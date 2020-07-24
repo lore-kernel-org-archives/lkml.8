@@ -2,140 +2,93 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CDFC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7CFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FCB52074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0212B20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:41:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUIxZHAJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JgGBQFcL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgGXMkh (ORCPT
+        id S1726701AbgGXMlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:40:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58160 "EHLO
+        Fri, 24 Jul 2020 08:41:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbgGXMkh (ORCPT
+        with ESMTP id S1726280AbgGXMlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:40:37 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B8D5C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 05:40:37 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id q5so8177256wru.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 05:40:36 -0700 (PDT)
+        Fri, 24 Jul 2020 08:41:37 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA5FC0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 05:41:37 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id b77so4799668vsd.8
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 05:41:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QxrC7srIn644JnxZvKZ6CAG4zZpgCwirCY+CCIdJm7s=;
-        b=RUIxZHAJwfFR/SWIIq5sARO+ZVI91NxfVEwDuAIyxMc4FFDGfKuPXPcTjLRrawUz5T
-         JOLP3yG2i6iK6X+JEWG5Mr/S/wFLkRIMHBhH8cjunC0bdW9D+kkT5yzQj/s1EbD1WQ0d
-         Izb0CuHVEHJAqsOaSDZrivMu34x2NZZ4oOnXyLRVW/csm24sIPQJMcZFtAfGeR5v6j4i
-         Sx5Z2z77fukerHtERYPhILwWBIDiIUH+HeNk0KNGlvEQF3T4Z0hyTpwzsJjxkn+nMrqT
-         1idDhwaf1ZFu0TnWp4ilbXL2p9bFFveeMTcv7LutBHv5y7zzmDWe31T3TneLPcSlA9+h
-         xNYA==
+        bh=2Y/hqFtvSIVM16rwYbPUWVppdN1RqdMbSz6G6w4jStg=;
+        b=JgGBQFcL9fblo1Ehj0NkTjtkr/P21VDmlXk6wvWbzPbSqNpJHCxXMj94ApqJj9rnP4
+         IN4mYv9wJcsU6iWVSC1SuYTe/TbESzsjaDFSRWeM5JqXJCPHonmV3b68IzF9CEjv5sTC
+         xwJ7zDOEpQhL7rve7+d5QfvSJXijdLHGbm8r4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QxrC7srIn644JnxZvKZ6CAG4zZpgCwirCY+CCIdJm7s=;
-        b=PmRKpDUbzxOlMXN6n2elX7wxXF/NKl6WuivinakqaznrzqogUl13cVxmxnnnOZI8Pj
-         NU3PeFNOOCd3ivHcXlcRDSx/S/fAgGx/BF4ACO2afM1RebVfFmKtMX9SYBUd2aXek+eQ
-         sFA0tnu2tkIz8Rm1he9OC5Ix2SNNIYF8nfkgllIi7Nftzj3iwOhWHNi1809PbvLvbdk+
-         flXc4r4EExt25vi/QO476XOPWkrk3fo25qPVSIh8scODBEKkhNwT3Oo1rZKLQyA4Usc0
-         PVsDdql2YxKAyEaAeL6a1ZvmDMgnGtATB2YbUjSWkwGqeq7cyELbXcrru465PggNJXuA
-         nqOw==
-X-Gm-Message-State: AOAM531FmY8ZLrx9t6//jvH3/6oULT9upBxtuFEPT8FGsD9hCQGtEuBR
-        2An1KV++oNC0qflaphVohidlACkMF36DpnaIu2I=
-X-Google-Smtp-Source: ABdhPJwHu4H6yeatS6mWn7YpmMc3Ks5DurPCbQ9atoAsPrbXiJE9vljBZf5TDlWsfo4Y/4e8yJCIF8ksxKiRtgeRcOw=
-X-Received: by 2002:adf:97d3:: with SMTP id t19mr8015728wrb.138.1595594435777;
- Fri, 24 Jul 2020 05:40:35 -0700 (PDT)
+        bh=2Y/hqFtvSIVM16rwYbPUWVppdN1RqdMbSz6G6w4jStg=;
+        b=dD7j1gky55EavSZTekYEKtXjD/JYinSINIuyp7NVCSBsp5SBCuMGfEya09nKWIfWJZ
+         bL2va56VdII3blAm84lw5iSzCTzY1YZSVvuajlETV2L8hLsQ7IYfhrONqnOy4Q6yx2aU
+         gK8IxWhIJQ6kXGXZZFFtKKbLsxfKUNxqFGnBWVWZsL6mTiT9/0bm5t96NYe/CH/khZ4d
+         krxE8tYMErH7L/9SD6hU5AHbwc/XnAWb/JqV/fnq44W+LKLfkGzfnEVxfx39ZNwlQlyw
+         i8yyjmMIwOzwujJbcSdi+uXDNnqfXsGT+HH/yt7/nnRJTAorEeAz0Ri+x/1RttH60oCn
+         hD4w==
+X-Gm-Message-State: AOAM531OCvW+NNR/XBlHDZiDtLj3ChtORZb5r4Hq5Qga/fhB6fhWZjF0
+        DMkvEI2tHGkU+g/md/zqTF7AHAmy7aLLEYcpr5ZyDA==
+X-Google-Smtp-Source: ABdhPJyAlSVayuXDG/mTcs8Rws1rB4Ysra6FB/un27XvYZ4dSbrTFfDoRevDk3+SMuiMsE0LlAfuPpRXgFCKuP7YzUA=
+X-Received: by 2002:a67:b448:: with SMTP id c8mr7575072vsm.54.1595594496206;
+ Fri, 24 Jul 2020 05:41:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200723233853.48815-1-humjb_1983@163.com> <CAKfTPtCnewaivay7bftUY27+-qB=ct3eSNEoZW=-2Z6k0S4B4Q@mail.gmail.com>
- <CAPJCdBnv4W5+u6OZ4vbAdJ2U8ubhfAU7+Zt0JUFjfxKEDuGJSw@mail.gmail.com>
- <CAKfTPtCXXGEDNG+YxBbRG4vFK1+ig5EBzntmyTxr7MbQw-Q7MA@mail.gmail.com>
- <CAPJCdBm=FJp8K1SubXP4Rfa-POr8hDh320faE+4Cjcjk3BL1JQ@mail.gmail.com> <20200724123644.GA634690@gmail.com>
-In-Reply-To: <20200724123644.GA634690@gmail.com>
-From:   Jiang Biao <benbjiang@gmail.com>
-Date:   Fri, 24 Jul 2020 20:40:24 +0800
-Message-ID: <CAPJCdBk6qqPi3sgQZdESuERCWHQsc=Vy37nQVSA58EfR2zj2+A@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: consider sched-idle CPU when selecting idle core
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Jiang Biao <humjb_1983@163.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiang Biao <benbjiang@tencent.com>
+References: <20200710144520.RESEND.1.Id0f52f486e277b5af30babac8ba6b09589962a68@changeid>
+ <20200710070332.GA1175842@kroah.com>
+In-Reply-To: <20200710070332.GA1175842@kroah.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 24 Jul 2020 20:41:25 +0800
+Message-ID: <CANMq1KDcKWgyYYP_m0-WV7602g7zUbU0PPkvwXxbSTF5vFfKGQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH] media: atomisp: Replace trace_printk by pr_info
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     devel@driverdev.osuosl.org, lkml <linux-kernel@vger.kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 at 20:36, Ingo Molnar <mingo@kernel.org> wrote:
+On Fri, Jul 10, 2020 at 3:03 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
+> On Fri, Jul 10, 2020 at 02:45:29PM +0800, Nicolas Boichat wrote:
+> > trace_printk should not be used in production code, replace it
+> > call with pr_info.
+> >
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > ---
+> > Sent this before as part of a series (whose 4th patch was a
+> > change that allows to detect such trace_printk), but maybe it's
+> > easier to get individual maintainer attention by splitting it.
 >
-> * Jiang Biao <benbjiang@gmail.com> wrote:
+> Mauro should take this soon:
 >
-> > On Fri, 24 Jul 2020 at 18:34, Vincent Guittot
-> > <vincent.guittot@linaro.org> wrote:
-> > >
-> > > On Fri, 24 Jul 2020 at 10:12, Jiang Biao <benbjiang@gmail.com> wrote:
-> > > >
-> > > > On Fri, 24 Jul 2020 at 15:24, Vincent Guittot
-> > > > <vincent.guittot@linaro.org> wrote:
-> > > > >
-> > > > > On Fri, 24 Jul 2020 at 01:39, Jiang Biao <humjb_1983@163.com> wrote:
-> > > > > >
-> > > > > > From: Jiang Biao <benbjiang@tencent.com>
-> > > > > >
-> > > > > > Sched-idle CPU has been considered in select_idle_cpu and
-> > > > > > select_idle_smt, it also needs to be considered in select_idle_core to
-> > > > > > be consistent and keep the same *idle* policy.
-> > > > >
-> > > > > In the case of select_idle_core, we are looking for a core that is
-> > > > > fully idle but if one CPU of the core is running a sched_idle task,
-> > > > > the core will not be idle and we might end up having  the wakeup task
-> > > > > on a CPU and a sched_idle task on another CPU of the core which is not
-> > > > > what we want
-> > > > Got it. sched_idle task may interfere its sibling, which brings me
-> > > > another question,
-> > > > If there's a core with smt1 running sched_idle task and smt2 idle,
-> > > > selecting smt1
-> > > > rather than smt2 should be more helpful for wakee task, because wakee task
-> > > > could suppress the sched_idle task without neighbour interfering.
-> > >
-> > > But the sched_idle will then probably quickly move on the idle smt2
-> > >
-> > > > And there seems to be no consideration about that currently.
-> > > > Is it worth improving that?
-> > >
-> > > This will complexify and extend the duration of the search loop  and
-> > > as mentioned above, it will most probably be a nop at the end because
-> > > of sched_idle task moving on smt2
-> > Indeed, the complexity is not worth.
-> > Thanks for the explanation.
->
-> BTW., if you disagree then you could add a bit of debug
-> instrumentation to measure to what extent it's a nop at the end of the
-> search loop, to turn the "most probably" statement into a specific
-> number.
->
-> Thanks,
->
->         Ingo
-Ok, I'll try.
-Thanks for your reply.
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Regards,
-Jiang
+Mauro: did you get a chance to look at this? (and the other similar
+patch "media: camss: vfe: Use trace_printk for debugging only")
+
+Thanks!
