@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A83C4345E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C59EC4345D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F1C20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BAB020786
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595576523;
-	bh=Z8MuOz+oKCf2eX1Gix1+yisOoYg6lXsXqmuJC5dVEe4=;
+	s=default; t=1595576521;
+	bh=n3jS1R8cGlbzQZ2E7MTkJN+e77K8jIddQTQt1KGSL/c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qfgsx0uPs8PUozUPrSl0MJoqRORhY0bYIO4REEO75c8j80YLSTEfNKWYgUcEfFf1V
-	 KL4ibrsTBV+VYnMJirSwMw7+vqMHWoEFluUyRtV0lf1aa1eQxEiKeIwt/F+MJGVBEE
-	 0kjlOTJ8amf9amn1I6NnFq8fj/YwtnulBpP/3tv4=
+	b=hmzdkw/KaCB0lWcLfw1dW9ZsPUfm8sqdsmbPwpDXFsq5UriqVgp7HZLEE2JYl6vaT
+	 Zxpt32cwBAhv7r3eql361GWXl5OsgupomE/FahPWVBwxouwK3ARwf7Ttkr/3d+kNJM
+	 8aGuSb/71sO8t/X0qXG/2PqTc8qFx2UVs/ngkgN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgGXHmB (ORCPT
+        id S1727935AbgGXHl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:42:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbgGXHl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jul 2020 03:41:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726591AbgGXHlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 03:41:55 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBA0C2074F;
-        Fri, 24 Jul 2020 07:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31F382078A;
+        Fri, 24 Jul 2020 07:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595576519;
-        bh=Z8MuOz+oKCf2eX1Gix1+yisOoYg6lXsXqmuJC5dVEe4=;
+        s=default; t=1595576514;
+        bh=n3jS1R8cGlbzQZ2E7MTkJN+e77K8jIddQTQt1KGSL/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uNwQdAcsnATv7hQA0Lrn9Cdl3YK45IejFRqKxfvibToH4PDyoEn8e5bJwZTTa+wvl
-         nq9SHZ26y3lvVvdpTBoPAGSIs400WQT567lMKaioL3HHr4cbsW4bsTnzrB1RxLGmNg
-         eq6HTShxDRY+VW88G4GM4tfm7tGasGGkO59Z6Mx4=
+        b=TQzI89DXGNlXEst3iKfRpL1/8FZTQOYeMgymg36QcNxLTpBen62K9gQ6pHVjL9Wbv
+         LeabdNsFhxbUqToBBg+Rleiv5zEogUu2tC4jDaSGajyPkM6FKESnzxoefcvqheyP16
+         sZFBhJzZXe79UaRbiY6YGNUxg+pMhl4NeQjxJEr8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         Markus Mayer <mmayer@broadcom.com>,
@@ -58,9 +58,9 @@ To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 10/29] memory: of: Remove unneeded extern from function declarations
-Date:   Fri, 24 Jul 2020 09:40:19 +0200
-Message-Id: <20200724074038.5597-11-krzk@kernel.org>
+Subject: [PATCH v2 09/29] memory: of: Correct indentation
+Date:   Fri, 24 Jul 2020 09:40:18 +0200
+Message-Id: <20200724074038.5597-10-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200724074038.5597-1-krzk@kernel.org>
 References: <20200724074038.5597-1-krzk@kernel.org>
@@ -69,52 +69,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function declarations in headers do not need to come with extern
-keyword.  Remove them to make the declaration slightly shorter.
+Correct indentation to match open parenthesis.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/memory/of_memory.h | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/memory/of_memory.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/memory/of_memory.h b/drivers/memory/of_memory.h
-index e39ecc4c733d..4a99b232ab0a 100644
---- a/drivers/memory/of_memory.h
-+++ b/drivers/memory/of_memory.h
-@@ -3,22 +3,23 @@
-  * OpenFirmware helpers for memory drivers
-  *
-  * Copyright (C) 2012 Texas Instruments, Inc.
-+ * Copyright (C) 2020 Krzysztof Kozlowski <krzk@kernel.org>
+diff --git a/drivers/memory/of_memory.c b/drivers/memory/of_memory.c
+index 8a5b654eca6b..67b811cb2cb9 100644
+--- a/drivers/memory/of_memory.c
++++ b/drivers/memory/of_memory.c
+@@ -26,7 +26,7 @@
+  * default min timings provided by JEDEC.
   */
+ const struct lpddr2_min_tck *of_get_min_tck(struct device_node *np,
+-		struct device *dev)
++					    struct device *dev)
+ {
+ 	int			ret = 0;
+ 	struct lpddr2_min_tck	*min;
+@@ -61,7 +61,7 @@ const struct lpddr2_min_tck *of_get_min_tck(struct device_node *np,
+ EXPORT_SYMBOL(of_get_min_tck);
  
- #ifndef __LINUX_MEMORY_OF_REG_H
- #define __LINUX_MEMORY_OF_REG_H
+ static int of_do_get_timings(struct device_node *np,
+-		struct lpddr2_timings *tim)
++			     struct lpddr2_timings *tim)
+ {
+ 	int ret;
  
- #if defined(CONFIG_OF) && defined(CONFIG_DDR)
--extern const struct lpddr2_min_tck *of_get_min_tck(struct device_node *np,
--		struct device *dev);
--extern const struct lpddr2_timings
--	*of_get_ddr_timings(struct device_node *np_ddr, struct device *dev,
--	u32 device_type, u32 *nr_frequencies);
--extern const struct lpddr3_min_tck
--	*of_lpddr3_get_min_tck(struct device_node *np, struct device *dev);
--extern const struct lpddr3_timings
--	*of_lpddr3_get_ddr_timings(struct device_node *np_ddr,
--	struct device *dev, u32 device_type, u32 *nr_frequencies);
-+const struct lpddr2_min_tck *of_get_min_tck(struct device_node *np,
-+					    struct device *dev);
-+const struct lpddr2_timings *of_get_ddr_timings(struct device_node *np_ddr,
+@@ -83,7 +83,7 @@ static int of_do_get_timings(struct device_node *np,
+ 	ret |= of_property_read_u32(np, "tZQinit", &tim->tZQinit);
+ 	ret |= of_property_read_u32(np, "tRAS-max-ns", &tim->tRAS_max_ns);
+ 	ret |= of_property_read_u32(np, "tDQSCK-max-derated",
+-		&tim->tDQSCK_max_derated);
++				    &tim->tDQSCK_max_derated);
+ 
+ 	return ret;
+ }
+@@ -102,7 +102,9 @@ static int of_do_get_timings(struct device_node *np,
+  * while populating, returns default timings provided by JEDEC.
+  */
+ const struct lpddr2_timings *of_get_ddr_timings(struct device_node *np_ddr,
+-		struct device *dev, u32 device_type, u32 *nr_frequencies)
 +						struct device *dev,
-+						u32 device_type, u32 *nr_frequencies);
-+const struct lpddr3_min_tck *of_lpddr3_get_min_tck(struct device_node *np,
-+						   struct device *dev);
-+const struct lpddr3_timings *
-+of_lpddr3_get_ddr_timings(struct device_node *np_ddr,
-+			  struct device *dev, u32 device_type, u32 *nr_frequencies);
- #else
- static inline const struct lpddr2_min_tck
- 	*of_get_min_tck(struct device_node *np, struct device *dev)
++						u32 device_type,
++						u32 *nr_frequencies)
+ {
+ 	struct lpddr2_timings	*timings = NULL;
+ 	u32			arr_sz = 0, i = 0;
 -- 
 2.17.1
 
