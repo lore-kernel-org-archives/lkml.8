@@ -2,94 +2,114 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B596EC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56024C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 842752065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E692065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:24:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cs33rQ2N";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wdUDbYM9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PioAJypK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbgGXNWh (ORCPT
+        id S1726821AbgGXNYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:22:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36512 "EHLO
+        Fri, 24 Jul 2020 09:24:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbgGXNWh (ORCPT
+        with ESMTP id S1726326AbgGXNYU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:22:37 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E354BC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:22:36 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595596955;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8gts4+rhoCcJmIbspKqY0dRXPYjhj0KR9ID/ZNHGSTY=;
-        b=cs33rQ2NIph3IdIHiubXINFkgQEgCuMUMNUwZB5JhRE9WHGCgr5vbG7cTfnoTXOAmznq8e
-        Tjw3rKYTn2fHAzbDZ+THN5wWU5w0GI3zmJgw5dmPucL+6Ns2MDhugZqEy5HbmtsCtz3Rls
-        x+GiwpenaOHw+QBEqML3RIA7ikoyv0KsgV7BuMUw6I2111kK8XsWjtbh8UjecGuDugaXrY
-        mfCjvNSCKDMKiKsLb/+QxjaUYHk+hgB0ddzwPnPS5I8aBfpOECwn/Kzp944oIxFVIgFkbF
-        oMKykPXTrTjU2gKBqXzVQM15aItTnzQV7nnpEyJD4rXKtUfkpdFSCp8d1pF0Lg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595596955;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8gts4+rhoCcJmIbspKqY0dRXPYjhj0KR9ID/ZNHGSTY=;
-        b=wdUDbYM98kOo9cWK8AKk8HLRWvE314quZ4hQSY20WWYkfc7cPLvHRt0qLRnLrfSFombc0h
-        o9nrg8DG3u4UcgAA==
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrei Vagin <avagin@gmail.com>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH v5 0/6] arm64: add the time namespace support
-In-Reply-To: <20200724110131.GC23388@gaia>
-References: <20200624083321.144975-1-avagin@gmail.com> <20200705064055.GA28894@gmail.com> <20200714015743.GA843937@gmail.com> <20200722181506.GA4517@gaia> <20200723174140.GA3991167@gmail.com> <87d04mvv0g.fsf@nanos.tec.linutronix.de> <20200724110131.GC23388@gaia>
-Date:   Fri, 24 Jul 2020 15:22:34 +0200
-Message-ID: <874kpxujxh.fsf@nanos.tec.linutronix.de>
+        Fri, 24 Jul 2020 09:24:20 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AF01C0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:24:20 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id i80so5164226lfi.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:24:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vrNd1IsGR4tP8PBdHAFs3AhICen6bv/rNf6zgNWwFI4=;
+        b=PioAJypK5ctFm6Xpj+L40YBoTd0JCG/mujuTgjgFt5XPDhLDMYIHuNZ1Gru3Xl1cPw
+         7QsYFW1PVV5ED1ho4LpWE8uqv8Z1+5PChli2H7RVUs0JgrT8x7uwT4Lq0A3FdXAmcj44
+         +bUSSrcbH3I9fbldqLNr+s4TKMTp2PmVV8Jrmqzxhd2A7paYkowMApdmShipQCBDSvzh
+         yb0grHRbq8Nu7Q1KGGdJcrjfFpv6kx3Iw/gU5VAeYZCfsHjzBHM2vKM3zjVchhsFf+U3
+         3AOEgFQm4R6pgWiA8g7HC+rAurTwKgrRSxTtx0XunZCr3Y7toQi+k84kbOIoajdoL302
+         C/zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vrNd1IsGR4tP8PBdHAFs3AhICen6bv/rNf6zgNWwFI4=;
+        b=fGKVu4FE70nRmLtrjMcMsYhhSIeokULKi+LzQFlnE/OF1TDOkcWoEFp2NjyysKlJIq
+         utmJJo/ufUrbRH9ERRGbFXgumDcZpofHzBRudOd+OJOabRgUp9LbWyd9AY01BilxxFOc
+         LaL1nRCKhUU866LJ217MnAdcWLGORAgVmMFSR8P5iHYax47EOvgfojja0NjuuleU15vG
+         jkmW/PeyIDkB6e//P7Vssrxp1QAI9nmPW7srnqcRl5dm3mIwQYxiHCFyXzCLXnDI0tCN
+         sNlcVEJhO88cFs/IHPANJblDp5UB0FVnRpGNgBjiB50hebgmmgV4uTwlYCj5UKBnwanF
+         hAaQ==
+X-Gm-Message-State: AOAM533ZvAgrXpXNDC7xwAViHBKUlslY+edTbfncja00MNHtD0u9qadU
+        L3OC9qidwjvVAQ6VRiW+bHVnXk5txHrzo5BVVJ0pTA==
+X-Google-Smtp-Source: ABdhPJzQ+DJRA0iFuI99YTbcfAz/FjMxLPDD4nS06PTBDi9IeLSDtUNouRu4oWlAKHjrLeLOfNOoXu4MPSQg8iNP4Jk=
+X-Received: by 2002:ac2:4d16:: with SMTP id r22mr4986311lfi.21.1595597058699;
+ Fri, 24 Jul 2020 06:24:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200723084622.31134-1-jorge@foundries.io>
+In-Reply-To: <20200723084622.31134-1-jorge@foundries.io>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Fri, 24 Jul 2020 18:54:07 +0530
+Message-ID: <CAFA6WYMCs-50WnwqqhefE9b_aXaORq1e3JdZJAjb04tHKvqP0A@mail.gmail.com>
+Subject: Re: [PATCHv2 1/2] hwrng: optee: handle unlimited data rates
+To:     Jorge Ramirez-Ortiz <jorge@foundries.io>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, ricardo@foundries.io,
+        Michael Scott <mike@foundries.io>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        op-tee@lists.trustedfirmware.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Catalin Marinas <catalin.marinas@arm.com> writes:
-> On Thu, Jul 23, 2020 at 10:25:35PM +0200, Thomas Gleixner wrote:
->> Andrei Vagin <avagin@gmail.com> writes:
->> > On Wed, Jul 22, 2020 at 07:15:06PM +0100, Catalin Marinas wrote:
->> >
->> > I don't think that we need to handle this case in the kernel. Users
->> > must understand what they are doing and have to write code so that avoid
->> > these sort of situations. In general, I would say that in most cases it
->> > is a bad idea to call setns from a signal handler.
->> 
->> This should not be supported in the first place and just let the
->> offender die right there.
+On Thu, 23 Jul 2020 at 14:16, Jorge Ramirez-Ortiz <jorge@foundries.io> wrote:
 >
-> It would have been nice if we caught the offender easily but since
-> signal handling doesn't have to be paired with sigreturn(), the kernel
-> can't tell whether setns() is called in the wrong context. I guess we
-> just have to live with this (maybe document the restriction in
-> time_namespaces(7) or setns(2)).
+> Data rates of MAX_UINT32 will schedule an unnecessary one jiffy
+> timeout on the call to msleep. Avoid this scenario by using 0 as the
+> unlimited data rate.
+>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+> ---
+>  drivers/char/hw_random/optee-rng.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
 
-Yes, I know that it's more or less impossible. The 'should' was just
-wishful thinking :)
+Sounds good to me. FWIW:
 
-But yes, proper documentation is required.
+Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
 
-Thanks,
+-Sumit
 
-        tglx
+> diff --git a/drivers/char/hw_random/optee-rng.c b/drivers/char/hw_random/optee-rng.c
+> index 49b2e02537dd..5bc4700c4dae 100644
+> --- a/drivers/char/hw_random/optee-rng.c
+> +++ b/drivers/char/hw_random/optee-rng.c
+> @@ -128,7 +128,7 @@ static int optee_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+>                 data += rng_size;
+>                 read += rng_size;
+>
+> -               if (wait) {
+> +               if (wait && pvt_data->data_rate) {
+>                         if (timeout-- == 0)
+>                                 return read;
+>                         msleep((1000 * (max - read)) / pvt_data->data_rate);
+> --
+> 2.17.1
+>
