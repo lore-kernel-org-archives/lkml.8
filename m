@@ -6,127 +6,160 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6619C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBB2C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD8F206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FF1206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgGXNas (ORCPT
+        id S1726689AbgGXNcz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:30:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36601 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgGXNas (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:30:48 -0400
-Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jyxmb-0006lR-9n; Fri, 24 Jul 2020 13:30:41 +0000
-Date:   Fri, 24 Jul 2020 15:30:39 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
-Subject: Re: [PATCH v5 0/6] arm64: add the time namespace support
-Message-ID: <20200724133039.hginkpnv7bkyz764@wittgenstein>
-References: <20200624083321.144975-1-avagin@gmail.com>
- <20200705064055.GA28894@gmail.com>
- <20200714015743.GA843937@gmail.com>
- <20200722181506.GA4517@gaia>
- <20200723174140.GA3991167@gmail.com>
+        Fri, 24 Jul 2020 09:32:55 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2524 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726235AbgGXNcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:32:54 -0400
+Received: from lhreml720-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 8578F17D3DDB922F41EF;
+        Fri, 24 Jul 2020 14:32:52 +0100 (IST)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml720-chm.china.huawei.com (10.201.108.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Fri, 24 Jul 2020 14:32:52 +0100
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
+ Fri, 24 Jul 2020 14:32:52 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
+        "jroedel@suse.de" <jroedel@suse.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        yangyicong <yangyicong@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>
+Subject: RE: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Thread-Topic: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Thread-Index: AQHWYUfqroZbmVDLlEO3jLbzt/fllakWZmIggAA5R4CAABpXQA==
+Date:   Fri, 24 Jul 2020 13:32:52 +0000
+Message-ID: <bb7c23fae649486aa0720c619fef2e8b@huawei.com>
+References: <b76444fed0a2468983b2a2c45d7d31b2@huawei.com>
+ <20200724125357.GA1510118@bjorn-Precision-5520>
+In-Reply-To: <20200724125357.GA1510118@bjorn-Precision-5520>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.85.142]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200723174140.GA3991167@gmail.com>
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:41:40AM -0700, Andrei Vagin wrote:
-> On Wed, Jul 22, 2020 at 07:15:06PM +0100, Catalin Marinas wrote:
-> > On Mon, Jul 13, 2020 at 06:57:43PM -0700, Andrei Vagin wrote:
-> > > On Sat, Jul 04, 2020 at 11:40:55PM -0700, Andrei Vagin wrote:
-> > > > On Wed, Jun 24, 2020 at 01:33:15AM -0700, Andrei Vagin wrote:
-> > > > > Allocate the time namespace page among VVAR pages and add the logic
-> > > > > to handle faults on VVAR properly.
-> > > > > 
-> > > > > If a task belongs to a time namespace then the VVAR page which contains
-> > > > > the system wide VDSO data is replaced with a namespace specific page
-> > > > > which has the same layout as the VVAR page. That page has vdso_data->seq
-> > > > > set to 1 to enforce the slow path and vdso_data->clock_mode set to
-> > > > > VCLOCK_TIMENS to enforce the time namespace handling path.
-> > > > > 
-> > > > > The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
-> > > > > update of the VDSO data is in progress, is not really affecting regular
-> > > > > tasks which are not part of a time namespace as the task is spin waiting
-> > > > > for the update to finish and vdso_data->seq to become even again.
-> > > > > 
-> > > > > If a time namespace task hits that code path, it invokes the corresponding
-> > > > > time getter function which retrieves the real VVAR page, reads host time
-> > > > > and then adds the offset for the requested clock which is stored in the
-> > > > > special VVAR page.
-> > > > > 
-> > > > 
-> > > > > v2: Code cleanups suggested by Vincenzo.
-> > > > > v3: add a comment in __arch_get_timens_vdso_data.
-> > > > > v4: - fix an issue reported by the lkp robot.
-> > > > >     - vvar has the same size with/without CONFIG_TIME_NAMESPACE, but the
-> > > > >       timens page isn't allocated on !CONFIG_TIME_NAMESPACE. This
-> > > > >       simplifies criu/vdso migration between different kernel configs.
-> > > > > v5: - Code cleanups suggested by Mark Rutland.
-> > > > >     - In vdso_join_timens, mmap_write_lock is downgraded to
-> > > > >       mmap_read_lock. The VMA list isn't changed there, zap_page_range
-> > > > >       doesn't require mmap_write_lock.
-> > > > > 
-> > > > > Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> > > > > Reviewed-by: Dmitry Safonov <dima@arista.com>
-> > > > 
-> > > > Hello Will and Catalin,
-> > > > 
-> > > > Have you had a chance to look at this patch set? I think it is ready to be
-> > > > merged. Let me know if you have any questions.
-> > > 
-> > > *friendly ping*
-> > > 
-> > > If I am doing something wrong, let me know.
-> > 
-> > Not really, just haven't got around to looking into it. Mark Rutland
-> > raised a concern (in private) about the safety of multithreaded apps
-> > but I think you already replied that timens_install() checks for this
-> > already [1].
-> > 
-> > Maybe a similar atomicity issue to the one raised by Mark but for
-> > single-threaded processes: the thread is executing vdso code, gets
-> > interrupted and a signal handler invokes setns(). Would resuming the
-> > execution in the vdso code on sigreturn cause any issues?
-> 
-> It will not cause any issues in the kernel. In the userspace,
-> clock_gettime() can return a clock value with an inconsistent offset, if
-> a process switches between two non-root namespaces. And it can triggers
-> SIGSEGV if it switches from a non-root to the root time namespace,
-> because a time namespace isn't mapped in the root time namespace.
-> 
-> I don't think that we need to handle this case in the kernel. Users
-> must understand what they are doing and have to write code so that avoid
-> these sort of situations. In general, I would say that in most cases it
-> is a bad idea to call setns from a signal handler.
+>-----Original Message-----
+>From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+>Sent: 24 July 2020 13:54
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+>kernel@vger.kernel.org; rjw@rjwysocki.net; bp@alien8.de;
+>james.morse@arm.com; lenb@kernel.org; tony.luck@intel.com;
+>dan.carpenter@oracle.com; zhangliguang@linux.alibaba.com;
+>andriy.shevchenko@linux.intel.com; Wangkefeng (OS Kernel Lab)
+><wangkefeng.wang@huawei.com>; jroedel@suse.de; Linuxarm
+><linuxarm@huawei.com>; yangyicong <yangyicong@huawei.com>; Jonathan
+>Cameron <jonathan.cameron@huawei.com>; tanxiaofei
+><tanxiaofei@huawei.com>
+>Subject: Re: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
+>(vendor) CPER records
+>
+>On Fri, Jul 24, 2020 at 09:00:41AM +0000, Shiju Jose wrote:
+>> >-----Original Message-----
+>> >From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+>> >Sent: 24 July 2020 00:21
+>> >To: Shiju Jose <shiju.jose@huawei.com>
+>> >Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+>> >kernel@vger.kernel.org; rjw@rjwysocki.net; bp@alien8.de;
+>> >james.morse@arm.com; lenb@kernel.org; tony.luck@intel.com;
+>> >dan.carpenter@oracle.com; zhangliguang@linux.alibaba.com;
+>> >andriy.shevchenko@linux.intel.com; Wangkefeng (OS Kernel Lab)
+>> ><wangkefeng.wang@huawei.com>; jroedel@suse.de; Linuxarm
+>> ><linuxarm@huawei.com>; yangyicong <yangyicong@huawei.com>;
+>Jonathan
+>> >Cameron <jonathan.cameron@huawei.com>; tanxiaofei
+>> ><tanxiaofei@huawei.com>
+>> >Subject: Re: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for
+>> >unknown
+>> >(vendor) CPER records
+>> >
+>> >On Wed, Jul 22, 2020 at 11:39:51AM +0100, Shiju Jose wrote:
+>> >> CPER records describing a firmware-first error are identified by GUID.
+>> >> The ghes driver currently logs, but ignores any unknown CPER records.
+>> >> This prevents describing errors that can't be represented by a
+>> >> standard entry, that would otherwise allow a driver to recover from
+>> >> an
+>> >error.
+>> >> The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
+>> >> version 2.8).
+>> >
+>> >> +#ifdef CONFIG_ACPI_APEI_GHES
+>> >> +/**
+>> >> + * ghes_register_vendor_record_notifier - register a notifier for
+>> >> +vendor
+>> >> + * records that the kernel would otherwise ignore.
+>> >> + * @nb: pointer to the notifier_block structure of the event handler.
+>> >> + *
+>> >> + * return 0 : SUCCESS, non-zero : FAIL  */ int
+>> >> +ghes_register_vendor_record_notifier(struct notifier_block *nb);
+>> >> +
+>> >> +/**
+>> >> + * ghes_unregister_vendor_record_notifier - unregister the
+>> >> +previously
+>> >> + * registered vendor record notifier.
+>> >> + * @nb: pointer to the notifier_block structure of the vendor
+>> >> +record
+>> >handler.
+>> >> + */
+>> >> +void ghes_unregister_vendor_record_notifier(struct notifier_block
+>> >> +*nb); #else static inline int
+>> >> +ghes_register_vendor_record_notifier(struct notifier_block *nb) {
+>> >> +	return -ENODEV;
+>> >> +}
+>> >> +
+>> >> +static inline void ghes_unregister_vendor_record_notifier(struct
+>> >> +notifier_block *nb) { }
+>> >
+>> >If you made CONFIG_PCIE_HISI_ERR depend on CONFIG_ACPI_APEI_GHES,
+>> >you'd be able to get rid of these stubs, wouldn't you?  It doesn't
+>> >look like there's any point in building pcie-hisi-error.c at all
+>> >unless CONFIG_ACPI_APEI_GHES is enabled.
+>>
+>> The stub is added because this interface is expected to use by the
+>> other drivers as well.  Some drivers may not want add the build depend
+>> on the CONFIG_ACPI_APEI_GHES if the error reporting has less priority
+>> in the driver.  However we can add dependency on
+>CONFIG_ACPI_APEI_GHES
+>> for building pcie-hisi-error.c.
+>
+>The usual route is to add stubs when they're needed, not just in anticipation
+>of some need that may never materialize.
+ok. I will change in the next version.
 
-I would argue that calling any function not in the list of
-man 7 signal-safety
-without checking the kernel implementation is "you get to keep the
-pieces territory". There's a whole range of syscalls that are not safe
-in signal handlers and we don't have any special precautions for them so
-I'm not sure we'd need one for setns(). But maybe I'm missing the bigger
-picture here.
-
-Thanks!
-Christian
+Thanks,
+Shiju
