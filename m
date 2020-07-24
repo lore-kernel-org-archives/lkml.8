@@ -2,117 +2,85 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AB1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A28C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50418206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 730092070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:40:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595630454;
+	bh=SxPVDdP6OkqBpUuq6d4bfLuZk9VZENEV/pSw/HUBnCg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ZU8mbiQA0HYRLH25Ms9xMkMbN2JfkQgdOMdPC0XW/MglwVecff9f13psAwXVfSvRB
+	 ia/n2t3OaGVqhDMcyrfwzbfowpfoSyidZBfpRmVq/uG3X4KDIhXakRLVR8lRsLixen
+	 r+f7hPEwCl1BB2zfLH2NKS6W0BvkZtIAhxN1sKVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgGXWir (ORCPT
+        id S1726658AbgGXWkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 18:38:47 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:49636 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgGXWir (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 18:38:47 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 82C521C0BD2; Sat, 25 Jul 2020 00:38:44 +0200 (CEST)
-Date:   Sat, 25 Jul 2020 00:38:44 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
-        Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v2 0/1] Add support for LEDs on
- Marvell PHYs
-Message-ID: <20200724223844.GA24384@amd>
-References: <20200723181319.15988-1-marek.behun@nic.cz>
- <20200724102901.qp65rtkxucauglsp@duo.ucw.cz>
- <20200724151233.35d799e8@dellmb.labs.office.nic.cz>
+        Fri, 24 Jul 2020 18:40:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726154AbgGXWkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 18:40:53 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E220206EB;
+        Fri, 24 Jul 2020 22:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595630452;
+        bh=SxPVDdP6OkqBpUuq6d4bfLuZk9VZENEV/pSw/HUBnCg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=12lC1cOLKD7jvtFqwJd/pStvqC+TPSqiftoCstfYanSQCfUaoaHuYYFfHHYNx2EwV
+         tn8llZGp100/e0Ra5ZYkf9YV9kAkbm2I1PZIqbFF7vSi3H8a3HntGH6zRWfDiBbU3E
+         iX6NB0PKnLYCRu69u3EGKENM3dwOfliLXsyvPl38=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 882023522749; Fri, 24 Jul 2020 15:40:52 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 15:40:52 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Marco Elver <elver@google.com>, will@kernel.org, arnd@arndb.de,
+        mark.rutland@arm.com, dvyukov@google.com, glider@google.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2 0/8] kcsan: Compound read-write instrumentation
+Message-ID: <20200724224052.GX9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200724070008.1389205-1-elver@google.com>
+ <20200724083920.GV10769@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200724151233.35d799e8@dellmb.labs.office.nic.cz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200724083920.GV10769@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 24, 2020 at 10:39:20AM +0200, Peter Zijlstra wrote:
+> On Fri, Jul 24, 2020 at 09:00:00AM +0200, Marco Elver wrote:
+> 
+> > Marco Elver (8):
+> >   kcsan: Support compounded read-write instrumentation
+> >   objtool, kcsan: Add __tsan_read_write to uaccess whitelist
+> >   kcsan: Skew delay to be longer for certain access types
+> >   kcsan: Add missing CONFIG_KCSAN_IGNORE_ATOMICS checks
+> >   kcsan: Test support for compound instrumentation
+> >   instrumented.h: Introduce read-write instrumentation hooks
+> >   asm-generic/bitops: Use instrument_read_write() where appropriate
+> >   locking/atomics: Use read-write instrumentation for atomic RMWs
+> 
+> Looks good to me,
+> 
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied with ack, thank you both!
 
-On Fri 2020-07-24 15:12:33, Marek Beh=FAn wrote:
-> On Fri, 24 Jul 2020 12:29:01 +0200
-> Pavel Machek <pavel@ucw.cz> wrote:
->=20
-> > In future, would you expect having software "1000/100/10/nolink"
-> > triggers I could activate on my scrollock LED (or on GPIO controlled
-> > LEDs) to indicate network activity?
->=20
-> Look at drivers/net/phy/phy_led_triggers.c, something like that could
-> be actually implemented there.
->=20
-> Some of the modes are useful, like the "1000/100/10/nolink". But some
-> of them are pretty weird, and I don't think anyone actually uses it
-> ("1000-10/else", which is on if the device is linked at 1000mbps ar
-> 10mbps, and else off? who would sacrifies a LED for this?).
->=20
-> I actually wanted to talk about the phy_led_triggers.c code. It
-> registers several trigger for each PHY, with the name in form:
->   phy-device-name:mode
-> where
->   phy-device-name is derived from OF
->     - sometimes it is in the form
->       d0032004.mdio-mii:01
->     - but sometimes in the form of whole OF path followed by ":" and
->       the PHY address:
->       /soc/internal-regs@d0000000/mdio@32004/switch0@10/mdio:08
->   mode is "link", "1Gbps", "100Mbps", "10Mbps" and so on"
->=20
-> So I have a GPIO LED, and I can set it to sw trigger so that it is on
-> when a specific PHY is linked on 1Gbps.
->=20
-> The problem is that on Turris Mox I can connect up to three 8-port
-> switches, which yields in 25 network PHYs overall. So reading the
-> trigger file results in 4290 bytes (look at attachment cat_trigger.txt).
-> I think the phy_led_triggers should have gone this way of having just
-> one trigger (like netdev has), and specifying phy device via and mode
-> via another file.
-
-I agree with you. This is ... not pretty ... and it would be nice to
-get it fixed.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8bYvMACgkQMOfwapXb+vL+6QCeNQBcceZTkyjl1bm+0JhHxnE8
-wt8An3Z/sFRowDd/7dI0Kz7WamI0ivh2
-=iB1C
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--
+							Thanx, Paul
