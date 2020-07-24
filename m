@@ -2,85 +2,76 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F25C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C75B2068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88BFB20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595580137;
+	bh=rAqdZE/fKAL7VqoalwAdqZ/lSHZ2jW3nfb1jX6yqrlk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SaIjqjGGnhM6kHrx2utczl4ms+ZuHvK19kLoZaHBSAkRm33GQtAcNm4KVGSfCP5E4
+	 2XyIT/7rcUQER4AERhYFkdNEV76F9VtmBSdYTMn+zLjqdY49WyyWBTkjUU6PWLghde
+	 2S9YIIUIBN+U8XOt17kGcGCB4x6ufLmS9Xs3rzPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgGXIlP (ORCPT
+        id S1727016AbgGXImQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:41:15 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37428 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgGXIlO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:41:14 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 4E5861C0BD2; Fri, 24 Jul 2020 10:41:13 +0200 (CEST)
-Date:   Fri, 24 Jul 2020 10:41:12 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     dledford@redhat.com, jgg@ziepe.ca, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, trivial@kernel.org
-Subject: [PATCH] RDMA/mlx5: fix typo in structure name
-Message-ID: <20200724084112.GC31930@amd>
+        Fri, 24 Jul 2020 04:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726676AbgGXImQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 04:42:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D54D20674;
+        Fri, 24 Jul 2020 08:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595580134;
+        bh=rAqdZE/fKAL7VqoalwAdqZ/lSHZ2jW3nfb1jX6yqrlk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=flen0IBnd3TWe2yeuevlI+qVN0U7Z5okT+2QsMkzrTlaX8BKkjQh3LRLNmBt+WrEL
+         MFn+FMLxunQ6nTjbFoHKcRjjHEnadXiRN3t5YkTOJQ90VuSn+kV6egKJkWD77G20an
+         CQ6vCUSLLj9u8Bbhkpq0SAF7agX0TnEEki4VV7I4=
+Date:   Fri, 24 Jul 2020 10:42:16 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     satya priya <skakit@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
+Subject: Re: [PATCH V2 3/3] tty: serial: qcom_geni_serial: Fix the UART
+ wakeup issue
+Message-ID: <20200724084216.GC3977020@kroah.com>
+References: <1595563082-2353-1-git-send-email-skakit@codeaurora.org>
+ <1595563082-2353-4-git-send-email-skakit@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="VywGB/WGlW4DM4P8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1595563082-2353-4-git-send-email-skakit@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 24, 2020 at 09:28:02AM +0530, satya priya wrote:
+> As a part of system suspend we call uart_port_suspend from the
+> Serial driver, which calls set_mctrl passing mctrl as NULL. This
+> makes RFR high(NOT_READY) during suspend.
+> 
+> Due to this BT SoC is not able to send wakeup bytes to UART during
+> suspend. Included if check for non-suspend case to keep RFR low
+> during suspend.
+> 
+> Signed-off-by: satya priya <skakit@codeaurora.org>
 
---VywGB/WGlW4DM4P8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-This is user API, but likely noone uses it...? Fix it before it
-becomes problem.
-
-Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
-
-
-diff --git a/include/uapi/rdma/mlx5_user_ioctl_cmds.h b/include/uapi/rdma/m=
-lx5_user_ioctl_cmds.h
-index 8e316ef896b5..2d889df38df6 100644
---- a/include/uapi/rdma/mlx5_user_ioctl_cmds.h
-+++ b/include/uapi/rdma/mlx5_user_ioctl_cmds.h
-@@ -259,7 +259,7 @@ enum mlx5_ib_create_flow_attrs {
- 	MLX5_IB_ATTR_CREATE_FLOW_FLAGS,
- };
-=20
--enum mlx5_ib_destoy_flow_attrs {
-+enum mlx5_ib_destroy_flow_attrs {
- 	MLX5_IB_ATTR_DESTROY_FLOW_HANDLE =3D (1U << UVERBS_ID_NS_SHIFT),
- };
-=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---VywGB/WGlW4DM4P8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8anqgACgkQMOfwapXb+vJDugCfaYsiuj7DNwprSvQEpcgL6Ny3
-ZI0An1SzQHO9yKKHkQOGUCxPcJlZh9JZ
-=fHM/
------END PGP SIGNATURE-----
-
---VywGB/WGlW4DM4P8--
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
