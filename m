@@ -2,144 +2,397 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7971BC433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D879C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48F32206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:29:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="AiM7BvGh"
+	by mail.kernel.org (Postfix) with ESMTP id 3385A206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgGXQ3X (ORCPT
+        id S1726754AbgGXQ0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37782 "EHLO
+        Fri, 24 Jul 2020 12:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbgGXQ3W (ORCPT
+        with ESMTP id S1726455AbgGXQ0H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:29:22 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77FCC0619E5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 09:29:22 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e8so5510421pgc.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 09:29:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H5vpCWHYjYJzXRlUWgDCLhZpTQz6UHH/5YbUsvqWdNg=;
-        b=AiM7BvGhGZq+8CYp8kZrjTGkqBuGSOVx6gcS2ZoV6niiBFHjxOg990QxEbHLjMtigv
-         rkvJauw/Nl3yhgdh3yh3/cQAnPJiwRmEprDaz+FVWchlY0XqPjysldBf7LV7iodBdHsg
-         899CD4i/WKRLcxWHL2qBJPQckfv3u7k8PdGNBc5u9vYaxF2nX4a0GJZ0t2UsIEZTpo6J
-         LSaij/Yuh1Dejhu73ovuUR07/jtKpWqsPIuesjS1PnD7zc9xpDNs1ajo4VYGKaFSYPEp
-         4k9hgoXmZx02QlUnefhSTGyaDFr/jP9Yjztbzg3eY6wwKKTEEk/uuvzIim3EIQCSWKme
-         optQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H5vpCWHYjYJzXRlUWgDCLhZpTQz6UHH/5YbUsvqWdNg=;
-        b=KyyqFejCso5/eWgY3M2fTIpMEG/RitgCXxgmyYz5QKWK0Yiuybc/5YX1SfRuNXBUoh
-         eF3rWxCyh+5Jhp/9bkfTPke/s3XwWonfob8Ndb+CM8ifrFMauew5v+xIo2EsJiurJjVa
-         JvMj7A+WV723YXeeVfdgKd0qiFbqF5SuWOuv1Yv/R7wLAgKT6mfH0uxQcDo+Tmnk5741
-         cZ+cYbvsJfqn0a0+TCYYEkFfNi1546GgO27M2NdB9v+c1pt8MB0a/QFnKfnwUOQV+B7P
-         4YnALQisduw71WgvKmD/zpmmj5wuNWIuEEJKEJWDiXqrJmehhIYBXX0EVIkI3pljQc9C
-         VZCA==
-X-Gm-Message-State: AOAM531BaBhYUOEqTUZmPtZQWDxOh+QeMH4aTsmLJY5jjFqyUGq0Amrd
-        yxhwgkf8dNivblKmE8+IoBMocA==
-X-Google-Smtp-Source: ABdhPJwiUQeYSR905NX4BkAH3K9ZeZTdo2ytHvuhOnPUvAeq9vMBPv48vFJy3B/CVUpeaPlmxlgHwA==
-X-Received: by 2002:a63:338c:: with SMTP id z134mr9031841pgz.245.1595608162016;
-        Fri, 24 Jul 2020 09:29:22 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id e15sm6659144pgt.17.2020.07.24.09.29.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 09:29:21 -0700 (PDT)
-Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
-To:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org
-Cc:     willy@infradead.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, SelvaKumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <1595605762-17010-1-git-send-email-joshi.k@samsung.com>
- <CGME20200724155350epcas5p3b8f1d59eda7f8fbb38c828f692d42fd6@epcas5p3.samsung.com>
- <1595605762-17010-7-git-send-email-joshi.k@samsung.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f5416bd4-93b3-4d14-3266-bdbc4ae1990b@kernel.dk>
-Date:   Fri, 24 Jul 2020 10:29:19 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 12:26:07 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54BF6C0619D3;
+        Fri, 24 Jul 2020 09:26:07 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id BF34E29931C
+From:   Helen Koike <helen.koike@collabora.com>
+To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, dafna.hirschfeld@collabora.com,
+        tfiga@chromium.org
+Subject: [PATCH] media: staging: rkisp1: uapi: remove __packed
+Date:   Fri, 24 Jul 2020 13:25:55 -0300
+Message-Id: <20200724162555.393631-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.28.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <1595605762-17010-7-git-send-email-joshi.k@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/24/20 9:49 AM, Kanchan Joshi wrote:
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 7809ab2..6510cf5 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -1284,8 +1301,15 @@ static void __io_cqring_fill_event(struct io_kiocb *req, long res, long cflags)
->  	cqe = io_get_cqring(ctx);
->  	if (likely(cqe)) {
->  		WRITE_ONCE(cqe->user_data, req->user_data);
-> -		WRITE_ONCE(cqe->res, res);
-> -		WRITE_ONCE(cqe->flags, cflags);
-> +		if (unlikely(req->flags & REQ_F_ZONE_APPEND)) {
-> +			if (likely(res > 0))
-> +				WRITE_ONCE(cqe->res64, req->rw.append_offset);
-> +			else
-> +				WRITE_ONCE(cqe->res64, res);
-> +		} else {
-> +			WRITE_ONCE(cqe->res, res);
-> +			WRITE_ONCE(cqe->flags, cflags);
-> +		}
+The driver access struct's fields one by one, they are not blindly
+copied to/from the hardware, so we can remove __packed from the
+structs.
 
-This would be nice to keep out of the fast path, if possible.
+Tested on Scarlet Chromebook with ChromeOS stack and verified images
+with the Camera app.
 
-> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-> index 92c2269..2580d93 100644
-> --- a/include/uapi/linux/io_uring.h
-> +++ b/include/uapi/linux/io_uring.h
-> @@ -156,8 +156,13 @@ enum {
->   */
->  struct io_uring_cqe {
->  	__u64	user_data;	/* sqe->data submission passed back */
-> -	__s32	res;		/* result code for this event */
-> -	__u32	flags;
-> +	union {
-> +		struct {
-> +			__s32	res;	/* result code for this event */
-> +			__u32	flags;
-> +		};
-> +		__s64	res64;	/* appending offset for zone append */
-> +	};
->  };
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+---
+ .../staging/media/rkisp1/uapi/rkisp1-config.h | 76 +++++++++----------
+ 1 file changed, 38 insertions(+), 38 deletions(-)
 
-Is this a compatible change, both for now but also going forward? You
-could randomly have IORING_CQE_F_BUFFER set, or any other future flags.
-Layout would also be different between big and little endian, so not
-even that easy to set aside a flag for this. But even if that was done,
-we'd still have this weird API where liburing or the app would need to
-distinguish this cqe from all others based on... the user_data? Hence
-liburing can't do it, only the app would be able to.
-
-Just seems like a hack to me.
-
+diff --git a/drivers/staging/media/rkisp1/uapi/rkisp1-config.h b/drivers/staging/media/rkisp1/uapi/rkisp1-config.h
+index 8f9b061e5b6b6..dbcb5933185e3 100644
+--- a/drivers/staging/media/rkisp1/uapi/rkisp1-config.h
++++ b/drivers/staging/media/rkisp1/uapi/rkisp1-config.h
+@@ -163,7 +163,7 @@ struct rkisp1_cif_isp_window {
+ 	__u16 v_offs;
+ 	__u16 h_size;
+ 	__u16 v_size;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_bls_fixed_val - BLS fixed subtraction values
+@@ -181,7 +181,7 @@ struct rkisp1_cif_isp_bls_fixed_val {
+ 	__s16 gr;
+ 	__s16 gb;
+ 	__s16 b;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_bls_config - Configuration used by black level subtraction
+@@ -203,7 +203,7 @@ struct rkisp1_cif_isp_bls_config {
+ 	struct rkisp1_cif_isp_window bls_window2;
+ 	__u8 bls_samples;
+ 	struct rkisp1_cif_isp_bls_fixed_val fixed_val;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_dpcc_methods_config - Methods Configuration used by DPCC
+@@ -224,7 +224,7 @@ struct rkisp1_cif_isp_dpcc_methods_config {
+ 	__u32 pg_fac;
+ 	__u32 rnd_thresh;
+ 	__u32 rg_fac;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_dpcc_config - Configuration used by DPCC
+@@ -245,16 +245,16 @@ struct rkisp1_cif_isp_dpcc_config {
+ 	struct rkisp1_cif_isp_dpcc_methods_config methods[RKISP1_CIF_ISP_DPCC_METHODS_MAX];
+ 	__u32 ro_limits;
+ 	__u32 rnd_offs;
+-} __packed;
++};
+ 
+ struct rkisp1_cif_isp_gamma_corr_curve {
+ 	__u16 gamma_y[RKISP1_CIF_ISP_DEGAMMA_CURVE_SIZE];
+-} __packed;
++};
+ 
+ struct rkisp1_cif_isp_gamma_curve_x_axis_pnts {
+ 	__u32 gamma_dx0;
+ 	__u32 gamma_dx1;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_sdg_config - Configuration used by sensor degamma
+@@ -267,7 +267,7 @@ struct rkisp1_cif_isp_sdg_config {
+ 	struct rkisp1_cif_isp_gamma_corr_curve curve_g;
+ 	struct rkisp1_cif_isp_gamma_corr_curve curve_b;
+ 	struct rkisp1_cif_isp_gamma_curve_x_axis_pnts xa_pnts;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_lsc_config - Configuration used by Lens shading correction
+@@ -287,7 +287,7 @@ struct rkisp1_cif_isp_lsc_config {
+ 	__u32 y_size_tbl[RKISP1_CIF_ISP_LSC_SIZE_TBL_SIZE];
+ 	__u16 config_width;
+ 	__u16 config_height;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_ie_config - Configuration used by image effects
+@@ -308,7 +308,7 @@ struct rkisp1_cif_isp_ie_config {
+ 	__u16 eff_mat_4;
+ 	__u16 eff_mat_5;
+ 	__u16 eff_tint;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_cproc_config - Configuration used by Color Processing
+@@ -330,7 +330,7 @@ struct rkisp1_cif_isp_cproc_config {
+ 	__u8 brightness;
+ 	__u8 sat;
+ 	__u8 hue;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_awb_meas_config - Configuration used by auto white balance
+@@ -363,7 +363,7 @@ struct rkisp1_cif_isp_awb_meas_config {
+ 	__u8 awb_ref_cr;
+ 	__u8 awb_ref_cb;
+ 	__u8 enable_ymax_cmp;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_awb_gain_config - Configuration used by auto white balance gain
+@@ -375,7 +375,7 @@ struct rkisp1_cif_isp_awb_gain_config {
+ 	__u16 gain_green_r;
+ 	__u16 gain_blue;
+ 	__u16 gain_green_b;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_flt_config - Configuration used by ISP filtering
+@@ -403,7 +403,7 @@ struct rkisp1_cif_isp_flt_config {
+ 	__u32 fac_mid;
+ 	__u32 fac_bl0;
+ 	__u32 fac_bl1;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_bdm_config - Configuration used by Bayer DeMosaic
+@@ -412,7 +412,7 @@ struct rkisp1_cif_isp_flt_config {
+  */
+ struct rkisp1_cif_isp_bdm_config {
+ 	__u8 demosaic_th;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_ctk_config - Configuration used by Cross Talk correction
+@@ -433,7 +433,7 @@ struct rkisp1_cif_isp_ctk_config {
+ 	__u16 ct_offset_r;
+ 	__u16 ct_offset_g;
+ 	__u16 ct_offset_b;
+-} __packed;
++};
+ 
+ enum rkisp1_cif_isp_goc_mode {
+ 	RKISP1_CIF_ISP_GOC_MODE_LOGARITHMIC,
+@@ -449,7 +449,7 @@ enum rkisp1_cif_isp_goc_mode {
+ struct rkisp1_cif_isp_goc_config {
+ 	__u32 mode;
+ 	__u16 gamma_y[RKISP1_CIF_ISP_GAMMA_OUT_MAX_SAMPLES];
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_hst_config - Configuration used by Histogram
+@@ -465,7 +465,7 @@ struct rkisp1_cif_isp_hst_config {
+ 	__u8 histogram_predivider;
+ 	struct rkisp1_cif_isp_window meas_window;
+ 	__u8 hist_weight[RKISP1_CIF_ISP_HISTOGRAM_WEIGHT_GRIDS_SIZE];
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_aec_config - Configuration used by Auto Exposure Control
+@@ -478,7 +478,7 @@ struct rkisp1_cif_isp_aec_config {
+ 	__u32 mode;
+ 	__u32 autostop;
+ 	struct rkisp1_cif_isp_window meas_window;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_afc_config - Configuration used by Auto Focus Control
+@@ -494,7 +494,7 @@ struct rkisp1_cif_isp_afc_config {
+ 	struct rkisp1_cif_isp_window afm_win[RKISP1_CIF_ISP_AFM_MAX_WINDOWS];
+ 	__u32 thres;
+ 	__u32 var_shift;
+-} __packed;
++};
+ 
+ /**
+  * enum rkisp1_cif_isp_dpf_gain_usage - dpf gain usage
+@@ -549,7 +549,7 @@ enum rkisp1_cif_isp_dpf_nll_scale_mode {
+ struct rkisp1_cif_isp_dpf_nll {
+ 	__u16 coeff[RKISP1_CIF_ISP_DPF_MAX_NLF_COEFFS];
+ 	__u32 scale_mode;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_dpf_rb_flt - Red blue filter config
+@@ -565,7 +565,7 @@ struct rkisp1_cif_isp_dpf_rb_flt {
+ 	__u8 spatial_coeff[RKISP1_CIF_ISP_DPF_MAX_SPATIAL_COEFFS];
+ 	__u8 r_enable;
+ 	__u8 b_enable;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_dpf_g_flt - Green filter Configuration
+@@ -578,7 +578,7 @@ struct rkisp1_cif_isp_dpf_g_flt {
+ 	__u8 spatial_coeff[RKISP1_CIF_ISP_DPF_MAX_SPATIAL_COEFFS];
+ 	__u8 gr_enable;
+ 	__u8 gb_enable;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_dpf_gain - Noise function Configuration
+@@ -597,7 +597,7 @@ struct rkisp1_cif_isp_dpf_gain {
+ 	__u16 nf_b_gain;
+ 	__u16 nf_gr_gain;
+ 	__u16 nf_gb_gain;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_dpf_config - Configuration used by De-noising pre-filter
+@@ -612,7 +612,7 @@ struct rkisp1_cif_isp_dpf_config {
+ 	struct rkisp1_cif_isp_dpf_g_flt g_flt;
+ 	struct rkisp1_cif_isp_dpf_rb_flt rb_flt;
+ 	struct rkisp1_cif_isp_dpf_nll nll;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_dpf_strength_config - strength of the filter
+@@ -625,7 +625,7 @@ struct rkisp1_cif_isp_dpf_strength_config {
+ 	__u8 r;
+ 	__u8 g;
+ 	__u8 b;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_isp_other_cfg - Parameters for some blocks in rockchip isp1
+@@ -659,7 +659,7 @@ struct rkisp1_cif_isp_isp_other_cfg {
+ 	struct rkisp1_cif_isp_dpf_strength_config dpf_strength_config;
+ 	struct rkisp1_cif_isp_cproc_config cproc_config;
+ 	struct rkisp1_cif_isp_ie_config ie_config;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_isp_meas_cfg - Rockchip ISP1 Measure Parameters
+@@ -674,7 +674,7 @@ struct rkisp1_cif_isp_isp_meas_cfg {
+ 	struct rkisp1_cif_isp_hst_config hst_config;
+ 	struct rkisp1_cif_isp_aec_config aec_config;
+ 	struct rkisp1_cif_isp_afc_config afc_config;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_params_cfg - Rockchip ISP1 Input Parameters Meta Data
+@@ -693,7 +693,7 @@ struct rkisp1_params_cfg {
+ 
+ 	struct rkisp1_cif_isp_isp_meas_cfg meas;
+ 	struct rkisp1_cif_isp_isp_other_cfg others;
+-} __packed;
++};
+ 
+ /*---------- PART2: Measurement Statistics ------------*/
+ 
+@@ -714,7 +714,7 @@ struct rkisp1_cif_isp_awb_meas {
+ 	__u8 mean_y_or_g;
+ 	__u8 mean_cb_or_b;
+ 	__u8 mean_cr_or_r;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_awb_stat - statistics automatic white balance data
+@@ -723,7 +723,7 @@ struct rkisp1_cif_isp_awb_meas {
+  */
+ struct rkisp1_cif_isp_awb_stat {
+ 	struct rkisp1_cif_isp_awb_meas awb_mean[RKISP1_CIF_ISP_AWB_MAX_GRID];
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_bls_meas_val - BLS measured values
+@@ -738,7 +738,7 @@ struct rkisp1_cif_isp_bls_meas_val {
+ 	__u16 meas_gr;
+ 	__u16 meas_gb;
+ 	__u16 meas_b;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_ae_stat - statistics auto exposure data
+@@ -751,7 +751,7 @@ struct rkisp1_cif_isp_bls_meas_val {
+ struct rkisp1_cif_isp_ae_stat {
+ 	__u8 exp_mean[RKISP1_CIF_ISP_AE_MEAN_MAX];
+ 	struct rkisp1_cif_isp_bls_meas_val bls_val;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_af_meas_val - AF measured values
+@@ -762,7 +762,7 @@ struct rkisp1_cif_isp_ae_stat {
+ struct rkisp1_cif_isp_af_meas_val {
+ 	__u32 sum;
+ 	__u32 lum;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_af_stat - statistics auto focus data
+@@ -774,7 +774,7 @@ struct rkisp1_cif_isp_af_meas_val {
+  */
+ struct rkisp1_cif_isp_af_stat {
+ 	struct rkisp1_cif_isp_af_meas_val window[RKISP1_CIF_ISP_AFM_MAX_WINDOWS];
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_cif_isp_hist_stat - statistics histogram data
+@@ -786,7 +786,7 @@ struct rkisp1_cif_isp_af_stat {
+  */
+ struct rkisp1_cif_isp_hist_stat {
+ 	__u16 hist_bins[RKISP1_CIF_ISP_HIST_BIN_N_MAX];
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_stat_buffer - Rockchip ISP1 Statistics Data
+@@ -801,7 +801,7 @@ struct rkisp1_cif_isp_stat {
+ 	struct rkisp1_cif_isp_ae_stat ae;
+ 	struct rkisp1_cif_isp_af_stat af;
+ 	struct rkisp1_cif_isp_hist_stat hist;
+-} __packed;
++};
+ 
+ /**
+  * struct rkisp1_stat_buffer - Rockchip ISP1 Statistics Meta Data
+@@ -814,6 +814,6 @@ struct rkisp1_stat_buffer {
+ 	__u32 meas_type;
+ 	__u32 frame_id;
+ 	struct rkisp1_cif_isp_stat params;
+-} __packed;
++};
+ 
+ #endif /* _UAPI_RKISP1_CONFIG_H */
 -- 
-Jens Axboe
+2.28.0.rc1
 
