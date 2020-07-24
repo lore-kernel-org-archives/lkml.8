@@ -2,112 +2,97 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9DFC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5DDC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52CD2206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8988E206E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:47:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VRmIniZQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hWKYclIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgGXHpW (ORCPT
+        id S1726784AbgGXHrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:45:22 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:52005 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726573AbgGXHpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:45:21 -0400
-Received: from [192.168.0.2] (ip5f5af51b.dynamic.kabel-deutschland.de [95.90.245.27])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 95C4C2002EE2B;
-        Fri, 24 Jul 2020 09:45:18 +0200 (CEST)
-Subject: Re: [PATCH] amdgpu_dm: fix nonblocking atomic commit use-after-free
-To:     Kees Cook <keescook@chromium.org>,
-        Mazin Rezk <mnrzk@protonmail.com>
-Cc:     linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        sunpeng.li@amd.com, Alexander Deucher <Alexander.Deucher@amd.com>,
-        1i5t5.duncan@cox.net, mphantomx@yahoo.com.br,
-        regressions@leemhuis.info, anthony.ruhier@gmail.com
-References: <YIGsJ9LlFquvBI2iWPKhJwjKBwDUr_C-38oVpLJJHJ5rDCY_Zrrv392o6UPNxHoeQrcpLYC9U4fZdpD9ilz6Amg2IxkSexGLQMCQIBek8rc=@protonmail.com>
- <202007231524.A24720C@keescook>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <a86cba0b-4513-e7c3-ae75-bb331433f664@molgen.mpg.de>
-Date:   Fri, 24 Jul 2020 09:45:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 03:47:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgGXHrK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 03:47:10 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F07F5C0619D3;
+        Fri, 24 Jul 2020 00:47:09 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595576828;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FWXzCGiB+6w7bin5af8nfmtk9CLXKa68COVfjfing6o=;
+        b=VRmIniZQg37vYwELwNuDFHkbyu0XfUkeBc5nCdGKaiEqTViQ7TX864WY4BP4URYtXBLEc9
+        QA+iYdoVZkmeLnJWt20TK6EI4srOug7m00sO9dBUV9cAZPDTIzfgvX1EQg7opPXGABTucY
+        oYXYKdhqRp5SSw12dQEomh1XKirEHVlV9GIaNUCOhr7qSqKOfh252sjzQ/EvK0/zwgxl2w
+        Scp0TgYUIWUDLZr8jjisgUhfWeIQhJ6N9sCtlGNPMbJBn5yhxcvhxUhYQu7u5RKLzvyFm1
+        r6ZIRdpdbaa9u5mafzvHomShi7jd07YNh6ucCY1hcJbKp4/P/1Fuufw1yRYx8g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595576828;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FWXzCGiB+6w7bin5af8nfmtk9CLXKa68COVfjfing6o=;
+        b=hWKYclINMXT+gdDfZm0t8FY9MgtW8eRxZcVJ9W9CNe34dTnQoWnuZffaeIi/WOIc7YIQgf
+        R7qYcBptaLh6JeBQ==
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>, Qian Cai <cai@lca.pw>,
+        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org,
+        mingo@redhat.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com, x86@kernel.org,
+        linux-next@vger.kernel.org, lpf.vector@gmail.com,
+        Shakeel Butt <shakeelb@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michal Hocko <mhocko@kernel.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>, Roman Gushchin <guro@fb.com>,
+        Dennis Zhou <dennis@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: Re: kernel BUG at mm/vmalloc.c:LINE! (2)
+In-Reply-To: <20200724142801.49d5e7a3@canb.auug.org.au>
+References: <000000000000588c2c05aa156b2b@google.com> <0000000000003cdc6c05aae24652@google.com> <20200720200618.GA9501@pc636> <20200722142759.GB4041@lca.pw> <20200722144650.GA19628@pc636> <20200723195029.60933e30f5d3dd64d6a861b3@linux-foundation.org> <20200724142801.49d5e7a3@canb.auug.org.au>
+Date:   Fri, 24 Jul 2020 09:47:07 +0200
+Message-ID: <87a6zpuzgk.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <202007231524.A24720C@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Kees,
+Stephen Rothwell <sfr@canb.auug.org.au> writes:
+>> All a bit mysterious.  I think it's best that we revert this from
+>> linux-next until we hear from Ingo.  I queued a patch - I expect
+>> Stephen will see and grab it, thanks.
+>
+> In the end I actually did the revert (of the revert) in the merge of
+> the tip tree (so that -next will bisect better if necessary).  So you
+> will not need the revert in your quilt series after today.
 
+Sigh. I have no idea why this was in tip auto-latest. I just
+reintegrated that branch and the annoyance should be gone now.
 
-Am 24.07.20 um 00:32 schrieb Kees Cook:
-> On Thu, Jul 23, 2020 at 09:10:15PM +0000, Mazin Rezk wrote:
->> When amdgpu_dm_atomic_commit_tail is running in the workqueue,
->> drm_atomic_state_put will get called while amdgpu_dm_atomic_commit_tail is
->> running, causing a race condition where state (and then dm_state) is
->> sometimes freed while amdgpu_dm_atomic_commit_tail is running. This bug has
->> occurred since 5.7-rc1 and is well documented among polaris11 users [1].
->>
->> Prior to 5.7, this was not a noticeable issue since the freelist pointer
->> was stored at the beginning of dm_state (base), which was unused. After
->> changing the freelist pointer to be stored in the middle of the struct, the
->> freelist pointer overwrote the context, causing dc_state to become garbage
->> data and made the call to dm_enable_per_frame_crtc_master_sync dereference
->> a freelist pointer.
->>
->> This patch fixes the aforementioned issue by calling drm_atomic_state_get
->> in amdgpu_dm_atomic_commit before drm_atomic_helper_commit is called and
->> drm_atomic_state_put after amdgpu_dm_atomic_commit_tail is complete.
->>
->> According to my testing on 5.8.0-rc6, this should fix bug 207383 on
->> Bugzilla [1].
->>
->> [1] https://bugzilla.kernel.org/show_bug.cgi?id=207383
-> 
-> Nice work tracking this down!
-> 
->> Fixes: 3202fa62f ("slub: relocate freelist pointer to middle of object")
-> 
-> I do, however, object to this Fixes tag. :) The flaw appears to have
-> been with amdgpu_dm's reference tracking of "state" in the nonblocking
-> case. (How this reference counting is supposed to work correctly, though,
-> I'm not sure.) If I look at where the drm helper was split from being
-> the default callback, it looks like this was what introduced the bug:
-> 
-> da5c47f682ab ("drm/amd/display: Remove acrtc->stream")
-> 
-> ? 3202fa62f certainly exposed it much more quickly, but there was a race
-> even without 3202fa62f where something could have realloced the memory
-> and written over it.
+Sorry for not paying attention.
 
-I understand the Fixes tag mainly a help when backporting commits.
+Thanks,
 
-As Linux 5.8-rc7 is going to be released this Sunday, I wonder, if 
-commit 3202fa62f ("slub: relocate freelist pointer to middle of object") 
-should be reverted for now to fix the regression for the users according 
-to Linux’ no regression policy. Once the AMDGPU/DRM driver issue is 
-fixed, it can be reapplied. I know it’s not optimal, but as some testing 
-is going to be involved for the fix, I’d argue it’s the best option for 
-the users.
-
-
-Kind regards,
-
-Paul
+        tglx
