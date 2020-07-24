@@ -2,87 +2,92 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CF0C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3953FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A47962065D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:28:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="izpWiBx2"
+	by mail.kernel.org (Postfix) with ESMTP id 13CC8206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgGXJ2r (ORCPT
+        id S1726891AbgGXJa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:28:47 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:47421 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727951AbgGXJ2r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:28:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595582926;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QiAVsRp3Ef2fGhlvABn6vT7+u/FrQ38NAfFM57p6aBA=;
-        b=izpWiBx2RG92/kIaQ20YTD4PJ5mfHXurxLNSGNHxp0IG7w9Wc4652nAE+xGF2rHwAykaXV
-        b3AAJdSSkpz3AhSaIcX8vZ7oLi6uYdr1Q8rwdmAqN3BMBtQtsOxMnOb8WPr5gzUKbsCi9/
-        tYLSAZP0Hz2EQyd4hkYeqROOLA1AeQ8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-452-5CHS9T3UM4uXAaqrqW46Dg-1; Fri, 24 Jul 2020 05:28:44 -0400
-X-MC-Unique: 5CHS9T3UM4uXAaqrqW46Dg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 24 Jul 2020 05:30:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726421AbgGXJa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 05:30:59 -0400
+Received: from gaia (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9349080046B;
-        Fri, 24 Jul 2020 09:28:41 +0000 (UTC)
-Received: from gondolin (ovpn-112-188.ams2.redhat.com [10.36.112.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 589E51C4;
-        Fri, 24 Jul 2020 09:28:35 +0000 (UTC)
-Date:   Fri, 24 Jul 2020 11:28:32 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Cc:     alex.williamson@redhat.com, herbert@gondor.apana.org.au,
-        nhorman@redhat.com, vdronov@redhat.com, bhelgaas@google.com,
-        mark.a.chambers@intel.com, gordon.mcfadden@intel.com,
-        ahsan.atta@intel.com, fiona.trahe@intel.com, qat-linux@intel.com,
-        kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] vfio/pci: Add device denylist
-Message-ID: <20200724112832.395f076b.cohuck@redhat.com>
-In-Reply-To: <20200724084800.6136-3-giovanni.cabiddu@intel.com>
-References: <20200724084800.6136-1-giovanni.cabiddu@intel.com>
-        <20200724084800.6136-3-giovanni.cabiddu@intel.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id 2195320663;
+        Fri, 24 Jul 2020 09:30:56 +0000 (UTC)
+Date:   Fri, 24 Jul 2020 10:30:54 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Sumit Gupta <sumitg@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hulk Robot <hulkci@huawei.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH -next] arm64: Export __cpu_logical_map
+Message-ID: <20200724093054.GA23388@gaia>
+References: <20200724030433.22287-1-wangkefeng.wang@huawei.com>
+ <82f750c4-d423-1ed8-a158-e75153745e07@huawei.com>
+ <7998529f-da52-5e46-dd09-b9b11d83ec1a@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7998529f-da52-5e46-dd09-b9b11d83ec1a@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 09:47:57 +0100
-Giovanni Cabiddu <giovanni.cabiddu@intel.com> wrote:
-
-> Add denylist of devices that by default are not probed by vfio-pci.
-> Devices in this list may be susceptible to untrusted application, even
-> if the IOMMU is enabled. To be accessed via vfio-pci, the user has to
-> explicitly disable the denylist.
+On Fri, Jul 24, 2020 at 01:46:18PM +0530, Anshuman Khandual wrote:
+> On 07/24/2020 08:38 AM, Kefeng Wang wrote:
+> > On 2020/7/24 11:04, Kefeng Wang wrote:
+> >> ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
+> >>
+> >> ARM64 tegra194-cpufreq driver use cpu_logical_map, export
+> >> __cpu_logical_map to fix build issue.
 > 
-> The denylist can be disabled via the module parameter disable_denylist.
-> 
-> Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
+> Commit 887d5fc82cb4 ("cpufreq: Add Tegra194 cpufreq driver") which adds
+> this particular driver is present just on linux-next. But as expected,
+> the driver does not use __cpu_logical_map directly but instead accesses
+> it via cpu_logical_map() wrapper. Wondering, how did you even trigger
+> the modpost error ?
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Since the wrapper is a macro, it just expands to __cpu_logical_map[].
 
+> >> Reported-by: Hulk Robot <hulkci@huawei.com>
+> >> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> >> ---
+> >>   arch/arm64/kernel/setup.c | 1 +
+> >>   1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> >> index c793276ec7ad9..3aea05fbb9998 100644
+> >> --- a/arch/arm64/kernel/setup.c
+> >> +++ b/arch/arm64/kernel/setup.c
+> >> @@ -275,6 +275,7 @@ static int __init reserve_memblock_reserved_regions(void)
+> >>   arch_initcall(reserve_memblock_reserved_regions);
+> >>     u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
+> >> +EXPORT_SYMBOL(__cpu_logical_map);
+> >>     void __init setup_arch(char **cmdline_p)
+> >>   {
+
+I can see the Tegra cpuidle also using cpu_logical_map(), though it
+can't be built as a module, unlike the cpufreq one. I think the patch
+makes sense.
+
+-- 
+Catalin
