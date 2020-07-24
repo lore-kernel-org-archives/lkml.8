@@ -2,157 +2,274 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D046DC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DEAC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96F3620771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:13:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595585592;
-	bh=EoqvfEshzpIM68DqeAYDiRPb5gv7A2oBgS8dEW9tPZ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZQED4DjKMQ93JKl5ecPqi+G3pqcBBPRDwH99Iv7dvyuE7y+Q2VEJSMlCWmC/1d5rS
-	 Ybn0EshLKHxHSAWlIl8JvtPAZBTs3eUfEgFpRPe7XSZ/et0ykpuIIh/ybA7TPvLCBD
-	 E7dfEcCTzTZgGA+7nRn5zwDTj0ARjsBLKwstaX6Y=
+	by mail.kernel.org (Postfix) with ESMTP id 23F40206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:13:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SvxLsNm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgGXKNL (ORCPT
+        id S1727856AbgGXKNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:13:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgGXKNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:13:11 -0400
-Received: from kernel.org (unknown [87.71.40.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89D3F206F0;
-        Fri, 24 Jul 2020 10:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595585590;
-        bh=EoqvfEshzpIM68DqeAYDiRPb5gv7A2oBgS8dEW9tPZ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uXIhY+n8XoKLLJSRf42I996guVZh1LHERarjrZALBm9iu83tzfE9bSEckzabSMuWg
-         0aUuPOtqvYE9OJagbs03juZieGE4AAfhvnndFnCeV75TMCtz+ZRRyyXpsMaVvY75EE
-         XTRpAFcVoEipQgDuyCQvMblAMGHywbtw3s72rVpM=
-Date:   Fri, 24 Jul 2020 13:13:02 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
-Subject: Re: [PATCH v4 3/7] vmalloc: Add text_alloc() and text_free()
-Message-ID: <20200724101302.GF927924@kernel.org>
-References: <20200717030422.679972-1-jarkko.sakkinen@linux.intel.com>
- <20200717030422.679972-4-jarkko.sakkinen@linux.intel.com>
- <20200718162359.GA2919062@kernel.org>
- <20200723222835.GC12405@linux.intel.com>
+        Fri, 24 Jul 2020 06:13:47 -0400
+Received: from mail-vi1eur05on2080.outbound.protection.outlook.com ([40.107.21.80]:27840
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726114AbgGXKNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 06:13:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dMyDZb3dTjfd+Q0LR2aVj0Pxk7h7ICRvXoBvgy0GNbLEhkJvTUx7vYtF/pPepMmFWo2cMmZWZUBGMI05Xi1lJXr8M2sjjlrNvn/tJnmh4+9cdMtXd3WkpJBEM+CHVO2WYLujBgKQ5+yDdzal2wg/ywuQ/ZQR+pySpDu14G5wIA7JLXu6Eyd3cR5tySURK7cNC3mhlpZdfPgEG+aREk4WUwQvhpL8jM7d7AD0VB9UlT+86RYoasSURmzb+m3l8mJDV9cDPZNzna5bnrkwY7OWb7qXtzMCRc2+VFC08hYSsbET1X4sY41Z9zbNQ76NjKjt/3p6jDYqG4Xu+tGFF3p6Wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TUCHpDaS9jcMIUeqt9A7i1pFlnLXuWw4VtilU4Q51fY=;
+ b=KHID1gc8od3oWr0UcojRjRRYXHNouQXopghGNF1g7c84bLoKy4hPhQnHTg5kILZZcnV/gTHavoUb+hwgt8gZ1lur9ZBUu+WzA+PoPogahcoee+qfLOHwacc4eMmmlmdeWbNOU8OJ8vqm4zh3oFS5jYeMjAufjQB3rS8TphZ532EdTBNj6RBUPHHcgnvWldlXy8MpyePAFAqYrWE14b4hDnZvuvixMMhlfaRnJEDIx8N+/8ev+bSdAWhmSgdI+nvP41xI0lD73fIxsBvIX+oT/nn03Acm3jUtxC4d9KF5HlKAwFF7LArF0Ae05g53owFhZYtpbaAUK2V/AH2DC6tr/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TUCHpDaS9jcMIUeqt9A7i1pFlnLXuWw4VtilU4Q51fY=;
+ b=SvxLsNm9I/9m5ObDHdUC1i89XF2uARkF7He6yX21WYNld3XAdjyCnctZIyjh6dUmClUR4IWcwkN8l99/YNLa75xfvIsGZpW7+v35g164AhUlPY562Hc3djM+bX3mSMaTgiN+rMtZjohj7o7uno6Vx1a/XJIq18oPf1/wSYw36Y8=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6640.eurprd04.prod.outlook.com (2603:10a6:803:122::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Fri, 24 Jul
+ 2020 10:13:41 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3195.028; Fri, 24 Jul 2020
+ 10:13:41 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "angelo@sysam.it" <angelo@sysam.it>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v2 6/9] dt-bindings: dma: add fsl-edma3 yaml
+Thread-Topic: [PATCH v2 6/9] dt-bindings: dma: add fsl-edma3 yaml
+Thread-Index: AQHWWcEHFW49eRTRd0i86/lmLEZUy6kKoHIAgApw4+A=
+Date:   Fri, 24 Jul 2020 10:13:41 +0000
+Message-ID: <VE1PR04MB6638C3006D405D9C8E13547C89770@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1594748508-22179-1-git-send-email-yibin.gong@nxp.com>
+ <1594748508-22179-7-git-send-email-yibin.gong@nxp.com>
+ <20200716194746.GA2716872@bogus>
+In-Reply-To: <20200716194746.GA2716872@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 43b7d7da-1d0c-4d6c-4e9a-08d82fba3d5e
+x-ms-traffictypediagnostic: VE1PR04MB6640:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB66408BC810B33E386472262E89770@VE1PR04MB6640.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +voL5hZHm3Zi8oFZWlzrLikgvEia9C84SztbCvIZnvH/6wN6kaS+1vYKEnYqwwozsjb8DdY5VTYAmoyzYwUm4Dq+wFoD6/oQGDxVTr7PIbvWMMd1VvV2WvC9AUl7aaJZbLboX69b+KJdwUVZMZTTs0bT63kb/EBaNGpV3NCSPZLG+R5ps1Z5Fl3tDvNjARqk+nyiu+sZMZJ9LBoKeXvTMW/+tI9gyQnVgaRG+v03PCKmSe03wOeKVxSM1mjJDrCf7cwwPeWecyNZHF98QUh3gNw6KyssgY5DhlOS13hH5NGFLHziiYWcWKxcrZkE/VFg
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(39860400002)(396003)(136003)(186003)(86362001)(55016002)(4326008)(9686003)(52536014)(33656002)(7416002)(2906002)(66556008)(7696005)(76116006)(66946007)(66446008)(64756008)(66476007)(71200400001)(5660300002)(54906003)(8676002)(6506007)(316002)(26005)(478600001)(8936002)(53546011)(83380400001)(6916009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: DTWZGAtScX5rUh0mBIsbm9C7HUbqhs4RaoCxLNPOElDZdH6sz7slct+VVTNAMirBDaZPJZzmqS/2mbYfuBUPe3lCEA4jB0XGczw+eilFCOA2RB+bjWWh44gq7HyRXuIXRDw/Uu6yqkIlpxPtnkACtY7Xs48VFK/rHQU30eNzFdSbULIK7qA+pXLOKcUDNjzkch8O5yEnaQ+yiAYjAUlYCmf15HgKQ8UUQgCb1CDrLDJzaBBLz7URDyKP0Q0G6YkYWBM9HEWuZBxB9XVbAXfqX2kvL1wcp8u45h/qOcCuFqrLfb5kJCSH0uFzX7S/48EzXMP2vMK4tIO04DLKVuzQtFuWWE/BVxKwP8zpP0lM6LqJ83YYwACfSQcOx+zheh8tjPkT1OCw7B/0TZvx4snISG27mj45covTeD/mEDeWJB90eZk9OEsoNKD9Vv2rqbWq2lEEYAgF2p8EPcBW007qqP5pgdIXzR0eWchZsP0zHd0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723222835.GC12405@linux.intel.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43b7d7da-1d0c-4d6c-4e9a-08d82fba3d5e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2020 10:13:41.1169
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yQ923lzmJLn9ZofjqoU6ncIIJvnvx6mG22/VGn1MUIVWhN8JEzppQnNovLydmIWv5e4Wu5SqTcBlkOGJLXCGOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6640
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 01:28:35AM +0300, Jarkko Sakkinen wrote:
-> On Sat, Jul 18, 2020 at 07:23:59PM +0300, Mike Rapoport wrote:
-> > On Fri, Jul 17, 2020 at 06:04:17AM +0300, Jarkko Sakkinen wrote:
-> > > Introduce functions for allocating memory for dynamic trampolines, such
-> > > as kprobes. An arch can promote the availability of these functions with
-> > > CONFIG_ARCH_HAS_TEXT_ALLOC. Provide default/fallback implementation
-> > > wrapping module_alloc() and module_memfree().
-> > > 
-> > > Cc: Andi Kleen <ak@linux.intel.com>
-> > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > ---
-> > >  include/linux/vmalloc.h | 23 +++++++++++++++++++++++
-> > >  1 file changed, 23 insertions(+)
-> > > 
-> > > diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-> > > index 0221f852a7e1..e981436e30b6 100644
-> > > --- a/include/linux/vmalloc.h
-> > > +++ b/include/linux/vmalloc.h
-> > > @@ -9,6 +9,7 @@
-> > >  #include <asm/page.h>		/* pgprot_t */
-> > >  #include <linux/rbtree.h>
-> > >  #include <linux/overflow.h>
-> > > +#include <linux/moduleloader.h>
-> > >  
-> > >  #include <asm/vmalloc.h>
-> > >  
-> > > @@ -249,4 +250,26 @@ pcpu_free_vm_areas(struct vm_struct **vms, int nr_vms)
-> > >  int register_vmap_purge_notifier(struct notifier_block *nb);
-> > >  int unregister_vmap_purge_notifier(struct notifier_block *nb);
-> > >  
-> > > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > > +/*
-> > > + * Allocate memory to be used for dynamic trampoline code.
-> > > + */
-> > > +void *text_alloc(unsigned long size);
-> > > +
-> > > +/*
-> > > + * Free memory returned from text_alloc().
-> > > + */
-> > > +void text_free(void *region);
-> > > +#else
-> > > +static inline void *text_alloc(unsigned long size)
-> > > +{
-> > > +	return module_alloc(size);
-> > > +}
-> > > +
-> > > +static inline void text_free(void *region)
-> > > +{
-> > > +	module_memfree(region);
-> > > +}
-> > 
-> > Using module_alloc() as the default implementation of generic
-> > text_alloc() does not sound right to me.
-> > 
-> > I would suggest rename module_alloc() to text_alloc() on x86, as Peter
-> > proposed and then add text_alloc_kprobes() that can be overridden by the
-> > architectures. x86 could use text_alloc(), arm64 vmalloc() with options
-> > of their choice and the fallback would remain module_alloc(). Something
-> > like (untested) patch below:
-> 
-> I'm not exactly sure which of the below is relevant as the patch set
-> includes the exact same changes with maybe different phrasing:
+On 2020/07/17 3:48 Rob Herring <robh@kernel.org> wrote:
+> > +
+> > +  reg:
+> > +    minItems: 2
+> > +    maxItems: 32
+>=20
+> Needs some sort of description as to what each region is.
+Okay, will add it in v3.
+>=20
+> > +
+> > +  interrupts:
+> > +    minItems: 2
+> > +    maxItems: 32
+>=20
+> ditto
+Will add it in v3.
+>=20
+> > +
+> > +  interrupt-names:
+> > +    minItems: 2
+> > +    maxItems: 32
+> > +    items:
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+>=20
+> What about interrupts 8-31? If you want a pattern for all entries, you
+Here 8 lines matches with the 8 channel used in dts (same example as the
+bottom of this yaml file below), otherwise, below warning comes out with
+'make dt_binding_check' if I remove the above last line:
+dma-controller@5a1f0000: interrupt-names: Additional items are not allowed =
+('edma2-chan15-tx' was unexpected)
 
-The difference in parsing is what differentiates semantically clean code
-from duct tape.
+Maybe there something I miss, please correct me if I'm wrong, thanks.
 
-As several people pointed out, a single text_alloc(), and apprently a
-single ARCH_HAS_TEXT_ALLOC, would not fit all architectures and some
-ground work required to implement a generic text allocation.
+> do:
+>=20
+> items:
+>   pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+>=20
+> (If 'items' is a schema instead of a list, then it applies to all
+> entries.)
+>=20
+> What does edma[0-2] correspond to? The names should be local to the
+> instance.
+There are 3 edma controllers on i.mx8QXP/QM, [0-2] is controller index.
+Clear controller index here may make dts readable since every edma channel
+has unique register map, interrupt number, power domain.
 
-Your patch works aroung this for x86 with broken semantics of
-text_alloc() when ARCH_HAS_TEXT_ALLOC is not defined.
+>=20
+> Really, what's the point of names that just have the channel number in th=
+em?
+> The driver can create names dynamically if needed. We already have
+> properties to define how many channels and a mask of present channels.
+interrupt-names/power-domain-names here just for better readable in dts, be=
+sides, the clear interrupt name for every channel including edma controller
+id which passed by dts could be used to register irq.
 
-My suggestion does not make text_alloc() a special case of
-module_alloc() but rather makes text_alloc_kprobes() to fallback to
-module_alloc() when architecture does not provide its implementation.
- 
-> https://lore.kernel.org/lkml/20200717030422.679972-1-jarkko.sakkinen@linux.intel.com/
-> 
-> If there is something that these patches are missing, please do remark
-> but these seven patches have been at least tested and split in
-> reasonable manner.
-
-My patch is not tested because I only wanted to help with 
-transiontion from module_alloc() in kprobes to a new clean interface, I
-don't really care if kprobes will depend on MODULES...
- 
-> /Jarkko
-
--- 
-Sincerely yours,
-Mike.
+>=20
+> > +
+> > +  '#dma-cells':
+> > +    const: 3
+> > +    description: |
+> > +      The 1st cell specifies the channel ID.
+> > +
+> > +      The 2nd cell specifies the channel priority.
+> > +
+> > +      The 3rd cell specifies the channel attributes:
+> > +        bit0 transmit or receive.
+> > +          0 =3D transmit
+> > +          1 =3D receive
+> > +        bit1 local or remote access.
+> > +          0 =3D local
+> > +          1 =3D remote
+> > +        bit2 dualfifo case or not(only in Audio cyclic now).
+> > +          0 =3D not dual fifo case
+> > +          1 =3D  dualfifo case.
+> > +
+> > +  dma-channels:
+> > +    minimum: 2
+> > +    maximum: 32
+> > +
+> > +  power-domains:
+> > +    minItems: 2
+> > +    maxItems: 32
+> > +
+> > +  power-domain-names:
+> > +    minItems: 2
+> > +    maxItems: 32
+> > +    items:
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> > +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+>=20
+> Again, why do you need names here?
+>=20
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - interrupt-names
+> > +  - '#dma-cells'
+> > +  - dma-channels
+> > +  - power-domains
+> > +  - power-domain-names
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/firmware/imx/rsrc.h>
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +    edma2: dma-controller@5a1f0000 {
+> > +        compatible =3D "fsl,imx8qm-edma";
+> > +        reg =3D <0x5a280000 0x10000>, /* channel8 UART0 rx */
+> > +              <0x5a290000 0x10000>, /* channel9 UART0 tx */
+> > +              <0x5a2a0000 0x10000>, /* channel10 UART1 rx */
+> > +              <0x5a2b0000 0x10000>, /* channel11 UART1 tx */
+> > +              <0x5a2c0000 0x10000>, /* channel12 UART2 rx */
+> > +              <0x5a2d0000 0x10000>, /* channel13 UART2 tx */
+> > +              <0x5a2e0000 0x10000>, /* channel14 UART3 rx */
+> > +              <0x5a2f0000 0x10000>; /* channel15 UART3 tx */
+> > +        #dma-cells =3D <3>;
+> > +        dma-channels =3D <8>;
+> > +        interrupts =3D <GIC_SPI 434 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <GIC_SPI 435 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <GIC_SPI 436 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <GIC_SPI 437 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <GIC_SPI 438 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <GIC_SPI 439 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>,
+> > +                     <GIC_SPI 441 IRQ_TYPE_LEVEL_HIGH>;
+> > +       interrupt-names =3D "edma2-chan8-rx", "edma2-chan9-tx",
+> > +                         "edma2-chan10-rx", "edma2-chan11-tx",
+> > +                         "edma2-chan12-rx", "edma2-chan13-tx",
+> > +                         "edma2-chan14-rx", "edma2-chan15-tx";
+> > +       power-domains =3D <&pd IMX_SC_R_DMA_2_CH8>,
+> > +                       <&pd IMX_SC_R_DMA_2_CH9>,
+> > +                       <&pd IMX_SC_R_DMA_2_CH10>,
+> > +                       <&pd IMX_SC_R_DMA_2_CH11>,
+> > +                       <&pd IMX_SC_R_DMA_2_CH12>,
+> > +                       <&pd IMX_SC_R_DMA_2_CH13>,
+> > +                       <&pd IMX_SC_R_DMA_2_CH14>,
+> > +                       <&pd IMX_SC_R_DMA_2_CH15>;
+> > +       power-domain-names =3D "edma2-chan8", "edma2-chan9",
+> > +                            "edma2-chan10", "edma2-chan11",
+> > +                            "edma2-chan12", "edma2-chan13",
+> > +                            "edma2-chan14", "edma2-chan15";
+> > +    };
+> > --
+> > 2.7.4
+> >
