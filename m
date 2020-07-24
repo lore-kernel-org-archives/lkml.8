@@ -2,104 +2,106 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11590C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90C7CC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D746020674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:20:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="IBcm+Zm6"
+	by mail.kernel.org (Postfix) with ESMTP id 7B21420674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgGXJUZ (ORCPT
+        id S1728092AbgGXJU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:20:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55182 "EHLO
+        Fri, 24 Jul 2020 05:20:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726861AbgGXJUZ (ORCPT
+        with ESMTP id S1726861AbgGXJU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:20:25 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1226EC0619D3;
-        Fri, 24 Jul 2020 02:20:25 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BCkFK6JGBz9sR4;
-        Fri, 24 Jul 2020 19:20:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1595582422;
-        bh=UPIxsyZfLqUDnT8iObHrZ8nb9iLP4cZ7fUXdGyHcmoY=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=IBcm+Zm6smdWh9PEK2Ss0rAnWl1DnQ/MqeA9ZxGG7OMSj5P/JP1IPUY2izxEO91Lh
-         YAkwG4Qio5k7RC4FL7WIQZuF7oyC3Xd1RRYOZkSUxy5QMknsyJUJDHz+Eeu/KKy8D2
-         Yj8ivvRvo695X+JLD7Sv+CqSKISjUJCY4NXGryZHHqScHu6DLebQN5O2YeWJVK91aS
-         kTpe65r4wtIWyXCXq9ZJmHY3iAOobFHTdAGAataxWlkQOYyGRq4xNEumJ9p3qztAfJ
-         oEtCBqHexVP0DDwwP8IINOU9+Qu43bHU1dzxXV7MkNfTUKFrCQTC8+SlwQuxuOA24I
-         a73JbJdb8pVzA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Daniel Axtens <dja@axtens.net>, linuxppc-dev@ozlabs.org
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hughd@google.com
-Subject: Re: [PATCH 2/5] powerpc: Allow 4096 bytes of stack expansion for the signal frame
-In-Reply-To: <87blk6tkuv.fsf@dja-thinkpad.axtens.net>
-References: <20200703141327.1732550-1-mpe@ellerman.id.au> <20200703141327.1732550-2-mpe@ellerman.id.au> <87blk6tkuv.fsf@dja-thinkpad.axtens.net>
-Date:   Fri, 24 Jul 2020 19:20:18 +1000
-Message-ID: <87wo2tp8vh.fsf@mpe.ellerman.id.au>
+        Fri, 24 Jul 2020 05:20:26 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CE4C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 02:20:26 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <a.fatoum@pengutronix.de>)
+        id 1jytsP-00047h-Im; Fri, 24 Jul 2020 11:20:25 +0200
+Subject: Re: [PATCH v4 2/3] dt-bindings: arm: stm32: document Odyssey
+ compatible
+To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, mani@kernel.org, sam@ravnborg.org,
+        linus.walleij@linaro.org, heiko.stuebner@theobroma-systems.com,
+        stephan@gerhold.net, lkundrak@v3.sk, broonie@kernel.org,
+        allen.chen@ite.com.tw, robh@kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+References: <20200723193737.190291-1-marcin.sloniewski@gmail.com>
+ <20200723193737.190291-2-marcin.sloniewski@gmail.com>
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+Message-ID: <b1bfc804-5bb3-b703-684e-8d9bb2b44fad@pengutronix.de>
+Date:   Fri, 24 Jul 2020 11:20:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200723193737.190291-2-marcin.sloniewski@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Axtens <dja@axtens.net> writes:
-> Hi Michael,
->
-> Unfortunately, this patch doesn't completely solve the problem.
->
-> Trying the original reproducer, I'm still able to trigger the crash even
-> with this patch, although not 100% of the time. (If I turn ASLR off
-> outside of tmux it reliably crashes, if I turn ASLR off _inside_ of tmux
-> it reliably succeeds; all of this is on a serial console.)
->
-> ./foo 1241000 & sleep 1; killall -USR1 foo; echo ok
->
-> If I add some debugging information, I see that I'm getting
-> address + 4096 = 7fffffed0fa0
-> gpr1 =           7fffffed1020
->
-> So address + 4096 is 0x80 bytes below the 4k window. I haven't been able
-> to figure out why, gdb gives me a NIP in __kernel_sigtramp_rt64 but I
-> don't know what to make of that.
+Hi,
 
-Thanks for testing.
+On 7/23/20 9:37 PM, Marcin Sloniewski wrote:
+> Document device tree bindings of Seeed SoM and carrier board.
+> 
+> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+> index 790e6dd48e34..22b9aaa75eee 100644
+> --- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+> +++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+> @@ -39,6 +39,8 @@ properties:
+>            - enum:
+>                - arrow,stm32mp157a-avenger96 # Avenger96
+>                - lxa,stm32mp157c-mc1
+> +              - seeed,stm32mp157c-odyssey
+> +              - seeed,stm32mp157c-odyssey-som
 
-I looked at it again this morning and it's fairly obvious when it's not
-11pm :)
+Did you run dtbs_check over it? I think this should fail.
 
-We need space for struct rt_sigframe as well as another 128 bytes,
-which is __SIGNAL_FRAMESIZE. It's actually mentioned in the comment
-above struct rt_sigframe.
+You want something like:
 
-I'll send a v2.
+# Odyssey SoM boards
+- items:
+  - enum:
+     - seeed,stm32mp157c-odyssey
+  - const: seeed,stm32mp157c-odyssey-som
+  - const: st,stm32mp157
 
-> P.S. I don't know what your policy on linking to kernel bugzilla is, but
-> if you want:
->
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=205183
+(Note 3 items vs 2 in yours)
 
-In general I prefer to keep things clean with just a single Link: tag
-pointing to the archive of the patch submission.
+>                - shiratech,stm32mp157a-iot-box # IoT Box
+>                - shiratech,stm32mp157a-stinger96 # Stinger96
+>                - st,stm32mp157c-ed1
+> 
 
-That can then contain further links and other info, and has the
-advantage that people can reply to the patch submission in the future to
-add information to the thread that wasn't known at the time of the
-commit.
-
-cheers
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
