@@ -2,43 +2,51 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4867C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA03BC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B09DE206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C326220674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:22:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgGXR01 (ORCPT
+        id S1726942AbgGXRWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:26:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42016 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 13:22:31 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2758 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbgGXR01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:26:27 -0400
-Received: from localhost.localdomain (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 355E320674;
-        Fri, 24 Jul 2020 17:26:25 +0000 (UTC)
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrei Vagin <avagin@gmail.com>, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>
-Subject: Re: [PATCH 1/6] arm64/vdso: use the fault callback to map vvar pages
-Date:   Fri, 24 Jul 2020 18:26:23 +0100
-Message-Id: <159561069973.19270.10637845392621633755.b4-ty@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200624083321.144975-2-avagin@gmail.com>
-References: <20200624083321.144975-1-avagin@gmail.com> <20200624083321.144975-2-avagin@gmail.com>
+        id S1726553AbgGXRWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:22:30 -0400
+IronPort-SDR: iom1tFWo+f7GA+6Oat+YV0gk/vKJmrUP/cqh3LrP14fXazXKbBb9E1QW1pGTJVgOQP8jFL0dAn
+ hZH4vHkBWWyA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="130823244"
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="130823244"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:22:30 -0700
+IronPort-SDR: 9O8vtli5y+nZdsVOSbnTk6bWsPxd5MqQ7GUWcjS0oy557P5BpoSCxHE1+LsmRoAOMgei5GA2hR
+ /Jg3/X1J6vaQ==
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="302730265"
+Received: from seokjaeb-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.24.239])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:22:29 -0700
+From:   Sean V Kelley <sean.v.kelley@intel.com>
+To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@kernel.org, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: [RFC PATCH 1/9] pci_ids: Add class code and extended capability for RCEC
+Date:   Fri, 24 Jul 2020 10:22:15 -0700
+Message-Id: <20200724172223.145608-2-sean.v.kelley@intel.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200724172223.145608-1-sean.v.kelley@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,44 +54,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jun 2020 01:33:16 -0700, Andrei Vagin wrote:
-> Currently the vdso has no awareness of time namespaces, which may
-> apply distinct offsets to processes in different namespaces. To handle
-> this within the vdso, we'll need to expose a per-namespace data page.
-> 
-> As a preparatory step, this patch separates the vdso data page from
-> the code pages, and has it faulted in via its own fault callback.
-> Subsquent patches will extend this to support distinct pages per time
-> namespace.
-> 
-> [...]
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-Applied to arm64 (for-next/timens), provisionally.
+A PCIe Root Complex Event Collector(RCEC) has the base class 0x08,
+sub-class 0x07, and programming interface 0x00. Add the class code
+0x0807 to identify RCEC devices and add the defines for the RCEC
+Endpoint Association Extended Capability.
 
-One potential issue I did not check is the compat vDSO. The arm32 port
-does not support timens currently. IIUC, with these patches and
-COMPAT_VDSO enabled, it will allow timens for compat processes. Normally
-I'd like the arm32 support first before updating compat but I don't
-think there would be any interface incompatibility here.
+See PCI Express Base Specification, version 5.0-1, section "1.3.4
+Root Complex Event Collector" and section "7.9.10 Root Complex
+Event Collector Endpoint Association Extended Capability"
 
-However, does this still work for arm32 processes if COMPAT_VDSO is
-disabled in the arm64 kernel?
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+---
+ include/linux/pci_ids.h       | 1 +
+ include/uapi/linux/pci_regs.h | 7 +++++++
+ 2 files changed, 8 insertions(+)
 
-[1/6] arm64/vdso: use the fault callback to map vvar pages
-      https://git.kernel.org/arm64/c/d53b5c013e1e
-[2/6] arm64/vdso: Zap vvar pages when switching to a time namespace
-      https://git.kernel.org/arm64/c/1b6867d2916b
-[3/6] arm64/vdso: Add time namespace page
-      https://git.kernel.org/arm64/c/3503d56cc723
-[4/6] arm64/vdso: Handle faults on timens page
-      https://git.kernel.org/arm64/c/ee3cda8e4606
-[5/6] arm64/vdso: Restrict splitting VVAR VMA
-      https://git.kernel.org/arm64/c/bcf996434240
-[6/6] arm64: enable time namespace support
-      https://git.kernel.org/arm64/c/9614cc576d76
-
-Thanks!
-
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 0ad57693f392..de8dff1fb176 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -81,6 +81,7 @@
+ #define PCI_CLASS_SYSTEM_RTC		0x0803
+ #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
+ #define PCI_CLASS_SYSTEM_SDHCI		0x0805
++#define PCI_CLASS_SYSTEM_RCEC		0x0807
+ #define PCI_CLASS_SYSTEM_OTHER		0x0880
+ 
+ #define PCI_BASE_CLASS_INPUT		0x09
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index f9701410d3b5..f335f65f65d6 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -828,6 +828,13 @@
+ #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system budget */
+ #define PCI_EXT_CAP_PWR_SIZEOF	16
+ 
++/* Root Complex Event Collector Endpoint Association  */
++#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
++#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
++#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version that BUSN present */
++#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
++#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
++
+ /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
+ #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
+ #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)
 -- 
-Catalin
+2.27.0
 
