@@ -2,124 +2,93 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45966C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2200C2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:22:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tP8O1cKy"
+	by mail.kernel.org (Postfix) with ESMTP id DF1BA2074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:22:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595593336;
+	bh=8PXCx60bJOB2VVd2llmJy4lMgQ91giqE48nQabhYHIs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hu+8kuUUQyvxys2aaLySZU0Jhmw4xczmrW6mpZ+JBuJE+8moJYcuWzfIGYs8sEf5x
+	 lxsl87X9APFhocRi6Nk6fIJESUIJvaiyRRg1fMgELVthWcsQPwvwwBuZ0U87HF8PxL
+	 k54r3vJA/ZrR3GdsdSRFEnxXMoG4aPS4m8ssXXnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgGXMWF (ORCPT
+        id S1727823AbgGXMWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:22:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgGXMWE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:22:04 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A73C0619D3;
-        Fri, 24 Jul 2020 05:22:04 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id k27so5137113pgm.2;
-        Fri, 24 Jul 2020 05:22:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rjrq4JxLWpIc39g0Y05S4Ho6toVlbizG0tABV5u04QY=;
-        b=tP8O1cKy1P7PU7WsJsDFkjNZWiYdtY/U4WnhnzXV2x3sxLxMf12d+xtbVz17rDQ/WD
-         K018S82IoABEx6tRS6Y946IYd/+BwFaIJumZJHene6h24KT0iIFLOz7aZ5NzFG2rmBMj
-         a9/axkDvZGFBAGDt+RxjzQS37eu/eMH64g/mqEy9ADHvMCEPyZeaZ7RNIajnJu+z49y/
-         t3hQagQr4Kp2/2K0m82AqC+1JnMcLHCbtLs8iKAtOeBKw2eY6RPpUktyteSMBiQS04ba
-         pxlxhKwOrSqUM5ORypT2BfXwOUZ954pTTiNUU2plXrrBKWegAbDCQ6UwJZR7EssPkz8P
-         kMjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rjrq4JxLWpIc39g0Y05S4Ho6toVlbizG0tABV5u04QY=;
-        b=YwCmaweAki6fL1+WLUU23Ik8JdTZXdDvGIlnNYSDfd26isBIdVqMcXe3KGjh5ughI5
-         DqSNTO6IWQZsZWBCBc39yqjSmptu+tw3hLOKFEHBXTx40Ky56t+K0PxwsdpEEgGNNp6p
-         OuwyeJ6NzKfyH7sldK6pjJ4kP5jw2dUm0OQGTS8A7j9uP/DsG5mOQGx/jjG6HvZFrEGg
-         Ev0x6bMyP/LJyQ7DoqIT99CxWtZ4HDsUNgs3GH7jBzxdyRNw1Kk8RgBYxVkwYxh3Af5m
-         RT/10wdhvD6LYMhrzh3x1wS6FHg7KSlne+5WGExnUpmpKGW+ZBvretfHWxl0RvXO1tKP
-         4A3Q==
-X-Gm-Message-State: AOAM531CIE8VaCPr5rfxP3ndod0nAp3fX2LKb04xNuaqolm/yoOnaJLG
-        +G8DJInN7WFHBymtac5353Y=
-X-Google-Smtp-Source: ABdhPJxNM5rIu3KaS1MWAf5H7vmy3q3BSToKRqHap5ZfoincstSZRvWBA5s005vCD910UvyDhPcbnQ==
-X-Received: by 2002:a65:6846:: with SMTP id q6mr7763851pgt.397.1595593323913;
-        Fri, 24 Jul 2020 05:22:03 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id r185sm5766819pfr.8.2020.07.24.05.22.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 05:22:03 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chen Yongzhi <yongzhi.chen@unisoc.com>
-Subject: [PATCH v2 1/2] math64: New DIV_S64_ROUND_CLOSEST helper
-Date:   Fri, 24 Jul 2020 20:21:47 +0800
-Message-Id: <20200724122148.26541-2-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200724122148.26541-1-zhang.lyra@gmail.com>
-References: <20200724122148.26541-1-zhang.lyra@gmail.com>
+        Fri, 24 Jul 2020 08:22:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726258AbgGXMWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 08:22:15 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A59CC2074B;
+        Fri, 24 Jul 2020 12:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595593335;
+        bh=8PXCx60bJOB2VVd2llmJy4lMgQ91giqE48nQabhYHIs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y/wjC9A/oDApgq731MtfIyCOZrYiKVWbu6UV9mKKddRCYmUwAp4KPKzXQ87WkGdi0
+         dFemXfYLVI7DxFBNUtnopYEV8e4mkNKhWBWL9y0Na4rmj/iFTqcs68ztCcnidGhS5J
+         E/hMuWYUqksr3ogD2pICcfNMTQOwnaJzO74vsbnk=
+Date:   Fri, 24 Jul 2020 13:22:00 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Subject: Re: [PATCH 6/8] regulator: mt6359: Set the enable time for LDOs
+Message-ID: <20200724122200.GE5664@sirena.org.uk>
+References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1595509133-5358-7-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gMR3gsNFwZpnI/Ts"
+Content-Disposition: inline
+In-Reply-To: <1595509133-5358-7-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Cookie: You will wish you hadn't.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-Provide DIV_S64_ROUND_CLOSEST helper which uses div_s64 to perform
-division rounded to the closest integer using signed 64bit
-dividend and signed 32bit divisor.
+--gMR3gsNFwZpnI/Ts
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- include/linux/math64.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+On Thu, Jul 23, 2020 at 08:58:51PM +0800, Hsin-Hsiung Wang wrote:
+> Add the enable time for LDOs.
+> This patch is preparing for adding mt6359p regulator support.
 
-diff --git a/include/linux/math64.h b/include/linux/math64.h
-index 11a267413e8e..cd0693989436 100644
---- a/include/linux/math64.h
-+++ b/include/linux/math64.h
-@@ -279,4 +279,23 @@ static inline u64 mul_u64_u32_div(u64 a, u32 mul, u32 divisor)
- #define DIV64_U64_ROUND_CLOSEST(dividend, divisor)	\
- 	({ u64 _tmp = (divisor); div64_u64((dividend) + _tmp / 2, _tmp); })
- 
-+/*
-+ * DIV_S64_ROUND_CLOSEST - signed 64bit divide with 32bit divisor rounded to nearest integer
-+ * @dividend: signed 64bit dividend
-+ * @divisor: signed 32bit divisor
-+ *
-+ * Divide signed 64bit dividend by signed 32bit divisor
-+ * and round to closest integer.
-+ *
-+ * Return: dividend / divisor rounded to nearest integer
-+ */
-+#define DIV_S64_ROUND_CLOSEST(dividend, divisor)(	\
-+{							\
-+	s64 __x = (dividend);				\
-+	s32 __d = (divisor);				\
-+	((__x > 0) == (__d > 0)) ?			\
-+		div_s64((__x + (__d / 2)), __d) :	\
-+		div_s64((__x - (__d / 2)), __d);	\
-+}							\
-+)
- #endif /* _LINUX_MATH64_H */
--- 
-2.20.1
+Acked-by: Mark Brown <broonie@kernel.org>
 
+--gMR3gsNFwZpnI/Ts
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8a0mcACgkQJNaLcl1U
+h9ClHgf+Iv+wHsCGXF3YvUuwEgURaO7JIQ3MmUBIbBA9ydPNLInosIv5pzsEfzKU
+ksXKf6YrYRWtvGKZ/RI+yQy50doSXIsjpVdGtaSthXlkCtU3O85UmnYH2/XbgQWU
+39glGYpINamDCNkrNc7DqdtxXEwoymcfRktME+Hb/jhiunoGNi/nXXhi1lsgA2KE
+kLufn7w7rvstpsbmxgRjlbwN9bPQNLe4N/hMMLaI1vClZiYdlKPEsvL5eUZiMSUi
+9yQqKDVFzYFMsDsrdAwnqEP04OKIqgJ3WHoy5S8lZB23r6slnMddqXSSsPRNy9K8
+Q00IJm9y5cHVZ6Z5sWNDrNfJy9D4MA==
+=ZtYc
+-----END PGP SIGNATURE-----
+
+--gMR3gsNFwZpnI/Ts--
