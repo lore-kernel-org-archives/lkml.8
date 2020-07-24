@@ -2,249 +2,105 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F784C433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CD0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07748206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E75206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:52:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="puZ4xVCL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rM03taNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgGXUqO (ORCPT
+        id S1726814AbgGXUwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 16:46:14 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.232.150]:34390 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726854AbgGXUpl (ORCPT
+        Fri, 24 Jul 2020 16:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgGXUwO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 16:45:41 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id E22711A0485;
-        Fri, 24 Jul 2020 13:36:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com E22711A0485
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1595622996;
-        bh=nCW04g64dWtt0X0SFdtKh1E37dCwFrmSRffc5sKoSnI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=puZ4xVCLnX7AQIhO5iCSMusoXUxUM1UHgYzjzxGciOqBwPtKQ0mC1FPo4YZkZz1IR
-         suaoAE/xOr/4QzPuOSgJCg2SXo6Pf7iXeshu9CR2uRV9Gze1yW26bdxg40/Zo7IyVA
-         y13t1lL6iB9YEu3NJHOZoKbLqRkPQ5IFv/1+1tb0=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 6A0C514024D;
-        Fri, 24 Jul 2020 13:34:42 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v9 09/12] PCI: brcmstb: Set additional internal memory DMA viewport sizes
-Date:   Fri, 24 Jul 2020 16:33:51 -0400
-Message-Id: <20200724203407.16972-10-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200724203407.16972-1-james.quinlan@broadcom.com>
-References: <20200724203407.16972-1-james.quinlan@broadcom.com>
+        Fri, 24 Jul 2020 16:52:14 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97CA5C0619D3;
+        Fri, 24 Jul 2020 13:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xVoSEin0oXCI9Z11WKA8dMlCCn4fz58veTFmYbww9j4=; b=rM03taNBaiVcGPukQ/TrRYqMy
+        ndpmAXRoMO9TzFyK8ljLIRdNw5cEnWPMmcB4HSplfNAAdMp78OqLjPvcI5k0vpulmZ+eeFayiErRd
+        SHL8/TmJko0KeyKcioSPPwbA9YNwX5D/OzH+fwcw57pGGrKGxgjXOIBMe3mnhfg699K7jZUuCcRPw
+        HNUpsLY4bzS854NtWp61QwU3FlJRmGe7QZENJ/UOl6rbJhbCtECTulLjX6MEL2Cw5350Ns1zziFpg
+        tf2gLiv9fLOZYESI2SzBLdmz3Gmqv+GzEjZvCu5f1Hp3gzWu3xi/+DAz5gsjrWxmvA0qEvZwiMvTY
+        9IVwehB/g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:43698)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jz4fq-0000Oe-6P; Fri, 24 Jul 2020 21:52:10 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jz4fp-0000u2-Gc; Fri, 24 Jul 2020 21:52:09 +0100
+Date:   Fri, 24 Jul 2020 21:52:09 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, ludovic.desroches@microchip.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        kamel.bouhara@bootlin.com
+Subject: Re: [RFC PATCH 1/4] dt-binding: i2c: add generic properties for GPIO
+ bus recovery
+Message-ID: <20200724205209.GC1551@shell.armlinux.org.uk>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+ <20200619141904.910889-2-codrin.ciubotariu@microchip.com>
+ <20200705211918.GB1055@kunai>
+ <20200724193913.GD1227@ninjato>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724193913.GD1227@ninjato>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Raspberry Pi (RPI) is currently the only chip using this driver
-(pcie-brcmstb.c).  There, only one memory controller is used, without an
-extension region, and the SCB0 viewport size is set to the size of the
-first and only dma-range region.  Other BrcmSTB SOCs have more complicated
-memory configurations that require setting additional viewport sizes.
+On Fri, Jul 24, 2020 at 09:39:13PM +0200, Wolfram Sang wrote:
+> On Sun, Jul 05, 2020 at 11:19:18PM +0200, Wolfram Sang wrote:
+> > 
+> > > +- pinctrl
+> > > +	add extra pinctrl to configure SCL/SDA pins to GPIO function for bus
+> > > +	recovery, call it "gpio" or "recovery" state
+> > 
+> > I think we should stick with "gpio" only. That is what at91 and imx have
+> > in their bindings. pxa uses "recovery" as a pinctrl state name but I
+> > can't find any further use or documentation of that. PXA is not fully
+> > converted to the best of my knowledge, so maybe it is no problem for PXA
+> > to switch to "gpio", too? We should ask Russell King (cced).
 
-BrcmSTB PCIe controllers are intimately connected to the memory
-controller(s) on the SOC.  The SOC may have one to three memory
-controllers; they are indicated by the term SCBi.  Each controller has a
-base region and an optional extension region.  In physical memory, the base
-and extension regions of a controller are not adjacent, but in PCIe-space
-they are.
+Fully converted to what?  The generic handling where the i2c core layer
+handles everything to do with recovery, including the switch between
+modes?
 
-There is a "viewport" for each memory controller that allows DMA from
-endpoint devices.  Each viewport's size must be set to a power of two, and
-that size must be equal to or larger than the amount of memory each
-controller supports which is the sum of base region and its optional
-extension.  Further, the 1-3 viewports are also adjacent in PCIe-space.
+i2c-pxa _intentionally_ carefully handles the switch between i2c mode and
+GPIO mode, and I don't see a generic driver doing that to avoid causing
+any additional glitches on the bus.  Given the use case that this recovery
+is targetted at, avoiding glitches is very important to keep.
 
-Unfortunately the viewport sizes cannot be ascertained from the
-"dma-ranges" property so they have their own property, "brcm,scb-sizes".
-This is because dma-range information does not indicate what memory
-controller it is associated.  For example, consider the following case
-where the size of one dma-range is 2GB and the second dma-range is 1GB:
+> > Russell, do you object naming the pinctrl state for bus recovery in
+> > the pxa i2c driver from "recovery" to "gpio"?
+> 
+> No response, so far. I suggest now to support the "recovery" naming but
+> mark it as deprecated. Opinions?
 
-    /* Case 1: SCB0 size set to 4GB */
-    dma-range0: 2GB (from memc0-base)
-    dma-range1: 1GB (from memc0-extension)
+I don't have a preference on the exact naming.
 
-    /* Case 2: SCB0 size set to 2GB, SCB1 size set to 1GB */
-    dma-range0: 2GB (from memc0-base)
-    dma-range1: 1GB (from memc0-extension)
-
-By just looking at the dma-ranges information, one cannot tell which
-situation applies. That is why an additional property is needed.  Its
-length indicates the number of memory controllers being used and each value
-indicates the viewport size.
-
-Note that the RPI DT does not have a "brcm,scb-sizes" property value,
-as it is assumed that it only requires one memory controller and no
-extension.  So the optional use of "brcm,scb-sizes" will be backwards
-compatible.
-
-One last layer of complexity exists: all of the viewports sizes must be
-added and rounded up to a power of two to determine what the "BAR" size is.
-Further, an offset must be given that indicates the base PCIe address of
-this "BAR".  The use of the term BAR is typically associated with endpoint
-devices, and the term is used here because the PCIe HW may be used as an RC
-or an EP.  In the former case, all of the system memory appears in a single
-"BAR" region in PCIe memory.  As it turns out, BrcmSTB PCIe HW is rarely
-used in the EP role and its system of mapping memory is an artifact that
-requires multiple dma-ranges regions.
-
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 68 ++++++++++++++++++++-------
- 1 file changed, 50 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 8dacb9d3b7b6..3ef2d37cc43b 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -57,6 +57,8 @@
- #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK	0x300000
- #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128		0x0
- #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK		0xf8000000
-+#define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK		0x07c00000
-+#define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK		0x0000001f
- 
- #define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO		0x400c
- #define PCIE_MEM_WIN0_LO(win)	\
-@@ -154,6 +156,7 @@
- #define SSC_STATUS_OFFSET		0x1
- #define SSC_STATUS_SSC_MASK		0x400
- #define SSC_STATUS_PLL_LOCK_MASK	0x800
-+#define PCIE_BRCM_MAX_MEMC		3
- 
- #define IDX_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_INDEX])
- #define DATA_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_DATA])
-@@ -260,6 +263,8 @@ struct brcm_pcie {
- 	const int		*reg_field_info;
- 	enum pcie_type		type;
- 	struct reset_control	*rescal;
-+	int			num_memc;
-+	u64			memc_size[PCIE_BRCM_MAX_MEMC];
- };
- 
- /*
-@@ -715,22 +720,44 @@ static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pcie *pcie,
- 							u64 *rc_bar2_offset)
- {
- 	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
--	struct device *dev = pcie->dev;
- 	struct resource_entry *entry;
-+	struct device *dev = pcie->dev;
-+	u64 lowest_pcie_addr = ~(u64)0;
-+	int ret, i = 0;
-+	u64 size = 0;
- 
--	entry = resource_list_first_type(&bridge->dma_ranges, IORESOURCE_MEM);
--	if (!entry)
--		return -ENODEV;
-+	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
-+		u64 pcie_beg = entry->res->start - entry->offset;
- 
-+		size += entry->res->end - entry->res->start + 1;
-+		if (pcie_beg < lowest_pcie_addr)
-+			lowest_pcie_addr = pcie_beg;
-+	}
- 
--	/*
--	 * The controller expects the inbound window offset to be calculated as
--	 * the difference between PCIe's address space and CPU's. The offset
--	 * provided by the firmware is calculated the opposite way, so we
--	 * negate it.
--	 */
--	*rc_bar2_offset = -entry->offset;
--	*rc_bar2_size = 1ULL << fls64(entry->res->end - entry->res->start);
-+	if (lowest_pcie_addr == ~(u64)0) {
-+		dev_err(dev, "DT node has no dma-ranges\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_property_read_variable_u64_array(pcie->np, "brcm,scb-sizes", pcie->memc_size, 1,
-+						  PCIE_BRCM_MAX_MEMC);
-+
-+	if (ret <= 0) {
-+		/* Make an educated guess */
-+		pcie->num_memc = 1;
-+		pcie->memc_size[0] = 1 << fls64(size - 1);
-+	} else {
-+		pcie->num_memc = ret;
-+	}
-+
-+	/* Each memc is viewed through a "port" that is a power of 2 */
-+	for (i = 0, size = 0; i < pcie->num_memc; i++)
-+		size += pcie->memc_size[i];
-+
-+	/* System memory starts at this address in PCIe-space */
-+	*rc_bar2_offset = lowest_pcie_addr;
-+	/* The sum of all memc views must also be a power of 2 */
-+	*rc_bar2_size = 1ULL << fls64(size - 1);
- 
- 	/*
- 	 * We validate the inbound memory view even though we should trust
-@@ -782,12 +809,11 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	void __iomem *base = pcie->base;
- 	struct device *dev = pcie->dev;
- 	struct resource_entry *entry;
--	unsigned int scb_size_val;
- 	bool ssc_good = false;
- 	struct resource *res;
- 	int num_out_wins = 0;
- 	u16 nlw, cls, lnksta;
--	int i, ret;
-+	int i, ret, memc;
- 	u32 tmp, aspm_support;
- 
- 	/* Reset the bridge */
-@@ -827,11 +853,17 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	writel(upper_32_bits(rc_bar2_offset),
- 	       base + PCIE_MISC_RC_BAR2_CONFIG_HI);
- 
--	scb_size_val = rc_bar2_size ?
--		       ilog2(rc_bar2_size) - 15 : 0xf; /* 0xf is 1GB */
- 	tmp = readl(base + PCIE_MISC_MISC_CTRL);
--	u32p_replace_bits(&tmp, scb_size_val,
--			  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
-+	for (memc = 0; memc < pcie->num_memc; memc++) {
-+		u32 scb_size_val = ilog2(pcie->memc_size[memc]) - 15;
-+
-+		if (memc == 0)
-+			u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK);
-+		else if (memc == 1)
-+			u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK);
-+		else if (memc == 2)
-+			u32p_replace_bits(&tmp, scb_size_val, PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK);
-+	}
- 	writel(tmp, base + PCIE_MISC_MISC_CTRL);
- 
- 	/*
 -- 
-2.17.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
