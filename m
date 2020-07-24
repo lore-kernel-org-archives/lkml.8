@@ -2,131 +2,139 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92923C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FBEC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A222065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:03:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595599434;
-	bh=l8O9b9w6KVznaryemW8PrV8g8wM+lmsDAl7e+r2DSRk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BbQGfJH8+3gIQPQNAbOpXtw4FoOyZVXFGYsVOorlj2RDgXYNa1ZyjVaO9g675cVXg
-	 tIjLdXC4ujxihLqy8QJY5L8r3iCLKYgPTjSRVfMlXdgWC8vFo8ZDhoH1MzxbHqJgj6
-	 kRCEewASUTQGmGTfmEshFlCk0s6A83hXWvUEPTDI=
+	by mail.kernel.org (Postfix) with ESMTP id 1DFCB206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:07:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Kxppuj5T";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CiLn/DBx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgGXODx (ORCPT
+        id S1726625AbgGXOHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:03:53 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39071 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbgGXODv (ORCPT
+        Fri, 24 Jul 2020 10:07:45 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38424 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbgGXOHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:03:51 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d18so7112498edv.6;
-        Fri, 24 Jul 2020 07:03:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TpZJ/ISFXgu5jBP5FbghkLZJiBtFOhQ1zwiBpuz8Qz4=;
-        b=lNMiaupolLT8jj2eQ/YGGJX4BsPAoan/6NmSNRIGDjDu9KxgSQG51p6k8ibLN1IROM
-         OH0zfOqt07KVj266JNY/aWBGGuyJapYgdy4Nzb1VFv05NWGfZLH0fnkv/Epns4ZbrCDI
-         6yeXQFrs/FrGDiDg8zCea+Q+FtkVEtW3S9rd4jsu7MVkThEkmiEbf4WFUYaMoVJGh7Ak
-         i1Om+ol/ipvvSJhd2QeTvUag20QmNB64+fo+22SVKhJ0KRcRcKY5y2AGVFRMrbLtJSt8
-         ztz8CeyQ+DR7OETa6KTWkooP8NR6Kl4WtV5TRlXnTp5TQyBslHqyZTrnEooPBQ14S923
-         miSQ==
-X-Gm-Message-State: AOAM531iphuIAkFtLknJb1Xu5sNMaP6K7JtJidIV0MfdLQfkTbTtmtsx
-        WGkBhDa0QQzSM8yQwLwkfyU=
-X-Google-Smtp-Source: ABdhPJwl2mU8KmEpK8AFkahBSmMJ4Kn3RsrN9Ktb6p4HbAcUPjkoroNdJBTxS8QkKijbtd+6pGmUwg==
-X-Received: by 2002:a50:ed15:: with SMTP id j21mr9386366eds.246.1595599429024;
-        Fri, 24 Jul 2020 07:03:49 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id o17sm710946ejb.105.2020.07.24.07.03.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Jul 2020 07:03:48 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 16:03:45 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Olof Johansson <olof@lixom.net>,
-        Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 00/29] *memory: Cleanup, improve and compile test
- memory drivers
-Message-ID: <20200724140345.GB13472@kozik-lap>
-References: <20200724074038.5597-1-krzk@kernel.org>
- <CAK8P3a2EAm=pxkU-AiucgDQyoMEGFOGqQBkVacWjoT7O9-PHkA@mail.gmail.com>
+        Fri, 24 Jul 2020 10:07:45 -0400
+Date:   Fri, 24 Jul 2020 14:07:41 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595599662;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=opVcxPUv963ARJfix0eZv2oOhV48P3svftrMOGDWqj8=;
+        b=Kxppuj5TTDpiFKF4ZHBMFJpK6Pht52wYRbKRufDNKLNiwZ7r9X09Hy2Nms2jmnG4UilrIw
+        MJq8Vwyv7Ojf06h0fhaySfRJYKs7SPe5ahjvaqKIZ4VpBYPKoPBtv7Gek09iWraa81TX5E
+        AEBpJnOfGjJ6tqBf+p4jPQLKdhgOJSeJ3kk4BUOIMF6rGX94Z3R3RN0xvzBUDh+IKnBoBh
+        bFsE7zr8Zq7cxfCDJK3TT2lIqlVlk+XhiMvJREADmkoAMgMGTRwMx0gMpHXSUdVWwIhnqe
+        997+gLSNXBuHS6CW5clMJg+Czq7SoXhvBwAV8jVovMxnNI3PTEiP0hkeQ0mThQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595599662;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=opVcxPUv963ARJfix0eZv2oOhV48P3svftrMOGDWqj8=;
+        b=CiLn/DBxHVCGgEFJq5bIqH0ItFramz0pFzYOWslczfSpDaiSliGK2AXrZkvbex8SFDUs22
+        7urxxbNSkRLvSwDw==
+From:   "tip-bot2 for Oleg Nesterov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] uprobes: Change handle_swbp() to send SIGTRAP with
+ si_code=SI_KERNEL, to fix GDB regression
+Cc:     Aaron Merey <amerey@redhat.com>, Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200723154420.GA32043@redhat.com>
+References: <20200723154420.GA32043@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2EAm=pxkU-AiucgDQyoMEGFOGqQBkVacWjoT7O9-PHkA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Message-ID: <159559966135.4006.10705285395851102706.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 03:51:04PM +0200, Arnd Bergmann wrote:
-> On Fri, Jul 24, 2020 at 9:41 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > Dear All,
-> >
-> > Changes since v1:
-> > 1. Few new patches,
-> > 2. Please see individual logs (per patch).
-> >
-> >
-> > The drivers/memory directory contains generic code (of_memory.c) and a
-> > bunch of drivers.  Changes to generic code were coming usually through
-> > different trees with the driver code.
-> >
-> > Over last days, memory drivers grew in numbers but not necessarily in
-> > quality.  They lacked compile testing and code cleanup.  Also lacked
-> > maintainer.
-> >
-> > I would be happy to take care about this part.
-> >
-> > If there are no objections, I will collect the patches and push them
-> > through arm-soc maintainers.
-> >
-> > Driver-specific changes in the patchset were only compile-tested. Tests
-> > are welcome. The generic code was tested on ARMv7 Exynos based boards
-> > with a exynos5422-dmc memory controller driver.
-> 
-> Looks all good. Can you send a pull request for the patches that you don't
-> expect to need testing for, while you still wait for more feedback on the
-> others?
-> 
-> As the merge window (and my vacation) is getting closer, I would like to
-> have most of the patches for v5.9 queued up.
+The following commit has been merged into the perf/urgent branch of tip:
 
-Sure, I'll prepare a pull.
+Commit-ID:     fe5ed7ab99c656bd2f5b79b49df0e9ebf2cead8a
+Gitweb:        https://git.kernel.org/tip/fe5ed7ab99c656bd2f5b79b49df0e9ebf2cead8a
+Author:        Oleg Nesterov <oleg@redhat.com>
+AuthorDate:    Thu, 23 Jul 2020 17:44:20 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 24 Jul 2020 15:38:37 +02:00
 
-Thanks!
+uprobes: Change handle_swbp() to send SIGTRAP with si_code=SI_KERNEL, to fix GDB regression
 
-Best regards,
-Krzysztof
+If a tracee is uprobed and it hits int3 inserted by debugger, handle_swbp()
+does send_sig(SIGTRAP, current, 0) which means si_code == SI_USER. This used
+to work when this code was written, but then GDB started to validate si_code
+and now it simply can't use breakpoints if the tracee has an active uprobe:
 
+	# cat test.c
+	void unused_func(void)
+	{
+	}
+	int main(void)
+	{
+		return 0;
+	}
+
+	# gcc -g test.c -o test
+	# perf probe -x ./test -a unused_func
+	# perf record -e probe_test:unused_func gdb ./test -ex run
+	GNU gdb (GDB) 10.0.50.20200714-git
+	...
+	Program received signal SIGTRAP, Trace/breakpoint trap.
+	0x00007ffff7ddf909 in dl_main () from /lib64/ld-linux-x86-64.so.2
+	(gdb)
+
+The tracee hits the internal breakpoint inserted by GDB to monitor shared
+library events but GDB misinterprets this SIGTRAP and reports a signal.
+
+Change handle_swbp() to use force_sig(SIGTRAP), this matches do_int3_user()
+and fixes the problem.
+
+This is the minimal fix for -stable, arch/x86/kernel/uprobes.c is equally
+wrong; it should use send_sigtrap(TRAP_TRACE) instead of send_sig(SIGTRAP),
+but this doesn't confuse GDB and needs another x86-specific patch.
+
+Reported-by: Aaron Merey <amerey@redhat.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200723154420.GA32043@redhat.com
+---
+ kernel/events/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index bb08628..5f8b0c5 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2199,7 +2199,7 @@ static void handle_swbp(struct pt_regs *regs)
+ 	if (!uprobe) {
+ 		if (is_swbp > 0) {
+ 			/* No matching uprobe; signal SIGTRAP. */
+-			send_sig(SIGTRAP, current, 0);
++			force_sig(SIGTRAP);
+ 		} else {
+ 			/*
+ 			 * Either we raced with uprobe_unregister() or we can't
