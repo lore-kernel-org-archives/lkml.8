@@ -2,106 +2,128 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69086C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 775902065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F7B2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:36:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LujJsvf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgGXUgE (ORCPT
+        id S1726768AbgGXUg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 16:36:04 -0400
-Received: from mailoutvs38.siol.net ([185.57.226.229]:58147 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726397AbgGXUgE (ORCPT
+        Fri, 24 Jul 2020 16:36:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbgGXUg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 16:36:04 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 8E85452329B;
-        Fri, 24 Jul 2020 22:36:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 1PUt-FPrhzhs; Fri, 24 Jul 2020 22:36:00 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 30B61523864;
-        Fri, 24 Jul 2020 22:36:00 +0200 (CEST)
-Received: from localhost.localdomain (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 614D7523591;
-        Fri, 24 Jul 2020 22:35:57 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: [PATCH] drm/sun4i: mixer: Enable register value caching
-Date:   Fri, 24 Jul 2020 22:35:49 +0200
-Message-Id: <20200724203549.35893-1-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.27.0
+        Fri, 24 Jul 2020 16:36:27 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F7EC0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:36:27 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d1so5206057plr.8
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=Dy+affn1QORYZlFPKm/x9JIhEFQzu25LJvzw99XqiwY=;
+        b=LujJsvf/f+p9A4gGM4h4h0jBGhjPrBlLldp5dfOBmdiiDJVk5Xyht7AMvYDbxh4/wN
+         WjYHKWyM+oUgDwTtbT7Z/Lgojy07LPerTRrTq0h9myasMDkNtC+JvCzUhkURq/g/q1sj
+         UqAR+Ejtt+NaZFNvD8yW1s4M4k9VUt5i1rB0s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=Dy+affn1QORYZlFPKm/x9JIhEFQzu25LJvzw99XqiwY=;
+        b=INDAM/5OZ/3hI4Bh8FNP13ztmHP92kU2t+OCBAq1UeiZgmfwoSXF60Djb8gKMlaWcu
+         K5nsEa19BR5YnhZKYeyQghTKQLpaVbOkU/oSXNS/dBU6tzkVURS/X4afxoNptPl7IWUm
+         dUw5BZEuqYiHibuFshNjjFMT4v3d3ctufKiNK/AQKzKOs/LY+B94iZh9TTiqQK8PjuF9
+         ka5UB5Q4OiU/W1A4PTcTlhbgHtmh2KAP6b4/cQsTA5cOAGWefmLf02r2UKjJu00GHPkR
+         9rBtYSRCHE5apBHzVidB8u+xnfUVVpxf2MT7Be0we+ynCq1gRgcO7m4FXBCAi7mqvY0f
+         Vomw==
+X-Gm-Message-State: AOAM530MZ4lejZi04OrFijploFdR8MnU0RJQzdYJATMJgJp6N8zXii7h
+        W86SAxXoq8zKv1JZoojv0Ivivw==
+X-Google-Smtp-Source: ABdhPJxBsAlQQsX3hKJcGQY2Tl4jpcFRsySRkE6k0M9nhFkVafNR4Kto9u5e7d8a1XKOONykUINPHQ==
+X-Received: by 2002:a17:90b:3807:: with SMTP id mq7mr4111009pjb.221.1595622986584;
+        Fri, 24 Jul 2020 13:36:26 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id s14sm7104841pjl.14.2020.07.24.13.36.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 13:36:25 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAD=FV=VsBkaMWSNFGimx3jFk==xsK+_NL-i1M0Dr_X9sc4EL9Q@mail.gmail.com>
+References: <20200723230344.1422750-1-swboyd@chromium.org> <20200723230344.1422750-4-swboyd@chromium.org> <CAD=FV=VsBkaMWSNFGimx3jFk==xsK+_NL-i1M0Dr_X9sc4EL9Q@mail.gmail.com>
+Subject: Re: [PATCH 3/3] iio: sx9310: Enable regulator for svdd supply
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Daniel Campello <campello@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+To:     Doug Anderson <dianders@chromium.org>
+Date:   Fri, 24 Jul 2020 13:36:24 -0700
+Message-ID: <159562298499.3847286.12070936748717235003@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It was discovered in the past by Ondrej Jirman that mixer register read
-may occasionally return wrong value, most likely zero. It turns out
-that all mixer units are affected by this issue. This becomes especially
-obvious with applications like video player. After a few minutes of a
-playback visual glitches appeared but not always in the same way. After
-register inspection it was clear that some bits are not set even when
-they should be.
+Quoting Doug Anderson (2020-07-24 13:25:01)
+> On Thu, Jul 23, 2020 at 4:03 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> >         /*
+> >          * Last reading of the proximity status for each channel.
+> >          * We only send an event to user space when this changes.
+> > @@ -914,21 +916,31 @@ static int sx9310_probe(struct i2c_client *client,
+> >         mutex_init(&data->mutex);
+> >         init_completion(&data->completion);
+> >
+> > +       data->supply =3D devm_regulator_get(&client->dev, "svdd");
+> > +       if (IS_ERR(data->supply))
+> > +               return PTR_ERR(data->supply);
+> > +
+> >         data->regmap =3D devm_regmap_init_i2c(client, &sx9310_regmap_co=
+nfig);
+> >         if (IS_ERR(data->regmap))
+> >                 return PTR_ERR(data->regmap);
+> >
+> > +       ret =3D regulator_enable(data->supply);
+> > +       if (ret)
+> > +               return ret;
+> > +       /* Must wait for Tpor time after initial power up */
+> > +       usleep_range(1000, 1100);
+>=20
+> ret =3D devm_add_action_or_reset(&client->dev, sx9310_regulator_disable, =
+supply);
+> if (ret)
+>   return ret;
+>=20
+> static void sx9310_regulator_disable(void *regulator) {
+>   regulator_disable(regulator);
+> }
+>=20
+> Then drop all changes below this line.
 
-Best solution would be to shuffle the code a bit to avoid
-read-modify-write operations and use only register writes. However,
-quicker solution is to enable caching support in regmap which is also
-used here. Such fix is also easier to backport in stable kernels.
+Ok. I originally had code to turn off the supply during suspend/resume
+but I removed it because I wasn't sure that the device would be OK with
+the IO interface dropping after the device went to sleep.
 
-Fixes: 9d75b8c0b999 ("drm/sun4i: add support for Allwinner DE2 mixers")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/gpu/drm/sun4i/sun8i_mixer.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+>=20
+>=20
+> Seems like you could add support for the other regulator listed in the
+> bindings, too?
+>=20
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/=
-sun8i_mixer.c
-index cc4fb916318f..f8f17c51c96d 100644
---- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-@@ -303,11 +303,23 @@ static const struct sunxi_engine_ops sun8i_engine_o=
-ps =3D {
- 	.layers_init	=3D sun8i_layers_init,
- };
-=20
-+static bool sun8i_mixer_volatile_reg(struct device *dev, unsigned int re=
-g)
-+{
-+	switch (reg) {
-+	case SUN8I_MIXER_GLOBAL_STATUS:
-+	case SUN8I_MIXER_GLOBAL_DBUFF:
-+		return true;
-+	}
-+	return false;
-+}
-+
- static struct regmap_config sun8i_mixer_regmap_config =3D {
-+	.cache_type	=3D REGCACHE_FLAT,
- 	.reg_bits	=3D 32,
- 	.val_bits	=3D 32,
- 	.reg_stride	=3D 4,
- 	.max_register	=3D 0xbfffc, /* guessed */
-+	.volatile_reg	=3D sun8i_mixer_volatile_reg,
- };
-=20
- static int sun8i_mixer_of_get_id(struct device_node *node)
---=20
-2.27.0
-
+Sure. I will use the bulk APIs.
