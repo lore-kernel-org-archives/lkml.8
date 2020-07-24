@@ -2,120 +2,67 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19085C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E31A320771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595592777;
-	bh=D0IgU45xG3ElDU86GcKCMlYBnMslTm2uRKbzZBIAGuw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hsav63BOlZ2ZjvXjN8ahIXKujiH9kjb5PD0+Q7o4VkvEyuuosEOtHMlAqQJVosTjl
-	 eXCgPLJ+LOqv7BEHvXozMwTUSe/SMENXAQcFaPVqydbQlPOgnbugYY6wRarmSNU625
-	 Z1t2I04ZLSL5uBEM5LCHVoAgCxBysxkc7TD2ln/U=
+	by mail.kernel.org (Postfix) with ESMTP id 47BAD2074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:15:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgGXMM4 (ORCPT
+        id S1726493AbgGXMPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:12:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgGXMMz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:12:55 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD68C0619D3;
-        Fri, 24 Jul 2020 05:12:55 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id a8so6879246edy.1;
-        Fri, 24 Jul 2020 05:12:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MNWc0su/JnnluaDA+8CCu6YuN01mXvydu0VWX6fHUwI=;
-        b=TYl8QLioQBYmYF/e7BIhFpjG+1MonWCfI+IOfU5BxHz+b1Ycw62QsoH1U0M5QfeP2F
-         k06vKn99Rwy/ZLjZu3mTPAdJMSvfTPIKjBpNMd3WcXe9gyV2Wclu7SnkwKbBazSmnHnH
-         Mh5THBiwufkrdW7Cc/1lqulna+PtuQhLAVPPJ8d5UMMAQMzYSB8g01KsAX0BWNdb+SxI
-         A1KCrF326yh2LNcmQnKc5z4LNVE7B1jcnzE812DvEAA7b1Jg492XW4YyFlxHSggOZ3at
-         InKc7a3xf5yx/I/wVBt7A9czZY6GgxN4CDLZh+LEBn8sAGhnJNTvcL1H7ErBr3T2VarL
-         +gDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=MNWc0su/JnnluaDA+8CCu6YuN01mXvydu0VWX6fHUwI=;
-        b=eXW8s5Lvr3I8AD/wrUhj4VCzOzQchX2dz0KRc1hNNAgMNl5DSwH6g22PN8PJ/iGYQM
-         7bLgSeRDE8arhcmgB5vJV5dzKuheHAyRxiuud6cPPESMtsnmymZ2W5i4oLhfyTTPR09F
-         z6K+dcIGFmc4SBj8QvGrXPZEy2za4Ug3S86V4G1RaILffuqX90dLUMecyeeRHM9m1JUk
-         nzib6gowLneiYrAN1yAqzuo/eaGgqMaJgOZKSpeqXDN/grIeSkFjz7EcIXFz2NOryZSW
-         efkdo+hmEAMvfG8hZsfc0p+X/01Sx6zTna2fD12+FhY6kH59rzOH4oQC0Y1PBaJr0fpY
-         HOqA==
-X-Gm-Message-State: AOAM530Ig0SCV6PxmKErOnx6+L1Q1UiJBzDeKjBQKbUDqjJ4zsHLJG9Z
-        fX5StN4YoqYYFs+6GUJR5tFp7sTF
-X-Google-Smtp-Source: ABdhPJyMHQrJpeOA+v0byFjX0VmVqWTMsvTlwH88ith1El30XY++sl2EXRmhj74L96OyHJCfw5S1TQ==
-X-Received: by 2002:aa7:d049:: with SMTP id n9mr8952718edo.39.1595592774091;
-        Fri, 24 Jul 2020 05:12:54 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id o15sm615607edv.55.2020.07.24.05.12.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 05:12:52 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 14:12:50 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Nick Terrell <nickrterrell@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
-        linux-kbuild@vger.kernel.org, x86@kernel.org,
-        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        Patrick Williams <patrick@stwcx.xyz>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Norbert Lange <nolange79@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alex Xu <alex_y_xu@yahoo.ca>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Terrell <terrelln@fb.com>
-Subject: Re: [PATCH v8 2/7] lib: add zstd support to decompress
-Message-ID: <20200724121250.GA632343@gmail.com>
-References: <20200723192801.351114-1-nickrterrell@gmail.com>
- <20200723192801.351114-3-nickrterrell@gmail.com>
+        Fri, 24 Jul 2020 08:15:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726258AbgGXMO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 08:14:59 -0400
+Received: from localhost.localdomain (unknown [95.146.230.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 290922065E;
+        Fri, 24 Jul 2020 12:14:58 +0000 (UTC)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     "gregory.herrero@oracle.com" <gregory.herrero@oracle.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>, rostedt@goodmis.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.
+Date:   Fri, 24 Jul 2020 13:14:56 +0100
+Message-Id: <159559281273.30177.1152636464895708228.b4-ty@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200717143338.19302-1-gregory.herrero@oracle.com>
+References: <20200717143338.19302-1-gregory.herrero@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723192801.351114-3-nickrterrell@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 17 Jul 2020 16:33:38 +0200, gregory.herrero@oracle.com wrote:
+> Currently, if a section has a relocation to '_mcount' symbol, a new
+> __mcount_loc entry will be added whatever the relocation type is.
+> This is problematic when a relocation to '_mcount' is in the middle of a
+> section and is not a call for ftrace use.
+> 
+> Such relocation could be generated with below code for example:
+>     bool is_mcount(unsigned long addr)
+>     {
+>         return (target == (unsigned long) &_mcount);
+>     }
+> 
+> [...]
 
-* Nick Terrell <nickrterrell@gmail.com> wrote:
+Applied to arm64 (for-next/misc), thanks!
 
-> +/* Size of the input and output buffers in multi-call mode.
-> + * Pick a larger size because it isn't used during kernel decompression,
-> + * since that is single pass, and we have to allocate a large buffer for
-> + * zstd's window anyways. The larger size speeds up initramfs decompression.
-> + */
-> +#define ZSTD_IOBUF_SIZE		(1 << 17)
+[1/1] recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.
+      https://git.kernel.org/arm64/c/ea0eada45632
 
-Nit: s/anyways/anyway
+-- 
+Catalin
 
-Also, please use the customary (multi-line) comment style:
-
-  /*
-   * Comment .....
-   * ...... goes here.
-   */
-
-specified in Documentation/CodingStyle.
-
-Thanks,
-
-        Ingo
