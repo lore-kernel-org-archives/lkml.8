@@ -2,90 +2,91 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22167C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E93DD2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26B72208A9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595552227;
+	bh=r5WxFrMiDdKHTC3n7Eg5/S6BdCaIflcHYZos9cjnVOI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lW7kr2ouPzTzpKuBowBUNjGI/YXmRWJmF9y/jE7EQQRXobXCdTN24q5cyu60+w1G1
+	 8SvlITM2JzNkQVbk5I1Uvozr0/PenJOjLFWnO6ZBXUAwR1yvkYmqAorY9bDxL2sOg2
+	 mTMH5Sm4E5kPSxkVI0h8EZ/h1kVO9ywHq/KQEfzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgGXAzs (ORCPT
+        id S1728362AbgGXA5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 20:55:48 -0400
-Received: from mga04.intel.com ([192.55.52.120]:60096 "EHLO mga04.intel.com"
+        Thu, 23 Jul 2020 20:57:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728413AbgGXAzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 20:55:47 -0400
-IronPort-SDR: 8mgsDcFf1Rjhs12yF9VLGlYUw2Hi+n4ANDOkbIjRcrNXcWfcts7RClCdngdvtkI1ohrKnK72Z5
- YqC3TmUAhIiA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="148135029"
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="148135029"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 17:55:47 -0700
-IronPort-SDR: qTxdZ5wR1udQ71TCjEpfT8A32uEqdelvgA9a4q/SttokEKqsJ23MyjygcYN29bchiquhTudin6
- yoBtw421rm4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="288829366"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga006.jf.intel.com with ESMTP; 23 Jul 2020 17:55:46 -0700
-Date:   Thu, 23 Jul 2020 17:55:46 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [patch V5 15/15] x86/kvm: Use generic xfer to guest work function
-Message-ID: <20200724005546.GL21891@linux.intel.com>
-References: <20200722215954.464281930@linutronix.de>
- <20200722220520.979724969@linutronix.de>
- <20200724001736.GK21891@linux.intel.com>
- <87eep1vixp.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87eep1vixp.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1727783AbgGXA5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 20:57:05 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF6B12086A;
+        Fri, 24 Jul 2020 00:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595552225;
+        bh=r5WxFrMiDdKHTC3n7Eg5/S6BdCaIflcHYZos9cjnVOI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=A6VgWN4htxp/7jHEyuT/i8Rz/5PrRRJcbIlv5FoYcEQGIwgzxxxNP8mvELD6OpEmo
+         fQFEb2RN093Ag/ZOmX8rPgE4StK8ZyCK18P3YSyEmevfo1QAufGZaeiOiltVe1G5l6
+         /sbTQfMJ7T0UtIEnmBt9bfFSv6bfZqNc0jfKe8AU=
+Date:   Thu, 23 Jul 2020 17:57:04 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        andi.kleen@intel.com, ying.huang@intel.com,
+        andriy.shevchenko@intel.com
+Subject: Re: [RFC PATCH] makefile: add debug option to enable function
+ aligned on 32 bytes
+Message-Id: <20200723175704.44c4b890e76dc6dc68bf3674@linux-foundation.org>
+In-Reply-To: <20200723062933.GA65362@shbuild999.sh.intel.com>
+References: <1595475001-90945-1-git-send-email-feng.tang@intel.com>
+        <20200722203919.8b7c9b35ff51d66550c3846c@linux-foundation.org>
+        <20200723062933.GA65362@shbuild999.sh.intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 02:46:26AM +0200, Thomas Gleixner wrote:
-> Sean,
-> 
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> > On Thu, Jul 23, 2020 at 12:00:09AM +0200, Thomas Gleixner wrote:
-> >> +		if (xfer_to_guest_mode_work_pending()) {
-> >>  			srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
-> >> -			cond_resched();
-> >> +			r = xfer_to_guest_mode(vcpu);
-> >
-> > Any reason not to call this xfer_to_guest_mode_work()?  Or handle_work(),
-> > do_work(), etc...  Without the "work" part, it looks like a function that
-> > should be invoked unconditionally.  It's obvious that's not the case if
-> > one looks at the implementation, but it's a bit confusing on the KVM side
-> > of things.
-> 
-> The reason is probably lazyness. The original approach was to have this
-> as close as possible to user entry/exit but with the recent changes
-> vs. instrumentation and RCU this is not longer the case.
-> 
-> I really want to keep the notion of transitioning in the function name,
-> so xfer_to_guest_mode_handle_work() makes a lot of sense.
-> 
-> I'll change that before merging the lot into the tip tree if your
-> Reviewed-by still stands with that change made w/o reposting.
+On Thu, 23 Jul 2020 14:29:33 +0800 Feng Tang <feng.tang@intel.com> wrote:
 
-Ya, works for me.
+> > > gcc has an option '-falign-functions=n' to force text aligned, and with
+> > > that option enabled, some of those performance changes will be gone,
+> > > like [1][2][3].
+> > > 
+> > > Add this option so that developers and 0day can easily find performance
+> > > bump caused by text alignment change,
+> > 
+> > Would they use it this way, or would they simply always enable the
+> > option to reduce the variability?
+> 
+> I may mis-understood it in my last reply. If you are asking about how
+> will developers and 0day use this option, for 0day, I've talked with
+> 0day folks, they may just enable it by default, as 0day cares more about
+> the performance delta caused by a commit (Adding Philip and Rong from
+> 0day).
+
+OK, thanks, I suspected as much.
+
+The patch is so simple and probably-will-work, I guess we toss it in
+there and see.
+
+However it would be good if the 0day people could use it for a while
+and then provide some feedback on whether it is actually proving
+useful.  If not, we get to remove some stuff.
