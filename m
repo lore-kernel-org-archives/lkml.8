@@ -2,120 +2,152 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E569C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B30BC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8190C2065E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:42:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tchdv+ux"
+	by mail.kernel.org (Postfix) with ESMTP id 1D678206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595616141;
+	bh=VHNLbtVFSPjw830AY8q0WdAxdEMuFmcFp4kafvzppUE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j5DZKCo29z06krxxt2m93cJAKBz5sj2vWnTxGUobjDOrcwhAgeRAqt/8fq9HMO7kB
+	 X8JW2wlEjJFVQHb6R8PWh7a3gTTSmAQjplqAVLlk2Kwx9fJsQubNYAXn0+OPVG3KUp
+	 PRT4u9LSKkbkMOqEFQeSfMqEZVp7Yz1oBQjyJWng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgGXSmd (ORCPT
+        id S1726625AbgGXSmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 14:42:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgGXSmc (ORCPT
+        Fri, 24 Jul 2020 14:42:20 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38253 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgGXSmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 14:42:32 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AADB0C0619D3;
-        Fri, 24 Jul 2020 11:42:31 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f1so8621742wro.2;
-        Fri, 24 Jul 2020 11:42:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=cJWPebvtfVQ4yMs95Aqk9HAmQuQ6TAMDSj0SSlM6Zyw=;
-        b=tchdv+uxYUIl91/+iKeAO23o2+daCsLjEzFBzBJ6nYL8WWL7/6shYVFUMrLlJ57wB0
-         YXrNyajSU8JqBrP6bd+yTRO9rEkoDlLTzPxgzYMilO/l3tsETh3tS2xRvlFnGBUOrG36
-         VwxueDDXHJj8AuaM78U+5YBM1chgmtCQnKrAcheq8CY74N7c78l9MXj0hLsJzeC+L4rn
-         9sPI9aDHFx222TxGJhTwKjLW5lK5T9nTl2UAOUIVwwKVmV1h8obiE2qr6BMles7cP9dA
-         EFZTy3q/SfOTNJfk7cKp4O78CMkJsQJ3Vw1jhcG2FiU3MsH0NNISBjddLadgeZw+IW++
-         97wA==
+        Fri, 24 Jul 2020 14:42:19 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a14so9183284wra.5;
+        Fri, 24 Jul 2020 11:42:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cJWPebvtfVQ4yMs95Aqk9HAmQuQ6TAMDSj0SSlM6Zyw=;
-        b=l8IGwpfeGTApepR6xe8AHDQAC/EEJNACvzYfgGrS+F6rJXXpCjZSBB600htsov2IIt
-         lyADwh2fG4ydB8pW1fTplqn8pfBsJ84ZviSf8pf0q3d4I7jsJoB5+nlPKAv3QvxEbqd5
-         aPSyorxXo6Gc8fBKLDBb0p4VLocxHYN2GOnPzEFeP5m+cbiGEdXqAbPUWKRD8kg3SvbL
-         wjXiPRZNP20k7/yY4G4Z1UrpZ/JdcCzBaWPzPwPl0SnTNqNu7xc+6oQMUqQpAyyIokSx
-         1mLUGm3MnVrfYRlX2vff2n6wTJR83tEYqLiweHU1lOgg/taN2F+lxzzs+RzLzN2QVuJG
-         oN6Q==
-X-Gm-Message-State: AOAM530xvc8j3tMJj+IdlGxM53hoohGaTG/hbRM/jsor23+hqt7kK1tS
-        WStOj/Akx0f5FJfrqyMSMQ0T+ado
-X-Google-Smtp-Source: ABdhPJxqhvPctvXXdP0cG+tS9quJNro8PhQnOhAKWyWR68ZFJCc5uDLpM661JfE8Tgg5Mymb3EexZw==
-X-Received: by 2002:adf:c981:: with SMTP id f1mr9684667wrh.14.1595616150183;
-        Fri, 24 Jul 2020 11:42:30 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id s205sm2248948wme.7.2020.07.24.11.42.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 11:42:29 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel test robot <lkp@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Justin Chen <justinpopo6@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
-        ARCHITECTURE),
-        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE)
-Subject: [PATCH] irqchip/irq-bcm7038-l1: Guard uses of cpu_logical_map
-Date:   Fri, 24 Jul 2020 11:41:56 -0700
-Message-Id: <20200724184157.29150-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J0wBk/6vaO0g7QfilA4yE/XNc/ENevl3w3KNoqKUGUg=;
+        b=JX67EWFSrCgYUIaKKHEps2NspcqsAebnQvui8r2KffYses0crAF3xw/lEL/YwesbqS
+         j2HE1Lrn5oZJC5z+z9iu6WayFwdz9DvXd0ZBqcNpWcNWPdiKCZC3Sv+WLtSQJ3S+hqR2
+         kUQxlpjHDMxXleRTAQNkmGEc7iuMegcKL2S6Ney5jB1xWdogeIjaYIuAhWTTyobymVNA
+         Ss8gg6bL/yBqaND0hPvpmMkxkaQOuMaES7y9Wy41rjPPjzaBiKJn0H7GOoWGmH8VFLz2
+         HCM3RhwVKWwCCK7RSVOtZ8ldzfEjJ3yrqFMnk9ZKYQS851fXEcdooe1Pbp53LRQoa4Ur
+         28SA==
+X-Gm-Message-State: AOAM530dwiCJzorXTxvNaSyBI37ixUUjtGY3/Lii/x9AfMLWJqo1+z75
+        xODoIcnM2/Mid9USeZUfMRDxP6OnEfU=
+X-Google-Smtp-Source: ABdhPJzZJ+86rVVgc4VYErzo8iaWzUH13pTk1ZyZ0TGQDiMpbauNPPK8NiSa4t0knu/LgxjZ7ip5Ag==
+X-Received: by 2002:a5d:56c6:: with SMTP id m6mr10508907wrw.363.1595616137156;
+        Fri, 24 Jul 2020 11:42:17 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id x11sm2174602wrl.28.2020.07.24.11.42.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 Jul 2020 11:42:16 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 20:42:13 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-pm@vger.kernel.org, Olof Johansson <olof@lixom.net>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFT 12/16] memory: brcmstb_dpfe: Add separate entry for compile
+ test
+Message-ID: <20200724184213.GA24993@kozik-lap>
+References: <20200724182328.3348-1-krzk@kernel.org>
+ <20200724182328.3348-13-krzk@kernel.org>
+ <7797a55e-bbf0-ef0f-daec-d56326167586@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <7797a55e-bbf0-ef0f-daec-d56326167586@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cpu_logical_map is only defined for CONFIG_SMP builds, when we are in an
-UP configuration, the boot CPU is 0.
+On Fri, Jul 24, 2020 at 11:40:09AM -0700, Florian Fainelli wrote:
+> On 7/24/20 11:23 AM, Krzysztof Kozlowski wrote:
+> > Add separate entry for Broadcom STB DPFE driver, selected by platforms
+> > by default.  This allows further customization and compile testing.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> > 
+> > I have other changes around drivers/memory/Kconfig pending. Sending them
+> > together would avoid conflicts.
+> > 
+> > ---
+> >  arch/arm/mach-bcm/Kconfig    |  1 +
+> >  arch/arm64/Kconfig.platforms |  1 +
+> >  drivers/memory/Kconfig       | 11 +++++++++++
+> >  drivers/memory/Makefile      |  2 +-
+> >  4 files changed, 14 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+> > index 1df0ee01ee02..b0c45238e69b 100644
+> > --- a/arch/arm/mach-bcm/Kconfig
+> > +++ b/arch/arm/mach-bcm/Kconfig
+> > @@ -208,6 +208,7 @@ config ARCH_BRCMSTB
+> >  	select ARM_GIC
+> >  	select ARM_ERRATA_798181 if SMP
+> >  	select HAVE_ARM_ARCH_TIMER
+> > +	select BRCMSTB_DPFE
+> >  	select BRCMSTB_L2_IRQ
+> >  	select BCM7120_L2_IRQ
+> >  	select ARCH_HAS_HOLES_MEMORYMODEL
+> > diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> > index ddc3bf75257f..f7791ed0ed6d 100644
+> > --- a/arch/arm64/Kconfig.platforms
+> > +++ b/arch/arm64/Kconfig.platforms
+> > @@ -68,6 +68,7 @@ config ARCH_BRCMSTB
+> >  	bool "Broadcom Set-Top-Box SoCs"
+> >  	select ARCH_HAS_RESET_CONTROLLER
+> >  	select BCM7038_L1_IRQ
+> > +	select BRCMSTB_DPFE
+> 
+> The select is probably not warranted, see below.
+> 
+> >  	select BRCMSTB_L2_IRQ
+> >  	select GENERIC_IRQ_CHIP
+> >  	select PINCTRL
+> > diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+> > index cd4fc93b50df..fef6f0873fda 100644
+> > --- a/drivers/memory/Kconfig
+> > +++ b/drivers/memory/Kconfig
+> > @@ -54,6 +54,17 @@ config ATMEL_EBI
+> >  	  tree is used. This bus supports NANDs, external ethernet controller,
+> >  	  SRAMs, ATA devices, etc.
+> >  
+> > +config BRCMSTB_DPFE
+> > +	bool "Broadcom STB DPFE driver" if COMPILE_TEST
+> > +	depends on ARCH_BRCMSTB || COMPILE_TEST
+> 
+> Can you make it default ARCH_BRCMSTB and remove the select above?
+> 
+> With that:
+> 
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: 6468fc18b006 ("irqchip/irq-bcm7038-l1: Add PM support")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/irqchip/irq-bcm7038-l1.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Sure, I'll fix it up. Thanks for feedback.
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index fd7c537fb42a..4127eeab10af 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -327,7 +327,11 @@ static int bcm7038_l1_suspend(void)
- 	u32 val;
- 
- 	/* Wakeup interrupt should only come from the boot cpu */
-+#ifdef CONFIG_SMP
- 	boot_cpu = cpu_logical_map(0);
-+#else
-+	boot_cpu = 0;
-+#endif
- 
- 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
- 		for (word = 0; word < intc->n_words; word++) {
-@@ -347,7 +351,11 @@ static void bcm7038_l1_resume(void)
- 	struct bcm7038_l1_chip *intc;
- 	int boot_cpu, word;
- 
-+#ifdef CONFIG_SMP
- 	boot_cpu = cpu_logical_map(0);
-+#else
-+	boot_cpu = 0;
-+#endif
- 
- 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
- 		for (word = 0; word < intc->n_words; word++) {
--- 
-2.17.1
-
+Best regards,
+Krzysztof
