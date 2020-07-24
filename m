@@ -2,367 +2,377 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778D6C43470
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D77C43619
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41401206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86096206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GbNXU4zr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PzZCPqrN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbgGXVhk (ORCPT
+        id S1727894AbgGXVhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:37:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57812 "EHLO
+        Fri, 24 Jul 2020 17:37:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgGXVgx (ORCPT
+        with ESMTP id S1726845AbgGXVhl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:36:53 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD09C08C5E2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:36:51 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k5so6243668pjg.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:36:51 -0700 (PDT)
+        Fri, 24 Jul 2020 17:37:41 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68CEDC0619D3;
+        Fri, 24 Jul 2020 14:37:41 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o8so9093267wmh.4;
+        Fri, 24 Jul 2020 14:37:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pw2QIqvpRkbGIbs2MdBK1+U/690xxKzu54KCttjHJY4=;
-        b=GbNXU4zrlYJGxN9b80SOAHnv6UVfMnvu+tWKkQ3EIL7h4mfwVMVQddf6xTgUMlUhQt
-         xsI5hzmMHepArBaloOVF5nzqjS/aariKap3iie3AoJiQGT/LCCnDP7TR5/Rwg5oMH4lh
-         FDi+L8t2C+Jw02i+AsQpRjJstdbGRut3bBEGI=
+        bh=68WPn9Azec2JlDfoJpM6NykYgzwfTUR4vZsC2W/Vl0A=;
+        b=PzZCPqrNNr7QU/p8ABDo7x77KzKK7yeAlH+BydGkQqlJshtJVHV7oHggyWGenqi1sG
+         1Rz7fU2onQBvi8x12p0M4v0iN99o6T1gi1Yk/DNcx83IYtKSSNje8cb7+BYcG02Ydb7W
+         diesQLO0acMXZXx8xYOnCbDkv2IfhVRWX9hKGXdI+zCxl37On/rnjVLRzeX2DrF6O0AI
+         WLToDxYqis8PRGOOVzGvt1naRmbDLOJSVnYaMQgx5+BdhbRF9LVL9tSNAF239jy+UAwE
+         Ko+HYlNSzlRqxJT3IAUzUKQovrJpl+WsYQbk57OK/aPeW0Khqarh1rZSW4zJg2INXXXb
+         gZaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pw2QIqvpRkbGIbs2MdBK1+U/690xxKzu54KCttjHJY4=;
-        b=tzZ+z74/Y29RD5Twlsk97+fQc36FkU1Ro293toVCRjiqFrxPMi4fJeBZadZW76J6Rn
-         f/AhQBmrkcKy7DnPvEDJftk/iNyrFEMbwgdVCTlqb/xPD+JBiLCc7t8aJUy6vXl3XKNK
-         75cZY0paHSiF+eT38VfOX3PQYeyFyMOWZz6+Sl3HT+Feyan3eNwtmPc3WpTV61R0n/OK
-         dJWWK3OVpDfI/Ls+BnNwWWEwJepimjXm/exlkWEyzzcKmgicjXGgVaeFJREP4eNG6QeB
-         0BbYD3w3I0mqh1GkPRA6+N1VHZ2tcpygn0cXTFqt9yTqAHcbf2pIBFYoC2OQWvG4RioJ
-         zUxg==
-X-Gm-Message-State: AOAM531H+pVZiu5Ht8fNB6QhFy6DINfXxjI4aFBZkbISCZ8+eqsmXa+C
-        kCC8pMva/vtg8SH70qKA6yx/JQ==
-X-Google-Smtp-Source: ABdhPJyxbalA/TVc66uU7PZJVRbrJ9QPAKha5qldASMqVOcFTR7qDDYHEl03uYc611laJcPOFEdTrw==
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr4762042pjp.228.1595626610630;
-        Fri, 24 Jul 2020 14:36:50 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d37sm6958548pgd.18.2020.07.24.14.36.46
+        bh=68WPn9Azec2JlDfoJpM6NykYgzwfTUR4vZsC2W/Vl0A=;
+        b=IF7Br3essrhFDaA++qWq1JHcX3EQgtM9FjxddPTpv5pgofvA3T1Io0A/T6avvdqjy1
+         vwxrQyV+Mh0AANS0S2Mx6VTiMdhlYlabT10kRDJoBa953Li6RfVCcuS1Ase9yyvrX+Vk
+         C2KXk5sEHQflVzSYZo1ki1yPnok1f+S6e1jKVbEEcDBai6M0yJPlf6TN4NU0H4NQnv+A
+         h8pSfv/7P6VMy4aEyViFF12UYBgMUSMD8lHZ9nMgfGaxz91cB2cCyjBAN70MQs3ELmCL
+         bK0L3l6i42OwUSMSnIOIjkmznfF3eQm/JUjv6LV40m6qiv8Gc0bJ+oVACA9VY69nxkTZ
+         Rd6w==
+X-Gm-Message-State: AOAM533NNiJ4EUGTBVBpkOFhUJvqlP2vlNYVzOl1VgIiMf6/Ba4ILFXa
+        d0efSIoCojAtpBGRjxbJ8v8AZY1rcjI=
+X-Google-Smtp-Source: ABdhPJw9WWSL99kw6ZlCZqx3kn6SwW0KdxQxr5/VS0sg7sBJoWu1O5HZGOrIWCIOQmnU1YGXka7IvQ==
+X-Received: by 2002:a1c:f219:: with SMTP id s25mr9958053wmc.2.1595626660001;
+        Fri, 24 Jul 2020 14:37:40 -0700 (PDT)
+Received: from TimeMachine.localdomain (bband-dyn34.178-41-255.t-com.sk. [178.41.255.34])
+        by smtp.googlemail.com with ESMTPSA id 129sm8853400wmd.48.2020.07.24.14.37.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 14:36:47 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 08/19] fs/kernel_read_file: Remove redundant size argument
-Date:   Fri, 24 Jul 2020 14:36:29 -0700
-Message-Id: <20200724213640.389191-9-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200724213640.389191-1-keescook@chromium.org>
-References: <20200724213640.389191-1-keescook@chromium.org>
+        Fri, 24 Jul 2020 14:37:39 -0700 (PDT)
+From:   Martin Botka <martin.botka1@gmail.com>
+Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Martin Botka <martin.botka1@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period with u64 data length
+Date:   Fri, 24 Jul 2020 23:36:52 +0200
+Message-Id: <20200724213659.273599-3-martin.botka1@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200724213659.273599-1-martin.botka1@gmail.com>
+References: <20200724213659.273599-1-martin.botka1@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for refactoring kernel_read_file*(), remove the redundant
-"size" argument which is not needed: it can be included in the return
-code, with callers adjusted. (VFS reads already cannot be larger than
-INT_MAX.)
+From: Fenglin Wu <fenglinw@codeaurora.org>
 
-Acked-by: Scott Branden <scott.branden@broadcom.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Currently, PWM core driver provides interfaces for configuring PWM
+period and duty length in nanoseconds with an integer data type, so
+the max period can be only set to ~2.147 seconds. Add interfaces which
+can set PWM period and duty with u64 data type to remove this
+limitation.
+
+Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
+[konradybcio@gmail.com: Fast-forward from kernel 4.14 to 5.8]
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+Signed-off-by: Martin Botka <martin.botka1@gmail.com>
 ---
- drivers/base/firmware_loader/main.c | 10 ++++++----
- fs/kernel_read_file.c               | 20 +++++++++-----------
- include/linux/kernel_read_file.h    |  8 ++++----
- kernel/kexec_file.c                 | 14 +++++++-------
- kernel/module.c                     |  7 +++----
- security/integrity/digsig.c         |  5 +++--
- security/integrity/ima/ima_fs.c     |  6 ++++--
- 7 files changed, 36 insertions(+), 34 deletions(-)
+ drivers/pwm/core.c  | 30 +++++++++++------
+ drivers/pwm/sysfs.c |  6 ++--
+ include/linux/pwm.h | 79 +++++++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 95 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index d4a413ea48ce..f80c0d102be8 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -462,7 +462,7 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
- 					     size_t in_size,
- 					     const void *in_buffer))
- {
--	loff_t size;
-+	size_t size;
- 	int i, len;
- 	int rc = -ENOENT;
- 	char *path;
-@@ -494,10 +494,9 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
- 		fw_priv->size = 0;
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index f3aa44106962..82411e3ccbbb 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -511,12 +511,12 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
+ 	    last->period > s2.period &&
+ 	    last->period <= state->period)
+ 		dev_warn(chip->dev,
+-			 ".apply didn't pick the best available period (requested: %u, applied: %u, possible: %u)\n",
++			 ".apply didn't pick the best available period (requested: %llu, applied: %llu, possible: %llu)\n",
+ 			 state->period, s2.period, last->period);
  
- 		/* load firmware files from the mount namespace of init */
--		rc = kernel_read_file_from_path_initns(path, &buffer,
--						       &size, msize,
-+		rc = kernel_read_file_from_path_initns(path, &buffer, msize,
- 						       READING_FIRMWARE);
--		if (rc) {
-+		if (rc < 0) {
- 			if (rc != -ENOENT)
- 				dev_warn(device, "loading %s failed with error %d\n",
- 					 path, rc);
-@@ -506,6 +505,9 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
- 					 path);
- 			continue;
- 		}
-+		size = rc;
-+		rc = 0;
-+
- 		dev_dbg(device, "Loading firmware from %s\n", path);
- 		if (decompress) {
- 			dev_dbg(device, "f/w decompressing %s\n",
-diff --git a/fs/kernel_read_file.c b/fs/kernel_read_file.c
-index 54d972d4befc..dc28a8def597 100644
---- a/fs/kernel_read_file.c
-+++ b/fs/kernel_read_file.c
-@@ -5,7 +5,7 @@
- #include <linux/security.h>
- #include <linux/vmalloc.h>
+ 	if (state->enabled && state->period < s2.period)
+ 		dev_warn(chip->dev,
+-			 ".apply is supposed to round down period (requested: %u, applied: %u)\n",
++			 ".apply is supposed to round down period (requested: %llu, applied: %llu)\n",
+ 			 state->period, s2.period);
  
--int kernel_read_file(struct file *file, void **buf, loff_t *size,
-+int kernel_read_file(struct file *file, void **buf,
- 		     loff_t max_size, enum kernel_read_file_id id)
- {
- 	loff_t i_size, pos;
-@@ -29,7 +29,7 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
- 		ret = -EINVAL;
- 		goto out;
- 	}
--	if (i_size > SIZE_MAX || (max_size > 0 && i_size > max_size)) {
-+	if (i_size > INT_MAX || (max_size > 0 && i_size > max_size)) {
- 		ret = -EFBIG;
- 		goto out;
- 	}
-@@ -59,8 +59,6 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
- 	}
+ 	if (state->enabled &&
+@@ -525,14 +525,14 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
+ 	    last->duty_cycle > s2.duty_cycle &&
+ 	    last->duty_cycle <= state->duty_cycle)
+ 		dev_warn(chip->dev,
+-			 ".apply didn't pick the best available duty cycle (requested: %u/%u, applied: %u/%u, possible: %u/%u)\n",
++			 ".apply didn't pick the best available duty cycle (requested: %llu/%llu, applied: %llu/%llu, possible: %llu/%llu)\n",
+ 			 state->duty_cycle, state->period,
+ 			 s2.duty_cycle, s2.period,
+ 			 last->duty_cycle, last->period);
  
- 	ret = security_kernel_post_read_file(file, *buf, i_size, id);
--	if (!ret)
--		*size = pos;
+ 	if (state->enabled && state->duty_cycle < s2.duty_cycle)
+ 		dev_warn(chip->dev,
+-			 ".apply is supposed to round down duty_cycle (requested: %u/%u, applied: %u/%u)\n",
++			 ".apply is supposed to round down duty_cycle (requested: %llu/%llu, applied: %llu/%llu)\n",
+ 			 state->duty_cycle, state->period,
+ 			 s2.duty_cycle, s2.period);
  
- out_free:
- 	if (ret < 0) {
-@@ -72,11 +70,11 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+@@ -559,7 +559,7 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
+ 	    (s1.enabled && s1.period != last->period) ||
+ 	    (s1.enabled && s1.duty_cycle != last->duty_cycle)) {
+ 		dev_err(chip->dev,
+-			".apply is not idempotent (ena=%d pol=%d %u/%u) -> (ena=%d pol=%d %u/%u)\n",
++			".apply is not idempotent (ena=%d pol=%d %llu/%llu) -> (ena=%d pol=%d %llu/%llu)\n",
+ 			s1.enabled, s1.polarity, s1.duty_cycle, s1.period,
+ 			last->enabled, last->polarity, last->duty_cycle,
+ 			last->period);
+@@ -655,9 +655,19 @@ int pwm_apply_state(struct pwm_device *pwm, const struct pwm_state *state)
  
- out:
- 	allow_write_access(file);
--	return ret;
-+	return ret == 0 ? pos : ret;
- }
- EXPORT_SYMBOL_GPL(kernel_read_file);
+ 		if (state->period != pwm->state.period ||
+ 		    state->duty_cycle != pwm->state.duty_cycle) {
+-			err = chip->ops->config(pwm->chip, pwm,
+-						state->duty_cycle,
+-						state->period);
++			if (pwm->chip->ops->config_extend) {
++					err = pwm->chip->ops->config_extend(pwm->chip,
++								pwm, state->duty_cycle,
++								state->period);
++			} else {
++				if (state->period > UINT_MAX)
++					pr_warn("period %llu duty_cycle %llu will be truncated\n",
++								state->period,
++								state->duty_cycle);
++				err = pwm->chip->ops->config(pwm->chip, pwm,
++								state->duty_cycle,
++								state->period);
++			}
+ 			if (err)
+ 				return err;
  
--int kernel_read_file_from_path(const char *path, void **buf, loff_t *size,
-+int kernel_read_file_from_path(const char *path, void **buf,
- 			       loff_t max_size, enum kernel_read_file_id id)
- {
- 	struct file *file;
-@@ -89,14 +87,14 @@ int kernel_read_file_from_path(const char *path, void **buf, loff_t *size,
- 	if (IS_ERR(file))
- 		return PTR_ERR(file);
+@@ -1310,8 +1320,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
+ 		if (state.enabled)
+ 			seq_puts(s, " enabled");
  
--	ret = kernel_read_file(file, buf, size, max_size, id);
-+	ret = kernel_read_file(file, buf, max_size, id);
- 	fput(file);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
+-		seq_printf(s, " period: %u ns", state.period);
+-		seq_printf(s, " duty: %u ns", state.duty_cycle);
++		seq_printf(s, " period: %llu ns", state.period);
++		seq_printf(s, " duty: %llu ns", state.duty_cycle);
+ 		seq_printf(s, " polarity: %s",
+ 			   state.polarity ? "inverse" : "normal");
  
- int kernel_read_file_from_path_initns(const char *path, void **buf,
--				      loff_t *size, loff_t max_size,
-+				      loff_t max_size,
- 				      enum kernel_read_file_id id)
- {
- 	struct file *file;
-@@ -115,13 +113,13 @@ int kernel_read_file_from_path_initns(const char *path, void **buf,
- 	if (IS_ERR(file))
- 		return PTR_ERR(file);
+diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
+index 4ee1e81db0bc..f9d7ebfb48f4 100644
+--- a/drivers/pwm/sysfs.c
++++ b/drivers/pwm/sysfs.c
+@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
  
--	ret = kernel_read_file(file, buf, size, max_size, id);
-+	ret = kernel_read_file(file, buf, max_size, id);
- 	fput(file);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
+ 	pwm_get_state(pwm, &state);
  
--int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
-+int kernel_read_file_from_fd(int fd, void **buf, loff_t max_size,
- 			     enum kernel_read_file_id id)
- {
- 	struct fd f = fdget(fd);
-@@ -130,7 +128,7 @@ int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
- 	if (!f.file)
- 		goto out;
- 
--	ret = kernel_read_file(f.file, buf, size, max_size, id);
-+	ret = kernel_read_file(f.file, buf, max_size, id);
- out:
- 	fdput(f);
- 	return ret;
-diff --git a/include/linux/kernel_read_file.h b/include/linux/kernel_read_file.h
-index 78cf3d7dc835..0ca0bdbed1bd 100644
---- a/include/linux/kernel_read_file.h
-+++ b/include/linux/kernel_read_file.h
-@@ -36,16 +36,16 @@ static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
+-	return sprintf(buf, "%u\n", state.period);
++	return sprintf(buf, "%llu\n", state.period);
  }
  
- int kernel_read_file(struct file *file,
--		     void **buf, loff_t *size, loff_t max_size,
-+		     void **buf, loff_t max_size,
- 		     enum kernel_read_file_id id);
- int kernel_read_file_from_path(const char *path,
--			       void **buf, loff_t *size, loff_t max_size,
-+			       void **buf, loff_t max_size,
- 			       enum kernel_read_file_id id);
- int kernel_read_file_from_path_initns(const char *path,
--				      void **buf, loff_t *size, loff_t max_size,
-+				      void **buf, loff_t max_size,
- 				      enum kernel_read_file_id id);
- int kernel_read_file_from_fd(int fd,
--			     void **buf, loff_t *size, loff_t max_size,
-+			     void **buf, loff_t max_size,
- 			     enum kernel_read_file_id id);
+ static ssize_t period_store(struct device *child,
+@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
  
- #endif /* _LINUX_KERNEL_READ_FILE_H */
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 1358069ce9e9..eda19ca256a3 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -220,13 +220,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- {
- 	int ret;
- 	void *ldata;
--	loff_t size;
+ 	pwm_get_state(pwm, &state);
  
- 	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
--				       &size, INT_MAX, READING_KEXEC_IMAGE);
--	if (ret)
-+				       INT_MAX, READING_KEXEC_IMAGE);
-+	if (ret < 0)
+-	return sprintf(buf, "%u\n", state.duty_cycle);
++	return sprintf(buf, "%llu\n", state.duty_cycle);
+ }
+ 
+ static ssize_t duty_cycle_store(struct device *child,
+@@ -212,7 +212,7 @@ static ssize_t capture_show(struct device *child,
+ 	if (ret)
  		return ret;
--	image->kernel_buf_len = size;
-+	image->kernel_buf_len = ret;
  
- 	/* Call arch image probe handlers */
- 	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
-@@ -243,11 +242,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 	/* It is possible that there no initramfs is being loaded */
- 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
- 		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
--					       &size, INT_MAX,
-+					       INT_MAX,
- 					       READING_KEXEC_INITRAMFS);
--		if (ret)
-+		if (ret < 0)
- 			goto out;
--		image->initrd_buf_len = size;
-+		image->initrd_buf_len = ret;
-+		ret = 0;
- 	}
- 
- 	if (cmdline_len) {
-diff --git a/kernel/module.c b/kernel/module.c
-index e9765803601b..b6fd4f51cc30 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3988,7 +3988,6 @@ SYSCALL_DEFINE3(init_module, void __user *, umod,
- SYSCALL_DEFINE3(finit_module, int, fd, const char __user *, uargs, int, flags)
- {
- 	struct load_info info = { };
--	loff_t size;
- 	void *hdr = NULL;
- 	int err;
- 
-@@ -4002,12 +4001,12 @@ SYSCALL_DEFINE3(finit_module, int, fd, const char __user *, uargs, int, flags)
- 		      |MODULE_INIT_IGNORE_VERMAGIC))
- 		return -EINVAL;
- 
--	err = kernel_read_file_from_fd(fd, &hdr, &size, INT_MAX,
-+	err = kernel_read_file_from_fd(fd, &hdr, INT_MAX,
- 				       READING_MODULE);
--	if (err)
-+	if (err < 0)
- 		return err;
- 	info.hdr = hdr;
--	info.len = size;
-+	info.len = err;
- 
- 	return load_module(&info, uargs, flags);
+-	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
++	return sprintf(buf, "%llu %llu\n", result.period, result.duty_cycle);
  }
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index f8869be45d8f..97661ffabc4e 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -171,16 +171,17 @@ int __init integrity_add_key(const unsigned int id, const void *data,
- int __init integrity_load_x509(const unsigned int id, const char *path)
+ 
+ static ssize_t output_type_show(struct device *child,
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 10a102efadc4..ab235007287f 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -39,7 +39,7 @@ enum pwm_polarity {
+  * current PWM hardware state.
+  */
+ struct pwm_args {
+-	unsigned int period;
++	u64 period;
+ 	enum pwm_polarity polarity;
+ };
+ 
+@@ -66,9 +66,9 @@ enum pwm_output_type {
+  * @cycles_per_duty: number of PWM period cycles an entry stays at
+  */
+ struct pwm_output_pattern {
+-	unsigned int *duty_pattern;
++	u64 *duty_pattern;
+ 	unsigned int num_entries;
+-	unsigned int cycles_per_duty;
++	u64 cycles_per_duty;
+ };
+ 
+ /*
+@@ -79,8 +79,8 @@ struct pwm_output_pattern {
+  * @enabled: PWM enabled status
+  */
+ struct pwm_state {
+-	unsigned int period;
+-	unsigned int duty_cycle;
++	u64 period;
++	u64 duty_cycle;
+ 	enum pwm_polarity polarity;
+ 	enum pwm_output_type output_type;
+ 	struct pwm_output_pattern *output_pattern;
+@@ -138,12 +138,30 @@ static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
+ 		pwm->state.period = period;
+ }
+ 
++static inline void pwm_set_period_extend(struct pwm_device *pwm, u64 period)
++{
++	if (pwm)
++		pwm->state.period = period;
++}
++
+ static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
  {
- 	void *data = NULL;
--	loff_t size;
-+	size_t size;
- 	int rc;
- 	key_perm_t perm;
+ 	struct pwm_state state;
  
--	rc = kernel_read_file_from_path(path, &data, &size, 0,
-+	rc = kernel_read_file_from_path(path, &data, 0,
- 					READING_X509_CERTIFICATE);
- 	if (rc < 0) {
- 		pr_err("Unable to open file: %s (%d)", path, rc);
- 		return rc;
- 	}
-+	size = rc;
+ 	pwm_get_state(pwm, &state);
  
- 	perm = (KEY_POS_ALL & ~KEY_POS_SETATTR) | KEY_USR_VIEW | KEY_USR_READ;
++	if (state.period > UINT_MAX)
++		pr_warn("PWM period %llu is truncated\n", state.period);
++
++	return (unsigned int)state.period;
++}
++
++static inline u64 pwm_get_period_extend(const struct pwm_device *pwm)
++{
++	struct pwm_state state;
++
++	pwm_get_state(pwm, &state);
++
+ 	return state.period;
+ }
  
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index e13ffece3726..602f52717757 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -275,7 +275,7 @@ static ssize_t ima_read_policy(char *path)
+@@ -153,12 +171,30 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
+ 		pwm->state.duty_cycle = duty;
+ }
+ 
++static inline void pwm_set_duty_cycle_extend(struct pwm_device *pwm, u64 duty)
++{
++	if (pwm)
++		pwm->state.duty_cycle = duty;
++}
++
+ static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
  {
- 	void *data = NULL;
- 	char *datap;
--	loff_t size;
-+	size_t size;
- 	int rc, pathlen = strlen(path);
+ 	struct pwm_state state;
  
- 	char *p;
-@@ -284,11 +284,13 @@ static ssize_t ima_read_policy(char *path)
- 	datap = path;
- 	strsep(&datap, "\n");
+ 	pwm_get_state(pwm, &state);
  
--	rc = kernel_read_file_from_path(path, &data, &size, 0, READING_POLICY);
-+	rc = kernel_read_file_from_path(path, &data, 0, READING_POLICY);
- 	if (rc < 0) {
- 		pr_err("Unable to open file: %s (%d)", path, rc);
- 		return rc;
- 	}
-+	size = rc;
-+	rc = 0;
++	if (state.duty_cycle > UINT_MAX)
++		pr_warn("PWM duty cycle %llu is truncated\n", state.duty_cycle);
++
++	return (unsigned int)state.duty_cycle;
++}
++
++static inline u64 pwm_get_duty_cycle_extend(const struct pwm_device *pwm)
++{
++	struct pwm_state state;
++
++	pwm_get_state(pwm, &state);
++
+ 	return state.duty_cycle;
+ }
  
- 	datap = data;
- 	while (size > 0 && (p = strsep(&datap, "\n"))) {
+@@ -296,6 +332,8 @@ pwm_set_relative_duty_cycle(struct pwm_state *state, unsigned int duty_cycle,
+  *	       registered.
+  * @owner: helps prevent removal of modules exporting active PWMs
+  * @config: configure duty cycles and period length for this PWM
++ * @config_extend: configure duty cycles and period length for this
++ *	       PWM with u64 data type
+  * @set_polarity: configure the polarity of this PWM
+  * @enable: enable PWM output toggling
+  * @disable: disable PWM output toggling
+@@ -317,6 +355,8 @@ struct pwm_ops {
+ 	/* Only used by legacy drivers */
+ 	int (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		      int duty_ns, int period_ns);
++	int (*config_extend)(struct pwm_chip *chip, struct pwm_device *pwm,
++		      u64 duty_ns, u64 period_ns);
+ 	int (*set_polarity)(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			    enum pwm_polarity polarity);
+ 	int (*enable)(struct pwm_chip *chip, struct pwm_device *pwm);
+@@ -362,8 +402,8 @@ struct pwm_chip {
+  * @duty_cycle: duty cycle of the PWM signal (in nanoseconds)
+  */
+ struct pwm_capture {
+-	unsigned int period;
+-	unsigned int duty_cycle;
++	u64 period;
++	u64 duty_cycle;
+ };
+ 
+ #if IS_ENABLED(CONFIG_PWM)
+@@ -415,6 +455,31 @@ static inline int pwm_config(struct pwm_device *pwm, int duty_ns,
+ 	return pwm_apply_state(pwm, &state);
+ }
+ 
++/*
++ * pwm_config_extend() - change PWM period and duty length with u64 data type
++ * @pwm: PWM device
++ * @duty_ns: "on" time (in nanoseconds)
++ * @period_ns: duration (in nanoseconds) of one cycle
++ *
++ * Returns: 0 on success or a negative error code on failure.
++ */
++static inline int pwm_config_extend(struct pwm_device *pwm, u64 duty_ns,
++			     u64 period_ns)
++{
++	struct pwm_state state;
++
++	if (!pwm)
++		return -EINVAL;
++
++	pwm_get_state(pwm, &state);
++	if (state.duty_cycle == duty_ns && state.period == period_ns)
++		return 0;
++
++	state.duty_cycle = duty_ns;
++	state.period = period_ns;
++	return pwm_apply_state(pwm, &state);
++}
++
+ /**
+  * pwm_enable() - start a PWM output toggling
+  * @pwm: PWM device
 -- 
-2.25.1
+2.27.0
 
