@@ -2,85 +2,91 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A28C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB42C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 730092070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595630454;
-	bh=SxPVDdP6OkqBpUuq6d4bfLuZk9VZENEV/pSw/HUBnCg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ZU8mbiQA0HYRLH25Ms9xMkMbN2JfkQgdOMdPC0XW/MglwVecff9f13psAwXVfSvRB
-	 ia/n2t3OaGVqhDMcyrfwzbfowpfoSyidZBfpRmVq/uG3X4KDIhXakRLVR8lRsLixen
-	 r+f7hPEwCl1BB2zfLH2NKS6W0BvkZtIAhxN1sKVs=
+	by mail.kernel.org (Postfix) with ESMTP id A652A206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgGXWkx (ORCPT
+        id S1726702AbgGXWnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 18:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726154AbgGXWkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 18:40:53 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E220206EB;
-        Fri, 24 Jul 2020 22:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595630452;
-        bh=SxPVDdP6OkqBpUuq6d4bfLuZk9VZENEV/pSw/HUBnCg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=12lC1cOLKD7jvtFqwJd/pStvqC+TPSqiftoCstfYanSQCfUaoaHuYYFfHHYNx2EwV
-         tn8llZGp100/e0Ra5ZYkf9YV9kAkbm2I1PZIqbFF7vSi3H8a3HntGH6zRWfDiBbU3E
-         iX6NB0PKnLYCRu69u3EGKENM3dwOfliLXsyvPl38=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 882023522749; Fri, 24 Jul 2020 15:40:52 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 15:40:52 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>, will@kernel.org, arnd@arndb.de,
-        mark.rutland@arm.com, dvyukov@google.com, glider@google.com,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 0/8] kcsan: Compound read-write instrumentation
-Message-ID: <20200724224052.GX9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200724070008.1389205-1-elver@google.com>
- <20200724083920.GV10769@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724083920.GV10769@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 24 Jul 2020 18:43:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726154AbgGXWnq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 18:43:46 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27EDEC0619D3;
+        Fri, 24 Jul 2020 15:43:46 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7C0081274F734;
+        Fri, 24 Jul 2020 15:26:58 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 15:43:42 -0700 (PDT)
+Message-Id: <20200724.154342.1433271593505001306.davem@davemloft.net>
+To:     hch@lst.de
+Cc:     kuba@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, edumazet@google.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
+        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
+Subject: Re: get rid of the address_space override in setsockopt v2
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200723060908.50081-1-hch@lst.de>
+References: <20200723060908.50081-1-hch@lst.de>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 24 Jul 2020 15:26:59 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 10:39:20AM +0200, Peter Zijlstra wrote:
-> On Fri, Jul 24, 2020 at 09:00:00AM +0200, Marco Elver wrote:
-> 
-> > Marco Elver (8):
-> >   kcsan: Support compounded read-write instrumentation
-> >   objtool, kcsan: Add __tsan_read_write to uaccess whitelist
-> >   kcsan: Skew delay to be longer for certain access types
-> >   kcsan: Add missing CONFIG_KCSAN_IGNORE_ATOMICS checks
-> >   kcsan: Test support for compound instrumentation
-> >   instrumented.h: Introduce read-write instrumentation hooks
-> >   asm-generic/bitops: Use instrument_read_write() where appropriate
-> >   locking/atomics: Use read-write instrumentation for atomic RMWs
-> 
-> Looks good to me,
-> 
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+From: Christoph Hellwig <hch@lst.de>
+Date: Thu, 23 Jul 2020 08:08:42 +0200
 
-Applied with ack, thank you both!
+> setsockopt is the last place in architecture-independ code that still
+> uses set_fs to force the uaccess routines to operate on kernel pointers.
+> 
+> This series adds a new sockptr_t type that can contained either a kernel
+> or user pointer, and which has accessors that do the right thing, and
+> then uses it for setsockopt, starting by refactoring some low-level
+> helpers and moving them over to it before finally doing the main
+> setsockopt method.
+> 
+> Note that apparently the eBPF selftests do not even cover this path, so
+> the series has been tested with a testing patch that always copies the
+> data first and passes a kernel pointer.  This is something that works for
+> most common sockopts (and is something that the ePBF support relies on),
+> but unfortunately in various corner cases we either don't use the passed
+> in length, or in one case actually copy data back from setsockopt, or in
+> case of bpfilter straight out do not work with kernel pointers at all.
+> 
+> Against net-next/master.
+> 
+> Changes since v1:
+>  - check that users don't pass in kernel addresses
+>  - more bpfilter cleanups
+>  - cosmetic mptcp tweak
 
-							Thanx, Paul
+Series applied to net-next, I'm build testing and will push this out when
+that is done.
+
+Thanks.
