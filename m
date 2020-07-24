@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6470BC43459
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF38C433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E10020771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3C020786
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595576515;
-	bh=fStTa63/zlpMTDTDyAH0TKomthctGMET63ewzq4d76A=;
+	s=default; t=1595576527;
+	bh=dKJqleudTNRGvHBta+EdJZhNoV8vaQFq0Rb0f5WhRCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IXjJrwZiRV2ve2uLfKgq1Iy1vVD9Ip8ACXsJwUbrelxT61EzyIB749iMdVuekRN4x
-	 p0AOL2TAhBbNgiUk6Yh6jvP8Cmxl6QDOrkkG75bNhJ61xA3JpS5LUBn2TeK3w3QJwc
-	 uYw81r4sQNkwAupgSQU8MFuOJ4FB8sJcVTd3Se20=
+	b=kUY1RncIO1oSKPCfikrbtxjglxscm8An5APAEKykQHkgy9s3naGoW2TvQchcyJ476
+	 bOJ2uR3XHR9WXRLun7yRxnQBjLySvERZoGyXiJPh2eQ7PBsyBngdJjw6iSAQXhz/5u
+	 KlqnA+BvIRjIOPIYhfrI9DI33CDtaPCDJQfFRRxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgGXHly (ORCPT
+        id S1727971AbgGXHmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:41:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35212 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 03:42:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgGXHlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:41:50 -0400
+        id S1727860AbgGXHmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 03:42:04 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A86E20767;
-        Fri, 24 Jul 2020 07:41:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A745520771;
+        Fri, 24 Jul 2020 07:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595576509;
-        bh=fStTa63/zlpMTDTDyAH0TKomthctGMET63ewzq4d76A=;
+        s=default; t=1595576524;
+        bh=dKJqleudTNRGvHBta+EdJZhNoV8vaQFq0Rb0f5WhRCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pqiP9f5jPgElV8ZGYS7hJAiccj1oGzr/PTxqSOz73i1+7jLNrGzCM3D4An9R419iJ
-         Jbay4ev352LbCTbzNiCcQG5NGpo8zmiKQNoXG/q6LBSparyQ7cFTetZs/NLQwXEYtt
-         PFjg4DMs8uJggb2xFGJQsbJj8SWXO6zBY+GNekfU=
+        b=VGiWibofBIlsSRw6kOPvQOC8WunLRM8UDONcJyHWGZWLTXXP5EcG3SuhHN/G1+3Uo
+         +DJ4LUrwd4wtq79pTqxoLGIAtkKhZVTf9B/oExctf/yEY0YUNE+P6Np90CpmA+ZLTM
+         r7FzkKhvBbzZNlXQjUUAXKfu5BoeoXSIwKVky+L8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         Markus Mayer <mmayer@broadcom.com>,
@@ -58,9 +58,9 @@ To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 08/29] memory: of: Remove __func__ in device related messages
-Date:   Fri, 24 Jul 2020 09:40:17 +0200
-Message-Id: <20200724074038.5597-9-krzk@kernel.org>
+Subject: [PATCH v2 11/29] memory: emif-asm-offsets: Add GPLv2 SPDX license header
+Date:   Fri, 24 Jul 2020 09:40:20 +0200
+Message-Id: <20200724074038.5597-12-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200724074038.5597-1-krzk@kernel.org>
 References: <20200724074038.5597-1-krzk@kernel.org>
@@ -69,91 +69,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Messages printed by generic of_memory code will still be using device
-context so their location/meaning will be known.  Printing __func__ is
-not needed.
+Add GPLv2 license header and remove GPL boiler plate text.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/memory/of_memory.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/memory/of_memory.c b/drivers/memory/of_memory.c
-index cfcb91eeccfb..8a5b654eca6b 100644
---- a/drivers/memory/of_memory.c
-+++ b/drivers/memory/of_memory.c
-@@ -4,6 +4,7 @@
+---
+
+Changes since v1:
+1. Use "GPL-2.0" instead of "GPL-2.0-only". It's shorter.
+---
+ drivers/memory/emif-asm-offsets.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
+
+diff --git a/drivers/memory/emif-asm-offsets.c b/drivers/memory/emif-asm-offsets.c
+index db8043019ec6..4b98d1854cd7 100644
+--- a/drivers/memory/emif-asm-offsets.c
++++ b/drivers/memory/emif-asm-offsets.c
+@@ -1,16 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * TI AM33XX EMIF PM Assembly Offsets
   *
-  * Copyright (C) 2012 Texas Instruments, Inc.
-  * Copyright (C) 2019 Samsung Electronics Co., Ltd.
-+ * Copyright (C) 2020 Krzysztof Kozlowski <krzk@kernel.org>
+  * Copyright (C) 2016-2017 Texas Instruments Inc.
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation version 2.
+- *
+- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+- * kind, whether express or implied; without even the implied warranty
+- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
   */
+ #include <linux/ti-emif-sram.h>
  
- #include <linux/device.h>
-@@ -54,7 +55,7 @@ const struct lpddr2_min_tck *of_get_min_tck(struct device_node *np,
- 	return min;
- 
- default_min_tck:
--	dev_warn(dev, "%s: using default min-tck values\n", __func__);
-+	dev_warn(dev, "Using default min-tck values\n");
- 	return &lpddr2_jedec_min_tck;
- }
- EXPORT_SYMBOL(of_get_min_tck);
-@@ -114,7 +115,7 @@ const struct lpddr2_timings *of_get_ddr_timings(struct device_node *np_ddr,
- 		tim_compat = "jedec,lpddr2-timings";
- 		break;
- 	default:
--		dev_warn(dev, "%s: un-supported memory type\n", __func__);
-+		dev_warn(dev, "Unsupported memory type\n");
- 	}
- 
- 	for_each_child_of_node(np_ddr, np_tim)
-@@ -143,7 +144,7 @@ const struct lpddr2_timings *of_get_ddr_timings(struct device_node *np_ddr,
- 	return timings;
- 
- default_timings:
--	dev_warn(dev, "%s: using default timings\n", __func__);
-+	dev_warn(dev, "Using default memory timings\n");
- 	*nr_frequencies = ARRAY_SIZE(lpddr2_jedec_timings);
- 	return lpddr2_jedec_timings;
- }
-@@ -191,8 +192,7 @@ const struct lpddr3_min_tck *of_lpddr3_get_min_tck(struct device_node *np,
- 	ret |= of_property_read_u32(np, "tMRD-min-tck", &min->tMRD);
- 
- 	if (ret) {
--		dev_warn(dev, "%s: errors while parsing min-tck values\n",
--			 __func__);
-+		dev_warn(dev, "Errors while parsing min-tck values\n");
- 		devm_kfree(dev, min);
- 		goto default_min_tck;
- 	}
-@@ -200,7 +200,7 @@ const struct lpddr3_min_tck *of_lpddr3_get_min_tck(struct device_node *np,
- 	return min;
- 
- default_min_tck:
--	dev_warn(dev, "%s: using default min-tck values\n", __func__);
-+	dev_warn(dev, "Using default min-tck values\n");
- 	return NULL;
- }
- EXPORT_SYMBOL(of_lpddr3_get_min_tck);
-@@ -262,7 +262,7 @@ const struct lpddr3_timings
- 		tim_compat = "jedec,lpddr3-timings";
- 		break;
- 	default:
--		dev_warn(dev, "%s: un-supported memory type\n", __func__);
-+		dev_warn(dev, "Unsupported memory type\n");
- 	}
- 
- 	for_each_child_of_node(np_ddr, np_tim)
-@@ -291,7 +291,7 @@ const struct lpddr3_timings
- 	return timings;
- 
- default_timings:
--	dev_warn(dev, "%s: failed to get timings\n", __func__);
-+	dev_warn(dev, "Failed to get timings\n");
- 	*nr_frequencies = 0;
- 	return NULL;
- }
 -- 
 2.17.1
 
