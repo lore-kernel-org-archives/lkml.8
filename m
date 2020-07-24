@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF34C433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FFAC433F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42AD920768
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D2220768
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595576581;
-	bh=GJgQRG3YQ8ioaOa9xxhYIJQBikr3KReGS0guhEEKk+I=;
+	s=default; t=1595576586;
+	bh=+gFjDJ7e8jqodH9leHcZ6qQN7ZQWC5AX9izX5256A2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TD8sFOtDWRe20eYFh2GQVHxUAxLSBOAAOxZBbwyiaIOAY5ioVC1BfzncngwsCBRTn
-	 BP9YqYn0QbgLuX4VE2L2zFlkoq+XR6P3GPgfBFGAHTjgLhfqRMCmNl5L0cCY+/49nX
-	 PxWm/j2BrcpP0SVQghEHpGf5KutgID5Sd5hd526c=
+	b=sXc84+zyCu9yYmUHHQX2ei6QDnw61WiB+QKQzJ3bK765m+8RqRM+O0UGAHmDGVqjU
+	 ntONUyQKlUL+G6dUHqAH0m+/uF00ULruGnl/2k2QykHdo880U8q/1r3uoq7ePUxEy2
+	 iwFigpJ049o0EH/kFATGlRhGqXjx/Cn/0pjC6BC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbgGXHnA (ORCPT
+        id S1728169AbgGXHnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:43:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36998 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 03:43:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbgGXHm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:42:58 -0400
+        id S1726607AbgGXHnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 03:43:03 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2EB720768;
-        Fri, 24 Jul 2020 07:42:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 767E32076A;
+        Fri, 24 Jul 2020 07:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595576577;
-        bh=GJgQRG3YQ8ioaOa9xxhYIJQBikr3KReGS0guhEEKk+I=;
+        s=default; t=1595576582;
+        bh=+gFjDJ7e8jqodH9leHcZ6qQN7ZQWC5AX9izX5256A2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BdIk/H8GUSHjr/HovDw6Pq4dLSFg6A0UTNKZtpqe4RMs2ZkyJgMwNp3flKxbbFHJn
-         GQhvMmI39tdeLKtURHZ8kGVOF1mBvnEz19Kbxj5tOJ0wsaJdnzYyr23x9SnFtJcy4t
-         MEftBJI/4aILINjqDmn4f51iLHrAbseDrqVlJKmQ=
+        b=uunsCN4IQjA9/JhkgbHmhzNyifJQlaud+n1NnuJK+nsthFK5hUNJ5N7DiMGCXlftH
+         jH+0M9mBlHTyJu+8JSmmzGneCH0Rg/LBsM8J1w01dYI3aGwEPvoFuh0EjFti+74Vku
+         DdahPIfnq1JGHrzfZeJ/rCeKbsy8Yeu4LP9MoSlY=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         Markus Mayer <mmayer@broadcom.com>,
@@ -58,9 +58,9 @@ To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 22/29] memory: omap-gpmc: Fix whitespace issue
-Date:   Fri, 24 Jul 2020 09:40:31 +0200
-Message-Id: <20200724074038.5597-23-krzk@kernel.org>
+Subject: [PATCH v2 23/29] memory: pl172: Add GPLv2 SPDX license header
+Date:   Fri, 24 Jul 2020 09:40:32 +0200
+Message-Id: <20200724074038.5597-24-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200724074038.5597-1-krzk@kernel.org>
 References: <20200724074038.5597-1-krzk@kernel.org>
@@ -69,45 +69,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix minor whitespace and comment issues.  No functional changes.
+Add GPLv2 license header and remove GPL boiler plate text.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
 ---
+ drivers/memory/pl172.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Changes since v1:
-1. Adjust entire comment, as suggested by Arnd.
----
- drivers/memory/omap-gpmc.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-index 2a2d0297e071..2675ea4e37fe 100644
---- a/drivers/memory/omap-gpmc.c
-+++ b/drivers/memory/omap-gpmc.c
-@@ -1005,7 +1005,7 @@ static int gpmc_cs_remap(int cs, u32 base)
- 	 * Make sure we ignore any device offsets from the GPMC partition
- 	 * allocated for the chip select and that the new base confirms
- 	 * to the GPMC 16MB minimum granularity.
--	 */ 
-+	 */
- 	base &= ~(SZ_16M - 1);
+diff --git a/drivers/memory/pl172.c b/drivers/memory/pl172.c
+index ff57195b4e37..084891eb29cc 100644
+--- a/drivers/memory/pl172.c
++++ b/drivers/memory/pl172.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Memory controller driver for ARM PrimeCell PL172
+  * PrimeCell MultiPort Memory Controller (PL172)
+@@ -6,10 +7,6 @@
+  *
+  * Based on:
+  * TI AEMIF driver, Copyright (C) 2010 - 2013 Texas Instruments Inc.
+- *
+- * This file is licensed under the terms of the GNU General Public
+- * License version 2. This program is licensed "as is" without any
+- * warranty of any kind, whether express or implied.
+  */
  
- 	gpmc_cs_get_memconf(cs, &old_base, &size);
-@@ -1800,10 +1800,11 @@ static int gpmc_calc_common_timings(struct gpmc_timings *gpmc_t,
- 	return 0;
- }
- 
--/* TODO: remove this function once all peripherals are confirmed to
-+/*
-+ * TODO: remove this function once all peripherals are confirmed to
-  * work with generic timing. Simultaneously gpmc_cs_set_timings()
-  * has to be modified to handle timings in ps instead of ns
--*/
-+ */
- static void gpmc_convert_ps_to_ns(struct gpmc_timings *t)
- {
- 	t->cs_on /= 1000;
+ #include <linux/amba/bus.h>
 -- 
 2.17.1
 
