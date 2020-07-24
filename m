@@ -2,335 +2,206 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E61C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50422C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0851A2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27FA9206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:22:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="GaeOzs9I"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iMyLrAai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgGXQUW (ORCPT
+        id S1726804AbgGXQWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:20:22 -0400
-Received: from mout.gmx.net ([212.227.17.20]:46505 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbgGXQUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:20:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1595607576;
-        bh=/YovQTHRJmQubqYrS56yUdbql3XriGKFkBCOtgZjghc=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=GaeOzs9IaCTt+GApf7abL2ke091W8LCUGx/EvedNwMuu+isKYh9gAY3pvjf2ikfIX
-         5IlVzzMdZ2d0XU8HAbI91uo+rOUjY3N7BNdOYZJXsvGBP/6OnvoCmWGnauAmwpmOsQ
-         DS2kFfPpKcgVulW/KSuyq4VWxjd2SpLIB3Ff/7EQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([79.150.73.70]) by mail.gmx.com (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1M8hZJ-1juLiT0l1N-004g99; Fri, 24
- Jul 2020 18:19:36 +0200
-Date:   Fri, 24 Jul 2020 18:19:21 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v2 2/2] kernel/trace: Remove function callback casts
-Message-ID: <20200724161921.GA3123@ubuntu>
-References: <20200719155033.24201-1-oscar.carter@gmx.com>
- <20200719155033.24201-3-oscar.carter@gmx.com>
- <20200721140545.445f0258@oasis.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721140545.445f0258@oasis.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:w2rXQ2d8NeYY7YeYRSXL/U4Jc2n+Z+Iwf/Adr2RooWuaDA7T18Z
- aPjn5EBcoNxDkgGw8bnt3gCBcrWmzlyMdD3v3FmVhBuZ0rETYVWJV5Q3WXZNWnBVw08pcxg
- Ci1krHnmsf2DPNg0SWNM+wUrPzmmgGdNEp9uzTtEhV35qZRtYYjozENg6FeTTqokxKOcZig
- QsqZXT79uDhL8wJhlCVsQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:O4+txQQMV4s=:OVHu+RCAyHa+xa5XyF4FCp
- XzbhRZ5FB3oU3ATs4seeUGW+32eyT+EgJAQbzYjkrEgS8UnvHL2OVtNtzeyQR+rMi03oRIZUJ
- NsuNrH2qpaxWpxNqG2+tz79ntWZ+TzfbT1rUzWl7yNajkJu4XObHQcoAGaPkXJlrswpMlSumZ
- aayraY61nP/sAgaR7fvyCE32mTpyb5XnRyuuBwTtAPnDfZVFF9TT7O740bi9IUIkW2P9NSJMo
- 575OAtEWeLGjlmKssN4rA1QzIBkbeedICGyAuBduFJw367DfbY8ZP8SigxJd37XPzmhoroiek
- I2Ryka9Rws6WRHb7wBt7+AOui6SnGYY3zeh5ulFJLDmsUE2JENEwMhX3SDqmlwz0VXnRyx5nR
- G7mC33KNVF2W/ije1cOmLa8aetQkRIPfLcu//hga+i8ZxpDmtELMdv37VIsmypMu1aeuyd5dm
- zzxpuoM8JgwfOKW7Qgt4lpVLrWqHjr5j+ijqD5SfFazz0nZlki3oD1I9eL/JuA2W4VXDYwv+A
- 059Sj76/aBIUCH1vyNRi7Nw0CFzN9BPFPA+F05J0l/L+xgAneLEPnveor1+zdwVSc6QhCWz/S
- +CrwwnzOzLu7ZxBJ96O4QdztFn6t3yb7lngEH+zDPoOey1dN7WBA6NDMOuwCWqZTXHmwlExnO
- VuzGdfYKBADKMPn/bGE1a2vcgi1fuVtEd44Zzy71uxc2by+MfKBO+GSflG12tRPWHcRSC9HVy
- dVg9t+RIH37KwZkCxFzhTrYiAj/0KEfAO1Gc0s+RQRaniBwglvSMf1f/uMuCsgeJvneKUxjCK
- 2K6+BxOSLn/S5oBP4xNrSq0DXAb9VngWihho5YoZ5qPRBtBA+zAQAjV2au0JaW1KdomMHMUKw
- m4pVr2VoVtqnpK05RxxmgwUZTr1BRoBX7RZMeY68VfqGwQkHV+3ugRdUaY4tcjwsf/Bz8e85W
- e00vAeVvas0t96k80K3p1nqxekFBjmSjbYpjcHUO0uOwYMoPuiHpBt+VU+BpVj1K3T8AAib+N
- FG2fE2Azg/MS9YIsqCAaRylCN8YUb/WKUrCnpcjE29YOC3sLvKUwhxTkUGIEsv5XHyDervz/m
- KUKjVppdI2Io1lNsc3QbfMC5UfmUv4OMLkocGLsGQynnjws6mKdJWcdAFlV9L0fX1kT62+yOU
- tSnZSyqndVXdxMzDL80ucxpXsQXivzm761/v1CeaC3D4PuReomJgpsM/OeQzns9679YN4Ybrw
- gjzxob5wza6VhsFq+fb8CIy3Zsk/HtiJfZEjm/w==
-Content-Transfer-Encoding: quoted-printable
+        Fri, 24 Jul 2020 12:22:40 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:16795 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbgGXQWj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:22:39 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200724162233epoutp0442eed3b5305693fbfd6f705e20229787~kvMxZVZOf2787927879epoutp04b
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 16:22:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200724162233epoutp0442eed3b5305693fbfd6f705e20229787~kvMxZVZOf2787927879epoutp04b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1595607753;
+        bh=NpX7UIFijjINqb3RWh4VijxgxpUkaoRam/J9yuwq45w=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=iMyLrAais4clOXdyCr14MKC66+MzicmVz0j1aPLQqbMecHdRR6JcA2C8DhQacApyZ
+         oxS3sgvoUC+8J/WyAqphqb9sV6hjMTwlrj9VL8ysjN+g7Uh1Zzud3qZmxVR+ADG8Kj
+         Hoyl4aKiivcPhPrrIeoSctcyXEZZrtdoTLzC+GmE=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20200724162233epcas5p25a3465dd26c4fee9658f3b92f13833eb~kvMwnEXZj2133721337epcas5p2v;
+        Fri, 24 Jul 2020 16:22:33 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7F.BE.40333.8CA0B1F5; Sat, 25 Jul 2020 01:22:32 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200724155244epcas5p2902f57e36e490ee8772da19aa9408cdc~kuyu_vaUD1470214702epcas5p2W;
+        Fri, 24 Jul 2020 15:52:44 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200724155244epsmtrp1b58587ff618d981a15758dd145d2b24b~kuyu96uhd3045430454epsmtrp1R;
+        Fri, 24 Jul 2020 15:52:44 +0000 (GMT)
+X-AuditID: b6c32a4a-9a7ff70000019d8d-20-5f1b0ac88328
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        75.02.08382.CC30B1F5; Sat, 25 Jul 2020 00:52:44 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.110.206.5]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200724155242epsmtip185a0b33a5d3780b627934a3288559d7f~kuysrDUXM0434604346epsmtip14;
+        Fri, 24 Jul 2020 15:52:41 +0000 (GMT)
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bcrl@kvack.org
+Cc:     willy@infradead.org, hch@infradead.org, Damien.LeMoal@wdc.com,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, Kanchan Joshi <joshi.k@samsung.com>
+Subject: [PATCH v4 0/6] zone-append support in io-uring and aio
+Date:   Fri, 24 Jul 2020 21:19:16 +0530
+Message-Id: <1595605762-17010-1-git-send-email-joshi.k@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSWUwTURiFc2em07GxOhah1yI1VI2CsahxuZpGUTFOfHGJD2CiUGUCRqi1
+        QxXFGFyQWrUiqwJxCyRSE8BSBVnUVIkgWlCMpGxCBCMQt6KFQAtapsS37/zn/v85D5fCJdcF
+        MuqwJonVadQJClJEPH4RsnR5gygwesVXD0LjedkCVGh+DNCDrmskMk5YCZSW7sJQU8Y9DH1P
+        sxOofvIbibJzzwFUMWIgUV37MlRb10ig1upCEn3IvoejZs8rARofLSTDaeZJfpeQqbgfyrS+
+        1TMWZ6aQMVnNgBm2yJn055cxxtL3DdtF7ROpYtmEw8dZXdjGGFF85Uu3UOtZkOz6UyVMBW6p
+        EcygIL0amkvfk0YgoiR0DYAVmc2AF04Ae85+9wkXgB3dpWB6pakkB+eNOgAvDHYSvBgGsL7Y
+        8U9QFEmHwJYsvRfn0ir4pGiR9wlOmzH4u+0C4T3kR2+CfQVlU0zQi+G44+pUgJjeCpsmPb4w
+        OXTYL02FQTqNgoPlFgFvRMDerIckz35w8JVVyLMMDly76GMOjnXW+5YNALal3iR4YxN8V+vB
+        vO3wf0XLqsP4cRDMeV2KeRmnZ8Gr430YPxfDqlvTHAy7M/t9HaSw90aRwHsG0gwc6tzmHUvo
+        /dCd1STIAEH5/wPuAGAG81gtlxjHcmu0qzTsCSWnTuT0mjjloaOJFjD1a0J3VIHenp9KG8Ao
+        YAOQwhVzxfddsmiJOFZ98hSrOxqt0yewnA0EUoRCKlaMvjkgoePUSewRltWyumkXo2bIUjEi
+        WGk10D+OCd50xKyTx+RXT0jD5O1nZp23O01nx25X7Zv4cz2lZ4l8bOMeUYdGgSv78nI16f7F
+        +mO9EbNXjJYowpNHKpuNAZWNKSNf9g5EFvxKmL17w+bTFf7Lc/tBGvusv//RM1P7HWJwKGrn
+        FX9VY15nsGqrLjiFvbt9UXFGQGly68+a4trYofnxjoZHpqxD2+zHtc6F52Xu7KIc6+nyIreJ
+        Dgl4WaMowW2upJgA45boj3Mc6sKvBS2qp4kLdkz6tRyI0NVFxckMUWR45bD0U9tawYbVIWKw
+        /v38zM93bweOGiLNK+1z9jpnUmWRv209OVwDddEmOiiSlA8FDSgILl69MhTXceq/Avp+86QD
+        AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsWy7bCSnO4ZZul4g54jEha/p09htZizahuj
+        xeq7/WwWXf+2sFi0tn9jsjg9YRGTxbvWcywWR/+/ZbOYMq2J0WLz9w42i723tC327D3JYnF5
+        1xw2iytTFjFbnP97nNXi9485bA4CHjtn3WX32LxCy+Py2VKPTZ8msXv0bVnF6PF5k5xH+4Fu
+        Jo9NT94yBXBEcdmkpOZklqUW6dslcGVsP/KHveCvfMW3rzvYGxj/iHcxcnJICJhInF45lbmL
+        kYtDSGA3o0RTw2cWiIS4RPO1H+wQtrDEyn/PwWwhgY+MEn3vDboYOTjYBDQlLkwuBQmLCDhI
+        dB1/zAQyh1lgG5PE08Z2sHphAXuJJ7PXg81kEVCV+H2zlxHE5hVwljj9/y8jxHw5iZvnOpkn
+        MPIsYGRYxSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kRHLZamjsYt6/6oHeIkYmD8RCj
+        BAezkgjvim9S8UK8KYmVValF+fFFpTmpxYcYpTlYlMR5bxQujBMSSE8sSc1OTS1ILYLJMnFw
+        SjUw6U+cEHRS0q15YrWZTE9q8+aYUzUXdx3dn/hpXnVokML7h59Nkt4yyR1W23P+pV7DZ1/d
+        Upsdcg1L+NZZsyXxTFnHbXKfsWSW28NunxU3Ix3l+EXWbbx168/rdf/ubPOY2lHr6hk0/4Op
+        jt/WYMFjZ09ucsw22FozQ/9wxDyegH9PK7Z/9sk1tvsktFx7/vYu4bCL17OEIs7vkfdI+rrZ
+        0IKzWDikQcX3q1NTzr6D5+xObgxWyXj4ki+7Z1Hm+um31m1eUNq7JGfqQ2buu38OOTTwhh/8
+        OcNUVOvSVfb3p1hi94SdOLwjS0JzS8KGc2qvhDJ6djWtEVn1vuRBEldG1sdJ6/W0/t6ZE+P3
+        WtOvWYmlOCPRUIu5qDgRAHQYDHzKAgAA
+X-CMS-MailID: 20200724155244epcas5p2902f57e36e490ee8772da19aa9408cdc
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200724155244epcas5p2902f57e36e490ee8772da19aa9408cdc
+References: <CGME20200724155244epcas5p2902f57e36e490ee8772da19aa9408cdc@epcas5p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
+Changes since v3:
+- Return absolute append offset in bytes, in both io_uring and aio
+- Repurpose cqe's res/flags and introduce res64 to send 64bit append-offset
+- Change iov_iter_truncate to report whether it actually truncated
+- Prevent short write and return failure if zone-append is spanning
+beyond end-of-device
+- Change ki_complete(...,long ret2) interface to support 64bit ret2
 
-On Tue, Jul 21, 2020 at 02:05:45PM -0400, Steven Rostedt wrote:
-> On Sun, 19 Jul 2020 17:50:33 +0200
-> Oscar Carter <oscar.carter@gmx.com> wrote:
->
-> > In an effort to enable -Wcast-function-type in the top-level Makefile =
-to
-> > support Control Flow Integrity builds, there are the need to remove al=
-l
-> > the function callback casts.
-> >
-> > ftrace_ops_list_func() can no longer be defined as ftrace_ops_no_ops()=
-.
-> > The reason for ftrace_ops_no_ops() is to use that when an architecture
-> > calls ftrace_ops_list_func() with only two parameters (called from
-> > assembly). And to make sure there's no C side-effects, those archs cal=
-l
-> > ftrace_ops_no_ops() which only has two parameters, as the function
-> > ftrace_ops_list_func() has four parameters.
-> >
-> > This patch removes the no longer needed function ftrace_ops_no_ops() a=
-nd
-> > all the function callback casts using the previous defined ftrace_func
-> > union and the two function helpers called ftrace_set_ufunc() and
-> > ftrace_same_address_ufunc().
->
-> Ug, I think I prefer the linker trick better.
->
-> >
-> > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> > ---
-> >  kernel/trace/ftrace.c | 48 ++++++++++++++++++++++++++----------------=
--
-> >  1 file changed, 29 insertions(+), 19 deletions(-)
-> >
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index fd8fbb422860..124ccf914657 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -143,9 +143,7 @@ static inline bool ftrace_same_address_ufunc(union=
- ftrace_func *ufunc,
-> >  	return (ufunc->ops =3D=3D func);
-> >  }
-> >  #else
-> > -/* See comment below, where ftrace_ops_list_func is defined */
-> > -static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_=
-ip);
-> > -#define ftrace_ops_list_func ((ftrace_func_t)ftrace_ops_no_ops)
-> > +static void ftrace_ops_list_func(unsigned long ip, unsigned long pare=
-nt_ip);
-> >
-> >  static inline void ftrace_set_ufunc(union ftrace_func *ufunc,
-> >  				    ftrace_func_no_ops_t func)
-> > @@ -198,22 +196,29 @@ static void ftrace_sync_ipi(void *data)
-> >  	smp_rmb();
-> >  }
-> >
-> > -static ftrace_func_t ftrace_ops_get_list_func(struct ftrace_ops *ops)
-> > +static union ftrace_func ftrace_ops_get_list_func(struct ftrace_ops *=
-ops)
-> >  {
-> > +	union ftrace_func list_func;
-> > +
-> >  	/*
-> >  	 * If this is a dynamic, RCU, or per CPU ops, or we force list func,
-> >  	 * then it needs to call the list anyway.
-> >  	 */
-> >  	if (ops->flags & (FTRACE_OPS_FL_DYNAMIC | FTRACE_OPS_FL_RCU) ||
-> >  	    FTRACE_FORCE_LIST_FUNC)
-> > -		return ftrace_ops_list_func;
-> > +		ftrace_set_ufunc(&list_func, ftrace_ops_list_func);
-> > +	else
-> > +		list_func.ops =3D ftrace_ops_get_func(ops);
-> >
-> > -	return ftrace_ops_get_func(ops);
-> > +	return list_func;
->
-> Is this the same as returning a pointer? It makes me very nervous about
-> returning a union. Can a compiler return something allocated on the stac=
-k?
+v3: https://lore.kernel.org/lkml/1593974870-18919-1-git-send-email-joshi.k@samsung.com/
 
-Yes, it can. The union is returned by value (copied). So, there is no
-problem.
+Changes since v2:
+- Use file append infra (O_APPEND/RWF_APPEND) to trigger zone-append
+(Christoph, Wilcox)
+- Added Block I/O path changes (Damien). Avoided append split into multi-bio.
+- Added patch to extend zone-append in block-layer to support bvec iov_iter.
+Append using io-uring fixed-buffer is enabled with this.
+- Made io-uring support code more concise, added changes mentioned by Pavel.
 
-If you don't like to return a union by value, I can modify the prototype
-of the ftrace_ops_get_list_func() to the following one:
+v2: https://lore.kernel.org/io-uring/1593105349-19270-1-git-send-email-joshi.k@samsung.com/
 
-static void ftrace_ops_get_list_func(struct ftrace_ops *ops,
-				     union ftrace_func *list_func)
+Changes since v1:
+- No new opcodes in uring or aio. Use RWF_ZONE_APPEND flag instead.
+- linux-aio changes vanish because of no new opcode
+- Fixed the overflow and other issues mentioned by Damien
+- Simplified uring support code, fixed the issues mentioned by Pavel
+- Added error checks for io-uring fixed-buffer and sync kiocb
 
-This way the old local variable "list_func" is removed and we need to pass
-the address of a union to this function. Then the function modify the unio=
-n.
+v1: https://lore.kernel.org/io-uring/1592414619-5646-1-git-send-email-joshi.k@samsung.com/
 
-If you prefer this option I have no problem with the change.
+Cover letter (updated):
 
-> Also, don't use "ufunc" as that makes me think its a user space variable=
-.
+This patchset enables zone-append using io-uring/linux-aio, on block IO path.
+Purpose is to provide zone-append consumption ability to applications which are
+using zoned-block-device directly.
+Application can send write with existing O/RWF_APPEND;On a zoned-block-device
+this will trigger zone-append. On regular block device, existing file-append
+behavior is retained. However, infra allows zone-append to be triggered on
+any file if FMODE_ZONE_APPEND (new kernel-only fmode) is set during open.
 
-Ok, would "bfunc" or "jfunc" be better?
-bfunc =3D> blend - function
-jfunc =3D> join - function
+With zone-append, written-location within zone is known only after completion.
+So apart from the usual return value of write, additional means are
+needed to obtain the actual written-location.
 
-> >  }
-> >
-> >  static void update_ftrace_function(void)
-> >  {
-> > -	ftrace_func_t func;
-> > +	union ftrace_func func;
-> > +#ifndef CONFIG_DYNAMIC_FTRACE
-> > +	union ftrace_func tmp;
-> > +#endif
-> >
-> >  	/*
-> >  	 * Prepare the ftrace_ops that the arch callback will use.
-> > @@ -225,7 +230,7 @@ static void update_ftrace_function(void)
-> >
-> >  	/* If there's no ftrace_ops registered, just call the stub function =
-*/
-> >  	if (set_function_trace_op =3D=3D &ftrace_list_end) {
-> > -		func =3D ftrace_stub;
-> > +		func.ops =3D ftrace_stub;
-> >
-> >  	/*
-> >  	 * If we are at the end of the list and this ops is
-> > @@ -239,21 +244,21 @@ static void update_ftrace_function(void)
-> >  	} else {
-> >  		/* Just use the default ftrace_ops */
-> >  		set_function_trace_op =3D &ftrace_list_end;
-> > -		func =3D ftrace_ops_list_func;
-> > +		ftrace_set_ufunc(&func, ftrace_ops_list_func);
-> >  	}
-> >
-> >  	update_function_graph_func();
-> >
-> >  	/* If there's no change, then do nothing more here */
-> > -	if (ftrace_trace_function =3D=3D func)
-> > +	if (ftrace_trace_function =3D=3D func.ops)
-> >  		return;
-> >
-> >  	/*
-> >  	 * If we are using the list function, it doesn't care
-> >  	 * about the function_trace_ops.
-> >  	 */
-> > -	if (func =3D=3D ftrace_ops_list_func) {
-> > -		ftrace_trace_function =3D func;
-> > +	if (ftrace_same_address_ufunc(&func, ftrace_ops_list_func)) {
-> > +		ftrace_trace_function =3D func.ops;
-> >  		/*
-> >  		 * Don't even bother setting function_trace_ops,
-> >  		 * it would be racy to do so anyway.
-> > @@ -272,7 +277,9 @@ static void update_ftrace_function(void)
-> >  	 * function we want, albeit indirectly, but it handles the
-> >  	 * ftrace_ops and doesn't depend on function_trace_op.
-> >  	 */
-> > -	ftrace_trace_function =3D ftrace_ops_list_func;
-> > +	ftrace_set_ufunc(&tmp, ftrace_ops_list_func);
-> > +	ftrace_trace_function =3D tmp.ops;
-> > +
-> >  	/*
-> >  	 * Make sure all CPUs see this. Yes this is slow, but static
-> >  	 * tracing is slow and nasty to have enabled.
-> > @@ -287,7 +294,7 @@ static void update_ftrace_function(void)
-> >  	/* OK, we are all set to update the ftrace_trace_function now! */
-> >  #endif /* !CONFIG_DYNAMIC_FTRACE */
-> >
-> > -	ftrace_trace_function =3D func;
-> > +	ftrace_trace_function =3D func.ops;
-> >  }
->
-> This looks really intrusive for what it's trying to accomplish.
+In aio, 64bit append-offset is returned to application using res2
+field of io_event -
 
-What this patch is trying to accomplish is to remove the warning
--Wcast-function-type in a way that allows the CFI build to get the
-necessary info about the prototypes (4 parameters or 2 parameters) of
-the functions used for archs that support ftrace ops and for the archs
-that don't support ftrace ops. This info is necessary to allow the
-compiler to insert a check to guarantee that an indirect call can only
-jump to functions that match the prototype. This way, the attack surface
-is reduced if an attacker can get some control over the system.
+struct io_event {
+        __u64           data;           /* the data field from the iocb */
+        __u64           obj;            /* what iocb this event came from */
+        __s64           res;            /* result code for this event */
+        __s64           res2;           /* secondary result */
+};
 
-> The linker trick is far less intrusive, and I believe less error prone.
+In io-uring, [cqe->res, cqq->flags] repurposed into res64 to return
+64bit append-offset to user-space.
 
-If we use the linker trick, the warning -Wcast-function-type dissapears,
-but in a way that makes impossible to the compiler to get the necessary
-info about function prototypes to insert the commented check. As far I
-know, this linker trick (redirection of a function) is hidden for the
-CFI build.
+struct io_uring_cqe {
+        __u64   user_data;      /* sqe->data submission passed back */
+        union {
+                struct {
+                        __s32   res;    /* result code for this event */
+                        __u32   flags;
+                };
+                __s64   res64;  /* appending offset for zone append */
+        };
+};
+Zone-append write is ensured not to be a short-write.
 
-So, in my opinion, the linker trick is not suitable if we want to protect
-the function pointers of the ftrace subsystem against an attack that
-modifiy the normal flow of the kernel.
+Kanchan Joshi (3):
+  fs: introduce FMODE_ZONE_APPEND and IOCB_ZONE_APPEND
+  block: add zone append handling for direct I/O path
+  block: enable zone-append for iov_iter of bvec type
 
-> -- Steve
+SelvaKumar S (3):
+  fs: change ki_complete interface to support 64bit ret2
+  uio: return status with iov truncation
+  io_uring: add support for zone-append
 
-Thanks,
-Oscar Carter
+ block/bio.c                       | 31 ++++++++++++++++++++---
+ drivers/block/loop.c              |  2 +-
+ drivers/nvme/target/io-cmd-file.c |  2 +-
+ drivers/target/target_core_file.c |  2 +-
+ fs/aio.c                          |  2 +-
+ fs/block_dev.c                    | 51 +++++++++++++++++++++++++++++--------
+ fs/io_uring.c                     | 53 +++++++++++++++++++++++++++++++--------
+ fs/overlayfs/file.c               |  2 +-
+ include/linux/fs.h                | 16 +++++++++---
+ include/linux/uio.h               |  7 ++++--
+ include/uapi/linux/io_uring.h     |  9 +++++--
+ 11 files changed, 142 insertions(+), 35 deletions(-)
 
-> >
-> >  static void add_ftrace_ops(struct ftrace_ops __rcu **list,
-> > @@ -2680,6 +2687,7 @@ void ftrace_modify_all_code(int command)
-> >  	int update =3D command & FTRACE_UPDATE_TRACE_FUNC;
-> >  	int mod_flags =3D 0;
-> >  	int err =3D 0;
-> > +	union ftrace_func func;
-> >
-> >  	if (command & FTRACE_MAY_SLEEP)
-> >  		mod_flags =3D FTRACE_MODIFY_MAY_SLEEP_FL;
-> > @@ -2695,7 +2703,8 @@ void ftrace_modify_all_code(int command)
-> >  	 * traced.
-> >  	 */
-> >  	if (update) {
-> > -		err =3D ftrace_update_ftrace_func(ftrace_ops_list_func);
-> > +		ftrace_set_ufunc(&func, ftrace_ops_list_func);
-> > +		err =3D ftrace_update_ftrace_func(func.ops);
-> >  		if (FTRACE_WARN_ON(err))
-> >  			return;
-> >  	}
-> > @@ -2705,7 +2714,9 @@ void ftrace_modify_all_code(int command)
-> >  	else if (command & FTRACE_DISABLE_CALLS)
-> >  		ftrace_replace_code(mod_flags);
-> >
-> > -	if (update && ftrace_trace_function !=3D ftrace_ops_list_func) {
-> > +	ftrace_set_ufunc(&func, ftrace_ops_list_func);
-> > +
-> > +	if (update && ftrace_trace_function !=3D func.ops) {
-> >  		function_trace_op =3D set_function_trace_op;
-> >  		smp_wmb();
-> >  		/* If irqs are disabled, we are in stop machine */
-> > @@ -6890,14 +6901,13 @@ static void ftrace_ops_list_func(unsigned long=
- ip, unsigned long parent_ip,
-> >  {
-> >  	__ftrace_ops_list_func(ip, parent_ip, NULL, regs);
-> >  }
-> > -NOKPROBE_SYMBOL(ftrace_ops_list_func);
-> >  #else
-> > -static void ftrace_ops_no_ops(unsigned long ip, unsigned long parent_=
-ip)
-> > +static void ftrace_ops_list_func(unsigned long ip, unsigned long pare=
-nt_ip)
-> >  {
-> >  	__ftrace_ops_list_func(ip, parent_ip, NULL, NULL);
-> >  }
-> > -NOKPROBE_SYMBOL(ftrace_ops_no_ops);
-> >  #endif
-> > +NOKPROBE_SYMBOL(ftrace_ops_list_func);
-> >
-> >  /*
-> >   * If there's only one function registered but it does not support
-> > --
-> > 2.20.1
->
+-- 
+2.7.4
+
