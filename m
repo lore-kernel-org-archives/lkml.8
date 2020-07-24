@@ -2,176 +2,71 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE998C4345E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDD8C43465
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A193620771
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:24:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595615087;
-	bh=lEKVZDzJhtzFur3P/7OyNZHCfVYi8hoC3ip/4L1ggro=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w/Op9n+/NTAQD/A/7lZD5WhjQ/K3rwLzZzOGtIyVC5e1RDc6vYdHbTieAFiqGaoGz
-	 4CeEyXB/CGgL/FviJhdurTluv19D2MpRdtjwxzaDrQthSvsSw1/FMHOdtC7SswoWaX
-	 BsKD3PSV/RhLTVMmfVYQws2AAQzXKiaqIR5kRtb8=
+	by mail.kernel.org (Postfix) with ESMTP id 1452A20737
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:24:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgGXSYq (ORCPT
+        id S1727812AbgGXSYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 14:24:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727089AbgGXSYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 14:24:43 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CAF620791;
-        Fri, 24 Jul 2020 18:24:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595615082;
-        bh=lEKVZDzJhtzFur3P/7OyNZHCfVYi8hoC3ip/4L1ggro=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RL46EB3CTxtzUCIVIi+XqDeDv38NEZ0GXle2sMfIjXN4qNhS46/CeXzxZHfeYTqTt
-         2VyVzL5bGmQA2yUlpROLf56SpgmwH8kUj8D88wre4+YvdT42fz7kVJh8nGfvQbAsAZ
-         wO+lF7iSF1rC46bkzDYMqaxMg1jQjmmGdcyf08ts=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Markus Mayer <mmayer@broadcom.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 07/16] memory: omap-gpmc: Correct white space issues
-Date:   Fri, 24 Jul 2020 20:23:19 +0200
-Message-Id: <20200724182328.3348-8-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200724182328.3348-1-krzk@kernel.org>
-References: <20200724182328.3348-1-krzk@kernel.org>
+        Fri, 24 Jul 2020 14:24:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbgGXSYv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 14:24:51 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72FC9C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 11:24:51 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jz2NF-001mjV-8S; Fri, 24 Jul 2020 18:24:49 +0000
+Date:   Fri, 24 Jul 2020 19:24:49 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [git pull] xtensa csum regression fix
+Message-ID: <20200724182449.GO2786714@ZenIV.linux.org.uk>
+References: <20200724181644.GN2786714@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724181644.GN2786714@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove some unneeded blank lines, align indentation with open
-parenthesis (or fix existing alignment).
+On Fri, Jul 24, 2020 at 07:16:44PM +0100, Al Viro wrote:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/memory/omap-gpmc.c | 24 +++++++-----------------
- 1 file changed, 7 insertions(+), 17 deletions(-)
+Argh...  Sorry, hit send too early; the missing summary would be
 
-diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-index e4d2f359bcfa..9339a7c75fdd 100644
---- a/drivers/memory/omap-gpmc.c
-+++ b/drivers/memory/omap-gpmc.c
-@@ -297,7 +297,6 @@ static unsigned long gpmc_get_fclk_period(void)
-  */
- static unsigned long gpmc_get_clk_period(int cs, enum gpmc_clk_domain cd)
- {
--
- 	unsigned long tick_ps = gpmc_get_fclk_period();
- 	u32 l;
- 	int div;
-@@ -317,7 +316,6 @@ static unsigned long gpmc_get_clk_period(int cs, enum gpmc_clk_domain cd)
- 	}
- 
- 	return tick_ps;
--
- }
- 
- static unsigned int gpmc_ns_to_clk_ticks(unsigned int time_ns, int cs,
-@@ -509,7 +507,7 @@ static void gpmc_cs_show_timings(int cs, const char *desc)
- 	GPMC_GET_RAW_BOOL(GPMC_CS_CONFIG1,  4,  4, "time-para-granularity");
- 	GPMC_GET_RAW(GPMC_CS_CONFIG1,  8,  9, "mux-add-data");
- 	GPMC_GET_RAW_SHIFT_MAX(GPMC_CS_CONFIG1, 12, 13, 1,
--			 GPMC_CONFIG1_DEVICESIZE_MAX, "device-width");
-+			       GPMC_CONFIG1_DEVICESIZE_MAX, "device-width");
- 	GPMC_GET_RAW(GPMC_CS_CONFIG1, 16, 17, "wait-pin");
- 	GPMC_GET_RAW_BOOL(GPMC_CS_CONFIG1, 21, 21, "wait-on-write");
- 	GPMC_GET_RAW_BOOL(GPMC_CS_CONFIG1, 22, 22, "wait-on-read");
-@@ -623,9 +621,8 @@ static int set_gpmc_timing_reg(int cs, int reg, int st_bit, int end_bit, int max
- 
- 	l = gpmc_cs_read_reg(cs, reg);
- #ifdef CONFIG_OMAP_GPMC_DEBUG
--	pr_info(
--		"GPMC CS%d: %-17s: %3d ticks, %3lu ns (was %3i ticks) %3d ns\n",
--	       cs, name, ticks, gpmc_get_clk_period(cs, cd) * ticks / 1000,
-+	pr_info("GPMC CS%d: %-17s: %3d ticks, %3lu ns (was %3i ticks) %3d ns\n",
-+		cs, name, ticks, gpmc_get_clk_period(cs, cd) * ticks / 1000,
- 			(l >> st_bit) & mask, time);
- #endif
- 	l &= ~(mask << st_bit);
-@@ -652,7 +649,6 @@ static int set_gpmc_timing_reg(int cs, int reg, int st_bit, int end_bit, int max
-  */
- static int gpmc_calc_waitmonitoring_divider(unsigned int wait_monitoring)
- {
--
- 	int div = gpmc_ns_to_ticks(wait_monitoring);
- 
- 	div += GPMC_CONFIG1_WAITMONITORINGTIME_MAX - 1;
-@@ -664,7 +660,6 @@ static int gpmc_calc_waitmonitoring_divider(unsigned int wait_monitoring)
- 		div = 1;
- 
- 	return div;
--
- }
- 
- /**
-@@ -718,7 +713,6 @@ int gpmc_cs_set_timings(int cs, const struct gpmc_timings *t,
- 	if (!s->sync_read && !s->sync_write &&
- 	    (s->wait_on_read || s->wait_on_write)
- 	   ) {
--
- 		div = gpmc_calc_waitmonitoring_divider(t->wait_monitoring);
- 		if (div < 0) {
- 			pr_err("%s: waitmonitoringtime %3d ns too large for greatest gpmcfclkdivider.\n",
-@@ -1512,7 +1506,6 @@ static void gpmc_mem_exit(void)
- 			continue;
- 		gpmc_cs_delete_mem(cs);
- 	}
--
- }
- 
- static void gpmc_mem_init(void)
-@@ -1681,17 +1674,14 @@ static int gpmc_calc_async_read_timings(struct gpmc_timings *gpmc_t,
- 	/* oe_on */
- 	temp = dev_t->t_oeasu;
- 	if (mux)
--		temp = max_t(u32, temp,
--			gpmc_t->adv_rd_off + dev_t->t_aavdh);
-+		temp = max_t(u32, temp, gpmc_t->adv_rd_off + dev_t->t_aavdh);
- 	gpmc_t->oe_on = gpmc_round_ps_to_ticks(temp);
- 
- 	/* access */
- 	temp = max_t(u32, dev_t->t_iaa, /* XXX: remove t_iaa in async ? */
--				gpmc_t->oe_on + dev_t->t_oe);
--	temp = max_t(u32, temp,
--				gpmc_t->cs_on + dev_t->t_ce);
--	temp = max_t(u32, temp,
--				gpmc_t->adv_on + dev_t->t_aa);
-+		     gpmc_t->oe_on + dev_t->t_oe);
-+	temp = max_t(u32, temp, gpmc_t->cs_on + dev_t->t_ce);
-+	temp = max_t(u32, temp, gpmc_t->adv_on + dev_t->t_aa);
- 	gpmc_t->access = gpmc_round_ps_to_ticks(temp);
- 
- 	gpmc_t->oe_off = gpmc_t->access + gpmc_ticks_to_ps(1);
--- 
-2.17.1
+	Max Filippov has caught a breakage introduced in xtensa this
+cycle by the csum_and_copy_..._user() series.  Cut'n'paste from the
+wrong source - the check that belongs in csum_and_copy_to_user() has
+ended up both there and in csum_and_copy_from_user().  Please, apply
 
+
+> The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+> 
+>   Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+> 
+> for you to fetch changes up to 5fff09bc141570cd15c118b097b17dec832b517f:
+> 
+>   xtensa: fix access check in csum_and_copy_from_user (2020-07-21 19:08:25 -0400)
+> 
+> ----------------------------------------------------------------
+> Max Filippov (1):
+>       xtensa: fix access check in csum_and_copy_from_user
+> 
+>  arch/xtensa/include/asm/checksum.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
