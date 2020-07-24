@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ED4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B893EC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCBE6206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A64422B3F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgGXQEF (ORCPT
+        id S1727781AbgGXQEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:04:05 -0400
-Received: from 8bytes.org ([81.169.241.247]:59268 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:04:15 -0400
+Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgGXQEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:00 -0400
+        id S1726870AbgGXQEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:06 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id B1ABB7CB;
-        Fri, 24 Jul 2020 18:03:57 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id BA2AFE60;
+        Fri, 24 Jul 2020 18:04:03 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
+        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
         Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -36,7 +36,6 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Dan Williams <dan.j.williams@intel.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
@@ -46,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 03/75] KVM: SVM: Use __packed shorthand
-Date:   Fri, 24 Jul 2020 18:02:24 +0200
-Message-Id: <20200724160336.5435-4-joro@8bytes.org>
+Subject: [PATCH v5 14/75] x86/boot/compressed/64: Add page-fault handler
+Date:   Fri, 24 Jul 2020 18:02:35 +0200
+Message-Id: <20200724160336.5435-15-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -59,74 +58,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@alien8.de>
+From: Joerg Roedel <jroedel@suse.de>
 
-Use the shorthand to make it more readable.
+Install a page-fault handler to add an identity mapping to addresses
+not yet mapped. Also do some checking whether the error code is sane.
 
-No functional changes.
+This makes non SEV-ES machines use the exception handling
+infrastructure in the pre-decompressions boot code too, making it less
+likely to break in the future.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/svm.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/boot/compressed/ident_map_64.c    | 39 ++++++++++++++++++++++
+ arch/x86/boot/compressed/idt_64.c          |  2 ++
+ arch/x86/boot/compressed/idt_handlers_64.S |  2 ++
+ arch/x86/boot/compressed/misc.h            |  6 ++++
+ 4 files changed, 49 insertions(+)
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index 0420250b008b..af91ced0f370 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -150,14 +150,14 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
- #define SVM_NESTED_CTL_NP_ENABLE	BIT(0)
- #define SVM_NESTED_CTL_SEV_ENABLE	BIT(1)
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index d9932a133ac9..e3d980ae9c2b 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -19,10 +19,13 @@
+ /* No PAGE_TABLE_ISOLATION support needed either: */
+ #undef CONFIG_PAGE_TABLE_ISOLATION
  
--struct __attribute__ ((__packed__)) vmcb_seg {
-+struct vmcb_seg {
- 	u16 selector;
- 	u16 attrib;
- 	u32 limit;
- 	u64 base;
--};
-+} __packed;
++#include "error.h"
+ #include "misc.h"
  
--struct __attribute__ ((__packed__)) vmcb_save_area {
-+struct vmcb_save_area {
- 	struct vmcb_seg es;
- 	struct vmcb_seg cs;
- 	struct vmcb_seg ss;
-@@ -231,9 +231,9 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
- 	u64 xcr0;
- 	u8 valid_bitmap[16];
- 	u64 x87_state_gpa;
--};
-+} __packed;
- 
--struct __attribute__ ((__packed__)) ghcb {
-+struct ghcb {
- 	struct vmcb_save_area save;
- 	u8 reserved_save[2048 - sizeof(struct vmcb_save_area)];
- 
-@@ -242,7 +242,7 @@ struct __attribute__ ((__packed__)) ghcb {
- 	u8 reserved_1[10];
- 	u16 protocol_version;	/* negotiated SEV-ES/GHCB protocol version */
- 	u32 ghcb_usage;
--};
-+} __packed;
- 
- 
- static inline void __unused_size_checks(void)
-@@ -252,11 +252,11 @@ static inline void __unused_size_checks(void)
- 	BUILD_BUG_ON(sizeof(struct ghcb) != 4096);
+ /* These actually do the work of building the kernel identity maps. */
+ #include <linux/pgtable.h>
++#include <asm/trap_pf.h>
++#include <asm/trapnr.h>
+ #include <asm/init.h>
+ /* Use the static base for this part of the boot process */
+ #undef __PAGE_OFFSET
+@@ -160,3 +163,39 @@ void finalize_identity_maps(void)
+ {
+ 	write_cr3(top_level_pgt);
  }
++
++static void do_pf_error(const char *msg, unsigned long error_code,
++			unsigned long address, unsigned long ip)
++{
++	error_putstr(msg);
++
++	error_putstr("\nError Code: ");
++	error_puthex(error_code);
++	error_putstr("\nCR2: 0x");
++	error_puthex(address);
++	error_putstr("\nRIP relative to _head: 0x");
++	error_puthex(ip - (unsigned long)_head);
++	error_putstr("\n");
++
++	error("Stopping.\n");
++}
++
++void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
++{
++	unsigned long address = native_read_cr2();
++
++	/*
++	 * Check for unexpected error codes. Unexpected are:
++	 *	- Faults on present pages
++	 *	- User faults
++	 *	- Reserved bits set
++	 */
++	if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD))
++		do_pf_error("Unexpected page-fault:", error_code, address, regs->ip);
++
++	/*
++	 * Error code is sane - now identity map the 2M region around
++	 * the faulting address.
++	 */
++	add_identity_map(address & PMD_MASK, PMD_SIZE);
++}
+diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
+index 082cd6bca033..5f083092a86d 100644
+--- a/arch/x86/boot/compressed/idt_64.c
++++ b/arch/x86/boot/compressed/idt_64.c
+@@ -40,5 +40,7 @@ void load_stage2_idt(void)
+ {
+ 	boot_idt_desc.address = (unsigned long)boot_idt;
  
--struct __attribute__ ((__packed__)) vmcb {
-+struct vmcb {
- 	struct vmcb_control_area control;
- 	u8 reserved_control[1024 - sizeof(struct vmcb_control_area)];
- 	struct vmcb_save_area save;
--};
-+} __packed;
++	set_idt_entry(X86_TRAP_PF, boot_page_fault);
++
+ 	load_boot_idt(&boot_idt_desc);
+ }
+diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
+index 36dee2f40a8b..b20e57504a94 100644
+--- a/arch/x86/boot/compressed/idt_handlers_64.S
++++ b/arch/x86/boot/compressed/idt_handlers_64.S
+@@ -68,3 +68,5 @@ SYM_FUNC_END(\name)
  
- #define SVM_CPUID_FUNC 0x8000000a
+ 	.text
+ 	.code64
++
++EXCEPTION_HANDLER	boot_page_fault do_boot_page_fault error_code=1
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 3a030a878d53..345c90fbc500 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -37,6 +37,9 @@
+ #define memptr unsigned
+ #endif
  
++/* boot/compressed/vmlinux start and end markers */
++extern char _head[], _end[];
++
+ /* misc.c */
+ extern memptr free_mem_ptr;
+ extern memptr free_mem_end_ptr;
+@@ -146,4 +149,7 @@ extern pteval_t __default_kernel_pte_mask;
+ extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
+ extern struct desc_ptr boot_idt_desc;
+ 
++/* IDT Entry Points */
++void boot_page_fault(void);
++
+ #endif /* BOOT_COMPRESSED_MISC_H */
 -- 
 2.27.0
 
