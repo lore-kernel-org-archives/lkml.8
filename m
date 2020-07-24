@@ -2,186 +2,147 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67836C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29ACAC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBB3206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08A7F206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:59:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="KXljTslu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfk3nWLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbgGXT4a (ORCPT
+        id S1726701AbgGXT7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:56:30 -0400
-Received: from mail-bn8nam12on2066.outbound.protection.outlook.com ([40.107.237.66]:33826
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726411AbgGXT4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:56:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n5uJU6KqO/dzqE+Mn7riBxERhWMQOjK3xyi+JkOYIfTNV1TnYd7xdOkfAws6c8GAvraLRnfJuC7qQ2zF0a3RbnxnVkudBGuhr4ACgsNA5X5pM8qmqK8YUvSqz7ORpeqs3IEQDsA4tD4W7jGs3YNwCDcHomJKSAzTAiRoSqftNxJDFaskAcxGguk7cjoft5p5MC6PrnR8+aUt2gFMrecQG4Lz2p7P2wn5F+Cetnv4W0VAxlqNL+gisa/obhNiAHxzcIfyVEfx1k9sYs31xPtrvLATi75meb3RdVBWEv4i9fpUTxAxpSsc4DyzCArUv30d8u4i1UfjTBDsd+O3rQhL4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NU/ius8UgfVJqWHtc7jqG+RWPsgHOQPKR/nQgqb0bM0=;
- b=Zl/ZctQst10Kd5H24AjxXLZI+7XkS8/3uYUFGK1nKuyHpayflPuP88iUIjkJCq7Fu1dDkvNEKCChqEo9a/NwM2Sldo8CUdseO/SyOKll4iHmUtW+1cthU+sPjmF4e1z1DFlx/ltk/sW8tOeyWg/CnETGUoNVwVmqKay6DQTEKq9q0CDWqUbkPVBkNFEu5FYRdSzwoK88Au3awt+38fLGzeySdCvWXp8vy5zaPcYpnN8Bdhqd/10EUGAGGAcTvw1FrsN48kw4o+KLwQoaTw8/iiI3mTty5wZELuTuTTj4f7bjGdMNoOcezTY+UE/wsTeqY/YUPJqwyHsKQKCe7/QfWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Fri, 24 Jul 2020 15:59:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgGXT7N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 15:59:13 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A107C0619D3;
+        Fri, 24 Jul 2020 12:59:13 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z3so5801306pfn.12;
+        Fri, 24 Jul 2020 12:59:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NU/ius8UgfVJqWHtc7jqG+RWPsgHOQPKR/nQgqb0bM0=;
- b=KXljTsluJScIBMxc/V+rEx9xG4Iyltndup8XJSNIhIN0gHVKEHSOEY46wWmhCy5Yz09YZp04t/IwhyItXh1zXzPrAMybEWrc+Nml78n0WiSIAERzdgVK/zefYdxLJFUW+D/bsCwcWfgHXZkfZL/5M+0qQ2CojD2YzuAOqhRrmok=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from MWHPR12MB1599.namprd12.prod.outlook.com (2603:10b6:301:10::12)
- by MWHPR12MB1599.namprd12.prod.outlook.com (2603:10b6:301:10::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Fri, 24 Jul
- 2020 19:56:26 +0000
-Received: from MWHPR12MB1599.namprd12.prod.outlook.com
- ([fe80::bd05:e7bf:ce39:6f32]) by MWHPR12MB1599.namprd12.prod.outlook.com
- ([fe80::bd05:e7bf:ce39:6f32%3]) with mapi id 15.20.3216.026; Fri, 24 Jul 2020
- 19:56:26 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
-        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ASoC: AMD: Restore PME_EN state at Power On
-Date:   Sat, 25 Jul 2020 01:25:52 +0530
-Message-Id: <20200724195600.11798-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR0101CA0043.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:22::29) To MWHPR12MB1599.namprd12.prod.outlook.com
- (2603:10b6:301:10::12)
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ojcIGO5CAmQ/rrq3+7bdIsRlDzBj1PpBf4wdlTsiCVU=;
+        b=mfk3nWLENugUYagFhxmELMHoOTUIn/A7K/vwYma1v2c3qSpl3bbf2wnRqIoRkdwURt
+         tpmZQmiLo+oIhcO+ejFiJvmA6DjMKJ25+tr8RbFJ6dQTqIf+HG3Fv4IbmYcryGHInhN7
+         cb0YAqAgwiuF/DiZ4swgSz1ZO5lukWreuAh25vWLrkDuF5JHyXM5QEFsMb2Vaaf5bB/L
+         5UVRKeyjUfzr3HfUjp76JlxdGriEp1WGz1Er3vRqYTABJ5RIg7X6h/KbRNo2iHA7S1HW
+         yriVXTNhE7uc8T0JrZIDufremMwv1dYJKeagrOkgV6vT0LOLtmkP2FKxid+hAr5FWsaE
+         RCyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ojcIGO5CAmQ/rrq3+7bdIsRlDzBj1PpBf4wdlTsiCVU=;
+        b=YYBbV3ox6If19NEGMVQX173VJNadsuwFH2OaVKw4T5M7Q0wePrtzK9S6oWJlUlpsMG
+         az90Bi0iiPw5tYbN0Qwxp7E7PV+igQ2SQumKSnOR8QHoycONXx/sMxHoLfrpKK/A/eSH
+         J7hhkbMXs+iw/pP4fHoYkX8iUJZGvyH1QbWaHoT9oeYxqF9yyPC3mATsQBXD7dL3hj7w
+         1NdLmfK1p5Y6kdf/ENnxhxTBLRmiQ+3WGo2hyw/RDddn/g8IL+JBDrkJPpqf7Befack5
+         8vtuT5c1w9yXKtdD60gcY2NiO0h7ncdOh2iZrPncP+amtTJ3zRNmhJSCY519Bl8Jk5z0
+         Jrgw==
+X-Gm-Message-State: AOAM532oR3pDf3SbQaQfGLzd7AC5keHykAly+N8RyjVjwdU0QAF0IINp
+        gruQSSiQ/ahOWh0A6oA8ZcjxKtQRCZuO+BRm6o0=
+X-Google-Smtp-Source: ABdhPJzW0BnWPjCjo818a0nVFHioJ4MmyYZx5d7bur507VD2Ys2Lwlt2ZZbqUxL0/XPIYyiVpBtNW0u8uFVUMC4+ROM=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr10141215pgi.203.1595620752921;
+ Fri, 24 Jul 2020 12:59:12 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from local.mshome.net (122.171.179.172) by MA1PR0101CA0043.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22 via Frontend Transport; Fri, 24 Jul 2020 19:56:23 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [122.171.179.172]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e40922fd-46a6-4972-ef6a-08d8300ba5b4
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1599:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MWHPR12MB1599781B3DD109ADD56A25AFF8770@MWHPR12MB1599.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GO1Wxa7H2pS2rztiNr5JiAIlgnYE6s9LqGrRwXrPm13UUisPA0n+jIeNH7fXjJmkAni45TvNkljqTS57uGQ/F2+zZ6Xwn/Tzo0IHBHfzXvMoPAzuqJtlKJX+a4nUV4IgcHyIGnOZUWUYwydaOypqrThnaV7uFzgIZcdPtqHzgyJvpJDmxr0dtRQ3uqAAzzww/01m9v9qFAT6MtaakW/nF+9KxAvGK3VnoG7kb9sRq3SkmAAeYiem4afY8B1fUwQqkk30YrC4R17okrsdEu5G1aqeium2m751Wel7fBnGF5MpGAcmrpEeY0TxyVNtyaWFmCmBWElQ1aIb8ywgHyS/eO77JEDIzcTH+TXZSf5qEkBNJljj1z1LJRKNFx1Y2Bo4
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR12MB1599.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(366004)(396003)(39860400002)(5660300002)(44832011)(2616005)(956004)(6512007)(86362001)(2906002)(66476007)(66946007)(66556008)(316002)(6506007)(4326008)(16526019)(186003)(26005)(8676002)(54906003)(478600001)(8936002)(6666004)(52116002)(6486002)(83380400001)(109986005)(1076003)(36756003)(266003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: CFkGkaVVpcRIOMTrUDkTWvuvCNpGsqi6uvVFkDMDkhLigULTXvKGyq+hccm4PvLXH8ncsGZHqa8EVQhCeKz29mIL3vrOk4y8r0VSRbzhXnkpqEXTW6KnTEMSkxQu4N46JPpzC3s0a7a1d/Aww71CHx2D+jkysb1FxvWZ+J9+QpFtU0MtcUbb6o59jUk1CkWIUk6rVKn0Nu11NpkgpH5xMcaDl1uSjQtnFQBDcwSb8nBzTj/8mJgz9pY/4/mFYwWOSmMYmSq4LIqT9jmL/yU0jCBeUdwW1P5CvH5PuGu6l1q9df9Sy7Dcur/P5/OIkg2zF1M7qEfl1yzFhsdLA60ph8Bh2NFjiplZ/gmMRas1CXOzMEQKJGpKPV4+BgMb9s0vhVnvfdPwdPHZLheJ1nFXmtBWFbM4xEs8ycTVnczBnzeQLVdZDxYbrRkLxvVEdgvL4bdbsgQhqm9JFkkCasTShcDDPUvn58opl/OpdwJXTls=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e40922fd-46a6-4972-ef6a-08d8300ba5b4
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR12MB1599.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 19:56:25.8281
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9cnF7Ww4bx/U8CDsYA3tcJl7as4VJKK1+QbCN7Nt1Zq/XdjwFOGQ1NV7lYkWv2JzfLPw58v2lfpZuvlvu5jA2A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1599
-To:     unlisted-recipients:; (no To-header on input)
+References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
+ <1595513168-11965-3-git-send-email-srinivas.neeli@xilinx.com>
+ <CAHp75Vd7BU5DYqyQFGfBtKrb6jWFEQjMCu2MOa_7M8XYkt6BFA@mail.gmail.com> <DM6PR02MB53867D532A3298BE06E32B86AF770@DM6PR02MB5386.namprd02.prod.outlook.com>
+In-Reply-To: <DM6PR02MB53867D532A3298BE06E32B86AF770@DM6PR02MB5386.namprd02.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 24 Jul 2020 22:58:56 +0300
+Message-ID: <CAHp75VeFE3b4mpvkQifuC5WPkTk9RUQy4yM8jTQXtrfNWRmDXA@mail.gmail.com>
+Subject: Re: [PATCH V2 2/3] gpio: xilinx: Add interrupt support
+To:     Srinivas Neeli <sneeli@xilinx.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michals@xilinx.com>,
+        Shubhrajyoti Datta <shubhraj@xilinx.com>,
+        Srinivas Goud <sgoud@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        git <git@xilinx.com>, Robert Hancock <hancock@sedsystems.ca>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PME_EN state needs to restored to the value set by fmw.
-For the devices which are not using I2S wake event which gets
-enabled by PME_EN bit, keeping PME_EN enabled burns considerable amount
-of power as it blocks low power state.
-For the devices using I2S wake event, PME_EN gets enabled in fmw and the
-state should be maintained after ACP Power On.
+On Fri, Jul 24, 2020 at 8:15 PM Srinivas Neeli <sneeli@xilinx.com> wrote:
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
----
- sound/soc/amd/raven/pci-acp3x.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+...
 
-diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
-index ebf4388b6262..31b797c8bfe6 100644
---- a/sound/soc/amd/raven/pci-acp3x.c
-+++ b/sound/soc/amd/raven/pci-acp3x.c
-@@ -19,10 +19,12 @@ struct acp3x_dev_data {
- 	bool acp3x_audio_mode;
- 	struct resource *res;
- 	struct platform_device *pdev[ACP3x_DEVS];
-+	u32 pme_en;
- };
- 
--static int acp3x_power_on(void __iomem *acp3x_base)
-+static int acp3x_power_on(struct acp3x_dev_data *adata)
- {
-+	void __iomem *acp3x_base = adata->acp3x_base;
- 	u32 val;
- 	int timeout;
- 
-@@ -39,10 +41,10 @@ static int acp3x_power_on(void __iomem *acp3x_base)
- 	while (++timeout < 500) {
- 		val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
- 		if (!val) {
--			/* Set PME_EN as after ACP power On,
--			 * PME_EN gets cleared
-+			/* ACP power On clears PME_EN.
-+			 * Restore the value to its prior state
- 			 */
--			rv_writel(0x1, acp3x_base + mmACP_PME_EN);
-+			rv_writel(adata->pme_en, acp3x_base + mmACP_PME_EN);
- 			return 0;
- 		}
- 		udelay(1);
-@@ -74,12 +76,13 @@ static int acp3x_reset(void __iomem *acp3x_base)
- 	return -ETIMEDOUT;
- }
- 
--static int acp3x_init(void __iomem *acp3x_base)
-+static int acp3x_init(struct acp3x_dev_data *adata)
- {
-+	void __iomem *acp3x_base = adata->acp3x_base;
- 	int ret;
- 
- 	/* power on */
--	ret = acp3x_power_on(acp3x_base);
-+	ret = acp3x_power_on(adata);
- 	if (ret) {
- 		pr_err("ACP3x power on failed\n");
- 		return ret;
-@@ -151,7 +154,9 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 	}
- 	pci_set_master(pci);
- 	pci_set_drvdata(pci, adata);
--	ret = acp3x_init(adata->acp3x_base);
-+	/* Save ACP_PME_EN state */
-+	adata->pme_en = rv_readl(adata->acp3x_base + mmACP_PME_EN);
-+	ret = acp3x_init(adata);
- 	if (ret)
- 		goto disable_msi;
- 
-@@ -274,7 +279,7 @@ static int snd_acp3x_resume(struct device *dev)
- 	struct acp3x_dev_data *adata;
- 
- 	adata = dev_get_drvdata(dev);
--	ret = acp3x_init(adata->acp3x_base);
-+	ret = acp3x_init(adata);
- 	if (ret) {
- 		dev_err(dev, "ACP init failed\n");
- 		return ret;
+> > > +#include <linux/irqchip/chained_irq.h>
+> >
+> > Not sure I see a user of it.
+> >
+> > ...
+> we are using chained_irq_enter() and chained_irq_exit()
+> APIs , so need "chained_irq.h"
+
+I see.  But gpio/driver.h does it for you.
+
+...
+
+> > > +       for (index = 0; index < num_channels; index++) {
+> > > +               if ((status & BIT(index))) {
+> >
+> > If gpio_width is the same among banks, you can use for_each_set_bit()
+> > here as well.
+> >
+> > ...
+> gpio_wdith vary depends on design. We can configure gpio pins for each bank.
+
+I see.
+
+...
+
+> > > +       chip->irq = platform_get_irq_optional(pdev, 0);
+> > > +       if (chip->irq <= 0) {
+> > > +               dev_info(&pdev->dev, "GPIO IRQ not set\n");
+> >
+> > Why do you need an optional variant if you print an error anyway?
+>
+> Here intention is just printing a debug message to user.
+
+Debug message should be debug, and not info. But in any case, I would
+rather drop it, or use platform_get_irq() b/c now you have a code
+controversy.
+
+...
+
+> > > +               chip->gc.irq.parents = (unsigned int *)&chip->irq;
+> > > +               chip->gc.irq.num_parents = 1;
+> >
+> > Current pattern is to use devm_kcalloc() for it (Linus has plans to
+> > simplify this in the future and this will help him to find what
+> > patterns are being used)
+>
+> I didn't get this , Could you please explain more.
+
+              girq->num_parents = 1;
+              girq->parents = devm_kcalloc(dev, girq->num_parents, ...);
+   if (!girq->parents)
+     return -ENOMEM;
+
+girq->parents[0] = chip->irq;
+
+Also, use temporary variable for IRQ chip structure:
+ girq = &chip->gc.irq;
+
+
 -- 
-2.20.1
-
+With Best Regards,
+Andy Shevchenko
