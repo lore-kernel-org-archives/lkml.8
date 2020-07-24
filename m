@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4004BC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A173C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A86920674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB1D206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728491AbgGXQGu (ORCPT
+        id S1728465AbgGXQGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:06:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33544 "EHLO
+        Fri, 24 Jul 2020 12:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728043AbgGXQEg (ORCPT
+        with ESMTP id S1728051AbgGXQEh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:36 -0400
+        Fri, 24 Jul 2020 12:04:37 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F0DDC0619D3;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB457C0619E5;
         Fri, 24 Jul 2020 09:04:36 -0700 (PDT)
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 22576FCB;
-        Fri, 24 Jul 2020 18:04:27 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 2EE08FCC;
+        Fri, 24 Jul 2020 18:04:28 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -49,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 50/75] x86/sev-es: Handle instruction fetches from user-space
-Date:   Fri, 24 Jul 2020 18:03:11 +0200
-Message-Id: <20200724160336.5435-51-joro@8bytes.org>
+Subject: [PATCH v5 52/75] x86/sev-es: Handle MMIO String Instructions
+Date:   Fri, 24 Jul 2020 18:03:13 +0200
+Message-Id: <20200724160336.5435-53-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -64,59 +64,109 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-When a #VC exception is triggered by user-space the instruction decoder
-needs to read the instruction bytes from user addresses.  Enhance
-vc_decode_insn() to safely fetch kernel and user instructions.
+Add handling for emulation the MOVS instruction on MMIO regions, as done
+by the memcpy_toio() and memcpy_fromio() functions.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+ arch/x86/kernel/sev-es.c | 77 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 81d94f78d2d4..1493e8cf14f2 100644
+index fa1fa55fd8e3..7bfd402c74e3 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -237,17 +237,30 @@ static enum es_result vc_decode_insn(struct es_em_ctxt *ctxt)
- 	enum es_result ret;
- 	int res;
- 
--	res = vc_fetch_insn_kernel(ctxt, buffer);
--	if (unlikely(res == -EFAULT)) {
--		ctxt->fi.vector     = X86_TRAP_PF;
--		ctxt->fi.error_code = 0;
--		ctxt->fi.cr2        = ctxt->regs->ip;
--		return ES_EXCEPTION;
-+	if (user_mode(ctxt->regs)) {
-+		res = insn_fetch_from_user(ctxt->regs, buffer);
-+		if (!res) {
-+			ctxt->fi.vector     = X86_TRAP_PF;
-+			ctxt->fi.error_code = X86_PF_INSTR | X86_PF_USER;
-+			ctxt->fi.cr2        = ctxt->regs->ip;
-+			return ES_EXCEPTION;
-+		}
-+
-+		if (!insn_decode(&ctxt->insn, ctxt->regs, buffer, res))
-+			return ES_DECODE_FAILED;
-+	} else {
-+		res = vc_fetch_insn_kernel(ctxt, buffer);
-+		if (res) {
-+			ctxt->fi.vector     = X86_TRAP_PF;
-+			ctxt->fi.error_code = X86_PF_INSTR;
-+			ctxt->fi.cr2        = ctxt->regs->ip;
-+			return ES_EXCEPTION;
-+		}
-+
-+		insn_init(&ctxt->insn, buffer, MAX_INSN_SIZE - res, 1);
-+		insn_get_length(&ctxt->insn);
- 	}
- 
--	insn_init(&ctxt->insn, buffer, MAX_INSN_SIZE - res, 1);
--	insn_get_length(&ctxt->insn);
--
- 	ret = ctxt->insn.immediate.got ? ES_OK : ES_DECODE_FAILED;
- 
+@@ -595,6 +595,73 @@ static enum es_result vc_handle_mmio_twobyte_ops(struct ghcb *ghcb,
  	return ret;
+ }
+ 
++/*
++ * The MOVS instruction has two memory operands, which raises the
++ * problem that it is not known whether the access to the source or the
++ * destination caused the #VC exception (and hence whether an MMIO read
++ * or write operation needs to be emulated).
++ *
++ * Instead of playing games with walking page-tables and trying to guess
++ * whether the source or destination is an MMIO range, split the move
++ * into two operations, a read and a write with only one memory operand.
++ * This will cause a nested #VC exception on the MMIO address which can
++ * then be handled.
++ *
++ * This implementation has the benefit that it also supports MOVS where
++ * source _and_ destination are MMIO regions.
++ *
++ * It will slow MOVS on MMIO down a lot, but in SEV-ES guests it is a
++ * rare operation. If it turns out to be a performance problem the split
++ * operations can be moved to memcpy_fromio() and memcpy_toio().
++ */
++static enum es_result vc_handle_mmio_movs(struct es_em_ctxt *ctxt,
++					  unsigned int bytes)
++{
++	unsigned long ds_base, es_base;
++	unsigned char *src, *dst;
++	unsigned char buffer[8];
++	enum es_result ret;
++	bool rep;
++	int off;
++
++	ds_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_DS);
++	es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
++
++	if (ds_base == -1L || es_base == -1L) {
++		ctxt->fi.vector = X86_TRAP_GP;
++		ctxt->fi.error_code = 0;
++		return ES_EXCEPTION;
++	}
++
++	src = ds_base + (unsigned char *)ctxt->regs->si;
++	dst = es_base + (unsigned char *)ctxt->regs->di;
++
++	ret = vc_read_mem(ctxt, src, buffer, bytes);
++	if (ret != ES_OK)
++		return ret;
++
++	ret = vc_write_mem(ctxt, dst, buffer, bytes);
++	if (ret != ES_OK)
++		return ret;
++
++	if (ctxt->regs->flags & X86_EFLAGS_DF)
++		off = -bytes;
++	else
++		off =  bytes;
++
++	ctxt->regs->si += off;
++	ctxt->regs->di += off;
++
++	rep = insn_has_rep_prefix(&ctxt->insn);
++	if (rep)
++		ctxt->regs->cx -= 1;
++
++	if (!rep || ctxt->regs->cx == 0)
++		return ES_OK;
++	else
++		return ES_RETRY;
++}
++
+ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
+ 				     struct es_em_ctxt *ctxt)
+ {
+@@ -655,6 +722,16 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
+ 		memcpy(reg_data, ghcb->shared_buffer, bytes);
+ 		break;
+ 
++		/* MOVS instruction */
++	case 0xa4:
++		bytes = 1;
++		fallthrough;
++	case 0xa5:
++		if (!bytes)
++			bytes = insn->opnd_bytes;
++
++		ret = vc_handle_mmio_movs(ctxt, bytes);
++		break;
+ 		/* Two-Byte Opcodes */
+ 	case 0x0f:
+ 		ret = vc_handle_mmio_twobyte_ops(ghcb, ctxt);
 -- 
 2.27.0
 
