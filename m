@@ -2,48 +2,52 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A23C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D40FC433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1550F206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4956B20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGXRWb (ORCPT
+        id S1727020AbgGXRWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:22:31 -0400
+        Fri, 24 Jul 2020 13:22:38 -0400
 Received: from mga17.intel.com ([192.55.52.151]:2758 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726397AbgGXRWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:22:30 -0400
-IronPort-SDR: L8ZVvMReFcL9nKB3twul6pG3HTMAfnQRFeGRw3z7hfk2QFr5ri+VROgAOcGPBAncBjVqlw4QUe
- Dr4IrHlGdb5g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="130823238"
+        id S1726945AbgGXRWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:22:36 -0400
+IronPort-SDR: q7j9iovf8o871WFyEb8XkwUuIu1Q+3Y5/7zrCyfapxXkuj0xQbSlJVhZOupG4gDItd9IhCFZXV
+ FJ/dSthYtcew==
+X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="130823256"
 X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="130823238"
+   d="scan'208";a="130823256"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:22:29 -0700
-IronPort-SDR: RCZ18sSisFVjxscl3aJapkVYwnFzSgiyMBkc9z0D/2H1O3HlOL0UlyCVtl0xPkLQgAN93QekfM
- DOtyQ8IPtWZQ==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:22:35 -0700
+IronPort-SDR: PHX01Lbd5BMqWA0B5spsJLegLotH/C7UAvPrg5Bh6PPB0lK2TuebNZjyVNoVCZZOdZmi/96Btr
+ g8KyBLeP6/Qw==
 X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="302730254"
+   d="scan'208";a="302730288"
 Received: from seokjaeb-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.24.239])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:22:28 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:22:34 -0700
 From:   Sean V Kelley <sean.v.kelley@intel.com>
 To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
         rjw@rjwysocki.net, ashok.raj@kernel.org, tony.luck@intel.com,
         sathyanarayanan.kuppuswamy@linux.intel.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
         Sean V Kelley <sean.v.kelley@intel.com>
-Subject: [RFC PATCH 0/9] Add RCEC handling to PCI/AER
-Date:   Fri, 24 Jul 2020 10:22:14 -0700
-Message-Id: <20200724172223.145608-1-sean.v.kelley@intel.com>
+Subject: [RFC PATCH 3/9] PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs associated with RCEC
+Date:   Fri, 24 Jul 2020 10:22:17 -0700
+Message-Id: <20200724172223.145608-4-sean.v.kelley@intel.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200724172223.145608-1-sean.v.kelley@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,127 +55,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Root Complex Event Collectors (RCEC) provide support for terminating error
-and PME messages from Root Complex Integrated Endpoints (RCiEPs).  An RCEC
-resides on a Bus in the Root Complex. Multiple RCECs can in fact reside on
-a single bus. An RCEC will explicitly declare supported RCiEPs through the
-Root Complex Endpoint Association Extended Capability.
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-(See PCIe 5.0-1, sections 1.3.2.3 (RCiEP), and 7.9.10 (RCEC Ext. Cap.))
+When an RCEC device signals error(s) to a CPU core, the CPU core
+needs to walk all the RCiEPs associated with that RCEC to check
+errors. So add the function pcie_walk_rcec() to walk all RCiEPs
+associated with the RCEC device.
 
-The kernel lacks handling for these RCECs and the error messages received
-from their respective associated RCiEPs. More recently, a new CPU
-interconnect, Compute eXpress Link (CXL) depends on RCEC capabilities for
-purposes of error messaging from CXL 1.1 supported RCiEP devices.
-
-DocLink: https://www.computeexpresslink.org/
-
-This use case is not limited to CXL. Existing hardware today includes
-support for RCECs, such as the Denverton microserver product
-family. Future hardware will be forthcoming.
-
-(See Intel Document, Order number: 33061-003US)
-
-So services such as AER or PME could be associated with an RCEC driver.
-In the case of CXL, if an RCiEP (i.e., CXL 1.1 device) is associated with a
-platform's RCEC it shall signal PME and AER error conditions through that
-RCEC.
-
-Towards the above use cases, add the missing RCEC class and extend the
-PCIe Root Port and service drivers to allow association of RCiEPs to their
-respective parent RCEC and facilitate handling of terminating error and PME
-messages.
-
-TESTING:
-
-   Results:
-    1) Show RCiEPs which are associated with RCECs:
-	Run dmesg | grep "RCiEP"
-	Log:
-	[    8.981698] pcieport 0000:e8:00.4: RCiEP(under an RCEC) 0000:e8:01.0
-	[    8.988830] pcieport 0000:e8:00.4: RCiEP(under an RCEC) 0000:e8:02.0
-	[    8.995956] pcieport 0000:e8:00.4: RCiEP(under an RCEC) 0000:e9:00.0
-	[    9.023034] pcieport 0000:ed:00.4: RCiEP(under an RCEC) 0000:ed:01.0
-	[    9.030159] pcieport 0000:ed:00.4: RCiEP(under an RCEC) 0000:ed:02.0
-	[    9.037282] pcieport 0000:ed:00.4: RCiEP(under an RCEC) 0000:ee:00.0
-	[    9.064294] pcieport 0000:f2:00.4: RCiEP(under an RCEC) 0000:f2:01.0
-	[    9.071409] pcieport 0000:f2:00.4: RCiEP(under an RCEC) 0000:f2:02.0
-	[    9.078526] pcieport 0000:f2:00.4: RCiEP(under an RCEC) 0000:f3:00.0
-	[    9.105535] pcieport 0000:f7:00.4: RCiEP(under an RCEC) 0000:f7:01.0
-	[    9.112652] pcieport 0000:f7:00.4: RCiEP(under an RCEC) 0000:f7:02.0
-	[    9.119774] pcieport 0000:f7:00.4: RCiEP(under an RCEC) 0000:f8:00.0
-
-    2) Inject a correctable error to the RCiEP 0000:e9:00.0
-	Run ./aer_inject <a parameter file as below>:
-	AER
-	PCI_ID 0000:e9:00.0
-	COR_STATUS BAD_TLP
-	HEADER_LOG 0 1 2 3
-
-	Log:
-	[  253.248362] pcieport 0000:e8:00.4: aer_inject: Injecting errors 00000040/00000000 into device 0000:e9:00.0
-	[  253.260656] pcieport 0000:e8:00.4: AER: Corrected error received: 0000:e9:00.0
-	[  253.269919] pci 0000:e9:00.0: AER: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID)
-	[  253.282549] pci 0000:e9:00.0: AER:   device [8086:4940] error status/mask=00000040/00002000
-	[  253.293937] pci 0000:e9:00.0: AER:    [ 6] BadTLP
-
-    3) Inject a non-fatal error to the RCiEP 0000:e8:01.0
-	Run ./aer_inject <a parameter file as below>:
-	AER
-	PCI_ID 0000:e8:01.0
-	UNCOR_STATUS COMP_ABORT
-	HEADER_LOG 0 1 2 3
-
-	Log:
-	[  288.405326] pcieport 0000:e8:00.4: aer_inject: Injecting errors 00000000/00008000 into device 0000:e8:01.0
-	[  288.416881] pcieport 0000:e8:00.4: AER: Uncorrected (Non-Fatal) error received: 0000:e8:01.0
-	[  288.427487] igen6_edac 0000:e8:01.0: AER: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Completer ID)
-	[  288.442098] igen6_edac 0000:e8:01.0: AER:   device [8086:0b25] error status/mask=00008000/00100000
-	[  288.452869] igen6_edac 0000:e8:01.0: AER:    [15] CmpltAbrt
-	[  288.461118] igen6_edac 0000:e8:01.0: AER:   TLP Header: 00000000 00000001 00000002 00000003
-	[  288.471192] igen6_edac 0000:e8:01.0: AER: device recovery successful
-
-    4) Inject a fatal error to the RCiEP 0000:ed:01.0
-	Run ./aer_inject <a parameter file as below>:
-	AER
-	PCI_ID 0000:ed:01.0
-	UNCOR_STATUS MALF_TLP
-	HEADER_LOG 0 1 2 3
-
-	Log:
-	[  535.537281] pcieport 0000:ed:00.4: aer_inject: Injecting errors 00000000/00040000 into device 0000:ed:01.0
-	[  535.551911] pcieport 0000:ed:00.4: AER: Uncorrected (Fatal) error received: 0000:ed:01.0
-	[  535.561556] igen6_edac 0000:ed:01.0: AER: PCIe Bus Error: severity=Uncorrected (Fatal), type=Inaccessible, (Unregistered Agent ID)
-	[  535.684964] igen6_edac 0000:ed:01.0: AER: device recovery successful
-
-
-Jonathan Cameron (1):
-  PCI/AER: Extend AER error handling to RCECs
-
-Qiuxu Zhuo (6):
-  pci_ids: Add class code and extended capability for RCEC
-  PCI: Extend Root Port Driver to support RCEC
-  PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs associated with RCEC
-  PCI/AER: Apply function level reset to RCiEP on fatal error
-  PCI: Add 'rcec' field to pci_dev for associated RCiEPs
-  PCI/AER: Add RCEC AER error injection support
-
-Sean V Kelley (2):
-  PCI/AER: Add RCEC AER handling
-  PCI/PME: Add RCEC PME handling
-
- drivers/pci/pcie/aer.c          | 43 ++++++++++++-----
- drivers/pci/pcie/aer_inject.c   |  5 +-
- drivers/pci/pcie/err.c          | 85 +++++++++++++++++++++++++++------
- drivers/pci/pcie/pme.c          | 15 ++++--
+Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+---
  drivers/pci/pcie/portdrv.h      |  2 +
- drivers/pci/pcie/portdrv_core.c | 82 +++++++++++++++++++++++++++++++
- drivers/pci/pcie/portdrv_pci.c  | 20 +++++++-
- include/linux/pci.h             |  3 ++
- include/linux/pci_ids.h         |  1 +
- include/uapi/linux/pci_regs.h   |  7 +++
- 10 files changed, 232 insertions(+), 31 deletions(-)
+ drivers/pci/pcie/portdrv_core.c | 82 +++++++++++++++++++++++++++++++++
+ 2 files changed, 84 insertions(+)
 
---
+diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+index af7cf237432a..c11d5ecbad76 100644
+--- a/drivers/pci/pcie/portdrv.h
++++ b/drivers/pci/pcie/portdrv.h
+@@ -116,6 +116,8 @@ void pcie_port_service_unregister(struct pcie_port_service_driver *new);
+ 
+ extern struct bus_type pcie_port_bus_type;
+ int pcie_port_device_register(struct pci_dev *dev);
++void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
++		    void *userdata);
+ #ifdef CONFIG_PM
+ int pcie_port_device_suspend(struct device *dev);
+ int pcie_port_device_resume_noirq(struct device *dev);
+diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+index 50a9522ab07d..bdcbb34764c2 100644
+--- a/drivers/pci/pcie/portdrv_core.c
++++ b/drivers/pci/pcie/portdrv_core.c
+@@ -14,6 +14,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/string.h>
+ #include <linux/slab.h>
++#include <linux/bitops.h>
+ #include <linux/aer.h>
+ 
+ #include "../pci.h"
+@@ -365,6 +366,87 @@ int pcie_port_device_register(struct pci_dev *dev)
+ 	return status;
+ }
+ 
++static int pcie_walk_rciep_devfn(struct pci_bus *pbus, int (*cb)(struct pci_dev *, void *),
++				 void *userdata, unsigned long bitmap)
++{
++	unsigned int dev, fn;
++	struct pci_dev *pdev;
++	int retval;
++
++	for_each_set_bit(dev, &bitmap, 32) {
++		for (fn = 0; fn < 8; fn++) {
++			pdev = pci_get_slot(pbus, PCI_DEVFN(dev, fn));
++
++			if (!pdev || pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)
++				continue;
++
++			retval = cb(pdev, userdata);
++			if (retval)
++				return retval;
++		}
++	}
++
++	return 0;
++}
++
++/** pcie_walk_rcec - Walk RCiEP devices associating with RCEC and call callback.
++ *  @rcec     RCEC whose RCiEP devices should be walked.
++ *  @cb       Callback to be called for each RCiEP device found.
++ *  @userdata Arbitrary pointer to be passed to callback.
++ *
++ *  Walk the given RCEC. Call the provided callback on each RCiEP device found.
++ *
++ *  We check the return of @cb each time. If it returns anything
++ *  other than 0, we break out.
++ *
++ */
++void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
++		    void *userdata)
++{
++	u32 pos, bitmap, hdr, busn;
++	u8 ver, nextbusn, lastbusn;
++	struct pci_bus *pbus;
++	unsigned int bnr;
++
++	pos = pci_find_ext_capability(rcec, PCI_EXT_CAP_ID_RCEC);
++	if (!pos)
++		return;
++
++	pbus = pci_find_bus(pci_domain_nr(rcec->bus), rcec->bus->number);
++	if (!pbus)
++		return;
++
++	pci_read_config_dword(rcec, pos + PCI_RCEC_RCIEP_BITMAP, &bitmap);
++
++	/* Find RCiEP devices on the same bus as the RCEC */
++	if (pcie_walk_rciep_devfn(pbus, cb, userdata, (unsigned long)bitmap))
++		return;
++
++	/* Check whether RCEC BUSN register is present */
++	pci_read_config_dword(rcec, pos, &hdr);
++	ver = PCI_EXT_CAP_VER(hdr);
++	if (ver < PCI_RCEC_BUSN_REG_VER)
++		return;
++
++	pci_read_config_dword(rcec, pos + PCI_RCEC_BUSN, &busn);
++	nextbusn = PCI_RCEC_BUSN_NEXT(busn);
++	lastbusn = PCI_RCEC_BUSN_LAST(busn);
++
++	/* All RCiEP devices are on the same bus as the RCEC */
++	if (nextbusn == 0xff && lastbusn == 0x00)
++		return;
++
++	for (bnr = nextbusn; bnr < (lastbusn + 1); bnr++) {
++		pbus = pci_find_bus(pci_domain_nr(rcec->bus), bnr);
++		if (!pbus)
++			continue;
++
++		/* Find RCiEP devices on the given bus */
++		if (pcie_walk_rciep_devfn(pbus, cb, userdata, 0xffffffff))
++			return;
++	}
++}
++
+ #ifdef CONFIG_PM
+ typedef int (*pcie_pm_callback_t)(struct pcie_device *);
+ 
+-- 
 2.27.0
 
