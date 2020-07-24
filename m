@@ -2,208 +2,91 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF842C433F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 11:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3E2C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 11:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6402073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 11:15:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="xoKXS7qO"
+	by mail.kernel.org (Postfix) with ESMTP id 906122065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 11:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgGXLPB (ORCPT
+        id S1727044AbgGXLU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 07:15:01 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:45346 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgGXLPA (ORCPT
+        Fri, 24 Jul 2020 07:20:27 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:35217 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgGXLU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 07:15:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595589299; x=1627125299;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=61qRLL/sx9zbGDY6/hWqsKu3Z0coKG4mMtti9uZcseg=;
-  b=xoKXS7qOKzX2+2GrtagKZF2pJ7QTGqkBGubr4HMnckZIW2345AGPo3By
-   4spN2WAF1JKwh7hR2FkXZfBinu51Rle5BgpKTPQQCEiytU/IftImH2Wzx
-   wsDjEM/hNCYJBEUFbsxKcxzFjMZFfjw46ocHEL9uSA1EDHaWM8pusJFx+
-   d3gXUcparYXUjlDyQbrizPU8olBh13KG3jNJVucfUNLRifanEdl07iZjR
-   QCHPji+3A1dM1/4YdnLlBMSCkiD5cpv7ZY8mMpMtyZhL/9DGkn1kUBM7O
-   TYMnh5iaYSK4r6D17//FIg1GgIMF1mfLFThURAip5bkrIGfhmbwPjCmR6
-   g==;
-IronPort-SDR: wxFztxzJ5sv5j+JoddDvcO2729fyo5BSf1MMDXdpbg9J+A7M34o05aVuNgAnB5nIUowMM3VaQo
- futwwUd9p15NrtU3u0jK3QnG/H0ItppVNqnStYMR+HBOD4nTEzVQreZ4NAfQor7n6o7KhtqiXz
- Tzm0QZqpdvHIYoNFRqG1E/EKG1bvMtJS4HYgjP/5YlWLMT6Kjf8e/9tWN02fdYBslsolmPoZBH
- NpAgXVhw/RfmZBdN0rADY0CYiExppmo19sVc3HOKEDu16cRNHHh04VMf67rUXwOXNfprWtuOju
- yd4=
-X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
-   d="scan'208";a="81158516"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Jul 2020 04:14:57 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 24 Jul 2020 04:14:57 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Fri, 24 Jul 2020 04:14:14 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: [PATCH v4 6/6] arm64: dts: sparx5: Add spi-nand devices
-Date:   Fri, 24 Jul 2020 13:14:04 +0200
-Message-ID: <20200724111404.13293-7-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200724111404.13293-1-lars.povlsen@microchip.com>
-References: <20200724111404.13293-1-lars.povlsen@microchip.com>
+        Fri, 24 Jul 2020 07:20:26 -0400
+X-Originating-IP: 90.63.246.187
+Received: from gandi.net (laubervilliers-658-1-215-187.w90-63.abo.wanadoo.fr [90.63.246.187])
+        (Authenticated sender: thibaut.sautereau@clip-os.org)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D40D7FF80A;
+        Fri, 24 Jul 2020 11:20:14 +0000 (UTC)
+Date:   Fri, 24 Jul 2020 13:20:14 +0200
+From:   Thibaut Sautereau <thibaut.sautereau@clip-os.org>
+To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v7 0/7] Add support for O_MAYEXEC
+Message-ID: <20200724112014.GB38720@gandi.net>
+References: <20200723171227.446711-1-mic@digikod.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <20200723171227.446711-1-mic@digikod.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add spi-nand DT nodes to the applicable Sparx5 boards.
+On Thu, Jul 23, 2020 at 07:12:20PM +0200, Mickaël Salaün wrote:
 
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5.dtsi     | 20 ++++++++++++
- .../arm64/boot/dts/microchip/sparx5_nand.dtsi | 31 +++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb125.dts      | 14 +++++++++
- .../boot/dts/microchip/sparx5_pcb134.dts      |  1 +
- .../boot/dts/microchip/sparx5_pcb135.dts      |  1 +
- 5 files changed, 67 insertions(+)
- create mode 100644 arch/arm64/boot/dts/microchip/sparx5_nand.dtsi
+> This patch series can be applied on top of v5.8-rc5 .
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 2169746703dfb..8e9e3ed872496 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -212,6 +212,26 @@ gpio: pinctrl@6110101e0 {
- 			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
- 			#interrupt-cells = <2>;
- 
-+			cs1_pins: cs1-pins {
-+				pins = "GPIO_16";
-+				function = "si";
-+			};
-+
-+			cs2_pins: cs2-pins {
-+				pins = "GPIO_17";
-+				function = "si";
-+			};
-+
-+			cs3_pins: cs3-pins {
-+				pins = "GPIO_18";
-+				function = "si";
-+			};
-+
-+			si2_pins: si2-pins {
-+				pins = "GPIO_39", "GPIO_40", "GPIO_41";
-+				function = "si2";
-+			};
-+
- 			uart_pins: uart-pins {
- 				pins = "GPIO_10", "GPIO_11";
- 				function = "uart";
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_nand.dtsi b/arch/arm64/boot/dts/microchip/sparx5_nand.dtsi
-new file mode 100644
-index 0000000000000..03f107e427d70
---- /dev/null
-+++ b/arch/arm64/boot/dts/microchip/sparx5_nand.dtsi
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
-+ */
-+
-+&gpio {
-+	cs14_pins: cs14-pins {
-+		pins = "GPIO_44";
-+		function = "si";
-+	};
-+};
-+
-+&spi0 {
-+	pinctrl-0 = <&si2_pins>;
-+	pinctrl-names = "default";
-+	spi@e {
-+		compatible = "spi-mux";
-+		mux-controls = <&mux>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <14>; /* CS14 */
-+		spi-flash@6 {
-+			compatible = "spi-nand";
-+			pinctrl-0 = <&cs14_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6>; /* SPI2 */
-+			spi-max-frequency = <42000000>;
-+			rx-sample-delay-ns = <7>;  /* Tune for speed */
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-index c1eb1d661174d..6b2da7c7520cc 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-@@ -53,6 +53,20 @@ spi-flash@9 {
- 			reg = <0x9>;	/* SPI */
- 		};
- 	};
-+	spi@1 {
-+		compatible = "spi-mux";
-+		mux-controls = <&mux 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <1>; /* CS1 */
-+		spi-flash@9 {
-+			compatible = "spi-nand";
-+			pinctrl-0 = <&cs1_pins>;
-+			pinctrl-names = "default";
-+			spi-max-frequency = <8000000>;
-+			reg = <0x9>;	/* SPI */
-+		};
-+	};
- };
- 
- &i2c1 {
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
-index feee4e99ff57c..45ca1af7e8500 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
-@@ -5,6 +5,7 @@
- 
- /dts-v1/;
- #include "sparx5_pcb134_board.dtsi"
-+#include "sparx5_nand.dtsi"
- 
- / {
- 	model = "Sparx5 PCB134 Reference Board (NAND)";
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
-index 20e409a9be196..647cdb38b1130 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
-@@ -5,6 +5,7 @@
- 
- /dts-v1/;
- #include "sparx5_pcb135_board.dtsi"
-+#include "sparx5_nand.dtsi"
- 
- / {
- 	model = "Sparx5 PCB135 Reference Board (NAND)";
+v5.8-rc6, actually.
+
+> Previous version:
+> https://lore.kernel.org/lkml/20200505153156.925111-1-mic@digikod.net/
+
+This is v5.
+v6 is at https://lore.kernel.org/lkml/20200714181638.45751-1-mic@digikod.net/
+
 -- 
-2.27.0
-
+Thibaut Sautereau
+CLIP OS developer
