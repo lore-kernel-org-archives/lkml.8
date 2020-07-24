@@ -2,157 +2,109 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 667B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175FCC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4550820709
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:32:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UA/Edbu+"
+	by mail.kernel.org (Postfix) with ESMTP id E7C7120714
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgGXDcp (ORCPT
+        id S1726845AbgGXDcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 23:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726493AbgGXDcn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 23:32:43 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE2A3C0619D3;
-        Thu, 23 Jul 2020 20:32:43 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id o22so5781252qtt.13;
-        Thu, 23 Jul 2020 20:32:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DtcH1eTSgDszis0K7FXJ1OIRE9d5R8EpJXxCpjozCEs=;
-        b=UA/Edbu+dhtvk4WBnl7FYJzN1RWqJ9JCjXCSLIW8hVtUQusFBc56abTMTaTCJuBR4b
-         FVuxxneBZrZ8w+IxP8SomsV6jFyeEQxnlEG9Mo1RuD0NNeGJMRRs+AuWbd0Z2bUNrdx9
-         PN/B17zT6quEeH7LB8I8Ja2IJ3hwuXI1hJ9kU5mkPgQG6uAxEOfvEFdnYfpXUbJepnnQ
-         UyphCL9W88aQRNCKJh2KTochD6+S26lPE6BREfP+abUnOMJzb1bOKuRC6aj+rg7ciPIK
-         yfJOKQcmngIelhtdTab84BM3YC7KmmiUTUamk+AvOwMKe1mEW7EWAB/IjsCTXUOmWqr6
-         0t5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DtcH1eTSgDszis0K7FXJ1OIRE9d5R8EpJXxCpjozCEs=;
-        b=VkBcLm7HnGtvZZd+kwHhZwBv32dB1tbNoibE3fx0J0LDoheFxVwpdb1x/U63PA9n4w
-         OENkpSggWqRPk87JfzEmNDI/fDniNVPdiyy0IpxCu2sDU7E6qNd1ljpWjG1uWropMXnl
-         ajYBkAwQvrrgg9v/t1068CWuNT6PbLipXGNJLYbpH4PUg7amIkNLjyE+aF9kxh+dch0g
-         QAuHjTpcZzVqqwRGr08rW2T4cHBgynBY1nPI2r3Xe3yqEvzG4b+0idte1Erh7iOe32ET
-         fM2r5lyhB6aEEKmKMC54UscaGgsOYejkK4neP/ztPAifaJov2F3bRwcEJNigbviRxKlA
-         nn9Q==
-X-Gm-Message-State: AOAM5325NpoGd0ZeE/NAT7y31Aa4bzqhSK/SCQrSXdkg1woFDcLhXXEh
-        6+G+R/pKqzfIIFldtX3RP7xmEN3/POVRnEcQrB+k2A==
-X-Google-Smtp-Source: ABdhPJwEn6kqyyLS60CluVwRJCMjkbqAvw20TguZLXgpyUxcMz4OI16TOCT7v39gd4+3OKfY2jKnWs9Xqi14PLWLfYQ=
-X-Received: by 2002:ac8:4d0c:: with SMTP id w12mr6645053qtv.194.1595561562872;
- Thu, 23 Jul 2020 20:32:42 -0700 (PDT)
+        Thu, 23 Jul 2020 23:32:51 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:54090 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726493AbgGXDcu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 23:32:50 -0400
+Received: from [10.130.0.63] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxX2VWVhpfr_sDAA--.1607S3;
+        Fri, 24 Jul 2020 11:32:39 +0800 (CST)
+Subject: Re: [PATCH 1/2] ALSA: hda/realtek: Fix headset mic on Loongson
+ platform
+To:     Takashi Iwai <tiwai@suse.de>
+References: <1594954292-1703-1-git-send-email-likaige@loongson.cn>
+ <s5hzh7yk4rk.wl-tiwai@suse.de>
+ <d95c163f-ab9b-acf1-f89d-d163726b6528@loongson.cn>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+From:   Kaige Li <likaige@loongson.cn>
+Message-ID: <66a95c5e-4997-ea4a-258e-343cdb91dfea@loongson.cn>
+Date:   Fri, 24 Jul 2020 11:32:38 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-References: <1595468942-29687-1-git-send-email-iamjoonsoo.kim@lge.com>
- <20200723180814.acde28b92ce6adc785a79120@linux-foundation.org>
- <CAAmzW4N9Y4W7CHenWA=TYu9tttgpYR=ZN+ky1vmXPgUJcjitAw@mail.gmail.com>
- <20200723193600.28e3eedd00925b22f7ca9780@linux-foundation.org>
- <CAAmzW4NhY0iaE02vwf+2O+aeK66CoKG_-BvsgqpfwZv3Q-w8dA@mail.gmail.com> <20200723201404.f76ccd792c9e74f3ae8ec9f5@linux-foundation.org>
-In-Reply-To: <20200723201404.f76ccd792c9e74f3ae8ec9f5@linux-foundation.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Fri, 24 Jul 2020 12:32:31 +0900
-Message-ID: <CAAmzW4Prx+pgwpg8ovwUo6s7YnM9S8LeUmJSTD6a3wZ1iQFYtw@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/page_alloc: fix memalloc_nocma_{save/restore} APIs
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d95c163f-ab9b-acf1-f89d-d163726b6528@loongson.cn>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxX2VWVhpfr_sDAA--.1607S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrZrWDuFW7tF4rZFWDArWrXwb_yoWkKFg_Cr
+        W7Can7Cw15trZ7Wan5tFs5tr4I9FykXrWUuryfGFs0q34xAF18Wr4rGrn3Aw4UJFZrJryf
+        u3yFvrW5C340gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbsAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+        IcxG8wCY02Avz4vE14v_Gr4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+        14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+        IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvE
+        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnU
+        UI43ZEXa7VUj5l1PUUUUU==
+X-CM-SenderInfo: 5olntxtjh6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 12:14, =
-Andrew Morton <akpm@linux-foundation.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
->
-> On Fri, 24 Jul 2020 12:04:02 +0900 Joonsoo Kim <js1304@gmail.com> wrote:
->
-> > 2020=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 11:=
-36, Andrew Morton <akpm@linux-foundation.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=
-=EC=84=B1:
-> > >
-> > > On Fri, 24 Jul 2020 11:23:52 +0900 Joonsoo Kim <js1304@gmail.com> wro=
-te:
-> > >
-> > > > > > Second, clearing __GFP_MOVABLE in current_gfp_context() has a s=
-ide effect
-> > > > > > to exclude the memory on the ZONE_MOVABLE for allocation target=
-.
-> > > > >
-> > > > > More whoops.
-> > > > >
-> > > > > Could we please have a description of the end-user-visible effect=
-s of
-> > > > > this change?  Very much needed when proposing a -stable backport,=
- I think.
-> > > >
-> > > > In fact, there is no noticeable end-user-visible effect since the f=
-allback would
-> > > > cover the problematic case. It's mentioned in the commit descriptio=
-n. Perhap,
-> > > > performance would be improved due to reduced retry and more availab=
-le memory
-> > > > (we can use ZONE_MOVABLE with this patch) but it would be neglectab=
-le.
-> > > >
-> > > > > d7fefcc8de9147c is over a year old.  Why did we only just discove=
-r
-> > > > > this?  This makes one wonder how serious those end-user-visible e=
-ffects
-> > > > > are?
-> > > >
-> > > > As mentioned above, there is no visible problem to the end-user.
-> > >
-> > > OK, thanks.  In that case, I don't believe that a stable backport is
-> > > appropriate?
-> > >
-> > > (Documentation/process/stable-kernel-rules.rst)
-> >
-> > Thanks for the pointer!
-> >
-> > Hmm... I'm not sure the correct way to handle this patch. I thought tha=
-t
-> > memalloc_nocma_{save,restore} is an API that is callable from the modul=
-e.
-> > If it is true, it's better to regard this patch as the stable candidate=
- since
-> > out-of-tree modules could use it without the fallback and it would caus=
-e
-> > a problem. But, yes, there is no visible problem to the end-user, at le=
-ast,
-> > within the mainline so it is possibly not a stable candidate.
-> >
-> > Please share your opinion about this situation.
->
-> We tend not to care much about out-of-tree modules.  I don't think a
-> theoretical concern for out-of-tree code justifies risking the
-> stability of -stable kernels.
+On 07/20/2020 09:58 AM, Kaige Li wrote:
 
-Okay. It's appreciated if you remove the stable tag. Or, I will send it aga=
-in
-without the stable tag.
+>
+> On 07/17/2020 02:57 PM, Takashi Iwai wrote:
+>> On Fri, 17 Jul 2020 04:51:31 +0200,
+>> Kaige Li wrote:
+>>> Add pin quirks to enable use of the headset mic on Loongson platform.
+>>>
+>>> Signed-off-by: Kaige Li <likaige@loongson.cn>
+>>> @@ -7654,6 +7663,7 @@ static const struct snd_pci_quirk 
+>>> alc269_fixup_tbl[] = {
+>>>       SND_PCI_QUIRK(0x17aa, 0x3bf8, "Quanta FL1", 
+>>> ALC269_FIXUP_PCM_44K),
+>>>       SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", 
+>>> ALC269_FIXUP_LENOVO_EAPD),
+>>>       SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MACH-WX9", 
+>>> ALC256_FIXUP_HUAWEI_MACH_WX9_PINS),
+>>> +    SND_PCI_QUIRK(0x10ec, 0x0269, "Loongson HDA", 
+>>> ALC269_FIXUP_LOONGSON_HDA),
+>> This is basically Realtek ALC269 codec itself, so putting this here
+>> may hit with many other machines.
+>>
+>> Doesn't it has any proper PCI or codec SSID?  The lack of them usually
+>> means a bug of BIOS.
+>
+>  Ok, I will have a look. If there is any progress, I will reply to you 
+> again.
+Sorry for that, there is no proper PCI or codec SSID. We have fixed this 
+by writing the firmware. So this patch is useless.
 
-Thanks.
+Thank you for your time!
+
+Kaige
+>
+>  Thank you!
+>
+>  Kaige
+>
+>> thanks,
+>>
+>> Takashi
+>
+
