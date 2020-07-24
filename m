@@ -8,45 +8,45 @@ X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD38C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA354C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB535206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B597A20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:22:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J4ucai3D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DZUqxPEz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGXIWy (ORCPT
+        id S1726799AbgGXIWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:22:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23635 "EHLO
+        Fri, 24 Jul 2020 04:22:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41388 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726554AbgGXIWw (ORCPT
+        with ESMTP id S1726554AbgGXIWs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:22:52 -0400
+        Fri, 24 Jul 2020 04:22:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595578971;
+        s=mimecast20190719; t=1595578967;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=lVgrrB2u3RkVMlRU7KdD6hpnUdQ/Fi3j0u87ZOZXuh4=;
-        b=J4ucai3DQMp0UhNDuvdnTM3ln1PVC7xJsZCUG5hZ662213DFSB51l/on+YARAOEje7LyIa
-        zarV6jiclbecO3FT1lJmNuUaHCO4VId0ow/4aVrciumrY5OyMi6tHegAKjyNX2drk21EV3
-        yISXKMHBJK9+rEKD75Zd9kgDDiqD7Io=
+        bh=2BOOxIHXiCunKOxphpa2rn7Yn8nix/g65BxOHIKcfXc=;
+        b=DZUqxPEzc5+iQZG+jV2YwsLp3TZSAW7aafmOEjXeVQmNbp5ZECuKjIyE3KotuqiTmSQ8se
+        knm5KaweKToH+r7N3ZA4820DGeMfNYn5qUplYT/p9PF+mzw+DNkskIXiyC6bxx1B7FyZn9
+        LmolcSOLfW/OezR0cB0Na9I6J2q7aIE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-334-zmud_EehM5SrJmK4yMbVxA-1; Fri, 24 Jul 2020 04:22:47 -0400
-X-MC-Unique: zmud_EehM5SrJmK4yMbVxA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-476-9V5aJZXlPUuo2RDLsNh7WQ-1; Fri, 24 Jul 2020 04:22:42 -0400
+X-MC-Unique: 9V5aJZXlPUuo2RDLsNh7WQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 55D3A57;
-        Fri, 24 Jul 2020 08:22:45 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B141957;
+        Fri, 24 Jul 2020 08:22:40 +0000 (UTC)
 Received: from [10.36.113.94] (ovpn-113-94.ams2.redhat.com [10.36.113.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA54F10013D9;
-        Fri, 24 Jul 2020 08:22:42 +0000 (UTC)
-Subject: Re: [PATCH 2/3] sh/mm: Drop unused MAX_PHYSADDR_BITS
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D34CB6FEFE;
+        Fri, 24 Jul 2020 08:22:37 +0000 (UTC)
+Subject: Re: [PATCH 1/3] x86/mm: Drop unused MAX_PHYSADDR_BITS
 To:     Arvind Sankar <nivedita@alum.mit.edu>, x86@kernel.org,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
@@ -58,7 +58,7 @@ To:     Arvind Sankar <nivedita@alum.mit.edu>, x86@kernel.org,
 Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
 References: <20200723231544.17274-1-nivedita@alum.mit.edu>
- <20200723231544.17274-3-nivedita@alum.mit.edu>
+ <20200723231544.17274-2-nivedita@alum.mit.edu>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -105,46 +105,63 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat GmbH
-Message-ID: <f65927b5-ded7-fdd2-c7c1-c2419ded6a2c@redhat.com>
-Date:   Fri, 24 Jul 2020 10:22:41 +0200
+Message-ID: <45ec14e7-fd5b-f4f9-6f61-94a9159ec3ad@redhat.com>
+Date:   Fri, 24 Jul 2020 10:22:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200723231544.17274-3-nivedita@alum.mit.edu>
+In-Reply-To: <20200723231544.17274-2-nivedita@alum.mit.edu>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 24.07.20 01:15, Arvind Sankar wrote:
-> The macro is not used anywhere, so remove the definition.
+> The macro is not used anywhere, and has an incorrect value (going by the
+> comment) on x86_64 since commit
+>   c898faf91b3e ("x86: 46 bit physical address support on 64 bits")
+> 
+> To avoid confusion, just remove the definition.
 > 
 > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 > ---
->  arch/sh/include/asm/sparsemem.h | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+>  arch/x86/include/asm/sparsemem.h | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
 > 
-> diff --git a/arch/sh/include/asm/sparsemem.h b/arch/sh/include/asm/sparsemem.h
-> index 4eb899751e45..084706bb8cca 100644
-> --- a/arch/sh/include/asm/sparsemem.h
-> +++ b/arch/sh/include/asm/sparsemem.h
-> @@ -5,11 +5,9 @@
->  #ifdef __KERNEL__
->  /*
->   * SECTION_SIZE_BITS		2^N: how big each section will be
-> - * MAX_PHYSADDR_BITS		2^N: how much physical address space we have
-> - * MAX_PHYSMEM_BITS		2^N: how much memory we can have in that space
-> + * MAX_PHYSMEM_BITS		2^N: how much physical address space we have
+> diff --git a/arch/x86/include/asm/sparsemem.h b/arch/x86/include/asm/sparsemem.h
+> index 199218719a86..6bfc878f6771 100644
+> --- a/arch/x86/include/asm/sparsemem.h
+> +++ b/arch/x86/include/asm/sparsemem.h
+> @@ -10,24 +10,20 @@
+>   *    field of the struct page
+>   *
+>   * SECTION_SIZE_BITS		2^n: size of each section
+> - * MAX_PHYSADDR_BITS		2^n: max size of physical address space
+> - * MAX_PHYSMEM_BITS		2^n: how much memory we can have in that space
+> + * MAX_PHYSMEM_BITS		2^n: max size of physical address space
+>   *
 >   */
->  #define SECTION_SIZE_BITS	26
-> -#define MAX_PHYSADDR_BITS	32
->  #define MAX_PHYSMEM_BITS	32
 >  
+>  #ifdef CONFIG_X86_32
+>  # ifdef CONFIG_X86_PAE
+>  #  define SECTION_SIZE_BITS	29
+> -#  define MAX_PHYSADDR_BITS	36
+>  #  define MAX_PHYSMEM_BITS	36
+>  # else
+>  #  define SECTION_SIZE_BITS	26
+> -#  define MAX_PHYSADDR_BITS	32
+>  #  define MAX_PHYSMEM_BITS	32
+>  # endif
+>  #else /* CONFIG_X86_32 */
+>  # define SECTION_SIZE_BITS	27 /* matt - 128 is convenient right now */
+> -# define MAX_PHYSADDR_BITS	(pgtable_l5_enabled() ? 52 : 44)
+>  # define MAX_PHYSMEM_BITS	(pgtable_l5_enabled() ? 52 : 46)
 >  #endif
+>  
 > 
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
