@@ -4,139 +4,137 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B48FC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A246CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A750206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:17:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CxBmKivf"
+	by mail.kernel.org (Postfix) with ESMTP id 7C3B0206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595618081;
+	bh=mTNy4KGrVM+aIgZL67PxvnR4jqHaeUoAL14mxcqNmCk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qomIoD+KjmObpWZxum3bt45g84SHBTAXzo3OyWkMTboa297w9REVaxySFikmQRDNi
+	 tzgre2PcNBksFnUrT6IPFvTRhv5N+XkA3ROOH+QjCrTy/exU7r36qUte4PFF+cFpOD
+	 ME6bwIL/FWtN3AxpClsxF41+pm1kRKWArkYDSuiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgGXTRT (ORCPT
+        id S1726696AbgGXTOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:17:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26063 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726572AbgGXTRT (ORCPT
+        Fri, 24 Jul 2020 15:14:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgGXTOj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:17:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595618237;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AJj/7mTJTokfFN7V2SBXvCQ6TJ6IN4DPcE0cHn1s29c=;
-        b=CxBmKivfJaKx+RiMkJeQYD4/c0/Kg5lTuE8xgboLRdk/szxaVv18+89/XeExAxK9IrqkPH
-        QEJ209rK67mlSVtF77pL7G1Iq5kumsSJtVWV9+RQNav/cqyoQtu6/rsPjeizcjAdcaEBHo
-        TIZbpgJtV41dlD5klgY8xVC7wW3Uukk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-270-6BoaiVaGM7ebz50loHlDeQ-1; Fri, 24 Jul 2020 15:17:13 -0400
-X-MC-Unique: 6BoaiVaGM7ebz50loHlDeQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D39CF800464;
-        Fri, 24 Jul 2020 19:17:10 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 80C546FEFE;
-        Fri, 24 Jul 2020 19:17:09 +0000 (UTC)
-Date:   Fri, 24 Jul 2020 13:17:08 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     WeitaoWang-oc <WeitaoWang-oc@zhaoxin.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "mathias.nyman@linux.intel.com" <mathias.nyman@linux.intel.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "hslester96@gmail.com" <hslester96@gmail.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Carsten_Schmid@mentor.com" <Carsten_Schmid@mentor.com>,
-        "efremov@linux.com" <efremov@linux.com>,
-        "Tony W. Wang(XA-RD)" <TonyWWang@zhaoxin.com>,
-        "Cobe Chen(BJ-RD)" <CobeChen@zhaoxin.com>,
-        "Tim Guo(BJ-RD)" <TimGuo@zhaoxin.com>,
-        "wwt8723@163.com" <wwt8723@163.com>
-Subject: Re: [PATCH] USB:Fix kernel NULL pointer when unbind UHCI form
- vfio-pci
-Message-ID: <20200724131708.0a0f3358@x1.home>
-In-Reply-To: <11a7a3e67d6c40cd9fd06cd4d6300283@zhaoxin.com>
-References: <1595419068-4812-1-git-send-email-WeitaoWang-oc@zhaoxin.com>
-        <20200722124414.GA3153105@kroah.com>
-        <20200722145913.GB1310843@rowland.harvard.edu>
-        <1bf449377e3448bc9c8bc7b64d7b7990@zhaoxin.com>
-        <20200722221817.542971a2@x1.home>
-        <20200723153821.GC1352396@rowland.harvard.edu>
-        <20200723101735.3222c289@w520.home>
-        <20200723163835.GA1357775@rowland.harvard.edu>
-        <11a7a3e67d6c40cd9fd06cd4d6300283@zhaoxin.com>
-Organization: Red Hat
+        Fri, 24 Jul 2020 15:14:39 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3011CC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:14:39 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q4so11085024lji.2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:14:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=td+POTQLbLYOoIxNCct7GsW10BBA9n/4Q5dVUic9E/Y=;
+        b=BmStlzF53IfQFR9lW1QEwB6WtPaCTo8kB/5l2ZVbvkNCRtpkKknR7R7gwnINKZMYbo
+         9roTE/qL7vaPo+Cyso47Tup2l6wwhF0x/6bkHDYtEfCuAEAXNXPJrsNboG8KVxzjNeDZ
+         VsPfwtpzBsiG/8I7JDAyVredl46a3Ru8+ROxI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=td+POTQLbLYOoIxNCct7GsW10BBA9n/4Q5dVUic9E/Y=;
+        b=BJ270DP3vTCYkckJSINSiByIHedpKERRN9X6Ma4DhZA1mlUrQvFuTo6ziHW2tTbv/I
+         jRxHtYSIpgdLPjFUttRm+fcOFR1XUM3iiHY9ajQhPZ1dy5H+V3eSMWtkF3j4QJwosFkV
+         KrTDZWS/xzc4Ey8G9xx3TDqC6EYu+IOhPYiQqlIoEtqmSi86rgmSl9fhUNKHOspi4aRf
+         5qdU513+iw8t/4Y+FebEqGqoDpuaHt7oycPRg59F9jV5zPfTQuCPoRkIsK2Yz+4ZAH6O
+         GLSBmbEryIaNts2mpcwpt6MrXCwmJOytVe8hhevPA5abdmHOdxzDNxYR9BEx9oNZFAF/
+         jSfw==
+X-Gm-Message-State: AOAM532n1AsD9pPnnvtSByyvDdGC4iWX7OYbO18fGfswVcQZscXKlJMK
+        12HW2H9whRSk3HQCtVFef9bD4WwYGaE=
+X-Google-Smtp-Source: ABdhPJycmn3m4TRX4VhgzRN3z1I1qA7oURPNAWFeQ8lXNss+9cVjruiHuWq+wxdzxI+TdQyR19ucsw==
+X-Received: by 2002:a2e:8157:: with SMTP id t23mr5223007ljg.417.1595618077138;
+        Fri, 24 Jul 2020 12:14:37 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id m1sm513676lfa.22.2020.07.24.12.14.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 12:14:36 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id 185so845547ljj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:14:35 -0700 (PDT)
+X-Received: by 2002:a2e:86c4:: with SMTP id n4mr5228146ljj.312.1595618075547;
+ Fri, 24 Jul 2020 12:14:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <159559628247.2141315.2107013106060144287.stgit@warthog.procyon.org.uk>
+ <159559630912.2141315.16186899692832741137.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159559630912.2141315.16186899692832741137.stgit@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 24 Jul 2020 12:14:18 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjnQArU_BewVKQgYHy2mQD6LNKC5kkKXOm7GpNkJCapQg@mail.gmail.com>
+Message-ID: <CAHk-=wjnQArU_BewVKQgYHy2mQD6LNKC5kkKXOm7GpNkJCapQg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] watch_queue: Implement mount topology and attribute
+ change notifications
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian@brauner.io>,
+        Jeff Layton <jlayton@redhat.com>, Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 12:57:49 +0000
-WeitaoWang-oc <WeitaoWang-oc@zhaoxin.com> wrote:
+This just can't be right.
 
-> On Thu, 23 Jul 2020 12:38:21 -0400, Alan wrote:
-> > On Thu, Jul 23, 2020 at 10:17:35AM -0600, Alex Williamson wrote:  
-> > > The IOMMU grouping restriction does solve the hardware issue, so long
-> > > as one driver doesn't blindly assume the driver private data for
-> > > another device and modify it.  
-> > 
-> > Correction: The IOMMU grouping restriction solves the hardware issue for
-> > vfio-pci.  It won't necessarily help if some other driver comes along
-> > and wants to bind to this hardware.
-> >   
-> > >   I do agree that your solution would
-> > > work, requiring all devices are unbound before any can be bound, but it
-> > > also seems difficult to manage.  The issue is largely unique to USB
-> > > AFAIK.  On the other hand, drivers coordinating with each other to
-> > > register their _private_ data as share-able within a set of drivers
-> > > seems like a much more direct and explicit interaction between the
-> > > drivers.  Thanks,  
-> > 
-> > Yes, that makes sense.  But it would have to be implemented in the
-> > driver core, not in particular subsystems like USB or PCI.  And it might
-> > be seen as overkill, given that only UHCI/OHCI/EHCI devices require this
-> > sort of sharing AFAIK.
-> > 
-> > Also, when you think about it, what form would such coordination among
-> > drivers take?  From your description, it sounds like the drivers would
-> > agree to avoid accessing each other's private data if the proper
-> > registration wasn't in place.
-> > 
-> > On the other hand, a stronger and perhaps more robust approach would be
-> > to enforce the condition that non-cooperating drivers are never bound to
-> > devices in the same group at the same time.  That's basically what I'm
-> > proposing here -- the question is whether the enforcement should be
-> > instituted in the kernel or should merely be part of a standard protocol
-> > followed by userspace drivers.
-> > 
-> > Given that it's currently needed in only one place, it seems reasonable
-> > to leave this as a "gentlemen's agreement" in userspace for the time
-> > being instead of adding it to the kernel.
-> > 	  
-> 
-> Provided that EHCI and UHCI host controller declare not support P2P and
-> ACS. So, we can assign EHCI and UHCI host controller to different IOMMU 
-> group separately. We assign EHCI host controller to host and assign UHCI
-> host controller to VM. Then, ehci_hcd driver load/unload operation in host
-> will cause the same issue as discussed
+On Fri, Jul 24, 2020 at 6:12 AM David Howells <dhowells@redhat.com> wrote:
+>
+> +
+> +/**
+> + * sys_watch_mount - Watch for mount topology/attribute changes
+> + * @dfd: Base directory to pathwalk from or fd referring to mount.
+> + * @filename: Path to mount to place the watch upon
+> + * @at_flags: Pathwalk control flags
+> + * @watch_fd: The watch queue to send notifications to.
+> + * @watch_id: The watch ID to be placed in the notification (-1 to remove watch)
+> + */
+> +SYSCALL_DEFINE5(watch_mount, [...]
+> +               int, watch_id)
+...
+> +       if (watch_id < -1 || watch_id > 0xff)
+> +               return -EINVAL;
+...
+> +       ret = inode_permission(path.dentry->d_inode, MAY_EXEC);
+> +       if (ret)
+> +               goto err_path;
+...
+> +       if (watch_id >= 0) {
+...
+> +               watch = kzalloc(sizeof(*watch), GFP_KERNEL);
+> +               if (!watch)
+> +                       goto err_wlist;
 
-And you have an example of such a device?  I expect these do not exist,
-nor should they.  It seems like it would be an improper use of ACS.
-Thanks,
+So now you can basically allocate as much kernel memory as you want as
+a regular user, as long as you have a mounted directory you can walk
+(ie everybody).
 
-Alex
+Is there any limiting of watches anywhere? I don't see it.
 
+I notice we already have this pattern elsewhere. I think we need to
+fix this before we add more watch types.
+
+Watch allocation shouldn't just be a kzalloc(). I think you should
+have a "watch_allocate()" that does the initialization of id etc, but
+also does some basic per-user watch resource tracking or something.
+
+              Linus
