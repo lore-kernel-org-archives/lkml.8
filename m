@@ -2,134 +2,115 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E026C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD74C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 412A72073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2705B20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:55:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="II5Iwnr4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rMlw0eEk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgGXKwI (ORCPT
+        id S1726658AbgGXKzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:52:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41260 "EHLO
+        Fri, 24 Jul 2020 06:55:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgGXKwH (ORCPT
+        with ESMTP id S1726258AbgGXKzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:52:07 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DDA9C0619D3;
-        Fri, 24 Jul 2020 03:52:06 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id d1so4239484plr.8;
-        Fri, 24 Jul 2020 03:52:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7f5a4rInq/BtPtGpwaCTr+PuPIYpCg1fDihs8uppVIo=;
-        b=II5Iwnr42FE3kJ4/53jooEX/7C2SypD7NhJwWPQOTQ94teQ3uJfjfo4A0wijzqrwGJ
-         f6KIgaAIMJLTuyibmpxUlz+SOKINfzcWLugzuXQWSkbVPVIcHp7oz1f2Hao0jen547kj
-         w6XStvT2KWFSwmhMVSh2Ks1Agkb4QF0WyMFNsORoHiPgRUVEBGIceqHjCpYYadjnWN0/
-         vgSd15vOxAJusmRG9oLBONO6GHIvU5Yc2dsHPdaIWOgSsfrJO4lUNbUqPTbuZbzj9b1b
-         NWEMHerEOhn2AJtRUvLg3HI60Citf4bahsPQgfaXhHsm/7BqZSrNyD0pS0td4o9L0Y2A
-         T2QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7f5a4rInq/BtPtGpwaCTr+PuPIYpCg1fDihs8uppVIo=;
-        b=k+UwWzy3hNKJCoOIHKwjB7drk1qHMPnvt4oapGDHWW2L2GAVNQv50XtX7nebdNGCzO
-         57Q+LFUIq4QgTf6hCndQPiushrlc6MFBOxvKysJICEsaieFYX9fHf983a47qAOH1ppTb
-         TphloIFy/SrUrEbQRnYF0W64+0YptJc9+4ai2PGzsbvIIG5kClFL8FaLM1VDgkVkFvVc
-         VuMRUiLMvwKnqQaS6kW6bybV+ARw9vFG5iWrTW08f2K/3GR776cidL0J5huJkHw5JtAq
-         DH93xVUsuWkS+bRedN/m1Rud851ymMFWX2A/ZqLAlASL63FhN6gP+OeuHgetNuQWIlIE
-         J9yw==
-X-Gm-Message-State: AOAM531skX8oV42ZFufwz1Bq9vtJZOzcXRuna7nOo4pBWpv0tUtc6OL3
-        ppgAhkxNbxpHMsRA5kOHB3W67Cj2N4A5uV0dwIY=
-X-Google-Smtp-Source: ABdhPJz8LrBxYW2OqSs/hx2X9HhDzRwSse6TRUnaNtTwquxh6eX4lrWDsN0j3dbu6m2pOgOcdMEJ/ghZRx3+aNuXMeM=
-X-Received: by 2002:a17:902:b098:: with SMTP id p24mr7899509plr.18.1595587925982;
- Fri, 24 Jul 2020 03:52:05 -0700 (PDT)
+        Fri, 24 Jul 2020 06:55:49 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7D5C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 03:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=dTI0RvYmB+fP73ftp8+VFu/GFD8sMlcrk0x3WCQYmQI=; b=rMlw0eEkaKNDAz+lfekbBI0Z3+
+        usBKIbI7FDAJDFs0Sg/cDph9xhnpgYIKSLNVoMHX5M3EhGjTgJdQN4hSdu4Drx0upPjEenM9DEHO4
+        /uGLK/DgyWQzb/QOxpFxP6brhyiweIm/W6OfxPDQyh3+v2QJLoVKuAdAb1sNqaXJ/qX7Kkor0yMZn
+        e+RjsYYIg1hn/YvnsnTNEX7RYsZIlTGBdLaoEA3txs0ADJ8veT7UA98FLjUPxZaakZvS1odKFp7//
+        OU50s3WOieZW8B/s808/qjccOGEuNWfYxWFPjxggdM3Gwn1qPbjR6lxpR9IYqLdGHsfg+9tumstRa
+        BHI7PBTg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyvMe-0005Ll-VL; Fri, 24 Jul 2020 10:55:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8CF5C300446;
+        Fri, 24 Jul 2020 12:55:43 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6E66F2847BADA; Fri, 24 Jul 2020 12:55:43 +0200 (CEST)
+Date:   Fri, 24 Jul 2020 12:55:43 +0200
+From:   peterz@infradead.org
+To:     kan.liang@linux.intel.com
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+        like.xu@linux.intel.com
+Subject: Re: [PATCH V7 07/14] perf/core: Add a new PERF_EV_CAP_COEXIST event
+ capability
+Message-ID: <20200724105543.GV119549@hirez.programming.kicks-ass.net>
+References: <20200723171117.9918-1-kan.liang@linux.intel.com>
+ <20200723171117.9918-8-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-References: <20200720155714.714114-1-vaibhavgupta40@gmail.com>
-In-Reply-To: <20200720155714.714114-1-vaibhavgupta40@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 24 Jul 2020 13:51:49 +0300
-Message-ID: <CAHp75Vdh-ssrmGgTc=gE9dWLhWDAw7_QHJKFeWKHpO-JqBdsEA@mail.gmail.com>
-Subject: Re: [PATCH v1] spi: spi-topcliff-pch: use generic power management
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723171117.9918-8-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 7:31 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
->
-> Drivers using legacy PM have to manage PCI states and device's PM states
-> themselves. They also need to take care of configuration registers.
->
-> With improved and powerful support of generic PM, PCI Core takes care of
-> above mentioned, device-independent, jobs.
->
-> This driver makes use of PCI helper functions like
-> pci_save/restore_state(), pci_enable/disable_device(), pci_enable_wake()
-> and pci_set_power_state() to do required operations. In generic mode, they
-> are no longer needed.
->
-> Change function parameter in both .suspend() and .resume() to
-> "struct device*" type. Use dev_get_drvdata() to get drv data.
+On Thu, Jul 23, 2020 at 10:11:10AM -0700, kan.liang@linux.intel.com wrote:
 
-> Compile-tested only.
-
-Yeah...
-
-...
-
-> +static int __maybe_unused pch_spi_suspend(struct device *dev)
->  {
-> +       struct pch_pd_dev_save *pd_dev_save = dev_get_drvdata(dev);
->
-> +       dev_dbg(dev, "%s ENTRY\n", __func__);
->
->         pd_dev_save->board_dat->suspend_sts = true;
->
-> +       return 0;
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 3b22db08b6fb..93631e5389bf 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -576,9 +576,14 @@ typedef void (*perf_overflow_handler_t)(struct perf_event *,
+>   * PERF_EV_CAP_SOFTWARE: Is a software event.
+>   * PERF_EV_CAP_READ_ACTIVE_PKG: A CPU event (or cgroup event) that can be read
+>   * from any CPU in the package where it is active.
+> + * PERF_EV_CAP_COEXIST: An event with this flag must coexist with other sibling
+> + * events, which have the same flag. If any event with the flag is detached
+> + * from the group, split the group into singleton events, and move the events
+> + * with the flag to the unrecoverable ERROR state.
+>   */
+>  #define PERF_EV_CAP_SOFTWARE		BIT(0)
+>  #define PERF_EV_CAP_READ_ACTIVE_PKG	BIT(1)
+> +#define PERF_EV_CAP_COEXIST		BIT(2)
+>  
+>  #define SWEVENT_HLIST_BITS		8
+>  #define SWEVENT_HLIST_SIZE		(1 << SWEVENT_HLIST_BITS)
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7c436d705fbd..e35d549a356d 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2133,10 +2133,28 @@ static inline struct list_head *get_event_list(struct perf_event *event)
+>  	return event->attr.pinned ? &ctx->pinned_active : &ctx->flexible_active;
 >  }
->
-> +static int __maybe_unused pch_spi_resume(struct device *dev)
->  {
-> +       struct pch_pd_dev_save *pd_dev_save = dev_get_drvdata(dev);
->
-> +       dev_dbg(dev, "%s ENTRY\n", __func__);
->
+>  
+> +/*
+> + * If the event has PERF_EV_CAP_COEXIST capability,
+> + * schedule it out and move it into the ERROR state.
+> + */
+> +static inline void perf_remove_coexist_events(struct perf_event *event)
+> +{
+> +	struct perf_event_context *ctx = event->ctx;
+> +	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
+> +
+> +	if (!(event->event_caps & PERF_EV_CAP_COEXIST))
+> +		return;
+> +
+> +	event_sched_out(event, cpuctx, ctx);
+> +	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+> +}
 
-> +       device_wakeup_disable(dev);
-
-Here I left a result. Care to explain (and perhaps send a follow up
-fix) where is the counterpart to this call?
-
-> +       /* set suspend status to false */
-> +       pd_dev_save->board_dat->suspend_sts = false;
-
-> +       return 0;
->  }
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Ah, so the problem here is that ERROR is actually recoverable using
+IOC_ENABLE. We don't want that either. Let me try and figure out of EXIT
+would work.
