@@ -2,4234 +2,733 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4264DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE26CC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE5D220767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:08:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="YWSg0ElL"
+	by mail.kernel.org (Postfix) with ESMTP id C45C8206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgGXJIu (ORCPT
+        id S1726977AbgGXJLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:08:50 -0400
-Received: from mail-eopbgr150088.outbound.protection.outlook.com ([40.107.15.88]:58240
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727997AbgGXJIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:08:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QH61PuHAlMKzmlyxPx8HoF6E/3OtGN6jZR7u/dwQq7q2k9tb78JFXXr9EizImiu9yxaLTPZGCzj6Q/BNPEZMEasel+y0AemOPrSfX9PwTR3KM46xVSjzQX+z/NEAoVlDKy8Brc7WEpTBP7ApXgb6BlceYyIkrrAOBwYD9dQITSAF2OngJgw5EH1u8Y3gXbVE9b/v4az8hpnG6QxjkFgsZ39CXFp6jtt0pdj1uozYjVPqUNpM8/DFep+BMbLlgjb+mLTAA+/Qg5zbngbaSOuFNXiBQkFGRMxxenyDfCaX71h3cBW2dZ1sCCx3hM6JFzPrpQKMM89dphDxGGZ6cEL48Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6DMH6+iW8DOJsrMqKqIzaUA41TXK9GoHmVY9vVnlmJ4=;
- b=ZCxGGbnCoe6puKRlNcswpsd8HJ8gz6Bj6xQZExjjpLEfYpID1UDgbMB3cIUx382UhjtsXqsREeQXJV6yo17lN+7qpheoQ5rV/yJ5NuYM73zXZXWXUEJ+XmfpjZyruIkE5v8L53wDZpdg5u1FhcnubTAu1iWHR5ElYdzXusobb22amorGeNViOjiuaOdPY5I8oPVheSVEWChMhwcXrJ9ST6YHE5whFB470Pqykdvkq28RrM5wB/30mquvFcYXJRXTzNhtig95qPlwpO82bdPTVThuAulmma/UhLfKmFuYxVLQTUY1EIVf1LU2rOfqO/GONt2OKxE/vfIYfejTuGi/6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6DMH6+iW8DOJsrMqKqIzaUA41TXK9GoHmVY9vVnlmJ4=;
- b=YWSg0ElL/gj3wWOEX+9Uu+ygqTZXdih2RsYpG73FKzkH3jWUrsIxtKBi1NU/b1XTmAuf1L15AWvsxVjkIA9U23tGFxxlG3w+jCUbhEYiaKYgc4KuiBqNR0kuBaFxwOp3s8IIe4IsyZwiPLipkPW4Z86DdQvi6zu8HMoCKOYe2hc=
-Authentication-Results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27) by VI1PR04MB5632.eurprd04.prod.outlook.com
- (2603:10a6:803:e5::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Fri, 24 Jul
- 2020 09:08:25 +0000
-Received: from VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::4c0:79dd:b734:9ea7]) by VI1PR0402MB3902.eurprd04.prod.outlook.com
- ([fe80::4c0:79dd:b734:9ea7%5]) with mapi id 15.20.3195.028; Fri, 24 Jul 2020
- 09:08:25 +0000
-From:   Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Cc:     lukas@mntmn.com, agx@sigxcpu.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, laurentiu.palcu@oss.nxp.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v8 2/5] drm/imx: Add initial support for DCSS on iMX8MQ
-Date:   Fri, 24 Jul 2020 12:07:31 +0300
-Message-Id: <20200724090736.12228-3-laurentiu.palcu@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
-References: <20200724090736.12228-1-laurentiu.palcu@oss.nxp.com>
-Content-Type: text/plain; charset="us-ascii"
-X-ClientProxiedBy: AM0PR10CA0128.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:e6::45) To VI1PR0402MB3902.eurprd04.prod.outlook.com
- (2603:10a6:803:22::27)
+        Fri, 24 Jul 2020 05:11:01 -0400
+Received: from mga18.intel.com ([134.134.136.126]:33610 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726591AbgGXJLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 05:11:01 -0400
+IronPort-SDR: Vs1jDMQ4giWDCgxXK7+A2GgkJvXEhrUlIzXgcSuwtNnEwwr0wJC9vLcOUgJdo5/OrU2843TCUY
+ rZ+UgSHmBb4w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="138178478"
+X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
+   d="gz'50?scan'50,208,50";a="138178478"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 02:09:57 -0700
+IronPort-SDR: IjpMZo5QZtySMrz8ZoWlRuttjVHmGFse+H2TCCp7kfNIDd87yb0228lXl+/ftuOi/b9kgnmPTa
+ q1owGQo8xKOw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
+   d="gz'50?scan'50,208,50";a="320950992"
+Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Jul 2020 02:09:54 -0700
+Received: from kbuild by df0563f96c37 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jytiE-0000DE-6d; Fri, 24 Jul 2020 09:09:54 +0000
+Date:   Fri, 24 Jul 2020 17:09:44 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c:259:19: error:
+ unused function 'rq_prio'
+Message-ID: <202007241731.431JCC5m%lkp@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1864-141.ea.freescale.net (83.217.231.2) by AM0PR10CA0128.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:e6::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Fri, 24 Jul 2020 09:08:23 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8c91bada-ab9b-4de2-314a-08d82fb11efa
-X-MS-TrafficTypeDiagnostic: VI1PR04MB5632:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB56320E3809CE027DF64EC1D3BE770@VI1PR04MB5632.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:213;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VCckM70Vt0zXhjKO/vGkBOAAfOI1qxOMrEo6tQDVZcvzlSN/VwcX/5kiaWSXnWr0itvy0vQafsaBNwMJKluW884a7K0rOelj56ywpmv4QzYv0dURjPeCZAyv47fbMYuic8PA1atCoRlbIwFx8CSxthzsIDMmMC4wVu87aj9CbhDbynvxuhV3Dor+JlkXPARvNCJ7PEUIncy0TLlJcfPfD9oBZDYS76bkiRwABarED0H179o+QIc9rEBCig6tJuhi6HVRYFEUCJNWodQZayqB5p/T1Aly7e0PR5Urw8jMrH6xwlrwPxHxnYXHBrGc5SjWu4MsOZbuxSJAm2cM5KtlhqWlpGEv425Pws4k4jIo1jh6IMzOFmnKZneFYo84Et+AtfNPWeYdmOV0NVPm108VtplvEqhAoUAJLR8s3GlrpqJyhBJY5dGSlPOXvPYBAh9aAaxucABzmxjFW6CDiztE6w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3902.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(346002)(376002)(136003)(366004)(30864003)(1076003)(5660300002)(66946007)(8936002)(8676002)(6512007)(6666004)(316002)(2906002)(86362001)(7416002)(4326008)(110136005)(6506007)(6486002)(44832011)(956004)(16526019)(26005)(52116002)(2616005)(478600001)(83380400001)(966005)(66476007)(66556008)(186003)(32563001)(559001)(579004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: wO0XNJhXUOm/Z0b7e5lCjteYyfBpaqdj6OtB5d8O5QopSVjLnsc+b4x04KXdV0umUdaomNS7Bi62tsLceTowpIGo0WFBv0/VKEMYlirBpwFi6htwUFBPTg2X084gggZetaehsPT1YT9GPfNLy0dGjd6eOP2bv1lKL/D9ntjf1Xh3q7zECtI1EaJiNLiH3Fh88KjY/8t+dXY3vvdWyncnJN2vFzH1Vs1dQcA3mZMJpOQd5qpisEoloFzgDuXLs3WWVnLC77enhdEFiqswP6p/kF154+L9GmJvCHsSf8Bm1L0EuUJdIJvI1p0azN6C0OLd6q1k3sAuMF4aZ5ZdoBJYznaw2PlfINhBw/lOcWkPm2FbwVTojypIFplSUQPUmth/W/fl0ZqJGsSDUytvv3b6ODpfA8X5HhPuYvocCZbUHaeHUxqe1TX2kBCaivBMFgCq/tcfl+TTNmSTxlgsl1XY+ajDT7DB7rLh1spicgKTuA0=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c91bada-ab9b-4de2-314a-08d82fb11efa
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3902.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 09:08:25.2552
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xJHksqMMVIwK0z5GGZ7hAlJEywkC9bVym9eN5LD1QDdmqe8Y4jmO0Up1k8z3+hPt6MV4or1x6dHqeYIokbxx1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5632
+Content-Type: multipart/mixed; boundary="qMm9M+Fa2AknHoGS"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
 
-This adds initial support for iMX8MQ's Display Controller Subsystem (DCSS).
-Some of its capabilities include:
- * 4K@60fps;
- * HDR10;
- * one graphics and 2 video pipelines;
- * on-the-fly decompression of compressed video and graphics;
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The reference manual can be found here:
-https://www.nxp.com/webapp/Download?colCode=IMX8MDQLQRM
+Hi Nick,
 
-The current patch adds only basic functionality: one primary plane for
-graphics, linear, tiled and super-tiled buffers support (no graphics
-decompression yet), no HDR10 and no video planes.
+FYI, the error/warning still remains.
 
-Video planes support and HDR10 will be added in subsequent patches once
-per-plane de-gamma/CSC/gamma support is in.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   f37e99aca03f63aa3f2bd13ceaf769455d12c4b0
+commit: 9f4069b055d1508c833115df7493b6e0001e5c9b drm/i915: re-disable -Wframe-address
+date:   3 months ago
+config: x86_64-randconfig-a003-20200724 (attached as .config)
+compiler: clang version 12.0.0 (https://github.com/llvm/llvm-project 1d09ecf36175f7910ffedd6d497c07b5c74c22fb)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install x86_64 cross compiling tool for clang build
+        # apt-get install binutils-x86-64-linux-gnu
+        git checkout 9f4069b055d1508c833115df7493b6e0001e5c9b
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64 
 
-Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c:259:19: error: unused function 'rq_prio' [-Werror,-Wunused-function]
+   static inline int rq_prio(const struct i915_request *rq)
+                     ^
+   1 error generated.
+--
+>> drivers/gpu/drm/i915/gvt/gtt.c:267:19: error: unused function 'get_pt_type' [-Werror,-Wunused-function]
+   static inline int get_pt_type(int type)
+                     ^
+>> drivers/gpu/drm/i915/gvt/gtt.c:590:20: error: unused function 'ppgtt_set_guest_root_entry' [-Werror,-Wunused-function]
+   static inline void ppgtt_set_guest_root_entry(struct intel_vgpu_mm *mm,
+                      ^
+   2 errors generated.
+
+vim +/rq_prio +259 drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c
+
+34ba5a80f249cd drivers/gpu/drm/i915/i915_guc_submission.c  Chris Wilson 2016-11-29  258  
+22b7a426bbe1eb drivers/gpu/drm/i915/intel_guc_submission.c Chris Wilson 2019-06-20 @259  static inline int rq_prio(const struct i915_request *rq)
+77f0d0e925e8a0 drivers/gpu/drm/i915/i915_guc_submission.c  Chris Wilson 2017-05-17  260  {
+22b7a426bbe1eb drivers/gpu/drm/i915/intel_guc_submission.c Chris Wilson 2019-06-20  261  	return rq->sched.attr.priority | __NO_PREEMPTION;
+77f0d0e925e8a0 drivers/gpu/drm/i915/i915_guc_submission.c  Chris Wilson 2017-05-17  262  }
+77f0d0e925e8a0 drivers/gpu/drm/i915/i915_guc_submission.c  Chris Wilson 2017-05-17  263  
+
+:::::: The code at line 259 was first introduced by commit
+:::::: 22b7a426bbe1ebe1520f92da4cd1617d1e1b5fc4 drm/i915/execlists: Preempt-to-busy
+
+:::::: TO: Chris Wilson <chris@chris-wilson.co.uk>
+:::::: CC: Chris Wilson <chris@chris-wilson.co.uk>
+
 ---
- drivers/gpu/drm/imx/Kconfig            |   2 +
- drivers/gpu/drm/imx/Makefile           |   1 +
- drivers/gpu/drm/imx/dcss/Kconfig       |   8 +
- drivers/gpu/drm/imx/dcss/Makefile      |   6 +
- drivers/gpu/drm/imx/dcss/dcss-blkctl.c |  70 +++
- drivers/gpu/drm/imx/dcss/dcss-crtc.c   | 219 +++++++
- drivers/gpu/drm/imx/dcss/dcss-ctxld.c  | 424 +++++++++++++
- drivers/gpu/drm/imx/dcss/dcss-dev.c    | 314 ++++++++++
- drivers/gpu/drm/imx/dcss/dcss-dev.h    | 177 ++++++
- drivers/gpu/drm/imx/dcss/dcss-dpr.c    | 562 +++++++++++++++++
- drivers/gpu/drm/imx/dcss/dcss-drv.c    | 138 +++++
- drivers/gpu/drm/imx/dcss/dcss-dtg.c    | 409 ++++++++++++
- drivers/gpu/drm/imx/dcss/dcss-kms.c    | 177 ++++++
- drivers/gpu/drm/imx/dcss/dcss-kms.h    |  43 ++
- drivers/gpu/drm/imx/dcss/dcss-plane.c  | 405 ++++++++++++
- drivers/gpu/drm/imx/dcss/dcss-scaler.c | 826 +++++++++++++++++++++++++
- drivers/gpu/drm/imx/dcss/dcss-ss.c     | 180 ++++++
- 17 files changed, 3961 insertions(+)
- create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
- create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
- create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-diff --git a/drivers/gpu/drm/imx/Kconfig b/drivers/gpu/drm/imx/Kconfig
-index 207bf7409dfb..6231048aa5aa 100644
---- a/drivers/gpu/drm/imx/Kconfig
-+++ b/drivers/gpu/drm/imx/Kconfig
-@@ -39,3 +39,5 @@ config DRM_IMX_HDMI
- 	depends on DRM_IMX
- 	help
- 	  Choose this if you want to use HDMI on i.MX6.
-+
-+source "drivers/gpu/drm/imx/dcss/Kconfig"
-diff --git a/drivers/gpu/drm/imx/Makefile b/drivers/gpu/drm/imx/Makefile
-index 21cdcc2faabc..b644deffe948 100644
---- a/drivers/gpu/drm/imx/Makefile
-+++ b/drivers/gpu/drm/imx/Makefile
-@@ -9,3 +9,4 @@ obj-$(CONFIG_DRM_IMX_TVE) += imx-tve.o
- obj-$(CONFIG_DRM_IMX_LDB) += imx-ldb.o
- 
- obj-$(CONFIG_DRM_IMX_HDMI) += dw_hdmi-imx.o
-+obj-$(CONFIG_DRM_IMX_DCSS) += dcss/
-diff --git a/drivers/gpu/drm/imx/dcss/Kconfig b/drivers/gpu/drm/imx/dcss/Kconfig
-new file mode 100644
-index 000000000000..a76435924b6a
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/Kconfig
-@@ -0,0 +1,8 @@
-+config DRM_IMX_DCSS
-+	tristate "i.MX8MQ DCSS"
-+	select IMX_IRQSTEER
-+	select DRM_KMS_CMA_HELPER
-+	depends on DRM && ARCH_MXC
-+	help
-+	  Choose this if you have a NXP i.MX8MQ based system and want to use the
-+	  Display Controller Subsystem. This option enables DCSS support.
-diff --git a/drivers/gpu/drm/imx/dcss/Makefile b/drivers/gpu/drm/imx/dcss/Makefile
-new file mode 100644
-index 000000000000..8c7c8da42792
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/Makefile
-@@ -0,0 +1,6 @@
-+imx-dcss-objs := dcss-drv.o dcss-dev.o dcss-blkctl.o dcss-ctxld.o dcss-dtg.o \
-+				 dcss-ss.o dcss-dpr.o dcss-scaler.o dcss-kms.o dcss-crtc.o \
-+				 dcss-plane.o
-+
-+obj-$(CONFIG_DRM_IMX_DCSS) += imx-dcss.o
-+
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-blkctl.c b/drivers/gpu/drm/imx/dcss/dcss-blkctl.c
-new file mode 100644
-index 000000000000..c9b54bb2692d
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-blkctl.c
-@@ -0,0 +1,70 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/of.h>
-+#include <linux/slab.h>
-+
-+#include "dcss-dev.h"
-+
-+#define DCSS_BLKCTL_RESET_CTRL		0x00
-+#define   B_CLK_RESETN			BIT(0)
-+#define   APB_CLK_RESETN		BIT(1)
-+#define   P_CLK_RESETN			BIT(2)
-+#define   RTR_CLK_RESETN		BIT(4)
-+#define DCSS_BLKCTL_CONTROL0		0x10
-+#define   HDMI_MIPI_CLK_SEL		BIT(0)
-+#define   DISPMIX_REFCLK_SEL_POS	4
-+#define   DISPMIX_REFCLK_SEL_MASK	GENMASK(5, 4)
-+#define   DISPMIX_PIXCLK_SEL		BIT(8)
-+#define   HDMI_SRC_SECURE_EN		BIT(16)
-+
-+struct dcss_blkctl {
-+	struct dcss_dev *dcss;
-+	void __iomem *base_reg;
-+};
-+
-+void dcss_blkctl_cfg(struct dcss_blkctl *blkctl)
-+{
-+	if (blkctl->dcss->hdmi_output)
-+		dcss_writel(0, blkctl->base_reg + DCSS_BLKCTL_CONTROL0);
-+	else
-+		dcss_writel(DISPMIX_PIXCLK_SEL,
-+			    blkctl->base_reg + DCSS_BLKCTL_CONTROL0);
-+
-+	dcss_set(B_CLK_RESETN | APB_CLK_RESETN | P_CLK_RESETN | RTR_CLK_RESETN,
-+		 blkctl->base_reg + DCSS_BLKCTL_RESET_CTRL);
-+}
-+
-+int dcss_blkctl_init(struct dcss_dev *dcss, unsigned long blkctl_base)
-+{
-+	struct dcss_blkctl *blkctl;
-+
-+	blkctl = kzalloc(sizeof(*blkctl), GFP_KERNEL);
-+	if (!blkctl)
-+		return -ENOMEM;
-+
-+	blkctl->base_reg = ioremap(blkctl_base, SZ_4K);
-+	if (!blkctl->base_reg) {
-+		dev_err(dcss->dev, "unable to remap BLK CTRL base\n");
-+		kfree(blkctl);
-+		return -ENOMEM;
-+	}
-+
-+	dcss->blkctl = blkctl;
-+	blkctl->dcss = dcss;
-+
-+	dcss_blkctl_cfg(blkctl);
-+
-+	return 0;
-+}
-+
-+void dcss_blkctl_exit(struct dcss_blkctl *blkctl)
-+{
-+	if (blkctl->base_reg)
-+		iounmap(blkctl->base_reg);
-+
-+	kfree(blkctl);
-+}
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-crtc.c b/drivers/gpu/drm/imx/dcss/dcss-crtc.c
-new file mode 100644
-index 000000000000..36abff0890b2
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-crtc.c
-@@ -0,0 +1,219 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_vblank.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+
-+#include "dcss-dev.h"
-+#include "dcss-kms.h"
-+
-+static int dcss_enable_vblank(struct drm_crtc *crtc)
-+{
-+	struct dcss_crtc *dcss_crtc = container_of(crtc, struct dcss_crtc,
-+						   base);
-+	struct dcss_dev *dcss = crtc->dev->dev_private;
-+
-+	dcss_dtg_vblank_irq_enable(dcss->dtg, true);
-+
-+	dcss_dtg_ctxld_kick_irq_enable(dcss->dtg, true);
-+
-+	enable_irq(dcss_crtc->irq);
-+
-+	return 0;
-+}
-+
-+static void dcss_disable_vblank(struct drm_crtc *crtc)
-+{
-+	struct dcss_crtc *dcss_crtc = container_of(crtc, struct dcss_crtc,
-+						   base);
-+	struct dcss_dev *dcss = dcss_crtc->base.dev->dev_private;
-+
-+	disable_irq_nosync(dcss_crtc->irq);
-+
-+	dcss_dtg_vblank_irq_enable(dcss->dtg, false);
-+
-+	if (dcss_crtc->disable_ctxld_kick_irq)
-+		dcss_dtg_ctxld_kick_irq_enable(dcss->dtg, false);
-+}
-+
-+static const struct drm_crtc_funcs dcss_crtc_funcs = {
-+	.set_config = drm_atomic_helper_set_config,
-+	.destroy = drm_crtc_cleanup,
-+	.page_flip = drm_atomic_helper_page_flip,
-+	.reset = drm_atomic_helper_crtc_reset,
-+	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_crtc_destroy_state,
-+	.enable_vblank = dcss_enable_vblank,
-+	.disable_vblank = dcss_disable_vblank,
-+};
-+
-+static void dcss_crtc_atomic_begin(struct drm_crtc *crtc,
-+				   struct drm_crtc_state *old_crtc_state)
-+{
-+	drm_crtc_vblank_on(crtc);
-+}
-+
-+static void dcss_crtc_atomic_flush(struct drm_crtc *crtc,
-+				   struct drm_crtc_state *old_crtc_state)
-+{
-+	struct dcss_crtc *dcss_crtc = container_of(crtc, struct dcss_crtc,
-+						   base);
-+	struct dcss_dev *dcss = dcss_crtc->base.dev->dev_private;
-+
-+	spin_lock_irq(&crtc->dev->event_lock);
-+	if (crtc->state->event) {
-+		WARN_ON(drm_crtc_vblank_get(crtc));
-+		drm_crtc_arm_vblank_event(crtc, crtc->state->event);
-+		crtc->state->event = NULL;
-+	}
-+	spin_unlock_irq(&crtc->dev->event_lock);
-+
-+	if (dcss_dtg_is_enabled(dcss->dtg))
-+		dcss_ctxld_enable(dcss->ctxld);
-+}
-+
-+static void dcss_crtc_atomic_enable(struct drm_crtc *crtc,
-+				    struct drm_crtc_state *old_crtc_state)
-+{
-+	struct dcss_crtc *dcss_crtc = container_of(crtc, struct dcss_crtc,
-+						   base);
-+	struct dcss_dev *dcss = dcss_crtc->base.dev->dev_private;
-+	struct drm_display_mode *mode = &crtc->state->adjusted_mode;
-+	struct drm_display_mode *old_mode = &old_crtc_state->adjusted_mode;
-+	struct videomode vm;
-+
-+	drm_display_mode_to_videomode(mode, &vm);
-+
-+	pm_runtime_get_sync(dcss->dev);
-+
-+	vm.pixelclock = mode->crtc_clock * 1000;
-+
-+	dcss_ss_subsam_set(dcss->ss);
-+	dcss_dtg_css_set(dcss->dtg);
-+
-+	if (!drm_mode_equal(mode, old_mode) || !old_crtc_state->active) {
-+		dcss_dtg_sync_set(dcss->dtg, &vm);
-+		dcss_ss_sync_set(dcss->ss, &vm,
-+				 mode->flags & DRM_MODE_FLAG_PHSYNC,
-+				 mode->flags & DRM_MODE_FLAG_PVSYNC);
-+	}
-+
-+	dcss_enable_dtg_and_ss(dcss);
-+
-+	dcss_ctxld_enable(dcss->ctxld);
-+
-+	/* Allow CTXLD kick interrupt to be disabled when VBLANK is disabled. */
-+	dcss_crtc->disable_ctxld_kick_irq = true;
-+}
-+
-+static void dcss_crtc_atomic_disable(struct drm_crtc *crtc,
-+				     struct drm_crtc_state *old_crtc_state)
-+{
-+	struct dcss_crtc *dcss_crtc = container_of(crtc, struct dcss_crtc,
-+						   base);
-+	struct dcss_dev *dcss = dcss_crtc->base.dev->dev_private;
-+	struct drm_display_mode *mode = &crtc->state->adjusted_mode;
-+	struct drm_display_mode *old_mode = &old_crtc_state->adjusted_mode;
-+
-+	drm_atomic_helper_disable_planes_on_crtc(old_crtc_state, false);
-+
-+	spin_lock_irq(&crtc->dev->event_lock);
-+	if (crtc->state->event) {
-+		drm_crtc_send_vblank_event(crtc, crtc->state->event);
-+		crtc->state->event = NULL;
-+	}
-+	spin_unlock_irq(&crtc->dev->event_lock);
-+
-+	dcss_dtg_ctxld_kick_irq_enable(dcss->dtg, true);
-+
-+	reinit_completion(&dcss->disable_completion);
-+
-+	dcss_disable_dtg_and_ss(dcss);
-+
-+	dcss_ctxld_enable(dcss->ctxld);
-+
-+	if (!drm_mode_equal(mode, old_mode) || !crtc->state->active)
-+		if (!wait_for_completion_timeout(&dcss->disable_completion,
-+						 msecs_to_jiffies(100)))
-+			dev_err(dcss->dev, "Shutting off DTG timed out.\n");
-+
-+	/*
-+	 * Do not shut off CTXLD kick interrupt when shutting VBLANK off. It
-+	 * will be needed to commit the last changes, before going to suspend.
-+	 */
-+	dcss_crtc->disable_ctxld_kick_irq = false;
-+
-+	drm_crtc_vblank_off(crtc);
-+
-+	pm_runtime_mark_last_busy(dcss->dev);
-+	pm_runtime_put_autosuspend(dcss->dev);
-+}
-+
-+static const struct drm_crtc_helper_funcs dcss_helper_funcs = {
-+	.atomic_begin = dcss_crtc_atomic_begin,
-+	.atomic_flush = dcss_crtc_atomic_flush,
-+	.atomic_enable = dcss_crtc_atomic_enable,
-+	.atomic_disable = dcss_crtc_atomic_disable,
-+};
-+
-+static irqreturn_t dcss_crtc_irq_handler(int irq, void *dev_id)
-+{
-+	struct dcss_crtc *dcss_crtc = dev_id;
-+	struct dcss_dev *dcss = dcss_crtc->base.dev->dev_private;
-+
-+	if (!dcss_dtg_vblank_irq_valid(dcss->dtg))
-+		return IRQ_NONE;
-+
-+	if (dcss_ctxld_is_flushed(dcss->ctxld))
-+		drm_crtc_handle_vblank(&dcss_crtc->base);
-+
-+	dcss_dtg_vblank_irq_clear(dcss->dtg);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+int dcss_crtc_init(struct dcss_crtc *crtc, struct drm_device *drm)
-+{
-+	struct dcss_dev *dcss = drm->dev_private;
-+	struct platform_device *pdev = to_platform_device(dcss->dev);
-+	int ret;
-+
-+	crtc->plane[0] = dcss_plane_init(drm, drm_crtc_mask(&crtc->base),
-+					 DRM_PLANE_TYPE_PRIMARY, 0);
-+	if (IS_ERR(crtc->plane[0]))
-+		return PTR_ERR(crtc->plane[0]);
-+
-+	crtc->base.port = dcss->of_port;
-+
-+	drm_crtc_helper_add(&crtc->base, &dcss_helper_funcs);
-+	ret = drm_crtc_init_with_planes(drm, &crtc->base, &crtc->plane[0]->base,
-+					NULL, &dcss_crtc_funcs, NULL);
-+	if (ret) {
-+		dev_err(dcss->dev, "failed to init crtc\n");
-+		return ret;
-+	}
-+
-+	crtc->irq = platform_get_irq_byname(pdev, "vblank");
-+	if (crtc->irq < 0)
-+		return crtc->irq;
-+
-+	ret = request_irq(crtc->irq, dcss_crtc_irq_handler,
-+			  0, "dcss_drm", crtc);
-+	if (ret) {
-+		dev_err(dcss->dev, "irq request failed with %d.\n", ret);
-+		return ret;
-+	}
-+
-+	disable_irq(crtc->irq);
-+
-+	return 0;
-+}
-+
-+void dcss_crtc_deinit(struct dcss_crtc *crtc, struct drm_device *drm)
-+{
-+	free_irq(crtc->irq, crtc);
-+}
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-ctxld.c b/drivers/gpu/drm/imx/dcss/dcss-ctxld.c
-new file mode 100644
-index 000000000000..3a84cb3209c4
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-ctxld.c
-@@ -0,0 +1,424 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#include "dcss-dev.h"
-+
-+#define DCSS_CTXLD_CONTROL_STATUS	0x0
-+#define   CTXLD_ENABLE			BIT(0)
-+#define   ARB_SEL			BIT(1)
-+#define   RD_ERR_EN			BIT(2)
-+#define   DB_COMP_EN			BIT(3)
-+#define   SB_HP_COMP_EN			BIT(4)
-+#define   SB_LP_COMP_EN			BIT(5)
-+#define   DB_PEND_SB_REC_EN		BIT(6)
-+#define   SB_PEND_DISP_ACTIVE_EN	BIT(7)
-+#define   AHB_ERR_EN			BIT(8)
-+#define   RD_ERR			BIT(16)
-+#define   DB_COMP			BIT(17)
-+#define   SB_HP_COMP			BIT(18)
-+#define   SB_LP_COMP			BIT(19)
-+#define   DB_PEND_SB_REC		BIT(20)
-+#define   SB_PEND_DISP_ACTIVE		BIT(21)
-+#define   AHB_ERR			BIT(22)
-+#define DCSS_CTXLD_DB_BASE_ADDR		0x10
-+#define DCSS_CTXLD_DB_COUNT		0x14
-+#define DCSS_CTXLD_SB_BASE_ADDR		0x18
-+#define DCSS_CTXLD_SB_COUNT		0x1C
-+#define   SB_HP_COUNT_POS		0
-+#define   SB_HP_COUNT_MASK		0xffff
-+#define   SB_LP_COUNT_POS		16
-+#define   SB_LP_COUNT_MASK		0xffff0000
-+#define DCSS_AHB_ERR_ADDR		0x20
-+
-+#define CTXLD_IRQ_COMPLETION		(DB_COMP | SB_HP_COMP | SB_LP_COMP)
-+#define CTXLD_IRQ_ERROR			(RD_ERR | DB_PEND_SB_REC | AHB_ERR)
-+
-+/* The following sizes are in context loader entries, 8 bytes each. */
-+#define CTXLD_DB_CTX_ENTRIES		1024	/* max 65536 */
-+#define CTXLD_SB_LP_CTX_ENTRIES		10240	/* max 65536 */
-+#define CTXLD_SB_HP_CTX_ENTRIES		20000	/* max 65536 */
-+#define CTXLD_SB_CTX_ENTRIES		(CTXLD_SB_LP_CTX_ENTRIES + \
-+					 CTXLD_SB_HP_CTX_ENTRIES)
-+
-+/* Sizes, in entries, of the DB, SB_HP and SB_LP context regions. */
-+static u16 dcss_ctxld_ctx_size[3] = {
-+	CTXLD_DB_CTX_ENTRIES,
-+	CTXLD_SB_HP_CTX_ENTRIES,
-+	CTXLD_SB_LP_CTX_ENTRIES
-+};
-+
-+/* this represents an entry in the context loader map */
-+struct dcss_ctxld_item {
-+	u32 val;
-+	u32 ofs;
-+};
-+
-+#define CTX_ITEM_SIZE			sizeof(struct dcss_ctxld_item)
-+
-+struct dcss_ctxld {
-+	struct device *dev;
-+	void __iomem *ctxld_reg;
-+	int irq;
-+	bool irq_en;
-+
-+	struct dcss_ctxld_item *db[2];
-+	struct dcss_ctxld_item *sb_hp[2];
-+	struct dcss_ctxld_item *sb_lp[2];
-+
-+	dma_addr_t db_paddr[2];
-+	dma_addr_t sb_paddr[2];
-+
-+	u16 ctx_size[2][3]; /* holds the sizes of DB, SB_HP and SB_LP ctx */
-+	u8 current_ctx;
-+
-+	bool in_use;
-+	bool armed;
-+
-+	spinlock_t lock; /* protects concurent access to private data */
-+};
-+
-+static irqreturn_t dcss_ctxld_irq_handler(int irq, void *data)
-+{
-+	struct dcss_ctxld *ctxld = data;
-+	struct dcss_dev *dcss = dcss_drv_dev_to_dcss(ctxld->dev);
-+	u32 irq_status;
-+
-+	irq_status = dcss_readl(ctxld->ctxld_reg + DCSS_CTXLD_CONTROL_STATUS);
-+
-+	if (irq_status & CTXLD_IRQ_COMPLETION &&
-+	    !(irq_status & CTXLD_ENABLE) && ctxld->in_use) {
-+		ctxld->in_use = false;
-+
-+		if (dcss && dcss->disable_callback)
-+			dcss->disable_callback(dcss);
-+	} else if (irq_status & CTXLD_IRQ_ERROR) {
-+		/*
-+		 * Except for throwing an error message and clearing the status
-+		 * register, there's not much we can do here.
-+		 */
-+		dev_err(ctxld->dev, "ctxld: error encountered: %08x\n",
-+			irq_status);
-+		dev_err(ctxld->dev, "ctxld: db=%d, sb_hp=%d, sb_lp=%d\n",
-+			ctxld->ctx_size[ctxld->current_ctx ^ 1][CTX_DB],
-+			ctxld->ctx_size[ctxld->current_ctx ^ 1][CTX_SB_HP],
-+			ctxld->ctx_size[ctxld->current_ctx ^ 1][CTX_SB_LP]);
-+	}
-+
-+	dcss_clr(irq_status & (CTXLD_IRQ_ERROR | CTXLD_IRQ_COMPLETION),
-+		 ctxld->ctxld_reg + DCSS_CTXLD_CONTROL_STATUS);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int dcss_ctxld_irq_config(struct dcss_ctxld *ctxld,
-+				 struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	ctxld->irq = platform_get_irq_byname(pdev, "ctxld");
-+	if (ctxld->irq < 0)
-+		return ctxld->irq;
-+
-+	ret = request_irq(ctxld->irq, dcss_ctxld_irq_handler,
-+			  0, "dcss_ctxld", ctxld);
-+	if (ret) {
-+		dev_err(ctxld->dev, "ctxld: irq request failed.\n");
-+		return ret;
-+	}
-+
-+	ctxld->irq_en = true;
-+
-+	return 0;
-+}
-+
-+static void dcss_ctxld_hw_cfg(struct dcss_ctxld *ctxld)
-+{
-+	dcss_writel(RD_ERR_EN | SB_HP_COMP_EN |
-+		    DB_PEND_SB_REC_EN | AHB_ERR_EN | RD_ERR | AHB_ERR,
-+		    ctxld->ctxld_reg + DCSS_CTXLD_CONTROL_STATUS);
-+}
-+
-+static void dcss_ctxld_free_ctx(struct dcss_ctxld *ctxld)
-+{
-+	struct dcss_ctxld_item *ctx;
-+	int i;
-+
-+	for (i = 0; i < 2; i++) {
-+		if (ctxld->db[i]) {
-+			dma_free_coherent(ctxld->dev,
-+					  CTXLD_DB_CTX_ENTRIES * sizeof(*ctx),
-+					  ctxld->db[i], ctxld->db_paddr[i]);
-+			ctxld->db[i] = NULL;
-+			ctxld->db_paddr[i] = 0;
-+		}
-+
-+		if (ctxld->sb_hp[i]) {
-+			dma_free_coherent(ctxld->dev,
-+					  CTXLD_SB_CTX_ENTRIES * sizeof(*ctx),
-+					  ctxld->sb_hp[i], ctxld->sb_paddr[i]);
-+			ctxld->sb_hp[i] = NULL;
-+			ctxld->sb_paddr[i] = 0;
-+		}
-+	}
-+}
-+
-+static int dcss_ctxld_alloc_ctx(struct dcss_ctxld *ctxld)
-+{
-+	struct dcss_ctxld_item *ctx;
-+	int i;
-+
-+	for (i = 0; i < 2; i++) {
-+		ctx = dma_alloc_coherent(ctxld->dev,
-+					 CTXLD_DB_CTX_ENTRIES * sizeof(*ctx),
-+					 &ctxld->db_paddr[i], GFP_KERNEL);
-+		if (!ctx)
-+			return -ENOMEM;
-+
-+		ctxld->db[i] = ctx;
-+
-+		ctx = dma_alloc_coherent(ctxld->dev,
-+					 CTXLD_SB_CTX_ENTRIES * sizeof(*ctx),
-+					 &ctxld->sb_paddr[i], GFP_KERNEL);
-+		if (!ctx)
-+			return -ENOMEM;
-+
-+		ctxld->sb_hp[i] = ctx;
-+		ctxld->sb_lp[i] = ctx + CTXLD_SB_HP_CTX_ENTRIES;
-+	}
-+
-+	return 0;
-+}
-+
-+int dcss_ctxld_init(struct dcss_dev *dcss, unsigned long ctxld_base)
-+{
-+	struct dcss_ctxld *ctxld;
-+	int ret;
-+
-+	ctxld = kzalloc(sizeof(*ctxld), GFP_KERNEL);
-+	if (!ctxld)
-+		return -ENOMEM;
-+
-+	dcss->ctxld = ctxld;
-+	ctxld->dev = dcss->dev;
-+
-+	spin_lock_init(&ctxld->lock);
-+
-+	ret = dcss_ctxld_alloc_ctx(ctxld);
-+	if (ret) {
-+		dev_err(dcss->dev, "ctxld: cannot allocate context memory.\n");
-+		goto err;
-+	}
-+
-+	ctxld->ctxld_reg = ioremap(ctxld_base, SZ_4K);
-+	if (!ctxld->ctxld_reg) {
-+		dev_err(dcss->dev, "ctxld: unable to remap ctxld base\n");
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
-+	ret = dcss_ctxld_irq_config(ctxld, to_platform_device(dcss->dev));
-+	if (ret)
-+		goto err_irq;
-+
-+	dcss_ctxld_hw_cfg(ctxld);
-+
-+	return 0;
-+
-+err_irq:
-+	iounmap(ctxld->ctxld_reg);
-+
-+err:
-+	dcss_ctxld_free_ctx(ctxld);
-+	kfree(ctxld);
-+
-+	return ret;
-+}
-+
-+void dcss_ctxld_exit(struct dcss_ctxld *ctxld)
-+{
-+	free_irq(ctxld->irq, ctxld);
-+
-+	if (ctxld->ctxld_reg)
-+		iounmap(ctxld->ctxld_reg);
-+
-+	dcss_ctxld_free_ctx(ctxld);
-+	kfree(ctxld);
-+}
-+
-+static int dcss_ctxld_enable_locked(struct dcss_ctxld *ctxld)
-+{
-+	int curr_ctx = ctxld->current_ctx;
-+	u32 db_base, sb_base, sb_count;
-+	u32 sb_hp_cnt, sb_lp_cnt, db_cnt;
-+	struct dcss_dev *dcss = dcss_drv_dev_to_dcss(ctxld->dev);
-+
-+	if (!dcss)
-+		return 0;
-+
-+	dcss_dpr_write_sysctrl(dcss->dpr);
-+
-+	dcss_scaler_write_sclctrl(dcss->scaler);
-+
-+	sb_hp_cnt = ctxld->ctx_size[curr_ctx][CTX_SB_HP];
-+	sb_lp_cnt = ctxld->ctx_size[curr_ctx][CTX_SB_LP];
-+	db_cnt = ctxld->ctx_size[curr_ctx][CTX_DB];
-+
-+	/* make sure SB_LP context area comes after SB_HP */
-+	if (sb_lp_cnt &&
-+	    ctxld->sb_lp[curr_ctx] != ctxld->sb_hp[curr_ctx] + sb_hp_cnt) {
-+		struct dcss_ctxld_item *sb_lp_adjusted;
-+
-+		sb_lp_adjusted = ctxld->sb_hp[curr_ctx] + sb_hp_cnt;
-+
-+		memcpy(sb_lp_adjusted, ctxld->sb_lp[curr_ctx],
-+		       sb_lp_cnt * CTX_ITEM_SIZE);
-+	}
-+
-+	db_base = db_cnt ? ctxld->db_paddr[curr_ctx] : 0;
-+
-+	dcss_writel(db_base, ctxld->ctxld_reg + DCSS_CTXLD_DB_BASE_ADDR);
-+	dcss_writel(db_cnt, ctxld->ctxld_reg + DCSS_CTXLD_DB_COUNT);
-+
-+	if (sb_hp_cnt)
-+		sb_count = ((sb_hp_cnt << SB_HP_COUNT_POS) & SB_HP_COUNT_MASK) |
-+			   ((sb_lp_cnt << SB_LP_COUNT_POS) & SB_LP_COUNT_MASK);
-+	else
-+		sb_count = (sb_lp_cnt << SB_HP_COUNT_POS) & SB_HP_COUNT_MASK;
-+
-+	sb_base = sb_count ? ctxld->sb_paddr[curr_ctx] : 0;
-+
-+	dcss_writel(sb_base, ctxld->ctxld_reg + DCSS_CTXLD_SB_BASE_ADDR);
-+	dcss_writel(sb_count, ctxld->ctxld_reg + DCSS_CTXLD_SB_COUNT);
-+
-+	/* enable the context loader */
-+	dcss_set(CTXLD_ENABLE, ctxld->ctxld_reg + DCSS_CTXLD_CONTROL_STATUS);
-+
-+	ctxld->in_use = true;
-+
-+	/*
-+	 * Toggle the current context to the alternate one so that any updates
-+	 * in the modules' settings take place there.
-+	 */
-+	ctxld->current_ctx ^= 1;
-+
-+	ctxld->ctx_size[ctxld->current_ctx][CTX_DB] = 0;
-+	ctxld->ctx_size[ctxld->current_ctx][CTX_SB_HP] = 0;
-+	ctxld->ctx_size[ctxld->current_ctx][CTX_SB_LP] = 0;
-+
-+	return 0;
-+}
-+
-+int dcss_ctxld_enable(struct dcss_ctxld *ctxld)
-+{
-+	spin_lock_irq(&ctxld->lock);
-+	ctxld->armed = true;
-+	spin_unlock_irq(&ctxld->lock);
-+
-+	return 0;
-+}
-+
-+void dcss_ctxld_kick(struct dcss_ctxld *ctxld)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&ctxld->lock, flags);
-+	if (ctxld->armed && !ctxld->in_use) {
-+		ctxld->armed = false;
-+		dcss_ctxld_enable_locked(ctxld);
-+	}
-+	spin_unlock_irqrestore(&ctxld->lock, flags);
-+}
-+
-+void dcss_ctxld_write_irqsafe(struct dcss_ctxld *ctxld, u32 ctx_id, u32 val,
-+			      u32 reg_ofs)
-+{
-+	int curr_ctx = ctxld->current_ctx;
-+	struct dcss_ctxld_item *ctx[] = {
-+		[CTX_DB] = ctxld->db[curr_ctx],
-+		[CTX_SB_HP] = ctxld->sb_hp[curr_ctx],
-+		[CTX_SB_LP] = ctxld->sb_lp[curr_ctx]
-+	};
-+	int item_idx = ctxld->ctx_size[curr_ctx][ctx_id];
-+
-+	if (item_idx + 1 > dcss_ctxld_ctx_size[ctx_id]) {
-+		WARN_ON(1);
-+		return;
-+	}
-+
-+	ctx[ctx_id][item_idx].val = val;
-+	ctx[ctx_id][item_idx].ofs = reg_ofs;
-+	ctxld->ctx_size[curr_ctx][ctx_id] += 1;
-+}
-+
-+void dcss_ctxld_write(struct dcss_ctxld *ctxld, u32 ctx_id,
-+		      u32 val, u32 reg_ofs)
-+{
-+	spin_lock_irq(&ctxld->lock);
-+	dcss_ctxld_write_irqsafe(ctxld, ctx_id, val, reg_ofs);
-+	spin_unlock_irq(&ctxld->lock);
-+}
-+
-+bool dcss_ctxld_is_flushed(struct dcss_ctxld *ctxld)
-+{
-+	return ctxld->ctx_size[ctxld->current_ctx][CTX_DB] == 0 &&
-+		ctxld->ctx_size[ctxld->current_ctx][CTX_SB_HP] == 0 &&
-+		ctxld->ctx_size[ctxld->current_ctx][CTX_SB_LP] == 0;
-+}
-+
-+int dcss_ctxld_resume(struct dcss_ctxld *ctxld)
-+{
-+	dcss_ctxld_hw_cfg(ctxld);
-+
-+	if (!ctxld->irq_en) {
-+		enable_irq(ctxld->irq);
-+		ctxld->irq_en = true;
-+	}
-+
-+	return 0;
-+}
-+
-+int dcss_ctxld_suspend(struct dcss_ctxld *ctxld)
-+{
-+	int ret = 0;
-+	unsigned long timeout = jiffies + msecs_to_jiffies(500);
-+
-+	if (!dcss_ctxld_is_flushed(ctxld)) {
-+		dcss_ctxld_kick(ctxld);
-+
-+		while (!time_after(jiffies, timeout) && ctxld->in_use)
-+			msleep(20);
-+
-+		if (time_after(jiffies, timeout))
-+			return -ETIMEDOUT;
-+	}
-+
-+	spin_lock_irq(&ctxld->lock);
-+
-+	if (ctxld->irq_en) {
-+		disable_irq_nosync(ctxld->irq);
-+		ctxld->irq_en = false;
-+	}
-+
-+	/* reset context region and sizes */
-+	ctxld->current_ctx = 0;
-+	ctxld->ctx_size[0][CTX_DB] = 0;
-+	ctxld->ctx_size[0][CTX_SB_HP] = 0;
-+	ctxld->ctx_size[0][CTX_SB_LP] = 0;
-+
-+	spin_unlock_irq(&ctxld->lock);
-+
-+	return ret;
-+}
-+
-+void dcss_ctxld_assert_locked(struct dcss_ctxld *ctxld)
-+{
-+	lockdep_assert_held(&ctxld->lock);
-+}
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-dev.c b/drivers/gpu/drm/imx/dcss/dcss-dev.c
-new file mode 100644
-index 000000000000..83a4840435cf
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-dev.c
-@@ -0,0 +1,314 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/of_device.h>
-+#include <linux/of_graph.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/slab.h>
-+#include <drm/drm_modeset_helper.h>
-+
-+#include "dcss-dev.h"
-+
-+static void dcss_clocks_enable(struct dcss_dev *dcss)
-+{
-+	clk_prepare_enable(dcss->axi_clk);
-+	clk_prepare_enable(dcss->apb_clk);
-+	clk_prepare_enable(dcss->rtrm_clk);
-+	clk_prepare_enable(dcss->dtrc_clk);
-+	clk_prepare_enable(dcss->pix_clk);
-+}
-+
-+static void dcss_clocks_disable(struct dcss_dev *dcss)
-+{
-+	clk_disable_unprepare(dcss->pix_clk);
-+	clk_disable_unprepare(dcss->dtrc_clk);
-+	clk_disable_unprepare(dcss->rtrm_clk);
-+	clk_disable_unprepare(dcss->apb_clk);
-+	clk_disable_unprepare(dcss->axi_clk);
-+}
-+
-+static void dcss_disable_dtg_and_ss_cb(void *data)
-+{
-+	struct dcss_dev *dcss = data;
-+
-+	dcss->disable_callback = NULL;
-+
-+	dcss_ss_shutoff(dcss->ss);
-+	dcss_dtg_shutoff(dcss->dtg);
-+
-+	complete(&dcss->disable_completion);
-+}
-+
-+void dcss_disable_dtg_and_ss(struct dcss_dev *dcss)
-+{
-+	dcss->disable_callback = dcss_disable_dtg_and_ss_cb;
-+}
-+
-+void dcss_enable_dtg_and_ss(struct dcss_dev *dcss)
-+{
-+	if (dcss->disable_callback)
-+		dcss->disable_callback = NULL;
-+
-+	dcss_dtg_enable(dcss->dtg);
-+	dcss_ss_enable(dcss->ss);
-+}
-+
-+static int dcss_submodules_init(struct dcss_dev *dcss)
-+{
-+	int ret = 0;
-+	u32 base_addr = dcss->start_addr;
-+	const struct dcss_type_data *devtype = dcss->devtype;
-+
-+	dcss_clocks_enable(dcss);
-+
-+	ret = dcss_blkctl_init(dcss, base_addr + devtype->blkctl_ofs);
-+	if (ret)
-+		return ret;
-+
-+	ret = dcss_ctxld_init(dcss, base_addr + devtype->ctxld_ofs);
-+	if (ret)
-+		goto ctxld_err;
-+
-+	ret = dcss_dtg_init(dcss, base_addr + devtype->dtg_ofs);
-+	if (ret)
-+		goto dtg_err;
-+
-+	ret = dcss_ss_init(dcss, base_addr + devtype->ss_ofs);
-+	if (ret)
-+		goto ss_err;
-+
-+	ret = dcss_dpr_init(dcss, base_addr + devtype->dpr_ofs);
-+	if (ret)
-+		goto dpr_err;
-+
-+	ret = dcss_scaler_init(dcss, base_addr + devtype->scaler_ofs);
-+	if (ret)
-+		goto scaler_err;
-+
-+	dcss_clocks_disable(dcss);
-+
-+	return 0;
-+
-+scaler_err:
-+	dcss_dpr_exit(dcss->dpr);
-+
-+dpr_err:
-+	dcss_ss_exit(dcss->ss);
-+
-+ss_err:
-+	dcss_dtg_exit(dcss->dtg);
-+
-+dtg_err:
-+	dcss_ctxld_exit(dcss->ctxld);
-+
-+ctxld_err:
-+	dcss_blkctl_exit(dcss->blkctl);
-+
-+	dcss_clocks_disable(dcss);
-+
-+	return ret;
-+}
-+
-+static void dcss_submodules_stop(struct dcss_dev *dcss)
-+{
-+	dcss_clocks_enable(dcss);
-+	dcss_scaler_exit(dcss->scaler);
-+	dcss_dpr_exit(dcss->dpr);
-+	dcss_ss_exit(dcss->ss);
-+	dcss_dtg_exit(dcss->dtg);
-+	dcss_ctxld_exit(dcss->ctxld);
-+	dcss_blkctl_exit(dcss->blkctl);
-+	dcss_clocks_disable(dcss);
-+}
-+
-+static int dcss_clks_init(struct dcss_dev *dcss)
-+{
-+	int i;
-+	struct {
-+		const char *id;
-+		struct clk **clk;
-+	} clks[] = {
-+		{"apb",   &dcss->apb_clk},
-+		{"axi",   &dcss->axi_clk},
-+		{"pix",   &dcss->pix_clk},
-+		{"rtrm",  &dcss->rtrm_clk},
-+		{"dtrc",  &dcss->dtrc_clk},
-+	};
-+
-+	for (i = 0; i < ARRAY_SIZE(clks); i++) {
-+		*clks[i].clk = devm_clk_get(dcss->dev, clks[i].id);
-+		if (IS_ERR(*clks[i].clk)) {
-+			dev_err(dcss->dev, "failed to get %s clock\n",
-+				clks[i].id);
-+			return PTR_ERR(*clks[i].clk);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void dcss_clks_release(struct dcss_dev *dcss)
-+{
-+	devm_clk_put(dcss->dev, dcss->dtrc_clk);
-+	devm_clk_put(dcss->dev, dcss->rtrm_clk);
-+	devm_clk_put(dcss->dev, dcss->pix_clk);
-+	devm_clk_put(dcss->dev, dcss->axi_clk);
-+	devm_clk_put(dcss->dev, dcss->apb_clk);
-+}
-+
-+struct dcss_dev *dcss_dev_create(struct device *dev, bool hdmi_output)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	int ret;
-+	struct resource *res;
-+	struct dcss_dev *dcss;
-+	const struct dcss_type_data *devtype;
-+
-+	devtype = of_device_get_match_data(dev);
-+	if (!devtype) {
-+		dev_err(dev, "no device match found\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(dev, "cannot get memory resource\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	dcss = kzalloc(sizeof(*dcss), GFP_KERNEL);
-+	if (!dcss)
-+		return ERR_PTR(-ENOMEM);
-+
-+	dcss->dev = dev;
-+	dcss->devtype = devtype;
-+	dcss->hdmi_output = hdmi_output;
-+
-+	ret = dcss_clks_init(dcss);
-+	if (ret) {
-+		dev_err(dev, "clocks initialization failed\n");
-+		goto err;
-+	}
-+
-+	dcss->of_port = of_graph_get_port_by_id(dev->of_node, 0);
-+	if (!dcss->of_port) {
-+		dev_err(dev, "no port@0 node in %s\n", dev->of_node->full_name);
-+		ret = -ENODEV;
-+		goto clks_err;
-+	}
-+
-+	dcss->start_addr = res->start;
-+
-+	ret = dcss_submodules_init(dcss);
-+	if (ret) {
-+		dev_err(dev, "submodules initialization failed\n");
-+		goto clks_err;
-+	}
-+
-+	init_completion(&dcss->disable_completion);
-+
-+	pm_runtime_set_autosuspend_delay(dev, 100);
-+	pm_runtime_use_autosuspend(dev);
-+	pm_runtime_set_suspended(dev);
-+	pm_runtime_allow(dev);
-+	pm_runtime_enable(dev);
-+
-+	return dcss;
-+
-+clks_err:
-+	dcss_clks_release(dcss);
-+
-+err:
-+	kfree(dcss);
-+
-+	return ERR_PTR(ret);
-+}
-+
-+void dcss_dev_destroy(struct dcss_dev *dcss)
-+{
-+	if (!pm_runtime_suspended(dcss->dev)) {
-+		dcss_ctxld_suspend(dcss->ctxld);
-+		dcss_clocks_disable(dcss);
-+	}
-+
-+	pm_runtime_disable(dcss->dev);
-+
-+	dcss_submodules_stop(dcss);
-+
-+	dcss_clks_release(dcss);
-+
-+	kfree(dcss);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+int dcss_dev_suspend(struct device *dev)
-+{
-+	struct dcss_dev *dcss = dcss_drv_dev_to_dcss(dev);
-+	int ret;
-+
-+	drm_mode_config_helper_suspend(dcss_drv_dev_to_drm(dev));
-+
-+	if (pm_runtime_suspended(dev))
-+		return 0;
-+
-+	ret = dcss_ctxld_suspend(dcss->ctxld);
-+	if (ret)
-+		return ret;
-+
-+	dcss_clocks_disable(dcss);
-+
-+	return 0;
-+}
-+
-+int dcss_dev_resume(struct device *dev)
-+{
-+	struct dcss_dev *dcss = dcss_drv_dev_to_dcss(dev);
-+
-+	if (pm_runtime_suspended(dev)) {
-+		drm_mode_config_helper_resume(dcss_drv_dev_to_drm(dev));
-+		return 0;
-+	}
-+
-+	dcss_clocks_enable(dcss);
-+
-+	dcss_blkctl_cfg(dcss->blkctl);
-+
-+	dcss_ctxld_resume(dcss->ctxld);
-+
-+	drm_mode_config_helper_resume(dcss_drv_dev_to_drm(dev));
-+
-+	return 0;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+#ifdef CONFIG_PM
-+int dcss_dev_runtime_suspend(struct device *dev)
-+{
-+	struct dcss_dev *dcss = dcss_drv_dev_to_dcss(dev);
-+	int ret;
-+
-+	ret = dcss_ctxld_suspend(dcss->ctxld);
-+	if (ret)
-+		return ret;
-+
-+	dcss_clocks_disable(dcss);
-+
-+	return 0;
-+}
-+
-+int dcss_dev_runtime_resume(struct device *dev)
-+{
-+	struct dcss_dev *dcss = dcss_drv_dev_to_dcss(dev);
-+
-+	dcss_clocks_enable(dcss);
-+
-+	dcss_blkctl_cfg(dcss->blkctl);
-+
-+	dcss_ctxld_resume(dcss->ctxld);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_PM */
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-dev.h b/drivers/gpu/drm/imx/dcss/dcss-dev.h
-new file mode 100644
-index 000000000000..c642ae17837f
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-dev.h
-@@ -0,0 +1,177 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#ifndef __DCSS_PRV_H__
-+#define __DCSS_PRV_H__
-+
-+#include <drm/drm_fourcc.h>
-+#include <linux/io.h>
-+#include <video/videomode.h>
-+
-+#define SET			0x04
-+#define CLR			0x08
-+#define TGL			0x0C
-+
-+#define dcss_writel(v, c)	writel((v), (c))
-+#define dcss_readl(c)		readl(c)
-+#define dcss_set(v, c)		writel((v), (c) + SET)
-+#define dcss_clr(v, c)		writel((v), (c) + CLR)
-+#define dcss_toggle(v, c)	writel((v), (c) + TGL)
-+
-+static inline void dcss_update(u32 v, u32 m, void __iomem *c)
-+{
-+	writel((readl(c) & ~(m)) | (v), (c));
-+}
-+
-+#define DCSS_DBG_REG(reg)	{.name = #reg, .ofs = reg}
-+
-+enum {
-+	DCSS_IMX8MQ = 0,
-+};
-+
-+struct dcss_type_data {
-+	const char *name;
-+	u32 blkctl_ofs;
-+	u32 ctxld_ofs;
-+	u32 rdsrc_ofs;
-+	u32 wrscl_ofs;
-+	u32 dtg_ofs;
-+	u32 scaler_ofs;
-+	u32 ss_ofs;
-+	u32 dpr_ofs;
-+	u32 dtrc_ofs;
-+	u32 dec400d_ofs;
-+	u32 hdr10_ofs;
-+};
-+
-+struct dcss_debug_reg {
-+	char *name;
-+	u32 ofs;
-+};
-+
-+enum dcss_ctxld_ctx_type {
-+	CTX_DB,
-+	CTX_SB_HP, /* high-priority */
-+	CTX_SB_LP, /* low-priority  */
-+};
-+
-+struct dcss_dev {
-+	struct device *dev;
-+	const struct dcss_type_data *devtype;
-+	struct device_node *of_port;
-+
-+	u32 start_addr;
-+
-+	struct dcss_blkctl *blkctl;
-+	struct dcss_ctxld *ctxld;
-+	struct dcss_dpr *dpr;
-+	struct dcss_dtg *dtg;
-+	struct dcss_ss *ss;
-+	struct dcss_hdr10 *hdr10;
-+	struct dcss_scaler *scaler;
-+	struct dcss_dtrc *dtrc;
-+	struct dcss_dec400d *dec400d;
-+	struct dcss_wrscl *wrscl;
-+	struct dcss_rdsrc *rdsrc;
-+
-+	struct clk *apb_clk;
-+	struct clk *axi_clk;
-+	struct clk *pix_clk;
-+	struct clk *rtrm_clk;
-+	struct clk *dtrc_clk;
-+	struct clk *pll_src_clk;
-+	struct clk *pll_phy_ref_clk;
-+
-+	bool hdmi_output;
-+
-+	void (*disable_callback)(void *data);
-+	struct completion disable_completion;
-+};
-+
-+struct dcss_dev *dcss_drv_dev_to_dcss(struct device *dev);
-+struct drm_device *dcss_drv_dev_to_drm(struct device *dev);
-+struct dcss_dev *dcss_dev_create(struct device *dev, bool hdmi_output);
-+void dcss_dev_destroy(struct dcss_dev *dcss);
-+int dcss_dev_runtime_suspend(struct device *dev);
-+int dcss_dev_runtime_resume(struct device *dev);
-+int dcss_dev_suspend(struct device *dev);
-+int dcss_dev_resume(struct device *dev);
-+void dcss_enable_dtg_and_ss(struct dcss_dev *dcss);
-+void dcss_disable_dtg_and_ss(struct dcss_dev *dcss);
-+
-+/* BLKCTL */
-+int dcss_blkctl_init(struct dcss_dev *dcss, unsigned long blkctl_base);
-+void dcss_blkctl_cfg(struct dcss_blkctl *blkctl);
-+void dcss_blkctl_exit(struct dcss_blkctl *blkctl);
-+
-+/* CTXLD */
-+int dcss_ctxld_init(struct dcss_dev *dcss, unsigned long ctxld_base);
-+void dcss_ctxld_exit(struct dcss_ctxld *ctxld);
-+void dcss_ctxld_write(struct dcss_ctxld *ctxld, u32 ctx_id,
-+		      u32 val, u32 reg_idx);
-+int dcss_ctxld_resume(struct dcss_ctxld *dcss_ctxld);
-+int dcss_ctxld_suspend(struct dcss_ctxld *dcss_ctxld);
-+void dcss_ctxld_write_irqsafe(struct dcss_ctxld *ctlxd, u32 ctx_id, u32 val,
-+			      u32 reg_ofs);
-+void dcss_ctxld_kick(struct dcss_ctxld *ctxld);
-+bool dcss_ctxld_is_flushed(struct dcss_ctxld *ctxld);
-+int dcss_ctxld_enable(struct dcss_ctxld *ctxld);
-+void dcss_ctxld_register_completion(struct dcss_ctxld *ctxld,
-+				    struct completion *dis_completion);
-+void dcss_ctxld_assert_locked(struct dcss_ctxld *ctxld);
-+
-+/* DPR */
-+int dcss_dpr_init(struct dcss_dev *dcss, unsigned long dpr_base);
-+void dcss_dpr_exit(struct dcss_dpr *dpr);
-+void dcss_dpr_write_sysctrl(struct dcss_dpr *dpr);
-+void dcss_dpr_set_res(struct dcss_dpr *dpr, int ch_num, u32 xres, u32 yres);
-+void dcss_dpr_addr_set(struct dcss_dpr *dpr, int ch_num, u32 luma_base_addr,
-+		       u32 chroma_base_addr, u16 pitch);
-+void dcss_dpr_enable(struct dcss_dpr *dpr, int ch_num, bool en);
-+void dcss_dpr_format_set(struct dcss_dpr *dpr, int ch_num,
-+			 const struct drm_format_info *format, u64 modifier);
-+void dcss_dpr_set_rotation(struct dcss_dpr *dpr, int ch_num, u32 rotation);
-+
-+/* DTG */
-+int dcss_dtg_init(struct dcss_dev *dcss, unsigned long dtg_base);
-+void dcss_dtg_exit(struct dcss_dtg *dtg);
-+bool dcss_dtg_vblank_irq_valid(struct dcss_dtg *dtg);
-+void dcss_dtg_vblank_irq_enable(struct dcss_dtg *dtg, bool en);
-+void dcss_dtg_vblank_irq_clear(struct dcss_dtg *dtg);
-+void dcss_dtg_sync_set(struct dcss_dtg *dtg, struct videomode *vm);
-+void dcss_dtg_css_set(struct dcss_dtg *dtg);
-+void dcss_dtg_enable(struct dcss_dtg *dtg);
-+void dcss_dtg_shutoff(struct dcss_dtg *dtg);
-+bool dcss_dtg_is_enabled(struct dcss_dtg *dtg);
-+void dcss_dtg_ctxld_kick_irq_enable(struct dcss_dtg *dtg, bool en);
-+bool dcss_dtg_global_alpha_changed(struct dcss_dtg *dtg, int ch_num, int alpha);
-+void dcss_dtg_plane_alpha_set(struct dcss_dtg *dtg, int ch_num,
-+			      const struct drm_format_info *format, int alpha);
-+void dcss_dtg_plane_pos_set(struct dcss_dtg *dtg, int ch_num,
-+			    int px, int py, int pw, int ph);
-+void dcss_dtg_ch_enable(struct dcss_dtg *dtg, int ch_num, bool en);
-+
-+/* SUBSAM */
-+int dcss_ss_init(struct dcss_dev *dcss, unsigned long subsam_base);
-+void dcss_ss_exit(struct dcss_ss *ss);
-+void dcss_ss_enable(struct dcss_ss *ss);
-+void dcss_ss_shutoff(struct dcss_ss *ss);
-+void dcss_ss_subsam_set(struct dcss_ss *ss);
-+void dcss_ss_sync_set(struct dcss_ss *ss, struct videomode *vm,
-+		      bool phsync, bool pvsync);
-+
-+/* SCALER */
-+int dcss_scaler_init(struct dcss_dev *dcss, unsigned long scaler_base);
-+void dcss_scaler_exit(struct dcss_scaler *scl);
-+void dcss_scaler_setup(struct dcss_scaler *scl, int ch_num,
-+		       const struct drm_format_info *format,
-+		       int src_xres, int src_yres, int dst_xres, int dst_yres,
-+		       u32 vrefresh_hz);
-+void dcss_scaler_ch_enable(struct dcss_scaler *scl, int ch_num, bool en);
-+int dcss_scaler_get_min_max_ratios(struct dcss_scaler *scl, int ch_num,
-+				   int *min, int *max);
-+void dcss_scaler_write_sclctrl(struct dcss_scaler *scl);
-+
-+#endif /* __DCSS_PRV_H__ */
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-dpr.c b/drivers/gpu/drm/imx/dcss/dcss-dpr.c
-new file mode 100644
-index 000000000000..df9dab949bf2
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-dpr.c
-@@ -0,0 +1,562 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+
-+#include "dcss-dev.h"
-+
-+#define DCSS_DPR_SYSTEM_CTRL0			0x000
-+#define   RUN_EN				BIT(0)
-+#define   SOFT_RESET				BIT(1)
-+#define   REPEAT_EN				BIT(2)
-+#define   SHADOW_LOAD_EN			BIT(3)
-+#define   SW_SHADOW_LOAD_SEL			BIT(4)
-+#define   BCMD2AXI_MSTR_ID_CTRL			BIT(16)
-+#define DCSS_DPR_IRQ_MASK			0x020
-+#define DCSS_DPR_IRQ_MASK_STATUS		0x030
-+#define DCSS_DPR_IRQ_NONMASK_STATUS		0x040
-+#define   IRQ_DPR_CTRL_DONE			BIT(0)
-+#define   IRQ_DPR_RUN				BIT(1)
-+#define   IRQ_DPR_SHADOW_LOADED			BIT(2)
-+#define   IRQ_AXI_READ_ERR			BIT(3)
-+#define   DPR2RTR_YRGB_FIFO_OVFL		BIT(4)
-+#define   DPR2RTR_UV_FIFO_OVFL			BIT(5)
-+#define   DPR2RTR_FIFO_LD_BUF_RDY_YRGB_ERR	BIT(6)
-+#define   DPR2RTR_FIFO_LD_BUF_RDY_UV_ERR	BIT(7)
-+#define DCSS_DPR_MODE_CTRL0			0x050
-+#define   RTR_3BUF_EN				BIT(0)
-+#define   RTR_4LINE_BUF_EN			BIT(1)
-+#define   TILE_TYPE_POS				2
-+#define   TILE_TYPE_MASK			GENMASK(4, 2)
-+#define   YUV_EN				BIT(6)
-+#define   COMP_2PLANE_EN			BIT(7)
-+#define   PIX_SIZE_POS				8
-+#define   PIX_SIZE_MASK				GENMASK(9, 8)
-+#define   PIX_LUMA_UV_SWAP			BIT(10)
-+#define   PIX_UV_SWAP				BIT(11)
-+#define   B_COMP_SEL_POS			12
-+#define   B_COMP_SEL_MASK			GENMASK(13, 12)
-+#define   G_COMP_SEL_POS			14
-+#define   G_COMP_SEL_MASK			GENMASK(15, 14)
-+#define   R_COMP_SEL_POS			16
-+#define   R_COMP_SEL_MASK			GENMASK(17, 16)
-+#define   A_COMP_SEL_POS			18
-+#define   A_COMP_SEL_MASK			GENMASK(19, 18)
-+#define DCSS_DPR_FRAME_CTRL0			0x070
-+#define   HFLIP_EN				BIT(0)
-+#define   VFLIP_EN				BIT(1)
-+#define   ROT_ENC_POS				2
-+#define   ROT_ENC_MASK				GENMASK(3, 2)
-+#define   ROT_FLIP_ORDER_EN			BIT(4)
-+#define   PITCH_POS				16
-+#define   PITCH_MASK				GENMASK(31, 16)
-+#define DCSS_DPR_FRAME_1P_CTRL0			0x090
-+#define DCSS_DPR_FRAME_1P_PIX_X_CTRL		0x0A0
-+#define DCSS_DPR_FRAME_1P_PIX_Y_CTRL		0x0B0
-+#define DCSS_DPR_FRAME_1P_BASE_ADDR		0x0C0
-+#define DCSS_DPR_FRAME_2P_CTRL0			0x0E0
-+#define DCSS_DPR_FRAME_2P_PIX_X_CTRL		0x0F0
-+#define DCSS_DPR_FRAME_2P_PIX_Y_CTRL		0x100
-+#define DCSS_DPR_FRAME_2P_BASE_ADDR		0x110
-+#define DCSS_DPR_STATUS_CTRL0			0x130
-+#define   STATUS_MUX_SEL_MASK			GENMASK(2, 0)
-+#define   STATUS_SRC_SEL_POS			16
-+#define   STATUS_SRC_SEL_MASK			GENMASK(18, 16)
-+#define DCSS_DPR_STATUS_CTRL1			0x140
-+#define DCSS_DPR_RTRAM_CTRL0			0x200
-+#define   NUM_ROWS_ACTIVE			BIT(0)
-+#define   THRES_HIGH_POS			1
-+#define   THRES_HIGH_MASK			GENMASK(3, 1)
-+#define   THRES_LOW_POS				4
-+#define   THRES_LOW_MASK			GENMASK(6, 4)
-+#define   ABORT_SEL				BIT(7)
-+
-+enum dcss_tile_type {
-+	TILE_LINEAR = 0,
-+	TILE_GPU_STANDARD,
-+	TILE_GPU_SUPER,
-+	TILE_VPU_YUV420,
-+	TILE_VPU_VP9,
-+};
-+
-+enum dcss_pix_size {
-+	PIX_SIZE_8,
-+	PIX_SIZE_16,
-+	PIX_SIZE_32,
-+};
-+
-+struct dcss_dpr_ch {
-+	struct dcss_dpr *dpr;
-+	void __iomem *base_reg;
-+	u32 base_ofs;
-+
-+	struct drm_format_info format;
-+	enum dcss_pix_size pix_size;
-+	enum dcss_tile_type tile;
-+	bool rtram_4line_en;
-+	bool rtram_3buf_en;
-+
-+	u32 frame_ctrl;
-+	u32 mode_ctrl;
-+	u32 sys_ctrl;
-+	u32 rtram_ctrl;
-+
-+	bool sys_ctrl_chgd;
-+
-+	int ch_num;
-+	int irq;
-+};
-+
-+struct dcss_dpr {
-+	struct device *dev;
-+	struct dcss_ctxld *ctxld;
-+	u32  ctx_id;
-+
-+	struct dcss_dpr_ch ch[3];
-+};
-+
-+static void dcss_dpr_write(struct dcss_dpr_ch *ch, u32 val, u32 ofs)
-+{
-+	struct dcss_dpr *dpr = ch->dpr;
-+
-+	dcss_ctxld_write(dpr->ctxld, dpr->ctx_id, val, ch->base_ofs + ofs);
-+}
-+
-+static int dcss_dpr_ch_init_all(struct dcss_dpr *dpr, unsigned long dpr_base)
-+{
-+	struct dcss_dpr_ch *ch;
-+	int i;
-+
-+	for (i = 0; i < 3; i++) {
-+		ch = &dpr->ch[i];
-+
-+		ch->base_ofs = dpr_base + i * 0x1000;
-+
-+		ch->base_reg = ioremap(ch->base_ofs, SZ_4K);
-+		if (!ch->base_reg) {
-+			dev_err(dpr->dev, "dpr: unable to remap ch %d base\n",
-+				i);
-+			return -ENOMEM;
-+		}
-+
-+		ch->dpr = dpr;
-+		ch->ch_num = i;
-+
-+		dcss_writel(0xff, ch->base_reg + DCSS_DPR_IRQ_MASK);
-+	}
-+
-+	return 0;
-+}
-+
-+int dcss_dpr_init(struct dcss_dev *dcss, unsigned long dpr_base)
-+{
-+	struct dcss_dpr *dpr;
-+
-+	dpr = kzalloc(sizeof(*dpr), GFP_KERNEL);
-+	if (!dpr)
-+		return -ENOMEM;
-+
-+	dcss->dpr = dpr;
-+	dpr->dev = dcss->dev;
-+	dpr->ctxld = dcss->ctxld;
-+	dpr->ctx_id = CTX_SB_HP;
-+
-+	if (dcss_dpr_ch_init_all(dpr, dpr_base)) {
-+		int i;
-+
-+		for (i = 0; i < 3; i++) {
-+			if (dpr->ch[i].base_reg)
-+				iounmap(dpr->ch[i].base_reg);
-+		}
-+
-+		kfree(dpr);
-+
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+void dcss_dpr_exit(struct dcss_dpr *dpr)
-+{
-+	int ch_no;
-+
-+	/* stop DPR on all channels */
-+	for (ch_no = 0; ch_no < 3; ch_no++) {
-+		struct dcss_dpr_ch *ch = &dpr->ch[ch_no];
-+
-+		dcss_writel(0, ch->base_reg + DCSS_DPR_SYSTEM_CTRL0);
-+
-+		if (ch->base_reg)
-+			iounmap(ch->base_reg);
-+	}
-+
-+	kfree(dpr);
-+}
-+
-+static u32 dcss_dpr_x_pix_wide_adjust(struct dcss_dpr_ch *ch, u32 pix_wide,
-+				      u32 pix_format)
-+{
-+	u8 pix_in_64byte_map[3][5] = {
-+		/* LIN, GPU_STD, GPU_SUP, VPU_YUV420, VPU_VP9 */
-+		{   64,       8,       8,          8,     16}, /* PIX_SIZE_8  */
-+		{   32,       8,       8,          8,      8}, /* PIX_SIZE_16 */
-+		{   16,       4,       4,          8,      8}, /* PIX_SIZE_32 */
-+	};
-+	u32 offset;
-+	u32 div_64byte_mod, pix_in_64byte;
-+
-+	pix_in_64byte = pix_in_64byte_map[ch->pix_size][ch->tile];
-+
-+	div_64byte_mod = pix_wide % pix_in_64byte;
-+	offset = (div_64byte_mod == 0) ? 0 : (pix_in_64byte - div_64byte_mod);
-+
-+	return pix_wide + offset;
-+}
-+
-+static u32 dcss_dpr_y_pix_high_adjust(struct dcss_dpr_ch *ch, u32 pix_high,
-+				      u32 pix_format)
-+{
-+	u8 num_rows_buf = ch->rtram_4line_en ? 4 : 8;
-+	u32 offset, pix_y_mod;
-+
-+	pix_y_mod = pix_high % num_rows_buf;
-+	offset = pix_y_mod ? (num_rows_buf - pix_y_mod) : 0;
-+
-+	return pix_high + offset;
-+}
-+
-+void dcss_dpr_set_res(struct dcss_dpr *dpr, int ch_num, u32 xres, u32 yres)
-+{
-+	struct dcss_dpr_ch *ch = &dpr->ch[ch_num];
-+	u32 pix_format = ch->format.format;
-+	u32 gap = DCSS_DPR_FRAME_2P_BASE_ADDR - DCSS_DPR_FRAME_1P_BASE_ADDR;
-+	int plane, max_planes = 1;
-+	u32 pix_x_wide, pix_y_high;
-+
-+	if (pix_format == DRM_FORMAT_NV12 ||
-+	    pix_format == DRM_FORMAT_NV21)
-+		max_planes = 2;
-+
-+	for (plane = 0; plane < max_planes; plane++) {
-+		yres = plane == 1 ? yres >> 1 : yres;
-+
-+		pix_x_wide = dcss_dpr_x_pix_wide_adjust(ch, xres, pix_format);
-+		pix_y_high = dcss_dpr_y_pix_high_adjust(ch, yres, pix_format);
-+
-+		dcss_dpr_write(ch, pix_x_wide,
-+			       DCSS_DPR_FRAME_1P_PIX_X_CTRL + plane * gap);
-+		dcss_dpr_write(ch, pix_y_high,
-+			       DCSS_DPR_FRAME_1P_PIX_Y_CTRL + plane * gap);
-+
-+		dcss_dpr_write(ch, 2, DCSS_DPR_FRAME_1P_CTRL0 + plane * gap);
-+	}
-+}
-+
-+void dcss_dpr_addr_set(struct dcss_dpr *dpr, int ch_num, u32 luma_base_addr,
-+		       u32 chroma_base_addr, u16 pitch)
-+{
-+	struct dcss_dpr_ch *ch = &dpr->ch[ch_num];
-+
-+	dcss_dpr_write(ch, luma_base_addr, DCSS_DPR_FRAME_1P_BASE_ADDR);
-+
-+	dcss_dpr_write(ch, chroma_base_addr, DCSS_DPR_FRAME_2P_BASE_ADDR);
-+
-+	ch->frame_ctrl &= ~PITCH_MASK;
-+	ch->frame_ctrl |= (((u32)pitch << PITCH_POS) & PITCH_MASK);
-+}
-+
-+static void dcss_dpr_argb_comp_sel(struct dcss_dpr_ch *ch, int a_sel, int r_sel,
-+				   int g_sel, int b_sel)
-+{
-+	u32 sel;
-+
-+	sel = ((a_sel << A_COMP_SEL_POS) & A_COMP_SEL_MASK) |
-+	      ((r_sel << R_COMP_SEL_POS) & R_COMP_SEL_MASK) |
-+	      ((g_sel << G_COMP_SEL_POS) & G_COMP_SEL_MASK) |
-+	      ((b_sel << B_COMP_SEL_POS) & B_COMP_SEL_MASK);
-+
-+	ch->mode_ctrl &= ~(A_COMP_SEL_MASK | R_COMP_SEL_MASK |
-+			   G_COMP_SEL_MASK | B_COMP_SEL_MASK);
-+	ch->mode_ctrl |= sel;
-+}
-+
-+static void dcss_dpr_pix_size_set(struct dcss_dpr_ch *ch,
-+				  const struct drm_format_info *format)
-+{
-+	u32 val;
-+
-+	switch (format->format) {
-+	case DRM_FORMAT_NV12:
-+	case DRM_FORMAT_NV21:
-+		val = PIX_SIZE_8;
-+		break;
-+
-+	case DRM_FORMAT_UYVY:
-+	case DRM_FORMAT_VYUY:
-+	case DRM_FORMAT_YUYV:
-+	case DRM_FORMAT_YVYU:
-+		val = PIX_SIZE_16;
-+		break;
-+
-+	default:
-+		val = PIX_SIZE_32;
-+		break;
-+	}
-+
-+	ch->pix_size = val;
-+
-+	ch->mode_ctrl &= ~PIX_SIZE_MASK;
-+	ch->mode_ctrl |= ((val << PIX_SIZE_POS) & PIX_SIZE_MASK);
-+}
-+
-+static void dcss_dpr_uv_swap(struct dcss_dpr_ch *ch, bool swap)
-+{
-+	ch->mode_ctrl &= ~PIX_UV_SWAP;
-+	ch->mode_ctrl |= (swap ? PIX_UV_SWAP : 0);
-+}
-+
-+static void dcss_dpr_y_uv_swap(struct dcss_dpr_ch *ch, bool swap)
-+{
-+	ch->mode_ctrl &= ~PIX_LUMA_UV_SWAP;
-+	ch->mode_ctrl |= (swap ? PIX_LUMA_UV_SWAP : 0);
-+}
-+
-+static void dcss_dpr_2plane_en(struct dcss_dpr_ch *ch, bool en)
-+{
-+	ch->mode_ctrl &= ~COMP_2PLANE_EN;
-+	ch->mode_ctrl |= (en ? COMP_2PLANE_EN : 0);
-+}
-+
-+static void dcss_dpr_yuv_en(struct dcss_dpr_ch *ch, bool en)
-+{
-+	ch->mode_ctrl &= ~YUV_EN;
-+	ch->mode_ctrl |= (en ? YUV_EN : 0);
-+}
-+
-+void dcss_dpr_enable(struct dcss_dpr *dpr, int ch_num, bool en)
-+{
-+	struct dcss_dpr_ch *ch = &dpr->ch[ch_num];
-+	u32 sys_ctrl;
-+
-+	sys_ctrl = (en ? REPEAT_EN | RUN_EN : 0);
-+
-+	if (en) {
-+		dcss_dpr_write(ch, ch->mode_ctrl, DCSS_DPR_MODE_CTRL0);
-+		dcss_dpr_write(ch, ch->frame_ctrl, DCSS_DPR_FRAME_CTRL0);
-+		dcss_dpr_write(ch, ch->rtram_ctrl, DCSS_DPR_RTRAM_CTRL0);
-+	}
-+
-+	if (ch->sys_ctrl != sys_ctrl)
-+		ch->sys_ctrl_chgd = true;
-+
-+	ch->sys_ctrl = sys_ctrl;
-+}
-+
-+struct rgb_comp_sel {
-+	u32 drm_format;
-+	int a_sel;
-+	int r_sel;
-+	int g_sel;
-+	int b_sel;
-+};
-+
-+static struct rgb_comp_sel comp_sel_map[] = {
-+	{DRM_FORMAT_ARGB8888, 3, 2, 1, 0},
-+	{DRM_FORMAT_XRGB8888, 3, 2, 1, 0},
-+	{DRM_FORMAT_ABGR8888, 3, 0, 1, 2},
-+	{DRM_FORMAT_XBGR8888, 3, 0, 1, 2},
-+	{DRM_FORMAT_RGBA8888, 0, 3, 2, 1},
-+	{DRM_FORMAT_RGBX8888, 0, 3, 2, 1},
-+	{DRM_FORMAT_BGRA8888, 0, 1, 2, 3},
-+	{DRM_FORMAT_BGRX8888, 0, 1, 2, 3},
-+};
-+
-+static int to_comp_sel(u32 pix_fmt, int *a_sel, int *r_sel, int *g_sel,
-+		       int *b_sel)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(comp_sel_map); i++) {
-+		if (comp_sel_map[i].drm_format == pix_fmt) {
-+			*a_sel = comp_sel_map[i].a_sel;
-+			*r_sel = comp_sel_map[i].r_sel;
-+			*g_sel = comp_sel_map[i].g_sel;
-+			*b_sel = comp_sel_map[i].b_sel;
-+
-+			return 0;
-+		}
-+	}
-+
-+	return -1;
-+}
-+
-+static void dcss_dpr_rtram_set(struct dcss_dpr_ch *ch, u32 pix_format)
-+{
-+	u32 val, mask;
-+
-+	switch (pix_format) {
-+	case DRM_FORMAT_NV21:
-+	case DRM_FORMAT_NV12:
-+		ch->rtram_3buf_en = true;
-+		ch->rtram_4line_en = false;
-+		break;
-+
-+	default:
-+		ch->rtram_3buf_en = true;
-+		ch->rtram_4line_en = true;
-+		break;
-+	}
-+
-+	val = (ch->rtram_4line_en ? RTR_4LINE_BUF_EN : 0);
-+	val |= (ch->rtram_3buf_en ? RTR_3BUF_EN : 0);
-+	mask = RTR_4LINE_BUF_EN | RTR_3BUF_EN;
-+
-+	ch->mode_ctrl &= ~mask;
-+	ch->mode_ctrl |= (val & mask);
-+
-+	val = (ch->rtram_4line_en ? 0 : NUM_ROWS_ACTIVE);
-+	val |= (3 << THRES_LOW_POS) & THRES_LOW_MASK;
-+	val |= (4 << THRES_HIGH_POS) & THRES_HIGH_MASK;
-+	mask = THRES_LOW_MASK | THRES_HIGH_MASK | NUM_ROWS_ACTIVE;
-+
-+	ch->rtram_ctrl &= ~mask;
-+	ch->rtram_ctrl |= (val & mask);
-+}
-+
-+static void dcss_dpr_setup_components(struct dcss_dpr_ch *ch,
-+				      const struct drm_format_info *format)
-+{
-+	int a_sel, r_sel, g_sel, b_sel;
-+	bool uv_swap, y_uv_swap;
-+
-+	switch (format->format) {
-+	case DRM_FORMAT_YVYU:
-+		uv_swap = true;
-+		y_uv_swap = true;
-+		break;
-+
-+	case DRM_FORMAT_VYUY:
-+	case DRM_FORMAT_NV21:
-+		uv_swap = true;
-+		y_uv_swap = false;
-+		break;
-+
-+	case DRM_FORMAT_YUYV:
-+		uv_swap = false;
-+		y_uv_swap = true;
-+		break;
-+
-+	default:
-+		uv_swap = false;
-+		y_uv_swap = false;
-+		break;
-+	}
-+
-+	dcss_dpr_uv_swap(ch, uv_swap);
-+
-+	dcss_dpr_y_uv_swap(ch, y_uv_swap);
-+
-+	if (!format->is_yuv) {
-+		if (!to_comp_sel(format->format, &a_sel, &r_sel,
-+				 &g_sel, &b_sel)) {
-+			dcss_dpr_argb_comp_sel(ch, a_sel, r_sel, g_sel, b_sel);
-+		} else {
-+			dcss_dpr_argb_comp_sel(ch, 3, 2, 1, 0);
-+		}
-+	} else {
-+		dcss_dpr_argb_comp_sel(ch, 0, 0, 0, 0);
-+	}
-+}
-+
-+static void dcss_dpr_tile_set(struct dcss_dpr_ch *ch, uint64_t modifier)
-+{
-+	switch (ch->ch_num) {
-+	case 0:
-+		switch (modifier) {
-+		case DRM_FORMAT_MOD_LINEAR:
-+			ch->tile = TILE_LINEAR;
-+			break;
-+		case DRM_FORMAT_MOD_VIVANTE_TILED:
-+			ch->tile = TILE_GPU_STANDARD;
-+			break;
-+		case DRM_FORMAT_MOD_VIVANTE_SUPER_TILED:
-+			ch->tile = TILE_GPU_SUPER;
-+			break;
-+		default:
-+			WARN_ON(1);
-+			break;
-+		}
-+		break;
-+	case 1:
-+	case 2:
-+		ch->tile = TILE_LINEAR;
-+		break;
-+	default:
-+		WARN_ON(1);
-+		return;
-+	}
-+
-+	ch->mode_ctrl &= ~TILE_TYPE_MASK;
-+	ch->mode_ctrl |= ((ch->tile << TILE_TYPE_POS) & TILE_TYPE_MASK);
-+}
-+
-+void dcss_dpr_format_set(struct dcss_dpr *dpr, int ch_num,
-+			 const struct drm_format_info *format, u64 modifier)
-+{
-+	struct dcss_dpr_ch *ch = &dpr->ch[ch_num];
-+
-+	ch->format = *format;
-+
-+	dcss_dpr_yuv_en(ch, format->is_yuv);
-+
-+	dcss_dpr_pix_size_set(ch, format);
-+
-+	dcss_dpr_setup_components(ch, format);
-+
-+	dcss_dpr_2plane_en(ch, format->num_planes == 2);
-+
-+	dcss_dpr_rtram_set(ch, format->format);
-+
-+	dcss_dpr_tile_set(ch, modifier);
-+}
-+
-+/* This function will be called from interrupt context. */
-+void dcss_dpr_write_sysctrl(struct dcss_dpr *dpr)
-+{
-+	int chnum;
-+
-+	dcss_ctxld_assert_locked(dpr->ctxld);
-+
-+	for (chnum = 0; chnum < 3; chnum++) {
-+		struct dcss_dpr_ch *ch = &dpr->ch[chnum];
-+
-+		if (ch->sys_ctrl_chgd) {
-+			dcss_ctxld_write_irqsafe(dpr->ctxld, dpr->ctx_id,
-+						 ch->sys_ctrl,
-+						 ch->base_ofs +
-+						 DCSS_DPR_SYSTEM_CTRL0);
-+			ch->sys_ctrl_chgd = false;
-+		}
-+	}
-+}
-+
-+void dcss_dpr_set_rotation(struct dcss_dpr *dpr, int ch_num, u32 rotation)
-+{
-+	struct dcss_dpr_ch *ch = &dpr->ch[ch_num];
-+
-+	ch->frame_ctrl &= ~(HFLIP_EN | VFLIP_EN | ROT_ENC_MASK);
-+
-+	ch->frame_ctrl |= rotation & DRM_MODE_REFLECT_X ? HFLIP_EN : 0;
-+	ch->frame_ctrl |= rotation & DRM_MODE_REFLECT_Y ? VFLIP_EN : 0;
-+
-+	if (rotation & DRM_MODE_ROTATE_90)
-+		ch->frame_ctrl |= 1 << ROT_ENC_POS;
-+	else if (rotation & DRM_MODE_ROTATE_180)
-+		ch->frame_ctrl |= 2 << ROT_ENC_POS;
-+	else if (rotation & DRM_MODE_ROTATE_270)
-+		ch->frame_ctrl |= 3 << ROT_ENC_POS;
-+}
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-drv.c b/drivers/gpu/drm/imx/dcss/dcss-drv.c
-new file mode 100644
-index 000000000000..8dc2f85c514b
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-drv.c
-@@ -0,0 +1,138 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <drm/drm_of.h>
-+
-+#include "dcss-dev.h"
-+#include "dcss-kms.h"
-+
-+struct dcss_drv {
-+	struct dcss_dev *dcss;
-+	struct dcss_kms_dev *kms;
-+};
-+
-+struct dcss_dev *dcss_drv_dev_to_dcss(struct device *dev)
-+{
-+	struct dcss_drv *mdrv = dev_get_drvdata(dev);
-+
-+	return mdrv ? mdrv->dcss : NULL;
-+}
-+
-+struct drm_device *dcss_drv_dev_to_drm(struct device *dev)
-+{
-+	struct dcss_drv *mdrv = dev_get_drvdata(dev);
-+
-+	return mdrv ? &mdrv->kms->base : NULL;
-+}
-+
-+static int dcss_drv_platform_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *remote;
-+	struct dcss_drv *mdrv;
-+	int err = 0;
-+	bool hdmi_output = true;
-+
-+	if (!dev->of_node)
-+		return -ENODEV;
-+
-+	remote = of_graph_get_remote_node(dev->of_node, 0, 0);
-+	if (!remote)
-+		return -ENODEV;
-+
-+	hdmi_output = !of_device_is_compatible(remote, "fsl,imx8mq-nwl-dsi");
-+
-+	of_node_put(remote);
-+
-+	mdrv = kzalloc(sizeof(*mdrv), GFP_KERNEL);
-+	if (!mdrv)
-+		return -ENOMEM;
-+
-+	mdrv->dcss = dcss_dev_create(dev, hdmi_output);
-+	if (IS_ERR(mdrv->dcss)) {
-+		err = PTR_ERR(mdrv->dcss);
-+		goto err;
-+	}
-+
-+	dev_set_drvdata(dev, mdrv);
-+
-+	mdrv->kms = dcss_kms_attach(mdrv->dcss);
-+	if (IS_ERR(mdrv->kms)) {
-+		err = PTR_ERR(mdrv->kms);
-+		goto dcss_shutoff;
-+	}
-+
-+	return 0;
-+
-+dcss_shutoff:
-+	dcss_dev_destroy(mdrv->dcss);
-+
-+	dev_set_drvdata(dev, NULL);
-+
-+err:
-+	kfree(mdrv);
-+	return err;
-+}
-+
-+static int dcss_drv_platform_remove(struct platform_device *pdev)
-+{
-+	struct dcss_drv *mdrv = dev_get_drvdata(&pdev->dev);
-+
-+	if (!mdrv)
-+		return 0;
-+
-+	dcss_kms_detach(mdrv->kms);
-+	dcss_dev_destroy(mdrv->dcss);
-+
-+	dev_set_drvdata(&pdev->dev, NULL);
-+
-+	kfree(mdrv);
-+
-+	return 0;
-+}
-+
-+static struct dcss_type_data dcss_types[] = {
-+	[DCSS_IMX8MQ] = {
-+		.name = "DCSS_IMX8MQ",
-+		.blkctl_ofs = 0x2F000,
-+		.ctxld_ofs = 0x23000,
-+		.dtg_ofs = 0x20000,
-+		.scaler_ofs = 0x1C000,
-+		.ss_ofs = 0x1B000,
-+		.dpr_ofs = 0x18000,
-+	},
-+};
-+
-+static const struct of_device_id dcss_of_match[] = {
-+	{ .compatible = "nxp,imx8mq-dcss", .data = &dcss_types[DCSS_IMX8MQ], },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, dcss_of_match);
-+
-+static const struct dev_pm_ops dcss_dev_pm = {
-+	SET_SYSTEM_SLEEP_PM_OPS(dcss_dev_suspend, dcss_dev_resume)
-+	SET_RUNTIME_PM_OPS(dcss_dev_runtime_suspend,
-+			   dcss_dev_runtime_resume, NULL)
-+};
-+
-+static struct platform_driver dcss_platform_driver = {
-+	.probe	= dcss_drv_platform_probe,
-+	.remove	= dcss_drv_platform_remove,
-+	.driver	= {
-+		.name = "imx-dcss",
-+		.of_match_table	= dcss_of_match,
-+		.pm = &dcss_dev_pm,
-+	},
-+};
-+
-+module_platform_driver(dcss_platform_driver);
-+
-+MODULE_AUTHOR("Laurentiu Palcu <laurentiu.palcu@nxp.com>");
-+MODULE_DESCRIPTION("DCSS driver for i.MX8MQ");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-dtg.c b/drivers/gpu/drm/imx/dcss/dcss-dtg.c
-new file mode 100644
-index 000000000000..30de00540f63
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-dtg.c
-@@ -0,0 +1,409 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/interrupt.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#include "dcss-dev.h"
-+
-+#define DCSS_DTG_TC_CONTROL_STATUS			0x00
-+#define   CH3_EN					BIT(0)
-+#define   CH2_EN					BIT(1)
-+#define   CH1_EN					BIT(2)
-+#define   OVL_DATA_MODE					BIT(3)
-+#define   BLENDER_VIDEO_ALPHA_SEL			BIT(7)
-+#define   DTG_START					BIT(8)
-+#define   DBY_MODE_EN					BIT(9)
-+#define   CH1_ALPHA_SEL					BIT(10)
-+#define   CSS_PIX_COMP_SWAP_POS				12
-+#define   CSS_PIX_COMP_SWAP_MASK			GENMASK(14, 12)
-+#define   DEFAULT_FG_ALPHA_POS				24
-+#define   DEFAULT_FG_ALPHA_MASK				GENMASK(31, 24)
-+#define DCSS_DTG_TC_DTG					0x04
-+#define DCSS_DTG_TC_DISP_TOP				0x08
-+#define DCSS_DTG_TC_DISP_BOT				0x0C
-+#define DCSS_DTG_TC_CH1_TOP				0x10
-+#define DCSS_DTG_TC_CH1_BOT				0x14
-+#define DCSS_DTG_TC_CH2_TOP				0x18
-+#define DCSS_DTG_TC_CH2_BOT				0x1C
-+#define DCSS_DTG_TC_CH3_TOP				0x20
-+#define DCSS_DTG_TC_CH3_BOT				0x24
-+#define   TC_X_POS					0
-+#define   TC_X_MASK					GENMASK(12, 0)
-+#define   TC_Y_POS					16
-+#define   TC_Y_MASK					GENMASK(28, 16)
-+#define DCSS_DTG_TC_CTXLD				0x28
-+#define   TC_CTXLD_DB_Y_POS				0
-+#define   TC_CTXLD_DB_Y_MASK				GENMASK(12, 0)
-+#define   TC_CTXLD_SB_Y_POS				16
-+#define   TC_CTXLD_SB_Y_MASK				GENMASK(28, 16)
-+#define DCSS_DTG_TC_CH1_BKRND				0x2C
-+#define DCSS_DTG_TC_CH2_BKRND				0x30
-+#define   BKRND_R_Y_COMP_POS				20
-+#define   BKRND_R_Y_COMP_MASK				GENMASK(29, 20)
-+#define   BKRND_G_U_COMP_POS				10
-+#define   BKRND_G_U_COMP_MASK				GENMASK(19, 10)
-+#define   BKRND_B_V_COMP_POS				0
-+#define   BKRND_B_V_COMP_MASK				GENMASK(9, 0)
-+#define DCSS_DTG_BLENDER_DBY_RANGEINV			0x38
-+#define DCSS_DTG_BLENDER_DBY_RANGEMIN			0x3C
-+#define DCSS_DTG_BLENDER_DBY_BDP			0x40
-+#define DCSS_DTG_BLENDER_BKRND_I			0x44
-+#define DCSS_DTG_BLENDER_BKRND_P			0x48
-+#define DCSS_DTG_BLENDER_BKRND_T			0x4C
-+#define DCSS_DTG_LINE0_INT				0x50
-+#define DCSS_DTG_LINE1_INT				0x54
-+#define DCSS_DTG_BG_ALPHA_DEFAULT			0x58
-+#define DCSS_DTG_INT_STATUS				0x5C
-+#define DCSS_DTG_INT_CONTROL				0x60
-+#define DCSS_DTG_TC_CH3_BKRND				0x64
-+#define DCSS_DTG_INT_MASK				0x68
-+#define   LINE0_IRQ					BIT(0)
-+#define   LINE1_IRQ					BIT(1)
-+#define   LINE2_IRQ					BIT(2)
-+#define   LINE3_IRQ					BIT(3)
-+#define DCSS_DTG_LINE2_INT				0x6C
-+#define DCSS_DTG_LINE3_INT				0x70
-+#define DCSS_DTG_DBY_OL					0x74
-+#define DCSS_DTG_DBY_BL					0x78
-+#define DCSS_DTG_DBY_EL					0x7C
-+
-+struct dcss_dtg {
-+	struct device *dev;
-+	struct dcss_ctxld *ctxld;
-+	void __iomem *base_reg;
-+	u32 base_ofs;
-+
-+	u32 ctx_id;
-+
-+	bool in_use;
-+
-+	u32 dis_ulc_x;
-+	u32 dis_ulc_y;
-+
-+	u32 control_status;
-+	u32 alpha;
-+	u32 alpha_cfg;
-+
-+	int ctxld_kick_irq;
-+	bool ctxld_kick_irq_en;
-+};
-+
-+static void dcss_dtg_write(struct dcss_dtg *dtg, u32 val, u32 ofs)
-+{
-+	if (!dtg->in_use)
-+		dcss_writel(val, dtg->base_reg + ofs);
-+
-+	dcss_ctxld_write(dtg->ctxld, dtg->ctx_id,
-+			 val, dtg->base_ofs + ofs);
-+}
-+
-+static irqreturn_t dcss_dtg_irq_handler(int irq, void *data)
-+{
-+	struct dcss_dtg *dtg = data;
-+	u32 status;
-+
-+	status = dcss_readl(dtg->base_reg + DCSS_DTG_INT_STATUS);
-+
-+	if (!(status & LINE0_IRQ))
-+		return IRQ_NONE;
-+
-+	dcss_ctxld_kick(dtg->ctxld);
-+
-+	dcss_writel(status & LINE0_IRQ, dtg->base_reg + DCSS_DTG_INT_CONTROL);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int dcss_dtg_irq_config(struct dcss_dtg *dtg,
-+			       struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	dtg->ctxld_kick_irq = platform_get_irq_byname(pdev, "ctxld_kick");
-+	if (dtg->ctxld_kick_irq < 0)
-+		return dtg->ctxld_kick_irq;
-+
-+	dcss_update(0, LINE0_IRQ | LINE1_IRQ,
-+		    dtg->base_reg + DCSS_DTG_INT_MASK);
-+
-+	ret = request_irq(dtg->ctxld_kick_irq, dcss_dtg_irq_handler,
-+			  0, "dcss_ctxld_kick", dtg);
-+	if (ret) {
-+		dev_err(dtg->dev, "dtg: irq request failed.\n");
-+		return ret;
-+	}
-+
-+	disable_irq(dtg->ctxld_kick_irq);
-+
-+	dtg->ctxld_kick_irq_en = false;
-+
-+	return 0;
-+}
-+
-+int dcss_dtg_init(struct dcss_dev *dcss, unsigned long dtg_base)
-+{
-+	int ret = 0;
-+	struct dcss_dtg *dtg;
-+
-+	dtg = kzalloc(sizeof(*dtg), GFP_KERNEL);
-+	if (!dtg)
-+		return -ENOMEM;
-+
-+	dcss->dtg = dtg;
-+	dtg->dev = dcss->dev;
-+	dtg->ctxld = dcss->ctxld;
-+
-+	dtg->base_reg = ioremap(dtg_base, SZ_4K);
-+	if (!dtg->base_reg) {
-+		dev_err(dcss->dev, "dtg: unable to remap dtg base\n");
-+		ret = -ENOMEM;
-+		goto err_ioremap;
-+	}
-+
-+	dtg->base_ofs = dtg_base;
-+	dtg->ctx_id = CTX_DB;
-+
-+	dtg->alpha = 255;
-+
-+	dtg->control_status |= OVL_DATA_MODE | BLENDER_VIDEO_ALPHA_SEL |
-+		((dtg->alpha << DEFAULT_FG_ALPHA_POS) & DEFAULT_FG_ALPHA_MASK);
-+
-+	ret = dcss_dtg_irq_config(dtg, to_platform_device(dcss->dev));
-+	if (ret)
-+		goto err_irq;
-+
-+	return 0;
-+
-+err_irq:
-+	iounmap(dtg->base_reg);
-+
-+err_ioremap:
-+	kfree(dtg);
-+
-+	return ret;
-+}
-+
-+void dcss_dtg_exit(struct dcss_dtg *dtg)
-+{
-+	free_irq(dtg->ctxld_kick_irq, dtg);
-+
-+	if (dtg->base_reg)
-+		iounmap(dtg->base_reg);
-+
-+	kfree(dtg);
-+}
-+
-+void dcss_dtg_sync_set(struct dcss_dtg *dtg, struct videomode *vm)
-+{
-+	struct dcss_dev *dcss = dcss_drv_dev_to_dcss(dtg->dev);
-+	u16 dtg_lrc_x, dtg_lrc_y;
-+	u16 dis_ulc_x, dis_ulc_y;
-+	u16 dis_lrc_x, dis_lrc_y;
-+	u32 sb_ctxld_trig, db_ctxld_trig;
-+	u32 pixclock = vm->pixelclock;
-+	u32 actual_clk;
-+
-+	dtg_lrc_x = vm->hfront_porch + vm->hback_porch + vm->hsync_len +
-+		    vm->hactive - 1;
-+	dtg_lrc_y = vm->vfront_porch + vm->vback_porch + vm->vsync_len +
-+		    vm->vactive - 1;
-+	dis_ulc_x = vm->hsync_len + vm->hback_porch - 1;
-+	dis_ulc_y = vm->vsync_len + vm->vfront_porch + vm->vback_porch - 1;
-+	dis_lrc_x = vm->hsync_len + vm->hback_porch + vm->hactive - 1;
-+	dis_lrc_y = vm->vsync_len + vm->vfront_porch + vm->vback_porch +
-+		    vm->vactive - 1;
-+
-+	clk_disable_unprepare(dcss->pix_clk);
-+	clk_set_rate(dcss->pix_clk, vm->pixelclock);
-+	clk_prepare_enable(dcss->pix_clk);
-+
-+	actual_clk = clk_get_rate(dcss->pix_clk);
-+	if (pixclock != actual_clk) {
-+		dev_info(dtg->dev,
-+			 "Pixel clock set to %u kHz instead of %u kHz.\n",
-+			 (actual_clk / 1000), (pixclock / 1000));
-+	}
-+
-+	dcss_dtg_write(dtg, ((dtg_lrc_y << TC_Y_POS) | dtg_lrc_x),
-+		       DCSS_DTG_TC_DTG);
-+	dcss_dtg_write(dtg, ((dis_ulc_y << TC_Y_POS) | dis_ulc_x),
-+		       DCSS_DTG_TC_DISP_TOP);
-+	dcss_dtg_write(dtg, ((dis_lrc_y << TC_Y_POS) | dis_lrc_x),
-+		       DCSS_DTG_TC_DISP_BOT);
-+
-+	dtg->dis_ulc_x = dis_ulc_x;
-+	dtg->dis_ulc_y = dis_ulc_y;
-+
-+	sb_ctxld_trig = ((0 * dis_lrc_y / 100) << TC_CTXLD_SB_Y_POS) &
-+							TC_CTXLD_SB_Y_MASK;
-+	db_ctxld_trig = ((99 * dis_lrc_y / 100) << TC_CTXLD_DB_Y_POS) &
-+							TC_CTXLD_DB_Y_MASK;
-+
-+	dcss_dtg_write(dtg, sb_ctxld_trig | db_ctxld_trig, DCSS_DTG_TC_CTXLD);
-+
-+	/* vblank trigger */
-+	dcss_dtg_write(dtg, 0, DCSS_DTG_LINE1_INT);
-+
-+	/* CTXLD trigger */
-+	dcss_dtg_write(dtg, ((90 * dis_lrc_y) / 100) << 16, DCSS_DTG_LINE0_INT);
-+}
-+
-+void dcss_dtg_plane_pos_set(struct dcss_dtg *dtg, int ch_num,
-+			    int px, int py, int pw, int ph)
-+{
-+	u16 p_ulc_x, p_ulc_y;
-+	u16 p_lrc_x, p_lrc_y;
-+
-+	p_ulc_x = dtg->dis_ulc_x + px;
-+	p_ulc_y = dtg->dis_ulc_y + py;
-+	p_lrc_x = p_ulc_x + pw;
-+	p_lrc_y = p_ulc_y + ph;
-+
-+	if (!px && !py && !pw && !ph) {
-+		dcss_dtg_write(dtg, 0, DCSS_DTG_TC_CH1_TOP + 0x8 * ch_num);
-+		dcss_dtg_write(dtg, 0, DCSS_DTG_TC_CH1_BOT + 0x8 * ch_num);
-+	} else {
-+		dcss_dtg_write(dtg, ((p_ulc_y << TC_Y_POS) | p_ulc_x),
-+			       DCSS_DTG_TC_CH1_TOP + 0x8 * ch_num);
-+		dcss_dtg_write(dtg, ((p_lrc_y << TC_Y_POS) | p_lrc_x),
-+			       DCSS_DTG_TC_CH1_BOT + 0x8 * ch_num);
-+	}
-+}
-+
-+bool dcss_dtg_global_alpha_changed(struct dcss_dtg *dtg, int ch_num, int alpha)
-+{
-+	if (ch_num)
-+		return false;
-+
-+	return alpha != dtg->alpha;
-+}
-+
-+void dcss_dtg_plane_alpha_set(struct dcss_dtg *dtg, int ch_num,
-+			      const struct drm_format_info *format, int alpha)
-+{
-+	/* we care about alpha only when channel 0 is concerned */
-+	if (ch_num)
-+		return;
-+
-+	/*
-+	 * Use global alpha if pixel format does not have alpha channel or the
-+	 * user explicitly chose to use global alpha (i.e. alpha is not OPAQUE).
-+	 */
-+	if (!format->has_alpha || alpha != 255)
-+		dtg->alpha_cfg = (alpha << DEFAULT_FG_ALPHA_POS) & DEFAULT_FG_ALPHA_MASK;
-+	else /* use per-pixel alpha otherwise */
-+		dtg->alpha_cfg = CH1_ALPHA_SEL;
-+
-+	dtg->alpha = alpha;
-+}
-+
-+void dcss_dtg_css_set(struct dcss_dtg *dtg)
-+{
-+	dtg->control_status |=
-+			(0x5 << CSS_PIX_COMP_SWAP_POS) & CSS_PIX_COMP_SWAP_MASK;
-+}
-+
-+void dcss_dtg_enable(struct dcss_dtg *dtg)
-+{
-+	dtg->control_status |= DTG_START;
-+
-+	dtg->control_status &= ~(CH1_ALPHA_SEL | DEFAULT_FG_ALPHA_MASK);
-+	dtg->control_status |= dtg->alpha_cfg;
-+
-+	dcss_dtg_write(dtg, dtg->control_status, DCSS_DTG_TC_CONTROL_STATUS);
-+
-+	dtg->in_use = true;
-+}
-+
-+void dcss_dtg_shutoff(struct dcss_dtg *dtg)
-+{
-+	dtg->control_status &= ~DTG_START;
-+
-+	dcss_writel(dtg->control_status,
-+		    dtg->base_reg + DCSS_DTG_TC_CONTROL_STATUS);
-+
-+	dtg->in_use = false;
-+}
-+
-+bool dcss_dtg_is_enabled(struct dcss_dtg *dtg)
-+{
-+	return dtg->in_use;
-+}
-+
-+void dcss_dtg_ch_enable(struct dcss_dtg *dtg, int ch_num, bool en)
-+{
-+	u32 ch_en_map[] = {CH1_EN, CH2_EN, CH3_EN};
-+	u32 control_status;
-+
-+	control_status = dtg->control_status & ~ch_en_map[ch_num];
-+	control_status |= en ? ch_en_map[ch_num] : 0;
-+
-+	control_status &= ~(CH1_ALPHA_SEL | DEFAULT_FG_ALPHA_MASK);
-+	control_status |= dtg->alpha_cfg;
-+
-+	if (dtg->control_status != control_status)
-+		dcss_dtg_write(dtg, control_status, DCSS_DTG_TC_CONTROL_STATUS);
-+
-+	dtg->control_status = control_status;
-+}
-+
-+void dcss_dtg_vblank_irq_enable(struct dcss_dtg *dtg, bool en)
-+{
-+	u32 status;
-+	u32 mask = en ? LINE1_IRQ : 0;
-+
-+	if (en) {
-+		status = dcss_readl(dtg->base_reg + DCSS_DTG_INT_STATUS);
-+		dcss_writel(status & LINE1_IRQ,
-+			    dtg->base_reg + DCSS_DTG_INT_CONTROL);
-+	}
-+
-+	dcss_update(mask, LINE1_IRQ, dtg->base_reg + DCSS_DTG_INT_MASK);
-+}
-+
-+void dcss_dtg_ctxld_kick_irq_enable(struct dcss_dtg *dtg, bool en)
-+{
-+	u32 status;
-+	u32 mask = en ? LINE0_IRQ : 0;
-+
-+	if (en) {
-+		status = dcss_readl(dtg->base_reg + DCSS_DTG_INT_STATUS);
-+
-+		if (!dtg->ctxld_kick_irq_en) {
-+			dcss_writel(status & LINE0_IRQ,
-+				    dtg->base_reg + DCSS_DTG_INT_CONTROL);
-+			enable_irq(dtg->ctxld_kick_irq);
-+			dtg->ctxld_kick_irq_en = true;
-+			dcss_update(mask, LINE0_IRQ,
-+				    dtg->base_reg + DCSS_DTG_INT_MASK);
-+		}
-+
-+		return;
-+	}
-+
-+	if (!dtg->ctxld_kick_irq_en)
-+		return;
-+
-+	disable_irq_nosync(dtg->ctxld_kick_irq);
-+	dtg->ctxld_kick_irq_en = false;
-+
-+	dcss_update(mask, LINE0_IRQ, dtg->base_reg + DCSS_DTG_INT_MASK);
-+}
-+
-+void dcss_dtg_vblank_irq_clear(struct dcss_dtg *dtg)
-+{
-+	dcss_update(LINE1_IRQ, LINE1_IRQ, dtg->base_reg + DCSS_DTG_INT_CONTROL);
-+}
-+
-+bool dcss_dtg_vblank_irq_valid(struct dcss_dtg *dtg)
-+{
-+	return !!(dcss_readl(dtg->base_reg + DCSS_DTG_INT_STATUS) & LINE1_IRQ);
-+}
-+
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-kms.c b/drivers/gpu/drm/imx/dcss/dcss-kms.c
-new file mode 100644
-index 000000000000..3ca49d0a3e61
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-kms.c
-@@ -0,0 +1,177 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <drm/drm_atomic.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_drv.h>
-+#include <drm/drm_fb_helper.h>
-+#include <drm/drm_gem_cma_helper.h>
-+#include <drm/drm_gem_framebuffer_helper.h>
-+#include <drm/drm_of.h>
-+#include <drm/drm_probe_helper.h>
-+#include <drm/drm_vblank.h>
-+
-+#include "dcss-dev.h"
-+#include "dcss-kms.h"
-+
-+DEFINE_DRM_GEM_CMA_FOPS(dcss_cma_fops);
-+
-+static const struct drm_mode_config_funcs dcss_drm_mode_config_funcs = {
-+	.fb_create = drm_gem_fb_create,
-+	.output_poll_changed = drm_fb_helper_output_poll_changed,
-+	.atomic_check = drm_atomic_helper_check,
-+	.atomic_commit = drm_atomic_helper_commit,
-+};
-+
-+static struct drm_driver dcss_kms_driver = {
-+	.driver_features	= DRIVER_MODESET | DRIVER_GEM | DRIVER_ATOMIC,
-+	.gem_free_object_unlocked = drm_gem_cma_free_object,
-+	.gem_vm_ops		= &drm_gem_cma_vm_ops,
-+	.dumb_create		= drm_gem_cma_dumb_create,
-+
-+	.prime_handle_to_fd	= drm_gem_prime_handle_to_fd,
-+	.prime_fd_to_handle	= drm_gem_prime_fd_to_handle,
-+	.gem_prime_import	= drm_gem_prime_import,
-+	.gem_prime_export	= drm_gem_prime_export,
-+	.gem_prime_get_sg_table	= drm_gem_cma_prime_get_sg_table,
-+	.gem_prime_import_sg_table = drm_gem_cma_prime_import_sg_table,
-+	.gem_prime_vmap		= drm_gem_cma_prime_vmap,
-+	.gem_prime_vunmap	= drm_gem_cma_prime_vunmap,
-+	.gem_prime_mmap		= drm_gem_cma_prime_mmap,
-+	.fops			= &dcss_cma_fops,
-+	.name			= "imx-dcss",
-+	.desc			= "i.MX8MQ Display Subsystem",
-+	.date			= "20190917",
-+	.major			= 1,
-+	.minor			= 0,
-+	.patchlevel		= 0,
-+};
-+
-+static const struct drm_mode_config_helper_funcs dcss_mode_config_helpers = {
-+	.atomic_commit_tail = drm_atomic_helper_commit_tail_rpm,
-+};
-+
-+static void dcss_kms_mode_config_init(struct dcss_kms_dev *kms)
-+{
-+	struct drm_mode_config *config = &kms->base.mode_config;
-+
-+	drm_mode_config_init(&kms->base);
-+
-+	config->min_width = 1;
-+	config->min_height = 1;
-+	config->max_width = 4096;
-+	config->max_height = 4096;
-+	config->allow_fb_modifiers = true;
-+	config->normalize_zpos = true;
-+
-+	config->funcs = &dcss_drm_mode_config_funcs;
-+	config->helper_private = &dcss_mode_config_helpers;
-+}
-+
-+static const struct drm_encoder_funcs dcss_kms_simple_encoder_funcs = {
-+	.destroy = drm_encoder_cleanup,
-+};
-+
-+static int dcss_kms_setup_encoder(struct dcss_kms_dev *kms)
-+{
-+	struct drm_device *ddev = &kms->base;
-+	struct drm_encoder *encoder = &kms->encoder;
-+	struct drm_crtc *crtc = (struct drm_crtc *)&kms->crtc;
-+	struct drm_panel *panel;
-+	struct drm_bridge *bridge;
-+	int ret;
-+
-+	ret = drm_of_find_panel_or_bridge(ddev->dev->of_node, 0, 0,
-+					  &panel, &bridge);
-+	if (ret)
-+		return ret;
-+
-+	if (!bridge) {
-+		dev_err(ddev->dev, "No bridge found %d.\n", ret);
-+		return -ENODEV;
-+	}
-+
-+	encoder->possible_crtcs = drm_crtc_mask(crtc);
-+
-+	ret = drm_encoder_init(&kms->base, encoder,
-+			       &dcss_kms_simple_encoder_funcs,
-+			       DRM_MODE_ENCODER_NONE, NULL);
-+	if (ret) {
-+		dev_err(ddev->dev, "Failed initializing encoder %d.\n", ret);
-+		return ret;
-+	}
-+
-+	return drm_bridge_attach(encoder, bridge, NULL, 0);
-+}
-+
-+struct dcss_kms_dev *dcss_kms_attach(struct dcss_dev *dcss)
-+{
-+	struct dcss_kms_dev *kms;
-+	struct drm_device *drm;
-+	struct dcss_crtc *crtc;
-+	int ret;
-+
-+	kms = devm_drm_dev_alloc(dcss->dev, &dcss_kms_driver,
-+				 struct dcss_kms_dev, base);
-+	if (IS_ERR(kms))
-+		return kms;
-+
-+	drm = &kms->base;
-+	crtc = &kms->crtc;
-+
-+	drm->dev_private = dcss;
-+
-+	dcss_kms_mode_config_init(kms);
-+
-+	ret = drm_vblank_init(drm, 1);
-+	if (ret)
-+		goto cleanup_mode_config;
-+
-+	drm->irq_enabled = true;
-+
-+	ret = dcss_crtc_init(crtc, drm);
-+	if (ret)
-+		goto cleanup_mode_config;
-+
-+	ret = dcss_kms_setup_encoder(kms);
-+	if (ret)
-+		goto cleanup_crtc;
-+
-+	drm_mode_config_reset(drm);
-+
-+	drm_kms_helper_poll_init(drm);
-+
-+	ret = drm_dev_register(drm, 0);
-+	if (ret)
-+		goto cleanup_crtc;
-+
-+	drm_fbdev_generic_setup(drm, 32);
-+
-+	return kms;
-+
-+cleanup_crtc:
-+	drm_kms_helper_poll_fini(drm);
-+	dcss_crtc_deinit(crtc, drm);
-+
-+cleanup_mode_config:
-+	drm_mode_config_cleanup(drm);
-+	drm->dev_private = NULL;
-+
-+	return ERR_PTR(ret);
-+}
-+
-+void dcss_kms_detach(struct dcss_kms_dev *kms)
-+{
-+	struct drm_device *drm = &kms->base;
-+
-+	drm_dev_unregister(drm);
-+	drm_kms_helper_poll_fini(drm);
-+	drm_atomic_helper_shutdown(drm);
-+	drm_crtc_vblank_off(&kms->crtc.base);
-+	drm->irq_enabled = false;
-+	drm_mode_config_cleanup(drm);
-+	dcss_crtc_deinit(&kms->crtc, drm);
-+	drm->dev_private = NULL;
-+}
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-kms.h b/drivers/gpu/drm/imx/dcss/dcss-kms.h
-new file mode 100644
-index 000000000000..1f51c86c6986
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-kms.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#ifndef _DCSS_KMS_H_
-+#define _DCSS_KMS_H_
-+
-+#include <drm/drm_encoder.h>
-+
-+struct dcss_plane {
-+	struct drm_plane base;
-+
-+	int ch_num;
-+};
-+
-+struct dcss_crtc {
-+	struct drm_crtc		base;
-+	struct drm_crtc_state	*state;
-+
-+	struct dcss_plane	*plane[3];
-+
-+	int			irq;
-+
-+	bool disable_ctxld_kick_irq;
-+};
-+
-+struct dcss_kms_dev {
-+	struct drm_device base;
-+	struct dcss_crtc crtc;
-+	struct drm_encoder encoder;
-+};
-+
-+struct dcss_kms_dev *dcss_kms_attach(struct dcss_dev *dcss);
-+void dcss_kms_detach(struct dcss_kms_dev *kms);
-+int dcss_crtc_init(struct dcss_crtc *crtc, struct drm_device *drm);
-+void dcss_crtc_deinit(struct dcss_crtc *crtc, struct drm_device *drm);
-+struct dcss_plane *dcss_plane_init(struct drm_device *drm,
-+				   unsigned int possible_crtcs,
-+				   enum drm_plane_type type,
-+				   unsigned int zpos);
-+
-+#endif
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-plane.c b/drivers/gpu/drm/imx/dcss/dcss-plane.c
-new file mode 100644
-index 000000000000..961d671f171b
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-plane.c
-@@ -0,0 +1,405 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <drm/drm_atomic.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_fb_cma_helper.h>
-+#include <drm/drm_gem_framebuffer_helper.h>
-+#include <drm/drm_gem_cma_helper.h>
-+
-+#include "dcss-dev.h"
-+#include "dcss-kms.h"
-+
-+static const u32 dcss_common_formats[] = {
-+	/* RGB */
-+	DRM_FORMAT_ARGB8888,
-+	DRM_FORMAT_XRGB8888,
-+	DRM_FORMAT_ABGR8888,
-+	DRM_FORMAT_XBGR8888,
-+	DRM_FORMAT_RGBA8888,
-+	DRM_FORMAT_RGBX8888,
-+	DRM_FORMAT_BGRA8888,
-+	DRM_FORMAT_BGRX8888,
-+	DRM_FORMAT_XRGB2101010,
-+	DRM_FORMAT_XBGR2101010,
-+	DRM_FORMAT_RGBX1010102,
-+	DRM_FORMAT_BGRX1010102,
-+	DRM_FORMAT_ARGB2101010,
-+	DRM_FORMAT_ABGR2101010,
-+	DRM_FORMAT_RGBA1010102,
-+	DRM_FORMAT_BGRA1010102,
-+};
-+
-+static const u64 dcss_video_format_modifiers[] = {
-+	DRM_FORMAT_MOD_LINEAR,
-+	DRM_FORMAT_MOD_INVALID,
-+};
-+
-+static const u64 dcss_graphics_format_modifiers[] = {
-+	DRM_FORMAT_MOD_VIVANTE_TILED,
-+	DRM_FORMAT_MOD_VIVANTE_SUPER_TILED,
-+	DRM_FORMAT_MOD_LINEAR,
-+	DRM_FORMAT_MOD_INVALID,
-+};
-+
-+static inline struct dcss_plane *to_dcss_plane(struct drm_plane *p)
-+{
-+	return container_of(p, struct dcss_plane, base);
-+}
-+
-+static inline bool dcss_plane_fb_is_linear(const struct drm_framebuffer *fb)
-+{
-+	return ((fb->flags & DRM_MODE_FB_MODIFIERS) == 0) ||
-+	       ((fb->flags & DRM_MODE_FB_MODIFIERS) != 0 &&
-+		fb->modifier == DRM_FORMAT_MOD_LINEAR);
-+}
-+
-+static void dcss_plane_destroy(struct drm_plane *plane)
-+{
-+	struct dcss_plane *dcss_plane = container_of(plane, struct dcss_plane,
-+						     base);
-+
-+	drm_plane_cleanup(plane);
-+	kfree(dcss_plane);
-+}
-+
-+static bool dcss_plane_format_mod_supported(struct drm_plane *plane,
-+					    u32 format,
-+					    u64 modifier)
-+{
-+	switch (plane->type) {
-+	case DRM_PLANE_TYPE_PRIMARY:
-+		switch (format) {
-+		case DRM_FORMAT_ARGB8888:
-+		case DRM_FORMAT_XRGB8888:
-+		case DRM_FORMAT_ARGB2101010:
-+			return modifier == DRM_FORMAT_MOD_LINEAR ||
-+			       modifier == DRM_FORMAT_MOD_VIVANTE_TILED ||
-+			       modifier == DRM_FORMAT_MOD_VIVANTE_SUPER_TILED;
-+		default:
-+			return modifier == DRM_FORMAT_MOD_LINEAR;
-+		}
-+		break;
-+	case DRM_PLANE_TYPE_OVERLAY:
-+		return modifier == DRM_FORMAT_MOD_LINEAR;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct drm_plane_funcs dcss_plane_funcs = {
-+	.update_plane		= drm_atomic_helper_update_plane,
-+	.disable_plane		= drm_atomic_helper_disable_plane,
-+	.destroy		= dcss_plane_destroy,
-+	.reset			= drm_atomic_helper_plane_reset,
-+	.atomic_duplicate_state	= drm_atomic_helper_plane_duplicate_state,
-+	.atomic_destroy_state	= drm_atomic_helper_plane_destroy_state,
-+	.format_mod_supported	= dcss_plane_format_mod_supported,
-+};
-+
-+static bool dcss_plane_can_rotate(const struct drm_format_info *format,
-+				  bool mod_present, u64 modifier,
-+				  unsigned int rotation)
-+{
-+	bool linear_format = !mod_present ||
-+			     (mod_present && modifier == DRM_FORMAT_MOD_LINEAR);
-+	u32 supported_rotation = DRM_MODE_ROTATE_0;
-+
-+	if (!format->is_yuv && linear_format)
-+		supported_rotation = DRM_MODE_ROTATE_0 | DRM_MODE_ROTATE_180 |
-+				     DRM_MODE_REFLECT_MASK;
-+	else if (!format->is_yuv &&
-+		 modifier == DRM_FORMAT_MOD_VIVANTE_TILED)
-+		supported_rotation = DRM_MODE_ROTATE_MASK |
-+				     DRM_MODE_REFLECT_MASK;
-+	else if (format->is_yuv && linear_format &&
-+		 (format->format == DRM_FORMAT_NV12 ||
-+		  format->format == DRM_FORMAT_NV21))
-+		supported_rotation = DRM_MODE_ROTATE_0 | DRM_MODE_ROTATE_180 |
-+				     DRM_MODE_REFLECT_MASK;
-+
-+	return !!(rotation & supported_rotation);
-+}
-+
-+static bool dcss_plane_is_source_size_allowed(u16 src_w, u16 src_h, u32 pix_fmt)
-+{
-+	if (src_w < 64 &&
-+	    (pix_fmt == DRM_FORMAT_NV12 || pix_fmt == DRM_FORMAT_NV21))
-+		return false;
-+	else if (src_w < 32 &&
-+		 (pix_fmt == DRM_FORMAT_UYVY || pix_fmt == DRM_FORMAT_VYUY ||
-+		  pix_fmt == DRM_FORMAT_YUYV || pix_fmt == DRM_FORMAT_YVYU))
-+		return false;
-+
-+	return src_w >= 16 && src_h >= 8;
-+}
-+
-+static int dcss_plane_atomic_check(struct drm_plane *plane,
-+				   struct drm_plane_state *state)
-+{
-+	struct dcss_plane *dcss_plane = to_dcss_plane(plane);
-+	struct dcss_dev *dcss = plane->dev->dev_private;
-+	struct drm_framebuffer *fb = state->fb;
-+	bool is_primary_plane = plane->type == DRM_PLANE_TYPE_PRIMARY;
-+	struct drm_gem_cma_object *cma_obj;
-+	struct drm_crtc_state *crtc_state;
-+	int hdisplay, vdisplay;
-+	int min, max;
-+	int ret;
-+
-+	if (!fb || !state->crtc)
-+		return 0;
-+
-+	cma_obj = drm_fb_cma_get_gem_obj(fb, 0);
-+	WARN_ON(!cma_obj);
-+
-+	crtc_state = drm_atomic_get_existing_crtc_state(state->state,
-+							state->crtc);
-+
-+	hdisplay = crtc_state->adjusted_mode.hdisplay;
-+	vdisplay = crtc_state->adjusted_mode.vdisplay;
-+
-+	if (!dcss_plane_is_source_size_allowed(state->src_w >> 16,
-+					       state->src_h >> 16,
-+					       fb->format->format)) {
-+		DRM_DEBUG_KMS("Source plane size is not allowed!\n");
-+		return -EINVAL;
-+	}
-+
-+	dcss_scaler_get_min_max_ratios(dcss->scaler, dcss_plane->ch_num,
-+				       &min, &max);
-+
-+	ret = drm_atomic_helper_check_plane_state(state, crtc_state,
-+						  min, max, !is_primary_plane,
-+						  false);
-+	if (ret)
-+		return ret;
-+
-+	if (!state->visible)
-+		return 0;
-+
-+	if (!dcss_plane_can_rotate(fb->format,
-+				   !!(fb->flags & DRM_MODE_FB_MODIFIERS),
-+				   fb->modifier,
-+				   state->rotation)) {
-+		DRM_DEBUG_KMS("requested rotation is not allowed!\n");
-+		return -EINVAL;
-+	}
-+
-+	if ((state->crtc_x < 0 || state->crtc_y < 0 ||
-+	     state->crtc_x + state->crtc_w > hdisplay ||
-+	     state->crtc_y + state->crtc_h > vdisplay) &&
-+	    !dcss_plane_fb_is_linear(fb)) {
-+		DRM_DEBUG_KMS("requested cropping operation is not allowed!\n");
-+		return -EINVAL;
-+	}
-+
-+	if ((fb->flags & DRM_MODE_FB_MODIFIERS) &&
-+	    !plane->funcs->format_mod_supported(plane,
-+				fb->format->format,
-+				fb->modifier)) {
-+		DRM_DEBUG_KMS("Invalid modifier: %llx", fb->modifier);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void dcss_plane_atomic_set_base(struct dcss_plane *dcss_plane)
-+{
-+	struct drm_plane *plane = &dcss_plane->base;
-+	struct drm_plane_state *state = plane->state;
-+	struct dcss_dev *dcss = plane->dev->dev_private;
-+	struct drm_framebuffer *fb = state->fb;
-+	const struct drm_format_info *format = fb->format;
-+	struct drm_gem_cma_object *cma_obj = drm_fb_cma_get_gem_obj(fb, 0);
-+	unsigned long p1_ba = 0, p2_ba = 0;
-+
-+	if (!format->is_yuv ||
-+	    format->format == DRM_FORMAT_NV12 ||
-+	    format->format == DRM_FORMAT_NV21)
-+		p1_ba = cma_obj->paddr + fb->offsets[0] +
-+			fb->pitches[0] * (state->src.y1 >> 16) +
-+			format->char_per_block[0] * (state->src.x1 >> 16);
-+	else if (format->format == DRM_FORMAT_UYVY ||
-+		 format->format == DRM_FORMAT_VYUY ||
-+		 format->format == DRM_FORMAT_YUYV ||
-+		 format->format == DRM_FORMAT_YVYU)
-+		p1_ba = cma_obj->paddr + fb->offsets[0] +
-+			fb->pitches[0] * (state->src.y1 >> 16) +
-+			2 * format->char_per_block[0] * (state->src.x1 >> 17);
-+
-+	if (format->format == DRM_FORMAT_NV12 ||
-+	    format->format == DRM_FORMAT_NV21)
-+		p2_ba = cma_obj->paddr + fb->offsets[1] +
-+			(((fb->pitches[1] >> 1) * (state->src.y1 >> 17) +
-+			(state->src.x1 >> 17)) << 1);
-+
-+	dcss_dpr_addr_set(dcss->dpr, dcss_plane->ch_num, p1_ba, p2_ba,
-+			  fb->pitches[0]);
-+}
-+
-+static bool dcss_plane_needs_setup(struct drm_plane_state *state,
-+				   struct drm_plane_state *old_state)
-+{
-+	struct drm_framebuffer *fb = state->fb;
-+	struct drm_framebuffer *old_fb = old_state->fb;
-+
-+	return state->crtc_x != old_state->crtc_x ||
-+	       state->crtc_y != old_state->crtc_y ||
-+	       state->crtc_w != old_state->crtc_w ||
-+	       state->crtc_h != old_state->crtc_h ||
-+	       state->src_x  != old_state->src_x  ||
-+	       state->src_y  != old_state->src_y  ||
-+	       state->src_w  != old_state->src_w  ||
-+	       state->src_h  != old_state->src_h  ||
-+	       fb->format->format != old_fb->format->format ||
-+	       fb->modifier  != old_fb->modifier ||
-+	       state->rotation != old_state->rotation;
-+}
-+
-+static void dcss_plane_atomic_update(struct drm_plane *plane,
-+				     struct drm_plane_state *old_state)
-+{
-+	struct drm_plane_state *state = plane->state;
-+	struct dcss_plane *dcss_plane = to_dcss_plane(plane);
-+	struct dcss_dev *dcss = plane->dev->dev_private;
-+	struct drm_framebuffer *fb = state->fb;
-+	u32 pixel_format;
-+	struct drm_crtc_state *crtc_state;
-+	bool modifiers_present;
-+	u32 src_w, src_h, dst_w, dst_h;
-+	struct drm_rect src, dst;
-+	bool enable = true;
-+
-+	if (!fb || !state->crtc || !state->visible)
-+		return;
-+
-+	pixel_format = state->fb->format->format;
-+	crtc_state = state->crtc->state;
-+	modifiers_present = !!(fb->flags & DRM_MODE_FB_MODIFIERS);
-+
-+	if (old_state->fb && !drm_atomic_crtc_needs_modeset(crtc_state) &&
-+	    !dcss_plane_needs_setup(state, old_state)) {
-+		dcss_plane_atomic_set_base(dcss_plane);
-+		return;
-+	}
-+
-+	src = plane->state->src;
-+	dst = plane->state->dst;
-+
-+	/*
-+	 * The width and height after clipping.
-+	 */
-+	src_w = drm_rect_width(&src) >> 16;
-+	src_h = drm_rect_height(&src) >> 16;
-+	dst_w = drm_rect_width(&dst);
-+	dst_h = drm_rect_height(&dst);
-+
-+	if (plane->type == DRM_PLANE_TYPE_OVERLAY &&
-+	    modifiers_present && fb->modifier == DRM_FORMAT_MOD_LINEAR)
-+		modifiers_present = false;
-+
-+	dcss_dpr_format_set(dcss->dpr, dcss_plane->ch_num, state->fb->format,
-+			    modifiers_present ? fb->modifier :
-+						DRM_FORMAT_MOD_LINEAR);
-+	dcss_dpr_set_res(dcss->dpr, dcss_plane->ch_num, src_w, src_h);
-+	dcss_dpr_set_rotation(dcss->dpr, dcss_plane->ch_num,
-+			      state->rotation);
-+
-+	dcss_plane_atomic_set_base(dcss_plane);
-+
-+	dcss_scaler_setup(dcss->scaler, dcss_plane->ch_num,
-+			  state->fb->format, src_w, src_h,
-+			  dst_w, dst_h,
-+			  drm_mode_vrefresh(&crtc_state->mode));
-+
-+	dcss_dtg_plane_pos_set(dcss->dtg, dcss_plane->ch_num,
-+			       dst.x1, dst.y1, dst_w, dst_h);
-+	dcss_dtg_plane_alpha_set(dcss->dtg, dcss_plane->ch_num,
-+				 fb->format, state->alpha >> 8);
-+
-+	if (!dcss_plane->ch_num && (state->alpha >> 8) == 0)
-+		enable = false;
-+
-+	dcss_dpr_enable(dcss->dpr, dcss_plane->ch_num, enable);
-+	dcss_scaler_ch_enable(dcss->scaler, dcss_plane->ch_num, enable);
-+
-+	if (!enable)
-+		dcss_dtg_plane_pos_set(dcss->dtg, dcss_plane->ch_num,
-+				       0, 0, 0, 0);
-+
-+	dcss_dtg_ch_enable(dcss->dtg, dcss_plane->ch_num, enable);
-+}
-+
-+static void dcss_plane_atomic_disable(struct drm_plane *plane,
-+				      struct drm_plane_state *old_state)
-+{
-+	struct dcss_plane *dcss_plane = to_dcss_plane(plane);
-+	struct dcss_dev *dcss = plane->dev->dev_private;
-+
-+	dcss_dpr_enable(dcss->dpr, dcss_plane->ch_num, false);
-+	dcss_scaler_ch_enable(dcss->scaler, dcss_plane->ch_num, false);
-+	dcss_dtg_plane_pos_set(dcss->dtg, dcss_plane->ch_num, 0, 0, 0, 0);
-+	dcss_dtg_ch_enable(dcss->dtg, dcss_plane->ch_num, false);
-+}
-+
-+static const struct drm_plane_helper_funcs dcss_plane_helper_funcs = {
-+	.prepare_fb = drm_gem_fb_prepare_fb,
-+	.atomic_check = dcss_plane_atomic_check,
-+	.atomic_update = dcss_plane_atomic_update,
-+	.atomic_disable = dcss_plane_atomic_disable,
-+};
-+
-+struct dcss_plane *dcss_plane_init(struct drm_device *drm,
-+				   unsigned int possible_crtcs,
-+				   enum drm_plane_type type,
-+				   unsigned int zpos)
-+{
-+	struct dcss_plane *dcss_plane;
-+	const u64 *format_modifiers = dcss_video_format_modifiers;
-+	int ret;
-+
-+	if (zpos > 2)
-+		return ERR_PTR(-EINVAL);
-+
-+	dcss_plane = kzalloc(sizeof(*dcss_plane), GFP_KERNEL);
-+	if (!dcss_plane) {
-+		DRM_ERROR("failed to allocate plane\n");
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	if (type == DRM_PLANE_TYPE_PRIMARY)
-+		format_modifiers = dcss_graphics_format_modifiers;
-+
-+	ret = drm_universal_plane_init(drm, &dcss_plane->base, possible_crtcs,
-+				       &dcss_plane_funcs, dcss_common_formats,
-+				       ARRAY_SIZE(dcss_common_formats),
-+				       format_modifiers, type, NULL);
-+	if (ret) {
-+		DRM_ERROR("failed to initialize plane\n");
-+		kfree(dcss_plane);
-+		return ERR_PTR(ret);
-+	}
-+
-+	drm_plane_helper_add(&dcss_plane->base, &dcss_plane_helper_funcs);
-+
-+	ret = drm_plane_create_zpos_immutable_property(&dcss_plane->base, zpos);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	drm_plane_create_rotation_property(&dcss_plane->base,
-+					   DRM_MODE_ROTATE_0,
-+					   DRM_MODE_ROTATE_0   |
-+					   DRM_MODE_ROTATE_90  |
-+					   DRM_MODE_ROTATE_180 |
-+					   DRM_MODE_ROTATE_270 |
-+					   DRM_MODE_REFLECT_X  |
-+					   DRM_MODE_REFLECT_Y);
-+
-+	dcss_plane->ch_num = zpos;
-+
-+	return dcss_plane;
-+}
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-scaler.c b/drivers/gpu/drm/imx/dcss/dcss-scaler.c
-new file mode 100644
-index 000000000000..cd21905de580
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-scaler.c
-@@ -0,0 +1,826 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ *
-+ * Scaling algorithms were contributed by Dzung Hoang <dzung.hoang@nxp.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+
-+#include "dcss-dev.h"
-+
-+#define DCSS_SCALER_CTRL			0x00
-+#define   SCALER_EN				BIT(0)
-+#define   REPEAT_EN				BIT(4)
-+#define   SCALE2MEM_EN				BIT(8)
-+#define   MEM2OFIFO_EN				BIT(12)
-+#define DCSS_SCALER_OFIFO_CTRL			0x04
-+#define   OFIFO_LOW_THRES_POS			0
-+#define   OFIFO_LOW_THRES_MASK			GENMASK(9, 0)
-+#define   OFIFO_HIGH_THRES_POS			16
-+#define   OFIFO_HIGH_THRES_MASK			GENMASK(25, 16)
-+#define   UNDERRUN_DETECT_CLR			BIT(26)
-+#define   LOW_THRES_DETECT_CLR			BIT(27)
-+#define   HIGH_THRES_DETECT_CLR			BIT(28)
-+#define   UNDERRUN_DETECT_EN			BIT(29)
-+#define   LOW_THRES_DETECT_EN			BIT(30)
-+#define   HIGH_THRES_DETECT_EN			BIT(31)
-+#define DCSS_SCALER_SDATA_CTRL			0x08
-+#define   YUV_EN				BIT(0)
-+#define   RTRAM_8LINES				BIT(1)
-+#define   Y_UV_BYTE_SWAP			BIT(4)
-+#define   A2R10G10B10_FORMAT_POS		8
-+#define   A2R10G10B10_FORMAT_MASK		GENMASK(11, 8)
-+#define DCSS_SCALER_BIT_DEPTH			0x0C
-+#define   LUM_BIT_DEPTH_POS			0
-+#define   LUM_BIT_DEPTH_MASK			GENMASK(1, 0)
-+#define   CHR_BIT_DEPTH_POS			4
-+#define   CHR_BIT_DEPTH_MASK			GENMASK(5, 4)
-+#define DCSS_SCALER_SRC_FORMAT			0x10
-+#define DCSS_SCALER_DST_FORMAT			0x14
-+#define   FORMAT_MASK				GENMASK(1, 0)
-+#define DCSS_SCALER_SRC_LUM_RES			0x18
-+#define DCSS_SCALER_SRC_CHR_RES			0x1C
-+#define DCSS_SCALER_DST_LUM_RES			0x20
-+#define DCSS_SCALER_DST_CHR_RES			0x24
-+#define   WIDTH_POS				0
-+#define   WIDTH_MASK				GENMASK(11, 0)
-+#define   HEIGHT_POS				16
-+#define   HEIGHT_MASK				GENMASK(27, 16)
-+#define DCSS_SCALER_V_LUM_START			0x48
-+#define   V_START_MASK				GENMASK(15, 0)
-+#define DCSS_SCALER_V_LUM_INC			0x4C
-+#define   V_INC_MASK				GENMASK(15, 0)
-+#define DCSS_SCALER_H_LUM_START			0x50
-+#define   H_START_MASK				GENMASK(18, 0)
-+#define DCSS_SCALER_H_LUM_INC			0x54
-+#define   H_INC_MASK				GENMASK(15, 0)
-+#define DCSS_SCALER_V_CHR_START			0x58
-+#define DCSS_SCALER_V_CHR_INC			0x5C
-+#define DCSS_SCALER_H_CHR_START			0x60
-+#define DCSS_SCALER_H_CHR_INC			0x64
-+#define DCSS_SCALER_COEF_VLUM			0x80
-+#define DCSS_SCALER_COEF_HLUM			0x140
-+#define DCSS_SCALER_COEF_VCHR			0x200
-+#define DCSS_SCALER_COEF_HCHR			0x300
-+
-+struct dcss_scaler_ch {
-+	void __iomem *base_reg;
-+	u32 base_ofs;
-+	struct dcss_scaler *scl;
-+
-+	u32 sdata_ctrl;
-+	u32 scaler_ctrl;
-+
-+	bool scaler_ctrl_chgd;
-+
-+	u32 c_vstart;
-+	u32 c_hstart;
-+};
-+
-+struct dcss_scaler {
-+	struct device *dev;
-+
-+	struct dcss_ctxld *ctxld;
-+	u32 ctx_id;
-+
-+	struct dcss_scaler_ch ch[3];
-+};
-+
-+/* scaler coefficients generator */
-+#define PSC_FRAC_BITS 30
-+#define PSC_FRAC_SCALE BIT(PSC_FRAC_BITS)
-+#define PSC_BITS_FOR_PHASE 4
-+#define PSC_NUM_PHASES 16
-+#define PSC_STORED_PHASES (PSC_NUM_PHASES / 2 + 1)
-+#define PSC_NUM_TAPS 7
-+#define PSC_NUM_TAPS_RGBA 5
-+#define PSC_COEFF_PRECISION 10
-+#define PSC_PHASE_FRACTION_BITS 13
-+#define PSC_PHASE_MASK (PSC_NUM_PHASES - 1)
-+#define PSC_Q_FRACTION 19
-+#define PSC_Q_ROUND_OFFSET (1 << (PSC_Q_FRACTION - 1))
-+
-+/**
-+ * mult_q() - Performs fixed-point multiplication.
-+ * @A: multiplier
-+ * @B: multiplicand
-+ */
-+static int mult_q(int A, int B)
-+{
-+	int result;
-+	s64 temp;
-+
-+	temp = (int64_t)A * (int64_t)B;
-+	temp += PSC_Q_ROUND_OFFSET;
-+	result = (int)(temp >> PSC_Q_FRACTION);
-+	return result;
-+}
-+
-+/**
-+ * div_q() - Performs fixed-point division.
-+ * @A: dividend
-+ * @B: divisor
-+ */
-+static int div_q(int A, int B)
-+{
-+	int result;
-+	s64 temp;
-+
-+	temp = (int64_t)A << PSC_Q_FRACTION;
-+	if ((temp >= 0 && B >= 0) || (temp < 0 && B < 0))
-+		temp += B / 2;
-+	else
-+		temp -= B / 2;
-+
-+	result = (int)(temp / B);
-+	return result;
-+}
-+
-+/**
-+ * exp_approx_q() - Compute approximation to exp(x) function using Taylor
-+ *		    series.
-+ * @x: fixed-point argument of exp function
-+ */
-+static int exp_approx_q(int x)
-+{
-+	int sum = 1 << PSC_Q_FRACTION;
-+	int term = 1 << PSC_Q_FRACTION;
-+
-+	term = mult_q(term, div_q(x, 1 << PSC_Q_FRACTION));
-+	sum += term;
-+	term = mult_q(term, div_q(x, 2 << PSC_Q_FRACTION));
-+	sum += term;
-+	term = mult_q(term, div_q(x, 3 << PSC_Q_FRACTION));
-+	sum += term;
-+	term = mult_q(term, div_q(x, 4 << PSC_Q_FRACTION));
-+	sum += term;
-+
-+	return sum;
-+}
-+
-+/**
-+ * dcss_scaler_gaussian_filter() - Generate gaussian prototype filter.
-+ * @fc_q: fixed-point cutoff frequency normalized to range [0, 1]
-+ * @use_5_taps: indicates whether to use 5 taps or 7 taps
-+ * @coef: output filter coefficients
-+ */
-+static void dcss_scaler_gaussian_filter(int fc_q, bool use_5_taps,
-+					bool phase0_identity,
-+					int coef[][PSC_NUM_TAPS])
-+{
-+	int sigma_q, g0_q, g1_q, g2_q;
-+	int tap_cnt1, tap_cnt2, tap_idx, phase_cnt;
-+	int mid;
-+	int phase;
-+	int i;
-+	int taps;
-+
-+	if (use_5_taps)
-+		for (phase = 0; phase < PSC_STORED_PHASES; phase++) {
-+			coef[phase][0] = 0;
-+			coef[phase][PSC_NUM_TAPS - 1] = 0;
-+		}
-+
-+	/* seed coefficient scanner */
-+	taps = use_5_taps ? PSC_NUM_TAPS_RGBA : PSC_NUM_TAPS;
-+	mid = (PSC_NUM_PHASES * taps) / 2 - 1;
-+	phase_cnt = (PSC_NUM_PHASES * (PSC_NUM_TAPS + 1)) / 2;
-+	tap_cnt1 = (PSC_NUM_PHASES * PSC_NUM_TAPS) / 2;
-+	tap_cnt2 = (PSC_NUM_PHASES * PSC_NUM_TAPS) / 2;
-+
-+	/* seed gaussian filter generator */
-+	sigma_q = div_q(PSC_Q_ROUND_OFFSET, fc_q);
-+	g0_q = 1 << PSC_Q_FRACTION;
-+	g1_q = exp_approx_q(div_q(-PSC_Q_ROUND_OFFSET,
-+				  mult_q(sigma_q, sigma_q)));
-+	g2_q = mult_q(g1_q, g1_q);
-+	coef[phase_cnt & PSC_PHASE_MASK][tap_cnt1 >> PSC_BITS_FOR_PHASE] = g0_q;
-+
-+	for (i = 0; i < mid; i++) {
-+		phase_cnt++;
-+		tap_cnt1--;
-+		tap_cnt2++;
-+
-+		g0_q = mult_q(g0_q, g1_q);
-+		g1_q = mult_q(g1_q, g2_q);
-+
-+		if ((phase_cnt & PSC_PHASE_MASK) <= 8) {
-+			tap_idx = tap_cnt1 >> PSC_BITS_FOR_PHASE;
-+			coef[phase_cnt & PSC_PHASE_MASK][tap_idx] = g0_q;
-+		}
-+		if (((-phase_cnt) & PSC_PHASE_MASK) <= 8) {
-+			tap_idx = tap_cnt2 >> PSC_BITS_FOR_PHASE;
-+			coef[(-phase_cnt) & PSC_PHASE_MASK][tap_idx] = g0_q;
-+		}
-+	}
-+
-+	phase_cnt++;
-+	tap_cnt1--;
-+	coef[phase_cnt & PSC_PHASE_MASK][tap_cnt1 >> PSC_BITS_FOR_PHASE] = 0;
-+
-+	/* override phase 0 with identity filter if specified */
-+	if (phase0_identity)
-+		for (i = 0; i < PSC_NUM_TAPS; i++)
-+			coef[0][i] = i == (PSC_NUM_TAPS >> 1) ?
-+						(1 << PSC_COEFF_PRECISION) : 0;
-+
-+	/* normalize coef */
-+	for (phase = 0; phase < PSC_STORED_PHASES; phase++) {
-+		int sum = 0;
-+		s64 ll_temp;
-+
-+		for (i = 0; i < PSC_NUM_TAPS; i++)
-+			sum += coef[phase][i];
-+		for (i = 0; i < PSC_NUM_TAPS; i++) {
-+			ll_temp = coef[phase][i];
-+			ll_temp <<= PSC_COEFF_PRECISION;
-+			ll_temp += sum >> 1;
-+			ll_temp /= sum;
-+			coef[phase][i] = (int)ll_temp;
-+		}
-+	}
-+}
-+
-+/**
-+ * dcss_scaler_filter_design() - Compute filter coefficients using
-+ *				 Gaussian filter.
-+ * @src_length: length of input
-+ * @dst_length: length of output
-+ * @use_5_taps: 0 for 7 taps per phase, 1 for 5 taps
-+ * @coef: output coefficients
-+ */
-+static void dcss_scaler_filter_design(int src_length, int dst_length,
-+				      bool use_5_taps, bool phase0_identity,
-+				      int coef[][PSC_NUM_TAPS])
-+{
-+	int fc_q;
-+
-+	/* compute cutoff frequency */
-+	if (dst_length >= src_length)
-+		fc_q = div_q(1, PSC_NUM_PHASES);
-+	else
-+		fc_q = div_q(dst_length, src_length * PSC_NUM_PHASES);
-+
-+	/* compute gaussian filter coefficients */
-+	dcss_scaler_gaussian_filter(fc_q, use_5_taps, phase0_identity, coef);
-+}
-+
-+static void dcss_scaler_write(struct dcss_scaler_ch *ch, u32 val, u32 ofs)
-+{
-+	struct dcss_scaler *scl = ch->scl;
-+
-+	dcss_ctxld_write(scl->ctxld, scl->ctx_id, val, ch->base_ofs + ofs);
-+}
-+
-+static int dcss_scaler_ch_init_all(struct dcss_scaler *scl,
-+				   unsigned long scaler_base)
-+{
-+	struct dcss_scaler_ch *ch;
-+	int i;
-+
-+	for (i = 0; i < 3; i++) {
-+		ch = &scl->ch[i];
-+
-+		ch->base_ofs = scaler_base + i * 0x400;
-+
-+		ch->base_reg = ioremap(ch->base_ofs, SZ_4K);
-+		if (!ch->base_reg) {
-+			dev_err(scl->dev, "scaler: unable to remap ch base\n");
-+			return -ENOMEM;
-+		}
-+
-+		ch->scl = scl;
-+	}
-+
-+	return 0;
-+}
-+
-+int dcss_scaler_init(struct dcss_dev *dcss, unsigned long scaler_base)
-+{
-+	struct dcss_scaler *scaler;
-+
-+	scaler = kzalloc(sizeof(*scaler), GFP_KERNEL);
-+	if (!scaler)
-+		return -ENOMEM;
-+
-+	dcss->scaler = scaler;
-+	scaler->dev = dcss->dev;
-+	scaler->ctxld = dcss->ctxld;
-+	scaler->ctx_id = CTX_SB_HP;
-+
-+	if (dcss_scaler_ch_init_all(scaler, scaler_base)) {
-+		int i;
-+
-+		for (i = 0; i < 3; i++) {
-+			if (scaler->ch[i].base_reg)
-+				iounmap(scaler->ch[i].base_reg);
-+		}
-+
-+		kfree(scaler);
-+
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+void dcss_scaler_exit(struct dcss_scaler *scl)
-+{
-+	int ch_no;
-+
-+	for (ch_no = 0; ch_no < 3; ch_no++) {
-+		struct dcss_scaler_ch *ch = &scl->ch[ch_no];
-+
-+		dcss_writel(0, ch->base_reg + DCSS_SCALER_CTRL);
-+
-+		if (ch->base_reg)
-+			iounmap(ch->base_reg);
-+	}
-+
-+	kfree(scl);
-+}
-+
-+void dcss_scaler_ch_enable(struct dcss_scaler *scl, int ch_num, bool en)
-+{
-+	struct dcss_scaler_ch *ch = &scl->ch[ch_num];
-+	u32 scaler_ctrl;
-+
-+	scaler_ctrl = en ? SCALER_EN | REPEAT_EN : 0;
-+
-+	if (en)
-+		dcss_scaler_write(ch, ch->sdata_ctrl, DCSS_SCALER_SDATA_CTRL);
-+
-+	if (ch->scaler_ctrl != scaler_ctrl)
-+		ch->scaler_ctrl_chgd = true;
-+
-+	ch->scaler_ctrl = scaler_ctrl;
-+}
-+
-+static void dcss_scaler_yuv_enable(struct dcss_scaler_ch *ch, bool en)
-+{
-+	ch->sdata_ctrl &= ~YUV_EN;
-+	ch->sdata_ctrl |= en ? YUV_EN : 0;
-+}
-+
-+static void dcss_scaler_rtr_8lines_enable(struct dcss_scaler_ch *ch, bool en)
-+{
-+	ch->sdata_ctrl &= ~RTRAM_8LINES;
-+	ch->sdata_ctrl |= en ? RTRAM_8LINES : 0;
-+}
-+
-+static void dcss_scaler_bit_depth_set(struct dcss_scaler_ch *ch, int depth)
-+{
-+	u32 val;
-+
-+	val = depth == 30 ? 2 : 0;
-+
-+	dcss_scaler_write(ch,
-+			  ((val << CHR_BIT_DEPTH_POS) & CHR_BIT_DEPTH_MASK) |
-+			  ((val << LUM_BIT_DEPTH_POS) & LUM_BIT_DEPTH_MASK),
-+			  DCSS_SCALER_BIT_DEPTH);
-+}
-+
-+enum buffer_format {
-+	BUF_FMT_YUV420,
-+	BUF_FMT_YUV422,
-+	BUF_FMT_ARGB8888_YUV444,
-+};
-+
-+enum chroma_location {
-+	PSC_LOC_HORZ_0_VERT_1_OVER_4 = 0,
-+	PSC_LOC_HORZ_1_OVER_4_VERT_1_OVER_4 = 1,
-+	PSC_LOC_HORZ_0_VERT_0 = 2,
-+	PSC_LOC_HORZ_1_OVER_4_VERT_0 = 3,
-+	PSC_LOC_HORZ_0_VERT_1_OVER_2 = 4,
-+	PSC_LOC_HORZ_1_OVER_4_VERT_1_OVER_2 = 5
-+};
-+
-+static void dcss_scaler_format_set(struct dcss_scaler_ch *ch,
-+				   enum buffer_format src_fmt,
-+				   enum buffer_format dst_fmt)
-+{
-+	dcss_scaler_write(ch, src_fmt, DCSS_SCALER_SRC_FORMAT);
-+	dcss_scaler_write(ch, dst_fmt, DCSS_SCALER_DST_FORMAT);
-+}
-+
-+static void dcss_scaler_res_set(struct dcss_scaler_ch *ch,
-+				int src_xres, int src_yres,
-+				int dst_xres, int dst_yres,
-+				u32 pix_format, enum buffer_format dst_format)
-+{
-+	u32 lsrc_xres, lsrc_yres, csrc_xres, csrc_yres;
-+	u32 ldst_xres, ldst_yres, cdst_xres, cdst_yres;
-+	bool src_is_444 = true;
-+
-+	lsrc_xres = src_xres;
-+	csrc_xres = src_xres;
-+	lsrc_yres = src_yres;
-+	csrc_yres = src_yres;
-+	ldst_xres = dst_xres;
-+	cdst_xres = dst_xres;
-+	ldst_yres = dst_yres;
-+	cdst_yres = dst_yres;
-+
-+	if (pix_format == DRM_FORMAT_UYVY || pix_format == DRM_FORMAT_VYUY ||
-+	    pix_format == DRM_FORMAT_YUYV || pix_format == DRM_FORMAT_YVYU) {
-+		csrc_xres >>= 1;
-+		src_is_444 = false;
-+	} else if (pix_format == DRM_FORMAT_NV12 ||
-+		   pix_format == DRM_FORMAT_NV21) {
-+		csrc_xres >>= 1;
-+		csrc_yres >>= 1;
-+		src_is_444 = false;
-+	}
-+
-+	if (dst_format == BUF_FMT_YUV422)
-+		cdst_xres >>= 1;
-+
-+	/* for 4:4:4 to 4:2:2 conversion, source height should be 1 less */
-+	if (src_is_444 && dst_format == BUF_FMT_YUV422) {
-+		lsrc_yres--;
-+		csrc_yres--;
-+	}
-+
-+	dcss_scaler_write(ch, (((lsrc_yres - 1) << HEIGHT_POS) & HEIGHT_MASK) |
-+			       (((lsrc_xres - 1) << WIDTH_POS) & WIDTH_MASK),
-+			  DCSS_SCALER_SRC_LUM_RES);
-+	dcss_scaler_write(ch, (((csrc_yres - 1) << HEIGHT_POS) & HEIGHT_MASK) |
-+			       (((csrc_xres - 1) << WIDTH_POS) & WIDTH_MASK),
-+			  DCSS_SCALER_SRC_CHR_RES);
-+	dcss_scaler_write(ch, (((ldst_yres - 1) << HEIGHT_POS) & HEIGHT_MASK) |
-+			       (((ldst_xres - 1) << WIDTH_POS) & WIDTH_MASK),
-+			  DCSS_SCALER_DST_LUM_RES);
-+	dcss_scaler_write(ch, (((cdst_yres - 1) << HEIGHT_POS) & HEIGHT_MASK) |
-+			       (((cdst_xres - 1) << WIDTH_POS) & WIDTH_MASK),
-+			  DCSS_SCALER_DST_CHR_RES);
-+}
-+
-+#define downscale_fp(factor, fp_pos)		((factor) << (fp_pos))
-+#define upscale_fp(factor, fp_pos)		((1 << (fp_pos)) / (factor))
-+
-+struct dcss_scaler_factors {
-+	int downscale;
-+	int upscale;
-+};
-+
-+static const struct dcss_scaler_factors dcss_scaler_factors[] = {
-+	{3, 8}, {5, 8}, {5, 8},
-+};
-+
-+static void dcss_scaler_fractions_set(struct dcss_scaler_ch *ch,
-+				      int src_xres, int src_yres,
-+				      int dst_xres, int dst_yres,
-+				      u32 src_format, u32 dst_format,
-+				      enum chroma_location src_chroma_loc)
-+{
-+	int src_c_xres, src_c_yres, dst_c_xres, dst_c_yres;
-+	u32 l_vinc, l_hinc, c_vinc, c_hinc;
-+	u32 c_vstart, c_hstart;
-+
-+	src_c_xres = src_xres;
-+	src_c_yres = src_yres;
-+	dst_c_xres = dst_xres;
-+	dst_c_yres = dst_yres;
-+
-+	c_vstart = 0;
-+	c_hstart = 0;
-+
-+	/* adjustments for source chroma location */
-+	if (src_format == BUF_FMT_YUV420) {
-+		/* vertical input chroma position adjustment */
-+		switch (src_chroma_loc) {
-+		case PSC_LOC_HORZ_0_VERT_1_OVER_4:
-+		case PSC_LOC_HORZ_1_OVER_4_VERT_1_OVER_4:
-+			/*
-+			 * move chroma up to first luma line
-+			 * (1/4 chroma input line spacing)
-+			 */
-+			c_vstart -= (1 << (PSC_PHASE_FRACTION_BITS - 2));
-+			break;
-+		case PSC_LOC_HORZ_0_VERT_1_OVER_2:
-+		case PSC_LOC_HORZ_1_OVER_4_VERT_1_OVER_2:
-+			/*
-+			 * move chroma up to first luma line
-+			 * (1/2 chroma input line spacing)
-+			 */
-+			c_vstart -= (1 << (PSC_PHASE_FRACTION_BITS - 1));
-+			break;
-+		default:
-+			break;
-+		}
-+		/* horizontal input chroma position adjustment */
-+		switch (src_chroma_loc) {
-+		case PSC_LOC_HORZ_1_OVER_4_VERT_1_OVER_4:
-+		case PSC_LOC_HORZ_1_OVER_4_VERT_0:
-+		case PSC_LOC_HORZ_1_OVER_4_VERT_1_OVER_2:
-+			/* move chroma left 1/4 chroma input sample spacing */
-+			c_hstart -= (1 << (PSC_PHASE_FRACTION_BITS - 2));
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	/* adjustments to chroma resolution */
-+	if (src_format == BUF_FMT_YUV420) {
-+		src_c_xres >>= 1;
-+		src_c_yres >>= 1;
-+	} else if (src_format == BUF_FMT_YUV422) {
-+		src_c_xres >>= 1;
-+	}
-+
-+	if (dst_format == BUF_FMT_YUV422)
-+		dst_c_xres >>= 1;
-+
-+	l_vinc = ((src_yres << 13) + (dst_yres >> 1)) / dst_yres;
-+	c_vinc = ((src_c_yres << 13) + (dst_c_yres >> 1)) / dst_c_yres;
-+	l_hinc = ((src_xres << 13) + (dst_xres >> 1)) / dst_xres;
-+	c_hinc = ((src_c_xres << 13) + (dst_c_xres >> 1)) / dst_c_xres;
-+
-+	/* save chroma start phase */
-+	ch->c_vstart = c_vstart;
-+	ch->c_hstart = c_hstart;
-+
-+	dcss_scaler_write(ch, 0, DCSS_SCALER_V_LUM_START);
-+	dcss_scaler_write(ch, l_vinc, DCSS_SCALER_V_LUM_INC);
-+
-+	dcss_scaler_write(ch, 0, DCSS_SCALER_H_LUM_START);
-+	dcss_scaler_write(ch, l_hinc, DCSS_SCALER_H_LUM_INC);
-+
-+	dcss_scaler_write(ch, c_vstart, DCSS_SCALER_V_CHR_START);
-+	dcss_scaler_write(ch, c_vinc, DCSS_SCALER_V_CHR_INC);
-+
-+	dcss_scaler_write(ch, c_hstart, DCSS_SCALER_H_CHR_START);
-+	dcss_scaler_write(ch, c_hinc, DCSS_SCALER_H_CHR_INC);
-+}
-+
-+int dcss_scaler_get_min_max_ratios(struct dcss_scaler *scl, int ch_num,
-+				   int *min, int *max)
-+{
-+	*min = upscale_fp(dcss_scaler_factors[ch_num].upscale, 16);
-+	*max = downscale_fp(dcss_scaler_factors[ch_num].downscale, 16);
-+
-+	return 0;
-+}
-+
-+static void dcss_scaler_program_5_coef_set(struct dcss_scaler_ch *ch,
-+					   int base_addr,
-+					   int coef[][PSC_NUM_TAPS])
-+{
-+	int i, phase;
-+
-+	for (i = 0; i < PSC_STORED_PHASES; i++) {
-+		dcss_scaler_write(ch, ((coef[i][1] & 0xfff) << 16 |
-+				       (coef[i][2] & 0xfff) << 4  |
-+				       (coef[i][3] & 0xf00) >> 8),
-+				  base_addr + i * sizeof(u32));
-+		dcss_scaler_write(ch, ((coef[i][3] & 0x0ff) << 20 |
-+				       (coef[i][4] & 0xfff) << 8  |
-+				       (coef[i][5] & 0xff0) >> 4),
-+				  base_addr + 0x40 + i * sizeof(u32));
-+		dcss_scaler_write(ch, ((coef[i][5] & 0x00f) << 24),
-+				  base_addr + 0x80 + i * sizeof(u32));
-+	}
-+
-+	/* reverse both phase and tap orderings */
-+	for (phase = (PSC_NUM_PHASES >> 1) - 1;
-+			i < PSC_NUM_PHASES; i++, phase--) {
-+		dcss_scaler_write(ch, ((coef[phase][5] & 0xfff) << 16 |
-+				       (coef[phase][4] & 0xfff) << 4  |
-+				       (coef[phase][3] & 0xf00) >> 8),
-+				  base_addr + i * sizeof(u32));
-+		dcss_scaler_write(ch, ((coef[phase][3] & 0x0ff) << 20 |
-+				       (coef[phase][2] & 0xfff) << 8  |
-+				       (coef[phase][1] & 0xff0) >> 4),
-+				  base_addr + 0x40 + i * sizeof(u32));
-+		dcss_scaler_write(ch, ((coef[phase][1] & 0x00f) << 24),
-+				  base_addr + 0x80 + i * sizeof(u32));
-+	}
-+}
-+
-+static void dcss_scaler_program_7_coef_set(struct dcss_scaler_ch *ch,
-+					   int base_addr,
-+					   int coef[][PSC_NUM_TAPS])
-+{
-+	int i, phase;
-+
-+	for (i = 0; i < PSC_STORED_PHASES; i++) {
-+		dcss_scaler_write(ch, ((coef[i][0] & 0xfff) << 16 |
-+				       (coef[i][1] & 0xfff) << 4  |
-+				       (coef[i][2] & 0xf00) >> 8),
-+				  base_addr + i * sizeof(u32));
-+		dcss_scaler_write(ch, ((coef[i][2] & 0x0ff) << 20 |
-+				       (coef[i][3] & 0xfff) << 8  |
-+				       (coef[i][4] & 0xff0) >> 4),
-+				  base_addr + 0x40 + i * sizeof(u32));
-+		dcss_scaler_write(ch, ((coef[i][4] & 0x00f) << 24 |
-+				       (coef[i][5] & 0xfff) << 12 |
-+				       (coef[i][6] & 0xfff)),
-+				  base_addr + 0x80 + i * sizeof(u32));
-+	}
-+
-+	/* reverse both phase and tap orderings */
-+	for (phase = (PSC_NUM_PHASES >> 1) - 1;
-+			i < PSC_NUM_PHASES; i++, phase--) {
-+		dcss_scaler_write(ch, ((coef[phase][6] & 0xfff) << 16 |
-+				       (coef[phase][5] & 0xfff) << 4  |
-+				       (coef[phase][4] & 0xf00) >> 8),
-+				  base_addr + i * sizeof(u32));
-+		dcss_scaler_write(ch, ((coef[phase][4] & 0x0ff) << 20 |
-+				       (coef[phase][3] & 0xfff) << 8  |
-+				       (coef[phase][2] & 0xff0) >> 4),
-+				  base_addr + 0x40 + i * sizeof(u32));
-+		dcss_scaler_write(ch, ((coef[phase][2] & 0x00f) << 24 |
-+				       (coef[phase][1] & 0xfff) << 12 |
-+				       (coef[phase][0] & 0xfff)),
-+				  base_addr + 0x80 + i * sizeof(u32));
-+	}
-+}
-+
-+static void dcss_scaler_yuv_coef_set(struct dcss_scaler_ch *ch,
-+				     enum buffer_format src_format,
-+				     enum buffer_format dst_format,
-+				     bool use_5_taps,
-+				     int src_xres, int src_yres, int dst_xres,
-+				     int dst_yres)
-+{
-+	int coef[PSC_STORED_PHASES][PSC_NUM_TAPS];
-+	bool program_5_taps = use_5_taps ||
-+			      (dst_format == BUF_FMT_YUV422 &&
-+			       src_format == BUF_FMT_ARGB8888_YUV444);
-+
-+	/* horizontal luma */
-+	dcss_scaler_filter_design(src_xres, dst_xres, false,
-+				  src_xres == dst_xres, coef);
-+	dcss_scaler_program_7_coef_set(ch, DCSS_SCALER_COEF_HLUM, coef);
-+
-+	/* vertical luma */
-+	dcss_scaler_filter_design(src_yres, dst_yres, program_5_taps,
-+				  src_yres == dst_yres, coef);
-+
-+	if (program_5_taps)
-+		dcss_scaler_program_5_coef_set(ch, DCSS_SCALER_COEF_VLUM, coef);
-+	else
-+		dcss_scaler_program_7_coef_set(ch, DCSS_SCALER_COEF_VLUM, coef);
-+
-+	/* adjust chroma resolution */
-+	if (src_format != BUF_FMT_ARGB8888_YUV444)
-+		src_xres >>= 1;
-+	if (src_format == BUF_FMT_YUV420)
-+		src_yres >>= 1;
-+	if (dst_format != BUF_FMT_ARGB8888_YUV444)
-+		dst_xres >>= 1;
-+	if (dst_format == BUF_FMT_YUV420) /* should not happen */
-+		dst_yres >>= 1;
-+
-+	/* horizontal chroma */
-+	dcss_scaler_filter_design(src_xres, dst_xres, false,
-+				  (src_xres == dst_xres) && (ch->c_hstart == 0),
-+				  coef);
-+
-+	dcss_scaler_program_7_coef_set(ch, DCSS_SCALER_COEF_HCHR, coef);
-+
-+	/* vertical chroma */
-+	dcss_scaler_filter_design(src_yres, dst_yres, program_5_taps,
-+				  (src_yres == dst_yres) && (ch->c_vstart == 0),
-+				  coef);
-+	if (program_5_taps)
-+		dcss_scaler_program_5_coef_set(ch, DCSS_SCALER_COEF_VCHR, coef);
-+	else
-+		dcss_scaler_program_7_coef_set(ch, DCSS_SCALER_COEF_VCHR, coef);
-+}
-+
-+static void dcss_scaler_rgb_coef_set(struct dcss_scaler_ch *ch,
-+				     int src_xres, int src_yres, int dst_xres,
-+				     int dst_yres)
-+{
-+	int coef[PSC_STORED_PHASES][PSC_NUM_TAPS];
-+
-+	/* horizontal RGB */
-+	dcss_scaler_filter_design(src_xres, dst_xres, false,
-+				  src_xres == dst_xres, coef);
-+	dcss_scaler_program_7_coef_set(ch, DCSS_SCALER_COEF_HLUM, coef);
-+
-+	/* vertical RGB */
-+	dcss_scaler_filter_design(src_yres, dst_yres, false,
-+				  src_yres == dst_yres, coef);
-+	dcss_scaler_program_7_coef_set(ch, DCSS_SCALER_COEF_VLUM, coef);
-+}
-+
-+static void dcss_scaler_set_rgb10_order(struct dcss_scaler_ch *ch,
-+					const struct drm_format_info *format)
-+{
-+	u32 a2r10g10b10_format;
-+
-+	if (format->is_yuv)
-+		return;
-+
-+	ch->sdata_ctrl &= ~A2R10G10B10_FORMAT_MASK;
-+
-+	if (format->depth != 30)
-+		return;
-+
-+	switch (format->format) {
-+	case DRM_FORMAT_ARGB2101010:
-+	case DRM_FORMAT_XRGB2101010:
-+		a2r10g10b10_format = 0;
-+		break;
-+
-+	case DRM_FORMAT_ABGR2101010:
-+	case DRM_FORMAT_XBGR2101010:
-+		a2r10g10b10_format = 5;
-+		break;
-+
-+	case DRM_FORMAT_RGBA1010102:
-+	case DRM_FORMAT_RGBX1010102:
-+		a2r10g10b10_format = 6;
-+		break;
-+
-+	case DRM_FORMAT_BGRA1010102:
-+	case DRM_FORMAT_BGRX1010102:
-+		a2r10g10b10_format = 11;
-+		break;
-+
-+	default:
-+		a2r10g10b10_format = 0;
-+		break;
-+	}
-+
-+	ch->sdata_ctrl |= a2r10g10b10_format << A2R10G10B10_FORMAT_POS;
-+}
-+
-+void dcss_scaler_setup(struct dcss_scaler *scl, int ch_num,
-+		       const struct drm_format_info *format,
-+		       int src_xres, int src_yres, int dst_xres, int dst_yres,
-+		       u32 vrefresh_hz)
-+{
-+	struct dcss_scaler_ch *ch = &scl->ch[ch_num];
-+	unsigned int pixel_depth = 0;
-+	bool rtr_8line_en = false;
-+	bool use_5_taps = false;
-+	enum buffer_format src_format = BUF_FMT_ARGB8888_YUV444;
-+	enum buffer_format dst_format = BUF_FMT_ARGB8888_YUV444;
-+	u32 pix_format = format->format;
-+
-+	if (format->is_yuv) {
-+		dcss_scaler_yuv_enable(ch, true);
-+
-+		if (pix_format == DRM_FORMAT_NV12 ||
-+		    pix_format == DRM_FORMAT_NV21) {
-+			rtr_8line_en = true;
-+			src_format = BUF_FMT_YUV420;
-+		} else if (pix_format == DRM_FORMAT_UYVY ||
-+			   pix_format == DRM_FORMAT_VYUY ||
-+			   pix_format == DRM_FORMAT_YUYV ||
-+			   pix_format == DRM_FORMAT_YVYU) {
-+			src_format = BUF_FMT_YUV422;
-+		}
-+
-+		use_5_taps = !rtr_8line_en;
-+	} else {
-+		dcss_scaler_yuv_enable(ch, false);
-+
-+		pixel_depth = format->depth;
-+	}
-+
-+	dcss_scaler_fractions_set(ch, src_xres, src_yres, dst_xres,
-+				  dst_yres, src_format, dst_format,
-+				  PSC_LOC_HORZ_0_VERT_1_OVER_4);
-+
-+	if (format->is_yuv)
-+		dcss_scaler_yuv_coef_set(ch, src_format, dst_format,
-+					 use_5_taps, src_xres, src_yres,
-+					 dst_xres, dst_yres);
-+	else
-+		dcss_scaler_rgb_coef_set(ch, src_xres, src_yres,
-+					 dst_xres, dst_yres);
-+
-+	dcss_scaler_rtr_8lines_enable(ch, rtr_8line_en);
-+	dcss_scaler_bit_depth_set(ch, pixel_depth);
-+	dcss_scaler_set_rgb10_order(ch, format);
-+	dcss_scaler_format_set(ch, src_format, dst_format);
-+	dcss_scaler_res_set(ch, src_xres, src_yres, dst_xres, dst_yres,
-+			    pix_format, dst_format);
-+}
-+
-+/* This function will be called from interrupt context. */
-+void dcss_scaler_write_sclctrl(struct dcss_scaler *scl)
-+{
-+	int chnum;
-+
-+	dcss_ctxld_assert_locked(scl->ctxld);
-+
-+	for (chnum = 0; chnum < 3; chnum++) {
-+		struct dcss_scaler_ch *ch = &scl->ch[chnum];
-+
-+		if (ch->scaler_ctrl_chgd) {
-+			dcss_ctxld_write_irqsafe(scl->ctxld, scl->ctx_id,
-+						 ch->scaler_ctrl,
-+						 ch->base_ofs +
-+						 DCSS_SCALER_CTRL);
-+			ch->scaler_ctrl_chgd = false;
-+		}
-+	}
-+}
-diff --git a/drivers/gpu/drm/imx/dcss/dcss-ss.c b/drivers/gpu/drm/imx/dcss/dcss-ss.c
-new file mode 100644
-index 000000000000..8ddf08da911b
---- /dev/null
-+++ b/drivers/gpu/drm/imx/dcss/dcss-ss.c
-@@ -0,0 +1,180 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+
-+#include "dcss-dev.h"
-+
-+#define DCSS_SS_SYS_CTRL			0x00
-+#define   RUN_EN				BIT(0)
-+#define DCSS_SS_DISPLAY				0x10
-+#define   LRC_X_POS				0
-+#define   LRC_X_MASK				GENMASK(12, 0)
-+#define   LRC_Y_POS				16
-+#define   LRC_Y_MASK				GENMASK(28, 16)
-+#define DCSS_SS_HSYNC				0x20
-+#define DCSS_SS_VSYNC				0x30
-+#define   SYNC_START_POS			0
-+#define   SYNC_START_MASK			GENMASK(12, 0)
-+#define   SYNC_END_POS				16
-+#define   SYNC_END_MASK				GENMASK(28, 16)
-+#define   SYNC_POL				BIT(31)
-+#define DCSS_SS_DE_ULC				0x40
-+#define   ULC_X_POS				0
-+#define   ULC_X_MASK				GENMASK(12, 0)
-+#define   ULC_Y_POS				16
-+#define   ULC_Y_MASK				GENMASK(28, 16)
-+#define   ULC_POL				BIT(31)
-+#define DCSS_SS_DE_LRC				0x50
-+#define DCSS_SS_MODE				0x60
-+#define   PIPE_MODE_POS				0
-+#define   PIPE_MODE_MASK			GENMASK(1, 0)
-+#define DCSS_SS_COEFF				0x70
-+#define   HORIZ_A_POS				0
-+#define   HORIZ_A_MASK				GENMASK(3, 0)
-+#define   HORIZ_B_POS				4
-+#define   HORIZ_B_MASK				GENMASK(7, 4)
-+#define   HORIZ_C_POS				8
-+#define   HORIZ_C_MASK				GENMASK(11, 8)
-+#define   HORIZ_H_NORM_POS			12
-+#define   HORIZ_H_NORM_MASK			GENMASK(14, 12)
-+#define   VERT_A_POS				16
-+#define   VERT_A_MASK				GENMASK(19, 16)
-+#define   VERT_B_POS				20
-+#define   VERT_B_MASK				GENMASK(23, 20)
-+#define   VERT_C_POS				24
-+#define   VERT_C_MASK				GENMASK(27, 24)
-+#define   VERT_H_NORM_POS			28
-+#define   VERT_H_NORM_MASK			GENMASK(30, 28)
-+#define DCSS_SS_CLIP_CB				0x80
-+#define DCSS_SS_CLIP_CR				0x90
-+#define   CLIP_MIN_POS				0
-+#define   CLIP_MIN_MASK				GENMASK(9, 0)
-+#define   CLIP_MAX_POS				0
-+#define   CLIP_MAX_MASK				GENMASK(23, 16)
-+#define DCSS_SS_INTER_MODE			0xA0
-+#define   INT_EN				BIT(0)
-+#define   VSYNC_SHIFT				BIT(1)
-+
-+struct dcss_ss {
-+	struct device *dev;
-+	void __iomem *base_reg;
-+	u32 base_ofs;
-+
-+	struct dcss_ctxld *ctxld;
-+	u32 ctx_id;
-+
-+	bool in_use;
-+};
-+
-+static void dcss_ss_write(struct dcss_ss *ss, u32 val, u32 ofs)
-+{
-+	if (!ss->in_use)
-+		dcss_writel(val, ss->base_reg + ofs);
-+
-+	dcss_ctxld_write(ss->ctxld, ss->ctx_id, val,
-+			 ss->base_ofs + ofs);
-+}
-+
-+int dcss_ss_init(struct dcss_dev *dcss, unsigned long ss_base)
-+{
-+	struct dcss_ss *ss;
-+
-+	ss = kzalloc(sizeof(*ss), GFP_KERNEL);
-+	if (!ss)
-+		return -ENOMEM;
-+
-+	dcss->ss = ss;
-+	ss->dev = dcss->dev;
-+	ss->ctxld = dcss->ctxld;
-+
-+	ss->base_reg = ioremap(ss_base, SZ_4K);
-+	if (!ss->base_reg) {
-+		dev_err(dcss->dev, "ss: unable to remap ss base\n");
-+		kfree(ss);
-+		return -ENOMEM;
-+	}
-+
-+	ss->base_ofs = ss_base;
-+	ss->ctx_id = CTX_SB_HP;
-+
-+	return 0;
-+}
-+
-+void dcss_ss_exit(struct dcss_ss *ss)
-+{
-+	/* stop SS */
-+	dcss_writel(0, ss->base_reg + DCSS_SS_SYS_CTRL);
-+
-+	if (ss->base_reg)
-+		iounmap(ss->base_reg);
-+
-+	kfree(ss);
-+}
-+
-+void dcss_ss_subsam_set(struct dcss_ss *ss)
-+{
-+	dcss_ss_write(ss, 0x41614161, DCSS_SS_COEFF);
-+	dcss_ss_write(ss, 0, DCSS_SS_MODE);
-+	dcss_ss_write(ss, 0x03ff0000, DCSS_SS_CLIP_CB);
-+	dcss_ss_write(ss, 0x03ff0000, DCSS_SS_CLIP_CR);
-+}
-+
-+void dcss_ss_sync_set(struct dcss_ss *ss, struct videomode *vm,
-+		      bool phsync, bool pvsync)
-+{
-+	u16 lrc_x, lrc_y;
-+	u16 hsync_start, hsync_end;
-+	u16 vsync_start, vsync_end;
-+	u16 de_ulc_x, de_ulc_y;
-+	u16 de_lrc_x, de_lrc_y;
-+
-+	lrc_x = vm->hfront_porch + vm->hback_porch + vm->hsync_len +
-+		vm->hactive - 1;
-+	lrc_y = vm->vfront_porch + vm->vback_porch + vm->vsync_len +
-+		vm->vactive - 1;
-+
-+	dcss_ss_write(ss, (lrc_y << LRC_Y_POS) | lrc_x, DCSS_SS_DISPLAY);
-+
-+	hsync_start = vm->hfront_porch + vm->hback_porch + vm->hsync_len +
-+		      vm->hactive - 1;
-+	hsync_end = vm->hsync_len - 1;
-+
-+	dcss_ss_write(ss, (phsync ? SYNC_POL : 0) |
-+		      ((u32)hsync_end << SYNC_END_POS) | hsync_start,
-+		      DCSS_SS_HSYNC);
-+
-+	vsync_start = vm->vfront_porch - 1;
-+	vsync_end = vm->vfront_porch + vm->vsync_len - 1;
-+
-+	dcss_ss_write(ss, (pvsync ? SYNC_POL : 0) |
-+		      ((u32)vsync_end << SYNC_END_POS) | vsync_start,
-+		      DCSS_SS_VSYNC);
-+
-+	de_ulc_x = vm->hsync_len + vm->hback_porch - 1;
-+	de_ulc_y = vm->vsync_len + vm->vfront_porch + vm->vback_porch;
-+
-+	dcss_ss_write(ss, SYNC_POL | ((u32)de_ulc_y << ULC_Y_POS) | de_ulc_x,
-+		      DCSS_SS_DE_ULC);
-+
-+	de_lrc_x = vm->hsync_len + vm->hback_porch + vm->hactive - 1;
-+	de_lrc_y = vm->vsync_len + vm->vfront_porch + vm->vback_porch +
-+		   vm->vactive - 1;
-+
-+	dcss_ss_write(ss, (de_lrc_y << LRC_Y_POS) | de_lrc_x, DCSS_SS_DE_LRC);
-+}
-+
-+void dcss_ss_enable(struct dcss_ss *ss)
-+{
-+	dcss_ss_write(ss, RUN_EN, DCSS_SS_SYS_CTRL);
-+	ss->in_use = true;
-+}
-+
-+void dcss_ss_shutoff(struct dcss_ss *ss)
-+{
-+	dcss_writel(0, ss->base_reg + DCSS_SS_SYS_CTRL);
-+	ss->in_use = false;
-+}
--- 
-2.23.0
+--qMm9M+Fa2AknHoGS
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
+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
+nFwLIVGvUnDyRpzvAvwLkX5tDfz1AQA=
+
+--qMm9M+Fa2AknHoGS--
