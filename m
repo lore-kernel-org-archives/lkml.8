@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B893EC433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA8EC433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A64422B3F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD4820674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgGXQEP (ORCPT
+        id S1727842AbgGXQEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:04:15 -0400
-Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:04:22 -0400
+Received: from 8bytes.org ([81.169.241.247]:59394 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726870AbgGXQEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:06 -0400
+        id S1726997AbgGXQEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:10 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id BA2AFE60;
-        Fri, 24 Jul 2020 18:04:03 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 82F65F3C;
+        Fri, 24 Jul 2020 18:04:07 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 14/75] x86/boot/compressed/64: Add page-fault handler
-Date:   Fri, 24 Jul 2020 18:02:35 +0200
-Message-Id: <20200724160336.5435-15-joro@8bytes.org>
+Subject: [PATCH v5 21/75] x86/boot/compressed/64: Add set_page_en/decrypted() helpers
+Date:   Fri, 24 Jul 2020 18:02:42 +0200
+Message-Id: <20200724160336.5435-22-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,124 +60,182 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Install a page-fault handler to add an identity mapping to addresses
-not yet mapped. Also do some checking whether the error code is sane.
-
-This makes non SEV-ES machines use the exception handling
-infrastructure in the pre-decompressions boot code too, making it less
-likely to break in the future.
+The functions are needed to map the GHCB for SEV-ES guests. The GHCB is
+used for communication with the hypervisor, so its content must not be
+encrypted. After the GHCB is not needed anymore it must be mapped
+encrypted again so that the running kernel image can safely re-use the
+memory.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/boot/compressed/ident_map_64.c    | 39 ++++++++++++++++++++++
- arch/x86/boot/compressed/idt_64.c          |  2 ++
- arch/x86/boot/compressed/idt_handlers_64.S |  2 ++
- arch/x86/boot/compressed/misc.h            |  6 ++++
- 4 files changed, 49 insertions(+)
+ arch/x86/boot/compressed/ident_map_64.c | 133 ++++++++++++++++++++++++
+ arch/x86/boot/compressed/misc.h         |   2 +
+ 2 files changed, 135 insertions(+)
 
 diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index d9932a133ac9..e3d980ae9c2b 100644
+index aa91bebc0fe9..05742f641a06 100644
 --- a/arch/x86/boot/compressed/ident_map_64.c
 +++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -19,10 +19,13 @@
- /* No PAGE_TABLE_ISOLATION support needed either: */
- #undef CONFIG_PAGE_TABLE_ISOLATION
- 
-+#include "error.h"
- #include "misc.h"
+@@ -24,6 +24,7 @@
  
  /* These actually do the work of building the kernel identity maps. */
  #include <linux/pgtable.h>
-+#include <asm/trap_pf.h>
-+#include <asm/trapnr.h>
++#include <asm/cmpxchg.h>
+ #include <asm/trap_pf.h>
+ #include <asm/trapnr.h>
  #include <asm/init.h>
- /* Use the static base for this part of the boot process */
- #undef __PAGE_OFFSET
-@@ -160,3 +163,39 @@ void finalize_identity_maps(void)
- {
+@@ -165,6 +166,138 @@ void finalize_identity_maps(void)
  	write_cr3(top_level_pgt);
  }
-+
-+static void do_pf_error(const char *msg, unsigned long error_code,
-+			unsigned long address, unsigned long ip)
+ 
++static pte_t *split_large_pmd(struct x86_mapping_info *info,
++			      pmd_t *pmdp, unsigned long __address)
 +{
-+	error_putstr(msg);
++	unsigned long page_flags;
++	unsigned long address;
++	pte_t *pte;
++	pmd_t pmd;
++	int i;
 +
-+	error_putstr("\nError Code: ");
-+	error_puthex(error_code);
-+	error_putstr("\nCR2: 0x");
-+	error_puthex(address);
-+	error_putstr("\nRIP relative to _head: 0x");
-+	error_puthex(ip - (unsigned long)_head);
-+	error_putstr("\n");
++	pte = (pte_t *)info->alloc_pgt_page(info->context);
++	if (!pte)
++		return NULL;
 +
-+	error("Stopping.\n");
-+}
++	address     = __address & PMD_MASK;
++	/* No large page - clear PSE flag */
++	page_flags  = info->page_flag & ~_PAGE_PSE;
 +
-+void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
-+{
-+	unsigned long address = native_read_cr2();
++	/* Populate the PTEs */
++	for (i = 0; i < PTRS_PER_PMD; i++) {
++		set_pte(&pte[i], __pte(address | page_flags));
++		address += PAGE_SIZE;
++	}
 +
 +	/*
-+	 * Check for unexpected error codes. Unexpected are:
-+	 *	- Faults on present pages
-+	 *	- User faults
-+	 *	- Reserved bits set
++	 * Ideally we need to clear the large PMD first and do a TLB
++	 * flush before we write the new PMD. But the 2M range of the
++	 * PMD might contain the code we execute and/or the stack
++	 * we are on, so we can't do that. But that should be safe here
++	 * because we are going from large to small mappings and we are
++	 * also the only user of the page-table, so there is no chance
++	 * of a TLB multihit.
 +	 */
-+	if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD))
-+		do_pf_error("Unexpected page-fault:", error_code, address, regs->ip);
++	pmd = __pmd((unsigned long)pte | info->kernpg_flag);
++	set_pmd(pmdp, pmd);
++	/* Flush TLB to establish the new PMD */
++	write_cr3(top_level_pgt);
++
++	return pte + pte_index(__address);
++}
++
++static void clflush_page(unsigned long address)
++{
++	unsigned int flush_size;
++	char *cl, *start, *end;
 +
 +	/*
-+	 * Error code is sane - now identity map the 2M region around
-+	 * the faulting address.
++	 * Hardcode cl-size to 64 - CPUID can't be used here because that might
++	 * cause another #VC exception and the GHCB is not ready to use yet.
 +	 */
-+	add_identity_map(address & PMD_MASK, PMD_SIZE);
++	flush_size = 64;
++	start      = (char *)(address & PAGE_MASK);
++	end        = start + PAGE_SIZE;
++
++	/*
++	 * First make sure there are no pending writes on the cache-lines to
++	 * flush.
++	 */
++	asm volatile("mfence" : : : "memory");
++
++	for (cl = start; cl != end; cl += flush_size)
++		clflush(cl);
 +}
-diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
-index 082cd6bca033..5f083092a86d 100644
---- a/arch/x86/boot/compressed/idt_64.c
-+++ b/arch/x86/boot/compressed/idt_64.c
-@@ -40,5 +40,7 @@ void load_stage2_idt(void)
++
++static int set_clr_page_flags(struct x86_mapping_info *info,
++			      unsigned long address,
++			      pteval_t set, pteval_t clr)
++{
++	pgd_t *pgdp = (pgd_t *)top_level_pgt;
++	p4d_t *p4dp;
++	pud_t *pudp;
++	pmd_t *pmdp;
++	pte_t *ptep, pte;
++
++	/*
++	 * First make sure there is a PMD mapping for 'address'.
++	 * It should already exist, but keep things generic.
++	 *
++	 * To map the page just read from it and fault it in if there is no
++	 * mapping yet. add_identity_map() can't be called here because that
++	 * would unconditionally map the address on PMD level, destroying any
++	 * PTE-level mappings that might already exist. Use assembly here so
++	 * the access won't be optimized away.
++	 */
++	asm volatile("mov %[address], %%r9"
++		     :: [address] "g" (*(unsigned long *)address)
++		     : "r9", "memory");
++
++	/*
++	 * The page is mapped at least with PMD size - so skip checks and walk
++	 * directly to the PMD.
++	 */
++	p4dp = p4d_offset(pgdp, address);
++	pudp = pud_offset(p4dp, address);
++	pmdp = pmd_offset(pudp, address);
++
++	if (pmd_large(*pmdp))
++		ptep = split_large_pmd(info, pmdp, address);
++	else
++		ptep = pte_offset_kernel(pmdp, address);
++
++	if (!ptep)
++		return -ENOMEM;
++
++	/*
++	 * Changing encryption attributes of a page requires to flush it from
++	 * the caches.
++	 */
++	if ((set | clr) & _PAGE_ENC)
++		clflush_page(address);
++
++	/* Update PTE */
++	pte = *ptep;
++	pte = pte_set_flags(pte, set);
++	pte = pte_clear_flags(pte, clr);
++	set_pte(ptep, pte);
++
++	/* Flush TLB after changing encryption attribute */
++	write_cr3(top_level_pgt);
++
++	return 0;
++}
++
++int set_page_decrypted(unsigned long address)
++{
++	return set_clr_page_flags(&mapping_info, address, 0, _PAGE_ENC);
++}
++
++int set_page_encrypted(unsigned long address)
++{
++	return set_clr_page_flags(&mapping_info, address, _PAGE_ENC, 0);
++}
++
+ static void do_pf_error(const char *msg, unsigned long error_code,
+ 			unsigned long address, unsigned long ip)
  {
- 	boot_idt_desc.address = (unsigned long)boot_idt;
- 
-+	set_idt_entry(X86_TRAP_PF, boot_page_fault);
-+
- 	load_boot_idt(&boot_idt_desc);
- }
-diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
-index 36dee2f40a8b..b20e57504a94 100644
---- a/arch/x86/boot/compressed/idt_handlers_64.S
-+++ b/arch/x86/boot/compressed/idt_handlers_64.S
-@@ -68,3 +68,5 @@ SYM_FUNC_END(\name)
- 
- 	.text
- 	.code64
-+
-+EXCEPTION_HANDLER	boot_page_fault do_boot_page_fault error_code=1
 diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 3a030a878d53..345c90fbc500 100644
+index 65da40777bc1..5e569e8a7d75 100644
 --- a/arch/x86/boot/compressed/misc.h
 +++ b/arch/x86/boot/compressed/misc.h
-@@ -37,6 +37,9 @@
- #define memptr unsigned
+@@ -98,6 +98,8 @@ static inline void choose_random_location(unsigned long input,
  #endif
  
-+/* boot/compressed/vmlinux start and end markers */
-+extern char _head[], _end[];
-+
- /* misc.c */
- extern memptr free_mem_ptr;
- extern memptr free_mem_end_ptr;
-@@ -146,4 +149,7 @@ extern pteval_t __default_kernel_pte_mask;
- extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
- extern struct desc_ptr boot_idt_desc;
+ #ifdef CONFIG_X86_64
++extern int set_page_decrypted(unsigned long address);
++extern int set_page_encrypted(unsigned long address);
+ extern unsigned char _pgtable[];
+ #endif
  
-+/* IDT Entry Points */
-+void boot_page_fault(void);
-+
- #endif /* BOOT_COMPRESSED_MISC_H */
 -- 
 2.27.0
 
