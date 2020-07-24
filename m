@@ -2,124 +2,148 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03E3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AF3C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C790820656
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3116A20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595598799;
-	bh=r+K7XG2E4IIGXClkVyV1Vfe2nn3RLsaCsu3NSVBIemk=;
+	s=default; t=1595598837;
+	bh=FG5QxcsNrCHTcEdgSYED6zkI+mT3HGv6lxfjVjJkloo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EhmACSFLv6UoY3Lroe3/8sZv6oTy3vsiVFR0VnA+DTkxOU77WnSMQm1BM1VYCr0Ah
-	 4eQMd0kG2ZaoRNfCPgDTNMeudbp72DlYlyS3mUNDw8v0SonDZi49wAY5q18F1U97f+
-	 sou0rOY+RTFKfzjAm3ATOTqK1gPl1heak/VUV75c=
+	b=bTDRY4Ow67yawJ0HiNKv8mu8IGZPhX/EW4bd6pmnT8xiT30F0dn8ok5TL+IBcoMNR
+	 vgwcY611rLHv6G9pyJUZAO6DeTldVLbL/EQ16McoaHzBZcGoGMJ4n7V1MLyefxozVF
+	 0Z7rBZkp2SObFOwguL4E1ikZEUsl+xjmESxZv35M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgGXNxS (ORCPT
+        id S1726890AbgGXNx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:53:18 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39904 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgGXNxR (ORCPT
+        Fri, 24 Jul 2020 09:53:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgGXNxz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:53:17 -0400
-Received: by mail-ed1-f65.google.com with SMTP id d18so7087978edv.6;
-        Fri, 24 Jul 2020 06:53:16 -0700 (PDT)
+        Fri, 24 Jul 2020 09:53:55 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04932C0619D3;
+        Fri, 24 Jul 2020 06:53:54 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id q4so3867032edv.13;
+        Fri, 24 Jul 2020 06:53:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cTxDphoe+vLxnF+A2C9bqEgwZdV601VaJb/lXVid7sA=;
+        b=mmK0swhDn4cPwzKbdQaVqJyXHitxeFtwO979jh/H41YMrA9DUbreb4Gui0K31xj5NH
+         hOakHWtY582/0yFRmicn4GpVfev8GM5P7xHjoA876BCXf0ljQKgSNOIZ0s2D2qx0e4hW
+         fjZULokGDmO/+0WRz4ZqNe/cPaK7MRon7qirnwg/Rh6kRPHanGMKkv4PSr6khDrpGdLF
+         +Sf7GfqOWyj8eFLg5OgTIVXoDkenlXCklXpzyvCJO8Mr4phhTlXL3QdwZfp4IAT8oupm
+         midhF7Bu0oGeyEA3obkIh4EM8kWM9eVibSE8vSi+pXQZ8Dtdk0Smc+39F60+0lxh9H7I
+         spXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wHJM9ZNtQPPVokcpsCbdp5GsMdp3YHUZAH6Xvy0iTKM=;
-        b=ZmSpJpw2lApyVrUgRqpAUwKUgIOfM2GzFdGJzvpAfcYRY+m4ZKqAs7TcGXbTz50gja
-         TrGnK6EET1TpeImy5mJDGjOg1+iHlgDommFFTqu+GXYYaB9iPt778nKPo/SIajcckhii
-         QamtcK1frWOq3xjeEV/4TnwQrBApGjWErmkC9Mb1N4Ahxb0BvWQfJzZGY0fzb+Iqljw7
-         aOuKo9+bQ2VugslwL9CdrlemzvVJubYOOBZDMWn9OBpm90KFi5PTSsiNT+hmEMbXRAUZ
-         RnJeDD5yNJn4g8X+fAwVApnqvb24+E37u5uZON/bZp+tC9ZbiXhpQevgWNCJ4J7xvDXR
-         giqg==
-X-Gm-Message-State: AOAM530oPE28Nn3bwcpiBYP6idNM2AlhvYpxRKz5AXGyPjj5C3PyTlJo
-        n0/SSedOd4deJUEVsPR/QJ8=
-X-Google-Smtp-Source: ABdhPJxQatp/16zc2FQj9pOk/YrBsNh8emgbUp3CY5xYniVLl6YIl4y8V3SdvTEG1nFeCNjq8TSdOA==
-X-Received: by 2002:a50:dacf:: with SMTP id s15mr9448134edj.136.1595598795606;
-        Fri, 24 Jul 2020 06:53:15 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id x10sm737481ejc.46.2020.07.24.06.53.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Jul 2020 06:53:14 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 15:53:11 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Olof Johansson <olof@lixom.net>,
-        Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 05/29] memory: jz4780-nemc: Do not enable by default
- on every compile test
-Message-ID: <20200724135311.GA13472@kozik-lap>
-References: <20200724074038.5597-1-krzk@kernel.org>
- <20200724074038.5597-6-krzk@kernel.org>
- <CAK8P3a0h3dMRH_wuGX5dZ5znnx+EHJKYwQeZ9aB7cFGudo6vmw@mail.gmail.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=cTxDphoe+vLxnF+A2C9bqEgwZdV601VaJb/lXVid7sA=;
+        b=YUaXu4J91igndDpan5wYC/Wfx6wenK7VTwnq6zgngOgGITBu7B+SwSc0LW/TANnWYy
+         5D8c7DAWBKJkTTWsdfcbdHUrOoSO+WGkaP73yBbV8wLB5l0OyUH8rykPNeIy9KCefUXw
+         33HIIAI/fPZEryq+brqk2p+x706B7GpJLlz8ZVdU5GbeRAdOU7tn8RDtt822xb6i8I5O
+         k9THmz2NLMLfZ6ml2uMOJHhN3pfByaxD6MzDlBbloT4OnlodWeg0upaZfitw1IeWZF8+
+         26HvhnJXJiv0w8MPx4x8JZVV1RI3pDCAsQqt4qBtJSjtFrC85W+9hY9vDCSooiVIS5yf
+         wm7w==
+X-Gm-Message-State: AOAM531eguwSqnavT4SgCPry0L9TsqlxwbFFTD2w+mW5Hv0rpD3oSdyv
+        9IZbZOnEYH5mgzpy1lPHErg=
+X-Google-Smtp-Source: ABdhPJz7uGKvAKS8JJWSFmBybH4/rkm6kX1pl/E/E9QQ3Z1uGV4NGBdCPC70QUDJySOQDC6oA7ddTQ==
+X-Received: by 2002:a50:fa4c:: with SMTP id c12mr6635866edq.5.1595598832764;
+        Fri, 24 Jul 2020 06:53:52 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id i8sm777537edt.19.2020.07.24.06.53.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 06:53:52 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 15:53:50 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Huaixin Chang <changhuaixin@linux.alibaba.com>
+Cc:     jpoimboe@redhat.com, bp@alien8.de, hpa@zytor.com,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        luto@amacapital.net, michal.lkml@markovi.net, mingo@redhat.com,
+        peterz@infradead.org, tglx@linutronix.de, x86@kernel.org,
+        yamada.masahiro@socionext.com
+Subject: Re: [PATCH 2/3] scripts/sorttable: Build orc fast lookup table via
+ sorttable tool
+Message-ID: <20200724135350.GA648324@gmail.com>
+References: <20200723034643.33537-1-changhuaixin@linux.alibaba.com>
+ <20200723034643.33537-3-changhuaixin@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a0h3dMRH_wuGX5dZ5znnx+EHJKYwQeZ9aB7cFGudo6vmw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200723034643.33537-3-changhuaixin@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 03:45:37PM +0200, Arnd Bergmann wrote:
-> On Fri, Jul 24, 2020 at 9:41 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > When compile testing, enable the driver by default only on MIPS
-> > architecture.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > ---
-> >
-> > Changes since v1:
-> > 1. New patch
->  @@ -141,7 +141,7 @@ config FSL_IFC
-> >
-> >  config JZ4780_NEMC
-> >         bool "Ingenic JZ4780 SoC NEMC driver"
-> > -       default y
-> > +       default y if MIPS
-> >         depends on MIPS || COMPILE_TEST
-> 
-> 
-> Actually I think this should be 'default MACH_INGENIC',
-> and probably also 'depends on MACH_INGENIC || COMPILE_TEST'.
 
-Makes sense, especially for default.
+* Huaixin Chang <changhuaixin@linux.alibaba.com> wrote:
 
-For the depends, there is also MTD_NAND_JZ4780 (depending on
-JZ4780_NEMC) which also requires MIPS. I could fix both then.
+> Since orc tables are already sorted by sorttable tool, let us move
+> building of fast lookup table into sorttable tool too. This saves us
+> 6380us from boot time under Intel(R) Xeon(R) CPU E5-2682 v4 @ 2.50GHz
+> with 64 cores.
 
-Best regards,
-Krzysztof
+Neat!
 
+> +struct orc_sort_param {
+> +	size_t		lookup_table_size;
+> +	unsigned int	*orc_lookup_table;
+> +	unsigned long	start_ip;
+> +	size_t		text_size;
+> +	unsigned int	orc_num_entries;
+> +};
+
+>  
+> +#define LOOKUP_BLOCK_ORDER	8
+> +#define LOOKUP_BLOCK_SIZE	(1 << LOOKUP_BLOCK_ORDER)
+> +
+> +	for (i = 0; i < lookup_num_blocks-1; i++) {
+> +		orc = __orc_find(g_orc_ip_table, g_orc_table,
+> +				 num_entries,
+> +				 lookup_start_ip + (LOOKUP_BLOCK_SIZE * i));
+> +		if (!orc) {
+> +			snprintf(g_err, ERRSTR_MAXSZ,
+> +					"Corrupt .orc_unwind table\n");
+> +			pthread_exit(g_err);
+> +		}
+> +
+> +		orc_lookup[i] = orc - g_orc_table;
+> +	}
+> +
+> +	/* Initialize the ending block: */
+> +	orc = __orc_find(g_orc_ip_table, g_orc_table, num_entries,
+> +			 lookup_stop_ip);
+> +	if (!orc) {
+> +		snprintf(g_err, ERRSTR_MAXSZ, "Corrupt .orc_unwind table\n");
+> +		pthread_exit(g_err);
+> +	}
+> +	orc_lookup[lookup_num_blocks-1] = orc - g_orc_table;
+
+Yeah, so now this definition of LOOKUP_BLOCK_* basicaly duplicates the 
+arch/x86/include/asm/orc_lookup.h size, with no obvious link between 
+the two. This is asking for trouble.
+
+<asm/orc_lookup.h> looks simple enough - can we include it in 
+scripts/sorttable.h?
+
+Or better yet, please move these two defines into <asm/orc_types.h>, 
+which is already included in sorttable.h.
+
+BTW., please update your patches to spell 'ORC' in a capitalized 
+fashion, like most of the existing code does:
+
+>  	/* create thread to sort ORC unwind tables concurrently */
+
+Thanks,
+
+	Ingo
