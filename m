@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65442C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D72C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABFC20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB2720674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgGXQE0 (ORCPT
+        id S1728347AbgGXQIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:04:26 -0400
-Received: from 8bytes.org ([81.169.241.247]:59368 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:08:54 -0400
+Received: from 8bytes.org ([81.169.241.247]:60034 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727093AbgGXQEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:13 -0400
+        id S1727876AbgGXQE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:26 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id AB38A7CB;
-        Fri, 24 Jul 2020 18:04:09 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 1B486FBC;
+        Fri, 24 Jul 2020 18:04:16 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 25/75] x86/fpu: Move xgetbv()/xsetbv() into separate header
-Date:   Fri, 24 Jul 2020 18:02:46 +0200
-Message-Id: <20200724160336.5435-26-joro@8bytes.org>
+Subject: [PATCH v5 35/75] x86/head/64: Load IDT earlier
+Date:   Fri, 24 Jul 2020 18:02:56 +0200
+Message-Id: <20200724160336.5435-36-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,113 +60,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The xgetbv() function is needed in pre-decompression boot code, but
-asm/fpu/internal.h can't be included there directly. Doing so opens
-the door to include-hell due to various include-magic in
-boot/compressed/misc.h.
-
-Avoid that by moving xgetbv()/xsetbv() to a separate header file and
-include this instead.
+Load the IDT right after switching to virtual addresses in head_64.S
+so that the kernel can handle #VC exceptions.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/fpu/internal.h | 33 +------------------------
- arch/x86/include/asm/fpu/xcr.h      | 37 +++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+), 32 deletions(-)
- create mode 100644 arch/x86/include/asm/fpu/xcr.h
+ arch/x86/include/asm/setup.h |  3 +++
+ arch/x86/kernel/head64.c     |  3 +++
+ arch/x86/kernel/head_64.S    |  5 +++++
+ arch/x86/kernel/idt.c        | 23 +++++++++++++++++++++++
+ 4 files changed, 34 insertions(+)
 
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 6b10cdaa7c96..6caf2a14d8dc 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -19,6 +19,7 @@
- #include <asm/user.h>
- #include <asm/fpu/api.h>
- #include <asm/fpu/xstate.h>
-+#include <asm/fpu/xcr.h>
- #include <asm/cpufeature.h>
- #include <asm/trace/fpu.h>
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index 8aa6ba0427b0..5c09f50ecf1c 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -50,6 +50,8 @@ extern unsigned long __startup_64(unsigned long physaddr, struct boot_params *bp
+ extern unsigned long __startup_secondary_64(void);
+ extern void startup_64_setup_env(unsigned long physbase);
+ extern int early_make_pgtable(unsigned long address);
++extern void early_idt_setup_early_handler(unsigned long physaddr);
++extern void early_load_idt(void);
  
-@@ -586,36 +587,4 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
- 	__write_pkru(pkru_val);
+ #ifdef CONFIG_X86_INTEL_MID
+ extern void x86_intel_mid_early_setup(void);
+@@ -66,6 +68,7 @@ static inline void x86_ce4100_early_setup(void) { }
+ #ifndef _SETUP
+ 
+ #include <asm/espfix.h>
++#include <asm/sections.h>
+ #include <linux/kernel.h>
+ 
+ /*
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 8703292a35e9..096b09d06d1c 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -286,6 +286,9 @@ unsigned long __head __startup_64(unsigned long physaddr,
+ 		}
+ 	}
+ 
++	/* Setup IDT with early handlers */
++	early_idt_setup_early_handler(physaddr);
++
+ 	/*
+ 	 * Return the SME encryption mask (if SME is active) to be used as a
+ 	 * modifier for the initial pgdir entry programmed into CR3.
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index a5e1939d1dc9..28de83fecda3 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -206,6 +206,11 @@ SYM_CODE_START(secondary_startup_64)
+ 	 */
+ 	movq initial_stack(%rip), %rsp
+ 
++	/* Load IDT */
++	pushq	%rsi
++	call	early_load_idt
++	popq	%rsi
++
+ 	/* Check if nx is implemented */
+ 	movl	$0x80000001, %eax
+ 	cpuid
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index c19773174221..e2777cc264f5 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -10,6 +10,7 @@
+ #include <asm/proto.h>
+ #include <asm/desc.h>
+ #include <asm/hw_irq.h>
++#include <asm/setup.h>
+ 
+ struct idt_data {
+ 	unsigned int	vector;
+@@ -385,3 +386,25 @@ void __init alloc_intr_gate(unsigned int n, const void *addr)
+ 	if (!WARN_ON(test_and_set_bit(n, system_vectors)))
+ 		set_intr_gate(n, addr);
  }
- 
--/*
-- * MXCSR and XCR definitions:
-- */
--
--static inline void ldmxcsr(u32 mxcsr)
--{
--	asm volatile("ldmxcsr %0" :: "m" (mxcsr));
--}
--
--extern unsigned int mxcsr_feature_mask;
--
--#define XCR_XFEATURE_ENABLED_MASK	0x00000000
--
--static inline u64 xgetbv(u32 index)
--{
--	u32 eax, edx;
--
--	asm volatile(".byte 0x0f,0x01,0xd0" /* xgetbv */
--		     : "=a" (eax), "=d" (edx)
--		     : "c" (index));
--	return eax + ((u64)edx << 32);
--}
--
--static inline void xsetbv(u32 index, u64 value)
--{
--	u32 eax = value;
--	u32 edx = value >> 32;
--
--	asm volatile(".byte 0x0f,0x01,0xd1" /* xsetbv */
--		     : : "a" (eax), "d" (edx), "c" (index));
--}
--
- #endif /* _ASM_X86_FPU_INTERNAL_H */
-diff --git a/arch/x86/include/asm/fpu/xcr.h b/arch/x86/include/asm/fpu/xcr.h
-new file mode 100644
-index 000000000000..d8e8fafebfdc
---- /dev/null
-+++ b/arch/x86/include/asm/fpu/xcr.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_FPU_XCR_H
-+#define _ASM_X86_FPU_XCR_H
 +
-+/*
-+ * MXCSR and XCR definitions:
-+ */
-+
-+static inline void ldmxcsr(u32 mxcsr)
++void __init early_idt_setup_early_handler(unsigned long physaddr)
 +{
-+	asm volatile("ldmxcsr %0" :: "m" (mxcsr));
++	gate_desc *idt;
++	int i;
++
++	idt = fixup_pointer(idt_table, physaddr);
++
++	for (i = 0; i < NUM_EXCEPTION_VECTORS; i++) {
++		struct idt_data data;
++		gate_desc desc;
++
++		init_idt_data(&data, i, early_idt_handler_array[i]);
++		idt_init_desc(&desc, &data);
++		native_write_idt_entry(idt, i, &desc);
++	}
 +}
 +
-+extern unsigned int mxcsr_feature_mask;
-+
-+#define XCR_XFEATURE_ENABLED_MASK	0x00000000
-+
-+static inline u64 xgetbv(u32 index)
++void early_load_idt(void)
 +{
-+	u32 eax, edx;
-+
-+	asm volatile(".byte 0x0f,0x01,0xd0" /* xgetbv */
-+		     : "=a" (eax), "=d" (edx)
-+		     : "c" (index));
-+	return eax + ((u64)edx << 32);
++	load_idt(&idt_descr);
 +}
-+
-+static inline void xsetbv(u32 index, u64 value)
-+{
-+	u32 eax = value;
-+	u32 edx = value >> 32;
-+
-+	asm volatile(".byte 0x0f,0x01,0xd1" /* xsetbv */
-+		     : : "a" (eax), "d" (edx), "c" (index));
-+}
-+
-+#endif /* _ASM_X86_FPU_XCR_H */
 -- 
 2.27.0
 
