@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D3FC433F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D080C433F8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE7AF20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366DC22D01
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgGXQE3 (ORCPT
+        id S1728089AbgGXQEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:04:29 -0400
-Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:04:39 -0400
+Received: from 8bytes.org ([81.169.241.247]:60312 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbgGXQEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:21 -0400
+        id S1727910AbgGXQE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:27 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 8D88EFB8;
-        Fri, 24 Jul 2020 18:04:12 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 27AF9E60;
+        Fri, 24 Jul 2020 18:04:20 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 30/75] x86/head/64: Setup MSR_GS_BASE before calling into C code
-Date:   Fri, 24 Jul 2020 18:02:51 +0200
-Message-Id: <20200724160336.5435-31-joro@8bytes.org>
+Subject: [PATCH v5 37/75] x86/head/64: Set CR4.FSGSBASE early
+Date:   Fri, 24 Jul 2020 18:02:58 +0200
+Message-Id: <20200724160336.5435-38-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,65 +60,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-When stack-protector is enabled a valid GS_BASE is needed before
-calling any C code function, because the stack canary is loaded from
-per-cpu data.
+Early exception handling will use rd/wrgsbase in paranoid_entry/exit.
+Enable the feature to avoid #UD exceptions on boot APs.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/head64.c  | 7 +++++++
- arch/x86/kernel/head_64.S | 8 ++++++++
- 2 files changed, 15 insertions(+)
+ arch/x86/kernel/head_64.S | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 8c82be44be94..b0ab5627900b 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -36,6 +36,7 @@
- #include <asm/microcode.h>
- #include <asm/kasan.h>
- #include <asm/fixmap.h>
-+#include <asm/realmode.h>
- 
- /*
-  * Manage page tables very early on.
-@@ -513,6 +514,8 @@ void __init x86_64_start_reservations(char *real_mode_data)
-  */
- void __head startup_64_setup_env(unsigned long physbase)
- {
-+	unsigned long gsbase;
-+
- 	/* Load GDT */
- 	startup_gdt_descr.address = (unsigned long)fixup_pointer(startup_gdt, physbase);
- 	native_load_gdt(&startup_gdt_descr);
-@@ -521,4 +524,8 @@ void __head startup_64_setup_env(unsigned long physbase)
- 	asm volatile("movl %%eax, %%ds\n"
- 		     "movl %%eax, %%ss\n"
- 		     "movl %%eax, %%es\n" : : "a"(__KERNEL_DS) : "memory");
-+
-+	/* Setup GS_BASE - needed for stack protector */
-+	gsbase = (unsigned long)fixup_pointer((void *)initial_gs, physbase);
-+	__wrmsr(MSR_GS_BASE, (u32)gsbase, (u32)(gsbase >> 32));
- }
 diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 2b2e91627221..800053219054 100644
+index 08412f308de3..4622940134a5 100644
 --- a/arch/x86/kernel/head_64.S
 +++ b/arch/x86/kernel/head_64.S
-@@ -78,6 +78,14 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	call	startup_64_setup_env
- 	popq	%rsi
- 
-+	/*
-+	 * Setup %gs here already to make stack-protector work - it needs to be
-+	 * setup again after the switch to kernel addresses. The address read
-+	 * from initial_gs is a kernel address, so it needs to be adjusted first
-+	 * for the identity mapping.
-+	 */
-+	movl	$MSR_GS_BASE,%ecx
+@@ -153,6 +153,13 @@ SYM_CODE_START(secondary_startup_64)
+ 	orl	$X86_CR4_LA57, %ecx
+ 1:
+ #endif
 +
- 	/* Now switch to __KERNEL_CS so IRET works reliably */
- 	pushq	$__KERNEL_CS
- 	leaq	.Lon_kernel_cs(%rip), %rax
++	ALTERNATIVE "jmp .Lstartup_write_cr4", "", X86_FEATURE_FSGSBASE
++
++	/* Early exception handling uses FSGSBASE on APs */
++	orl	$X86_CR4_FSGSBASE, %ecx
++
++.Lstartup_write_cr4:
+ 	movq	%rcx, %cr4
+ 
+ 	/* Setup early boot stage 4-/5-level pagetables. */
 -- 
 2.27.0
 
