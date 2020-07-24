@@ -2,124 +2,105 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78942C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD2BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57A99206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:17:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595582237;
-	bh=nCFgBu3omwx54faaWMaxjDb9i8wcpM4x0LN4rc5l4LU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v2+A9KbPkVJ7yLesfnDZVBjqVyM5Y4OKtOdZCscBGHwSlGJML2G2RBFsiowXR8SEO
-	 BUZHcPG6ih0gAMWuN9H4QQyZvujVlDzRnXWfa2iYOBsAxNfbZm0DoNY2T8OmaLZntb
-	 sjb3vdKEc3nvXT5h3Qx8yHVfKb88hn/RfE9y2nVE=
+	by mail.kernel.org (Postfix) with ESMTP id 9B9BB2063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgGXJRQ (ORCPT
+        id S1728048AbgGXJQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:17:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726863AbgGXJRP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:17:15 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C75FC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 02:17:15 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id f12so9246423eja.9
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 02:17:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/OC350Q0A9R/G9QPy9dkketdGLXiYUcXoiXvxtiFS3I=;
-        b=chuTST1JaqOVT7yYQunPdIWjX5K7+V3f26TOUaT4KfzOSmf0pRhB9CnodvRIf/ombz
-         Bxw5TQ9jSLFkknPnQYCUXvfuOMFTBb9K65ELT2jsylkPekxy/bOlU0C1c78dhTmMePsA
-         PlNNVcPa31LsjUFOmI79sHMe09phtsApgsxDD2xxYH7Wy2oPpRHhC4PhsZAs0a77TIGb
-         Aa4ApPuru4kGYdqJ2ihY2lhuMLJnyeN1w6qUG62Zp+mCktHh+gVest/yTVxkZGNd61a/
-         6gu0WeAoM1Yb4Zp4dU9+tdw7XHas/8Y3HYvS9hWtWUEiZiOkeDgGVP4fHTEocjq+E1ie
-         bKnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=/OC350Q0A9R/G9QPy9dkketdGLXiYUcXoiXvxtiFS3I=;
-        b=WrmAu7viA/P8cgKfLCo0uPY7m+tXkzgcUjR72a7IzhOb2sYjv0RqF0pf72gEe2HkFi
-         TxEnc5GvcKmOjbcwWY1sXvAYH1BB+vDGbf5p70Hygp20S1Yfy0QYaX3ShNmlStqWQ06+
-         CPVhS8hlrlPcFCzqNjaMbShgGd7xE+vt9Dk53d9ocGqbsuvOqPywcydWUXEBFOPY428A
-         2YP4/5bIkQrHkL/OtIGGas2kgfGnwJfAIPl8zAua5sBbFzOJX9o4X6YfXcThs2/NyvEY
-         /46i6UlJPSYrjqCq+8+9r9cE+oRt0ahcGi4UL+48mEv0pQzkPKT+T/M8jR2AD1e3brqJ
-         SVEw==
-X-Gm-Message-State: AOAM532QrcfP5M6kovwBy4z75VfjDFM41Ssj427Wv8A3MIuNDwrOa7bE
-        3OHq+7VYOqOm7HLVzM9NatU=
-X-Google-Smtp-Source: ABdhPJzwOcbamfMswXat/5I2ZGN5RwAMcwz8bdlQYVANNSSFvVtSOr/BB0E/b8cwXbRRmp3FTOgzLg==
-X-Received: by 2002:a17:906:6499:: with SMTP id e25mr8186466ejm.352.1595582234028;
-        Fri, 24 Jul 2020 02:17:14 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id v5sm296033ejj.61.2020.07.24.02.17.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 02:17:13 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 11:17:11 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v5 1/6] kprobes: Remove dependency to the module_mutex
-Message-ID: <20200724091711.GB517988@gmail.com>
-References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
- <20200724050553.1724168-2-jarkko.sakkinen@linux.intel.com>
+        Fri, 24 Jul 2020 05:16:58 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55302 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726979AbgGXJQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 05:16:57 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3490F7D3B18E53A0A185;
+        Fri, 24 Jul 2020 17:16:55 +0800 (CST)
+Received: from [127.0.0.1] (10.174.178.56) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Fri, 24 Jul 2020
+ 17:16:45 +0800
+Subject: Re: [PATCH -next] arm64: Export __cpu_logical_map
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Sumit Gupta <sumitg@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+CC:     Hulk Robot <hulkci@huawei.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200724030433.22287-1-wangkefeng.wang@huawei.com>
+ <82f750c4-d423-1ed8-a158-e75153745e07@huawei.com>
+ <7998529f-da52-5e46-dd09-b9b11d83ec1a@arm.com>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+Message-ID: <292c907e-f08d-8a89-9148-802995e92ef3@huawei.com>
+Date:   Fri, 24 Jul 2020 17:16:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724050553.1724168-2-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <7998529f-da52-5e46-dd09-b9b11d83ec1a@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.174.178.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+On 2020/7/24 16:16, Anshuman Khandual wrote:
+> On 07/24/2020 08:38 AM, Kefeng Wang wrote:
+>> +maillist
+> This does not seem to be a correct method of posting any patch.
+sorry， forget to cc mailist when git send-email
+>> On 2020/7/24 11:04, Kefeng Wang wrote:
+>>> ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
+>
+>>> ARM64 tegra194-cpufreq driver use cpu_logical_map, export
+>>> __cpu_logical_map to fix build issue.
+> Commit 887d5fc82cb4 ("cpufreq: Add Tegra194 cpufreq driver") which adds
+> this particular driver is present just on linux-next. But as expected,
+> the driver does not use __cpu_logical_map directly but instead accesses
+> it via cpu_logical_map() wrapper. Wondering, how did you even trigger
+> the modpost error ?
 
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -564,7 +564,7 @@ static void kprobe_optimizer(struct work_struct *work)
->  	cpus_read_lock();
->  	mutex_lock(&text_mutex);
->  	/* Lock modules while optimizing kprobes */
-> -	mutex_lock(&module_mutex);
-> +	lock_modules();
->  
->  	/*
->  	 * Step 1: Unoptimize kprobes and collect cleaned (unused and disarmed)
-> @@ -589,7 +589,7 @@ static void kprobe_optimizer(struct work_struct *work)
->  	/* Step 4: Free cleaned kprobes after quiesence period */
->  	do_free_cleaned_kprobes();
->  
-> -	mutex_unlock(&module_mutex);
-> +	unlock_modules();
->  	mutex_unlock(&text_mutex);
->  	cpus_read_unlock();
+arch/arm64/include/asm/smp.h:#define cpu_logical_map(cpu) 
+__cpu_logical_map[cpu]
 
-BTW., it would be nice to expand on the comments above - exactly which 
-parts of the modules code is being serialized against and why?
+Will see the error when using allmodconfig to build.
 
-We already hold the text_mutex here, which should protect against most 
-kprobes related activities interfering - and it's unclear (to me) 
-which part of the modules code is being serialized with here, and the 
-'lock modules while optimizing kprobes' comments is unhelpful. :-)
+>
+>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>>> ---
+>>>    arch/arm64/kernel/setup.c | 1 +
+>>>    1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+>>> index c793276ec7ad9..3aea05fbb9998 100644
+>>> --- a/arch/arm64/kernel/setup.c
+>>> +++ b/arch/arm64/kernel/setup.c
+>>> @@ -275,6 +275,7 @@ static int __init reserve_memblock_reserved_regions(void)
+>>>    arch_initcall(reserve_memblock_reserved_regions);
+>>>      u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
+>>> +EXPORT_SYMBOL(__cpu_logical_map);
+>>>      void __init setup_arch(char **cmdline_p)
+>>>    {
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+> .
+>
 
-Thanks,
-
-	Ingo
