@@ -2,120 +2,125 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900A4C43459
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00708C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75AF720737
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E030A20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgGXRXC (ORCPT
+        id S1727798AbgGXRXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:23:02 -0400
-Received: from mga17.intel.com ([192.55.52.151]:2758 "EHLO mga17.intel.com"
+        Fri, 24 Jul 2020 13:23:46 -0400
+Received: from mga11.intel.com ([192.55.52.93]:37270 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727091AbgGXRWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:22:45 -0400
-IronPort-SDR: eJJN1yZ/fL+cnOHDf9n8dPWgpCN+Qa0wPgn9tawGVfMgKk5Hx5wUsxIlpgFpxbyrT/EhAJl+bF
- cMu6LOGqqRgg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="130823285"
+        id S1726488AbgGXRXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:23:45 -0400
+IronPort-SDR: 9gFTjqXOuyPvcfytVO5ev51AbIBPrNR8FuEKpKk2orj2VQQP1t6d/JOb0WAaMHq/ZpPLNhvSUH
+ +aISKKy95zYA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="148664560"
 X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="130823285"
+   d="scan'208";a="148664560"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:22:44 -0700
-IronPort-SDR: bqpea7Atuo6iNBMQ51ETHMhlOUiEtRbg4SWdBK2OIdkGQ2d0h2IssVs/BK6bF7tlVimvKqljIc
- 4GfeoA1wWI/A==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:23:45 -0700
+IronPort-SDR: X1JW4FggRo3qDiJx0NWoLol6p1tsq6DYf4Mj7qGG/ohJuRs2TnDCp10u9BuuIVBIeURlyoIeXD
+ g8wFtHdotI8g==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="302730338"
-Received: from seokjaeb-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.24.239])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:22:43 -0700
-From:   Sean V Kelley <sean.v.kelley@intel.com>
-To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rjw@rjwysocki.net, ashok.raj@kernel.org, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean V Kelley <sean.v.kelley@intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: [RFC PATCH 8/9] PCI/PME: Add RCEC PME handling
-Date:   Fri, 24 Jul 2020 10:22:22 -0700
-Message-Id: <20200724172223.145608-9-sean.v.kelley@intel.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200724172223.145608-1-sean.v.kelley@intel.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+   d="scan'208";a="311467245"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Jul 2020 10:23:45 -0700
+Date:   Fri, 24 Jul 2020 10:23:44 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across
+ exceptions
+Message-ID: <20200724172344.GO844235@iweiny-DESK2.sc.intel.com>
+References: <20200717072056.73134-1-ira.weiny@intel.com>
+ <20200717072056.73134-18-ira.weiny@intel.com>
+ <20200717100610.GH10769@hirez.programming.kicks-ass.net>
+ <20200722052709.GB478587@iweiny-DESK2.sc.intel.com>
+ <87o8o6vvt0.fsf@nanos.tec.linutronix.de>
+ <87lfjavvhm.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87lfjavvhm.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Root Complex Event Collectors(RCEC) appear as peers of Root Ports
-and also have the PME capability. So add RCEC support to the current PME
-service driver and attach the PME service driver to the RCEC device.
+On Thu, Jul 23, 2020 at 10:15:17PM +0200, Thomas Gleixner wrote:
+> Thomas Gleixner <tglx@linutronix.de> writes:
+> 
+> > Ira Weiny <ira.weiny@intel.com> writes:
+> >> On Fri, Jul 17, 2020 at 12:06:10PM +0200, Peter Zijlstra wrote:
+> >>> On Fri, Jul 17, 2020 at 12:20:56AM -0700, ira.weiny@intel.com wrote:
+> >> I've been really digging into this today and I'm very concerned that I'm
+> >> completely missing something WRT idtentry_enter() and idtentry_exit().
+> >>
+> >> I've instrumented idt_{save,restore}_pkrs(), and __dev_access_{en,dis}able()
+> >> with trace_printk()'s.
+> >>
+> >> With this debug code, I have found an instance where it seems like
+> >> idtentry_enter() is called without a corresponding idtentry_exit().  This has
+> >> left the thread ref counter at 0 which results in very bad things happening
+> >> when __dev_access_disable() is called and the ref count goes negative.
+> >>
+> >> Effectively this seems to be happening:
+> >>
+> >> ...
+> >> 	// ref == 0
+> >> 	dev_access_enable()  // ref += 1 ==> disable protection
+> >> 		// exception  (which one I don't know)
+> >> 			idtentry_enter()
+> >> 				// ref = 0
+> >> 				_handler() // or whatever code...
+> >> 			// *_exit() not called [at least there is no trace_printk() output]...
+> >> 			// Regardless of trace output, the ref is left at 0
+> >> 	dev_access_disable() // ref -= 1 ==> -1 ==> does not enable protection
+> >> 	(Bad stuff is bound to happen now...)
+> >
+> > Well, if any exception which calls idtentry_enter() would return without
+> > going through idtentry_exit() then lots of bad stuff would happen even
+> > without your patches.
+> >
+> >> Also is there any chance that the process could be getting scheduled and that
+> >> is causing an issue?
+> >
+> > Only from #PF, but after the fault has been resolved and the tasks is
+> > scheduled in again then the task returns through idtentry_exit() to the
+> > place where it took the fault. That's not guaranteed to be on the same
+> > CPU. If schedule is not aware of the fact that the exception turned off
+> > stuff then you surely get into trouble. So you really want to store it
+> > in the task itself then the context switch code can actually see the
+> > state and act accordingly.
+> 
+> Actually thats nasty as well as you need a stack of PKRS values to
+> handle nested exceptions. But it might be still the most reasonable
+> thing to do. 7 PKRS values plus an index should be really sufficient,
+> that's 32bytes total, not that bad.
 
-Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
----
- drivers/pci/pcie/pme.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+I've thought about this a bit more and unless I'm wrong I think the
+idtentry_state provides for that because each nested exception has it's own
+idtentry_state doesn't it?
 
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index 6a32970bb731..87799166c96a 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -310,7 +310,10 @@ static int pcie_pme_can_wakeup(struct pci_dev *dev, void *ign)
- static void pcie_pme_mark_devices(struct pci_dev *port)
- {
- 	pcie_pme_can_wakeup(port, NULL);
--	if (port->subordinate)
-+
-+	if (pci_pcie_type(port) == PCI_EXP_TYPE_RC_EC)
-+		pcie_walk_rcec(port, pcie_pme_can_wakeup, NULL);
-+	else if (port->subordinate)
- 		pci_walk_bus(port->subordinate, pcie_pme_can_wakeup, NULL);
- }
- 
-@@ -320,10 +323,15 @@ static void pcie_pme_mark_devices(struct pci_dev *port)
-  */
- static int pcie_pme_probe(struct pcie_device *srv)
- {
--	struct pci_dev *port;
-+	struct pci_dev *port = srv->port;
- 	struct pcie_pme_service_data *data;
- 	int ret;
- 
-+	/* Limit to Root Ports or Root Complex Event Collectors */
-+	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
-+	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
-+		return -ENODEV;
-+
- 	data = kzalloc(sizeof(*data), GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
-@@ -333,7 +341,6 @@ static int pcie_pme_probe(struct pcie_device *srv)
- 	data->srv = srv;
- 	set_service_data(srv, data);
- 
--	port = srv->port;
- 	pcie_pme_interrupt_enable(port, false);
- 	pcie_clear_root_pme_status(port);
- 
-@@ -445,7 +452,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
- 
- static struct pcie_port_service_driver pcie_pme_driver = {
- 	.name		= "pcie_pme",
--	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
-+	.port_type	= PCIE_ANY_PORT,
- 	.service	= PCIE_PORT_SERVICE_PME,
- 
- 	.probe		= pcie_pme_probe,
--- 
-2.27.0
-
+Ira
