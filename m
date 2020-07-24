@@ -2,153 +2,117 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D54C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AB1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9DA2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:37:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595630270;
-	bh=zxwr+36uT8ubeqQoSb23nE4JB8UimJF+iQqfxvEF9FY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=v06Nb4Hj8w3EafkCLc9rIiKRfyD7UIAUCMQRZhbYxjr0fjCv7rn2BMBKsPWObBvML
-	 9lOBuIV7RLXnuYCTHdUxZ5bDef2tWJNgp5ntJ+rI6+lGbnSfZep/TLwaNVq7iKG1pd
-	 TFy56YzcDdD553JOU0ggiSlfipu2Ge8jB31AMjD8=
+	by mail.kernel.org (Postfix) with ESMTP id 50418206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgGXWht (ORCPT
+        id S1726639AbgGXWir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 18:37:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726154AbgGXWht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 18:37:49 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF439206EB;
-        Fri, 24 Jul 2020 22:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595630268;
-        bh=zxwr+36uT8ubeqQoSb23nE4JB8UimJF+iQqfxvEF9FY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=knGAAh2upW0BFnDQwYIiXAZ3Ff7raBKnQ4IlptMZBVuCFXlSHptY+MTfJ35tkaIFH
-         Jq88j1WDBy1Z4RgGvaLeGRmLMLk584oX7SdMB/0yCmfMDNaImOjmsl0l05PVzNHSx9
-         w5lvfgVYFUL9qj4V1/sbAkxlvZseRM5fmTudm+tI=
-Date:   Fri, 24 Jul 2020 17:37:46 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v1] spi: spi-topcliff-pch: use generic power management
-Message-ID: <20200724223746.GA1538991@bjorn-Precision-5520>
+        Fri, 24 Jul 2020 18:38:47 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:49636 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726154AbgGXWir (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 18:38:47 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 82C521C0BD2; Sat, 25 Jul 2020 00:38:44 +0200 (CEST)
+Date:   Sat, 25 Jul 2020 00:38:44 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
+        Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC leds + net-next v2 0/1] Add support for LEDs on
+ Marvell PHYs
+Message-ID: <20200724223844.GA24384@amd>
+References: <20200723181319.15988-1-marek.behun@nic.cz>
+ <20200724102901.qp65rtkxucauglsp@duo.ucw.cz>
+ <20200724151233.35d799e8@dellmb.labs.office.nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vdo22ofbCktupFYbfYy6PQ609fsk5B6u2b3FpfKxs8OQg@mail.gmail.com>
+In-Reply-To: <20200724151233.35d799e8@dellmb.labs.office.nic.cz>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Rafael, in case you can clear up our wakeup confusion]
-original patch:
-https://lore.kernel.org/r/20200720155714.714114-1-vaibhavgupta40@gmail.com
 
-On Fri, Jul 24, 2020 at 11:16:55PM +0300, Andy Shevchenko wrote:
-> On Fri, Jul 24, 2020 at 6:17 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
-> > On Fri, Jul 24, 2020 at 01:51:49PM +0300, Andy Shevchenko wrote:
-> > > On Mon, Jul 20, 2020 at 7:31 PM Vaibhav Gupta <vaibhavgupta40@gmail.com> wrote:
-> 
-> ...
-> > > > +       device_wakeup_disable(dev);
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > >
-> > > Here I left a result. Care to explain (and perhaps send a follow up
-> > > fix) where is the counterpart to this call?
+On Fri 2020-07-24 15:12:33, Marek Beh=FAn wrote:
+> On Fri, 24 Jul 2020 12:29:01 +0200
+> Pavel Machek <pavel@ucw.cz> wrote:
+>=20
+> > In future, would you expect having software "1000/100/10/nolink"
+> > triggers I could activate on my scrollock LED (or on GPIO controlled
+> > LEDs) to indicate network activity?
+>=20
+> Look at drivers/net/phy/phy_led_triggers.c, something like that could
+> be actually implemented there.
+>=20
+> Some of the modes are useful, like the "1000/100/10/nolink". But some
+> of them are pretty weird, and I don't think anyone actually uses it
+> ("1000-10/else", which is on if the device is linked at 1000mbps ar
+> 10mbps, and else off? who would sacrifies a LED for this?).
+>=20
+> I actually wanted to talk about the phy_led_triggers.c code. It
+> registers several trigger for each PHY, with the name in form:
+>   phy-device-name:mode
+> where
+>   phy-device-name is derived from OF
+>     - sometimes it is in the form
+>       d0032004.mdio-mii:01
+>     - but sometimes in the form of whole OF path followed by ":" and
+>       the PHY address:
+>       /soc/internal-regs@d0000000/mdio@32004/switch0@10/mdio:08
+>   mode is "link", "1Gbps", "100Mbps", "10Mbps" and so on"
+>=20
+> So I have a GPIO LED, and I can set it to sw trigger so that it is on
+> when a specific PHY is linked on 1Gbps.
+>=20
+> The problem is that on Turris Mox I can connect up to three 8-port
+> switches, which yields in 25 network PHYs overall. So reading the
+> trigger file results in 4290 bytes (look at attachment cat_trigger.txt).
+> I think the phy_led_triggers should have gone this way of having just
+> one trigger (like netdev has), and specifying phy device via and mode
+> via another file.
 
-The common pattern seems to be "enable wakeup in suspend, disable
-wakeup in resume".
+I agree with you. This is ... not pretty ... and it would be nice to
+get it fixed.
 
-The confusion in spi-topcliff-pch.c is that it *disables* wakeup in
-both the .suspend() and the .resume() methods and never seems to
-enable wakeup at all.
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Maybe there's something subtle we're missing, because all of the
-following are the same way; they disable wakeup in suspend and also
-disable wakeup in resume:
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-  pch_i2c_suspend    pci_enable_wake(pdev, PCI_D3hot, 0);
-  pch_phub_suspend   pci_enable_wake(pdev, PCI_D3hot, 0);
-  tifm_7xx1_suspend  pci_enable_wake(dev, pci_choose_state(dev, state), 0);
-  pch_can_suspend    pci_enable_wake(pdev, PCI_D3hot, 0);
-  atl1e_suspend      pci_enable_wake(pdev, pci_choose_state(pdev, state), 0);
-  atl2_suspend       pci_enable_wake(pdev, pci_choose_state(pdev, state), 0);
-  smsc9420_suspend   pci_enable_wake(pdev, pci_choose_state(pdev, state), 0);
-  pch_suspend        pci_enable_wake(pdev, PCI_D3hot, 0);
-  pch_spi_suspend    pci_enable_wake(pdev, PCI_D3hot, 0);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-And the following are curious because they seem to disable wakeup in
-suspend but don't do anything with wakeup in resume:
+iEYEARECAAYFAl8bYvMACgkQMOfwapXb+vL+6QCeNQBcceZTkyjl1bm+0JhHxnE8
+wt8An3Z/sFRowDd/7dI0Kz7WamI0ivh2
+=iB1C
+-----END PGP SIGNATURE-----
 
-  jmb38x_ms_suspend  pci_enable_wake(dev, pci_choose_state(dev, state), 0);
-  rtsx_pci_suspend   pci_enable_wake(pcidev, pci_choose_state(pcidev, state), 0);
-  toshsd_pm_suspend  pci_enable_wake(pdev, PCI_D3hot, 0);
-  via_sd_suspend     pci_enable_wake(pcidev, pci_choose_state(pcidev, state), 0);
-  uli526x_suspend    pci_enable_wake(pdev, power_state, 0);
-
-All of the above *look* buggy, but maybe we're missing something.
-
-My *guess* is that most PCI drivers using generic PM shouldn't do
-anything at all with wakeup because these paths in the PCI core do it
-for them:
-
-  pci_pm_suspend_noirq             # pci_dev_pm_ops.suspend_noirq
-    if (!pdev->state_saved)
-      if (pci_power_manageable(pdev)
-        pci_prepare_to_sleep(pdev)
-	  wakeup = device_may_wakeup(&pdev->dev)
-	  pci_enable_wake(pdev, ..., wakeup)
-
-  pci_pm_resume                    # pci_dev_pm_ops.resume
-    pci_pm_default_resume
-      pci_enable_wake(pdev, ..., false)
-
-> > Yes, it seem I forgot to put device_wakeup_disable() in .suspend()
-> > when I removed pci_enable_wake(pdev, PCI_D3hot, 0); from there. It
-> > doesn't seem that .suspend() wants to enable-wake the device as
-> > the bool value passed to pci_enable_wake() is zero.
-> 
-> > Am I missing something else?
-> 
-> At least above. Either you need to drop the current call, or explain
-> how it works.
-
-> Since you have no hardware to test, I would rather ask to drop an
-> extra call or revert the change.
-
-I'm not quite sure what you mean here.  Vaibhav is converting dozens
-of drivers from legacy PCI PM to generic PM, and of course doesn't
-have any of that hardware, but it's still worth doing the conversion.
-
-If it's a bug that spi-topcliff-pch.c disables but never enables
-wakeup, I think this should turn into two patches:
-
-  1) Fix the bug by enabling wakeup in suspend (or whatever the right
-  fix is), and
-
-  2) Convert to generic PM, which may involve removing the
-  wakeup-related code completely.
-
-Bjorn
+--ibTvN161/egqYuK8--
