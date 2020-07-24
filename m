@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37C5C4346A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3493EC4345A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 943252074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 065FC20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595576609;
-	bh=KtM49i0V08bRy4KEevLt7MwZmAFXsueBkkylkf7FmD4=;
+	s=default; t=1595576615;
+	bh=01DVBx+cUJU2MUx86mEXbPPRcD1lVtSvl6DAEX/P6uE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Po6n9wpnt/1kMMzCc28EXl1CFBaKKorgXIscKgbJDQXZBBAjJP5k9pRLDCPnOZIyl
-	 a7CgJxQAiuRvS2vZRuWxOFWyJe4gJVgDxBDLA3J76tgWcdiU0lD7gwKEbNCcIdnTrq
-	 C2snrz/vLubj1yIJP8tPq9b/eUqYyP0JlKQYycmw=
+	b=FQQb71NhCIadHmBAew7tVXq83edIdIM2ZMuCYWIsRJX/6qzYPhMAf8Y254z9JfE5K
+	 l5QylnkGrVGZ+BH4La8ca+Xn60QxHnRRLNjV5mS4STa0NDV8xcjtH/CadZgY4hgMBo
+	 +pTnmxywjJ0VthzBvPQbSmF2zyYWVtq9QdrGwHlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgGXHn2 (ORCPT
+        id S1728228AbgGXHne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:43:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37698 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 03:43:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726607AbgGXHn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:43:27 -0400
+        id S1727886AbgGXHnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 03:43:31 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36E1E2076A;
-        Fri, 24 Jul 2020 07:43:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FD5720786;
+        Fri, 24 Jul 2020 07:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595576606;
-        bh=KtM49i0V08bRy4KEevLt7MwZmAFXsueBkkylkf7FmD4=;
+        s=default; t=1595576611;
+        bh=01DVBx+cUJU2MUx86mEXbPPRcD1lVtSvl6DAEX/P6uE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ETmX7RHojUwKnONwYfzjhyrsaZYbAM/T/HeQn7dUgZMaQpjofjgd8OQWOFeFiRggO
-         785drOokRYVsZt/75hNUwcI90V7jHkIfrHj8vUTu9hlbERhdeI7VBOJIkpF1y0Tv2v
-         MZeaIC1ksmQbMU9OZRMb+bWCwoyPZElcWh9fD7rs=
+        b=lU+ri9XTeXV7fdDhxC3z7c5crNIvFy/Om3bddXaemL8BaUIDVVuX9FV6jrqSXkBWR
+         ErCM6ROOyf8AQp9eff/vfdrUX6AZ3oLt20pPHW84/j52XGmZkRf4N+7T5vd23jUQIG
+         gv0egVrlDdHC8WMUScaOHw/vG3Ki388NlnpxjqgY=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         Markus Mayer <mmayer@broadcom.com>,
@@ -58,9 +58,9 @@ To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 28/29] memory: Describe the MEMORY Kconfig entry
-Date:   Fri, 24 Jul 2020 09:40:37 +0200
-Message-Id: <20200724074038.5597-29-krzk@kernel.org>
+Subject: [PATCH v2 29/29] memory: samsung: exynos-srom: Describe the Kconfig entry
+Date:   Fri, 24 Jul 2020 09:40:38 +0200
+Message-Id: <20200724074038.5597-30-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200724074038.5597-1-krzk@kernel.org>
 References: <20200724074038.5597-1-krzk@kernel.org>
@@ -69,7 +69,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Write short description about the entire memory controllers section.
+Write short description about the Exynos SROM controller driver.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
@@ -78,26 +78,26 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. New patch
 ---
- drivers/memory/Kconfig | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/memory/samsung/Kconfig | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
-index c37752d5f26d..ec735794aeaf 100644
---- a/drivers/memory/Kconfig
-+++ b/drivers/memory/Kconfig
-@@ -5,6 +5,12 @@
- 
- menuconfig MEMORY
- 	bool "Memory Controller drivers"
+diff --git a/drivers/memory/samsung/Kconfig b/drivers/memory/samsung/Kconfig
+index 20a8406ce786..8e240f078afc 100644
+--- a/drivers/memory/samsung/Kconfig
++++ b/drivers/memory/samsung/Kconfig
+@@ -23,5 +23,12 @@ config EXYNOS5422_DMC
+ config EXYNOS_SROM
+ 	bool "Exynos SROM controller driver" if COMPILE_TEST
+ 	depends on (ARM && ARCH_EXYNOS) || (COMPILE_TEST && HAS_IOMEM)
 +	help
-+	  This option allows to enable specific memory controller drivers,
-+	  useful mostly on embedded systems.  These could be controllers
-+	  for DRAM (SDR, DDR), ROM, SRAM and others.  The drivers features
-+	  vary from memory tuning and frequency scaling to enabling
-+	  access to attached peripherals through memory bus.
++	  This adds driver for Samsung Exynos SoC SROM controller.  The driver
++	  in basic operation mode only saves and restores SROM registers
++	  during suspend.  If however appropriate device tree configuration
++	  is provided, the driver enables support for external memory
++	  or external devices.
++	  If unsure, say Y on devices with Samsung Exynos SocS.
  
- if MEMORY
- 
+ endif
 -- 
 2.17.1
 
