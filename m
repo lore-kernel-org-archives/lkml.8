@@ -2,99 +2,126 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 512B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 11:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B53C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 11:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE762074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 11:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4F72074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 11:41:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NJbnzZKz"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Do62pTL1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgGXLgO (ORCPT
+        id S1726535AbgGXLlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 07:36:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27262 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726820AbgGXLgN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 07:36:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595590571;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=I68fbRd6bZ95LK9+jolwOQBVPAxfW2jV01rcWnCSNp0=;
-        b=NJbnzZKzhV/h+pPjDJVM2yV2WuCD9IN1DwsZXIfKemcWPpP0DfJe12hGE8+vB2ruJboxDF
-        OhdqEcwByJ+vMeM7vm3vOJUCs3TBlVH6pxSeQ7xCws4403Vu/jdn4xeiEpagtnm8dyLY9a
-        pqA53eU4PSfx3aO6xAe7hTM9Kqna64w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-512-PexwN0WVOwWbFOVy0tM0dg-1; Fri, 24 Jul 2020 07:36:10 -0400
-X-MC-Unique: PexwN0WVOwWbFOVy0tM0dg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 507C6107ACCA;
-        Fri, 24 Jul 2020 11:36:07 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EDB2919723;
-        Fri, 24 Jul 2020 11:36:03 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net>
-References: <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net> <1293241.1595501326@warthog.procyon.org.uk> <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com> <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk> <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk> <2003787.1595585999@warthog.procyon.org.uk>
-To:     Ian Kent <raven@themaw.net>
-Cc:     dhowells@redhat.com, Miklos Szeredi <miklos@szeredi.hu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
-        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
-        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and attribute change notifications [ver #5]
+        Fri, 24 Jul 2020 07:41:21 -0400
+Received: from mail-eopbgr80078.outbound.protection.outlook.com ([40.107.8.78]:38062
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726258AbgGXLlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 07:41:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BLFHoUKKcL4ftb8v9+Ri4QvA6XVqgnG4bXB8yLaU4sefgP4GwxMWI+17mXirPxg/0sWSqe66Dp4aoVaKBQgDm7rfokMTVeI1TW+DvFDR4KmpjNHeTdxhXagHJlskwhwwqFPHNZ1gzQpMoSJEHiXWPLIcoqP5doaB+PEq1Dnyfdsa6MoU6b9UlH89uUafjEVGjKFJzdfG8shBZFM7C6cy549BAK9uhbi0Ti4cuNxvdRWsOfvmI0XpEcXdWzFnq1RFy0oth6sE2nNd1A5HjHSLwCPX0xpOOFw7/5NAc0UPq+I4SBhRU7uB+7FaGL2Izt/7peTKehudivAacDxeRcvdew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hsHO/KvBMsQBpTI0T/MHRQPaSwEqDCU7+44Wnneh4aM=;
+ b=RmX7erBU070N4oHuc5sqcN0mQQh5LsggZe1hX7FXwJdJbGXwM+K69+LuJtv+RPCcc+j1GLPMge+/LiGula9R1cCbKDTz6AMAmyvyroToEcZgFNmW9BcJhq/Cyn1UudxMc6VloWn/6SOoNwE0VcZFANREVOlkjWh38kf0E1jLaxP5Qfj6IlNAB4bKemw6aSsYudwLg3axl1CA1pL8otL00AwZtuJYiO9cdhscT+hWh8ZF1OSlFn5PiWI8xkfPq2AU2dFAPtzQRXPGgyp8KyWcHGPzdIALjDIK/dlXmdWp/aJ2onG1hSSD6nZ0ByAR6SMGL2mHsfVLyQYLCFR6dKfU8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hsHO/KvBMsQBpTI0T/MHRQPaSwEqDCU7+44Wnneh4aM=;
+ b=Do62pTL1dtrr8JNZWO4cLY0HjY3Z67Ig1RU8jPMQ1O/c12rKcCj3oOxSC3sdsj1Mq+qa9nPSBfSzHlXs2E5yEZMzq5PpWaL3Y9iH1iYLMRK87z8ty/IrbLRmNvNSXtXv7Yg7Op5kirU20lIjLfvQpZFATpykMnMnC7lGdo6bKMw=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VI1PR04MB4800.eurprd04.prod.outlook.com (2603:10a6:803:5a::12)
+ by VI1PR0402MB3375.eurprd04.prod.outlook.com (2603:10a6:803:2::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Fri, 24 Jul
+ 2020 11:41:17 +0000
+Received: from VI1PR04MB4800.eurprd04.prod.outlook.com
+ ([fe80::1c58:aed8:bd10:6c9e]) by VI1PR04MB4800.eurprd04.prod.outlook.com
+ ([fe80::1c58:aed8:bd10:6c9e%3]) with mapi id 15.20.3216.026; Fri, 24 Jul 2020
+ 11:41:17 +0000
+From:   Vabhav Sharma <vabhav.sharma@oss.nxp.com>
+To:     shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     V.Sethi@nxp.com, Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: [PATCH] arm64: dts: ls1028a: qds: enable lpuart1
+Date:   Fri, 24 Jul 2020 17:04:42 +0530
+Message-Id: <1595590482-26833-1-git-send-email-vabhav.sharma@oss.nxp.com>
+X-Mailer: git-send-email 1.9.1
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR03CA0097.apcprd03.prod.outlook.com
+ (2603:1096:4:7c::25) To VI1PR04MB4800.eurprd04.prod.outlook.com
+ (2603:10a6:803:5a::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2023285.1595590563.1@warthog.procyon.org.uk>
-Date:   Fri, 24 Jul 2020 12:36:03 +0100
-Message-ID: <2023286.1595590563@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from uefi-OptiPlex-790.ap.freescale.net (92.120.0.71) by SG2PR03CA0097.apcprd03.prod.outlook.com (2603:1096:4:7c::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3239.9 via Frontend Transport; Fri, 24 Jul 2020 11:41:14 +0000
+X-Mailer: git-send-email 1.9.1
+X-Originating-IP: [92.120.0.71]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d1ee4ff6-69d2-4278-9034-08d82fc67a4d
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3375:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB33757AF15B20EFB1FBCB8AC0B2770@VI1PR0402MB3375.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:513;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IIVHPUIPvyM4PhPLh/c/GdfT7tUERzuPjdOGJMWy0sCdO4dHDyy/USOU6ZdxWKXCINaJdREElzOp33MH3NcRAzottzFQtbKguEPACRisXI1asTLcPCtDnM6P43AhXxzX9d4pZNwlWRNugnqrmjO3XfFpOsx4Byo5OtLZb23KjDjLitK2+oh2s7QHIPrjkm9DZhC7C28D7N0UOQDysSJu2BDsDbOiQnlVMvRUaN/aEnFMaTwoD4kAHYmiEQVyaLjPrA7ZSMmEhOtx3XBhq/26kVFJG1+RmhNsyUeCHjdGMudbTFsDL7FRMsnx8bArFlZtgbDE/n6mi0pG9ptq3kcl9Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4800.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(366004)(136003)(346002)(396003)(5660300002)(478600001)(66476007)(316002)(86362001)(4744005)(66556008)(4326008)(66946007)(2906002)(6506007)(186003)(6486002)(83380400001)(8676002)(26005)(16526019)(956004)(6666004)(2616005)(6512007)(44832011)(52116002)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: TrF6YiOAr3JZXmc9yWEYdI9QsElB9Dx/uBPBZ8JBj4xn7H75orTuwB84vxz349w6Xq2WZz7PWrPl3q1MEUw4k/4VcTlfjpoeWQJ0+qEPJGUBPgBwXDptXL10sNR4sHhPU3+BIMH/8bs+f1vOAIIlGooXystugiLe+3UAbd3JSivzeo8E7fFK9hM+R8BXSEbH7gYO/DXdAhpmICawIMb0dEG0yCNpMXUqjD88/BLCLUBSUg7PdUeuwopxQfsF0k2o35bMOewFzwHrR+VX76t+iL9Vvb0EEmY+CRblYR3R52ctPt/jTxyNiQ7KDGrvCIL11CXWI8cSgKp6xuIv2zUJ62aTFe96UnIt84d0DQKtotru9sWLSIcybnERpAMnccRJeGzVhNkkbai2wzaxwLeLt44mHMTHMIimBjBDdjbXrw8lhHNwG97gGV6WwJwDQ/JDyFll0Szshhr86GLalsqUbItiPmAN6cv5mBQSQoPGihs=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1ee4ff6-69d2-4278-9034-08d82fc67a4d
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4800.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 11:41:17.8896
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lsWDyzBGbYbNZj0QdPLrKymqT2asFoARt/SzJdGJj9ynRVnOuvvd1h4xcHOOZFkUYGiiWlvNFw2wAFBxmCQNpQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3375
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ian Kent <raven@themaw.net> wrote:
+From: Vabhav Sharma <vabhav.sharma@nxp.com>
 
-> I was wondering about id re-use.
-> 
-> Assuming that ids that are returned to the idr db are re-used
-> what would the chance that a recently used id would end up
-> being used?
-> 
-> Would that chance increase as ids are consumed and freed over
-> time?
+LPUART nodes by default are disabled in LS1028A device
+tree, Enabling LPUART1 node
 
-I've added something to deal with that in the fsinfo branch.  I've given each
-mount object and superblock a supplementary 64-bit unique ID that's not likely
-to repeat before we're no longer around to have to worry about it.
+Acked-by: Fugang Duan <fugang.duan@nxp.com>
+Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-fsinfo() then allows you to retrieve them by path or by mount ID.
-
-So, yes, mnt_id and s_dev are not unique and may be reused very quickly, but
-I'm also providing uniquifiers that you can check.
-
-David
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+index dd69c5b..045f748 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+@@ -228,6 +228,10 @@
+ 	status = "okay";
+ };
+ 
++&lpuart0 {
++	status = "okay";
++};
++
+ &sai1 {
+ 	status = "okay";
+ };
+-- 
+2.7.4
 
