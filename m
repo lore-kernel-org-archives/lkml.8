@@ -2,70 +2,197 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CFAC433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A447BC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5189206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:58:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595581084;
-	bh=tzkyofJZ83xu4Dq5g+CzcXfmkcFYKwcnP4l8Hcgbzi0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=LHn5O193OxRUscpEtU/CCU3WysgEDyBZXn5iIZG08TVEN6iw0AXsYYwRNkhKMAto/
-	 Uy90Oq77c80JDv4htWvksaJKLN4Tych1g5R2HNMgLNY81MgDcDQ/5irct60hBS/Ihv
-	 rW0OxgrW4kAG5L3W4MGBEuNDY9N5JXRgd8X3tlGs=
+	by mail.kernel.org (Postfix) with ESMTP id 84638206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgGXI6D (ORCPT
+        id S1727029AbgGXI7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:58:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbgGXI6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:58:02 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9522206EB;
-        Fri, 24 Jul 2020 08:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595581082;
-        bh=tzkyofJZ83xu4Dq5g+CzcXfmkcFYKwcnP4l8Hcgbzi0=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=JmwZsWL9ufg4Nclx28FhOXoT/jbgancmEtRdpD63spixXt6/mOuk/7iQIun5njbdD
-         aCrswaoFV40Ip68Zb23JDBPtGlzEVxVHtoqFQkAMGIIdA2ZBDmpZI27xtlCNFFSLOY
-         6LwxqK7YxB0SqIc3PdfB5Fp0DpeavRsJBvMPGfjk=
-Content-Type: text/plain; charset="utf-8"
+        Fri, 24 Jul 2020 04:59:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57288 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbgGXI7P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 04:59:15 -0400
+Received: from mail-ej1-f71.google.com ([209.85.218.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <andrea.righi@canonical.com>)
+        id 1jytXt-0003cG-LP
+        for linux-kernel@vger.kernel.org; Fri, 24 Jul 2020 08:59:13 +0000
+Received: by mail-ej1-f71.google.com with SMTP id z14so1753398eje.19
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 01:59:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=Hjub13SPe2wEgoDjP8LKlCX8Yl7alX0oGHdU3qzYDPM=;
+        b=jBgCutwikEpD3UHAPtd1CterNSTZQh8a4747chpYJNt7Askl107Plj5NT93ex6zmND
+         rovhAiss88fsWt3AME/16eh/rAg1zfHfgnVbxKr7yayiaiBK9rzlJUYr3EL7/VFMItpD
+         Atb3sw+1bmYa7uwisBSZBT2dmXWnxfHUZndmGPbhkWk4aIzt697BJlVYo8x9hi1G62I4
+         MhM79+v8SLdRBA10YdDPJ8ViEUrLINcOVGWdv04w+rVYfkotNLgBgAcaAdsKKPHljJ4Y
+         qaXbeJtBPVtobeTCozEysAP3AasI/iMZMqISgLaIW/z42oQDTOCbt8UlMp6Y8Yfmg675
+         R4Ow==
+X-Gm-Message-State: AOAM533HQ0uo6v47pGL4B4UvbTzqcIzSw/LdigOY5TNLjVhRNNKlJMZR
+        Tbwnm7u78Xfx+dJ2t+Y6uwhrcBK7slc1F4OKeGIkHv4kYibzenX6uhL0UiqIKPgwUNBNj/eaLQN
+        aHkiNbA2CJQh8s3GJObysIRlmAKV2vmVmGx8I0UG7eA==
+X-Received: by 2002:a17:906:c40d:: with SMTP id u13mr8037439ejz.519.1595581152670;
+        Fri, 24 Jul 2020 01:59:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyLghkjxyAHSXRSJUM7yxIeHsXsl1Sx8URoFGpqj60bEA7IlZyIWZIUznr715CpupWlbmdO2A==
+X-Received: by 2002:a17:906:c40d:: with SMTP id u13mr8037418ejz.519.1595581152278;
+        Fri, 24 Jul 2020 01:59:12 -0700 (PDT)
+Received: from localhost (host-87-11-131-192.retail.telecomitalia.it. [87.11.131.192])
+        by smtp.gmail.com with ESMTPSA id y22sm302547edl.84.2020.07.24.01.59.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 01:59:11 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 10:59:10 +0200
+From:   Andrea Righi <andrea.righi@canonical.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] xen-netfront: fix potential deadlock in xennet_remove()
+Message-ID: <20200724085910.GA1043801@xps-13>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <26624b65d0e6b958c4765a406b9929d1a9ce1c2c.1594880946.git.rahul.tanwar@linux.intel.com>
-References: <7ef7009b4e9f986fd6dfbf487c0e85de68a4ba9b.1594880946.git.rahul.tanwar@linux.intel.com> <26624b65d0e6b958c4765a406b9929d1a9ce1c2c.1594880946.git.rahul.tanwar@linux.intel.com>
-Subject: Re: [PATCH v2 3/3] clk: intel: Avoid unnecessary memset by improving code
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar.linux@gmail.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        linux-clk@vger.kernel.org, mturquette@baylibre.com
-Date:   Fri, 24 Jul 2020 01:58:01 -0700
-Message-ID: <159558108119.3847286.13508421250919573847@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rahul Tanwar (2020-07-15 23:30:32)
-> memset can be avoided in a loop if the variables used are declared
-> inside the loop. Move such variables declaration inside the loop
-> to avoid memset.
->=20
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
+There's a potential race in xennet_remove(); this is what the driver is
+doing upon unregistering a network device:
 
-Applied to clk-next
+  1. state = read bus state
+  2. if state is not "Closed":
+  3.    request to set state to "Closing"
+  4.    wait for state to be set to "Closing"
+  5.    request to set state to "Closed"
+  6.    wait for state to be set to "Closed"
+
+If the state changes to "Closed" immediately after step 1 we are stuck
+forever in step 4, because the state will never go back from "Closed" to
+"Closing".
+
+Make sure to check also for state == "Closed" in step 4 to prevent the
+deadlock.
+
+Also add a 5 sec timeout any time we wait for the bus state to change,
+to avoid getting stuck forever in wait_event().
+
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+---
+Changes in v2:
+ - remove all dev_dbg() calls (as suggested by David Miller)
+
+ drivers/net/xen-netfront.c | 64 +++++++++++++++++++++++++-------------
+ 1 file changed, 42 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
+index 482c6c8b0fb7..88280057e032 100644
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -63,6 +63,8 @@ module_param_named(max_queues, xennet_max_queues, uint, 0644);
+ MODULE_PARM_DESC(max_queues,
+ 		 "Maximum number of queues per virtual interface");
+ 
++#define XENNET_TIMEOUT  (5 * HZ)
++
+ static const struct ethtool_ops xennet_ethtool_ops;
+ 
+ struct netfront_cb {
+@@ -1334,12 +1336,15 @@ static struct net_device *xennet_create_dev(struct xenbus_device *dev)
+ 
+ 	netif_carrier_off(netdev);
+ 
+-	xenbus_switch_state(dev, XenbusStateInitialising);
+-	wait_event(module_wq,
+-		   xenbus_read_driver_state(dev->otherend) !=
+-		   XenbusStateClosed &&
+-		   xenbus_read_driver_state(dev->otherend) !=
+-		   XenbusStateUnknown);
++	do {
++		xenbus_switch_state(dev, XenbusStateInitialising);
++		err = wait_event_timeout(module_wq,
++				 xenbus_read_driver_state(dev->otherend) !=
++				 XenbusStateClosed &&
++				 xenbus_read_driver_state(dev->otherend) !=
++				 XenbusStateUnknown, XENNET_TIMEOUT);
++	} while (!err);
++
+ 	return netdev;
+ 
+  exit:
+@@ -2139,28 +2144,43 @@ static const struct attribute_group xennet_dev_group = {
+ };
+ #endif /* CONFIG_SYSFS */
+ 
+-static int xennet_remove(struct xenbus_device *dev)
++static void xennet_bus_close(struct xenbus_device *dev)
+ {
+-	struct netfront_info *info = dev_get_drvdata(&dev->dev);
+-
+-	dev_dbg(&dev->dev, "%s\n", dev->nodename);
++	int ret;
+ 
+-	if (xenbus_read_driver_state(dev->otherend) != XenbusStateClosed) {
++	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
++		return;
++	do {
+ 		xenbus_switch_state(dev, XenbusStateClosing);
+-		wait_event(module_wq,
+-			   xenbus_read_driver_state(dev->otherend) ==
+-			   XenbusStateClosing ||
+-			   xenbus_read_driver_state(dev->otherend) ==
+-			   XenbusStateUnknown);
++		ret = wait_event_timeout(module_wq,
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateClosing ||
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateClosed ||
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateUnknown,
++				   XENNET_TIMEOUT);
++	} while (!ret);
++
++	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
++		return;
+ 
++	do {
+ 		xenbus_switch_state(dev, XenbusStateClosed);
+-		wait_event(module_wq,
+-			   xenbus_read_driver_state(dev->otherend) ==
+-			   XenbusStateClosed ||
+-			   xenbus_read_driver_state(dev->otherend) ==
+-			   XenbusStateUnknown);
+-	}
++		ret = wait_event_timeout(module_wq,
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateClosed ||
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateUnknown,
++				   XENNET_TIMEOUT);
++	} while (!ret);
++}
++
++static int xennet_remove(struct xenbus_device *dev)
++{
++	struct netfront_info *info = dev_get_drvdata(&dev->dev);
+ 
++	xennet_bus_close(dev);
+ 	xennet_disconnect_backend(info);
+ 
+ 	if (info->netdev->reg_state == NETREG_REGISTERED)
+-- 
+2.25.1
+
