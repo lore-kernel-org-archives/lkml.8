@@ -2,156 +2,130 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A69CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D6DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 675E4206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 321C9206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:56:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IRsMsqR/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsYsRiGQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgGXR6W (ORCPT
+        id S1727776AbgGXR4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:58:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51714 "EHLO
+        Fri, 24 Jul 2020 13:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726639AbgGXR6V (ORCPT
+        with ESMTP id S1726618AbgGXR4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:58:21 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8467FC0619D3;
-        Fri, 24 Jul 2020 10:58:21 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id s23so7483589qtq.12;
-        Fri, 24 Jul 2020 10:58:21 -0700 (PDT)
+        Fri, 24 Jul 2020 13:56:24 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0652C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:56:24 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id w17so7628177otl.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:56:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nNxE3+XkF4L9QAdGaxowxMGCxg8LNIy3uR1pRcTBli8=;
-        b=IRsMsqR//APDGVVqlwMqj9i8FEhPtdym9xLU/hrqoJFLeA28tM1yuiV39r1+Tewy1R
-         OqhuvBQYpmn9x+80zP6rITJWNoEkQrrNjdoCTUa2CraEfVogjBBFVXSzVJ/fW/LoSP3n
-         ThLDyUjFxsXJdDTf3KRzj0J6cZ009Ec8gzlxCNo+pf1zQusT5UH7mTwig6RD13VrihQQ
-         dP+XUIIAy0uz2FP/4QiSXy1TAAVh6KjvJSJLVRS0+iicQ8cKzxezWKEFuURcrHa6QsW0
-         rgZaL29YQsivXvFW/gR1d4OJMOEvG88XDu+S5/zGHmHGEzUo3C0uhJDk4xe/kLjkJ5Dl
-         OxYQ==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=crOELoHuO5UyCHwlOjSs28KQsKC5splMHLSUwDt5LfI=;
+        b=WsYsRiGQq/Ne+jIHDnyOUOBwFQMSO8mx0SFa5Iv16nUbj/GxaWT7Oo97hPT3V+8i8E
+         6P0QHd/ggEPcUPzWs5wlZmFqABDmPOc2y1onfiJiVNoFIeGDjo+N6AvBm97eWfW3FMrc
+         ap8Xb95k9VObNlQB34nanTazZMzARB4pnkCmjmUiEZdMftNaIJ2X3erRf9iF9/e8TkWN
+         1PwAUM+dq/TbWBjUpfNAaEd7hHVqv8iQo3Rr+kk1IHG7kW03EFsCE1ppj42sdqT2IPMX
+         hZSwl8PKiwcp8gqEyven9Z1+daim39qVhgTxjg951sWWqg/t8T/G5kZe0P7VQaq9R9gB
+         kQ1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=nNxE3+XkF4L9QAdGaxowxMGCxg8LNIy3uR1pRcTBli8=;
-        b=XbggV43azL5N2lVcVypFcVtbgsaMzaPaZViu37qNxbqUF0wTHRdV0YmAWMhuUWWcCV
-         CzrABiWoDrfVS5nN2XgJ7qY9+BzG91kdPDWTISeSdOfSUh/Je8nLN2YwcasP1zw1GbQ5
-         bN52o1BWAWtZizJbWeLHFTTyapkW62D6N1C9Rh9VyS7ZJJzHvU5Q4ZpjR+IoJ/rMY1xR
-         H6BBE+aJkBd7pMtwRH/Tsjt0dRThXywYuQZequ/UGHF4cXuSiteNSBvG9+6IMpRUi3Hv
-         zno3hJrJ5O/GwcJvagVJ4tQ/LNe6/a2W9Mg8GYRYW1uBeJbJ7H+TXlOfTDCZVza51C9I
-         gVvQ==
-X-Gm-Message-State: AOAM530piO2vcijFujgQNuXjbQhUaUWCRIksG/a6kHqpjHW+EPrMyOOu
-        JMxs/cnAfC5x5kEfpuD2a44=
-X-Google-Smtp-Source: ABdhPJwnUda8U9jPe6l5SaeP7NYrS9DsjuxSVrOKEOdJwPbzA+tWm03LJ6+gS8YFbvPWm+2sSJv0Jw==
-X-Received: by 2002:ac8:1baf:: with SMTP id z44mr10871128qtj.129.1595613500705;
-        Fri, 24 Jul 2020 10:58:20 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id a203sm7199153qkg.30.2020.07.24.10.58.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 10:58:20 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 24 Jul 2020 13:58:18 -0400
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v5 11/75] x86/boot/compressed/64: Disable red-zone usage
-Message-ID: <20200724175818.GA732164@rani.riverdale.lan>
-References: <20200724160336.5435-1-joro@8bytes.org>
- <20200724160336.5435-12-joro@8bytes.org>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=crOELoHuO5UyCHwlOjSs28KQsKC5splMHLSUwDt5LfI=;
+        b=CgfhsVC5AYHnNrOFxdISSZc6kaA06INq3EmJw5u9BiFNQZ0b2iieaYUL/ipt3B0vyd
+         Ad5HGkSikzfoX7gcSjreu3XZRPixQaXXviuZrTPhUxsj/+yolty2R1uC0F9NBxdUxc19
+         StVFCoD2GPwVjkR7FDL2QjYkjON+mrkcRERRKBx9PvJ+HvZ5NkVEEJirD69Y4x/xKlkj
+         jcdoDaDYyL9xMQtudo7omxv+sYWbruHfCZWjj/8ZKYPzj66z/waokjXXjLV/omF8LUOW
+         R5QPrhmDbrQo25SR3KUWXmoXj/PTqdW5zWD4I1I/cFziZMzt4QOHpMo7idRfJbKPhNof
+         d1Tg==
+X-Gm-Message-State: AOAM5334MyZnKvblEw+4kPqDcB2GBotFCGrHgdBlWGd+tk/l4yDE5C3m
+        bdKl7th5leBfK8QJC4T6z13aKCcl
+X-Google-Smtp-Source: ABdhPJzB+ySmpkZQodsm5CaoU4cuc/3IVfPnt5raiqSbjqvrnqiwWCuLSYICKSu1uPDuHLYpsteMxg==
+X-Received: by 2002:a9d:5915:: with SMTP id t21mr9702226oth.372.1595613383978;
+        Fri, 24 Jul 2020 10:56:23 -0700 (PDT)
+Received: from localhost.localdomain (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id n7sm1559472ooo.38.2020.07.24.10.56.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 10:56:23 -0700 (PDT)
+Subject: Re: [PATCH] Staging: rtl8188eu: rtw_mlme: Fix uninitialized variable
+ authmode
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kjlu@umn.edu,
+        Shreeya Patel <shreeya.patel23498@gmail.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Michael Straube <straube.linux@gmail.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20200724122957.30411-1-dinghao.liu@zju.edu.cn>
+ <20200724132836.GC316746@kroah.com>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <66d9502e-682f-6ccd-ef90-138feee0c2ae@lwfinger.net>
+Date:   Fri, 24 Jul 2020 12:56:22 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200724160336.5435-12-joro@8bytes.org>
+In-Reply-To: <20200724132836.GC316746@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 06:02:32PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> The x86-64 ABI defines a red-zone on the stack:
-> 
->   The 128-byte area beyond the location pointed to by %rsp is considered
->   to be reserved and shall not be modified by signal or interrupt
->   handlers. Therefore, functions may use this area for temporary data
->   that is not needed across function calls. In particular, leaf
->   functions may use this area for their entire stack frame, rather than
->   adjusting the stack pointer in the prologue and epilogue. This area is
->   known as the red zone.
-> 
-> This is not compatible with exception handling, because the IRET frame
-> written by the hardware at the stack pointer and the functions to handle
-> the exception will overwrite the temporary variables of the interrupted
-> function, causing undefined behavior. So disable red-zones for the
-> pre-decompression boot code.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/boot/Makefile            | 2 +-
->  arch/x86/boot/compressed/Makefile | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-> index fe605205b4ce..4d6a16a47e9f 100644
-> --- a/arch/x86/boot/Makefile
-> +++ b/arch/x86/boot/Makefile
-> @@ -66,7 +66,7 @@ targets += cpustr.h
->  
->  # ---------------------------------------------------------------------------
->  
-> -KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
-> +KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP -mno-red-zone
->  KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
->  KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
->  KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+On 7/24/20 8:28 AM, Dinghao Liu wrote:
+> The variable authmode will keep uninitialized if neither if
+> statements used to initialize this variable are not triggered.
 
-This change seems unnecessary? REALMODE_CFLAGS means it uses -m16, so
-this isn't 64-bit code. [As an aside, we can drop the check for -m16
-support in arch/x86/Makefile now that we've bumbed to 4.9]
+Besides Greg's comment, you need to re-parse this sentence. I realize that 
+English is probably not your first language, but this one is not what you meant.
 
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index 5a828fde7a42..416f52ab39ec 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -32,7 +32,7 @@ KBUILD_CFLAGS := -m$(BITS) -O2
->  KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
->  KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
->  cflags-$(CONFIG_X86_32) := -march=i386
-> -cflags-$(CONFIG_X86_64) := -mcmodel=small
-> +cflags-$(CONFIG_X86_64) := -mcmodel=small -mno-red-zone
->  KBUILD_CFLAGS += $(cflags-y)
->  KBUILD_CFLAGS += -mno-mmx -mno-sse
->  KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
-> -- 
-> 2.27.0
-> 
+You likely meant "The variable authmode will remain uninitialized if all 
+statements used to initialize this variable are not triggered."
 
-This one is necessary.
+A possible (line-wrapped) patch to quiet the tools would be:
+
+diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c 
+b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+index 9de2d421f6b1..9e4d78bc9a2e 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_mlme.c
++++ b/drivers/staging/rtl8188eu/core/rtw_mlme.c
+@@ -1729,9 +1729,11 @@ int rtw_restruct_sec_ie(struct adapter *adapter, u8 
+*in_ie, u8 *out_ie, uint in_
+         if ((ndisauthmode == Ndis802_11AuthModeWPA) ||
+             (ndisauthmode == Ndis802_11AuthModeWPAPSK))
+                 authmode = _WPA_IE_ID_;
+-       if ((ndisauthmode == Ndis802_11AuthModeWPA2) ||
+-           (ndisauthmode == Ndis802_11AuthModeWPA2PSK))
++       else if ((ndisauthmode == Ndis802_11AuthModeWPA2) ||
++                (ndisauthmode == Ndis802_11AuthModeWPA2PSK))
+                 authmode = _WPA2_IE_ID_;
++       else
++               authmode = 0;
+
+         if (check_fwstate(pmlmepriv, WIFI_UNDER_WPS)) {
+                 memcpy(out_ie + ielength, psecuritypriv->wps_ie, 
+psecuritypriv->wps_ie_len);
+
+
+Yes, in this routine, it would be possible for authmode to not be set; however, 
+later code only compares it to either _WPA_IE_ID_ or _WPA2_IE_ID_. It is never 
+used in a way that an unset value could make the program flow be different by 
+arbitrarily setting the value to zero. Thus your statement "Then authmode may 
+contain a garbage value and influence the execution flow of this function." is 
+false.
+
+Larry
