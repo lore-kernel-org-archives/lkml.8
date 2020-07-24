@@ -2,303 +2,526 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCEBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D80C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A32120888
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E27A2065E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:05:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jPVQGwIg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgGXCFO (ORCPT
+        id S1727012AbgGXCF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 22:05:14 -0400
-Received: from mga01.intel.com ([192.55.52.88]:13911 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbgGXCFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 22:05:13 -0400
-IronPort-SDR: s8EXjp8DLeQoqB4/yXaMbH+1faePJL1prxNxgkP+XvQlfIXF0BjSAkBo7IAwL5L5NI5HkITv1e
- vfSB9RNzCDzg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="168779573"
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="168779573"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2020 19:05:12 -0700
-IronPort-SDR: t2KNmM/PpoTY0J7LcRqYkWt/Sy3yMr4UVbfustsha/wPKH17rY8egWo7+4DRFhkDmMSphToBkN
- Tg7E2IPocDDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,388,1589266800"; 
-   d="scan'208";a="363230043"
-Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.135]) ([10.239.161.135])
-  by orsmga001.jf.intel.com with ESMTP; 23 Jul 2020 19:05:06 -0700
-Subject: Re: [RFC PATCH 11/16] sched: migration changes for core
- scheduling(Internet mail)
-To:     =?UTF-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>,
-        Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pjt@google.com" <pjt@google.com>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Aubrey Li <aubrey.li@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "subhra.mazumdar@oracle.com" <subhra.mazumdar@oracle.com>,
-        "fweisbec@gmail.com" <fweisbec@gmail.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "kerrnel@google.com" <kerrnel@google.com>,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>,
-        "joel@joelfernandes.org" <joel@joelfernandes.org>,
-        "vineethrp@gmail.com" <vineethrp@gmail.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-References: <cover.1593530334.git.vpillai@digitalocean.com>
- <9044a2ebde089483d45c091752d208a878c604ac.1593530334.git.vpillai@digitalocean.com>
- <72869477-AA03-47D4-96C5-D3CDBDBC12E7@tencent.com>
- <459dbf33-02f6-d4e0-52e4-919e1e33be13@linux.intel.com>
- <5C71B460-8DC3-44AF-A75E-68BB2E33686B@tencent.com>
- <589382b3-709e-17a6-d693-05ebd3998336@linux.intel.com>
- <897E5117-8A78-4CE3-8514-3577C4474775@tencent.com>
- <6ab8a001-ae5e-e484-c571-90d6931004e7@linux.intel.com>
- <96A765D7-7FD3-40EB-873B-0F9365569490@tencent.com>
- <a4533d7f-41b0-3477-0316-0e2df55cbe9c@linux.intel.com>
- <325B98A4-9135-4138-AFED-ADFC3560D917@tencent.com>
- <36cce58e-03b3-4d77-dfc5-e3c49f3ecdd8@linux.intel.com>
- <A73E4BD3-D742-40E1-9928-B45BC68D1B89@tencent.com>
- <CAERHkrseWGsQ7Vw1Sb4A+PB6XFeeuTj4d1nH70kadRFRXLQLsg@mail.gmail.com>
- <F6F57D2C-90B2-49E5-8684-3F300A15B605@tencent.com>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <9d2a6233-57a4-4970-c615-43bd05ea9da3@linux.intel.com>
-Date:   Fri, 24 Jul 2020 10:05:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <F6F57D2C-90B2-49E5-8684-3F300A15B605@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 23 Jul 2020 22:05:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbgGXCF5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 22:05:57 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D52BCC0619E3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 19:05:56 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id t18so4648176plo.13
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 19:05:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=5aq7lvgbPI0yY0ktvMY4HSJk6lzevca6F80kF3dvzrE=;
+        b=jPVQGwIg0GiX4KtlyMpzJwDgm/r7Xdmu0P2fnQiNpQyVh7Tj1QJCMf3mBwwEq8UQhN
+         2ZhgheD7xAwJwEkp1xdB51RpbgMeUfpgtr1iOgC7rqiJWNbJ6JENcJ4zpaURAnJWLcCO
+         EccFaSIqQFAC/lrut0Er0SzepwM9+UY3ucU3GM4f2Ja3CJbeeJtS2pyd8zZjX2VQGf73
+         r+PEKNJWcIvqVi6To8CqJpbbQc3r4jZZsNRzKDhJ46zjI1VAcwrVE3oivJ952B88PEht
+         NmR6LQyP1+nFZnYrY3vdwk+HoJYrMH8lFiTbFi0a5Ff59WydC2I/e2oJHEyq/nFbCbdu
+         u8Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=5aq7lvgbPI0yY0ktvMY4HSJk6lzevca6F80kF3dvzrE=;
+        b=B6CRHiSTpQLLyz7Ofr2a7Zjub9imgPzAGcxT/Jw5SjwkS+NbnNukMGY3/ePa8/MHNZ
+         bVm49hi9qvK2RGs98h0U7hPSUyXEkziZRrar9pMNyurX22Iqvlt7IanSxWWKaA1NoByQ
+         DMiKkK3taWjcEH0bNFUygx32EgZIG6lp0Tx8cmOr9KRa8A2thsV7KNtOCh76YCKj8X9Y
+         TSiW5brs86K2eBqtY26mJU4CpMLw4CSOH4veeMby5r4ES1dvxwEFRwvNRsQ3ZKDR4qhP
+         icSioS2eLDnvLzB0Muz8dXWqKAtDh9KwAE6rcSi5L2qA5SdoTlIL2HkbD+v8d54+aKhs
+         7IIQ==
+X-Gm-Message-State: AOAM531SFIQQlIwXyROkliE1Sg96BVoskJzfOuhH3SYOs0lHWa2/wywc
+        0MEUZrOY32JUj7zQah8Wn2CWZxN4/Ys=
+X-Google-Smtp-Source: ABdhPJx0GFKrM7N8cz9nMm4kBTbS4cxBB0lCJYzrs8BnwiLomuLfU/NmtUZkYyePvFGlfl/or9P/NjcMnvk=
+X-Received: by 2002:a17:90a:bd8b:: with SMTP id z11mr1440845pjr.0.1595556355812;
+ Thu, 23 Jul 2020 19:05:55 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 19:05:51 -0700
+Message-Id: <20200724020551.2737376-1-badhri@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+Subject: [PATCH v2] usb: typec: tcpm: Migrate workqueue to RT priority for
+ processing events
+From:   Badhri Jagan Sridharan <badhri@google.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Badhri Jagan Sridharan <badhri@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/24 9:26, benbjiang(蒋彪) wrote:
-> Hi,
-> 
->> On Jul 24, 2020, at 7:43 AM, Aubrey Li <aubrey.intel@gmail.com> wrote:
->>
->> On Thu, Jul 23, 2020 at 4:28 PM benbjiang(蒋彪) <benbjiang@tencent.com> wrote:
->>>
->>> Hi,
->>>
->>>> On Jul 23, 2020, at 4:06 PM, Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->>>>
->>>> On 2020/7/23 15:47, benbjiang(蒋彪) wrote:
->>>>> Hi,
->>>>>
->>>>>> On Jul 23, 2020, at 1:39 PM, Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->>>>>>
->>>>>> On 2020/7/23 12:23, benbjiang(蒋彪) wrote:
->>>>>>> Hi,
->>>>>>>> On Jul 23, 2020, at 11:35 AM, Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->>>>>>>>
->>>>>>>> On 2020/7/23 10:42, benbjiang(蒋彪) wrote:
->>>>>>>>> Hi,
->>>>>>>>>
->>>>>>>>>> On Jul 23, 2020, at 9:57 AM, Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->>>>>>>>>>
->>>>>>>>>> On 2020/7/22 22:32, benbjiang(蒋彪) wrote:
->>>>>>>>>>> Hi,
->>>>>>>>>>>
->>>>>>>>>>>> On Jul 22, 2020, at 8:13 PM, Li, Aubrey <aubrey.li@linux.intel.com> wrote:
->>>>>>>>>>>>
->>>>>>>>>>>> On 2020/7/22 16:54, benbjiang(蒋彪) wrote:
->>>>>>>>>>>>> Hi, Aubrey,
->>>>>>>>>>>>>
->>>>>>>>>>>>>> On Jul 1, 2020, at 5:32 AM, Vineeth Remanan Pillai <vpillai@digitalocean.com> wrote:
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> From: Aubrey Li <aubrey.li@intel.com>
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> - Don't migrate if there is a cookie mismatch
->>>>>>>>>>>>>> Load balance tries to move task from busiest CPU to the
->>>>>>>>>>>>>> destination CPU. When core scheduling is enabled, if the
->>>>>>>>>>>>>> task's cookie does not match with the destination CPU's
->>>>>>>>>>>>>> core cookie, this task will be skipped by this CPU. This
->>>>>>>>>>>>>> mitigates the forced idle time on the destination CPU.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> - Select cookie matched idle CPU
->>>>>>>>>>>>>> In the fast path of task wakeup, select the first cookie matched
->>>>>>>>>>>>>> idle CPU instead of the first idle CPU.
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> - Find cookie matched idlest CPU
->>>>>>>>>>>>>> In the slow path of task wakeup, find the idlest CPU whose core
->>>>>>>>>>>>>> cookie matches with task's cookie
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> - Don't migrate task if cookie not match
->>>>>>>>>>>>>> For the NUMA load balance, don't migrate task to the CPU whose
->>>>>>>>>>>>>> core cookie does not match with task's cookie
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
->>>>>>>>>>>>>> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
->>>>>>>>>>>>>> Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
->>>>>>>>>>>>>> ---
->>>>>>>>>>>>>> kernel/sched/fair.c  | 64 ++++++++++++++++++++++++++++++++++++++++----
->>>>>>>>>>>>>> kernel/sched/sched.h | 29 ++++++++++++++++++++
->>>>>>>>>>>>>> 2 files changed, 88 insertions(+), 5 deletions(-)
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>>>>>>>>>>>>> index d16939766361..33dc4bf01817 100644
->>>>>>>>>>>>>> --- a/kernel/sched/fair.c
->>>>>>>>>>>>>> +++ b/kernel/sched/fair.c
->>>>>>>>>>>>>> @@ -2051,6 +2051,15 @@ static void task_numa_find_cpu(struct task_numa_env *env,
->>>>>>>>>>>>>>            if (!cpumask_test_cpu(cpu, env->p->cpus_ptr))
->>>>>>>>>>>>>>                    continue;
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> +#ifdef CONFIG_SCHED_CORE
->>>>>>>>>>>>>> +           /*
->>>>>>>>>>>>>> +            * Skip this cpu if source task's cookie does not match
->>>>>>>>>>>>>> +            * with CPU's core cookie.
->>>>>>>>>>>>>> +            */
->>>>>>>>>>>>>> +           if (!sched_core_cookie_match(cpu_rq(cpu), env->p))
->>>>>>>>>>>>>> +                   continue;
->>>>>>>>>>>>>> +#endif
->>>>>>>>>>>>>> +
->>>>>>>>>>>>>>            env->dst_cpu = cpu;
->>>>>>>>>>>>>>            if (task_numa_compare(env, taskimp, groupimp, maymove))
->>>>>>>>>>>>>>                    break;
->>>>>>>>>>>>>> @@ -5963,11 +5972,17 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
->>>>>>>>>>>>>>
->>>>>>>>>>>>>>    /* Traverse only the allowed CPUs */
->>>>>>>>>>>>>>    for_each_cpu_and(i, sched_group_span(group), p->cpus_ptr) {
->>>>>>>>>>>>>> +           struct rq *rq = cpu_rq(i);
->>>>>>>>>>>>>> +
->>>>>>>>>>>>>> +#ifdef CONFIG_SCHED_CORE
->>>>>>>>>>>>>> +           if (!sched_core_cookie_match(rq, p))
->>>>>>>>>>>>>> +                   continue;
->>>>>>>>>>>>>> +#endif
->>>>>>>>>>>>>> +
->>>>>>>>>>>>>>            if (sched_idle_cpu(i))
->>>>>>>>>>>>>>                    return i;
->>>>>>>>>>>>>>
->>>>>>>>>>>>>>            if (available_idle_cpu(i)) {
->>>>>>>>>>>>>> -                   struct rq *rq = cpu_rq(i);
->>>>>>>>>>>>>>                    struct cpuidle_state *idle = idle_get_state(rq);
->>>>>>>>>>>>>>                    if (idle && idle->exit_latency < min_exit_latency) {
->>>>>>>>>>>>>>                            /*
->>>>>>>>>>>>>> @@ -6224,8 +6239,18 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
->>>>>>>>>>>>>>    for_each_cpu_wrap(cpu, cpus, target) {
->>>>>>>>>>>>>>            if (!--nr)
->>>>>>>>>>>>>>                    return -1;
->>>>>>>>>>>>>> -           if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
->>>>>>>>>>>>>> -                   break;
->>>>>>>>>>>>>> +
->>>>>>>>>>>>>> +           if (available_idle_cpu(cpu) || sched_idle_cpu(cpu)) {
->>>>>>>>>>>>>> +#ifdef CONFIG_SCHED_CORE
->>>>>>>>>>>>>> +                   /*
->>>>>>>>>>>>>> +                    * If Core Scheduling is enabled, select this cpu
->>>>>>>>>>>>>> +                    * only if the process cookie matches core cookie.
->>>>>>>>>>>>>> +                    */
->>>>>>>>>>>>>> +                   if (sched_core_enabled(cpu_rq(cpu)) &&
->>>>>>>>>>>>>> +                       p->core_cookie == cpu_rq(cpu)->core->core_cookie)
->>>>>>>>>>>>> Why not also add similar logic in select_idle_smt to reduce forced-idle? :)
->>>>>>>>>>>> We hit select_idle_smt after we scaned the entire LLC domain for idle cores
->>>>>>>>>>>> and idle cpus and failed,so IMHO, an idle smt is probably a good choice under
->>>>>>>>>>>> this scenario.
->>>>>>>>>>>
->>>>>>>>>>> AFAIC, selecting idle sibling with unmatched cookie will cause unnecessary fored-idle, unfairness and latency, compared to choosing *target* cpu.
->>>>>>>>>> Choosing target cpu could increase the runnable task number on the target runqueue, this
->>>>>>>>>> could trigger busiest->nr_running > 1 logic and makes the idle sibling trying to pull but
->>>>>>>>>> not success(due to cookie not match). Putting task to the idle sibling is relatively stable IMHO.
->>>>>>>>>
->>>>>>>>> I’m afraid that *unsuccessful* pullings between smts would not result in unstableness, because
->>>>>>>>> the load-balance always do periodicly , and unsuccess means nothing happen.
->>>>>>>> unsuccess pulling means more unnecessary overhead in load balance.
->>>>>>>>
->>>>>>>>> On the contrary, unmatched sibling tasks running concurrently could bring forced-idle to each other repeatedly,
->>>>>>>>> Which is more unstable, and more costly when pick_next_task for all siblings.
->>>>>>>> Not worse than two tasks ping-pong on the same target run queue I guess, and better if
->>>>>>>> - task1(cookie A) is running on the target, and task2(cookie B) in the runqueue,
->>>>>>>> - task3(cookie B) coming
->>>>>>>>
->>>>>>>> If task3 chooses target's sibling, it could have a chance to run concurrently with task2.
->>>>>>>> But if task3 chooses target, it will wait for next pulling luck of load balancer
->>>>>>> That’s more interesting. :)
->>>>>>> Distributing different cookie tasks onto different cpus(or cpusets) could be the *ideal stable status* we want, as I understood.
->>>>>>> Different cookie tasks running on sibling smts could hurt performance, and that should be avoided with best effort.
->>>>>> We already tried to avoid when we scan idle cores and idle cpus in llc domain.
->>>>>
->>>>> I’m afraid that’s not enough either, :)
->>>>> 1. Scanning Idle cpus is not a full scan, there is limit according to scan cost.
->>>>> 2. That's only trying at the *core/cpu* level, *SMT* level should be considered too.
->>>>>
->>>>>>
->>>>>>> For above case, selecting idle sibling cpu can improve the concurrency indeed, but it decrease the imbalance for load-balancer.
->>>>>>> In that case, load-balancer could not notice the imbalance, and would do nothing to improve the unmatched situation.
->>>>>>> On the contrary, choosing the *target* cpu could enhance the imbalance, and load-balancer could try to pull unmatched task away,
->>>>>> Pulling away to where needs another bunch of elaboration.
->>>>>
->>>>> Still with the SMT2+3tasks case,
->>>>> if *idle sibling* chosen,
->>>>> Smt1’s load = task1+task2, smt2’s load = task3. Task3 will run intermittently because of forced-idle,
->>>>> so smt2’s real load could low enough, that it could not be pulled away forever. That’s indeed a stable state,
->>>>> but with performance at a discount.
->>>>>
->>>>> If *target sibling* chose,
->>>>> Smt1’s load = task1+task2+task3, smt2’s load=0. It’s a obvious imbalance, and load-balancer will pick a task to pull,
->>>>> 1. If task1(cookie A) picked, that’s done for good.
->>>>> 2. If task2(cookie B) or task3(cookie B) picked, that’s ok too, the rest task(cookie B) could be pulled away at next balance(maybe need to improve the pulling to tend to pull matched task more aggressively).
->>>>> And then, we may reach a more stable state *globally* without performance discount.
->>>>
->>>> I'm not sure what you mean pulled away,
->>> I mean pulled away by other cpus, may be triggered by idle balance or periodic balance on other cpus.
->>>
->>>> - if you mean pulled away from this core, cookieA in idle sibling case can be
->>>> pulled away too.
->>> Yep, cookieA(task1) in idle sibling case could be pulled away, but
->>> cookieB(task3) on the smt2 could never get the chance being pulled
->>> away(unless being waken up).
->>> If cookieA(task1) failed being pulled(cookieB(task2) on smt1 may be pulled,
->>> 50% chance), cookieA(task1) and cookieB(task3) would reach the stable state
->>> with performance discount.
->>>
->> If you meant pulled away from this core, I didn't see how two cases are
->> different either. For example, when task2(cookieB) runs on SMT1, task3
->> cookieb can be pulled to SMT2. and when task1(cookieA) switch onto SMT1,
->> task2(cookieB) can be pulled away by other cpus, too.
-> That’s the case only if SMT2’s pulling happens when task2(cookieB) is running
-> on SMT1, which depends on,
-> 1. Smt2 not entering tickless or nohz_balancer_kick picks smt2 before other
-> cpu’s pulling, may be unlikely. :)
-> 2. Task1(cookieA) is not running on SMT1.
-> otherwise it would be the case I described above.  
-> 
-> Besides, for other cases, like smt2+2task(CookieA+CookieB), picking *target*
-> cpu instead of *idle sibling* could be more helpful to reach the global stable
-> status(distribute different cookies onto different cores). 
->If the task number of two cookies has a big difference, then distributing
-different cookies onto different cores leads to a big imbalance, that state may
-be stable but not an optimal state, I guess that's why core run queue does
-not refuse different cookies onto its rb tree.
+"tReceiverResponse 15 ms Section 6.6.2
+The receiver of a Message requiring a response Shall respond
+within tReceiverResponse in order to ensure that the
+sender=E2=80=99s SenderResponseTimer does not expire."
 
-I think I understand your concern but IMHO I'm not convinced adding cookie match
-in idle SMT selection is a best choice, if you have some performance data of your
-workload, that will be very helpful to understand the case.
+When the cpu complex is busy running other lower priority
+work items, TCPM's work queue sometimes does not get scheduled
+on time to meet the above requirement from the spec.
+Moving to kthread_work apis to run with real time priority.
+Just lower than the default threaded irq priority,
+MAX_USER_RT_PRIO/2 + 1. (Higher number implies lower priority).
 
-If distributing different cookies onto different cores is a hard requirement from
-your side, you are welcome to submit a patch to see others opinion.
+Further, as observed in 1ff688209e2e, moving to hrtimers to
+overcome scheduling latency while scheduling the delayed work.
 
-Thanks,
--Aubrey
+TCPM has three work streams:
+1. tcpm_state_machine
+2. vdm_state_machine
+3. event_work
+
+tcpm_state_machine and vdm_state_machine both schedule work in
+future i.e. delayed. Hence each of them have a corresponding
+hrtimer, tcpm_state_machine_timer & vdm_state_machine_timer.
+
+When work is queued right away kthread_queue_work is used.
+Else, the relevant timer is programmed and made to queue
+the kthread_work upon timer expiry.
+
+kthread_create_worker only creates one kthread worker thread,
+hence single threadedness of workqueue is retained.
+
+Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+---
+
+Changes since v1:(Guenter's suggestions)
+- Remove redundant call to hrtimer_cancel while calling
+  hrtimer_start.
+
+---
+ drivers/usb/typec/tcpm/tcpm.c | 140 ++++++++++++++++++++++------------
+ 1 file changed, 92 insertions(+), 48 deletions(-)
+
+diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+index ff1cbd2147ca8a..fa9002944dc766 100644
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -8,8 +8,10 @@
+ #include <linux/completion.h>
+ #include <linux/debugfs.h>
+ #include <linux/device.h>
++#include <linux/hrtimer.h>
+ #include <linux/jiffies.h>
+ #include <linux/kernel.h>
++#include <linux/kthread.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/power_supply.h>
+@@ -28,7 +30,8 @@
+ #include <linux/usb/role.h>
+ #include <linux/usb/tcpm.h>
+ #include <linux/usb/typec_altmode.h>
+-#include <linux/workqueue.h>
++
++#include <uapi/linux/sched/types.h>
+=20
+ #define FOREACH_STATE(S)			\
+ 	S(INVALID_STATE),			\
+@@ -195,7 +198,7 @@ struct tcpm_port {
+ 	struct device *dev;
+=20
+ 	struct mutex lock;		/* tcpm state machine lock */
+-	struct workqueue_struct *wq;
++	struct kthread_worker *wq;
+=20
+ 	struct typec_capability typec_caps;
+ 	struct typec_port *typec_port;
+@@ -239,15 +242,17 @@ struct tcpm_port {
+ 	enum tcpm_state prev_state;
+ 	enum tcpm_state state;
+ 	enum tcpm_state delayed_state;
+-	unsigned long delayed_runtime;
++	ktime_t delayed_runtime;
+ 	unsigned long delay_ms;
+=20
+ 	spinlock_t pd_event_lock;
+ 	u32 pd_events;
+=20
+-	struct work_struct event_work;
+-	struct delayed_work state_machine;
+-	struct delayed_work vdm_state_machine;
++	struct kthread_work event_work;
++	struct hrtimer state_machine_timer;
++	struct kthread_work state_machine;
++	struct hrtimer vdm_state_machine_timer;
++	struct kthread_work vdm_state_machine;
+ 	bool state_machine_running;
+=20
+ 	struct completion tx_complete;
+@@ -332,7 +337,7 @@ struct tcpm_port {
+ };
+=20
+ struct pd_rx_event {
+-	struct work_struct work;
++	struct kthread_work work;
+ 	struct tcpm_port *port;
+ 	struct pd_message msg;
+ };
+@@ -906,6 +911,27 @@ static int tcpm_pd_send_sink_caps(struct tcpm_port *po=
+rt)
+ 	return tcpm_pd_transmit(port, TCPC_TX_SOP, &msg);
+ }
+=20
++static void mod_tcpm_delayed_work(struct tcpm_port *port, unsigned int del=
+ay_ms)
++{
++	if (delay_ms) {
++		hrtimer_start(&port->state_machine_timer, ms_to_ktime(delay_ms), HRTIMER=
+_MODE_REL);
++	} else {
++		hrtimer_cancel(&port->state_machine_timer);
++		kthread_queue_work(port->wq, &port->state_machine);
++	}
++}
++
++static void mod_vdm_delayed_work(struct tcpm_port *port, unsigned int dela=
+y_ms)
++{
++	if (delay_ms) {
++		hrtimer_start(&port->vdm_state_machine_timer, ms_to_ktime(delay_ms),
++			      HRTIMER_MODE_REL);
++	} else {
++		hrtimer_cancel(&port->vdm_state_machine_timer);
++		kthread_queue_work(port->wq, &port->vdm_state_machine);
++	}
++}
++
+ static void tcpm_set_state(struct tcpm_port *port, enum tcpm_state state,
+ 			   unsigned int delay_ms)
+ {
+@@ -914,9 +940,8 @@ static void tcpm_set_state(struct tcpm_port *port, enum=
+ tcpm_state state,
+ 			 tcpm_states[port->state], tcpm_states[state],
+ 			 delay_ms);
+ 		port->delayed_state =3D state;
+-		mod_delayed_work(port->wq, &port->state_machine,
+-				 msecs_to_jiffies(delay_ms));
+-		port->delayed_runtime =3D jiffies + msecs_to_jiffies(delay_ms);
++		mod_tcpm_delayed_work(port, delay_ms);
++		port->delayed_runtime =3D ktime_add(ktime_get(), ms_to_ktime(delay_ms));
+ 		port->delay_ms =3D delay_ms;
+ 	} else {
+ 		tcpm_log(port, "state change %s -> %s",
+@@ -931,7 +956,7 @@ static void tcpm_set_state(struct tcpm_port *port, enum=
+ tcpm_state state,
+ 		 * machine.
+ 		 */
+ 		if (!port->state_machine_running)
+-			mod_delayed_work(port->wq, &port->state_machine, 0);
++			mod_tcpm_delayed_work(port, 0);
+ 	}
+ }
+=20
+@@ -952,7 +977,7 @@ static void tcpm_queue_message(struct tcpm_port *port,
+ 			       enum pd_msg_request message)
+ {
+ 	port->queued_message =3D message;
+-	mod_delayed_work(port->wq, &port->state_machine, 0);
++	mod_tcpm_delayed_work(port, 0);
+ }
+=20
+ /*
+@@ -1238,8 +1263,7 @@ static void tcpm_handle_vdm_request(struct tcpm_port =
+*port,
+ 			port->vdm_state =3D VDM_STATE_WAIT_RSP_BUSY;
+ 			port->vdo_retry =3D (p0 & ~VDO_CMDT_MASK) |
+ 				CMDT_INIT;
+-			mod_delayed_work(port->wq, &port->vdm_state_machine,
+-					 msecs_to_jiffies(PD_T_VDM_BUSY));
++			mod_vdm_delayed_work(port, PD_T_VDM_BUSY);
+ 			return;
+ 		}
+ 		port->vdm_state =3D VDM_STATE_DONE;
+@@ -1250,7 +1274,7 @@ static void tcpm_handle_vdm_request(struct tcpm_port =
+*port,
+=20
+ 	if (rlen > 0) {
+ 		tcpm_queue_vdm(port, response[0], &response[1], rlen - 1);
+-		mod_delayed_work(port->wq, &port->vdm_state_machine, 0);
++		mod_vdm_delayed_work(port, 0);
+ 	}
+ }
+=20
+@@ -1267,7 +1291,7 @@ static void tcpm_send_vdm(struct tcpm_port *port, u32=
+ vid, int cmd,
+ 			1 : (PD_VDO_CMD(cmd) <=3D CMD_ATTENTION), cmd);
+ 	tcpm_queue_vdm(port, header, data, count);
+=20
+-	mod_delayed_work(port->wq, &port->vdm_state_machine, 0);
++	mod_vdm_delayed_work(port, 0);
+ }
+=20
+ static unsigned int vdm_ready_timeout(u32 vdm_hdr)
+@@ -1334,8 +1358,7 @@ static void vdm_run_state_machine(struct tcpm_port *p=
+ort)
+ 			port->vdm_retries =3D 0;
+ 			port->vdm_state =3D VDM_STATE_BUSY;
+ 			timeout =3D vdm_ready_timeout(port->vdo_data[0]);
+-			mod_delayed_work(port->wq, &port->vdm_state_machine,
+-					 timeout);
++			mod_vdm_delayed_work(port, timeout);
+ 		}
+ 		break;
+ 	case VDM_STATE_WAIT_RSP_BUSY:
+@@ -1364,10 +1387,9 @@ static void vdm_run_state_machine(struct tcpm_port *=
+port)
+ 	}
+ }
+=20
+-static void vdm_state_machine_work(struct work_struct *work)
++static void vdm_state_machine_work(struct kthread_work *work)
+ {
+-	struct tcpm_port *port =3D container_of(work, struct tcpm_port,
+-					      vdm_state_machine.work);
++	struct tcpm_port *port =3D container_of(work, struct tcpm_port, vdm_state=
+_machine);
+ 	enum vdm_states prev_state;
+=20
+ 	mutex_lock(&port->lock);
+@@ -1515,7 +1537,7 @@ static int tcpm_altmode_enter(struct typec_altmode *a=
+ltmode, u32 *vdo)
+ 	header |=3D VDO_OPOS(altmode->mode);
+=20
+ 	tcpm_queue_vdm(port, header, vdo, vdo ? 1 : 0);
+-	mod_delayed_work(port->wq, &port->vdm_state_machine, 0);
++	mod_vdm_delayed_work(port, 0);
+ 	mutex_unlock(&port->lock);
+=20
+ 	return 0;
+@@ -1531,7 +1553,7 @@ static int tcpm_altmode_exit(struct typec_altmode *al=
+tmode)
+ 	header |=3D VDO_OPOS(altmode->mode);
+=20
+ 	tcpm_queue_vdm(port, header, NULL, 0);
+-	mod_delayed_work(port->wq, &port->vdm_state_machine, 0);
++	mod_vdm_delayed_work(port, 0);
+ 	mutex_unlock(&port->lock);
+=20
+ 	return 0;
+@@ -1544,7 +1566,7 @@ static int tcpm_altmode_vdm(struct typec_altmode *alt=
+mode,
+=20
+ 	mutex_lock(&port->lock);
+ 	tcpm_queue_vdm(port, header, data, count - 1);
+-	mod_delayed_work(port->wq, &port->vdm_state_machine, 0);
++	mod_vdm_delayed_work(port, 0);
+ 	mutex_unlock(&port->lock);
+=20
+ 	return 0;
+@@ -1961,7 +1983,7 @@ static void tcpm_pd_ext_msg_request(struct tcpm_port =
+*port,
+ 	}
+ }
+=20
+-static void tcpm_pd_rx_handler(struct work_struct *work)
++static void tcpm_pd_rx_handler(struct kthread_work *work)
+ {
+ 	struct pd_rx_event *event =3D container_of(work,
+ 						 struct pd_rx_event, work);
+@@ -2023,10 +2045,10 @@ void tcpm_pd_receive(struct tcpm_port *port, const =
+struct pd_message *msg)
+ 	if (!event)
+ 		return;
+=20
+-	INIT_WORK(&event->work, tcpm_pd_rx_handler);
++	kthread_init_work(&event->work, tcpm_pd_rx_handler);
+ 	event->port =3D port;
+ 	memcpy(&event->msg, msg, sizeof(*msg));
+-	queue_work(port->wq, &event->work);
++	kthread_queue_work(port->wq, &event->work);
+ }
+ EXPORT_SYMBOL_GPL(tcpm_pd_receive);
+=20
+@@ -2079,9 +2101,9 @@ static bool tcpm_send_queued_message(struct tcpm_port=
+ *port)
+ 	} while (port->queued_message !=3D PD_MSG_NONE);
+=20
+ 	if (port->delayed_state !=3D INVALID_STATE) {
+-		if (time_is_after_jiffies(port->delayed_runtime)) {
+-			mod_delayed_work(port->wq, &port->state_machine,
+-					 port->delayed_runtime - jiffies);
++		if (ktime_after(port->delayed_runtime, ktime_get())) {
++			mod_tcpm_delayed_work(port, ktime_to_ms(ktime_sub(port->delayed_runtime=
+,
++									  ktime_get())));
+ 			return true;
+ 		}
+ 		port->delayed_state =3D INVALID_STATE;
+@@ -3214,10 +3236,9 @@ static void run_state_machine(struct tcpm_port *port=
+)
+ 	case SNK_DISCOVERY_DEBOUNCE_DONE:
+ 		if (!tcpm_port_is_disconnected(port) &&
+ 		    tcpm_port_is_sink(port) &&
+-		    time_is_after_jiffies(port->delayed_runtime)) {
++		    ktime_after(port->delayed_runtime, ktime_get())) {
+ 			tcpm_set_state(port, SNK_DISCOVERY,
+-				       jiffies_to_msecs(port->delayed_runtime -
+-							jiffies));
++				       ktime_to_ms(ktime_sub(port->delayed_runtime, ktime_get())));
+ 			break;
+ 		}
+ 		tcpm_set_state(port, unattached_state(port), 0);
+@@ -3612,10 +3633,9 @@ static void run_state_machine(struct tcpm_port *port=
+)
+ 	}
+ }
+=20
+-static void tcpm_state_machine_work(struct work_struct *work)
++static void tcpm_state_machine_work(struct kthread_work *work)
+ {
+-	struct tcpm_port *port =3D container_of(work, struct tcpm_port,
+-					      state_machine.work);
++	struct tcpm_port *port =3D container_of(work, struct tcpm_port, state_mac=
+hine);
+ 	enum tcpm_state prev_state;
+=20
+ 	mutex_lock(&port->lock);
+@@ -3975,7 +3995,7 @@ static void _tcpm_pd_hard_reset(struct tcpm_port *por=
+t)
+ 		       0);
+ }
+=20
+-static void tcpm_pd_event_handler(struct work_struct *work)
++static void tcpm_pd_event_handler(struct kthread_work *work)
+ {
+ 	struct tcpm_port *port =3D container_of(work, struct tcpm_port,
+ 					      event_work);
+@@ -4016,7 +4036,7 @@ void tcpm_cc_change(struct tcpm_port *port)
+ 	spin_lock(&port->pd_event_lock);
+ 	port->pd_events |=3D TCPM_CC_EVENT;
+ 	spin_unlock(&port->pd_event_lock);
+-	queue_work(port->wq, &port->event_work);
++	kthread_queue_work(port->wq, &port->event_work);
+ }
+ EXPORT_SYMBOL_GPL(tcpm_cc_change);
+=20
+@@ -4025,7 +4045,7 @@ void tcpm_vbus_change(struct tcpm_port *port)
+ 	spin_lock(&port->pd_event_lock);
+ 	port->pd_events |=3D TCPM_VBUS_EVENT;
+ 	spin_unlock(&port->pd_event_lock);
+-	queue_work(port->wq, &port->event_work);
++	kthread_queue_work(port->wq, &port->event_work);
+ }
+ EXPORT_SYMBOL_GPL(tcpm_vbus_change);
+=20
+@@ -4034,7 +4054,7 @@ void tcpm_pd_hard_reset(struct tcpm_port *port)
+ 	spin_lock(&port->pd_event_lock);
+ 	port->pd_events =3D TCPM_RESET_EVENT;
+ 	spin_unlock(&port->pd_event_lock);
+-	queue_work(port->wq, &port->event_work);
++	kthread_queue_work(port->wq, &port->event_work);
+ }
+ EXPORT_SYMBOL_GPL(tcpm_pd_hard_reset);
+=20
+@@ -4742,10 +4762,28 @@ static int devm_tcpm_psy_register(struct tcpm_port =
+*port)
+ 	return PTR_ERR_OR_ZERO(port->psy);
+ }
+=20
++static enum hrtimer_restart state_machine_timer_handler(struct hrtimer *ti=
+mer)
++{
++	struct tcpm_port *port =3D container_of(timer, struct tcpm_port, state_ma=
+chine_timer);
++
++	kthread_queue_work(port->wq, &port->state_machine);
++	return HRTIMER_NORESTART;
++}
++
++static enum hrtimer_restart vdm_state_machine_timer_handler(struct hrtimer=
+ *timer)
++{
++	struct tcpm_port *port =3D container_of(timer, struct tcpm_port, vdm_stat=
+e_machine_timer);
++
++	kthread_queue_work(port->wq, &port->vdm_state_machine);
++	return HRTIMER_NORESTART;
++}
++
+ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *=
+tcpc)
+ {
+ 	struct tcpm_port *port;
+ 	int err;
++	/* Priority just lower than default irq thread priority */
++	struct sched_param param =3D {.sched_priority =3D (MAX_USER_RT_PRIO / 2) =
++ 1,};
+=20
+ 	if (!dev || !tcpc ||
+ 	    !tcpc->get_vbus || !tcpc->set_cc || !tcpc->get_cc ||
+@@ -4763,12 +4801,18 @@ struct tcpm_port *tcpm_register_port(struct device =
+*dev, struct tcpc_dev *tcpc)
+ 	mutex_init(&port->lock);
+ 	mutex_init(&port->swap_lock);
+=20
+-	port->wq =3D create_singlethread_workqueue(dev_name(dev));
+-	if (!port->wq)
+-		return ERR_PTR(-ENOMEM);
+-	INIT_DELAYED_WORK(&port->state_machine, tcpm_state_machine_work);
+-	INIT_DELAYED_WORK(&port->vdm_state_machine, vdm_state_machine_work);
+-	INIT_WORK(&port->event_work, tcpm_pd_event_handler);
++	port->wq =3D kthread_create_worker(0, dev_name(dev));
++	if (IS_ERR(port->wq))
++		return (struct tcpm_port *)port->wq;
++	sched_setscheduler(port->wq->task, SCHED_FIFO, &param);
++
++	kthread_init_work(&port->state_machine, tcpm_state_machine_work);
++	kthread_init_work(&port->vdm_state_machine, vdm_state_machine_work);
++	kthread_init_work(&port->event_work, tcpm_pd_event_handler);
++	hrtimer_init(&port->state_machine_timer, CLOCK_MONOTONIC, HRTIMER_MODE_RE=
+L);
++	port->state_machine_timer.function =3D state_machine_timer_handler;
++	hrtimer_init(&port->vdm_state_machine_timer, CLOCK_MONOTONIC, HRTIMER_MOD=
+E_REL);
++	port->vdm_state_machine_timer.function =3D vdm_state_machine_timer_handle=
+r;
+=20
+ 	spin_lock_init(&port->pd_event_lock);
+=20
+@@ -4820,7 +4864,7 @@ struct tcpm_port *tcpm_register_port(struct device *d=
+ev, struct tcpc_dev *tcpc)
+ 	usb_role_switch_put(port->role_sw);
+ out_destroy_wq:
+ 	tcpm_debugfs_exit(port);
+-	destroy_workqueue(port->wq);
++	kthread_destroy_worker(port->wq);
+ 	return ERR_PTR(err);
+ }
+ EXPORT_SYMBOL_GPL(tcpm_register_port);
+@@ -4835,7 +4879,7 @@ void tcpm_unregister_port(struct tcpm_port *port)
+ 	typec_unregister_port(port->typec_port);
+ 	usb_role_switch_put(port->role_sw);
+ 	tcpm_debugfs_exit(port);
+-	destroy_workqueue(port->wq);
++	kthread_destroy_worker(port->wq);
+ }
+ EXPORT_SYMBOL_GPL(tcpm_unregister_port);
+=20
+--=20
+2.28.0.rc0.142.g3c755180ce-goog
+
