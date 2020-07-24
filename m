@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7C3C4347E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202A5C4345E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EDB020767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E460B20767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kxuG2qKC"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HkHfo/Ts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgGXHoB (ORCPT
+        id S1728295AbgGXHoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:44:01 -0400
+        Fri, 24 Jul 2020 03:44:05 -0400
 Received: from mail-vi1eur05on2088.outbound.protection.outlook.com ([40.107.21.88]:26464
         "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727057AbgGXHn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:43:59 -0400
+        id S1727798AbgGXHoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 03:44:03 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oBLMZdQNxOvzteK/H+gE6T4pg65KA+hYX1fNRFyhAuZMTVypZBnQaDLQbt+oz5CKxAK13EYeCqklrVgXXWSn/SpR+QMBVxGY25/g1DTM+o3u/ApQIqKGDq9vtUoJwT7qAv0Lmstcx0JEG9jDfRdfc0ECSzbBfVcilt6nGcEx2EErjpDgmP5bH9p2Abrpy5G0439lR5JSxZ4lzUlCbiAn4NsDgoLZC/iBnCpeM5Hk+6Jv2gE/dLvy9UkO7XNCB4lepuuHW78e1+JkMtXNvK1xddeRiliscCGA/jRMTjjurmuGqCIFFoBd8YcB7lq1/5ux2Y17cshUVQC43UFt1PpitA==
+ b=O/SV76Gjq4sasbhY+NDQXcRlRm9keyg+5wUqFPSLn+MkyTNSpAlFTGl+obIgBZun2Zes4maAZhgkkQRT9V/DEn8BsflX9lSDzakdAGiLGWLBNgudEZt3tG0rYMGVnjm7O7ZxKe/3WCBeKLTaZLPVpFMow54InFUGHKQ5/VASRfAh9kLXsxQa7JzRxJ9hnvh8UQK12S417XyJoUiF6PGcaoUdBZO/5bt0Q1fnwBB3gpz93FCpkJAzdw0R1+QnFHKK2pamPA6WzFUSLm33pq1ZJSLeLF1ymXAVJnX/cXOwN3FrKz8fBh/hR/KbkKpusJu68gZkOWj1/ZGMabxAV1DRkw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R9PER7tJVHanuJZgCm9ErNp4Xtl84HfXSUbuBJPMqvM=;
- b=XxL9D67GGpTahHdvHIEnv4Dg5CybLK2a/ghpKBh7NxCYmvVOivBmVoujEGcS5nxeUVvG5qXDuz8ego3+18yfg+VEJ1uCBNEwgUdBDH18rEyurXVdbZewYmzdY8mNBRrWeMUW11viQRP8bZz+IreMxPGfYvF/BB1wydUHAD2TOJ9U1nGuLm3Iwx6OCDDWHgbYj6pfCysRfYAxV2DirOQwBhwnJCnkvDHTiRppcJ1dw81xh2SZKc7/EVSHXQZKxYJwDHzMMrNCDBZvKgzPj9NbO2y/qrV5HoxQULxmTntr+r9TsUdWD6bclFwIMYvFshv/ZtZ2P+8BTLzKRnKIn0WewA==
+ bh=WNKBHTMrmY8wF7CYQVz+bZy3kgVPVLfKbD5Xvr6bNBU=;
+ b=YNFfVeHUMgY+OknLbOSM9wiJtISbQ0KpxPkqXyr2xNz0AZYWy1NmE4jBA7cy+eHRAPyadwI35p5rje+GC6DlcMWM8m2mQHoHLnQUfau6LyVeTj8rxuozpd5oTxb0nXJQ1iSNmvzygSUfn6PPz2yiCc97CAhkYnwmOT2xTjHEMuleuFGXvarlhe9PItg9oCyE7gyOXHaGhuQty8J6iBoMjTH7ABiKBY0Wh8xt1FR3holY7oYHTsMwLG+XfJjL27YJvuVJ7f9bej50m5mH3CG9mGijKlwdjtvhCPkTJ3VrAeyEuSp3p8do8T8KT9GXZMJzuVtlXpltAEDGg0cXC22Y3A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R9PER7tJVHanuJZgCm9ErNp4Xtl84HfXSUbuBJPMqvM=;
- b=kxuG2qKCU2MZQb7aqj2eXtnu4WxfOd78e/vfEBsBbSeY7op/jYsm9vcwoPPClmDLbGyDvXVYzsc3Dhb+2E5kwYyURNJxRkLteHPPfL4Mwz5rNIPXI8te/5n1//XYiStp6oicRt6TKY1sJL4qgZk8+IHKrNYlxasCiDko9Ai5530=
+ bh=WNKBHTMrmY8wF7CYQVz+bZy3kgVPVLfKbD5Xvr6bNBU=;
+ b=HkHfo/Ts1kD8h4YZh7RuBKYWclzwFdeZHAdHWsRjY1Rn5y51ajq8BUm56byhnMJkt7Dso/NRs0mjruvKu/BbeOFxjuDq0Ek/fKN/hTD1BIGON/Jyw/pQN6j4qAfdJFfPIyxFNnTSfmTG2TxFYfIqasRomaXC0K2BP10jLUKJxmk=
 Authentication-Results: linaro.org; dkim=none (message not signed)
  header.d=none;linaro.org; dmarc=none action=none header.from=nxp.com;
 Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
  by DB8PR04MB6858.eurprd04.prod.outlook.com (2603:10a6:10:113::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Fri, 24 Jul
- 2020 07:43:55 +0000
+ 2020 07:43:59 +0000
 Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
  ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
  ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3216.024; Fri, 24 Jul 2020
- 07:43:55 +0000
+ 07:43:59 +0000
 From:   Peng Fan <peng.fan@nxp.com>
 To:     bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
         o.rempel@pengutronix.de, robh+dt@kernel.org
@@ -56,9 +56,9 @@ Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
         festevam@gmail.com, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 06/10] remoteproc: imx_rproc: add load hook
-Date:   Fri, 24 Jul 2020 16:08:09 +0800
-Message-Id: <20200724080813.24884-7-peng.fan@nxp.com>
+Subject: [PATCH 07/10] remoteproc: imx_rproc: add i.MX specific parse fw hook
+Date:   Fri, 24 Jul 2020 16:08:10 +0800
+Message-Id: <20200724080813.24884-8-peng.fan@nxp.com>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200724080813.24884-1-peng.fan@nxp.com>
 References: <20200724080813.24884-1-peng.fan@nxp.com>
@@ -67,167 +67,176 @@ X-ClientProxiedBy: SGAP274CA0014.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::26)
  To DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from linux-1xn6.ap.freescale.net (119.31.174.71) by SGAP274CA0014.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Fri, 24 Jul 2020 07:43:50 +0000
+Received: from linux-1xn6.ap.freescale.net (119.31.174.71) by SGAP274CA0014.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Fri, 24 Jul 2020 07:43:55 +0000
 X-Mailer: git-send-email 2.16.4
 X-Originating-IP: [119.31.174.71]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 09efdae1-9660-43d4-4047-08d82fa550f1
+X-MS-Office365-Filtering-Correlation-Id: be5bf5c4-b3d2-402f-ad0f-08d82fa5538c
 X-MS-TrafficTypeDiagnostic: DB8PR04MB6858:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB8PR04MB6858449761DECCE66B7D09FC88770@DB8PR04MB6858.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Microsoft-Antispam-PRVS: <DB8PR04MB6858FA9F6D82DFE9019BDFF288770@DB8PR04MB6858.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2eVnLRBXqM2usHHpmO+CDx5E6eZTkI7D8jvuDEPe5MeDFaRSFichJM1HSELAr1Cap36j9LFEhB3M7roub49JGVZwtQwgsqCu3ztOG07fqNKhDwkXV5AjjQQfjDb/DLO1EUlILJdpdLeLPblbAKZ3EWCjZULmxm4nKLYCwUUJyI8wC42KCln/U2DIGeSMY6n46mTsjDTyWlIwZWCCSWEP3/6wmQdsPcHwv9pxc6VETlbXT+FfO9bfrIN1Hgqjn97meKW05r/AbW2bl/rLNA1wx7ghhAalTpvrEhErTwXlKaHaVTFkERTiAAUDIo0J6omo
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(136003)(396003)(39860400002)(52116002)(36756003)(478600001)(1076003)(2906002)(6666004)(16526019)(186003)(26005)(6506007)(44832011)(956004)(2616005)(86362001)(6486002)(66946007)(316002)(8936002)(7416002)(6512007)(66476007)(66556008)(4326008)(8676002)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: bQisqhNZcBXoHnrt1CeG53YrUuBqxIxwOHfytyrQQgbJlbPZPQdhN2CIsU9Wt0nlM57bgSf9q2FgASRgWhGwBJEkBCidZAZ+SHL2DMN/gOMnUpZHuS4WVr/06Z8T1N/sKGpiaG8sX8k1e80JKQerPAOi0/wGuwnp1yKBDcLLuOpiRFLhNctBw5Qn/g4nfgYg2DbedgqHAADt0xWDKryMqyrnE/FCLnM/59wASZO0V8IE2cejU78VowLjLANfe8d36tikTCmB5x5Lm4oIxlE92nUCiwgSLBdoimAm/PEvWFZS0KNikJCcvGotecjidB1RJoPSLmQc6JbBmT3/H3EOA24keWbHyZDP7QxFnzZuMFjVEW2OV6b5xKHvzuIAMCgAIVf9WnxJ8REsdI71722aHy83rLeIb6KWRklMQlJDmqQOB91Y1ZLaK/xik3RNiNZ7JFFfRk3jiMkZAIFxHHtOLN/H51u/apdUNeyz+zEsZoc=
+X-Microsoft-Antispam-Message-Info: 4wuKCks85IhmC2+OYiUrsGTU3FBHO5id70PmdIGFSN+BYsWU+vjdT9TJXWUVfd3FiQ68KnPKiavTxntw2SOkuRoab+0RWnwLKszCNk4u9g3iJNUU5e06Z3SWOdrbgTM/5TYl2iCMgiXJ6RhfnV6LBV36UCOsK4DPXT3M6QsY3d2+ii8lVeYwiHG/pJq8Jf66mbguEuo5ruAd/FsdQ2umnNqjmCsqZFpWFO+oJcJ/G3CnlP94Upare3ypdVBoMhrBzkGq4QTk+5dRroOGh6epaMB52jIFp9x4nSjlCQkYlNXoNFmhGvZ3okUSNWrKalTJYrwl+GVQsZ9MjLJ7xBUd2g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(376002)(136003)(396003)(39860400002)(52116002)(36756003)(83380400001)(478600001)(1076003)(2906002)(6666004)(16526019)(186003)(26005)(6506007)(44832011)(956004)(2616005)(86362001)(6486002)(66946007)(316002)(8936002)(7416002)(6512007)(66476007)(66556008)(4326008)(8676002)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 4rB80+kq6rOSHgz75BGeKeh0K3llEyUJsXaW5hN40qfvFav6rwHscRZ0QJbM5nffQ8uvYiTOrpF8Y7BZFZRiaxSzmLTxfZHS+UbaDK1AptaoRqtoZRJKfN9UiLIWvAZZ8CN+eP8YyNAkFSToGagVPgqrAakDveBA4gxLE6DHrnjUZJaL4cL/oMIuIjTOwpm/iwkT+saqk5tHUGDxrpZsk0sr/MgscIOtlWn1nkcSGWkc/GM6oGIRVpYZY/xzG5mZoZT4MZn8bFXyYQik2wtsun96kTM7oWWM628rZ7NiCDh1XoYUkJ1DHGOp9kHnVC3SktjePdoAypQFUdJXLhMEpf4t1f28IcTEO3POXQfJJ7EaC+rBF7s0Nh1WGhrteirnFFa75bO2lCGba+y0PgnH+wkfHrpgNB36rdV2dzgw0tTpDYYGbeLxeCzKO+Tnn+5RT9C1v+FuPbatA0W/8TDiJgt/ubhucBuLXKm9OMCkfJ0=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09efdae1-9660-43d4-4047-08d82fa550f1
+X-MS-Exchange-CrossTenant-Network-Message-Id: be5bf5c4-b3d2-402f-ad0f-08d82fa5538c
 X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 07:43:54.9481
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 07:43:59.3381
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 18pW4hA7DfvczYWr/Fc+gzcqS7dJ5xipyYvG50SpDGu5T02XsvSszVtoSpxXp7gO+F2SkmOXkVE1L91IsXJkqA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: JZ6B9KWUD4ZM7R/Fsst9Q4fob8QLeeijXxa6jILD3XdjWwz1Dz24GWYNuI9XcXT2BHCFPxmhjyV4pxpxxfFMpA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6858
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To i.MX8, we not able to see the correct data written into TCM when
-using ioremap_wc, so use ioremap.
-
-However common elf loader using memset.
-
-To arm64, "dc      zva, dst" is used in memset.
-Per ARM DDI 0487A.j, chapter C5.3.8 DC ZVA, Data Cache Zero by VA,
-
-"If the memory region being zeroed is any type of Device memory,
-this instruction can give an alignment fault which is prioritized
-in the same way as other alignment faults that are determined
-by the memory type."
-
-On i.MX platforms, when elf is loaded to onchip TCM area, the region
-is ioremapped, so "dc zva, dst" will trigger abort.
-
-So add i.MX specific loader to address the TCM write issue.
-
-The change not impact i.MX6/7 function.
+The hook is used to parse memory-regions and load resource table
+from the address the remote processor published.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/remoteproc/imx_rproc.c | 76 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
+ drivers/remoteproc/imx_rproc.c | 99 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 98 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-index aee790efbf7b..c23726091228 100644
+index c23726091228..43000a992455 100644
 --- a/drivers/remoteproc/imx_rproc.c
 +++ b/drivers/remoteproc/imx_rproc.c
-@@ -4,6 +4,7 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/elf.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
-@@ -15,6 +16,9 @@
+@@ -11,6 +11,7 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
++#include <linux/of_reserved_mem.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
  #include <linux/regmap.h>
- #include <linux/remoteproc.h>
+@@ -89,6 +90,7 @@ struct imx_rproc {
+ 	const struct imx_rproc_dcfg	*dcfg;
+ 	struct imx_rproc_mem		mem[IMX7D_RPROC_MEM_MAX];
+ 	struct clk			*clk;
++	void				*rsc_va;
+ };
  
-+#include "remoteproc_internal.h"
-+#include "remoteproc_elf_helpers.h"
-+
- #define IMX7D_SRC_SCR			0x0C
- #define IMX7D_ENABLE_M4			BIT(3)
- #define IMX7D_SW_M4P_RST		BIT(2)
-@@ -247,10 +251,82 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
+ static const struct imx_rproc_att imx_rproc_att_imx7d[] = {
+@@ -251,6 +253,101 @@ static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len)
  	return va;
  }
  
-+static int imx_rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw)
++static int imx_rproc_mem_alloc(struct rproc *rproc,
++			       struct rproc_mem_entry *mem)
 +{
-+	struct device *dev = &rproc->dev;
-+	const void *ehdr, *phdr;
-+	int i, ret = 0;
-+	u16 phnum;
-+	const u8 *elf_data = fw->data;
-+	u8 class = fw_elf_get_class(fw);
-+	u32 elf_phdr_get_size = elf_size_of_phdr(class);
++	struct device *dev = rproc->dev.parent;
++	void *va;
 +
-+	ehdr = elf_data;
-+	phnum = elf_hdr_get_e_phnum(class, ehdr);
-+	phdr = elf_data + elf_hdr_get_e_phoff(class, ehdr);
-+
-+	/* go through the available ELF segments */
-+	for (i = 0; i < phnum; i++, phdr += elf_phdr_get_size) {
-+		u64 da = elf_phdr_get_p_paddr(class, phdr);
-+		u64 memsz = elf_phdr_get_p_memsz(class, phdr);
-+		u64 filesz = elf_phdr_get_p_filesz(class, phdr);
-+		u64 offset = elf_phdr_get_p_offset(class, phdr);
-+		u32 type = elf_phdr_get_p_type(class, phdr);
-+		void *ptr;
-+
-+		if (type != PT_LOAD)
-+			continue;
-+
-+		dev_dbg(dev, "phdr: type %d da 0x%llx memsz 0x%llx filesz 0x%llx\n",
-+			type, da, memsz, filesz);
-+
-+		if (filesz > memsz) {
-+			dev_err(dev, "bad phdr filesz 0x%llx memsz 0x%llx\n",
-+				filesz, memsz);
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		if (offset + filesz > fw->size) {
-+			dev_err(dev, "truncated fw: need 0x%llx avail 0x%zx\n",
-+				offset + filesz, fw->size);
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		if (!rproc_u64_fit_in_size_t(memsz)) {
-+			dev_err(dev, "size (%llx) does not fit in size_t type\n",
-+				memsz);
-+			ret = -EOVERFLOW;
-+			break;
-+		}
-+
-+		/* grab the kernel address for this device address */
-+		ptr = rproc_da_to_va(rproc, da, memsz);
-+		if (!ptr) {
-+			dev_err(dev, "bad phdr da 0x%llx mem 0x%llx\n", da,
-+				memsz);
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		/* put the segment where the remote processor expects it */
-+		if (filesz)
-+			memcpy_toio(ptr, elf_data + offset, filesz);
++	dev_dbg(dev, "map memory: %p+%zx\n", &mem->dma, mem->len);
++	va = ioremap_wc(mem->dma, mem->len);
++	if (IS_ERR_OR_NULL(va)) {
++		dev_err(dev, "Unable to map memory region: %p+%zx\n",
++			&mem->dma, mem->len);
++		return -ENOMEM;
 +	}
 +
-+	return ret;
++	/* Update memory entry va */
++	mem->va = va;
++
++	return 0;
 +}
 +
- static const struct rproc_ops imx_rproc_ops = {
- 	.start		= imx_rproc_start,
++static int imx_rproc_mem_release(struct rproc *rproc,
++				 struct rproc_mem_entry *mem)
++{
++	dev_dbg(rproc->dev.parent, "unmap memory: %pa\n", &mem->dma);
++	iounmap(mem->va);
++
++	return 0;
++}
++
++static int imx_rproc_parse_memory_regions(struct rproc *rproc)
++{
++	struct imx_rproc *priv = rproc->priv;
++	struct device_node *np = priv->dev->of_node;
++	struct of_phandle_iterator it;
++	struct rproc_mem_entry *mem;
++	struct reserved_mem *rmem;
++	int index = 0;
++	u32 da;
++
++	/* Register associated reserved memory regions */
++	of_phandle_iterator_init(&it, np, "memory-region", NULL, 0);
++	while (of_phandle_iterator_next(&it) == 0) {
++		rmem = of_reserved_mem_lookup(it.node);
++		if (!rmem) {
++			dev_err(priv->dev, "unable to acquire memory-region\n");
++			return -EINVAL;
++		}
++
++		/* No need to translate pa to da, i.MX use same map */
++		da = rmem->base;
++
++		if (strcmp(it.node->name, "vdev0buffer")) {
++			/* Register memory region */
++			mem = rproc_mem_entry_init(priv->dev, NULL,
++						   (dma_addr_t)rmem->base,
++						   rmem->size, da,
++						   imx_rproc_mem_alloc,
++						   imx_rproc_mem_release,
++						   it.node->name);
++
++			if (mem)
++				rproc_coredump_add_segment(rproc, da,
++							   rmem->size);
++		} else {
++			/* Register reserved memory for vdev buffer alloc */
++			mem = rproc_of_resm_mem_entry_init(priv->dev, index,
++							   rmem->size,
++							   rmem->base,
++							   it.node->name);
++		}
++
++		if (!mem)
++			return -ENOMEM;
++
++		rproc_add_carveout(rproc, mem);
++		index++;
++	}
++
++	return  0;
++}
++
++static int imx_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
++{
++	int ret = imx_rproc_parse_memory_regions(rproc);
++
++	if (ret)
++		return ret;
++
++	ret = rproc_elf_load_rsc_table(rproc, fw);
++	if (ret)
++		dev_info(&rproc->dev, "No resource table in elf\n");
++
++	return 0;
++}
++
+ static int imx_rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw)
+ {
+ 	struct device *dev = &rproc->dev;
+@@ -323,7 +420,7 @@ static const struct rproc_ops imx_rproc_ops = {
  	.stop		= imx_rproc_stop,
  	.da_to_va       = imx_rproc_da_to_va,
-+	.load		= imx_rproc_elf_load_segments,
-+	.parse_fw	= rproc_elf_load_rsc_table,
-+	.find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
-+	.sanity_check	= rproc_elf_sanity_check,
-+	.get_boot_addr	= rproc_elf_get_boot_addr,
- };
- 
- static int imx_rproc_addr_init(struct imx_rproc *priv,
+ 	.load		= imx_rproc_elf_load_segments,
+-	.parse_fw	= rproc_elf_load_rsc_table,
++	.parse_fw	= imx_rproc_parse_fw,
+ 	.find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
+ 	.sanity_check	= rproc_elf_sanity_check,
+ 	.get_boot_addr	= rproc_elf_get_boot_addr,
 -- 
 2.16.4
 
