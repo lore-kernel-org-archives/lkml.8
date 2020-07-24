@@ -2,96 +2,83 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5D2C433F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8C520674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595600168;
-	bh=onJE2kg1lOrWB4sO35BBm9Eo7GH4oyn8dKPYU7FH3Ko=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S/QOq27pqjj1tCPsYgCn3rhGuOYLeDJrR5L56aPw7cF1pwCxE4aJrFBaScJvtGf/3
-	 t2/AT2kO2TeidIeLlygo7wLchQZiQg8mBathdL/6MUXT9LAJsa6ROkidFRcH9eMRYE
-	 wC/o21nuqiPLi2vnIkqeAhlGBRKf5kJJ7ADw08dw=
+	by mail.kernel.org (Postfix) with ESMTP id 2B025206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:16:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="K7IjJVFm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgGXOQH (ORCPT
+        id S1726882AbgGXOQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:16:07 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:47058 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgGXOQH (ORCPT
+        Fri, 24 Jul 2020 10:16:33 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:63299 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726317AbgGXOQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:16:07 -0400
-Received: by mail-ed1-f66.google.com with SMTP id q4so3918636edv.13;
-        Fri, 24 Jul 2020 07:16:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tY5Z6idGhGaqy3j7rWihq62kp3XpN6wVWhfnttBTXk8=;
-        b=h8MXWKG9WHaJ1tVmsXRheG9WQ7W50vXWtrWDseBZPYUPQVZzT46PtzN+OV+aqY0HuU
-         jdfV4wKLutrl/yB1ityAAIsqPaHArfSt/aDf+VD740HoA0Vea2wMxX/8z2WPsf/syzLh
-         nyhrbzbWndrajaaKvgiwJOz2y8QYizRlO6xiBhdKigAoN7wPSHEVN4w+ZBUHxkveLbIL
-         mfoF7WT40vW859Lgmavli21kQRgaBjMiGH8Vr1mXEIkHKQRKDUbNRCRWKFk2+m8+QmHX
-         zTTv19IZTbLOwAk8n4zzYOfkFabU1JysRc/1WHTcU9IJ0WHJAeuG3vcfNWqvBEzqI7us
-         ip7A==
-X-Gm-Message-State: AOAM533OM7PF5oqawpCQWvXdGd4efln6p8TAG6ZV/PUshoplb3ES1cV3
-        riGOS16OARKTVht1JPbHgjA6NVFD2zc=
-X-Google-Smtp-Source: ABdhPJxbtj3fM+AjJ6hvcrUuIeJieCO2lk2efSggfaPTyqvT5VX+nS/1FqCch3ryhjUR2m21oTec/g==
-X-Received: by 2002:a05:6402:1b1c:: with SMTP id by28mr9171688edb.270.1595600164984;
-        Fri, 24 Jul 2020 07:16:04 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id fi29sm758336ejb.83.2020.07.24.07.16.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Jul 2020 07:16:04 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 16:16:01 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 23/29] memory: pl172: Add GPLv2 SPDX license header
-Message-ID: <20200724141601.GC10663@kozik-lap>
-References: <20200724074038.5597-1-krzk@kernel.org>
- <20200724074038.5597-24-krzk@kernel.org>
+        Fri, 24 Jul 2020 10:16:33 -0400
+X-UUID: 8a42d10ae5014834a8de1a588a501137-20200724
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=m/J/gzq1uW0/CaTq7kELXH0oOhP3/tQJ+deO3cPbxHM=;
+        b=K7IjJVFmWr38T985rei045Yd8P6KgKnzNFFd4qhT2xaC4QcnOf2GRsHh75tys0Uj63eTo+jXb7EyYcVa+nG3r1En5NKXLxzXXP+/m8hUHsyyTr9HVVg49cAZTEwk8uwlKap7P2XXIXp28s1jiuRwpekceATXIZNaIudtm94VBFo=;
+X-UUID: 8a42d10ae5014834a8de1a588a501137-20200724
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 368038415; Fri, 24 Jul 2020 22:16:29 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 24 Jul 2020 22:16:26 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 24 Jul 2020 22:16:26 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <bvanassche@acm.org>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
+        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v1] scsi: ufs-mediatek: Prevent LPM operation on undeclared VCC
+Date:   Fri, 24 Jul 2020 22:16:27 +0800
+Message-ID: <20200724141627.20094-1-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200724074038.5597-24-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 09:40:32AM +0200, Krzysztof Kozlowski wrote:
-> Add GPLv2 license header and remove GPL boiler plate text.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/memory/pl172.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+SW4gc29tZSBwbGF0Zm9ybXMsIFZDQyByZWd1bGF0b3IgbWF5IG5vdCBiZSBkZWNsYXJlZCBpbiBk
+ZXZpY2UgdHJlZQ0KdG8ga2VlcCBpdHNlbGYgImFsd2F5cy1vbiIuIEluIHRoaXMgY2FzZSwgaGJh
+LT52cmVnX2luZm8udmNjIGlzIE5VTEwNCmFuZCBzaGFsbCBub3QgYmUgb3BlcmF0ZWQgZHVyaW5n
+IGFueSBmbG93Lg0KDQpQcmV2ZW50IHBvc3NpYmxlIE5VTEwgaGJhLT52cmVnX2luZm8udmNjIGFj
+Y2VzcyBpbiBMUE0gbW9kZSBieSBjaGVja2luZw0KaWYgaXQgaXMgdmFsaWQgZmlyc3QuDQoNClNp
+Z25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRlay5jb20+DQotLS0N
+CiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jIHwgMiArLQ0KIDEgZmlsZSBjaGFuZ2Vk
+LCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMN
+CmluZGV4IDMxYWY4YjNkMmI1My4uNjYyMjNmZTIwMGZjIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYw0KKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0
+ZWsuYw0KQEAgLTU3NCw3ICs1NzQsNyBAQCBzdGF0aWMgaW50IHVmc19tdGtfbGlua19zZXRfbHBt
+KHN0cnVjdCB1ZnNfaGJhICpoYmEpDQogDQogc3RhdGljIHZvaWQgdWZzX210a192cmVnX3NldF9s
+cG0oc3RydWN0IHVmc19oYmEgKmhiYSwgYm9vbCBscG0pDQogew0KLQlpZiAoIWhiYS0+dnJlZ19p
+bmZvLnZjY3EyKQ0KKwlpZiAoIWhiYS0+dnJlZ19pbmZvLnZjY3EyIHx8ICFoYmEtPnZyZWdfaW5m
+by52Y2MpDQogCQlyZXR1cm47DQogDQogCWlmIChscG0gJiAhaGJhLT52cmVnX2luZm8udmNjLT5l
+bmFibGVkKQ0KLS0gDQoyLjE4LjANCg==
 
-Applied (and part of pull request to arm-soc).
-
-Best regards,
-Krzysztof
