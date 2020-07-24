@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7100C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D6BC433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E0E420674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B02420674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgGXQGa (ORCPT
+        id S1728435AbgGXQGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:06:30 -0400
-Received: from 8bytes.org ([81.169.241.247]:60432 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:06:33 -0400
+Received: from 8bytes.org ([81.169.241.247]:60034 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728087AbgGXQEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728060AbgGXQEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jul 2020 12:04:39 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 69C5AC07;
-        Fri, 24 Jul 2020 18:04:31 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 5F3767CB;
+        Fri, 24 Jul 2020 18:04:30 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 58/75] x86/sev-es: Handle INVD Events
-Date:   Fri, 24 Jul 2020 18:03:19 +0200
-Message-Id: <20200724160336.5435-59-joro@8bytes.org>
+Subject: [PATCH v5 56/75] x86/sev-es: Handle RDTSC(P) Events
+Date:   Fri, 24 Jul 2020 18:03:17 +0200
+Message-Id: <20200724160336.5435-57-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,28 +60,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Implement a handler for #VC exceptions caused by INVD instructions.
-Since Linux should never use INVD, just mark it as unsupported.
+Implement a handler for #VC exceptions caused by RDTSC and RDTSCP
+instructions. Also make it available in the pre-decompression stage
+because the KASLR code used RDTSC/RDTSCP to gather entropy and some
+hypervisors intercept these instructions.
 
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: Adapt to #VC handling infrastructure ]
+[ jroedel@suse.de: - Adapt to #VC handling infrastructure
+                   - Make it available early ]
 Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/boot/compressed/sev-es.c |  4 ++++
+ arch/x86/kernel/sev-es-shared.c   | 23 +++++++++++++++++++++++
+ arch/x86/kernel/sev-es.c          |  4 ++++
+ 3 files changed, 31 insertions(+)
 
+diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+index 851d7af29d79..1ce144e0ddc3 100644
+--- a/arch/x86/boot/compressed/sev-es.c
++++ b/arch/x86/boot/compressed/sev-es.c
+@@ -181,6 +181,10 @@ void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
+ 		goto finish;
+ 
+ 	switch (exit_code) {
++	case SVM_EXIT_RDTSC:
++	case SVM_EXIT_RDTSCP:
++		result = vc_handle_rdtsc(boot_ghcb, &ctxt, exit_code);
++		break;
+ 	case SVM_EXIT_IOIO:
+ 		result = vc_handle_ioio(boot_ghcb, &ctxt);
+ 		break;
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+index 59884926fae5..608f76d0d088 100644
+--- a/arch/x86/kernel/sev-es-shared.c
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -467,3 +467,26 @@ static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
+ 
+ 	return ES_OK;
+ }
++
++static enum es_result vc_handle_rdtsc(struct ghcb *ghcb,
++				      struct es_em_ctxt *ctxt,
++				      unsigned long exit_code)
++{
++	bool rdtscp = (exit_code == SVM_EXIT_RDTSCP);
++	enum es_result ret;
++
++	ret = sev_es_ghcb_hv_call(ghcb, ctxt, exit_code, 0, 0);
++	if (ret != ES_OK)
++		return ret;
++
++	if (!(ghcb_is_valid_rax(ghcb) && ghcb_is_valid_rdx(ghcb) &&
++	     (!rdtscp || ghcb_is_valid_rcx(ghcb))))
++		return ES_VMM_ERROR;
++
++	ctxt->regs->ax = ghcb->save.rax;
++	ctxt->regs->dx = ghcb->save.rdx;
++	if (rdtscp)
++		ctxt->regs->cx = ghcb->save.rcx;
++
++	return ES_OK;
++}
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 8c7d32161c15..2d19a5e8388d 100644
+index 2e83bbc330c9..0d8103a87ff1 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -892,6 +892,10 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	case SVM_EXIT_RDPMC:
- 		result = vc_handle_rdpmc(ghcb, ctxt);
+@@ -866,6 +866,10 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_WRITE_DR7:
+ 		result = vc_handle_dr7_write(ghcb, ctxt);
  		break;
-+	case SVM_EXIT_INVD:
-+		pr_err_ratelimited("#VC exception for INVD??? Seriously???\n");
-+		result = ES_UNSUPPORTED;
++	case SVM_EXIT_RDTSC:
++	case SVM_EXIT_RDTSCP:
++		result = vc_handle_rdtsc(ghcb, ctxt, exit_code);
 +		break;
  	case SVM_EXIT_CPUID:
  		result = vc_handle_cpuid(ghcb, ctxt);
