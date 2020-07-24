@@ -2,87 +2,152 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E26C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBB8C433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC6D320714
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F62A206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:11:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YDqeQfkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgGXNLS (ORCPT
+        id S1726890AbgGXNLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:11:18 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53552 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726235AbgGXNLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:11:17 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jyxTa-006g07-6H; Fri, 24 Jul 2020 15:11:02 +0200
-Date:   Fri, 24 Jul 2020 15:11:02 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Marek Behun <marek.behun@nic.cz>, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v2 1/1] net: phy: marvell: add
- support for PHY LEDs via LED class
-Message-ID: <20200724131102.GD1472201@lunn.ch>
-References: <20200723181319.15988-1-marek.behun@nic.cz>
- <20200723181319.15988-2-marek.behun@nic.cz>
- <20200723213531.GK1553578@lunn.ch>
- <20200724005349.2e90a247@nic.cz>
- <20200724102403.wyuteeql3jn5xouw@duo.ucw.cz>
+        Fri, 24 Jul 2020 09:11:33 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36145 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726235AbgGXNLc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:11:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595596290;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=k9drAeZ4hZck3whF/zeswoHycRwKNcQGYouHgh2Avoc=;
+        b=YDqeQfkJoA+Uul4rs/pkD4LVyYa/WW4oajQY6I0TGOSh9f4O74xUKewjEMvMEk1g5PCjEY
+        L3ztfie8Se7xAt2jXZf9muY5AupAbZBSSfqaIVoC3Gcebc1J3hYm8OvQMyoQWqZBL0t7CP
+        vCgOxW6tKBuMd8jGecAvLbK+upriiIs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-209-gG4lK0YCMwmnzZVTuuyqkA-1; Fri, 24 Jul 2020 09:11:28 -0400
+X-MC-Unique: gG4lK0YCMwmnzZVTuuyqkA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8292658;
+        Fri, 24 Jul 2020 13:11:26 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 58970183AB;
+        Fri, 24 Jul 2020 13:11:23 +0000 (UTC)
+Subject: [PATCH 0/4] Mount notifications
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-security-module@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Miklos Szeredi <mszeredi@redhat.com>, dhowells@redhat.com,
+        torvalds@linux-foundation.org, casey@schaufler-ca.com,
+        sds@tycho.nsa.gov, nicolas.dichtel@6wind.com, raven@themaw.net,
+        christian@brauner.io, jlayton@redhat.com, kzak@redhat.com,
+        mszeredi@redhat.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 24 Jul 2020 14:11:22 +0100
+Message-ID: <159559628247.2141315.2107013106060144287.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724102403.wyuteeql3jn5xouw@duo.ucw.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 12:24:03PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > > I expect some of this should be moved into the phylib core. We don't
-> > > want each PHY inventing its own way to do this. The core should
-> > > provide a framework and the PHY driver fills in the gaps.
-> > > 
-> > > Take a look at for example mscc_main.c and its LED information. It has
-> > > pretty similar hardware to the Marvell. And microchip.c also has LED
-> > > handling, etc.
-> > 
-> > OK, this makes sense. I will have to think about this a little.
-> > 
-> > My main issue though is whether one "hw-control" trigger should be
-> > registered via LED API and the specific mode should be chosen via
-> > another sysfs file as in this RFC, or whether each HW control mode
-> > should have its own trigger. The second solution would either result in
-> > a lot of registered triggers or complicate LED API, though...
-> 
-> If you register say 5 triggers.... that's okay. If you do like 1024
-> additional triggers (it happened before!)... well please don't.
 
-Hi Pavel
+Here's a set of patches to add notifications for mount topology events,
+such as mounting, unmounting, mount expiry, mount reconfiguration.
 
-There tends to be around 15 different blink patterns per LED. And
-there can be 2 to 3 LEDs per PHY. The blink patterns can be different
-per PHY, or they can be the same. For the Marvell PHY we are looking
-at around 45. Most of the others PHYs tend to have the same patterns
-for all LEDs, so 15 triggers could be shared.
+An LSM hook is included to an LSM to rule on whether or not a mount watch
+may be set on a particular path.
 
-But if you then think of a 10 port Ethernet switch, there could be 450
-triggers, if the triggers are not shared at all.
+Why do we want mount notifications?  Whilst /proc/mounts can be polled, it
+only tells you that something changed in your namespace.  To find out, you
+have to trawl /proc/mounts or similar to work out what changed in the mount
+object attributes and mount topology.  I'm told that the proc file holding
+the namespace_sem is a point of contention, especially as the process of
+generating the text descriptions of the mounts/superblocks can be quite
+involved.
 
-So to some extent, it is a question of how much effort should be put
-in to sharing triggers.
+The notification generated here directly indicates the mounts involved in
+any particular event and gives an idea of what the change was.
 
-   Andrew
+This is combined with a new fsinfo() system call that allows, amongst other
+things, the ability to retrieve in one go an { id, change_counter } tuple
+from all the children of a specified mount, allowing buffer overruns to be
+dealt with quickly.
+
+This is of use to systemd to improve efficiency:
+
+	https://lore.kernel.org/linux-fsdevel/20200227151421.3u74ijhqt6ekbiss@ws.net.home/
+
+And it's not just Red Hat that's potentially interested in this:
+
+	https://lore.kernel.org/linux-fsdevel/293c9bd3-f530-d75e-c353-ddeabac27cf6@6wind.com/
+
+The kernel patches can also be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=notifications-pipe-core
+
+David
+---
+David Howells (4):
+      watch_queue: Make watch_sizeof() check record size
+      watch_queue: Add security hooks to rule on setting mount watches
+      watch_queue: Implement mount topology and attribute change notifications
+      watch_queue: sample: Display mount tree change notifications
+
+
+ Documentation/watch_queue.rst               |  12 +-
+ arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
+ arch/arm/tools/syscall.tbl                  |   1 +
+ arch/arm64/include/asm/unistd32.h           |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
+ fs/Kconfig                                  |   9 +
+ fs/Makefile                                 |   1 +
+ fs/mount.h                                  |  21 ++
+ fs/mount_notify.c                           | 228 ++++++++++++++++++++
+ fs/namespace.c                              |  22 ++
+ include/linux/dcache.h                      |   1 +
+ include/linux/lsm_hook_defs.h               |   3 +
+ include/linux/lsm_hooks.h                   |   6 +
+ include/linux/security.h                    |   8 +
+ include/linux/syscalls.h                    |   2 +
+ include/uapi/asm-generic/unistd.h           |   4 +-
+ include/uapi/linux/watch_queue.h            |  36 +++-
+ kernel/sys_ni.c                             |   3 +
+ samples/watch_queue/watch_test.c            |  44 +++-
+ security/security.c                         |   7 +
+ 33 files changed, 421 insertions(+), 4 deletions(-)
+ create mode 100644 fs/mount_notify.c
+
+
