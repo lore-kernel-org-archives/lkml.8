@@ -2,91 +2,108 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8737C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A641DC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4AD9206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 807B1206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgGXRWD (ORCPT
+        id S1726988AbgGXRWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:22:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39062 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 13:22:32 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2758 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726397AbgGXRWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:22:03 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 517C120674;
-        Fri, 24 Jul 2020 17:22:02 +0000 (UTC)
-Date:   Fri, 24 Jul 2020 13:22:00 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Minor RST rant
-Message-ID: <20200724132200.51fd2065@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726945AbgGXRWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:22:31 -0400
+IronPort-SDR: Qb0A5n7OLz27S5htWjpsuMUDYSY3Ps/ErPf/7hMQP7Vyu+dihtsTCNWsse5UZgc2nOp/OWAKr0
+ 0eBBaZtmyHPw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="130823246"
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="130823246"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:22:31 -0700
+IronPort-SDR: BpDPFqNZRmEGycqgLI8FBRJBYTkz4LxUXiLZ8xt047fA2dFY8fQfCgtOk4Zx03B5kjwfM+MCoa
+ GZ/0TklebrQg==
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="302730275"
+Received: from seokjaeb-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.24.239])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:22:30 -0700
+From:   Sean V Kelley <sean.v.kelley@intel.com>
+To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@kernel.org, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Sean V Kelley <sean.v.kelley@intel.com>
+Subject: [RFC PATCH 2/9] PCI: Extend Root Port Driver to support RCEC
+Date:   Fri, 24 Jul 2020 10:22:16 -0700
+Message-Id: <20200724172223.145608-3-sean.v.kelley@intel.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200724172223.145608-1-sean.v.kelley@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jon,
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-I like how RST can help make for a better grouping of our documents
-and put it into other formats. But I have to rant a little because I'm
-currently experiencing some of the frustration that Peter commonly
-complains about.
+If a Root Complex Integrated Endpoint (RCiEP) is implemented, errors may
+optionally be sent to a corresponding Root Complex Event Collector (RCEC).
+Each RCiEP must be associated with no more than one RCEC. Interface errors
+are reported to the OS by RCECs.
 
-I'm looking into how to make the event directory tree be created on the
-fly, and not waste a lot of space on all these dentry and inodes that
-are allocated for the thousands of events in the kernel. This is to
-also make instances have a smaller memory footprint since each instance
-creates a copy of those 1000s of events. But I really don't understand
-the VFS layer. I decided to jump into Documentation/filesystems and try
-to learn how to do this for tracefs.
+For an RCEC (technically not a Bridge), error messages "received" from
+associated RCiEPs must be enabled for "transmission" in order to cause a
+System Error via the Root Control register or (when the Advanced Error
+Reporting Capability is present) reporting via the Root Error Command
+register and logging in the Root Error Status register and Error Source
+Identification register.
 
-Now for my rant.
+Given the commonality with Root Ports and the need to also support AER
+and PME services for RCECs, extend the Root Port driver to support RCEC
+devices through the addition of the RCEC Class ID to the driver
+structure.
 
-I just finished reading Documentation/filesystems/path-lookup.txt and
-learned a lot. It was even an enjoyable read.
+Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+---
+ drivers/pci/pcie/portdrv_pci.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Then I went to Documentation/filesystems/path-lookup.rst, and found
-myself constantly re-reading the same paragraph over again, and losing
-track of what I'm reading. I realized it wasn't due to the writing, but
-due to the constant inserted markup of quotes, that makes it terribly
-annoying to read, and unfortunately, not enjoyable at all.
+diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+index 3acf151ae015..d5b109499b10 100644
+--- a/drivers/pci/pcie/portdrv_pci.c
++++ b/drivers/pci/pcie/portdrv_pci.c
+@@ -106,7 +106,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+ 	if (!pci_is_pcie(dev) ||
+ 	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
+ 	     (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM) &&
+-	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
++	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM) &&
++	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
+ 		return -ENODEV;
+ 
+ 	status = pcie_port_device_register(dev);
+@@ -195,6 +196,8 @@ static const struct pci_device_id port_pci_ids[] = {
+ 	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x00), ~0) },
+ 	/* subtractive decode PCI-to-PCI bridge, class type is 060401h */
+ 	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x01), ~0) },
++	/* handle any Root Complex Event Collector */
++	{ PCI_DEVICE_CLASS(((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00), ~0) },
+ 	{ },
+ };
+ 
+-- 
+2.27.0
 
-For example:
-
-> It is tempting to describe the second kind as starting with a
-> component, but that isn't always accurate: a pathname can lack both
-> slashes and components, it can be empty, in other words.  This is
-> generally forbidden in POSIX, but some of those "xxx``at``" system calls
-> in Linux permit it when the ``AT_EMPTY_PATH`` flag is given.  For
-> example, if you have an open file descriptor on an executable file you
-> can execute it by calling `execveat() <execveat_>`_ passing
-> the file descriptor, an empty path, and the ``AT_EMPTY_PATH`` flag.
-
-All those `` are throwing me off to understanding what is being written.
-
-I don't even know what those are suppose to represent.
-
-Again, I really like the effort to pull all this useful information in
-the Documentation directory into other formats that others can enjoy,
-but this is just to give you some feedback where this format can be a
-real distraction for those that much prefer to read a simple text file
-than a web page or pdf file.
-
-Just my $0.02.
-
--- Steve
