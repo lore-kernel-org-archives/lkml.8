@@ -2,96 +2,136 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE48C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3277C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED2582074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:42:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="BZqXe6it"
+	by mail.kernel.org (Postfix) with ESMTP id C2ABB2074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:54:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595595241;
+	bh=RCrAinQ2iDuDhggp9uedY0HcB9B27aaB8nmj+Icx1yE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=T4JOgrHU6ULzPziIdlBryyCkIhC7zPljXXzYQRBDdDlTWh7inm1+GqUW1AcQ0Di1B
+	 2rMdIrULUMznktVFjMPLKKGnz/8cHArQdyfKr5YiYHOayj8jBipEzjYAceCzFBXljt
+	 Rpp55Aq3fS8dNtQsgol2k43s+j0oa9xNFrpYmiws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgGXMmu (ORCPT
+        id S1726617AbgGXMyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:42:50 -0400
-Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:20842 "EHLO
-        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgGXMmu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:42:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1595594570;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lKXqW8/3YOwTJyFQghmaI+GKNMTKpRONfG96XJL/WMA=;
-  b=BZqXe6itPshhw5SvxqtgahrVQsUNc1iTrY5Xcuplaj7eMxM7TAc4ZpuE
-   MpL6BOJ6TLOJ2tZC6qEGeLof34rnVGeGiXyFcpY/Wq5lwahTIC1LHLTLG
-   sCDHLNZYTUj77Rupkcg14VRXD3zXxSb+gr+zPbQkv+B/+OCUmBtpX7qDa
-   U=;
-Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: K2iI69Y6OCtQDD19Hf1T4acInpaZV4ysI4avOab6HMISqvB1o3gpzLiKS0FhxgkjERb9XUjbTM
- F5Fk3T9f8PoaJiidx88PglziYhudJ7iwbIzk0laWncsGIwz8mbbcVgIIfzCz86by8Hxvqzx5BR
- qbK8blo8XCtPs2i+LqVGnWdLRWcLB7az7C3KN4ylPsbPouPFyCxfn6homOcHD6A5C8ZGVk1Wyy
- ZBFJQbjsCo8HjxyTMtMXjYDlwSF1IkT6vaIvqsJ6hPCQ6AHZnn0CgbbMk0UmWe/uB4BCMSNSr1
- L3s=
-X-SBRS: 2.7
-X-MesageID: 23118831
-X-Ironport-Server: esa3.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.75,390,1589256000"; 
-   d="scan'208";a="23118831"
-From:   Roger Pau Monne <roger.pau@citrix.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Roger Pau Monne <roger.pau@citrix.com>,
-        <xen-devel@lists.xenproject.org>
-Subject: [PATCH v2 0/4] xen/balloon: fixes for memory hotplug
-Date:   Fri, 24 Jul 2020 14:42:37 +0200
-Message-ID: <20200724124241.48208-1-roger.pau@citrix.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 24 Jul 2020 08:54:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726235AbgGXMyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 08:54:00 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F9482065E;
+        Fri, 24 Jul 2020 12:53:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595595240;
+        bh=RCrAinQ2iDuDhggp9uedY0HcB9B27aaB8nmj+Icx1yE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=WAsXnhiTgA0OwmYAAGY2bi1ZOLtYr0IpsWrWSm7wrq8zyu6slm4urI3hx+aIDux3P
+         9prU0ZLHq0fmPv1OEmWSNy4C6e00KjPEr4Rtg/b3tiHkTc/GqreyRo6wIPMBGBvzBM
+         b7sXXBKNGQA0aag2kHNgPTS62/ooAw6+Yakege2o=
+Date:   Fri, 24 Jul 2020 07:53:57 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
+        "jroedel@suse.de" <jroedel@suse.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        yangyicong <yangyicong@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>
+Subject: Re: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
+ (vendor) CPER records
+Message-ID: <20200724125357.GA1510118@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b76444fed0a2468983b2a2c45d7d31b2@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Jul 24, 2020 at 09:00:41AM +0000, Shiju Jose wrote:
+> >-----Original Message-----
+> >From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> >Sent: 24 July 2020 00:21
+> >To: Shiju Jose <shiju.jose@huawei.com>
+> >Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+> >kernel@vger.kernel.org; rjw@rjwysocki.net; bp@alien8.de;
+> >james.morse@arm.com; lenb@kernel.org; tony.luck@intel.com;
+> >dan.carpenter@oracle.com; zhangliguang@linux.alibaba.com;
+> >andriy.shevchenko@linux.intel.com; Wangkefeng (OS Kernel Lab)
+> ><wangkefeng.wang@huawei.com>; jroedel@suse.de; Linuxarm
+> ><linuxarm@huawei.com>; yangyicong <yangyicong@huawei.com>; Jonathan
+> >Cameron <jonathan.cameron@huawei.com>; tanxiaofei
+> ><tanxiaofei@huawei.com>
+> >Subject: Re: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
+> >(vendor) CPER records
+> >
+> >On Wed, Jul 22, 2020 at 11:39:51AM +0100, Shiju Jose wrote:
+> >> CPER records describing a firmware-first error are identified by GUID.
+> >> The ghes driver currently logs, but ignores any unknown CPER records.
+> >> This prevents describing errors that can't be represented by a
+> >> standard entry, that would otherwise allow a driver to recover from an
+> >error.
+> >> The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
+> >> version 2.8).
+> >
+> >> +#ifdef CONFIG_ACPI_APEI_GHES
+> >> +/**
+> >> + * ghes_register_vendor_record_notifier - register a notifier for
+> >> +vendor
+> >> + * records that the kernel would otherwise ignore.
+> >> + * @nb: pointer to the notifier_block structure of the event handler.
+> >> + *
+> >> + * return 0 : SUCCESS, non-zero : FAIL  */ int
+> >> +ghes_register_vendor_record_notifier(struct notifier_block *nb);
+> >> +
+> >> +/**
+> >> + * ghes_unregister_vendor_record_notifier - unregister the previously
+> >> + * registered vendor record notifier.
+> >> + * @nb: pointer to the notifier_block structure of the vendor record
+> >handler.
+> >> + */
+> >> +void ghes_unregister_vendor_record_notifier(struct notifier_block
+> >> +*nb); #else static inline int
+> >> +ghes_register_vendor_record_notifier(struct notifier_block *nb) {
+> >> +	return -ENODEV;
+> >> +}
+> >> +
+> >> +static inline void ghes_unregister_vendor_record_notifier(struct
+> >> +notifier_block *nb) { }
+> >
+> >If you made CONFIG_PCIE_HISI_ERR depend on CONFIG_ACPI_APEI_GHES,
+> >you'd be able to get rid of these stubs, wouldn't you?  It doesn't
+> >look like there's any point in building pcie-hisi-error.c at all
+> >unless CONFIG_ACPI_APEI_GHES is enabled.
+>
+> The stub is added because this interface is expected to use by the
+> other drivers as well.  Some drivers may not want add the build
+> depend on the CONFIG_ACPI_APEI_GHES if the error reporting has less
+> priority in the driver.  However we can add dependency on
+> CONFIG_ACPI_APEI_GHES for building pcie-hisi-error.c.  
 
-The following series contain some fixes in order to split Xen
-unpopulated memory handling from the ballooning driver if ZONE_DEVICE is
-available, so that physical memory regions used to map foreign pages are
-not tied to memory hotplug.
-
-Fix two patches are bugfixes that IMO should be backported to stable
-branches, third patch is a revert of a workaround applied to the balloon
-driver and last patch introduces an interface based on ZONE_DEVICE in
-order to manage regions to use for foreign mappings.
-
-Thanks, Roger.
-
-Roger Pau Monne (4):
-  xen/balloon: fix accounting in alloc_xenballooned_pages error path
-  xen/balloon: make the balloon wait interruptible
-  Revert "xen/balloon: Fix crash when ballooning on x86 32 bit PAE"
-  xen: add helpers to allocate unpopulated memory
-
- drivers/gpu/drm/xen/xen_drm_front_gem.c |   8 +-
- drivers/xen/Makefile                    |   1 +
- drivers/xen/balloon.c                   |  30 ++--
- drivers/xen/grant-table.c               |   4 +-
- drivers/xen/privcmd.c                   |   4 +-
- drivers/xen/unpopulated-alloc.c         | 222 ++++++++++++++++++++++++
- drivers/xen/xenbus/xenbus_client.c      |   6 +-
- drivers/xen/xlate_mmu.c                 |   4 +-
- include/xen/xen.h                       |   8 +
- 9 files changed, 256 insertions(+), 31 deletions(-)
- create mode 100644 drivers/xen/unpopulated-alloc.c
-
--- 
-2.27.0
-
+The usual route is to add stubs when they're needed, not just in
+anticipation of some need that may never materialize.
