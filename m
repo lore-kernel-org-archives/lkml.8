@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA16C433FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D56C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 377442065E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E9A206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgGXQFj (ORCPT
+        id S1728355AbgGXQFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:05:39 -0400
-Received: from 8bytes.org ([81.169.241.247]:33026 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:05:44 -0400
+Received: from 8bytes.org ([81.169.241.247]:60312 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727939AbgGXQEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:46 -0400
+        id S1728169AbgGXQEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:44 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id A40BEFEC;
-        Fri, 24 Jul 2020 18:04:37 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 7B931F3C;
+        Fri, 24 Jul 2020 18:04:36 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 69/75] x86/smpboot: Setup TSS for starting AP
-Date:   Fri, 24 Jul 2020 18:03:30 +0200
-Message-Id: <20200724160336.5435-70-joro@8bytes.org>
+Subject: [PATCH v5 67/75] x86/realmode: Add SEV-ES specific trampoline entry point
+Date:   Fri, 24 Jul 2020 18:03:28 +0200
+Message-Id: <20200724160336.5435-68-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,179 +60,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Set up the TSS for starting APs before they are kicked. This allows the
-APs to use IST in early exception handling.
+The code at the trampoline entry point is executed in real-mode. In
+real-mode #VC exceptions can't be handled, so anything that might cause
+such an exception must be avoided.
 
-Also load the TSS early if the TSS entry in the GDT is present. This
-makes sure a TSS is only loaded when it has been set up.
+In the standard trampoline entry code this is the WBINVD instruction and
+the call to verify_cpu(), which are both not needed anyway when running
+as an SEV-ES guest.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/processor.h |  7 ++++++
- arch/x86/kernel/cpu/common.c     | 37 +++++++++++++++++++-------------
- arch/x86/kernel/head64.c         | 11 ++++++++++
- arch/x86/kernel/head_64.S        |  5 +++++
- arch/x86/kernel/smpboot.c        |  6 ++++++
- 5 files changed, 51 insertions(+), 15 deletions(-)
+ arch/x86/include/asm/realmode.h      |  3 +++
+ arch/x86/realmode/rm/header.S        |  3 +++
+ arch/x86/realmode/rm/trampoline_64.S | 20 ++++++++++++++++++++
+ 3 files changed, 26 insertions(+)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 2a1f7e1d7151..c69d1eb8e504 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -761,6 +761,13 @@ extern void load_fixmap_gdt(int);
- extern void load_percpu_segment(int);
- extern void cpu_init(void);
- extern void cr4_init(void);
-+extern void tss_setup(int cpu);
-+
-+#ifdef CONFIG_X86_64
-+extern void setup_getcpu(int cpu);
-+#else
-+static inline void setup_getcpu(int cpu) { }
+diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
+index b35030eeec36..6590394af309 100644
+--- a/arch/x86/include/asm/realmode.h
++++ b/arch/x86/include/asm/realmode.h
+@@ -21,6 +21,9 @@ struct real_mode_header {
+ 	/* SMP trampoline */
+ 	u32	trampoline_start;
+ 	u32	trampoline_header;
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	u32	sev_es_trampoline_start;
 +#endif
- 
- static inline unsigned long get_debugctlmsr(void)
- {
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 86efa9c207e5..ad20647c79a4 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1794,7 +1794,7 @@ static void wait_for_master_cpu(int cpu)
- }
- 
  #ifdef CONFIG_X86_64
--static inline void setup_getcpu(int cpu)
-+void setup_getcpu(int cpu)
- {
- 	unsigned long cpudata = vdso_encode_cpunode(cpu, early_cpu_to_node(cpu));
- 	struct desc_struct d = { };
-@@ -1821,27 +1821,26 @@ static inline void ucode_cpu_init(int cpu)
- 		load_ucode_ap();
- }
- 
--static inline void tss_setup_ist(struct tss_struct *tss)
-+static inline void tss_setup_ist(struct tss_struct *tss,
-+				 struct cpu_entry_area *cea)
- {
- 	/* Set up the per-CPU TSS IST stacks */
--	tss->x86_tss.ist[IST_INDEX_DF] = __this_cpu_ist_top_va(DF);
--	tss->x86_tss.ist[IST_INDEX_NMI] = __this_cpu_ist_top_va(NMI);
--	tss->x86_tss.ist[IST_INDEX_DB] = __this_cpu_ist_top_va(DB);
--	tss->x86_tss.ist[IST_INDEX_MCE] = __this_cpu_ist_top_va(MCE);
-+	tss->x86_tss.ist[IST_INDEX_DF]  = CEA_ESTACK_TOP(&cea->estacks, DF);
-+	tss->x86_tss.ist[IST_INDEX_NMI] = CEA_ESTACK_TOP(&cea->estacks, NMI);
-+	tss->x86_tss.ist[IST_INDEX_DB]  = CEA_ESTACK_TOP(&cea->estacks, DB);
-+	tss->x86_tss.ist[IST_INDEX_MCE] = CEA_ESTACK_TOP(&cea->estacks, MCE);
- 	/* Only mapped when SEV-ES is active */
--	tss->x86_tss.ist[IST_INDEX_VC] = __this_cpu_ist_top_va(VC);
-+	tss->x86_tss.ist[IST_INDEX_VC]	= CEA_ESTACK_TOP(&cea->estacks, VC);
- }
- 
- #else /* CONFIG_X86_64 */
- 
--static inline void setup_getcpu(int cpu) { }
--
- static inline void ucode_cpu_init(int cpu)
- {
- 	show_ucode_info_early();
- }
- 
--static inline void tss_setup_ist(struct tss_struct *tss) { }
-+static inline void tss_setup_ist(struct tss_struct *tss, struct cpu_entry_area *cea) { }
- 
- #endif /* !CONFIG_X86_64 */
- 
-@@ -1861,6 +1860,17 @@ static inline void tss_setup_io_bitmap(struct tss_struct *tss)
+ 	u32	trampoline_pgd;
  #endif
- }
+diff --git a/arch/x86/realmode/rm/header.S b/arch/x86/realmode/rm/header.S
+index af04512c02d9..8c1db5bf5d78 100644
+--- a/arch/x86/realmode/rm/header.S
++++ b/arch/x86/realmode/rm/header.S
+@@ -20,6 +20,9 @@ SYM_DATA_START(real_mode_header)
+ 	/* SMP trampoline */
+ 	.long	pa_trampoline_start
+ 	.long	pa_trampoline_header
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	.long	pa_sev_es_trampoline_start
++#endif
+ #ifdef CONFIG_X86_64
+ 	.long	pa_trampoline_pgd;
+ #endif
+diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
+index 251758ed7443..84c5d1b33d10 100644
+--- a/arch/x86/realmode/rm/trampoline_64.S
++++ b/arch/x86/realmode/rm/trampoline_64.S
+@@ -56,6 +56,7 @@ SYM_CODE_START(trampoline_start)
+ 	testl   %eax, %eax		# Check for return code
+ 	jnz	no_longmode
  
-+void tss_setup(int cpu)
-+{
-+	struct tss_struct *tss = per_cpu_ptr(&cpu_tss_rw, cpu);
-+	struct cpu_entry_area *cea = get_cpu_entry_area(cpu);
-+
-+	/* Initialize the TSS for cpu. */
-+	tss_setup_ist(tss, cea);
-+	tss_setup_io_bitmap(tss);
-+	set_tss_desc(cpu, &cea->tss.x86_tss);
-+}
-+
- /*
-  * cpu_init() initializes state that is per-CPU. Some data is already
-  * initialized (naturally) in the bootstrap process, such as the GDT
-@@ -1869,7 +1879,6 @@ static inline void tss_setup_io_bitmap(struct tss_struct *tss)
-  */
- void cpu_init(void)
- {
--	struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
- 	struct task_struct *cur = current;
- 	int cpu = raw_smp_processor_id();
- 
-@@ -1915,10 +1924,8 @@ void cpu_init(void)
- 	initialize_tlbstate_and_flush();
- 	enter_lazy_tlb(&init_mm, cur);
- 
--	/* Initialize the TSS. */
--	tss_setup_ist(tss);
--	tss_setup_io_bitmap(tss);
--	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
-+	/* Initialize the TSS - Only needed on the boot-CPU */
-+	tss_setup(cpu);
- 
- 	load_TR_desc();
++.Lswitch_to_protected:
  	/*
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index ce2d8284edb9..b26a7f1bd6fe 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -545,3 +545,14 @@ void __head startup_64_setup_env(unsigned long physbase)
- 	gsbase = (unsigned long)fixup_pointer((void *)initial_gs, physbase);
- 	__wrmsr(MSR_GS_BASE, (u32)gsbase, (u32)(gsbase >> 32));
- }
-+
-+void __head early_load_tss(void)
-+{
-+	struct desc_struct *gdt = (struct desc_struct *)early_gdt_descr.address;
-+	tss_desc tss;
-+
-+	/* Load TSS only if entry in GDT is marked present */
-+	memcpy(&tss, &gdt[GDT_ENTRY_TSS], sizeof(tss_desc));
-+	if (tss.p)
-+		asm volatile("ltr %w0"::"q" (GDT_ENTRY_TSS*8));
-+}
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 12bf6f11fd83..8d5bf7c568a4 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -220,6 +220,11 @@ SYM_CODE_START(secondary_startup_64)
- 	 */
- 	movq initial_stack(%rip), %rsp
+ 	 * GDT tables in non default location kernel can be beyond 16MB and
+ 	 * lgdt will not be able to load the address as in real mode default
+@@ -80,6 +81,25 @@ no_longmode:
+ 	jmp no_longmode
+ SYM_CODE_END(trampoline_start)
  
-+	/* Setup a TSS for early IST handlers - needs %gs to be set up */
-+	pushq	%rsi
-+	call	early_load_tss
-+	popq	%rsi
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++/* SEV-ES supports non-zero IP for entry points - no alignment needed */
++SYM_CODE_START(sev_es_trampoline_start)
++	cli			# We should be safe anyway
 +
- 	/* Load IDT */
- 	pushq	%rsi
- 	call	early_load_idt
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 27aa04a95702..fb55d28332e2 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1040,6 +1040,12 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
- 	/* Enable the espfix hack for this CPU */
- 	init_espfix_ap(cpu);
++	LJMPW_RM(1f)
++1:
++	mov	%cs, %ax	# Code and data in the same place
++	mov	%ax, %ds
++	mov	%ax, %es
++	mov	%ax, %ss
++
++	# Setup stack
++	movl	$rm_stack_end, %esp
++
++	jmp	.Lswitch_to_protected
++SYM_CODE_END(sev_es_trampoline_start)
++#endif	/* CONFIG_AMD_MEM_ENCRYPT */
++
+ #include "../kernel/verify_cpu.S"
  
-+	/* Set up GDT_ENTRY_CPUNODE for early exception handling */
-+	setup_getcpu(cpu);
-+
-+	/* Setup TSS so that AP can use IST early */
-+	tss_setup(cpu);
-+
- 	/* So we see what's up */
- 	announce_cpu(cpu, apicid);
- 
+ 	.section ".text32","ax"
 -- 
 2.27.0
 
