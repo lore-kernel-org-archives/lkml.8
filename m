@@ -2,103 +2,214 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282E9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D93CC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFF8E206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:08:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="el+I9+uQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DpuwIS4s"
+	by mail.kernel.org (Postfix) with ESMTP id 35367206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgGXTIi (ORCPT
+        id S1726814AbgGXTId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:08:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34604 "EHLO
+        Fri, 24 Jul 2020 15:08:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgGXTIh (ORCPT
+        with ESMTP id S1726381AbgGXTIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:08:37 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1CABC0619D3;
-        Fri, 24 Jul 2020 12:08:37 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595617714;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HDN6+oEq+rXXE3L9eqvVhY8T2LwO0r+OvHOIHPOdeUs=;
-        b=el+I9+uQblelBDjYB//Cal2rLo4nU3iFXpDSaBgrTN+Gqe0m1TddgxerIJmVagiDFK0gWf
-        CyV/KxAlDTzUt0zrDOn/2RrKXH/5oFv1dExHp8xBDLIlwaI9ATikeGvsglX2qOagUAYLMB
-        pheHNkJHIZ1OgRKLxRjCh4f0eWjtypi+cwbpnAv24hWi9GKZ+yPNEW5SiPf+8yoZyG38JS
-        I/p+jLZqeSHvzZBPvzuwDyW54Etmj9QdvG2NgR5gxljp7dyle1DKPlmgOMy+UCBDijfcMZ
-        L8BRqm/ISG0fdbHksFxHZ4DdSX8GLyeMTnwt7N5mBJZMcYPN8BlQTne+/tcGvA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595617715;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HDN6+oEq+rXXE3L9eqvVhY8T2LwO0r+OvHOIHPOdeUs=;
-        b=DpuwIS4slPn8hA1LX5q05nEMp3zaBYNmq/xtwXclhxwCVdYvfh9uyeHozT6oyBGWJvZmj+
-        G65wLHmg2aKSxxDQ==
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [patch V5 15/15] x86/kvm: Use generic xfer to guest work function
-In-Reply-To: <20200724142426.GA651711@gmail.com>
-References: <20200722215954.464281930@linutronix.de> <20200722220520.979724969@linutronix.de> <20200724142426.GA651711@gmail.com>
-Date:   Fri, 24 Jul 2020 21:08:34 +0200
-Message-ID: <87k0ysu3wt.fsf@nanos.tec.linutronix.de>
+        Fri, 24 Jul 2020 15:08:32 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F831C0619D3;
+        Fri, 24 Jul 2020 12:08:32 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id E3D5E2993B7
+Message-ID: <6bac45d9b22deacf8ac7d68f5b51a5a6c30649f3.camel@collabora.com>
+Subject: Re: [PATCH 06/10] media: uapi: h264: Cleanup DPB entry interface
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Jonas Karlman <jonas@kwiboo.se>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Fri, 24 Jul 2020 16:08:19 -0300
+In-Reply-To: <5726fac8-9d3b-d429-0894-cd8c02c288ee@kwiboo.se>
+References: <20200715202233.185680-1-ezequiel@collabora.com>
+         <20200715202233.185680-7-ezequiel@collabora.com>
+         <5726fac8-9d3b-d429-0894-cd8c02c288ee@kwiboo.se>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-1 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ingo Molnar <mingo@kernel.org> writes:
-> * Thomas Gleixner <tglx@linutronix.de> wrote:
->>  		/*
->> -		 * Note, return 1 and not 0, vcpu_run() is responsible for
->> -		 * morphing the pending signal into the proper return code.
->> +		 * Note, return 1 and not 0, vcpu_run() will invoke
->> +		 * xfer_to_guest_mode() which will create a proper return
->> +		 * code.
->>  		 */
->> -		if (signal_pending(current))
->> +		if (__xfer_to_guest_mode_work_pending())
->>  			return 1;
->> -
->> -		if (need_resched())
->> -			schedule();
->>  	}
->
-> AFAICS this chunk removes a conditional reschedule point from 
-> handle_invalid_guest_state() and replaces it with 
-> __xfer_to_guest_mode_work_pending().
->
-> But __xfer_to_guest_mode_work_pending() doesn't do the cond-resched of 
-> the full xfer_to_guest_mode_work() function - so we essentially lose a 
-> cond_resched() here.
->
-> Is this side effect intended, was the cond_resched() superfluous?
+Hello Jonas,
 
-It makes the thing drop back to the outer loop for any pending work not
-only for signals. That avoids having yet another thing to worry about.
+On Wed, 2020-07-22 at 21:52 +0000, Jonas Karlman wrote:
+> On 2020-07-15 22:22, Ezequiel Garcia wrote:
+> > As discussed recently, the current interface for the
+> > Decoded Picture Buffer is not enough to properly
+> > support field coding.
+> > 
+> > This commit introduces enough semantics to support
+> > frame and field coding, and to signal how DPB entries
+> > are "used for reference".
+> > 
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  .../media/v4l/ext-ctrls-codec.rst             | 46 ++++++++++++-------
+> >  drivers/media/v4l2-core/v4l2-h264.c           |  4 +-
+> >  drivers/staging/media/rkvdec/rkvdec-h264.c    |  8 ++--
+> >  include/media/h264-ctrls.h                    |  8 +++-
+> >  4 files changed, 42 insertions(+), 24 deletions(-)
+> > 
+> > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > index dd8e5a2e8986..46d4c8c6ad47 100644
+> > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > @@ -2058,10 +2058,35 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> >      * - __s32
+> >        - ``bottom_field_order_cnt``
+> >        -
+> > +    * - enum :c:type:`v4l2_h264_dpb_reference`
+> > +      - ``reference``
+> > +      - Specifies how the DPB entry is referenced.
+> >      * - __u32
+> >        - ``flags``
+> >        - See :ref:`DPB Entry Flags <h264_dpb_flags>`
+> >  
+> > +.. c:type:: v4l2_h264_dpb_reference
+> > +
+> > +.. cssclass:: longtable
+> > +
+> > +.. flat-table::
+> > +    :header-rows:  0
+> > +    :stub-columns: 0
+> > +    :widths:       1 1 2
+> > +
+> > +    * - ``V4L2_H264_DPB_TOP_REF``
+> > +      - 0x1
+> > +      - The top field in field pair is used for
+> > +        short-term reference.
+> > +    * - ``V4L2_H264_DPB_BOTTOM_REF``
+> > +      - 0x2
+> > +      - The bottom field in field pair is used for
+> > +        short-term reference.
+> > +    * - ``V4L2_H264_DPB_FRAME_REF``
+> > +      - 0x3
+> > +      - The frame (or the top/bottom fields, if it's a field pair)
+> > +        is used for short-term reference.
+> > +
+> >  .. _h264_dpb_flags:
+> >  
+> >  ``DPB Entries Flags``
+> > @@ -2075,29 +2100,16 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> >  
+> >      * - ``V4L2_H264_DPB_ENTRY_FLAG_VALID``
+> >        - 0x00000001
+> > -      - The DPB entry is valid and should be considered
+> > +      - The DPB entry is valid (non-empty) and should be considered.
+> >      * - ``V4L2_H264_DPB_ENTRY_FLAG_ACTIVE``
+> >        - 0x00000002
+> > -      - The DPB entry is currently being used as a reference frame
+> > +      - The DPB entry is used for reference.
+> >      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
+> >        - 0x00000004
+> > -      - The DPB entry is a long term reference frame
+> > +      - The DPB entry is used for long-term reference.
+> >      * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD``
+> >        - 0x00000008
+> > -      - The DPB entry is a field reference, which means only one of the field
+> > -        will be used when decoding the new frame/field. When not set the DPB
+> > -        entry is a frame reference (both fields will be used). Note that this
+> > -        flag does not say anything about the number of fields contained in the
+> > -        reference frame, it just describes the one used to decode the new
+> > -        field/frame
+> > -    * - ``V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD``
+> > -      - 0x00000010
+> > -      - The DPB entry is a bottom field reference (only the bottom field of the
+> > -        reference frame is needed to decode the new frame/field). Only valid if
+> > -        V4L2_H264_DPB_ENTRY_FLAG_FIELD is set. When
+> > -        V4L2_H264_DPB_ENTRY_FLAG_FIELD is set but
+> > -        V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD is not, that means the
+> > -        DPB entry is a top field reference
+> > +      - The DPB entry is a single field or a complementary field pair.
+> >  
+> >  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
+> >      Specifies the decoding mode to use. Currently exposes slice-based and
+> > diff --git a/drivers/media/v4l2-core/v4l2-h264.c b/drivers/media/v4l2-core/v4l2-h264.c
+> > index edf6225f0522..306a51683606 100644
+> > --- a/drivers/media/v4l2-core/v4l2-h264.c
+> > +++ b/drivers/media/v4l2-core/v4l2-h264.c
+> > @@ -66,10 +66,10 @@ v4l2_h264_init_reflist_builder(struct v4l2_h264_reflist_builder *b,
+> >  		else
+> >  			b->refs[i].frame_num = dpb[i].frame_num;
+> >  
+> > -		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
+> > +		if (dpb[i].reference & V4L2_H264_DPB_FRAME_REF)
+> 
+> This looks wrong, should probably use ==,
+> 
+> dpb[i].reference == V4L2_H264_DPB_FRAME_REF
+> 
+> else this would match any reference value.
+> 
+> >  			pic_order_count = min(dpb[i].top_field_order_cnt,
+> >  					      dpb[i].bottom_field_order_cnt);
+> > -		else if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
+> > +		else if (dpb[i].reference & V4L2_H264_DPB_BOTTOM_REF)
+> >  			pic_order_count = dpb[i].bottom_field_order_cnt;
+> >  		else
+> >  			pic_order_count = dpb[i].top_field_order_cnt;
+> > diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
+> > index 7b66e2743a4f..57539c630422 100644
+> > --- a/drivers/staging/media/rkvdec/rkvdec-h264.c
+> > +++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
+> > @@ -953,11 +953,11 @@ static void config_registers(struct rkvdec_ctx *ctx,
+> >  			     RKVDEC_COLMV_USED_FLAG_REF;
+> >  
+> >  		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
+> > -			refer_addr |= RKVDEC_TOPFIELD_USED_REF |
+> > -				      RKVDEC_BOTFIELD_USED_REF;
+> > -		else if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
+> > +			refer_addr |= RKVDEC_FIELD_REF;
+> > +
+> > +		if (dpb[i].reference & V4L2_H264_DPB_TOP_REF)
+> >  			refer_addr |= RKVDEC_BOTFIELD_USED_REF;
+> > -		else
+> > +		else if (dpb[i].reference & V4L2_H264_DPB_BOTTOM_REF)
+> 
+> This should probably be if and not else if, and BOTFIELD/TOPFIELD_USED_REF
+> seems to be mixed up.
+> 
+> I have only taken a quick look so far, I will update ffmpeg and runtime test
+> later this weekend, will get back with result and full review on Sunday evening.
+> 
+
+Thanks that would be useful.
+
+However, keep in mind this series is specifically concerned
+with the uAPI review.
+
+This is not supposed to fix the field coded support, or anything
+else in any driver.
+
+IMO, at this stage, fixing drivers is somewhat lower priority
+than discussing and stabilizing the uAPI.
 
 Thanks,
+Ezequiel
 
-        tglx
+
