@@ -2,87 +2,140 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69899C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8DAC433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4327D20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8A420674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:09:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VsSPLqKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728595AbgGXQJ2 (ORCPT
+        id S1728611AbgGXQJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:09:28 -0400
-Received: from 8bytes.org ([81.169.241.247]:59394 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727774AbgGXQEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:15 -0400
-Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id A30B1F91;
-        Fri, 24 Jul 2020 18:04:10 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 27/75] x86/idt: Move IDT to data segment
-Date:   Fri, 24 Jul 2020 18:02:48 +0200
-Message-Id: <20200724160336.5435-28-joro@8bytes.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
-References: <20200724160336.5435-1-joro@8bytes.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 24 Jul 2020 12:09:34 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:56896 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728323AbgGXQJb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:09:31 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OG1R3d040171;
+        Fri, 24 Jul 2020 16:09:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=NdHEC4itFa22ofate1mFXVI4T3rcTTOAPX7QEG7yQZI=;
+ b=VsSPLqKATTJS9rGEBfGKvy7FqiKAflaIfs6DKkqPspilgK+ytEEd8G1K1KyKwQLd1wdf
+ pmHS0BRfpCQtkECrTMRQQtVHp1vQF1/716e64rtAdWQ9H9MQliPdCH7eIZmiEX90iQdw
+ rb4ioAWS4B9nBkjgy/isopL3490hct/8KR0vlHXwJ86J+g6wlUSoCyIH4pzq2WNECUY0
+ 8XOLuWQCj8BYrzBI/UDJ//rOxcZzA4HQRCczOoG06CSZoMZIo2Z7fJnA3kEQ2Uab/hkX
+ R8A64dPUYFmR1D/eJzv487iq9b2yv5r2C2rMPgNGyeXTHWvLam4sYqqauOIpXzv+ZNiI fQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 32bs1myxg0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Jul 2020 16:09:25 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OG4Uxj048444;
+        Fri, 24 Jul 2020 16:09:25 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 32fsr7jbxn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jul 2020 16:09:25 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06OG9OuY006837;
+        Fri, 24 Jul 2020 16:09:24 GMT
+Received: from brm-x32-03.us.oracle.com (/10.80.150.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 Jul 2020 16:09:24 +0000
+From:   Jane Chu <jane.chu@oracle.com>
+To:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        dave.jiang@intel.com, ira.weiny@intel.com, jmoyer@redhat.com,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Cc:     jane.chu@oracle.com
+Subject: [PATCH 1/2] libnvdimm/security: 'security' attr never show 'overwrite' state
+Date:   Fri, 24 Jul 2020 10:09:18 -0600
+Message-Id: <1595606959-8516-1-git-send-email-jane.chu@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ bulkscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007240127
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007240126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+Since
+commit d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute"),
+when issue
+ # ndctl sanitize-dimm nmem0 --overwrite
+then immediately check the 'security' attribute,
+ # cat /sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0012:00/ndbus0/nmem0/security
+ unlocked
+Actually the attribute stays 'unlocked' through out the entire overwrite
+operation, never changed.  That's because 'nvdimm->sec.flags' is a bitmap
+that has both bits set indicating 'overwrite' and 'unlocked'.
+But security_show() checks the mutually exclusive bits before it checks
+the 'overwrite' bit at last. The order should be reversed.
 
-With SEV-ES, exception handling is needed very early, even before the
-kernel has cleared the bss segment. In order to prevent clearing the
-currently used IDT, move the IDT to the data segment.
+The commit also has a typo: in one occasion, 'nvdimm->sec.ext_state'
+assignment is replaced with 'nvdimm->sec.flags' assignment for
+the NVDIMM_MASTER type.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Fixes: d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute")
+Signed-off-by: Jane Chu <jane.chu@oracle.com>
 ---
- arch/x86/kernel/idt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvdimm/dimm_devs.c | 4 ++--
+ drivers/nvdimm/security.c  | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index 7ecf9babf0cb..34fcc58b81b5 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -158,7 +158,7 @@ static const __initconst struct idt_data apic_idts[] = {
- };
+diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+index b7b77e8..5d72026 100644
+--- a/drivers/nvdimm/dimm_devs.c
++++ b/drivers/nvdimm/dimm_devs.c
+@@ -363,14 +363,14 @@ __weak ssize_t security_show(struct device *dev,
+ {
+ 	struct nvdimm *nvdimm = to_nvdimm(dev);
  
- /* Must be page-aligned because the real IDT is used in the cpu entry area */
--static gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
-+static gate_desc idt_table[IDT_ENTRIES] __page_aligned_data;
++	if (test_bit(NVDIMM_SECURITY_OVERWRITE, &nvdimm->sec.flags))
++		return sprintf(buf, "overwrite\n");
+ 	if (test_bit(NVDIMM_SECURITY_DISABLED, &nvdimm->sec.flags))
+ 		return sprintf(buf, "disabled\n");
+ 	if (test_bit(NVDIMM_SECURITY_UNLOCKED, &nvdimm->sec.flags))
+ 		return sprintf(buf, "unlocked\n");
+ 	if (test_bit(NVDIMM_SECURITY_LOCKED, &nvdimm->sec.flags))
+ 		return sprintf(buf, "locked\n");
+-	if (test_bit(NVDIMM_SECURITY_OVERWRITE, &nvdimm->sec.flags))
+-		return sprintf(buf, "overwrite\n");
+ 	return -ENOTTY;
+ }
  
- static struct desc_ptr idt_descr __ro_after_init = {
- 	.size		= IDT_TABLE_SIZE - 1,
+diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
+index 4cef69b..8f3971c 100644
+--- a/drivers/nvdimm/security.c
++++ b/drivers/nvdimm/security.c
+@@ -457,7 +457,7 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
+ 	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
+ 	put_device(&nvdimm->dev);
+ 	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
+-	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
++	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
+ }
+ 
+ void nvdimm_security_overwrite_query(struct work_struct *work)
 -- 
-2.27.0
+1.8.3.1
 
