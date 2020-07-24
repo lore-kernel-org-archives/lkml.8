@@ -2,133 +2,176 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC34C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66940C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0702070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BCCD206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:12:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cil1XNPV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSkUTzRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGXVLp (ORCPT
+        id S1726890AbgGXVL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:11:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24782 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726411AbgGXVLo (ORCPT
+        Fri, 24 Jul 2020 17:11:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgGXVL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:11:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595625103;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tgk0E/B+fKLI4HapciZOOHShfeB4adj+yNndqo5HAqc=;
-        b=cil1XNPVb6qCS5eOC9TwJy+Zs2IXvFYnt8Gqhy2WKEgPbZU/gksB1Ouv4h7RfEsoB/++iQ
-        E0z9/zUjsWsrXdXpxvVAfISeMK5oYIjOeoE8uYSz7r/ia8Z7Zazlvn7vdXz102qx05xbhH
-        Y301+MqJmUSb7kpLKOlh3iOiRdsRYwg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-467-EvQuSqI9Np-gVoJuVaSCpw-1; Fri, 24 Jul 2020 17:11:41 -0400
-X-MC-Unique: EvQuSqI9Np-gVoJuVaSCpw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6ED61106B251;
-        Fri, 24 Jul 2020 21:11:39 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-203.rdu2.redhat.com [10.10.117.203])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9267410013C2;
-        Fri, 24 Jul 2020 21:11:36 +0000 (UTC)
-Subject: Re: [PATCH v4 0/6] powerpc: queued spinlocks and rwlocks
-To:     Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org
-References: <20200724131423.1362108-1-npiggin@gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <f568c8aa-29b5-dbe9-47b8-ee12ce55cb31@redhat.com>
-Date:   Fri, 24 Jul 2020 17:11:36 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 24 Jul 2020 17:11:58 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D10C0619D3;
+        Fri, 24 Jul 2020 14:11:58 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id a9so2066876oof.12;
+        Fri, 24 Jul 2020 14:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=32A/vrWodJ+BXQ39fKXWfYJgwA/ZpA42pEyTyFICNY4=;
+        b=OSkUTzRFFG6RCEG7jFwkBHEBckqfzjEE9h1/uxk+PoDk+pQ5GVA0N00BcljH0cCsor
+         NVsdjYZQ55bSAZoH+pMzq7otfrlv+N6ahNwUbZDoEwIovrLJrbHlJn7SG5FTPUH8W8rN
+         sEVtfwYrR2em11V37/00XfWF6ckiAmUdTzUO45ppdMMfcDNmm9M48e1molbrJ3d89rgh
+         U6Uhk34FGaWbE/IUy47lWobysaBxKVR7xJkkFGkMGM5+5SaZsCvFeKMWfzHxr+64P3HP
+         SJMJiO7vEQ/hJkFWkOu3L1e1KTDpxA07ul5qqjYF51UvdhDoch7uZw5OpGn+F3MqGvFh
+         JWMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=32A/vrWodJ+BXQ39fKXWfYJgwA/ZpA42pEyTyFICNY4=;
+        b=cJFPLY9e2SSjx8m42kbcUHgjEicGvS7re+ENl6VIRx6SPxZdf/0oGZQ7MNmvfjTBhk
+         Olu2IrOQiDUGgx6I/bODtjLlQ+/X+wwyVQMdcKwPKb6AgHe9pjI1C9jR8kiy/EXesY0d
+         0vSrcOaKeL+MurxUAnizerDXzXy6eTEQUyM75WVU7bEV8TIOptPdIYP7hOXtDcuk9V/i
+         nMsUiVkvIgn4SmMwV32nWo6D0aib5BbTTZrX3Rt/wwqYwJdeuA7iZqY6Cdc+WcPw4qYq
+         2MdBOEYCAEsskjmBGUlhBT1Mq8NgHQMXlIDlsLpAiclYLnwbycyNEG1Wh678xVfcm4KT
+         g2ww==
+X-Gm-Message-State: AOAM530DagotO3/l7+dxJ2sY0OI9kcstA3NVp5Wn8EcmbTjf5f5E7g7A
+        gBzp3ZdTMnk6iU8IQLYer05w8FihSlWlJfwvxUoBKpT1
+X-Google-Smtp-Source: ABdhPJxSEMhig/5INwzyVFWMGkySOfLKrkW2RDf7R+3+uH6ipq7O9w4cfjL01QlFjgiZmOkFqqaLKEyX+6LwPAI5QWg=
+X-Received: by 2002:a4a:1d83:: with SMTP id 125mr11360872oog.18.1595625117897;
+ Fri, 24 Jul 2020 14:11:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200724131423.1362108-1-npiggin@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <1595602732-25582-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1595602732-25582-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200724193752.GE2729799@oden.dyn.berto.se>
+In-Reply-To: <20200724193752.GE2729799@oden.dyn.berto.se>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 24 Jul 2020 22:11:31 +0100
+Message-ID: <CA+V-a8s7UkhCGcP8eiiH_jd8hhnpLJA6QqfL7jXo_sAgRMfy8g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: media: renesas,vin: Document
+ renesas-vin-ycbcr-8b-g property
+To:     Niklas <niklas.soderlund@ragnatech.se>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/24/20 9:14 AM, Nicholas Piggin wrote:
-> Updated with everybody's feedback (thanks all), and more performance
-> results.
->
-> What I've found is I might have been measuring the worst load point for
-> the paravirt case, and by looking at a range of loads it's clear that
-> queued spinlocks are overall better even on PV, doubly so when you look
-> at the generally much improved worst case latencies.
->
-> I have defaulted it to N even though I'm less concerned about the PV
-> numbers now, just because I think it needs more stress testing. But
-> it's very nicely selectable so should be low risk to include.
->
-> All in all this is a very cool technology and great results especially
-> on the big systems but even on smaller ones there are nice gains. Thanks
-> Waiman and everyone who developed it.
->
-> Thanks,
-> Nick
->
-> Nicholas Piggin (6):
->    powerpc/pseries: move some PAPR paravirt functions to their own file
->    powerpc: move spinlock implementation to simple_spinlock
->    powerpc/64s: implement queued spinlocks and rwlocks
->    powerpc/pseries: implement paravirt qspinlocks for SPLPAR
->    powerpc/qspinlock: optimised atomic_try_cmpxchg_lock that adds the
->      lock hint
->    powerpc: implement smp_cond_load_relaxed
->
->   arch/powerpc/Kconfig                          |  15 +
->   arch/powerpc/include/asm/Kbuild               |   1 +
->   arch/powerpc/include/asm/atomic.h             |  28 ++
->   arch/powerpc/include/asm/barrier.h            |  14 +
->   arch/powerpc/include/asm/paravirt.h           |  87 +++++
->   arch/powerpc/include/asm/qspinlock.h          |  91 ++++++
->   arch/powerpc/include/asm/qspinlock_paravirt.h |   7 +
->   arch/powerpc/include/asm/simple_spinlock.h    | 288 ++++++++++++++++
->   .../include/asm/simple_spinlock_types.h       |  21 ++
->   arch/powerpc/include/asm/spinlock.h           | 308 +-----------------
->   arch/powerpc/include/asm/spinlock_types.h     |  17 +-
->   arch/powerpc/lib/Makefile                     |   3 +
->   arch/powerpc/lib/locks.c                      |  12 +-
->   arch/powerpc/platforms/pseries/Kconfig        |   9 +-
->   arch/powerpc/platforms/pseries/setup.c        |   4 +-
->   include/asm-generic/qspinlock.h               |   4 +
->   16 files changed, 588 insertions(+), 321 deletions(-)
->   create mode 100644 arch/powerpc/include/asm/paravirt.h
->   create mode 100644 arch/powerpc/include/asm/qspinlock.h
->   create mode 100644 arch/powerpc/include/asm/qspinlock_paravirt.h
->   create mode 100644 arch/powerpc/include/asm/simple_spinlock.h
->   create mode 100644 arch/powerpc/include/asm/simple_spinlock_types.h
->
-That patch series looks good to me. Thanks for working on this.
+Hi Niklas,
 
-For the series,
+Thank you for the review.
 
-Acked-by: Waiman Long <longman@redhat.com>
+On Fri, Jul 24, 2020 at 8:37 PM Niklas <niklas.soderlund@ragnatech.se> wrot=
+e:
+>
+> Hi Lad,
+>
+> Thanks for your patch.
+>
+> On 2020-07-24 15:58:51 +0100, Lad Prabhakar wrote:
+> > Add a DT property "renesas-vin-ycbcr-8b-g" to select YCbCr422 8-bit dat=
+a
+> > input pins.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/media/renesas,vin.yaml | 13 ++++++++=
++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/renesas,vin.yaml b=
+/Documentation/devicetree/bindings/media/renesas,vin.yaml
+> > index 53c0a72..7dfb781 100644
+> > --- a/Documentation/devicetree/bindings/media/renesas,vin.yaml
+> > +++ b/Documentation/devicetree/bindings/media/renesas,vin.yaml
+> > @@ -106,6 +106,12 @@ properties:
+> >
+> >            remote-endpoint: true
+> >
+> > +          renesas-vin-ycbcr-8b-g:
+>
+> I think the preferred format for vendor specific properties are
+> "<vendor>,<property>".
+>
+Indeed and I had it as renesas,vin-ycbcr-8b-g but dt_bindings_check
+complained about it.
 
+> This nit apart I'm not sure a property is the right way here. Could it
+> not be possible on some designs to have two different sensors one wired
+> to DATA[7:0] and the other to DATA[15:8] and by controlling the
+> VNDRM2_YDS register at runtime switch between the two? If so adding a DT
+> property to hard-code one of the two options would prevent this. I fear
+> we need to think of a runtime way to deal with this.
+>
+Aha Gen2 and Gen3 hardware manuals have a bit different description
+about the YDS field. (I was working R8a7742 SoC so I referred Gen2
+manual)
+
+> The best way to do that I think is to extend the port@0 node to allow
+> for two endpoints, one for each of the two possible parallel sensors.
+> This would then have to be expressed in the media graph and selection if
+> YDS should be set or not depend on which media links are enabled.
+>
+In that case how do we handle endpoint matching each would have two
+subdevs to be matched. And in case non media-ctl cases we cannot
+switch between subdevs.
+
+Cheers,
+--Prabhakar
+
+> > +            type: boolean
+> > +            description:
+> > +              If present this property specifies to selects VIN_G[7:0]=
+ as data pins for YCbCr422 8-bit data.
+> > +            default: false
+> > +
+> >          required:
+> >            - remote-endpoint
+> >
+> > @@ -168,6 +174,13 @@ properties:
+> >
+> >                remote-endpoint: true
+> >
+> > +              renesas-vin-ycbcr-8b-g:
+> > +                type: boolean
+> > +                description:
+> > +                  If present this property specifies to selects VIN_G[=
+7:0] as data pins for
+> > +                  YCbCr422 8-bit data.
+> > +                default: false
+> > +
+> >              required:
+> >                - remote-endpoint
+> >
+> > --
+> > 2.7.4
+> >
+>
+> --
+> Regards,
+> Niklas S=C3=B6derlund
