@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A287C43600
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E263DC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C82C720748
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B8220748
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:39:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="lMS0hKsT"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="tIdgZ4jR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgGXKi6 (ORCPT
+        id S1728220AbgGXKjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:38:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39184 "EHLO
+        Fri, 24 Jul 2020 06:39:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgGXKi5 (ORCPT
+        with ESMTP id S1726726AbgGXKjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:38:57 -0400
+        Fri, 24 Jul 2020 06:39:03 -0400
 Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2CD7C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 03:38:56 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id k20so172818wmi.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 03:38:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A900DC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 03:39:02 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id o8so7527921wmh.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 03:39:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sartura-hr.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=asNVEYk8KfoZ4vg7N/gD3s4rcXG24Tr1/ayUv6ELQDA=;
-        b=lMS0hKsTGuLOzUEs5OuvhgZ8Stjst8miUPMx3B0A9abxrjSNgaKaVtS/0pZQZa3SZf
-         Ye6XwdvuS/WCKoxzEA6SV89RC7Liz0J/lkrgrvwMRfSwS8fc3zFStCQx+yfgR+vWo309
-         fFb8PXCdeKxJHyOwdmlWtN63viAJXcLaSGyVZ6NxxV9S5vsjjAr3D9CFnzz/2O9OU/2c
-         5NjxVsW3ifD6SijmQ08F1Fnb9PDoAIUGj7VFD3PvfYZdiAN4+mpgksweKjvd9VOOhr1z
-         +/9tqNXP9hzE7sxVQCJeyRc8ayX5l8EjVU6iCBnu5ezIHwAmRyLjIruHh+H1UvNR5HyU
-         NumA==
+        bh=YHdxCCtAxsdNwqWlZsmsaGSLGhK0kJ1tZwNHB/8rXdk=;
+        b=tIdgZ4jRKnl2bMPcLNVW/J5K2vucpsFanUiuGE0dj7qI6OuHBFwQ0YTvsavb5PGxJH
+         7iviGrpxVB9I64dglOC9k10owGp0JQK1BcGf++uyseOI1foE5kdP0SBDSrZ1BdkBFBMh
+         VpLqQPzj1D/8LDIJaDHc+Zjpmz2TIgYfYG7qamjgIE103m/8tN+QUy28sN0lDZYJPIjo
+         uTsJH5SvG42gUiVvuoGUy0uTm4vnQXImAo2Z7igZxsi0EmBwiwT62ejg31nMOc7x4urX
+         IBVlkNDBhd+W8XDEodt9QM9h1CrRMa71fgly9h87QpJeLvyRjecHcqsCBSm5a+gghItF
+         SiJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=asNVEYk8KfoZ4vg7N/gD3s4rcXG24Tr1/ayUv6ELQDA=;
-        b=pDEYeaLxakrp8cO7vcbtOPbs5H/vjVu/Qb8TB9aJ5seKiZ9rmSwBHLAgvoVUnnBp6e
-         PeoK6628YJBTcgAf5w+IqKMI9b1wRKop4925NLoREu8UKL1D3WsfPKBliwbv3CC0yEY5
-         65Ka5HnQlWY+2PVQevumlFAeFSENWph94DfBJBKybgD2U9seN/QW0kyk+MmeQ1t3IbzQ
-         /rp1oi6fkDBvj4e3P1C0SL2tiBcxb3ewDswpD8FWdVL2B83MBa4wcyVblu51095J3YVn
-         W06gHj3uvdp5XxvWMCPzgF6hvhDElHpgeplcB1rEIvQM7YBP6Hqz+aj1ZKGHd8O5HGKP
-         a1Gw==
-X-Gm-Message-State: AOAM5329NggjEuM3g4pOBuOV99kVkEe/xmqmqnUE99CnWazyyMglcSBA
-        jOwosyeh2qxDVMOOWa6+gfN2Ow==
-X-Google-Smtp-Source: ABdhPJx0ZNqiuuhbIiOHn5PgnM0nwGQ+h7ykoniMkeWT2A7yZtkoVyUDBnTbW5mVNDL0oRvX3iICXQ==
-X-Received: by 2002:a1c:a181:: with SMTP id k123mr8235759wme.172.1595587135446;
-        Fri, 24 Jul 2020 03:38:55 -0700 (PDT)
+        bh=YHdxCCtAxsdNwqWlZsmsaGSLGhK0kJ1tZwNHB/8rXdk=;
+        b=PHXnkCRR94qN6RMTDvYYFebFpbE2GhgZD9v6SXqs2dVY60NIUB2T0QcksJs0IX/20a
+         cTlKiJue8SdrYlNg2u4zN8YgOv5vIk6qCv73hRCAj+w9OtvT9/yhkdQFpzcsra4qzpTO
+         gWNoy/AfFfF3UcI5Hvtq+tJSmXsSlF218EA6FQmjb2qtZupE/pVT1RTfoMQd4edrXKCR
+         o7fNaQUQskJIafMRT2QrGFWEvVuOHcG/t81Z+xCaMAQetS10LWL0BZgmVlf7L6CoZF3p
+         Aajb5jhIyraGxaivjaTm/FTGCv4B6P2BZR7HfaomePZgxy6Kr7cvvMeix9I8McJn84/h
+         vUOg==
+X-Gm-Message-State: AOAM533IH9082yfTaXvZfcURAU6AJGGvdRXqjewfMAz0rZwyraqBNzVi
+        bfNRIdV0THPIcBbsUMuskglEcg==
+X-Google-Smtp-Source: ABdhPJxIOWOQAngZE4YY/7+tg8Tk9gtgWe22Fj9tsgMyjTga8VbFtaphwOr0BR2V8nOYGX+qNMsUHg==
+X-Received: by 2002:a7b:c775:: with SMTP id x21mr8288923wmk.34.1595587141483;
+        Fri, 24 Jul 2020 03:39:01 -0700 (PDT)
 Received: from lukakovacicapc.local ([2a00:ee2:4b0d:3001:fbc5:498b:ed6d:cfac])
-        by smtp.gmail.com with ESMTPSA id f186sm6526280wmf.29.2020.07.24.03.38.54
+        by smtp.gmail.com with ESMTPSA id f186sm6526280wmf.29.2020.07.24.03.39.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 03:38:54 -0700 (PDT)
+        Fri, 24 Jul 2020 03:39:00 -0700 (PDT)
 From:   Luka Kovacic <luka.kovacic@sartura.hr>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
@@ -66,9 +66,9 @@ Cc:     jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
         Luka Kovacic <luka.kovacic@sartura.hr>,
         Luka Perkov <luka.perkov@sartura.hr>,
         Jakov Petrina <jakov.petrina@sartura.hr>
-Subject: [PATCH 1/4] arm: mvebu: dts: Add CRS326-24G-2S board
-Date:   Fri, 24 Jul 2020 12:38:37 +0200
-Message-Id: <20200724103840.18994-2-luka.kovacic@sartura.hr>
+Subject: [PATCH 4/4] MAINTAINERS: Add an entry for MikroTik CRS3xx 98DX3236 boards
+Date:   Fri, 24 Jul 2020 12:38:40 +0200
+Message-Id: <20200724103840.18994-5-luka.kovacic@sartura.hr>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200724103840.18994-1-luka.kovacic@sartura.hr>
 References: <20200724103840.18994-1-luka.kovacic@sartura.hr>
@@ -79,223 +79,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MikroTik CRS326-24G-2S board has a switch chip with an integrated
-Marvell Prestera 98DX3236 CPU.
-
-This commit includes two board variants, namely the factory
-default one and a Bit variant. The Bit variant has a
-bigger Macronix flash.
-
-This device tree includes basic Linux support.
+An entry is added for MikroTik CRS3xx 98DX3236 based switches.
 
 Signed-off-by: Luka Kovacic <luka.kovacic@sartura.hr>
 Cc: Luka Perkov <luka.perkov@sartura.hr>
 Cc: Jakov Petrina <jakov.petrina@sartura.hr>
 ---
- arch/arm/boot/dts/Makefile                    |   2 +
- .../boot/dts/armada-xp-crs326-24g-2s-bit.dts  |  43 ++++++++
- arch/arm/boot/dts/armada-xp-crs326-24g-2s.dts |  17 +++
- .../arm/boot/dts/armada-xp-crs326-24g-2s.dtsi | 104 ++++++++++++++++++
- 4 files changed, 166 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-xp-crs326-24g-2s-bit.dts
- create mode 100644 arch/arm/boot/dts/armada-xp-crs326-24g-2s.dts
- create mode 100644 arch/arm/boot/dts/armada-xp-crs326-24g-2s.dtsi
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e6a1cac0bfc7..8627a38c4100 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1312,6 +1312,8 @@ dtb-$(CONFIG_MACH_ARMADA_39X) += \
- 	armada-398-db.dtb
- dtb-$(CONFIG_MACH_ARMADA_XP) += \
- 	armada-xp-axpwifiap.dtb \
-+	armada-xp-crs326-24g-2s.dtb \
-+	armada-xp-crs326-24g-2s-bit.dtb \
- 	armada-xp-db.dtb \
- 	armada-xp-db-dxbc2.dtb \
- 	armada-xp-db-xc3-24g4xg.dtb \
-diff --git a/arch/arm/boot/dts/armada-xp-crs326-24g-2s-bit.dts b/arch/arm/boot/dts/armada-xp-crs326-24g-2s-bit.dts
-new file mode 100644
-index 000000000000..21f442afab1f
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-xp-crs326-24g-2s-bit.dts
-@@ -0,0 +1,43 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device Tree file for MikroTik CRS326-24G-2S+ Bit board
-+ *
-+ * Copyright (C) 2020 Sartura Ltd.
-+ * Author: Luka Kovacic <luka.kovacic@sartura.hr>
-+ */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d53db30d1365..9da194a33b7a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11402,6 +11402,17 @@ M:	Oliver Neukum <oliver@neukum.org>
+ S:	Maintained
+ F:	drivers/usb/image/microtek.*
+ 
++MIKROTIK CRS3XX 98DX3236 BOARD SUPPORT
++M:	Luka Kovacic <luka.kovacic@sartura.hr>
++M:	Luka Perkov <luka.perkov@sartura.hr>
++S:	Maintained
++F:	arch/arm/boot/dts/armada-xp-crs305-1g-4s-bit.dts
++F:	arch/arm/boot/dts/armada-xp-crs305-1g-4s.dts
++F:	arch/arm/boot/dts/armada-xp-crs326-24g-2s-bit.dts
++F:	arch/arm/boot/dts/armada-xp-crs326-24g-2s.dts
++F:	arch/arm/boot/dts/armada-xp-crs328-4c-20s-4s-bit.dts
++F:	arch/arm/boot/dts/armada-xp-crs328-4c-20s-4s.dts
 +
-+#include "armada-xp-crs326-24g-2s.dtsi"
-+
-+/ {
-+	model = "MikroTik CRS326-24G-2S+ Bit";
-+};
-+
-+&spi0 {
-+	status = "okay";
-+
-+	spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		reg = <0>; /* Chip select 0 */
-+		spi-max-frequency = <108000000>;
-+		m25p,fast-read;
-+
-+		partition@u-boot {
-+			reg = <0x00000000 0x001f0000>;
-+			label = "u-boot";
-+		};
-+		partition@u-boot-env {
-+			reg = <0x001f0000 0x00010000>;
-+			label = "u-boot-env";
-+		};
-+		partition@ubi1 {
-+			reg = <0x00200000 0x03f00000>;
-+			label = "ubi1";
-+		};
-+		partition@ubi2 {
-+			reg = <0x04100000 0x03f00000>;
-+			label = "ubi2";
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/armada-xp-crs326-24g-2s.dts b/arch/arm/boot/dts/armada-xp-crs326-24g-2s.dts
-new file mode 100644
-index 000000000000..83aef43f66d5
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-xp-crs326-24g-2s.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device Tree file for MikroTik CRS326-24G-2S+ board
-+ *
-+ * Copyright (C) 2020 Sartura Ltd.
-+ * Author: Luka Kovacic <luka.kovacic@sartura.hr>
-+ */
-+
-+#include "armada-xp-crs326-24g-2s.dtsi"
-+
-+/ {
-+	model = "MikroTik CRS326-24G-2S+";
-+};
-+
-+&spi0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/armada-xp-crs326-24g-2s.dtsi b/arch/arm/boot/dts/armada-xp-crs326-24g-2s.dtsi
-new file mode 100644
-index 000000000000..f3e1a25ca5f2
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-xp-crs326-24g-2s.dtsi
-@@ -0,0 +1,104 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device Tree file for CRS326-24G-2S board
-+ *
-+ * Copyright (C) 2016 Allied Telesis Labs
-+ * Copyright (C) 2020 Sartura Ltd.
-+ *
-+ * Based on armada-xp-db.dts
-+ *
-+ * Note: this Device Tree assumes that the bootloader has remapped the
-+ * internal registers to 0xf1000000 (instead of the default
-+ * 0xd0000000). The 0xf1000000 is the default used by the recent,
-+ * DT-capable, U-Boot bootloaders provided by Marvell. Some earlier
-+ * boards were delivered with an older version of the bootloader that
-+ * left internal registers mapped at 0xd0000000. If you are in this
-+ * situation, you should either update your bootloader (preferred
-+ * solution) or the below Device Tree should be adjusted.
-+ */
-+
-+/dts-v1/;
-+#include "armada-xp-98dx3236.dtsi"
-+
-+/ {
-+	model = "CRS326-24G-2S+";
-+	compatible = "mikrotik,crs326-24g-2s", "marvell,armadaxp-98dx3236", "marvell,armada-370-xp";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0 0x00000000 0 0x20000000>; /* 512 MB */
-+	};
-+};
-+
-+&L2 {
-+	arm,parity-enable;
-+	marvell,ecc-enable;
-+};
-+
-+&devbus_bootcs {
-+	status = "okay";
-+
-+	/* Device Bus parameters are required */
-+
-+	/* Read parameters */
-+	devbus,bus-width    = <16>;
-+	devbus,turn-off-ps  = <60000>;
-+	devbus,badr-skew-ps = <0>;
-+	devbus,acc-first-ps = <124000>;
-+	devbus,acc-next-ps  = <248000>;
-+	devbus,rd-setup-ps  = <0>;
-+	devbus,rd-hold-ps   = <0>;
-+
-+	/* Write parameters */
-+	devbus,sync-enable = <0>;
-+	devbus,wr-high-ps  = <60000>;
-+	devbus,wr-low-ps   = <60000>;
-+	devbus,ale-wr-ps   = <60000>;
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	clock-frequency = <100000>;
-+	status = "okay";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&spi0 {
-+	status = "okay";
-+
-+	spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		reg = <0>; /* Chip select 0 */
-+		spi-max-frequency = <108000000>;
-+		m25p,fast-read;
-+
-+		partition@u-boot {
-+			reg = <0x00000000 0x001f0000>;
-+			label = "u-boot";
-+		};
-+		partition@u-boot-env {
-+			reg = <0x001f0000 0x00010000>;
-+			label = "u-boot-env";
-+		};
-+		partition@ubi1 {
-+			reg = <0x00200000 0x00e00000>;
-+			label = "ubi1";
-+		};
-+	};
-+};
+ MIPS
+ M:	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+ L:	linux-mips@vger.kernel.org
 -- 
 2.26.2
 
