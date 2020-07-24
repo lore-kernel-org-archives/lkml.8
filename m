@@ -2,146 +2,236 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBDEC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE124C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 070232068F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7D120714
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:50:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRTt5xyI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgGXAuT (ORCPT
+        id S1728428AbgGXAur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 20:50:19 -0400
-Received: from mleia.com ([178.79.152.223]:35378 "EHLO mail.mleia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbgGXAuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 20:50:19 -0400
-Received: from mail.mleia.com (localhost [127.0.0.1])
-        by mail.mleia.com (Postfix) with ESMTP id 527DA3F9092;
-        Fri, 24 Jul 2020 00:50:17 +0000 (UTC)
-From:   Vladimir Zapolskiy <vz@mleia.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Wen Yang <wenyang@linux.alibaba.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator: fix memory leak on error path of regulator_register()
-Date:   Fri, 24 Jul 2020 03:50:13 +0300
-Message-Id: <20200724005013.23278-1-vz@mleia.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 23 Jul 2020 20:50:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60994 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728399AbgGXAur (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 20:50:47 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E35B7C0619D3;
+        Thu, 23 Jul 2020 17:50:46 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id i18so5914367ilk.10;
+        Thu, 23 Jul 2020 17:50:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=ifKaXZeiPHIEultDZ5bkkiqe2SdELJPeAy8i17powzw=;
+        b=VRTt5xyIZwRDcn6SBkzxXZp2qt/yStopOOAQFlDj/ZWfTcc1PGH5vghraL/YN2XTl2
+         OgJHAswgmkJhBP2kZgT5u8i9tXAKoksgXixNMW46SN5W1p5/bLJwdy29caFM0kFOFbZw
+         uzygmT5/kSNq/l2z5fg+8W77pGbEZ61gYM4QC5Fh7bhfuNl9+EiLpMVtTrCZ+CxaG1sk
+         gUXRempdZ5SNEq/KsOtbxCtF5YIPrpj137vsco3hTCv+exNpPuYGgfNSb7OR10T6ffQI
+         u8q5uq94xLvtzEt6zltVl0Pd2wseW1/GgohBpL5jeB6gatXQ+aY3pucxqQpgYo5AlcNb
+         Rs2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=ifKaXZeiPHIEultDZ5bkkiqe2SdELJPeAy8i17powzw=;
+        b=VTVhYT6L04pZUXjLGph4h1GnGtCZG/5x1ZXkkZwrK+h2yFfZa0C8ySi55f/RVk46zr
+         8qvTrc7TeVUEdavISkd3ftg4J9Gcl6Je3K8Fgsl/gFsq1M1CB0nlUojhT+2TfdVVi2k7
+         MSVreI1+II5fi23ZHyBEk2zq6rZQ6v4ftpQffpsBaXSlCLiDdXLYxbJwQYxqc6LF1egF
+         3hx0mam9sG5d8xRP+IUGT0PM74AodEkbkL0MlQps6jzu14isNI31iCwzKlVKcQ6FL+jX
+         ddswZwXXL07o5BcJEHRsgTFc8rsgni9x+HzHNiaRFSxbANYTj35niuluuHNndbGuJJwP
+         V0vg==
+X-Gm-Message-State: AOAM532F6JFfs/b0z4JGkrVZ4KkgQc5nrkdkNnj9qt3nqxonxORTVo5z
+        AmNQWVsd1Sa1ObrB9tugKFsTj9mvyou4L69v6SA=
+X-Google-Smtp-Source: ABdhPJwDEIkpDnmM+MbKOZDluYvj5ve5dUEgKRkgss245BC2wevpXUbBcBFcVdwctbOrQBKtlTKZWNkZU+N2pE69n/4=
+X-Received: by 2002:a92:b705:: with SMTP id k5mr4273672ili.176.1595551846207;
+ Thu, 23 Jul 2020 17:50:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20200724_005017_358293_61AE4293 
-X-CRM114-Status: GOOD (  13.97  )
+References: <20200723192801.351114-1-nickrterrell@gmail.com> <20200723192801.351114-7-nickrterrell@gmail.com>
+In-Reply-To: <20200723192801.351114-7-nickrterrell@gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 24 Jul 2020 02:50:34 +0200
+Message-ID: <CA+icZUWV3ANmBj08QZKBtEE38Y-iyCGGxLWtiFkdpKqkGP7ZqQ@mail.gmail.com>
+Subject: Re: [PATCH v8 6/7] x86: Add support for ZSTD compressed kernel
+To:     Nick Terrell <nickrterrell@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Terrell <terrelln@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The change corrects registration and deregistration on error path
-of a regulator, the problem was manifested by a reported memory
-leak on deferred probe:
+On Thu, Jul 23, 2020 at 9:30 PM Nick Terrell <nickrterrell@gmail.com> wrote:
+>
+> From: Nick Terrell <terrelln@fb.com>
+>
+> * Add support for zstd compressed kernel
+> * Define __DISABLE_EXPORTS in misc.c
+> * Bump the heap size for zstd.
+> * Update the documentation.
+>
+> Integrates the ZSTD decompression code to the x86 pre-boot code.
+>
+> Zstandard requires slightly more memory during the kernel decompression
+> on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+> window size.
+>
+> __DISABLE_EXPORTS is defined in misc.c instead of the Makefile because
+> kaslr.c defines __DISABLE_EXPORTS, and defining it in the Makefile gives
+> duplicate definition warnings.
+>
 
-    as3722-regulator as3722-regulator: regulator 13 register failed -517
+That was reported by Arvind - feel free to add a Reported-by: ...
 
-    # cat /sys/kernel/debug/kmemleak
-    unreferenced object 0xecc43740 (size 64):
-      comm "swapper/0", pid 1, jiffies 4294937640 (age 712.880s)
-      hex dump (first 32 bytes):
-        72 65 67 75 6c 61 74 6f 72 2e 32 34 00 5a 5a 5a  regulator.24.ZZZ
-        5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a  ZZZZZZZZZZZZZZZZ
-      backtrace:
-        [<0c4c3d1c>] __kmalloc_track_caller+0x15c/0x2c0
-        [<40c0ad48>] kvasprintf+0x64/0xd4
-        [<109abd29>] kvasprintf_const+0x70/0x84
-        [<c4215946>] kobject_set_name_vargs+0x34/0xa8
-        [<62282ea2>] dev_set_name+0x40/0x64
-        [<a39b6757>] regulator_register+0x3a4/0x1344
-        [<16a9543f>] devm_regulator_register+0x4c/0x84
-        [<51a4c6a1>] as3722_regulator_probe+0x294/0x754
-        ...
+- Sedat -
 
-The memory leak problem was introduced as a side ef another fix in
-regulator_register() error path, I believe that the proper fix is
-to decouple device_register() function into its two compounds and
-initialize a struct device before assigning any values to its fields
-and then using it before actual registration of a device happens.
-
-This lets to call put_device() safely after initialization, and, since
-now a release callback is called, kfree(rdev->constraints) shall be
-removed to exclude a double free condition.
-
-Fixes: a3cde9534ebd ("regulator: core: fix regulator_register() error paths to properly release rdev")
-Cc: Wen Yang <wenyang@linux.alibaba.com>
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
----
- drivers/regulator/core.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 03154f5b939f..720f28844795 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -5023,7 +5023,6 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	struct regulator_dev *rdev;
- 	bool dangling_cfg_gpiod = false;
- 	bool dangling_of_gpiod = false;
--	bool reg_device_fail = false;
- 	struct device *dev;
- 	int ret, i;
- 
-@@ -5152,10 +5151,12 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	}
- 
- 	/* register with sysfs */
-+	device_initialize(&rdev->dev);
- 	rdev->dev.class = &regulator_class;
- 	rdev->dev.parent = dev;
- 	dev_set_name(&rdev->dev, "regulator.%lu",
- 		    (unsigned long) atomic_inc_return(&regulator_no));
-+	dev_set_drvdata(&rdev->dev, rdev);
- 
- 	/* set regulator constraints */
- 	if (init_data)
-@@ -5206,12 +5207,9 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	    !rdev->desc->fixed_uV)
- 		rdev->is_switch = true;
- 
--	dev_set_drvdata(&rdev->dev, rdev);
--	ret = device_register(&rdev->dev);
--	if (ret != 0) {
--		reg_device_fail = true;
-+	ret = device_add(&rdev->dev);
-+	if (ret != 0)
- 		goto unset_supplies;
--	}
- 
- 	rdev_init_debugfs(rdev);
- 
-@@ -5233,17 +5231,15 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	mutex_unlock(&regulator_list_mutex);
- wash:
- 	kfree(rdev->coupling_desc.coupled_rdevs);
--	kfree(rdev->constraints);
- 	mutex_lock(&regulator_list_mutex);
- 	regulator_ena_gpio_free(rdev);
- 	mutex_unlock(&regulator_list_mutex);
-+	put_device(&rdev->dev);
-+	rdev = NULL;
- clean:
- 	if (dangling_of_gpiod)
- 		gpiod_put(config->ena_gpiod);
--	if (reg_device_fail)
--		put_device(&rdev->dev);
--	else
--		kfree(rdev);
-+	kfree(rdev);
- 	kfree(config);
- rinse:
- 	if (dangling_cfg_gpiod)
--- 
-2.24.0
-
+> This patch has been boot tested with both a zstd and gzip compressed
+> kernel on i386 and x86_64 using buildroot and QEMU.
+>
+> Additionally, this has been tested in production on x86_64 devices.
+> We saw a 2 second boot time reduction by switching kernel compression
+> from xz to zstd.
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Signed-off-by: Nick Terrell <terrelln@fb.com>
+> ---
+>  Documentation/x86/boot.rst        | 6 +++---
+>  arch/x86/Kconfig                  | 1 +
+>  arch/x86/boot/compressed/Makefile | 5 ++++-
+>  arch/x86/boot/compressed/misc.c   | 9 +++++++++
+>  arch/x86/include/asm/boot.h       | 6 ++++--
+>  5 files changed, 21 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
+> index 5325c71ca877..7fafc7ac00d7 100644
+> --- a/Documentation/x86/boot.rst
+> +++ b/Documentation/x86/boot.rst
+> @@ -782,9 +782,9 @@ Protocol:   2.08+
+>    uncompressed data should be determined using the standard magic
+>    numbers.  The currently supported compression formats are gzip
+>    (magic numbers 1F 8B or 1F 9E), bzip2 (magic number 42 5A), LZMA
+> -  (magic number 5D 00), XZ (magic number FD 37), and LZ4 (magic number
+> -  02 21).  The uncompressed payload is currently always ELF (magic
+> -  number 7F 45 4C 46).
+> +  (magic number 5D 00), XZ (magic number FD 37), LZ4 (magic number
+> +  02 21) and ZSTD (magic number 28 B5). The uncompressed payload is
+> +  currently always ELF (magic number 7F 45 4C 46).
+>
+>  ============   ==============
+>  Field name:    payload_length
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 883da0abf779..4a64395bc35d 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -188,6 +188,7 @@ config X86
+>         select HAVE_KERNEL_LZMA
+>         select HAVE_KERNEL_LZO
+>         select HAVE_KERNEL_XZ
+> +       select HAVE_KERNEL_ZSTD
+>         select HAVE_KPROBES
+>         select HAVE_KPROBES_ON_FTRACE
+>         select HAVE_FUNCTION_ERROR_INJECTION
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index 7619742f91c9..3498cd990869 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -26,7 +26,7 @@ OBJECT_FILES_NON_STANDARD     := y
+>  KCOV_INSTRUMENT                := n
+>
+>  targets := vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2 vmlinux.bin.lzma \
+> -       vmlinux.bin.xz vmlinux.bin.lzo vmlinux.bin.lz4
+> +       vmlinux.bin.xz vmlinux.bin.lzo vmlinux.bin.lz4 vmlinux.bin.zst
+>
+>  KBUILD_CFLAGS := -m$(BITS) -O2
+>  KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
+> @@ -145,6 +145,8 @@ $(obj)/vmlinux.bin.lzo: $(vmlinux.bin.all-y) FORCE
+>         $(call if_changed,lzo)
+>  $(obj)/vmlinux.bin.lz4: $(vmlinux.bin.all-y) FORCE
+>         $(call if_changed,lz4)
+> +$(obj)/vmlinux.bin.zst: $(vmlinux.bin.all-y) FORCE
+> +       $(call if_changed,zstd22)
+>
+>  suffix-$(CONFIG_KERNEL_GZIP)   := gz
+>  suffix-$(CONFIG_KERNEL_BZIP2)  := bz2
+> @@ -152,6 +154,7 @@ suffix-$(CONFIG_KERNEL_LZMA)        := lzma
+>  suffix-$(CONFIG_KERNEL_XZ)     := xz
+>  suffix-$(CONFIG_KERNEL_LZO)    := lzo
+>  suffix-$(CONFIG_KERNEL_LZ4)    := lz4
+> +suffix-$(CONFIG_KERNEL_ZSTD)   := zst
+>
+>  quiet_cmd_mkpiggy = MKPIGGY $@
+>        cmd_mkpiggy = $(obj)/mkpiggy $< > $@
+> diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+> index 9652d5c2afda..885dc20680c2 100644
+> --- a/arch/x86/boot/compressed/misc.c
+> +++ b/arch/x86/boot/compressed/misc.c
+> @@ -12,6 +12,11 @@
+>   * High loaded stuff by Hans Lermen & Werner Almesberger, Feb. 1996
+>   */
+>
+> +/* decompressors bring in EXPORT_SYMBOL which is meaningless and will
+> + * cause compiler errors in some cases.
+> + */
+> +#define __DISABLE_EXPORTS
+> +
+>  #include "misc.h"
+>  #include "error.h"
+>  #include "pgtable.h"
+> @@ -77,6 +82,10 @@ static int lines, cols;
+>  #ifdef CONFIG_KERNEL_LZ4
+>  #include "../../../../lib/decompress_unlz4.c"
+>  #endif
+> +
+> +#ifdef CONFIG_KERNEL_ZSTD
+> +#include "../../../../lib/decompress_unzstd.c"
+> +#endif
+>  /*
+>   * NOTE: When adding a new decompressor, please update the analysis in
+>   * ../header.S.
+> diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
+> index 680c320363db..d6dd43d25d9f 100644
+> --- a/arch/x86/include/asm/boot.h
+> +++ b/arch/x86/include/asm/boot.h
+> @@ -24,9 +24,11 @@
+>  # error "Invalid value for CONFIG_PHYSICAL_ALIGN"
+>  #endif
+>
+> -#ifdef CONFIG_KERNEL_BZIP2
+> +#if defined(CONFIG_KERNEL_BZIP2)
+>  # define BOOT_HEAP_SIZE                0x400000
+> -#else /* !CONFIG_KERNEL_BZIP2 */
+> +#elif defined(CONFIG_KERNEL_ZSTD)
+> +# define BOOT_HEAP_SIZE                 0x30000
+> +#else
+>  # define BOOT_HEAP_SIZE                 0x10000
+>  #endif
+>
+> --
+> 2.27.0
+>
