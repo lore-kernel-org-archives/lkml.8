@@ -2,474 +2,367 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87C3C433FB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 01:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 01:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8509320714
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 01:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54842065E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 01:30:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cfMpaDwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgGXB0r (ORCPT
+        id S1726607AbgGXBa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 21:26:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgGXBZs (ORCPT
+        Thu, 23 Jul 2020 21:30:27 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:20964 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgGXBa1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 21:25:48 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A24C0619D3;
-        Thu, 23 Jul 2020 18:25:48 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jymT4-001GcN-PK; Fri, 24 Jul 2020 01:25:46 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: [PATCH v2 04/20] unify generic instances of csum_partial_copy_nocheck()
-Date:   Fri, 24 Jul 2020 02:25:30 +0100
-Message-Id: <20200724012546.302155-4-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200724012546.302155-1-viro@ZenIV.linux.org.uk>
-References: <20200724012512.GK2786714@ZenIV.linux.org.uk>
- <20200724012546.302155-1-viro@ZenIV.linux.org.uk>
+        Thu, 23 Jul 2020 21:30:27 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200724013020epoutp0233d3c5ebe232f473bce3013be8d99a8e~kjBw7UZ9-0474804748epoutp02Q
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 01:30:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200724013020epoutp0233d3c5ebe232f473bce3013be8d99a8e~kjBw7UZ9-0474804748epoutp02Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1595554220;
+        bh=sDkywlC37Mfc4GeqS/QBxJW96NYDvgyhZByXX5UIuZQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=cfMpaDwYT4xjXiGq4Myu2mS6IazCE+vEtgK6n7jO+gpaWFc4E7UhaqCSoqnDId66V
+         eDI0/fWzm+dDCVXseMqZ1dS39zmqeoSNvcpUwQk4AK6J90dVw+TzuGnEBdxQH6lAGp
+         qOXNK5HsvnYvIPXmGjD5d5PrjpZSPlEmhnxdeQ7E=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200724013020epcas1p1feca0d6f5c13ad4dc408da54d19f427a~kjBwRNidP1509415094epcas1p1v;
+        Fri, 24 Jul 2020 01:30:20 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4BCWpy1VhJzMqYkn; Fri, 24 Jul
+        2020 01:30:18 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        41.A2.28578.8A93A1F5; Fri, 24 Jul 2020 10:30:16 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200724013015epcas1p37acad7db6732252f3800474b44a4ce30~kjBrpgbkh2618926189epcas1p3d;
+        Fri, 24 Jul 2020 01:30:15 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200724013015epsmtrp2ef54417fee74fa5deffc50440d3ea927~kjBrou0PC3073530735epsmtrp2a;
+        Fri, 24 Jul 2020 01:30:15 +0000 (GMT)
+X-AuditID: b6c32a39-e6f5da8000006fa2-d1-5f1a39a8a1dc
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        16.88.08303.7A93A1F5; Fri, 24 Jul 2020 10:30:15 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200724013014epsmtip2219e1602465b4d7962aa530d4110a820~kjBrZjycm0479904799epsmtip2U;
+        Fri, 24 Jul 2020 01:30:14 +0000 (GMT)
+Subject: Re: [PATCH v2 1/2] PM / devfreq: Clean up the devfreq instance name
+ in sysfs attr
+To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com,
+        enric.balletbo@collabora.com, hl@rock-chips.com, digetx@gmail.com,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, abel.vesa@nxp.com,
+        chanwoo@kernel.org, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <b1bfdf95-7990-17e3-07df-51e1fe66adb1@samsung.com>
+Date:   Fri, 24 Jul 2020 10:42:02 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200713083113.5595-2-cw00.choi@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJJsWRmVeSWpSXmKPExsWy7bCmge4KS6l4gwn/zS2WXTrKaDHxxhUW
+        i9UfHzNarLl9iNHix4ZTzBYtsxaxWJxtesNuseLuR1aLy7vmsFl87j3CaLGwqYXd4nbjCjaL
+        n7vmsTjweqyZt4bRY8fdJYweO2fdZffYtKqTzaO3+R2bx8Z3O5g8/s7az+LRt2UVo8fnTXIB
+        nFHZNhmpiSmpRQqpecn5KZl56bZK3sHxzvGmZgaGuoaWFuZKCnmJuam2Si4+AbpumTlAhysp
+        lCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVSC1JyCiwL9IoTc4tL89L1kvNzrQwNDIxMgQoT
+        sjPub9vDWnDYtqLvhkgD436DLkZODgkBE4nFb88wdTFycQgJ7GCUWPz1GZTziVHi/fGDLBDO
+        Z0aJD28XM8O0HFrXAVW1i1Hi5MdjjBDOe0aJjc+ms3YxcnAIC8RI3DlhCdIgImAlcfp/B1gz
+        s0Ark8SX8zEgNpuAlsT+FzfYQGx+AUWJqz8eM4LYvAJ2EpdWXWYFsVkEVCU2TFgBViMqECZx
+        clsLVI2gxMmZT1hAbE6g+dNbj7NBzBeXuPVkPhOELS+x/e0cZpDbJAQecEhMW9QP9YGLxMuj
+        XWwQtrDEq+Nb2CFsKYnP7/ZCxaslVp48wgbR3MEosWX/BVaIhLHE/qWTmUCeZBbQlFi/Sx8i
+        rCix8/dcRojFfBLvvvaAw0FCgFeio00IokRZ4vKDu0wQtqTE4vZOtgmMSrOQvDMLyQuzkLww
+        C2HZAkaWVYxiqQXFuempxYYFpsiRvYkRnKa1LHcwTn/7Qe8QIxMH4yFGCQ5mJRFeHUbxeCHe
+        lMTKqtSi/Pii0pzU4kOMpsAAnsgsJZqcD8wUeSXxhqZGxsbGFiaGZqaGhkrivP/OsscLCaQn
+        lqRmp6YWpBbB9DFxcEo1MMWqdSzdclEwwNzmZ43tFF3BVf/YN/9pznHNjOhJDNRN0F5lzcLe
+        bVi1y4HdW/atY/82wcfFBw541cq2hHaz+tfsqNbiYnpzr/61xTqRnUq3om58WnxN8MdOp783
+        n5Yy3ni7elfczu8tC/Y0um7YbFqaxVogW/vN4WeHjIkvR4LvXPe5Ml6vpvjudHndeyXgF1et
+        QfQCrgvfbS1cnbTygpeK/djPPO//NKFvDF/5n9rWLXIM5kycPcnpxZWTSdm6HNwdniU7jqq0
+        eR3kLDXOrd5q6fyo50KaX2PWGXa38JNly6R3iFx9eM5J8/Qf4wkS9ZlbJvl9Yc1I1v+cpLvv
+        bMfBtceel1znTzd5eltXiaU4I9FQi7moOBEAsCdjDFwEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsWy7bCSvO5yS6l4g6WzOC2WXTrKaDHxxhUW
+        i9UfHzNarLl9iNHix4ZTzBYtsxaxWJxtesNuseLuR1aLy7vmsFl87j3CaLGwqYXd4nbjCjaL
+        n7vmsTjweqyZt4bRY8fdJYweO2fdZffYtKqTzaO3+R2bx8Z3O5g8/s7az+LRt2UVo8fnTXIB
+        nFFcNimpOZllqUX6dglcGfe37WEtOGxb0XdDpIFxv0EXIyeHhICJxKF1HUxdjFwcQgI7GCXu
+        7J/FCJGQlJh28ShzFyMHkC0scfhwMUTNW0aJ3av7WEHiwgIxEndOWIKUiwhYSZz+38EMYjML
+        tDJJfDonDFG/l1Fi3dcF7CAJNgEtif0vbrCB2PwCihJXfzwG28UrYCdxadVlVhCbRUBVYsOE
+        FWA1ogJhEjuXPGaCqBGUODnzCQuIzQm0bHrrcTaIZeoSf+ZdglosLnHryXwmCFteYvvbOcwT
+        GIVnIWmfhaRlFpKWWUhaFjCyrGKUTC0ozk3PLTYsMMpLLdcrTswtLs1L10vOz93ECI5XLa0d
+        jHtWfdA7xMjEwXiIUYKDWUmEV4dRPF6INyWxsiq1KD++qDQntfgQozQHi5I479dZC+OEBNIT
+        S1KzU1MLUotgskwcnFINTPM2ng/cH9J63eaw7/sglrtC9e38GT+u1OT3mKpNZg6cdCTEwfBz
+        4YsqhYJfDMy1Njyfzzgcr3UuK3+2UrTqwBSlPOG9Hw9qeOyRsD0h7fvDw1P4y+GsGZqHej7I
+        sTXw/koTvuH++/k2Y66OmY91by29JdfGIj3d+UfPwas+7PJhyXn3Go+s7V21SOn65aKdd5ft
+        YtR3XCKcLC9eLmV9WltGVmqmduy5CQv5J8Y1NPpIKfFesn1y8zHXh52zyifnHy+/Fvb4+tP4
+        7vDu+KJ/r/8Yr9qksZLJoHDLvzM3+I268tRtozRU8rJWHFoVwKi7lV9/w+wz62R5tlSlr9yr
+        tcfB9F3ZkZPTOn9dvHBNSYmlOCPRUIu5qDgRAGrtGPxGAwAA
+X-CMS-MailID: 20200724013015epcas1p37acad7db6732252f3800474b44a4ce30
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200713081943epcas1p2a618d5a2e87610be7442e1fa584076cf
+References: <20200713083113.5595-1-cw00.choi@samsung.com>
+        <CGME20200713081943epcas1p2a618d5a2e87610be7442e1fa584076cf@epcas1p2.samsung.com>
+        <20200713083113.5595-2-cw00.choi@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On 7/13/20 5:31 PM, Chanwoo Choi wrote:
+> The sysfs attr interface used eithere 'df' or 'devfreq' for devfreq instance
+> name. In order to keep the consistency and to improve the readabilty,
+> unify the instance name as 'df'. Add add the missing conditional statement
+> to prevent the fault.
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  drivers/devfreq/devfreq.c | 94 +++++++++++++++++++++++++--------------
+>  1 file changed, 60 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index 5320c3b37f35..286957f760f1 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -1280,18 +1280,20 @@ EXPORT_SYMBOL(devfreq_remove_governor);
+>  static ssize_t name_show(struct device *dev,
+>  			struct device_attribute *attr, char *buf)
+>  {
+> -	struct devfreq *devfreq = to_devfreq(dev);
+> -	return sprintf(buf, "%s\n", dev_name(devfreq->dev.parent));
+> +	struct devfreq *df = to_devfreq(dev);
+> +	return sprintf(buf, "%s\n", dev_name(df->dev.parent));
+>  }
+>  static DEVICE_ATTR_RO(name);
+>  
+>  static ssize_t governor_show(struct device *dev,
+>  			     struct device_attribute *attr, char *buf)
+>  {
+> -	if (!to_devfreq(dev)->governor)
+> +	struct devfreq *df = to_devfreq(dev);
+> +
+> +	if (!df->governor)
+>  		return -EINVAL;
+>  
+> -	return sprintf(buf, "%s\n", to_devfreq(dev)->governor->name);
+> +	return sprintf(buf, "%s\n", df->governor->name);
+>  }
+>  
+>  static ssize_t governor_store(struct device *dev, struct device_attribute *attr,
+> @@ -1302,6 +1304,9 @@ static ssize_t governor_store(struct device *dev, struct device_attribute *attr,
+>  	char str_governor[DEVFREQ_NAME_LEN + 1];
+>  	const struct devfreq_governor *governor, *prev_governor;
+>  
+> +	if (!df->governor)
+> +		return -EINVAL;
+> +
+>  	ret = sscanf(buf, "%" __stringify(DEVFREQ_NAME_LEN) "s", str_governor);
+>  	if (ret != 1)
+>  		return -EINVAL;
+> @@ -1315,20 +1320,18 @@ static ssize_t governor_store(struct device *dev, struct device_attribute *attr,
+>  	if (df->governor == governor) {
+>  		ret = 0;
+>  		goto out;
+> -	} else if ((df->governor && df->governor->immutable) ||
+> -					governor->immutable) {
+> +	} else if (df->governor->immutable || governor->immutable) {
+>  		ret = -EINVAL;
+>  		goto out;
+>  	}
+>  
+> -	if (df->governor) {
+> -		ret = df->governor->event_handler(df, DEVFREQ_GOV_STOP, NULL);
+> -		if (ret) {
+> -			dev_warn(dev, "%s: Governor %s not stopped(%d)\n",
+> -				 __func__, df->governor->name, ret);
+> -			goto out;
+> -		}
+> +	ret = df->governor->event_handler(df, DEVFREQ_GOV_STOP, NULL);
+> +	if (ret) {
+> +		dev_warn(dev, "%s: Governor %s not stopped(%d)\n",
+> +			 __func__, df->governor->name, ret);
+> +		goto out;
+>  	}
+> +
+>  	prev_governor = df->governor;
+>  	df->governor = governor;
+>  	strncpy(df->governor_name, governor->name, DEVFREQ_NAME_LEN);
+> @@ -1363,13 +1366,16 @@ static ssize_t available_governors_show(struct device *d,
+>  	struct devfreq *df = to_devfreq(d);
+>  	ssize_t count = 0;
+>  
+> +	if (!df->governor)
+> +		return -EINVAL;
+> +
+>  	mutex_lock(&devfreq_list_lock);
+>  
+>  	/*
+>  	 * The devfreq with immutable governor (e.g., passive) shows
+>  	 * only own governor.
+>  	 */
+> -	if (df->governor && df->governor->immutable) {
+> +	if (df->governor->immutable) {
+>  		count = scnprintf(&buf[count], DEVFREQ_NAME_LEN,
+>  				  "%s ", df->governor_name);
+>  	/*
+> @@ -1403,27 +1409,37 @@ static ssize_t cur_freq_show(struct device *dev, struct device_attribute *attr,
+>  			     char *buf)
+>  {
+>  	unsigned long freq;
+> -	struct devfreq *devfreq = to_devfreq(dev);
+> +	struct devfreq *df = to_devfreq(dev);
+>  
+> -	if (devfreq->profile->get_cur_freq &&
+> -		!devfreq->profile->get_cur_freq(devfreq->dev.parent, &freq))
+> +	if (!df->profile)
+> +		return -EINVAL;
+> +
+> +	if (df->profile->get_cur_freq &&
+> +		!df->profile->get_cur_freq(df->dev.parent, &freq))
+>  		return sprintf(buf, "%lu\n", freq);
+>  
+> -	return sprintf(buf, "%lu\n", devfreq->previous_freq);
+> +	return sprintf(buf, "%lu\n", df->previous_freq);
+>  }
+>  static DEVICE_ATTR_RO(cur_freq);
+>  
+>  static ssize_t target_freq_show(struct device *dev,
+>  				struct device_attribute *attr, char *buf)
+>  {
+> -	return sprintf(buf, "%lu\n", to_devfreq(dev)->previous_freq);
+> +	struct devfreq *df = to_devfreq(dev);
+> +
+> +	return sprintf(buf, "%lu\n", df->previous_freq);
+>  }
+>  static DEVICE_ATTR_RO(target_freq);
+>  
+>  static ssize_t polling_interval_show(struct device *dev,
+>  				     struct device_attribute *attr, char *buf)
+>  {
+> -	return sprintf(buf, "%d\n", to_devfreq(dev)->profile->polling_ms);
+> +	struct devfreq *df = to_devfreq(dev);
+> +
+> +	if (!df->profile)
+> +		return -EINVAL;
+> +
+> +	return sprintf(buf, "%d\n", df->profile->polling_ms);
+>  }
+>  
+>  static ssize_t polling_interval_store(struct device *dev,
+> @@ -1551,6 +1567,9 @@ static ssize_t available_frequencies_show(struct device *d,
+>  	ssize_t count = 0;
+>  	int i;
+>  
+> +	if (!df->profile)
+> +		return -EINVAL;
+> +
+>  	mutex_lock(&df->lock);
+>  
+>  	for (i = 0; i < df->profile->max_state; i++)
+> @@ -1571,49 +1590,53 @@ static DEVICE_ATTR_RO(available_frequencies);
+>  static ssize_t trans_stat_show(struct device *dev,
+>  			       struct device_attribute *attr, char *buf)
+>  {
+> -	struct devfreq *devfreq = to_devfreq(dev);
+> +	struct devfreq *df = to_devfreq(dev);
+>  	ssize_t len;
+>  	int i, j;
+> -	unsigned int max_state = devfreq->profile->max_state;
+> +	unsigned int max_state;
+> +
+> +	if (!df->profile)
+> +		return -EINVAL;
+> +	max_state = df->profile->max_state;
+>  
+>  	if (max_state == 0)
+>  		return sprintf(buf, "Not Supported.\n");
+>  
+> -	mutex_lock(&devfreq->lock);
+> -	if (!devfreq->stop_polling &&
+> -			devfreq_update_status(devfreq, devfreq->previous_freq)) {
+> -		mutex_unlock(&devfreq->lock);
+> +	mutex_lock(&df->lock);
+> +	if (!df->stop_polling &&
+> +			devfreq_update_status(df, df->previous_freq)) {
+> +		mutex_unlock(&df->lock);
+>  		return 0;
+>  	}
+> -	mutex_unlock(&devfreq->lock);
+> +	mutex_unlock(&df->lock);
+>  
+>  	len = sprintf(buf, "     From  :   To\n");
+>  	len += sprintf(buf + len, "           :");
+>  	for (i = 0; i < max_state; i++)
+>  		len += sprintf(buf + len, "%10lu",
+> -				devfreq->profile->freq_table[i]);
+> +				df->profile->freq_table[i]);
+>  
+>  	len += sprintf(buf + len, "   time(ms)\n");
+>  
+>  	for (i = 0; i < max_state; i++) {
+> -		if (devfreq->profile->freq_table[i]
+> -					== devfreq->previous_freq) {
+> +		if (df->profile->freq_table[i]
+> +					== df->previous_freq) {
+>  			len += sprintf(buf + len, "*");
+>  		} else {
+>  			len += sprintf(buf + len, " ");
+>  		}
+>  		len += sprintf(buf + len, "%10lu:",
+> -				devfreq->profile->freq_table[i]);
+> +				df->profile->freq_table[i]);
+>  		for (j = 0; j < max_state; j++)
+>  			len += sprintf(buf + len, "%10u",
+> -				devfreq->stats.trans_table[(i * max_state) + j]);
+> +				df->stats.trans_table[(i * max_state) + j]);
+>  
+>  		len += sprintf(buf + len, "%10llu\n", (u64)
+> -			jiffies64_to_msecs(devfreq->stats.time_in_state[i]));
+> +			jiffies64_to_msecs(df->stats.time_in_state[i]));
+>  	}
+>  
+>  	len += sprintf(buf + len, "Total transition : %u\n",
+> -					devfreq->stats.total_trans);
+> +					df->stats.total_trans);
+>  	return len;
+>  }
+>  
+> @@ -1624,6 +1647,9 @@ static ssize_t trans_stat_store(struct device *dev,
+>  	struct devfreq *df = to_devfreq(dev);
+>  	int err, value;
+>  
+> +	if (!df->profile)
+> +		return -EINVAL;
+> +
+>  	if (df->profile->max_state == 0)
+>  		return count;
+>  
+> 
 
-quite a few architectures have the same csum_partial_copy_nocheck() -
-simply memcpy() the data and then return the csum of the copy.
+Applied it. It is just clean-up patch for patch2.
+patch2 needs more discussion. So, only apply patch1.
 
-hexagon, parisc, ia64, s390, um: explicitly spelled out that way.
-
-arc, arm64, csky, h8300, m68k/nommu, microblaze, mips/GENERIC_CSUM, nds32,
-nios2, openrisc, riscv, unicore32: end up picking the same thing spelled
-out in lib/checksum.h (with varying amounts of perversions along the way).
-
-everybody else (alpha, arm, c6x, m68k/mmu, mips/!GENERIC_CSUM, powerpc,
-sh, sparc, x86, xtensa) have non-generic variants.  For all except c6x
-the declaration is in their asm/checksum.h.  c6x uses the wrapper
-from asm-generic/checksum.h that would normally lead to the lib/checksum.h
-instance, but in case of c6x we end up using an asm function from arch/c6x
-instead.
-
-Screw that mess - have architectures with private instances define
-_HAVE_ARCH_CSUM_AND_COPY in their asm/checksum.h and have the default
-one right in net/checksum.h conditional on _HAVE_ARCH_CSUM_AND_COPY
-*not* defined.
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- arch/alpha/include/asm/checksum.h   |  1 +
- arch/arm/include/asm/checksum.h     |  1 +
- arch/c6x/include/asm/checksum.h     |  6 ++++++
- arch/hexagon/include/asm/checksum.h | 11 -----------
- arch/hexagon/lib/checksum.c         | 11 -----------
- arch/ia64/include/asm/checksum.h    |  3 ---
- arch/ia64/lib/csum_partial_copy.c   | 15 ---------------
- arch/m68k/include/asm/checksum.h    |  1 +
- arch/mips/include/asm/checksum.h    |  2 +-
- arch/nios2/include/asm/checksum.h   |  5 -----
- arch/parisc/include/asm/checksum.h  |  8 --------
- arch/parisc/lib/checksum.c          | 17 -----------------
- arch/powerpc/include/asm/checksum.h |  1 +
- arch/s390/include/asm/checksum.h    |  7 -------
- arch/sh/include/asm/checksum_32.h   |  1 +
- arch/sparc/include/asm/checksum.h   |  1 +
- arch/x86/include/asm/checksum.h     |  1 +
- arch/x86/um/asm/checksum.h          | 16 ----------------
- arch/xtensa/include/asm/checksum.h  |  1 +
- include/asm-generic/checksum.h      | 14 --------------
- include/net/checksum.h              |  9 +++++++++
- lib/checksum.c                      | 11 -----------
- 22 files changed, 24 insertions(+), 119 deletions(-)
-
-diff --git a/arch/alpha/include/asm/checksum.h b/arch/alpha/include/asm/checksum.h
-index 0eac81624d01..7e8e4fa4362d 100644
---- a/arch/alpha/include/asm/checksum.h
-+++ b/arch/alpha/include/asm/checksum.h
-@@ -42,6 +42,7 @@ extern __wsum csum_partial(const void *buff, int len, __wsum sum);
-  * better 64-bit) boundary
-  */
- #define _HAVE_ARCH_COPY_AND_CSUM_FROM_USER
-+#define _HAVE_ARCH_CSUM_AND_COPY
- __wsum csum_and_copy_from_user(const void __user *src, void *dst, int len, __wsum sum, int *errp);
- 
- __wsum csum_partial_copy_nocheck(const void *src, void *dst, int len, __wsum sum);
-diff --git a/arch/arm/include/asm/checksum.h b/arch/arm/include/asm/checksum.h
-index ed6073fee338..53f769508540 100644
---- a/arch/arm/include/asm/checksum.h
-+++ b/arch/arm/include/asm/checksum.h
-@@ -41,6 +41,7 @@ __wsum
- csum_partial_copy_from_user(const void __user *src, void *dst, int len, __wsum sum, int *err_ptr);
- 
- #define _HAVE_ARCH_COPY_AND_CSUM_FROM_USER
-+#define _HAVE_ARCH_CSUM_AND_COPY
- static inline
- __wsum csum_and_copy_from_user (const void __user *src, void *dst,
- 				      int len, __wsum sum, int *err_ptr)
-diff --git a/arch/c6x/include/asm/checksum.h b/arch/c6x/include/asm/checksum.h
-index 36770b8308d9..facdd636af85 100644
---- a/arch/c6x/include/asm/checksum.h
-+++ b/arch/c6x/include/asm/checksum.h
-@@ -26,6 +26,12 @@ csum_tcpudp_nofold(__be32 saddr, __be32 daddr, __u32 len,
- }
- #define csum_tcpudp_nofold csum_tcpudp_nofold
- 
-+extern __wsum csum_partial_copy(const void *src, void *dst, int len, __wsum sum);
-+
-+#define _HAVE_ARCH_CSUM_AND_COPY
-+#define csum_partial_copy_nocheck(src, dst, len, sum)  \
-+	csum_partial_copy((src), (dst), (len), (sum))
-+
- #include <asm-generic/checksum.h>
- 
- #endif /* _ASM_C6X_CHECKSUM_H */
-diff --git a/arch/hexagon/include/asm/checksum.h b/arch/hexagon/include/asm/checksum.h
-index a5c42f4614c1..4bc6ad96c4c5 100644
---- a/arch/hexagon/include/asm/checksum.h
-+++ b/arch/hexagon/include/asm/checksum.h
-@@ -10,17 +10,6 @@
- unsigned int do_csum(const void *voidptr, int len);
- 
- /*
-- * the same as csum_partial, but copies from src while it
-- * checksums
-- *
-- * here even more important to align src and dst on a 32-bit (or even
-- * better 64-bit) boundary
-- */
--#define csum_partial_copy_nocheck csum_partial_copy_nocheck
--__wsum csum_partial_copy_nocheck(const void *src, void *dst,
--					int len, __wsum sum);
--
--/*
-  * computes the checksum of the TCP/UDP pseudo-header
-  * returns a 16-bit checksum, already complemented
-  */
-diff --git a/arch/hexagon/lib/checksum.c b/arch/hexagon/lib/checksum.c
-index c4a6b72d97de..ba50822a0800 100644
---- a/arch/hexagon/lib/checksum.c
-+++ b/arch/hexagon/lib/checksum.c
-@@ -176,14 +176,3 @@ unsigned int do_csum(const void *voidptr, int len)
- 
- 	return 0xFFFF & sum0;
- }
--
--/*
-- * copy from ds while checksumming, otherwise like csum_partial
-- */
--__wsum
--csum_partial_copy_nocheck(const void *src, void *dst, int len, __wsum sum)
--{
--	memcpy(dst, src, len);
--	return csum_partial(dst, len, sum);
--}
--EXPORT_SYMBOL(csum_partial_copy_nocheck);
-diff --git a/arch/ia64/include/asm/checksum.h b/arch/ia64/include/asm/checksum.h
-index 2a1c64629cdc..f3026213aa32 100644
---- a/arch/ia64/include/asm/checksum.h
-+++ b/arch/ia64/include/asm/checksum.h
-@@ -37,9 +37,6 @@ extern __wsum csum_tcpudp_nofold(__be32 saddr, __be32 daddr,
-  */
- extern __wsum csum_partial(const void *buff, int len, __wsum sum);
- 
--extern __wsum csum_partial_copy_nocheck(const void *src, void *dst,
--					       int len, __wsum sum);
--
- /*
-  * This routine is used for miscellaneous IP-like checksums, mainly in
-  * icmp.c
-diff --git a/arch/ia64/lib/csum_partial_copy.c b/arch/ia64/lib/csum_partial_copy.c
-index 6e82e0be8040..917e3138b277 100644
---- a/arch/ia64/lib/csum_partial_copy.c
-+++ b/arch/ia64/lib/csum_partial_copy.c
-@@ -96,18 +96,3 @@ unsigned long do_csum_c(const unsigned char * buff, int len, unsigned int psum)
- out:
- 	return result;
- }
--
--/*
-- * XXX Fixme
-- *
-- * This is very ugly but temporary. THIS NEEDS SERIOUS ENHANCEMENTS.
-- * But it's very tricky to get right even in C.
-- */
--__wsum
--csum_partial_copy_nocheck(const void *src, void *dst, int len, __wsum sum)
--{
--	memcpy(dst, src, len);
--	return csum_partial(dst, len, sum);
--}
--
--EXPORT_SYMBOL(csum_partial_copy_nocheck);
-diff --git a/arch/m68k/include/asm/checksum.h b/arch/m68k/include/asm/checksum.h
-index 3f2c15d6f18c..ab16881d84cb 100644
---- a/arch/m68k/include/asm/checksum.h
-+++ b/arch/m68k/include/asm/checksum.h
-@@ -31,6 +31,7 @@ __wsum csum_partial(const void *buff, int len, __wsum sum);
-  */
- 
- #define _HAVE_ARCH_COPY_AND_CSUM_FROM_USER
-+#define _HAVE_ARCH_CSUM_AND_COPY
- extern __wsum csum_and_copy_from_user(const void __user *src,
- 						void *dst,
- 						int len, __wsum sum,
-diff --git a/arch/mips/include/asm/checksum.h b/arch/mips/include/asm/checksum.h
-index dcebaaf8c862..b771621ec3c5 100644
---- a/arch/mips/include/asm/checksum.h
-+++ b/arch/mips/include/asm/checksum.h
-@@ -101,9 +101,9 @@ __wsum csum_and_copy_to_user(const void *src, void __user *dst, int len,
-  * the same as csum_partial, but copies from user space (but on MIPS
-  * we have just one address space, so this is identical to the above)
-  */
-+#define _HAVE_ARCH_CSUM_AND_COPY
- __wsum csum_partial_copy_nocheck(const void *src, void *dst,
- 				       int len, __wsum sum);
--#define csum_partial_copy_nocheck csum_partial_copy_nocheck
- 
- /*
-  *	Fold a partial checksum without adding pseudo headers
-diff --git a/arch/nios2/include/asm/checksum.h b/arch/nios2/include/asm/checksum.h
-index ec39698d3bea..69004e07a1ba 100644
---- a/arch/nios2/include/asm/checksum.h
-+++ b/arch/nios2/include/asm/checksum.h
-@@ -12,11 +12,6 @@
- 
- /* Take these from lib/checksum.c */
- extern __wsum csum_partial(const void *buff, int len, __wsum sum);
--extern __wsum csum_partial_copy(const void *src, void *dst, int len,
--				__wsum sum);
--#define csum_partial_copy_nocheck(src, dst, len, sum)	\
--	csum_partial_copy((src), (dst), (len), (sum))
--
- extern __sum16 ip_fast_csum(const void *iph, unsigned int ihl);
- extern __sum16 ip_compute_csum(const void *buff, int len);
- 
-diff --git a/arch/parisc/include/asm/checksum.h b/arch/parisc/include/asm/checksum.h
-index fe8c63b2d2c3..522cd574c068 100644
---- a/arch/parisc/include/asm/checksum.h
-+++ b/arch/parisc/include/asm/checksum.h
-@@ -19,14 +19,6 @@
- extern __wsum csum_partial(const void *, int, __wsum);
- 
- /*
-- * The same as csum_partial, but copies from src while it checksums.
-- *
-- * Here even more important to align src and dst on a 32-bit (or even
-- * better 64-bit) boundary
-- */
--extern __wsum csum_partial_copy_nocheck(const void *, void *, int, __wsum);
--
--/*
-  *	Optimized for IP headers, which always checksum on 4 octet boundaries.
-  *
-  *	Written by Randolph Chung <tausq@debian.org>, and then mucked with by
-diff --git a/arch/parisc/lib/checksum.c b/arch/parisc/lib/checksum.c
-index c6f161583549..4818f3db84a5 100644
---- a/arch/parisc/lib/checksum.c
-+++ b/arch/parisc/lib/checksum.c
-@@ -106,20 +106,3 @@ __wsum csum_partial(const void *buff, int len, __wsum sum)
- }
- 
- EXPORT_SYMBOL(csum_partial);
--
--/*
-- * copy while checksumming, otherwise like csum_partial
-- */
--__wsum csum_partial_copy_nocheck(const void *src, void *dst,
--				       int len, __wsum sum)
--{
--	/*
--	 * It's 2:30 am and I don't feel like doing it real ...
--	 * This is lots slower than the real thing (tm)
--	 */
--	sum = csum_partial(src, len, sum);
--	memcpy(dst, src, len);
--
--	return sum;
--}
--EXPORT_SYMBOL(csum_partial_copy_nocheck);
-diff --git a/arch/powerpc/include/asm/checksum.h b/arch/powerpc/include/asm/checksum.h
-index 9cce06194dcc..d75fc5bf8f37 100644
---- a/arch/powerpc/include/asm/checksum.h
-+++ b/arch/powerpc/include/asm/checksum.h
-@@ -29,6 +29,7 @@ extern __wsum csum_and_copy_from_user(const void __user *src, void *dst,
- extern __wsum csum_and_copy_to_user(const void *src, void __user *dst,
- 				    int len, __wsum sum, int *err_ptr);
- 
-+#define _HAVE_ARCH_CSUM_AND_COPY
- #define csum_partial_copy_nocheck(src, dst, len, sum)   \
-         csum_partial_copy_generic((src), (dst), (len), (sum), NULL, NULL)
- 
-diff --git a/arch/s390/include/asm/checksum.h b/arch/s390/include/asm/checksum.h
-index 6d01c96aeb5c..6813bfa1eeb7 100644
---- a/arch/s390/include/asm/checksum.h
-+++ b/arch/s390/include/asm/checksum.h
-@@ -39,13 +39,6 @@ csum_partial(const void *buff, int len, __wsum sum)
- 	return sum;
- }
- 
--static inline __wsum
--csum_partial_copy_nocheck (const void *src, void *dst, int len, __wsum sum)
--{
--        memcpy(dst,src,len);
--	return csum_partial(dst, len, sum);
--}
--
- /*
-  *      Fold a partial checksum without adding pseudo headers
-  */
-diff --git a/arch/sh/include/asm/checksum_32.h b/arch/sh/include/asm/checksum_32.h
-index 91571a42e44e..87269642d78d 100644
---- a/arch/sh/include/asm/checksum_32.h
-+++ b/arch/sh/include/asm/checksum_32.h
-@@ -34,6 +34,7 @@ asmlinkage __wsum csum_partial_copy_generic(const void *src, void *dst,
- 					    int len, __wsum sum,
- 					    int *src_err_ptr, int *dst_err_ptr);
- 
-+#define _HAVE_ARCH_CSUM_AND_COPY
- /*
-  *	Note: when you get a NULL pointer exception here this means someone
-  *	passed in an incorrect kernel address to one of these functions.
-diff --git a/arch/sparc/include/asm/checksum.h b/arch/sparc/include/asm/checksum.h
-index a6256cb6fc5c..deb4fe5aeafd 100644
---- a/arch/sparc/include/asm/checksum.h
-+++ b/arch/sparc/include/asm/checksum.h
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef ___ASM_SPARC_CHECKSUM_H
- #define ___ASM_SPARC_CHECKSUM_H
-+#define _HAVE_ARCH_CSUM_AND_COPY
- #define _HAVE_ARCH_COPY_AND_CSUM_FROM_USER
- #if defined(__sparc__) && defined(__arch64__)
- #include <asm/checksum_64.h>
-diff --git a/arch/x86/include/asm/checksum.h b/arch/x86/include/asm/checksum.h
-index 0ada98d5d09f..bca625a60186 100644
---- a/arch/x86/include/asm/checksum.h
-+++ b/arch/x86/include/asm/checksum.h
-@@ -1,6 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #define  _HAVE_ARCH_COPY_AND_CSUM_FROM_USER 1
- #define HAVE_CSUM_COPY_USER
-+#define _HAVE_ARCH_CSUM_AND_COPY
- #ifdef CONFIG_X86_32
- # include <asm/checksum_32.h>
- #else
-diff --git a/arch/x86/um/asm/checksum.h b/arch/x86/um/asm/checksum.h
-index ff6bba2c8ab6..b07824500363 100644
---- a/arch/x86/um/asm/checksum.h
-+++ b/arch/x86/um/asm/checksum.h
-@@ -20,22 +20,6 @@
-  */
- extern __wsum csum_partial(const void *buff, int len, __wsum sum);
- 
--/*
-- *	Note: when you get a NULL pointer exception here this means someone
-- *	passed in an incorrect kernel address to one of these functions.
-- *
-- *	If you use these functions directly please don't forget the
-- *	access_ok().
-- */
--
--static __inline__
--__wsum csum_partial_copy_nocheck(const void *src, void *dst,
--				       int len, __wsum sum)
--{
--	memcpy(dst, src, len);
--	return csum_partial(dst, len, sum);
--}
--
- /**
-  * csum_fold - Fold and invert a 32bit checksum.
-  * sum: 32bit unfolded sum
-diff --git a/arch/xtensa/include/asm/checksum.h b/arch/xtensa/include/asm/checksum.h
-index 243a5fe79d3c..0c879099977f 100644
---- a/arch/xtensa/include/asm/checksum.h
-+++ b/arch/xtensa/include/asm/checksum.h
-@@ -41,6 +41,7 @@ asmlinkage __wsum csum_partial_copy_generic(const void *src, void *dst,
- 					    int len, __wsum sum,
- 					    int *src_err_ptr, int *dst_err_ptr);
- 
-+#define _HAVE_ARCH_CSUM_AND_COPY
- /*
-  *	Note: when you get a NULL pointer exception here this means someone
-  *	passed in an incorrect kernel address to one of these functions.
-diff --git a/include/asm-generic/checksum.h b/include/asm-generic/checksum.h
-index 5a80f8e54300..43e18db89c14 100644
---- a/include/asm-generic/checksum.h
-+++ b/include/asm-generic/checksum.h
-@@ -16,20 +16,6 @@
-  */
- extern __wsum csum_partial(const void *buff, int len, __wsum sum);
- 
--/*
-- * the same as csum_partial, but copies from src while it
-- * checksums
-- *
-- * here even more important to align src and dst on a 32-bit (or even
-- * better 64-bit) boundary
-- */
--extern __wsum csum_partial_copy(const void *src, void *dst, int len, __wsum sum);
--
--#ifndef csum_partial_copy_nocheck
--#define csum_partial_copy_nocheck(src, dst, len, sum)	\
--	csum_partial_copy((src), (dst), (len), (sum))
--#endif
--
- #ifndef ip_fast_csum
- /*
-  * This is a version of ip_compute_csum() optimized for IP headers,
-diff --git a/include/net/checksum.h b/include/net/checksum.h
-index 46754ba9d7b7..db9d02b5f88a 100644
---- a/include/net/checksum.h
-+++ b/include/net/checksum.h
-@@ -47,6 +47,15 @@ static __inline__ __wsum csum_and_copy_to_user
- }
- #endif
- 
-+#ifndef _HAVE_ARCH_CSUM_AND_COPY
-+static inline __wsum
-+csum_partial_copy_nocheck(const void *src, void *dst, int len, __wsum sum)
-+{
-+	memcpy(dst, src, len);
-+	return csum_partial(dst, len, sum);
-+}
-+#endif
-+
- #ifndef HAVE_ARCH_CSUM_ADD
- static inline __wsum csum_add(__wsum csum, __wsum addend)
- {
-diff --git a/lib/checksum.c b/lib/checksum.c
-index 7ac65a0000ff..6860d6b05a17 100644
---- a/lib/checksum.c
-+++ b/lib/checksum.c
-@@ -145,17 +145,6 @@ __sum16 ip_compute_csum(const void *buff, int len)
- }
- EXPORT_SYMBOL(ip_compute_csum);
- 
--/*
-- * copy from ds while checksumming, otherwise like csum_partial
-- */
--__wsum
--csum_partial_copy(const void *src, void *dst, int len, __wsum sum)
--{
--	memcpy(dst, src, len);
--	return csum_partial(dst, len, sum);
--}
--EXPORT_SYMBOL(csum_partial_copy);
--
- #ifndef csum_tcpudp_nofold
- static inline u32 from64to32(u64 x)
- {
 -- 
-2.11.0
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
