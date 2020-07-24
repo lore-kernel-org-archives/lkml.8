@@ -2,81 +2,69 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9920EC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F08C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC28206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:59:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595602742;
-	bh=u80k3o+yMsUhRhDlI5TDV+bP/sT0UHxg6hWT8vGxnUE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FfMbiftLTonxZ+OzdIRokoctxljCDr/5AR/WlAY8YLp5DGHcepSkW1nhwqmpJ+gQE
-	 K+IsqrkAWs5kuQr9NUmYxveB78zOZSfcq94ehtmh31WBL+c7aQZX8S3OUdSciyij1i
-	 1Kez1RnQzxmXQelS8Q2yfSVbRgb48UxdUA5kWHG4=
+	by mail.kernel.org (Postfix) with ESMTP id EEE1E206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgGXO7B (ORCPT
+        id S1726893AbgGXO7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:59:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726397AbgGXO7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:59:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04F52206D8;
-        Fri, 24 Jul 2020 14:58:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595602740;
-        bh=u80k3o+yMsUhRhDlI5TDV+bP/sT0UHxg6hWT8vGxnUE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=byM5bE+qq0+e4DX1qLnAPg5gQqxDsg//AT4pubsYTtBg1PF7LZpTTu1rOQK66ZtWS
-         uFwPKjaNvGO8QKNCn/TEJE3EW5XRh1xeFTewkzqPSCQYsUKM7WMLkRDp1UUd+m98AZ
-         3PsLL2mhcCf6wOGL1yj6dUvFoZns1ek5VkrOi+8I=
-Date:   Fri, 24 Jul 2020 16:59:00 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org,
-        akpm@linuxfoundation.org, linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v5 00/18] dynamic_debug fixes, cleanups, features, export
-Message-ID: <20200724145900.GA330332@kroah.com>
-References: <20200719231058.1586423-1-jim.cromie@gmail.com>
- <4d7244b1-fa4d-f1bd-42e4-7123116e708f@akamai.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d7244b1-fa4d-f1bd-42e4-7123116e708f@akamai.com>
+        Fri, 24 Jul 2020 10:59:19 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:18194 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726366AbgGXO7T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 10:59:19 -0400
+X-IronPort-AV: E=Sophos;i="5.75,391,1589209200"; 
+   d="scan'208";a="52751506"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 24 Jul 2020 23:59:17 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id E0DD3425F874;
+        Fri, 24 Jul 2020 23:59:14 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Niklas <niklas.soderlund@ragnatech.se>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/2] media: rcar-vin: Add support to select data pins
+Date:   Fri, 24 Jul 2020 15:58:50 +0100
+Message-Id: <1595602732-25582-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 09:48:54AM -0400, Jason Baron wrote:
-> 
-> 
-> On 7/19/20 7:10 PM, Jim Cromie wrote:
-> > this is v5, changes from previous:
-> >  - moved a chunk from patch 13 to 12, per Jason
-> >  - shorten logging prefix to "dyndbg", drop __func__
-> >  - now with more commit-log advocacy
-> >  - shuffle EXPORT_GPL(ddebug_exec_queries) last.
-> >  - v4+ series Acked-by: jbaron@akamai.com
-> 
-> Yes, series looks good to me:
-> Acked-by: <jbaron@akamai.com>
-> 
-> Greg, what do you think about pulling in this series?
+Hi All,
 
-Me?  Am I the one who takes these patches?
+This patch series adds support to enable selecting data
+lines via DT.
 
-Ok, will do, give me a few hours...
+Cheers,
+Prabhakar
 
-thanks,
+Lad Prabhakar (2):
+  dt-bindings: media: renesas,vin: Document renesas-vin-ycbcr-8b-g
+    property
+  media: rcar-vin: Add support to read renesas-vin-ycbcr-8b-g property
 
-greg k-h
+ Documentation/devicetree/bindings/media/renesas,vin.yaml | 13 +++++++++++++
+ drivers/media/platform/rcar-vin/rcar-core.c              |  4 +++-
+ drivers/media/platform/rcar-vin/rcar-dma.c               |  7 +++++++
+ drivers/media/platform/rcar-vin/rcar-vin.h               |  2 ++
+ 4 files changed, 25 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
+
