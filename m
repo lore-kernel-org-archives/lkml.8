@@ -2,242 +2,209 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308A2C433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035B6C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1417B20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF58420674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FauBewUn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PYQzksp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgGXQHz (ORCPT
+        id S1728478AbgGXQIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:07:55 -0400
-Received: from 8bytes.org ([81.169.241.247]:60432 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbgGXQEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:32 -0400
-Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 740C4FC8;
-        Fri, 24 Jul 2020 18:04:24 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 45/75] x86/sev-es: Adjust #VC IST Stack on entering NMI handler
-Date:   Fri, 24 Jul 2020 18:03:06 +0200
-Message-Id: <20200724160336.5435-46-joro@8bytes.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
-References: <20200724160336.5435-1-joro@8bytes.org>
+        Fri, 24 Jul 2020 12:08:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728521AbgGXQIR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:08:17 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD77C0619E4;
+        Fri, 24 Jul 2020 09:08:16 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595606893;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3s3Aqgk8wYEb6C7q76eOXNAqiLkE4bQcw2wKh9KEzyY=;
+        b=FauBewUnsIbIwsfTsUPJbI07vZky8mAkl6COdDJH8e9nhi7dsgWxCcZiz5++vGloYa3wt8
+        DJLWCHMQl5O+zK5Wo7MD6tkkesSF1QuLohYDxKaCf0tCms6mlkKUlTx+gFAoWQfqdrOUCX
+        6gvrKASHtAoTZ5eOZ8EqInEwe7CMPWx5Df0krM3ODVoHV0ImV1dkgHnRCLwSbObdmwf00d
+        UYNksdCl1f7je5OMYZLvE4+kDNmU8JuDBUQaLZxKRTMkC2HsVUCHhqMXTC+maDkF9LaN8Z
+        7+t3sUmjMF4iXbA2ZhMq/CxAMXm+W+hORXO5U35Xvx30ERGSYcFgpxttvrVdCg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595606893;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3s3Aqgk8wYEb6C7q76eOXNAqiLkE4bQcw2wKh9KEzyY=;
+        b=PYQzksp8119gJXWIbAR97q2k9vMn1xwijpvcyOhpepzX0j2WJs2GqqH2gviiTC/qtVWSyE
+        M3LwSBgwFVJNHgCA==
+To:     Alex Belits <abelits@marvell.com>,
+        "peterz\@infradead.org" <peterz@infradead.org>
+Cc:     "mingo\@kernel.org" <mingo@kernel.org>,
+        Prasun Kapoor <pkapoor@marvell.com>,
+        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "rostedt\@goodmis.org" <rostedt@goodmis.org>,
+        "frederic\@kernel.org" <frederic@kernel.org>,
+        "catalin.marinas\@arm.com" <catalin.marinas@arm.com>,
+        "will\@kernel.org" <will@kernel.org>,
+        "linux-arch\@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel\@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v4 00/13] "Task_isolation" mode
+In-Reply-To: <851ee54e8317cd186338a76a045f738476144fcc.camel@marvell.com>
+References: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com> <87imeextf3.fsf@nanos.tec.linutronix.de> <831e023422aa0e4cb3da37ceef6fdcd5bc854682.camel@marvell.com> <20200723154933.GB709@worktop.programming.kicks-ass.net> <3ff1383e669b543462737b0d12c0d1fb7d409e3e.camel@marvell.com> <877dutx5xj.fsf@nanos.tec.linutronix.de> <851ee54e8317cd186338a76a045f738476144fcc.camel@marvell.com>
+Date:   Fri, 24 Jul 2020 18:08:13 +0200
+Message-ID: <87mu3ouc9e.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+Alex,
 
-When an NMI hits in the #VC handler entry code before it switched to
-another stack, any subsequent #VC exception in the NMI code-path will
-overwrite the interrupted #VC handlers stack.
+Alex Belits <abelits@marvell.com> writes:
+> On Thu, 2020-07-23 at 23:44 +0200, Thomas Gleixner wrote:
+>>  1) That inline function can be put out of line by the compiler and
+>>     placed into the regular text section which makes it subject to
+>>     instrumentation
+>> 
+>>  2) That inline function invokes local_irq_save() which is subject to
+>>     instrumentation _before_ the entry state for the instrumentation
+>>     mechanisms is established.
+>> 
+>>  3) That inline function invokes sync_core() before important state
+>> has
+>>     been established, which is especially interesting in NMI like
+>>     exceptions.
+>> 
+>> As you clearly documented why all of the above is safe and does not
+>> cause any problems, it's just me and Peter being silly, right?
+>> 
+>> Try again.
+>
+> I don't think, accusations and mockery are really necessary here.
 
-Make sure this doesn't happen by  explicitly adjusting the #VC IST entry
-in the NMI handler for the time in can cause #VC exceptions.
+Let's get some context to this.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/sev-es.h | 19 +++++++++++
- arch/x86/kernel/nmi.c         |  6 ++++
- arch/x86/kernel/sev-es.c      | 59 +++++++++++++++++++++++++++++++++++
- arch/x86/kernel/traps.c       |  2 ++
- 4 files changed, 86 insertions(+)
+  I told you in my first mail, that this breaks noinstr and that
+  building with full debug would have told you.
 
-diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
-index 824e9e6b067c..2dd19932a60d 100644
---- a/arch/x86/include/asm/sev-es.h
-+++ b/arch/x86/include/asm/sev-es.h
-@@ -77,4 +77,23 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
- extern void vc_no_ghcb(void);
- extern bool handle_vc_boot_ghcb(struct pt_regs *regs);
- 
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+extern struct static_key_false sev_es_enable_key;
-+extern void __sev_es_ist_enter(struct pt_regs *regs);
-+extern void __sev_es_ist_exit(void);
-+static __always_inline void sev_es_ist_enter(struct pt_regs *regs)
-+{
-+	if (static_branch_unlikely(&sev_es_enable_key))
-+		__sev_es_ist_enter(regs);
-+}
-+static __always_inline void sev_es_ist_exit(void)
-+{
-+	if (static_branch_unlikely(&sev_es_enable_key))
-+		__sev_es_ist_exit();
-+}
-+#else
-+static inline void sev_es_ist_enter(struct pt_regs *regs) { }
-+static inline void sev_es_ist_exit(void) { }
-+#endif
-+
- #endif
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 4fc9954a9560..951f098a4bf5 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -33,6 +33,7 @@
- #include <asm/reboot.h>
- #include <asm/cache.h>
- #include <asm/nospec-branch.h>
-+#include <asm/sev-es.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/nmi.h>
-@@ -488,6 +489,9 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
- 	this_cpu_write(nmi_cr2, read_cr2());
- nmi_restart:
- 
-+	/* Needs to happen before DR7 is accessed */
-+	sev_es_ist_enter(regs);
-+
- 	this_cpu_write(nmi_dr7, local_db_save());
- 
- 	irq_state = idtentry_enter_nmi(regs);
-@@ -501,6 +505,8 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
- 
- 	local_db_restore(this_cpu_read(nmi_dr7));
- 
-+	sev_es_ist_exit();
-+
- 	if (unlikely(this_cpu_read(nmi_cr2) != read_cr2()))
- 		write_cr2(this_cpu_read(nmi_cr2));
- 	if (this_cpu_dec_return(nmi_state))
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 64002d86a237..95831d103418 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -52,6 +52,9 @@ struct sev_es_runtime_data {
- 
- static DEFINE_PER_CPU(struct sev_es_runtime_data*, runtime_data);
- 
-+DEFINE_STATIC_KEY_FALSE(sev_es_enable_key);
-+EXPORT_SYMBOL_GPL(sev_es_enable_key);
-+
- static void __init sev_es_setup_vc_stacks(int cpu)
- {
- 	struct sev_es_runtime_data *data;
-@@ -73,6 +76,59 @@ static void __init sev_es_setup_vc_stacks(int cpu)
- 	cea_set_pte((void *)vaddr, pa, PAGE_KERNEL);
- }
- 
-+static __always_inline bool on_vc_stack(unsigned long sp)
-+{
-+	return ((sp >= __this_cpu_ist_bot_va(VC)) && (sp < __this_cpu_ist_top_va(VC)));
-+}
-+
-+/*
-+ * This function handles the case when an NM is raised in the #VC exception
-+ * handler entry code. In this case the IST entry for VC must be adjusted, so
-+ * that any subsequent VC exception will not overwrite the stack contents of the
-+ * interrupted VC handler.
-+ *
-+ * The IST entry is adjusted unconditionally so that it can be also be
-+ * unconditionally back-adjusted in sev_es_ist_exit(). Otherwise a nested
-+ * sev_es_ist_exit() call may back-adjust the IST entry too early.
-+ */
-+void noinstr __sev_es_ist_enter(struct pt_regs *regs)
-+{
-+	unsigned long old_ist, new_ist;
-+	unsigned long *p;
-+
-+	/* Read old IST entry */
-+	old_ist = __this_cpu_read(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC]);
-+
-+	/* Make room on the IST stack */
-+	if (on_vc_stack(regs->sp))
-+		new_ist = ALIGN_DOWN(regs->sp, 8) - sizeof(old_ist);
-+	else
-+		new_ist = old_ist - sizeof(old_ist);
-+
-+	/* Store old IST entry */
-+	p       = (unsigned long *)new_ist;
-+	*p      = old_ist;
-+
-+	/* Set new IST entry */
-+	this_cpu_write(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC], new_ist);
-+}
-+
-+void noinstr __sev_es_ist_exit(void)
-+{
-+	unsigned long ist;
-+	unsigned long *p;
-+
-+	/* Read IST entry */
-+	ist = __this_cpu_read(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC]);
-+
-+	if (WARN_ON(ist == __this_cpu_ist_top_va(VC)))
-+		return;
-+
-+	/* Read back old IST entry and write it to the TSS */
-+	p = (unsigned long *)ist;
-+	this_cpu_write(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC], *p);
-+}
-+
- /* Needed in vc_early_forward_exception */
- void do_early_exception(struct pt_regs *regs, int trapnr);
- 
-@@ -277,6 +333,9 @@ void __init sev_es_init_vc_handling(void)
- 	if (!sev_es_active())
- 		return;
- 
-+	/* Enable SEV-ES special handling */
-+	static_branch_enable(&sev_es_enable_key);
-+
- 	/* Initialize per-cpu GHCB pages */
- 	for_each_possible_cpu(cpu) {
- 		sev_es_alloc_runtime_data(cpu);
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index bf850127c442..24f6f0a19a49 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -59,6 +59,7 @@
- #include <asm/umip.h>
- #include <asm/insn.h>
- #include <asm/insn-eval.h>
-+#include <asm/sev-es.h>
- 
- #ifdef CONFIG_X86_64
- #include <asm/x86_init.h>
-@@ -732,6 +733,7 @@ static bool is_sysenter_singlestep(struct pt_regs *regs)
- 
- static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
- {
-+
- 	/*
- 	 * Disable breakpoints during exception handling; recursive exceptions
- 	 * are exceedingly 'fun'.
--- 
-2.27.0
+  Peter gave you a clear hint where to look.
 
+Now it might be expected that you investigate that or at least ask
+questions before making the bold claim:
+
+>> > Unless something else is involved, those operations are safe, so I
+>> > am not adding anything that can break those.
+
+Surely I could have avoided the snide remark, but after you demonstrably
+ignored technically valid concerns and suggestions in your other reply,
+I was surely not in the mood to be overly careful in my choice of words.
+
+> The result of this may be not a "design" per se, but an understanding
+> of how things are implemented, and what rules are being followed, so I
+> could add my code in a manner consistent with what is done, and
+> document the whole thing.
+
+Every other big and technically complex project which has to change the
+very inner workings of the kernel started the same way. I'm not aware of
+any of them getting accepted as is or in a big code dump.
+
+What you have now qualifies as proof of concept and the big challenge is
+to turn it into something which is acceptable and maintainable.
+
+You talk in great length about how inconsistent stuff is all over the
+place. Yes, it is indeed. You even call that inconsistency an existing
+design:
+
+> My patches reflect what is already in code and in its design.
+
+I agree that you just work with the code as is, but you might have
+noticed that quite some of this stuff is clearly not designed at all or
+designed badly.
+
+The solution is not to pile on top of the inconsistency, the solution is
+to make it consistent in the first place.
+
+You are surely going to say, that's beyond the scope of your project. I
+can tell you that it is in the scope of your project simply because just
+proliferating the status quo and piling new stuff on top is not an
+option. And no, there are no people waiting in a row to mop up after
+you either.
+
+Quite some of the big technology projects have spent and still spend
+considerable amount of time to do exactly this kind of consolidation
+work upfront in order to make their features acceptable in a
+maintainable form.
+
+All of these projects have been merged or are still being merged
+piecewise in reviewable chunks.
+
+We are talking about intrusive technology which requires a very careful
+integration to prevent it from becoming a roadblock or a maintenaince
+headache. The approach and implementation has to be _agreed_ on by the
+involved parties, i.e. submitters, reviewers and maintainers.
+
+> While I understand that this is an unusual feature and by its nature
+> it affects kernel in multiple places, it does not deserve to be called
+> a "mess" and other synonyms of "mess".
+
+The feature is perfectly fine and I completely understand why you want
+it. Guess who started to lay the grounds for NOHZ_FULL more than a
+decade ago and why?
+
+The implementation is not acceptable on technical grounds,
+maintainability reasons, lack of design and proper consolidated
+integration.
+
+> Another issue that you have asked me to defend is the existence and
+> scope of task isolation itself.
+
+I have not asked you to defend the existance. I asked you for coherent
+explanations how the implementation works and why the chosen approach is
+correct and valid. That's a completely different thing.
+
+> It's an attempt to introduce a feature that turns Linux userspace into
+> superior replacement of RTOS.....
+
+Can you please spare me the advertising and marketing? I'm very well
+aware what an RTOS is and I'm also very well aware that there is no such
+thing like a 'superior replacement' for RTOS in general.
+
+If your view of RTOS is limited to this particular feature, then I have
+to tell you that this particular feature is only useful for a very small
+portion of the overall RTOS use cases.
+
+> However most definitely this is not a "mess", and it I do not believe
+> that I have to defend the validity of this direction of development, or
+> be accused of general incompetence every time someone finds a
+> frustrating mistake in my code.
+
+Nobody accuses you of incompetence, but you will have to defend the
+validity of your approach and implementation and accept that things
+might not be as shiny as you think they are. That's not hostility,
+that's just how Linux kernel development works whether you like it or
+not. 
+
+I surely can understand your frustration over my view of this series,
+but you might have noticed that aside of criticism I gave you very clear
+technical arguments and suggestions how to proceed.
+
+It's your decision what you make of that.
+
+Thanks,
+
+        tglx
