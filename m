@@ -2,139 +2,157 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A246CC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D72C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3B0206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595618081;
-	bh=mTNy4KGrVM+aIgZL67PxvnR4jqHaeUoAL14mxcqNmCk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qomIoD+KjmObpWZxum3bt45g84SHBTAXzo3OyWkMTboa297w9REVaxySFikmQRDNi
-	 tzgre2PcNBksFnUrT6IPFvTRhv5N+XkA3ROOH+QjCrTy/exU7r36qUte4PFF+cFpOD
-	 ME6bwIL/FWtN3AxpClsxF41+pm1kRKWArkYDSuiE=
+	by mail.kernel.org (Postfix) with ESMTP id 972772065E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:21:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="P+weo+cY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgGXTOk (ORCPT
+        id S1726701AbgGXTVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:14:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgGXTOj (ORCPT
+        Fri, 24 Jul 2020 15:21:08 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:60198 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgGXTVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:14:39 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3011CC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:14:39 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q4so11085024lji.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:14:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=td+POTQLbLYOoIxNCct7GsW10BBA9n/4Q5dVUic9E/Y=;
-        b=BmStlzF53IfQFR9lW1QEwB6WtPaCTo8kB/5l2ZVbvkNCRtpkKknR7R7gwnINKZMYbo
-         9roTE/qL7vaPo+Cyso47Tup2l6wwhF0x/6bkHDYtEfCuAEAXNXPJrsNboG8KVxzjNeDZ
-         VsPfwtpzBsiG/8I7JDAyVredl46a3Ru8+ROxI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=td+POTQLbLYOoIxNCct7GsW10BBA9n/4Q5dVUic9E/Y=;
-        b=BJ270DP3vTCYkckJSINSiByIHedpKERRN9X6Ma4DhZA1mlUrQvFuTo6ziHW2tTbv/I
-         jRxHtYSIpgdLPjFUttRm+fcOFR1XUM3iiHY9ajQhPZ1dy5H+V3eSMWtkF3j4QJwosFkV
-         KrTDZWS/xzc4Ey8G9xx3TDqC6EYu+IOhPYiQqlIoEtqmSi86rgmSl9fhUNKHOspi4aRf
-         5qdU513+iw8t/4Y+FebEqGqoDpuaHt7oycPRg59F9jV5zPfTQuCPoRkIsK2Yz+4ZAH6O
-         GLSBmbEryIaNts2mpcwpt6MrXCwmJOytVe8hhevPA5abdmHOdxzDNxYR9BEx9oNZFAF/
-         jSfw==
-X-Gm-Message-State: AOAM532n1AsD9pPnnvtSByyvDdGC4iWX7OYbO18fGfswVcQZscXKlJMK
-        12HW2H9whRSk3HQCtVFef9bD4WwYGaE=
-X-Google-Smtp-Source: ABdhPJycmn3m4TRX4VhgzRN3z1I1qA7oURPNAWFeQ8lXNss+9cVjruiHuWq+wxdzxI+TdQyR19ucsw==
-X-Received: by 2002:a2e:8157:: with SMTP id t23mr5223007ljg.417.1595618077138;
-        Fri, 24 Jul 2020 12:14:37 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id m1sm513676lfa.22.2020.07.24.12.14.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 12:14:36 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id 185so845547ljj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:14:35 -0700 (PDT)
-X-Received: by 2002:a2e:86c4:: with SMTP id n4mr5228146ljj.312.1595618075547;
- Fri, 24 Jul 2020 12:14:35 -0700 (PDT)
+        Fri, 24 Jul 2020 15:21:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3uSMvInD2Jk/6cMDVdGrLAgWn9ZHoqePo02Lz6hivfE=; b=P+weo+cY0o/lpm5Nzy0Xmn5+jK
+        dix62OJ3ciCGa5qYQThWzrPst7nAnSt2UJBWzBb0n6JLallV8DS8wMhcPcvyEqTWmTCOfCssOS7GD
+        uyh1Bdnu92ZzqaNHboHbwHAVTKv6nNvz3kRMt0bGpCxUIM4oKgcD16r3lVquIZjcDVMDmblq+8qLe
+        aF5ywXjS3PsILAhPbfyVRPxB4hryFcP3JlD45yM7bZU1olKdE0lHfNaj4NGTnC38MWG/zwaNZNOhI
+        YRjBYQ/8LRQNTL0cB1Gh+En1J1Rjkhy1y4iD99pT0KP1EcldanXJujY8LROUTcOP45Rrh/CZ9pr/X
+        C+mC+d3w==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jz3Fc-0000ue-JE; Fri, 24 Jul 2020 13:21:02 -0600
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Andrew Maier <andrew.maier@eideticom.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+References: <20200723195742.GA1447143@bjorn-Precision-5520>
+ <89d853d1-9e45-1ba5-5be7-4bbce79c7fb8@deltatee.com>
+ <CADnq5_NMKK83GaNA+w85MR8bqDbFqvcdvn9MCqZtLwctJKmOUw@mail.gmail.com>
+ <CADnq5_MCPTyxG31guPFL-uvs7HisGxwO5KpALnufc=Bj4MfYCw@mail.gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <7ba8fff5-990a-a59c-53cf-b0c9e9b54a6e@deltatee.com>
+Date:   Fri, 24 Jul 2020 13:20:57 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <159559628247.2141315.2107013106060144287.stgit@warthog.procyon.org.uk>
- <159559630912.2141315.16186899692832741137.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159559630912.2141315.16186899692832741137.stgit@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 24 Jul 2020 12:14:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjnQArU_BewVKQgYHy2mQD6LNKC5kkKXOm7GpNkJCapQg@mail.gmail.com>
-Message-ID: <CAHk-=wjnQArU_BewVKQgYHy2mQD6LNKC5kkKXOm7GpNkJCapQg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] watch_queue: Implement mount topology and attribute
- change notifications
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian@brauner.io>,
-        Jeff Layton <jlayton@redhat.com>, Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CADnq5_MCPTyxG31guPFL-uvs7HisGxwO5KpALnufc=Bj4MfYCw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: hpa@zytor.com, andrew.maier@eideticom.com, ray.huang@amd.com, christian.koenig@amd.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org, alexdeucher@gmail.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
+ allowed bridges
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This just can't be right.
 
-On Fri, Jul 24, 2020 at 6:12 AM David Howells <dhowells@redhat.com> wrote:
->
-> +
-> +/**
-> + * sys_watch_mount - Watch for mount topology/attribute changes
-> + * @dfd: Base directory to pathwalk from or fd referring to mount.
-> + * @filename: Path to mount to place the watch upon
-> + * @at_flags: Pathwalk control flags
-> + * @watch_fd: The watch queue to send notifications to.
-> + * @watch_id: The watch ID to be placed in the notification (-1 to remove watch)
-> + */
-> +SYSCALL_DEFINE5(watch_mount, [...]
-> +               int, watch_id)
-...
-> +       if (watch_id < -1 || watch_id > 0xff)
-> +               return -EINVAL;
-...
-> +       ret = inode_permission(path.dentry->d_inode, MAY_EXEC);
-> +       if (ret)
-> +               goto err_path;
-...
-> +       if (watch_id >= 0) {
-...
-> +               watch = kzalloc(sizeof(*watch), GFP_KERNEL);
-> +               if (!watch)
-> +                       goto err_wlist;
 
-So now you can basically allocate as much kernel memory as you want as
-a regular user, as long as you have a mounted directory you can walk
-(ie everybody).
+On 2020-07-24 10:07 a.m., Alex Deucher wrote:
+> On Thu, Jul 23, 2020 at 4:18 PM Alex Deucher <alexdeucher@gmail.com> wrote:
+>>
+>> On Thu, Jul 23, 2020 at 4:11 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+>>>
+>>>
+>>>
+>>> On 2020-07-23 1:57 p.m., Bjorn Helgaas wrote:
+>>>> [+cc Andrew, Armen, hpa]
+>>>>
+>>>> On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:
+>>>>> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+>>>>>>
+>>>>>> The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
+>>>>>> transactions between root ports and found to work. Therefore add it
+>>>>>> to the list.
+>>>>>>
+>>>>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>>>>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>>>>>> Cc: Christian König <christian.koenig@amd.com>
+>>>>>> Cc: Huang Rui <ray.huang@amd.com>
+>>>>>> Cc: Alex Deucher <alexdeucher@gmail.com>
+>>>>>
+>>>>> Starting with Zen, all AMD platforms support P2P for reads and writes.
+>>>>
+>>>> What's the plan for getting out of the cycle of "update this list for
+>>>> every new chip"?  Any new _DSMs planned, for instance?
+>>>
+>>> Well there was an effort to add capabilities in the PCI spec to describe
+>>> this but, as far as I know, they never got anywhere, and hardware still
+>>> doesn't self describe with this.
+>>>
+>>>> A continuous trickle of updates like this is not really appealing.  So
+>>>> far we have:
+>>>>
+>>>>   7d5b10fcb81e ("PCI/P2PDMA: Add AMD Zen Raven and Renoir Root Ports to whitelist")
+>>>>   7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to the whitelist")
+>>>>   bc123a515cb7 ("PCI/P2PDMA: Add Intel SkyLake-E to the whitelist")
+>>>>   494d63b0d5d0 ("PCI/P2PDMA: Whitelist some Intel host bridges")
+>>>>   0f97da831026 ("PCI/P2PDMA: Allow P2P DMA between any devices under AMD ZEN Root Complex")
+>>>>
+>>>> And that's just from the last year, not including this patch.
+>>>
+>>> Yes, it's not ideal. But most of these are adding old devices as people
+>>> test and care about running on those platforms -- a lot of this is
+>>> bootstrapping the list. I'd expect this to slow down a bit as by now we
+>>> have hopefully got a lot of the existing platforms people care about.
+>>> But we'd still probably expect to be adding a new Intel and AMD devices
+>>> about once a year as they produce new hardware designs.
+>>>
+>>> Unless, the Intel and AMD folks know of a way to detect this, or even to
+>>> query if a root complex is newer than a certain generation, I'm not sure
+>>> what else we can do here.
+>>
+>> I started a thread internally to see if I can find a way.  FWIW,
+>> pre-ZEN parts also support p2p DMA, but only for writes.  If I can get
+>> a definitive list, maybe we could switch to a blacklist for the old
+>> ones?
+> 
+> After talking with a few people internally, for AMD chips, it would
+> probably be easiest to just whitelist based on the CPU family id for
+> zen and newer (e.g., >= 0x17).
 
-Is there any limiting of watches anywhere? I don't see it.
+That seems sensible. I was trying to see if we could do something
+similar for Intel, and just allow anything after Skylake. I found
+this[1]. It seems they have been on family 6 for a long time, and I'm
+not comfortable enabling the whole family. Their model numbers also
+don't seem to increment in a favorable fashion, in that "small core"
+atoms (which have different host bridges with very much unknown support)
+have model numbers interspersed with regular "big core" CPUS.
 
-I notice we already have this pattern elsewhere. I think we need to
-fix this before we add more watch types.
+So we might be stuck with the Intel white list for a while, but using
+the AMD family number will at least cut the number of additions down a
+fair amount. I can try to put a patch together in place of this one.
 
-Watch allocation shouldn't just be a kzalloc(). I think you should
-have a "watch_allocate()" that does the initialization of id etc, but
-also does some basic per-user watch resource tracking or something.
+Logan
 
-              Linus
+[1]
+https://elixir.bootlin.com/linux/latest/source/arch/x86/include/asm/intel-family.h#L73
