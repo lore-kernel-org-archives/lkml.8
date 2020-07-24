@@ -2,135 +2,151 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E97C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB43C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4A132065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B9A92065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:41:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vyzeWhfz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgGXOkd (ORCPT
+        id S1726650AbgGXOlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:40:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726503AbgGXOkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:40:33 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF3862063A;
-        Fri, 24 Jul 2020 14:40:30 +0000 (UTC)
-Date:   Fri, 24 Jul 2020 15:40:28 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Andrei Vagin <avagin@gmail.com>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
-Subject: Re: [PATCH v5 0/6] arm64: add the time namespace support
-Message-ID: <20200724144027.GE23388@gaia>
-References: <20200624083321.144975-1-avagin@gmail.com>
- <20200705064055.GA28894@gmail.com>
- <20200714015743.GA843937@gmail.com>
- <20200722181506.GA4517@gaia>
- <20200723174140.GA3991167@gmail.com>
- <20200724133039.hginkpnv7bkyz764@wittgenstein>
+        Fri, 24 Jul 2020 10:41:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbgGXOlY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 10:41:24 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9833C0619E5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 07:41:24 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id d18so10042057ion.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 07:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9E66nUvcODIIIOq5t+2qbeVH/MSVvQN11l9oNW6GhyI=;
+        b=vyzeWhfzUBv+3aCDt4bAbkZMDVC7ooJXOhKnolfXtu9A3d40lBkGooDb91bIunTCM4
+         JhOzmmvBtL2Xz7JyAwEraF9uTjtY3wRYHxwIqE4gz8WQPxsaMaCXm12OwNRghR7xDBho
+         vaHCMyrYn81hU9KBurVxoZOQgu1Kj2LXvbkrAUPo+aaliJPrSCFcESce3TkrEU0tyzV4
+         9qIlhXFbZkyNo7yUsDaqowQQrrDfOwNx3smuImtKSzHEFHB1VgLf3BvyFmDQCioY+YKZ
+         9rNBWCGP3SdRjIaEZGWo+VO6ljJKWzf0P4/9cqtBKzW2bJzvJBM26RwR6PjiwvuKQerz
+         eKnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9E66nUvcODIIIOq5t+2qbeVH/MSVvQN11l9oNW6GhyI=;
+        b=Q6712naKXqDD5wlsoz9ntnuJavj6wkIskOhjwIjydU5MBz5oz64/OKfrtWYkLQ00hV
+         kcsJTYuPmJcZSNVRbuvS/U8BWAad2VkgGzujaPIIFn9qfJi/Rok92ApBJFh2PM5KwFcm
+         4x9GMTmg5pOK4qg/sF9gj2+QKq1VqvOBVN608/Stsp40Rn84TYHIXPMjqoxMTM6BGqz7
+         pycseJohK8AZ/GYWf2SfmzIT2orMSHZpl9xxjQdTHedARRgyW8z3sjTjbyPgGDfQSclb
+         4IzJ+7jTxJ+lginxDrPGa0aJuYMDCEq0NhJshFmdirBWiWvKjw4J721cJ/jrs+fZFE0H
+         lfVg==
+X-Gm-Message-State: AOAM531xuZdSJXsreXE5qV61s6bdAi/T0kH+DLM+Kmkq8YbeFDtSAcBl
+        O+/zrmEfmpOF/pnU5XU4dmmq/uUH/0A5TiVdgy3G4Q==
+X-Google-Smtp-Source: ABdhPJwAGCFsZ6cfW/RCed2pPReLn9Q4orINjlDAatEH6Czg9iP1uAc2Sj/EmE/i1I7eUakHAEQGgWrRJkRjKipv+Lg=
+X-Received: by 2002:a5d:97d1:: with SMTP id k17mr10702728ios.100.1595601683730;
+ Fri, 24 Jul 2020 07:41:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724133039.hginkpnv7bkyz764@wittgenstein>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200423002632.224776-1-dancol@google.com> <20200724094505-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200724094505-mutt-send-email-mst@kernel.org>
+From:   Lokesh Gidra <lokeshgidra@google.com>
+Date:   Fri, 24 Jul 2020 07:41:12 -0700
+Message-ID: <CA+EESO40x0+FW2ek5E=EYoHXt_AX2hvJ6QjbS=GSh9CpJQQRAA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Control over userfaultfd kernel-fault handling
+To:     "Michael S. Tsirkin" <mst@redhat.com>, kernel@android.com
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Xu <peterx@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
+        linux-doc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Minchan Kim <minchan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Daniel Colascione <dancol@dancol.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 03:30:39PM +0200, Christian Brauner wrote:
-> On Thu, Jul 23, 2020 at 10:41:40AM -0700, Andrei Vagin wrote:
-> > On Wed, Jul 22, 2020 at 07:15:06PM +0100, Catalin Marinas wrote:
-> > > On Mon, Jul 13, 2020 at 06:57:43PM -0700, Andrei Vagin wrote:
-> > > > On Sat, Jul 04, 2020 at 11:40:55PM -0700, Andrei Vagin wrote:
-> > > > > On Wed, Jun 24, 2020 at 01:33:15AM -0700, Andrei Vagin wrote:
-> > > > > > Allocate the time namespace page among VVAR pages and add the logic
-> > > > > > to handle faults on VVAR properly.
-> > > > > > 
-> > > > > > If a task belongs to a time namespace then the VVAR page which contains
-> > > > > > the system wide VDSO data is replaced with a namespace specific page
-> > > > > > which has the same layout as the VVAR page. That page has vdso_data->seq
-> > > > > > set to 1 to enforce the slow path and vdso_data->clock_mode set to
-> > > > > > VCLOCK_TIMENS to enforce the time namespace handling path.
-> > > > > > 
-> > > > > > The extra check in the case that vdso_data->seq is odd, e.g. a concurrent
-> > > > > > update of the VDSO data is in progress, is not really affecting regular
-> > > > > > tasks which are not part of a time namespace as the task is spin waiting
-> > > > > > for the update to finish and vdso_data->seq to become even again.
-> > > > > > 
-> > > > > > If a time namespace task hits that code path, it invokes the corresponding
-> > > > > > time getter function which retrieves the real VVAR page, reads host time
-> > > > > > and then adds the offset for the requested clock which is stored in the
-> > > > > > special VVAR page.
-> > > > > > 
-> > > > > 
-> > > > > > v2: Code cleanups suggested by Vincenzo.
-> > > > > > v3: add a comment in __arch_get_timens_vdso_data.
-> > > > > > v4: - fix an issue reported by the lkp robot.
-> > > > > >     - vvar has the same size with/without CONFIG_TIME_NAMESPACE, but the
-> > > > > >       timens page isn't allocated on !CONFIG_TIME_NAMESPACE. This
-> > > > > >       simplifies criu/vdso migration between different kernel configs.
-> > > > > > v5: - Code cleanups suggested by Mark Rutland.
-> > > > > >     - In vdso_join_timens, mmap_write_lock is downgraded to
-> > > > > >       mmap_read_lock. The VMA list isn't changed there, zap_page_range
-> > > > > >       doesn't require mmap_write_lock.
-> > > > > > 
-> > > > > > Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> > > > > > Reviewed-by: Dmitry Safonov <dima@arista.com>
-> > > > > 
-> > > > > Hello Will and Catalin,
-> > > > > 
-> > > > > Have you had a chance to look at this patch set? I think it is ready to be
-> > > > > merged. Let me know if you have any questions.
-> > > > 
-> > > > *friendly ping*
-> > > > 
-> > > > If I am doing something wrong, let me know.
-> > > 
-> > > Not really, just haven't got around to looking into it. Mark Rutland
-> > > raised a concern (in private) about the safety of multithreaded apps
-> > > but I think you already replied that timens_install() checks for this
-> > > already [1].
-> > > 
-> > > Maybe a similar atomicity issue to the one raised by Mark but for
-> > > single-threaded processes: the thread is executing vdso code, gets
-> > > interrupted and a signal handler invokes setns(). Would resuming the
-> > > execution in the vdso code on sigreturn cause any issues?
-> > 
-> > It will not cause any issues in the kernel. In the userspace,
-> > clock_gettime() can return a clock value with an inconsistent offset, if
-> > a process switches between two non-root namespaces. And it can triggers
-> > SIGSEGV if it switches from a non-root to the root time namespace,
-> > because a time namespace isn't mapped in the root time namespace.
-> > 
-> > I don't think that we need to handle this case in the kernel. Users
-> > must understand what they are doing and have to write code so that avoid
-> > these sort of situations. In general, I would say that in most cases it
-> > is a bad idea to call setns from a signal handler.
-> 
-> I would argue that calling any function not in the list of
-> man 7 signal-safety
-> without checking the kernel implementation is "you get to keep the
-> pieces territory". There's a whole range of syscalls that are not safe
-> in signal handlers and we don't have any special precautions for them so
-> I'm not sure we'd need one for setns(). But maybe I'm missing the bigger
-> picture here.
+On Fri, Jul 24, 2020 at 7:01 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Wed, Apr 22, 2020 at 05:26:30PM -0700, Daniel Colascione wrote:
+> > This small patch series adds a new flag to userfaultfd(2) that allows
+> > callers to give up the ability to handle user-mode faults with the
+> > resulting UFFD file object. In then add a new sysctl to require
+> > unprivileged callers to use this new flag.
+> >
+> > The purpose of this new interface is to decrease the change of an
+> > unprivileged userfaultfd user taking advantage of userfaultfd to
+> > enhance security vulnerabilities by lengthening the race window in
+> > kernel code.
+>
+> There are other ways to lengthen the race window, such as madvise
+> MADV_DONTNEED, mmap of fuse files ...
+> Could the patchset commit log include some discussion about
+> why these are not the concern please?
+>
+> Multiple subsystems including vhost have come to rely on
+> copy from/to user behaving identically to userspace access.
+>
+> Could the patchset please include discussion on what effect blocking
+> these will have? E.g. I guess Android doesn't use vhost right now.
+> Will it want to do it to run VMs in 2021?
+>
+> Thanks!
+>
+> > This patch series is split from [1].
+> >
+> > [1] https://lore.kernel.org/lkml/20200211225547.235083-1-dancol@google.com/
+>
+> So in that series, Kees said:
+> https://lore.kernel.org/lkml/202002112332.BE71455@keescook/#t
+>
+> What is the threat being solved? (I understand the threat, but detailing
+>   it in the commit log is important for people who don't know it.)
+>
 
-Good point (I don't read man pages very often ;)). Thanks for
-clarifying.
+Adding Android security folks, Nick and Jeff, to answer.
 
--- 
-Catalin
+> Could you pls do that?
+>
+> > Daniel Colascione (2):
+> >   Add UFFD_USER_MODE_ONLY
+> >   Add a new sysctl knob: unprivileged_userfaultfd_user_mode_only
+> >
+> >  Documentation/admin-guide/sysctl/vm.rst | 13 +++++++++++++
+> >  fs/userfaultfd.c                        | 18 ++++++++++++++++--
+> >  include/linux/userfaultfd_k.h           |  1 +
+> >  include/uapi/linux/userfaultfd.h        |  9 +++++++++
+> >  kernel/sysctl.c                         |  9 +++++++++
+> >  5 files changed, 48 insertions(+), 2 deletions(-)
+> >
+> > --
+> > 2.26.2.303.gf8c07b1a785-goog
+> >
+>
