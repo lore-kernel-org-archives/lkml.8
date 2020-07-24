@@ -2,201 +2,367 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B728C433FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778D6C43470
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6123A206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41401206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GbNXU4zr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgGXVhy (ORCPT
+        id S1727861AbgGXVhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:37:54 -0400
-Received: from sed198n136.SEDSystems.ca ([198.169.180.136]:36283 "EHLO
-        sed198n136.sedsystems.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbgGXVhp (ORCPT
+        Fri, 24 Jul 2020 17:37:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgGXVgx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:37:45 -0400
-X-Greylist: delayed 2098 seconds by postgrey-1.27 at vger.kernel.org; Fri, 24 Jul 2020 17:37:45 EDT
-Received: from barney.sedsystems.ca (barney [198.169.180.121])
-        by sed198n136.sedsystems.ca  with ESMTP id 06OL2RfA017602
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 15:02:27 -0600 (CST)
-Received: from [192.168.234.15] (sed198n237.sedsystems.ca [198.169.180.237])
-        by barney.sedsystems.ca (8.14.7/8.14.4) with ESMTP id 06OL2QDV063279
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Fri, 24 Jul 2020 15:02:26 -0600
-Subject: Re: [PATCH V2 2/3] gpio: xilinx: Add interrupt support
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        shubhrajyoti.datta@xilinx.com, sgoud@xilinx.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        git@xilinx.com
-References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
- <1595513168-11965-3-git-send-email-srinivas.neeli@xilinx.com>
- <CAHp75Vd7BU5DYqyQFGfBtKrb6jWFEQjMCu2MOa_7M8XYkt6BFA@mail.gmail.com>
-From:   Robert Hancock <hancock@sedsystems.ca>
-Message-ID: <8c4d01b4-ff14-9807-303e-2e2571af12e2@sedsystems.ca>
-Date:   Fri, 24 Jul 2020 15:02:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Fri, 24 Jul 2020 17:36:53 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AD09C08C5E2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:36:51 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k5so6243668pjg.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:36:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pw2QIqvpRkbGIbs2MdBK1+U/690xxKzu54KCttjHJY4=;
+        b=GbNXU4zrlYJGxN9b80SOAHnv6UVfMnvu+tWKkQ3EIL7h4mfwVMVQddf6xTgUMlUhQt
+         xsI5hzmMHepArBaloOVF5nzqjS/aariKap3iie3AoJiQGT/LCCnDP7TR5/Rwg5oMH4lh
+         FDi+L8t2C+Jw02i+AsQpRjJstdbGRut3bBEGI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pw2QIqvpRkbGIbs2MdBK1+U/690xxKzu54KCttjHJY4=;
+        b=tzZ+z74/Y29RD5Twlsk97+fQc36FkU1Ro293toVCRjiqFrxPMi4fJeBZadZW76J6Rn
+         f/AhQBmrkcKy7DnPvEDJftk/iNyrFEMbwgdVCTlqb/xPD+JBiLCc7t8aJUy6vXl3XKNK
+         75cZY0paHSiF+eT38VfOX3PQYeyFyMOWZz6+Sl3HT+Feyan3eNwtmPc3WpTV61R0n/OK
+         dJWWK3OVpDfI/Ls+BnNwWWEwJepimjXm/exlkWEyzzcKmgicjXGgVaeFJREP4eNG6QeB
+         0BbYD3w3I0mqh1GkPRA6+N1VHZ2tcpygn0cXTFqt9yTqAHcbf2pIBFYoC2OQWvG4RioJ
+         zUxg==
+X-Gm-Message-State: AOAM531H+pVZiu5Ht8fNB6QhFy6DINfXxjI4aFBZkbISCZ8+eqsmXa+C
+        kCC8pMva/vtg8SH70qKA6yx/JQ==
+X-Google-Smtp-Source: ABdhPJyxbalA/TVc66uU7PZJVRbrJ9QPAKha5qldASMqVOcFTR7qDDYHEl03uYc611laJcPOFEdTrw==
+X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr4762042pjp.228.1595626610630;
+        Fri, 24 Jul 2020 14:36:50 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d37sm6958548pgd.18.2020.07.24.14.36.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 14:36:47 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 08/19] fs/kernel_read_file: Remove redundant size argument
+Date:   Fri, 24 Jul 2020 14:36:29 -0700
+Message-Id: <20200724213640.389191-9-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200724213640.389191-1-keescook@chromium.org>
+References: <20200724213640.389191-1-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vd7BU5DYqyQFGfBtKrb6jWFEQjMCu2MOa_7M8XYkt6BFA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.64 on 198.169.180.136
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-23 12:03 p.m., Andy Shevchenko wrote:
->> +/**
->> + * xgpio_xlate - Translate gpio_spec to the GPIO number and flags
->> + * @gc: Pointer to gpio_chip device structure.
->> + * @gpiospec:  gpio specifier as found in the device tree
->> + * @flags: A flags pointer based on binding
->> + *
->> + * Return:
->> + * irq number otherwise -EINVAL
->> + */
->> +static int xgpio_xlate(struct gpio_chip *gc,
->> +                      const struct of_phandle_args *gpiospec, u32 *flags)
->> +{
->> +       if (gc->of_gpio_n_cells < 2) {
->> +               WARN_ON(1);
->> +               return -EINVAL;
->> +       }
->> +
->> +       if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
->> +               return -EINVAL;
->> +
->> +       if (gpiospec->args[0] >= gc->ngpio)
->> +               return -EINVAL;
->> +
->> +       if (flags)
->> +               *flags = gpiospec->args[1];
->> +
->> +       return gpiospec->args[0];
->> +}
-> 
-> This looks like a very standart xlate function for GPIO. Why do you
-> need to open-code it?
+In preparation for refactoring kernel_read_file*(), remove the redundant
+"size" argument which is not needed: it can be included in the return
+code, with callers adjusted. (VFS reads already cannot be larger than
+INT_MAX.)
 
-Indeed, this seems the same as the of_gpio_simple_xlate callback which 
-is used if no xlate callback is specified, so I'm not sure why this is 
-necessary?
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/base/firmware_loader/main.c | 10 ++++++----
+ fs/kernel_read_file.c               | 20 +++++++++-----------
+ include/linux/kernel_read_file.h    |  8 ++++----
+ kernel/kexec_file.c                 | 14 +++++++-------
+ kernel/module.c                     |  7 +++----
+ security/integrity/digsig.c         |  5 +++--
+ security/integrity/ima/ima_fs.c     |  6 ++++--
+ 7 files changed, 36 insertions(+), 34 deletions(-)
 
-> 
-> ...
-> 
->> +/**
->> + * xgpio_irq_ack - Acknowledge a child GPIO interrupt.
-> 
->> + * This currently does nothing, but irq_ack is unconditionally called by
->> + * handle_edge_irq and therefore must be defined.
-> 
-> This should go after parameter description(s).
-> 
->> + * @irq_data: per irq and chip data passed down to chip functions
->> + */
-> 
-> ...
-> 
->>   /**
->> + * xgpio_irq_mask - Write the specified signal of the GPIO device.
->> + * @irq_data: per irq and chip data passed down to chip functions
-> 
-> In all comments irq -> IRQ.
-> 
->> + */
->> +static void xgpio_irq_mask(struct irq_data *irq_data)
->> +{
->> +       unsigned long flags;
->> +       struct xgpio_instance *chip = irq_data_get_irq_chip_data(irq_data);
->> +       int irq_offset = irqd_to_hwirq(irq_data);
->> +       int index = xgpio_index(chip, irq_offset);
->> +       int offset = xgpio_offset(chip, irq_offset);
->> +
->> +       spin_lock_irqsave(&chip->gpio_lock, flags);
->> +
-> 
->> +       chip->irq_enable[index] &= ~BIT(offset);
-> 
-> If you convert your data structure to use bitmaps (and respective API) like
-> 
-> #define XILINX_NGPIOS  64
-> ...
->    DECLARE_BITMAP(irq_enable, XILINX_NGPIOS);
-> ...
-> 
-> it will make code better to read and understand. For example, here it
-> will be just
-> __clear_bit(offset, chip->irq_enable);
-> 
->> +       dev_dbg(chip->gc.parent, "Disable %d irq, irq_enable_mask 0x%x\n",
->> +               irq_offset, chip->irq_enable[index]);
-> 
-> Under spin lock?! Hmm...
-> 
->> +       if (!chip->irq_enable[index]) {
->> +               /* Disable per channel interrupt */
->> +               u32 temp = xgpio_readreg(chip->regs + XGPIO_IPIER_OFFSET);
->> +
->> +               temp &= ~BIT(index);
->> +               xgpio_writereg(chip->regs + XGPIO_IPIER_OFFSET, temp);
->> +       }
->> +       spin_unlock_irqrestore(&chip->gpio_lock, flags);
->> +}
-> 
-> ...
-> 
->> +       for (index = 0; index < num_channels; index++) {
->> +               if ((status & BIT(index))) {
-> 
-> If gpio_width is the same among banks, you can use for_each_set_bit()
-> here as well.
-> 
-> ...
-> 
->> +                       for_each_set_bit(bit, &all_events, 32) {
->> +                               generic_handle_irq(irq_find_mapping
->> +                                       (chip->gc.irq.domain, offset + bit));
-> 
-> Strange indentation. Maybe a temporary variable helps?
-> 
-> ...
-> 
->> +       chip->irq = platform_get_irq_optional(pdev, 0);
->> +       if (chip->irq <= 0) {
->> +               dev_info(&pdev->dev, "GPIO IRQ not set\n");
-> 
-> Why do you need an optional variant if you print an error anyway?
-> 
->> +       } else {
-> 
-> 
-> ...
-> 
->> +               chip->gc.irq.parents = (unsigned int *)&chip->irq;
->> +               chip->gc.irq.num_parents = 1;
-> 
-> Current pattern is to use devm_kcalloc() for it (Linus has plans to
-> simplify this in the future and this will help him to find what
-> patterns are being used)
-> 
-
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index d4a413ea48ce..f80c0d102be8 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -462,7 +462,7 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
+ 					     size_t in_size,
+ 					     const void *in_buffer))
+ {
+-	loff_t size;
++	size_t size;
+ 	int i, len;
+ 	int rc = -ENOENT;
+ 	char *path;
+@@ -494,10 +494,9 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
+ 		fw_priv->size = 0;
+ 
+ 		/* load firmware files from the mount namespace of init */
+-		rc = kernel_read_file_from_path_initns(path, &buffer,
+-						       &size, msize,
++		rc = kernel_read_file_from_path_initns(path, &buffer, msize,
+ 						       READING_FIRMWARE);
+-		if (rc) {
++		if (rc < 0) {
+ 			if (rc != -ENOENT)
+ 				dev_warn(device, "loading %s failed with error %d\n",
+ 					 path, rc);
+@@ -506,6 +505,9 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
+ 					 path);
+ 			continue;
+ 		}
++		size = rc;
++		rc = 0;
++
+ 		dev_dbg(device, "Loading firmware from %s\n", path);
+ 		if (decompress) {
+ 			dev_dbg(device, "f/w decompressing %s\n",
+diff --git a/fs/kernel_read_file.c b/fs/kernel_read_file.c
+index 54d972d4befc..dc28a8def597 100644
+--- a/fs/kernel_read_file.c
++++ b/fs/kernel_read_file.c
+@@ -5,7 +5,7 @@
+ #include <linux/security.h>
+ #include <linux/vmalloc.h>
+ 
+-int kernel_read_file(struct file *file, void **buf, loff_t *size,
++int kernel_read_file(struct file *file, void **buf,
+ 		     loff_t max_size, enum kernel_read_file_id id)
+ {
+ 	loff_t i_size, pos;
+@@ -29,7 +29,7 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+-	if (i_size > SIZE_MAX || (max_size > 0 && i_size > max_size)) {
++	if (i_size > INT_MAX || (max_size > 0 && i_size > max_size)) {
+ 		ret = -EFBIG;
+ 		goto out;
+ 	}
+@@ -59,8 +59,6 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+ 	}
+ 
+ 	ret = security_kernel_post_read_file(file, *buf, i_size, id);
+-	if (!ret)
+-		*size = pos;
+ 
+ out_free:
+ 	if (ret < 0) {
+@@ -72,11 +70,11 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+ 
+ out:
+ 	allow_write_access(file);
+-	return ret;
++	return ret == 0 ? pos : ret;
+ }
+ EXPORT_SYMBOL_GPL(kernel_read_file);
+ 
+-int kernel_read_file_from_path(const char *path, void **buf, loff_t *size,
++int kernel_read_file_from_path(const char *path, void **buf,
+ 			       loff_t max_size, enum kernel_read_file_id id)
+ {
+ 	struct file *file;
+@@ -89,14 +87,14 @@ int kernel_read_file_from_path(const char *path, void **buf, loff_t *size,
+ 	if (IS_ERR(file))
+ 		return PTR_ERR(file);
+ 
+-	ret = kernel_read_file(file, buf, size, max_size, id);
++	ret = kernel_read_file(file, buf, max_size, id);
+ 	fput(file);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
+ 
+ int kernel_read_file_from_path_initns(const char *path, void **buf,
+-				      loff_t *size, loff_t max_size,
++				      loff_t max_size,
+ 				      enum kernel_read_file_id id)
+ {
+ 	struct file *file;
+@@ -115,13 +113,13 @@ int kernel_read_file_from_path_initns(const char *path, void **buf,
+ 	if (IS_ERR(file))
+ 		return PTR_ERR(file);
+ 
+-	ret = kernel_read_file(file, buf, size, max_size, id);
++	ret = kernel_read_file(file, buf, max_size, id);
+ 	fput(file);
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
+ 
+-int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
++int kernel_read_file_from_fd(int fd, void **buf, loff_t max_size,
+ 			     enum kernel_read_file_id id)
+ {
+ 	struct fd f = fdget(fd);
+@@ -130,7 +128,7 @@ int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
+ 	if (!f.file)
+ 		goto out;
+ 
+-	ret = kernel_read_file(f.file, buf, size, max_size, id);
++	ret = kernel_read_file(f.file, buf, max_size, id);
+ out:
+ 	fdput(f);
+ 	return ret;
+diff --git a/include/linux/kernel_read_file.h b/include/linux/kernel_read_file.h
+index 78cf3d7dc835..0ca0bdbed1bd 100644
+--- a/include/linux/kernel_read_file.h
++++ b/include/linux/kernel_read_file.h
+@@ -36,16 +36,16 @@ static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
+ }
+ 
+ int kernel_read_file(struct file *file,
+-		     void **buf, loff_t *size, loff_t max_size,
++		     void **buf, loff_t max_size,
+ 		     enum kernel_read_file_id id);
+ int kernel_read_file_from_path(const char *path,
+-			       void **buf, loff_t *size, loff_t max_size,
++			       void **buf, loff_t max_size,
+ 			       enum kernel_read_file_id id);
+ int kernel_read_file_from_path_initns(const char *path,
+-				      void **buf, loff_t *size, loff_t max_size,
++				      void **buf, loff_t max_size,
+ 				      enum kernel_read_file_id id);
+ int kernel_read_file_from_fd(int fd,
+-			     void **buf, loff_t *size, loff_t max_size,
++			     void **buf, loff_t max_size,
+ 			     enum kernel_read_file_id id);
+ 
+ #endif /* _LINUX_KERNEL_READ_FILE_H */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 1358069ce9e9..eda19ca256a3 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -220,13 +220,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ {
+ 	int ret;
+ 	void *ldata;
+-	loff_t size;
+ 
+ 	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
+-				       &size, INT_MAX, READING_KEXEC_IMAGE);
+-	if (ret)
++				       INT_MAX, READING_KEXEC_IMAGE);
++	if (ret < 0)
+ 		return ret;
+-	image->kernel_buf_len = size;
++	image->kernel_buf_len = ret;
+ 
+ 	/* Call arch image probe handlers */
+ 	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+@@ -243,11 +242,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	/* It is possible that there no initramfs is being loaded */
+ 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+ 		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
+-					       &size, INT_MAX,
++					       INT_MAX,
+ 					       READING_KEXEC_INITRAMFS);
+-		if (ret)
++		if (ret < 0)
+ 			goto out;
+-		image->initrd_buf_len = size;
++		image->initrd_buf_len = ret;
++		ret = 0;
+ 	}
+ 
+ 	if (cmdline_len) {
+diff --git a/kernel/module.c b/kernel/module.c
+index e9765803601b..b6fd4f51cc30 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3988,7 +3988,6 @@ SYSCALL_DEFINE3(init_module, void __user *, umod,
+ SYSCALL_DEFINE3(finit_module, int, fd, const char __user *, uargs, int, flags)
+ {
+ 	struct load_info info = { };
+-	loff_t size;
+ 	void *hdr = NULL;
+ 	int err;
+ 
+@@ -4002,12 +4001,12 @@ SYSCALL_DEFINE3(finit_module, int, fd, const char __user *, uargs, int, flags)
+ 		      |MODULE_INIT_IGNORE_VERMAGIC))
+ 		return -EINVAL;
+ 
+-	err = kernel_read_file_from_fd(fd, &hdr, &size, INT_MAX,
++	err = kernel_read_file_from_fd(fd, &hdr, INT_MAX,
+ 				       READING_MODULE);
+-	if (err)
++	if (err < 0)
+ 		return err;
+ 	info.hdr = hdr;
+-	info.len = size;
++	info.len = err;
+ 
+ 	return load_module(&info, uargs, flags);
+ }
+diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
+index f8869be45d8f..97661ffabc4e 100644
+--- a/security/integrity/digsig.c
++++ b/security/integrity/digsig.c
+@@ -171,16 +171,17 @@ int __init integrity_add_key(const unsigned int id, const void *data,
+ int __init integrity_load_x509(const unsigned int id, const char *path)
+ {
+ 	void *data = NULL;
+-	loff_t size;
++	size_t size;
+ 	int rc;
+ 	key_perm_t perm;
+ 
+-	rc = kernel_read_file_from_path(path, &data, &size, 0,
++	rc = kernel_read_file_from_path(path, &data, 0,
+ 					READING_X509_CERTIFICATE);
+ 	if (rc < 0) {
+ 		pr_err("Unable to open file: %s (%d)", path, rc);
+ 		return rc;
+ 	}
++	size = rc;
+ 
+ 	perm = (KEY_POS_ALL & ~KEY_POS_SETATTR) | KEY_USR_VIEW | KEY_USR_READ;
+ 
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index e13ffece3726..602f52717757 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -275,7 +275,7 @@ static ssize_t ima_read_policy(char *path)
+ {
+ 	void *data = NULL;
+ 	char *datap;
+-	loff_t size;
++	size_t size;
+ 	int rc, pathlen = strlen(path);
+ 
+ 	char *p;
+@@ -284,11 +284,13 @@ static ssize_t ima_read_policy(char *path)
+ 	datap = path;
+ 	strsep(&datap, "\n");
+ 
+-	rc = kernel_read_file_from_path(path, &data, &size, 0, READING_POLICY);
++	rc = kernel_read_file_from_path(path, &data, 0, READING_POLICY);
+ 	if (rc < 0) {
+ 		pr_err("Unable to open file: %s (%d)", path, rc);
+ 		return rc;
+ 	}
++	size = rc;
++	rc = 0;
+ 
+ 	datap = data;
+ 	while (size > 0 && (p = strsep(&datap, "\n"))) {
 -- 
-Robert Hancock
-Senior Hardware Designer
-SED Systems, a division of Calian Ltd.
-Email: hancock@sedsystems.ca
+2.25.1
+
