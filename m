@@ -2,170 +2,86 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B711C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A05C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17DB6206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595612678;
-	bh=bAQpgRroLYP5aRy6ABfGc3GgdNAR1aE+sPxU5qd9MzQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RUhVVLqd9r9L1cfPQvislhrM1nAcoqbwvj0BKdz3bLcUeCnaxo56dZ7J/EWBMl04i
-	 mocgl4XqCcLgJRe/SG8c8iGhLlhO9uQRSbpuAPDAiiQKY+Vtv0JyqVyjqvH6duV7mQ
-	 tRofeIqSgGYFoZCMFL/a4xrccncw5vTo8lOcK2eg=
+	by mail.kernel.org (Postfix) with ESMTP id 13EA3206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgGXRoh (ORCPT
+        id S1726857AbgGXRqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:44:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbgGXRog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:44:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3402A2067D;
-        Fri, 24 Jul 2020 17:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595612675;
-        bh=bAQpgRroLYP5aRy6ABfGc3GgdNAR1aE+sPxU5qd9MzQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eduqc2DjA8GQbBNmmXwHci4z566RPcuNqvvblv4OJPEP+cg1NMrBHRTOPKmptXOiL
-         fbD3r87NblRq9eY8+ROnWRqvfuRP/YiU60A6eLZmoeEwfuQ2N356OsEYUTRGwTlv8W
-         jDTvet9vZgTOohuYEsGJt9hDSwUV2MgGyrPXPSXo=
-Date:   Fri, 24 Jul 2020 19:44:37 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        kvm ML <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Rik van Riel <riel@surriel.com>, x86-ml <x86@kernel.org>,
-        cip-dev <cip-dev@lists.cip-project.org>
-Subject: Re: [PATCH 4.9 18/22] x86/fpu: Disable bottom halves while loading
- FPU registers
-Message-ID: <20200724174437.GB555114@kroah.com>
-References: <20181228113126.144310132@linuxfoundation.org>
- <20181228113127.414176417@linuxfoundation.org>
- <01857944-ce1a-c6cd-3666-1e9b6ca8cccc@siemens.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <01857944-ce1a-c6cd-3666-1e9b6ca8cccc@siemens.com>
+        Fri, 24 Jul 2020 13:46:14 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:18446 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726381AbgGXRqO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:46:14 -0400
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 24 Jul 2020 10:46:13 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg04-sd.qualcomm.com with ESMTP; 24 Jul 2020 10:46:13 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 729C715AF; Fri, 24 Jul 2020 10:46:13 -0700 (PDT)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org
+Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Veera Vegivada <vvegivad@codeaurora.org>,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [RESEND PATCH v1 2/2] thermal: qcom-spmi-temp-alarm: Don't suppress negative temp
+Date:   Fri, 24 Jul 2020 10:46:11 -0700
+Message-Id: <6bb66f529eaab58b3a75eea3386233cbca27f818.1595612650.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <f22bb151d836f924b09cf80ffd6e58eb286be5d6.1595612650.git.gurus@codeaurora.org>
+References: <f22bb151d836f924b09cf80ffd6e58eb286be5d6.1595612650.git.gurus@codeaurora.org>
+In-Reply-To: <f22bb151d836f924b09cf80ffd6e58eb286be5d6.1595612650.git.gurus@codeaurora.org>
+References: <f22bb151d836f924b09cf80ffd6e58eb286be5d6.1595612650.git.gurus@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 07:07:06PM +0200, Jan Kiszka wrote:
-> On 28.12.18 12:52, Greg Kroah-Hartman wrote:
-> > 4.9-stable review patch.  If anyone has any objections, please let me know.
-> > 
-> > ------------------
-> > 
-> > From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > 
-> > commit 68239654acafe6aad5a3c1dc7237e60accfebc03 upstream.
-> > 
-> > The sequence
-> > 
-> >    fpu->initialized = 1;		/* step A */
-> >    preempt_disable();		/* step B */
-> >    fpu__restore(fpu);
-> >    preempt_enable();
-> > 
-> > in __fpu__restore_sig() is racy in regard to a context switch.
-> > 
-> > For 32bit frames, __fpu__restore_sig() prepares the FPU state within
-> > fpu->state. To ensure that a context switch (switch_fpu_prepare() in
-> > particular) does not modify fpu->state it uses fpu__drop() which sets
-> > fpu->initialized to 0.
-> > 
-> > After fpu->initialized is cleared, the CPU's FPU state is not saved
-> > to fpu->state during a context switch. The new state is loaded via
-> > fpu__restore(). It gets loaded into fpu->state from userland and
-> > ensured it is sane. fpu->initialized is then set to 1 in order to avoid
-> > fpu__initialize() doing anything (overwrite the new state) which is part
-> > of fpu__restore().
-> > 
-> > A context switch between step A and B above would save CPU's current FPU
-> > registers to fpu->state and overwrite the newly prepared state. This
-> > looks like a tiny race window but the Kernel Test Robot reported this
-> > back in 2016 while we had lazy FPU support. Borislav Petkov made the
-> > link between that report and another patch that has been posted. Since
-> > the removal of the lazy FPU support, this race goes unnoticed because
-> > the warning has been removed.
-> > 
-> > Disable bottom halves around the restore sequence to avoid the race. BH
-> > need to be disabled because BH is allowed to run (even with preemption
-> > disabled) and might invoke kernel_fpu_begin() by doing IPsec.
-> > 
-> >   [ bp: massage commit message a bit. ]
-> > 
-> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > Signed-off-by: Borislav Petkov <bp@suse.de>
-> > Acked-by: Ingo Molnar <mingo@kernel.org>
-> > Acked-by: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Andy Lutomirski <luto@kernel.org>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-> > Cc: kvm ML <kvm@vger.kernel.org>
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Krčmář <rkrcmar@redhat.com>
-> > Cc: Rik van Riel <riel@surriel.com>
-> > Cc: stable@vger.kernel.org
-> > Cc: x86-ml <x86@kernel.org>
-> > Link: http://lkml.kernel.org/r/20181120102635.ddv3fvavxajjlfqk@linutronix.de
-> > Link: https://lkml.kernel.org/r/20160226074940.GA28911@pd.tnic
-> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> >   arch/x86/kernel/fpu/signal.c |    4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > --- a/arch/x86/kernel/fpu/signal.c
-> > +++ b/arch/x86/kernel/fpu/signal.c
-> > @@ -342,10 +342,10 @@ static int __fpu__restore_sig(void __use
-> >   			sanitize_restored_xstate(tsk, &env, xfeatures, fx_only);
-> >   		}
-> > +		local_bh_disable();
-> >   		fpu->fpstate_active = 1;
-> > -		preempt_disable();
-> >   		fpu__restore(fpu);
-> > -		preempt_enable();
-> > +		local_bh_enable();
-> >   		return err;
-> >   	} else {
-> > 
-> > 
-> 
-> Any reason why the backport stopped back than at 4.9? I just debugged this
-> out of a 4.4 kernel, and it is needed there as well. I'm happy to propose a
-> backport, would just appreciate a hint if the BH protection is needed also
-> there (my case was without BH).
+From: Veera Vegivada <vvegivad@codeaurora.org>
 
-You are asking about something we did back in 2018.  I can't remember
-what I did last week :)
+Currently driver is suppressing the negative temperature
+readings from the vadc. Consumers of the thermal zones need
+to read the negative temperature too. Don't suppress the
+readings.
 
-If you provide a backport that works, I'll be glad to take it.  The
-current patch does not apply cleanly there at all.
+Signed-off-by: Veera Vegivada <vvegivad@codeaurora.org>
+Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+---
+ drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-thanks,
+diff --git a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+index 05a9601..6d8f090 100644
+--- a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
++++ b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (c) 2011-2015, 2017, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2011-2015, 2017, 2020, The Linux Foundation. All rights reserved.
+  */
+ 
+ #include <linux/bitops.h>
+@@ -212,7 +212,7 @@ static int qpnp_tm_get_temp(void *data, int *temp)
+ 		chip->temp = mili_celsius;
+ 	}
+ 
+-	*temp = chip->temp < 0 ? 0 : chip->temp;
++	*temp = chip->temp;
+ 
+ 	return 0;
+ }
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-greg k-h
