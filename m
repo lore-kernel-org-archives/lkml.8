@@ -2,115 +2,122 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD74C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1103EC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2705B20767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:55:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rMlw0eEk"
+	by mail.kernel.org (Postfix) with ESMTP id ECF2C20768
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgGXKzu (ORCPT
+        id S1726884AbgGXK4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:55:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgGXKzt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:55:49 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7D5C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 03:55:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dTI0RvYmB+fP73ftp8+VFu/GFD8sMlcrk0x3WCQYmQI=; b=rMlw0eEkaKNDAz+lfekbBI0Z3+
-        usBKIbI7FDAJDFs0Sg/cDph9xhnpgYIKSLNVoMHX5M3EhGjTgJdQN4hSdu4Drx0upPjEenM9DEHO4
-        /uGLK/DgyWQzb/QOxpFxP6brhyiweIm/W6OfxPDQyh3+v2QJLoVKuAdAb1sNqaXJ/qX7Kkor0yMZn
-        e+RjsYYIg1hn/YvnsnTNEX7RYsZIlTGBdLaoEA3txs0ADJ8veT7UA98FLjUPxZaakZvS1odKFp7//
-        OU50s3WOieZW8B/s808/qjccOGEuNWfYxWFPjxggdM3Gwn1qPbjR6lxpR9IYqLdGHsfg+9tumstRa
-        BHI7PBTg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyvMe-0005Ll-VL; Fri, 24 Jul 2020 10:55:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8CF5C300446;
-        Fri, 24 Jul 2020 12:55:43 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6E66F2847BADA; Fri, 24 Jul 2020 12:55:43 +0200 (CEST)
-Date:   Fri, 24 Jul 2020 12:55:43 +0200
-From:   peterz@infradead.org
-To:     kan.liang@linux.intel.com
-Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        like.xu@linux.intel.com
-Subject: Re: [PATCH V7 07/14] perf/core: Add a new PERF_EV_CAP_COEXIST event
- capability
-Message-ID: <20200724105543.GV119549@hirez.programming.kicks-ass.net>
-References: <20200723171117.9918-1-kan.liang@linux.intel.com>
- <20200723171117.9918-8-kan.liang@linux.intel.com>
+        Fri, 24 Jul 2020 06:56:11 -0400
+Received: from mga03.intel.com ([134.134.136.65]:6908 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726258AbgGXK4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 06:56:11 -0400
+IronPort-SDR: 9L1TGkqDiJZDjwESrL5beZ8CA2jFxy40TSiiqXXNI6abRbYmgN/nraxvPNslXYsYlvEEw0+ivb
+ Kuw34WTHJL2g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="150675010"
+X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
+   d="scan'208";a="150675010"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 03:56:10 -0700
+IronPort-SDR: 2tisJ6WPrHiElX4vifb4Xa+qD7K0tawdKTHfz5RL1+5+CZdqOn4YpC7SW6EmyCm1/+1fJj5g/6
+ 5DLjkbgOcpaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
+   d="scan'208";a="284901497"
+Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314.ger.corp.intel.com) ([10.237.222.51])
+  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2020 03:56:07 -0700
+From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+To:     alex.williamson@redhat.com, herbert@gondor.apana.org.au
+Cc:     cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
+        bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        fiona.trahe@intel.com, qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Subject: [PATCH v5 0/5] vfio/pci: add denylist and disable qat
+Date:   Fri, 24 Jul 2020 11:55:55 +0100
+Message-Id: <20200724105600.10814-1-giovanni.cabiddu@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723171117.9918-8-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:11:10AM -0700, kan.liang@linux.intel.com wrote:
+This patchset defines a denylist of devices in the vfio-pci module and adds
+the current generation of Intel(R) QuickAssist devices to it as they are
+not designed to run in an untrusted environment.
 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 3b22db08b6fb..93631e5389bf 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -576,9 +576,14 @@ typedef void (*perf_overflow_handler_t)(struct perf_event *,
->   * PERF_EV_CAP_SOFTWARE: Is a software event.
->   * PERF_EV_CAP_READ_ACTIVE_PKG: A CPU event (or cgroup event) that can be read
->   * from any CPU in the package where it is active.
-> + * PERF_EV_CAP_COEXIST: An event with this flag must coexist with other sibling
-> + * events, which have the same flag. If any event with the flag is detached
-> + * from the group, split the group into singleton events, and move the events
-> + * with the flag to the unrecoverable ERROR state.
->   */
->  #define PERF_EV_CAP_SOFTWARE		BIT(0)
->  #define PERF_EV_CAP_READ_ACTIVE_PKG	BIT(1)
-> +#define PERF_EV_CAP_COEXIST		BIT(2)
->  
->  #define SWEVENT_HLIST_BITS		8
->  #define SWEVENT_HLIST_SIZE		(1 << SWEVENT_HLIST_BITS)
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 7c436d705fbd..e35d549a356d 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2133,10 +2133,28 @@ static inline struct list_head *get_event_list(struct perf_event *event)
->  	return event->attr.pinned ? &ctx->pinned_active : &ctx->flexible_active;
->  }
->  
-> +/*
-> + * If the event has PERF_EV_CAP_COEXIST capability,
-> + * schedule it out and move it into the ERROR state.
-> + */
-> +static inline void perf_remove_coexist_events(struct perf_event *event)
-> +{
-> +	struct perf_event_context *ctx = event->ctx;
-> +	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
-> +
-> +	if (!(event->event_caps & PERF_EV_CAP_COEXIST))
-> +		return;
-> +
-> +	event_sched_out(event, cpuctx, ctx);
-> +	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
-> +}
+By default, if a device is in the denylist, the probe of vfio-pci fails.
+If a user wants to use a device in the denylist, he needs to disable the
+full denylist providing the option disable_denylist=1 at the load of
+vfio-pci or specifying that parameter in a config file in /etc/modprobe.d.
 
-Ah, so the problem here is that ERROR is actually recoverable using
-IOC_ENABLE. We don't want that either. Let me try and figure out of EXIT
-would work.
+This series also moves the device ids definitions present in the qat driver
+to linux/pci_ids.h since they will be shared between the vfio-pci and the qat
+drivers and replaces the custom ADF_SYSTEM_DEVICE macro with PCI_VDEVICE.
+
+The series is applicable to Herbert's tree. Patches 1 to 3 apply also to
+Alex's tree (next). Patches 4 and 5 are optional and can be applied at a later
+stage.
+
+Changes from v4:
+ - Patch #2: added Reviewed-by tag from Cornelia Huck
+ - Patch #5: added Suggested-by tag as this change was suggested internally
+   by Andy Shevchenko
+ - Patches 1-5: added Reviewed-by tag from Fiona Trahe
+
+Changes from v3:
+ - Patch #1: included Acked-by tag, after ack from Bjorn Helgaas
+ - Patch #2: s/prevents/allows/ in module parameter description
+
+Changes from v2:
+ - Renamed blocklist in denylist
+ - Patch #2: reworded module parameter description to clarify why a device is
+   in the denylist
+ - Patch #2: reworded warning that occurs when denylist is enabled and device
+   is present in that list
+
+Changes from v1:
+ - Reworked commit messages:
+   Patches #1, #2 and #3: capitalized first character after column to comply to
+   subject line convention
+   Patch #3: Capitalized QAT acronym and added link and doc number for document
+   "Intel® QuickAssist Technology (Intel® QAT) Software for Linux"
+
+
+Giovanni Cabiddu (5):
+  PCI: Add Intel QuickAssist device IDs
+  vfio/pci: Add device denylist
+  vfio/pci: Add QAT devices to denylist
+  crypto: qat - replace device ids defines
+  crypto: qat - use PCI_VDEVICE
+
+ drivers/crypto/qat/qat_c3xxx/adf_drv.c        | 11 ++---
+ drivers/crypto/qat/qat_c3xxxvf/adf_drv.c      | 11 ++---
+ drivers/crypto/qat/qat_c62x/adf_drv.c         | 11 ++---
+ drivers/crypto/qat/qat_c62xvf/adf_drv.c       | 11 ++---
+ .../crypto/qat/qat_common/adf_accel_devices.h |  6 ---
+ drivers/crypto/qat/qat_common/qat_hal.c       |  7 +--
+ drivers/crypto/qat/qat_common/qat_uclo.c      |  9 ++--
+ drivers/crypto/qat/qat_dh895xcc/adf_drv.c     | 11 ++---
+ drivers/crypto/qat/qat_dh895xccvf/adf_drv.c   | 11 ++---
+ drivers/vfio/pci/vfio_pci.c                   | 48 +++++++++++++++++++
+ include/linux/pci_ids.h                       |  6 +++
+ 11 files changed, 87 insertions(+), 55 deletions(-)
+
+-- 
+2.26.2
+
