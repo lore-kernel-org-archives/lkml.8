@@ -2,152 +2,158 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22968C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A446EC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB3A2206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7869B206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:15:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sEAtKdMU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CE5BNpSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgGXWGI (ORCPT
+        id S1726753AbgGXWPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 18:06:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
+        Fri, 24 Jul 2020 18:15:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgGXWGI (ORCPT
+        with ESMTP id S1726552AbgGXWPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 18:06:08 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA5EC0619D3;
-        Fri, 24 Jul 2020 15:06:08 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id 12so9290190oir.4;
-        Fri, 24 Jul 2020 15:06:08 -0700 (PDT)
+        Fri, 24 Jul 2020 18:15:36 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21ABDC0619D3;
+        Fri, 24 Jul 2020 15:15:36 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id y3so9555679wrl.4;
+        Fri, 24 Jul 2020 15:15:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gKGaZYbAQma5BZaaiiuz/q6Gx4ZB9iVd+JzL1laX8mM=;
-        b=sEAtKdMUwCMH492Zr8KyBJo4FC3G6NThqJNVuq7jSP0yA1L6Z9fsE6toZcF3fLeG0E
-         K/6ilzx3MNpT82/1+8CNDfUFsUh7nBLylWK85eVqrOV3wrmGGFlv3tjsCL5R7CEQ5WkW
-         zQG0wALZRwXWwnE/AxWlS7o7EQj/jsJsE7h7I9sspuEBQpqhtERMaXU5H0tf4qIzxt0Y
-         btImVEvvaaGUYGEFQmVgO+6CDMpjG4176j/exB3I+FN0uwFfbVkMW9O59ig2HrHpcjnV
-         CXeIywFpC+P7vJSjRl7FdxaujfUrtm05ax1EoLF00fTZsJr+vcr8B1tRZAauCyGWWrAi
-         xxaw==
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/BL7Yf3SnQJIuGF0q8569+vuKMLzOdJ+rG+5qnHgOgU=;
+        b=CE5BNpSOQqy6VqGkaw2fZp/fIrovbAYuYULSczlA/R3h6XyeJKTPaFn5HojZi3RxVa
+         AfY2ybzsfQ28k4MXExaMpzqmxEnONjGNm19qWq1j8Pz42yjmy2T42ME4IjCBCEToeovE
+         W2mbXrUr5F/cFpyPjXtphNv60SkE0+IVnq4KTGw527dcxjne90EhD1cyPSuKFA/hujkP
+         5LAge8F+1YkjSPSqgSCq3/jzXvJ0MzQRkJ7QXAqSjRv4qzIuyLPsqoZyKkJKHJgdrSJ6
+         C9H5En5fn4A7Nu9BbRrWamDEGUjtYPSrHliRBDbnUVW9rlKJdQewJhJ4AbQsRv65t4zh
+         u9JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gKGaZYbAQma5BZaaiiuz/q6Gx4ZB9iVd+JzL1laX8mM=;
-        b=jGbtz3GF4+bnI1dc1gTUTmACbqfhzfwsf2OSQfEjJQinMpC/dMnDr1RCStRbbrFGRX
-         oXutEq8qxT9AEfu36h24htASRLjV4IqSKjGidU+GCAYaJN7V+1s5RiIKfXVRirEcabl0
-         WM30j/bHCj0U/gvqzj43+/Mep8Mv4FGB1+PzTTzsvIRSqYSbMpFGM4N1zkKZhrmghx+z
-         zk5Du2yu3ueVu0pdhgVPyK3tEbydICuiG0piggEyVpBG4bi+YCBgiKUuRzcyExKixHcd
-         AyYuzlU2N89JUKmhU4IzRs4PTPTEftcqo+Txdo4eu2809pyJ18+OV33Ge1rXaGu5zQjw
-         quqQ==
-X-Gm-Message-State: AOAM531GMugT5q2m7FzBxn85Iyh/M9pMujpfOc4xD9TYW3KWzLvs0y/z
-        1PFzqTd+Wx0bsuElrSaK8AUzs8I3Dcr4MVR6vAs=
-X-Google-Smtp-Source: ABdhPJx+EPUvb808nu8ymhw9hZsJ+tGycBMMznqA6sRwyWtt7F2IBZHQHJOXc00tBvTycRRgjF9Gr5jiPUREwMXS+Zg=
-X-Received: by 2002:aca:b7d5:: with SMTP id h204mr9855591oif.62.1595628367460;
- Fri, 24 Jul 2020 15:06:07 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/BL7Yf3SnQJIuGF0q8569+vuKMLzOdJ+rG+5qnHgOgU=;
+        b=fJUJAeg+Ocp3Z5qZPy/qA95GXR4fEzCnNluPfcBBtg1Nhm2TZJSlreWHTVq31RnwAm
+         Dp/pFbkAC2ReX4fI5zM7clmb67swmdEYlhuOcO5fjEH8yy+MWE7cDKNlNZu+37a9geIT
+         okkdYICZCGilEQJsKI4wV1jWxRe7vOeu1m0+txQVvSwLVZJZHjEaObUVdOgdBbQHfw/E
+         EzcvTwcBNH7044FweqR0meh3EQ3r9YhGSH3nJlBOQ8s1FX/egwAJrA6wjwwGcjqzw48+
+         0WwcuRhr+ZGeZPhhxKAQL+mWfG6+E0FjtN/le+/Jw/ic1l0/C55n+DUF56wTNg3pQWSK
+         UjqQ==
+X-Gm-Message-State: AOAM531YbGU3gXCLVd6C8iG4Ax5H2zUzdlI5XH1hL1ttGbC6/bym9pHX
+        bpaHL8UiCOz4nI+0CJZccxV5lrtq
+X-Google-Smtp-Source: ABdhPJyKqTF7YKKixNOOMJiDKb42VlLjfn4wQRlnKzo5gtUke5Hn3Sh7VfHlY3e2BUgBvc4P0eiIFQ==
+X-Received: by 2002:adf:efd2:: with SMTP id i18mr9989664wrp.32.1595628934625;
+        Fri, 24 Jul 2020 15:15:34 -0700 (PDT)
+Received: from [10.67.50.75] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id u1sm3095040wrb.78.2020.07.24.15.15.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 15:15:33 -0700 (PDT)
+Subject: Re: [PATCH v4 0/9] bmips: add BCM63xx power domain controller
+To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
+        hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
+        robh+dt@kernel.org, f.fainelli@gmail.com, jonas.gorski@gmail.com,
+        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200610171630.465579-1-noltari@gmail.com>
+ <20200613082140.2009461-1-noltari@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
+ 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSDOwU0EVxvH8AEQAOqv6agYuT4x3DgFIJNv9i0e
+ S443rCudGwmg+CbjXGA4RUe1bNdPHYgbbIaN8PFkXfb4jqg64SyU66FXJJJO+DmPK/t7dRNA
+ 3eMB1h0GbAHlLzsAzD0DKk1ARbjIusnc02aRQNsAUfceqH5fAMfs2hgXBa0ZUJ4bLly5zNbr
+ r0t/fqZsyI2rGQT9h1D5OYn4oF3KXpSpo+orJD93PEDeseho1EpmMfsVH7PxjVUlNVzmZ+tc
+ IDw24CDSXf0xxnaojoicQi7kzKpUrJodfhNXUnX2JAm/d0f9GR7zClpQMezJ2hYAX7BvBajb
+ Wbtzwi34s8lWGI121VjtQNt64mSqsK0iQAE6OYk0uuQbmMaxbBTT63+04rTPBO+gRAWZNDmQ
+ b2cTLjrOmdaiPGClSlKx1RhatzW7j1gnUbpfUl91Xzrp6/Rr9BgAZydBE/iu57KWsdMaqu84
+ JzO9UBGomh9eyBWBkrBt+Fe1qN78kM7JO6i3/QI56NA4SflV+N4PPgI8TjDVaxgrfUTV0gVa
+ cr9gDE5VgnSeSiOleChM1jOByZu0JTShOkT6AcSVW0kCz3fUrd4e5sS3J3uJezSvXjYDZ53k
+ +0GS/Hy//7PSvDbNVretLkDWL24Sgxu/v8i3JiYIxe+F5Br8QpkwNa1tm7FK4jOd95xvYADl
+ BUI1EZMCPI7zABEBAAHCwagEGBECAAkFAlcbx/ACGwICKQkQYVeZFbVjdg7BXSAEGQECAAYF
+ Alcbx/AACgkQh9CWnEQHBwSJBw//Z5n6IO19mVzMy/ZLU/vu8flv0Aa0kwk5qvDyvuvfiDTd
+ WQzq2PLs+obX0y1ffntluhvP+8yLzg7h5O6/skOfOV26ZYD9FeV3PIgR3QYF26p2Ocwa3B/k
+ P6ENkk2pRL2hh6jaA1Bsi0P34iqC2UzzLq+exctXPa07ioknTIJ09BT31lQ36Udg7NIKalnj
+ 5UbkRjqApZ+Rp0RAP9jFtq1n/gjvZGyEfuuo/G+EVCaiCt3Vp/cWxDYf2qsX6JxkwmUNswuL
+ C3duQ0AOMNYrT6Pn+Vf0kMboZ5UJEzgnSe2/5m8v6TUc9ZbC5I517niyC4+4DY8E2m2V2LS9
+ es9uKpA0yNcd4PfEf8bp29/30MEfBWOf80b1yaubrP5y7yLzplcGRZMF3PgBfi0iGo6kM/V2
+ 13iD/wQ45QTV0WTXaHVbklOdRDXDHIpT69hFJ6hAKnnM7AhqZ70Qi31UHkma9i/TeLLzYYXz
+ zhLHGIYaR04dFT8sSKTwTSqvm8rmDzMpN54/NeDSoSJitDuIE8givW/oGQFb0HGAF70qLgp0
+ 2XiUazRyRU4E4LuhNHGsUxoHOc80B3l+u3jM6xqJht2ZyMZndbAG4LyVA2g9hq2JbpX8BlsF
+ skzW1kbzIoIVXT5EhelxYEGqLFsZFdDhCy8tjePOWK069lKuuFSssaZ3C4edHtkZ8gCfWWtA
+ 8dMsqeOIg9Trx7ZBCDOZGNAAnjYQmSb2eYOAti3PX3Ex7vI8ZhJCzsNNBEjPuBIQEAC/6NPW
+ 6EfQ91ZNU7e/oKWK91kOoYGFTjfdOatp3RKANidHUMSTUcN7J2mxww80AQHKjr3Yu2InXwVX
+ SotMMR4UrkQX7jqabqXV5G+88bj0Lkr3gi6qmVkUPgnNkIBe0gaoM523ujYKLreal2OQ3GoJ
+ PS6hTRoSUM1BhwLCLIWqdX9AdT6FMlDXhCJ1ffA/F3f3nTN5oTvZ0aVF0SvQb7eIhGVFxrlb
+ WS0+dpyulr9hGdU4kzoqmZX9T/r8WCwcfXipmmz3Zt8o2pYWPMq9Utby9IEgPwultaP06MHY
+ nhda1jfzGB5ZKco/XEaXNvNYADtAD91dRtNGMwRHWMotIGiWwhEJ6vFc9bw1xcR88oYBs+7p
+ gbFSpmMGYAPA66wdDKGj9+cLhkd0SXGht9AJyaRA5AWB85yNmqcXXLkzzh2chIpSEawRsw8B
+ rQIZXc5QaAcBN2dzGN9UzqQArtWaTTjMrGesYhN+aVpMHNCmJuISQORhX5lkjeg54oplt6Zn
+ QyIsOCH3MfG95ha0TgWwyFtdxOdY/UY2zv5wGivZ3WeS0TtQf/BcGre2y85rAohFziWOzTaS
+ BKZKDaBFHwnGcJi61Pnjkz82hena8OmsnsBIucsz4N0wE+hVd6AbDYN8ZcFNIDyt7+oGD1+c
+ PfqLz2df6qjXzq27BBUboklbGUObNwADBQ//V45Z51Q4fRl/6/+oY5q+FPbRLDPlUF2lV6mb
+ hymkpqIzi1Aj/2FUKOyImGjbLAkuBQj3uMqy+BSSXyQLG3sg8pDDe8AJwXDpG2fQTyTzQm6l
+ OnaMCzosvALk2EOPJryMkOCI52+hk67cSFA0HjgTbkAv4Mssd52y/5VZR28a+LW+mJIZDurI
+ Y14UIe50G99xYxjuD1lNdTa/Yv6qFfEAqNdjEBKNuOEUQOlTLndOsvxOOPa1mRUk8Bqm9BUt
+ LHk3GDb8bfDwdos1/h2QPEi+eI+O/bm8YX7qE7uZ13bRWBY+S4+cd+Cyj8ezKYAJo9B+0g4a
+ RVhdhc3AtW44lvZo1h2iml9twMLfewKkGV3oG35CcF9mOd7n6vDad3teeNpYd/5qYhkopQrG
+ k2oRBqxyvpSLrJepsyaIpfrt5NNaH7yTCtGXcxlGf2jzGdei6H4xQPjDcVq2Ra5GJohnb/ix
+ uOc0pWciL80ohtpSspLlWoPiIowiKJu/D/Y0bQdatUOZcGadkywCZc/dg5hcAYNYchc8AwA4
+ 2dp6w8SlIsm1yIGafWlNnfvqbRBglSTnxFuKqVggiz2zk+1wa/oP+B96lm7N4/3Aw6uy7lWC
+ HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
+ TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <26f1b70f-073d-130e-2a91-35d6dff1fe20@gmail.com>
+Date:   Fri, 24 Jul 2020 15:15:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200723170453.432-1-novikov@ispras.ru> <CA+V-a8uNfscxiM1fMjfdvZstZkkzxW41p40jpBXT3NeyiS9-Qw@mail.gmail.com>
- <20927111595619342@mail.yandex.ru>
-In-Reply-To: <20927111595619342@mail.yandex.ru>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 24 Jul 2020 23:05:40 +0100
-Message-ID: <CA+V-a8tUmMnb8x=GPXJ8QGLJg5qGP+DP+F9EbUrDfUbrxWnkag@mail.gmail.com>
-Subject: Re: [PATCH] media: davinci: vpif_capture: fix potential double free
-To:     Evgeny Novikov <novikov@ispras.ru>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "ldv-project@linuxtesting.org" <ldv-project@linuxtesting.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200613082140.2009461-1-noltari@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Evgeny,
+On 6/13/20 1:21 AM, Álvaro Fernández Rojas wrote:
+> BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
+> to enable/disable certain components in order to save power.
+> 
+> v4: Fix device tree bindings documentation.
+> v3: Introduce changes suggested by Florian:
+>   - Use dt-bindings definitions in power domain driver.
+>   - Separate dt-bindings definitions from power domain .dtsi support.
+> v2: Introduce changes suggested by Florian:
+>   - Add separate YAML file for dt-bindings.
+>   - Add bcm63xx folder in drivers/soc/bcm.
+>   - Update MAINTAINERS.
+>   - Add dt-bindings header files.
+>   - Also add BCM63268 support.
 
-On Fri, Jul 24, 2020 at 9:00 PM Evgeny Novikov <novikov@ispras.ru> wrote:
->
-> Hi Lad,
->
-> Yet again I can not demonstrate you a nice error trace corresponding to t=
-he bug fixed by the patch. Indeed, there is a branch in vpif_probe() that e=
-xplicitly invokes vpif_probe_complete() and the patch targets the possible =
-issue that can happen during this.
->
-> When I developed the patch I saw on vpif_display.ko. It looks very simila=
-r regarding things touched by the patch. In particular, it does not free vp=
-if_obj.sd in its vpif_probe_complete(). But now I see that it does this in =
-vpif_remove()!
->
-Makes sense.
-
-> Do you think that vpif_capture.ko should do the same? If so, I guess that=
- I should fix the patch appropriately since likely it just replaces one (ve=
-ry rare) bug with another one (on a typical execution path).
->
-Yes it should.
-
-Cheers,
---Prabhakar
-
-> --
-> Evgeny Novikov
-> Linux Verification Center, ISP RAS
-> http://linuxtesting.org
->
->
->
-> 24.07.2020, 17:17, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>:
-> > Hi Evgeny,
-> >
-> > Thank you for the patch.
-> >
-> > On Thu, Jul 23, 2020 at 6:04 PM Evgeny Novikov <novikov@ispras.ru> wrot=
-e:
-> >>  In case of errors vpif_probe_complete() releases memory for vpif_obj.=
-sd
-> >>  and unregisters the V4L2 device. But then this is done again by
-> >>  vpif_probe() itself. The patch removes the cleaning from
-> >>  vpif_probe_complete().
-> >>
-> >>  Found by Linux Driver Verification project (linuxtesting.org).
-> >>
-> >>  Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-> >>  ---
-> >>   drivers/media/platform/davinci/vpif_capture.c | 2 --
-> >>   1 file changed, 2 deletions(-)
-> >>
-> >>  diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/=
-media/platform/davinci/vpif_capture.c
-> >>  index d9ec439faefa..72a0e94e2e21 100644
-> >>  --- a/drivers/media/platform/davinci/vpif_capture.c
-> >>  +++ b/drivers/media/platform/davinci/vpif_capture.c
-> >>  @@ -1482,8 +1482,6 @@ static int vpif_probe_complete(void)
-> >>                  /* Unregister video device */
-> >>                  video_unregister_device(&ch->video_dev);
-> >>          }
-> >>  - kfree(vpif_obj.sd);
-> >>  - v4l2_device_unregister(&vpif_obj.v4l2_dev);
-> >
-> > vpif_probe_complete() is a async callback and probe() should have
-> > already completed by then.
-> >
-> > Cheers,
-> > --Prabhakar
-> >
-> >>          return err;
-> >>   }
-> >>  --
-> >>  2.16.4
+Series applied to drivers/next after capitalizing MIPS and BMIPS to
+follow prior contributions to these files, thanks!
+-- 
+Florian
