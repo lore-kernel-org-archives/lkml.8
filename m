@@ -2,207 +2,361 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D48DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBECC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5832070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE152070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:49:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="N9gGRmQH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjKz3F3d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgGXRsT (ORCPT
+        id S1726811AbgGXRta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:48:19 -0400
-Received: from mail-mw2nam12on2108.outbound.protection.outlook.com ([40.107.244.108]:1581
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726731AbgGXRsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:48:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dmTxNTg1gJJ7l+t4eofli8MMXANgDgq7HgfmboVrK+Jg2uHZozY9IwIEL+vVPghopW26HpziXVUxbWxL/yealCg6pyi9exo+EO4O0ZVJjrEgpSqx6cyAheSh0QhQsEH6Nnk45AE8cj9XJ6kWsbs4C6MpjSAIdlTe6RaqXLC641Cp5rUxJQFUBtzQVzSl26XBrjlWFJQLKwMX4pRJV5AoYUAK7p3G3bcL465KG6oHIk0vHKkitTKULqIJS+qTdoB6aHqyd316DM9Fu/FuCo3Lod/QAI09Ad74mq3DW5c3oyRD4Qqn/VMr/ZGdOOutN6dPfFvNZKd+WowocPvA4SqxxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VXiSccFOo6otIu3zRZ2TJuYK1Nq/KQosYt56pQ1kCyk=;
- b=LpTkwl3A+4RZdZRAAfvtaSP9/3MYtRpJKTvvzZdSctmG74WYdulFh6Tm7GUyxJlrTl4GSl1pHyLgUHGtD7dEPVdoJOTnKhqxnIrHWuHPI4EVRAXMYgiLyjxGw/PG9t3Pny+eZAlpKVwRTkoPWGmTaq/0wgIpv+M6tXCOeg0ckHj53dvZXCnphJCCyGfreZjSdu4yyUrvb6ZRDFxb7WzhLBP8wt9UulpPtkm6XvgrJuyAjePVZ71LjpeKtDo63oFAovxsuFpj1y4tqHbtxQTQ27RPpRoCqdYD0uEH2E3MyXD4A8+/DVNHQ2BGmiMoWoGg74fUpW+iHy+Jfm33vtcSHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VXiSccFOo6otIu3zRZ2TJuYK1Nq/KQosYt56pQ1kCyk=;
- b=N9gGRmQH4VK3CYtS5sIqgzuGR0lPuh6oYjtLrNQEpXZwT2loTaSAuR8R+NwZb9Bikf93bawVX9dOVYl4KZ5oDHxiHnn48XWRQcec1qa6fqPRmdfZ7lzhYuFB/q9wZ12k+Vyq7asY3LZzBBBhkFJSYBqJiF0kXsjmn5fAlOvBSV4=
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- (2603:10b6:207:30::18) by MN2PR21MB1486.namprd21.prod.outlook.com
- (2603:10b6:208:1f7::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9; Fri, 24 Jul
- 2020 17:48:13 +0000
-Received: from BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::f5a4:d43f:75c1:1b33]) by BL0PR2101MB0930.namprd21.prod.outlook.com
- ([fe80::f5a4:d43f:75c1:1b33%5]) with mapi id 15.20.3239.011; Fri, 24 Jul 2020
- 17:48:13 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>,
-        Andres Beltran <lkmlabelt@gmail.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
-        Saruhan Karademir <skarade@microsoft.com>
-Subject: RE: [PATCH] Drivers: hv: vmbus: Fix variable assignments in
- hv_ringbuffer_read()
-Thread-Topic: [PATCH] Drivers: hv: vmbus: Fix variable assignments in
- hv_ringbuffer_read()
-Thread-Index: AQHWYdnygalh4GYqZ06NpC1cNLe6jqkW9wqAgAAH5rA=
-Date:   Fri, 24 Jul 2020 17:48:13 +0000
-Message-ID: <BL0PR2101MB09303D51B6CC0DA2CE0A6782CA770@BL0PR2101MB0930.namprd21.prod.outlook.com>
-References: <20200724164606.43699-1-lkmlabelt@gmail.com>
- <20200724101047.34de7e49@hermes.lan>
-In-Reply-To: <20200724101047.34de7e49@hermes.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-07-24T17:48:12Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=25e3d78f-1e70-41de-b9bb-e257e2f97208;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: networkplumber.org; dkim=none (message not signed)
- header.d=none;networkplumber.org; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [75.100.88.238]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7e60ec97-9b4e-4416-cd9c-08d82ff9bcd7
-x-ms-traffictypediagnostic: MN2PR21MB1486:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR21MB148684B21B1595004A88F365CA770@MN2PR21MB1486.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5n8b0Ah+sOTnsebNAxn7XrjMLlelF0Y6MKWvzjAORutusrKK5WMitR4rPIRXsTNCnp9ltTVn1b09tx8wEOZdE2uLZd6zwFkMlIbm7jJ+P/vnFZTiFIJHRMXll0oTrEu3I/baJf8xjJ/rkXLGGJCyURvUUy46RDb+afNJX93ULoW0snY/I6AMnfH06UZdQPw4ySDy2BBXK5YlM3Hoyg8ZwHN0+uqil/L6W8FdZQ0TFzFFn0M2B5kgcPRnKtbzXpV5aNjiep3/2b7I2L7KrT1wusTMPW/RE/6Oyb4GFI+JCKvFA8TUh7CaTOJ71IU7DgtTVIVeSu+pXnosHfxU1USKgQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB0930.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(39860400002)(346002)(366004)(136003)(83380400001)(82960400001)(54906003)(5660300002)(6506007)(110136005)(76116006)(71200400001)(26005)(4326008)(86362001)(7696005)(316002)(2906002)(82950400001)(186003)(66476007)(66446008)(66946007)(64756008)(66556008)(53546011)(8936002)(8990500004)(52536014)(478600001)(107886003)(33656002)(9686003)(55016002)(8676002)(10290500003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: qpxETa/Fx00jxpp2usN8XJfnV0aa6rme1Ud2Y6E8OQG6aOb/UjPmTCBfsEKUWCFsefJsF20IGr/FyK+0WzeFu9abRAlHLEUvi5NtU0hYraKU7wODS8Nf5lbKIxHwLY1Vd8Ht2jmM2SU84C0XLDq/HfkDhA7lLQpTH5nxE4Pb5KVwtaVfLohYAs/MsX8aVJ9wvEinhTrLPl8y+wGo8jFER12kWD4cP2g9faZqO5f0Mr1BZZ13Y1Rkhe6unHhwAjKEuo0cz0m2ZL5+Gn/6m21z3NbV7u0EcqpRasXiH/5SsyALDiZohs+wOb8udYZd0ovm1rUQUC2VXVLvx7qB+6PgJrXdxOlN7ix5Et7Ams5oTw9k5dvTRIgGaxDIfc6YObs8zoZfgdUDWVAqDaeG+rR/QgFyFjhYsyN1hlloIdey2l2sxjd96GadQHWBN5qF3OQXcui4dsK/WwB+n82b9HiRoeLVqpHpmhhmF0NCeDTLUuLTDo7gETQTcCqBllcyvwTULrpDYuxoeDsoLKZ6/v4B9rou6d5EZCFhtvhwPhOZrxmOieT25H8wosbao42w0fd/iBj1sU6aZ3CqVTFQcUDZb0W6J9Q3PG50/eggaodbeMOV7u7Gy69frTg8gGmYz/AKgsM4OAcR3SQOFDf4+Sdb/w==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 24 Jul 2020 13:49:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbgGXRt3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:49:29 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6133EC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:49:29 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id j18so8647898wmi.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=9Q5AzBbtuYu7ME5NxD8MhcqjW9DxmclgN3iVwn5YFfo=;
+        b=hjKz3F3dd4z8+Q85RKA9fwX6SO36sYWfU7iTao8VlJ26+9A8FbW+uz1pozmp8mawak
+         TemATNpzfCAxcI4unAvkoB9GEAtr4nShxYLRO8IQc/niNQhGFL/boiB/4g3LhrkgyiVg
+         pTVh3iFCcLspFDNPUrLQ9EZ9Cnrsa+ss5icT92Yd8uaTKaZFyS8PPAF+WRUNtBfX5QuD
+         PDCJd5BG8duJ4jL92mIyp2lwejGsAlK4ausKHE8Xbh8lN1v5TDaVpsDuY4hBmHQ00TQK
+         iQ9v3MS/uhLP35vssHCDhze22RXReORbCvGzftg8JVzIRYSjzjdtmPaMU/OgroiIHDEf
+         DwSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=9Q5AzBbtuYu7ME5NxD8MhcqjW9DxmclgN3iVwn5YFfo=;
+        b=bKxD4HlpOG+S2+a7V9KnLG0/gVkapC6KXK5ztZDYrKZq/6l80dLf9zwwI5U/rkEG3o
+         BPPDA8Yy6DaVOr50O3hR1sdR3M7or9i/zxGCz0BuUQe0+Tmr0JYcXKzRcMCsxdqgDUKd
+         e230v0wJ6dOpVZ+imQ233ocBD+rYnQnLaKSkYflktQzpFPga0PGUddqw9tpt6uPjacah
+         l/yB367GV0b9HVxduHiK57ARGSjbNjsVewmBidBI/1KLdAWHt/cme8e8MFpyL6cyUCj/
+         oT40Bt3YQVrQI7LfvP85pkSRJ3m0ScpHUXv45lM/JKgCi81R2cgUAl/K0xbRgkwpU1ns
+         Dk4A==
+X-Gm-Message-State: AOAM531wdXbSQ9CTX5er9vS0bT8a25yS38guYNgjE+83lANILSVFxeQ1
+        Gx0WPnELMYOT1cNxV/AeCtfiTmQy
+X-Google-Smtp-Source: ABdhPJwHsrtd3HLcVsXWuVJX5zaUHYmZ7SFxwT3aHoTmFlJBEqATuGEjwdLPMKgqKR4YNuKJ0uWwuA==
+X-Received: by 2002:a1c:a78a:: with SMTP id q132mr6254721wme.27.1595612967958;
+        Fri, 24 Jul 2020 10:49:27 -0700 (PDT)
+Received: from ogabbay-VM ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id 31sm2112897wrp.87.2020.07.24.10.49.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 Jul 2020 10:49:26 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 20:49:24 +0300
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [git pull] habanalabs pull request for kernel 5.9-rc1 (resend again)
+Message-ID: <20200724174924.GA20186@ogabbay-VM>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB0930.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e60ec97-9b4e-4416-cd9c-08d82ff9bcd7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jul 2020 17:48:13.3207
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9TambnX2Z1zQ9rC4emlLmANbowfvn5MzULI2mIBd1Xp0XAi6RONfusujyC/wXKAS8b/gcQurM35zGbImyKlUWA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1486
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Greg,
 
+(Re-sending again this pull request)
 
-> -----Original Message-----
-> From: Stephen Hemminger <stephen@networkplumber.org>
-> Sent: Friday, July 24, 2020 1:11 PM
-> To: Andres Beltran <lkmlabelt@gmail.com>
-> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> wei.liu@kernel.org; linux-hyperv@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Michael Kelley <mikelley@microsoft.com>;
-> parri.andrea@gmail.com; Saruhan Karademir <skarade@microsoft.com>
-> Subject: Re: [PATCH] Drivers: hv: vmbus: Fix variable assignments in
-> hv_ringbuffer_read()
->=20
-> On Fri, 24 Jul 2020 09:46:06 -0700
-> "Andres Beltran" <lkmlabelt@gmail.com> wrote:
->=20
-> > Assignments to buffer_actual_len and requestid happen before packetlen
-> > is checked to be within buflen. If this condition is true,
-> > hv_ringbuffer_read() returns with these variables already set to some
-> > value even though no data is actually read. This might create
-> > inconsistencies in any routine calling hv_ringbuffer_read(). Assign val=
-ues
-> > to such pointers after the packetlen check.
-> >
-> > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> > ---
-> >  drivers/hv/ring_buffer.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-> > index 356e22159e83..e277ce7372a4 100644
-> > --- a/drivers/hv/ring_buffer.c
-> > +++ b/drivers/hv/ring_buffer.c
-> > @@ -350,12 +350,13 @@ int hv_ringbuffer_read(struct vmbus_channel
-> > *channel,
-> >
-> >  	offset =3D raw ? 0 : (desc->offset8 << 3);
-> >  	packetlen =3D (desc->len8 << 3) - offset;
-> > -	*buffer_actual_len =3D packetlen;
-> > -	*requestid =3D desc->trans_id;
-> >
-> >  	if (unlikely(packetlen > buflen))
-> >  		return -ENOBUFS;
-> >
-> > +	*buffer_actual_len =3D packetlen;
-> > +	*requestid =3D desc->trans_id;
-> > +
-> >  	/* since ring is double mapped, only one copy is necessary */
-> >  	memcpy(buffer, (const char *)desc + offset, packetlen);
-> >
->=20
-> What is the rationale for this change, it may break other code.
->=20
-> A common API model in Windows world where this originated
-> is to have a call where caller first
-> makes request and then if the requested buffer is not big enough the
-> caller look at the actual length and allocate a bigger buffer.
->=20
-> Did you audit all the users of this API to make sure they aren't doing th=
-at.
-
-I took a quick look. I saw a case which treats the ringbuffer_read as=20
-successful if the buffer_actual_len > 0. So if hv_ringbuffer_read() should=
-=20
-not be fixed this way, then all callers like balloon_onchannelcallback()=20
-need a fix.
-
-1476 static void balloon_onchannelcallback(void *context)
-1477 {
-1478         struct hv_device *dev =3D context;
-1479         u32 recvlen;
-1480         u64 requestid;
-1481         struct dm_message *dm_msg;
-1482         struct dm_header *dm_hdr;
-1483         struct hv_dynmem_device *dm =3D hv_get_drvdata(dev);
-1484         struct dm_balloon *bal_msg;
-1485         struct dm_hot_add *ha_msg;
-1486         union dm_mem_page_range *ha_pg_range;
-1487         union dm_mem_page_range *ha_region;
-1488
-1489         memset(recv_buffer, 0, sizeof(recv_buffer));
-1490         vmbus_recvpacket(dev->channel, recv_buffer,
-1491                          HV_HYP_PAGE_SIZE, &recvlen, &requestid);
-1492
-1493         if (recvlen > 0) {
-1494                 dm_msg =3D (struct dm_message *)recv_buffer;
-1495                 dm_hdr =3D &dm_msg->hdr;
+This is habanalabs pull request for the merge window of kernel 5.9. It
+contains many small improvements to common and GAUDI code. Details are in
+the tag.
 
 Thanks,
-- Haiyang
+Oded
 
+The following changes since commit 92ca3dd4867bafbfd026b06d53737d61ded1bd27:
+
+  mei: hw: don't use one element arrays (2020-07-23 19:33:09 +0200)
+
+are available in the Git repository at:
+
+  git://people.freedesktop.org/~gabbayo/linux misc-habanalabs-next-2020-07-24
+
+for you to fetch changes up to 94f8be9eb065412cf069efd45053d33e8911fa9e:
+
+  habanalabs: Fix memory leak in error flow of context initialization (2020-07-24 20:40:06 +0300)
+
+----------------------------------------------------------------
+This tag contains the following changes for kernel 5.9-rc1:
+
+- Remove rate limiters from GAUDI configuration (no longer needed).
+- Set maximum amount of in-flight CS per ASIC type and increase
+  the maximum amount for GAUDI.
+- Refactor signal/wait command submissions code
+- Calculate trace frequency from PLLs to show accurate profiling data
+- Rephrase error messages to make them more clear to the common user
+- Add statistics of dropped CS (counter per possible reason for drop)
+- Get ECC information from firmware
+- Remove support for partial SoC reset in Gaudi
+- Halt device CPU only when reset is certain to happen. Sometimes we abort
+  the reset procedure and in that case we can't leave device CPU in halt
+  mode.
+- set each CQ to its own work queue to prevent a race between completions
+  on different CQs.
+- Use queue pi/ci in order to determine queue occupancy. This is done to
+  make the code reusable between current and future ASICs.
+- Add more validations for user inputs.
+- Refactor PCIe controller configuration to make the code reusable between
+  current and future ASICs.
+- Update firmware interface headers to latest version
+- Move all common code to a dedicated common sub-folder
+
+----------------------------------------------------------------
+Adam Aharon (1):
+      habanalabs: calculate trace frequency from PLL
+
+Christine Gharzuzi (1):
+      habanalabs: extract cpu boot status lookup
+
+Moti Haimovski (1):
+      habanalabs: check for DMA errors when clearing memory
+
+Oded Gabbay (10):
+      habanalabs: remove rate limiters from GAUDI
+      uapi/habanalabs: fix some comments
+      habanalabs: align armcp_packet structure to 8 bytes
+      habanalabs: rephrase error messages
+      habanalabs: Extract ECC information from FW
+      habanalabs: remove soft-reset support from GAUDI
+      habanalabs: halt device CPU only upon certain reset
+      habanalabs: create common folder
+      habanalabs: update hl_boot_if.h from firmware
+      habanalabs: enable device before hw_init()
+
+Ofir Bitton (11):
+      habanalabs: Use pending CS amount per ASIC
+      habanalabs: sync stream generic functionality
+      habanalabs: Use mask instead of shift in sync stream registers
+      habanalabs: Increase queues depth
+      habanalabs: Add dropped cs statistics info struct
+      habanalabs: PCIe iATU refactoring
+      habanalabs: configure maximum queues per asic
+      habanalabs: use queue pi/ci in order to determine queue occupancy
+      habanalabs: Assign each CQ with its own work queue
+      habanalabs: verify queue can contain all cs jobs
+      habanalabs: create internal CB pool
+
+Omer Shpigelman (2):
+      habanalabs: rephrase error message
+      habanalabs: remove unused hash
+
+Tomer Tayar (2):
+      habanalabs: use no flags on MMU cache invalidation
+      habanalabs: Fix memory leak in error flow of context initialization
+
+ drivers/misc/habanalabs/Makefile                   |  11 +-
+ drivers/misc/habanalabs/common/Makefile            |   9 +
+ drivers/misc/habanalabs/{ => common}/asid.c        |   0
+ .../misc/habanalabs/{ => common}/command_buffer.c  |  82 +-
+ .../habanalabs/{ => common}/command_submission.c   |  97 ++-
+ drivers/misc/habanalabs/{ => common}/context.c     |  39 +-
+ drivers/misc/habanalabs/{ => common}/debugfs.c     |   0
+ drivers/misc/habanalabs/{ => common}/device.c      |  88 +-
+ drivers/misc/habanalabs/{ => common}/firmware_if.c | 101 +--
+ drivers/misc/habanalabs/{ => common}/habanalabs.h  | 172 ++--
+ .../misc/habanalabs/{ => common}/habanalabs_drv.c  |   1 -
+ .../habanalabs/{ => common}/habanalabs_ioctl.c     |  24 +
+ drivers/misc/habanalabs/{ => common}/hw_queue.c    | 165 ++--
+ drivers/misc/habanalabs/{ => common}/hwmon.c       |   0
+ drivers/misc/habanalabs/{ => common}/irq.c         |  13 +-
+ drivers/misc/habanalabs/{ => common}/memory.c      |   3 +-
+ drivers/misc/habanalabs/{ => common}/mmu.c         |   1 -
+ drivers/misc/habanalabs/{ => common}/pci.c         | 136 ++--
+ drivers/misc/habanalabs/{ => common}/sysfs.c       |   3 +
+ drivers/misc/habanalabs/gaudi/Makefile             |   2 +-
+ drivers/misc/habanalabs/gaudi/gaudi.c              | 894 ++++++++-------------
+ drivers/misc/habanalabs/gaudi/gaudiP.h             |  16 +-
+ drivers/misc/habanalabs/gaudi/gaudi_coresight.c    |   6 +-
+ drivers/misc/habanalabs/goya/goya.c                | 172 ++--
+ drivers/misc/habanalabs/goya/goyaP.h               |  14 +-
+ drivers/misc/habanalabs/goya/goya_coresight.c      |   6 +-
+ .../habanalabs/include/{ => common}/armcp_if.h     |  14 +-
+ .../habanalabs/include/{ => common}/hl_boot_if.h   |  14 +
+ .../misc/habanalabs/include/{ => common}/qman_if.h |   0
+ .../habanalabs/include/gaudi/asic_reg/gaudi_regs.h |  21 +-
+ .../include/gaudi/asic_reg/psoc_cpu_pll_regs.h     | 114 +++
+ .../misc/habanalabs/include/gaudi/gaudi_masks.h    |   3 +
+ .../misc/habanalabs/include/gaudi/gaudi_packets.h  |   4 +-
+ include/uapi/misc/habanalabs.h                     |  27 +-
+ 34 files changed, 1260 insertions(+), 992 deletions(-)
+ create mode 100644 drivers/misc/habanalabs/common/Makefile
+ rename drivers/misc/habanalabs/{ => common}/asid.c (100%)
+ rename drivers/misc/habanalabs/{ => common}/command_buffer.c (85%)
+ rename drivers/misc/habanalabs/{ => common}/command_submission.c (92%)
+ rename drivers/misc/habanalabs/{ => common}/context.c (84%)
+ rename drivers/misc/habanalabs/{ => common}/debugfs.c (100%)
+ rename drivers/misc/habanalabs/{ => common}/device.c (94%)
+ rename drivers/misc/habanalabs/{ => common}/firmware_if.c (89%)
+ rename drivers/misc/habanalabs/{ => common}/habanalabs.h (94%)
+ rename drivers/misc/habanalabs/{ => common}/habanalabs_drv.c (99%)
+ rename drivers/misc/habanalabs/{ => common}/habanalabs_ioctl.c (95%)
+ rename drivers/misc/habanalabs/{ => common}/hw_queue.c (86%)
+ rename drivers/misc/habanalabs/{ => common}/hwmon.c (100%)
+ rename drivers/misc/habanalabs/{ => common}/irq.c (95%)
+ rename drivers/misc/habanalabs/{ => common}/memory.c (99%)
+ rename drivers/misc/habanalabs/{ => common}/mmu.c (99%)
+ rename drivers/misc/habanalabs/{ => common}/pci.c (73%)
+ rename drivers/misc/habanalabs/{ => common}/sysfs.c (99%)
+ rename drivers/misc/habanalabs/include/{ => common}/armcp_if.h (98%)
+ rename drivers/misc/habanalabs/include/{ => common}/hl_boot_if.h (84%)
+ rename drivers/misc/habanalabs/include/{ => common}/qman_if.h (100%)
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/psoc_cpu_pll_regs.h
+The following changes since commit 92ca3dd4867bafbfd026b06d53737d61ded1bd27:
+
+  mei: hw: don't use one element arrays (2020-07-23 19:33:09 +0200)
+
+are available in the Git repository at:
+
+  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2020-07-24
+
+for you to fetch changes up to 94f8be9eb065412cf069efd45053d33e8911fa9e:
+
+  habanalabs: Fix memory leak in error flow of context initialization (2020-07-24 20:40:06 +0300)
+
+----------------------------------------------------------------
+This tag contains the following changes for kernel 5.9-rc1:
+
+- Remove rate limiters from GAUDI configuration (no longer needed).
+- Set maximum amount of in-flight CS per ASIC type and increase
+  the maximum amount for GAUDI.
+- Refactor signal/wait command submissions code
+- Calculate trace frequency from PLLs to show accurate profiling data
+- Rephrase error messages to make them more clear to the common user
+- Add statistics of dropped CS (counter per possible reason for drop)
+- Get ECC information from firmware
+- Remove support for partial SoC reset in Gaudi
+- Halt device CPU only when reset is certain to happen. Sometimes we abort
+  the reset procedure and in that case we can't leave device CPU in halt
+  mode.
+- set each CQ to its own work queue to prevent a race between completions
+  on different CQs.
+- Use queue pi/ci in order to determine queue occupancy. This is done to
+  make the code reusable between current and future ASICs.
+- Add more validations for user inputs.
+- Refactor PCIe controller configuration to make the code reusable between
+  current and future ASICs.
+- Update firmware interface headers to latest version
+- Move all common code to a dedicated common sub-folder
+
+----------------------------------------------------------------
+Adam Aharon (1):
+      habanalabs: calculate trace frequency from PLL
+
+Christine Gharzuzi (1):
+      habanalabs: extract cpu boot status lookup
+
+Moti Haimovski (1):
+      habanalabs: check for DMA errors when clearing memory
+
+Oded Gabbay (10):
+      habanalabs: remove rate limiters from GAUDI
+      uapi/habanalabs: fix some comments
+      habanalabs: align armcp_packet structure to 8 bytes
+      habanalabs: rephrase error messages
+      habanalabs: Extract ECC information from FW
+      habanalabs: remove soft-reset support from GAUDI
+      habanalabs: halt device CPU only upon certain reset
+      habanalabs: create common folder
+      habanalabs: update hl_boot_if.h from firmware
+      habanalabs: enable device before hw_init()
+
+Ofir Bitton (11):
+      habanalabs: Use pending CS amount per ASIC
+      habanalabs: sync stream generic functionality
+      habanalabs: Use mask instead of shift in sync stream registers
+      habanalabs: Increase queues depth
+      habanalabs: Add dropped cs statistics info struct
+      habanalabs: PCIe iATU refactoring
+      habanalabs: configure maximum queues per asic
+      habanalabs: use queue pi/ci in order to determine queue occupancy
+      habanalabs: Assign each CQ with its own work queue
+      habanalabs: verify queue can contain all cs jobs
+      habanalabs: create internal CB pool
+
+Omer Shpigelman (2):
+      habanalabs: rephrase error message
+      habanalabs: remove unused hash
+
+Tomer Tayar (2):
+      habanalabs: use no flags on MMU cache invalidation
+      habanalabs: Fix memory leak in error flow of context initialization
+
+ drivers/misc/habanalabs/Makefile                   |  11 +-
+ drivers/misc/habanalabs/common/Makefile            |   9 +
+ drivers/misc/habanalabs/{ => common}/asid.c        |   0
+ .../misc/habanalabs/{ => common}/command_buffer.c  |  82 +-
+ .../habanalabs/{ => common}/command_submission.c   |  97 ++-
+ drivers/misc/habanalabs/{ => common}/context.c     |  39 +-
+ drivers/misc/habanalabs/{ => common}/debugfs.c     |   0
+ drivers/misc/habanalabs/{ => common}/device.c      |  88 +-
+ drivers/misc/habanalabs/{ => common}/firmware_if.c | 101 +--
+ drivers/misc/habanalabs/{ => common}/habanalabs.h  | 172 ++--
+ .../misc/habanalabs/{ => common}/habanalabs_drv.c  |   1 -
+ .../habanalabs/{ => common}/habanalabs_ioctl.c     |  24 +
+ drivers/misc/habanalabs/{ => common}/hw_queue.c    | 165 ++--
+ drivers/misc/habanalabs/{ => common}/hwmon.c       |   0
+ drivers/misc/habanalabs/{ => common}/irq.c         |  13 +-
+ drivers/misc/habanalabs/{ => common}/memory.c      |   3 +-
+ drivers/misc/habanalabs/{ => common}/mmu.c         |   1 -
+ drivers/misc/habanalabs/{ => common}/pci.c         | 136 ++--
+ drivers/misc/habanalabs/{ => common}/sysfs.c       |   3 +
+ drivers/misc/habanalabs/gaudi/Makefile             |   2 +-
+ drivers/misc/habanalabs/gaudi/gaudi.c              | 894 ++++++++-------------
+ drivers/misc/habanalabs/gaudi/gaudiP.h             |  16 +-
+ drivers/misc/habanalabs/gaudi/gaudi_coresight.c    |   6 +-
+ drivers/misc/habanalabs/goya/goya.c                | 172 ++--
+ drivers/misc/habanalabs/goya/goyaP.h               |  14 +-
+ drivers/misc/habanalabs/goya/goya_coresight.c      |   6 +-
+ .../habanalabs/include/{ => common}/armcp_if.h     |  14 +-
+ .../habanalabs/include/{ => common}/hl_boot_if.h   |  14 +
+ .../misc/habanalabs/include/{ => common}/qman_if.h |   0
+ .../habanalabs/include/gaudi/asic_reg/gaudi_regs.h |  21 +-
+ .../include/gaudi/asic_reg/psoc_cpu_pll_regs.h     | 114 +++
+ .../misc/habanalabs/include/gaudi/gaudi_masks.h    |   3 +
+ .../misc/habanalabs/include/gaudi/gaudi_packets.h  |   4 +-
+ include/uapi/misc/habanalabs.h                     |  27 +-
+ 34 files changed, 1260 insertions(+), 992 deletions(-)
+ create mode 100644 drivers/misc/habanalabs/common/Makefile
+ rename drivers/misc/habanalabs/{ => common}/asid.c (100%)
+ rename drivers/misc/habanalabs/{ => common}/command_buffer.c (85%)
+ rename drivers/misc/habanalabs/{ => common}/command_submission.c (92%)
+ rename drivers/misc/habanalabs/{ => common}/context.c (84%)
+ rename drivers/misc/habanalabs/{ => common}/debugfs.c (100%)
+ rename drivers/misc/habanalabs/{ => common}/device.c (94%)
+ rename drivers/misc/habanalabs/{ => common}/firmware_if.c (89%)
+ rename drivers/misc/habanalabs/{ => common}/habanalabs.h (94%)
+ rename drivers/misc/habanalabs/{ => common}/habanalabs_drv.c (99%)
+ rename drivers/misc/habanalabs/{ => common}/habanalabs_ioctl.c (95%)
+ rename drivers/misc/habanalabs/{ => common}/hw_queue.c (86%)
+ rename drivers/misc/habanalabs/{ => common}/hwmon.c (100%)
+ rename drivers/misc/habanalabs/{ => common}/irq.c (95%)
+ rename drivers/misc/habanalabs/{ => common}/memory.c (99%)
+ rename drivers/misc/habanalabs/{ => common}/mmu.c (99%)
+ rename drivers/misc/habanalabs/{ => common}/pci.c (73%)
+ rename drivers/misc/habanalabs/{ => common}/sysfs.c (99%)
+ rename drivers/misc/habanalabs/include/{ => common}/armcp_if.h (98%)
+ rename drivers/misc/habanalabs/include/{ => common}/hl_boot_if.h (84%)
+ rename drivers/misc/habanalabs/include/{ => common}/qman_if.h (100%)
+ create mode 100644 drivers/misc/habanalabs/include/gaudi/asic_reg/psoc_cpu_pll_regs.h
