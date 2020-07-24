@@ -2,120 +2,178 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,
+	DATE_IN_FUTURE_06_12,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77968C433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E4CC4347E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5404620767
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6192074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:38:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="Z0FKEEs+"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bzXYWz+U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgGXKiy (ORCPT
+        id S1728158AbgGXKiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:38:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgGXKix (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:38:53 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8710C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 03:38:52 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 3so894221wmi.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 03:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4tmCdaz8BOl0xduEDd+WbFqDaYK/wTJhp8v3Tb2E2TM=;
-        b=Z0FKEEs+iHhe7WnG9f17lbA3+BhvgYoS942m2eZ7tZ7G2zhYwOXxVT6Yw3tzIp6Fpo
-         OGbh0T4fLWbxwcmk2X3YaZAKi8lgU3EGYK9NPmKFa/dYrSJ2yjLvPwNZrB3z/t4fHvmM
-         pttHwHeT2UNIyQSpZub2SumaRqF2mEpSUuHOBwUmQyjMLlHsbhwtD6NBP+QRE6kYWrPA
-         jZVDjxdtEF6vIO9H1xaR9amVxpKammDMWdalvAFT+JvLmrBKBLe7s4CSDQAjDVKC6Si3
-         nqztHM5lGN4Sw4KQyXa5LxUFEt2nrpAqT2R/9WGEYtBdphpQwDoG6o6yjKAzGNJ/uiJW
-         /L1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4tmCdaz8BOl0xduEDd+WbFqDaYK/wTJhp8v3Tb2E2TM=;
-        b=EEqMJWrOeQXGw1Rt0qLdDkXfDcEZFmJaeaCfJ71zPsZtSy6s2feMRCe16bIzwHtWsw
-         oCSW7PwR/yuh7lmPldb7WbIaHua62e2EyleLNfT7Q/F05QV136X+YnEbvzlVhAe51TJT
-         IAlKeETTwQ/NP0pt370yqefRbDNnlSBTMbzQBTE7MDqA0jzCtHwwfO0IeQk83npkwh7Q
-         FinurXWRqil9AOZ441qdYV+aKLHGYf8LUry9GXO7foLM9hppBsT8o0fPJl/t9zdH3Y8Q
-         3e6AGKL5+a0dIMw4gDTpCNX9Z/Fxc/F765Zt4/yfFlZEUU9B7zBP6U1DkwkPJD+gusKr
-         d7/A==
-X-Gm-Message-State: AOAM5304FkY/BVo9dHpxCze08yLanbZkEUS7fpb4ekPgJ5s0Fx6QeW8P
-        3oTaUiEVfotINK9J0FOfFmKSAw==
-X-Google-Smtp-Source: ABdhPJydV86axSeppJXyJqRlp5jQnMsGUNm+DZeHqZFR79nB5xRdu6p2Ova3IV80TktFHkrJeORrig==
-X-Received: by 2002:a7b:c30e:: with SMTP id k14mr8261504wmj.69.1595587131456;
-        Fri, 24 Jul 2020 03:38:51 -0700 (PDT)
-Received: from lukakovacicapc.local ([2a00:ee2:4b0d:3001:fbc5:498b:ed6d:cfac])
-        by smtp.gmail.com with ESMTPSA id f186sm6526280wmf.29.2020.07.24.03.38.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 03:38:50 -0700 (PDT)
-From:   Luka Kovacic <luka.kovacic@sartura.hr>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
-        sebastian.hesselbarth@gmail.com,
-        Luka Kovacic <luka.kovacic@sartura.hr>
-Subject: [PATCH 0/4] Add support for a series of MikroTik CRS3xx switches
-Date:   Fri, 24 Jul 2020 12:38:36 +0200
-Message-Id: <20200724103840.18994-1-luka.kovacic@sartura.hr>
-X-Mailer: git-send-email 2.26.2
+        Fri, 24 Jul 2020 06:38:25 -0400
+Received: from mail-eopbgr80044.outbound.protection.outlook.com ([40.107.8.44]:26390
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728121AbgGXKiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 06:38:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JfQ0aN9hEDk1gCZDCbCrDisjP+Kdx5OTioxy8+4dTNhdl/U0RQ2a34XNY2Q7kLE07krg90fojP7ZsTwZ09QZgyWF83iWnxbESp8GOsq/id/1P2828V+z05TZ+nZSbc8f58vYvnn6Dq1K0Oox2Q8pAVSLenXEwokdyKRPddNGl6TQxs5ATwuZ5tsTaOeXf7PVqi51dK5V6zmuUmX87ra3RCn9WvlNJxFzOaBfbsu0TQm4mtZTcH6HQpWYo8V2GPjuFynhQNmehpIzwQ7sxBn+AHdogGJivjNucZWYPWlgQwFnfD9s41rmUOUcfoPBaGVVyusnSnchaGal1Q+I8hBWKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XBIPq6OiaZoFybaiM/oj4EKt1yY0a1UUP3wLjjdf/lk=;
+ b=LyV18mbLo6nRy1JoGc11IP0jD2q3vmmrwoNUmNQn3m4jNKl3KIz0b3f7KlnmjtqTWbAkTOUbuc2pImZL7mID+GmHysXnCF7Y9Spjt93pZ3Y4OpaoM3km6OqB+5he9kRJ3DcqBfltmqN4zdCZ0TKx6nb17XNVDmN0m3PfBt0t8QGTjzkGppUow3FuIEFwmKjfXCCa2vZg8+oEMHGhczFncQMI6XSMzFwM3z7CLl0Oi7FWa40YZ6NDUHXbDLNdJGW2NJQ01Z0eu92D9g/thJ1YO2C4zVtimJnqm/OehmqkomFvfQ9vO+XTfhEjbUCo2r+9W1tcHSIXkWr5SikPDUy1mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XBIPq6OiaZoFybaiM/oj4EKt1yY0a1UUP3wLjjdf/lk=;
+ b=bzXYWz+Uf9QGbt6x9VMqEhsz7/LYrTCpZ5IWYNpqYlRPL/kR+6t+QDi0M4fH7uMCPUen0KiliravpCKLDqN74v1mDyFBVfETzIzXEbldLEjwVbQpddwwz9Z31lKuUeGfMGR0SApBzZGIxg4MiRC8L+Hj2kLtF2pJE8CRquSbdrk=
+Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VI1PR0402MB3710.eurprd04.prod.outlook.com (2603:10a6:803:25::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Fri, 24 Jul
+ 2020 10:38:19 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3195.028; Fri, 24 Jul 2020
+ 10:38:19 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
+        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com,
+        frieder.schrempf@kontron.de
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
+Subject: [PATCH v11 12/12] dmaengine: imx-sdma: add uart rom script
+Date:   Sat, 25 Jul 2020 02:51:25 +0800
+Message-Id: <1595616685-9987-13-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595616685-9987-1-git-send-email-yibin.gong@nxp.com>
+References: <1595616685-9987-1-git-send-email-yibin.gong@nxp.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0046.apcprd02.prod.outlook.com
+ (2603:1096:3:18::34) To VE1PR04MB6638.eurprd04.prod.outlook.com
+ (2603:10a6:803:119::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR02CA0046.apcprd02.prod.outlook.com (2603:1096:3:18::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3216.20 via Frontend Transport; Fri, 24 Jul 2020 10:38:14 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.67]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: f8184ba9-3b6b-4e67-a54e-08d82fbdae5b
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3710:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB3710D37C68784447F9FF54E989770@VI1PR0402MB3710.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 40iTtDX0VfalWJkdiF/LCDsuh1HIUPosZBagUAMPnc5dAZMKT7mFOZ7ddTzuxRmalAmeLFX0qz2ZLBDupvLdFCh+TSYkiTKLOY1Q3HUT7OvOOeZzW/shKY4+TvspO9X0YM7is/8bAwbLABlp0UPE9TvUii5SKpSxfPcXXTA79KVqT4vJllNQ90We4BWsDMqZkPTqsC4U9z67NmID7PJsG/vx33WMSZPHnY2DWJShKEIM3RnVQ87pIPLfujIoBGwNLAPbkiCNWVGr7tqVb/69y3p2a6Mxn4vcL4vt9OJ3uTIXkV7wk7jELwlMQYv3gkNyOrZ3uoiNh5eKLqPZcPY/ioL1D/23bxQi7nmLniU3pPtPv+c9NdvjEd0baYMp/rdI77HqKSj42/LfAO979/tbV0TZRL3wUUNoewHMdkeNBG0JGsGHqYhBrGoLD6ujK0T9ux3HT7W2u+IpfbflSp9aDQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(346002)(39860400002)(366004)(136003)(16526019)(186003)(66476007)(2906002)(8936002)(83380400001)(66556008)(478600001)(5660300002)(7416002)(52116002)(6512007)(36756003)(316002)(2616005)(6486002)(8676002)(26005)(6666004)(86362001)(4326008)(66946007)(956004)(6506007)(966005)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 4mlP6SQzB9Y/Ds7L0Wwf0IsKxoXAZfEFflkkEojcbYjoOYpsGfIwLSo3w9VVg8cz8E/yUrVg2XWbJvzwNyP/aglcO5MHvBohRSMiK4DZgwv9SUgBjqpAEmGU5nSCuAXQNzqu5Fp06K0WhV7yOz5Cv6try42vqwIVAlLm1bgYK3vvs1eI/nf8G+UKUU2oVbnVxEHAmiCVqIOa92e3Y38Vt/EjRomL4n1HApBWq8tZOD4doMQUe29Nfejlob8nzvmTncE2SvKQZKpvGnjjt/bTmHsf86M5TdaXN9l5DjoOxWSf3zeTEacfDsaqOYDaXGWBRwS+8xwK+kWQa9Hi4ma2zyFcMQTMtMCb5yTlY4SK4P8BhR5t/I1bz4m06i7+f+VWPVYyDCMg1lmxY0UNpY/QxFf39rmFuQNhffuNMHnx+JS5An6sHrXqlkXGvTYj/aWRpjbjmNj+4B3JXe02eDiftDTBRYjoEnKi2eMZaBiI4gg=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8184ba9-3b6b-4e67-a54e-08d82fbdae5b
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 10:38:19.5320
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wKZtvEhK4VcFNbtYMiZyPmYaWiAMTatR2+5V6FwMYyCheahmsY6FQ4ZHF01Se1F1s7HPQr0bRohAeUHgOk4fMw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3710
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches add support for a series of MikroTik CRS3xx switches
-based on the Marvell Prestera 98DX3236 switch chip.
+For the compatibility of NXP internal legacy kernel before 4.19 which
+is based on uart ram script and upstreaming kernel based on uart rom
+script, add both uart ram/rom script in latest sdma firmware. By default
+uart rom script used.
+Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
+back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
 
-Namely, support is added for:
- -  MikroTik CRS305-1G-4S+ (including the Bit variant)
- -  MikroTik CRS326-24G-2S+ (including the Bit variant)
- -  MikroTik CRS328-4C-20S-4S+ (including the Bit variant)
+rom script:
+        uart_2_mcu_addr
+	uartsh_2_mcu_addr /* through spba bus */
+am script:
+	uart_2_mcu_ram_addr
+	uartsh_2_mcu_ram_addr /* through spba bus */
 
-The Bit board variant is added for each of the boards.
-These boards were modified to use a bigger Macronix flash.
+Please get latest sdma firmware from the below and put them into the path
+(/lib/firmware/imx/sdma/):
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+/tree/imx/sdma
 
-Currently only basic board support is added, but the support will
-be extended in a new patchset.
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/dma/imx-sdma.c                     | 4 ++--
+ include/linux/platform_data/dma-imx-sdma.h | 8 ++++++--
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-Luka Kovacic (4):
-  arm: mvebu: dts: Add CRS326-24G-2S board
-  arm: mvebu: dts: Add CRS305-1G-4S board
-  arm: mvebu: dts: Add CRS328-4C-20S-4S board
-  MAINTAINERS: Add an entry for MikroTik CRS3xx 98DX3236 boards
-
- MAINTAINERS                                   |  11 ++
- arch/arm/boot/dts/Makefile                    |   6 +
- .../boot/dts/armada-xp-crs305-1g-4s-bit.dts   |  43 ++++++++
- arch/arm/boot/dts/armada-xp-crs305-1g-4s.dts  |  17 +++
- arch/arm/boot/dts/armada-xp-crs305-1g-4s.dtsi | 104 ++++++++++++++++++
- .../boot/dts/armada-xp-crs326-24g-2s-bit.dts  |  43 ++++++++
- arch/arm/boot/dts/armada-xp-crs326-24g-2s.dts |  17 +++
- .../arm/boot/dts/armada-xp-crs326-24g-2s.dtsi | 104 ++++++++++++++++++
- .../dts/armada-xp-crs328-4c-20s-4s-bit.dts    |  43 ++++++++
- .../boot/dts/armada-xp-crs328-4c-20s-4s.dts   |  17 +++
- .../boot/dts/armada-xp-crs328-4c-20s-4s.dtsi  | 104 ++++++++++++++++++
- 11 files changed, 509 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-xp-crs305-1g-4s-bit.dts
- create mode 100644 arch/arm/boot/dts/armada-xp-crs305-1g-4s.dts
- create mode 100644 arch/arm/boot/dts/armada-xp-crs305-1g-4s.dtsi
- create mode 100644 arch/arm/boot/dts/armada-xp-crs326-24g-2s-bit.dts
- create mode 100644 arch/arm/boot/dts/armada-xp-crs326-24g-2s.dts
- create mode 100644 arch/arm/boot/dts/armada-xp-crs326-24g-2s.dtsi
- create mode 100644 arch/arm/boot/dts/armada-xp-crs328-4c-20s-4s-bit.dts
- create mode 100644 arch/arm/boot/dts/armada-xp-crs328-4c-20s-4s.dts
- create mode 100644 arch/arm/boot/dts/armada-xp-crs328-4c-20s-4s.dtsi
-
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 8735606..5900e32 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1729,8 +1729,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
+ 
+ #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
+ #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
+-#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
+-#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
++#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
++#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
+ 
+ static void sdma_add_scripts(struct sdma_engine *sdma,
+ 		const struct sdma_script_start_addrs *addr)
+diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
+index 30e676b..e12d2e8 100644
+--- a/include/linux/platform_data/dma-imx-sdma.h
++++ b/include/linux/platform_data/dma-imx-sdma.h
+@@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
+ 	s32 per_2_firi_addr;
+ 	s32 mcu_2_firi_addr;
+ 	s32 uart_2_per_addr;
+-	s32 uart_2_mcu_addr;
++	s32 uart_2_mcu_ram_addr;
+ 	s32 per_2_app_addr;
+ 	s32 mcu_2_app_addr;
+ 	s32 per_2_per_addr;
+ 	s32 uartsh_2_per_addr;
+-	s32 uartsh_2_mcu_addr;
++	s32 uartsh_2_mcu_ram_addr;
+ 	s32 per_2_shp_addr;
+ 	s32 mcu_2_shp_addr;
+ 	s32 ata_2_mcu_addr;
+@@ -52,6 +52,10 @@ struct sdma_script_start_addrs {
+ 	s32 zcanfd_2_mcu_addr;
+ 	s32 zqspi_2_mcu_addr;
+ 	s32 mcu_2_ecspi_addr;
++	s32 mcu_2_sai_addr;
++	s32 sai_2_mcu_addr;
++	s32 uart_2_mcu_addr;
++	s32 uartsh_2_mcu_addr;
+ 	/* End of v3 array */
+ 	s32 mcu_2_zqspi_addr;
+ 	/* End of v4 array */
 -- 
-2.26.2
+2.7.4
 
