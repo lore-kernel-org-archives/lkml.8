@@ -2,164 +2,120 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C885AC433FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900A4C43459
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A319F206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595611378;
-	bh=ZgiZc/zKa7rVTrSVHj1LISPAv7gOgwskYu/ike+UHGM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PW7tFsimsfOj8kAunSqxXPfwew2mACfMfd4eQ+LKRMLdoqEuh8E0Xz8dWZx5NewiF
-	 WOfNJC+HWRnEfxVoE321+JPtMxpFvqdEyxWl5qp+xOwGQICRRtuqNdkuDIUHcMBFL6
-	 1SvE/n10xmE0sIQzBO5rEUbfYS0esYaFFSuciqoA=
+	by mail.kernel.org (Postfix) with ESMTP id 75AF720737
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgGXRW5 (ORCPT
+        id S1727833AbgGXRXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:22:57 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:26946 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727775AbgGXRWw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:22:52 -0400
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 06OHMC1T015856;
-        Sat, 25 Jul 2020 02:22:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 06OHMC1T015856
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1595611333;
-        bh=fG2yn0pcLIIBdxT8aZxqMxQEYQaapN+gY06fxpmJOts=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=I85Xyy2Yx90AU6uhgw4j5t15yjd/yQw/7qA/07XjFLdpWhBjHpP/a4OWadwjPFWsc
-         8wKvWyxQf0qloU7cxw05aDEk/EVL3ic9hKqq/KQfhcYhJ8FLWmL99kh1cMvu+AyDyY
-         iVGUBwOncm09J/rdW6P+Yli6fNipjA6sTgjAUfGWBmm+N+sCV7Y5RBCMqUm84jygx7
-         jlqbQ7ZgWvnEi848Hqg96VSRIr3FDdMaThaT3z0voyda6bFrhy7LxvLpzW6IjRY8m0
-         uU5Ul5VzO0Unu9Fobqk5pPQO9p7uZ0QdePRPoJ32n4rfmFtNGSCEypigNW84UtMd/I
-         ub14RmVrSEhFQ==
-X-Nifty-SrcIP: [209.85.222.48]
-Received: by mail-ua1-f48.google.com with SMTP id r63so3179662uar.9;
-        Fri, 24 Jul 2020 10:22:13 -0700 (PDT)
-X-Gm-Message-State: AOAM533Y3GATB+PUOA3hMGY3b3+lYHhIGNBOC67N/+LY+9wa2Yh2sLmP
-        +4rgcXRLkD0phn0USFBl7gLECoxtLSZYlLbn0jM=
-X-Google-Smtp-Source: ABdhPJw26mXp9fv/rqe2SYqBL5Li25Za2DnnmpAUUUMiSv1JOH2MOK5Uv0dahEyeurACAAgkCjM3R/WMpuRIk+l9fyk=
-X-Received: by 2002:ab0:48:: with SMTP id 66mr9217639uai.40.1595611331833;
- Fri, 24 Jul 2020 10:22:11 -0700 (PDT)
+        Fri, 24 Jul 2020 13:23:02 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2758 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727091AbgGXRWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:22:45 -0400
+IronPort-SDR: eJJN1yZ/fL+cnOHDf9n8dPWgpCN+Qa0wPgn9tawGVfMgKk5Hx5wUsxIlpgFpxbyrT/EhAJl+bF
+ cMu6LOGqqRgg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="130823285"
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="130823285"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:22:44 -0700
+IronPort-SDR: bqpea7Atuo6iNBMQ51ETHMhlOUiEtRbg4SWdBK2OIdkGQ2d0h2IssVs/BK6bF7tlVimvKqljIc
+ 4GfeoA1wWI/A==
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="302730338"
+Received: from seokjaeb-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.24.239])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:22:43 -0700
+From:   Sean V Kelley <sean.v.kelley@intel.com>
+To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@kernel.org, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@intel.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: [RFC PATCH 8/9] PCI/PME: Add RCEC PME handling
+Date:   Fri, 24 Jul 2020 10:22:22 -0700
+Message-Id: <20200724172223.145608-9-sean.v.kelley@intel.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200724172223.145608-1-sean.v.kelley@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
 MIME-Version: 1.0
-References: <20200722053417.5915-1-jcmvbkbc@gmail.com> <20200722053417.5915-2-jcmvbkbc@gmail.com>
-In-Reply-To: <20200722053417.5915-2-jcmvbkbc@gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 25 Jul 2020 02:21:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS+mEEqY65AYpU8dxLDLj-NX-A44m86UbOP9g1KajTABA@mail.gmail.com>
-Message-ID: <CAK7LNAS+mEEqY65AYpU8dxLDLj-NX-A44m86UbOP9g1KajTABA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] xtensa: move vmlinux.bin[.gz] to boot subdirectory
-To:     Max Filippov <jcmvbkbc@gmail.com>
-Cc:     "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>, Chris Zankel <chris@zankel.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 2:34 PM Max Filippov <jcmvbkbc@gmail.com> wrote:
->
-> vmlinux.bin and vmlinux.bin.gz are always rebuilt in the kernel build
-> process. Add them to 'targets' and move them to the boot subdirectory
-> where their rules are. Update make rules that refer to them.
->
-> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
-> ---
+The Root Complex Event Collectors(RCEC) appear as peers of Root Ports
+and also have the PME capability. So add RCEC support to the current PME
+service driver and attach the PME service driver to the RCEC device.
 
-Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
+Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+---
+ drivers/pci/pcie/pme.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-
->  arch/xtensa/boot/Makefile              | 11 ++++++-----
->  arch/xtensa/boot/boot-elf/Makefile     |  4 ++--
->  arch/xtensa/boot/boot-redboot/Makefile |  4 ++--
->  3 files changed, 10 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/xtensa/boot/Makefile b/arch/xtensa/boot/Makefile
-> index 1a14d38d9b33..801fe30b4dfe 100644
-> --- a/arch/xtensa/boot/Makefile
-> +++ b/arch/xtensa/boot/Makefile
-> @@ -17,6 +17,7 @@ BIG_ENDIAN    := $(shell echo __XTENSA_EB__ | $(CC) -E - | grep -v "\#")
->  export BIG_ENDIAN
->
->  subdir-y       := lib
-> +targets                += vmlinux.bin vmlinux.bin.gz
->
->  # Subdirs for the boot loader(s)
->
-> @@ -35,19 +36,19 @@ boot-elf boot-redboot: $(addprefix $(obj)/,$(subdir-y))
->
->  OBJCOPYFLAGS = --strip-all -R .comment -R .notes -O binary
->
-> -vmlinux.bin: vmlinux FORCE
-> +$(obj)/vmlinux.bin: vmlinux FORCE
->         $(call if_changed,objcopy)
->
-> -vmlinux.bin.gz: vmlinux.bin FORCE
-> +$(obj)/vmlinux.bin.gz: $(obj)/vmlinux.bin FORCE
->         $(call if_changed,gzip)
->
-> -boot-elf: vmlinux.bin
-> -boot-redboot: vmlinux.bin.gz
-> +boot-elf: $(obj)/vmlinux.bin
-> +boot-redboot: $(obj)/vmlinux.bin.gz
->
->  UIMAGE_LOADADDR = $(CONFIG_KERNEL_LOAD_ADDRESS)
->  UIMAGE_COMPRESSION = gzip
->
-> -$(obj)/uImage: vmlinux.bin.gz FORCE
-> +$(obj)/uImage: $(obj)/vmlinux.bin.gz FORCE
->         $(call if_changed,uimage)
->         $(Q)$(kecho) '  Kernel: $@ is ready'
->
-> diff --git a/arch/xtensa/boot/boot-elf/Makefile b/arch/xtensa/boot/boot-elf/Makefile
-> index badee63dae27..0ebc9827f7e5 100644
-> --- a/arch/xtensa/boot/boot-elf/Makefile
-> +++ b/arch/xtensa/boot/boot-elf/Makefile
-> @@ -19,9 +19,9 @@ targets               += $(boot-y) boot.lds
->
->  OBJS           := $(addprefix $(obj)/,$(boot-y))
->
-> -$(obj)/Image.o: vmlinux.bin $(OBJS)
-> +$(obj)/Image.o: $(obj)/../vmlinux.bin $(OBJS)
->         $(Q)$(OBJCOPY) $(OBJCOPY_ARGS) -R .comment \
-> -               --add-section image=vmlinux.bin \
-> +               --add-section image=$< \
->                 --set-section-flags image=contents,alloc,load,load,data \
->                 $(OBJS) $@
->
-> diff --git a/arch/xtensa/boot/boot-redboot/Makefile b/arch/xtensa/boot/boot-redboot/Makefile
-> index 1a277dd57b2a..07cb24afedc2 100644
-> --- a/arch/xtensa/boot/boot-redboot/Makefile
-> +++ b/arch/xtensa/boot/boot-redboot/Makefile
-> @@ -20,9 +20,9 @@ LIBS  := arch/xtensa/boot/lib/lib.a arch/xtensa/lib/lib.a
->
->  LIBGCC := $(shell $(CC) $(KBUILD_CFLAGS) -print-libgcc-file-name)
->
-> -$(obj)/zImage.o: vmlinux.bin.gz $(OBJS)
-> +$(obj)/zImage.o: $(obj)/../vmlinux.bin.gz $(OBJS)
->         $(Q)$(OBJCOPY) $(OBJCOPY_ARGS) -R .comment \
-> -               --add-section image=vmlinux.bin.gz \
-> +               --add-section image=$< \
->                 --set-section-flags image=contents,alloc,load,load,data \
->                 $(OBJS) $@
->
-> --
-> 2.20.1
->
-
-
+diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+index 6a32970bb731..87799166c96a 100644
+--- a/drivers/pci/pcie/pme.c
++++ b/drivers/pci/pcie/pme.c
+@@ -310,7 +310,10 @@ static int pcie_pme_can_wakeup(struct pci_dev *dev, void *ign)
+ static void pcie_pme_mark_devices(struct pci_dev *port)
+ {
+ 	pcie_pme_can_wakeup(port, NULL);
+-	if (port->subordinate)
++
++	if (pci_pcie_type(port) == PCI_EXP_TYPE_RC_EC)
++		pcie_walk_rcec(port, pcie_pme_can_wakeup, NULL);
++	else if (port->subordinate)
+ 		pci_walk_bus(port->subordinate, pcie_pme_can_wakeup, NULL);
+ }
+ 
+@@ -320,10 +323,15 @@ static void pcie_pme_mark_devices(struct pci_dev *port)
+  */
+ static int pcie_pme_probe(struct pcie_device *srv)
+ {
+-	struct pci_dev *port;
++	struct pci_dev *port = srv->port;
+ 	struct pcie_pme_service_data *data;
+ 	int ret;
+ 
++	/* Limit to Root Ports or Root Complex Event Collectors */
++	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
++	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
++		return -ENODEV;
++
+ 	data = kzalloc(sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+@@ -333,7 +341,6 @@ static int pcie_pme_probe(struct pcie_device *srv)
+ 	data->srv = srv;
+ 	set_service_data(srv, data);
+ 
+-	port = srv->port;
+ 	pcie_pme_interrupt_enable(port, false);
+ 	pcie_clear_root_pme_status(port);
+ 
+@@ -445,7 +452,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
+ 
+ static struct pcie_port_service_driver pcie_pme_driver = {
+ 	.name		= "pcie_pme",
+-	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
++	.port_type	= PCIE_ANY_PORT,
+ 	.service	= PCIE_PORT_SERVICE_PME,
+ 
+ 	.probe		= pcie_pme_probe,
 -- 
-Best Regards
-Masahiro Yamada
+2.27.0
+
