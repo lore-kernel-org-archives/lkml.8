@@ -2,100 +2,121 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2151C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F313CC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD82206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18FF20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:49:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="O106MpoV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgGXQrg (ORCPT
+        id S1726753AbgGXQtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:47:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40658 "EHLO
+        Fri, 24 Jul 2020 12:49:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgGXQrg (ORCPT
+        with ESMTP id S1726617AbgGXQtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:47:36 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E6EAC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 09:47:36 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jz0r8-00060c-6a; Fri, 24 Jul 2020 18:47:34 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jz0r7-0004Uo-1X; Fri, 24 Jul 2020 18:47:33 +0200
-Date:   Fri, 24 Jul 2020 18:47:32 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: Re: [PATCH v4] pwm: bcm-iproc: handle clk_get_rate() return
-Message-ID: <20200724164732.dlzykskoyicvudxm@pengutronix.de>
-References: <20200718044606.18739-1-scott.branden@broadcom.com>
+        Fri, 24 Jul 2020 12:49:16 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D20AFC0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 09:49:16 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id p1so4777192pls.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 09:49:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=GQt2Z1ws/WfONIjOWp9AeuItjf9hMkR3TALYfXb7u3I=;
+        b=O106MpoVjd9OAiNYoACBwGCFb/AqfJ74hf/aLS68KdQRU8QBBf2kXmGt3dlG8EFmZl
+         tldbLqhbWpOl5KlqmMM//KMcNHYUTrcc01KlUPSOrLtlgwPNG05TXn93742HCOY38kio
+         c5G8Lm966mtk3iXaGFW0iNPgW9UqpvUL8LzVRXJHMtgmWOsY89xgTvyZlqH+QKIUrxsw
+         MzVBZ1JEu+zoV6bNeZvhRIMsUkyrmpFIK2T0ewM1hALHofP3gliEyj9cjmzS1wlFZfQS
+         3ODloyX3PAhNaBgj/J0MNOFOEMvW6IaYZV7rfJltMYcZ9xxj7xvrIlKoUlr0HwdnWyR5
+         lblg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=GQt2Z1ws/WfONIjOWp9AeuItjf9hMkR3TALYfXb7u3I=;
+        b=KOjXcJmqAxJdMUDL3TCJAM6udQtet9Mm8QkFZnmQdbzUuYPt2Y5XPmxcvl0THWogTN
+         TXFbdvUy5BGigTsZ68qsqj1njUSc2X/2JQWJLdw1IPsPmeDFT2FAbd6B2p3A4g7edVkb
+         HEDQFMvpbZuwPg2KT6J0xj47XO4216/cxeWWveNirWZ+JXeQ2FGSIKp8+7jyV/bQhk/A
+         tkQxtSF3nCSEsVCUEybxZdYLE9EMRj2S4v1D7O9hx5JX9APJbquZyBoLobOnUIs55BQV
+         V5nE41UAoFSbyS0Wtph/qDEgwM9SWuVXeUCwj2mZ/Fg2ANlCruEVBKtoRd6HJJ6sqsGA
+         8Jbw==
+X-Gm-Message-State: AOAM5333XgXpvU/j7aurbnaNMTPCcCiZJ/jJSP4e2q8awrwuiYlC/KT8
+        qqRFDZnFDaetCy1AFyN42rSfinjuHDU=
+X-Google-Smtp-Source: ABdhPJyEn8R5pCXQtGwr5zjilHrF158dQmMATZYqIqSDms0Uoe+gVM8JOFPE2S1JajDB3gKMHMlgYQ==
+X-Received: by 2002:a17:90a:ebc7:: with SMTP id cf7mr6279349pjb.207.1595609356077;
+        Fri, 24 Jul 2020 09:49:16 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id w20sm6797797pfn.44.2020.07.24.09.49.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 09:49:15 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] io_uring fixes for 5.8-rc7
+Message-ID: <c07ebe12-2b16-3811-9abc-d3e8d99b54db@kernel.dk>
+Date:   Fri, 24 Jul 2020 10:49:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zpkmtaie53wffwdm"
-Content-Disposition: inline
-In-Reply-To: <20200718044606.18739-1-scott.branden@broadcom.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
---zpkmtaie53wffwdm
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+- Fix discrepancy in how sqe->flags are treated for a few requests, this
+  makes it consistent (Daniele)
 
-On Fri, Jul 17, 2020 at 09:46:06PM -0700, Scott Branden wrote:
-> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
->=20
-> Handle clk_get_rate() returning 0 to avoid possible division by zero.
->=20
-> Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+- Ensure that poll driven retry works double waitqueue poll users
 
-LGTM
+- Fix a missing io_req_init_async() (Pavel)
 
-Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+Please pull!
 
-Best regards
-Uwe
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+The following changes since commit 681fda8d27a66f7e65ff7f2d200d7635e64a8d05:
 
---zpkmtaie53wffwdm
-Content-Type: application/pgp-signature; name="signature.asc"
+  io_uring: fix recvmsg memory leak with buffer selection (2020-07-15 13:35:56 -0600)
 
------BEGIN PGP SIGNATURE-----
+are available in the Git repository at:
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8bEKIACgkQwfwUeK3K
-7AmqhAf/VecpBhLCwuweFqfOdiYiJozKCjXZTiczR/q/hBwUPmyGhrk5tkKgSc5C
-AkWRKXk2ZPhP+utJJesUg5gqs9CpNpEGrd1SeUkynnq8S1+1uVeqgBnZsFrU6uZP
-xir/EBUvjPtDBiB5n+B34YEEN2ookofE7Sd0dh8zJOMtXEpSXYVJZqJ9woR4tdMP
-TYyRIo9iN3EX4SA30yoSirxxcJzosEOzCbNthYUS5cum4warJ9VzqKg6BeV2HVBD
-EesjyjrxvEZEVh48XYqXimSEWuQTRDN7iHBLI5WlkSJ6Kz/T8GXZZxBSFSFZIrfR
-x8S6hu/VQUloNLsvvYwPKikoNgb7Vg==
-=b6Vh
------END PGP SIGNATURE-----
+  git://git.kernel.dk/linux-block.git tags/io_uring-5.8-2020-07-24
 
---zpkmtaie53wffwdm--
+for you to fetch changes up to 3e863ea3bb1a2203ae648eb272db0ce6a1a2072c:
+
+  io_uring: missed req_init_async() for IOSQE_ASYNC (2020-07-23 11:20:55 -0600)
+
+----------------------------------------------------------------
+io_uring-5.8-2020-07-24
+
+----------------------------------------------------------------
+Daniele Albano (1):
+      io_uring: always allow drain/link/hardlink/async sqe flags
+
+Jens Axboe (1):
+      io_uring: ensure double poll additions work with both request types
+
+Pavel Begunkov (1):
+      io_uring: missed req_init_async() for IOSQE_ASYNC
+
+ fs/io_uring.c | 61 +++++++++++++++++++++++++++++++++++------------------------
+ 1 file changed, 36 insertions(+), 25 deletions(-)
+
+-- 
+Jens Axboe
+
