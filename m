@@ -2,70 +2,86 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC56C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47782C433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56BC72067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 282E0206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:00:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LWnkkFCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgGXRAd (ORCPT
+        id S1726877AbgGXRAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:00:33 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12416 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbgGXRAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:00:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgGXRAc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jul 2020 13:00:32 -0400
-IronPort-SDR: J+Im2xHnxTdEIj5ktuhQdb9xbQQXesExXlVsPAd+KbSROub+pWwTTEFmpWIZEbC+si2FodhUzV
- nCGzrFfXS9cA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="138245666"
-X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="138245666"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:00:31 -0700
-IronPort-SDR: G6zJ9jlbWHEOMhv6Hj4P4IuC68udFVXIBCA/yuNM45GHvKH2Gyu0xJVeyhsY/k9PcKukfG/xjF
- HqLYGEcsaIow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="284985355"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2020 10:00:30 -0700
-Received: from [10.252.140.222] (kliang2-mobl.ccr.corp.intel.com [10.252.140.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 0AA4A580297;
-        Fri, 24 Jul 2020 10:00:29 -0700 (PDT)
-Subject: Re: [PATCH V7 07/14] perf/core: Add a new PERF_EV_CAP_COEXIST event
- capability
-To:     peterz@infradead.org, Andi Kleen <ak@linux.intel.com>
-Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, eranian@google.com,
-        alexander.shishkin@linux.intel.com, like.xu@linux.intel.com
-References: <20200723171117.9918-1-kan.liang@linux.intel.com>
- <20200723171117.9918-8-kan.liang@linux.intel.com>
- <20200724105543.GV119549@hirez.programming.kicks-ass.net>
- <20200724114628.GJ43129@hirez.programming.kicks-ass.net>
- <0d33a25c-cfe4-af7f-c915-a98dba17b53b@linux.intel.com>
- <20200724135412.GA10769@hirez.programming.kicks-ass.net>
- <e04f1708-e8c0-3787-1572-443f03ab73ca@linux.intel.com>
- <20200724143258.GB10769@hirez.programming.kicks-ass.net>
- <20200724144632.GE1180481@tassilo.jf.intel.com>
- <20200724145934.GD10769@hirez.programming.kicks-ass.net>
- <20200724164356.GL43129@hirez.programming.kicks-ass.net>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <af274c58-6935-22cd-2830-519c3977e136@linux.intel.com>
-Date:   Fri, 24 Jul 2020 13:00:28 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32AFFC0619E5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:00:32 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r2so3846807wrs.8
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HVn0XE1npVfMcheHUb+P8nScOwE9YNtoOrv0SrU7C6k=;
+        b=LWnkkFCyH4G+4whOm/GLvE3rIRX+ith86RYBTw6a6RbeuYjCHpaZrnNOSWWamNMoOB
+         4r37fGz6LjbkYQp3O8Cbtcl5EcwtRGHq/5ysdzXV93eU6Z4TKthDV+ZofSLhcfFt90SW
+         sWvc7toEFfDm+V4UyaNKD3VQy5xIqrToXQVEwH2lBRA/DZArKou+VctaXqGsqX+moKEb
+         rIDRGj3MddETxAtjC7QAF1C0FU4Bp2R/+8xUB/vbaE2AmcL0FC0MO5tOnGGW7vjxFhYl
+         zXuQt47JR3EQ9SX56RIdSle/YHmxZR0CNTLvln25ex5F+rdEU0deaDqsxq5FNQD28vb/
+         9wxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HVn0XE1npVfMcheHUb+P8nScOwE9YNtoOrv0SrU7C6k=;
+        b=gHrf9AxQKibqvx2FcA1x+2qp7EosJ6TZQwKpwRSksRafOCdnpYAkpuKhOJ48vJgnur
+         pn0gJeK+aJAr1gvRdHH6/tx6l8jrmAlIzzoAGhDF+37c+t1dsaUW8aofGK4LzlrzEW12
+         Ve0J7fCQXBqLc6MFAwceOK0Jkm6tr4JWC22A62EA/p3HNGDtojZOalZIeNBD+bQY9XU7
+         8/l2mp5+yblenHg3oC4IoGI0Yot1cSLdkRpjdXRXWsg5QQG2tkJdm+0jtlqWlmCAY4Is
+         FlkggRPWGtkD5tcV5s7gw6ElwPtL1GSiZFOhjL3UEETnyDXXQpGvGXWecEYa/VV7LMYo
+         kD1g==
+X-Gm-Message-State: AOAM530/0MU+aHyq3/u6gr26SbJdsGlehQU6ipVdSa9W8WkjAFfuEn1S
+        6WOVcgLK49yc6m8nRm5izqn5Lg==
+X-Google-Smtp-Source: ABdhPJx08BKvgkrkQDZ7tzxJdOszCdutDDRkrtncNdcGXVFzfxfS5ykjVZ0O4lF9mxQ7Vn+5hDOKfQ==
+X-Received: by 2002:adf:e9cd:: with SMTP id l13mr9722660wrn.340.1595610030767;
+        Fri, 24 Jul 2020 10:00:30 -0700 (PDT)
+Received: from [192.168.1.4] ([195.24.90.54])
+        by smtp.googlemail.com with ESMTPSA id o21sm7536640wmh.18.2020.07.24.10.00.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 10:00:30 -0700 (PDT)
+Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
+ power-domains for venus
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     Lina Iyer <ilina@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Maulik Shah <mkshah@codeaurora.org>
+References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+ <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
+ <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
+ <654e0fcb-ae4d-c151-fa8a-4d029fc823fb@codeaurora.org>
+ <20200724162825.GH9185@codeaurora.org>
+ <d3fe38de-2f79-713f-eb9e-f72f4b9f6dc0@linaro.org>
+Message-ID: <3a5cc26b-7a77-33df-d8d2-edb46a72968a@linaro.org>
+Date:   Fri, 24 Jul 2020 20:00:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200724164356.GL43129@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <d3fe38de-2f79-713f-eb9e-f72f4b9f6dc0@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,53 +91,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 7/24/2020 12:43 PM, peterz@infradead.org wrote:
-> On Fri, Jul 24, 2020 at 04:59:34PM +0200, Peter Zijlstra wrote:
->> On Fri, Jul 24, 2020 at 07:46:32AM -0700, Andi Kleen wrote:
->>>> Something that seems to 'work' is:
->>>> '{cycles,cpu/instructions,period=50000/}', so maybe you can make the
->>>> group modifier :S use any sampling event if there is one, and otherwise
->>>> designate the leader.
->>>>
->>>> Then you can write things like:
->>>>
->>>>    '{slots, metric1, metric2, cpu/cycles,freq=50000/}:S'
->>>>
->>>> and then since cycles is specified as a sampling event, it will use
->>>> that.
+On 7/24/20 7:52 PM, Stanimir Varbanov wrote:
+> Hi Lina,
+> 
+> On 7/24/20 7:28 PM, Lina Iyer wrote:
+>> On Fri, Jul 24 2020 at 03:03 -0600, Rajendra Nayak wrote:
+>>> Hi Maulik/Lina,
 >>>
->>> Okay possible, but it makes things more complicated
->>> for the user to understand and requires special documentation.
->>> Hopefully it's worth it the internal simplification.
->>
->> You already require special documentation for this metrics stuff. We
->> already need to state that SLOTS cannot be a sampling event, so you
->> already need to pay attention to this anyway.
->>
->> A shortcut could be a :s event modifier, then you can write:
->>
->>   '{slots, metric1, metric2, cycles:s}:S'
->>
->> and have the tool select the :s tagged one.
+>>> On 7/23/2020 11:36 PM, Stanimir Varbanov wrote:
+>>>> Hi Rajendra,
+>>>>
+>>>> After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
+>>>> below messages on db845:
+>>>>
+>>>> qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
+>>>> current OPP for freq 533000097 (-34)
+>>>>
+>>>> ^^^ This one is new.
+>>>>
+>>>> qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
+>>>>
+>>>> ^^^ and this message is annoying, can we make it pr_debug in rpmh?
+>>>
+>> How annoyingly often do you see this message?
+> 
+> I haven't gig deeply but on every driver pm_runtime_suspend (after
+> applying Rajendra's patches). And I guess it comes after a call to
+> dev_pm_opp_set_rate(dev, 0).
 
-It looks like PT encountered a similar issue as us.
-They use the 2nd event of the group as the
-"leader". I think we can simply extend the function to check the slots 
-event in perf tool.
-https://lore.kernel.org/lkml/20200401101613.6201-17-adrian.hunter@intel.com/
-
+Or it might be when the driver is switching off opp_pmdomain.
 
 > 
-> Having slots as leader also would allow doing something like
-> FORMAT_METRIC, where we return sibling/leader in some fashion.
+> IMO this is too often.
 > 
-> That also makes sense for instructions, because, IIRC,
-> instructions/slots is the better IPC.
+>> Usually, this is an indication of bad system state either on remote
+>> processors in the SoC or in Linux itself. On a smooth sailing build you
+>> should not see this 'warning'.
+>>
+>>> Would you be fine with moving this message to a pr_debug? Its currently
+>>> a pr_info_ratelimited()
+>> I would rather not, moving this out of sight will mask a lot serious
+>> issues that otherwise bring attention to the developers.
+>>
+>> --Lina
 > 
-> And we should probably consider FORMAT_RESET.
 
-What's FORMAT_RESET for?
-
-Thanks,
-Kan
-
+-- 
+regards,
+Stan
