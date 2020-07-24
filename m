@@ -2,166 +2,151 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646C7C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A98920674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:31:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kN2nzfwu"
+	by mail.kernel.org (Postfix) with ESMTP id 487142063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgGXObn (ORCPT
+        id S1726956AbgGXOcM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:31:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgGXObm (ORCPT
+        Fri, 24 Jul 2020 10:32:12 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38349 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgGXOcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:31:42 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8224DC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 07:31:42 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id el4so4162689qvb.13
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 07:31:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=623/gE+t/NAauC48CDPw5iNlUH9MVtSJpPc426h2K5M=;
-        b=kN2nzfwuzsH+t/mKkGCZ6ygMIN/RvaebEl1PWSwAXMxnqa6f9DLQRpnr4OnjeVBN87
-         8/HhCpuMuw+Dox9Q2uqS/XHHB3klUIU7zuwA20kO+oMUlY+XppcxPx1sbquLV+raa/JW
-         7VPvolE+rKqRLYqyJKEuN5FKGIg7hOQr5IRdHGq39qN2h1JU6/07+MI4B1nQGBkOwAtA
-         Ojg4I7avozPqahwPeEWugPQVI1DOpO888LCN9dItKMJo/GJiEakjlylcXc02RDto+5LY
-         GIddrTeP0mcLteGk1ph978PwTrSC6/pPNmj10tWa5/RPxlkY9xJnFg2gUEdZ6HmWKy6C
-         UizA==
+        Fri, 24 Jul 2020 10:32:12 -0400
+Received: from mail-pf1-f199.google.com ([209.85.210.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jyyk5-000597-Lz
+        for linux-kernel@vger.kernel.org; Fri, 24 Jul 2020 14:32:09 +0000
+Received: by mail-pf1-f199.google.com with SMTP id w4so6382102pfq.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 07:32:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=623/gE+t/NAauC48CDPw5iNlUH9MVtSJpPc426h2K5M=;
-        b=lPV8kdNy2QafhmgahA2rPJd+BjNHSw0ZlgvghdoZQo3DHpd0PLV0X+bfkHE9Yjhf+P
-         qxAmvDQgw0m4x0fnqsLWKOtbHf/iF+nDPuNZFU4a/4jy6Pb01dv7YoeQg6m6QP8rEMpA
-         OieaMDSVRLGOo9brdeAZ3tfXFrYLkbOHC66hECwlTmijbVM+ORW6FRP/yFTUmknLOBqD
-         ZBuibKP9gb96yCOahY6jqhbANve6lkkBF9HAu37kasT7yyzHtVfX3RVnGhKFRdTtJy4p
-         va+BHHfPE6pQQyx+zd0CAadZZi/yQ+1AWp+qSZ9eluy+aamEfJIbQkP5bnuVH8tqcgLS
-         fbcQ==
-X-Gm-Message-State: AOAM531R6L+q4o7BwH5ksOupS67ggf6BCYaKKgXpjUEpV0zaSaNBSaBT
-        dwoXA6tXqkXosZbM20tg/+A=
-X-Google-Smtp-Source: ABdhPJxzEOhSzoijM/c8TNrFFKFv6FIvvv/SFKgfL+JgeJERXhB7GoLZ6FiXAd8Lt8w5gx8pvrATkg==
-X-Received: by 2002:ad4:4869:: with SMTP id u9mr10018190qvy.98.1595601101763;
-        Fri, 24 Jul 2020 07:31:41 -0700 (PDT)
-Received: from dev.localdomain ([183.134.211.52])
-        by smtp.gmail.com with ESMTPSA id y50sm1664233qtk.29.2020.07.24.07.31.37
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=OY6zbYqXoDNfg1vkCWS7IkbQH43ot9XbU/fDyuAMUME=;
+        b=jjazPLXL2oXV7a47tJqPK0HZV5HP0UZBgyPJwJH0QZd54y/Okg727TDZ9uAzekNTF4
+         VymTuEkIZovQ8YqM8JyuXQu2GYHyItHYdZBfDwToDIhXfFst9ValuBiL3PONu29VxlTD
+         CZT8ZZ783MD/pRww7OLG7eWsYb79Iu/Z6dNRxyjWPvn5xmmNkosvHxJvL02xRQ6MAjG4
+         nwHUeOeKmmHs1QG1NvldXSCxVMrMDAOkeEbP9zJuDk30lnMFk0XnPJwF/X1fVo++SMtu
+         Pnn6stuhhcrDP4BWSp20XFEqBrPH7Et7kR40a6mlWFiUK4nWTAY42PcenQ7R2oV/SWVp
+         /nOQ==
+X-Gm-Message-State: AOAM530IWIv0jEXj8ysnxGrxnPxyIglq16DwNrJ0ctHhTrwivSbFVWga
+        dzZGBWxWavDKIzDFHtVRIn4xL86QLvbrO5RSB9tga21Ca05K+HeN56W0spm/8Hb/FzYwXWtyPCf
+        oM0TJIN0LPmxkLGo2H6vg3jTKte0xxI3HbSWF8XiwVA==
+X-Received: by 2002:aa7:8e90:: with SMTP id a16mr8853492pfr.84.1595601128058;
+        Fri, 24 Jul 2020 07:32:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxls24L4v3wXph7gJpHH17hnDV5EVagwMFk9LHOOndi8kMi4J1ZA6VFcG1xMEeuLd3MRmpN7Q==
+X-Received: by 2002:aa7:8e90:: with SMTP id a16mr8853466pfr.84.1595601127681;
+        Fri, 24 Jul 2020 07:32:07 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id n9sm6136816pjo.53.2020.07.24.07.32.06
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 Jul 2020 07:31:41 -0700 (PDT)
-From:   qianjun.kernel@gmail.com
-To:     tglx@linutronix.de, peterz@infradead.org, will@kernel.org,
-        luto@kernel.org
-Cc:     linux-kernel@vger.kernel.org, laoar.shao@gmail.com,
-        urezki@gmail.com, jun qian <qianjun.kernel@gmail.com>
-Subject: [PATCH V4] Softirq:avoid large sched delay from the pending softirqs
-Date:   Fri, 24 Jul 2020 10:31:23 -0400
-Message-Id: <1595601083-10183-1-git-send-email-qianjun.kernel@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 24 Jul 2020 07:32:07 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: 5.7 regression: Lots of PCIe AER errors and suspend failure
+ without pcie=noaer
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <CADLC3L1R2hssRjxHJv9yhdN_7-hGw58rXSfNp-FraZh0Tw+gRw@mail.gmail.com>
+Date:   Fri, 24 Jul 2020 22:32:05 +0800
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <87CA0F2C-5CEB-4CE7-8399-534CABE5ADD8@canonical.com>
+References: <CADLC3L20DuXw8WbS=SApmu2m49mkxxWKZrMJS_GBHDX7Vh0TvQ@mail.gmail.com>
+ <CADLC3L2ZnGTQJ+fwCy42dpxhHLpAFzFkjMRG3ZS=z7R4WK08og@mail.gmail.com>
+ <CADLC3L1R2hssRjxHJv9yhdN_7-hGw58rXSfNp-FraZh0Tw+gRw@mail.gmail.com>
+To:     Robert Hancock <hancockrwd@gmail.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: jun qian <qianjun.kernel@gmail.com>
+Hi Robert,
 
-When get the pending softirqs, it need to process all the pending
-softirqs in the while loop. If the processing time of each pending
-softirq is need more than 2 msec in this loop, or one of the softirq
-will running a long time, according to the original code logic, it
-will process all the pending softirqs without wakeuping ksoftirqd,
-which will cause a relatively large scheduling delay on the
-corresponding CPU, which we do not wish to see. The patch will check
-the total time to process pending softirq, if the time exceeds 2 ms
-we need to wakeup the ksofirqd to aviod large sched delay.
+> On Jul 22, 2020, at 07:55, Robert Hancock <hancockrwd@gmail.com> wrote:
+> 
+> On Fri, Jul 10, 2020 at 6:28 PM Robert Hancock <hancockrwd@gmail.com> wrote:
+>> 
+>> On Fri, Jul 10, 2020 at 6:23 PM Robert Hancock <hancockrwd@gmail.com> wrote:
+>>> 
+>>> Noticed a problem on my desktop with an Asus PRIME H270-PRO
+>>> motherboard after Fedora 32 upgraded to the 5.7 kernel (now on 5.7.8):
+>>> periodically there are PCIe AER errors getting spewed in dmesg that
+>>> weren't happening before, and this also seems to causes suspend to
+>>> fail - the system just wakes back up again right away, I am assuming
+>>> due to some AER errors interrupting the process. 5.6 kernels didn't
+>>> have this problem. Setting "pcie=noaer" on the kernel command line
+>>> works around the issue, but I'm not sure what would have changed to
+>>> trigger this to occur?
+>> 
+>> Correction: the workaround option is "pci=noaer".
+> 
+> As a follow-up, from some more experimentation, it appears that
+> disabling PCIe ASPM with setpci on both the ASMedia PCIe-PCI bridge as
+> well as the PCIe root port it is connected to seems to silence the AER
+> errors and allow suspend/resume to work again:
+> 
+> setpci -s 00:1c.0 0x50.B=0x00
+> setpci -s 02:00.0 0x90.B=0x00
+> 
+> It appears the behavior changed as a result of this patch (which went
+> into the stable tree for 5.7.6 and so affects 5.7 kernels as well):
+> 
+> commit 66ff14e59e8a30690755b08bc3042359703fb07a
+> Author: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Date:   Wed May 6 01:34:21 2020 +0800
+> 
+>    PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
+> 
+>    7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
+>    Linux to enable ASPM, but for some undocumented reason, it didn't enable
+>    ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
+> 
+>    Remove this exclusion so we can enable ASPM on these links.
+> 
+>    The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
+>    PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
+>    Intel SoC to enter deeper Package C-states, which is a significant power
+>    savings.
+> 
+>    [bhelgaas: commit log]
+>    Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
+>    Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
+>    Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>    Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> 
+> Unfortunately it appears that this ASMedia PCIe-PCI bridge:
+> 
+> 02:00.0 PCI bridge [0604]: ASMedia Technology Inc. ASM1083/1085 PCIe
+> to PCI Bridge [1b21:1080] (rev 04)
+> 
+> doesn't cope with ASPM properly and causes a bunch of PCIe link
+> errors. (This is in addition to some broken-ness known as far back as
+> 2012 with these ASM1083/1085 chips with regard to PCI interrupts
+> getting stuck, but this ASPM problem causes issues even if no devices
+> are connected to the PCI side of the bridge, as is the case on my
+> system.)
+> 
+> Might need a quirk to disable ASPM on this device?
 
-Signed-off-by: jun qian <qianjun.kernel@gmail.com>
----
- kernel/softirq.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+Yes I think it's a great idea to do it.
 
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index c4201b7f..d572ce4 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -25,6 +25,7 @@
- #include <linux/smpboot.h>
- #include <linux/tick.h>
- #include <linux/irq.h>
-+#include <linux/sched/clock.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/irq.h>
-@@ -200,17 +201,15 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
- /*
-  * We restart softirq processing for at most MAX_SOFTIRQ_RESTART times,
-  * but break the loop if need_resched() is set or after 2 ms.
-- * The MAX_SOFTIRQ_TIME provides a nice upper bound in most cases, but in
-- * certain cases, such as stop_machine(), jiffies may cease to
-- * increment and so we need the MAX_SOFTIRQ_RESTART limit as
-- * well to make sure we eventually return from this method.
-+ * In the loop, if the processing time of the softirq has exceeded 2
-+ * milliseconds, we also need to break the loop to wakeup the ksofirqd.
-  *
-  * These limits have been established via experimentation.
-  * The two things to balance is latency against fairness -
-  * we want to handle softirqs as soon as possible, but they
-  * should not be able to lock up the box.
-  */
--#define MAX_SOFTIRQ_TIME  msecs_to_jiffies(2)
-+#define MAX_SOFTIRQ_TIME_NS 2000000
- #define MAX_SOFTIRQ_RESTART 10
- 
- #ifdef CONFIG_TRACE_IRQFLAGS
-@@ -248,7 +247,7 @@ static inline void lockdep_softirq_end(bool in_hardirq) { }
- 
- asmlinkage __visible void __softirq_entry __do_softirq(void)
- {
--	unsigned long end = jiffies + MAX_SOFTIRQ_TIME;
-+	u64 end = sched_clock() + MAX_SOFTIRQ_TIME_NS;
- 	unsigned long old_flags = current->flags;
- 	int max_restart = MAX_SOFTIRQ_RESTART;
- 	struct softirq_action *h;
-@@ -299,6 +298,19 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
- 		}
- 		h++;
- 		pending >>= softirq_bit;
-+
-+		/*
-+		 * the softirq's action has been running for too much time
-+		 * so it may need to wakeup the ksoftirqd
-+		 */
-+		if (need_resched() && sched_clock() > end) {
-+			/*
-+			 * Ensure that the remaining pending bits are
-+			 * handled.
-+			 */
-+			or_softirq_pending(pending << (vec_nr + 1));
-+			break;
-+		}
- 	}
- 
- 	if (__this_cpu_read(ksoftirqd) == current)
-@@ -307,8 +319,8 @@ asmlinkage __visible void __softirq_entry __do_softirq(void)
- 
- 	pending = local_softirq_pending();
- 	if (pending) {
--		if (time_before(jiffies, end) && !need_resched() &&
--		    --max_restart)
-+		if (!need_resched() && --max_restart &&
-+		    sched_clock() <= end)
- 			goto restart;
- 
- 		wakeup_softirqd();
--- 
-1.8.3.1
+Can you please file a bug on [1] and we can continue our discussion there.
 
+[1] https://bugzilla.kernel.org
+
+Kai-Heng
