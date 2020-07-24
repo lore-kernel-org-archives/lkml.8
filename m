@@ -2,87 +2,71 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLACK autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 869B0C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B04720714
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0228F20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:20:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HRCsheQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726625AbgGXGQu convert rfc822-to-8bit (ORCPT
+        id S1726740AbgGXGUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 02:16:50 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38160 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726178AbgGXGQu (ORCPT
+        Fri, 24 Jul 2020 02:20:13 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:49259 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726525AbgGXGUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 02:16:50 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06O63REN056865;
-        Fri, 24 Jul 2020 02:16:37 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32facequ3q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 02:16:37 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06O63lKS058736;
-        Fri, 24 Jul 2020 02:16:36 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32facequ2w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 02:16:36 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06O6EIAc002103;
-        Fri, 24 Jul 2020 06:16:34 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 32brq83tw0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 06:16:34 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06O6GWI528114984
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jul 2020 06:16:32 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EA4BDA405B;
-        Fri, 24 Jul 2020 06:16:31 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4831FA4064;
-        Fri, 24 Jul 2020 06:16:29 +0000 (GMT)
-Received: from [9.85.89.111] (unknown [9.85.89.111])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 24 Jul 2020 06:16:29 +0000 (GMT)
+        Fri, 24 Jul 2020 02:20:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595571611; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=paVXKsmzeg5/qxSudmtRIQ5uq5kOrJ80jzH+Ujzi6Vw=; b=HRCsheQppdeoO4G6t72eCzkBQEInb2LlfaCxXLQKQAdmJI6InZ7RRsXtexNRYrjnT8zUGMBs
+ YiAqqGmfE5Pw4HzTR7DGkZD6P2XAbhFRNFHkp5UG4dUpUxJByNJ5W1OQ69eUORj/uQljAQ4L
+ IUw0Lpb5xU77GjvADVf4gSGss6c=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5f1a7d8af9ca681bd08ec4cc (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Jul 2020 06:19:54
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7F31BC433CA; Fri, 24 Jul 2020 06:19:53 +0000 (UTC)
+Received: from Pillair (unknown [183.83.71.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0CAE1C433C6;
+        Fri, 24 Jul 2020 06:19:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0CAE1C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   "Rakesh Pillai" <pillair@codeaurora.org>
+To:     "'Sebastian Gottschall'" <s.gottschall@dd-wrt.com>,
+        <ath10k@lists.infradead.org>
+Cc:     <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kvalo@codeaurora.org>, <johannes@sipsolutions.net>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <dianders@chromium.org>, <evgreen@chromium.org>
+References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org> <1595351666-28193-8-git-send-email-pillair@codeaurora.org> <1540605b-c54e-d482-296f-8139eb07c195@dd-wrt.com>
+In-Reply-To: <1540605b-c54e-d482-296f-8139eb07c195@dd-wrt.com>
+Subject: RE: [RFC 7/7] ath10k: Handle rx thread suspend and resume
+Date:   Fri, 24 Jul 2020 11:49:46 +0530
+Message-ID: <000001d66182$70d2bc30$52783490$@codeaurora.org>
+MIME-Version: 1.0
 Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 1/2] lockdep: improve current->(hard|soft)irqs_enabled
- synchronisation with actual irq state
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <1884dcea-9ecd-a1f3-21bb-213c655e2480@ozlabs.ru>
-Date:   Fri, 24 Jul 2020 11:46:26 +0530
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <6BAF6D26-A316-4F0A-AF10-5E43B2C09B90@linux.vnet.ibm.com>
-References: <20200723105615.1268126-1-npiggin@gmail.com>
- <20200723114010.GO5523@worktop.programming.kicks-ass.net>
- <1595506730.3mvrxktem5.astroid@bobo.none>
- <1884dcea-9ecd-a1f3-21bb-213c655e2480@ozlabs.ru>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-24_01:2020-07-24,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 impostorscore=0
- phishscore=0 malwarescore=0 suspectscore=0 adultscore=0 clxscore=1011
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007240044
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQG1Bu1FBYi7G1oVhHY/01uT1gSslwGYY6AwAmphXtGpOOBtAA==
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -90,87 +74,221 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On 24-Jul-2020, at 9:46 AM, Alexey Kardashevskiy <aik@ozlabs.ru> wrote:
-> 
-> 
-> 
-> On 23/07/2020 23:11, Nicholas Piggin wrote:
->> Excerpts from Peter Zijlstra's message of July 23, 2020 9:40 pm:
->>> On Thu, Jul 23, 2020 at 08:56:14PM +1000, Nicholas Piggin wrote:
->>> 
->>>> diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
->>>> index 3a0db7b0b46e..35060be09073 100644
->>>> --- a/arch/powerpc/include/asm/hw_irq.h
->>>> +++ b/arch/powerpc/include/asm/hw_irq.h
->>>> @@ -200,17 +200,14 @@ static inline bool arch_irqs_disabled(void)
->>>> #define powerpc_local_irq_pmu_save(flags)			\
->>>> 	 do {							\
->>>> 		raw_local_irq_pmu_save(flags);			\
->>>> -		trace_hardirqs_off();				\
->>>> +		if (!raw_irqs_disabled_flags(flags))		\
->>>> +			trace_hardirqs_off();			\
->>>> 	} while(0)
->>>> #define powerpc_local_irq_pmu_restore(flags)			\
->>>> 	do {							\
->>>> -		if (raw_irqs_disabled_flags(flags)) {		\
->>>> -			raw_local_irq_pmu_restore(flags);	\
->>>> -			trace_hardirqs_off();			\
->>>> -		} else {					\
->>>> +		if (!raw_irqs_disabled_flags(flags))		\
->>>> 			trace_hardirqs_on();			\
->>>> -			raw_local_irq_pmu_restore(flags);	\
->>>> -		}						\
->>>> +		raw_local_irq_pmu_restore(flags);		\
->>>> 	} while(0)
->>> 
->>> You shouldn't be calling lockdep from NMI context!
->> 
->> After this patch it doesn't.
->> 
->> trace_hardirqs_on/off implementation appears to expect to be called in NMI 
->> context though, for some reason.
->> 
->>> That is, I recently
->>> added suport for that on x86:
->>> 
->>>  https://lkml.kernel.org/r/20200623083721.155449112@infradead.org
->>>  https://lkml.kernel.org/r/20200623083721.216740948@infradead.org
->>> 
->>> But you need to be very careful on how you order things, as you can see
->>> the above relies on preempt_count() already having been incremented with
->>> NMI_MASK.
->> 
->> Hmm. My patch seems simpler.
-> 
-> And your patches fix my error while Peter's do not:
-> 
-> 
-> IRQs not enabled as expected
-> WARNING: CPU: 0 PID: 1377 at /home/aik/p/kernel/kernel/softirq.c:169
-> __local_bh_enable_ip+0x118/0x190
+> -----Original Message-----
+> From: Sebastian Gottschall <s.gottschall@dd-wrt.com>
+> Sent: Friday, July 24, 2020 4:36 AM
+> To: Rakesh Pillai <pillair@codeaurora.org>; ath10k@lists.infradead.org
+> Cc: linux-wireless@vger.kernel.org; linux-kernel@vger.kernel.org;
+> kvalo@codeaurora.org; johannes@sipsolutions.net; davem@davemloft.net;
+> kuba@kernel.org; netdev@vger.kernel.org; dianders@chromium.org;
+> evgreen@chromium.org
+> Subject: Re: [RFC 7/7] ath10k: Handle rx thread suspend and resume
+>=20
+> your patch seem to only affect the WCN3990 chipset. all other ath10k
+> supported chipset are not supported here. so you see a chance to
+> implement this more generic?
+>=20
+> Sebastian
 
-Hi Nicholas, Alexey
+Hi Sebastian,
 
-I was able to reproduce the warning which Alexey reported using perf_fuzzer test suite. 
-With the patch provided by Nick, I don’t see the issue anymore. This patch fixes the
-warnings I got with perf fuzzer run.
+A generic core for handling threads is added with this patchset.
+So the handling of rx packet processing in thread can always be extended =
+to other targets, if they wish so.
 
-Thanks Nick for the fix. 
+The thread related APIs are in core.c which gives all the other targets =
+access to these APIs for using them.
 
-Tested-by: Athira Rajeev<atrajeev@linux.ibm.com>
+Thanks,
+Rakesh Pillai.
 
-
-> 
-> 
->> 
->> I don't know this stuff very well, I don't really understand what your patch 
->> enables for x86 but at least it shouldn't be incompatible with this one 
->> AFAIKS.
->> 
->> Thanks,
->> Nick
->> 
-> 
-> -- 
-> Alexey
+>=20
+> Am 21.07.2020 um 19:14 schrieb Rakesh Pillai:
+> > During the system suspend or resume, the rx thread
+> > also needs to be suspended or resume respectively.
+> >
+> > Handle the rx thread as well during the system
+> > suspend and resume.
+> >
+> > Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+> >
+> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> > ---
+> >   drivers/net/wireless/ath/ath10k/core.c | 23 ++++++++++++++++++
+> >   drivers/net/wireless/ath/ath10k/core.h |  5 ++++
+> >   drivers/net/wireless/ath/ath10k/snoc.c | 44
+> +++++++++++++++++++++++++++++++++-
+> >   3 files changed, 71 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/net/wireless/ath/ath10k/core.c
+> b/drivers/net/wireless/ath/ath10k/core.c
+> > index 4064fa2..b82b355 100644
+> > --- a/drivers/net/wireless/ath/ath10k/core.c
+> > +++ b/drivers/net/wireless/ath/ath10k/core.c
+> > @@ -668,6 +668,27 @@ static unsigned int
+> ath10k_core_get_fw_feature_str(char *buf,
+> >   	return scnprintf(buf, buf_len, "%s",
+> ath10k_core_fw_feature_str[feat]);
+> >   }
+> >
+> > +int ath10k_core_thread_suspend(struct ath10k_thread *thread)
+> > +{
+> > +	ath10k_dbg(thread->ar, ATH10K_DBG_BOOT, "Suspending thread
+> %s\n",
+> > +		   thread->name);
+> > +	set_bit(ATH10K_THREAD_EVENT_SUSPEND, thread->event_flags);
+> > +	wait_for_completion(&thread->suspend);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL(ath10k_core_thread_suspend);
+> > +
+> > +int ath10k_core_thread_resume(struct ath10k_thread *thread)
+> > +{
+> > +	ath10k_dbg(thread->ar, ATH10K_DBG_BOOT, "Resuming thread
+> %s\n",
+> > +		   thread->name);
+> > +	complete(&thread->resume);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL(ath10k_core_thread_resume);
+> > +
+> >   void ath10k_core_thread_post_event(struct ath10k_thread *thread,
+> >   				   enum ath10k_thread_events event)
+> >   {
+> > @@ -700,6 +721,8 @@ int ath10k_core_thread_init(struct ath10k *ar,
+> >
+> >   	init_waitqueue_head(&thread->wait_q);
+> >   	init_completion(&thread->shutdown);
+> > +	init_completion(&thread->suspend);
+> > +	init_completion(&thread->resume);
+> >   	memcpy(thread->name, thread_name,
+> ATH10K_THREAD_NAME_SIZE_MAX);
+> >   	clear_bit(ATH10K_THREAD_EVENT_SHUTDOWN, thread-
+> >event_flags);
+> >   	ath10k_info(ar, "Starting thread %s\n", thread_name);
+> > diff --git a/drivers/net/wireless/ath/ath10k/core.h
+> b/drivers/net/wireless/ath/ath10k/core.h
+> > index 596d31b..df65e75 100644
+> > --- a/drivers/net/wireless/ath/ath10k/core.h
+> > +++ b/drivers/net/wireless/ath/ath10k/core.h
+> > @@ -976,6 +976,7 @@ enum ath10k_thread_events {
+> >   	ATH10K_THREAD_EVENT_SHUTDOWN,
+> >   	ATH10K_THREAD_EVENT_RX_POST,
+> >   	ATH10K_THREAD_EVENT_TX_POST,
+> > +	ATH10K_THREAD_EVENT_SUSPEND,
+> >   	ATH10K_THREAD_EVENT_MAX,
+> >   };
+> >
+> > @@ -983,6 +984,8 @@ struct ath10k_thread {
+> >   	struct ath10k *ar;
+> >   	struct task_struct *task;
+> >   	struct completion shutdown;
+> > +	struct completion suspend;
+> > +	struct completion resume;
+> >   	wait_queue_head_t wait_q;
+> >   	DECLARE_BITMAP(event_flags, ATH10K_THREAD_EVENT_MAX);
+> >   	char name[ATH10K_THREAD_NAME_SIZE_MAX];
+> > @@ -1296,6 +1299,8 @@ static inline bool
+> ath10k_peer_stats_enabled(struct ath10k *ar)
+> >
+> >   extern unsigned long ath10k_coredump_mask;
+> >
+> > +int ath10k_core_thread_suspend(struct ath10k_thread *thread);
+> > +int ath10k_core_thread_resume(struct ath10k_thread *thread);
+> >   void ath10k_core_thread_post_event(struct ath10k_thread *thread,
+> >   				   enum ath10k_thread_events event);
+> >   int ath10k_core_thread_shutdown(struct ath10k *ar,
+> > diff --git a/drivers/net/wireless/ath/ath10k/snoc.c
+> b/drivers/net/wireless/ath/ath10k/snoc.c
+> > index 3eb5eac..a373b2b 100644
+> > --- a/drivers/net/wireless/ath/ath10k/snoc.c
+> > +++ b/drivers/net/wireless/ath/ath10k/snoc.c
+> > @@ -932,13 +932,31 @@ int ath10k_snoc_rx_thread_loop(void *data)
+> >   					    rx_thread->event_flags) ||
+> >
+> test_and_clear_bit(ATH10K_THREAD_EVENT_TX_POST,
+> >   					    rx_thread->event_flags) ||
+> > +			 test_bit(ATH10K_THREAD_EVENT_SUSPEND,
+> > +				  rx_thread->event_flags) ||
+> >   			 test_bit(ATH10K_THREAD_EVENT_SHUTDOWN,
+> >   				  rx_thread->event_flags)));
+> >
+> > +		if (test_and_clear_bit(ATH10K_THREAD_EVENT_SUSPEND,
+> > +				       rx_thread->event_flags)) {
+> > +			complete(&rx_thread->suspend);
+> > +			ath10k_info(ar, "rx thread suspend\n");
+> > +			wait_for_completion(&rx_thread->resume);
+> > +			ath10k_info(ar, "rx thread resume\n");
+> > +		}
+> > +
+> >   		ath10k_htt_txrx_compl_task(ar, thread_budget);
+> >   		if
+> (test_and_clear_bit(ATH10K_THREAD_EVENT_SHUTDOWN,
+> >   				       rx_thread->event_flags))
+> >   			shutdown =3D true;
+> > +
+> > +		if (test_and_clear_bit(ATH10K_THREAD_EVENT_SUSPEND,
+> > +				       rx_thread->event_flags)) {
+> > +			complete(&rx_thread->suspend);
+> > +			ath10k_info(ar, "rx thread suspend\n");
+> > +			wait_for_completion(&rx_thread->resume);
+> > +			ath10k_info(ar, "rx thread resume\n");
+> > +		}
+> >   	}
+> >
+> >   	ath10k_dbg(ar, ATH10K_DBG_SNOC, "rx thread exiting\n");
+> > @@ -1133,15 +1151,30 @@ static int ath10k_snoc_hif_suspend(struct
+> ath10k *ar)
+> >   	if (!device_may_wakeup(ar->dev))
+> >   		return -EPERM;
+> >
+> > +	if (ar->rx_thread_enable) {
+> > +		ret =3D ath10k_core_thread_suspend(&ar->rx_thread);
+> > +		if (ret) {
+> > +			ath10k_err(ar, "failed to suspend rx_thread, %d\n",
+> > +				   ret);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> >   	ret =3D enable_irq_wake(ar_snoc-
+> >ce_irqs[ATH10K_SNOC_WAKE_IRQ].irq_line);
+> >   	if (ret) {
+> >   		ath10k_err(ar, "failed to enable wakeup irq :%d\n", ret);
+> > -		return ret;
+> > +		goto fail;
+> >   	}
+> >
+> >   	ath10k_dbg(ar, ATH10K_DBG_SNOC, "snoc device suspended\n");
+> >
+> >   	return ret;
+> > +
+> > +fail:
+> > +	if (ar->rx_thread_enable)
+> > +		ath10k_core_thread_resume(&ar->rx_thread);
+> > +
+> > +	return ret;
+> >   }
+> >
+> >   static int ath10k_snoc_hif_resume(struct ath10k *ar)
+> > @@ -1158,6 +1191,15 @@ static int ath10k_snoc_hif_resume(struct =
+ath10k
+> *ar)
+> >   		return ret;
+> >   	}
+> >
+> > +	if (ar->rx_thread_enable) {
+> > +		ret =3D ath10k_core_thread_resume(&ar->rx_thread);
+> > +		if (ret) {
+> > +			ath10k_err(ar, "failed to suspend rx_thread, %d\n",
+> > +				   ret);
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> >   	ath10k_dbg(ar, ATH10K_DBG_SNOC, "snoc device resumed\n");
+> >
+> >   	return ret;
 
