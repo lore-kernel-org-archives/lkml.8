@@ -2,140 +2,122 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47782C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A59C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 282E0206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0221B2067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:01:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LWnkkFCy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WvZXqq7r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgGXRAf (ORCPT
+        id S1726890AbgGXRBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:00:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42656 "EHLO
+        Fri, 24 Jul 2020 13:01:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgGXRAc (ORCPT
+        with ESMTP id S1726326AbgGXRBM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:00:32 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32AFFC0619E5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:00:32 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r2so3846807wrs.8
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:00:32 -0700 (PDT)
+        Fri, 24 Jul 2020 13:01:12 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92FEC0619D3;
+        Fri, 24 Jul 2020 10:01:11 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id h28so7515094edz.0;
+        Fri, 24 Jul 2020 10:01:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HVn0XE1npVfMcheHUb+P8nScOwE9YNtoOrv0SrU7C6k=;
-        b=LWnkkFCyH4G+4whOm/GLvE3rIRX+ith86RYBTw6a6RbeuYjCHpaZrnNOSWWamNMoOB
-         4r37fGz6LjbkYQp3O8Cbtcl5EcwtRGHq/5ysdzXV93eU6Z4TKthDV+ZofSLhcfFt90SW
-         sWvc7toEFfDm+V4UyaNKD3VQy5xIqrToXQVEwH2lBRA/DZArKou+VctaXqGsqX+moKEb
-         rIDRGj3MddETxAtjC7QAF1C0FU4Bp2R/+8xUB/vbaE2AmcL0FC0MO5tOnGGW7vjxFhYl
-         zXuQt47JR3EQ9SX56RIdSle/YHmxZR0CNTLvln25ex5F+rdEU0deaDqsxq5FNQD28vb/
-         9wxQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=N55p9HlPMBDczNO+FOx56BHvJH2h0tKoLCVXNpo9G3M=;
+        b=WvZXqq7rAaJYphTzFQ9Vvq+Wn/RP5L3aKeqJOEyh76XpdQP96g1hniiru2fEFxQh8N
+         cuh3EHmBNmH1rGSFaUj5+FPAsM+5jEG/yLcmCnQRpFBdjiYPJAXGXjEHnc/cdTBK9Ahb
+         QMVvP7uBiXfNUvDmW7+QeaIFV2OhMP/QUyy5lnBqRVTgLzZmwNozq1QDzq7jjJzGGFCc
+         iST4nAdSfktKCoFtR5wvPKP0mwn1E8eT7e5hl5b09dy0RCD2LG+5F4tMbuyuoA53DAWh
+         esB7DuwLVNy/2QhZ+9q1iK7V7quoMDxV3BJSpSiWKeP+Ac4kXEnqbBHKLDISg5wweq0P
+         M+iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HVn0XE1npVfMcheHUb+P8nScOwE9YNtoOrv0SrU7C6k=;
-        b=gHrf9AxQKibqvx2FcA1x+2qp7EosJ6TZQwKpwRSksRafOCdnpYAkpuKhOJ48vJgnur
-         pn0gJeK+aJAr1gvRdHH6/tx6l8jrmAlIzzoAGhDF+37c+t1dsaUW8aofGK4LzlrzEW12
-         Ve0J7fCQXBqLc6MFAwceOK0Jkm6tr4JWC22A62EA/p3HNGDtojZOalZIeNBD+bQY9XU7
-         8/l2mp5+yblenHg3oC4IoGI0Yot1cSLdkRpjdXRXWsg5QQG2tkJdm+0jtlqWlmCAY4Is
-         FlkggRPWGtkD5tcV5s7gw6ElwPtL1GSiZFOhjL3UEETnyDXXQpGvGXWecEYa/VV7LMYo
-         kD1g==
-X-Gm-Message-State: AOAM530/0MU+aHyq3/u6gr26SbJdsGlehQU6ipVdSa9W8WkjAFfuEn1S
-        6WOVcgLK49yc6m8nRm5izqn5Lg==
-X-Google-Smtp-Source: ABdhPJx08BKvgkrkQDZ7tzxJdOszCdutDDRkrtncNdcGXVFzfxfS5ykjVZ0O4lF9mxQ7Vn+5hDOKfQ==
-X-Received: by 2002:adf:e9cd:: with SMTP id l13mr9722660wrn.340.1595610030767;
-        Fri, 24 Jul 2020 10:00:30 -0700 (PDT)
-Received: from [192.168.1.4] ([195.24.90.54])
-        by smtp.googlemail.com with ESMTPSA id o21sm7536640wmh.18.2020.07.24.10.00.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 10:00:30 -0700 (PDT)
-Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
- power-domains for venus
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     Lina Iyer <ilina@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Maulik Shah <mkshah@codeaurora.org>
-References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
- <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
- <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
- <654e0fcb-ae4d-c151-fa8a-4d029fc823fb@codeaurora.org>
- <20200724162825.GH9185@codeaurora.org>
- <d3fe38de-2f79-713f-eb9e-f72f4b9f6dc0@linaro.org>
-Message-ID: <3a5cc26b-7a77-33df-d8d2-edb46a72968a@linaro.org>
-Date:   Fri, 24 Jul 2020 20:00:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=N55p9HlPMBDczNO+FOx56BHvJH2h0tKoLCVXNpo9G3M=;
+        b=FeyTiHlRKkoqiIh+eLjt10Kx6Z9pAvrX7OpeEPDd43O01AHjYska2pmS4IFkL5vV+L
+         ObikjYKnHBA6jJhrPlHFxiJ/zWVgWnk1hnC6NGdJEOxhIheo2u/inCWbW4iJIMWFSDs8
+         U/WSCfPBOGbPl4HGvGP+0ald4trMGDNiwfEeZHequYu3am8TdWcTKctR08QSIZPrwhQQ
+         V5JynQOY2Dw7xqiU2dQ2XKxsoF5Bkmm90nWx7GyThLZ1httuJe7+4iLID9jGKH1Q/FEA
+         1j3rS1jIhvy2gNFsU7QorrCIN1f3uuZDsWfrb3ruUfAPEhblQMOU4XlV5JBbhVGYVb9E
+         +zrg==
+X-Gm-Message-State: AOAM532tbCy1ehH8a3uP64PSMUXgHTjJTaS/1PelaI49zU3hvemJj0DM
+        8NZQTL1rD3ZAMmMi4P+GaE8pqrRX
+X-Google-Smtp-Source: ABdhPJytnSuqN8Rq5+gISeWtuSvudKbnrUSIIGlRetE2zWQZ4mRgW3qWuBpdGiuYKSunbCD5BMDJqQ==
+X-Received: by 2002:a50:ab5c:: with SMTP id t28mr9723421edc.209.1595610070636;
+        Fri, 24 Jul 2020 10:01:10 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id u60sm1066419edc.59.2020.07.24.10.01.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 10:01:09 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Amit Kucheria <amitk@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] thermal: Fix zone lookup by ID
+Date:   Fri, 24 Jul 2020 19:01:05 +0200
+Message-Id: <20200724170105.2705467-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <d3fe38de-2f79-713f-eb9e-f72f4b9f6dc0@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Thierry Reding <treding@nvidia.com>
 
+When a thermal zone is looked up by an ID and no zone is found matching
+that ID, the thermal_zone_get_by_id() function will return a pointer to
+the thermal zone list head which isn't actually a valid thermal zone.
 
-On 7/24/20 7:52 PM, Stanimir Varbanov wrote:
-> Hi Lina,
-> 
-> On 7/24/20 7:28 PM, Lina Iyer wrote:
->> On Fri, Jul 24 2020 at 03:03 -0600, Rajendra Nayak wrote:
->>> Hi Maulik/Lina,
->>>
->>> On 7/23/2020 11:36 PM, Stanimir Varbanov wrote:
->>>> Hi Rajendra,
->>>>
->>>> After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
->>>> below messages on db845:
->>>>
->>>> qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
->>>> current OPP for freq 533000097 (-34)
->>>>
->>>> ^^^ This one is new.
->>>>
->>>> qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
->>>>
->>>> ^^^ and this message is annoying, can we make it pr_debug in rpmh?
->>>
->> How annoyingly often do you see this message?
-> 
-> I haven't gig deeply but on every driver pm_runtime_suspend (after
-> applying Rajendra's patches). And I guess it comes after a call to
-> dev_pm_opp_set_rate(dev, 0).
+This can lead to a subsequent crash because a valid pointer is returned
+to the called, but dereferencing that pointer as struct thermal_zone is
+not safe.
 
-Or it might be when the driver is switching off opp_pmdomain.
+Fixes: 329b064fbd13 ("thermal: core: Get thermal zone by id")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ drivers/thermal/thermal_core.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-> 
-> IMO this is too often.
-> 
->> Usually, this is an indication of bad system state either on remote
->> processors in the SoC or in Linux itself. On a smooth sailing build you
->> should not see this 'warning'.
->>
->>> Would you be fine with moving this message to a pr_debug? Its currently
->>> a pr_info_ratelimited()
->> I would rather not, moving this out of sight will mask a lot serious
->> issues that otherwise bring attention to the developers.
->>
->> --Lina
-> 
-
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 007f9618e20a..9748fbb9a3a1 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -751,16 +751,18 @@ int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
+ 
+ struct thermal_zone_device *thermal_zone_get_by_id(int id)
+ {
+-	struct thermal_zone_device *tz = NULL;
++	struct thermal_zone_device *tz, *match = NULL;
+ 
+ 	mutex_lock(&thermal_list_lock);
+ 	list_for_each_entry(tz, &thermal_tz_list, node) {
+-		if (tz->id == id)
++		if (tz->id == id) {
++			match = tz;
+ 			break;
++		}
+ 	}
+ 	mutex_unlock(&thermal_list_lock);
+ 
+-	return tz;
++	return match;
+ }
+ 
+ void thermal_zone_device_unbind_exception(struct thermal_zone_device *tz,
 -- 
-regards,
-Stan
+2.27.0
+
