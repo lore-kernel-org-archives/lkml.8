@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42565C433F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47789C433FB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04D6B20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2066120714
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595600007;
-	bh=g8D7CPlvS4wK9vhl0dilzoLyBABd67EXDo7VBxjq8DA=;
+	s=default; t=1595600019;
+	bh=88CpPKAtIlo3F7ArWLteJwlPsvfDHKw5zqRN1cYwJqo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O0YsJ70SLj2KDi4k2sgx8r2NvPXaqxIHgmaokPdye/LdCq9TMBGdDJt8YELipE6hv
-	 XngLfrmko9sC8h8ESMTT7ypMYa4X/xCp5W7wb5YYKZtmuQ7kTW2hWh+o5cMqJvGYSH
-	 1wB5DxwwdNrthY0cHZoNxMt445QEVpiZA7LW2Zj8=
+	b=Kt4nJlweMZeJaGliOQCFlGWrssFQyITx4CjHSp19MyygP+UAZLVvshEpeF5IEqqkE
+	 d3fI8RLKIknMLY8HNlkRqzyk33dSl6GEwqkoS9dY0LNoupDplpBom2tA9ArafvxzN1
+	 9BZrtgskNyaEOtNXLiUOPa2E4M3dWpGdclqvazlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgGXONZ (ORCPT
+        id S1727029AbgGXONh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:13:25 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33496 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbgGXONX (ORCPT
+        Fri, 24 Jul 2020 10:13:37 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55619 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbgGXONh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:13:23 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f18so31269wmc.0;
-        Fri, 24 Jul 2020 07:13:20 -0700 (PDT)
+        Fri, 24 Jul 2020 10:13:37 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 9so8080354wmj.5;
+        Fri, 24 Jul 2020 07:13:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lRR7zihfAPcF3BkRyL0Zid9zLwCKqRIandOIBJZScT8=;
-        b=h/SEgQLoY7GjmkV+rIbu2mHS31vXrCw7A+e8uKQ97wiQZrnnnwoMF+0hhCx3ztMpcA
-         A1OFg41PpMH6T2E76D82pV0tW3D+5BXiQ7X91ga6QNrVjK028bXaAXL0wDfKP8n2g0z4
-         ZcBuvCagqCQriskMc4qgtbuC77n2ow0R5n4cy6iV9WGL/O72FfurITrcea/L9uToJn1D
-         wV+b5pf7Ej5GyxG8nI0DytJCcYxQfa7Ef6+Kv1e8W4UgREmfb/eE/8jLq5Ieg3DEklwR
-         gAauM/jP1Z7X0kH9jp6Xyfr5iIsZXpIHskBHq6For8zMaCRzIsK5+WIZA4C+uSp79Y4J
-         nZPQ==
-X-Gm-Message-State: AOAM531rv69x5/10yMaeW9lbB9SySXcfElFYDWwUCrrnUvuJphs+PmPt
-        gxLYA7TOdwq+O6wyA3LNJ5E=
-X-Google-Smtp-Source: ABdhPJwNei28bnjgISCwDv9tMLHh2SVTSriTtsDgwYvqcTiDeKj5wmxQxqltNmpJgPyq8t+kqT2nWQ==
-X-Received: by 2002:a05:600c:21d3:: with SMTP id x19mr9270136wmj.174.1595599999842;
-        Fri, 24 Jul 2020 07:13:19 -0700 (PDT)
+        bh=IOGzJ6cY2FjYdFpjVdtQFQ2yTS4SILz/gGUSj1jCM6U=;
+        b=qAyAJcWweKwfWmjl+uwT2JTXTjtrxkUvjmgWuw2xLrSTOF3/uYhzbGtJvGY/wpwXKG
+         /oKPELLid06/sQmRrYDC0M7Y64f2ywzNiTBB1r55TdQm4/QUrWI2awpGrZteLE5QR8dl
+         v858jeGEjSbKUcaOrPnqnxwAklI9cR1zNAlTHR1vK9DHFf5fGaubEGepWnQW2Tn4e2nF
+         61heGq+rXYDknrYpIy1xFUPveiPTxKIiNyau7u8A9Rib8d6p3V/dt8RlLf8jdBXYP7JO
+         TOtx1cn16QSn8iT0qLax0fe4Hnu7ieAiG72N8QsyELDi7VuLyqBVBdQ/h7r3F/0CwkvL
+         mLpw==
+X-Gm-Message-State: AOAM533p5Augq3ejPy1lPMxoLiXR5ovL55KiWTVfgGDDt6+MyeLgk7Os
+        NVy5aA+6Vx9uTj5COXrJE9g=
+X-Google-Smtp-Source: ABdhPJwL+QeVZyCxyJDZBcmgW5Pvgk096UsvgpB8okMSIFclx8Xu4901fsQGaQOHTWUHjjTjXaZfBQ==
+X-Received: by 2002:a1c:8094:: with SMTP id b142mr8846186wmd.122.1595600013959;
+        Fri, 24 Jul 2020 07:13:33 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id f197sm7820726wme.33.2020.07.24.07.13.17
+        by smtp.googlemail.com with ESMTPSA id g126sm7375209wme.16.2020.07.24.07.13.31
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Jul 2020 07:13:19 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 16:13:16 +0200
+        Fri, 24 Jul 2020 07:13:33 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 16:13:29 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         Markus Mayer <mmayer@broadcom.com>,
@@ -69,31 +69,29 @@ To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 18/29] memory: brcmstb_dpfe: Remove unneeded braces
-Message-ID: <20200724141316.GI14851@kozik-lap>
+Subject: Re: [PATCH v2 19/29] memory: mtk-smi: Add argument to function
+ pointer definition
+Message-ID: <20200724141329.GJ14851@kozik-lap>
 References: <20200724074038.5597-1-krzk@kernel.org>
- <20200724074038.5597-19-krzk@kernel.org>
+ <20200724074038.5597-20-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200724074038.5597-19-krzk@kernel.org>
+In-Reply-To: <20200724074038.5597-20-krzk@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 09:40:27AM +0200, Krzysztof Kozlowski wrote:
-> Single statement blocks don't need braces.  Fixes checkpatch warning:
-> 
->     WARNING: braces {} are not necessary for single statement blocks
+On Fri, Jul 24, 2020 at 09:40:28AM +0200, Krzysztof Kozlowski wrote:
+> Fix checkpatch warning:
+>     WARNING: function definition argument 'struct device *' should also have an identifier name
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> Acked-by: Markus Mayer <mmayer@broadcom.com>
 > ---
->  drivers/memory/brcmstb_dpfe.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/memory/mtk-smi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Applied (and part of pull request to arm-soc).
 
