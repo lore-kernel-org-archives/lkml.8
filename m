@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81975C43445
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA76C43446
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 531DD20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFEB520767
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595576556;
-	bh=FgOxaXut3KMNgsxRSkJGLlmDOsLTEuccL9YQdrk1EKs=;
+	s=default; t=1595576551;
+	bh=HjMCchZVhPwTwkexmP6RnIdWez/ZPatrwHEB1rb8se0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v3zflxJCv1iWq6mDVlRRnGHRAnaMQRtx/zhhnjIAZTbBuCeXNGWTJIslX3PtLipCu
-	 7cZK0P+fLUZNlhQDMj+oiJu7H5RZ0AQeRMMtHOEBJumW6/n8GupbAwcq2k5mFmxGqH
-	 NL3kRqVWw6MYaygheEJJGtMwo3Ypw1Bpn9Pl/QkE=
+	b=DPk7QNYFBfTyWDbqHvg9ID1HyqR+2iZ+neM/V1lIVR1pU1XYfjmSr18TwVgv+J+0D
+	 KG1jyzs9Xd4UgxMxBceeaW+wGJabfN/AJbo/AMkmRNHpLFoi6UgIxU9I/PIVVqbCR6
+	 4CpfxNnp6bP5TprEDdl5suHuYeidjH3dU4TkOge4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgGXHmf (ORCPT
+        id S1728050AbgGXHma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:42:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36338 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 03:42:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbgGXHme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:42:34 -0400
+        id S1726617AbgGXHm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 03:42:29 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 370242074F;
-        Fri, 24 Jul 2020 07:42:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28BA920748;
+        Fri, 24 Jul 2020 07:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595576553;
-        bh=FgOxaXut3KMNgsxRSkJGLlmDOsLTEuccL9YQdrk1EKs=;
+        s=default; t=1595576548;
+        bh=HjMCchZVhPwTwkexmP6RnIdWez/ZPatrwHEB1rb8se0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jfXZfekvKtnfezKe0L5biigo+3u1XLWKCF0LFLhzaROG3Lj6dIEEQ7Noe6GgTFMVa
-         HKPWZYqlOnNHqk6D092qoQQMckyQ8OCvtuN+gqAY8YtiZPpGPoKyTYCDnHGMLc0eg4
-         QW0R43G5pmqygVqFxOKeliX4OYNwfcyRYdL36AaU=
+        b=Rito5OUzJvjz7P1joe3gLjI+5XcfUMEsocOFshLbAP/gH0z5iPUscAcJetiA2JIVn
+         V5l9RMsSGwP0FDQ+C0t4jKv/a1BBdDnBpXvZV+AFw/bspRRsnth+hnzpa58gI4Q00p
+         +7nmqtsliKdOt77lhWJdI6mA61AeVnkZ3d55o40w=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         Markus Mayer <mmayer@broadcom.com>,
@@ -58,9 +58,9 @@ To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 17/29] memory: brcmstb_dpfe: Constify the contents of string
-Date:   Fri, 24 Jul 2020 09:40:26 +0200
-Message-Id: <20200724074038.5597-18-krzk@kernel.org>
+Subject: [PATCH v2 16/29] memory: renesas-rpc-if: Simplify with PTR_ERR_OR_ZERO
+Date:   Fri, 24 Jul 2020 09:40:25 +0200
+Message-Id: <20200724074038.5597-17-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200724074038.5597-1-krzk@kernel.org>
 References: <20200724074038.5597-1-krzk@kernel.org>
@@ -69,28 +69,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The string itself can be made const for safety.
+Use PTR_ERR_OR_ZERO to make the code a little bit simpler.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Markus Mayer <mmayer@broadcom.com>
 ---
- drivers/memory/brcmstb_dpfe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/memory/renesas-rpc-if.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/memory/brcmstb_dpfe.c b/drivers/memory/brcmstb_dpfe.c
-index 82b415be18d1..5942380f343b 100644
---- a/drivers/memory/brcmstb_dpfe.c
-+++ b/drivers/memory/brcmstb_dpfe.c
-@@ -188,7 +188,7 @@ struct brcmstb_dpfe_priv {
- 	struct mutex lock;
- };
+diff --git a/drivers/memory/renesas-rpc-if.c b/drivers/memory/renesas-rpc-if.c
+index 88f51ec8f1d1..f2a33a1af836 100644
+--- a/drivers/memory/renesas-rpc-if.c
++++ b/drivers/memory/renesas-rpc-if.c
+@@ -199,10 +199,8 @@ int rpcif_sw_init(struct rpcif *rpc, struct device *dev)
+ 		rpc->dirmap = NULL;
  
--static const char *error_text[] = {
-+static const char * const error_text[] = {
- 	"Success", "Header code incorrect", "Unknown command or argument",
- 	"Incorrect checksum", "Malformed command", "Timed out",
- };
+ 	rpc->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+-	if (IS_ERR(rpc->rstc))
+-		return PTR_ERR(rpc->rstc);
+ 
+-	return 0;
++	return PTR_ERR_OR_ZERO(rpc->rstc);
+ }
+ EXPORT_SYMBOL(rpcif_sw_init);
+ 
 -- 
 2.17.1
 
