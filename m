@@ -2,102 +2,113 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C30C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7D1C433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25FD4206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C92206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:46:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="ODIqmaFr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EodzYYag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgGXQqH (ORCPT
+        id S1726982AbgGXQqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:46:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40424 "EHLO
+        Fri, 24 Jul 2020 12:46:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726639AbgGXQqG (ORCPT
+        with ESMTP id S1726455AbgGXQqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:46:06 -0400
-Received: from mail.nic.cz (lists.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A8E4C0619E4;
-        Fri, 24 Jul 2020 09:46:06 -0700 (PDT)
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id 0E8FB140801;
-        Fri, 24 Jul 2020 18:46:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1595609164; bh=uVEK4+lNEwNHSkbt4FwgcwamVpjAjW9xrSCBYvsp+fU=;
-        h=From:To:Date;
-        b=ODIqmaFrBnepS5Ewc5sPX8LbJbZF9jV0HzWrF6sj74qVeThg0sfnxINPFQX4IcoMd
-         wA9vybKY8uvLq/lfdMVaoyPsEPXTebXNnnLF0DfFdihRSnNDfN0rsizFHzPJ9L4LZi
-         7g8MmCnLPQ5I/KzGmdUT8IUmHnN9cZ/IFl8PySnk=
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-To:     netdev@vger.kernel.org
-Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH RFC leds + net-next v3 0/2] Add support for LEDs on Marvell PHYs
-Date:   Fri, 24 Jul 2020 18:46:01 +0200
-Message-Id: <20200724164603.29148-1-marek.behun@nic.cz>
-X-Mailer: git-send-email 2.26.2
+        Fri, 24 Jul 2020 12:46:14 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A4A9C0619D3;
+        Fri, 24 Jul 2020 09:46:14 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id n5so5550959pgf.7;
+        Fri, 24 Jul 2020 09:46:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tx5YX2IOPcV4RJbsivodmqYOOqUKOFaQmDzrxOXFXCY=;
+        b=EodzYYagBDt5iwRKdDssPxz/3J9e6QclydtGwFuZ1WCfyv+7cJifUgZetYyZ+K8YQP
+         Q7M4Ka3evjRn+yTb3d562wChMBrQnLb/RQG7KVWDWx0L8JcJdwTCmXTBQf+KS5xFAl14
+         5ES60RkY8tdjBRMIX2jhenXTXMalpUUgEKeBEj/6jKXsNk3Sa5OSlVcG2SGivZWr4smR
+         ahoFB526nNw1XBGexjwdgvFOjCR8VIK8pclJm8MqwNiWq9JZm24/g+hLGYFQxr/aM37s
+         cgbZQCRHoN0AjSbVqGaOB7Khvd0kGuDOQ03RQmOSnRDQ2Vr74auIdqqGcc2DApdJv07O
+         ZvzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tx5YX2IOPcV4RJbsivodmqYOOqUKOFaQmDzrxOXFXCY=;
+        b=WbBfiry/CNfvuuFTHkYXnBAoMo1dMrhQtqFG4/hv2knAsknoeTAdE8CGqUeyvu+1fq
+         T/DlksRBTzD0JiWz8rMHb/VIt46Jc+zss/ahbuLQlYFqrFF8/EHfcxeVTbErZ7lC/Nma
+         IEW9poQJM0ro+CN2EUspLM9tm/4yLMGXxpqifvj1dgBQeTuoRX/Rit9lykZ4ZycyLM/Q
+         KNCbZ7hLAdn2Wwg7MaUB5L5m9S6P8agqX/txuxAdsrSc8dnGGd067OlhpbJa0WmWyjz8
+         j3bv3FmfFKlYN4NA97SrFuNgRgNH7WPvgne002c7c1YXLS33oMYckhBwJMdpOeBWshC+
+         rqSg==
+X-Gm-Message-State: AOAM530v7MBQJnE6ZeEImQv8PICw2uCWnt1lVqMA9tEy4FYDh/4IoESE
+        SYOFDfV8olD40PrudPuWR64=
+X-Google-Smtp-Source: ABdhPJzSkzdvzW43LGvtO5zkWGvKc86Thv3nh35W1vcfnETJG+JZz/6QXcDWyJnsJ/5/27wrIo0Evw==
+X-Received: by 2002:a63:1a0c:: with SMTP id a12mr9169217pga.24.1595609173638;
+        Fri, 24 Jul 2020 09:46:13 -0700 (PDT)
+Received: from localhost.localdomain ([131.107.159.194])
+        by smtp.gmail.com with ESMTPSA id y27sm7161734pgc.56.2020.07.24.09.46.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 09:46:13 -0700 (PDT)
+From:   Andres Beltran <lkmlabelt@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, parri.andrea@gmail.com,
+        skarade@microsoft.com, Andres Beltran <lkmlabelt@gmail.com>
+Subject: [PATCH] Drivers: hv: vmbus: Fix variable assignments in hv_ringbuffer_read()
+Date:   Fri, 24 Jul 2020 12:46:06 -0400
+Message-Id: <20200724164606.43699-1-lkmlabelt@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: /
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Assignments to buffer_actual_len and requestid happen before packetlen
+is checked to be within buflen. If this condition is true,
+hv_ringbuffer_read() returns with these variables already set to some
+value even though no data is actually read. This might create
+inconsistencies in any routine calling hv_ringbuffer_read(). Assign values
+to such pointers after the packetlen check.
 
-this is v3 of my RFC adding support for LEDs connected to Marvell PHYs.
+Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+---
+ drivers/hv/ring_buffer.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Please note that if you want to test this, you still need to first apply
-the patch adding the LED private triggers support from Pavel's tree.
-https://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/commit/?h=for-next&id=93690cdf3060c61dfce813121d0bfc055e7fa30d
-
-Changes since v2:
-- to share code with other drivers which may want to also offer PHY HW
-  control of LEDs some of the code was refactored and now resides in
-  phy_hw_led_mode.c. This code is compiled in when config option
-  LED_TRIGGER_PHY_HW is enabled. Drivers wanting to offer PHY HW control
-  of LEDs should depend on this option.
-- the "hw-control" trigger is renamed to "phydev-hw-mode" and is
-  registered by the code in phy_hw_led_mode.c
-- the "hw_control" sysfs file is renamed to "hw_mode"
-- struct phy_driver is extended by three methods to support PHY HW LED
-  control
-- I renamed the various HW control modes offeret by Marvell PHYs to
-  conform to other Linux mode names, for example the "1000/100/10/else"
-  mode was renamed to "1Gbps/100Mbps/10Mbps", or "recv/else" was renamed
-  to "rx" (this is the name of the mode in netdev trigger).
-
-Marek
-
-Marek Behún (2):
-  net: phy: add API for LEDs controlled by PHY HW
-  net: phy: marvell: add support for PHY LEDs via LED class
-
- drivers/net/phy/Kconfig           |  10 +
- drivers/net/phy/Makefile          |   1 +
- drivers/net/phy/marvell.c         | 364 ++++++++++++++++++++++++++++++
- drivers/net/phy/phy_hw_led_mode.c |  96 ++++++++
- include/linux/phy.h               |  15 ++
- 5 files changed, 486 insertions(+)
- create mode 100644 drivers/net/phy/phy_hw_led_mode.c
-
+diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
+index 356e22159e83..e277ce7372a4 100644
+--- a/drivers/hv/ring_buffer.c
++++ b/drivers/hv/ring_buffer.c
+@@ -350,12 +350,13 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
+ 
+ 	offset = raw ? 0 : (desc->offset8 << 3);
+ 	packetlen = (desc->len8 << 3) - offset;
+-	*buffer_actual_len = packetlen;
+-	*requestid = desc->trans_id;
+ 
+ 	if (unlikely(packetlen > buflen))
+ 		return -ENOBUFS;
+ 
++	*buffer_actual_len = packetlen;
++	*requestid = desc->trans_id;
++
+ 	/* since ring is double mapped, only one copy is necessary */
+ 	memcpy(buffer, (const char *)desc + offset, packetlen);
+ 
 -- 
-2.26.2
+2.25.1
 
