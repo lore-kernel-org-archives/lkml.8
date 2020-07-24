@@ -2,107 +2,168 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7081BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A273C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36396206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D309206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgGXVO1 (ORCPT
+        id S1726753AbgGXVQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:14:27 -0400
-Received: from mga07.intel.com ([134.134.136.100]:2641 "EHLO mga07.intel.com"
+        Fri, 24 Jul 2020 17:16:01 -0400
+Received: from mga06.intel.com ([134.134.136.31]:8880 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726639AbgGXVO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:14:26 -0400
-IronPort-SDR: 0djh0dCjjpd5F+KtjQWdBV2uk3/gIMmff24yuAQk/zhTrEtLwByv7CsQYkALQNpkudtguEW737
- m2cNwOIMKYaw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="215365018"
+        id S1726591AbgGXVQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 17:16:00 -0400
+IronPort-SDR: Fh1oCKVMrZvZC8C3+ETFpXh1kBpUe2H/LI8TwRH7izdIddlgzjhQ0D2c8QMfoCD/FLXvpCy4XK
+ 5veE7jRxvGbg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="212323868"
 X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="215365018"
+   d="scan'208";a="212323868"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 14:14:26 -0700
-IronPort-SDR: sATOhYz40y+cGfnFT7Xq9uZ7pU51qOr3ByTfyP0CDW+NLGVwYqP0LgB5G6AQIpMkH1P0K31VB3
- MXJNmRB4VsVw==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 14:15:59 -0700
+IronPort-SDR: 5wLNB0PJC81eBlHf/0OKzKa5uI/KpYyjBt/r9WAkBTVIBa5Q3z1qD6msuHM8ZXQGwccrTVTqPX
+ yY/vp2jnnX8w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="289108474"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.254.52.44]) ([10.254.52.44])
-  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2020 14:14:25 -0700
-Subject: Re: [PATCH] netlink: add buffer boundary checking
-To:     Eric Dumazet <eric.dumazet@gmail.com>,
-        Mark Salyzyn <salyzyn@android.com>,
-        linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Thomas Graf <tgraf@suug.ch>
-References: <20200723182136.2550163-1-salyzyn@android.com>
- <09cd1829-8e41-bef5-ba5e-1c446c166778@gmail.com>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <8bd7695c-0012-83e9-8a5a-94a40d91d6f6@intel.com>
-Date:   Fri, 24 Jul 2020 14:14:25 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0.1
+   d="scan'208";a="272683587"
+Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Jul 2020 14:15:58 -0700
+Received: from kbuild by df0563f96c37 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jz52r-0000Yo-DI; Fri, 24 Jul 2020 21:15:57 +0000
+Date:   Sat, 25 Jul 2020 05:15:03 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cleanups] BUILD SUCCESS
+ 0a787b28b7a375ad9d5c77bc3922ae1a8305239e
+Message-ID: <5f1b4f57.Pt+Gqc+EXK4Y0xZC%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <09cd1829-8e41-bef5-ba5e-1c446c166778@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cleanups
+branch HEAD: 0a787b28b7a375ad9d5c77bc3922ae1a8305239e  x86/mm: Drop unused MAX_PHYSADDR_BITS
 
+elapsed time: 721m
 
-On 7/23/2020 12:35 PM, Eric Dumazet wrote:
-> On 7/23/20 11:21 AM, Mark Salyzyn wrote:
->> Many of the nla_get_* inlines fail to check attribute's length before
->> copying the content resulting in possible out-of-boundary accesses.
->> Adjust the inlines to perform nla_len checking, for the most part
->> using the nla_memcpy function to faciliate since these are not
->> necessarily performance critical and do not need a likely fast path.
->>
->> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
->> Cc: netdev@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Cc: kernel-team@android.com
->> Cc: "David S. Miller" <davem@davemloft.net>
->> Cc: Jakub Kicinski <kuba@kernel.org>
->> Cc: Thomas Graf <tgraf@suug.ch>
->> Fixes: bfa83a9e03cf ("[NETLINK]: Type-safe netlink messages/attributes interface")
->> ---
->>  include/net/netlink.h | 66 +++++++++++++++++++++++++++++++++++--------
->>  1 file changed, 54 insertions(+), 12 deletions(-)
->>
->> diff --git a/include/net/netlink.h b/include/net/netlink.h
->> index c0411f14fb53..11c0f153be7c 100644
->> --- a/include/net/netlink.h
->> +++ b/include/net/netlink.h
->> @@ -1538,7 +1538,11 @@ static inline int nla_put_bitfield32(struct sk_buff *skb, int attrtype,
->>   */
->>  static inline u32 nla_get_u32(const struct nlattr *nla)
->>  {
->> -	return *(u32 *) nla_data(nla);
->> +	u32 tmp;
->> +
->> +	nla_memcpy(&tmp, nla, sizeof(tmp));
->> +
->> +	return tmp;
-> 
-> I believe this will hide bugs, that syzbot was able to catch.
-> 
-> Instead, you could perhaps introduce a CONFIG_DEBUG_NETLINK option,
-> and add a WARN_ON_ONCE(nla_len(nla) < sizeof(u32)) so that we can detect bugs in callers.
-> 
-> 
+configs tested: 97
+configs skipped: 70
 
-I also think this is a better approach.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a003-20200724
+i386                 randconfig-a005-20200724
+i386                 randconfig-a004-20200724
+i386                 randconfig-a006-20200724
+i386                 randconfig-a002-20200724
+i386                 randconfig-a001-20200724
+i386                 randconfig-a003-20200725
+i386                 randconfig-a005-20200725
+i386                 randconfig-a004-20200725
+i386                 randconfig-a006-20200725
+i386                 randconfig-a002-20200725
+i386                 randconfig-a001-20200725
+x86_64               randconfig-a014-20200724
+x86_64               randconfig-a016-20200724
+x86_64               randconfig-a015-20200724
+x86_64               randconfig-a012-20200724
+x86_64               randconfig-a013-20200724
+x86_64               randconfig-a011-20200724
+i386                 randconfig-a016-20200724
+i386                 randconfig-a013-20200724
+i386                 randconfig-a012-20200724
+i386                 randconfig-a015-20200724
+i386                 randconfig-a014-20200724
+i386                 randconfig-a011-20200724
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
