@@ -2,269 +2,174 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBF2C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC0820674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:24:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595611495;
-	bh=7UDxAq6Pm0yB8pbnrhkoRNKTklADUBaS1F8Muj/F9qY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TbEScCV6GYiC4SBcRdrfphOq9wINgIhZNSaFg9iuIV6pHJJpwH0k2TXO/28BsujvH
-	 zQV57iDLfOj6QFuXHKzHaHh/z7LLjAjTTmv9T2KcdJsWRKZ8EAuhCHFCWdQnxfdRJT
-	 eVF/vj8DQKA0koPZsdVicFidmKRtp5nKp1FBk0RU=
+	by mail.kernel.org (Postfix) with ESMTP id C6E4B206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:25:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="LI+oW/UF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgGXRYy (ORCPT
+        id S1726952AbgGXRZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:24:54 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:29184 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726625AbgGXRYx (ORCPT
+        Fri, 24 Jul 2020 13:25:26 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:58562 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726512AbgGXRZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:24:53 -0400
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 06OHOW59016668;
-        Sat, 25 Jul 2020 02:24:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 06OHOW59016668
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1595611473;
-        bh=bIixnEMAR0jpu0bkdEKJIWnyzdVnCrMQLsfoauhy0fQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=W2EWm1cc14fkW4PNArDHqu1LBD4fe2IusZG6QPFRbSfzz7M0LtWyFqUKPCXA341TG
-         il+FgP81GniPKySpqsmlALQ7tF3ymvtkKp+irMGUwWBDFz8uBtu1c2lYf8L5yiXEen
-         djEjwIfRNocZm8GrbY6Nj6FL0WOtqvtBkfPGnH0tgw3AjXU71wlpkW04v38l1h1f/a
-         4+k+uf95HOXf82wFxseyb+v6qUqX1saNnGkDK5p9/XrNdjYF9BZsezQoY9n1bSXBOX
-         n5qUk2ZCeIkSzfkVA/060ujOfd1xyDDx/XPTxrNA1OVcrQ/UMYMnCtjCg/Z8GSoYBY
-         5w5N0qbxCu2TQ==
-X-Nifty-SrcIP: [209.85.221.181]
-Received: by mail-vk1-f181.google.com with SMTP id t187so2380024vke.5;
-        Fri, 24 Jul 2020 10:24:32 -0700 (PDT)
-X-Gm-Message-State: AOAM533yb3THXWA3i5czVZBw1Z7zqc9nwzEAps1a27/SGJJZ+10+KPpX
-        /CqKpNb49QDlPKzYA8fcYyb1+LAdDA3QVAEpN1M=
-X-Google-Smtp-Source: ABdhPJzGY41nFJFYVQa7SB+bfB7R68BKKKKuv/lpK6zpHu7T7ky83qZV94n9m68mlcZz5TCDSXepblY5pu3C5TEWURw=
-X-Received: by 2002:ac5:c74b:: with SMTP id b11mr8651746vkn.73.1595611471380;
- Fri, 24 Jul 2020 10:24:31 -0700 (PDT)
+        Fri, 24 Jul 2020 13:25:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hSGWBwm/NutG4cL4B08mF9B/cFvn+Vs21yYP8xZpoEs=; b=LI+oW/UFlHU7aXgaiv0gCIFDIK
+        rYI/2fAEmQiHAir/UaXD+MfnfYEQDfjTioR/QQNgOVsW19B/KxXV7OTavs3F+7p01np8Mc9JWWd0y
+        2rjPu0njXV7Fad9BzApZDKySTFiXNqzPOlRKW8I+a+pY6Yyxi3G1xoF1Mo2heCxL0Qym8QpObIjFb
+        MZ9MhKgE+RGexqTnPZCQ63/h+TMeuQtf4DYY1Zq/bRZN18Ybt+sFuDy18Q6se8gC06fT2brS77Itt
+        aPKVfVBEDvHjoXGP9FZIx9AMJ65OleXx8b2EqfjDVWUSeHymFCHY+kmtTDjboR/fIWJ+BvkBtQEnf
+        Nm0fEbjg==;
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1jz1Rk-0006yp-5m; Fri, 24 Jul 2020 11:25:25 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1jz1Ri-0004GC-79; Fri, 24 Jul 2020 11:25:22 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Fri, 24 Jul 2020 11:25:14 -0600
+Message-Id: <20200724172520.16318-4-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200724172520.16318-1-logang@deltatee.com>
+References: <20200724172520.16318-1-logang@deltatee.com>
 MIME-Version: 1.0
-References: <20200718063847.919599-1-masahiroy@kernel.org>
-In-Reply-To: <20200718063847.919599-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 25 Jul 2020 02:23:52 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASqquXzfcd8KWE7HDZepLu9Y8t0G77OgZTEVM4DL=JuNw@mail.gmail.com>
-Message-ID: <CAK7LNASqquXzfcd8KWE7HDZepLu9Y8t0G77OgZTEVM4DL=JuNw@mail.gmail.com>
-Subject: Re: [PATCH] kconfig: constify XPM data
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v16 3/9] nvme: Introduce nvme_execute_passthru_rq to call nvme_passthru_[start|end]()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 18, 2020 at 3:39 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Constify arrays as well as strings.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+Introduce a new nvme_execute_passthru_rq() helper which calls
+nvme_passthru_[start|end]() around blk_execute_rq(). This ensures
+all passthru calls (including nvme_submit_io()) will be wrapped
+appropriately.
 
-Applied to linux-kbuild.
+nvme_execute_passthru_rq() will also be useful for the nvmet passthru
+code and is exported in the NVME_TARGET_PASSTHRU namespace.
 
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/nvme/host/core.c | 22 +++++++++++++++-------
+ drivers/nvme/host/nvme.h |  1 +
+ 2 files changed, 16 insertions(+), 7 deletions(-)
 
->  scripts/kconfig/images.c | 30 +++++++++++++++---------------
->  scripts/kconfig/images.h | 30 +++++++++++++++---------------
->  2 files changed, 30 insertions(+), 30 deletions(-)
->
-> diff --git a/scripts/kconfig/images.c b/scripts/kconfig/images.c
-> index b4fa0e4a63a5..2f9afffa5d79 100644
-> --- a/scripts/kconfig/images.c
-> +++ b/scripts/kconfig/images.c
-> @@ -5,7 +5,7 @@
->
->  #include "images.h"
->
-> -const char *xpm_load[] = {
-> +const char * const xpm_load[] = {
->  "22 22 5 1",
->  ". c None",
->  "# c #000000",
-> @@ -35,7 +35,7 @@ const char *xpm_load[] = {
->  "###############.......",
->  "......................"};
->
-> -const char *xpm_save[] = {
-> +const char * const xpm_save[] = {
->  "22 22 5 1",
->  ". c None",
->  "# c #000000",
-> @@ -65,7 +65,7 @@ const char *xpm_save[] = {
->  "..##################..",
->  "......................"};
->
-> -const char *xpm_back[] = {
-> +const char * const xpm_back[] = {
->  "22 22 3 1",
->  ". c None",
->  "# c #000083",
-> @@ -93,7 +93,7 @@ const char *xpm_back[] = {
->  "......................",
->  "......................"};
->
-> -const char *xpm_tree_view[] = {
-> +const char * const xpm_tree_view[] = {
->  "22 22 2 1",
->  ". c None",
->  "# c #000000",
-> @@ -120,7 +120,7 @@ const char *xpm_tree_view[] = {
->  "......................",
->  "......................"};
->
-> -const char *xpm_single_view[] = {
-> +const char * const xpm_single_view[] = {
->  "22 22 2 1",
->  ". c None",
->  "# c #000000",
-> @@ -147,7 +147,7 @@ const char *xpm_single_view[] = {
->  "......................",
->  "......................"};
->
-> -const char *xpm_split_view[] = {
-> +const char * const xpm_split_view[] = {
->  "22 22 2 1",
->  ". c None",
->  "# c #000000",
-> @@ -174,7 +174,7 @@ const char *xpm_split_view[] = {
->  "......................",
->  "......................"};
->
-> -const char *xpm_symbol_no[] = {
-> +const char * const xpm_symbol_no[] = {
->  "12 12 2 1",
->  "  c white",
->  ". c black",
-> @@ -191,7 +191,7 @@ const char *xpm_symbol_no[] = {
->  " .......... ",
->  "            "};
->
-> -const char *xpm_symbol_mod[] = {
-> +const char * const xpm_symbol_mod[] = {
->  "12 12 2 1",
->  "  c white",
->  ". c black",
-> @@ -208,7 +208,7 @@ const char *xpm_symbol_mod[] = {
->  " .......... ",
->  "            "};
->
-> -const char *xpm_symbol_yes[] = {
-> +const char * const xpm_symbol_yes[] = {
->  "12 12 2 1",
->  "  c white",
->  ". c black",
-> @@ -225,7 +225,7 @@ const char *xpm_symbol_yes[] = {
->  " .......... ",
->  "            "};
->
-> -const char *xpm_choice_no[] = {
-> +const char * const xpm_choice_no[] = {
->  "12 12 2 1",
->  "  c white",
->  ". c black",
-> @@ -242,7 +242,7 @@ const char *xpm_choice_no[] = {
->  "    ....    ",
->  "            "};
->
-> -const char *xpm_choice_yes[] = {
-> +const char * const xpm_choice_yes[] = {
->  "12 12 2 1",
->  "  c white",
->  ". c black",
-> @@ -259,7 +259,7 @@ const char *xpm_choice_yes[] = {
->  "    ....    ",
->  "            "};
->
-> -const char *xpm_menu[] = {
-> +const char * const xpm_menu[] = {
->  "12 12 2 1",
->  "  c white",
->  ". c black",
-> @@ -276,7 +276,7 @@ const char *xpm_menu[] = {
->  " .......... ",
->  "            "};
->
-> -const char *xpm_menu_inv[] = {
-> +const char * const xpm_menu_inv[] = {
->  "12 12 2 1",
->  "  c white",
->  ". c black",
-> @@ -293,7 +293,7 @@ const char *xpm_menu_inv[] = {
->  " .......... ",
->  "            "};
->
-> -const char *xpm_menuback[] = {
-> +const char * const xpm_menuback[] = {
->  "12 12 2 1",
->  "  c white",
->  ". c black",
-> @@ -310,7 +310,7 @@ const char *xpm_menuback[] = {
->  " .......... ",
->  "            "};
->
-> -const char *xpm_void[] = {
-> +const char * const xpm_void[] = {
->  "12 12 2 1",
->  "  c white",
->  ". c black",
-> diff --git a/scripts/kconfig/images.h b/scripts/kconfig/images.h
-> index d8ff614bd087..7212dec2006c 100644
-> --- a/scripts/kconfig/images.h
-> +++ b/scripts/kconfig/images.h
-> @@ -10,21 +10,21 @@
->  extern "C" {
->  #endif
->
-> -extern const char *xpm_load[];
-> -extern const char *xpm_save[];
-> -extern const char *xpm_back[];
-> -extern const char *xpm_tree_view[];
-> -extern const char *xpm_single_view[];
-> -extern const char *xpm_split_view[];
-> -extern const char *xpm_symbol_no[];
-> -extern const char *xpm_symbol_mod[];
-> -extern const char *xpm_symbol_yes[];
-> -extern const char *xpm_choice_no[];
-> -extern const char *xpm_choice_yes[];
-> -extern const char *xpm_menu[];
-> -extern const char *xpm_menu_inv[];
-> -extern const char *xpm_menuback[];
-> -extern const char *xpm_void[];
-> +extern const char * const xpm_load[];
-> +extern const char * const xpm_save[];
-> +extern const char * const xpm_back[];
-> +extern const char * const xpm_tree_view[];
-> +extern const char * const xpm_single_view[];
-> +extern const char * const xpm_split_view[];
-> +extern const char * const xpm_symbol_no[];
-> +extern const char * const xpm_symbol_mod[];
-> +extern const char * const xpm_symbol_yes[];
-> +extern const char * const xpm_choice_no[];
-> +extern const char * const xpm_choice_yes[];
-> +extern const char * const xpm_menu[];
-> +extern const char * const xpm_menu_inv[];
-> +extern const char * const xpm_menuback[];
-> +extern const char * const xpm_void[];
->
->  #ifdef __cplusplus
->  }
-> --
-> 2.25.1
->
-
-
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index bd07b4edd6fc..ccca36f881d6 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1017,6 +1017,20 @@ static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
+ 	}
+ }
+ 
++void nvme_execute_passthru_rq(struct request *rq)
++{
++	struct nvme_command *cmd = nvme_req(rq)->cmd;
++	struct nvme_ctrl *ctrl = nvme_req(rq)->ctrl;
++	struct nvme_ns *ns = rq->q->queuedata;
++	struct gendisk *disk = ns ? ns->disk : NULL;
++	u32 effects;
++
++	effects = nvme_passthru_start(ctrl, ns, cmd->common.opcode);
++	blk_execute_rq(rq->q, disk, rq, 0);
++	nvme_passthru_end(ctrl, effects);
++}
++EXPORT_SYMBOL_NS_GPL(nvme_execute_passthru_rq, NVME_TARGET_PASSTHRU);
++
+ static int nvme_submit_user_cmd(struct request_queue *q,
+ 		struct nvme_command *cmd, void __user *ubuffer,
+ 		unsigned bufflen, void __user *meta_buffer, unsigned meta_len,
+@@ -1055,7 +1069,7 @@ static int nvme_submit_user_cmd(struct request_queue *q,
+ 		}
+ 	}
+ 
+-	blk_execute_rq(req->q, disk, req, 0);
++	nvme_execute_passthru_rq(req);
+ 	if (nvme_req(req)->flags & NVME_REQ_CANCELLED)
+ 		ret = -EINTR;
+ 	else
+@@ -1489,7 +1503,6 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	struct nvme_passthru_cmd cmd;
+ 	struct nvme_command c;
+ 	unsigned timeout = 0;
+-	u32 effects;
+ 	u64 result;
+ 	int status;
+ 
+@@ -1516,12 +1529,10 @@ static int nvme_user_cmd(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	if (cmd.timeout_ms)
+ 		timeout = msecs_to_jiffies(cmd.timeout_ms);
+ 
+-	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
+ 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
+ 			nvme_to_user_ptr(cmd.addr), cmd.data_len,
+ 			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
+ 			0, &result, timeout);
+-	nvme_passthru_end(ctrl, effects);
+ 
+ 	if (status >= 0) {
+ 		if (put_user(result, &ucmd->result))
+@@ -1537,7 +1548,6 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	struct nvme_passthru_cmd64 cmd;
+ 	struct nvme_command c;
+ 	unsigned timeout = 0;
+-	u32 effects;
+ 	int status;
+ 
+ 	if (!capable(CAP_SYS_ADMIN))
+@@ -1563,12 +1573,10 @@ static int nvme_user_cmd64(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	if (cmd.timeout_ms)
+ 		timeout = msecs_to_jiffies(cmd.timeout_ms);
+ 
+-	effects = nvme_passthru_start(ctrl, ns, cmd.opcode);
+ 	status = nvme_submit_user_cmd(ns ? ns->queue : ctrl->admin_q, &c,
+ 			nvme_to_user_ptr(cmd.addr), cmd.data_len,
+ 			nvme_to_user_ptr(cmd.metadata), cmd.metadata_len,
+ 			0, &cmd.result, timeout);
+-	nvme_passthru_end(ctrl, effects);
+ 
+ 	if (status >= 0) {
+ 		if (put_user(cmd.result, &ucmd->result))
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index d4dbf7280500..c43e0e4e0b97 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -786,5 +786,6 @@ static inline void nvme_hwmon_init(struct nvme_ctrl *ctrl) { }
+ 
+ u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 			 u8 opcode);
++void nvme_execute_passthru_rq(struct request *rq);
+ 
+ #endif /* _NVME_H */
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
