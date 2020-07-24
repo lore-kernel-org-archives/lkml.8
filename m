@@ -2,178 +2,120 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B78EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D085EC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9E9C20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:55:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="yw8HskBN"
+	by mail.kernel.org (Postfix) with ESMTP id ABA1F20737
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595598937;
+	bh=dBOSEmv/jbG85FH1I0XU+w0TPh3/pcF87TvXO5QwAgE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H7aoDe6qMJa6FK+xeWFiFUdEcupHrhzJ09LpQuYdh95/qF/vlKfZKghI5q3oJPAeh
+	 rh1sXJZ8UC7LxdQrfLBlihU1m6SnVtqxgAvEwsyOxL3PypBMSE7QxiqZDhKJdW3LQv
+	 URPy6kWG8Ra3IJmlF74AAOP6/hBRTaiMF4wiYs50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgGXNzO (ORCPT
+        id S1726926AbgGXNzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:55:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
+        Fri, 24 Jul 2020 09:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgGXNzO (ORCPT
+        with ESMTP id S1726329AbgGXNzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:55:14 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC5DDC0619E4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:55:13 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id a21so10049737ejj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:55:13 -0700 (PDT)
+        Fri, 24 Jul 2020 09:55:35 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83AEAC0619D3;
+        Fri, 24 Jul 2020 06:55:35 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id a1so7077279edt.10;
+        Fri, 24 Jul 2020 06:55:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2+QY4UUobhGBvSSFOCx6nVkPgfj8aj4xZ1WgLjYrTQs=;
-        b=yw8HskBNj5wOQJSaAsDDosZQzeLjims7JWWXKdcziXgfxwCTExxUhYTruFid5xgh8T
-         7SxjC/csP73hxZuLXPZm34Iz8fw6WG7hjiR5uvQzZKsedkAWqQhR+ppw0+mjKSlibCYF
-         vxQS8PsSkoA0cfWG41Gs+CWBr7oLDXmQkbUmN3a/xKyXcVL9pyRrd520M5f6KtYB67CY
-         lBLeCvPY4BOFokvNqbHqorLtD2L9SEy7WyEXA2aSIQGpsDUJYj/R0KTDCovBALQhllG4
-         F+Qj79J1hh/g2J5y/nc5fO0Egqqn3x2nb86zlya0t64gGFhwzm/DpC5VN787S3p6hRdL
-         utMg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bmFz7cHe6FXncDvQc9pcir1rKoTqKWeDI3/7YT3MhQw=;
+        b=mvFJOEB4reBPoVZNhFMX0sz/P47ysC3LXwOpKC53C3V3a/n5FUk6LJQwDfD3qqTEFN
+         UAtu50snoubFDkeqeeEA6g2QILZWsFsh7Uu+GXbmB39r/bD2WHQAynF+hd75KaiHkDy7
+         8P8bmkjuF3OnZ4PUWK7j2maGdV3SRxdvIar2kq7t7Awj4WswaEM4iGdWd7a8kEx1+k72
+         NXkjhcc+oxLoIeyj+e4cYkuq8IyxS07SCPH6YyZCLELVtIL5dh1e4HRsyfSrpH/N48dF
+         I+oCXLNnu4tCazuvWruKtHgH9PjcE5ywp9Hnbx9C+PjrdtHzjvRM9M0/guU6+4DAPgUc
+         5UDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2+QY4UUobhGBvSSFOCx6nVkPgfj8aj4xZ1WgLjYrTQs=;
-        b=DS1gHyRE43DPCWO2Me5DTuP+sOY13/fL0/9epQh50CxwSrckTxVREnzqVujvt6uZXp
-         OQbrEZlJoBWayZmH+y89ty9oXOQMinXO8kTXcP+8vWrtCEA+asdRG50hSNURW0exjjpi
-         JX4RdEN08bVh6bBSFXVzNRAMmKqDbOT4OEd2wRkOZbCTBRmvAyn65lnakIuqL5Ul0ZFu
-         BuQLIHxAnn/0Gf/pWs+iRwP7omWI+9Mf1DhS1CRgJxmcwJgZKEpIuvTwMriHLn7P+g7w
-         aVKQ4b6qh+HQZ1QuK+yIPgPgXTvOBFMEfPh+9ULcRcvO1dEursqs4aYVyTFvGV6xoIEW
-         Iylg==
-X-Gm-Message-State: AOAM531LunBHYgmGjpVzqxWAx+sVhMIyOdUZ5jOrnslTBNgtNQzCvwTd
-        i3xqzFlcJgOirTlW/U0WdbbP/6DftJjQ3kPUvZYPN7s=
-X-Google-Smtp-Source: ABdhPJxTX4nMAqNgQlVPyc+Z5BK8nuJJeXDqJEBY/FoSoIzyn9oUsZSoJGfXybNqS+CbQYYvKt1coik5DkaPdaRsOlI=
-X-Received: by 2002:a17:906:1911:: with SMTP id a17mr1088054eje.431.1595598912508;
- Fri, 24 Jul 2020 06:55:12 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=bmFz7cHe6FXncDvQc9pcir1rKoTqKWeDI3/7YT3MhQw=;
+        b=R8qtMgFoovM5UQHfK2NZtNlozxGd1Rh0s13JUtwJjNTilMgT9Tvt+W6+5cdLz8Pzqo
+         XRffXzPs1EDRih2s0PK8rvup3w+Tan8RpmZz0EnTIEy7Rw+W9BNbrkJyKeoTksyuvs+d
+         +etbPm9HKOaWgvNYZ6epNX3xYtNacQSAkGuXd1GZdEGPOQ+pMF3tMlrwft7tYavPuL/H
+         ix5RTqs7F7aeursFI9Z18EYyBtuc83UtLvAA6SkrgTluka3ggfkjFJZ8NV4K2yOTXvjw
+         s6FZVdNjpLGPUcJO1StgWRI9J7nHwWyfixtgf3hVB4wpDna/X1c7uhx/LghCVdFLajAr
+         vNRQ==
+X-Gm-Message-State: AOAM530HZBTEqCg7xqxoBFuvHw4rIeagDAQaeqi55zNhHndL/TJUA+zX
+        kTh4QsdMb2zLCLFRZJfKq10=
+X-Google-Smtp-Source: ABdhPJy1S3uyp9RG31NrgjgypWQdqbo8eySe/kk3lS+aH9O2qTBtvNLiRVmi5VzrWW0hZojtqZx56Q==
+X-Received: by 2002:a05:6402:319b:: with SMTP id di27mr9180215edb.133.1595598934297;
+        Fri, 24 Jul 2020 06:55:34 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id cc9sm809400edb.14.2020.07.24.06.55.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 06:55:33 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 15:55:31 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Huaixin Chang <changhuaixin@linux.alibaba.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     jpoimboe@redhat.com, bp@alien8.de, hpa@zytor.com,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        luto@amacapital.net, michal.lkml@markovi.net, mingo@redhat.com,
+        peterz@infradead.org, tglx@linutronix.de, x86@kernel.org,
+        yamada.masahiro@socionext.com
+Subject: Re: [PATCH 1/3] scripts/sorttable: Change section type of orc_lookup
+ to SHT_PROGBITS
+Message-ID: <20200724135531.GB648324@gmail.com>
+References: <20200723034643.33537-1-changhuaixin@linux.alibaba.com>
+ <20200723034643.33537-2-changhuaixin@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20200724091520.880211-1-tweek@google.com> <CAEjxPJ45ij3obT37ywn_edb9xb89z-SdwzejfN6+jrvAtghXfA@mail.gmail.com>
-In-Reply-To: <CAEjxPJ45ij3obT37ywn_edb9xb89z-SdwzejfN6+jrvAtghXfA@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 24 Jul 2020 09:54:59 -0400
-Message-ID: <CAHC9VhS4aXD8kcXnQ2MsYvjc--xXSUpsM1xtgq3X5DBT59ohhw@mail.gmail.com>
-Subject: Re: [PATCH] selinux: add tracepoint on denials
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723034643.33537-2-changhuaixin@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 9:32 AM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
-> On Fri, Jul 24, 2020 at 5:15 AM Thi=C3=A9baud Weksteen <tweek@google.com>=
- wrote:
-> > The audit data currently captures which process and which target
-> > is responsible for a denial. There is no data on where exactly in the
-> > process that call occurred. Debugging can be made easier by being able =
-to
-> > reconstruct the unified kernel and userland stack traces [1]. Add a
-> > tracepoint on the SELinux denials which can then be used by userland
-> > (i.e. perf).
-> >
-> > Although this patch could manually be added by each OS developer to
-> > trouble shoot a denial, adding it to the kernel streamlines the
-> > developers workflow.
-> >
-> > [1] https://source.android.com/devices/tech/debug/native_stack_dump
-> >
-> > Signed-off-by: Thi=C3=A9baud Weksteen <tweek@google.com>
-> > Signed-off-by: Joel Fernandes <joelaf@google.com>
-> > ---
-> >  MAINTAINERS                    |  1 +
-> >  include/trace/events/selinux.h | 35 ++++++++++++++++++++++++++++++++++
-> >  security/selinux/avc.c         |  6 ++++++
-> >  3 files changed, 42 insertions(+)
-> >  create mode 100644 include/trace/events/selinux.h
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index e64cdde81851..6b6cd5e13537 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -15358,6 +15358,7 @@ T:      git git://git.kernel.org/pub/scm/linux/=
-kernel/git/pcmoore/selinux.git
-> >  F:     Documentation/ABI/obsolete/sysfs-selinux-checkreqprot
-> >  F:     Documentation/ABI/obsolete/sysfs-selinux-disable
-> >  F:     Documentation/admin-guide/LSM/SELinux.rst
-> > +F:     include/trace/events/selinux.h
-> >  F:     include/uapi/linux/selinux_netlink.h
-> >  F:     scripts/selinux/
-> >  F:     security/selinux/
-> > diff --git a/include/trace/events/selinux.h b/include/trace/events/seli=
-nux.h
-> > new file mode 100644
-> > index 000000000000..e247187a8135
-> > --- /dev/null
-> > +++ b/include/trace/events/selinux.h
-> > @@ -0,0 +1,35 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#undef TRACE_SYSTEM
-> > +#define TRACE_SYSTEM selinux
-> > +
-> > +#if !defined(_TRACE_SELINUX_H) || defined(TRACE_HEADER_MULTI_READ)
-> > +#define _TRACE_SELINUX_H
-> > +
-> > +#include <linux/ktime.h>
-> > +#include <linux/tracepoint.h>
-> > +
-> > +TRACE_EVENT(selinux_denied,
-> > +
-> > +       TP_PROTO(int cls, int av),
-> > +
-> > +       TP_ARGS(cls, av),
-> > +
-> > +       TP_STRUCT__entry(
-> > +               __field(int, cls)
-> > +               __field(int, av)
-> > +       ),
-> > +
-> > +       TP_fast_assign(
-> > +               __entry->cls =3D cls;
-> > +               __entry->av =3D av;
-> > +       ),
-> > +
-> > +       TP_printk("denied %d %d",
-> > +               __entry->cls,
-> > +               __entry->av)
-> > +);
->
-> I would think you would want to log av as %x for easier interpretation
-> especially when there are multiple permissions being checked at once
-> (which can happen). Also both cls and av would properly be unsigned
-> values.  Only other question I have is whether it would be beneficial
-> to include other information here to help uniquely identify/correlate
-> the denial with the avc: message and whether any decoding of the
-> class, av, or other information could/should be done here versus in
-> some userland helper.
 
-It does seem like at the very least it would be nice to see the av as
-hex values instead of integers, e.g. "%x" in the TP_printk() call.
-Considering this patch is about making dev's lives easier, I tend to
-agree with Stephen questioning if you should go a step further and
-convert both the class and av values into string representations.
+* Huaixin Chang <changhuaixin@linux.alibaba.com> wrote:
 
---=20
-paul moore
-www.paul-moore.com
+> In order to edit orc_lookup table via sorttable, type of section
+> orc_lookup needs to be SHT_PROGBITS instead of SHT_NOBITS.
+> 
+> Linker script doesn't seem to allow manual specification of the section
+> type, so just write a byte into the section instead.
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
+> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+> ---
+>  include/asm-generic/vmlinux.lds.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index db600ef218d7..49f4f5bc6165 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -826,6 +826,8 @@
+>  		. += (((SIZEOF(.text) + LOOKUP_BLOCK_SIZE - 1) /	\
+>  			LOOKUP_BLOCK_SIZE) + 1) * 4;			\
+>  		orc_lookup_end = .;					\
+> +		/* HACK: force SHT_PROGBITS so sorttable can edit: */	\
+> +		BYTE(1);						\
+
+Cc:-ing Masahiro Yamada, maybe there's a cleaner solution to this?
+
+Thanks,
+
+	Ingo
