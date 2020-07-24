@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92821C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C64C433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72FD220768
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C0420768
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:56:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgGXK4P (ORCPT
+        id S1727881AbgGXK4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:56:15 -0400
-Received: from mga03.intel.com ([134.134.136.65]:6908 "EHLO mga03.intel.com"
+        Fri, 24 Jul 2020 06:56:22 -0400
+Received: from mga03.intel.com ([134.134.136.65]:6918 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbgGXK4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:56:13 -0400
-IronPort-SDR: e/8eBRYezjBh+0lktMOhjPfBVoq6ciPmzD0+mwgKHbzMoxGwaOM6uw/GOp0NN4cGorjsMyFLh9
- xIRgdjy1IiKg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="150675014"
+        id S1727093AbgGXK4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 06:56:20 -0400
+IronPort-SDR: gZnl9j//nozhHPzcTi6tFXGf9NFphX4+7BeYorAieU/BuFgQbvrd+Z7suiYq517Hfg23rL4Htv
+ YkagLPlUg3TA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="150675029"
 X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
-   d="scan'208";a="150675014"
+   d="scan'208";a="150675029"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 03:56:13 -0700
-IronPort-SDR: p/ePnwyeQJlPOPOiNEifMstkJkp29RfObeMal3Y9DDC/ZvxkKARaOYCK0PMiI4Lp9eOKKR0asg
- h7Jv0QUiNQ5A==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 03:56:19 -0700
+IronPort-SDR: /4qoBCkXM4d6YKyxWH9Oz0mAgHCD0o02zZ41ydPRQ9d2VYEa1CdG4ox7Fdbo3oELzTIcdphsuw
+ SaDhgtDvQyjA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
-   d="scan'208";a="284901521"
+   d="scan'208";a="284901554"
 Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314.ger.corp.intel.com) ([10.237.222.51])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2020 03:56:10 -0700
+  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2020 03:56:16 -0700
 From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
 To:     alex.williamson@redhat.com, herbert@gondor.apana.org.au
 Cc:     cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
@@ -45,63 +45,70 @@ Cc:     cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
         linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Subject: [PATCH v5 1/5] PCI: Add Intel QuickAssist device IDs
-Date:   Fri, 24 Jul 2020 11:55:56 +0100
-Message-Id: <20200724105600.10814-2-giovanni.cabiddu@intel.com>
+Subject: [PATCH v5 3/5] vfio/pci: Add QAT devices to denylist
+Date:   Fri, 24 Jul 2020 11:55:58 +0100
+Message-Id: <20200724105600.10814-4-giovanni.cabiddu@intel.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200724105600.10814-1-giovanni.cabiddu@intel.com>
 References: <20200724105600.10814-1-giovanni.cabiddu@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device IDs for the following Intel QuickAssist devices: DH895XCC,
+The current generation of Intel® QuickAssist Technology devices
+are not designed to run in an untrusted environment because of the
+following issues reported in the document "Intel® QuickAssist Technology
+(Intel® QAT) Software for Linux" (document number 336211-014):
+
+QATE-39220 - GEN - Intel® QAT API submissions with bad addresses that
+             trigger DMA to invalid or unmapped addresses can cause a
+             platform hang
+QATE-7495  - GEN - An incorrectly formatted request to Intel® QAT can
+             hang the entire Intel® QAT Endpoint
+
+The document is downloadable from https://01.org/intel-quickassist-technology
+at the following link:
+https://01.org/sites/default/files/downloads/336211-014-qatforlinux-releasenotes-hwv1.7_0.pdf
+
+This patch adds the following QAT devices to the denylist: DH895XCC,
 C3XXX and C62X.
 
-The defines in this patch are going to be referenced in two independent
-drivers, qat and vfio-pci.
-
 Signed-off-by: Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 Reviewed-by: Fiona Trahe <fiona.trahe@intel.com>
 ---
- include/linux/pci_ids.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/vfio/pci/vfio_pci.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 0ad57693f392..f3166b1425ca 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2659,6 +2659,8 @@
- #define PCI_DEVICE_ID_INTEL_80332_1	0x0332
- #define PCI_DEVICE_ID_INTEL_80333_0	0x0370
- #define PCI_DEVICE_ID_INTEL_80333_1	0x0372
-+#define PCI_DEVICE_ID_INTEL_QAT_DH895XCC	0x0435
-+#define PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF	0x0443
- #define PCI_DEVICE_ID_INTEL_82375	0x0482
- #define PCI_DEVICE_ID_INTEL_82424	0x0483
- #define PCI_DEVICE_ID_INTEL_82378	0x0484
-@@ -2708,6 +2710,8 @@
- #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_NHI     0x1577
- #define PCI_DEVICE_ID_INTEL_ALPINE_RIDGE_4C_BRIDGE  0x1578
- #define PCI_DEVICE_ID_INTEL_80960_RP	0x1960
-+#define PCI_DEVICE_ID_INTEL_QAT_C3XXX	0x19e2
-+#define PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF	0x19e3
- #define PCI_DEVICE_ID_INTEL_82840_HB	0x1a21
- #define PCI_DEVICE_ID_INTEL_82845_HB	0x1a30
- #define PCI_DEVICE_ID_INTEL_IOAT	0x1a38
-@@ -2924,6 +2928,8 @@
- #define PCI_DEVICE_ID_INTEL_IOAT_JSF7	0x3717
- #define PCI_DEVICE_ID_INTEL_IOAT_JSF8	0x3718
- #define PCI_DEVICE_ID_INTEL_IOAT_JSF9	0x3719
-+#define PCI_DEVICE_ID_INTEL_QAT_C62X	0x37c8
-+#define PCI_DEVICE_ID_INTEL_QAT_C62X_VF	0x37c9
- #define PCI_DEVICE_ID_INTEL_ICH10_0	0x3a14
- #define PCI_DEVICE_ID_INTEL_ICH10_1	0x3a16
- #define PCI_DEVICE_ID_INTEL_ICH10_2	0x3a18
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 0101f41e7834..bcc22d19ee07 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -75,6 +75,21 @@ static inline bool vfio_vga_disabled(void)
+ 
+ static bool vfio_pci_dev_in_denylist(struct pci_dev *pdev)
+ {
++	switch (pdev->vendor) {
++	case PCI_VENDOR_ID_INTEL:
++		switch (pdev->device) {
++		case PCI_DEVICE_ID_INTEL_QAT_C3XXX:
++		case PCI_DEVICE_ID_INTEL_QAT_C3XXX_VF:
++		case PCI_DEVICE_ID_INTEL_QAT_C62X:
++		case PCI_DEVICE_ID_INTEL_QAT_C62X_VF:
++		case PCI_DEVICE_ID_INTEL_QAT_DH895XCC:
++		case PCI_DEVICE_ID_INTEL_QAT_DH895XCC_VF:
++			return true;
++		default:
++			return false;
++		}
++	}
++
+ 	return false;
+ }
+ 
 -- 
 2.26.2
 
