@@ -2,137 +2,128 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B9EC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3887B2065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66812074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:14:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pXLqcyKc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crDQbd0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgGXNOh (ORCPT
+        id S1727044AbgGXNOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:14:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35244 "EHLO
+        Fri, 24 Jul 2020 09:14:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgGXNOg (ORCPT
+        with ESMTP id S1726753AbgGXNOj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:14:36 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA1FC0619D3;
-        Fri, 24 Jul 2020 06:14:36 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id t11so5062726pfq.11;
-        Fri, 24 Jul 2020 06:14:36 -0700 (PDT)
+        Fri, 24 Jul 2020 09:14:39 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 443B0C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:14:39 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id gc15so5842776pjb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:14:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pNbiY4rCOWfn291u6DvF/2Ahe4KMxxHPAD/LG/AtX8A=;
-        b=pXLqcyKcwadFpxMawcde5uKWsmYRkcG8MkmB7OazkUR1B9BxLPOTtomS0atxp0wsl0
-         3K/nBNDtdLM3XMKp/+Q2KWPhTzNaLsUfCbkpvUQYl6EOzkHNK4vD7ZfKDhoLzWCd2/se
-         fgoI8WC64Tprw9SX7RVYFGJVh3Fr+l1v+e5gbAofaNSm7BpQNZBwaJXh4KnnE/c7ATBL
-         JP1X36gJgrQMWq1w5fNtffUVAvZelPJ7TC9Q/xuCVhzxxomWZcH5/i0edBgmsWZ5thXx
-         Ig3Akrdt8zubCyDuzbipimtLx+lMYUOnS0mpNIrbb3vf4jg7KTVvtMzq2Quh777Evv+Z
-         RCAw==
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=reMLRYlsYVkeM3mrx5IDn5+pquZ2PKUwq+BgQPeb0uE=;
+        b=crDQbd0+Ra2ZheXq/4azXw+hYoYrjbQc11JsdCvANLDkTf8DoL96/OEeSL8+HTgJyp
+         obQoiSet+rGZ5/JCo5sQjNwikd+TQoTXPDj6DYpCjt+AXr5HzOxgUh47x6T1EbancBVZ
+         OtIxxi0ifmL/i5lXyyfgOM3H3BEi+P+qKvC9xRdwAw5wVN7tbHB1AtdYIpDYmmBZOQDu
+         WcGFGUu4OKOgNhwSza5ek1VTyABtHAIpiQlnrobhnpix4OlG5C7NIu+KjAVRxJql74Bw
+         YQvbFZs6L40npUAtmGjF2eNaCkV4tQ3OON9gl9TPam67WRwhRpJ17ZW6WDfq9x1qLJ13
+         0KFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pNbiY4rCOWfn291u6DvF/2Ahe4KMxxHPAD/LG/AtX8A=;
-        b=fOhw1y0pJZVgXHfJ82/XVH4Qx+EbPI0sqKmKcQPkY56N98j/dBwBOMBhJIoqKSHFr6
-         h/DFi6v7n+uk1D5iUk45GNveIhyREa7COJsAXG9vVNyU6XpAQ8HAvTX5mzX2/BBp3crW
-         kNb5TF3d0+RFK8Etug1IgSt5AQj9VsbGWQ2/lw02xO0vs0dQyEwoLn+5wJwy6psNegrl
-         y7MrWyLr9gDGkbH2XzJGHNBm3WJZpWhMjGLE2uwkDehLGuu1nHXruKF1J+z2c6mrLei5
-         r0KopvgUJSuqAeTdGn7YkX2DAyF3g/iVhm1nGQMAKbrGHHgv8ppwRNiNZaRRExIxhxSH
-         mm/w==
-X-Gm-Message-State: AOAM530iJk9lXCOY+R+kyb07YU0Ezu7hsveHDc/gPZoqM06XutRfVliM
-        VcWJFVWtL8u2AHkpNsZwYh8=
-X-Google-Smtp-Source: ABdhPJxTM0xNsmofbW6cID6lTwKMAYAg9GWepJp2u9OgGyKYII7bL4WnhIOmRKega9Bzh5DogPa2Zg==
-X-Received: by 2002:a05:6a00:1586:: with SMTP id u6mr8714565pfk.147.1595596476262;
-        Fri, 24 Jul 2020 06:14:36 -0700 (PDT)
-Received: from bobo.ibm.com (110-174-173-27.tpgi.com.au. [110.174.173.27])
-        by smtp.gmail.com with ESMTPSA id az16sm5871998pjb.7.2020.07.24.06.14.30
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=reMLRYlsYVkeM3mrx5IDn5+pquZ2PKUwq+BgQPeb0uE=;
+        b=q8vrwmQ0k73jdS0ZmAY53JlapzaDsWGpjkmscLlQyMUz1dFLIsaAgX3msqc7ccCU2x
+         bpOfWnrilKGxgURSMqHIBznwQJ+HlOJXhgWJZ+zuk3yxFxaay3/OgKIhYII7YN2BTk4n
+         GOYaGsndaTbzBiz43jIbR8y/5xvDThinLbDuPK8owDCbBFa5It5nIfCYCGBJTnbW+fQl
+         RSsfXyYVTFzFo+/NcathshMKQ8j289rWSC6a2XEHfqI2WgSKV/lDn8iw7lhZsD/NwKLK
+         wTuOnt3Rf0eXfKm57ns9BSfaDB+u/H/q637J9sGUkcdrRn9N6XAor2N40TkZmqVO3YHQ
+         WzWg==
+X-Gm-Message-State: AOAM532fv+vBIrpINWRLZSF+ElOXGY0CwC9jaFU9jm34CpdIsFbNrgK8
+        vEjmjTflG/NG9AVrA9EcTtQ=
+X-Google-Smtp-Source: ABdhPJzo6r4cVg9XFVnSSmhDLOnaM7HNU6jJzG2pIvwWmMAoLkD6y9qFg/71rcuEhHlZbvrnAbdtZw==
+X-Received: by 2002:a17:90a:1089:: with SMTP id c9mr5403159pja.180.1595596478783;
+        Fri, 24 Jul 2020 06:14:38 -0700 (PDT)
+Received: from localhost ([1.22.41.181])
+        by smtp.gmail.com with ESMTPSA id 66sm6600458pfg.63.2020.07.24.06.14.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 06:14:35 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        =?UTF-8?q?Michal=20Such=C3=A1nek?= <msuchanek@suse.de>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
-        linux-arch@vger.kernel.org
-Subject: [PATCH v4 0/6] powerpc: queued spinlocks and rwlocks
-Date:   Fri, 24 Jul 2020 23:14:17 +1000
-Message-Id: <20200724131423.1362108-1-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Fri, 24 Jul 2020 06:14:37 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 18:44:33 +0530
+From:   Mrinal Pandey <mrinalmni@gmail.com>
+To:     gregkh@linuxfoundation.org, arve@android.com, tkjos@android.com,
+        maco@android.com, joel@joelfernandes.org, christian@brauner.io,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        mrinalmni@gmail.com
+Subject: [PATCH 5/6] drivers: android: Fix a variable declaration coding
+ style issue
+Message-ID: <20200724131433.stf3ycooogawyzb3@mrinalpandey>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="grqqnbefsvlkzzvh"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Updated with everybody's feedback (thanks all), and more performance
-results.
 
-What I've found is I might have been measuring the worst load point for
-the paravirt case, and by looking at a range of loads it's clear that
-queued spinlocks are overall better even on PV, doubly so when you look
-at the generally much improved worst case latencies.
+--grqqnbefsvlkzzvh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I have defaulted it to N even though I'm less concerned about the PV
-numbers now, just because I think it needs more stress testing. But
-it's very nicely selectable so should be low risk to include.
+Add a blank line after variable declarations as suggested by checkpatch.
 
-All in all this is a very cool technology and great results especially
-on the big systems but even on smaller ones there are nice gains. Thanks
-Waiman and everyone who developed it.
+Signed-off-by: Mrinal Pandey <mrinalmni@gmail.com>
+---
+ drivers/android/binderfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks,
-Nick
+diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+index 7cf566aafe1f..8a98a36ff71a 100644
+--- a/drivers/android/binderfs.c
++++ b/drivers/android/binderfs.c
+@@ -351,6 +351,7 @@ static const struct super_operations binderfs_super_ops=
+ =3D {
+ static inline bool is_binderfs_control_device(const struct dentry *dentry)
+ {
+ 	struct binderfs_info *info =3D dentry->d_sb->s_fs_info;
++
+ 	return info->control_dentry =3D=3D dentry;
+ }
+=20
+--=20
+2.25.1
 
-Nicholas Piggin (6):
-  powerpc/pseries: move some PAPR paravirt functions to their own file
-  powerpc: move spinlock implementation to simple_spinlock
-  powerpc/64s: implement queued spinlocks and rwlocks
-  powerpc/pseries: implement paravirt qspinlocks for SPLPAR
-  powerpc/qspinlock: optimised atomic_try_cmpxchg_lock that adds the
-    lock hint
-  powerpc: implement smp_cond_load_relaxed
 
- arch/powerpc/Kconfig                          |  15 +
- arch/powerpc/include/asm/Kbuild               |   1 +
- arch/powerpc/include/asm/atomic.h             |  28 ++
- arch/powerpc/include/asm/barrier.h            |  14 +
- arch/powerpc/include/asm/paravirt.h           |  87 +++++
- arch/powerpc/include/asm/qspinlock.h          |  91 ++++++
- arch/powerpc/include/asm/qspinlock_paravirt.h |   7 +
- arch/powerpc/include/asm/simple_spinlock.h    | 288 ++++++++++++++++
- .../include/asm/simple_spinlock_types.h       |  21 ++
- arch/powerpc/include/asm/spinlock.h           | 308 +-----------------
- arch/powerpc/include/asm/spinlock_types.h     |  17 +-
- arch/powerpc/lib/Makefile                     |   3 +
- arch/powerpc/lib/locks.c                      |  12 +-
- arch/powerpc/platforms/pseries/Kconfig        |   9 +-
- arch/powerpc/platforms/pseries/setup.c        |   4 +-
- include/asm-generic/qspinlock.h               |   4 +
- 16 files changed, 588 insertions(+), 321 deletions(-)
- create mode 100644 arch/powerpc/include/asm/paravirt.h
- create mode 100644 arch/powerpc/include/asm/qspinlock.h
- create mode 100644 arch/powerpc/include/asm/qspinlock_paravirt.h
- create mode 100644 arch/powerpc/include/asm/simple_spinlock.h
- create mode 100644 arch/powerpc/include/asm/simple_spinlock_types.h
+--grqqnbefsvlkzzvh
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-2.23.0
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCgAdFiEE8DwCG1PwaC2uTI99xIwpEWwxhGQFAl8a3rkACgkQxIwpEWwx
+hGTS3hAAnBoTVKJZTQYY6H7ngmGccBbE4quqljqUD8/0UyfwOCH91x3Py9M35U09
+DeDH2opW3cJn3boASkps0OuDsd8Eizte2DOxVnvzcFgszkty6XLxzfuaNQnywx55
+6HVPITlom5YCCV/gi1bJUBtbeTHzy9ILb3NXeycgiZua5aq9EwFqKNJaoHAtPGrT
+B6QCkNAw1hrfvCd5bgqxOgO0ODgMbOL1w/MTnbobUHKeTrLPgKQyZpEsvTBPfJfa
+8Swbmf7Wp3QNk/RJSVsHQOsOH7elK6P4ApGrAveoU/SSa9JU49G40ENHeuPDe9K+
+cTStZkaX8sO48xRxB/yLwUyGbR0E/MRbKxI4BA699fMGOIeDnNN762lr8bZoRAkg
+RUMkH7eQUgnAAsnUl3P/Mk1Wa1d4TlIdmnAeNFsa7CKxnMISGtQr/Wg6uE1guAbU
+HvcZ1CzYmy8w2o/C4jJam3F+VymG2rtpskcLmnH7rpTLWtJGu3+oOULX/d04ordD
+qCQaVuZmeg1268/RFaRICNN6oycEI3bZc8thGzmrH6YD1V9b5hoRBUo30tFJ+7Tf
+ner0nESJWLg29oeEzPVeOklqh/2gLsCrIXq/doM3VMJm7RS99cgudjWYZayaO0xB
+Ms4I19LgSIjj61avbj28nEJODFpAi+BYdZgcLBz7DiC4iR8wYpk=
+=GUIX
+-----END PGP SIGNATURE-----
+
+--grqqnbefsvlkzzvh--
