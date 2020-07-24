@@ -2,267 +2,124 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB42C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE7FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 221DB2065E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F872065E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:24:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mFuCi7l+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgGXHVv (ORCPT
+        id S1726686AbgGXHYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:21:51 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:50783 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726543AbgGXHVu (ORCPT
+        Fri, 24 Jul 2020 03:24:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbgGXHYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:21:50 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07519391|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.664333-0.000360464-0.335307;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03268;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.I6q5URR_1595575301;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I6q5URR_1595575301)
-          by smtp.aliyun-inc.com(10.147.41.178);
-          Fri, 24 Jul 2020 15:21:45 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     mripard@kernel.org, wens@csie.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com, Yangtao Li <frank@allwinnertech.com>
-Subject: [PATCH v5 16/16] arm64: allwinner: A100: add support for Allwinner Perf1 board
-Date:   Fri, 24 Jul 2020 15:21:05 +0800
-Message-Id: <30f4a3fc6ac84d05094e2c3b89d1dddc8ff6b7fc.1595572867.git.frank@allwinnertech.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1595572867.git.frank@allwinnertech.com>
-References: <cover.1595572867.git.frank@allwinnertech.com>
+        Fri, 24 Jul 2020 03:24:01 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEF50C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:24:00 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q4so8997562lji.2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Agbo96iJWTQmppeH0ZuVgDrrhEDWnKr3NEJ2MsKJuc=;
+        b=mFuCi7l+1rKxLSIS4b35GsIQLtRrutcM6ZpK4vRXfP3n07SDev1BNPBWl3J9CeFf/e
+         PzRVm3eCeLvS9EZQt8c3Xsu0U0oRLuOzPngbbt0c46GjdkagIN8NRMDN1OqfY9bfMoXM
+         Ce4S16ACxeEiF/dtgVqbFB9yzhkX+TZvT4ivsYbOI6jH8vgP39qexvtwvH1BV64UK9uO
+         n8wV700vtTzh5bgI1C0EbErR3Kz/nwE2jN5tyQrFD25QtG0UpbHJ2QLbDr8OItjijxmV
+         4Bzglfj+9DMSCcg0d/TGOiuGINFHsAhSsYlSgzsKec6ypoftrpkfTgcFjOilkbzahLSf
+         Brdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Agbo96iJWTQmppeH0ZuVgDrrhEDWnKr3NEJ2MsKJuc=;
+        b=sCorxoWNX0M+BY7WIkiHzz9b1dXa5n/D2nmr77crwm7W4Rt41CUQ4s3vsLIImuo6aB
+         jybl/xXu1Wco3fVO6EXJWp7OzhinbdQNR13k7TOx+/iCpallXyiR1VmyGzclQ/1fUp9n
+         jUSUmC/Y2G0KUAI5iERJ6RJhMJZuwK+QBpBS0VRtQ1aiAGCs6af68qSjVpNRdnbhCmi5
+         Tp9KSb7ZMclk01LaIbt/a4jc10HlBqK6+fO62ovhBXyjMCTqNt8IgF5a3JXpAxYUCExC
+         HuZeaBxzWhu1WcnBUhuNsMsHTdO+IzoehJfAH03a5cM/+sPn9bnLGZHIp2ptqsJJpdoO
+         wxpA==
+X-Gm-Message-State: AOAM533CvmQDKMKbVcIN+SrjqtMkXioCS3E9PbyR3cS6V34aFJM42P6l
+        BN1QSvf/4UDnuC08qN0EXogiTSsdR2QHdHEa1qJFbg==
+X-Google-Smtp-Source: ABdhPJzQ0oQeWvbZCU6Ss+2K5GdUaGPBLM+kpg2yLrepsv/h/3BOTAfChWcaUJIy3xgp6oz5Ai/Ciocd5hdvAv8g2gg=
+X-Received: by 2002:a2e:3c0e:: with SMTP id j14mr3783563lja.25.1595575439290;
+ Fri, 24 Jul 2020 00:23:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200723233853.48815-1-humjb_1983@163.com>
+In-Reply-To: <20200723233853.48815-1-humjb_1983@163.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 24 Jul 2020 09:23:48 +0200
+Message-ID: <CAKfTPtCnewaivay7bftUY27+-qB=ct3eSNEoZW=-2Z6k0S4B4Q@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: consider sched-idle CPU when selecting idle core
+To:     Jiang Biao <humjb_1983@163.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiang Biao <benbjiang@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <frank@allwinnertech.com>
+On Fri, 24 Jul 2020 at 01:39, Jiang Biao <humjb_1983@163.com> wrote:
+>
+> From: Jiang Biao <benbjiang@tencent.com>
+>
+> Sched-idle CPU has been considered in select_idle_cpu and
+> select_idle_smt, it also needs to be considered in select_idle_core to
+> be consistent and keep the same *idle* policy.
 
-A100 perf1 is an Allwinner A100-based SBC, with the following features:
+In the case of select_idle_core, we are looking for a core that is
+fully idle but if one CPU of the core is running a sched_idle task,
+the core will not be idle and we might end up having  the wakeup task
+on a CPU and a sched_idle task on another CPU of the core which is not
+what we want
 
-- 1GiB DDR3 DRAM
-- AXP803 PMIC
-- 2 USB 2.0 ports
-- MicroSD slot and on-board eMMC module
-- on-board Nand flash
-- ···
-
-Adds initial support for it, including UART and PMU.
-
-Signed-off-by: Yangtao Li <frank@allwinnertech.com>
----
- arch/arm64/boot/dts/allwinner/Makefile        |   1 +
- .../allwinner/sun50i-a100-allwinner-perf1.dts | 180 ++++++++++++++++++
- 2 files changed, 181 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
-
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index e4d3cd0ac5bb..ab780dbdd17b 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -14,6 +14,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinephone-1.1.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a100-allwinner-perf1.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus-v1.2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-emlid-neutis-n5-devboard.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
-new file mode 100644
-index 000000000000..d34c2bb1079f
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a100-allwinner-perf1.dts
-@@ -0,0 +1,180 @@
-+// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-+/*
-+ * Copyright (c) 2020 Yangtao Li <frank@allwinnertech.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun50i-a100.dtsi"
-+
-+/{
-+	model = "Allwinner A100 Perf1";
-+	compatible = "allwinner,a100-perf1", "allwinner,sun50i-a100";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&pio {
-+	vcc-pb-supply = <&reg_dcdc1>;
-+	vcc-pc-supply = <&reg_eldo1>;
-+	vcc-pd-supply = <&reg_dcdc1>;
-+	vcc-pe-supply = <&reg_dldo2>;
-+	vcc-pf-supply = <&reg_dcdc1>;
-+	vcc-pg-supply = <&reg_dldo1>;
-+	vcc-ph-supply = <&reg_dcdc1>;
-+};
-+
-+&r_pio {
-+	/*
-+	 * FIXME: We can't add that supply for now since it would
-+	 * create a circular dependency between pinctrl, the regulator
-+	 * and the RSB Bus.
-+	 *
-+	 * vcc-pl-supply = <&reg_aldo3>;
-+	 */
-+};
-+
-+&r_i2c0 {
-+	status = "okay";
-+
-+	axp803: pmic@34 {
-+		compatible = "x-powers,axp803";
-+		reg = <0x34>;
-+		interrupt-parent = <&r_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		x-powers,drive-vbus-en; /* set N_VBUSEN as output pin */
-+	};
-+};
-+
-+#include "axp803.dtsi"
-+
-+&ac_power_supply {
-+	status = "okay";
-+};
-+
-+&reg_aldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-pll-avcc";
-+};
-+
-+&reg_aldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-dram-1";
-+};
-+
-+&reg_aldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-usb-pl";
-+};
-+
-+&reg_dcdc1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-io-usb-pd-emmc-nand-card";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	/*
-+	 * FIXME: update min and max before support dvfs.
-+	 */
-+	regulator-min-microvolt = <500000>;
-+	regulator-max-microvolt = <1300000>;
-+	regulator-name = "vdd-cpux";
-+};
-+
-+/* DCDC3 is polyphased with DCDC2 */
-+
-+&reg_dcdc4 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <950000>;
-+	regulator-max-microvolt = <950000>;
-+	regulator-name = "vdd-sys-usb-dram";
-+};
-+
-+&reg_dcdc5 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1500000>;
-+	regulator-max-microvolt = <1500000>;
-+	regulator-name = "vcc-dram-2";
-+};
-+
-+&reg_dldo1 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-pg-dcxo-wifi";
-+};
-+
-+&reg_dldo2 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "vcc-pe-csi";
-+};
-+
-+&reg_dldo3 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "ldo-avdd-csi";
-+};
-+
-+&reg_dldo4 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "avcc-csi";
-+};
-+
-+&reg_eldo1 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-pc-lvds-csi-efuse-emmc-nand";
-+};
-+
-+&reg_eldo2 {
-+	regulator-min-microvolt = <1200000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "dvdd-csi";
-+};
-+
-+&reg_eldo3 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-mipi-lcd";
-+};
-+
-+&reg_fldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <900000>;
-+	regulator-max-microvolt = <900000>;
-+	regulator-name = "vdd-cpus-usb";
-+};
-+
-+&reg_ldo_io0 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-ctp";
-+	status = "okay";
-+};
-+
-+&reg_drivevbus {
-+	regulator-name = "usb0-vbus";
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
--- 
-2.24.0
-
+>
+> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
+> ---
+>  kernel/sched/fair.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 04fa8dbcfa4d..f430a9820d08 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -6014,7 +6014,7 @@ void __update_idle_core(struct rq *rq)
+>                 if (cpu == core)
+>                         continue;
+>
+> -               if (!available_idle_cpu(cpu))
+> +               if (!available_idle_cpu(cpu) && !sched_idle_cpu(cpu))
+>                         goto unlock;
+>         }
+>
+> @@ -6045,7 +6045,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
+>                 bool idle = true;
+>
+>                 for_each_cpu(cpu, cpu_smt_mask(core)) {
+> -                       if (!available_idle_cpu(cpu)) {
+> +                       if (!available_idle_cpu(cpu) && !sched_idle_cpu(cpu)) {
+>                                 idle = false;
+>                                 break;
+>                         }
+> --
+> 2.21.0
+>
+>
