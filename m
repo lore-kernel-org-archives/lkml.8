@@ -2,71 +2,115 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EADC433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DC4C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A555E20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:52:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595580774;
-	bh=3XAOLRXH+A5spT3PUCVqth7VHfe4CGFX/QSU9CZHx44=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=OuAXoUqEhiJbJWbGLoB1zLAiB0QrRhiTwcmyONBmEWwd/f06o2QT0ALPAHSS1W5vP
-	 3jYbf+TajpCgQIuKig3dYpov6Mjx3UcGNEATXanQNJ+D8dyqqOBzL0/QY8zBzNFlrm
-	 4VnmdY0cT585kBUMe0umWUjUMJIx35wxDyl0FK0U=
+	by mail.kernel.org (Postfix) with ESMTP id 4A8E52068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgGXIwx (ORCPT
+        id S1726918AbgGXIsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:52:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37754 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 04:48:10 -0400
+Received: from mga02.intel.com ([134.134.136.20]:45604 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbgGXIww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:52:52 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADBC5206EB;
-        Fri, 24 Jul 2020 08:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595580771;
-        bh=3XAOLRXH+A5spT3PUCVqth7VHfe4CGFX/QSU9CZHx44=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Rw7XkhQcY5FW6xbsyMZBXEUG/Ik1Wu+zCSg9CYpbtSNmDwm0krzyLmvfm5i2yl5jo
-         5YOFfvV5otirQ5ak3P6eveW2XcV8W/r9sTXHVcfdi2sLi9rVxLCVZZ5wSVb63iwkmr
-         1hJH1LLi0gKKVS/OR7VkFCnr/YzvNkMsQapjd1Q8=
-Content-Type: text/plain; charset="utf-8"
+        id S1726554AbgGXIsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 04:48:09 -0400
+IronPort-SDR: sH6rwSAxZ1rS5Gvp09MhgJ+hBfsY/Jiulsyzzv04BQ+5NStcQtKtHTx+XR1EIUZHnP3Q+Uxas6
+ F5B8HltMKMvw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="138742736"
+X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
+   d="scan'208";a="138742736"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 01:48:09 -0700
+IronPort-SDR: +Un+cSduj96ujc+RzGWhAE9vgnycKNK++XQWrcgHivKYO1MueFnzcalUZFyGf87nATYpUZltb8
+ r1MhhKa+Uuyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
+   d="scan'208";a="311335253"
+Received: from silpixa00400314.ir.intel.com (HELO silpixa00400314.ger.corp.intel.com) ([10.237.222.51])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Jul 2020 01:48:05 -0700
+From:   Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+To:     alex.williamson@redhat.com, herbert@gondor.apana.org.au
+Cc:     cohuck@redhat.com, nhorman@redhat.com, vdronov@redhat.com,
+        bhelgaas@google.com, mark.a.chambers@intel.com,
+        gordon.mcfadden@intel.com, ahsan.atta@intel.com,
+        fiona.trahe@intel.com, qat-linux@intel.com, kvm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>
+Subject: [PATCH v4 0/5] vfio/pci: add denylist and disable qat
+Date:   Fri, 24 Jul 2020 09:47:55 +0100
+Message-Id: <20200724084800.6136-1-giovanni.cabiddu@intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200709135251.643-12-jonathan@marek.ca>
-References: <20200709135251.643-1-jonathan@marek.ca> <20200709135251.643-12-jonathan@marek.ca>
-Subject: Re: [PATCH v3 11/14] clk: qcom: Add graphics clock controller driver for SM8250
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
-Date:   Fri, 24 Jul 2020 01:52:51 -0700
-Message-ID: <159558077103.3847286.2846749165672548492@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jonathan Marek (2020-07-09 06:52:42)
-> Add support for the graphics clock controller found on SM8250
-> based devices.
->=20
-> This is initially copied from the downstream kernel, but has
-> been modified to more closely match the upstream sc7180 driver.
->=20
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
+This patchset defines a denylist of devices in the vfio-pci module and adds
+the current generation of Intel(R) QuickAssist devices to it as they are
+not designed to run in an untrusted environment.
 
-Applied to clk-next
+By default, if a device is in the denylist, the probe of vfio-pci fails.
+If a user wants to use a device in the denylist, he needs to disable the
+full denylist providing the option disable_denylist=1 at the load of
+vfio-pci or specifying that parameter in a config file in /etc/modprobe.d.
+
+This series also moves the device ids definitions present in the qat driver
+to linux/pci_ids.h since they will be shared between the vfio-pci and the qat
+drivers and replaces the custom ADF_SYSTEM_DEVICE macro with PCI_VDEVICE.
+
+The series is applicable to Herbert's tree. Patches 1 to 3 apply also to
+Alex's tree (next). Patches 4 and 5 are optional and can be applied at a later
+stage.
+
+Changes from v3:
+ - Patch #1: included Acked-by tag, after ack from Bjorn Helgaas
+ - Patch #2: s/prevents/allows/ in module parameter description
+
+Changes from v2:
+ - Renamed blocklist in denylist
+ - Patch #2: reworded module parameter description to clarify why a device is
+   in the denylist
+ - Patch #2: reworded warning that occurs when denylist is enabled and device
+   is present in that list
+
+Changes from v1:
+ - Reworked commit messages:
+   Patches #1, #2 and #3: capitalized first character after column to comply to
+   subject line convention
+   Patch #3: Capitalized QAT acronym and added link and doc number for document
+   "Intel® QuickAssist Technology (Intel® QAT) Software for Linux"
+
+Giovanni Cabiddu (5):
+  PCI: Add Intel QuickAssist device IDs
+  vfio/pci: Add device denylist
+  vfio/pci: Add QAT devices to denylist
+  crypto: qat - replace device ids defines
+  crypto: qat - use PCI_VDEVICE
+
+ drivers/crypto/qat/qat_c3xxx/adf_drv.c        | 11 ++---
+ drivers/crypto/qat/qat_c3xxxvf/adf_drv.c      | 11 ++---
+ drivers/crypto/qat/qat_c62x/adf_drv.c         | 11 ++---
+ drivers/crypto/qat/qat_c62xvf/adf_drv.c       | 11 ++---
+ .../crypto/qat/qat_common/adf_accel_devices.h |  6 ---
+ drivers/crypto/qat/qat_common/qat_hal.c       |  7 +--
+ drivers/crypto/qat/qat_common/qat_uclo.c      |  9 ++--
+ drivers/crypto/qat/qat_dh895xcc/adf_drv.c     | 11 ++---
+ drivers/crypto/qat/qat_dh895xccvf/adf_drv.c   | 11 ++---
+ drivers/vfio/pci/vfio_pci.c                   | 48 +++++++++++++++++++
+ include/linux/pci_ids.h                       |  6 +++
+ 11 files changed, 87 insertions(+), 55 deletions(-)
+
+-- 
+2.26.2
+
