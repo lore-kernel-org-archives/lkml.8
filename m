@@ -2,65 +2,66 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC31C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E23820737
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2810206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:18:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgGXWSu (ORCPT
+        id S1726852AbgGXWSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 18:18:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbgGXWSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 18:18:50 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1D71206D7;
-        Fri, 24 Jul 2020 22:18:48 +0000 (UTC)
-Date:   Fri, 24 Jul 2020 18:18:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     peterz@infradead.org
-Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, sfr@canb.auug.org.au
-Subject: Re: [PATCH v2] sched,tracing: Convert to sched_set_fifo()
-Message-ID: <20200724181846.415bfd43@oasis.local.home>
-In-Reply-To: <20200724215003.GY119549@hirez.programming.kicks-ass.net>
-References: <202006192249.AYnVBGCH%lkp@intel.com>
-        <20200709124505.GT597537@hirez.programming.kicks-ass.net>
-        <20200709115818.36a956a4@oasis.local.home>
-        <20200720214918.GM5523@worktop.programming.kicks-ass.net>
-        <20200724213911.GX119549@hirez.programming.kicks-ass.net>
-        <20200724174618.7487ee7c@oasis.local.home>
-        <20200724215003.GY119549@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 24 Jul 2020 18:18:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36170 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgGXWSy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 18:18:54 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26065C0619D3;
+        Fri, 24 Jul 2020 15:18:54 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9A9F01195421E;
+        Fri, 24 Jul 2020 15:02:08 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 15:18:53 -0700 (PDT)
+Message-Id: <20200724.151853.1338329532264832068.davem@davemloft.net>
+To:     chisong@linux.microsoft.com
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, kuba@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 net-next] net: hyperv: dump TX indirection table to
+ ethtool regs
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200724041426.GB25409@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <alpine.LRH.2.23.451.2007222356070.2641@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+        <20200724041426.GB25409@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 24 Jul 2020 15:02:09 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 23:50:03 +0200
-peterz@infradead.org wrote:
+From: Chi Song <chisong@linux.microsoft.com>
+Date: Thu, 23 Jul 2020 21:14:26 -0700
 
-> -	if (producer_fifo < 0)
-> +	if (producer_fifo)
-> +		trace_printk("Running Producer at SCHED_FIFO %s\n",
-> +			     consumer_fifo == 1 ? "low" : "high");
+> An imbalanced TX indirection table causes netvsc to have low
+> performance. This table is created and managed during runtime. To help
+> better diagnose performance issues caused by imbalanced tables, it needs
+> make TX indirection tables visible.
+> 
+> Because TX indirection table is driver specified information, so
+> display it via ethtool register dump.
+> 
+> Signed-off-by: Chi Song <chisong@microsoft.com>
 
-I'm going to take cut-and-paste away from you!
-
--- Steve
-
-> +	else
->  		trace_printk("Running Producer at nice: %d\n",
->  			     producer_nice);
+Applied, thank you.
