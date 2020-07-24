@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77874C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BEBC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB0F2073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4861C2074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="utBhLhz3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XgaUDS6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgGXHAd (ORCPT
+        id S1726980AbgGXHAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:00:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33478 "EHLO
+        Fri, 24 Jul 2020 03:00:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgGXHAa (ORCPT
+        with ESMTP id S1726964AbgGXHAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:00:30 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A105C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:00:30 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id y7so2534260qvj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:00:30 -0700 (PDT)
+        Fri, 24 Jul 2020 03:00:32 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 685C8C0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:00:32 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 7so7213723ybl.5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:00:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=ROSpznE7uIV54LbFh2Cka7vTr1SComFhGsjc+g8qPz8=;
-        b=utBhLhz3IuEbZPYCAASa4TiiCIGcqNyvrjQPgTsEQoR+sdOQGOenTw19TlehFH6aT0
-         Vx0rBn3h2JjlTCyGiL+BEYfmeZ4ZrMO4jcgljXFe1jXOAMA9tPhPOqa0JkkgBfduX6/l
-         aUdhpxcmuhjquy3qFiW3odpSvS3kPuUgq8ur914YAhVEzbmwHo1NAj1+tVa6llDAJbwQ
-         6udGxxqa8kXqdnxs6IxifD7BbRli256RNYwgqPSFO7x5x89RN10V5vgfvb9TmJWrXdUC
-         2muznV/iYpADkWSwqFqNVn9Q+Nw6wbJDbRkpesxMiqUyfXDTpj9nyzavmIG39MURM4q3
-         COkA==
+        bh=5cayCuPk2wPjGrqLjRjs0da5Omg5sZGp1EbJR3QFOWA=;
+        b=XgaUDS6lp9nfPXqDpwi2F+CnJNkzEBfzakfczBxRxMHopo8/GKoQHgb1J4G2BLOPId
+         Tj7TokenLtlE0yd10U3xLpw2pvexm+cQHg8qZDXd1Hds+R8Ya60ZJRzH+X1ph8/9V0NP
+         gWGpMVej7a3D2OA5JAw31HMddDv9tUp2mmDz2ZVfGLMEWvFVPBmAWMbP2ZgSVe7ESAqV
+         W8GVG/bfHd984S3my9TIYv7ONr7HbP4/d7XOruVcCrWouarTuQeqHybf1gWxg8jKLCOd
+         1XOxupusauqtoiWHSTZ/+XEgsRxcCjs9WGMhPi069xiPfUBLCQtcY6BeixmJGEmKEamC
+         JG7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=ROSpznE7uIV54LbFh2Cka7vTr1SComFhGsjc+g8qPz8=;
-        b=HdAwq7ZWDN7L3LI79xO2STzDuz/kNIune7iS+isw0Urg+EFy3cWCFUehBxSaifj5Ri
-         hUxoZPX1GXvV0khkk3aSY+5S7bLt9SS5EBEz60CWx4aLVzvHwQxU9Kupn75YDqeNGHXN
-         divNcT0+ER+J2/mypgA4fzD7Us40bM6dg/c8N/29ruZlp+y8FsckMKKBsEFqWCsZ5LJj
-         Ao4MiPnhMFfs+hYLZWatIHaMq2B/4sezKjksL7bYH8ku5EBMu/TGdoPHgnqJ4GlM0X03
-         IumHfGQH+TEvTphkSAsE+MNRclkW3XuDGzd9NyQzY6piGvgVOlXZnNNqTT/lMAGX5VFK
-         +38g==
-X-Gm-Message-State: AOAM532tFJWjY2p8wcOfsGi+mokW4ZWJ0f3Gbjk3UJXb6RTmeHHcUi3n
-        8NzOz2zONdcdmdpwp4fv73GcLLDM7Q==
-X-Google-Smtp-Source: ABdhPJwdYVXI7+3Acs6ndY94bwhL8oxL71978la2lM/pJ7Xv0Lh37oWJb9SLOcZDQOKXWK3Mr5bT6RFKYg==
-X-Received: by 2002:a0c:e78e:: with SMTP id x14mr8617576qvn.65.1595574029293;
- Fri, 24 Jul 2020 00:00:29 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 09:00:03 +0200
+        bh=5cayCuPk2wPjGrqLjRjs0da5Omg5sZGp1EbJR3QFOWA=;
+        b=ac+l+B0MT4P4zXWw36YBXZiOW2+Kddk1aP9IXgmzGYbeCFJ1xNdMRqgJgpgws2FVpI
+         ViGfEKg+zjee77PhGDZHhEhaoMbXHO5YXOYKQ8LWzsd/y4zt3pUaUuhxunfNb9MrqOle
+         ouO1DG1RYbHedCN1JEZL/NYQbkf8DQeYpz/ADipnLPGbf7/tUeXmqe+9vjGROz4SMYoy
+         nsNFZvYFEbifSN3YMnnN59zNypP/PwXknhixp+dXbxX6u89v1PMOCZn8+AcwVUUvDhPp
+         UYImAqwlFCcQ1x1jiyyR4wnqUB3hnIG/VyZp64Dl+k3E4iRfq4yjY5KV578lmRN6W51x
+         SRrA==
+X-Gm-Message-State: AOAM531PsPttsvkt3zyMonShnb78HXWic/6B69kHTMNSBQOpCvZpn5mB
+        DE5jbJZLkvcFgzhud0UGdMaD0qaJbg==
+X-Google-Smtp-Source: ABdhPJzcsx9MWCrFPtOouS3kHQd2xrtiLfC+0hwi+LxDJkH7/b/r8aGAco8bTXZRQ9ZDKDFku2rj0XEIzA==
+X-Received: by 2002:a25:b68d:: with SMTP id s13mr13979168ybj.330.1595574031586;
+ Fri, 24 Jul 2020 00:00:31 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 09:00:04 +0200
 In-Reply-To: <20200724070008.1389205-1-elver@google.com>
-Message-Id: <20200724070008.1389205-4-elver@google.com>
+Message-Id: <20200724070008.1389205-5-elver@google.com>
 Mime-Version: 1.0
 References: <20200724070008.1389205-1-elver@google.com>
 X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH v2 3/8] kcsan: Skew delay to be longer for certain access types
+Subject: [PATCH v2 4/8] kcsan: Add missing CONFIG_KCSAN_IGNORE_ATOMICS checks
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com, paulmck@kernel.org
 Cc:     will@kernel.org, peterz@infradead.org, arnd@arndb.de,
@@ -75,64 +75,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For compound instrumentation and assert accesses, skew the watchpoint
-delay to be longer if randomized. This is useful to improve race
-detection for such accesses.
-
-For compound accesses we should increase the delay as we've aggregated
-both read and write instrumentation. By giving up 1 call into the
-runtime, we're less likely to set up a watchpoint and thus less likely
-to detect a race. We can balance this by increasing the watchpoint
-delay.
-
-For assert accesses, we know these are of increased interest, and we
-wish to increase our chances of detecting races for such checks.
-
-Note that, kcsan_udelay_{task,interrupt} define the upper bound delays.
-When randomized, delays are uniformly distributed between [0, delay].
-Skewing the delay does not break this promise as long as the defined
-upper bounds are still adhered to. The current skew results in delays
-uniformly distributed between [delay/2, delay].
+Add missing CONFIG_KCSAN_IGNORE_ATOMICS checks for the builtin atomics
+instrumentation.
 
 Signed-off-by: Marco Elver <elver@google.com>
 ---
 v2:
-* Commit message rewording.
+* Add {} for readability.
+
+Added to this series, as it would otherwise cause patch conflicts.
 ---
- kernel/kcsan/core.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ kernel/kcsan/core.c | 30 ++++++++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 8 deletions(-)
 
 diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index fb52de2facf3..4633baebf84e 100644
+index 4633baebf84e..e43a55643e00 100644
 --- a/kernel/kcsan/core.c
 +++ b/kernel/kcsan/core.c
-@@ -283,11 +283,15 @@ static __always_inline bool kcsan_is_enabled(void)
- 	return READ_ONCE(kcsan_enabled) && get_ctx()->disable_count == 0;
- }
- 
--static inline unsigned int get_delay(void)
-+static inline unsigned int get_delay(int type)
- {
- 	unsigned int delay = in_task() ? kcsan_udelay_task : kcsan_udelay_interrupt;
-+	/* For certain access types, skew the random delay to be longer. */
-+	unsigned int skew_delay_order =
-+		(type & (KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_ASSERT)) ? 1 : 0;
-+
- 	return delay - (IS_ENABLED(CONFIG_KCSAN_DELAY_RANDOMIZE) ?
--				prandom_u32_max(delay) :
-+				prandom_u32_max(delay >> skew_delay_order) :
- 				0);
- }
- 
-@@ -449,7 +453,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	 * Delay this thread, to increase probability of observing a racy
- 	 * conflicting access.
- 	 */
--	udelay(get_delay());
-+	udelay(get_delay(type));
- 
- 	/*
- 	 * Re-read value, and check if it is as expected; if not, we infer a
+@@ -892,14 +892,19 @@ EXPORT_SYMBOL(__tsan_init);
+ 	u##bits __tsan_atomic##bits##_load(const u##bits *ptr, int memorder);                      \
+ 	u##bits __tsan_atomic##bits##_load(const u##bits *ptr, int memorder)                       \
+ 	{                                                                                          \
+-		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_ATOMIC);                      \
++		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS)) {                                    \
++			check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_ATOMIC);              \
++		}                                                                                  \
+ 		return __atomic_load_n(ptr, memorder);                                             \
+ 	}                                                                                          \
+ 	EXPORT_SYMBOL(__tsan_atomic##bits##_load);                                                 \
+ 	void __tsan_atomic##bits##_store(u##bits *ptr, u##bits v, int memorder);                   \
+ 	void __tsan_atomic##bits##_store(u##bits *ptr, u##bits v, int memorder)                    \
+ 	{                                                                                          \
+-		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC); \
++		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS)) {                                    \
++			check_access(ptr, bits / BITS_PER_BYTE,                                    \
++				     KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);                    \
++		}                                                                                  \
+ 		__atomic_store_n(ptr, v, memorder);                                                \
+ 	}                                                                                          \
+ 	EXPORT_SYMBOL(__tsan_atomic##bits##_store)
+@@ -908,8 +913,11 @@ EXPORT_SYMBOL(__tsan_init);
+ 	u##bits __tsan_atomic##bits##_##op(u##bits *ptr, u##bits v, int memorder);                 \
+ 	u##bits __tsan_atomic##bits##_##op(u##bits *ptr, u##bits v, int memorder)                  \
+ 	{                                                                                          \
+-		check_access(ptr, bits / BITS_PER_BYTE,                                            \
+-			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);    \
++		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS)) {                                    \
++			check_access(ptr, bits / BITS_PER_BYTE,                                    \
++				     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE |                  \
++					     KCSAN_ACCESS_ATOMIC);                                 \
++		}                                                                                  \
+ 		return __atomic_##op##suffix(ptr, v, memorder);                                    \
+ 	}                                                                                          \
+ 	EXPORT_SYMBOL(__tsan_atomic##bits##_##op)
+@@ -937,8 +945,11 @@ EXPORT_SYMBOL(__tsan_init);
+ 	int __tsan_atomic##bits##_compare_exchange_##strength(u##bits *ptr, u##bits *exp,          \
+ 							      u##bits val, int mo, int fail_mo)    \
+ 	{                                                                                          \
+-		check_access(ptr, bits / BITS_PER_BYTE,                                            \
+-			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);    \
++		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS)) {                                    \
++			check_access(ptr, bits / BITS_PER_BYTE,                                    \
++				     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE |                  \
++					     KCSAN_ACCESS_ATOMIC);                                 \
++		}                                                                                  \
+ 		return __atomic_compare_exchange_n(ptr, exp, val, weak, mo, fail_mo);              \
+ 	}                                                                                          \
+ 	EXPORT_SYMBOL(__tsan_atomic##bits##_compare_exchange_##strength)
+@@ -949,8 +960,11 @@ EXPORT_SYMBOL(__tsan_init);
+ 	u##bits __tsan_atomic##bits##_compare_exchange_val(u##bits *ptr, u##bits exp, u##bits val, \
+ 							   int mo, int fail_mo)                    \
+ 	{                                                                                          \
+-		check_access(ptr, bits / BITS_PER_BYTE,                                            \
+-			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);    \
++		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS)) {                                    \
++			check_access(ptr, bits / BITS_PER_BYTE,                                    \
++				     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE |                  \
++					     KCSAN_ACCESS_ATOMIC);                                 \
++		}                                                                                  \
+ 		__atomic_compare_exchange_n(ptr, &exp, val, 0, mo, fail_mo);                       \
+ 		return exp;                                                                        \
+ 	}                                                                                          \
 -- 
 2.28.0.rc0.142.g3c755180ce-goog
 
