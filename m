@@ -2,122 +2,99 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D93C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 11:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 11:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF32B2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 11:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE762074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 11:36:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BaYEtLFI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NJbnzZKz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgGXLfq (ORCPT
+        id S1726985AbgGXLgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 07:35:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbgGXLfq (ORCPT
+        Fri, 24 Jul 2020 07:36:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27262 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726820AbgGXLgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 07:35:46 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8338C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 04:35:45 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id g37so6708499otb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 04:35:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0okWF7m0mxKnIjxocen5tI8Jd/G7/Bk7ETNsmNpYOFA=;
-        b=BaYEtLFIQLnHBtzZnOMivwOHKaNw21qCUdJOsfu86Ei5Eu/AOwAUeIS5K+s11lqhGi
-         yi3jldrEmla9RW8pdzXD3wUfMlp1WFy5CbWPbs8g5Is5lLdW/Dy0WjQUHqc9XADYYpuk
-         vViqlfhEZRrnADqugOPCz+3AsC2bwewAnDHr+AquPGwfJ1EpzAV9DLo5XCSOeaNCXpl7
-         /ky9hyaoJri3tfntaZiFvDykYXLfr2n+mzaja5IRUoqDuqezMFgQRovF9hqdbtU/pVbs
-         5J37MNaMF2lR3asJ5sH/Aoxf8uFnvPSlwoe0YxCXxVjz8jx3gkIvG3fwiLRIn9/d5buh
-         hrKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0okWF7m0mxKnIjxocen5tI8Jd/G7/Bk7ETNsmNpYOFA=;
-        b=bfRjNtOGMblEKwcrATugmdDsDh2rnNyFQxDWL6+3EJeqsPi5XKnb5D9LclzcZGVdxY
-         Iq4W6mDu/GJuQzyVxdl8otT/fbuJM/+2JWzbe7Wri4ouuaCNy1gRyqbdiPAeNgsR/pBM
-         cdOewXl/kFo0Hwz8ZhxN7S1MQDMq84/6QuF38kgY0dNiIx1EWPOCUlGbJO2UByL0gt4h
-         qvqbzxMbcS4PEmkI0kz3od0HAfEykhjToYIkcegK6n6sCbUmw7y3X7cjm4tN+4LF1vOZ
-         vOFBhB4Hy+5y1rYRZo16hwTG2c0DCzh+J3v3saNeX+5YX3HkyAv41hcXQOecmXd+6A6V
-         RCcQ==
-X-Gm-Message-State: AOAM530IsUgcTcAvtLjl8fN1PytUcsgnmfC9X+V4pVc/fRvgJkCNwtOV
-        TyVy9tUCq7++fx4htit3yr6hOsfNlBlk644wDOrrW7fU
-X-Google-Smtp-Source: ABdhPJzNmPb/Pb0fSf86yJwe0oZTFd8E1Iyrwq4Eu5yXiZiTxpZ0eqpb19Hem0ncB91v4QJ3fw7E/5v9+GCbNX/v3FA=
-X-Received: by 2002:a05:6830:42:: with SMTP id d2mr8760888otp.339.1595590545204;
- Fri, 24 Jul 2020 04:35:45 -0700 (PDT)
+        Fri, 24 Jul 2020 07:36:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595590571;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=I68fbRd6bZ95LK9+jolwOQBVPAxfW2jV01rcWnCSNp0=;
+        b=NJbnzZKzhV/h+pPjDJVM2yV2WuCD9IN1DwsZXIfKemcWPpP0DfJe12hGE8+vB2ruJboxDF
+        OhdqEcwByJ+vMeM7vm3vOJUCs3TBlVH6pxSeQ7xCws4403Vu/jdn4xeiEpagtnm8dyLY9a
+        pqA53eU4PSfx3aO6xAe7hTM9Kqna64w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-512-PexwN0WVOwWbFOVy0tM0dg-1; Fri, 24 Jul 2020 07:36:10 -0400
+X-MC-Unique: PexwN0WVOwWbFOVy0tM0dg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 507C6107ACCA;
+        Fri, 24 Jul 2020 11:36:07 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EDB2919723;
+        Fri, 24 Jul 2020 11:36:03 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net>
+References: <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net> <1293241.1595501326@warthog.procyon.org.uk> <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com> <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk> <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk> <2003787.1595585999@warthog.procyon.org.uk>
+To:     Ian Kent <raven@themaw.net>
+Cc:     dhowells@redhat.com, Miklos Szeredi <miklos@szeredi.hu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
+        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
+        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and attribute change notifications [ver #5]
 MIME-Version: 1.0
-References: <20200723191525.GA24516@ogabbay-VM> <20200724093259.GB4116407@kroah.com>
-In-Reply-To: <20200724093259.GB4116407@kroah.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Fri, 24 Jul 2020 14:35:17 +0300
-Message-ID: <CAFCwf10r4eqO=6B=C_iKt17XcY7oVuRDEJs5_x9Anw_5Djig6Q@mail.gmail.com>
-Subject: Re: [git pull] habanalabs pull request for kernel 5.9-rc1 (resend)
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2023285.1595590563.1@warthog.procyon.org.uk>
+Date:   Fri, 24 Jul 2020 12:36:03 +0100
+Message-ID: <2023286.1595590563@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 12:32 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Jul 23, 2020 at 10:15:25PM +0300, Oded Gabbay wrote:
-> > Hello Greg,
-> >
-> > (Re-sending this pull request)
-> >
-> > This is habanalabs pull request for the merge window of kernel 5.9. It
-> > contains many small improvements to common and GAUDI code. Details are in
-> > the tag.
-> >
-> > Thanks,
-> > Oded
-> >
-> > The following changes since commit 7a4462a96777b64b22412f782de226c90290bf75:
-> >
-> >   misc: rtsx: Use standard PCI definitions (2020-07-22 13:39:31 +0200)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2020-07-23
->
-> {sigh}
->
-> Commit: 961a7325e670 ("habanalabs: Fix memory leak in error flow of context init")
->         Fixes tag: Fixes: 786c94810698 ("habanalabs: Use pending cs amount per asic")
->         Has these problem(s):
->                 - Subject does not match target commit subject
->                   Just use
->                                 git log -1 --format='Fixes: %h ("%s")'
->
-> The scripts I use to check this are here:
->         https://github.com/gregkh/gregkh-linux/blob/master/work/verify_fixes.sh
->         https://github.com/gregkh/gregkh-linux/blob/master/work/verify_signedoff.sh
->
-> And note, if I ignore these errors, you will just get the same response
-> from Stephen when it hits linux-next :(
->
-> thanks,
->
-> greg k-h
+Ian Kent <raven@themaw.net> wrote:
 
-I'm sorry for all the trouble Greg, but I wanted to ask before I send
-it again, won't the fixed sha-id be wrong once you merge this pull
-request to your tree ?
-Because this patch fixes a previous patch in this pull-request.
-Maybe I should just squash them ?
+> I was wondering about id re-use.
+> 
+> Assuming that ids that are returned to the idr db are re-used
+> what would the chance that a recently used id would end up
+> being used?
+> 
+> Would that chance increase as ids are consumed and freed over
+> time?
 
-Thanks,
-Oded
+I've added something to deal with that in the fsinfo branch.  I've given each
+mount object and superblock a supplementary 64-bit unique ID that's not likely
+to repeat before we're no longer around to have to worry about it.
+
+fsinfo() then allows you to retrieve them by path or by mount ID.
+
+So, yes, mnt_id and s_dev are not unique and may be reused very quickly, but
+I'm also providing uniquifiers that you can check.
+
+David
+
