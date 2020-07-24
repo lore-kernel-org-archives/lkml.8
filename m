@@ -2,126 +2,149 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29213C433F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD320C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03E7F20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:11:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B4BlKfbm"
+	by mail.kernel.org (Postfix) with ESMTP id B7B1220674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595607403;
+	bh=G3jgH9IJtnDPS4GzMfQzYedGbY2dUDD4L8Drje8NRlU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=uH/w3gVkW77dTKFV52d347+a6au4F2wWLrMxiMYEqeNZFkbK3z1/QATtTtYoL2nOG
+	 p9EHZywq+8+aZL+Ekde0GUB73jNrXCJS+M9JABVhmX6tguwV2Ki/rKW0EiIZvsyJr+
+	 xvbWEFdNkImtnY/gXEbmJ3TEdurkYQyNrORZ/Zy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgGXQLg (ORCPT
+        id S1726730AbgGXQQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:11:36 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37866 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728458AbgGXQLb (ORCPT
+        Fri, 24 Jul 2020 12:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbgGXQQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:11:31 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OG2oQZ078805;
-        Fri, 24 Jul 2020 16:11:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=WMp6kqTxYWGFRT/ot1iZ7DJpa+AfJh3DHPgpyzjSXbE=;
- b=B4BlKfbmGkrr4ajeKkxrPNbrQpEoayl5/YajI350Ge3teyZxKxvsYvo8I4iDv9fquzhx
- YuAudkKyo//A/BGNczJ6vbQ7MJ2HbAXtOiVN6UR4q5DxJ1KMrHG4sLvEaomfdICyNlsu
- dqJxM4j7CGXIyNpeByAc/iYV1ExhPqqWasrTfpci3iOXxNsAGB+n0c5QAeosEURnUN05
- ioXtnrPH3to+G2UiVlb0yGWKb9qSfALL1NjbZnms/UhwS2KUlBVFtAn3FlVwvouq2Pci
- fVe8dmQQeuki2SwJa8XVeqdnnOvQ7AnjJxDh1ZDFFZU6ikP4Euj1I74XJXau5vWxZiXm Zw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 32brgs00ae-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 Jul 2020 16:11:26 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OG4ORI058161;
-        Fri, 24 Jul 2020 16:09:26 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 32fswssb5h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jul 2020 16:09:25 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06OG9On1003112;
-        Fri, 24 Jul 2020 16:09:24 GMT
-Received: from brm-x32-03.us.oracle.com (/10.80.150.35)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 24 Jul 2020 16:09:24 +0000
-From:   Jane Chu <jane.chu@oracle.com>
-To:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
-        dave.jiang@intel.com, ira.weiny@intel.com, jmoyer@redhat.com,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Cc:     jane.chu@oracle.com
-Subject: [PATCH 2/2] libnvdimm/security: ensure sysfs poll thread woke up and fetch updated attr
-Date:   Fri, 24 Jul 2020 10:09:19 -0600
-Message-Id: <1595606959-8516-2-git-send-email-jane.chu@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1595606959-8516-1-git-send-email-jane.chu@oracle.com>
-References: <1595606959-8516-1-git-send-email-jane.chu@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007240127
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
- priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007240126
+        Fri, 24 Jul 2020 12:16:42 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05514C0619D3;
+        Fri, 24 Jul 2020 09:16:42 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id d17so10546673ljl.3;
+        Fri, 24 Jul 2020 09:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=G3jgH9IJtnDPS4GzMfQzYedGbY2dUDD4L8Drje8NRlU=;
+        b=nrUSmfpaTpszweIRHhqWJLQQZtbutSiCM3PQrV1OkVvq6RfvffjRE1yf0vpuGKHaJH
+         GwbC6/ZnQJoUwZ5oss1A3GDiGgrViVQydfS95yWJjFzW26+Z78e5ixZr2r45JXwe5Nue
+         Qx7ULKX0G91/kYXx5WyUZXGgO8tBIUuq9vEKXvR9QvQUNhJIO43nxaEUtUmvwRrYtM0b
+         zbADhSwV1bbaYEtEs5FfIHr+gnkzeYd5k9fgY5N7ob9S80HD8SQPWHgfcjukumtj+Cky
+         OSp7+V1WEu9ga05UIEVmoCY52dhnmRxE27Q2NFqvlBLz34SML1A0oXul2I0Z6X1oF3i5
+         sdrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=G3jgH9IJtnDPS4GzMfQzYedGbY2dUDD4L8Drje8NRlU=;
+        b=gpmtjPQA/UezREMhEnzIqGxv4jHWP7bsjeZShucx2AVOfpZIOuz1i5PK0ZXygAXZP5
+         FBHjYTN2CMFyNseMK1ZyilCv97uZyyEC3j2nvxXaDjNjTehTF5j3j7p+OzZKx+Wz01lv
+         wmZY5yIqU8l978UY3pwpJgXaCl2Wx7DIpGHnNXf+IQTx0uFDu/soYF89CoyeknO4fvZ8
+         2qxPU+DMhwyfZRdYJW0k9fIsAFuDjIN4rf8sYoOrE1a4VR4NKHyQqmupyeVyh7KNdWC3
+         +P1ftzZFyZkukgoyjQTQ/9CiwVDViixQ8k4+Qd9FwoqxwDv1Ult6P3W9EljAAJKVLyON
+         yGYw==
+X-Gm-Message-State: AOAM5301ahZRfu/y4Pr+wFU1wnI0epQsXxWxMWCjWK1ffrZJb6b/NtYK
+        RNVSZAXwWXhFGH/MVC6IeII=
+X-Google-Smtp-Source: ABdhPJzZZxJFgz/JhY1AQxrSNFLKjFlzqxRkySRQt6pWYKe77616ATr0A1ybIV2h7qX8Q8N/3qdvRw==
+X-Received: by 2002:a2e:960a:: with SMTP id v10mr4860375ljh.223.1595607400472;
+        Fri, 24 Jul 2020 09:16:40 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id r15sm335077ljd.130.2020.07.24.09.16.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 Jul 2020 09:16:39 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Amelie DELAUNAY <amelie.delaunay@st.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>
+Cc:     "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel\@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32\@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v3 0/3] Add USB role switch support to DWC2
+In-Reply-To: <fcff5f96-8383-fd84-35f1-3eb291cd65df@st.com>
+References: <20200724104711.5474-1-amelie.delaunay@st.com> <4c44f596-d2c3-6d2f-bf28-9e3964b6e6f1@st.com> <878sf9owcw.fsf@kernel.org> <fcff5f96-8383-fd84-35f1-3eb291cd65df@st.com>
+Date:   Fri, 24 Jul 2020 19:16:29 +0300
+Message-ID: <871rl0q46a.fsf@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
-adds a sysfs_notify_dirent() to wake up userspace poll thread when the "overwrite"
-operation has completed. But the notification is issued before the internal
-dimm security state and flags have been updated, so the userspace poll thread
-wakes up and fetches the not-yet-updated attr and falls back to sleep, forever.
-But if user from another terminal issue "ndctl wait-overwrite nmemX" again,
-the command returns instantly.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Fixes: 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
-Signed-off-by: Jane Chu <jane.chu@oracle.com>
----
- drivers/nvdimm/security.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Amelie DELAUNAY <amelie.delaunay@st.com> writes:
 
-diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
-index 8f3971c..4b80150 100644
---- a/drivers/nvdimm/security.c
-+++ b/drivers/nvdimm/security.c
-@@ -450,14 +450,19 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
- 	else
- 		dev_dbg(&nvdimm->dev, "overwrite completed\n");
- 
--	if (nvdimm->sec.overwrite_state)
--		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
-+	/*
-+	 * Mark the overwrite work done and update dimm security flags,
-+	 * then send a sysfs event notification to wake up userspace
-+	 * poll threads to picked up the changed state.
-+	 */
- 	nvdimm->sec.overwrite_tmo = 0;
- 	clear_bit(NDD_SECURITY_OVERWRITE, &nvdimm->flags);
- 	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
--	put_device(&nvdimm->dev);
- 	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
- 	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
-+	if (nvdimm->sec.overwrite_state)
-+		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
-+	put_device(&nvdimm->dev);
- }
- 
- void nvdimm_security_overwrite_query(struct work_struct *work)
--- 
-1.8.3.1
+> Hi,
+>
+> On 7/24/20 3:50 PM, Felipe Balbi wrote:
+>>=20
+>> (no top-posting, please)
+>>=20
+>> Hi,
+>>=20
+>> Amelie DELAUNAY <amelie.delaunay@st.com> writes:
+>>> Series dropped.
+>>=20
+>> what do you mean with this? Should I drop all patches related with this =
+series?
+>>=20
+>
+> As v1 patches were in your next branch, I've prepared a new patchset=20
+> which contains fixes, on top of you next branch :
+> https://lore.kernel.org/patchwork/project/lkml/list/?series=3D454959
+>
+>
+> What do you prefer ? Drop all patches related to the v1 "Add USB role=20
+> switch support to DWC2" series and I send a v4 in replacement or keep=20
+> all patches and wait for new series review ?
 
+I've dropped those because they caused the build breakage :-) I can take
+a new series, let's take the opportunity to avoid the build regression.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8bCV8ACgkQzL64meEa
+mQZc7w/7BbjxTemwrP+zsnhES1GyFOmMB+RtZe3AKqd2aNcuD7rhQAPH2At/2pfK
+bVw4evguMHwzuyeHPw/3p6wy0udW/NGnxuqNR5TX+fQaydDlp4MFJj7qLK7zRpd1
+b7cYxDKXgcXpI4rMORF6w/6rOdcweTGRlTZJ+Jk8/I/cee+JB7ZmQbqwvAr2pURP
+AE6tu8v8jzcguyIm7IC0vdvTigkdQGTrNp+qmrECbf+gr5TMvvY8CYRIwmgz312O
+8Xqc2GzEm02HLK2GxZDTl31ImnXO8sRjCkkZH33BOeMka6+Jw4PqrGVj7zIGG5zG
+uxal+yZwCub2JfEPo+sVP/GbGg8iHzMeoXzBwDPHbGyvCizRqrRfUoRiSVav6Yy+
+0dtrs3vcOwnvHIo2frrxei7PMV5U/AqTNmhBik8eRr0U8aFwf2i/2IeJAZt+te0p
+z5t9wRGPop1RzMtai2jCcvxCA0e/tX8exBXB7+0UuuuPPjWBIFYSSbhqovYiyk1G
+CRbk5L4Gw4Kh8OLJzmXv+O4Awpf5PsPt8VmoWy2SVyMxwPPBiCyklwtiVYt/TpAZ
+Tsw+MnaT1USiMoluo3LLzpNLFp6p1uqgKaJGEVoLBeI5czoFP9mBdEAkUGx0Z/Zl
+HUDcXMpUkSydzN840QymcMm15u0etdm9IPdA3cwW4LZxhwEGtjk=
+=JWEE
+-----END PGP SIGNATURE-----
+--=-=-=--
