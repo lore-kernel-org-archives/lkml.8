@@ -2,92 +2,107 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3953FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A092C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13CC8206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C8620663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:31:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mf6ETM7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGXJa7 (ORCPT
+        id S1726989AbgGXJbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:30:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbgGXJa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:30:59 -0400
-Received: from gaia (unknown [95.146.230.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2195320663;
-        Fri, 24 Jul 2020 09:30:56 +0000 (UTC)
-Date:   Fri, 24 Jul 2020 10:30:54 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Sumit Gupta <sumitg@nvidia.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hulk Robot <hulkci@huawei.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH -next] arm64: Export __cpu_logical_map
-Message-ID: <20200724093054.GA23388@gaia>
-References: <20200724030433.22287-1-wangkefeng.wang@huawei.com>
- <82f750c4-d423-1ed8-a158-e75153745e07@huawei.com>
- <7998529f-da52-5e46-dd09-b9b11d83ec1a@arm.com>
+        Fri, 24 Jul 2020 05:31:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbgGXJbP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 05:31:15 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20A86C0619D3;
+        Fri, 24 Jul 2020 02:31:15 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id h22so9295302lji.9;
+        Fri, 24 Jul 2020 02:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TBUxgudIuaDLAvLBANWhcm32RAOD50DQBXyfj2jsnh4=;
+        b=Mf6ETM7ztIRbwjiqdscapi6l9//E/tfVMAaamIup0eE1/HQOKAdQHP6t1dPv9Y9wQh
+         QCq3ECza5RUGvdRueuVmu5PemT0/eJsrc1xZTolBXPT9d8p5FNOREcaVe9nNJsD4/XOn
+         fbO58i7FBj74xB8EhCAVW37Njy/qdCvnvx3zj88P2Qr/f0yaBQtVXQssU4xQG7UKrTj9
+         AeaJ7r09bRqFXHURxpbKEYu7C+aA+gd+LZ5TyulVZasfOuwC5jUhmYZpCOaGU2cpAFhQ
+         SWdrI1DmMJEltKZaQA6fucFMfH8SAnju0B5/+mJHw5p46opV3I0Gj2xToLOuShtW9IPV
+         8xbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=TBUxgudIuaDLAvLBANWhcm32RAOD50DQBXyfj2jsnh4=;
+        b=TZ7v+rnHi//XdLAuet4tQtKbAuPHE9lrpKn00fHLkVK2mcF4TIn8MSjRIGRUDX0WBC
+         oZ8Z7WDJR6vWbz5ZBliGnMoV9k+FIdmVnK1BqJYvTiSg2okcfViG8HFhnW8BG5cqjKG0
+         PR3++h3kI6jA2h2Vmg/rTq6SIWJo1pqzKChG8P/Q9IpoVsuntreB8qoEIE/IeXVIUPu4
+         hBteyE5FOZx30uBW9D3rfXbCvhOGGLEpzV018xkWjDPuPGqg4/a8/T3zZZtlHSYeozkA
+         wkD7Jubm99vYcC9pjr7ut7rPH3H5eZO28JO/YsFUyfWte7uAb/R/DL9G3VVKE9VFobex
+         KOuA==
+X-Gm-Message-State: AOAM532OB/c6czXq4cxNbnBeTL7woNVXQyoNcnWaQdXXUrH/q6A0NcIn
+        d+IVv87QBiNngVM98I8S8vzODMoYXlI=
+X-Google-Smtp-Source: ABdhPJyYL/2FJHBDk6bM7QU+nPX0YDimDInJXXxpicOfu+ldA96NXGc/cdDQ7seaU002+wFwwJXGJw==
+X-Received: by 2002:a05:651c:156:: with SMTP id c22mr4151018ljd.453.1595583073494;
+        Fri, 24 Jul 2020 02:31:13 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:48a4:44fe:25f3:4dcc:b496:1546? ([2a00:1fa0:48a4:44fe:25f3:4dcc:b496:1546])
+        by smtp.gmail.com with ESMTPSA id n3sm120108ljj.39.2020.07.24.02.31.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 02:31:12 -0700 (PDT)
+Subject: Re: [PATCH] newport_con: vc_color is now in state
+To:     Jiri Slaby <jslaby@suse.cz>, gregkh@linuxfoundation.org
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-mips@vger.kernel.org
+References: <202007241318.wXYkumEO%lkp@intel.com>
+ <20200724062735.18229-1-jslaby@suse.cz>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <b1b9d90a-5fe3-947a-dc4e-8576cd143869@gmail.com>
+Date:   Fri, 24 Jul 2020 12:30:59 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7998529f-da52-5e46-dd09-b9b11d83ec1a@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200724062735.18229-1-jslaby@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 01:46:18PM +0530, Anshuman Khandual wrote:
-> On 07/24/2020 08:38 AM, Kefeng Wang wrote:
-> > On 2020/7/24 11:04, Kefeng Wang wrote:
-> >> ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
-> >>
-> >> ARM64 tegra194-cpufreq driver use cpu_logical_map, export
-> >> __cpu_logical_map to fix build issue.
+On 24.07.2020 9:27, Jiri Slaby wrote:
+
+> Since commit 28bc24fc46f9 (vc: separate state), vc->vc_color is known as
+
+    Cgit says "Bad object id: 28bc24fc46f9" (in Linus' repo). Also, you should
+enclose the commit summary in (""), not just ()...
+
+> vc->state.color. Somehow both me and 0-day bot missed this driver during
+> the conversion.
 > 
-> Commit 887d5fc82cb4 ("cpufreq: Add Tegra194 cpufreq driver") which adds
-> this particular driver is present just on linux-next. But as expected,
-> the driver does not use __cpu_logical_map directly but instead accesses
-> it via cpu_logical_map() wrapper. Wondering, how did you even trigger
-> the modpost error ?
+> So fix the driver now.
+> 
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: linux-mips@vger.kernel.org
+[...]
 
-Since the wrapper is a macro, it just expands to __cpu_logical_map[].
-
-> >> Reported-by: Hulk Robot <hulkci@huawei.com>
-> >> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> >> ---
-> >>   arch/arm64/kernel/setup.c | 1 +
-> >>   1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> >> index c793276ec7ad9..3aea05fbb9998 100644
-> >> --- a/arch/arm64/kernel/setup.c
-> >> +++ b/arch/arm64/kernel/setup.c
-> >> @@ -275,6 +275,7 @@ static int __init reserve_memblock_reserved_regions(void)
-> >>   arch_initcall(reserve_memblock_reserved_regions);
-> >>     u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
-> >> +EXPORT_SYMBOL(__cpu_logical_map);
-> >>     void __init setup_arch(char **cmdline_p)
-> >>   {
-
-I can see the Tegra cpuidle also using cpu_logical_map(), though it
-can't be built as a module, unlike the cpufreq one. I think the patch
-makes sense.
-
--- 
-Catalin
+MBR, Sergei
