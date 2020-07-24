@@ -2,160 +2,107 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68B1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC06C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A57C920748
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71872074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:36:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GXGBk5yJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgGXGec (ORCPT
+        id S1726740AbgGXGgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 02:34:32 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3364 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726178AbgGXGeb (ORCPT
+        Fri, 24 Jul 2020 02:36:44 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:15394 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726525AbgGXGgn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 02:34:31 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06O6XFIc052004;
-        Fri, 24 Jul 2020 02:34:11 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32f23h06ff-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 02:34:10 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06O6YAqF054466;
-        Fri, 24 Jul 2020 02:34:10 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32f23h06de-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 02:34:10 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06O6FZqc014045;
-        Fri, 24 Jul 2020 06:34:08 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 32brq7pyds-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 06:34:07 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06O6Y54I56951026
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jul 2020 06:34:05 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 19752A404D;
-        Fri, 24 Jul 2020 06:34:05 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7D9BFA4069;
-        Fri, 24 Jul 2020 06:34:03 +0000 (GMT)
-Received: from [9.199.35.65] (unknown [9.199.35.65])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 24 Jul 2020 06:34:03 +0000 (GMT)
-Subject: Re: [PATCH v2 2/3] powerpc/powernv/idle: save-restore DAWR0,DAWRX0
- for P10
-To:     Michael Neuling <mikey@neuling.org>, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org,
-        ravi.bangoria@linux.ibm.com, ego@linux.vnet.ibm.com,
-        svaidy@linux.ibm.com, pratik.r.sampat@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20200710052207.12003-1-psampat@linux.ibm.com>
- <20200710052207.12003-3-psampat@linux.ibm.com>
- <b9507631629bfc1f36893a280b2b83ea484516f9.camel@neuling.org>
-From:   Pratik Sampat <psampat@linux.ibm.com>
-Message-ID: <cb410050-71ee-5385-096c-3f57e3aa226e@linux.ibm.com>
-Date:   Fri, 24 Jul 2020 12:04:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 24 Jul 2020 02:36:43 -0400
+X-UUID: ce487071849c45eda65232134b3a46a0-20200724
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=LqLck1fwSu4qq9+0rFPa49nhL2/61wPAzLCarhjNGK4=;
+        b=GXGBk5yJ1rNUirFNFLv+qwbcnilBv5cgAqDf0vIRrkfeUyn29nsjVsB0j0W47NJRN5no2l1sway7q5RoNKaO00YnuPU4v22DJ9PP2vW3rR5fkQleBfLEHJhgFnMLYrGH7WJCRakn9MOMbCzg0MdGT3WbaCOFDCdo2J67EbmpodU=;
+X-UUID: ce487071849c45eda65232134b3a46a0-20200724
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <crystal.guo@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1363268807; Fri, 24 Jul 2020 14:36:39 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs07n2.mediatek.inc
+ (172.21.101.141) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 24 Jul
+ 2020 14:36:37 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 24 Jul 2020 14:36:35 +0800
+Message-ID: <1595572526.15289.9.camel@mhfsdcap03>
+Subject: Re: [PATCH 4/4] dt-binding: mediatek: mt8192: update mtk-wdt
+ document
+From:   Crystal Guo <crystal.guo@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Rob Herring <robh@kernel.org>,
+        Seiya Wang =?UTF-8?Q?=28=E7=8E=8B=E8=BF=BA=E5=90=9B=29?= 
+        <seiya.wang@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Date:   Fri, 24 Jul 2020 14:35:26 +0800
+In-Reply-To: <d69d441d-b8c7-f4a4-7ae1-a0012d8001f3@gmail.com>
+References: <20200723090731.4482-1-seiya.wang@mediatek.com>
+         <20200723090731.4482-5-seiya.wang@mediatek.com>
+         <20200723212935.GA889594@bogus>
+         <d69d441d-b8c7-f4a4-7ae1-a0012d8001f3@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <b9507631629bfc1f36893a280b2b83ea484516f9.camel@neuling.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-24_01:2020-07-24,2020-07-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- adultscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 clxscore=1015 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007240047
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 24/07/20 6:55 am, Michael Neuling wrote:
-> On Fri, 2020-07-10 at 10:52 +0530, Pratik Rajesh Sampat wrote:
->> Additional registers DAWR0, DAWRX0 may be lost on Power 10 for
->> stop levels < 4.
->> Therefore save the values of these SPRs before entering a  "stop"
->> state and restore their values on wakeup.
->>
->> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
->> ---
->>   arch/powerpc/platforms/powernv/idle.c | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/arch/powerpc/platforms/powernv/idle.c
->> b/arch/powerpc/platforms/powernv/idle.c
->> index 19d94d021357..f2e2a6a4c274 100644
->> --- a/arch/powerpc/platforms/powernv/idle.c
->> +++ b/arch/powerpc/platforms/powernv/idle.c
->> @@ -600,6 +600,8 @@ struct p9_sprs {
->>   	u64 iamr;
->>   	u64 amor;
->>   	u64 uamor;
->> +	u64 dawr0;
->> +	u64 dawrx0;
->>   };
->>   
->>   static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
->> @@ -687,6 +689,10 @@ static unsigned long power9_idle_stop(unsigned long
->> psscr, bool mmu_on)
->>   	sprs.iamr	= mfspr(SPRN_IAMR);
->>   	sprs.amor	= mfspr(SPRN_AMOR);
->>   	sprs.uamor	= mfspr(SPRN_UAMOR);
->> +	if (cpu_has_feature(CPU_FTR_ARCH_31)) {
-
-You are actually viewing an old version of the patches
-The main point of change were based on comments from Nick Piggin, I
-have changed the top level function check from ARCH_300 to a P9 PVR
-check instead.
-
-A similar thing needs to be done for P10, however as the P10 PVR isn't
-exposed yet, I've shelved this particular patch.
-
-Nick's comment to check based on PVR:https://lkml.org/lkml/2020/7/13/1018
-v4 of the series:https://lkml.org/lkml/2020/7/21/784
-
-Thanks for your review,
-Pratik
-
-> Can you add a comment here saying even though DAWR0 is ARCH_30, it's only
-> required to be saved on 31. Otherwise this looks pretty odd.
->
->> +		sprs.dawr0 = mfspr(SPRN_DAWR0);
->> +		sprs.dawrx0 = mfspr(SPRN_DAWRX0);
->> +	}
->>   
->>   	srr1 = isa300_idle_stop_mayloss(psscr);		/* go idle */
->>   
->> @@ -710,6 +716,10 @@ static unsigned long power9_idle_stop(unsigned long
->> psscr, bool mmu_on)
->>   		mtspr(SPRN_IAMR,	sprs.iamr);
->>   		mtspr(SPRN_AMOR,	sprs.amor);
->>   		mtspr(SPRN_UAMOR,	sprs.uamor);
->> +		if (cpu_has_feature(CPU_FTR_ARCH_31)) {
->> +			mtspr(SPRN_DAWR0, sprs.dawr0);
->> +			mtspr(SPRN_DAWRX0, sprs.dawrx0);
->> +		}
->>   
->>   		/*
->>   		 * Workaround for POWER9 DD2.0, if we lost resources, the ERAT
+T24gRnJpLCAyMDIwLTA3LTI0IGF0IDA2OjAyICswODAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMjMvMDcvMjAyMCAyMzoyOSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+ID4gT24g
+VGh1LCBKdWwgMjMsIDIwMjAgYXQgMDU6MDc6MzFQTSArMDgwMCwgU2VpeWEgV2FuZyB3cm90ZToN
+Cj4gPj4gRnJvbTogQ3J5c3RhbCBHdW8gPGNyeXN0YWwuZ3VvQG1lZGlhdGVrLmNvbT4NCj4gPj4N
+Cj4gPj4gdXBkYXRlIG10ay13ZHQgZG9jdW1lbnQgZm9yIE1UODE5MiBwbGF0Zm9ybQ0KPiA+Pg0K
+PiA+PiBTaWduZWQtb2ZmLWJ5OiBDcnlzdGFsIEd1byA8Y3J5c3RhbC5ndW9AbWVkaWF0ZWsuY29t
+Pg0KPiA+PiAtLS0NCj4gPj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0
+Y2hkb2cvbXRrLXdkdC50eHQgfCAyICsrDQo+ID4+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0
+aW9ucygrKQ0KPiA+Pg0KPiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3dhdGNoZG9nL210ay13ZHQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3dhdGNoZG9nL210ay13ZHQudHh0DQo+ID4+IGluZGV4IDRkZDM2YmQzZjFhZC4u
+ZDc2MGNhOGE2MzBlIDEwMDY0NA0KPiA+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQNCj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL210ay13ZHQudHh0DQo+ID4+IEBAIC0xMiw2ICsx
+Miw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4+ICAgCSJtZWRpYXRlayxtdDc2Mjktd2R0
+IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQ3NjI5DQo+ID4+ICAgCSJtZWRpYXRlayxt
+dDgxODMtd2R0IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQ4MTgzDQo+ID4+ICAgCSJt
+ZWRpYXRlayxtdDg1MTYtd2R0IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQ4NTE2DQo+
+ID4+ICsJIm1lZGlhdGVrLG10ODE5Mi13ZHQiOiBmb3IgTVQ4MTkyDQo+ID4+ICsNCj4gPiANCj4g
+PiBTbywgbm90IGNvbXBhdGlibGUgd2l0aCAibWVkaWF0ZWssbXQ2NTg5LXdkdCI/IElzIHNvLCBw
+ZXJoYXBzIHN1bW1hcml6ZQ0KPiA+IHdoYXQgdGhlIGRpZmZlcmVuY2VzIGFyZS4NCj4gPiANCj4g
+DQo+IEhtLCBsb29rcyB0byBtZSBhcyBpZiB0aGUgYmluZGluZyBkZXNjcmlwdGlvbiBmb3IgbXQy
+NzEyIGFuZCBtdDgxODMgaXNuJ3QgDQo+IGNvcnJlY3QsIGFzIHdlIGhhdmUgYSBPRiBkYXRhIGp1
+c3QgYXMgd2UgaGF2ZSBmb3IgbXQ4MTkyIG5vdy4gQ291bGQgeW91IGZpeCB0aGlzIA0KPiBpbiBh
+IHNlcGFyYXRlIHBhdGNoPw0KPiANCj4gUmVnYXJkcywNCj4gTWF0dGhpYXMNCj4gDQo+IEJlc2lk
+ZXMgd2F0Y2hkb2csIG10ODE5MiB0b3ByZ3UgbW9kdWxlIGFsc28gcHJvdmlkZSBzdWItc3lzdGVt
+IHNvZnR3YXJlIHJlc2V0IGZlYXR1cmVzLg0KPiBtdDI3MTIgYW5kIG10ODE4MyBhcmUgc2FtZSBh
+cyBtdDgxOTIuIEJ1dCBtdDY1ODkgbm90IHN1cHBvcnQgc3ViLXN5c3RlbSBzb2Z0d2FyZSByZXNl
+dC4NCj4gDQo+ID4+ICAgDQo+ID4+ICAgLSByZWcgOiBTcGVjaWZpZXMgYmFzZSBwaHlzaWNhbCBh
+ZGRyZXNzIGFuZCBzaXplIG9mIHRoZSByZWdpc3RlcnMuDQo+ID4+ICAgDQo+ID4+IC0tIA0KPiA+
+PiAyLjE0LjENCg0K
 
