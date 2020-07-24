@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C09C43457
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AB8C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB622065E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EFA2065E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgGXQEw (ORCPT
+        id S1728320AbgGXQFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:04:52 -0400
-Received: from 8bytes.org ([81.169.241.247]:60034 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:05:02 -0400
+Received: from 8bytes.org ([81.169.241.247]:33000 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbgGXQEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:40 -0400
+        id S1728195AbgGXQEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:47 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 88E69F89;
-        Fri, 24 Jul 2020 18:04:32 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 5391CFF2;
+        Fri, 24 Jul 2020 18:04:40 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 60/75] x86/sev-es: Handle MWAIT/MWAITX Events
-Date:   Fri, 24 Jul 2020 18:03:21 +0200
-Message-Id: <20200724160336.5435-61-joro@8bytes.org>
+Subject: [PATCH v5 74/75] x86/efi: Add GHCB mappings when SEV-ES is active
+Date:   Fri, 24 Jul 2020 18:03:35 +0200
+Message-Id: <20200724160336.5435-75-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,45 +60,120 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Implement a handler for #VC exceptions caused by MWAIT and MWAITX
-instructions.
+Calling down to EFI runtime services can result in the firmware performing
+VMGEXIT calls. The firmware is likely to use the GHCB of the OS (e.g., for
+setting EFI variables), so each GHCB in the system needs to be identity
+mapped in the EFI page tables, as unencrypted, to avoid page faults.
 
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: Adapt to #VC handling infrastructure ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
+[ jroedel@suse.de: Moved GHCB mapping loop to sev-es.c ]
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/x86/boot/compressed/sev-es.c |  1 +
+ arch/x86/include/asm/sev-es.h     |  2 ++
+ arch/x86/kernel/sev-es.c          | 30 ++++++++++++++++++++++++++++++
+ arch/x86/platform/efi/efi_64.c    | 10 ++++++++++
+ 4 files changed, 43 insertions(+)
 
+diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+index 1ce144e0ddc3..b522c18c0588 100644
+--- a/arch/x86/boot/compressed/sev-es.c
++++ b/arch/x86/boot/compressed/sev-es.c
+@@ -12,6 +12,7 @@
+  */
+ #include "misc.h"
+ 
++#include <asm/pgtable_types.h>
+ #include <asm/sev-es.h>
+ #include <asm/trapnr.h>
+ #include <asm/trap_pf.h>
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+index 21fdee11ac83..f22c4531624c 100644
+--- a/arch/x86/include/asm/sev-es.h
++++ b/arch/x86/include/asm/sev-es.h
+@@ -101,11 +101,13 @@ static __always_inline void sev_es_nmi_complete(void)
+ 	if (static_branch_unlikely(&sev_es_enable_key))
+ 		__sev_es_nmi_complete();
+ }
++extern int __init sev_es_efi_map_ghcbs(pgd_t *pgd);
+ #else
+ static inline void sev_es_ist_enter(struct pt_regs *regs) { }
+ static inline void sev_es_ist_exit(void) { }
+ static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh) { return 0; }
+ static inline void sev_es_nmi_complete(void) { }
++static inline int sev_es_efi_map_ghcbs(pgd_t *pgd) { return 0; }
+ #endif
+ 
+ #endif
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 826a9f704d5b..33182484baf1 100644
+index 6db343bd0117..c5e0ceb099c2 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -882,6 +882,13 @@ static enum es_result vc_handle_monitor(struct ghcb *ghcb,
- 	return ES_OK;
+@@ -495,6 +495,36 @@ int sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
+ 	return 0;
  }
  
-+static enum es_result vc_handle_mwait(struct ghcb *ghcb,
-+				      struct es_em_ctxt *ctxt)
++/*
++ * This is needed by the OVMF UEFI firmware which will use whatever it finds in
++ * the GHCB MSR as its GHCB to talk to the hypervisor. So make sure the per-cpu
++ * runtime GHCBs used by the kernel are also mapped in the EFI page-table.
++ */
++int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
 +{
-+	/* Treat the same as MONITOR/MONITORX */
-+	return ES_OK;
++	struct sev_es_runtime_data *data;
++	unsigned long address, pflags;
++	int cpu;
++	u64 pfn;
++
++	if (!sev_es_active())
++		return 0;
++
++	pflags = _PAGE_NX | _PAGE_RW;
++
++	for_each_possible_cpu(cpu) {
++		data = per_cpu(runtime_data, cpu);
++
++		address = __pa(&data->ghcb_page);
++		pfn = address >> PAGE_SHIFT;
++
++		if (kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags))
++			return 1;
++	}
++
++	return 0;
 +}
 +
- static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 					 struct ghcb *ghcb,
- 					 unsigned long exit_code)
-@@ -921,6 +928,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	case SVM_EXIT_MONITOR:
- 		result = vc_handle_monitor(ghcb, ctxt);
- 		break;
-+	case SVM_EXIT_MWAIT:
-+		result = vc_handle_mwait(ghcb, ctxt);
-+		break;
- 	case SVM_EXIT_NPF:
- 		result = vc_handle_mmio(ghcb, ctxt);
- 		break;
+ static enum es_result vc_handle_msr(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+ {
+ 	struct pt_regs *regs = ctxt->regs;
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index 413583f904a6..bcf979c4aa10 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -47,6 +47,7 @@
+ #include <asm/realmode.h>
+ #include <asm/time.h>
+ #include <asm/pgalloc.h>
++#include <asm/sev-es.h>
+ 
+ /*
+  * We allocate runtime services regions top-down, starting from -4G, i.e.
+@@ -229,6 +230,15 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 		return 1;
+ 	}
+ 
++	/*
++	 * When SEV-ES is active, the GHCB as set by the kernel will be used
++	 * by firmware. Create a 1:1 unencrypted mapping for each GHCB.
++	 */
++	if (sev_es_efi_map_ghcbs(pgd)) {
++		pr_err("Failed to create 1:1 mapping for the GHCBs!\n");
++		return 1;
++	}
++
+ 	/*
+ 	 * When making calls to the firmware everything needs to be 1:1
+ 	 * mapped and addressable with 32-bit pointers. Map the kernel
 -- 
 2.27.0
 
