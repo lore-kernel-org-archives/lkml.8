@@ -2,117 +2,152 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DDFC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC0FC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2762064B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:45:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NDuePlci"
+	by mail.kernel.org (Postfix) with ESMTP id 963D12065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:45:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595601948;
+	bh=e8NxHBw15bPFDKNS3PtLCv2UFLG9ocdw579DTCyUFHY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TcpBot1u/tpr54T6gylltowwNaCGFKEbSsHMb09DwwOZSDJ2KpD8NzkG9ZefMgMTU
+	 F+1b9mARSP0E+8UT4YnQfgT4ELMZ4ToYlQKVp+UN6KGHhS6VVM62FLLYr8Sz3eqOaP
+	 z5anStQMGvUwWLK19yOHsNE9B6xogVA+2O4jvrnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgGXOpg (ORCPT
+        id S1726739AbgGXOpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:45:36 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33222 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726170AbgGXOpf (ORCPT
+        Fri, 24 Jul 2020 10:45:47 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42951 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgGXOpr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:45:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595601934;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bG1yDLGWaSETMRzgJW6YtgsTeF47PRE999wzG6k/f94=;
-        b=NDuePlcin5he6w9SHzhaA+q9+VPnapy1+uQH4ZZbgC7vOLANauJOHGLYEzgymgdFkNr+Oz
-        89ngWXdhR3b5ofnOBoASKLeN0V1mlqdIq28qr3QmmsJhBeSqmQOLjMM8dcrOO5T/hV8IgQ
-        rY3xPLXskYm+3RJ26aIhN2OF3oACkt4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-150-wyDAzewePwaS7ZvCwK9RoQ-1; Fri, 24 Jul 2020 10:45:30 -0400
-X-MC-Unique: wyDAzewePwaS7ZvCwK9RoQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE98080183C;
-        Fri, 24 Jul 2020 14:45:28 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.121])
-        by smtp.corp.redhat.com (Postfix) with SMTP id E524370C5F;
-        Fri, 24 Jul 2020 14:45:26 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Fri, 24 Jul 2020 16:45:28 +0200 (CEST)
-Date:   Fri, 24 Jul 2020 16:45:25 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Hugh Dickins <hughd@google.com>, Michal Hocko <mhocko@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-Message-ID: <20200724144525.GB17209@redhat.com>
-References: <CAHk-=whewL14RgwLZTXcNAnrDPt0H+sRJS6iDq0oGb6zwaBMxg@mail.gmail.com>
- <CAHk-=whb0=rjc1WR+F_r_syw5Ld4=ebuNJmmpaPEzfjZRD5Y-w@mail.gmail.com>
- <alpine.LSU.2.11.2007221359450.1017@eggly.anvils>
- <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com>
- <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com>
- <20200723124749.GA7428@redhat.com>
- <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
- <20200723180100.GA21755@redhat.com>
- <CAHk-=wj9KWfs799xU5eW0J_hkee52C5kvFFmBV-A+vN7qNWnjA@mail.gmail.com>
- <CAHk-=wg=zqJ69JH3S9Ux0XKwZzjKqBP+ruLrmjW6NbNrpMuBNw@mail.gmail.com>
+        Fri, 24 Jul 2020 10:45:47 -0400
+Received: by mail-lf1-f68.google.com with SMTP id h8so5318149lfp.9;
+        Fri, 24 Jul 2020 07:45:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Dzkx8gigl6y/De7kKuc0wZrJ0/8/lN60gfKkzmdYUI0=;
+        b=dyhHWZM6Xgw4Ajl8H1CUqnUIkRVUc4RPb+xaHqfH5zcXUFE5RYdNu5Xw8cAoNAiTnu
+         x5LEs8VOgk6h8ksaxEnWNeO5mkrw2qT0qZu3di1scTi5m5pyQnmpfzczPlr/eoocOyPF
+         GPpoOYpPC/+Dcd+tEoZEohn4NqQyGp2afH+m1E30BNtBoXaqrK8N5fU3MggBGvsoiTX6
+         Uhu43Fe+lydXOlaLE2lTxUrCEQzSabnniV12VfSbbl/qIAODmu9qevVj9K3JPfShstgd
+         HbftaXgS2BynbbP0mSr5Lr4JcBT0awjUIaAw4ev8yXh+B11ZWoMEwVMClS9m4be9SjQW
+         AtXg==
+X-Gm-Message-State: AOAM53232PaXdJHGzBg1D6lybcSHOFg0gaReYA3Ui7c7Bv68FgkAFXPP
+        0x7B2N+z11YouhK6AD1Btfo=
+X-Google-Smtp-Source: ABdhPJxuDUKtDBKeqpYEsnpicDu6cv82dbR4O6uIC8LLHmnCf4mma1fQefnoPsAv972lWmW/J6c3kg==
+X-Received: by 2002:a19:ae0a:: with SMTP id f10mr5218572lfc.100.1595601944019;
+        Fri, 24 Jul 2020 07:45:44 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id m5sm287761ljb.98.2020.07.24.07.45.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 07:45:42 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jyyx6-00031S-Np; Fri, 24 Jul 2020 16:45:37 +0200
+Date:   Fri, 24 Jul 2020 16:45:36 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     johan@kernel.org, gregkh@linuxfoundation.org, corbet@lwn.net,
+        linux-usb@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH for v5.9] USB: serial: Replace HTTP links with HTTPS ones
+Message-ID: <20200724144536.GP3634@localhost>
+References: <20200719161920.60087-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wg=zqJ69JH3S9Ux0XKwZzjKqBP+ruLrmjW6NbNrpMuBNw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200719161920.60087-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/23, Linus Torvalds wrote:
->
-> IOW, I think we should do something like this (this is on top of my
-> patch, since it has that wake_page_function() change in it, but notice
-> how we have the exact same issue in our traditional
-> autoremove_wake_function() usage).
+On Sun, Jul 19, 2020 at 06:19:20PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+> 
+>  If there are any URLs to be removed completely
+>  or at least not (just) HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+>  Sorry again to all maintainers who complained about subject lines.
+>  Now I realized that you want an actually perfect prefixes,
+>  not just subsystem ones.
+>  I tried my best...
+>  And yes, *I could* (at least half-)automate it.
+>  Impossible is nothing! :)
+> 
+> 
+>  Documentation/usb/usb-serial.rst  |  2 +-
+>  drivers/usb/serial/cyberjack.c    |  2 +-
+>  drivers/usb/serial/ftdi_sio.h     |  4 ++--
+>  drivers/usb/serial/ftdi_sio_ids.h | 34 +++++++++++++++----------------
+>  drivers/usb/serial/kobil_sct.c    |  2 +-
+>  drivers/usb/serial/metro-usb.c    |  2 +-
+>  6 files changed, 23 insertions(+), 23 deletions(-)
+> 
+> diff --git a/Documentation/usb/usb-serial.rst b/Documentation/usb/usb-serial.rst
+> index 8fa7dbd3da9a..0a2071953691 100644
+> --- a/Documentation/usb/usb-serial.rst
+> +++ b/Documentation/usb/usb-serial.rst
+> @@ -202,7 +202,7 @@ Keyspan USA-series Serial Adapters
+>  
+>    More information is available at:
+>  
+> -        http://www.carnationsoftware.com/carnation/Keyspan.html
+> +        https://www.carnationsoftware.com/carnation/Keyspan.html
+>  
+>    For any questions or problems with this driver, please contact Hugh
+>    Blemings at hugh@misc.nu
 
-...
+Looks like your script is buggy; there are many more URLs than this one
+is this document.
 
-> +static inline void list_del_init_careful(struct list_head *entry)
-> +{
-> +	__list_del_entry(entry);
-> +	entry->prev = entry;
-> +	smp_store_release(&entry->next, entry);
-> +}
-> +
-...
->  static inline int list_empty_careful(const struct list_head *head)
->  {
-> -	struct list_head *next = head->next;
-> +	struct list_head *next = smp_load_acquire(&head->next);
->  	return (next == head) && (next == head->prev);
->  }
+> diff --git a/drivers/usb/serial/ftdi_sio_ids.h b/drivers/usb/serial/ftdi_sio_ids.h
+> index e8373528264c..a5bf2b974813 100644
+> --- a/drivers/usb/serial/ftdi_sio_ids.h
+> +++ b/drivers/usb/serial/ftdi_sio_ids.h
+> @@ -60,14 +60,14 @@
+>  /*
+>   * Texas Instruments XDS100v2 JTAG / BeagleBone A3
+>   * http://processors.wiki.ti.com/index.php/XDS100
+> - * http://beagleboard.org/bone
+> + * https://beagleboard.org/bone
+>   */
 
-This (and your previous email) answers my concerns about memory barriers.
+And here's another indication of that.
 
-IIUC, finish_wait() could even use this version of list_empty_careful(),
-
-	struct list_head *next = smp_load_acquire(&head->next);
-	return (next == head) && !WARN_ON(next != head->prev);
-
-iow, it doesn't really need to check next == head->prev as long as only
-list_del_init_careful() can remove it from list.
-
-Thanks!
-
-Oleg.
-
+Johan
