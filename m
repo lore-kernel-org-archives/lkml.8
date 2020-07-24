@@ -2,62 +2,78 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60053C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E47DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42E35206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C11206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbgGXNqo (ORCPT
+        id S1726895AbgGXNsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:46:44 -0400
-Received: from mail.monom.org ([188.138.9.77]:40748 "EHLO mail.monom.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726235AbgGXNqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:46:43 -0400
-Received: from mail.monom.org (localhost [127.0.0.1])
-        by filter.mynetwork.local (Postfix) with ESMTP id 232BD50056B;
-        Fri, 24 Jul 2020 15:46:41 +0200 (CEST)
-Received: from localhost (unknown [94.31.100.251])
-        by mail.monom.org (Postfix) with ESMTPSA id 5758150039E;
-        Fri, 24 Jul 2020 15:46:40 +0200 (CEST)
-From:   Daniel Wagner <dwagner@suse.de>
-Subject: [ANNOUNCE] v4.4.231-rt202
-Date:   Fri, 24 Jul 2020 13:41:05 -0000
-Message-ID: <159559806551.29587.13643956941367278015@beryllium>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>,
-        Pavel Machek <pavel@denx.de>
+        Fri, 24 Jul 2020 09:48:32 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34058 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726235AbgGXNsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:48:32 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3035D55B06DFD5CAED3A;
+        Fri, 24 Jul 2020 21:48:11 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 24 Jul 2020
+ 21:48:03 +0800
+From:   Wang Hai <wanghai38@huawei.com>
+To:     <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: hix5hd2_gmac: Remove unneeded cast from memory allocation
+Date:   Fri, 24 Jul 2020 21:46:30 +0800
+Message-ID: <20200724134630.15415-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.113.133]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT-list!
+Remove casting the values returned by memory allocation function.
 
-I'm pleased to announce the v4.4.231-rt202 stable release.
+Coccinelle emits WARNING:
 
-This release is an update to the new stable v4.4.231 version.
-It also includes the backport ("BPF: Disable on PREEMPT_RT") as
-Sebastian suggested to include in v4.4-rt.
+./drivers/net/ethernet/hisilicon/hix5hd2_gmac.c:1027:9-23: WARNING:
+ casting value returned by memory allocation function to (struct sg_desc *) is useless.
 
-Known issues:
+This issue was detected by using the Coccinelle software.
 
-   sigwaittest with hackbench as workload is able to trigger a crash on x86_64,
-   the same as reported for the v4.4.220-rt196 release. As it turns
-   out it was not triggered by BPF.
-   https://paste.opensuse.org/view/raw/58939248
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thanks,
-Daniel
+diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+index 4fb776920..8b2bf8503 100644
+--- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
++++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+@@ -1024,9 +1024,9 @@ static int hix5hd2_init_sg_desc_queue(struct hix5hd2_priv *priv)
+ 	struct sg_desc *desc;
+ 	dma_addr_t phys_addr;
+ 
+-	desc = (struct sg_desc *)dma_alloc_coherent(priv->dev,
+-				TX_DESC_NUM * sizeof(struct sg_desc),
+-				&phys_addr, GFP_KERNEL);
++	desc = dma_alloc_coherent(priv->dev,
++				  TX_DESC_NUM * sizeof(struct sg_desc),
++				  &phys_addr, GFP_KERNEL);
+ 	if (!desc)
+ 		return -ENOMEM;
+ 
+-- 
+2.17.1
+
