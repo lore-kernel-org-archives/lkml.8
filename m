@@ -2,78 +2,104 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDADC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EBEC433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00160206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:28:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595597320;
-	bh=aVUlwaFSPbv2FOLkmLAuTXyO51kUIwT97MB3MVPw4m0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hDMkaYfpeSAld3FAM9aCtoW7LQxdXPU/RoSGOTqPivkygzblBbVwFCrG0GDQgl1jc
-	 7mGysBOxASzvz4ewOOjoT7so4vSXXAvJU1iXKaze5++bEFfeC+vBx6bq+XPqieIwMo
-	 oPGx5sf/Y4DnsbZXDEVckMIiDRqKOcLyuAwoUZNM=
+	by mail.kernel.org (Postfix) with ESMTP id 1883A206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:28:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="G3ZqKwBd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgGXN2i (ORCPT
+        id S1726962AbgGXN2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:28:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727774AbgGXN2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:28:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FEC82065F;
-        Fri, 24 Jul 2020 13:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595597314;
-        bh=aVUlwaFSPbv2FOLkmLAuTXyO51kUIwT97MB3MVPw4m0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cNxwEYnSSTcZNbJ28anpaf133BCtSSNL5BVKFETSxWIjX67dvkoe00WB9jPpmI3In
-         o9UPsvYM4jDGPJ/TTeKqcjUFwTovwr8HzUJVcE3RRdfVggcBFQHc0Cs8TF2FqOgavZ
-         HlPQZPvOMFNa3dvUVimS1J+e0GXQ/FOB/OdZvp8E=
-Date:   Fri, 24 Jul 2020 15:28:36 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Larry Finger <Larry.Finger@lwfinger.net>,
-        Shreeya Patel <shreeya.patel23498@gmail.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Michael Straube <straube.linux@gmail.com>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: rtl8188eu: rtw_mlme: Fix uninitialized variable
- authmode
-Message-ID: <20200724132836.GC316746@kroah.com>
-References: <20200724122957.30411-1-dinghao.liu@zju.edu.cn>
+        Fri, 24 Jul 2020 09:28:10 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:34205 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbgGXN2H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:28:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1595597286; x=1627133286;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=EXi3tTBHf8P3xAGZvqsO/kEW9lXFWZ2Yowzh8A1KNTI=;
+  b=G3ZqKwBd8rgnt1nwnFnGAm5OnY97lGlhVi4Jv0wXUgD+bmVfIohEx3EC
+   O9tTFgiWYuD9DpWuVXTEDJXbSjCX4599o5lqTYg+oAhMqyYK3BSOhaFLe
+   J69B8ZoijNk3mnhpnuPJYVINe2d7QKYW4l5HIpS7G76UAySebaObX821j
+   U=;
+IronPort-SDR: 7jFFeONIrrdpxNdbouE0R7Yx2R0SSXt8hUfWbDs20BY7fyU180bbE/HsH3DqDzJ/j/WSzmn18b
+ hi9Whw/bkgJQ==
+X-IronPort-AV: E=Sophos;i="5.75,390,1589241600"; 
+   d="scan'208";a="43878160"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 24 Jul 2020 13:28:04 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id B9B1BA2248;
+        Fri, 24 Jul 2020 13:28:03 +0000 (UTC)
+Received: from EX13D19EUB001.ant.amazon.com (10.43.166.229) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 24 Jul 2020 13:28:03 +0000
+Received: from u8a88181e7b2355.ant.amazon.com (10.43.160.65) by
+ EX13D19EUB001.ant.amazon.com (10.43.166.229) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 24 Jul 2020 13:27:55 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <arnd@arndb.de>, <robh+dt@kernel.org>, <tsahee@annapurnalabs.com>,
+        <antoine.tenart@bootlin.com>, <mchehab+huawei@kernel.org>,
+        <davem@davemloft.net>
+List-Id: <soc.lore.kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <arm@kernel.org>,
+        <soc@kernel.org>, <dwmw@amazon.co.uk>, <benh@amazon.com>,
+        <ronenk@amazon.com>, <talel@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <eitan@amazon.com>, <hhhawa@amazon.com>
+Subject: [PATCH v6 3/6] dt-bindings: arm: amazon: update maintainers of amazon,al DT bindings
+Date:   Fri, 24 Jul 2020 16:26:51 +0300
+Message-ID: <20200724132654.16549-4-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200724132654.16549-1-hhhawa@amazon.com>
+References: <20200724132654.16549-1-hhhawa@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724122957.30411-1-dinghao.liu@zju.edu.cn>
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.65]
+X-ClientProxiedBy: EX13D32UWA004.ant.amazon.com (10.43.160.193) To
+ EX13D19EUB001.ant.amazon.com (10.43.166.229)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 08:29:55PM +0800, Dinghao Liu wrote:
-> The variable authmode will keep uninitialized if neither if
-> statements used to initialize this variable are not triggered.
-> Then authmode may contain a garbage value and influence the
-> execution flow of this function.
-> 
-> Fix this by initializing it to zero.
+Update maintainers of amazon,al DT bindings.
 
-That does not fix anything, you just now are potentially setting a value
-you really do not have.
+Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Antoine Tenart <antoine.tenart@bootlin.com>
+---
+ Documentation/devicetree/bindings/arm/amazon,al.yaml | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Are you sure that this variable really will never be set?  If so, please
-fix it up with a "real" value that the code can handle properly.
+diff --git a/Documentation/devicetree/bindings/arm/amazon,al.yaml b/Documentation/devicetree/bindings/arm/amazon,al.yaml
+index 58eb4ad55a76..19ee489396f9 100644
+--- a/Documentation/devicetree/bindings/arm/amazon,al.yaml
++++ b/Documentation/devicetree/bindings/arm/amazon,al.yaml
+@@ -7,8 +7,9 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Amazon's Annapurna Labs Alpine Platform Device Tree Bindings
+ 
+ maintainers:
+-  - Tsahee Zidenberg <tsahee@annapurnalabs.com>
+-  - Antoine Tenart <antoine.tenart@bootlin.com>
++  - Hanna Hawa <hhhawa@amazon.com>
++  - Talel Shenhar <talel@amazon.com>, <talelshenhar@gmail.com>
++  - Ronen Krupnik <ronenk@amazon.com>
+ 
+ properties:
+   compatible:
+-- 
+2.17.1
 
-thanks,
-
-greg k-h
