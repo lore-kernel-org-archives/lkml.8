@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC34C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF74F206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0702070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:11:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PwJpJWJi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cil1XNPV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgGXVKN (ORCPT
+        id S1726736AbgGXVLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:10:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48531 "EHLO
+        Fri, 24 Jul 2020 17:11:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24782 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726576AbgGXVKN (ORCPT
+        with ESMTP id S1726411AbgGXVLo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:10:13 -0400
+        Fri, 24 Jul 2020 17:11:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595625012;
+        s=mimecast20190719; t=1595625103;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Ed8j2LT2KsHWpolspTWtSncJAinB+1jy5yMqXWi8RFM=;
-        b=PwJpJWJi4ll+H51OATK/8oT0TTkmsUBS8zCNhsv2BDgOt6v5LblWyFkum6Uevjw0m/NY1n
-        fkqXZjEoXjFXRZpcjOrNZuIBHnNoXtWJ91oVPckRvmm8u8CANDw2ZXvy8Hw/oVfA+YlbxI
-        cAmfJaOwbc/tCx6EXMxGDbkRYl4I94E=
+        bh=tgk0E/B+fKLI4HapciZOOHShfeB4adj+yNndqo5HAqc=;
+        b=cil1XNPVb6qCS5eOC9TwJy+Zs2IXvFYnt8Gqhy2WKEgPbZU/gksB1Ouv4h7RfEsoB/++iQ
+        E0z9/zUjsWsrXdXpxvVAfISeMK5oYIjOeoE8uYSz7r/ia8Z7Zazlvn7vdXz102qx05xbhH
+        Y301+MqJmUSb7kpLKOlh3iOiRdsRYwg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-162-4oQL6yaXMw6-6arlXRKcGw-1; Fri, 24 Jul 2020 17:10:08 -0400
-X-MC-Unique: 4oQL6yaXMw6-6arlXRKcGw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-467-EvQuSqI9Np-gVoJuVaSCpw-1; Fri, 24 Jul 2020 17:11:41 -0400
+X-MC-Unique: EvQuSqI9Np-gVoJuVaSCpw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 794CD1005504;
-        Fri, 24 Jul 2020 21:10:06 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6ED61106B251;
+        Fri, 24 Jul 2020 21:11:39 +0000 (UTC)
 Received: from llong.remote.csb (ovpn-117-203.rdu2.redhat.com [10.10.117.203])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 959296FEFE;
-        Fri, 24 Jul 2020 21:10:02 +0000 (UTC)
-Subject: Re: [PATCH v4 6/6] powerpc: implement smp_cond_load_relaxed
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9267410013C2;
+        Fri, 24 Jul 2020 21:11:36 +0000 (UTC)
+Subject: Re: [PATCH v4 0/6] powerpc: queued spinlocks and rwlocks
 To:     Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org
 Cc:     Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -57,29 +57,78 @@ Cc:     Will Deacon <will@kernel.org>,
         virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
         linux-arch@vger.kernel.org
 References: <20200724131423.1362108-1-npiggin@gmail.com>
- <20200724131423.1362108-7-npiggin@gmail.com>
 From:   Waiman Long <longman@redhat.com>
 Organization: Red Hat
-Message-ID: <1d24ef18-963b-4e26-2798-68bfe1350167@redhat.com>
-Date:   Fri, 24 Jul 2020 17:10:02 -0400
+Message-ID: <f568c8aa-29b5-dbe9-47b8-ee12ce55cb31@redhat.com>
+Date:   Fri, 24 Jul 2020 17:11:36 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200724131423.1362108-7-npiggin@gmail.com>
+In-Reply-To: <20200724131423.1362108-1-npiggin@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 7/24/20 9:14 AM, Nicholas Piggin wrote:
-> This implements smp_cond_load_relaed with the slowpath busy loop using the
+> Updated with everybody's feedback (thanks all), and more performance
+> results.
+>
+> What I've found is I might have been measuring the worst load point for
+> the paravirt case, and by looking at a range of loads it's clear that
+> queued spinlocks are overall better even on PV, doubly so when you look
+> at the generally much improved worst case latencies.
+>
+> I have defaulted it to N even though I'm less concerned about the PV
+> numbers now, just because I think it needs more stress testing. But
+> it's very nicely selectable so should be low risk to include.
+>
+> All in all this is a very cool technology and great results especially
+> on the big systems but even on smaller ones there are nice gains. Thanks
+> Waiman and everyone who developed it.
+>
+> Thanks,
+> Nick
+>
+> Nicholas Piggin (6):
+>    powerpc/pseries: move some PAPR paravirt functions to their own file
+>    powerpc: move spinlock implementation to simple_spinlock
+>    powerpc/64s: implement queued spinlocks and rwlocks
+>    powerpc/pseries: implement paravirt qspinlocks for SPLPAR
+>    powerpc/qspinlock: optimised atomic_try_cmpxchg_lock that adds the
+>      lock hint
+>    powerpc: implement smp_cond_load_relaxed
+>
+>   arch/powerpc/Kconfig                          |  15 +
+>   arch/powerpc/include/asm/Kbuild               |   1 +
+>   arch/powerpc/include/asm/atomic.h             |  28 ++
+>   arch/powerpc/include/asm/barrier.h            |  14 +
+>   arch/powerpc/include/asm/paravirt.h           |  87 +++++
+>   arch/powerpc/include/asm/qspinlock.h          |  91 ++++++
+>   arch/powerpc/include/asm/qspinlock_paravirt.h |   7 +
+>   arch/powerpc/include/asm/simple_spinlock.h    | 288 ++++++++++++++++
+>   .../include/asm/simple_spinlock_types.h       |  21 ++
+>   arch/powerpc/include/asm/spinlock.h           | 308 +-----------------
+>   arch/powerpc/include/asm/spinlock_types.h     |  17 +-
+>   arch/powerpc/lib/Makefile                     |   3 +
+>   arch/powerpc/lib/locks.c                      |  12 +-
+>   arch/powerpc/platforms/pseries/Kconfig        |   9 +-
+>   arch/powerpc/platforms/pseries/setup.c        |   4 +-
+>   include/asm-generic/qspinlock.h               |   4 +
+>   16 files changed, 588 insertions(+), 321 deletions(-)
+>   create mode 100644 arch/powerpc/include/asm/paravirt.h
+>   create mode 100644 arch/powerpc/include/asm/qspinlock.h
+>   create mode 100644 arch/powerpc/include/asm/qspinlock_paravirt.h
+>   create mode 100644 arch/powerpc/include/asm/simple_spinlock.h
+>   create mode 100644 arch/powerpc/include/asm/simple_spinlock_types.h
+>
+That patch series looks good to me. Thanks for working on this.
 
-Nit: "smp_cond_load_relaxed"
+For the series,
 
-Cheers,
-Longman
+Acked-by: Waiman Long <longman@redhat.com>
 
