@@ -7,65 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D421EC433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65916C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0F6720737
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45EED206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:08:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hjHu74Ts"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NyPhcF7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgGXTIv (ORCPT
+        id S1726956AbgGXTIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:08:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34642 "EHLO
+        Fri, 24 Jul 2020 15:08:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726742AbgGXTIv (ORCPT
+        with ESMTP id S1726742AbgGXTIw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:08:51 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1742AC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:08:51 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id w126so5561517pfw.8
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:08:51 -0700 (PDT)
+        Fri, 24 Jul 2020 15:08:52 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78FDAC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:08:52 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 1so5726219pfn.9
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:08:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jLe/OdSp6Fw1TtsCd8Mn/UyE/yt0Kzj/0i9kStm4nAs=;
-        b=hjHu74TsssCcfZJhkXtNq32lhCkRo3h18fghgfFy13uqjRo3Qj3Pzgeozq1tv0BNZu
-         S7svZRtcA8Zif0+u/pNMUSmozeA/8r7dwQjwC2rUnX9dr0CeRgbHGZX28TQ5Z2xeCi4O
-         ePioeZdXUJvV1uEOQFDvjdJbYr5eLvByuzQng=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1golVKvQMtPFKTXci2gDoubKVQV9khMoEWiJu1+cjio=;
+        b=NyPhcF7ES8xptWq8dHNT7VwVGzeQpKfZ5hRq8rGory7uVyoZMd4V8Re7FTzoRfEANd
+         V9ylGwmoW/hs3J+61sj/6UNwzlKLZhVuXYaxOx/RZfv/hLe1ieazh6AvGyiRd00lZBna
+         tiBh1rSzAdugOJEo3I+gBIlVBy6wmwjIWa7Qw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jLe/OdSp6Fw1TtsCd8Mn/UyE/yt0Kzj/0i9kStm4nAs=;
-        b=raHOYtxTC8JkmgPTjTYfwlW312u2JXQD5/mCblG5Rx3gHtwn1Dplfy2q908HHraq62
-         edOo9OxQkWnMwGy6ewPaaS/iajFfN4GYb3GKH36nQmmGM5lvncOxXmi+0P5R/iUMvsbv
-         dvVjKW8cjfzGmJmuecOd2gKf8krk6gIXDBR2IjBP1KVli34PIS06bCGlYkhklx0Whkgr
-         n0HbRXwOn4eorOENl0AQWvAT3Wrp1K+AU1KOJPxFpiApT8ibCpJ6+YapZXv/ziHKcnUH
-         q5/WRKYjCXdcFO6ZMMQMXUuvRFRGD3DdTaPFeEhEHWo4GqW2wzwpeu8zMiiDiUCKx9pu
-         SJ1g==
-X-Gm-Message-State: AOAM533qjL4dqXR2JMg3XA8bmerA6XJGDKvQ4QE1yI42kbKWzrsyw1YI
-        Sw883cpAoNbnWz6gd5fRzlZq9g==
-X-Google-Smtp-Source: ABdhPJwuM5PLKGJAjBqvGZG9LH6s5vJIg23sGFxMU/RMzFHPIVsn0t+bCcgMx2JHHD7VRbWaeiA90w==
-X-Received: by 2002:a63:4d3:: with SMTP id 202mr9867073pge.14.1595617730607;
-        Fri, 24 Jul 2020 12:08:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1golVKvQMtPFKTXci2gDoubKVQV9khMoEWiJu1+cjio=;
+        b=kJdjd60zh8qavfF5FJzJMUBrY5jbQLPoOHQnLQubIqcH/1Ao8D/ZmfysQd9CH6eTip
+         WNK1a+oeypwlX4PQogWNmh4HW4KenUtAWVlbRnD0GmKHWFikOq4HNm5is3Z1HyZR1IYv
+         s8IN8/a2hWFkux8C0WnDBsXlJMfx2dyq1eWhsgdepEyGCKyE2fC6Rb8Ho0m4F+nCvjJV
+         jyguHQSoNaFrtuJv3wadRrMkjBm3HqMuavchqES3K4t8J9XpiWV9VAhamCSyvUI74Wbp
+         ceqyb7EZAr+h3xkNItWcnp3YxP9qVlBtmZ8ai5X6e5ra2mmIQ8JRiOI/1IdQtiQEMlai
+         Ds5A==
+X-Gm-Message-State: AOAM532rlXmxLvxeNIyvaWVRb20YShiQ97wGM/6PqTSqiARdiI/Plbz4
+        wWZR3WzajuMZXhFl9Vj4gBsyoA==
+X-Google-Smtp-Source: ABdhPJySCxAxlkIyR/MCENi3CKBep+K5xQ84CnfCIaWUraOnMKGPI77sG+bl/zCMOaUaQwlIK10oyg==
+X-Received: by 2002:a63:c049:: with SMTP id z9mr9465123pgi.353.1595617732012;
+        Fri, 24 Jul 2020 12:08:52 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:8edc:d4ff:fe53:350d])
-        by smtp.gmail.com with ESMTPSA id c14sm7157871pfj.82.2020.07.24.12.08.48
+        by smtp.gmail.com with ESMTPSA id c14sm7157871pfj.82.2020.07.24.12.08.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 12:08:49 -0700 (PDT)
+        Fri, 24 Jul 2020 12:08:51 -0700 (PDT)
 From:   Brian Norris <briannorris@chromium.org>
 To:     Benson Leung <bleung@chromium.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Guenter Roeck <groeck@chromium.org>
 Cc:     <linux-kernel@vger.kernel.org>,
         Brian Norris <briannorris@chromium.org>
-Subject: [PATCH v2 1/2] platform/chrome: cros_ec_proto: ignore unnecessary wakeups on old ECs
-Date:   Fri, 24 Jul 2020 12:08:40 -0700
-Message-Id: <20200724190841.3112365-1-briannorris@chromium.org>
+Subject: [PATCH v2 2/2] platform/chrome: cros_ec_proto: check for missing EC_CMD_HOST_EVENT_GET_WAKE_MASK
+Date:   Fri, 24 Jul 2020 12:08:41 -0700
+Message-Id: <20200724190841.3112365-2-briannorris@chromium.org>
 X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+In-Reply-To: <20200724190841.3112365-1-briannorris@chromium.org>
+References: <20200724190841.3112365-1-briannorris@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,75 +75,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ECs that don't implement EC_CMD_HOST_EVENT_GET_WAKE_MASK should still
-have some reasonable default mask -- otherwise, they'll treat a variety
-of EC signals as spurious wakeups. Battery and AC events can be
-especially common, for devices that have been sitting at full charge
-plugged into AC for a long time, as they may cycle their charging off
-and on, or their battery may start reporting failures as it ages.
+As with cros_ec_cmd_xfer_status(), etc., it's not enough to simply check
+for the return status of send_command() -- that only covers transport or
+other similarly-fatal errors. One must also check the ->result field, to
+see whether the command really succeeded. If not, we can't use the data
+it returns.
 
-Treating these as wakeups does not serve a useful purpose, and is
-instead often counterproductive. And indeed, later ECs (that implement
-the mask) don't include these events in their wake-mask.
+The caller of cros_ec_get_host_event_wake_mask() ignores this, and so
+for example, on EC's where the command is not implemented, we're using
+junk (or in practice, all zeros) for our wake-mask. We should be using a
+non-zero default (currently, it's supposed to be all-1's).
 
-Note that this patch doesn't do anything without the subsequent patch
-("platform/chrome: cros_ec_proto: check for missing
-EC_CMD_HOST_EVENT_GET_WAKE_MASK"), because
-cros_ec_get_host_event_wake_mask() currently does not return an error if
-EC_CMD_HOST_EVENT_GET_WAKE_MASK is not implemented.
+Fix this by checking the ->result field and returning -EPROTO for
+errors.
 
-Some additional notes:
-While the EC typically knows not to wake the CPU for these unimportant
-events once the CPU reaches a sleep state, it doesn't really have a way
-to know that the CPU is "almost" asleep, unless it has support for
-EC_CMD_HOST_SLEEP_EVENT. Alas, these older ECs do not support that
-command either, so this solution is not 100% complete.
+I might label this as fixing commit 29d99b966d60 ("cros_ec: Don't signal
+wake event for non-wake host events"), except that this fix alone
+actually may make things worse, as it now allows for a lot more spurious
+wakeups. The patch "platform/chrome: cros_ec_proto: ignore battery/AC
+wakeups on old ECs" helps to mitigate this.
 
 Signed-off-by: Brian Norris <briannorris@chromium.org>
 ---
 v2:
- * more notes in commit message
+ * EOPNOTSUPP, not ENOTSUPP
 ---
- drivers/platform/chrome/cros_ec_proto.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ drivers/platform/chrome/cros_ec_proto.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index 3e745e0fe092..e93024b55ce8 100644
+index e93024b55ce8..31ca0af62388 100644
 --- a/drivers/platform/chrome/cros_ec_proto.c
 +++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -469,14 +469,26 @@ int cros_ec_query_all(struct cros_ec_device *ec_dev)
- 						    &ver_mask);
- 	ec_dev->host_sleep_v1 = (ret >= 0 && (ver_mask & EC_VER_MASK(1)));
+@@ -208,6 +208,12 @@ static int cros_ec_get_host_event_wake_mask(struct cros_ec_device *ec_dev,
+ 	msg->insize = sizeof(*r);
  
--	/*
--	 * Get host event wake mask, assume all events are wake events
--	 * if unavailable.
--	 */
-+	/* Get host event wake mask. */
- 	ret = cros_ec_get_host_event_wake_mask(ec_dev, proto_msg,
- 					       &ec_dev->host_event_wake_mask);
--	if (ret < 0)
--		ec_dev->host_event_wake_mask = U32_MAX;
-+	if (ret < 0) {
-+		/*
-+		 * If the EC doesn't support EC_CMD_HOST_EVENT_GET_WAKE_MASK,
-+		 * use a reasonable default. Note that we ignore various
-+		 * battery, AC status, and power-state events, because (a)
-+		 * those can be quite common (e.g., when sitting at full
-+		 * charge, on AC) and (b) these are not actionable wake events;
-+		 * if anything, we'd like to continue suspending (to save
-+		 * power), not wake up.
-+		 */
-+		ec_dev->host_event_wake_mask = U32_MAX &
-+			~(BIT(EC_HOST_EVENT_AC_DISCONNECTED) |
-+			  BIT(EC_HOST_EVENT_BATTERY_LOW) |
-+			  BIT(EC_HOST_EVENT_BATTERY_CRITICAL) |
-+			  BIT(EC_HOST_EVENT_PD_MCU) |
-+			  BIT(EC_HOST_EVENT_BATTERY_STATUS));
+ 	ret = send_command(ec_dev, msg);
++	if (ret >= 0) {
++		if (msg->result == EC_RES_INVALID_COMMAND)
++			return -EOPNOTSUPP;
++		if (msg->result != EC_RES_SUCCESS)
++			return -EPROTO;
 +	}
+ 	if (ret > 0) {
+ 		r = (struct ec_response_host_event_mask *)msg->data;
+ 		*mask = r->mask;
+@@ -488,6 +494,13 @@ int cros_ec_query_all(struct cros_ec_device *ec_dev)
+ 			  BIT(EC_HOST_EVENT_BATTERY_CRITICAL) |
+ 			  BIT(EC_HOST_EVENT_PD_MCU) |
+ 			  BIT(EC_HOST_EVENT_BATTERY_STATUS));
++		/*
++		 * Old ECs may not support this command. Complain about all
++		 * other errors.
++		 */
++		if (ret != -EOPNOTSUPP)
++			dev_err(ec_dev->dev,
++				"failed to retrieve wake mask: %d\n", ret);
+ 	}
  
  	ret = 0;
- 
 -- 
 2.28.0.rc0.142.g3c755180ce-goog
 
