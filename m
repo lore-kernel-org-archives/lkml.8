@@ -2,126 +2,388 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18185C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C29BC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F41FA20663
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2B220663
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:36:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BCruDuz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgGXNgJ (ORCPT
+        id S1727829AbgGXNgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:36:09 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:59163 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgGXNgH (ORCPT
+        Fri, 24 Jul 2020 09:36:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58794 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726979AbgGXNgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:36:07 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N2Unv-1kwxDf44zv-013xIE; Fri, 24 Jul 2020 15:36:05 +0200
-Received: by mail-qk1-f180.google.com with SMTP id h7so8575895qkk.7;
-        Fri, 24 Jul 2020 06:36:04 -0700 (PDT)
-X-Gm-Message-State: AOAM532hYaDo6t+trYK+KCT+JMsg5jycchuLnjo51AAU19Wp3gLf8Ncu
-        35WOXYGXfPYuI7U6enw6YYbLwiplR8D/VkeqtT0=
-X-Google-Smtp-Source: ABdhPJw8PDUAcsa19D0JsA1UiJ+7gWd1V/OX8unaG7ilwuCw9y8HfDDcLAZ6+8VBtnlLCvi1Km+wsSFZgRokoxK9dkY=
-X-Received: by 2002:a37:9004:: with SMTP id s4mr10380921qkd.286.1595597763603;
- Fri, 24 Jul 2020 06:36:03 -0700 (PDT)
+        Fri, 24 Jul 2020 09:36:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595597760;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fotUKMptHkYQQHndl5BpnjiJX3mD8PFHbtajrsB9/tY=;
+        b=BCruDuz76yO+8xsHCjoCe3Wm3rCFM/oJoShEvza687dkyuw1nxqF/Mtlh/earqA+fO2Hb1
+        Kny/CAuqRQvYgVczhjmCIFHbecCTZwJcov14C5axfUzepirp4e7uKcnMIb1ypKieOnE3O+
+        Wl8fKTOo5uu30gnebQDUxVibYZnIGv4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-263-8QZ4OOrSNEGj1obkYhxw6w-1; Fri, 24 Jul 2020 09:35:54 -0400
+X-MC-Unique: 8QZ4OOrSNEGj1obkYhxw6w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E9A010059A9;
+        Fri, 24 Jul 2020 13:35:52 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C83CC183AB;
+        Fri, 24 Jul 2020 13:35:49 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 07/17] fsinfo: Allow mount information to be queried [ver #20]
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
+        christian@brauner.io, jannh@google.com, darrick.wong@oracle.com,
+        kzak@redhat.com, jlayton@redhat.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 24 Jul 2020 14:35:48 +0100
+Message-ID: <159559774897.2144584.567467595900151004.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159559768062.2144584.13583793543173131929.stgit@warthog.procyon.org.uk>
+References: <159559768062.2144584.13583793543173131929.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-References: <20200716141534.30241-1-ulf.hansson@linaro.org>
- <CAK8P3a1+rwY5uFpUMijgET_W78Tj+tqqKDevgqstjUmmhxdKuA@mail.gmail.com> <CAPDyKFp3D8xZCSGNMm2ZOpa5f5wMwderCuAA5yLMXdjoKFoxQw@mail.gmail.com>
-In-Reply-To: <CAPDyKFp3D8xZCSGNMm2ZOpa5f5wMwderCuAA5yLMXdjoKFoxQw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 24 Jul 2020 15:35:47 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3wLPv58uqTqyXk7+0Cxoe4vdfahzCxXOp2pdGZDkeFsw@mail.gmail.com>
-Message-ID: <CAK8P3a3wLPv58uqTqyXk7+0Cxoe4vdfahzCxXOp2pdGZDkeFsw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: core: Initial support for SD express card/host
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Rui Feng <rui_feng@realsil.com.cn>,
-        linux-nvme@lists.infradead.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:sWySF2uPvNfnIJt2RYlZ05DeyB1/MWpKkxM0ZjPNdOei7NQaBl2
- qjvVQFmCkkg7AiyOwRHvceQS4gdf9GbXdpE8DiWykSINr04WTI6S7WEtOIxgzGPIhmLZw94
- Gftycli4cnN2AhZzNWTL/vt2w6qTOh41yvxPS+POCgoVcP/j6UwbbxPSkoAtDaOo7DUg2JM
- PkSMVcg0M/8DNCgT1bkxQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xMpLX/THuQI=:xzY2tk0dNhSRXdDJ17jQpp
- sGaBDDQKEIO2siPv7Z7qubu2rUnrbrGZMHlfkMd2XVA4H38r5NBxREpgqE+HsC7E2sjf1mHdB
- SqVHokrnHo9G8GpqEwl9TPoq/jb6HB4zCr6fwEAmvtld9E/VxEDTpGss+8n1G2ciQaCKI6KpP
- ihcf8h8TC+S8b3lkpjK2NSM45yTIYVteVvnaqoE/wLPpQrwKw4WkwkLwDRwc4GxBzKXIG3sUl
- d4HRC/eDuVg5XKsqElXkEoEZvxpfIjAPlagZwpQRtmLFbPUGAw8cuHHtj1I7uv0ZD6Ph/rKnz
- c5dLzbq2jXhYJKvib/ovnxHc9G3GiaIWEGT8bEIFATykHSY2hTz6ys3hjHj4JxajqOFM8JaJk
- xqrNyn8jLzc9N3A4WA0XoCbQc8xJMlV3a3StdsM+TjokKoOFW+k0R1LJpN2INh+x+7wZflcl6
- skRNeRL5hEXsFwsYYdDLHfMosb4sZbMb7JH8cRwma0eV1RSixBt3avzJ+NslyRN+GaeVhPHg0
- piBzi2zBN+yDfiTxoBP51ASzPrrOattSJbATN+Ihll3ApuN9r9Tulr0kNKwLzTMO3xCH9HPJx
- QxbOuro2Z2Wp3fH5terEPRI4E4aQWL2y5aqRVJLTXF9uqFdYaNqhH+4RM4GWzsaFTyL0Jdr5K
- Trg5mNStOwW+xm/N30I7HhPnamJkZQWzoImXrSTEweuPT3FY+KQCFzFo3oBaF49wIhi+QUnzm
- lq0h8v2rlLm7xPQiRXfbiNEHo1+wKSX/d+YePicTbbniKoNnWUsDKXT2hq/p6kOD6AYn+FUYL
- T06vam23PeXJnSCGSiKEpWAEkmMLek6q+6KJeVaxnyaJYtVbvVlSmDgswQajm1KeZD7A/ezF7
- u555Ld0Z5flYmYVofLp0ZvbDx8QFhwkQLEBBC7Weoos1IKpg4IJTv6PAahryVQPacfWgXewfw
- pCfFH51zFlaVLZ/jL8c35flUsd3n0jclNR0cDp9gMtJL/KXzMCq0G
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 12:06 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> On Thu, 16 Jul 2020 at 20:23, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Thu, Jul 16, 2020 at 4:16 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >
-> > > +       /* Continue with the SD express init, if the card supports it. */
-> > > +       resp &= 0x3000;
-> > > +       if (pcie_bits && resp) {
-> > > +               if (resp == 0x3000)
-> > > +                       host->ios.timing = MMC_TIMING_SD_EXP_1_2V;
-> > > +               else
-> > > +                       host->ios.timing = MMC_TIMING_SD_EXP;
-> > > +
-> > > +               /*
-> > > +                * According to the spec the clock shall also be gated, but
-> > > +                * let's leave this to the host driver for more flexibility.
-> > > +                */
-> > > +               return host->ops->init_sd_express(host, &host->ios);
-> > > +       }
-> > > +
-> > >         return 0;
-> > >  }
-> >
-> > Does this need an additional handshake or timeout to see if the
-> > device was successfully probed by the nvme driver?
-> >
-> > It looks like the card would just disappear here if e.g. the nvme driver
-> > is not loaded or runs into a runtime error.
->
-> You are correct! In principle, the card would not be detected (it
-> doesn't disappear as it never gets registered). Instead, it's left in
-> "half-initialized" state, waiting for the nvme driver to take over.
->
-> I simply didn't want to go that far, to introduce synchronizations
-> steps between the nvme driver and mmc driver, but rather started
-> simple. Perhaps we can discuss these things as improvements on top
-> instead?
->
-> What do you think?
+Allow mount information, including information about a mount object to be
+queried with the fsinfo() system call.  Setting FSINFO_FLAGS_QUERY_MOUNT
+allows overlapping mounts to be queried by indicating that the syscall
+should interpret the pathname as a number indicating the mount ID.
 
-Starting simple is generally a good idea, yes.
+To this end, a number of fsinfo() attributes are provided:
 
-It would be good to have feedback from the nvme driver maintainers.
+ (1) FSINFO_ATTR_MOUNT_INFO.
 
-One way I can see the handshake working would be to have
-an sdexpress class_driver that provides interfaces for both mmc
-and nvme to link against. The mmc core can then create a
-class device when it finds an sd-express device and that
-class device contains a simple state machine that keeps track of
-what either side think is going on, possibly also providing
-a way to perform callbacks between the two sides.
+     This is a structure providing information about a mount, including:
 
-      Arnd
+	- Mount ID (can be used with FSINFO_FLAGS_QUERY_MOUNT).
+	- Mount uniquifier ID.
+	- Mount attributes (eg. R/O, NOEXEC).
+	- Mount change/notification counters.
+	- Superblock ID.
+	- Superblock change/notification counters.
+
+ (2) FSINFO_ATTR_MOUNT_PATH.
+
+     This a string providing information about a bind mount relative the
+     the root that was bound off, though it may get overridden by the
+     filesystem (NFS unconditionally sets it to "/", for example).
+
+ (3) FSINFO_ATTR_MOUNT_POINT.
+
+     This is a string indicating the name of the mountpoint within the
+     parent mount, limited to the parent's mounted root and the chroot.
+
+ (4) FSINFO_ATTR_MOUNT_POINT_FULL.
+
+     This is a string indicating the full path of the mountpoint, limited to
+     the chroot.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ fs/d_path.c                 |    2 -
+ fs/fsinfo.c                 |   12 +++++
+ fs/internal.h               |    9 +++
+ fs/namespace.c              |  114 +++++++++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/fsinfo.h |   17 ++++++
+ samples/vfs/test-fsinfo.c   |   16 ++++++
+ 6 files changed, 169 insertions(+), 1 deletion(-)
+
+diff --git a/fs/d_path.c b/fs/d_path.c
+index 0f1fc1743302..4c203f64e45e 100644
+--- a/fs/d_path.c
++++ b/fs/d_path.c
+@@ -229,7 +229,7 @@ static int prepend_unreachable(char **buffer, int *buflen)
+ 	return prepend(buffer, buflen, "(unreachable)", 13);
+ }
+ 
+-static void get_fs_root_rcu(struct fs_struct *fs, struct path *root)
++void get_fs_root_rcu(struct fs_struct *fs, struct path *root)
+ {
+ 	unsigned seq;
+ 
+diff --git a/fs/fsinfo.c b/fs/fsinfo.c
+index 8ccbcddb4f16..f276857709ee 100644
+--- a/fs/fsinfo.c
++++ b/fs/fsinfo.c
+@@ -252,6 +252,13 @@ static int fsinfo_generic_seq_read(struct path *path, struct fsinfo_context *ctx
+ 			ret = sb->s_op->show_options(&m, path->mnt->mnt_root);
+ 		break;
+ 
++	case FSINFO_ATTR_MOUNT_PATH:
++		if (sb->s_op->show_path)
++			ret = sb->s_op->show_path(&m, path->mnt->mnt_root);
++		else
++			seq_dentry(&m, path->mnt->mnt_root, " \t\n\\");
++		break;
++
+ 	case FSINFO_ATTR_FS_STATISTICS:
+ 		if (sb->s_op->show_stats)
+ 			ret = sb->s_op->show_stats(&m, path->mnt->mnt_root);
+@@ -282,6 +289,11 @@ static const struct fsinfo_attribute fsinfo_common_attributes[] = {
+ 
+ 	FSINFO_LIST	(FSINFO_ATTR_FSINFO_ATTRIBUTES,	(void *)123UL),
+ 	FSINFO_VSTRUCT_N(FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, (void *)123UL),
++
++	FSINFO_VSTRUCT	(FSINFO_ATTR_MOUNT_INFO,	fsinfo_generic_mount_info),
++	FSINFO_STRING	(FSINFO_ATTR_MOUNT_PATH,	fsinfo_generic_seq_read),
++	FSINFO_STRING	(FSINFO_ATTR_MOUNT_POINT,	fsinfo_generic_mount_point),
++	FSINFO_STRING	(FSINFO_ATTR_MOUNT_POINT_FULL,	fsinfo_generic_mount_point_full),
+ 	{}
+ };
+ 
+diff --git a/fs/internal.h b/fs/internal.h
+index 84bbb743a5ac..a56008b7f3ec 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -15,6 +15,7 @@ struct mount;
+ struct shrink_control;
+ struct fs_context;
+ struct user_namespace;
++struct fsinfo_context;
+ 
+ /*
+  * block_dev.c
+@@ -46,6 +47,11 @@ extern int __block_write_begin_int(struct page *page, loff_t pos, unsigned len,
+  */
+ extern void __init chrdev_init(void);
+ 
++/*
++ * d_path.c
++ */
++extern void get_fs_root_rcu(struct fs_struct *fs, struct path *root);
++
+ /*
+  * fs_context.c
+  */
+@@ -91,6 +97,9 @@ extern void __mnt_drop_write_file(struct file *);
+ extern void dissolve_on_fput(struct vfsmount *);
+ extern int lookup_mount_object(struct path *, unsigned int, struct path *);
+ extern int fsinfo_generic_mount_source(struct path *, struct fsinfo_context *);
++extern int fsinfo_generic_mount_info(struct path *, struct fsinfo_context *);
++extern int fsinfo_generic_mount_point(struct path *, struct fsinfo_context *);
++extern int fsinfo_generic_mount_point_full(struct path *, struct fsinfo_context *);
+ 
+ /*
+  * fs_struct.c
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 1db8a64cd76f..c196af35d39d 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -4265,4 +4265,118 @@ int lookup_mount_object(struct path *root, unsigned int mnt_id, struct path *_mn
+ 	goto out_unlock;
+ }
+ 
++/*
++ * Retrieve information about the nominated mount.
++ */
++int fsinfo_generic_mount_info(struct path *path, struct fsinfo_context *ctx)
++{
++	struct fsinfo_mount_info *p = ctx->buffer;
++	struct super_block *sb;
++	struct mount *m;
++	unsigned int flags;
++
++	m = real_mount(path->mnt);
++	sb = m->mnt.mnt_sb;
++
++	p->sb_unique_id		= sb->s_unique_id;
++	p->mnt_unique_id	= m->mnt_unique_id;
++	p->mnt_id		= m->mnt_id;
++
++	flags = READ_ONCE(m->mnt.mnt_flags);
++	if (flags & MNT_READONLY)
++		p->attr |= MOUNT_ATTR_RDONLY;
++	if (flags & MNT_NOSUID)
++		p->attr |= MOUNT_ATTR_NOSUID;
++	if (flags & MNT_NODEV)
++		p->attr |= MOUNT_ATTR_NODEV;
++	if (flags & MNT_NOEXEC)
++		p->attr |= MOUNT_ATTR_NOEXEC;
++	if (flags & MNT_NODIRATIME)
++		p->attr |= MOUNT_ATTR_NODIRATIME;
++
++	if (flags & MNT_NOATIME)
++		p->attr |= MOUNT_ATTR_NOATIME;
++	else if (flags & MNT_RELATIME)
++		p->attr |= MOUNT_ATTR_RELATIME;
++	else
++		p->attr |= MOUNT_ATTR_STRICTATIME;
++	return sizeof(*p);
++}
++
++/*
++ * Return the path of this mount relative to its parent and clipped to
++ * the current chroot.
++ */
++int fsinfo_generic_mount_point(struct path *path, struct fsinfo_context *ctx)
++{
++	struct mountpoint *mp;
++	struct mount *m, *parent;
++	struct path mountpoint, root;
++	void *p;
++
++	rcu_read_lock();
++
++	m = real_mount(path->mnt);
++	parent = m->mnt_parent;
++	if (parent == m)
++		goto skip;
++	mp = READ_ONCE(m->mnt_mp);
++	if (mp)
++		goto found;
++skip:
++	rcu_read_unlock();
++	return -ENODATA;
++
++found:
++	mountpoint.mnt = &parent->mnt;
++	mountpoint.dentry = READ_ONCE(mp->m_dentry);
++
++	get_fs_root_rcu(current->fs, &root);
++	if (path->mnt == root.mnt) {
++		rcu_read_unlock();
++		return fsinfo_string("/", ctx);
++	}
++
++	if (root.mnt != &parent->mnt) {
++		root.mnt = &parent->mnt;
++		root.dentry = parent->mnt.mnt_root;
++	}
++
++	((char *)ctx->buffer)[ctx->buf_size - 1] = 0;
++	p = __d_path(&mountpoint, &root, ctx->buffer, ctx->buf_size - 1);
++	rcu_read_unlock();
++
++	if (IS_ERR(p))
++		return PTR_ERR(p);
++	if (!p)
++		return -EPERM;
++
++	ctx->skip = p - ctx->buffer;
++	return (ctx->buffer + ctx->buf_size) - p;
++}
++
++/*
++ * Return the path of this mount from the current chroot.
++ */
++int fsinfo_generic_mount_point_full(struct path *path, struct fsinfo_context *ctx)
++{
++	struct path root;
++	void *p;
++
++	((char *)ctx->buffer)[ctx->buf_size - 1] = 0;
++
++	rcu_read_lock();
++	get_fs_root_rcu(current->fs, &root);
++	p = __d_path(path, &root, ctx->buffer, ctx->buf_size - 1);
++	rcu_read_unlock();
++
++	if (IS_ERR(p))
++		return PTR_ERR(p);
++	if (!p)
++		return -EPERM;
++
++	ctx->skip = p - ctx->buffer;
++	return (ctx->buffer + ctx->buf_size) - p;
++}
++
+ #endif /* CONFIG_FSINFO */
+diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
+index d24e47762a07..15ef161905cd 100644
+--- a/include/uapi/linux/fsinfo.h
++++ b/include/uapi/linux/fsinfo.h
+@@ -31,6 +31,11 @@
+ #define FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO 0x100	/* Information about attr N (for path) */
+ #define FSINFO_ATTR_FSINFO_ATTRIBUTES	0x101	/* List of supported attrs (for path) */
+ 
++#define FSINFO_ATTR_MOUNT_INFO		0x200	/* Mount object information */
++#define FSINFO_ATTR_MOUNT_PATH		0x201	/* Bind mount/superblock path (string) */
++#define FSINFO_ATTR_MOUNT_POINT		0x202	/* Relative path of mount in parent (string) */
++#define FSINFO_ATTR_MOUNT_POINT_FULL	0x203	/* Absolute path of mount (string) */
++
+ /*
+  * Optional fsinfo() parameter structure.
+  *
+@@ -85,6 +90,18 @@ struct fsinfo_u128 {
+ #endif
+ };
+ 
++/*
++ * Information struct for fsinfo(FSINFO_ATTR_MOUNT_INFO).
++ */
++struct fsinfo_mount_info {
++	__u64	sb_unique_id;		/* Kernel-lifetime unique superblock ID */
++	__u64	mnt_unique_id;		/* Kernel-lifetime unique mount ID */
++	__u32	mnt_id;			/* Mount identifier (use with AT_FSINFO_MOUNTID_PATH) */
++	__u32	attr;			/* MOUNT_ATTR_* flags */
++};
++
++#define FSINFO_ATTR_MOUNT_INFO__STRUCT struct fsinfo_mount_info
++
+ /*
+  * Information struct for fsinfo(FSINFO_ATTR_STATFS).
+  * - This gives extended filesystem information.
+diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
+index dfa44bba8bbd..f3bebb7318d9 100644
+--- a/samples/vfs/test-fsinfo.c
++++ b/samples/vfs/test-fsinfo.c
+@@ -294,6 +294,17 @@ static void dump_fsinfo_generic_volume_uuid(void *reply, unsigned int size)
+ 	       f->uuid[14], f->uuid[15]);
+ }
+ 
++static void dump_fsinfo_generic_mount_info(void *reply, unsigned int size)
++{
++	struct fsinfo_mount_info *r = reply;
++
++	printf("\n");
++	printf("\tsb_uniq : %llx\n", (unsigned long long)r->sb_unique_id);
++	printf("\tmnt_uniq: %llx\n", (unsigned long long)r->mnt_unique_id);
++	printf("\tmnt_id  : %x\n", r->mnt_id);
++	printf("\tattr    : %x\n", r->attr);
++}
++
+ static void dump_string(void *reply, unsigned int size)
+ {
+ 	char *s = reply, *p;
+@@ -370,6 +381,11 @@ static const struct fsinfo_attribute fsinfo_attributes[] = {
+ 
+ 	FSINFO_VSTRUCT_N(FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, fsinfo_meta_attribute_info),
+ 	FSINFO_LIST	(FSINFO_ATTR_FSINFO_ATTRIBUTES,	fsinfo_meta_attributes),
++
++	FSINFO_VSTRUCT	(FSINFO_ATTR_MOUNT_INFO,	fsinfo_generic_mount_info),
++	FSINFO_STRING	(FSINFO_ATTR_MOUNT_PATH,	string),
++	FSINFO_STRING_N	(FSINFO_ATTR_MOUNT_POINT,	string),
++	FSINFO_STRING_N	(FSINFO_ATTR_MOUNT_POINT_FULL,	string),
+ 	{}
+ };
+ 
+
+
