@@ -2,159 +2,107 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD61AC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8958920748
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850AA2074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:12:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Y6jIMlIg";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k6srkc7i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYN++5sI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgGXIMP (ORCPT
+        id S1726938AbgGXIMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:12:15 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:41331 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726437AbgGXIMP (ORCPT
+        Fri, 24 Jul 2020 04:12:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726437AbgGXIMr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:12:15 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8E5175C00C3;
-        Fri, 24 Jul 2020 04:12:13 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 24 Jul 2020 04:12:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=l
-        lMA+z5xxbFrYgBvQFXToJikEdxN9Z4xtWWma8Oxs28=; b=Y6jIMlIgg3LoDmF5/
-        NDpZM5XhL+hsGuNNoyGuLd47v+GGgFEtXP4CC2hpMrg/lNXVTJzEMuSEQ522oJvY
-        E5uCdsS3boU9WGM9ZH9s9L42/Vj0Uet4Sql8W/AwTZXfuuvea636ToXdlHXeeu7/
-        9rin4xGPPS04N6Pwv8RhT+hxV8Cn5T2muPW1nUYzcs4fPXNDzw5fQCwaJENjAJrv
-        3FIMi6IuMWGEo7Po3IrQe84HBNdILbgpvftJfvpMTCizS1JL/Hviajo5CZEDrN5j
-        bF5E2fSkkkUsWsVUuw7UBsr2ayq//Tapk8n0TdXQu+606lRBX5pCjxeeEqo4wFEj
-        t6q9Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=llMA+z5xxbFrYgBvQFXToJikEdxN9Z4xtWWma8Oxs
-        28=; b=k6srkc7iotFmvhNup6obDys5ISJCFQ7f30//PVyqBEE3oXl5FJuQOeirq
-        U6gS2oD+QcbmNT73cHGTCyiOgIm0yf/7spNuRQ8aTXSmGXlXNPow8WT+dMjj19Jz
-        3BGymHcMJxIn4qlhmeJE1t/ZfzXcXleUPFDeOrTGUpvz2b0uG6stB59oxhiKlUmc
-        5pWhaNOtZpNbTkFeuAlKzvxZEO1sDW0/2Opn+49Yy0jhNuhCXiNa/3nzaKlp8Qs3
-        7DVZVq/FtU8E0mjGJnicHA0jG39qKTnQdze5Eav0Qaxqj3gtc8N0lxbKhxYmXwYb
-        B29zLEg5/DfihvRR5PtodHYkSD4zA==
-X-ME-Sender: <xms:3JcaX0s6jygY4aN5IxbwmL0tGEvXXDG51FYuW1VFylPpAXehU2YXkQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheefgddtudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtqhertddttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepgfejtedtjefggfffvdetuedthedtheegheeuteekfeeghfdtteejkeeludeg
-    vddunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:3JcaXxdQdQJOMtMSKmKcQghMEKC5uE2UOioVw6r3303tQ-GsBR8zGA>
-    <xmx:3JcaX_wbfDBKmnLiar_vYufQ3CnJfNBPeXnsIVnlr14Q2XyHATtEnw>
-    <xmx:3JcaX3O-L7_gadk8L1GCe1uXGH8V-qnikMbJXeDs_AtiK5RTkqZizg>
-    <xmx:3ZcaXzlVoC22eU6YpjmSTfNgeM58Qi4V7rhksOWOtT6Q3h0WZDn6Hw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B7D93328005A;
-        Fri, 24 Jul 2020 04:12:11 -0400 (EDT)
-Date:   Fri, 24 Jul 2020 10:12:09 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     Frank Lee <frank@allwinnertech.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?utf-8?B?6buE54OB55Sf?= <huangshuosheng@allwinnertech.com>,
-        liyong@allwinnertech.com
-Subject: Re: [PATCH v4 14/16] arm64: allwinner: A100: add the basical
- Allwinner A100 DTSI file
-Message-ID: <20200724081209.d3b6tp2bfkhd63mv@gilmour.lan>
-References: <cover.1594708863.git.frank@allwinnertech.com>
- <f7f86c648bad6e72f8fc8117b96065bf5326a273.1594708864.git.frank@allwinnertech.com>
- <20200723165448.crdc4fc5jwqmsret@gilmour.lan>
- <CAEExFWu0PUOD0R+QvEiOsoZy_7JO_53i6OH3JoavVvGASxEeuA@mail.gmail.com>
+        Fri, 24 Jul 2020 04:12:47 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C296C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 01:12:47 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 184so7455619wmb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 01:12:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6m8MPunnWnimoI8Tr90cXlgJie5/8V6P4spqo5yR3oA=;
+        b=rYN++5sI6uFsZ4lzSC5kXiJ2bIlfMMhlKCn6cNHsZsqhNTEctNRB3jXApCdZkY+Iga
+         Aska2E6Dps0wUimqz4oyvDlKCvIv1eVON8R/sE6g1l5ULQqaFiCOcxrCVeJYU4pKNH5y
+         dWjELZvKV1fakMBy0HsVzJ5w0RXquLc7JtpoW30NhYZRE26n37TFgE5FXNlkBQBNOhLK
+         Lvk9FalQRsObfPi7+p65qFzEY/8K5nm+6Isx+F9+wsR5M3H6YGLl2CsmWPqSrDrJ6AlP
+         Uf+xWmn4VnyRKITODbECoAoOzhYoYLzjpsvdGloKED79RF635kyqghHwHMbK8lo+P2fv
+         yAFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6m8MPunnWnimoI8Tr90cXlgJie5/8V6P4spqo5yR3oA=;
+        b=oOLSDbE9rjCTrDs75wjVTyKaxfog+IcIela/YNjxgCstymfSzPYk9IeWWQoXivS3J7
+         0quTbN4+ueIYz+Rrs13WeWgAfhwAPv6kd4s8AmAePi7iHA/ysyAoWvDSdxKsJDoO64t6
+         6pzD3jYKy4u2lJROYKZNM8WVXVNOmpp1QJbLhm2RX4CC+bVqO8BuNpywyNzMChyf++Mq
+         sC/xnsjdKEgTZepP4qf9UOGK8QUgAeMW8l+XcpjXBn2b4eLLQ+bHxJ2P+g7rBMExGgWk
+         ulqPYsOL854s2e1zzXDdKKwSrOzMsr3vzo+eK5WRuoJWHy9PRktupIKUSfGp7uN2DCmh
+         b4fw==
+X-Gm-Message-State: AOAM531JuBj2xhsrTk7MNsCkD8IDTEljecEWfPGIQQU30xXrbFs5AEOe
+        6Y/zUw04eyBNy7GVRc7ECFyjACI9RAJ+1vLrZLA=
+X-Google-Smtp-Source: ABdhPJzmgBbim0+iQSTRtt3i8djYhE1SSkUXosg01WNCYrXcBmOWUTUgNIEZX6Xfv9R29wIEQKd4ExZpFGIodr0Y8js=
+X-Received: by 2002:a1c:28a:: with SMTP id 132mr7496150wmc.109.1595578366312;
+ Fri, 24 Jul 2020 01:12:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAEExFWu0PUOD0R+QvEiOsoZy_7JO_53i6OH3JoavVvGASxEeuA@mail.gmail.com>
+References: <20200723233853.48815-1-humjb_1983@163.com> <CAKfTPtCnewaivay7bftUY27+-qB=ct3eSNEoZW=-2Z6k0S4B4Q@mail.gmail.com>
+In-Reply-To: <CAKfTPtCnewaivay7bftUY27+-qB=ct3eSNEoZW=-2Z6k0S4B4Q@mail.gmail.com>
+From:   Jiang Biao <benbjiang@gmail.com>
+Date:   Fri, 24 Jul 2020 16:12:35 +0800
+Message-ID: <CAPJCdBnv4W5+u6OZ4vbAdJ2U8ubhfAU7+Zt0JUFjfxKEDuGJSw@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: consider sched-idle CPU when selecting idle core
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Jiang Biao <humjb_1983@163.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiang Biao <benbjiang@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 02:25:33PM +0800, Frank Lee wrote:
-> HI,
->=20
-> On Fri, Jul 24, 2020 at 12:54 AM Maxime Ripard <maxime@cerno.tech> wrote:
+On Fri, 24 Jul 2020 at 15:24, Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+>
+> On Fri, 24 Jul 2020 at 01:39, Jiang Biao <humjb_1983@163.com> wrote:
 > >
-> > Hi,
+> > From: Jiang Biao <benbjiang@tencent.com>
 > >
-> > On Tue, Jul 14, 2020 at 03:20:29PM +0800, Frank Lee wrote:
-> > > From: Yangtao Li <frank@allwinnertech.com>
-> > >
-> > > Allwinner A100 is a new SoC with Cortex-A53 cores, this commit adds
-> > > the basical DTSI file of it, including the clock, i2c, pins, sid, ths,
-> > > nmi, and UART support.
-> > >
-> > > Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> > > ---
-> > >  .../arm64/boot/dts/allwinner/sun50i-a100.dtsi | 364 ++++++++++++++++=
-++
-> > >  1 file changed, 364 insertions(+)
-> > >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/ar=
-m64/boot/dts/allwinner/sun50i-a100.dtsi
-> > > new file mode 100644
-> > > index 000000000000..3fb2443f2121
-> > > --- /dev/null
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-> > > @@ -0,0 +1,364 @@
-> > > +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> > > +/*
-> > > + * Copyright (c) 2020 Yangtao Li <frank@allwinnertech.com>
-> > > + */
-> > > +
-> > > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > > +#include <dt-bindings/clock/sun50i-a100-ccu.h>
-> > > +#include <dt-bindings/clock/sun50i-a100-r-ccu.h>
-> > > +#include <dt-bindings/reset/sun50i-a100-ccu.h>
-> > > +#include <dt-bindings/reset/sun50i-a100-r-ccu.h>
-> > > +
-> > > +/ {
-> > > +     interrupt-parent =3D <&gic>;
-> > > +     #address-cells =3D <2>;
-> > > +     #size-cells =3D <2>;
-> > > +
-> > > +     cpus {
-> > > +             #address-cells =3D <1>;
-> > > +             #size-cells =3D <0>;
-> > > +
-> > > +             cpu0: cpu@0 {
-> > > +                     compatible =3D "arm,armv8";
-> >
-> > You should use the arm,cortex-a53 compatible here, arm,armv8 is for
-> > software models.
-> >
-> > > +             sid@3006000 {
-> >
-> > The node name is supposed to be the class of the device, and the DT spec
-> > defines a list of them already. eeprom would be better suited here.
->=20
-> EFuse is more accurate?
+> > Sched-idle CPU has been considered in select_idle_cpu and
+> > select_idle_smt, it also needs to be considered in select_idle_core to
+> > be consistent and keep the same *idle* policy.
+>
+> In the case of select_idle_core, we are looking for a core that is
+> fully idle but if one CPU of the core is running a sched_idle task,
+> the core will not be idle and we might end up having  the wakeup task
+> on a CPU and a sched_idle task on another CPU of the core which is not
+> what we want
+Got it. sched_idle task may interfere its sibling, which brings me
+another question,
+If there's a core with smt1 running sched_idle task and smt2 idle,
+selecting smt1
+rather than smt2 should be more helpful for wakee task, because wakee task
+could suppress the sched_idle task without neighbour interfering.
+And there seems to be no consideration about that currently.
+Is it worth improving that?
 
-I missed that efuse got added. Yeah, it's definitely better
+Thanks a lot.
 
-Thanks!
-Maxime
+Regards,
+Jiang
