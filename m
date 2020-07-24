@@ -2,96 +2,138 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9093EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64342206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D39D2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:25:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mcpxjpBa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BRWV0W95"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgGXVUE (ORCPT
+        id S1726717AbgGXVZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:20:04 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:52807 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726573AbgGXVUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:20:03 -0400
-Received: from [192.168.0.7] (ip5f5af26d.dynamic.kabel-deutschland.de [95.90.242.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 4C4162002EE2A;
-        Fri, 24 Jul 2020 23:20:00 +0200 (CEST)
-Subject: Re: [PATCH] amdgpu_dm: fix nonblocking atomic commit use-after-free
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Mazin Rezk <mnrzk@protonmail.com>, linux-kernel@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Fri, 24 Jul 2020 17:25:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgGXVZC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 17:25:02 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B58C0619D3;
+        Fri, 24 Jul 2020 14:25:02 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595625899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GvMyNHsN0q61AeYEdZRSIrvuxMsl65bOxTzAFe7Crcg=;
+        b=mcpxjpBay3zaosMLUpZIESiZjX70tWRDRrx62Lm4RZUZc66n2tEF+jIigzon1ulXqPAERq
+        ZJBeRZcLuvLk3InOnvs226uLjvp9EwdGzfEf4sHXWe38EjioooEeyVEX2Kksr7QK6jVkr+
+        gApsCDCed1fI1bDW7RK9ps9yfftC50U2AXId0QshkdkkGOfTL5UPVuBaBWUBWhbMGefq0a
+        MAKXzZK9hoR8BnVhzGZPhLTTEPNpSkPkqD7AcTV1UJTp0GZt3J4BCnJi/biHikXZ5HE40c
+        xE35FKIFCpdNFLF7Crv+6ifPiyZlxBEA9V8tCb6fCPFnzN/br8LG0AYI/g9MTw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595625899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GvMyNHsN0q61AeYEdZRSIrvuxMsl65bOxTzAFe7Crcg=;
+        b=BRWV0W9529yicWf3VvB2bX366+Nsr1sxb73tdd6g/5PhodE1uYx58ywUoVNKdnXJW4fZmr
+        4hAZGvRtWU1J8ICw==
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        sunpeng.li@amd.com, Alexander Deucher <Alexander.Deucher@amd.com>,
-        1i5t5.duncan@cox.net, mphantomx@yahoo.com.br,
-        regressions@leemhuis.info, anthony.ruhier@gmail.com
-References: <YIGsJ9LlFquvBI2iWPKhJwjKBwDUr_C-38oVpLJJHJ5rDCY_Zrrv392o6UPNxHoeQrcpLYC9U4fZdpD9ilz6Amg2IxkSexGLQMCQIBek8rc=@protonmail.com>
- <202007231524.A24720C@keescook>
- <a86cba0b-4513-e7c3-ae75-bb331433f664@molgen.mpg.de>
- <202007241016.922B094AAA@keescook>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <3c92db94-3b62-a70b-8ace-f5e34e8f268f@molgen.mpg.de>
-Date:   Fri, 24 Jul 2020 23:19:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across exceptions
+In-Reply-To: <87mu3pvly7.fsf@nanos.tec.linutronix.de>
+References: <20200717072056.73134-1-ira.weiny@intel.com> <20200717072056.73134-18-ira.weiny@intel.com> <87r1t2vwi7.fsf@nanos.tec.linutronix.de> <20200723220435.GI844235@iweiny-DESK2.sc.intel.com> <87mu3pvly7.fsf@nanos.tec.linutronix.de>
+Date:   Fri, 24 Jul 2020 23:24:58 +0200
+Message-ID: <874kpwtxlh.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <202007241016.922B094AAA@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ira,
 
-Dear Kees,
+Thomas Gleixner <tglx@linutronix.de> writes:
+> Ira Weiny <ira.weiny@intel.com> writes:
+>> On Thu, Jul 23, 2020 at 09:53:20PM +0200, Thomas Gleixner wrote:
+>> I think, after fixing my code (see below), using idtentry_state could still
+>> work.  If the per-cpu cache and the MSR is updated in idtentry_exit() that
+>> should carry the state to the new cpu, correct?
+>
+> I'm way too tired to think about that now. Will have a look tomorrow
+> with brain awake.
 
+Not that I'm way more awake now, but at least I have the feeling that my
+brain is not completely useless.
 
-Am 24.07.20 um 19:33 schrieb Kees Cook:
-> On Fri, Jul 24, 2020 at 09:45:18AM +0200, Paul Menzel wrote:
->> Am 24.07.20 um 00:32 schrieb Kees Cook:
->>> On Thu, Jul 23, 2020 at 09:10:15PM +0000, Mazin Rezk wrote:
->> As Linux 5.8-rc7 is going to be released this Sunday, I wonder, if commit
->> 3202fa62f ("slub: relocate freelist pointer to middle of object") should be
->> reverted for now to fix the regression for the users according to Linux’ no
->> regression policy. Once the AMDGPU/DRM driver issue is fixed, it can be
->> reapplied. I know it’s not optimal, but as some testing is going to be
->> involved for the fix, I’d argue it’s the best option for the users.
-> 
-> Well, the SLUB defense was already released in v5.7, so I'm not sure it
-> really helps for amdgpu_dm users seeing it there too.
+Let me summarize what I understood:
 
-In my opinion, it would help, as the stable release could pick up the 
-revert, ones it’s in Linus’ master branch.
+  1) A per CPU cache which shadows the current state of the MSR, i.e. the
+     current valid key. You use that to avoid costly MSR writes if the
+     key does not change.
 
-> There was a fix to disable the async path for this driver that worked
-> around the bug too, yes? That seems like a safer and more focused
-> change that doesn't revert the SLUB defense for all users, and would
-> actually provide a complete, I think, workaround whereas reverting
-> the SLUB change means the race still exists. For example, it would be
-> hit with slab poisoning, etc.
+  2) On idtentry you store the key on entry in idtentry_state, clear it
+     in the MSR and shadow state if necessary and restore it on exit.
 
-I do not know. If there is such a fix, that would be great. But if you 
-do not know, how should a normal user? ;-)
+  3) On context switch out you save the per CPU cache value in the task
+     and on context switch in you restore it from there.
 
+Yes, that works (see below for #2) and sorry for my confusion yesterday
+about storing this in task state.
 
-Kind regards,
+#2 requires to handle the exceptions which do not go through
+idtentry_enter/exit() seperately, but that's a manageable amount. It's
+the ones which use IDTENTRY_RAW or a variant of it.
 
-Paul
+#BP, #MC, #NMI, #DB, #DF need extra local storage as all the kernel
+entries for those use nmi_enter()/exit(). So you just can create
+wrappers around those. Somehting like this
 
+static __always_inline idtentry_state_t idtentry_nmi_enter(void)
+{
+     	idtentry_state_t state = {};
 
-Kind regards,
+        nmi_enter();
+        instrumentation_begin();
+        state.key = save_and_clear_key();
+        instrumentation_end();
+}
 
-Paul
+static __always_inline void idtentry_nmi_exit(idtentry_state_t state)
+{
+        instrumentation_begin();
+        restore_key(state.key);
+        instrumentation_end();
+        nmi_exit();
+}
+
+#UD and #PF are using the raw entry variant as well but still invoke
+idtentry_enter()/exit(). #PF does not need any work. #UD handles
+WARN/BUG without going through idtentry_enter() first, but I don't think
+that's an issue unless a not 0 key would prevent writing to the console
+device. You surely can figure that out.
+
+Hope that helps.
+
+Thanks,
+
+        tglx
