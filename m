@@ -2,134 +2,127 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AE3C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A39C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3B2206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3441A206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:39:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TnFXeLiZ"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eWpURAT1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgGXFf3 (ORCPT
+        id S1726565AbgGXFjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 01:35:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgGXFf3 (ORCPT
+        Fri, 24 Jul 2020 01:39:23 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:13199 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726277AbgGXFjW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 01:35:29 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6523CC0619D3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 22:35:29 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id c25so6132032otf.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 22:35:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EpP1x6fpBcJRRTFRXnW5L0tvhqkIz94dWPm8oCXCSGg=;
-        b=TnFXeLiZoPhmCJGn8MBfTPcOm2/alOEcWuJYiXGsR74hLyq8npnNYkfGYGbkbfwgqU
-         NysP9hCDCaYUcSwSda/DO1KqMRNq0vB/6jFQI/OqnqT/ZOuMxKkiAYUBC5WOBddI9m5v
-         Cz8hML9K27X9jN9kBfbzNpvYMuWvCxYRnsZkPUxEBlBvgunagLSs0G/7CVEyzcmYABBC
-         JU/8JzAYYydFd+IQMbV8ews2kyd0hdKCEQFnEsU2qpBALoRmiFzgDNYEJ7fEJ2GiRRuM
-         aYWTJUu4e8sRyFhycyURKVNuYmp9QAVdG5HPmniDK7mZLZNJZ4RpFc+g7ajDULqsyBSs
-         N9dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EpP1x6fpBcJRRTFRXnW5L0tvhqkIz94dWPm8oCXCSGg=;
-        b=ZW8tjx19LAzqzk/ZKL/w7niILDINQqoVRUh5mFI8LSvQtYfewOrgwqr3t3i7KlUE4D
-         2w2G/OyoxwdHwzvuDveHHjqV8SqH4KXctKWcRdkm1S7mMuGeWg0SamOnSA+bSuyUYunY
-         O5XrkozxYA0MzGvtU5KDU+mOdzpLXzPqyujWY+B4qJ2dfLg2uy2I+2kbvrQU91uhgAlU
-         AvLQxx4JB8G2jAh6/mK+ZafHFNRR++gG+jEi5o3Z1e9RyDTGJQLKE3LiqbFbIK75TF2U
-         C7WTU/hu8QQ3DSrIiRmpKYQuahoDPZxxs/yJLJPpAiZQD/aAckn/40CEPWnJ8XCvx7r6
-         fQaQ==
-X-Gm-Message-State: AOAM530jBee9Stt3ffwXcW+v/W/290VNvc4GEnhx2iKKRmxGdxV/Gs6e
-        C0abiVpTbRWIZjUH3OOtHZwuza9RWXrlomVW/EQ=
-X-Google-Smtp-Source: ABdhPJzjCd7itzkyErUCs/NOiWvltk4xor8hQjXMvSPqF7YlI5nbOEyQtDEcNxAy7VvN5QmVjlbgIzvF6r9XDe4t7Yg=
-X-Received: by 2002:a05:6830:1ad7:: with SMTP id r23mr6902936otc.96.1595568928812;
- Thu, 23 Jul 2020 22:35:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200723091715.GL19262@shao2-debian> <87v9iexztl.fsf@nanos.tec.linutronix.de>
- <CAKc596KA2moT7fgO+Ount5trEbtrYsuLbde5S5Ou-c4EQbHb3g@mail.gmail.com> <874kpyxpro.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <874kpyxpro.fsf@nanos.tec.linutronix.de>
-From:   jun qian <qianjun.kernel@gmail.com>
-Date:   Fri, 24 Jul 2020 13:35:17 +0800
-Message-ID: <CAKc596Lp3m3Ny9joOckYPsR5Lmok978bceMYNBrzsk6ozFjqhw@mail.gmail.com>
-Subject: Re: [Softirq] a76eadba0d: WARNING:at_net/mac80211/rx.c:#ieee80211_rx_napi[mac80211]
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     kernel test robot <lkp@intel.com>, peterz@infradead.org,
-        will@kernel.org, luto@kernel.org, linux-kernel@vger.kernel.org,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Yafang Shao <laoar.shao@gmail.com>, lkp@lists.01.org
+        Fri, 24 Jul 2020 01:39:22 -0400
+X-UUID: 66bd73bc038147919ce272d953c64023-20200724
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=wBDacOncVh0PojdDGdKS/zftjuMPjd4CIaDYeFLXde0=;
+        b=eWpURAT14eo6meR9czwptJ9cwLjrlF/Gx+AbjSeoyNor7s/UCPAt+1AL941wbTKhathGzX+L/LSf3IE8KYiKJOsE0q1Pw+T+fuZZYID6ftCUkcLePuFHqwvqDFaSRUiVEZhSCIW1MYjBhCxjv67W6ZaD+qkp00wIu1gXsTpNQiI=;
+X-UUID: 66bd73bc038147919ce272d953c64023-20200724
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 609872489; Fri, 24 Jul 2020 13:39:18 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 24 Jul 2020 13:39:16 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 24 Jul 2020 13:39:17 +0800
+Message-ID: <1595569156.29906.6.camel@mtkswgap22>
+Subject: Re: [PATCH v9 2/7] dt-bindings: pinctrl: add bindings for MediaTek
+ MT6779 SoC
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Stephen Boyd <sboyd@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Loda Chou <loda.chou@mediatek.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        "Sean Wang" <sean.wang@kernel.org>, <wsd_upstream@mediatek.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        <devicetree@vger.kernel.org>, mtk01761 <wendell.lin@mediatek.com>,
+        Michael Turquette <mturquette@baylibre.com>
+Date:   Fri, 24 Jul 2020 13:39:16 +0800
+In-Reply-To: <20200723155159.GB436360@bogus>
+References: <1595503197-15246-1-git-send-email-hanks.chen@mediatek.com>
+         <1595503197-15246-3-git-send-email-hanks.chen@mediatek.com>
+         <20200723155159.GB436360@bogus>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:35 PM Thomas Gleixner <tglx@linutronix.de> wrote=
-:
->
-> jun qian <qianjun.kernel@gmail.com> writes:
-> > On Thu, Jul 23, 2020 at 6:58 PM Thomas Gleixner <tglx@linutronix.de> wr=
-ote:
-> >> That drops everything which has not yet been processed and the above
-> >> warning is due to this.
-> >>
-> > wow, I made a mistake, thank you for finding the cause of the problem
-> > so quickly.
-> >
-> > How about the following code.   we need to clear the corresponding
-> > pending bit at the
-> > right time Instead of all the pending bits cleared in the start.
-> >
-> > pending =3D softirq_pending();
-> >
-> > while ((softirq_bit =3D ffs(pending))) {
-> >
-> >         pending >>=3D softirq_bit;
-> >
-> >         set_softirq_pending(pending);  //Only clear the corresponding
-> > bit which will be processed.
->
-> How is that supposed to be correct. pending has been shifted
-> right. Something like this should work:
->
->                 h++;
->                 pending >>=3D softirq_bit;
->
->                 if (timeout()) {
->                         /*
->                          * Ensure that the remaining pending bits
->                          * are handled.
->                          */
->                         or_softirq_pending(pending << (vec_nr + 1));
->                         break;
->                 }
->         }
->
-> Thanks,
->
->         tglx
->
+T24gVGh1LCAyMDIwLTA3LTIzIGF0IDA5OjUxIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVGh1LCAyMyBKdWwgMjAyMCAxOToxOTo1MiArMDgwMCwgSGFua3MgQ2hlbiB3cm90ZToNCj4g
+PiBGcm9tOiBBbmR5IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQo+ID4gDQo+ID4gQWRk
+IGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIE1UNjc3OSBwaW5jdHJsIGRyaXZlci4N
+Cj4gPiANCj4gPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBBbmR5IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQo+ID4g
+U2lnbmVkLW9mZi1ieTogSGFua3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQo+ID4g
+LS0tDQo+ID4gIC4uLi9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLnlhbWwgICAgICB8
+IDE5NyArKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5NyBpbnNlcnRp
+b25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvcGluY3RybC9tZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sDQo+ID4gDQo+IA0K
+PiANCj4gTXkgYm90IGZvdW5kIGVycm9ycyBydW5uaW5nICdtYWtlIGR0X2JpbmRpbmdfY2hlY2sn
+IG9uIHlvdXIgcGF0Y2g6DQo+IA0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3
+OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJl
+ZzowOiBbMCwgMjY4NDU1OTM2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhl
+cnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
+aW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0w
+OiBwaW5jdHJsQDEwMDA1MDAwOnJlZzoxOiBbMCwgMjk3OTI2NjU2LCAwLCA0MDk2XSBpcyB0b28g
+bG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1w
+bGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzoyOiBbMCwgMjk4OTA5
+Njk2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQt
+cmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVr
+LG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1
+MDAwOnJlZzozOiBbMCwgMzAwMDIzODA4LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRz
+L3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhh
+bXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo0OiBbMCwgMzAwMzUxNDg4LCAwLCA0MDk2XSBp
+cyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJs
+LmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo1OiBbMCwg
+MzAwNTQ4MDk2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGlu
+dXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21l
+ZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJs
+QDEwMDA1MDAwOnJlZzo2OiBbMCwgMzAxMDcyMzg0LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAv
+YnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLmV4YW1wbGUuZHQueWFt
+bDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo3OiBbMCwgMzAxMTM3OTIwLCAwLCA0
+MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1w
+aW5jdHJsLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo4
+OiBbMCwgMjY4NDgwNTEyLCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiANCj4gDQo+IFNlZSBodHRw
+czovL3VybGRlZmVuc2UuY29tL3YzL19faHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRj
+aC8xMzM0NzQzX187ISFDVFJOS0E5d01nMEFSYncheFZxMjFzLVZhdzNJZjEtUThFV0pFREJCSVVw
+MGozMFBJYUdRV0R5aENmdGJjT2dGcmpScVpNTkhvSGdPWGtzRDNnJCANCj4gDQo+IElmIHlvdSBh
+bHJlYWR5IHJhbiAnbWFrZSBkdF9iaW5kaW5nX2NoZWNrJyBhbmQgZGlkbid0IHNlZSB0aGUgYWJv
+dmUNCj4gZXJyb3IocyksIHRoZW4gbWFrZSBzdXJlIGR0LXNjaGVtYSBpcyB1cCB0byBkYXRlOg0K
+PiANCj4gcGlwMyBpbnN0YWxsIGdpdCtodHRwczovL2dpdGh1Yi5jb20vZGV2aWNldHJlZS1vcmcv
+ZHQtc2NoZW1hLmdpdEBtYXN0ZXIgLS11cGdyYWRlDQo+IA0KPiBQbGVhc2UgY2hlY2sgYW5kIHJl
+LXN1Ym1pdC4NCj4gDQpIaSBSb2IsDQoNCkl0J3MgbXkgZmF1bHQNCkkgY291bGQgcmVwcm9kdWNl
+IHRoZSBlcnJvciBsb2cgYWZ0ZXIgZHQtc2NoZW1hIHVwZGF0ZXMgdG8gdGhlIGxhdGVzdA0KdmVy
+c2lvbi4NCkknbGwgZml4IGl0IGluIG5leHQgdmVyc2lvbi4NCg0KVGhhbmtzIQ0KDQpIYW5rcyBD
+aGVuDQoNCg==
 
-I have two questions that need to be discussed.
-
-1. If the __do_sofrirq() is executed in the ksoftirqd, we may not need
-to check the timeout in the loop.
-2. Both the invoke_softirq() and run_ksoftirqd()  will execute
-__do_sofirq, they all execute the same code=EF=BC=8C
-    when it is in the ksoftirqd, Do we need to wake up ksoftirqd in
-the process context according to
-    max_restart and MAX_SOFTIRQ_TIME. In my opinion, If we  use a flag
-to distinguish where
-    __do_softirq() is called from,  we can do what is most suitable
-for __do_softirq based on this flag.
