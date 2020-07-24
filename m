@@ -2,139 +2,226 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ABFC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BF5C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28B80206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E55D206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:35:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="qJfJnqhI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbgGXTe1 convert rfc822-to-8bit (ORCPT
+        id S1726759AbgGXTfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:34:27 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:38102 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgGXTe0 (ORCPT
+        Fri, 24 Jul 2020 15:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgGXTfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:34:26 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jz3SY-0004V4-Rg; Fri, 24 Jul 2020 13:34:22 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jz3SX-0001HJ-4f; Fri, 24 Jul 2020 13:34:22 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Michael Kerrisk (man-pages) <mtk.manpages@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Serge Hallyn <serge@hallyn.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        =?utf-8?Q?=C3=81kos?= Uzonyi <uzonyi.akos@gmail.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-References: <20200724001248.GC25522@altlinux.org>
-        <CAK8P3a0JM8dytW6C8P9HoPcGksg0d5JCut1yT7JzBcUCAm-WcQ@mail.gmail.com>
-        <20200724102848.GA1654@altlinux.org>
-Date:   Fri, 24 Jul 2020 14:31:19 -0500
-In-Reply-To: <20200724102848.GA1654@altlinux.org> (Dmitry V. Levin's message
-        of "Fri, 24 Jul 2020 13:28:49 +0300")
-Message-ID: <878sf8ogl4.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 24 Jul 2020 15:35:00 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C20F0C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:35:00 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id s189so3685690iod.2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:35:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gfXUqywojfTyPVAtr3dZJqxRQaBJzeI+7fUn5bNK71A=;
+        b=qJfJnqhIA6GWl/EQVKkfUjcNv/yM4zbW5MlLKnr3EacZlE/oTx7DBET5AWCXSaoNla
+         gP6BBvuYBTdolIYzEh8qR8Bm0zEIlSVkpoH2v8u3xxUy5ZBFm2sO1ff7RKAuTbcFbK6W
+         t3Wy80oJ6tlUHSo7iZCPsEHjx4pxZo4u7WCIQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gfXUqywojfTyPVAtr3dZJqxRQaBJzeI+7fUn5bNK71A=;
+        b=Z6NyGwn/UU6EcCBrQLVu+na8ill6rX9x+xpYoIHJpT0raTQK+uurAp5tD5UPPkEmAa
+         NH0Gzi4Zubm2wkRdLRaQ/YbyHGGv/0Hx9ONh659DimxMVII/MA/h433nBIzvx4OTS+rq
+         yMv4jqb0dxpQ8Z7OGyLOs56LeiZQLdA1jG1qSrZiY7z2e2yh9EfFgea3Lh7/3ZGKALFe
+         Q3XlU9A7C35w90Q3e04WuLLf8zwL0GPO4gVG7Ji0h9hNuVigytz//q410L9GygbiIywZ
+         tNAyk5CNTJ8rxuewEbZJ9mHIXWs+XXaX7fQXtaSBYDBw/WFeFXyHuPKj67PcMRZvIoBU
+         dWlQ==
+X-Gm-Message-State: AOAM532qTMZHLlBa+YYPslNpigj1DG+D+0NViA3qZoBpj+37ugMGFGYH
+        HGP91CnN3AGNyPlzdZKPTiadmL0Kg9Ip0yEj/EMdMQ==
+X-Google-Smtp-Source: ABdhPJy/C/8/7t9G5BmZSyZZzr/kQM/LFbD0WPZmgFsJ5u93Ru2xsRRtyO4TPeyXyPagSucpoAPLysM+CNVKgGb86ao=
+X-Received: by 2002:a05:6638:1ec:: with SMTP id t12mr12402601jaq.86.1595619300093;
+ Fri, 24 Jul 2020 12:35:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-XM-SPF: eid=1jz3SX-0001HJ-4f;;;mid=<878sf8ogl4.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/cDxh9ZbG5MfX7w6erKvG5kP72UnbZSUY=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] fs/nsfs.c: fix ioctl support of compat processes
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <20200719035518.2386828-1-joel@joelfernandes.org>
+ <CAEXW_YQhYiYQZOJ95dqBcu_fAZ_6k7HGbrw53eTgPrgXU+5few@mail.gmail.com>
+ <20200719041841.GA2398236@google.com> <20200720082211.GA35358@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+In-Reply-To: <20200720082211.GA35358@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Fri, 24 Jul 2020 15:34:46 -0400
+Message-ID: <CAEXW_YR4dxuPV+Yu9HcYCSAdiV1H=9Rk9HJgCST-YMMc7J2Mgg@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] rcu/segcblist: Add counters to segcblist datastructure
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Michael,
-
-As the original author of NS_GET_OWNER_UID can you take a look at this?
-
-"Dmitry V. Levin" <ldv@altlinux.org> writes:
-
-> On Fri, Jul 24, 2020 at 11:20:26AM +0200, Arnd Bergmann wrote:
->> On Fri, Jul 24, 2020 at 2:12 AM Dmitry V. Levin <ldv@altlinux.org> wrote:
->> >
->> > According to Documentation/driver-api/ioctl.rst, in order to support
->> > 32-bit user space running on a 64-bit kernel, each subsystem or driver
->> > that implements an ioctl callback handler must also implement the
->> > corresponding compat_ioctl handler.  The compat_ptr_ioctl() helper can
->> > be used in place of a custom compat_ioctl file operation for drivers
->> > that only take arguments that are pointers to compatible data
->> > structures.
->> >
->> > In case of NS_* ioctls only NS_GET_OWNER_UID accepts an argument, and
->> > this argument is a pointer to uid_t type, which is universally defined
->> > to __kernel_uid32_t.
->> 
->> This is potentially dangerous to rely on, as there are two parts that
->> are mismatched:
->> 
->> - user space does not see the kernel's uid_t definition, but has its own,
->>   which may be either the 16-bit or the 32-bit type. 32-bit uid_t was
->>   introduced with linux-2.3.39 in back in 2000. glibc was already
->>   using 32-bit uid_t at the time in user space, but uclibc only changed
->>   in 2003, and others may have been even later.
->> 
->> - the ioctl command number is defined (incorrectly) as if there was no
->>   argument, so if there is any user space that happens to be built with
->>   a 16-bit uid_t, this does not get caught.
+On Mon, Jul 20, 2020 at 4:22 AM <boqun.feng@gmail.com> wrote:
 >
-> Note that NS_GET_OWNER_UID is provided on 32-bit architectures, too, so
-> this 16-bit vs 32-bit uid_t issue was exposed to userspace long time ago
-> when NS_GET_OWNER_UID was introduced, and making NS_GET_OWNER_UID
-> available for compat processes won't make any difference, as the mismatch
-> is not between native and compat types, but rather between 16-bit and
-> 32-bit uid_t types.
->
-> I agree it would be correct to define NS_GET_OWNER_UID as
-> _IOR(NSIO, 0x4, uid_t) instead of _IO(NSIO, 0x4), but nobody Cc'ed me
-> on this topic when NS_GET_OWNER_UID was discussed, and that ship has long
-> sailed.
->
->> > This change fixes compat strace --pidns-translation.
->> > 
->> > Note: when backporting this patch to stable kernels, commit
->> > "compat_ioctl: add compat_ptr_ioctl()" is needed as well.
->> > 
->> > Reported-by: Ákos Uzonyi <uzonyi.akos@gmail.com>
->> > Fixes: 6786741dbf99 ("nsfs: add ioctl to get an owning user namespace for ns file descriptor")
->> > Cc: stable@vger.kernel.org # v4.9+
->> > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
->> > ---
->> >  fs/nsfs.c | 1 +
->> >  1 file changed, 1 insertion(+)
->> >
->> > diff --git a/fs/nsfs.c b/fs/nsfs.c
->> > index 800c1d0eb0d0..a00236bffa2c 100644
->> > --- a/fs/nsfs.c
->> > +++ b/fs/nsfs.c
->> > @@ -21,6 +21,7 @@ static long ns_ioctl(struct file *filp, unsigned int ioctl,
->> >  static const struct file_operations ns_file_operations = {
->> >         .llseek         = no_llseek,
->> >         .unlocked_ioctl = ns_ioctl,
->> > +       .compat_ioctl   = compat_ptr_ioctl,
->> >  };
->> >
->> >  static char *ns_dname(struct dentry *dentry, char *buffer, int buflen)
+> Hi Joel,
 
-Thank you,
-Eric
+Sorry for the late reply as I was on vacation last several days.
+
+>
+> On Sun, Jul 19, 2020 at 12:18:41AM -0400, Joel Fernandes wrote:
+> > On Sun, Jul 19, 2020 at 12:06:28AM -0400, Joel Fernandes wrote:
+> > > On Sat, Jul 18, 2020 at 11:55 PM Joel Fernandes (Google)
+> > > <joel@joelfernandes.org> wrote:
+> > > [...]
+> > > >         /* If no callbacks moved, nothing more need be done. */
+> > > > @@ -419,10 +494,9 @@ void rcu_segcblist_advance(struct rcu_segcblist *rsclp, unsigned long seq)
+> > > >          * callbacks.  The overall effect is to copy down the later pointers
+> > > >          * into the gap that was created by the now-ready segments.
+> > > >          */
+> > > > -       for (j = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL; i++, j++) {
+> > > > -               if (rsclp->tails[j] == rsclp->tails[RCU_NEXT_TAIL])
+> > > > -                       break;  /* No more callbacks. */
+> > > > +       for (j = RCU_WAIT_TAIL; i < RCU_NEXT_TAIL && j < RCU_NEXT_TAIL; i++, j++) {
+> > > >                 WRITE_ONCE(rsclp->tails[j], rsclp->tails[i]);
+> > > > +               rcu_segcblist_move_seglen(rsclp, i, j);
+> > > >                 rsclp->gp_seq[j] = rsclp->gp_seq[i];
+> > > >         }
+> > >
+> > > Unfortunately I broke this code, _sigh_.  I need to reinstate the
+> > > if (rsclp->tails[j] == rsclp->tails[RCU_NEXT_TAIL]) , I completely
+> > > misunderstood that.
+> >
+> > And hopefully, third time's a charm with various extra newlines removed:
+> >
+> > ---8<-----------------------
+> >
+> > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> > Subject: [PATCH v3] rcu/segcblist: Add counters to segcblist datastructure
+> >
+> > Add counting of segment lengths of segmented callback list.
+> >
+> > This will be useful for a number of things such as knowing how big the
+> > ready-to-execute segment have gotten. The immediate benefit is ability
+> > to trace how the callbacks in the segmented callback list change.
+> >
+> > Tested by profusely reading traces when segcblist counts updated.
+> >
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> >
+> > v1->v3: minor nits.
+> > ---
+> >  include/linux/rcu_segcblist.h |  2 +
+> >  kernel/rcu/rcu_segcblist.c    | 77 +++++++++++++++++++++++++++++++++--
+> >  2 files changed, 76 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
+> > index b36afe7b22c9..d462ae5e340a 100644
+> > --- a/include/linux/rcu_segcblist.h
+> > +++ b/include/linux/rcu_segcblist.h
+> > @@ -69,8 +69,10 @@ struct rcu_segcblist {
+> >       unsigned long gp_seq[RCU_CBLIST_NSEGS];
+> >  #ifdef CONFIG_RCU_NOCB_CPU
+> >       atomic_long_t len;
+> > +     atomic_long_t seglen[RCU_CBLIST_NSEGS];
+> >  #else
+> >       long len;
+> > +     long seglen[RCU_CBLIST_NSEGS];
+> >  #endif
+> >       u8 enabled;
+> >       u8 offloaded;
+> > diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
+> > index 9a0f66133b4b..c5841efcd38e 100644
+> > --- a/kernel/rcu/rcu_segcblist.c
+> > +++ b/kernel/rcu/rcu_segcblist.c
+> > @@ -88,6 +88,57 @@ static void rcu_segcblist_set_len(struct rcu_segcblist *rsclp, long v)
+> >  #endif
+> >  }
+> >
+> > +/* Get the length of a segment of the rcu_segcblist structure. */
+> > +static long rcu_segcblist_get_seglen(struct rcu_segcblist *rsclp, int seg)
+> > +{
+> > +#ifdef CONFIG_RCU_NOCB_CPU
+> > +     return atomic_long_read(&rsclp->seglen[seg]);
+> > +#else
+> > +     return READ_ONCE(rsclp->seglen[seg]);
+> > +#endif
+> > +}
+> > +
+> > +/* Set the length of a segment of the rcu_segcblist structure. */
+> > +static void rcu_segcblist_set_seglen(struct rcu_segcblist *rsclp, int seg, long v)
+> > +{
+> > +#ifdef CONFIG_RCU_NOCB_CPU
+> > +     atomic_long_set(&rsclp->seglen[seg], v);
+> > +#else
+> > +     WRITE_ONCE(rsclp->seglen[seg], v);
+> > +#endif
+>
+> These #ifdef really make me uncomfortable ;-) Since we are allowed to
+> use the '_Generic' key from C11 (see include/linux/compiler_types.h), I
+> wonder whether it's better if we have a few "generic" primitives like:
+>
+>         #define gen_long_read(x) _Generic((x),                                          \
+>                                           atomic_long_t: atomic_long_read(&x, v),       \
+>                                           long: READ_ONCE(x)),                          \
+>                                           ...
+>
+>         #define gen_long_set(x, v) _Generic((x),                                        \
+>                                             atomic_long_t: atomic_long_set(&x, v),      \
+>                                             long: WRITE_ONCE(x, v)),                    \
+>                                             ...
+>
+> , and similar for _xchg and _add.
+
+This sounds like a good idea. But isn't the kernel compiled with -std=gnu89
+
+Here are the KBUILD_CFLAGS
+
+KBUILD_CFLAGS   := -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs \
+                   -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE \
+                   -Werror=implicit-function-declaration -Werror=implicit-int \
+                   -Wno-format-security \
+                   -std=gnu89
+
+With "make kernel/rcu/tree.o V=1" confirming it as well:
+
+  gcc -Wp,-MD,kernel/rcu/.tree.o.d  -nostdinc -isystem
+/usr/lib/gcc/x86_64-linux-gnu/9/include -I./arch/x86/include
+-I./arch/x86/include/generated  -I./include -I./arch/x86/include/uapi
+-I./arch/x86/include/generated/uapi -I./include/uapi
+-I./include/generated/uapi -include ./include/linux/kconfig.h -include
+./include/linux/compiler_types.h -D__KERNEL__ -Wall -Wundef
+-Werror=strict-prototypes -Wno-trigraphs -fno-strict-aliasing
+-fno-common -fshort-wchar -fno-PIE
+-Werror=implicit-function-declaration -Werror=implicit-int
+-Wno-format-security -std=gnu89
+
+>
+> With these primitives introduced, you can avoid () to add those
+> rcu_segcblist_*_seglen() which have #ifdefs in them. Of course, an
+> alternative would be that we implement rcu_segcblist_*_seglen() using
+> _Generic, but I think someone else may have the similar problems or
+> requirement (already or in the future), so it might be worthwhile to
+> introduce the gen_ primitives for broader usage.
+
+One issue is code using memory barriers around the operation, such as
+in rcu_segcblist_add_len() where you use smp_mb__before_atomic() for
+the atomic version, and regular smp_mb() for the non-atomic version.
+So ifdef will still exist to some degree.
+
+thanks,
+
+ - Joel
