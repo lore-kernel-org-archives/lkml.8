@@ -2,113 +2,182 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCCAC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56A762067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:37:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AwIgpfzK"
+	by mail.kernel.org (Postfix) with ESMTP id 117F5206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:43:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgGXNhh (ORCPT
+        id S1726841AbgGXNnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:37:37 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53282 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726763AbgGXNhf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:37:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595597854;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zkyxEbU5sxUTH/FEtcDCO3vpSvQgHkghjp2v8unR++E=;
-        b=AwIgpfzKt2RtcdiBVpwK/sm0Tmh5yR6J9rEKE1zAqtNESgzDPL4qesUA8pqcOqsgHYFfxv
-        2e28tvFTp6QZlKamHAULzHf4Tlek7eYLE86ppdsW6Ijktpqy9DZnrxTwWTxctLA5OAHVJb
-        CswBiMwss8bbdmyCTqtLr3yUqqWMZvM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-306-oBiQwkP_OF-vdWI7I9LYng-1; Fri, 24 Jul 2020 09:37:30 -0400
-X-MC-Unique: oBiQwkP_OF-vdWI7I9LYng-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B1315107ACCA;
-        Fri, 24 Jul 2020 13:37:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 182F070105;
-        Fri, 24 Jul 2020 13:37:25 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 17/17] samples: add error state information to test-fsinfo.c
- [ver #20]
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
-Cc:     Jeff Layton <jlayton@kernel.org>, dhowells@redhat.com,
-        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
-        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
-        jlayton@redhat.com, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 24 Jul 2020 14:37:25 +0100
-Message-ID: <159559784523.2144584.13104902796488677217.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159559768062.2144584.13583793543173131929.stgit@warthog.procyon.org.uk>
-References: <159559768062.2144584.13583793543173131929.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        Fri, 24 Jul 2020 09:43:40 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:58292 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726326AbgGXNnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:43:39 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6B9BB6B6301DDE2BC00E;
+        Fri, 24 Jul 2020 21:43:29 +0800 (CST)
+Received: from DESKTOP-KKJBAGG.china.huawei.com (10.174.186.173) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 24 Jul 2020 21:43:20 +0800
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+To:     <maz@kernel.org>, <james.morse@arm.com>,
+        <julien.thierry.kdev@gmail.com>, <suzuki.poulose@arm.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <steven.price@arm.com>, <mark.rutland@arm.com>, <ascull@google.com>
+CC:     <kvm@vger.kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <yezhenyu2@huawei.com>
+Subject: [RESEND RFC PATCH v1] arm64: kvm: flush tlbs by range in unmap_stage2_range function
+Date:   Fri, 24 Jul 2020 21:43:15 +0800
+Message-ID: <20200724134315.805-1-yezhenyu2@huawei.com>
+X-Mailer: git-send-email 2.22.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.186.173]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+Now in unmap_stage2_range(), we flush tlbs one by one just after the
+corresponding pages cleared.  However, this may cause some performance
+problems when the unmap range is very large (such as when the vm
+migration rollback, this may cause vm downtime too loog).
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
+This patch moves the kvm_tlb_flush_vmid_ipa() out of loop, and
+flush tlbs by range after other operations completed.  Because we
+do not make new mapping for the pages here, so this doesn't violate
+the Break-Before-Make rules.
+
+Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
 ---
+ arch/arm64/include/asm/kvm_asm.h |  2 ++
+ arch/arm64/kvm/hyp/tlb.c         | 36 ++++++++++++++++++++++++++++++++
+ arch/arm64/kvm/mmu.c             | 11 +++++++---
+ 3 files changed, 46 insertions(+), 3 deletions(-)
 
- samples/vfs/test-fsinfo.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
-index 5209b6a44fb0..9525ef72378a 100644
---- a/samples/vfs/test-fsinfo.c
-+++ b/samples/vfs/test-fsinfo.c
-@@ -428,6 +428,15 @@ static void dump_afs_fsinfo_server_address(void *reply, unsigned int size)
- 	printf("family=%u\n", ss->ss_family);
+diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+index 352aaebf4198..ef8203d3ca45 100644
+--- a/arch/arm64/include/asm/kvm_asm.h
++++ b/arch/arm64/include/asm/kvm_asm.h
+@@ -61,6 +61,8 @@ extern char __kvm_hyp_vector[];
+ 
+ extern void __kvm_flush_vm_context(void);
+ extern void __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa);
++extern void __kvm_tlb_flush_vmid_range(struct kvm *kvm, phys_addr_t start,
++				       phys_addr_t end);
+ extern void __kvm_tlb_flush_vmid(struct kvm *kvm);
+ extern void __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu);
+ 
+diff --git a/arch/arm64/kvm/hyp/tlb.c b/arch/arm64/kvm/hyp/tlb.c
+index d063a576d511..4f4737a7e588 100644
+--- a/arch/arm64/kvm/hyp/tlb.c
++++ b/arch/arm64/kvm/hyp/tlb.c
+@@ -189,6 +189,42 @@ void __hyp_text __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
+ 	__tlb_switch_to_host(kvm, &cxt);
  }
  
-+static void dump_fsinfo_generic_error_state(void *reply, unsigned int size)
++void __hyp_text __kvm_tlb_flush_vmid_range(struct kvm *kvm, phys_addr_t start,
++					   phys_addr_t end)
 +{
-+	struct fsinfo_error_state *es = reply;
++	struct tlb_inv_context cxt;
++	unsigned long addr;
 +
-+	printf("\n");
-+	printf("\tlatest error : %d (%s)\n", es->wb_error_last, strerror(es->wb_error_last));
-+	printf("\tcookie       : 0x%x\n", es->wb_error_cookie);
++	start = __TLBI_VADDR(start, 0);
++	end = __TLBI_VADDR(end, 0);
++
++	dsb(ishst);
++
++	/* Switch to requested VMID */
++	kvm = kern_hyp_va(kvm);
++	__tlb_switch_to_guest(kvm, &cxt);
++
++	if ((end - start) >= 512 << (PAGE_SHIFT - 12)) {
++		__tlbi(vmalls12e1is);
++		goto end;
++	}
++
++	for (addr = start; addr < end; addr += 1 << (PAGE_SHIFT - 12))
++		__tlbi(ipas2e1is, addr);
++
++	dsb(ish);
++	__tlbi(vmalle1is);
++
++end:
++	dsb(ish);
++	isb();
++
++	if (!has_vhe() && icache_is_vpipt())
++		__flush_icache_all();
++
++	__tlb_switch_to_host(kvm, &cxt);
 +}
 +
- static void dump_string(void *reply, unsigned int size)
+ void __hyp_text __kvm_tlb_flush_vmid(struct kvm *kvm)
  {
- 	char *s = reply, *p;
-@@ -516,6 +525,7 @@ static const struct fsinfo_attribute fsinfo_attributes[] = {
- 	FSINFO_STRING	(FSINFO_ATTR_AFS_CELL_NAME,	string),
- 	FSINFO_STRING	(FSINFO_ATTR_AFS_SERVER_NAME,	string),
- 	FSINFO_LIST_N	(FSINFO_ATTR_AFS_SERVER_ADDRESSES, afs_fsinfo_server_address),
-+	FSINFO_VSTRUCT  (FSINFO_ATTR_ERROR_STATE,       fsinfo_generic_error_state),
- 	{}
- };
+ 	struct tlb_inv_context cxt;
+diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+index 8c0035cab6b6..bcc719c32921 100644
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -63,6 +63,12 @@ static void kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
+ 	kvm_call_hyp(__kvm_tlb_flush_vmid_ipa, kvm, ipa);
+ }
  
++static void kvm_tlb_flush_vmid_range(struct kvm *kvm, phys_addr_t start,
++				     phys_addr_t end)
++{
++	kvm_call_hyp(__kvm_tlb_flush_vmid_range, kvm, start, end);
++}
++
+ /*
+  * D-Cache management functions. They take the page table entries by
+  * value, as they are flushing the cache using the kernel mapping (or
+@@ -267,7 +273,6 @@ static void unmap_stage2_ptes(struct kvm *kvm, pmd_t *pmd,
+ 			pte_t old_pte = *pte;
+ 
+ 			kvm_set_pte(pte, __pte(0));
+-			kvm_tlb_flush_vmid_ipa(kvm, addr);
+ 
+ 			/* No need to invalidate the cache for device mappings */
+ 			if (!kvm_is_device_pfn(pte_pfn(old_pte)))
+@@ -295,7 +300,6 @@ static void unmap_stage2_pmds(struct kvm *kvm, pud_t *pud,
+ 				pmd_t old_pmd = *pmd;
+ 
+ 				pmd_clear(pmd);
+-				kvm_tlb_flush_vmid_ipa(kvm, addr);
+ 
+ 				kvm_flush_dcache_pmd(old_pmd);
+ 
+@@ -324,7 +328,6 @@ static void unmap_stage2_puds(struct kvm *kvm, p4d_t *p4d,
+ 				pud_t old_pud = *pud;
+ 
+ 				stage2_pud_clear(kvm, pud);
+-				kvm_tlb_flush_vmid_ipa(kvm, addr);
+ 				kvm_flush_dcache_pud(old_pud);
+ 				put_page(virt_to_page(pud));
+ 			} else {
+@@ -352,6 +355,8 @@ static void unmap_stage2_p4ds(struct kvm *kvm, pgd_t *pgd,
+ 
+ 	if (stage2_p4d_table_empty(kvm, start_p4d))
+ 		clear_stage2_pgd_entry(kvm, pgd, start_addr);
++
++	kvm_tlb_flush_vmid_range(kvm, start_addr, end);
+ }
+ 
+ /**
+-- 
+2.19.1
 
 
