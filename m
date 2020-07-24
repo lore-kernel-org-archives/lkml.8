@@ -2,93 +2,131 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92923C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B40420663
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:02:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GaNVz3Ht"
+	by mail.kernel.org (Postfix) with ESMTP id 70A222065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595599434;
+	bh=l8O9b9w6KVznaryemW8PrV8g8wM+lmsDAl7e+r2DSRk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BbQGfJH8+3gIQPQNAbOpXtw4FoOyZVXFGYsVOorlj2RDgXYNa1ZyjVaO9g675cVXg
+	 tIjLdXC4ujxihLqy8QJY5L8r3iCLKYgPTjSRVfMlXdgWC8vFo8ZDhoH1MzxbHqJgj6
+	 kRCEewASUTQGmGTfmEshFlCk0s6A83hXWvUEPTDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgGXOCx (ORCPT
+        id S1726820AbgGXODx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:02:53 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:2215 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726503AbgGXOCw (ORCPT
+        Fri, 24 Jul 2020 10:03:53 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39071 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbgGXODv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:02:52 -0400
-X-UUID: 7d03c5e8d5614c01b1dea987b338fce4-20200724
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Nz8Osbgnil53yDCY8vBue9WxW2K6KBh+DmnbLurDntQ=;
-        b=GaNVz3HtX4Bh+NM5EuiV84LMnWmerA+Hd/RHkyQwsO99SoBzHoxlrrKRnx9PKzpCyjMn/LIQr3ToeRhoxm9kVhRcxwpfhWLYoRX+8hQHQXylYvFK1RVGwYgfL8ZAXKjvt7IZZX6BvVzm/Q1krDUWGsZunHG2LnU6wAXtKz1TT+U=;
-X-UUID: 7d03c5e8d5614c01b1dea987b338fce4-20200724
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1969448085; Fri, 24 Jul 2020 22:02:51 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 24 Jul 2020 22:02:45 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 24 Jul 2020 22:02:45 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <bvanassche@acm.org>
-CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
-        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        Fri, 24 Jul 2020 10:03:51 -0400
+Received: by mail-ed1-f67.google.com with SMTP id d18so7112498edv.6;
+        Fri, 24 Jul 2020 07:03:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TpZJ/ISFXgu5jBP5FbghkLZJiBtFOhQ1zwiBpuz8Qz4=;
+        b=lNMiaupolLT8jj2eQ/YGGJX4BsPAoan/6NmSNRIGDjDu9KxgSQG51p6k8ibLN1IROM
+         OH0zfOqt07KVj266JNY/aWBGGuyJapYgdy4Nzb1VFv05NWGfZLH0fnkv/Epns4ZbrCDI
+         6yeXQFrs/FrGDiDg8zCea+Q+FtkVEtW3S9rd4jsu7MVkThEkmiEbf4WFUYaMoVJGh7Ak
+         i1Om+ol/ipvvSJhd2QeTvUag20QmNB64+fo+22SVKhJ0KRcRcKY5y2AGVFRMrbLtJSt8
+         ztz8CeyQ+DR7OETa6KTWkooP8NR6Kl4WtV5TRlXnTp5TQyBslHqyZTrnEooPBQ14S923
+         miSQ==
+X-Gm-Message-State: AOAM531iphuIAkFtLknJb1Xu5sNMaP6K7JtJidIV0MfdLQfkTbTtmtsx
+        WGkBhDa0QQzSM8yQwLwkfyU=
+X-Google-Smtp-Source: ABdhPJwl2mU8KmEpK8AFkahBSmMJ4Kn3RsrN9Ktb6p4HbAcUPjkoroNdJBTxS8QkKijbtd+6pGmUwg==
+X-Received: by 2002:a50:ed15:: with SMTP id j21mr9386366eds.246.1595599429024;
+        Fri, 24 Jul 2020 07:03:49 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id o17sm710946ejb.105.2020.07.24.07.03.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 Jul 2020 07:03:48 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 16:03:45 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Olof Johansson <olof@lixom.net>,
+        Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
         <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
-        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v4] scsi: ufs: Cleanup completed request without interrupt notification
-Date:   Fri, 24 Jul 2020 22:02:46 +0800
-Message-ID: <20200724140246.19434-1-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 00/29] *memory: Cleanup, improve and compile test
+ memory drivers
+Message-ID: <20200724140345.GB13472@kozik-lap>
+References: <20200724074038.5597-1-krzk@kernel.org>
+ <CAK8P3a2EAm=pxkU-AiucgDQyoMEGFOGqQBkVacWjoT7O9-PHkA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2EAm=pxkU-AiucgDQyoMEGFOGqQBkVacWjoT7O9-PHkA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SWYgc29tZWhvdyBubyBpbnRlcnJ1cHQgbm90aWZpY2F0aW9uIGlzIHJhaXNlZCBmb3IgYSBjb21w
-bGV0ZWQgcmVxdWVzdA0KYW5kIGl0cyBkb29yYmVsbCBiaXQgaXMgY2xlYXJlZCBieSBob3N0LCBV
-RlMgZHJpdmVyIG5lZWRzIHRvIGNsZWFudXANCml0cyBvdXRzdGFuZGluZyBiaXQgaW4gdWZzaGNk
-X2Fib3J0KCkuIE90aGVyd2lzZSwgc3lzdGVtIG1heSBiZWhhdmUNCmFibm9ybWFsbHkgYnkgYmVs
-b3cgZmxvdzoNCg0KQWZ0ZXIgdWZzaGNkX2Fib3J0KCkgcmV0dXJucywgdGhpcyByZXF1ZXN0IHdp
-bGwgYmUgcmVxdWV1ZWQgYnkgU0NTSQ0KbGF5ZXIgd2l0aCBpdHMgb3V0c3RhbmRpbmcgYml0IHNl
-dC4gQW55IGZ1dHVyZSBjb21wbGV0ZWQgcmVxdWVzdA0Kd2lsbCB0cmlnZ2VyIHVmc2hjZF90cmFu
-c2Zlcl9yZXFfY29tcGwoKSB0byBoYW5kbGUgYWxsICJjb21wbGV0ZWQNCm91dHN0YW5kaW5nIGJp
-dHMiLiBJbiB0aGlzIHRpbWUsIHRoZSAiYWJub3JtYWwgb3V0c3RhbmRpbmcgYml0Ig0Kd2lsbCBi
-ZSBkZXRlY3RlZCBhbmQgdGhlICJyZXF1ZXVlZCByZXF1ZXN0IiB3aWxsIGJlIGNob3NlbiB0byBl
-eGVjdXRlDQpyZXF1ZXN0IHBvc3QtcHJvY2Vzc2luZyBmbG93LiBUaGlzIGlzIHdyb25nIGJlY2F1
-c2UgdGhpcyByZXF1ZXN0IGlzDQpzdGlsbCAiYWxpdmUiLg0KDQpTaWduZWQtb2ZmLWJ5OiBTdGFu
-bGV5IENodSA8c3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zY3NpL3Vm
-cy91ZnNoY2QuYyB8IDMgKystDQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBk
-ZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyBiL2Ry
-aXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCmluZGV4IDU3N2NjMGQ3NDg3Zi4uOWQxODBkYTc3NDg4
-IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KKysrIGIvZHJpdmVycy9z
-Y3NpL3Vmcy91ZnNoY2QuYw0KQEAgLTY0OTMsNyArNjQ5Myw3IEBAIHN0YXRpYyBpbnQgdWZzaGNk
-X2Fib3J0KHN0cnVjdCBzY3NpX2NtbmQgKmNtZCkNCiAJCQkvKiBjb21tYW5kIGNvbXBsZXRlZCBh
-bHJlYWR5ICovDQogCQkJZGV2X2VycihoYmEtPmRldiwgIiVzOiBjbWQgYXQgdGFnICVkIHN1Y2Nl
-c3NmdWxseSBjbGVhcmVkIGZyb20gREIuXG4iLA0KIAkJCQlfX2Z1bmNfXywgdGFnKTsNCi0JCQln
-b3RvIG91dDsNCisJCQlnb3RvIGNsZWFudXA7DQogCQl9IGVsc2Ugew0KIAkJCWRldl9lcnIoaGJh
-LT5kZXYsDQogCQkJCSIlczogbm8gcmVzcG9uc2UgZnJvbSBkZXZpY2UuIHRhZyA9ICVkLCBlcnIg
-JWRcbiIsDQpAQCAtNjUyNyw2ICs2NTI3LDcgQEAgc3RhdGljIGludCB1ZnNoY2RfYWJvcnQoc3Ry
-dWN0IHNjc2lfY21uZCAqY21kKQ0KIAkJZ290byBvdXQ7DQogCX0NCiANCitjbGVhbnVwOg0KIAlz
-Y3NpX2RtYV91bm1hcChjbWQpOw0KIA0KIAlzcGluX2xvY2tfaXJxc2F2ZShob3N0LT5ob3N0X2xv
-Y2ssIGZsYWdzKTsNCi0tIA0KMi4xOC4wDQo=
+On Fri, Jul 24, 2020 at 03:51:04PM +0200, Arnd Bergmann wrote:
+> On Fri, Jul 24, 2020 at 9:41 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Dear All,
+> >
+> > Changes since v1:
+> > 1. Few new patches,
+> > 2. Please see individual logs (per patch).
+> >
+> >
+> > The drivers/memory directory contains generic code (of_memory.c) and a
+> > bunch of drivers.  Changes to generic code were coming usually through
+> > different trees with the driver code.
+> >
+> > Over last days, memory drivers grew in numbers but not necessarily in
+> > quality.  They lacked compile testing and code cleanup.  Also lacked
+> > maintainer.
+> >
+> > I would be happy to take care about this part.
+> >
+> > If there are no objections, I will collect the patches and push them
+> > through arm-soc maintainers.
+> >
+> > Driver-specific changes in the patchset were only compile-tested. Tests
+> > are welcome. The generic code was tested on ARMv7 Exynos based boards
+> > with a exynos5422-dmc memory controller driver.
+> 
+> Looks all good. Can you send a pull request for the patches that you don't
+> expect to need testing for, while you still wait for more feedback on the
+> others?
+> 
+> As the merge window (and my vacation) is getting closer, I would like to
+> have most of the patches for v5.9 queued up.
+
+Sure, I'll prepare a pull.
+
+Thanks!
+
+Best regards,
+Krzysztof
 
