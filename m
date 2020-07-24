@@ -2,165 +2,103 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833B4C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A69B2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:04:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RA9SUATS"
+	by mail.kernel.org (Postfix) with ESMTP id A54FC20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgGXIEI (ORCPT
+        id S1726967AbgGXIH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:04:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43300 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgGXIEH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:04:07 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C5DC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 01:04:07 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t6so4818327pgq.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 01:04:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uqirvcFMc70uC94GyEknvwJsqOJX3sShmxejjT9FWhA=;
-        b=RA9SUATSXAXcFwNQmkQO44BYBHtivdwf9c36nd4KOMg+YMlimEGNcxYbm0lm9oOPKd
-         2Xj1L8KbVYuJtzH2KW7Sf7dTjxIszT3OzNaj6CAYZ8ADakNuUyq1zj3bohEXiZOXSkzg
-         OvlfNZT5Nh6cvFcNqcYK1GjM0FxrSAUGcL63I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uqirvcFMc70uC94GyEknvwJsqOJX3sShmxejjT9FWhA=;
-        b=Uy+ESTAWROG/DGLDBTpd+r4TFzrT0EjOv4ILpwmhBr8bTzrjcPm1hByrjukpCdi6Pp
-         UBrie2934Czghuhm5uH/83vTA8iQJtsFUFiRNLvcDJNFPN/unYbNu/yBjmBOVxmfR6Kx
-         /h9vXaF/j1eUjp5ZDJeqqiABMgc1fpEAfT/uXxRPiySls8rJCz5yyTqFu17S7WqPOBWH
-         iOKC/JdDCI7mSGsy7M/fnebnkZfeA4tF0ZrWzgCUBDgUMjBC0TjRyFpjJMoWVve9lJVK
-         1WF4aZsvGN/ZoNrmTcrPtPY+edySxkjJVH9dvFbVxoo8Q08aqwGykmO6JdAP2BdSBsfH
-         VJ7w==
-X-Gm-Message-State: AOAM531T2uh9R13YkTXf5CqmkmB/cFWE9gxuIDagCKz8rqXc6zVzLuMG
-        GWgiDD+J7TJve0QWErDv5ZLfSg==
-X-Google-Smtp-Source: ABdhPJz8do2aMWZiBjG+9jYtdOHslug9YNp9NdrXqG/FEyORXA8aCULw37pV0rsyD5EAgMgRBHyD7w==
-X-Received: by 2002:a62:758b:: with SMTP id q133mr7918437pfc.289.1595577846817;
-        Fri, 24 Jul 2020 01:04:06 -0700 (PDT)
-Received: from kafuu-chino.c.googlers.com.com (105.219.229.35.bc.googleusercontent.com. [35.229.219.105])
-        by smtp.googlemail.com with ESMTPSA id l17sm5578583pgn.48.2020.07.24.01.04.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 01:04:05 -0700 (PDT)
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Yicheng Li <yichengli@chromium.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] platform/chrome: cros_ec: Fix host command for regulator control.
-Date:   Fri, 24 Jul 2020 16:03:55 +0800
-Message-Id: <20200724080358.619245-1-pihsun@chromium.org>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 24 Jul 2020 04:07:27 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:17430 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726572AbgGXIH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 04:07:26 -0400
+Received: from localhost.localdomain (unknown [210.32.144.186])
+        by mail-app4 (Coremail) with SMTP id cS_KCgAHiPyplhpfXiRFAA--.33653S4;
+        Fri, 24 Jul 2020 16:07:09 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Sunil Goutham <sgoutham@marvell.com>,
+        Linu Cherian <lcherian@marvell.com>,
+        Geetha sowjanya <gakula@marvell.com>,
+        Jerin Jacob <jerinj@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] octeontx2-af: Fix use of uninitialized pointer bmap
+Date:   Fri, 24 Jul 2020 16:06:57 +0800
+Message-Id: <20200724080657.19182-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgAHiPyplhpfXiRFAA--.33653S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7tw17Wr47KFyxuw4fCF17KFg_yoW8Xr18pF
+        W29FZ7AFyUXrW3Wa1Dta10qF45tw1a9F98Kayqkw1Sg34Fyrn5Xr4rKFWfXrsFkFWUGa47
+        t3Z0y3y5ur98JrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9v1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
+        wVAFwVW8ZwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
+        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
+        rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
+        0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUjNJ55UUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAggHBlZdtPRcawAPs4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the host command number 0x012B conflicts with other EC host
-command, add one to all regulator control related host command.
+If req->ctype does not match any of NIX_AQ_CTYPE_CQ,
+NIX_AQ_CTYPE_SQ or NIX_AQ_CTYPE_RQ, pointer bmap will remain
+uninitialized and be accessed in test_bit(), which can lead
+to kernal crash.
 
-Also fix a wrong alignment on struct and sync the comment with the one
-in ChromeOS EC codebase.
+Fix this by returning an error code if this case is triggered.
 
-Fixes: dff08caf35ec ("platform/chrome: cros_ec: Add command for regulator control.")
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
-The original numbers were chosen before the 0x012B is used in ChromeOS
-EC codebase. Since the original kernel patch got accepted before the
-corresponding commit in ChromeOS EC codebase got merged, the host
-command number was used by other commit first.
+ drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Since now the commit in ChromeOS EC codebase
-(https://crrev.com/c/2247431) with updated host command numbers got
-merged, need this patch to sync up the host command numbers with
-ChromeOS EC codebase. Sorry for the confusion.
----
- include/linux/platform_data/cros_ec_commands.h | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-index a417b51b5764..91e77f53414d 100644
---- a/include/linux/platform_data/cros_ec_commands.h
-+++ b/include/linux/platform_data/cros_ec_commands.h
-@@ -5438,7 +5438,7 @@ struct ec_response_rollback_info {
-  *
-  * Returns the regulator name and supported voltage list in mV.
-  */
--#define EC_CMD_REGULATOR_GET_INFO 0x012B
-+#define EC_CMD_REGULATOR_GET_INFO 0x012C
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
+index 36953d4f51c7..20a64ed24474 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
+@@ -869,19 +869,18 @@ static int nix_lf_hwctx_disable(struct rvu *rvu, struct hwctx_disable_req *req)
+ 		aq_req.cq_mask.bp_ena = 1;
+ 		q_cnt = pfvf->cq_ctx->qsize;
+ 		bmap = pfvf->cq_bmap;
+-	}
+-	if (req->ctype == NIX_AQ_CTYPE_SQ) {
++	} else if (req->ctype == NIX_AQ_CTYPE_SQ) {
+ 		aq_req.sq.ena = 0;
+ 		aq_req.sq_mask.ena = 1;
+ 		q_cnt = pfvf->sq_ctx->qsize;
+ 		bmap = pfvf->sq_bmap;
+-	}
+-	if (req->ctype == NIX_AQ_CTYPE_RQ) {
++	} else if (req->ctype == NIX_AQ_CTYPE_RQ) {
+ 		aq_req.rq.ena = 0;
+ 		aq_req.rq_mask.ena = 1;
+ 		q_cnt = pfvf->rq_ctx->qsize;
+ 		bmap = pfvf->rq_bmap;
+-	}
++	} else
++		return NIX_AF_ERR_AQ_ENQUEUE;
  
- /* Maximum length of regulator name */
- #define EC_REGULATOR_NAME_MAX_LEN 16
-@@ -5454,12 +5454,12 @@ struct ec_response_regulator_get_info {
- 	char name[EC_REGULATOR_NAME_MAX_LEN];
- 	uint16_t num_voltages;
- 	uint16_t voltages_mv[EC_REGULATOR_VOLTAGE_MAX_COUNT];
--} __ec_align1;
-+} __ec_align2;
- 
- /*
-  * Configure the regulator as enabled / disabled.
-  */
--#define EC_CMD_REGULATOR_ENABLE 0x012C
-+#define EC_CMD_REGULATOR_ENABLE 0x012D
- 
- struct ec_params_regulator_enable {
- 	uint32_t index;
-@@ -5471,7 +5471,7 @@ struct ec_params_regulator_enable {
-  *
-  * Returns 1 if the regulator is enabled, 0 if not.
-  */
--#define EC_CMD_REGULATOR_IS_ENABLED 0x012D
-+#define EC_CMD_REGULATOR_IS_ENABLED 0x012E
- 
- struct ec_params_regulator_is_enabled {
- 	uint32_t index;
-@@ -5489,7 +5489,7 @@ struct ec_response_regulator_is_enabled {
-  * Also note that this might be called before the regulator is enabled, and the
-  * setting should be in effect after the regulator is enabled.
-  */
--#define EC_CMD_REGULATOR_SET_VOLTAGE 0x012E
-+#define EC_CMD_REGULATOR_SET_VOLTAGE 0x012F
- 
- struct ec_params_regulator_set_voltage {
- 	uint32_t index;
-@@ -5500,9 +5500,10 @@ struct ec_params_regulator_set_voltage {
- /*
-  * Get the currently configured voltage for the voltage regulator.
-  *
-- * Note that this might be called before the regulator is enabled.
-+ * Note that this might be called before the regulator is enabled, and this
-+ * should return the configured output voltage if the regulator is enabled.
-  */
--#define EC_CMD_REGULATOR_GET_VOLTAGE 0x012F
-+#define EC_CMD_REGULATOR_GET_VOLTAGE 0x0130
- 
- struct ec_params_regulator_get_voltage {
- 	uint32_t index;
-
-base-commit: 8d9f8d57e023893bfa708d83e3a787e77766a378
+ 	aq_req.ctype = req->ctype;
+ 	aq_req.op = NIX_AQ_INSTOP_WRITE;
 -- 
-2.28.0.rc0.142.g3c755180ce-goog
+2.17.1
 
