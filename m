@@ -2,363 +2,112 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6266CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9701C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF1520714
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7EA320656
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:18:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UZ6l97Pg"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="FVPTQE9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgGXNRG (ORCPT
+        id S1726726AbgGXNSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:17:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbgGXNRG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:17:06 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA281C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:17:05 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id r12so8248531wrj.13
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:17:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=S7QBZlfci/LCF5suhgmT0LeHDK2XYlVTP8M5bVppCyU=;
-        b=UZ6l97PgupmwMDE1OuyNigZKNvhzp23Zi/LN69XKxYxepC5DED7f+2C9zevuFgkJC1
-         u2O952zUBI5Oi1pmRyi3stvDoIkWTqLs00RqHbLxYn1pc+YyIKXWMtI1RbWoUD6MBxW3
-         CzyrDAXvEMpQjqPkJs8qsZNzlhzFYf9JL5uJnjqPwIH9tTRp9UcRGigEtJvl40K23nGL
-         UvaoUSjxFU6ZM9mNNpakp/GYO0ThRakQP50tiSoYGjMgHQRwX5O3aFBs+JbT8Fbq+5PG
-         2PZyildjwo/4xIEJojlOhCTQhjQoTsQON5mQXt88kTsaGB4NFoggeE8LUPg0pQOi+33d
-         0I+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S7QBZlfci/LCF5suhgmT0LeHDK2XYlVTP8M5bVppCyU=;
-        b=YzUH0DjHAWMlXbXpoCUwYQ6uBmCO4sQijeU5Ta6gKcfbTMwIq0JDnJaAiKy1+F5sF2
-         q1XWpCtAoSK0rWyMfB3j6XwstfuKn5oRozbit8L/IuD1hK5Evav4c6IfElF9lXJKROzE
-         Q4XDo8gzs3VNyUYMRT8pbnuwlbCvvxW93SvXrcKfAstMkl5uSxqO4+hg9LTDFrnnamNh
-         LVd4Ga1TPsGZOg7gIWc/+flS6v7ksEdwkcGriykmE2H5VdAdVfqzSuai5urzD9HQj4b1
-         +4Frto3l+7lnwbFptdmUJIzNXHDPTzN3CZFdfBQLAAXnrrzr9+zQQ74wm90IPO54c+A7
-         La4A==
-X-Gm-Message-State: AOAM530CsbfSliDMQDvJxX+JqA909MgzGuizSffBFPT1NrelPeK0wSyN
-        hTWH8nD20xAGq+sUeRbyaLZSbA==
-X-Google-Smtp-Source: ABdhPJwAztunpqiWSNiTLtL/GuIB4yN/M70Co/bwNEHoRea65Ke6AxJb0UNJHPmjwbWdX5GSI2Z0jg==
-X-Received: by 2002:adf:a299:: with SMTP id s25mr8645107wra.106.1595596624269;
-        Fri, 24 Jul 2020 06:17:04 -0700 (PDT)
-Received: from [192.168.1.4] ([195.24.90.54])
-        by smtp.googlemail.com with ESMTPSA id o2sm1387609wrj.21.2020.07.24.06.17.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 06:17:03 -0700 (PDT)
-Subject: Re: [PATCH v4 2/6] media: v4l2: Add extended buffer operations
-To:     Helen Koike <helen.koike@collabora.com>, mchehab@kernel.org,
-        hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com,
-        sakari.ailus@iki.fi, linux-media@vger.kernel.org
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        tfiga@chromium.org, hiroh@chromium.org, nicolas@ndufresne.ca,
-        Brian.Starkey@arm.com, kernel@collabora.com,
-        narmstrong@baylibre.com, linux-kernel@vger.kernel.org,
-        frkoenig@chromium.org, mjourdan@baylibre.com
-References: <20200717115435.2632623-1-helen.koike@collabora.com>
- <20200717115435.2632623-3-helen.koike@collabora.com>
- <5665bbd4-75e2-ec73-ba24-54e5981eb4ac@linaro.org>
- <e4d4c88b-2724-76c0-fff2-2404d5073ae4@collabora.com>
- <0fd9e21d-4317-dbed-c035-9c1523e0195b@linaro.org>
- <15067dff-c802-d6f0-a2f8-817fb487b30d@collabora.com>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <b11b0887-ce9e-63ab-9f74-7ad3dbda922b@linaro.org>
-Date:   Fri, 24 Jul 2020 16:16:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 09:18:15 -0400
+Received: from lists.nic.cz ([217.31.204.67]:53008 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726326AbgGXNSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:18:15 -0400
+Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
+        by mail.nic.cz (Postfix) with ESMTPSA id 652B11409C6;
+        Fri, 24 Jul 2020 15:18:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1595596693; bh=FXLBwI943Zogfi1PcdT70A/ip4Rj0lpCR1CpsVo5qq0=;
+        h=Date:From:To;
+        b=FVPTQE9Dxx4THp/tl+1Yt14Tpfj33iMP6a4zAWmEfqgZqQ5/0rZYa0w+lAnXU4UxL
+         tZ61dxJZoxBxhGX7e6pQxT7U5hIYFTtAobg2ahQBmuIZEqZW7J0uv9KEQPc5AW9bjb
+         oC3ukslRt89OfSQvxv9KuK95m4WsYCPVr9Qz2xvE=
+Date:   Fri, 24 Jul 2020 15:18:13 +0200
+From:   Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
+        Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC leds + net-next v2 0/1] Add support for LEDs on
+ Marvell PHYs
+Message-ID: <20200724151813.709f2a4e@dellmb.labs.office.nic.cz>
+In-Reply-To: <20200724151233.35d799e8@dellmb.labs.office.nic.cz>
+References: <20200723181319.15988-1-marek.behun@nic.cz>
+        <20200724102901.qp65rtkxucauglsp@duo.ucw.cz>
+        <20200724151233.35d799e8@dellmb.labs.office.nic.cz>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <15067dff-c802-d6f0-a2f8-817fb487b30d@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 24 Jul 2020 15:12:33 +0200
+Marek Beh=C3=BAn <marek.behun@nic.cz> wrote:
 
+> On Fri, 24 Jul 2020 12:29:01 +0200
+> Pavel Machek <pavel@ucw.cz> wrote:
+>=20
+> > In future, would you expect having software "1000/100/10/nolink"
+> > triggers I could activate on my scrollock LED (or on GPIO controlled
+> > LEDs) to indicate network activity? =20
+>=20
+> Look at drivers/net/phy/phy_led_triggers.c, something like that could
+> be actually implemented there.
+>=20
+> Some of the modes are useful, like the "1000/100/10/nolink". But some
+> of them are pretty weird, and I don't think anyone actually uses it
+> ("1000-10/else", which is on if the device is linked at 1000mbps ar
+> 10mbps, and else off? who would sacrifies a LED for this?).
+>=20
+> I actually wanted to talk about the phy_led_triggers.c code. It
+> registers several trigger for each PHY, with the name in form:
+>   phy-device-name:mode
+> where
+>   phy-device-name is derived from OF
+>     - sometimes it is in the form
+>       d0032004.mdio-mii:01
+>     - but sometimes in the form of whole OF path followed by ":" and
+>       the PHY address:
+>       /soc/internal-regs@d0000000/mdio@32004/switch0@10/mdio:08
+>   mode is "link", "1Gbps", "100Mbps", "10Mbps" and so on"
+>=20
+> So I have a GPIO LED, and I can set it to sw trigger so that it is on
+> when a specific PHY is linked on 1Gbps.
+>=20
+> The problem is that on Turris Mox I can connect up to three 8-port
+> switches, which yields in 25 network PHYs overall. So reading the
+> trigger file results in 4290 bytes (look at attachment
+> cat_trigger.txt). I think the phy_led_triggers should have gone this
+> way of having just one trigger (like netdev has), and specifying phy
+> device via and mode via another file.
+>=20
+> Marek
+>=20
 
-On 7/21/20 5:40 PM, Helen Koike wrote:
-> 
-> 
-> On 7/21/20 11:30 AM, Stanimir Varbanov wrote:
->> Hi Helen,
->>
->> On 7/21/20 4:54 PM, Helen Koike wrote:
->>> Hi,
->>>
->>> On 7/21/20 8:26 AM, Stanimir Varbanov wrote:
->>>>
->>>>
->>>> On 7/17/20 2:54 PM, Helen Koike wrote:
->>>>> From: Hans Verkuil <hans.verkuil@cisco.com>
->>>>>
->>>>> Those extended buffer ops have several purpose:
->>>>> 1/ Fix y2038 issues by converting the timestamp into an u64 counting
->>>>>    the number of ns elapsed since 1970
->>>>> 2/ Unify single/multiplanar handling
->>>>> 3/ Add a new start offset field to each v4l2 plane buffer info struct
->>>>>    to support the case where a single buffer object is storing all
->>>>>    planes data, each one being placed at a different offset
->>>>>
->>>>> New hooks are created in v4l2_ioctl_ops so that drivers can start using
->>>>> these new objects.
->>>>>
->>>>> The core takes care of converting new ioctls requests to old ones
->>>>> if the driver does not support the new hooks, and vice versa.
->>>>>
->>>>> Note that the timecode field is gone, since there doesn't seem to be
->>>>> in-kernel users. We can be added back in the reserved area if needed or
->>>>> use the Request API to collect more metadata information from the
->>>>> frame.
->>>>>
->>>>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
->>>>> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
->>>>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
->>>>> ---
->>>>> Changes in v4:
->>>>> - Use v4l2_ext_pix_format directly in the ioctl, drop v4l2_ext_format,
->>>>> making V4L2_BUF_TYPE_VIDEO_[OUTPUT,CAPTURE] the only valid types.
->>>>> - Drop VIDIOC_EXT_EXPBUF, since the only difference from VIDIOC_EXPBUF
->>>>> was that with VIDIOC_EXT_EXPBUF we could export multiple planes at once.
->>>>> I think we can add this later, so I removed it from this RFC to simplify it.
->>>>> - Remove num_planes field from struct v4l2_ext_buffer
->>>>> - Add flags field to struct v4l2_ext_create_buffers
->>>>> - Reformulate struct v4l2_ext_plane
->>>>> - Fix some bugs caught by v4l2-compliance
->>>>> - Rebased on top of media/master (post 5.8-rc1)
->>>>>
->>>>> Changes in v3:
->>>>> - Rebased on top of media/master (post 5.4-rc1)
->>>>>
->>>>> Changes in v2:
->>>>> - Add reserved space to v4l2_ext_buffer so that new fields can be added
->>>>>   later on
->>>>> ---
->>>>>  drivers/media/v4l2-core/v4l2-dev.c   |  29 ++-
->>>>>  drivers/media/v4l2-core/v4l2-ioctl.c | 349 +++++++++++++++++++++++++--
->>>>>  include/media/v4l2-ioctl.h           |  26 ++
->>>>>  include/uapi/linux/videodev2.h       |  89 +++++++
->>>>>  4 files changed, 471 insertions(+), 22 deletions(-)
->>>>>
->>>>
->>>> <cut>
->>>>
->>>>> +/**
->>>>> + * struct v4l2_ext_plane - extended plane buffer info
->>>>> + * @buffer_length:	size of the entire buffer in bytes, should fit
->>>>> + *			@offset + @plane_length
->>>>> + * @plane_length:	size of the plane in bytes.
->>>>> + * @userptr:		when memory is V4L2_MEMORY_USERPTR, a userspace pointer pointing
->>>>> + *			to this plane.
->>>>> + * @dmabuf_fd:		when memory is V4L2_MEMORY_DMABUF, a userspace file descriptor
->>>>> + *			associated with this plane.
->>>>> + * @offset:		offset in the memory buffer where the plane starts. If
->>>>> + *			V4L2_MEMORY_MMAP is used, then it can be a "cookie" that
->>>>> + *			should be passed to mmap() called on the video node.
->>>>> + * @reserved:		extra space reserved for future fields, must be set to 0.
->>>>> + *
->>>>> + *
->>>>> + * Buffers consist of one or more planes, e.g. an YCbCr buffer with two planes
->>>>> + * can have one plane for Y, and another for interleaved CbCr components.
->>>>> + * Each plane can reside in a separate memory buffer, or even in
->>>>> + * a completely separate memory node (e.g. in embedded devices).
->>>>> + */
->>>>> +struct v4l2_ext_plane {
->>>>> +	__u32 buffer_length;
->>>>> +	__u32 plane_length;
->>>>> +	union {
->>>>> +		__u64 userptr;
->>>>> +		__s32 dmabuf_fd;
->>>>> +	} m;
->>>>> +	__u32 offset;
->>>>> +	__u32 reserved[4];
->>>>> +};
->>>>> +
->>>>>  /**
->>>>>   * struct v4l2_buffer - video buffer info
->>>>>   * @index:	id number of the buffer
->>>>> @@ -1055,6 +1086,36 @@ struct v4l2_buffer {
->>>>>  	};
->>>>>  };
->>>>>  
->>>>> +/**
->>>>> + * struct v4l2_ext_buffer - extended video buffer info
->>>>> + * @index:	id number of the buffer
->>>>> + * @type:	V4L2_BUF_TYPE_VIDEO_CAPTURE or V4L2_BUF_TYPE_VIDEO_OUTPUT
->>>>> + * @flags:	buffer informational flags
->>>>> + * @field:	enum v4l2_field; field order of the image in the buffer
->>>>> + * @timestamp:	frame timestamp
->>>>> + * @sequence:	sequence count of this frame
->>>>> + * @memory:	enum v4l2_memory; the method, in which the actual video data is
->>>>> + *		passed
->>>>> + * @planes:	per-plane buffer information
->>>>> + * @request_fd:	fd of the request that this buffer should use
->>>>> + * @reserved:	extra space reserved for future fields, must be set to 0
->>>>> + *
->>>>> + * Contains data exchanged by application and driver using one of the Streaming
->>>>> + * I/O methods.
->>>>> + */
->>>>> +struct v4l2_ext_buffer {
->>>>> +	__u32 index;
->>>>> +	__u32 type;
->>>>> +	__u32 flags;
->>>>> +	__u32 field;
->>>>> +	__u64 timestamp;
->>>>> +	__u32 sequence;
->>>>> +	__u32 memory;
->>>>> +	__u32 request_fd;
->>>>
->>>> This should be __s32, at least for consistency with dmabuf_fd?
->>>
->>> I see that in struct v4l2_buffer, we have __s32, I don't mind changing it
->>> to keep the consistency, I just don't see where this value can be a negative
->>> number.
->>
->> here
->> https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/media/common/videobuf2/videobuf2-v4l2.c#L134
-> 
-> I saw that -1 is used to signal an invalid value, but I was just wondering when request_fd = 0 is valid.
+In fact I think the way the phy_led_triggers does this should be
+deprecated. I new kernel config options should be create, something
+like "new user API for PHY LED trigger", which would create just one
+trigger, with name phydev, like we have netdev, and like in the netdev
+trigger, the mode and device should be configured via other files.
 
-The request_fd is valid system wide file descriptor and request_fd = 0
-is STDIN_FILENO thus IMO it is valid as far as we call it file descriptor.
+This phydev trigger could then be made similar to phy-hw-mode trigger...
 
-> 
->>
->>>
->>>>
->>>>> +	struct v4l2_ext_plane planes[VIDEO_MAX_PLANES];
->>>>> +	__u32 reserved[4];
->>>>
->>>> I think we have to reserve more words here for future extensions.
->>>>
->>>> I'd like also to propose to add here __s32 metadata_fd. The idea behind
->>>> this is to have a way to pass per-frame metadata dmabuf buffers for
->>>> synchronous type of metadata where the metadata is coming at the same
->>>> time with data buffers. What would be the format of the metadata buffer
->>>> is TBD.
->>>>
->>>> One option for metadata buffer format could be:
->>>>
->>>> header {
->>>> 	num_ctrls
->>>> 	array_of_ctrls [0..N]
->>>> 		ctrl_id
->>>> 		ctrl_size
->>>> 		ctrl_offset
->>>> }
->>>>
->>>> data {
->>>> 	cid0	//offset of cid0 in dmabuf buffer
->>>> 	cid1
->>>> 	cidN
->>>> }
->>>
->>> Would it be better if, instead of adding a medatata_fd inside struct v4l2_ext_buffer,
->>> we create a new ioctl that gets this structs for the controls and sync them using the
->>> Request API ?
-
-New ioctl means new syscall. There are use-cases where encoding
-framerate is 480 fps (and more in near future, for example 960fps) this
-means 480 more syscalls per second. I don't think this is optimal and
-scalable solution at all.
-
->>
->> no, this solution has performance drawbacks when the metadata is big,
->> think of 64K.
-> 
-> Why? You could still use a dmabuf in this new ioctl, no?
-> 
-> 
-> Regards,
-> Helen
-> 
->>
->>>
->>> I'd like to avoid too much metadata in the buffer object.
->>>
->>> Regards,
->>> Helen
->>>
->>>>
->>>> This will make easy to get concrete ctrl id without a need to parse the
->>>> whole metadata buffer. Also using dmabuf we don't need to copy data
->>>> between userspace <-> kernelspace (just cache syncs through
->>>> begin/end_cpu_access).
->>>>
->>>> The open question is who will validate the metadata buffer when it comes
->>>> from userspace. The obvious answer is v4l2-core but looking into DRM
->>>> subsytem they give more freedom to the drivers, and just provide generic
->>>> helpers which are not mandatory.
->>>>
->>>> I guess this will be a voice in the wilderness but I wanted to know your
->>>> opinion.
->>>>
->>>>> +};
->>>>> +
->>>>>  #ifndef __KERNEL__
->>>>>  /**
->>>>>   * v4l2_timeval_to_ns - Convert timeval to nanoseconds
->>>>> @@ -2520,6 +2581,29 @@ struct v4l2_create_buffers {
->>>>>  	__u32			reserved[6];
->>>>>  };
->>>>>  
->>>>> +/**
->>>>> + * struct v4l2_ext_create_buffers - VIDIOC_EXT_CREATE_BUFS argument
->>>>> + * @index:	on return, index of the first created buffer
->>>>> + * @count:	entry: number of requested buffers,
->>>>> + *		return: number of created buffers
->>>>> + * @memory:	enum v4l2_memory; buffer memory type
->>>>> + * @capabilities: capabilities of this buffer type.
->>>>> + * @format:	frame format, for which buffers are requested
->>>>> + * @flags:	additional buffer management attributes (ignored unless the
->>>>> + *		queue has V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS capability
->>>>> + *		and configured for MMAP streaming I/O).
->>>>> + * @reserved:	extra space reserved for future fields, must be set to 0
->>>>> + */
->>>>> +struct v4l2_ext_create_buffers {
->>>>> +	__u32				index;
->>>>> +	__u32				count;
->>>>> +	__u32				memory;
->>>>> +	struct v4l2_ext_pix_format	format;
->>>>> +	__u32				capabilities;
->>>>> +	__u32				flags;
->>>>> +	__u32 reserved[4];
->>>>> +};
->>>>> +
->>>>>  /*
->>>>>   *	I O C T L   C O D E S   F O R   V I D E O   D E V I C E S
->>>>>   *
->>>>> @@ -2623,6 +2707,11 @@ struct v4l2_create_buffers {
->>>>>  #define VIDIOC_G_EXT_PIX_FMT	_IOWR('V', 104, struct v4l2_ext_pix_format)
->>>>>  #define VIDIOC_S_EXT_PIX_FMT	_IOWR('V', 105, struct v4l2_ext_pix_format)
->>>>>  #define VIDIOC_TRY_EXT_PIX_FMT	_IOWR('V', 106, struct v4l2_ext_pix_format)
->>>>> +#define VIDIOC_EXT_CREATE_BUFS	_IOWR('V', 107, struct v4l2_ext_create_buffers)
->>>>> +#define VIDIOC_EXT_QUERYBUF	_IOWR('V', 108, struct v4l2_ext_buffer)
->>>>> +#define VIDIOC_EXT_QBUF		_IOWR('V', 109, struct v4l2_ext_buffer)
->>>>> +#define VIDIOC_EXT_DQBUF	_IOWR('V', 110, struct v4l2_ext_buffer)
->>>>> +#define VIDIOC_EXT_PREPARE_BUF	_IOWR('V', 111, struct v4l2_ext_buffer)
->>>>>  
->>>>>  /* Reminder: when adding new ioctls please add support for them to
->>>>>     drivers/media/v4l2-core/v4l2-compat-ioctl32.c as well! */
->>>>>
->>>>
->>
-
--- 
-regards,
-Stan
+Marek
