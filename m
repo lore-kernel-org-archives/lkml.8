@@ -2,242 +2,153 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09263C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED42C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEC7320748
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:42:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dro2IQ3g"
+	by mail.kernel.org (Postfix) with ESMTP id F02C82074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:44:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgGXFmP (ORCPT
+        id S1726731AbgGXFoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 01:42:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgGXFmP (ORCPT
+        Fri, 24 Jul 2020 01:44:16 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:45620 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgGXFoQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 01:42:15 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE85C0619E4
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 22:42:15 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id w126so4315327pfw.8
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 22:42:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/7h13uK3yaCmC6CvwntDrcPq/x8aDHrW9fKg5HxHfJ8=;
-        b=dro2IQ3giApo6ftru/j+SRlfgGyyq/joz+CqXpj+SkXiFG3KqSiPG5xEf84M0adWtQ
-         DQFwEcqs5o/AojmOxk2loupywrh4gZ7jVgS7M8uXJTixBZpsr0TPa3lSFDRV9eQbfk85
-         3NJf37XuXYMHx6zLiRbFwRZbnFIzVAxyKQdkwFcVS+vcuDR/8zNMWwaEo9Zx3R7MfBsx
-         llbxS8G1Hipp9VKkcmrw2eWaqp9ZXY8TuDjW+4EsWt+lf+91noSc35V+3MmeIHWRLC9b
-         ew0tpQExMvxfRadSlQG5p/Pk2uvg1M9BUS6QcPNmZpNPNYi2sIkn+MlI9Sn5uKb7ZXhV
-         k/Xw==
+        Fri, 24 Jul 2020 01:44:16 -0400
+Received: by mail-il1-f197.google.com with SMTP id c1so5000278ilk.12
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 22:44:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/7h13uK3yaCmC6CvwntDrcPq/x8aDHrW9fKg5HxHfJ8=;
-        b=NyX4B2fVYcNrgZUufqii9hUK1b6FSiRw8t0dXJP+62T/D1udXQXmku5gYromhj/ay9
-         TiHJH8tpBvCx3G8vuUCOqPOzOgiK/dU4lZE6/TVh0fsM0xO11Bndtd8D5FqqN1WrF7SK
-         OnKjF3WNUME9UeBK70o4+piXOg6EGP2w1ggNk97Narn1caSsJ9FkLCJI0QrM6x4GrWD9
-         3oe1tb90vonmOsdKLy31ZCiwU/KbJmNfKN58ylF1uAJ9zQLNcIR+jOfzI8EXrVc5e0aE
-         A3ub1dk1Yo/GNEVwAtpQSS+XLYqwZSq+1MeagAn5X0Rr3qOUiVHi0cCOfcJA+K4KDiEk
-         Ye9Q==
-X-Gm-Message-State: AOAM531DqmMpeNWRmfbWlY49wAQV9j051mih8eQuADoiUq6HWNUr9JoC
-        g3UAu5bSu5wXa9VrlUrClLdf
-X-Google-Smtp-Source: ABdhPJxlVphFfTC0uNq8+LW41fK8sJCI/GPQ8wSRCRSNL4eEQMMHcVxK25DtuSSiYx9Yw9Eesr2yUA==
-X-Received: by 2002:a63:8c5c:: with SMTP id q28mr7157006pgn.111.1595569334629;
-        Thu, 23 Jul 2020 22:42:14 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6c9b:7816:d54:f58c:a790:e57b])
-        by smtp.gmail.com with ESMTPSA id ml8sm4462138pjb.47.2020.07.23.22.42.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Jul 2020 22:42:14 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 11:12:06 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Bhaumik Bhatt <bbhatt@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 10/10] bus: mhi: core: Introduce sysfs entries for MHI
-Message-ID: <20200724054206.GC17957@Mani-XPS-13-9360>
-References: <1595543802-17859-1-git-send-email-bbhatt@codeaurora.org>
- <1595543802-17859-11-git-send-email-bbhatt@codeaurora.org>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=OMRIqu8obzB7sqBNMSf9FQ4q4I4IeW7Bg8oejJNF6U0=;
+        b=tqUeeEXkF/0EQIlw5E2Ns8Zb7nO5D7SFMGxnopDexmONIgVTlpllbg4gKQGMlv87B9
+         7OsFJ5aHtGbVwH0bZEgOiTZ9XY/F2OGAwik8zOz02kv7CNH3M1A7CNfxNAxpB9qTRFbA
+         ddJbGF/dyGNKR9//VwkHPxyngw6zyZjZP7kPI2Hl1LoMLJbvrlJXv01vkNWWioZ4S5Ez
+         +Ik2bo/bGDdYUJd2ffWPFdz0jc2GNdLxuckF6gIEjR7wVB7AFov/EpfxbmLyIsqautIR
+         VkWRWyuYdoIsiAxLbzl5ugbr3rK8UGpYMk75519iV9mF6fBHVn2fydB8hYtnK9HPP6DF
+         SxDw==
+X-Gm-Message-State: AOAM532Wsl09n0eMmYvs+/dJ/gKofRahGd8vmMsiYcOCVLyPD1hbFj7Z
+        SlKkukhY216W0KLIvSETSq3fABoq/WHnkFmUm4S7iRqHvryG
+X-Google-Smtp-Source: ABdhPJz+cEqTGRpwSTZo9WNIglVqLWwOEuLvSiDPE+iKmJWXKYSfuDsc4pBL0flCRkMB3teDVKLvV6dIV7FLzDJdqlvUlkIIrxWx
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595543802-17859-11-git-send-email-bbhatt@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a92:d602:: with SMTP id w2mr4817149ilm.247.1595569454951;
+ Thu, 23 Jul 2020 22:44:14 -0700 (PDT)
+Date:   Thu, 23 Jul 2020 22:44:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000093b26605ab2976f0@google.com>
+Subject: INFO: rcu detected stall in rtnl_newlink
+From:   syzbot <syzbot+d46d08c4209a3a86ccc5@syzkaller.appspotmail.com>
+To:     fweisbec@gmail.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 03:36:42PM -0700, Bhaumik Bhatt wrote:
-> Introduce sysfs entries to enable userspace clients the ability to read
-> the serial number and the OEM PK Hash values obtained from BHI. OEMs
-> need to read these device-specific hardware information values through
-> userspace for factory testing purposes and cannot be exposed via degbufs
-> as it may remain disabled for performance reasons. Also, update the
-> documentation for ABI to include these entries.
-> 
-> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> ---
->  Documentation/ABI/stable/sysfs-bus-mhi | 25 ++++++++++++++++
->  MAINTAINERS                            |  1 +
->  drivers/bus/mhi/core/init.c            | 53 ++++++++++++++++++++++++++++++++++
->  3 files changed, 79 insertions(+)
->  create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
-> 
-> diff --git a/Documentation/ABI/stable/sysfs-bus-mhi b/Documentation/ABI/stable/sysfs-bus-mhi
-> new file mode 100644
-> index 0000000..a4e4bd2
-> --- /dev/null
-> +++ b/Documentation/ABI/stable/sysfs-bus-mhi
-> @@ -0,0 +1,25 @@
-> +What:		/sys/bus/mhi/devices/.../serialnumber
-> +Date:		July 2020
-> +KernelVersion:  5.8
-> +Contact:	Bhaumik Bhatt <bbhatt@codeaurora.org>
-> +Description:
-> +		The file holds the serial number of the client device obtained
-> +		using a BHI (Boot Host Interface) register read after at least
-> +		one attempt to power up the device has been done. If read
-> +		without having the device power on at least once, the file will
-> +		read all 0's.
-> +Users:		Any userspace application or clients interested in the device
-> +		hardware information.
+Hello,
 
-Please align all the fields onto a single starting point. Have a look at other
-ABI documentation like, Documentation/ABI/stable/sysfs-bus-vmbus.
+syzbot found the following issue on:
 
-> +
-> +What:		/sys/bus/mhi/devices/.../oem_pk_hash
-> +Date:		July 2020
-> +KernelVersion:  5.8
-> +Contact:	Bhaumik Bhatt <bbhatt@codeaurora.org>
-> +Description:
-> +		The file holds the OEM PK Hash value of the endpoint device
-> +		obtained using a BHI (Boot Host Interface) register read after
-> +		at least one attempt to power up the device has been done. If
-> +		read without having the device power on at least once, the file
-> +		will read all 0's.
-> +Users:		Any userspace application or clients interested in the device
-> +		hardware information.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e64e5db..5e49316 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11018,6 +11018,7 @@ M:	Hemant Kumar <hemantk@codeaurora.org>
->  L:	linux-arm-msm@vger.kernel.org
->  S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mani/mhi.git
-> +F:	Documentation/ABI/stable/sysfs-bus-mhi
->  F:	Documentation/mhi/
->  F:	drivers/bus/mhi/
->  F:	include/linux/mhi.h
-> diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-> index d2c0f6e..a7b0d76 100644
-> --- a/drivers/bus/mhi/core/init.c
-> +++ b/drivers/bus/mhi/core/init.c
-> @@ -76,6 +76,56 @@ const char *to_mhi_pm_state_str(enum mhi_pm_state state)
->  	return mhi_pm_state_str[index];
->  }
->  
-> +static ssize_t serial_number_show(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  char *buf)
+HEAD commit:    e6827d1a cxgb4: add missing release on skb in uld_send()
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=17a227b4900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=dddbcb5a9f4192db
+dashboard link: https://syzkaller.appspot.com/bug?extid=d46d08c4209a3a86ccc5
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15a38228900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1302e4c4900000
 
-We haven't followed this before but it is good to align the function parameters
-with respect to '('.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d46d08c4209a3a86ccc5@syzkaller.appspotmail.com
 
-> +{
-> +	struct mhi_device *mhi_dev = to_mhi_device(dev);
-> +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-> +
-> +	return snprintf(buf, PAGE_SIZE, "Serial Number: %u\n",
-> +			mhi_cntrl->serial_number);
+rcu: INFO: rcu_preempt self-detected stall on CPU
+rcu: 	1-....: (10491 ticks this GP) idle=5d2/1/0x4000000000000000 softirq=10100/10100 fqs=5226 
+	(t=10500 jiffies g=8229 q=552)
+NMI backtrace for cpu 1
+CPU: 1 PID: 6812 Comm: syz-executor138 Not tainted 5.8.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
+ nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
+ trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+ rcu_dump_cpu_stacks+0x194/0x1cf kernel/rcu/tree_stall.h:320
+ print_cpu_stall kernel/rcu/tree_stall.h:553 [inline]
+ check_cpu_stall kernel/rcu/tree_stall.h:627 [inline]
+ rcu_pending kernel/rcu/tree.c:3489 [inline]
+ rcu_sched_clock_irq.cold+0x5b3/0xccc kernel/rcu/tree.c:2504
+ update_process_times+0x25/0x60 kernel/time/timer.c:1726
+ tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:176
+ tick_sched_timer+0x108/0x290 kernel/time/tick-sched.c:1320
+ __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
+ __hrtimer_run_queues+0x1d5/0xfc0 kernel/time/hrtimer.c:1584
+ hrtimer_interrupt+0x32a/0x930 kernel/time/hrtimer.c:1646
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1080 [inline]
+ __sysvec_apic_timer_interrupt+0x142/0x5e0 arch/x86/kernel/apic/apic.c:1097
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ sysvec_apic_timer_interrupt+0xe0/0x120 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:587
+RIP: 0010:should_resched arch/x86/include/asm/preempt.h:102 [inline]
+RIP: 0010:__local_bh_enable_ip+0x189/0x250 kernel/softirq.c:196
+Code: 89 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 0f 85 c4 00 00 00 48 83 3d 60 5a 6e 08 00 74 7b fb 66 0f 1f 44 00 00 <65> 8b 05 80 78 bb 7e 85 c0 74 6b 5b 5d 41 5c c3 80 3d a3 6a 63 09
+RSP: 0018:ffffc90001816d80 EFLAGS: 00000286
+RAX: 1ffffffff1369c12 RBX: 0000000000000201 RCX: 0000000000000002
+RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffffffff81468609
+RBP: ffffffff87cdbce5 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000000 R12: ffff8880a9298400
+R13: 0000000000000001 R14: 0000000000000034 R15: dffffc0000000000
+ spin_unlock_bh include/linux/spinlock.h:398 [inline]
+ batadv_tt_local_purge+0x285/0x370 net/batman-adv/translation-table.c:1446
+ batadv_tt_local_resize_to_mtu+0x8e/0x130 net/batman-adv/translation-table.c:4197
+ batadv_hardif_activate_interface.part.0.cold+0x14c/0x1ba net/batman-adv/hard-interface.c:653
+ batadv_hardif_activate_interface net/batman-adv/hard-interface.c:800 [inline]
+ batadv_hardif_enable_interface+0xa7d/0xb10 net/batman-adv/hard-interface.c:792
+ batadv_softif_slave_add+0x92/0x150 net/batman-adv/soft-interface.c:892
+ do_set_master+0x1c8/0x220 net/core/rtnetlink.c:2476
+ do_setlink+0x903/0x35c0 net/core/rtnetlink.c:2611
+ __rtnl_newlink+0xc21/0x1750 net/core/rtnetlink.c:3272
+ rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4437d9
+Code: Bad RIP value.
+RSP: 002b:00007ffdfad85898 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004437d9
+RDX: 0000000000000000 RSI: 0000000020000140 RDI: 0000000000000004
+RBP: 00007ffdfad858a0 R08: 0000000001bbbbbb R09: 0000000001bbbbbb
+R10: 0000000001bbbbbb R11: 0000000000000246 R12: 00007ffdfad858b0
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
-We need to think about what happens if the mhi_cntrl structure is not zero
-initialized by the controller driver. All throughout the stack we assume that
-the mhi_cntrl struct is zero initialized but things can go awry if it was not
-the case!
 
-There was one API in the downstream (mhi_alloc_controller()) for this purpose
-but I removed it since we ended up with just a kzalloc(). Does it make sense to
-introduce it now?
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Thanks,
-Mani
-
-> +}
-> +static DEVICE_ATTR_RO(serial_number);
-> +
-> +static ssize_t oem_pk_hash_show(struct device *dev,
-> +				struct device_attribute *attr,
-> +				char *buf)
-> +{
-> +	struct mhi_device *mhi_dev = to_mhi_device(dev);
-> +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-> +	int i, cnt = 0;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(mhi_cntrl->oem_pk_hash); i++)
-> +		cnt += snprintf(buf + cnt, PAGE_SIZE - cnt,
-> +				"OEMPKHASH[%d]: 0x%x\n", i,
-> +				mhi_cntrl->oem_pk_hash[i]);
-> +
-> +	return cnt;
-> +}
-> +static DEVICE_ATTR_RO(oem_pk_hash);
-> +
-> +static struct attribute *mhi_sysfs_attrs[] = {
-> +	&dev_attr_serial_number.attr,
-> +	&dev_attr_oem_pk_hash.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group mhi_sysfs_group = {
-> +	.attrs = mhi_sysfs_attrs,
-> +};
-> +
-> +static int mhi_create_sysfs(struct mhi_controller *mhi_cntrl)
-> +{
-> +	return sysfs_create_group(&mhi_cntrl->mhi_dev->dev.kobj,
-> +				  &mhi_sysfs_group);
-> +}
-> +
-> +static void mhi_destroy_sysfs(struct mhi_controller *mhi_cntrl)
-> +{
-> +	sysfs_remove_group(&mhi_cntrl->mhi_dev->dev.kobj, &mhi_sysfs_group);
-> +}
-> +
->  /* MHI protocol requires the transfer ring to be aligned with ring length */
->  static int mhi_alloc_aligned_ring(struct mhi_controller *mhi_cntrl,
->  				  struct mhi_ring *ring,
-> @@ -917,6 +967,8 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
->  	mhi_cntrl->mhi_dev = mhi_dev;
->  
->  	mhi_create_debugfs(mhi_cntrl);
-> +	if (mhi_create_sysfs(mhi_cntrl))
-> +		dev_err(mhi_cntrl->cntrl_dev, "Failed to create sysfs entries\n");
->  
->  	return 0;
->  
-> @@ -940,6 +992,7 @@ void mhi_unregister_controller(struct mhi_controller *mhi_cntrl)
->  	struct mhi_chan *mhi_chan = mhi_cntrl->mhi_chan;
->  	unsigned int i;
->  
-> +	mhi_destroy_sysfs(mhi_cntrl);
->  	mhi_destroy_debugfs(mhi_cntrl);
->  
->  	kfree(mhi_cntrl->mhi_cmd);
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
