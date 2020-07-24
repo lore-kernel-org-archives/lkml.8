@@ -2,124 +2,250 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0993C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4269FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B195E206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:57:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595602645;
-	bh=UAvrshxQEJ0Ykt7yvu37iIenplAoYeh9Ny04iEuSMGc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wf/Wtqw7vtTwqzvzzJUviBK/hjlOi2Bs4Aa6+TIVR9FE7RkjDYhnDv6nsVtQZaWXQ
-	 NHvbdz5wFTH3vTDKu9PewjWzH9ZGAOQWGAapdmY84HorKpmkIVeFBAP7XQBpY6/pw5
-	 E2ys8zFz1Sb5k4sggQAT8hH1TPhFXuTq1DMIpMAs=
+	by mail.kernel.org (Postfix) with ESMTP id 1679A206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:58:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="ogt6hTzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgGXO5Y (ORCPT
+        id S1726804AbgGXO6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:57:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbgGXO5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:57:24 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF1B206D8;
-        Fri, 24 Jul 2020 14:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595602643;
-        bh=UAvrshxQEJ0Ykt7yvu37iIenplAoYeh9Ny04iEuSMGc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=crC5S/FGJPAWRBT9ywxQN/+7BmOHwIP6uS8JJxRhcF24ZZFiW7/n6ooDey+u2lHjL
-         +Z9LNEz5VWQTMMlZj1QTz5KdYzPnqSv2afZS3EfbTpgwlcwuhYfMhXRAFfWIaJO64+
-         9jnMvXCY8vIBQoQCZnMZtHvWrU031I+B42EQBeu0=
-Date:   Fri, 24 Jul 2020 23:57:19 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v5 5/6] kprobes: Use text_alloc() and text_free()
-Message-Id: <20200724235719.a64952a8a92a42db9ea0cd94@kernel.org>
-In-Reply-To: <20200724102748.GD2831654@kernel.org>
-References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
-        <20200724050553.1724168-6-jarkko.sakkinen@linux.intel.com>
-        <20200724102748.GD2831654@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 24 Jul 2020 10:58:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726397AbgGXO6j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 10:58:39 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 014EEC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 07:58:39 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a15so8582066wrh.10
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 07:58:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=r7z3kqffAILENhx2PwFKt/PKLBtoYO+d/ApQ2e9tzs8=;
+        b=ogt6hTzqzPZxkRmK6oKvZq3N+WEBvaYIKIFNk5zMdvgQVJr2mlOkDE42r3SaIiBQLJ
+         0qCJ8TyhkTTwJBLS3XRFCnopLJnWSmIVQkPvCf/3biaWUsMEQ7GpnB/VHyMomprUheQy
+         QsKhwAIuQ5/4GzaJJd+GkJfVuasTnZNVUCsjbtuCwPQsd3n7VpkgAqD4CrFeUQRnsRiY
+         ltpInl1+FKdrFWJlOKI2aDcPrAJpd6C8M7YVqbkTgYTN+1YXuuOos6S0TFDnYu8SYsgj
+         D/Afyfr4nJrA4G1EemrzvqDKt3EEVrG7zHGN107m7WjNb1m6pNDbPCwEYMfmHjfnBVfh
+         C+Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=r7z3kqffAILENhx2PwFKt/PKLBtoYO+d/ApQ2e9tzs8=;
+        b=S6yAy/jYobQI3rFoyZwbC9VyKLvrGI4s04zNijytjXvx5wGqZ4QNPwByCbcsKivf4I
+         jQqEEtp04S/GH4coKXxNVAISaI9oUb+J5WqF9Od6rCRKxcx4Z9WAINUzO6HavB+oxDPD
+         n0CCO1fx+p6Lw6mNfkDScK2uSJi/aDWkmz7pQ9JscOMPVLRQmhyjKNra6VE21AabDEps
+         7EIZu4Q9alJi5bbDNNWVqlnReXZeBjgmfQe2gTD7EWqfaNaKkg2ELaB4OO1cqJ3GFi3R
+         Q5m1ukwPDISnizfeBlME+9fSjvk1diLKi4Smj1hBOmBW7/KRzn2+qOzhzIhIWlFAqzfm
+         V6Qw==
+X-Gm-Message-State: AOAM532qmEU0/jtve9yEpKkK09wH8bXaWaZiiBeJjhi5brOqDHLFwVae
+        hzf0BrlaXsPgAUbDA0J38xS1hg==
+X-Google-Smtp-Source: ABdhPJzGW9oxk7aw2R9ByG18wgcevibYu9oaEzkaAp0L88lZn8Tb/pVckPCeKvylboejUXX9lu2C9Q==
+X-Received: by 2002:adf:82b2:: with SMTP id 47mr8701330wrc.17.1595602717635;
+        Fri, 24 Jul 2020 07:58:37 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id q7sm1584344wra.56.2020.07.24.07.58.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 07:58:37 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 16:58:36 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [net-next v2 0/6] net: marvell: prestera: Add Switchdev driver
+ for Prestera family ASIC device 98DX326x (AC3x)
+Message-ID: <20200724145836.GA2216@nanopsycho>
+References: <20200724141957.29698-1-vadym.kochan@plvision.eu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724141957.29698-1-vadym.kochan@plvision.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 13:27:48 +0300
-Mike Rapoport <rppt@kernel.org> wrote:
+Fri, Jul 24, 2020 at 04:19:51PM CEST, vadym.kochan@plvision.eu wrote:
+>Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
+>ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
+>wireless SMB deployment.
+>
+>Prestera Switchdev is a firmware based driver that operates via PCI bus.  The
+>current implementation supports only boards designed for the Marvell Switchdev
+>solution and requires special firmware.
+>
+>This driver implementation includes only L1, basic L2 support, and RX/TX.
+>
+>The core Prestera switching logic is implemented in prestera_main.c, there is
+>an intermediate hw layer between core logic and firmware. It is
+>implemented in prestera_hw.c, the purpose of it is to encapsulate hw
+>related logic, in future there is a plan to support more devices with
+>different HW related configurations.
+>
+>The following Switchdev features are supported:
+>
+>    - VLAN-aware bridge offloading
+>    - VLAN-unaware bridge offloading
+>    - FDB offloading (learning, ageing)
+>    - Switchport configuration
+>
+>The original firmware image is uploaded to the linux-firmware repository.
+>
+>PATCHv2:
+>    1) Use devlink_port_type_clear()
+>
+>    2) Add _MS prefix to timeout defines.
+>
+>    3) Remove not-needed packed attribute from the firmware ipc structs,
+>       also the firmware image needs to be uploaded too (will do it soon).
+>
+>    4) Introduce prestera_hw_switch_fini(), to be mirrored with init and
+>       do simple validation if the event handlers are unregistered.
+>
+>    5) Use kfree_rcu() for event handler unregistering.
+>
+>    6) Get rid of rcu-list usage when dealing with ports, not needed for
+>       now.
+>
+>    7) Little spelling corrections in the error/info messages.
+>
+>    8) Make pci probe & remove logic mirrored.
+>
+>    9) Get rid of ETH_FCS_LEN in headroom setting, not needed.
 
-> On Fri, Jul 24, 2020 at 08:05:52AM +0300, Jarkko Sakkinen wrote:
-> > Use text_alloc() and text_free() instead of module_alloc() and
-> > module_memfree() when an arch provides them.
-> > 
-> > Cc: linux-mm@kvack.org
-> > Cc: Andi Kleen <ak@linux.intel.com>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  kernel/kprobes.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index 4e46d96d4e16..611fcda9f6bf 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -40,6 +40,7 @@
-> >  #include <asm/cacheflush.h>
-> >  #include <asm/errno.h>
-> >  #include <linux/uaccess.h>
-> > +#include <linux/vmalloc.h>
-> >  
-> >  #define KPROBE_HASH_BITS 6
-> >  #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
-> > @@ -111,12 +112,20 @@ enum kprobe_slot_state {
-> >  
-> >  void __weak *alloc_insn_page(void)
-> >  {
-> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > +	return text_alloc(PAGE_SIZE);
-> > +#else
-> >  	return module_alloc(PAGE_SIZE);
-> > +#endif
-> >  }
-> >  
-> >  void __weak free_insn_page(void *page)
-> >  {
-> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > +	text_free(page);
-> > +#else
-> >  	module_memfree(page);
-> > +#endif
-> >  }
-> 
-> Both alloc_insn_page() and free_insn_page() are __weak and can be simple
-> overriden in arch/x86 code.
+Note it is much more convenient for the reviewer to see the changelog
+per-patch. Could you please do it if there's going to be v3? Thanks!
 
-No, we can't use module_alloc/memfree() without CONFIG_MODULES, so
-we can not escape from this #ifdefs. (and I think this is not so bad.)
 
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+>
+>PATCH:
+>    1) Fixed W=1 warnings
+>
+>    2) Renamed PCI driver name to be more generic "Prestera DX" because
+>       there will be more devices supported.
+>
+>    3) Changed firmware image dir path: marvell/ -> mrvl/prestera/
+>       to be aligned with location in linux-firmware.git (if such
+>       will be accepted).
+>
+>RFC v3:
+>    1) Fix prestera prefix in prestera_rxtx.c
+>
+>    2) Protect concurrent access from multiple ports on multiple CPU system
+>       on tx path by spinlock in prestera_rxtx.c
+>
+>    3) Try to get base mac address from device-tree, otherwise use a random generated one.
+>
+>    4) Move ethtool interface support into separate prestera_ethtool.c file.
+>
+>    5) Add basic devlink support and get rid of physical port naming ops.
+>
+>    6) Add STP support in Switchdev driver.
+>
+>    7) Removed MODULE_AUTHOR
+>
+>    8) Renamed prestera.c -> prestera_main.c, and kernel module to
+>       prestera.ko
+>
+>RFC v2:
+>    1) Use "pestera_" prefix in struct's and functions instead of mvsw_pr_
+>
+>    2) Original series split into additional patches for Switchdev ethtool support.
+>
+>    3) Use major and minor firmware version numbers in the firmware image filename.
+>
+>    4) Removed not needed prints.
+>
+>    5) Use iopoll API for waiting on register's value in prestera_pci.c
+>
+>    6) Use standart approach for describing PCI ID matching section instead of using
+>       custom wrappers in prestera_pci.c
+>
+>    7) Add RX/TX support in prestera_rxtx.c.
+>
+>    8) Rewritten prestera_switchdev.c with following changes:
+>       - handle netdev events from prestera.c
+>
+>       - use struct prestera_bridge for bridge objects, and get rid of
+>         struct prestera_bridge_device which may confuse.
+>
+>       - use refcount_t
+>
+>    9) Get rid of macro usage for sending fw requests in prestera_hw.c
+>
+>    10) Add base_mac setting as module parameter. base_mac is required for
+>        generation default port's mac.
+>
+>Vadym Kochan (6):
+>  net: marvell: prestera: Add driver for Prestera family ASIC devices
+>  net: marvell: prestera: Add PCI interface support
+>  net: marvell: prestera: Add basic devlink support
+>  net: marvell: prestera: Add ethtool interface support
+>  net: marvell: prestera: Add Switchdev driver implementation
+>  dt-bindings: marvell,prestera: Add description for device-tree
+>    bindings
+>
+> .../bindings/net/marvell,prestera.txt         |   34 +
+> drivers/net/ethernet/marvell/Kconfig          |    1 +
+> drivers/net/ethernet/marvell/Makefile         |    1 +
+> drivers/net/ethernet/marvell/prestera/Kconfig |   25 +
+> .../net/ethernet/marvell/prestera/Makefile    |    7 +
+> .../net/ethernet/marvell/prestera/prestera.h  |  208 +++
+> .../marvell/prestera/prestera_devlink.c       |  120 ++
+> .../marvell/prestera/prestera_devlink.h       |   26 +
+> .../ethernet/marvell/prestera/prestera_dsa.c  |  134 ++
+> .../ethernet/marvell/prestera/prestera_dsa.h  |   37 +
+> .../marvell/prestera/prestera_ethtool.c       |  737 ++++++++++
+> .../marvell/prestera/prestera_ethtool.h       |   37 +
+> .../ethernet/marvell/prestera/prestera_hw.c   | 1231 ++++++++++++++++
+> .../ethernet/marvell/prestera/prestera_hw.h   |  181 +++
+> .../ethernet/marvell/prestera/prestera_main.c |  653 +++++++++
+> .../ethernet/marvell/prestera/prestera_pci.c  |  823 +++++++++++
+> .../ethernet/marvell/prestera/prestera_rxtx.c |  860 +++++++++++
+> .../ethernet/marvell/prestera/prestera_rxtx.h |   21 +
+> .../marvell/prestera/prestera_switchdev.c     | 1286 +++++++++++++++++
+> .../marvell/prestera/prestera_switchdev.h     |   16 +
+> 20 files changed, 6438 insertions(+)
+> create mode 100644 drivers/net/ethernet/marvell/prestera/Kconfig
+> create mode 100644 drivers/net/ethernet/marvell/prestera/Makefile
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera.h
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_devlink.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_devlink.h
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_dsa.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_dsa.h
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_ethtool.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_ethtool.h
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_hw.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_hw.h
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_main.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_pci.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_rxtx.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_rxtx.h
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_switchdev.c
+> create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_switchdev.h
+>
+>-- 
+>2.17.1
+>
