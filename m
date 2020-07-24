@@ -2,167 +2,232 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B39D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF7BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9AD20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:38:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ccd6ytBX"
+	by mail.kernel.org (Postfix) with ESMTP id 7349520674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgGXIiB (ORCPT
+        id S1726915AbgGXIiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:38:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgGXIiA (ORCPT
+        Fri, 24 Jul 2020 04:38:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46890 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726573AbgGXIiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:38:00 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 806DFC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 01:38:00 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id o1so4071292plk.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 01:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=p0IULCq/Q+AE1YxUkLmIKHqXfNPlAYmp+Itiol6P2JY=;
-        b=Ccd6ytBXOtKD5o+42jMgMbZ2gCvJ0abn1yDVFv6Ym+JbqwHJ30QuFcaqmqQuup0eUC
-         DqiNTHAng20np18m4pmIC2uqci4mGZdxKeeDBu82p1PlG4Aac0UtHrnfaQhuigSrMKqn
-         jOt13HE0JX5VSi3FMu9J2dzgjKh8aJJmRgmDerCca1AColglURL442y0YmXE8E3Em4m/
-         u3xKvdBn+a5t5bw1t3yBMNJlT9Neo0MK+p0X5ptr/RN52/wOfSoLNkf55GuIVkdnGa5U
-         gYzNq864o3/rpEw6/tve5FgIGYzMzXDxOLmX37adtAPVj3KQIft+UAeqNSKmO3ogoby2
-         raBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=p0IULCq/Q+AE1YxUkLmIKHqXfNPlAYmp+Itiol6P2JY=;
-        b=M19G5EzaaPkX9iPiC9LyqGJOJtgZ2cGkuJ3x/9r3ZSYnLSEueG0f7ScPUcpvyL2SPr
-         q6Zjjr8TWe3e7KhQo5aO32NbIyyevNX3EF7WxzN9LfVp70lIUl11UYvxAyRQlwpNQEyN
-         w2IZxzQaI35OIPh73LwuPjT+uo1a1QtQhVXzvs+TLmrb7djQz+hArfW8IY2vQZ9w42Ez
-         +vTtacL9Y5vLJejp+/1laLMp3MQAR3JjarkBMdfgQDtqfBOEt277igheCCVTlISDfBCB
-         wSeCLxyvLbdGS21ZBWE9H41LjddIQaS5dHiR6RblPFb3Qx06g98GDWoP2nEW0kUlIsiP
-         LDXQ==
-X-Gm-Message-State: AOAM5330t9mgXhJtucaytyRryYGgMiL4Qg3BWqLpXzX57FVdBGZOPRYp
-        p2yNIW2V51pJaCZkxgC3lXHJDr53
-X-Google-Smtp-Source: ABdhPJymSlWtgenETZB6v17Bf2UUDR0hi0PKjuxgRa2nAHSr8QUUZffT+uyvgS7xZGQeXydniUlJZA==
-X-Received: by 2002:a17:902:b706:: with SMTP id d6mr7277568pls.244.1595579879502;
-        Fri, 24 Jul 2020 01:37:59 -0700 (PDT)
-Received: from localhost (g155.222-224-148.ppp.wakwak.ne.jp. [222.224.148.155])
-        by smtp.gmail.com with ESMTPSA id e5sm4905956pjy.26.2020.07.24.01.37.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 01:37:58 -0700 (PDT)
-From:   Stafford Horne <shorne@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Stafford Horne <shorne@gmail.com>, Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        openrisc@lists.librecores.org
-Subject: [PATCH v2] openrisc: Fix oops caused when dumping stack
-Date:   Fri, 24 Jul 2020 17:37:50 +0900
-Message-Id: <20200724083751.580738-1-shorne@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 24 Jul 2020 04:38:15 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06O8WmDB172246;
+        Fri, 24 Jul 2020 04:38:12 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32fae1k9dv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Jul 2020 04:38:11 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06O8YR5i177736;
+        Fri, 24 Jul 2020 04:38:11 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32fae1k9da-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Jul 2020 04:38:11 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06O8aZ45014818;
+        Fri, 24 Jul 2020 08:38:09 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma02fra.de.ibm.com with ESMTP id 32brq7x3da-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Jul 2020 08:38:09 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06O8c6qC31654192
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jul 2020 08:38:06 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 985A8A405F;
+        Fri, 24 Jul 2020 08:38:06 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4A06A4060;
+        Fri, 24 Jul 2020 08:38:05 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.28.3])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 24 Jul 2020 08:38:05 +0000 (GMT)
+Subject: Re: [PATCH v9 02/15] s390/vfio-ap: use new AP bus interface to search
+ for queue devices
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, kernel test robot <lkp@intel.com>
+References: <20200720150344.24488-1-akrowiak@linux.ibm.com>
+ <20200720150344.24488-3-akrowiak@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <a946e992-ff36-ca45-1811-7c6b0aaa161f@linux.ibm.com>
+Date:   Fri, 24 Jul 2020 10:38:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200720150344.24488-3-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-24_02:2020-07-24,2020-07-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 clxscore=1011 malwarescore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007240059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When dumping a stack with 'cat /proc/#/stack' the kernel would oops.
-For example:
 
-    # cat /proc/690/stack
-    Unable to handle kernel access
-     at virtual address 0x7fc60f58
 
-    Oops#: 0000
-    CPU #: 0
-       PC: c00097fc    SR: 0000807f    SP: d6f09b9c
-    GPR00: 00000000 GPR01: d6f09b9c GPR02: d6f09bb8 GPR03: d6f09bc4
-    GPR04: 7fc60f5c GPR05: c00099b4 GPR06: 00000000 GPR07: d6f09ba3
-    GPR08: ffffff00 GPR09: c0009804 GPR10: d6f08000 GPR11: 00000000
-    GPR12: ffffe000 GPR13: dbb86000 GPR14: 00000001 GPR15: dbb86250
-    GPR16: 7fc60f63 GPR17: 00000f5c GPR18: d6f09bc4 GPR19: 00000000
-    GPR20: c00099b4 GPR21: ffffffc0 GPR22: 00000000 GPR23: 00000000
-    GPR24: 00000001 GPR25: 000002c6 GPR26: d78b6850 GPR27: 00000001
-    GPR28: 00000000 GPR29: dbb86000 GPR30: ffffffff GPR31: dbb862fc
-      RES: 00000000 oGPR11: ffffffff
-    Process cat (pid: 702, stackpage=d79d6000)
+On 2020-07-20 17:03, Tony Krowiak wrote:
+> This patch refactor's the vfio_ap device driver to use the AP bus's
+> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
+> information about a queue that is bound to the vfio_ap device driver.
+> The bus's ap_get_qdev() function retrieves the queue device from a
+> hashtable keyed by APQN. This is much more efficient than looping over
+> the list of devices attached to the AP bus by several orders of
+> magnitude.
 
-    Stack:
-    Call trace:
-    [<598977f2>] save_stack_trace_tsk+0x40/0x74
-    [<95063f0e>] stack_trace_save_tsk+0x44/0x58
-    [<b557bfdd>] proc_pid_stack+0xd0/0x13c
-    [<a2df8eda>] proc_single_show+0x6c/0xf0
-    [<e5a737b7>] seq_read+0x1b4/0x688
-    [<2d6c7480>] do_iter_read+0x208/0x248
-    [<2182a2fb>] vfs_readv+0x64/0x90
+The patch does much more than modifying this line. ;)
 
-This was caused by the stack trace code in save_stack_trace_tsk using
-the wrong stack pointer.  It was using the user stack pointer instead of
-the kernel stack pointer.  Fix this by using the right stack.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> ---
+>   drivers/s390/crypto/vfio_ap_drv.c     | 27 ++-------
+>   drivers/s390/crypto/vfio_ap_ops.c     | 86 +++++++++++++++------------
+>   drivers/s390/crypto/vfio_ap_private.h |  8 ++-
+>   3 files changed, 59 insertions(+), 62 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> index f4ceb380dd61..24cdef60039a 100644
+> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> @@ -53,15 +53,9 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
+>    */
+>   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+>   {
+> -	struct vfio_ap_queue *q;
+> -
+> -	q = kzalloc(sizeof(*q), GFP_KERNEL);
+> -	if (!q)
+> -		return -ENOMEM;
+> -	dev_set_drvdata(&apdev->device, q);
+> -	q->apqn = to_ap_queue(&apdev->device)->qid;
+> -	q->saved_isc = VFIO_AP_ISC_INVALID;
+> -	return 0;
+> +	struct ap_queue *queue = to_ap_queue(&apdev->device);
+> +
+> +	return vfio_ap_mdev_probe_queue(queue);
+>   }
 
-Also for good measure we add try_get_task_stack/put_task_stack to ensure
-the task is not lost while we are walking it's stack.
+You should explain the reason why this function is modified.
 
-Fixes: eecac38b0423a ("openrisc: support framepointers and STACKTRACE_SUPPORT")
-Signed-off-by: Stafford Horne <shorne@gmail.com>
----
-Changes since v1:
- - V1 was not properly locating the stack, adjust for redzone and pt_regs.
+>   
+>   /**
+> @@ -72,18 +66,9 @@ static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+>    */
+>   static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
+>   {
+> -	struct vfio_ap_queue *q;
+> -	int apid, apqi;
+> -
+> -	mutex_lock(&matrix_dev->lock);
+> -	q = dev_get_drvdata(&apdev->device);
+> -	dev_set_drvdata(&apdev->device, NULL);
+> -	apid = AP_QID_CARD(q->apqn);
+> -	apqi = AP_QID_QUEUE(q->apqn);
+> -	vfio_ap_mdev_reset_queue(apid, apqi, 1);
+> -	vfio_ap_irq_disable(q);
+> -	kfree(q);
+> -	mutex_unlock(&matrix_dev->lock);
+> +	struct ap_queue *queue = to_ap_queue(&apdev->device);
+> +
+> +	vfio_ap_mdev_remove_queue(queue);
+>   }
 
- arch/openrisc/kernel/stacktrace.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+... and this one?
 
-diff --git a/arch/openrisc/kernel/stacktrace.c b/arch/openrisc/kernel/stacktrace.c
-index 43f140a28bc7..54d38809e22c 100644
---- a/arch/openrisc/kernel/stacktrace.c
-+++ b/arch/openrisc/kernel/stacktrace.c
-@@ -13,6 +13,7 @@
- #include <linux/export.h>
- #include <linux/sched.h>
- #include <linux/sched/debug.h>
-+#include <linux/sched/task_stack.h>
- #include <linux/stacktrace.h>
- 
- #include <asm/processor.h>
-@@ -68,12 +69,25 @@ void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
- {
- 	unsigned long *sp = NULL;
- 
-+	if (!try_get_task_stack(tsk))
-+		return;
-+
- 	if (tsk == current)
- 		sp = (unsigned long *) &sp;
--	else
--		sp = (unsigned long *) KSTK_ESP(tsk);
-+	else {
-+		unsigned long ksp;
-+
-+		/* Locate stack from kernel context */
-+		ksp = task_thread_info(tsk)->ksp;
-+		ksp += STACK_FRAME_OVERHEAD;	/* redzone */
-+		ksp += sizeof(struct pt_regs);
-+
-+		sp = (unsigned long *) ksp;
-+	}
- 
- 	unwind_stack(trace, sp, save_stack_address_nosched);
-+
-+	put_task_stack(tsk);
- }
- EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
- 
+>   
+>   static void vfio_ap_matrix_dev_release(struct device *dev)
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index e0bde8518745..ad3925f04f61 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -26,43 +26,26 @@
+>   
+>   static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
+>   
+> -static int match_apqn(struct device *dev, const void *data)
+> -{
+> -	struct vfio_ap_queue *q = dev_get_drvdata(dev);
+> -
+> -	return (q->apqn == *(int *)(data)) ? 1 : 0;
+> -}
+> -
+>   /**
+> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
+> - * @matrix_mdev: the associated mediated matrix
+> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
+>    * @apqn: The queue APQN
+>    *
+> - * Retrieve a queue with a specific APQN from the list of the
+> - * devices of the vfio_ap_drv.
+> - * Verify that the APID and the APQI are set in the matrix.
+> + * Retrieve a queue with a specific APQN from the AP queue devices attached to
+> + * the AP bus.
+>    *
+> - * Returns the pointer to the associated vfio_ap_queue
+> + * Returns the pointer to the vfio_ap_queue with the specified APQN, or NULL.
+>    */
+> -static struct vfio_ap_queue *vfio_ap_get_queue(
+> -					struct ap_matrix_mdev *matrix_mdev,
+> -					int apqn)
+> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
+>   {
+> +	struct ap_queue *queue;
+>   	struct vfio_ap_queue *q;
+> -	struct device *dev;
+>   
+> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
+> -		return NULL;
+> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
+> +	queue = ap_get_qdev(apqn);
+> +	if (!queue)
+>   		return NULL;
+>   
+> -	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+> -				 &apqn, match_apqn);
+> -	if (!dev)
+> -		return NULL;
+> -	q = dev_get_drvdata(dev);
+> -	q->matrix_mdev = matrix_mdev;
+> -	put_device(dev);
+> +	q = dev_get_drvdata(&queue->ap_dev.device);
+> +	put_device(&queue->ap_dev.device);
+>   
+>   	return q;
+>   }
+
+this function changed a lot too, you should explain the goal in the 
+patch comment.
+
+...snip...
+
+Regards,
+Pierre
+
 -- 
-2.26.2
-
+Pierre Morel
+IBM Lab Boeblingen
