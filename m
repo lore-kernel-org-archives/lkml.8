@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11853C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23B4C433F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E002220674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1FF206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgGXQEe (ORCPT
+        id S1727991AbgGXQEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 24 Jul 2020 12:04:34 -0400
-Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
+Received: from 8bytes.org ([81.169.241.247]:60034 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727873AbgGXQEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:25 -0400
+        id S1726962AbgGXQEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:23 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 7FB82FBD;
-        Fri, 24 Jul 2020 18:04:15 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 0031BFBB;
+        Fri, 24 Jul 2020 18:04:13 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 34/75] x86/head/64: Make fixup_pointer() static inline
-Date:   Fri, 24 Jul 2020 18:02:55 +0200
-Message-Id: <20200724160336.5435-35-joro@8bytes.org>
+Subject: [PATCH v5 32/75] x86/head/64: Load segment registers earlier
+Date:   Fri, 24 Jul 2020 18:02:53 +0200
+Message-Id: <20200724160336.5435-33-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,52 +60,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Also move it to a header file so that it can be used in the idt code
-to setup the early IDT.
+Make sure segments are properly set up before setting up an IDT and
+doing anything that might cause a #VC exception. This is later needed
+for early exception handling.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/setup.h | 10 ++++++++++
- arch/x86/kernel/head64.c     |  5 -----
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ arch/x86/kernel/head_64.S | 52 +++++++++++++++++++--------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
-index 5c2fd05bd52c..8aa6ba0427b0 100644
---- a/arch/x86/include/asm/setup.h
-+++ b/arch/x86/include/asm/setup.h
-@@ -74,6 +74,16 @@ static inline void x86_ce4100_early_setup(void) { }
- extern struct boot_params boot_params;
- extern char _text[];
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index f958d4e4ee08..057c7bd3eeb6 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -174,6 +174,32 @@ SYM_CODE_START(secondary_startup_64)
+ 	 */
+ 	lgdt	early_gdt_descr(%rip)
  
-+/*
-+ * This function is used in C code that runs while the kernel still runs on
-+ * identity mapped addresses to get the correct address of kernel pointers in
-+ * the identity mapping.
-+ */
-+static __always_inline void *fixup_pointer(void *ptr, unsigned long physaddr)
-+{
-+	return ptr - (void *)_text + (void *)physaddr;
-+}
++	/* set up data segments */
++	xorl %eax,%eax
++	movl %eax,%ds
++	movl %eax,%ss
++	movl %eax,%es
 +
- static inline bool kaslr_enabled(void)
- {
- 	return IS_ENABLED(CONFIG_RANDOMIZE_MEMORY) &&
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index b0ab5627900b..8703292a35e9 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -82,11 +82,6 @@ static struct desc_ptr startup_gdt_descr = {
++	/*
++	 * We don't really need to load %fs or %gs, but load them anyway
++	 * to kill any stale realmode selectors.  This allows execution
++	 * under VT hardware.
++	 */
++	movl %eax,%fs
++	movl %eax,%gs
++
++	/* Set up %gs.
++	 *
++	 * The base of %gs always points to fixed_percpu_data. If the
++	 * stack protector canary is enabled, it is located at %gs:40.
++	 * Note that, on SMP, the boot cpu uses init data section until
++	 * the per cpu areas are set up.
++	 */
++	movl	$MSR_GS_BASE,%ecx
++	movl	initial_gs(%rip),%eax
++	movl	initial_gs+4(%rip),%edx
++	wrmsr
++
+ 	/* Check if nx is implemented */
+ 	movl	$0x80000001, %eax
+ 	cpuid
+@@ -201,32 +227,6 @@ SYM_CODE_START(secondary_startup_64)
+ 	pushq $0
+ 	popfq
  
- #define __head	__section(.head.text)
- 
--static void __head *fixup_pointer(void *ptr, unsigned long physaddr)
--{
--	return ptr - (void *)_text + (void *)physaddr;
--}
+-	/* set up data segments */
+-	xorl %eax,%eax
+-	movl %eax,%ds
+-	movl %eax,%ss
+-	movl %eax,%es
 -
- static unsigned long __head *fixup_long(void *ptr, unsigned long physaddr)
- {
- 	return fixup_pointer(ptr, physaddr);
+-	/*
+-	 * We don't really need to load %fs or %gs, but load them anyway
+-	 * to kill any stale realmode selectors.  This allows execution
+-	 * under VT hardware.
+-	 */
+-	movl %eax,%fs
+-	movl %eax,%gs
+-
+-	/* Set up %gs.
+-	 *
+-	 * The base of %gs always points to fixed_percpu_data. If the
+-	 * stack protector canary is enabled, it is located at %gs:40.
+-	 * Note that, on SMP, the boot cpu uses init data section until
+-	 * the per cpu areas are set up.
+-	 */
+-	movl	$MSR_GS_BASE,%ecx
+-	movl	initial_gs(%rip),%eax
+-	movl	initial_gs+4(%rip),%edx
+-	wrmsr
+-
+ 	/* rsi is pointer to real mode structure with interesting info.
+ 	   pass it to C */
+ 	movq	%rsi, %rdi
 -- 
 2.27.0
 
