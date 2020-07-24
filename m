@@ -2,156 +2,94 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7648C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 15:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4538C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 15:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8D0206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 15:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27D620737
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 15:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595603204;
+	bh=d/lHftCugyAGXbmWZxAljFlvx4t6XIizbWGk9XJGek8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=BwMFBRGAGOEzj1t2/hWMOufPw3Gl5VM6GDehtfOtMuKuRuJwMiKbkTXW1Y/ew0abA
+	 8SoIZzLjf6xnRVCVhT+HAsgyrj2Lhrxw+M3cZdXsjHLOO/R/n1Z6D5bZe9L0VjwTmx
+	 NcUw26inGKGY9vIOHWkx0GKqKbFmv/H37VxDYm4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgGXPIa (ORCPT
+        id S1726782AbgGXPGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 11:08:30 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:57183 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726938AbgGXPI0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 11:08:26 -0400
-X-IronPort-AV: E=Sophos;i="5.75,391,1589209200"; 
-   d="scan'208";a="52752077"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 25 Jul 2020 00:08:26 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 1AF46400517D;
-        Sat, 25 Jul 2020 00:08:23 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/2] media: i2c: ov772x: Add test pattern control
-Date:   Fri, 24 Jul 2020 16:08:16 +0100
-Message-Id: <1595603296-25903-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595603296-25903-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1595603296-25903-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Fri, 24 Jul 2020 11:06:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726424AbgGXPGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 11:06:43 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B81120714;
+        Fri, 24 Jul 2020 15:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595603202;
+        bh=d/lHftCugyAGXbmWZxAljFlvx4t6XIizbWGk9XJGek8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=YsjxJOVkT3utZoAopAiM9AzCy9/gsq8e90vIYnS8HCmi3TKoHyfjf4ovxvridIluu
+         oK0BfZXwVAPelnhcd/bQh4flU8Kxyvq1XaJ5KmGJEvPaAPjLA+qA8kgJPKYnLQdIfr
+         rDiTawY8yno4O21e5vcgirMSF5vKuAezym4//HAk=
+Date:   Fri, 24 Jul 2020 10:06:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Andrew Maier <andrew.maier@eideticom.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
+ allowed bridges
+Message-ID: <20200724150641.GA1518875@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <89d853d1-9e45-1ba5-5be7-4bbce79c7fb8@deltatee.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for test pattern control supported by the sensor.
+On Thu, Jul 23, 2020 at 02:10:52PM -0600, Logan Gunthorpe wrote:
+> On 2020-07-23 1:57 p.m., Bjorn Helgaas wrote:
+> > On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:
+> >> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+> >>>
+> >>> The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
+> >>> transactions between root ports and found to work. Therefore add it
+> >>> to the list.
+> >>>
+> >>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> >>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >>> Cc: Christian König <christian.koenig@amd.com>
+> >>> Cc: Huang Rui <ray.huang@amd.com>
+> >>> Cc: Alex Deucher <alexdeucher@gmail.com>
+> >>
+> >> Starting with Zen, all AMD platforms support P2P for reads and writes.
+> > 
+> > What's the plan for getting out of the cycle of "update this list for
+> > every new chip"?  Any new _DSMs planned, for instance?
+> 
+> Well there was an effort to add capabilities in the PCI spec to describe
+> this but, as far as I know, they never got anywhere, and hardware still
+> doesn't self describe with this.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- drivers/media/i2c/ov772x.c | 25 ++++++++++++++++++++++++-
- include/media/i2c/ov772x.h |  1 +
- 2 files changed, 25 insertions(+), 1 deletion(-)
+Any idea what happened?  Is there hope for the future?  I'm really not
+happy about signing up for open-ended device-specific patches like
+this.  It's certainly not in the plug and play spirit that has made
+PCI successful.  I know, preaching to the choir here.
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 3b7dfba..bdee2a8 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -227,7 +227,7 @@
- 
- /* COM3 */
- #define SWAP_MASK       (SWAP_RGB | SWAP_YUV | SWAP_ML)
--#define IMG_MASK        (VFLIP_IMG | HFLIP_IMG)
-+#define IMG_MASK        (VFLIP_IMG | HFLIP_IMG | SCOLOR_TEST)
- 
- #define VFLIP_IMG       0x80	/* Vertical flip image ON/OFF selection */
- #define HFLIP_IMG       0x40	/* Horizontal mirror image ON/OFF selection */
-@@ -425,6 +425,7 @@ struct ov772x_priv {
- 	const struct ov772x_win_size     *win;
- 	struct v4l2_ctrl		 *vflip_ctrl;
- 	struct v4l2_ctrl		 *hflip_ctrl;
-+	unsigned int			  test_pattern;
- 	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
- 	struct v4l2_ctrl		 *band_filter_ctrl;
- 	unsigned int			  fps;
-@@ -540,6 +541,11 @@ static const struct ov772x_win_size ov772x_win_sizes[] = {
- 	},
- };
- 
-+static const char * const ov772x_test_pattern_menu[] = {
-+	"Disabled",
-+	"Vertical Color Bar Type 1",
-+};
-+
- /*
-  * frame rate settings lists
-  */
-@@ -754,6 +760,13 @@ static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
- 	return ret;
- }
- 
-+static int ov772x_enable_test_pattern(struct ov772x_priv *priv, u32 pattern)
-+{
-+	priv->test_pattern = pattern;
-+	return regmap_update_bits(priv->regmap, COM3, SCOLOR_TEST,
-+				  pattern ? SCOLOR_TEST : 0x00);
-+}
-+
- static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
- {
- 	struct ov772x_priv *priv = container_of(ctrl->handler,
-@@ -801,6 +814,8 @@ static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
- 		}
- 
- 		return ret;
-+	case V4L2_CID_TEST_PATTERN:
-+		return ov772x_enable_test_pattern(priv, ctrl->val);
- 	}
- 
- 	return -EINVAL;
-@@ -1095,10 +1110,14 @@ static int ov772x_set_params(struct ov772x_priv *priv,
- 		val |= VFLIP_IMG;
- 	if (priv->info && (priv->info->flags & OV772X_FLAG_HFLIP))
- 		val |= HFLIP_IMG;
-+	if (priv->info && (priv->info->flags & OV772X_FLAG_TEST_PATTERN))
-+		val |= SCOLOR_TEST;
- 	if (priv->vflip_ctrl->val)
- 		val ^= VFLIP_IMG;
- 	if (priv->hflip_ctrl->val)
- 		val ^= HFLIP_IMG;
-+	if (priv->test_pattern)
-+		val ^= SCOLOR_TEST;
- 
- 	ret = regmap_update_bits(priv->regmap, COM3, SWAP_MASK | IMG_MASK, val);
- 	if (ret < 0)
-@@ -1399,6 +1418,10 @@ static int ov772x_probe(struct i2c_client *client)
- 	priv->band_filter_ctrl = v4l2_ctrl_new_std(&priv->hdl, &ov772x_ctrl_ops,
- 						   V4L2_CID_BAND_STOP_FILTER,
- 						   0, 256, 1, 0);
-+	v4l2_ctrl_new_std_menu_items(&priv->hdl, &ov772x_ctrl_ops,
-+				     V4L2_CID_TEST_PATTERN,
-+				     ARRAY_SIZE(ov772x_test_pattern_menu) - 1,
-+				     0, 0, ov772x_test_pattern_menu);
- 	priv->subdev.ctrl_handler = &priv->hdl;
- 	if (priv->hdl.error) {
- 		ret = priv->hdl.error;
-diff --git a/include/media/i2c/ov772x.h b/include/media/i2c/ov772x.h
-index a1702d4..65e6f8d 100644
---- a/include/media/i2c/ov772x.h
-+++ b/include/media/i2c/ov772x.h
-@@ -12,6 +12,7 @@
- /* for flags */
- #define OV772X_FLAG_VFLIP	(1 << 0) /* Vertical flip image */
- #define OV772X_FLAG_HFLIP	(1 << 1) /* Horizontal flip image */
-+#define OV772X_FLAG_TEST_PATTERN	(1 << 2) /* Test pattern */
- 
- /*
-  * for Edge ctrl
--- 
-2.7.4
-
+Bjorn
