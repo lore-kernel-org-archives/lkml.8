@@ -2,93 +2,76 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAACC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9F9C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0439F2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595593404;
-	bh=SCXFKjxEaCFEqThct34NH7LinKsaOpA7DKxBHAjFIsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W5lEilvNG4OvUXOT+IUdrTT8LZpT+F7ZlsfQKis3UY2odT9A3tLBx9CMQ3kV4B7k/
-	 Pnn5QpwiIGNNgKrYx+xWxtEwElcJtcpaaH2JBBgR+48vp7xfLUL9DPE2BJqgOq3Yv8
-	 lCD8Dw1uxwSRsralFq6vYK98ISZw7kOfG0i0S6iM=
+	by mail.kernel.org (Postfix) with ESMTP id 372FD2074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:23:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dWCoZstj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgGXMXX (ORCPT
+        id S1727009AbgGXMXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:23:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbgGXMXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:23:22 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0630820737;
-        Fri, 24 Jul 2020 12:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595593402;
-        bh=SCXFKjxEaCFEqThct34NH7LinKsaOpA7DKxBHAjFIsw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iHjV6PRMiPtvYQ78i14qyA8AMC0rOelizX1FFlG2owztY0tuTHP2CXjjzPKGE6stH
-         nyove5LbJGrydA2rRaNIIpGskvbFZJeTFflHI1EsA+CZSb8YF+eKDyMts8D2XbEPol
-         fEgHgsuHT1VV7P84PZFD0ve7K+G61NOc8CFE9fzg=
-Date:   Fri, 24 Jul 2020 13:23:07 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Subject: Re: [PATCH 7/8] regulator: mt6359: Add support for MT6359P regulator
-Message-ID: <20200724122307.GF5664@sirena.org.uk>
-References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1595509133-5358-8-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Fri, 24 Jul 2020 08:23:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbgGXMXk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 08:23:40 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70A77C0619D3;
+        Fri, 24 Jul 2020 05:23:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0xAtt8OdXDwTj0AGHmBvJe2bIWDAHdVfH+I971pKCts=; b=dWCoZstj6bW9VNbcVyaoonTtsh
+        GtJrh8tIKIiQGqD15HbnXud8AO6HOgCtXDxOsH7vyrug5McH6tf0dpJQDYEwArCXDLODRtqmAqQiQ
+        Cus2hBBz4MxrQ4q2lfxfWLi9v4mQxtOss9CP+t21orFMn5NJiqrNr0pPpQQL5jaeq9LM+utqELT5c
+        7JYs6Vg3siXPoICKLHbI0DTllNhMwgN/ryklTgv1jArKVEGBaqa4Obhq0F2jqSLG6O66ZIdIpI0nj
+        o/AwFN7OwH4173Dx2ulB2iYivxp0rvZ02EZ8d+mRt3bIo+K3579kpQF42OSm8L7wsR+oEwAVtoAM6
+        jpEM5J8g==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jywjh-000668-4R; Fri, 24 Jul 2020 12:23:37 +0000
+Date:   Fri, 24 Jul 2020 13:23:37 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2 04/20] unify generic instances of
+ csum_partial_copy_nocheck()
+Message-ID: <20200724122337.GA23095@infradead.org>
+References: <20200724012512.GK2786714@ZenIV.linux.org.uk>
+ <20200724012546.302155-1-viro@ZenIV.linux.org.uk>
+ <20200724012546.302155-4-viro@ZenIV.linux.org.uk>
+ <20200724064117.GA10522@infradead.org>
+ <20200724121918.GL2786714@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jkO+KyKz7TfD21mV"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1595509133-5358-8-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-Cookie: You will wish you hadn't.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200724121918.GL2786714@ZenIV.linux.org.uk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 24, 2020 at 01:19:18PM +0100, Al Viro wrote:
+> > net-next has a patch from me killing off csum_and_copy_from_user
+> > already:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=f1bfd71c8662f20d53e71ef4e18bfb0e5677c27f
+> 
+> Nothing in that patch of yours touches csum_and_copy_from_user(). what
+> are you talking about?
 
---jkO+KyKz7TfD21mV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sorry, I meant csum_and_copy_from_nocheck, just as in this patch.
 
-On Thu, Jul 23, 2020 at 08:58:52PM +0800, Hsin-Hsiung Wang wrote:
-> The MT6359P is a eco version for MT6359 regulator.
-> We add support based on MT6359 regulator driver.
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---jkO+KyKz7TfD21mV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8a0qoACgkQJNaLcl1U
-h9CI9gf9HBScIw40EhXiHa2xEWUpuW7VdZE+GURbcWcwrbYa1DzxTpy8bnVgBHSZ
-id1lz9wbu0docIpwklwTolu0/YTvsX/4HbvOdo72+r0g9Q+TEudUGpkbExZEk+VE
-7xv+F60dCAdaORA7dCs9Lx0PYgOPzhCvngpNCu0toeAHQjL3xNiFhJVGux5KNMiY
-1UuCfEzVa2w/ovCxltxsLJI7Z4Xv5wf1RygqvALUOmp1ziTx1DQiBvMGZHEK+CY9
-GdeeA/NGGgDhjTEa0R+yvcBASktquLjlwuWaEB4kXolFZynJhjQSPuFlnLmUljuR
-uM5Y076bN5Y/jPaAuQ+gxm0bB+n8ng==
-=/gQD
------END PGP SIGNATURE-----
-
---jkO+KyKz7TfD21mV--
+Merging your branch into the net-next tree thus will conflict in
+the nios2 and asm-geneeric/checksum.h as well as lib/checksum.c.
