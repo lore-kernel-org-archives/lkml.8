@@ -2,144 +2,300 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D4BC433F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3B3C433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 265D42070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 917292070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:12:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iwSz087a"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4rgt62Gc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d7UwQII1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgGXUMR (ORCPT
+        id S1726926AbgGXULm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 16:12:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44574 "EHLO
+        Fri, 24 Jul 2020 16:11:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgGXUMQ (ORCPT
+        with ESMTP id S1726742AbgGXULl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 16:12:16 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BC0CC0619E4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:12:15 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id 1so895640vsl.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LM5eS2EeRGKww+dYskRfhmE9ybbsR8gCTRM+LVzEnYc=;
-        b=iwSz087aaVUaiSy1oH9aa8XJaarVKSzVfLzp/O4LysKy3u1QVPScnmr13iFwMv3SCT
-         0gIzFILLrv2w2raEeGSNDRBWD+3817WlhnydMdgxhGKHReLuPGu6kF6KAWjIGa2MzykV
-         JruC9nRwh9hvoMlHT7vihvIaF/VdfgBjqJfLc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LM5eS2EeRGKww+dYskRfhmE9ybbsR8gCTRM+LVzEnYc=;
-        b=Y9cSNQm395gM5J++RqC1Fah7SvKG7GXKfemJBz5onNEWVXG60hlrsk8AWobm6muxXQ
-         0L7PsHeCxDlrO5kL3c7k5MQByNxZ4/zcoIJeyhHM6CjPdj8lVNQhtzyvOg6zLJNR9CZ7
-         8qY7ki6oeCdrWX+lTBb6motklvWssyOWP9mXRVnfe0zuO5hSuDqcaxFaHb5DNnr5Z0yB
-         gCKTRGqMJsiTk+GjLNwChj4KPHEmQzm5BqgJwXrhsi0ND1ZXFOwPwgn+FzFEdhpeb0W3
-         0chrZfKi+F7gYJdwiuyOb/oyohQxB72EYG1/43TmLa1izu397UnWEel+29HIDZ0VeVaC
-         2q4w==
-X-Gm-Message-State: AOAM533jI84Kwny3gKAS474EIcHTbzeoWz6C5CFdZrBo9gZjDACpqN23
-        C2ehQAJLQyy8Ub3OXQPBjsQuJy4cGE4=
-X-Google-Smtp-Source: ABdhPJwiXJO57s71XGPkkhlnpTglmyZ7q0tgaRvgPW5l0IjdtqtmkQkMtPMgGWfFX+DbKAqT4D8Isg==
-X-Received: by 2002:a05:6102:126a:: with SMTP id q10mr8614894vsg.35.1595621533792;
-        Fri, 24 Jul 2020 13:12:13 -0700 (PDT)
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
-        by smtp.gmail.com with ESMTPSA id j189sm215776vsd.24.2020.07.24.13.12.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 13:12:12 -0700 (PDT)
-Received: by mail-vs1-f46.google.com with SMTP id m6so5525164vsl.12
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:12:12 -0700 (PDT)
-X-Received: by 2002:a67:ec0f:: with SMTP id d15mr8730677vso.121.1595621531870;
- Fri, 24 Jul 2020 13:12:11 -0700 (PDT)
+        Fri, 24 Jul 2020 16:11:41 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A903C0619E4;
+        Fri, 24 Jul 2020 13:11:41 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 20:11:38 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595621499;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QEw8x1X0AeiW3L3FJag4/Lccp+nsgi61AQcN9AJSSek=;
+        b=4rgt62GcAVgb4coC9KOviLIh8qILhMCwsiQTwOOFTgmEDXuZTw0E/4tZir1v+Vnpij3kqd
+        ZUrGdzHhu46Gy1ZDIKolwzMGdskew3oKfjaTBYxZS56JuPTj0EZTgFeNutWKFG2/q6xz3h
+        WZd5IQEUgkZMWWj+/22TFF/Z1pX7VJnYjhtFWurDAhTdPqx/3v7PLKqKDIDF6v5mj5Xg2p
+        BUrDUkRVyPHUGi3Gdo7wYRfSp5aiF6NmpasT1snKb9rrS8OIhkkVRbaktSR/WEhR9GKWKk
+        T8NRXCrUOMzP9Gyk/tIKkjLrqJEUvxJSQvBI8XHmu23Ggt+4h4kRSIb+WeFxrA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595621499;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QEw8x1X0AeiW3L3FJag4/Lccp+nsgi61AQcN9AJSSek=;
+        b=d7UwQII1BgW9DPWIwbkJWD9g6zVJHuM02fmUnaAliclHZamHn6cgQKDWHmGl4x0aadw6tM
+        JJWZ2bl4FJ6qByDA==
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/entry] x86/entry: Use generic interrupt entry/exit code
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200722220520.711492752@linutronix.de>
+References: <20200722220520.711492752@linutronix.de>
 MIME-Version: 1.0
-References: <20200723010137.3127584-1-swboyd@chromium.org> <CAD=FV=WtjyYY+bmocc17S9NbRs6inkAWjj7=c9qBsVf3LtG99Q@mail.gmail.com>
- <159561988523.3847286.14763422711224252201@swboyd.mtv.corp.google.com>
- <CAD=FV=WH1vKKe=MPVdtBJZWnSzxNLO0uyM02GFG6oCJfSEwehQ@mail.gmail.com> <159562087212.3847286.9484527206999948907@swboyd.mtv.corp.google.com>
-In-Reply-To: <159562087212.3847286.9484527206999948907@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 24 Jul 2020 13:11:59 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VUSwsP_xrHsufLjZqbWdn5V8rybtv2DWad2nBfU+VJ9w@mail.gmail.com>
-Message-ID: <CAD=FV=VUSwsP_xrHsufLjZqbWdn5V8rybtv2DWad2nBfU+VJ9w@mail.gmail.com>
-Subject: Re: [PATCH] soc: qcom: rpmh-rsc: Sleep waiting for tcs slots to be free
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <159562149894.4006.3658443105395747761.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The following commit has been merged into the x86/entry branch of tip:
 
-On Fri, Jul 24, 2020 at 1:01 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Doug Anderson (2020-07-24 12:49:56)
-> > Hi,
-> >
-> > On Fri, Jul 24, 2020 at 12:44 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > > > -       if (ret)
-> > > > > -               goto unlock;
-> > > > >
-> > > > > -       ret = find_free_tcs(tcs);
-> > > > > -       if (ret < 0)
-> > > > > -               goto unlock;
-> > > > > -       tcs_id = ret;
-> > > > > +       wait_event_lock_irq(drv->tcs_wait,
-> > > > > +                           (tcs_id = claim_tcs_for_req(drv, tcs, msg)) >= 0,
-> > > >
-> > > > Even though claim_tcs_for_req() only returns 0 or -EBUSY today (IOW it
-> > > > never returns error codes other than -EBUSY), should we handle it?  If
-> > > > we don't, claim_tcs_for_req() should be very clear that it shouldn't
-> > > > return any errors other than -EBUSY.
-> > >
-> > > Do you mean you want to change it to be
-> > >
-> > >         (tcs_id = claim_tcs_for_req(drv, tcs, msg)) != -EBUSY
-> > >
-> > > instead of >= 0? It should return the tcs_id that was claimed, not just
-> > > 0 or -EBUSY.
-> >
-> > Ah, right.  Yes, you got it right.  Of course then we have to add a
-> > "if (tcd_id < 0) goto unlock", too.  If you think it's not worth
-> > adding this then we just need to make sure it's super obvious in
-> > claim_tcs_for_req() that it's not allowed to return other errors.
-> >
->
-> Hmm right now the code will wait forever for the condition to become
-> true, so it will only ever continue past this point if tcs_id >= 0. We
-> could add a timeout here in another patch, but I didn't want to change
-> the behavior of what is there in this patch. I don't really care if >= 0
-> or != -EBUSY is used here so I can change it to -EBUSY to provide
-> clarity.
->
-> If we add a timeout here, it would be better to change this driver to
-> use a pull model instead of the push model it is using today so that the
-> timeout isn't necessary. That would entail making a proper kthread that
-> pulls requests off a queue of messages and then this asnyc call would
-> append messages to the end of the queue and return immediately. That
-> would be necessary if we want the async calls to work from non-sleeping
-> contexts for example. I think Lina was alluding to this earlier in this
-> thread.
+Commit-ID:     bdcd178ada90d2413bcc9df4211dcdd511a47586
+Gitweb:        https://git.kernel.org/tip/bdcd178ada90d2413bcc9df4211dcdd511a47586
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 23 Jul 2020 00:00:07 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Fri, 24 Jul 2020 15:05:00 +02:00
 
-I wasn't suggesting adding a timeout.  I was just saying that if
-claim_tcs_for_req() were to ever return an error code other than
--EBUSY that we'd need a check for it because otherwise we'd interpret
-the result as a tcs_id.
+x86/entry: Use generic interrupt entry/exit code
 
--Doug
+Replace the x86 code with the generic variant. Use temporary defines for
+idtentry_* which will be cleaned up in the next step.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200722220520.711492752@linutronix.de
+
+
+---
+ arch/x86/entry/common.c         | 167 +-------------------------------
+ arch/x86/include/asm/idtentry.h |  10 +--
+ 2 files changed, 5 insertions(+), 172 deletions(-)
+
+diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+index bc96eb8..297e08e 100644
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -198,171 +198,6 @@ SYSCALL_DEFINE0(ni_syscall)
+ 	return -ENOSYS;
+ }
+ 
+-/**
+- * idtentry_enter - Handle state tracking on ordinary idtentries
+- * @regs:	Pointer to pt_regs of interrupted context
+- *
+- * Invokes:
+- *  - lockdep irqflag state tracking as low level ASM entry disabled
+- *    interrupts.
+- *
+- *  - Context tracking if the exception hit user mode.
+- *
+- *  - The hardirq tracer to keep the state consistent as low level ASM
+- *    entry disabled interrupts.
+- *
+- * As a precondition, this requires that the entry came from user mode,
+- * idle, or a kernel context in which RCU is watching.
+- *
+- * For kernel mode entries RCU handling is done conditional. If RCU is
+- * watching then the only RCU requirement is to check whether the tick has
+- * to be restarted. If RCU is not watching then rcu_irq_enter() has to be
+- * invoked on entry and rcu_irq_exit() on exit.
+- *
+- * Avoiding the rcu_irq_enter/exit() calls is an optimization but also
+- * solves the problem of kernel mode pagefaults which can schedule, which
+- * is not possible after invoking rcu_irq_enter() without undoing it.
+- *
+- * For user mode entries irqentry_enter_from_user_mode() must be invoked to
+- * establish the proper context for NOHZ_FULL. Otherwise scheduling on exit
+- * would not be possible.
+- *
+- * Returns: An opaque object that must be passed to idtentry_exit()
+- *
+- * The return value must be fed into the state argument of
+- * idtentry_exit().
+- */
+-idtentry_state_t noinstr idtentry_enter(struct pt_regs *regs)
+-{
+-	idtentry_state_t ret = {
+-		.exit_rcu = false,
+-	};
+-
+-	if (user_mode(regs)) {
+-		irqentry_enter_from_user_mode(regs);
+-		return ret;
+-	}
+-
+-	/*
+-	 * If this entry hit the idle task invoke rcu_irq_enter() whether
+-	 * RCU is watching or not.
+-	 *
+-	 * Interupts can nest when the first interrupt invokes softirq
+-	 * processing on return which enables interrupts.
+-	 *
+-	 * Scheduler ticks in the idle task can mark quiescent state and
+-	 * terminate a grace period, if and only if the timer interrupt is
+-	 * not nested into another interrupt.
+-	 *
+-	 * Checking for __rcu_is_watching() here would prevent the nesting
+-	 * interrupt to invoke rcu_irq_enter(). If that nested interrupt is
+-	 * the tick then rcu_flavor_sched_clock_irq() would wrongfully
+-	 * assume that it is the first interupt and eventually claim
+-	 * quiescient state and end grace periods prematurely.
+-	 *
+-	 * Unconditionally invoke rcu_irq_enter() so RCU state stays
+-	 * consistent.
+-	 *
+-	 * TINY_RCU does not support EQS, so let the compiler eliminate
+-	 * this part when enabled.
+-	 */
+-	if (!IS_ENABLED(CONFIG_TINY_RCU) && is_idle_task(current)) {
+-		/*
+-		 * If RCU is not watching then the same careful
+-		 * sequence vs. lockdep and tracing is required
+-		 * as in irqentry_enter_from_user_mode().
+-		 */
+-		lockdep_hardirqs_off(CALLER_ADDR0);
+-		rcu_irq_enter();
+-		instrumentation_begin();
+-		trace_hardirqs_off_finish();
+-		instrumentation_end();
+-
+-		ret.exit_rcu = true;
+-		return ret;
+-	}
+-
+-	/*
+-	 * If RCU is watching then RCU only wants to check whether it needs
+-	 * to restart the tick in NOHZ mode. rcu_irq_enter_check_tick()
+-	 * already contains a warning when RCU is not watching, so no point
+-	 * in having another one here.
+-	 */
+-	instrumentation_begin();
+-	rcu_irq_enter_check_tick();
+-	/* Use the combo lockdep/tracing function */
+-	trace_hardirqs_off();
+-	instrumentation_end();
+-
+-	return ret;
+-}
+-
+-static void idtentry_exit_cond_resched(struct pt_regs *regs, bool may_sched)
+-{
+-	if (may_sched && !preempt_count()) {
+-		/* Sanity check RCU and thread stack */
+-		rcu_irq_exit_check_preempt();
+-		if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
+-			WARN_ON_ONCE(!on_thread_stack());
+-		if (need_resched())
+-			preempt_schedule_irq();
+-	}
+-	/* Covers both tracing and lockdep */
+-	trace_hardirqs_on();
+-}
+-
+-/**
+- * idtentry_exit - Handle return from exception that used idtentry_enter()
+- * @regs:	Pointer to pt_regs (exception entry regs)
+- * @state:	Return value from matching call to idtentry_enter()
+- *
+- * Depending on the return target (kernel/user) this runs the necessary
+- * preemption and work checks if possible and reguired and returns to
+- * the caller with interrupts disabled and no further work pending.
+- *
+- * This is the last action before returning to the low level ASM code which
+- * just needs to return to the appropriate context.
+- *
+- * Counterpart to idtentry_enter(). The return value of the entry
+- * function must be fed into the @state argument.
+- */
+-void noinstr idtentry_exit(struct pt_regs *regs, idtentry_state_t state)
+-{
+-	lockdep_assert_irqs_disabled();
+-
+-	/* Check whether this returns to user mode */
+-	if (user_mode(regs)) {
+-		irqentry_exit_to_user_mode(regs);
+-	} else if (regs->flags & X86_EFLAGS_IF) {
+-		/*
+-		 * If RCU was not watching on entry this needs to be done
+-		 * carefully and needs the same ordering of lockdep/tracing
+-		 * and RCU as the return to user mode path.
+-		 */
+-		if (state.exit_rcu) {
+-			instrumentation_begin();
+-			/* Tell the tracer that IRET will enable interrupts */
+-			trace_hardirqs_on_prepare();
+-			lockdep_hardirqs_on_prepare(CALLER_ADDR0);
+-			instrumentation_end();
+-			rcu_irq_exit();
+-			lockdep_hardirqs_on(CALLER_ADDR0);
+-			return;
+-		}
+-
+-		instrumentation_begin();
+-		idtentry_exit_cond_resched(regs, IS_ENABLED(CONFIG_PREEMPTION));
+-		instrumentation_end();
+-	} else {
+-		/*
+-		 * IRQ flags state is correct already. Just tell RCU if it
+-		 * was not watching on entry.
+-		 */
+-		if (state.exit_rcu)
+-			rcu_irq_exit();
+-	}
+-}
+-
+ #ifdef CONFIG_XEN_PV
+ #ifndef CONFIG_PREEMPTION
+ /*
+@@ -427,7 +262,7 @@ __visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
+ 	inhcall = get_and_clear_inhcall();
+ 	if (inhcall && !WARN_ON_ONCE(state.exit_rcu)) {
+ 		instrumentation_begin();
+-		idtentry_exit_cond_resched(regs, true);
++		irqentry_exit_cond_resched();
+ 		instrumentation_end();
+ 		restore_inhcall(inhcall);
+ 	} else {
+diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
+index bf59f72..621e25d 100644
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -11,12 +11,10 @@
+ 
+ #include <asm/irq_stack.h>
+ 
+-typedef struct idtentry_state {
+-	bool exit_rcu;
+-} idtentry_state_t;
+-
+-idtentry_state_t idtentry_enter(struct pt_regs *regs);
+-void idtentry_exit(struct pt_regs *regs, idtentry_state_t state);
++/* Temporary defines */
++typedef irqentry_state_t idtentry_state_t;
++#define idtentry_enter irqentry_enter
++#define idtentry_exit irqentry_exit
+ 
+ /**
+  * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
