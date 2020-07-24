@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07EBC433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25048C433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4B7E2065E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038542065E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgGXQGC (ORCPT
+        id S1728399AbgGXQGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:06:02 -0400
-Received: from 8bytes.org ([81.169.241.247]:60034 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:06:08 -0400
+Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728139AbgGXQEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:42 -0400
+        id S1728112AbgGXQEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:41 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id C7633FE7;
-        Fri, 24 Jul 2020 18:04:34 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 952AEFD6;
+        Fri, 24 Jul 2020 18:04:33 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 64/75] x86/paravirt: Allow hypervisor specific VMMCALL handling under SEV-ES
-Date:   Fri, 24 Jul 2020 18:03:25 +0200
-Message-Id: <20200724160336.5435-65-joro@8bytes.org>
+Subject: [PATCH v5 62/75] x86/sev-es: Handle #AC Events
+Date:   Fri, 24 Jul 2020 18:03:23 +0200
+Message-Id: <20200724160336.5435-63-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,85 +60,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add two new paravirt callbacks to provide hypervisor specific processor
-state in the GHCB and to copy state from the hypervisor back to the
-processor.
+Implement a handler for #VC exceptions caused by #AC exceptions. The #AC
+exception is just forwarded to do_alignment_check() and not pushed down
+to the hypervisor, as requested by the SEV-ES GHCB Standardization
+Specification.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/x86_init.h | 16 +++++++++++++++-
- arch/x86/kernel/sev-es.c        | 12 ++++++++++++
- 2 files changed, 27 insertions(+), 1 deletion(-)
+ arch/x86/kernel/sev-es.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index 6807153c0410..0304e2931cd3 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -4,8 +4,10 @@
- 
- #include <asm/bootparam.h>
- 
-+struct ghcb;
- struct mpc_bus;
- struct mpc_cpu;
-+struct pt_regs;
- struct mpc_table;
- struct cpuinfo_x86;
- 
-@@ -236,10 +238,22 @@ struct x86_legacy_features {
- /**
-  * struct x86_hyper_runtime - x86 hypervisor specific runtime callbacks
-  *
-- * @pin_vcpu:		pin current vcpu to specified physical cpu (run rarely)
-+ * @pin_vcpu:			pin current vcpu to specified physical
-+ *				cpu (run rarely)
-+ * @sev_es_hcall_prepare:	Load additional hypervisor-specific
-+ *				state into the GHCB when doing a VMMCALL under
-+ *				SEV-ES. Called from the #VC exception handler.
-+ * @sev_es_hcall_finish:	Copies state from the GHCB back into the
-+ *				processor (or pt_regs). Also runs checks on the
-+ *				state returned from the hypervisor after a
-+ *				VMMCALL under SEV-ES.  Needs to return 'false'
-+ *				if the checks fail.  Called from the #VC
-+ *				exception handler.
-  */
- struct x86_hyper_runtime {
- 	void (*pin_vcpu)(int cpu);
-+	void (*sev_es_hcall_prepare)(struct ghcb *ghcb, struct pt_regs *regs);
-+	bool (*sev_es_hcall_finish)(struct ghcb *ghcb, struct pt_regs *regs);
- };
- 
- /**
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 8b9e4e852d2c..88636ff1d451 100644
+index 75c5cec4cd8e..58278f9f16a2 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -897,6 +897,9 @@ static enum es_result vc_handle_vmmcall(struct ghcb *ghcb,
- 	ghcb_set_rax(ghcb, ctxt->regs->ax);
- 	ghcb_set_cpl(ghcb, user_mode(ctxt->regs) ? 3 : 0);
- 
-+	if (x86_platform.hyper.sev_es_hcall_prepare)
-+		x86_platform.hyper.sev_es_hcall_prepare(ghcb, ctxt->regs);
-+
- 	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_VMMCALL, 0, 0);
- 	if (ret != ES_OK)
- 		return ret;
-@@ -906,6 +909,15 @@ static enum es_result vc_handle_vmmcall(struct ghcb *ghcb,
- 
- 	ctxt->regs->ax = ghcb->save.rax;
- 
-+	/*
-+	 * Call sev_es_hcall_finish() after regs->ax is already set.
-+	 * This allows the hypervisor handler to overwrite it again if
-+	 * necessary.
-+	 */
-+	if (x86_platform.hyper.sev_es_hcall_finish &&
-+	    !x86_platform.hyper.sev_es_hcall_finish(ghcb, ctxt->regs))
-+		return ES_VMM_ERROR;
-+
+@@ -909,6 +909,19 @@ static enum es_result vc_handle_vmmcall(struct ghcb *ghcb,
  	return ES_OK;
  }
  
++static enum es_result vc_handle_trap_ac(struct ghcb *ghcb,
++					struct es_em_ctxt *ctxt)
++{
++	/*
++	 * Calling ecx_alignment_check() directly does not work, because it
++	 * enables IRQs and the GHCB is active. Forward the exception and call
++	 * it later from vc_forward_exception().
++	 */
++	ctxt->fi.vector = X86_TRAP_AC;
++	ctxt->fi.error_code = 0;
++	return ES_EXCEPTION;
++}
++
+ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 					 struct ghcb *ghcb,
+ 					 unsigned long exit_code)
+@@ -922,6 +935,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_WRITE_DR7:
+ 		result = vc_handle_dr7_write(ghcb, ctxt);
+ 		break;
++	case SVM_EXIT_EXCP_BASE + X86_TRAP_AC:
++		result = vc_handle_trap_ac(ghcb, ctxt);
++		break;
+ 	case SVM_EXIT_RDTSC:
+ 	case SVM_EXIT_RDTSCP:
+ 		result = vc_handle_rdtsc(ghcb, ctxt, exit_code);
+@@ -981,6 +997,9 @@ static __always_inline void vc_forward_exception(struct es_em_ctxt *ctxt)
+ 	case X86_TRAP_UD:
+ 		exc_invalid_op(ctxt->regs);
+ 		break;
++	case X86_TRAP_AC:
++		exc_alignment_check(ctxt->regs, error_code);
++		break;
+ 	default:
+ 		pr_emerg("Unsupported exception in #VC instruction emulation - can't continue\n");
+ 		BUG();
 -- 
 2.27.0
 
