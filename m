@@ -2,90 +2,132 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77286C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA1EC433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 442D5207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B670207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:04:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CHcYskn9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qsGf5Y+e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgGXDED (ORCPT
+        id S1726804AbgGXDEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 23:04:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53382 "EHLO
+        Thu, 23 Jul 2020 23:04:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgGXDEC (ORCPT
+        with ESMTP id S1726437AbgGXDEO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 23:04:02 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E1B9C0619D3;
-        Thu, 23 Jul 2020 20:04:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=Bkjf0CIjG+04GJ1x/Bn4xTvGvn1CQ2PafE9rcjMKdes=; b=CHcYskn9xYfy1pXPgXpf/V6HQF
-        PHfWhfVfTGM2mPUbpzMsE9bDxE31DqHbWroUmE/COHuStmeIDtWRq0ne8yPNgVdXICtEY1elQ1ZNH
-        WX8zatzewbn8hJEGOpD8YqmJelUgoHPx+bk8RKdFZ9rNc4yFxwR1U3snUG9r0S69zETAAdP7jwBRp
-        X7Qq6YreokoQiiScgamZtUevV7NOZZFL0nWoCgvoUheMh3Z4SrMRXtWuVZGpLFbkzKF8dBO2XBubL
-        PT4wqeLfj8RF6AjRDsVZHXoaCXUgmRPpAyB/b5BoskMk1KfEWmuLlN7TKg8lg2N0jjP34n4CabbdB
-        ioae9HaQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jyo04-0007d6-H1; Fri, 24 Jul 2020 03:03:57 +0000
-Subject: Re: [PATCH v2 0/4] Modularization of DFL private feature drivers
-To:     Xu Yilun <yilun.xu@intel.com>, mdf@kernel.org,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, lgoncalv@redhat.com
-References: <1595556555-9903-1-git-send-email-yilun.xu@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <7ff4653b-dcf0-e7d4-9d09-a30a9f857661@infradead.org>
-Date:   Thu, 23 Jul 2020 20:03:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 23 Jul 2020 23:04:14 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A344AC0619D3;
+        Thu, 23 Jul 2020 20:04:14 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id u8so3515995qvj.12;
+        Thu, 23 Jul 2020 20:04:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Pq5OZv+1Cdv1nhK/D4C8Dz963Kl7Du6n7kqUvhsIG9o=;
+        b=qsGf5Y+eAHB2nfvmMACk9RPMbSNLUk3wCIuPP0VRSEch3lQ01wDuEuqsN/3wbSre4n
+         h+hryRYytPrwoB3pf2nnN/OJzTS9VnnL0daQ5L4b+GuC7l9etql0GSlZRagIqz00WqOL
+         6CsD5xOvOA577EZxSjSkqLbsEUXYO63r60YNioeEPaJ+tWqfI9yy6EwrqFWt+uNitbHT
+         R8EEiiUNREX6zswIU3QlVOAlAA4edHBllH9GwyLn+3DbrXXQsaQplONQQ/5F+eGOAJcy
+         s3RGVSiuB4zPBhq8JJjE/HXJa/stf5lKdhzi8Gs7X+0JNDQFdZxHsPo/Pg2xdxHE8UqX
+         OPBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Pq5OZv+1Cdv1nhK/D4C8Dz963Kl7Du6n7kqUvhsIG9o=;
+        b=QAmXhYfFylLSoM+A2e5PkoUyceRmOMRCnGZLH4CjjnW4R1mMWylp7Rug0azlmI07Th
+         mwB4SMdo6E+8MbtIy0zjiG0Fxb8YxyWQL0pdIN0Zcc8TInMHoc40UgtStA3aBWTtYL/k
+         O0QZxqxYS0cM5pcY+kxWTJCOWQO7sqMQxpoYJLvmnpcaYcg7z18YSBbkpfN+q6PmX7nn
+         RnnMAbCGT4ZcA+dIOVrh83KbjKsGHVQnL5z2O+s4h9fp4MNtO5Tor5fRnZetI5G+ZHDY
+         DSkkSjWaN2hNmOXYjEuyxnZ8HVFLgjOBqY1Gg5eFPn6ruVsYICHccwD/SPx+l/wsjMTY
+         aI0Q==
+X-Gm-Message-State: AOAM531FPt4ld6bAaC3Ms1GH81uuaTlXpGviOTk40dWULl6ECjoagSt7
+        DJbjWUsa/NMDr0GjTtoVbBW1RmIrwDYy3ILonsdAQi7S
+X-Google-Smtp-Source: ABdhPJw1SXbemGwJXMtHFRJrSmfqWp6LYCjOQKzlcVM2YAiR4TBph55l7a03bvdSluU1+C4UQ0f9q8MUWMfU8Q2WK6A=
+X-Received: by 2002:a0c:a306:: with SMTP id u6mr7860949qvu.88.1595559853706;
+ Thu, 23 Jul 2020 20:04:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1595556555-9903-1-git-send-email-yilun.xu@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1595468942-29687-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <20200723180814.acde28b92ce6adc785a79120@linux-foundation.org>
+ <CAAmzW4N9Y4W7CHenWA=TYu9tttgpYR=ZN+ky1vmXPgUJcjitAw@mail.gmail.com> <20200723193600.28e3eedd00925b22f7ca9780@linux-foundation.org>
+In-Reply-To: <20200723193600.28e3eedd00925b22f7ca9780@linux-foundation.org>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Fri, 24 Jul 2020 12:04:02 +0900
+Message-ID: <CAAmzW4NhY0iaE02vwf+2O+aeK66CoKG_-BvsgqpfwZv3Q-w8dA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm/page_alloc: fix memalloc_nocma_{save/restore} APIs
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/20 7:09 PM, Xu Yilun wrote:
-> This patchset makes it possible to develop independent driver modules
-> for DFL private features. It also helps to leverage existing kernel
-> drivers to enable some IP blocks in DFL.
-> 
-> Patch #1: An improvement of feature id definition. The feature id will be used
-> 	  as the key field for dfl device/driver matching.
-> Patch #2: Release the dfl mmio regions after enumeration, so that private
-> 	  feature drivers could request mmio region in their own drivers.
-> Patch #3: Introduce the dfl bus, then dfl devices could be supported by
-> 	  independent dfl drivers.
-> Patch #4: An example of the dfl driver for N3000 nios private feature.
-> 
+2020=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EA=B8=88) =EC=98=A4=EC=A0=84 11:36, =
+Andrew Morton <akpm@linux-foundation.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
+=B1:
+>
+> On Fri, 24 Jul 2020 11:23:52 +0900 Joonsoo Kim <js1304@gmail.com> wrote:
+>
+> > > > Second, clearing __GFP_MOVABLE in current_gfp_context() has a side =
+effect
+> > > > to exclude the memory on the ZONE_MOVABLE for allocation target.
+> > >
+> > > More whoops.
+> > >
+> > > Could we please have a description of the end-user-visible effects of
+> > > this change?  Very much needed when proposing a -stable backport, I t=
+hink.
+> >
+> > In fact, there is no noticeable end-user-visible effect since the fallb=
+ack would
+> > cover the problematic case. It's mentioned in the commit description. P=
+erhap,
+> > performance would be improved due to reduced retry and more available m=
+emory
+> > (we can use ZONE_MOVABLE with this patch) but it would be neglectable.
+> >
+> > > d7fefcc8de9147c is over a year old.  Why did we only just discover
+> > > this?  This makes one wonder how serious those end-user-visible effec=
+ts
+> > > are?
+> >
+> > As mentioned above, there is no visible problem to the end-user.
+>
+> OK, thanks.  In that case, I don't believe that a stable backport is
+> appropriate?
+>
+> (Documentation/process/stable-kernel-rules.rst)
 
-Hi,
-What is "nios"?  Is that explained or described anywhere?
+Thanks for the pointer!
 
-> 
-> Main changes from v1:
-> - Add the new Patch #1, to improve the feature id definition.
-> - Change the dfl bus uevent format.
-> - Change the dfl device's sysfs name format.
-> - refactor dfl_dev_add()
-> - Add the Patch #4 as an example of the dfl driver.
-> - A lot of minor fixes for comments from Hao and Tom.
+Hmm... I'm not sure the correct way to handle this patch. I thought that
+memalloc_nocma_{save,restore} is an API that is callable from the module.
+If it is true, it's better to regard this patch as the stable candidate sin=
+ce
+out-of-tree modules could use it without the fallback and it would cause
+a problem. But, yes, there is no visible problem to the end-user, at least,
+within the mainline so it is possibly not a stable candidate.
 
-thanks.
--- 
-~Randy
+Please share your opinion about this situation.
 
+Thanks.
