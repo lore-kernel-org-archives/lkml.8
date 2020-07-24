@@ -2,171 +2,130 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16134C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F20C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3C38206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595601998;
-	bh=xAHnG2Hy+DQIFym5s+rANLi7W4SNe3rVMEhADkf1cgg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=P25jZruivveE/spzpIbaJDr3RDPr4RbVFapxnEje25ot0XQoQYGUmuDJsLABVtyYS
-	 Wvs/FwJX1ZvfDoniHmwVwn4CyNx6ZXgG6M49ICKfnRKrLp2fyejhI0INeVMy68BVHZ
-	 r5OcsrCbj5W3+69ejA2YBlLzCLhGNKGHsAYtpu2M=
+	by mail.kernel.org (Postfix) with ESMTP id 1F9FD2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:48:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HiEu5S/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgGXOqh (ORCPT
+        id S1726625AbgGXOst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:46:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbgGXOqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:46:37 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C9BD2065E;
-        Fri, 24 Jul 2020 14:46:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595601996;
-        bh=xAHnG2Hy+DQIFym5s+rANLi7W4SNe3rVMEhADkf1cgg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ia0fI2bU+Tpmd81+fVmhsa+CaE2enWOGw6tvkEcB1EdcmscoL0F+Ge0qAiM6z7wdF
-         jQ5d02eSQ2lIlAi8gQono/ETw36XJWmdtEnOE7iaJIKsPTDNGj14KBbgrhUxr7WwV7
-         EWa3ZNAk6q+KznVKGQoXMimXaugXxjt0KaWmGTgo=
-Date:   Fri, 24 Jul 2020 23:46:31 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v5 1/6] kprobes: Remove dependency to the module_mutex
-Message-Id: <20200724234631.40f4ffec6adae57ac3df8ea3@kernel.org>
-In-Reply-To: <20200724050553.1724168-2-jarkko.sakkinen@linux.intel.com>
-References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
-        <20200724050553.1724168-2-jarkko.sakkinen@linux.intel.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 24 Jul 2020 10:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgGXOss (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 10:48:48 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577D9C0619D3;
+        Fri, 24 Jul 2020 07:48:48 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id q3so7415430ilt.8;
+        Fri, 24 Jul 2020 07:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=AfTbl+xYnSMnr2dDiDoDcPiQOlraklTTHYcmYhyUnOg=;
+        b=HiEu5S/7+v33uYgp7Yy4N5KJQWU46qvkheSu4OxEeyWGCGYKoVn3tYCw/URpePmCWC
+         P9Sc1Gyf897uYvdoecbrMUInjQs434jXcvWwiePIajv6zsSJS0Gx7Sp/vsZYwwLuvoJH
+         1jhvHxLj/aGt0gkuLefzXVW3as5pCUp8ZNcj9aReIDN5rrLX2k2AkM43pgw1wcqNYZcz
+         7rOzxbYJQJ67iP3ybkxtLhG12iLJfmWhN8AJ6ugufemno1ihbWP6Mlq4lVG+FTwdob6A
+         YjFfkI9ju2+jtYo1fKPz/EPuAodonpTCxmqwJqYtqNAHCiOlHjR7VEHidlMhrEgkFmZK
+         GrgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=AfTbl+xYnSMnr2dDiDoDcPiQOlraklTTHYcmYhyUnOg=;
+        b=YEVvdvfgX+yIZNoenfP/9XkbheoIibMxasJ9toLaFpACfxPSEl/rAXXYNd30EXGyxM
+         WfOUXwUNhXNPOQ3wb72FmgVN8nMQXRXPlpanWFiHQ8cW750hJUJQQJ5Ro2ky8tmiVHh8
+         OwppjQCxR/gszb6ZuW30lAqAeX+e0gbP85D5ddhYdf2E20KHj+qOnltLDSskoLQlQipT
+         vnBnHk/vCuNXGP9odnX8QrRv474dYofuae6wQLRfouK5zKBH7S/GfhggngAXBQ9jUmV3
+         3jHP9N6vBkUFLIVgIa5y+BX6cwmpBwOXNFTr/hXveAg1A96MaDvZzpvA4E2kOHdS2dSO
+         jVpQ==
+X-Gm-Message-State: AOAM530CFYNtL3Wf+Mx6TxHZIhJXpMHpgevg9DtM6Q8feD3/3l0SLXIH
+        6Pt0msP7Yz8F5nE2myibvtkrpET/Tjo90ovs8UY=
+X-Google-Smtp-Source: ABdhPJx82953GvUn4UMlNxBZ/swHYEqZz9F+hAPkCEURlD4RRr7tkUILpIDrIiYQ7XzxxZ6AHYDXKwM/tq9Zc9iXYkc=
+X-Received: by 2002:a92:290a:: with SMTP id l10mr11127609ilg.204.1595602127620;
+ Fri, 24 Jul 2020 07:48:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200723192801.351114-1-nickrterrell@gmail.com>
+ <20200723192801.351114-7-nickrterrell@gmail.com> <CA+icZUWV3ANmBj08QZKBtEE38Y-iyCGGxLWtiFkdpKqkGP7ZqQ@mail.gmail.com>
+ <20200724143022.GA601509@rani.riverdale.lan>
+In-Reply-To: <20200724143022.GA601509@rani.riverdale.lan>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Fri, 24 Jul 2020 16:48:36 +0200
+Message-ID: <CA+icZUWr0FBO1dpu-PPXJDSFzemoD7zniq+eQQrWXA_uGVKVAA@mail.gmail.com>
+Subject: Re: [PATCH v8 6/7] x86: Add support for ZSTD compressed kernel
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Nick Terrell <nickrterrell@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>, Nick Terrell <terrelln@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 08:05:48 +0300
-Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+On Fri, Jul 24, 2020 at 4:30 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Fri, Jul 24, 2020 at 02:50:34AM +0200, Sedat Dilek wrote:
+> > On Thu, Jul 23, 2020 at 9:30 PM Nick Terrell <nickrterrell@gmail.com> wrote:
+> > >
+> > > From: Nick Terrell <terrelln@fb.com>
+> > >
+> > > * Add support for zstd compressed kernel
+> > > * Define __DISABLE_EXPORTS in misc.c
+> > > * Bump the heap size for zstd.
+> > > * Update the documentation.
+> > >
+> > > Integrates the ZSTD decompression code to the x86 pre-boot code.
+> > >
+> > > Zstandard requires slightly more memory during the kernel decompression
+> > > on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+> > > window size.
+> > >
+> > > __DISABLE_EXPORTS is defined in misc.c instead of the Makefile because
+> > > kaslr.c defines __DISABLE_EXPORTS, and defining it in the Makefile gives
+> > > duplicate definition warnings.
+> > >
+> >
+> > That was reported by Arvind - feel free to add a Reported-by: ...
+> >
+> > - Sedat -
+> >
+>
+> It's not necessary to add Reported-by's for problems encountered while
+> developing the series. Especially as it was my drive-by suggestion to
+> use __DISABLE_EXPORTS that introduced the issue in the first place :)
+>
 
-> Add lock_modules() and unlock_modules() wrappers for acquiring module_mutex
-> in order to remove the compile time dependency to it.
+It is up to you with credits.
 
-This subject is a bit confusing. This is just wrapping modules_mutex in
-kpprobes. We still have compile time dependency, e.g. module_state, right?
+> I'd have added it to the Makefile and just dropped the definition in
+> kaslr.c -- should be no reason for anything in here to use EXPORT_SYMBOL.
+>
 
-Thank you,
+I cannot follow - this is no more needed as this was due to some of
+your local changes in kaslr.c?
 
-> 
-> Cc: linux-mm@kvack.org
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  include/linux/module.h      | 18 ++++++++++++++++++
->  kernel/kprobes.c            |  4 ++--
->  kernel/trace/trace_kprobe.c |  4 ++--
->  3 files changed, 22 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 2e6670860d27..8850b9692b8f 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -705,6 +705,16 @@ static inline bool is_livepatch_module(struct module *mod)
->  bool is_module_sig_enforced(void);
->  void set_module_sig_enforced(void);
->  
-> +static inline void lock_modules(void)
-> +{
-> +	mutex_lock(&module_mutex);
-> +}
-> +
-> +static inline void unlock_modules(void)
-> +{
-> +	mutex_unlock(&module_mutex);
-> +}
-> +
->  #else /* !CONFIG_MODULES... */
->  
->  static inline struct module *__module_address(unsigned long addr)
-> @@ -852,6 +862,14 @@ void *dereference_module_function_descriptor(struct module *mod, void *ptr)
->  	return ptr;
->  }
->  
-> +static inline void lock_modules(void)
-> +{
-> +}
-> +
-> +static inline void unlock_modules(void)
-> +{
-> +}
-> +
->  #endif /* CONFIG_MODULES */
->  
->  #ifdef CONFIG_SYSFS
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 2e97febeef77..4e46d96d4e16 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -564,7 +564,7 @@ static void kprobe_optimizer(struct work_struct *work)
->  	cpus_read_lock();
->  	mutex_lock(&text_mutex);
->  	/* Lock modules while optimizing kprobes */
-> -	mutex_lock(&module_mutex);
-> +	lock_modules();
->  
->  	/*
->  	 * Step 1: Unoptimize kprobes and collect cleaned (unused and disarmed)
-> @@ -589,7 +589,7 @@ static void kprobe_optimizer(struct work_struct *work)
->  	/* Step 4: Free cleaned kprobes after quiesence period */
->  	do_free_cleaned_kprobes();
->  
-> -	mutex_unlock(&module_mutex);
-> +	unlock_modules();
->  	mutex_unlock(&text_mutex);
->  	cpus_read_unlock();
->  
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index aefb6065b508..710ec6a6aa8f 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -122,9 +122,9 @@ static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
->  	if (!p)
->  		return true;
->  	*p = '\0';
-> -	mutex_lock(&module_mutex);
-> +	lock_modules();
->  	ret = !!find_module(tk->symbol);
-> -	mutex_unlock(&module_mutex);
-> +	unlock_modules();
->  	*p = ':';
->  
->  	return ret;
-> -- 
-> 2.25.1
-> 
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+- Sedat -
