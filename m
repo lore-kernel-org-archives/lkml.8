@@ -2,130 +2,128 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD26DC433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D65C433F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9158206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E019206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:58:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A6lV4ZEV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DPcpUPcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgGXC4o (ORCPT
+        id S1726977AbgGXC6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 22:56:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52204 "EHLO
+        Thu, 23 Jul 2020 22:58:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgGXC4o (ORCPT
+        with ESMTP id S1726945AbgGXC6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 22:56:44 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8C4AC0619D3;
-        Thu, 23 Jul 2020 19:56:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=gIHSieEI/ICBzURiExKROzcBrLGuuEu7fSniuyclIJg=; b=A6lV4ZEVvGkxCKJPOGUxlk9s9B
-        xREQAJqnoX7K22XrxYkYSJWN4M5FBq2cU3xSTBpBh3NzBJ9oz2XQTBgLDjev1S5r1VTjqrGAcMgMl
-        E3XHJDPwh+XxJ1Nvs+ENCenmweZmgg59lHlB3ut+Gqr882Zo4zX7YWHFBjEVF9Iq4fk+uB6BuSqRV
-        oke0s4Z1Gu3y86B1/HzPa1GBaS7qF7pxqWrSPS8CXLTPGllzniQjgIGfv8qi7WVfzuUYEHEDvCCTV
-        PMOY0s//aX/GRAPnDZVcajmv2nBy+jOlRVZuQaDKmkuWI5abCYPskbxc8RsRrjQNGwUnxdoDZEb5d
-        nMhU2w8w==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jynt0-00076g-Io; Fri, 24 Jul 2020 02:56:39 +0000
-Subject: Re: [PATCH V17 3/3] Input: new da7280 haptic driver
-To:     Roy Im <roy.im.opensource@diasemi.com>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-References: <cover.1595516501.git.Roy.Im@diasemi.com>
- <c13d812871b7f09205c1f04e95f5bdf07f307eaf.1595516501.git.Roy.Im@diasemi.com>
- <71818ab8-0020-77db-c412-8d35a541ead3@infradead.org>
- <DB8PR10MB343644A6DADE61D62BEE157C85770@DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f549102d-4e69-c903-1672-f50bdb7994a3@infradead.org>
-Date:   Thu, 23 Jul 2020 19:56:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thu, 23 Jul 2020 22:58:14 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1ECFC0619D3;
+        Thu, 23 Jul 2020 19:58:14 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 207so4267522pfu.3;
+        Thu, 23 Jul 2020 19:58:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=4t0GZUqaSa6aUwCTaIwAXrly6p8Czif4LGn3BgFT6TE=;
+        b=DPcpUPcNBFgbN7NAuBzuNO5Cgtw+MrsUmXPHfU+OWuGOduhQbZnz76vLQ/FUX7yz92
+         XL04/XCDd2soVga9zJ7+8HSR8IQyL+R5wH7id1BAsFxQWMrq8oyMD7LLMYU/82GOpymv
+         +GPYxG6e4Q8ueq3ddqAQXcD5e3xJRg2mjNTZbw593KHL6V9P/BIAs60cB7oQf/duObjP
+         VPQJXMcu64DEEOI0Hoc9hjVolEUhJ5UXmMEY6ny9tPpGmLSNHyfEfRumXahdRSuZAuK1
+         enInlhtA67QA9NqgdQ3LIj+y6mjEE2IlSXWYk/VjdoI+snUw4hBXOi053H2sLQNMbBhl
+         8oJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=4t0GZUqaSa6aUwCTaIwAXrly6p8Czif4LGn3BgFT6TE=;
+        b=dSKfHU1MojYoezYfHGk/xKHllhMa1Cf8mLuU9iM9Q+tluyYKJkrx/NBY2Ua86QOL1X
+         n88B5a2s9Jctxj+WvM4sp1sEfA+fz/B7njhEI4LDQvAnl5Y9lq+fPrkuoxb4vAoxH1Wx
+         /1WGei9MabV6hJFpGMmPplTOXPRGq0E6o0zOIFoscTcSnReEmoORPMIflvzXzOSdmvJu
+         OTVFFjt95idBU6Odj3w4UVG9S23xgQs1NgAwLeXlJxX/83YeK9FDy3RVlI7MDXWqpzqU
+         TNY9wetGLQfXf3fe8Li1gWKdO4Ci8WCD3QZaFAHeed7uxnV98sD56b7Mlk30aEdZFdZW
+         S8xw==
+X-Gm-Message-State: AOAM531rm6cJUGBvl6g1GAFIEanWdCMCZ3waESOqpZU5k0+DEcn7RhmC
+        YP6OZoDUmCE5BBCPWZABCdSEPTOs35k=
+X-Google-Smtp-Source: ABdhPJxWhg6BPC7Zci2dfEdWTRJy2DPvvLgGvpP3lqtfKmZx74vens29zzaH67vEJKbpoq5BjWATEg==
+X-Received: by 2002:a62:82ce:: with SMTP id w197mr6955833pfd.322.1595559494291;
+        Thu, 23 Jul 2020 19:58:14 -0700 (PDT)
+Received: from [10.8.0.10] ([203.205.141.54])
+        by smtp.gmail.com with ESMTPSA id h15sm4405238pjc.14.2020.07.23.19.58.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jul 2020 19:58:13 -0700 (PDT)
+To:     tytso@mit.edu, adilger.kernel@dilger.ca,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   brookxu <brookxu.cn@gmail.com>
+Subject: [PATCH 1/3] ext4: reorganize if statement of,
+ ext4_mb_release_context()
+Message-ID: <4de96de5-c645-f25e-d2cf-f788d56f6f51@gmail.com>
+Date:   Fri, 24 Jul 2020 10:58:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <DB8PR10MB343644A6DADE61D62BEE157C85770@DB8PR10MB3436.EURPRD10.PROD.OUTLOOK.COM>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/20 6:54 PM, Roy Im wrote:
-> On Fri, July 24, 2020 5:51 AM, Randy Dunlap wrote
->> On 7/23/20 8:01 AM, Roy Im wrote:
->>> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
->>> index 362e8a0..06dc5a3 100644
->>> --- a/drivers/input/misc/Kconfig
->>> +++ b/drivers/input/misc/Kconfig
->>> @@ -869,4 +869,17 @@ config INPUT_STPMIC1_ONKEY
->>>  	  To compile this driver as a module, choose M here: the
->>>  	  module will be called stpmic1_onkey.
->>>
->>> +config INPUT_DA7280_HAPTICS
->>> +	tristate "Dialog Semiconductor DA7280 haptics support"
->>> +	depends on INPUT && I2C
->>> +	select INPUT_FF_MEMLESS
->>> +	select REGMAP_I2C
->>> +	help
->>> +	  Say Y to enable support for the Dialog DA7280 haptics driver.
->>> +	  The haptics can be controlled by I2C communication,
->>> +	  or by PWM input, or by GPI.
->>
->> 	  Is that                GPIO.
->> ?
-> The Haptics can be working by GPI(if see from the haptic device), but from the Host it is GPO. Do you think the GPIO is correct?
+Reorganize the if statement of ext4_mb_release_context(), make it
+easier to read.
 
-To me it needs to represent what services/interfaces/facilities are used by this driver that are
-provided by the Linux kernel.  If it uses Linux GPIO services, then it should say GPIO --
-although I don't see it using any Linux GPIO services.
+Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+---
+ fs/ext4/mballoc.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
->>
->> Can the haptics be controlled only by PWM or only by GPI(O)?
->>
->> Just curious: why is I2C required to build the driver if a user is only controlling the device by PWM or GPI?
-> 
-> I2C is required to control registers and it can be triggered by I2C or PWM or GPI(controlled by host outside this driver), so PWM and GPI are optional.
-> With your comments, I think it's better to remove below lines(//remove) to avoid confusion and add PWM as below if you agree.
->          // remove
-> 	  The haptics can be controlled by I2C communication,
-> 	  or by PWM input, or by GPI.
->          // update, adding || PWM
->          depends on (INPUT && I2C) || PWM
-
-Since <linux/pwm.h> provides stubs for when CONFIG_PWM is not enabled,
-it appears that "depends on  PWM" is not required.
-
-I'll leave it up to you. I was just trying to understand better.
-It may be that no changes are needed.
-
-
-thanks.
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index c0a331e..4f21f34 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -4564,20 +4564,19 @@ static int ext4_mb_release_context(struct ext4_allocation_context *ac)
+             pa->pa_free -= ac->ac_b_ex.fe_len;
+             pa->pa_len -= ac->ac_b_ex.fe_len;
+             spin_unlock(&pa->pa_lock);
+-        }
+-    }
+-    if (pa) {
+-        /*
+-         * We want to add the pa to the right bucket.
+-         * Remove it from the list and while adding
+-         * make sure the list to which we are adding
+-         * doesn't grow big.
+-         */
+-        if ((pa->pa_type == MB_GROUP_PA) && likely(pa->pa_free)) {
+-            spin_lock(pa->pa_obj_lock);
+-            list_del_rcu(&pa->pa_inode_list);
+-            spin_unlock(pa->pa_obj_lock);
+-            ext4_mb_add_n_trim(ac);
++
++            /*
++             * We want to add the pa to the right bucket.
++             * Remove it from the list and while adding
++             * make sure the list to which we are adding
++             * doesn't grow big.
++             */
++            if (likely(pa->pa_free)) {
++                spin_lock(pa->pa_obj_lock);
++                list_del_rcu(&pa->pa_inode_list);
++                spin_unlock(pa->pa_obj_lock);
++                ext4_mb_add_n_trim(ac);
++            }
+         }
+         ext4_mb_put_pa(ac, ac->ac_sb, pa);
+     }
 -- 
-~Randy
+1.8.3.1
 
