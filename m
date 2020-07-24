@@ -2,140 +2,184 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E594C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 15:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 15:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38EBE20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 15:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E48A206E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 15:28:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="imQF+GYV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NRMFT95r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgGXPcO (ORCPT
+        id S1726652AbgGXP2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 11:32:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26581 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726841AbgGXPcK (ORCPT
+        Fri, 24 Jul 2020 11:28:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbgGXP2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 11:32:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595604728;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rJ4eBzscfjVW65qtmfE+3zWCcQrF/o+JHEw2Tgi7GN0=;
-        b=imQF+GYVLw878Wa1vYm/ctdiFqYOYhhCoB+q/EIF59ZnpXb3yo+4xeE5Uk0oWDbxniUsb9
-        svxYtYf3jVyjc8ihkIykhhDjHvGLZIJyfOAf+XLwN+uWbAhGN4k3NZ4z7aFk5gwPhqDvbs
-        yn4ViRuCPyzynKq6r7/ZOVaRi+d7xKM=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-90-YsfiXKrpMcCYN2lH4vEa5Q-1; Fri, 24 Jul 2020 11:32:02 -0400
-X-MC-Unique: YsfiXKrpMcCYN2lH4vEa5Q-1
-Received: by mail-qt1-f200.google.com with SMTP id q7so6218256qtq.14
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 08:32:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rJ4eBzscfjVW65qtmfE+3zWCcQrF/o+JHEw2Tgi7GN0=;
-        b=rfJl4nsF23j6AJehVHtlbSZ7yO9FnyIOn+N1BKVxxKzCMbpo0hm0/EbMgsx7DwvLai
-         iu8dTtr9oKyn8iYu7evKtmO4N/UUz9gaoroJVcrnHXUoCOE2ZG61BmkpFSm3rUHaXb1g
-         M2PYNVpDPnszURpwWoWiUOdfuAr2Ssnpr/VnHCtUSIeF6Dl1AbvOn6WpKjbBZ5QELv33
-         3wVFHg0Ci9O5C3NKA45y2iYlxbKrj70RO/rmM2s+cSjbYaZ8dfPFT9G5PRxeGhspX9ve
-         RMS4rP6udqieb7t2nEwynj5V/5L0zcIxi2U639Xnm1g+1OeqcdDRTSMHqDW6WkECEGYK
-         0UvQ==
-X-Gm-Message-State: AOAM532lK0cC3fLrKQ0npn60iU8V1Z8EkcbOWEKhi1XAUQLejfaWXHJP
-        63NgxZVcmyQin+cdVpYoEZqKtcbKrAjow3m+XRMxMivyTkdY9D53wI0KnxxN/f2TXtyUgsYtN3U
-        1Wi5ZtN9YPsO0xMDoUBFIOdD1
-X-Received: by 2002:aed:3048:: with SMTP id 66mr9938175qte.326.1595604722398;
-        Fri, 24 Jul 2020 08:32:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw4J1aqYKmKLi+dX777ViWvyYs+NSW35jxglqUjTkCAO9zSHuz2ha7vRzek0SkAosAOtvrSgg==
-X-Received: by 2002:aed:3048:: with SMTP id 66mr9938139qte.326.1595604722091;
-        Fri, 24 Jul 2020 08:32:02 -0700 (PDT)
-Received: from x1.bristot.me (host-87-16-204-193.retail.telecomitalia.it. [87.16.204.193])
-        by smtp.gmail.com with ESMTPSA id c33sm1683018qtk.40.2020.07.24.08.31.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 08:32:01 -0700 (PDT)
-Subject: Re: [PATCH] sched/deadline: dome some cleanup for push_dl_task()
-To:     Juri Lelli <juri.lelli@redhat.com>, Peng Liu <iwtbavbm@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de
-References: <20200706160442.GA19741@iZj6chx1xj0e0buvshuecpZ>
- <20200724071426.GD14912@localhost.localdomain>
-From:   Daniel Bristot de Oliveira <bristot@redhat.com>
-Message-ID: <16385ed9-eb44-3ea4-b10a-1e5ef993b33e@redhat.com>
-Date:   Fri, 24 Jul 2020 17:31:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 11:28:03 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CFFDC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 08:28:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=nD2IKbj6Hkp+Qcze16IFgvVILlJVgrHdGLOEeTeycjY=; b=NRMFT95rDkm37t+WlIwebpRB6B
+        sypgI0mbqwj7Qj6Sy55wUZ0G2ImB/MqIYootH3js3VnQD4ScvuPjrRIrLgNf7rcxOeo34QvNmC7/i
+        7/JvDmZrYhPYYdxq6i5eAhdq4QCP4Qoi7sh1rVnyK0gIpjOksyp2LoC+NCsiy3cWhRkDzNE+f06X1
+        gmzKC3koohFJL0YnrBY5yKW1RYE7m7e4NoivnywhbQldSJK1Y6Xo5sG+bD7QRhWryRxkY6/NA+zFx
+        KgKBCVvxzd73nlGtPDcJOAABtji2Zr0jdI4w/FS1Nje96LffC6hxWjmDvOjEBwPn8o2RuZtHtTKmS
+        k+4MmYfw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyzc4-0007Cn-QV; Fri, 24 Jul 2020 15:27:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D2E0F300446;
+        Fri, 24 Jul 2020 17:27:55 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BBDDE29C0D269; Fri, 24 Jul 2020 17:27:55 +0200 (CEST)
+Date:   Fri, 24 Jul 2020 17:27:55 +0200
+From:   peterz@infradead.org
+To:     kan.liang@linux.intel.com
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+        like.xu@linux.intel.com
+Subject: Re: [PATCH V7 08/14] perf/x86/intel: Generic support for hardware
+ TopDown metrics
+Message-ID: <20200724152755.GK43129@hirez.programming.kicks-ass.net>
+References: <20200723171117.9918-1-kan.liang@linux.intel.com>
+ <20200723171117.9918-9-kan.liang@linux.intel.com>
+ <20200724131906.GW119549@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200724071426.GD14912@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724131906.GW119549@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/24/20 9:14 AM, Juri Lelli wrote:
-> Hi,
+On Fri, Jul 24, 2020 at 03:19:06PM +0200, peterz@infradead.org wrote:
+> On Thu, Jul 23, 2020 at 10:11:11AM -0700, kan.liang@linux.intel.com wrote:
+> > @@ -3375,6 +3428,72 @@ static int intel_pmu_hw_config(struct perf_event *event)
+> >  	if (event->attr.type != PERF_TYPE_RAW)
+> >  		return 0;
+> >  
+> > +	/*
+> > +	 * Config Topdown slots and metric events
+> > +	 *
+> > +	 * The slots event on Fixed Counter 3 can support sampling,
+> > +	 * which will be handled normally in x86_perf_event_update().
+> > +	 *
+> > +	 * The metric events don't support sampling.
+> > +	 *
+> > +	 * For counting, topdown slots and metric events will be
+> > +	 * handled specially for event update.
+> > +	 * A flag PERF_X86_EVENT_TOPDOWN is applied for the case.
+> > +	 */
+> > +	if (x86_pmu.intel_cap.perf_metrics && is_topdown_event(event)) {
+> > +		if (is_metric_event(event)) {
+> > +			struct perf_event *leader = event->group_leader;
+> > +			struct perf_event *sibling;
+> > +
+> > +			/* The metric events don't support sampling. */
+> > +			if (is_sampling_event(event))
+> > +				return -EINVAL;
+> > +
+> > +			/* The metric events cannot be a group leader. */
+> > +			if (leader == event)
+> > +				return -EINVAL;
+> > +
+> > +			/*
+> > +			 * The slots event cannot be the leader of a topdown
+> > +			 * sample-read group, e.g., {slots, topdown-retiring}:S
+> > +			 */
+> > +			if (is_slots_event(leader) && is_sampling_event(leader))
+> > +				return -EINVAL;
 > 
-> On 07/07/20 00:04, Peng Liu wrote:
->> 'commit 840d719604b0 ("sched/deadline: Update rq_clock of later_rq when pushing a task")'
->> introduced the update_rq_clock() to fix the "used-before-update" bug.
->>
->> 'commit f4904815f97a ("sched/deadline: Fix double accounting of rq/running bw in push & pull")'
->> took away the bug source(add_running_bw()).
->>
->> We no longer need to update rq_clock in advance, let activate_task()
->> worry about that.
->>
->> Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
->> ---
->>  kernel/sched/deadline.c | 8 +-------
->>  1 file changed, 1 insertion(+), 7 deletions(-)
->>
->> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
->> index 504d2f51b0d6..c3fa11f84d93 100644
->> --- a/kernel/sched/deadline.c
->> +++ b/kernel/sched/deadline.c
->> @@ -2104,13 +2104,7 @@ static int push_dl_task(struct rq *rq)
->>  
->>  	deactivate_task(rq, next_task, 0);
->>  	set_task_cpu(next_task, later_rq->cpu);
->> -
->> -	/*
->> -	 * Update the later_rq clock here, because the clock is used
->> -	 * by the cpufreq_update_util() inside __add_running_bw().
->> -	 */
->> -	update_rq_clock(later_rq);
->> -	activate_task(later_rq, next_task, ENQUEUE_NOCLOCK);
->> +	activate_task(later_rq, next_task, 0);
->>  	ret = 1;
-> The change looks good to me, since now add_running_bw() is called later
-> by enqueue_task_dl(), but rq_clock has already been updated by core's
-> enqueue_task().
+> This has nothing to do with sample-read; SLOTS cannot be sampling when
+> coupled with the METRIC stuff because hardware is daft.
 > 
-> Daniel, Dietmar, a second pair of eyes (since you authored the commits
-> above)?
+> And you can have SAMPLE_READ on non-leader events just fine.
 > 
-> I'd chage subject to something like "sched/deadline: Stop updating
-> rq_clock before pushing a task".
+> > +
+> > +			/*
+> > +			 * The slots event must be before the metric events,
+> > +			 * because we only update the values of a topdown
+> > +			 * group once with the slots event.
+> > +			 */
+> > +			if (!is_slots_event(leader)) {
+> > +				for_each_sibling_event(sibling, leader) {
+> > +					if (is_slots_event(sibling))
+> > +						break;
+> > +					if (is_metric_event(sibling))
+> > +						return -EINVAL;
+> > +				}
+> > +			}
+> 
+> Per the SIBLING patch this then wants to be:
+> 
+> 			if (!is_slots_event(leader))
+> 				return -EINVAL;
+> 
+> 			event->event_caps |= PERF_EV_CAP_SIBLING.
+> 			/*
+> 			 * Only once we have a METRICs sibling to we
+> 			 * need TopDown magic.
+> 			 */
+> 			leader->hw.flags |= PERF_X86_EVENT_TOPDOWN;
+> > +		}
+> > +
+> > +		if (!is_sampling_event(event)) {
+> > +			if (event->attr.config1 != 0)
+> > +				return -EINVAL;
+> 
+> How does this depend on sampling?
+> 
+> > +			/*
+> > +			 * The TopDown metrics events and slots event don't
+> > +			 * support any filters.
+> > +			 */
+> > +			if (event->attr.config & X86_ALL_EVENT_FLAGS)
+> > +				return -EINVAL;
+> 
+> That seems independent of sampling too. Even a sampling SLOTS shouldn't
+> be having any of those afaict.
+> 
+> > +
+> > +			event->hw.flags |= PERF_X86_EVENT_TOPDOWN;
+> 
+> This is confusing too, a !sampling SLOTS event without METRIC siblings
+> shouldn't have this set, right? So arguably, this should be like above.
+> 
+> > +
+> > +			event->event_caps |= PERF_EV_CAP_COEXIST;
+> > +
+> > +			if (is_metric_event(event))
+> > +				event->hw.flags &= ~PERF_X86_EVENT_RDPMC_ALLOWED;
+> 
+> This too seems like something that should be in the is_metric_event()
+> branch above.
+> 
+> > +		}
+> > +	}
+> > +
+> >  	if (!(event->attr.config & ARCH_PERFMON_EVENTSEL_ANY))
+> >  		return 0;
+> >  
 
-Looks good to me!
+FWIW, I pushed out a branch with all these changes in:
 
-Acked-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git perf/metric
 
-Thanks
--- Daniel
-
+Just to get it some build love, if you want it differently, I'm happy to
+throw it all out again.
