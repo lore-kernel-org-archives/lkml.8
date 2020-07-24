@@ -2,183 +2,152 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAD0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2835C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C306B206E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B958C206E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:16:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l8gmwJum"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="lxxpDkoj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgGXANs (ORCPT
+        id S1728343AbgGXAQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 20:13:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbgGXANs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 20:13:48 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E84C0619D3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 17:13:47 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f2so6733330wrp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 17:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u6x/hJOAHY4ipAqr2hJOXVMYMMf3KgJBBZ1yOdjcCvI=;
-        b=l8gmwJumnfBAOwcf7hDnzKOckke+7FJJ1NS9zYl0CO+6Pru0aHNLw4HL2QDUsBgdhH
-         axu8m6MrxU5VdYN4oAGIZdtsMVu8j6flA574tZoNh4po7WcTh6q1rieHBqKlRltKdbCD
-         mRmuZwZL83CaZlupM/YSFfxgvx1txVJARFTLHaQrldSKkiDAJ/spYh49b9M+3RwKvWub
-         /2DNZhf6sGQMubLVZWjTR5dSCHcOiP8VDJL948DebpH1wfKg/YflimMDf8rSPcikR7M9
-         4/pQ1OEAAbhLbUCW9li1IIdxp2v+wVu52E/H3p9jXWs7jm42G4MKPbBYCWb276JbC5f9
-         XzWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u6x/hJOAHY4ipAqr2hJOXVMYMMf3KgJBBZ1yOdjcCvI=;
-        b=cRtAfYUMrLuoX7+biFPMTMZU8y/6/5bIPAwSpYj+81yQmTRfHSWiwiLFtrehUUZSUX
-         UbBy/dbT0OKHTylUcJJfFfHZIIubOATJTazdoG3vtYBKvSedywFcSglaPsMBapt7jQE4
-         Up3BiFztaVzVzwNFad9EFdpchzfIyBCtwzYac1xD0nkRjw+jd60Liyg9+MF/gDa3J7Y7
-         4V74YZ9JuZV7vgZhQVTIciVfA8GON4/wBuyXxqQFH1oau72likloOAqafoiv30ir16Qo
-         hVX1P3Fpo314E0Zr/gIgi23MoLqfbTd8FErKnx7tniCyKr6arkYCcy+c0HnIPCElvKio
-         zH8Q==
-X-Gm-Message-State: AOAM532emwr7CpYzyZtnO1yjMqmb/K26HK4MLwpoRF8tU8c+rGbxy1hy
-        LtCZ1Y2rIMo9ea1Fo94o+AASxxuwhmNwkQ4+26vWYg==
-X-Google-Smtp-Source: ABdhPJxL5Y1BrfDtq2upmNHI5yCi1q/zfAI4WwmzzlYEyc+rDsh6CrhBn6+3cgw1FRPldkigKYwPi5ct9CVXTswVgMc=
-X-Received: by 2002:a5d:65cd:: with SMTP id e13mr6637550wrw.213.1595549625931;
- Thu, 23 Jul 2020 17:13:45 -0700 (PDT)
+        Thu, 23 Jul 2020 20:16:17 -0400
+Received: from mail-am6eur05on2065.outbound.protection.outlook.com ([40.107.22.65]:5600
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728065AbgGXAQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 20:16:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R5H4bU0JHrdvsYO6/mwtdx0jvp9ZedCGUhJDljlLObu0ArtejZj+Yj52q6o9rk3oymsSjXMb15ecskS18sXuOY/Wc+PSTLEkJMbI74WLIeUr2JapkuLzbojjaXVkHPDVtiPNo93LcuIS+jlTC+qLwgWQgpbJCicL8dWVVbThLGLAuwHOcT6EsjYettfNKwNo8Ex1XaFNtGWoPX5ZXkd4ifKuHvX2ts6cNMoXWx4xVUsqDptuFCuI6ppjdHijx3B76S2imWsOj7jSPMx1ADYk5Z2lNsA1AbELfA6kxWCaAl+GDgU7d7tykQ2l5pL5ke6lZpyGPj0aB00MExgJ4do6TQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7+PR5UqQ3rGDrRjplhGOc1b+DhQdOrbdEJMuAg0qOrI=;
+ b=PwvLbDZHP6qK5U6oDfchaKagiPLBWBWSCxyc2MA9W/wNjGS9yFqLPzANSzr60RscWrb4vrxq6szWLYnDGOi3KoJi3xMnp7JzwXxpAjw53QSL3PqRTpPbn8qJY3vm6gKa19M1S8ph+sv4VFyriyXhMTBHLj7IZDf/3ez0/D+guYvEpjjv8Qh4wjZSl2N0H5nHICXn0lxKJG8+o5HSbOjemYebCR2TdY5f2vBcxmTAk7paC32WZ1rYVFw5Ks95GhCOJYux2NknyXy109YEF/hWZa0jvxCCWnXSVXxojBdQ4/xJHiH2QZjmqLH4FL6ZhCb5liwl92r47Z7sFZuw/nhPQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7+PR5UqQ3rGDrRjplhGOc1b+DhQdOrbdEJMuAg0qOrI=;
+ b=lxxpDkojMmiALczhMfZ3eC2wd+QfXdtHuTjcUJThJL/z84id2o+TtwD8Em+FdJTcMwNVQnJklQrisAVCVqNBwJHVTaQo3RLzUmyXnzRt27EyAGbtDZYdTctHhsqhFGUz1kjmJrro6GUEiV8U6prezjx4rB/PhwPVIXFlDVxfHC8=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR0502MB3951.eurprd05.prod.outlook.com (2603:10a6:803:17::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Fri, 24 Jul
+ 2020 00:16:12 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::252e:52c7:170b:35d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::252e:52c7:170b:35d%5]) with mapi id 15.20.3195.028; Fri, 24 Jul 2020
+ 00:16:12 +0000
+Date:   Thu, 23 Jul 2020 21:16:06 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, bhelgaas@google.com, rafael@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
+ irq domain
+Message-ID: <20200724001606.GR2021248@mellanox.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
+ <878sfbxtzi.wl-maz@kernel.org>
+ <20200722195928.GN2021248@mellanox.com>
+ <cfb8191e364e77f352b1483c415a83a5@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cfb8191e364e77f352b1483c415a83a5@kernel.org>
+X-ClientProxiedBy: YTBPR01CA0016.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::29) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-References: <20200423002632.224776-1-dancol@google.com> <20200423002632.224776-3-dancol@google.com>
- <20200508125054-mutt-send-email-mst@kernel.org> <20200508125314-mutt-send-email-mst@kernel.org>
- <20200520045938.GC26186@redhat.com> <202005200921.2BD5A0ADD@keescook>
- <20200520194804.GJ26186@redhat.com> <20200520195134.GK26186@redhat.com>
- <CA+EESO4wEQz3CMxNLh8mQmTpUHdO+zZbV10zUfYGKEwfRPK2nQ@mail.gmail.com>
- <20200520211634.GL26186@redhat.com> <CABXk95A-E4NYqA5qVrPgDF18YW-z4_udzLwa0cdo2OfqVsy=SQ@mail.gmail.com>
- <CA+EESO4kLaje0yTOyMSxHfSLC0n86zAF+M1DWB_XrwFDLOCawQ@mail.gmail.com>
-In-Reply-To: <CA+EESO4kLaje0yTOyMSxHfSLC0n86zAF+M1DWB_XrwFDLOCawQ@mail.gmail.com>
-From:   Nick Kralevich <nnk@google.com>
-Date:   Thu, 23 Jul 2020 17:13:28 -0700
-Message-ID: <CAFJ0LnGfrzvVgtyZQ+UqRM6F3M7iXOhTkUBTc+9sV+=RrFntyQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Add a new sysctl knob: unprivileged_userfaultfd_user_mode_only
-To:     Lokesh Gidra <lokeshgidra@google.com>
-Cc:     Jeffrey Vander Stoep <jeffv@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Daniel Colascione <dancol@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Xu <peterx@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Minchan Kim <minchan@google.com>,
-        Sandeep Patil <sspatil@google.com>, kernel@android.com,
-        Daniel Colascione <dancol@dancol.org>,
-        Kalesh Singh <kaleshsingh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by YTBPR01CA0016.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:14::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22 via Frontend Transport; Fri, 24 Jul 2020 00:16:10 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1jylNe-00Eb0e-EY; Thu, 23 Jul 2020 21:16:06 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ff3eac2d-469b-4e6e-e4cb-08d82f66c4ec
+X-MS-TrafficTypeDiagnostic: VI1PR0502MB3951:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0502MB3951FAC71A330F1FE38A6E08CF770@VI1PR0502MB3951.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:546;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TbglQy6WjAPpYzORnQQaSnrvt/ZRToAcv7EDaiKZS3s4imbFLTAVUNMAUloVSM9JneFEz5fS6qLF3cmVU/yB0xOuevmwd/gRUvpbD5+OcufxLtT0jvUUIjsHH+Oesca7BZXXCVrwS2Ux4d+Cv+TQCwXsYMtUW1Iv+yxEgMpB6SMk0LcQZYS+jiBMxVxAR2XbuTOgBbPH6E06Xr0uWSnid/dUeO8uKnE7ICf1atC8jRhbfd3lGiKSfgM+R0Eaj3DVyr5lROsDPpLD8iJrxWZ7c3yNPSSdTFJa8qUDld5hCDFTKtUKXJSAqFHDzXBpB7wflNFNBrMB5LqzVIYDSdmeoQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(366004)(346002)(136003)(39860400002)(33656002)(26005)(6916009)(83380400001)(5660300002)(4326008)(36756003)(9746002)(9786002)(1076003)(7406005)(66476007)(186003)(7416002)(478600001)(2906002)(2616005)(426003)(86362001)(8676002)(66946007)(66556008)(316002)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: pkzJzh3rwgcfpE4ScO4MbqywNt5vXhI9fEv/u0aPI+/4pFIJm0dcn4NDJ/TVlAREUCS5zfHKQbjZocROdeLuuwxnTW1g5AzcI54td018hHrZ/q4rqCOZnLkCHYh+JK4KLoZLceV7S8eH7/Y2uCXFXejsOLwjFUo4Mdl9fZzYK4Su64V2ltODTkY4zPWTPVmUgWRs78dN651J8ueKya/H1PfTnqApMH4sKnencO1OHvzCeBAUM1Fva5ge7mmBOVVi163rtC4eufK/GhY+IKslTDo5Llnudq2aup+Fsn/jYN0mr1rrE56FGHa7Y5A4WEENoimnlpgyQ9bCZ1JPOvWqfE3tgfxmp3irVM8ZEoixDITWsOx2z31b4urCDNjJ5ZBEmT9jGC4ue+5Gh2Y4QsoXiJAbNlCHym4YLrmjYARvNxJNNDMznxamAPIKDSPw70aAg+kkbW2VqD4rKb/4pdZVLX2PN+ujrWkQHCZAZZxE7IQ=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff3eac2d-469b-4e6e-e4cb-08d82f66c4ec
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 00:16:11.8499
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: b+7rmQRxImwF/MP1RFEgQ6cHT+P0QvQ9Ve3pWRFXBW/esOE41L5SQDb4+ctdQ7XpnBjaRr0DfNs6aJMwvTvang==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3951
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:30 AM Lokesh Gidra <lokeshgidra@google.com> wrote:
-> From the discussion so far it seems that there is a consensus that
-> patch 1/2 in this series should be upstreamed in any case. Is there
-> anything that is pending on that patch?
+On Thu, Jul 23, 2020 at 09:51:52AM +0100, Marc Zyngier wrote:
 
-That's my reading of this thread too.
+> > IIRC on Intel/AMD at least once a MSI is launched it is not maskable.
+> 
+> Really? So you can't shut a device with a screaming interrupt,
+> for example, should it become otherwise unresponsive?
 
-> > > Unless I'm mistaken that you can already enforce bit 1 of the second
-> > > parameter of the userfaultfd syscall to be set with seccomp-bpf, this
-> > > would be more a question to the Android userland team.
-> > >
-> > > The question would be: does it ever happen that a seccomp filter isn't
-> > > already applied to unprivileged software running without
-> > > SYS_CAP_PTRACE capability?
-> >
-> > Yes.
-> >
-> > Android uses selinux as our primary sandboxing mechanism. We do use
-> > seccomp on a few processes, but we have found that it has a
-> > surprisingly high performance cost [1] on arm64 devices so turning it
-> > on system wide is not a good option.
-> >
-> > [1] https://lore.kernel.org/linux-security-module/202006011116.3F7109A@keescook/T/#m82ace19539ac595682affabdf652c0ffa5d27dad
+Well, it used to be like that in the APICv1 days. I suppose modern
+interrupt remapping probably changes things.
 
-As Jeff mentioned, seccomp is used strategically on Android, but is
-not applied to all processes. It's too expensive and impractical when
-simpler implementations (such as this sysctl) can exist. It's also
-significantly simpler to test a sysctl value for correctness as
-opposed to a seccomp filter.
+> > So the model for MSI is always "mask at source". The closest mapping
+> > to the Linux IRQ model is to say the end device has a irqchip that
+> > encapsulates the ability of the device to generate the MSI in the
+> > first place.
+> 
+> This is an x86'ism, I'm afraid. Systems I deal with can mask any
+> interrupt at the interrupt controller level, MSI or not.
 
-> > >
-> > >
-> > > If answer is "no" the behavior of the new sysctl in patch 2/2 (in
-> > > subject) should be enforceable with minor changes to the BPF
-> > > assembly. Otherwise it'd require more changes.
+Sure. However it feels like a bad practice to leave the source
+unmasked and potentially continuing to generate messages if the
+intention was to disable the IRQ that was assigned to it - even if the
+messages do not result in CPU interrupts they will still consume
+system resources.
 
-It would be good to understand what these changes are.
+> > I suppose the motivation to make it explicit is related to vfio using
+> > the generic mask/unmask functionality?
+> > 
+> > Explicit seems better, IMHO.
+> 
+> If masking at the source is the only way to shut the device up,
+> and assuming that the device provides the expected semantics
+> (a MSI raised by the device while the interrupt is masked
+> isn't lost and gets sent when unmasked), that's fair enough.
+> It's just ugly.
 
-> > > Why exactly is it preferable to enlarge the surface of attack of the
-> > > kernel and take the risk there is a real bug in userfaultfd code (not
-> > > just a facilitation of exploiting some other kernel bug) that leads to
-> > > a privilege escalation, when you still break 99% of userfaultfd users,
-> > > if you set with option "2"?
+It makes sense that the masking should follow the same semantics for
+PCI MSI masking.
 
-I can see your point if you think about the feature as a whole.
-However, distributions (such as Android) have specialized knowledge of
-their security environments, and may not want to support the typical
-usages of userfaultfd. For such distributions, providing a mechanism
-to prevent userfaultfd from being useful as an exploit primitive,
-while still allowing the very limited use of userfaultfd for userspace
-faults only, is desirable. Distributions shouldn't be forced into
-supporting 100% of the use cases envisioned by userfaultfd when their
-needs may be more specialized, and this sysctl knob empowers
-distributions to make this choice for themselves.
-
-> > > Is the system owner really going to purely run on his systems CRIU
-> > > postcopy live migration (which already runs with CAP_SYS_PTRACE) and
-> > > nothing else that could break?
-
-This is a great example of a capability which a distribution may not
-want to support, due to distribution specific security policies.
-
-> > >
-> > > Option "2" to me looks with a single possible user, and incidentally
-> > > this single user can already enforce model "2" by only tweaking its
-> > > seccomp-bpf filters without applying 2/2. It'd be a bug if android
-> > > apps runs unprotected by seccomp regardless of 2/2.
-
-Can you elaborate on what bug is present by processes being
-unprotected by seccomp?
-
-Seccomp cannot be universally applied on Android due to previously
-mentioned performance concerns. Seccomp is used in Android primarily
-as a tool to enforce the list of allowed syscalls, so that such
-syscalls can be audited before being included as part of the Android
-API.
-
--- Nick
-
--- 
-Nick Kralevich | nnk@google.com
+Jason
