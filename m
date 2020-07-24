@@ -2,102 +2,92 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7380BC433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FA3C433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 589702065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA21206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595601453;
+	bh=Y3rRNtfg71nMx6qz6rx66JXD55K1Y0yFf+scRNRURBs=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=Uu2d3SVqvAPoKCkWP/OMSV/RGR3CFalXSqOhZg3XXt2zi58RELXlq23uYPIWYk0HX
+	 HO8dkm/j78+z1DOU2YupO0hZbGUu5vz2spvnlv4a1+xirS7SfRKuUCufZYb0Cq3IjX
+	 /oEQpnecHc6eyXi0uyO96hTwSy8C0Hkz4+zZESAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgGXOhX (ORCPT
+        id S1726835AbgGXOhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:37:23 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:59959 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgGXOhW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:37:22 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M5Q6n-1k0MOz3oDl-001RSX; Fri, 24 Jul 2020 16:37:21 +0200
-Received: by mail-qk1-f178.google.com with SMTP id d14so8733337qke.13;
-        Fri, 24 Jul 2020 07:37:20 -0700 (PDT)
-X-Gm-Message-State: AOAM530FIFJc95r7tlLXcXV7NgEUGV9fBFtMgOZFoSH9aCHC1QqVp0ub
-        szReiIBPj6uwYpEdyq7S9sR57/HWG6uZF5xqRl8=
-X-Google-Smtp-Source: ABdhPJyaQi7YzQKTJwmOO4XDEeEyZaHphOcqVuChV10LKgqkrkdxnJ75ifPgkS9cU2YkIgVzTsgKdKYNadxoztv7GTc=
-X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr10764238qko.138.1595601439718;
- Fri, 24 Jul 2020 07:37:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200710094544.430258-1-daniel@0x0f.com>
-In-Reply-To: <20200710094544.430258-1-daniel@0x0f.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 24 Jul 2020 16:37:03 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2xQmba=ikPjRZCu+PhMGMRKDWW=WbgzjRypD9U43WHDw@mail.gmail.com>
-Message-ID: <CAK8P3a2xQmba=ikPjRZCu+PhMGMRKDWW=WbgzjRypD9U43WHDw@mail.gmail.com>
-Subject: Re: [PATCH v5 00/12] Initial MStar/Sigmastar ARMv7 SoC support
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Marc Zyngier <maz@kernel.org>, Willy Tarreau <w@1wt.eu>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:YLqLKonfSFlV0CdryiCWyZo0KqBmLMX0UfCGDGKDrrPMRzm2Hct
- Ztf2ZBDM5+/H/XndQ/LS9H3sP0bnW5+u2srbtzlLBfGd/uWGha8cGvgL6jj1vDQ2KrkAVrk
- 4mlCMm/wImI5OI9VgicQKt/jSk4t4NZscA3hKRcKwwypkNADgzpBZu8mrwkd0Shai9F6V6p
- Re1+014RGObpWXvfAXS+Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qYsSy1sGqow=:ozo37+sqzsWY5KN5+V+YPI
- OlCXkG+1uGAPEs4x28hvbfb7vE1YcujfYXFT5xV1GF9bl9/VC8ouXY9p0ReOAYV0hHOxLnMhs
- Qrc5Ceetk6PUduiI3LOl584yJlaBkrJqkl3lH8Er3zibKHbn434znybWfHvp7LlfaTVvtkT+B
- Mm1Oc3cMcfhCphAScByEKkTK2gWPA3tPo5F6kGItVyCMr9q6aixvJXwKGzoJPRKkTfuLgG6Bl
- 3oAP6a+3YgzwksObkpGDOpSKGCwxeHU4ddWIqOcOb+3CV6OsMqHkA0UFtwbVEpqkA/GWJ9Ov3
- ynuV01ekPkRUq3kin9/uA2yH3iSd138L+x6cjBNorXqDRx+0mJULTl3NwmZp7AQA7PP/3EG8w
- 48rA6nhG4n0CXkWmLXpYJ6Wki0rIuynAwOPG/zHroaaCOo8KytudNcNQ1DBtEUJ16pL7eRHum
- OwazTZc5iFxQKwCd0iBqQTO6Zm4VsvwTnpTgidrM9NnjRu8ZzTjDH5YsI2LhTN2VvdXz7H0MQ
- /ywa+I4jndo23Il8TafVODSX2PbHwIUQxO6dsPnbKbFvPHy3s1oQmhpzV4AB7rRdo1LUSY8hv
- Nj/uQDY9LR4cBc95RfcRh7pSUMUc9X+wEsBr5vlaLArGkGUWtnokqDT3dxVVmL/4GHhi4yEIb
- f4w4nUWC0w+1UDefFvoSmu8zXzaU/BcTXlRIDnxAHbxRH8rPJCHU1XwWkxZw1x3bYx12JyN/k
- l2ahhrFD0Q8i1RTVt9BMrRnO88m3cAarJAX/o/cFq7nYkhows7EZU49w1aGwzJ//be5+pkiW4
- /AZ+urb+e4cxs1ne7rq6rAmh9+AYO7zt4n26ueBoYgBhWYyJortjXI5VrtwKhs/DwzQ9P2kHp
- rGqcaqR3F1oFPaM9D31vh7DOc4snOFK5YT1DjajpeRkI8Ia8xsMbOHGKvHCGkCtC5/grEbh4B
- iT/5/nvlhiIgq5cnFIulaqNYEIEalrC6v5taFCaft/luDscbiiPLK
+        Fri, 24 Jul 2020 10:37:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726366AbgGXOhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 10:37:32 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 542FF20674;
+        Fri, 24 Jul 2020 14:37:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595601451;
+        bh=Y3rRNtfg71nMx6qz6rx66JXD55K1Y0yFf+scRNRURBs=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=ZAlWr5O+XTfG91n0rqwmKp3rshphbA6EIBLmuQCyb8izj8jCMReYWja4yrnPq6RYd
+         tcrzxLEoNG6tNr+r9BYGi93QBbwbJscxNs1A5nxmIqgTjor/Mewkq9ihkkhFtf3eYP
+         QihSAcIqt3ewMLFv2S61Lz0msGDRp+q7xneMvyRc=
+Date:   Fri, 24 Jul 2020 15:37:16 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200723142020.1338740-1-jbrunet@baylibre.com>
+References: <20200723142020.1338740-1-jbrunet@baylibre.com>
+Subject: Re: [PATCH] ASoC: soc-component: don't report of_xlate_dai_name failures
+Message-Id: <159560143160.13017.4077278524631889799.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 10, 2020 at 11:46 AM Daniel Palmer <daniel@0x0f.com> wrote:
->
-> This patch set adds initial support for MStar/Sigmastar's
-> Armv7 based SoCs. There is just enough here to get to a shell
-> with an initramfs but support for a lot of the hardware is
-> in progress and will follow.
->
-> MStar also shipped chips with MIPS cores and ARM9 etc which
-> are incompatible so I've tried to make the distinction in the
-> code that this is strictly for the Armv7 based chips.
->
-> Sorry for the spamming this. I just really want to make some
-> progress on this because I'm worried the other bits that are
-> needed for these SoCs (Really old AT91 support in macb and
-> the fotg210 usb host) will be lost or stop working in the meantime.
-> This already happened in u-boot.
+On Thu, 23 Jul 2020 16:20:20 +0200, Jerome Brunet wrote:
+> With commit e2329eeba45f ("ASoC: soc-component: add soc_component_err()")
+> every error different for ENOTSUPP or EPROBE_DEFER will log an error.
+> 
+> However, as explained in snd_soc_get_dai_name(), this callback may error
+> to indicate that the DAI is not matched by the component tested. If the
+> device provides other components, those may still match. Logging an error
+> in this case is misleading.
+> 
+> [...]
 
-Hi Daniel,
+Applied to
 
-I just found the series again after looking through some backlog,
-and noticing I missed your submission from July 10. This looks
-all good to me now, so I've merged the series into the arm/newsoc
-branch that already contains added support for the keembay and
-sparx5 SoCs.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-If you require any changes to this, please send incremental
-patches against the soc tree, and submit it to soc@kernel.org
-so it makes it gets into patchwork.
+Thanks!
 
-       Arnd
+[1/1] ASoC: soc-component: don't report of_xlate_dai_name failures
+      commit: cc4d8cebbf2a1239aab71a8077fbe20f24ec2165
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
