@@ -2,93 +2,160 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FBBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C68B1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07C6020748
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57C920748
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgGXGa5 (ORCPT
+        id S1726703AbgGXGec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 02:30:57 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51974 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgGXGa5 (ORCPT
+        Fri, 24 Jul 2020 02:34:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3364 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726178AbgGXGeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 02:30:57 -0400
-Received: from mail-ed1-f69.google.com ([209.85.208.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1jyrEM-0004iy-L0
-        for linux-kernel@vger.kernel.org; Fri, 24 Jul 2020 06:30:54 +0000
-Received: by mail-ed1-f69.google.com with SMTP id a4so2487072edr.18
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 23:30:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=f5Bi1N9eHmzbwm4KZS+jcd4luzKCa17r9gngXjYNYvc=;
-        b=sTT9Z79WjxVFbi6VmzhnJJR2iGq7m9N3+u9V5Lgww6fjnYkUqzRC+0MbLf4PRKxgfl
-         qxraVlPiRjH0NQA7tjIMOnK0Bu/r3HOafmyK/feiS0X3+tjI9Nj3/ZO3PrpXNIf9nYOO
-         BzVPtbMPgzPwR0OcZLsQTkWlZRH6FoNXt6mPDCJsGHAMF78R4/rO8lcXlAtysxypj3Sh
-         hNRa8vSNYsqtUVjx2TPXUXFUz+tP1PWAgQJyUTD00tYGV7xME71sJjW87aAvgjwzSA1P
-         ADeOLk/auUUeojgaFf49QYiQPMRrfnd6S9E9wE45qAKHzzSXbHEFMZxdpF8MoqAcZU7z
-         W5Ew==
-X-Gm-Message-State: AOAM530Kged2f5VIMto3COtnulGMFaKezy/sfs8ExnGRPkndGBo8bAfT
-        XwVlss202/VJsnlBusvhjmB2/pBS3o0NmhlJMt/bmijDUKaL3VcwK80j/o6GRtaoZoBOOcH0F/y
-        U66vZ0M46FEO2f/Bwy9CPx6erpREvuXQya0CPUcuhKw==
-X-Received: by 2002:a17:906:3bd5:: with SMTP id v21mr3756079ejf.329.1595572254321;
-        Thu, 23 Jul 2020 23:30:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxXO1++pFVwTCL/tYfrIs0xm/tuHNlxlyRivKJ5/9QT5Rk/9NHc5BZDVgyqSnOH54Jo7XttPw==
-X-Received: by 2002:a17:906:3bd5:: with SMTP id v21mr3756053ejf.329.1595572254072;
-        Thu, 23 Jul 2020 23:30:54 -0700 (PDT)
-Received: from localhost (host-87-11-131-192.retail.telecomitalia.it. [87.11.131.192])
-        by smtp.gmail.com with ESMTPSA id r19sm48005edi.85.2020.07.23.23.30.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 23:30:53 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 08:30:52 +0200
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, kuba@kernel.org,
-        xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xen-netfront: fix potential deadlock in xennet_remove()
-Message-ID: <20200724063052.GG841369@xps-13>
-References: <20200722065211.GA841369@xps-13>
- <20200723.145722.752878326752101646.davem@davemloft.net>
+        Fri, 24 Jul 2020 02:34:31 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06O6XFIc052004;
+        Fri, 24 Jul 2020 02:34:11 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32f23h06ff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Jul 2020 02:34:10 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06O6YAqF054466;
+        Fri, 24 Jul 2020 02:34:10 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32f23h06de-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Jul 2020 02:34:10 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06O6FZqc014045;
+        Fri, 24 Jul 2020 06:34:08 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 32brq7pyds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Jul 2020 06:34:07 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06O6Y54I56951026
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jul 2020 06:34:05 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 19752A404D;
+        Fri, 24 Jul 2020 06:34:05 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7D9BFA4069;
+        Fri, 24 Jul 2020 06:34:03 +0000 (GMT)
+Received: from [9.199.35.65] (unknown [9.199.35.65])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 24 Jul 2020 06:34:03 +0000 (GMT)
+Subject: Re: [PATCH v2 2/3] powerpc/powernv/idle: save-restore DAWR0,DAWRX0
+ for P10
+To:     Michael Neuling <mikey@neuling.org>, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org,
+        ravi.bangoria@linux.ibm.com, ego@linux.vnet.ibm.com,
+        svaidy@linux.ibm.com, pratik.r.sampat@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200710052207.12003-1-psampat@linux.ibm.com>
+ <20200710052207.12003-3-psampat@linux.ibm.com>
+ <b9507631629bfc1f36893a280b2b83ea484516f9.camel@neuling.org>
+From:   Pratik Sampat <psampat@linux.ibm.com>
+Message-ID: <cb410050-71ee-5385-096c-3f57e3aa226e@linux.ibm.com>
+Date:   Fri, 24 Jul 2020 12:04:02 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723.145722.752878326752101646.davem@davemloft.net>
+In-Reply-To: <b9507631629bfc1f36893a280b2b83ea484516f9.camel@neuling.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-24_01:2020-07-24,2020-07-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0 phishscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 clxscore=1015 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007240047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 02:57:22PM -0700, David Miller wrote:
-> From: Andrea Righi <andrea.righi@canonical.com>
-> Date: Wed, 22 Jul 2020 08:52:11 +0200
-> 
-> > +static int xennet_remove(struct xenbus_device *dev)
-> > +{
-> > +	struct netfront_info *info = dev_get_drvdata(&dev->dev);
-> > +
-> > +	dev_dbg(&dev->dev, "%s\n", dev->nodename);
-> 
-> These kinds of debugging messages provide zero context and are so much
-> less useful than simply using tracepoints which are more universally
-> available than printk debugging facilities.
-> 
-> Please remove all of the dev_dbg() calls from this patch.
 
-I didn't add that dev_dbg() call, it's just the old code moved around,
-but I agree, I'll remove that call and send a new version of this patch.
 
-Thanks for looking at it!
--Andrea
+On 24/07/20 6:55 am, Michael Neuling wrote:
+> On Fri, 2020-07-10 at 10:52 +0530, Pratik Rajesh Sampat wrote:
+>> Additional registers DAWR0, DAWRX0 may be lost on Power 10 for
+>> stop levels < 4.
+>> Therefore save the values of these SPRs before entering a  "stop"
+>> state and restore their values on wakeup.
+>>
+>> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+>> ---
+>>   arch/powerpc/platforms/powernv/idle.c | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/arch/powerpc/platforms/powernv/idle.c
+>> b/arch/powerpc/platforms/powernv/idle.c
+>> index 19d94d021357..f2e2a6a4c274 100644
+>> --- a/arch/powerpc/platforms/powernv/idle.c
+>> +++ b/arch/powerpc/platforms/powernv/idle.c
+>> @@ -600,6 +600,8 @@ struct p9_sprs {
+>>   	u64 iamr;
+>>   	u64 amor;
+>>   	u64 uamor;
+>> +	u64 dawr0;
+>> +	u64 dawrx0;
+>>   };
+>>   
+>>   static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+>> @@ -687,6 +689,10 @@ static unsigned long power9_idle_stop(unsigned long
+>> psscr, bool mmu_on)
+>>   	sprs.iamr	= mfspr(SPRN_IAMR);
+>>   	sprs.amor	= mfspr(SPRN_AMOR);
+>>   	sprs.uamor	= mfspr(SPRN_UAMOR);
+>> +	if (cpu_has_feature(CPU_FTR_ARCH_31)) {
+
+You are actually viewing an old version of the patches
+The main point of change were based on comments from Nick Piggin, I
+have changed the top level function check from ARCH_300 to a P9 PVR
+check instead.
+
+A similar thing needs to be done for P10, however as the P10 PVR isn't
+exposed yet, I've shelved this particular patch.
+
+Nick's comment to check based on PVR:https://lkml.org/lkml/2020/7/13/1018
+v4 of the series:https://lkml.org/lkml/2020/7/21/784
+
+Thanks for your review,
+Pratik
+
+> Can you add a comment here saying even though DAWR0 is ARCH_30, it's only
+> required to be saved on 31. Otherwise this looks pretty odd.
+>
+>> +		sprs.dawr0 = mfspr(SPRN_DAWR0);
+>> +		sprs.dawrx0 = mfspr(SPRN_DAWRX0);
+>> +	}
+>>   
+>>   	srr1 = isa300_idle_stop_mayloss(psscr);		/* go idle */
+>>   
+>> @@ -710,6 +716,10 @@ static unsigned long power9_idle_stop(unsigned long
+>> psscr, bool mmu_on)
+>>   		mtspr(SPRN_IAMR,	sprs.iamr);
+>>   		mtspr(SPRN_AMOR,	sprs.amor);
+>>   		mtspr(SPRN_UAMOR,	sprs.uamor);
+>> +		if (cpu_has_feature(CPU_FTR_ARCH_31)) {
+>> +			mtspr(SPRN_DAWR0, sprs.dawr0);
+>> +			mtspr(SPRN_DAWRX0, sprs.dawrx0);
+>> +		}
+>>   
+>>   		/*
+>>   		 * Workaround for POWER9 DD2.0, if we lost resources, the ERAT
+
