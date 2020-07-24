@@ -2,93 +2,72 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870F3C43445
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5B02074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595587879;
-	bh=PWG32YcOeMhH2GemOphH4Q5kn3Lnq8/kK3Cn2vynBns=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AxRpW5+sPl8oCePpvNZocDXfIXQ1DCCXiWTZLgLKzfn4YBsE3CvOcsCwku0HgH2zk
-	 hOUhkJnOuyvPGeZu0Skkh2oqCPLtF16EtI9VrMyvwQBWU5cCUuiKYIESmePms+ggNW
-	 BHR8OslhlUpWBJyPNn8aPqYZhLfxrBx1qtEtYBIA=
+	by mail.kernel.org (Postfix) with ESMTP id 37FB020748
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbgGXKvS (ORCPT
+        id S1727043AbgGXKqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:51:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38018 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbgGXKvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:51:14 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE4D92073E;
-        Fri, 24 Jul 2020 10:51:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595587874;
-        bh=PWG32YcOeMhH2GemOphH4Q5kn3Lnq8/kK3Cn2vynBns=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F13CfL8g3nuEJDlJLOJWXoQxuiGsmhcbLkqR3TjHfE+4YtoZbpNAOvoKtkd2cESJO
-         Dflwy+cwmJdExBiwXmtYEDNj1QWcDUekKwgWndHKUXiotd3FTxwjukBYHZA/7fY9E0
-         HKqx+IFR1ua1y60dDC0WoFg5wGByT2ZHtSDCuMX8=
-Date:   Fri, 24 Jul 2020 11:50:59 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Steve Lee <steves.lee@maximintegrated.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        ckeepax@opensource.cirrus.com, geert@linux-m68k.org,
-        rf@opensource.wolfsonmicro.com, shumingf@realtek.com,
-        srinivas.kandagatla@linaro.org, krzk@kernel.org, dmurphy@ti.com,
-        jack.yu@realtek.com, nuno.sa@analog.com,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
-        steves.lee.maxim@gmail.com
-Subject: Re: [PATCH 3/3] ASoC: max98390: update dsm param bin max size
-Message-ID: <20200724105059.GA5664@sirena.org.uk>
-References: <20200724085644.9837-1-steves.lee@maximintegrated.com>
+        Fri, 24 Jul 2020 06:46:45 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60231 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgGXKop (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 06:44:45 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jyvBx-0005hi-Oa; Fri, 24 Jul 2020 10:44:41 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFS: remove redundant initialization of variable result
+Date:   Fri, 24 Jul 2020 11:44:41 +0100
+Message-Id: <20200724104441.13532-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
-Content-Disposition: inline
-In-Reply-To: <20200724085644.9837-1-steves.lee@maximintegrated.com>
-X-Cookie: You will wish you hadn't.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
---EeQfGwPcQSOJBaQU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The variable result is being initialized with a value that is never read
+and it is being updated later with a new value.  The initialization is
+redundant and can be removed.
 
-On Fri, Jul 24, 2020 at 05:56:44PM +0900, Steve Lee wrote:
->  MAX98390_DSM_PARAM_MAX_SIZE is changed to support extended
->  register update.
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ fs/nfs/direct.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm missing patches 1-2 and have no cover letter - what's the story
-with dependencies?
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 1b79dd5cf661..2d30a4da49fa 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -896,7 +896,7 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+  */
+ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
+ {
+-	ssize_t result = -EINVAL, requested;
++	ssize_t result, requested;
+ 	size_t count;
+ 	struct file *file = iocb->ki_filp;
+ 	struct address_space *mapping = file->f_mapping;
+-- 
+2.27.0
 
---EeQfGwPcQSOJBaQU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8avQ8ACgkQJNaLcl1U
-h9Aj3gf/YVzWgBS3oyh3vmgjlIEpdZ48zKwfNrdP3AjsgdDI/wZsm/firZQBHg7G
-6AituA5MsDLLEH8KG4S6HZ30QY3mC4BB0v8ILr9OeOGc/+M1OugxQQPMgK5RqZ8e
-o8PGXWFmZdTnE2Uitl70g7Kb0aHiWY3aiB3M8EKVY5+z3OShdaVfcrOJBmssd9Uj
-kWF0WxHZzYpkC1xny5352uirIwuv4tVkupZeP4A9Tg6A/LgRlKpqVG/GVZJMjjdY
-9d5lewHYM/UTje7Fk+21hvKnGScwlPt9iMejfI0A85Fm0So9WPVGqimIKLn8mu61
-ChWNE4Zr+67zERK/T8B8aktKc+gVxw==
-=TNpF
------END PGP SIGNATURE-----
-
---EeQfGwPcQSOJBaQU--
