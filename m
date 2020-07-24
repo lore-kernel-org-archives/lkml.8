@@ -6,57 +6,59 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C24C433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5324BC433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E397206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3884A2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbgGXNYy (ORCPT
+        id S1726997AbgGXNY7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:24:54 -0400
-Received: from ozlabs.org ([203.11.71.1]:54591 "EHLO ozlabs.org"
+        Fri, 24 Jul 2020 09:24:59 -0400
+Received: from ozlabs.org ([203.11.71.1]:51383 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726892AbgGXNYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:24:52 -0400
+        id S1726764AbgGXNY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:24:58 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4BCqgL0JnKz9sTT; Fri, 24 Jul 2020 23:24:44 +1000 (AEST)
+        id 4BCqgV4J65z9sV1; Fri, 24 Jul 2020 23:24:52 +1000 (AEST)
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     nayna@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        pfsmorigo@gmail.com, herbert@gondor.apana.org.au,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>, corbet@lwn.net,
-        davem@davemloft.net, linux-doc@vger.kernel.org, paulus@samba.org,
-        benh@kernel.crashing.org, linux-crypto@vger.kernel.org,
-        leitao@debian.org, linux-kernel@vger.kernel.org, mpe@ellerman.id.au
-In-Reply-To: <20200718103958.5455-1-grandmaster@al2klimov.de>
-References: <20200718103958.5455-1-grandmaster@al2klimov.de>
-Subject: Re: [PATCH] powerpc: Replace HTTP links with HTTPS ones
-Message-Id: <159559696781.1657499.3467682028636656801.b4-ty@ellerman.id.au>
-Date:   Fri, 24 Jul 2020 23:24:44 +1000 (AEST)
+To:     Ingo Molnar <mingo@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+In-Reply-To: <20200707004812.190765-1-leobras.c@gmail.com>
+References: <20200707004812.190765-1-leobras.c@gmail.com>
+Subject: Re: [PATCH 1/1] KVM/PPC: Fix typo on H_DISABLE_AND_GET hcall
+Message-Id: <159559697292.1657499.11332603391566688077.b4-ty@ellerman.id.au>
+Date:   Fri, 24 Jul 2020 23:24:52 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 18 Jul 2020 12:39:58 +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+On Mon, 6 Jul 2020 21:48:12 -0300, Leonardo Bras wrote:
+> On PAPR+ the hcall() on 0x1B0 is called H_DISABLE_AND_GET, but got
+> defined as H_DISABLE_AND_GETC instead.
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
+> This define was introduced with a typo in commit <b13a96cfb055>
+> ("[PATCH] powerpc: Extends HCALL interface for InfiniBand usage"), and was
+> later used without having the typo noticed.
 
 Applied to powerpc/next.
 
-[1/1] powerpc: Replace HTTP links with HTTPS ones
-      https://git.kernel.org/powerpc/c/c8ed9fc9d29e24dafd08971e6a0c6b302a8ade2d
+[1/1] KVM: PPC: Fix typo on H_DISABLE_AND_GET hcall
+      https://git.kernel.org/powerpc/c/0f10228c6ff6af36cbb31af35b01f76cdb0b3fc1
 
 cheers
