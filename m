@@ -2,152 +2,203 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC0FC433E8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8BFC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 963D12065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:45:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595601948;
-	bh=e8NxHBw15bPFDKNS3PtLCv2UFLG9ocdw579DTCyUFHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TcpBot1u/tpr54T6gylltowwNaCGFKEbSsHMb09DwwOZSDJ2KpD8NzkG9ZefMgMTU
-	 F+1b9mARSP0E+8UT4YnQfgT4ELMZ4ToYlQKVp+UN6KGHhS6VVM62FLLYr8Sz3eqOaP
-	 z5anStQMGvUwWLK19yOHsNE9B6xogVA+2O4jvrnY=
+	by mail.kernel.org (Postfix) with ESMTP id 322602065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:46:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ejwR60RW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgGXOpr (ORCPT
+        id S1726764AbgGXOqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:45:47 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42951 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgGXOpr (ORCPT
+        Fri, 24 Jul 2020 10:46:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbgGXOqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:45:47 -0400
-Received: by mail-lf1-f68.google.com with SMTP id h8so5318149lfp.9;
-        Fri, 24 Jul 2020 07:45:44 -0700 (PDT)
+        Fri, 24 Jul 2020 10:46:14 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC0A1C0619E5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 07:46:14 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id x9so7420485ila.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 07:46:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ooxbKiMWNxM2Qkg9OCv+AGbzLM8cpI7Yz8Qh84quFec=;
+        b=ejwR60RWkPZ9/VVKHthh3FpYSzqmZIanKKHiIZIzNQfGxkc34Rg8Z9LYBQPYpo1teZ
+         SZz9q9XA9dY263aHUQ2ps+DaSxtV0Dz1nnNw4Nko5bTb0QAWMHSxWoRW56nnr0xT2d8f
+         N0LyUn2C3G9JYflsDNQE/0EhPghMtFdYKsOqAVk/yJyN54LNZSzsM9V88gijgsLn1KZK
+         saK9TyhP/8yogG+tYgBngjt1QmJhVi/HN8Jg2czuum+IvvJfuKZfmilrJ8v2XGSPhDNG
+         eeMHriv7AnjefyokfOeATQlWcY2nOw95zZn4vGsOfE9Ya6LxXfX0Gps6lYzq0x/F+S1y
+         oEtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Dzkx8gigl6y/De7kKuc0wZrJ0/8/lN60gfKkzmdYUI0=;
-        b=dyhHWZM6Xgw4Ajl8H1CUqnUIkRVUc4RPb+xaHqfH5zcXUFE5RYdNu5Xw8cAoNAiTnu
-         x5LEs8VOgk6h8ksaxEnWNeO5mkrw2qT0qZu3di1scTi5m5pyQnmpfzczPlr/eoocOyPF
-         GPpoOYpPC/+Dcd+tEoZEohn4NqQyGp2afH+m1E30BNtBoXaqrK8N5fU3MggBGvsoiTX6
-         Uhu43Fe+lydXOlaLE2lTxUrCEQzSabnniV12VfSbbl/qIAODmu9qevVj9K3JPfShstgd
-         HbftaXgS2BynbbP0mSr5Lr4JcBT0awjUIaAw4ev8yXh+B11ZWoMEwVMClS9m4be9SjQW
-         AtXg==
-X-Gm-Message-State: AOAM53232PaXdJHGzBg1D6lybcSHOFg0gaReYA3Ui7c7Bv68FgkAFXPP
-        0x7B2N+z11YouhK6AD1Btfo=
-X-Google-Smtp-Source: ABdhPJxuDUKtDBKeqpYEsnpicDu6cv82dbR4O6uIC8LLHmnCf4mma1fQefnoPsAv972lWmW/J6c3kg==
-X-Received: by 2002:a19:ae0a:: with SMTP id f10mr5218572lfc.100.1595601944019;
-        Fri, 24 Jul 2020 07:45:44 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id m5sm287761ljb.98.2020.07.24.07.45.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 07:45:42 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jyyx6-00031S-Np; Fri, 24 Jul 2020 16:45:37 +0200
-Date:   Fri, 24 Jul 2020 16:45:36 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     johan@kernel.org, gregkh@linuxfoundation.org, corbet@lwn.net,
-        linux-usb@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH for v5.9] USB: serial: Replace HTTP links with HTTPS ones
-Message-ID: <20200724144536.GP3634@localhost>
-References: <20200719161920.60087-1-grandmaster@al2klimov.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ooxbKiMWNxM2Qkg9OCv+AGbzLM8cpI7Yz8Qh84quFec=;
+        b=GnoMZU/noNpJsEj+DSIfRIL17LU2xwJbwlRP3ONwBzXVEIPHeElDd5+pRA3USfGnJc
+         efIMwQmIQiTXiaLYgNlAaTv/W40Opj/kA5Ehmm7vkbdC/CWf+ThqYA3aJnRb7kKicTYo
+         zohcXn2nknS2Pyf7READM8qPxiJRTdXgtc/3F51l5k/S+tbM7yaTtaE82+p6ZFw6xhM5
+         jdEE5Yv14KH8SEu7+/Q2hGycj1P/M4Jq3xSHweprkcxFZoMAEjLOEITVN9Bnu7/3xaj/
+         UXkLksyC0RryJJUI0fTyvjcV+l41wi+O03HV0GIhjmh20hFevyyu+d8m3u2Mebz2SpEN
+         SI4w==
+X-Gm-Message-State: AOAM533MYMkhYYBPy5dqa+QY7p1sqxAABAM7kB/ia0xNpFuVMxfPeryF
+        ng7+pCOjWGxFzXdfYZeZvBHeX9aB6VB77J1di+RPXQ==
+X-Google-Smtp-Source: ABdhPJyPvAM0JnGaS6jm4dJ5xNruS00zsCyrN9+cibN31itzCWNJYwmf6/zGbKSKU1KI+6JSZWEekKEjpUlnYPbQH7I=
+X-Received: by 2002:a92:dc90:: with SMTP id c16mr10596811iln.202.1595601973678;
+ Fri, 24 Jul 2020 07:46:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200719161920.60087-1-grandmaster@al2klimov.de>
+References: <20200423002632.224776-1-dancol@google.com> <20200423002632.224776-2-dancol@google.com>
+ <20200724100153-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200724100153-mutt-send-email-mst@kernel.org>
+From:   Lokesh Gidra <lokeshgidra@google.com>
+Date:   Fri, 24 Jul 2020 07:46:02 -0700
+Message-ID: <CA+EESO4yw+qoGx9WWJDcDea8EvGQNzHHQFzfG2FcN=iCcET8tg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Add UFFD_USER_MODE_ONLY
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Xu <peterx@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
+        linux-doc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Minchan Kim <minchan@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Daniel Colascione <dancol@dancol.org>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Nick Kralevich <nnk@google.com>, kernel@android.com,
+        Kalesh Singh <kaleshsingh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 19, 2020 at 06:19:20PM +0200, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
->  (Actually letting a shell for loop submit all this stuff for me.)
-> 
->  If there are any URLs to be removed completely
->  or at least not (just) HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
->  Sorry again to all maintainers who complained about subject lines.
->  Now I realized that you want an actually perfect prefixes,
->  not just subsystem ones.
->  I tried my best...
->  And yes, *I could* (at least half-)automate it.
->  Impossible is nothing! :)
-> 
-> 
->  Documentation/usb/usb-serial.rst  |  2 +-
->  drivers/usb/serial/cyberjack.c    |  2 +-
->  drivers/usb/serial/ftdi_sio.h     |  4 ++--
->  drivers/usb/serial/ftdi_sio_ids.h | 34 +++++++++++++++----------------
->  drivers/usb/serial/kobil_sct.c    |  2 +-
->  drivers/usb/serial/metro-usb.c    |  2 +-
->  6 files changed, 23 insertions(+), 23 deletions(-)
-> 
-> diff --git a/Documentation/usb/usb-serial.rst b/Documentation/usb/usb-serial.rst
-> index 8fa7dbd3da9a..0a2071953691 100644
-> --- a/Documentation/usb/usb-serial.rst
-> +++ b/Documentation/usb/usb-serial.rst
-> @@ -202,7 +202,7 @@ Keyspan USA-series Serial Adapters
->  
->    More information is available at:
->  
-> -        http://www.carnationsoftware.com/carnation/Keyspan.html
-> +        https://www.carnationsoftware.com/carnation/Keyspan.html
->  
->    For any questions or problems with this driver, please contact Hugh
->    Blemings at hugh@misc.nu
-
-Looks like your script is buggy; there are many more URLs than this one
-is this document.
-
-> diff --git a/drivers/usb/serial/ftdi_sio_ids.h b/drivers/usb/serial/ftdi_sio_ids.h
-> index e8373528264c..a5bf2b974813 100644
-> --- a/drivers/usb/serial/ftdi_sio_ids.h
-> +++ b/drivers/usb/serial/ftdi_sio_ids.h
-> @@ -60,14 +60,14 @@
->  /*
->   * Texas Instruments XDS100v2 JTAG / BeagleBone A3
->   * http://processors.wiki.ti.com/index.php/XDS100
-> - * http://beagleboard.org/bone
-> + * https://beagleboard.org/bone
->   */
-
-And here's another indication of that.
-
-Johan
+On Fri, Jul 24, 2020 at 7:28 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Wed, Apr 22, 2020 at 05:26:31PM -0700, Daniel Colascione wrote:
+> > userfaultfd handles page faults from both user and kernel code.  Add a
+> > new UFFD_USER_MODE_ONLY flag for userfaultfd(2) that makes the
+> > resulting userfaultfd object refuse to handle faults from kernel mode,
+> > treating these faults as if SIGBUS were always raised, causing the
+> > kernel code to fail with EFAULT.
+> >
+> > A future patch adds a knob allowing administrators to give some
+> > processes the ability to create userfaultfd file objects only if they
+> > pass UFFD_USER_MODE_ONLY, reducing the likelihood that these processes
+> > will exploit userfaultfd's ability to delay kernel page faults to open
+> > timing windows for future exploits.
+> >
+> > Signed-off-by: Daniel Colascione <dancol@google.com>
+>
+> Something to add here is that there is separate work on selinux to
+> support limiting specific userspace programs to only this type of
+> userfaultfd.
+>
+> I also think Kees' comment about documenting what is the threat being solved
+> including some links to external sources still applies.
+>
+> Finally, a question:
+>
+> Is there any way at all to increase security without breaking
+> the assumption that copy_from_user is the same as userspace read?
+>
+>
+> As an example of a drastical approach that might solve some issues, how
+> about allocating some special memory and setting some VMA flag, then
+> limiting copy from/to user to just this subset of virtual addresses?
+> We can then do things like pin these pages in RAM, forbid
+> madvise/userfaultfd for these addresses, etc.
+>
+> Affected userspace then needs to use a kind of a bounce buffer for any
+> calls into kernel.  This needs much more support from userspace and adds
+> much more overhead, but on the flip side, affects more ways userspace
+> can slow down the kernel.
+>
+> Was this discussed in the past? Links would be appreciated.
+>
+Adding Nick and Jeff to the discussion.
+>
+> > ---
+> >  fs/userfaultfd.c                 | 7 ++++++-
+> >  include/uapi/linux/userfaultfd.h | 9 +++++++++
+> >  2 files changed, 15 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> > index e39fdec8a0b0..21378abe8f7b 100644
+> > --- a/fs/userfaultfd.c
+> > +++ b/fs/userfaultfd.c
+> > @@ -418,6 +418,9 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
+> >
+> >       if (ctx->features & UFFD_FEATURE_SIGBUS)
+> >               goto out;
+> > +     if ((vmf->flags & FAULT_FLAG_USER) == 0 &&
+> > +         ctx->flags & UFFD_USER_MODE_ONLY)
+> > +             goto out;
+> >
+> >       /*
+> >        * If it's already released don't get it. This avoids to loop
+> > @@ -2003,6 +2006,7 @@ static void init_once_userfaultfd_ctx(void *mem)
+> >
+> >  SYSCALL_DEFINE1(userfaultfd, int, flags)
+> >  {
+> > +     static const int uffd_flags = UFFD_USER_MODE_ONLY;
+> >       struct userfaultfd_ctx *ctx;
+> >       int fd;
+> >
+> > @@ -2012,10 +2016,11 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
+> >       BUG_ON(!current->mm);
+> >
+> >       /* Check the UFFD_* constants for consistency.  */
+> > +     BUILD_BUG_ON(uffd_flags & UFFD_SHARED_FCNTL_FLAGS);
+> >       BUILD_BUG_ON(UFFD_CLOEXEC != O_CLOEXEC);
+> >       BUILD_BUG_ON(UFFD_NONBLOCK != O_NONBLOCK);
+> >
+> > -     if (flags & ~UFFD_SHARED_FCNTL_FLAGS)
+> > +     if (flags & ~(UFFD_SHARED_FCNTL_FLAGS | uffd_flags))
+> >               return -EINVAL;
+> >
+> >       ctx = kmem_cache_alloc(userfaultfd_ctx_cachep, GFP_KERNEL);
+> > diff --git a/include/uapi/linux/userfaultfd.h b/include/uapi/linux/userfaultfd.h
+> > index e7e98bde221f..5f2d88212f7c 100644
+> > --- a/include/uapi/linux/userfaultfd.h
+> > +++ b/include/uapi/linux/userfaultfd.h
+> > @@ -257,4 +257,13 @@ struct uffdio_writeprotect {
+> >       __u64 mode;
+> >  };
+> >
+> > +/*
+> > + * Flags for the userfaultfd(2) system call itself.
+> > + */
+> > +
+> > +/*
+> > + * Create a userfaultfd that can handle page faults only in user mode.
+> > + */
+> > +#define UFFD_USER_MODE_ONLY 1
+> > +
+> >  #endif /* _LINUX_USERFAULTFD_H */
+> > --
+> > 2.26.2.303.gf8c07b1a785-goog
+> >
+>
