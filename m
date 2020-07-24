@@ -2,160 +2,84 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 134D8C433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737C2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF8ED206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:02:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="t2x/2CGE"
+	by mail.kernel.org (Postfix) with ESMTP id 5C7F32068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgGXICZ (ORCPT
+        id S1727085AbgGXICl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:02:25 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:35686 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgGXICX (ORCPT
+        Fri, 24 Jul 2020 04:02:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbgGXICk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:02:23 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200724080221epoutp041b67f884f41a6a52c4fb9e3adf6ac180~koYBxiZ9o2385223852epoutp049
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 08:02:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200724080221epoutp041b67f884f41a6a52c4fb9e3adf6ac180~koYBxiZ9o2385223852epoutp049
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1595577741;
-        bh=hY9rpWUhx1P8mckQQzl9WKYfgD/JvNgWgM+Fv0pMqhE=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=t2x/2CGEfZtj2xq4QkiaTjtXnN6eiM1EwHtEgcBRzKACxTh2iuwmkQmLyOMJBx9h6
-         B+ZeTeMxmPchwl8Du18sSc4Ox8O/cyN03pgoeH8zo8Z0WE72PjUGloXpZhFZZym5KT
-         qCiyERja+JYDAUA0Imc1764ZPFca+k0YHYN8hWsk=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200724080220epcas1p443170d5346261ccbd17f9089c64afedd~koYBbg6y-0480704807epcas1p4f;
-        Fri, 24 Jul 2020 08:02:20 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4BChWG1pyBzMqYkV; Fri, 24 Jul
-        2020 08:02:18 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F2.A5.18978.F759A1F5; Fri, 24 Jul 2020 17:02:07 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200724080207epcas1p125e12a249e629b1068223b16b9e07edf~koX0uHQQl2072320723epcas1p1G;
-        Fri, 24 Jul 2020 08:02:07 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200724080207epsmtrp206d8e37a04ddd95a000789a6a2e8e708~koX0tfoc_1271612716epsmtrp2C;
-        Fri, 24 Jul 2020 08:02:07 +0000 (GMT)
-X-AuditID: b6c32a35-b8298a8000004a22-bc-5f1a957f216d
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E2.9E.08303.E759A1F5; Fri, 24 Jul 2020 17:02:06 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200724080206epsmtip152503e90280764acc12e5a815165880e~koX0fHojd1861618616epsmtip1t;
-        Fri, 24 Jul 2020 08:02:06 +0000 (GMT)
-Subject: Re: [PATCH] PM / devfrq: Fix indentaion of devfreq_summary debugfs
- node
-To:     Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     chanwoo@kernel.org, stable@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <41a5d612-ac02-ff22-84ad-9e2138b53b43@samsung.com>
-Date:   Fri, 24 Jul 2020 17:13:54 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Fri, 24 Jul 2020 04:02:40 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93822C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 01:02:40 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jysf5-0003SQ-IJ; Fri, 24 Jul 2020 10:02:35 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jysf5-00015q-10; Fri, 24 Jul 2020 10:02:35 +0200
+Message-ID: <04a1a291886c0c659b206fa741de6977708549c3.camel@pengutronix.de>
+Subject: Re: [PATCH v2 0/2] reset: reset-zynqmp: Added Versal platform
+ support
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com,
+        saikrishna12468@gmail.com
+Date:   Fri, 24 Jul 2020 10:02:34 +0200
+In-Reply-To: <1595402165-8282-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+References: <1595402165-8282-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <20200717170847.F18AB207DD@mail.kernel.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgk+LIzCtJLcpLzFFi42LZdlhTT7d+qlS8Qc90OYuJN66wWFzeNYfN
-        4nPvEUaLTWuusVks2PiI0YHVY9OqTjaPz5vkApiism0yUhNTUosUUvOS81My89JtlbyD453j
-        Tc0MDHUNLS3MlRTyEnNTbZVcfAJ03TJzgLYpKZQl5pQChQISi4uV9O1sivJLS1IVMvKLS2yV
-        UgtScgosC/SKE3OLS/PS9ZLzc60MDQyMTIEKE7Izprc1sRec56xoOjCRpYHxPHsXIyeHhICJ
-        xKRFB9i6GLk4hAR2MErc/ngDyvnEKPF1XgczhPOZUeJf43U2mJYDvftZIRK7GCXezngJ5bxn
-        lNi7dz/YYGGBIIldrxeA2SICsRJrF19nBLGZBfQkbvSvBIuzCWhJ7H9xA2wqv4CixNUfj8Fq
-        eAXsJH4fOwNmswioSjz4/5kZxBYVCJM4ua0FqkZQ4uTMJywgNqeAhcS7iVNZIOaLS9x6Mp8J
-        wpaX2P52DtgLEgJf2SV+vd3GDPGCi8TSmVOg3hGWeHV8CzQ0pCQ+v9sLFa+WWHnyCBtEcwej
-        xJb9F1ghEsYS+5dOBtrAAbRBU2L9Ln2IsKLEzt9zoZ7kk3j3tYcVpERCgFeio00IokRZ4vKD
-        u0wQtqTE4vZOtgmMSrOQvDMLyQuzkLwwC2HZAkaWVYxiqQXFuempxYYFhsjRvYkRnBS1THcw
-        Tnz7Qe8QIxMH4yFGCQ5mJRFeHUbxeCHelMTKqtSi/Pii0pzU4kOMpsAAnsgsJZqcD0zLeSXx
-        hqZGxsbGFiaGZqaGhkrivP/OsscLCaQnlqRmp6YWpBbB9DFxcEo1MAV/nn/ulWlZLq/hrO7J
-        T3Yv2/KsXuFsg8+kg2ZPouNu30pm37pxj6/rsbALO8se1P7cE572RJ/xTuEenQUTVc6fWLri
-        rPM3hiub50w7oDInu1jgwDu7WNUm1tvGtyRfMsx/JbKpwMPu35rympy+OZ7+O0qDHe8GpNYX
-        cOWpRcsznF9VZRDVeqlg5pp3ucHxc5mmHZzewx93oWnXTS4+xlXPjvyWNL3Gu+Dp4QN1OW/L
-        gnP2Nf30iG7+oVCVqjGdaxHPlpVqefoCxwuLrso7nqpRSJ6XPGlr35Eeszvvdl+5ZnKlSmua
-        gucr8Tld0/Y0Tc+RMpT69ee3g0ois0rZ/g1uB88HPpVqamVi0XQ4dluJpTgj0VCLuag4EQCu
-        Hwn/EwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJLMWRmVeSWpSXmKPExsWy7bCSnG7dVKl4g/nbzS0m3rjCYnF51xw2
-        i8+9RxgtNq25xmaxYOMjRgdWj02rOtk8Pm+SC2CK4rJJSc3JLEst0rdL4MqY3tbEXnCes6Lp
-        wESWBsbz7F2MnBwSAiYSB3r3s4LYQgI7GCWeHTOEiEtKTLt4lLmLkQPIFpY4fLi4i5ELqOQt
-        o8SLhw8ZQWqEBYIkdr1eADZHRCBWov3qK2YQm1lAT+JG/0p2iIbdjBJLr/1kA0mwCWhJ7H9x
-        A8zmF1CUuPrjMdggXgE7id/HzoDZLAKqEg/+fwYbJCoQJrFzyWMmiBpBiZMzn7CA2JwCFhLv
-        Jk5lgVimLvFn3iWoxeISt57MZ4Kw5SW2v53DPIFReBaS9llIWmYhaZmFpGUBI8sqRsnUguLc
-        9NxiwwKjvNRyveLE3OLSvHS95PzcTYzg2NDS2sG4Z9UHvUOMTByMhxglOJiVRHh1GMXjhXhT
-        EiurUovy44tKc1KLDzFKc7AoifN+nbUwTkggPbEkNTs1tSC1CCbLxMEp1cB0SY/xtdniCeKX
-        M/xlOR/WyVgsKmV5WeGp8TrgccGBKY9m6d223Pp6Q8keef5EGfsJs2brmt5PWc/ltlVzcuv/
-        Y6qL+Rf+skvZYtzE5lq5gNNrWvDM1M+sDM8s5z30fDbh+Wo2ORG5f0fMTj1Sy2VbKmSh0ZZ1
-        SXvhrOdegn57TX57LtU5HB+rJZXjy2o+jelf+6NLe6dYv7D8aTfxaIuAue2lor3RK1YIGiw9
-        G/TJTjao/AW3BdM0ztQ7euc3Zry+vrNE1HNCzWfBr3tSrOt7bL1nnA/MVfRa5sHdt/1W9tGg
-        /bar+XI9Vt1gd2Z6O6my1a1PWsjpHn/WN46JF/ftUo/5oiAvnSVXpRB1/rYSS3FGoqEWc1Fx
-        IgDQEy35/AIAAA==
-X-CMS-MailID: 20200724080207epcas1p125e12a249e629b1068223b16b9e07edf
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200717170852epcas1p39bbb3c1e07c7a60c47f1dac2ee992a00
-References: <20200713073112.6297-1-cw00.choi@samsung.com>
-        <CGME20200717170852epcas1p39bbb3c1e07c7a60c47f1dac2ee992a00@epcas1p3.samsung.com>
-        <20200717170847.F18AB207DD@mail.kernel.org>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 2020-07-22 at 12:46 +0530, Sai Krishna Potthuri wrote:
+> Extended the ZynqMP reset driver to support Versal platform, accordingly
+> updated the dt-binding with the Versal platform specific information
+> like compatible string and reset indices.
+> 
+> Changes in v2:
+>  - Updated 1/2 patch commit description with some explanation about
+> reset indices.
+>  - 2/2 patch, Created SOC specific data structure and initialize the
+> const data based on of_device_get_match_data.
+>  - Defined driver specific of_xlate callback.
+> 
+> Sai Krishna Potthuri (2):
+>   dt-bindings: reset: Updated binding for Versal reset driver
+>   reset: reset-zynqmp: Added support for Versal platform
+> 
+>  .../bindings/reset/xlnx,zynqmp-reset.txt      |  11 +-
+>  drivers/reset/reset-zynqmp.c                  |  50 ++++++++-
+>  .../dt-bindings/reset/xlnx-versal-resets.h    | 105 ++++++++++++++++++
+>  3 files changed, 156 insertions(+), 10 deletions(-)
+>  create mode 100644 include/dt-bindings/reset/xlnx-versal-resets.h
 
-On 7/18/20 2:08 AM, Sasha Levin wrote:
-> Hi
-> 
-> [This is an automated email]
-> 
-> This commit has been processed because it contains a "Fixes:" tag
-> fixing commit: 66d0e797bf09 ("Revert "PM / devfreq: Modify the device name as devfreq(X) for sysfs"").
-> 
-> The bot has tested the following trees: v5.7.8, v5.4.51, v4.19.132, v4.14.188.
-> 
-> v5.7.8: Build OK!
-> v5.4.51: Failed to apply! Possible dependencies:
->     490a421bc575d ("PM / devfreq: Add debugfs support with devfreq_summary file")
-> 
-> v4.19.132: Failed to apply! Possible dependencies:
->     490a421bc575d ("PM / devfreq: Add debugfs support with devfreq_summary file")
-> 
-> v4.14.188: Failed to apply! Possible dependencies:
->     490a421bc575d ("PM / devfreq: Add debugfs support with devfreq_summary file")
-> 
-> 
-> NOTE: The patch will not be queued to stable trees until it is upstream.
-> 
-> How should we proceed with this patch?
-> 
+Thank you, applied to reset/next.
 
-The fixes commit was merged to v5.6-rc4. As your test result,
-it was possible to build above v5.6. It is not problem. Thanks for your testing.
-- 66d0e797bf09 ("Revert "PM / devfreq: Modify the device name as devfreq(X) for sysfs"").
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+regards
+Philipp
