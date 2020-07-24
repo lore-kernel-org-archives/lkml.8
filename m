@@ -2,139 +2,118 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60CBC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E32C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2AAA206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BD5206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:15:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ENdczydU"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BH1RpB7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgGXRMx (ORCPT
+        id S1726814AbgGXRPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:12:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgGXRMw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:12:52 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60775C0619E4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:12:52 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f2so8955634wrp.7
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:12:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CsY5cW3WXMhmwG38rsvRK1D4/ep9vkdqpuLxDaLO6ZY=;
-        b=ENdczydUnM51Zqjz14BXRYs6Wtcq/VXoyg3aRYeJpRN1RHpf9Te7iKx/YVTZy5GT3w
-         pMXGEwSqIUIrd3mwKhe62m6VFho5gRHpebxLJ07i0PUmRrTJdf0ezbu1OPTG/1MqiGPG
-         xWikmoKFoqrAWupOrwmn+pETjBpk0avnFrAccqUsQ8xKwL3ESFvFS59PM/RqlP+16ZYs
-         G76I38eJtIh7aIoEHs0C3B8gCt1dcGxQJobELShQMV8NlwU9aqsSoqGh1lG+e0Zz1BbK
-         lf/w2q5W8I+Boy100Pim4QGUUg/OdTl9XyMXvw89WaQbtEertFk6TUSxutBQoiEgbsQ5
-         0kYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CsY5cW3WXMhmwG38rsvRK1D4/ep9vkdqpuLxDaLO6ZY=;
-        b=HhP2eL3yF/MdsnADaHkS96qgXykGIoAPKJlsj9KFwkT67/Ea2YEv/AKB9U/LXbhD/H
-         u7mNlN9NTmF3SL/Poaemw/AjO5VBvY1zI7SsUacgkRmiZSlc+yyIOafjvxIWNZEHJSo8
-         KjyPredaM97hDJkMJCGuMBub5EXFoKNp8zWcetffS7i1ryRwa111surueeixrhSuH4Ys
-         KgeyvHEITgO/3UiyUu7o4jFoFDPeVzMI9jL3Vq5q3juH+QBGl5ZRrTrCaNLm/JbTgtzG
-         cgzb+gcYIxbEHNgcpKpUJYu3hKthDZLN359IOXFoXYDA/YdKdYfFtvdiE7KLesLijhaG
-         zXyw==
-X-Gm-Message-State: AOAM530MoxEU/I06HHWAz54vOGbSszUggtGlQ8ZEkEGfWme2qvIFPl7U
-        rw+bprgQgJvE0j59tx7sGj6PbwIfclmIag==
-X-Google-Smtp-Source: ABdhPJzVyryFXYR9Gku2wPrJ/1NZPZOtbGI57W/l86IomYGROONvKgaAAlrND+wJ9s9fVjvYDq3ZvA==
-X-Received: by 2002:adf:f847:: with SMTP id d7mr9052643wrq.328.1595610770634;
-        Fri, 24 Jul 2020 10:12:50 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:819c:7aa9:1038:21b3? ([2a01:e34:ed2f:f020:819c:7aa9:1038:21b3])
-        by smtp.googlemail.com with ESMTPSA id z11sm1834740wrw.93.2020.07.24.10.12.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 10:12:50 -0700 (PDT)
-Subject: Re: [PATCH] thermal: Fix zone lookup by ID
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     Amit Kucheria <amitk@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200724170105.2705467-1-thierry.reding@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <db6efeab-b2bc-bad5-9c75-89e3e306256c@linaro.org>
-Date:   Fri, 24 Jul 2020 19:12:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 13:15:04 -0400
+Received: from mout.gmx.net ([212.227.15.18]:60529 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726488AbgGXRPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:15:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1595610860;
+        bh=cv/SDR0kOcXEn9Fw/iBcj1piWhrjN0Exl+XnPA9RlC4=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=BH1RpB7QpaPIDkMWi70/rplClWt4XmcUdsoghyYHbM/ksvt3NcfxSmzteKwXvHd9Q
+         GqIW96s/rDXFztopxRcOynzc1/nAWTDieZXpCics37RkFTJ2QwL8BijL7reSfWdEbl
+         o2bO6fGLspZ6vNk9vy+elf2K7BuRdREPvaoIIkFc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([79.150.73.70]) by mail.gmx.com (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MtwZ4-1kovT61nGm-00uIlk; Fri, 24
+ Jul 2020 19:14:20 +0200
+Date:   Fri, 24 Jul 2020 19:14:18 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v2 2/2] kernel/trace: Remove function callback casts
+Message-ID: <20200724171418.GB3123@ubuntu>
+References: <20200719155033.24201-1-oscar.carter@gmx.com>
+ <20200719155033.24201-3-oscar.carter@gmx.com>
+ <20200721140545.445f0258@oasis.local.home>
+ <20200724161921.GA3123@ubuntu>
+ <20200724123528.36ea9c9e@oasis.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20200724170105.2705467-1-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724123528.36ea9c9e@oasis.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:8mJAGBN69jsylqIUl4XfLkJ0qQx4OepHIZjmBvP8ebW13vJVvbD
+ gRGLIW2zPT9VkV8Y3zkaZPnvM/AQJ/TPUGC034MMJtac+SlTuOOS0YUceTbPrXanaYdsHS3
+ GtsFefuH7nNXe2TGU9Q5zMwfkWVYJWVMfa+ucVgKj7YF1HMi9S+Dy8rxQFS9G5wUar1bBTd
+ hNRTel1dmZZGqq69NvIIA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6/RlyAQl3N4=:AF4CyxOALtHfjBrOCsKgIw
+ r6l02g3SfHIj0w0ME5hSsD1+xJRABfLb2aQqNgpZt4u+/WVrrADR/Bu+/AFlzBgw6fiaecYeR
+ GHVFvSFqs+LAhVDeiJENr7KH8RT27mKN2636z4f0PEzGpJJ+APBiy1sXxq4Vc/mDp8NdjcNf0
+ BU7djhoRJSqM8JlNu/TmER3RkTzUqNaSYtpsoDAeZCQZGjMEGu0JojH0O51rGasVlcy6nAnN3
+ h0JyCfV7THJ0tSD0ec/BizaXltosb4+gW9hAAJEeEGrSXI/2I8VTpK1EqfT5KoaOWlSagnULb
+ b6MLJrUxmqSK0d5NAuoeHLgodA4P+1Dg1aMZmdG82nH46bZOj5Isoj4afB4rHvHQ3DfClUG+U
+ 7j/pALGd+tfv8p4Z3NoCr8/pZMNR0HJjedEcF1lGDVnzTZsIgt3uozXsn9VRQ9KYkOx7CxhTP
+ ihqyaC3oqMFHpzX/1V2Nbux/2mYpUMdRL00mziaAMP5uvNgmxae+Kty26LuclueVc2CutBUcR
+ NTQDlF2+9+zgYqvZsKmFpH3BuFXoxQyEHXEQ8DZ+0yeAQ8FAtQYXQG7b0zLykLohC1UQKvQjW
+ XuIQrwiDisL6qxFsraljKTURnZX3KOBtdy6i/L3b1eZ/3cAuBTJ0pBbPjVLYFAPpVUk41wokC
+ PHsuDyd6VoLgZFxeXEcLpLMZ+wJ7hdnM0mI73UeXvXMyPNZPqZNJgNjTazCIaGMEAZODH+iA7
+ XwaPbH58ahKA0xGfdGnSnachpbe+k3kM2HKMnm03a9P2hYzqNgsnKkgbD+b8HD7gcZu3LgOiY
+ DS89NQszfdV/ETcYkleVt/3H+GBltnPBHq0nF/o53O5N+Nyzl1gfiu+kIsVgFxkOYfIjP4YTG
+ T1Cdu1dW6K5NcJ6EtKki21SHzTNFCIUg6+JwsIGZ4rjlQH71KVaaPvpmDrvouXTNXfK/z+5Vw
+ X9ZiPp2808d6tLQPfBfjqM3DJs6AHiPwfl7ZVVhN7QUpixaakGDmNuvSzWRHECCSfGcY8gz7D
+ lVdP0hkIOv6liZVWu7swaHouV3Xs07QLCFzHyBlvFRlg4I3LPq6B2E2oygjR5hF36IKGVnwZm
+ zVOdYd44rB2hCu0JFbBEkhYjhdgWLJlQBrM2UQ5nnVh/tJm1uuLtwZZh0HMUlPXWw9n3ZSuZc
+ uxqLXdfFoNzmKdjY+86IKmJFwTN+NXTbRcc+C9/7y54WW8c9hhLo9WyxJa0va0LJhu6A6Xoxb
+ 1lof539/B7Ftj289lKPOUmkc1ptwAptJokMVTIw==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
+On Fri, Jul 24, 2020 at 12:35:28PM -0400, Steven Rostedt wrote:
+> On Fri, 24 Jul 2020 18:19:21 +0200
+> Oscar Carter <oscar.carter@gmx.com> wrote:
+>
+> > > The linker trick is far less intrusive, and I believe less error pro=
+ne.
+> >
+> > If we use the linker trick, the warning -Wcast-function-type dissapear=
+s,
+> > but in a way that makes impossible to the compiler to get the necessar=
+y
+> > info about function prototypes to insert the commented check. As far I
+> > know, this linker trick (redirection of a function) is hidden for the
+> > CFI build.
+> >
+> > So, in my opinion, the linker trick is not suitable if we want to prot=
+ect
+> > the function pointers of the ftrace subsystem against an attack that
+> > modifiy the normal flow of the kernel.
+>
+> The linker trick should only affect architectures that don't implement
+> the needed features. I can make it so the linker trick is only applied
+> to those archs, and other archs that want more protection only need to
+> add these features to their architectures.
+>
+> It's much less intrusive than this patch.
 
-Applied, thanks for the fix!
+Sorry, but I don't understand your proposal. What features an arch need to
+add if want the CFI protection?
 
+>
+> -- Steve
 
-On 24/07/2020 19:01, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> When a thermal zone is looked up by an ID and no zone is found matching
-> that ID, the thermal_zone_get_by_id() function will return a pointer to
-> the thermal zone list head which isn't actually a valid thermal zone.
-> 
-> This can lead to a subsequent crash because a valid pointer is returned
-> to the called, but dereferencing that pointer as struct thermal_zone is
-> not safe.
-> 
-> Fixes: 329b064fbd13 ("thermal: core: Get thermal zone by id")
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  drivers/thermal/thermal_core.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index 007f9618e20a..9748fbb9a3a1 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -751,16 +751,18 @@ int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
->  
->  struct thermal_zone_device *thermal_zone_get_by_id(int id)
->  {
-> -	struct thermal_zone_device *tz = NULL;
-> +	struct thermal_zone_device *tz, *match = NULL;
->  
->  	mutex_lock(&thermal_list_lock);
->  	list_for_each_entry(tz, &thermal_tz_list, node) {
-> -		if (tz->id == id)
-> +		if (tz->id == id) {
-> +			match = tz;
->  			break;
-> +		}
->  	}
->  	mutex_unlock(&thermal_list_lock);
->  
-> -	return tz;
-> +	return match;
->  }
->  
->  void thermal_zone_device_unbind_exception(struct thermal_zone_device *tz,
-> 
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks,
+Oscar Carter
