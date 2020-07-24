@@ -2,105 +2,136 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A278DC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CF2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75D492070E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF410206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:05:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BtmjxCtK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qr8Lr+Ay"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="T0IFBHqa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgGXUDx (ORCPT
+        id S1726717AbgGXUFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 16:03:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgGXUDx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 16:03:53 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E003C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:03:53 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595621031;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TeW9A/qlTP1o8VO5EnHYgVwdURE2GyvHXNk/PN9Dj5s=;
-        b=BtmjxCtK8ctJgLSe8EjHUW2wx6+tzgzp71S39DtmA2VdicGT1NKLEFXkmc9HsIB3Lr3uqj
-        2AiBktpkFXj8ke5ISYhdL28i6mjaV17dLXTqB6tEA3xGtwn98xeFrXJt3sW1poETBtmWm9
-        0CrIW8HmtVRk0qnCA/nrf8IWN8nVHUgWbXwwjLvuZwpH89EICdm8zRCPzCfs9JdN/zioQh
-        IJIOquRNKpSBpgy2OUIh+EEzSyeo+/vpK0x42UhtTSDxNg16X2NZuxGUBm6z6c/LLyn5Tl
-        9dESUbP1iPqIuqnb1h9jhPnqg5QlMduPfBMYctzzg0LnWhN4rs1FQl5nSZcilA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595621031;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TeW9A/qlTP1o8VO5EnHYgVwdURE2GyvHXNk/PN9Dj5s=;
-        b=qr8Lr+Ay0lMnpkHs46mGO8NrG8s/Ha1Lws3i6vjRcQBpkm3avItorbjRTpQo+X+JYSPbgO
-        +XbGzm/Q4bv/hJCQ==
-To:     John Keeping <john@metanate.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Ben Herrenschmidt <benh@amazon.com>,
-        Ali Saidi <alisaidi@amazon.com>, Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2] genirq/affinity: Handle affinity setting on inactive interrupts correctly
-In-Reply-To: <20200724182422.27ddced6.john@metanate.com>
-References: <87k0z2s2q3.fsf@nanos.tec.linutronix.de> <877dv2rv25.fsf@nanos.tec.linutronix.de> <20200724182422.27ddced6.john@metanate.com>
-Date:   Fri, 24 Jul 2020 22:03:50 +0200
-Message-ID: <87h7twu1cp.fsf@nanos.tec.linutronix.de>
+        Fri, 24 Jul 2020 16:05:10 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:36144 "EHLO nat-hk.nvidia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726381AbgGXUFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 16:05:10 -0400
+Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.100]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f1b3ef30000>; Sat, 25 Jul 2020 04:05:07 +0800
+Received: from HKMAIL102.nvidia.com ([10.18.16.11])
+  by hkpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 24 Jul 2020 13:05:07 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate102.nvidia.com on Fri, 24 Jul 2020 13:05:07 -0700
+Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL102.nvidia.com
+ (10.18.16.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 24 Jul
+ 2020 20:05:07 +0000
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
+ by HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Fri, 24 Jul 2020 20:05:06 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KlBuPhvKFBlISCytCjT2fYgdfEUxiWLW9CSIbzunf6Fc9hUoeELOlMDnKj486+FP8Si1I4G3QTIas8gymrxyu9tDynjalfxJ7vb9DHelUYRDwG8SYw2qkldNKKnmpzJIT1GyiHfINWCoyI479PrQrk0Ht3s6arx66YVJ5Q8xKWWM467tChJU5G2wc2a18V1/ddNFuhAjB7wKZFse3KexTiooWPn9yxI10rQHst7M8AXHY+nkrtELDL6kwy+MUf6CX2hp7p08HgdGrO3kqQX+U09IQIhbCF07fjswKcdAzRkYPesSrjZyDaGmZeuJoRVep8xLg4GR4FG0+QZoLqzjJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Y9GDbXUogGyoJfp0xcchvrjcp/jc7V3YPuzA556lps=;
+ b=Ca3KOlXrUOmZkX2Ag6izDFWZtSpyfxz265hj9wKn4qm5q6MGLj7cBPihB35SZ8R/6vBdIlrE9srkR/Chai+eKjdqmHJN8Fv3kHeccSwTacWxj3U6zpJG6pBI/e+6K9J9ielRgXaQnUaF586cXX5ASJX55TmcHMqG5C+G6sqw3hpxWs+xrOBxbg1C2PMRPlRCE7vDupC5JDrtW2kUn8qsDyRGHoG8RHuTbEeB9iQgq6/vvA7rTUF0m2C6MHcZ4z6vmKlRwp5fBguUmW5MT5NUdAOPOPDenTp3eKsl0Ke9xOZFF+nWZ70pFixXLgbYMWp2U0HTP1xXgzBNN3ocfOKmQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: ucw.cz; dkim=none (message not signed)
+ header.d=none;ucw.cz; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB1658.namprd12.prod.outlook.com (2603:10b6:4:5::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3216.21; Fri, 24 Jul 2020 20:05:04 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3216.024; Fri, 24 Jul 2020
+ 20:05:04 +0000
+Date:   Fri, 24 Jul 2020 17:05:02 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <dledford@redhat.com>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <trivial@kernel.org>
+Subject: Re: [PATCH] RDMA/mlx5: fix typo in structure name
+Message-ID: <20200724200502.GA3671003@nvidia.com>
+References: <20200724084112.GC31930@amd>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200724084112.GC31930@amd>
+X-ClientProxiedBy: MN2PR05CA0013.namprd05.prod.outlook.com
+ (2603:10b6:208:c0::26) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR05CA0013.namprd05.prod.outlook.com (2603:10b6:208:c0::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9 via Frontend Transport; Fri, 24 Jul 2020 20:05:03 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1jz3wE-00FP0m-Mb; Fri, 24 Jul 2020 17:05:02 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 621ed405-3b6c-41f2-0a45-08d8300cda8b
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1658:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1658378296F8D5E3C354F38EC2770@DM5PR12MB1658.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: n/B0y8olNcJBBzfl1teUwwF1GwYNE4fZZXpMwda/kO8ivKC3jIxD0ebd9+xci2dss8JBc9Ds14xPqKuLND/T29zS9IVOv/TySDnUUdYNsGYm/o5ovdoloKN1eQu6e5bVoFyfokf3cMH8Rf8EfaZ/TPbWgBZmaI29t9PsAs1dep6yjXFxM5QswhVYbMgpeBmXnWaJZUIZL1LsrdMuNk9mHkEw7gvEB1fh+UmIAqxQ7d0V5dYEIyURKePpLqRAtbW+Us2WAoWCw4HSk/JIZM8VZO4sAUx7dspoJhkbMJuYXv9yj34de/hFBV/SAuRj8zHs2vDxSWvTxUs3OJ9vASn8sA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(376002)(396003)(39860400002)(6916009)(478600001)(9786002)(66556008)(2616005)(66476007)(316002)(1076003)(86362001)(36756003)(9746002)(426003)(8676002)(4326008)(33656002)(26005)(66946007)(5660300002)(2906002)(8936002)(558084003)(186003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 2PXy5G48LhH4r8eRU+kTmjBKG24EUViycfuvynRo1aGr/7+bb1J3Iz437/bi4hLO8Avlx2BT5hNOm10I2v1+fioTeoacrHZ+7NQYOMw5uX/R/D+N9bIOfSMlxBEmiQ1qxgUL5KS0OXRHQFpQMCQNdyEHlzmXUpCfkBeX/RRcEWxVi/jap0Anrgzi0L/+KQVvBZz5MUdCzdH44HWltrBjmDf3ccCJlT9lkOA5W58hzqNw40YbuYtQV9nzaN9h1ScbDYbP0rKbxpfvAjYTjcnHu/T7vRe7b+JYD+F6LaHF5mUW1G4fbSVhunsIiLrH4kwy9v5LyEWY94Mp5gsCA9io694dbBwzJl28rJUWEC/6mCLdV/dTUGzoUtDng31dSqj1kOgG8yRvxMpec1rexscvBcWtAZEKTYlTA7DlwPFi4lLxRikUQu0OK8nIFkL8E2zt67X4aFDjeI6hRnDSY3pHBlVQpTqZcdTK7/msE0+YHi8=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 621ed405-3b6c-41f2-0a45-08d8300cda8b
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 20:05:04.0109
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: W9SB9lSoFjyBkpChZBsgXcvmILWWOCZmkcM74iYAIQS7qNVY4VUbSzeIz0z02Fpv
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1658
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595621107; bh=0Y9GDbXUogGyoJfp0xcchvrjcp/jc7V3YPuzA556lps=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
+         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=T0IFBHqanoyaFNmN6B3oTFPuAPg1RWtZwV0kleyedHsC6KCKaPTP7Bc+2FllDCEFG
+         BYWBWtOuAaaQ9qpebP44uKN2qOugxP85cPdkQuupoh3r9bfJQSwLFgqdHR0nxwqh1n
+         6p4a+suTfdAtBwsI1IQ9SGcVs+FZ0jT9yiD6eHq5OumEqQGq7yRZnrFWWULyzOJNRq
+         lNb5aJA2wja/AUaeYUohQC2ibiH/b4fw1FEfQj7K5WaCcor87m8YZq3hZxK1qZAsas
+         r0jUVxzlUBuY1cX7Vgw7k2BUJRPrGrsQCGAhoFC90wq8LtMMO0/53QC1wDeyK4ku1e
+         XHTPd35w1JcNA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-John,
+On Fri, Jul 24, 2020 at 10:41:12AM +0200, Pavel Machek wrote:
+> This is user API, but likely noone uses it...? Fix it before it
+> becomes problem.
+> 
+> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
 
-John Keeping <john@metanate.com> writes:
-> On Fri, 17 Jul 2020 18:00:02 +0200
-> Thomas Gleixner <tglx@linutronix.de> wrote:
-> It seems that this patch breaks perf events on RK3288 because the PMU
-> interrupts that should be per-cpu are now all on CPU0 so no events are
-> collected from CPUs 1-3 and those interrupts are killed as spurious
-> after a few seconds.
->
-> I'm seeing this on 4.19.134 and 5.4.53 but as far as I can tell the
-> relevant code hasn't changed through to next-20200723.  Reverting the
-> backport of this change fixes the problem.
+Applied to for-next, thanks
 
-Bah.
-
-> It looks like what happens is that because the interrupts are not
-> per-CPU in the hardware, armpmu_request_irq() calls irq_force_affinity()
-> while the interrupt is deactivated and then request_irq() with
-> IRQF_PERCPU | IRQF_NOBALANCING.
->
-> Now when irq_startup() runs with IRQ_STARTUP_NORMAL, it calls
-> irq_setup_affinity() which returns early because IRQF_PERCPU and
-> IRQF_NOBALANCING are set, leaving the interrupt on its original CPU.
-
-Right. My brain tricked me to believe that we made activation mandatory,
-but that's not.
-
-I have some ideas for a trivial generic way to solve this without
-undoing the commit in question and without going through all the irq
-chip drivers. So far everything I came up with is butt ugly. Maybe Marc
-has some brilliant idea.
-
-Sorry for the wreckage and thanks for the excellent problem
-description. I'll come back to you in the next days.
-
-Thanks,
-
-        tglx
-
-
+Jason
