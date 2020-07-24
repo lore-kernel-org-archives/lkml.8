@@ -2,157 +2,172 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A293C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09355C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEBB206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9392064C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:10:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kuy4/sNc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgGXRHp (ORCPT
+        id S1726835AbgGXRKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:07:45 -0400
-Received: from gecko.sbs.de ([194.138.37.40]:46604 "EHLO gecko.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbgGXRHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:07:45 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 06OH7AVU029510
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jul 2020 19:07:10 +0200
-Received: from [139.22.112.247] ([139.22.112.247])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 06OH76bs007058;
-        Fri, 24 Jul 2020 19:07:07 +0200
-Subject: Re: [PATCH 4.9 18/22] x86/fpu: Disable bottom halves while loading
- FPU registers
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        kvm ML <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Rik van Riel <riel@surriel.com>, x86-ml <x86@kernel.org>,
-        cip-dev <cip-dev@lists.cip-project.org>
-References: <20181228113126.144310132@linuxfoundation.org>
- <20181228113127.414176417@linuxfoundation.org>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <01857944-ce1a-c6cd-3666-1e9b6ca8cccc@siemens.com>
-Date:   Fri, 24 Jul 2020 19:07:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 13:10:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbgGXRKV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:10:21 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94DBDC0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:10:21 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l63so5596382pge.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:10:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qkAaFjery3QjJ83jfEJ0MJlBn4m3y6EVIy2ZbJLV8bU=;
+        b=kuy4/sNcdDcQ202jEjqBuGOnLzo0pbV5eJseYDLyUGSWZ8ex6s9jqe0ekBtgjg6ljJ
+         7PTWh+d687iUKNUgu6iPFMx78M8I0pYjZBP/8ZLz+DB+7k9ZMhN4yaX5XA/O/Sdo5iMP
+         p05otZD7eM5+ZLXdt3oma4VUUiuuVuZZzYjV8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qkAaFjery3QjJ83jfEJ0MJlBn4m3y6EVIy2ZbJLV8bU=;
+        b=tw3+R0ajJMCTlwu1g8qavUj95V5+fHLYTc+XWzGwX3nwNKc0DJmH0q6Xf404/lUQCt
+         tPukCp0dJRvBQFJvcYvx+ecKbkTn3T6KlSmZJmDKsj5tFXdIkLuU1mHE/g4O19wC9lpR
+         bKO38Y+ALHHqWsJ1fVg1eMaHzB6k/Tx2eXBJyE7TZowVSQcuGWwtzt5S/WhijvbQmsFS
+         +kSVApS+mzXk8PvdUg0Cvz0BMGQkSMGkY6PlJdbkIWmJSpTdqLTR1Y7Z2dPsFcrQ7tW+
+         /lKlifAb+g7F5bbSUztXwzszZQ8Ac++ts8SulbZQqIpJDKrWp/KQ0NZPG2eNFQUgzh+l
+         S3AA==
+X-Gm-Message-State: AOAM530JwmYUiRKuM/UJxmhvb21b6EFrgrpwjKV+vQRhZk7vMxP0TZ0f
+        dyfPuJ/r+a0o5OnQVr7LBhmxaQ==
+X-Google-Smtp-Source: ABdhPJzZxhrzHOCqKvqD4WQ6yqc1s3n1hBE8cuy5bTPcCpOum59Gr0QXldYjMlULUPK1IaxQYnkh4g==
+X-Received: by 2002:a63:7c5:: with SMTP id 188mr9653775pgh.48.1595610621095;
+        Fri, 24 Jul 2020 10:10:21 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id m17sm7265223pfo.182.2020.07.24.10.10.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 10:10:19 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 10:10:18 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, rnayak@codeaurora.org,
+        Pradeep P V K <ppvk@codeaurora.org>
+Subject: Re: [PATCH V2] arm64: dts: qcom: sc7180: Add bandwidth votes for
+ eMMC and SDcard
+Message-ID: <20200724171018.GZ3191083@google.com>
+References: <1595328381-29552-1-git-send-email-sbhanu@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20181228113127.414176417@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1595328381-29552-1-git-send-email-sbhanu@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.12.18 12:52, Greg Kroah-Hartman wrote:
-> 4.9-stable review patch.  If anyone has any objections, please let me know.
+Hi Shaik,
+
+On Tue, Jul 21, 2020 at 04:16:21PM +0530, Shaik Sajida Bhanu wrote:
+> From: Pradeep P V K <ppvk@codeaurora.org>
 > 
-> ------------------
+> Add the bandwidth domain supporting performance state and
+> the corresponding OPP tables for the sdhc device on sc7180.
 > 
-> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> 
-> commit 68239654acafe6aad5a3c1dc7237e60accfebc03 upstream.
-> 
-> The sequence
-> 
->    fpu->initialized = 1;		/* step A */
->    preempt_disable();		/* step B */
->    fpu__restore(fpu);
->    preempt_enable();
-> 
-> in __fpu__restore_sig() is racy in regard to a context switch.
-> 
-> For 32bit frames, __fpu__restore_sig() prepares the FPU state within
-> fpu->state. To ensure that a context switch (switch_fpu_prepare() in
-> particular) does not modify fpu->state it uses fpu__drop() which sets
-> fpu->initialized to 0.
-> 
-> After fpu->initialized is cleared, the CPU's FPU state is not saved
-> to fpu->state during a context switch. The new state is loaded via
-> fpu__restore(). It gets loaded into fpu->state from userland and
-> ensured it is sane. fpu->initialized is then set to 1 in order to avoid
-> fpu__initialize() doing anything (overwrite the new state) which is part
-> of fpu__restore().
-> 
-> A context switch between step A and B above would save CPU's current FPU
-> registers to fpu->state and overwrite the newly prepared state. This
-> looks like a tiny race window but the Kernel Test Robot reported this
-> back in 2016 while we had lazy FPU support. Borislav Petkov made the
-> link between that report and another patch that has been posted. Since
-> the removal of the lazy FPU support, this race goes unnoticed because
-> the warning has been removed.
-> 
-> Disable bottom halves around the restore sequence to avoid the race. BH
-> need to be disabled because BH is allowed to run (even with preemption
-> disabled) and might invoke kernel_fpu_begin() by doing IPsec.
-> 
->   [ bp: massage commit message a bit. ]
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Acked-by: Ingo Molnar <mingo@kernel.org>
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-> Cc: kvm ML <kvm@vger.kernel.org>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Rik van Riel <riel@surriel.com>
-> Cc: stable@vger.kernel.org
-> Cc: x86-ml <x86@kernel.org>
-> Link: http://lkml.kernel.org/r/20181120102635.ddv3fvavxajjlfqk@linutronix.de
-> Link: https://lkml.kernel.org/r/20160226074940.GA28911@pd.tnic
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
 > ---
->   arch/x86/kernel/fpu/signal.c |    4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> --- a/arch/x86/kernel/fpu/signal.c
-> +++ b/arch/x86/kernel/fpu/signal.c
-> @@ -342,10 +342,10 @@ static int __fpu__restore_sig(void __use
->   			sanitize_restored_xstate(tsk, &env, xfeatures, fx_only);
->   		}
->   
-> +		local_bh_disable();
->   		fpu->fpstate_active = 1;
-> -		preempt_disable();
->   		fpu__restore(fpu);
-> -		preempt_enable();
-> +		local_bh_enable();
->   
->   		return err;
->   	} else {
+> Changes since V1:
+> 	- Incorporated review comments by Bjorn Andersson.
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 68f9894..d78a066 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -684,6 +684,9 @@
+>  			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+>  					<&gcc GCC_SDCC1_AHB_CLK>;
+>  			clock-names = "core", "iface";
+> +			interconnects = <&aggre1_noc MASTER_EMMC &mc_virt SLAVE_EBI1>,
+> +				<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_EMMC_CFG>;
+> +			interconnect-names = "sdhc-ddr","cpu-sdhc";
+>  			power-domains = <&rpmhpd SC7180_CX>;
+>  			operating-points-v2 = <&sdhc1_opp_table>;
+>  
+> @@ -704,11 +707,15 @@
+>  				opp-100000000 {
+>  					opp-hz = /bits/ 64 <100000000>;
+>  					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <100000 100000>;
+> +					opp-avg-kBps = <100000 50000>;
+>  				};
+>  
+>  				opp-384000000 {
+>  					opp-hz = /bits/ 64 <384000000>;
+>  					required-opps = <&rpmhpd_opp_svs_l1>;
+> +					opp-peak-kBps = <600000 900000>;
+> +					opp-avg-kBps = <261438 300000>;
+>  				};
+>  			};
+>  		};
+> @@ -2476,6 +2483,10 @@
+>  			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+>  					<&gcc GCC_SDCC2_AHB_CLK>;
+>  			clock-names = "core", "iface";
+> +
+> +			interconnects = <&aggre1_noc MASTER_SDCC_2 &mc_virt SLAVE_EBI1>,
+> +				<&gem_noc MASTER_APPSS_PROC &config_noc	SLAVE_SDCC_2>;
+> +			interconnect-names = "sdhc-ddr","cpu-sdhc";
+>  			power-domains = <&rpmhpd SC7180_CX>;
+>  			operating-points-v2 = <&sdhc2_opp_table>;
+>  
+> @@ -2489,11 +2500,15 @@
+>  				opp-100000000 {
+>  					opp-hz = /bits/ 64 <100000000>;
+>  					required-opps = <&rpmhpd_opp_low_svs>;
+> +					opp-peak-kBps = <160000 100000>;
+> +					opp-avg-kBps = <80000 50000>;
+>  				};
+>  
+>  				opp-202000000 {
+>  					opp-hz = /bits/ 64 <202000000>;
+>  					required-opps = <&rpmhpd_opp_svs_l1>;
+> +					opp-peak-kBps = <200000	120000>;
+> +					opp-avg-kBps = <100000 60000>;
+>  				};
+>  			};
+>  		};
 
-Any reason why the backport stopped back than at 4.9? I just debugged 
-this out of a 4.4 kernel, and it is needed there as well. I'm happy to 
-propose a backport, would just appreciate a hint if the BH protection is 
-needed also there (my case was without BH).
+Does the sdhci-msm driver actually have BW scaling support at this point?
 
-Thanks,
-Jan
+There is commit 4ece9795be56 ("mmc: sdhci-msm: Add interconnect
+bandwidth scaling support"), whose commit message says "make sure
+interconnect driver is ready before handling interconnect scaling.".
 
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+I haven't seen any patch adding the scaling support (supposedly by
+adding dev_pm_opp_set_bw() calls?). Did I miss it? If not it seems
+it would make sense to post it in a series together with this patch,
+as far as I can tell this patch alone does nothing in practical terms.
+
+grep sdhc /sys/kernel/debug/interconnect/interconnect_summary
+  8804000.sdhci                          0            0            0
+  7c4000.sdhci                           0            0            0
+  7c4000.sdhci                           0            0            0
+  8804000.sdhci                          0            0            0
+  ...
