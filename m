@@ -2,134 +2,134 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD140C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A157B206C1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1FB206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:57:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AK0WtPv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgGXM4I (ORCPT
+        id S1726758AbgGXM5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:56:08 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35551 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbgGXM4H (ORCPT
+        Fri, 24 Jul 2020 08:57:22 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:41187 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726235AbgGXM5W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:56:07 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jyxF6-0003TN-Sh; Fri, 24 Jul 2020 12:56:04 +0000
-Subject: Re: [PATCH] sctp: remove redundant initialization of variable status
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc:     Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200724121753.16721-1-colin.king@canonical.com>
- <20200724125514.GD3399@localhost.localdomain>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ff52bd0f-ff45-477d-4a66-8f8e98328122@canonical.com>
-Date:   Fri, 24 Jul 2020 13:56:04 +0100
+        Fri, 24 Jul 2020 08:57:22 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06OCvBYg002758;
+        Fri, 24 Jul 2020 14:57:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=u81ztgjIJJ329cqaZ/0ZrdkPGl4LegMpe1IdzmOvXJ8=;
+ b=AK0WtPv0aSmrZ9MBGxNzHF7Vouss8MhB9iwPS2EbZp/ZWxx0Z5AeG1vCuTjYXi9eqHpB
+ HppYnVIazp6gFPmxCbtf87cyY9NR19Wo4LEYIw1Xc8QhIzfBwJ9j9deogKKputQT1CfW
+ ApwRla7mo4RyGooh1OWHuFmz5sFLR2SVuTBjzIlLZVm4LyuIPo+Rwxcy3VTkrpSMXRLW
+ OE44Uq3UmboZg1nhWSTMYdyHFvf/k02HAcPWGQIb3vUxRG6JXZ9ukQPN0EEj/+4JRsyR
+ BLfTFn9X91o+f0z7NaLPdbUK9zwbwYf5Pnf0zCio89ag2lKl5Zra0PxxBK7OxLxwkpXU nA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32bs6vg63r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Jul 2020 14:57:11 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 33AEF100034;
+        Fri, 24 Jul 2020 14:57:07 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1BF752A4D8E;
+        Fri, 24 Jul 2020 14:57:07 +0200 (CEST)
+Received: from lmecxl0995.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 Jul
+ 2020 14:57:06 +0200
+Subject: Re: [PATCH 0/3] Add USB role switch support to DWC2
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>, <linux-usb@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+References: <20200616140717.28465-1-amelie.delaunay@st.com>
+ <d8069a78-2640-d112-a2fb-d86b99a8e44f@st.com>
+From:   Amelie DELAUNAY <amelie.delaunay@st.com>
+Message-ID: <97cd44c1-9e19-94bc-54f8-204d79b79975@st.com>
+Date:   Fri, 24 Jul 2020 14:57:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200724125514.GD3399@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <d8069a78-2640-d112-a2fb-d86b99a8e44f@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-24_04:2020-07-24,2020-07-24 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/07/2020 13:55, Marcelo Ricardo Leitner wrote:
-> On Fri, Jul 24, 2020 at 01:17:53PM +0100, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> The variable status is being initialized with a value that is never read
->> and it is being updated later with a new value.  The initialization is
->> redundant and can be removed.
->>
->> Addresses-Coverity: ("Unused value")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> 
-> Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-> 
-> Are you willing to send another to patch to fix the var ordering in
-> reverse christmass tree in there?
+Hi Felipe,
 
-Sure, I'll send a V2 to re-order the vars.
+I saw that you took DT patch (ARM: dts: stm32: enable usb-role-switch on 
+USB OTG on stm32mp15xx-dkx) in your next branch. As it was already in
+Alex' stm32-next branch, a potential merge conflict could occurred.
 
+Regards,
+Amelie
+
+On 7/21/20 10:54 AM, Alexandre Torgue wrote:
+> Hi Amélie
 > 
->> ---
->>  net/sctp/protocol.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
+> On 6/16/20 4:07 PM, Amelie Delaunay wrote:
+>> When using usb-c connector (but it can also be the case with a micro-b
+>> connector), iddig, avalid, bvalid, vbusvalid input signals may not be
+>> connected to the DWC2 OTG controller.
+>> DWC2 OTG controller features an overriding control of the PHY voltage 
+>> valid
+>> and ID input signals.
+>> So, missing signals can be forced using usb role from usb role switch and
+>> this override feature.
 >>
->> diff --git a/net/sctp/protocol.c b/net/sctp/protocol.c
->> index 7ecaf7d575c0..a0448f7c64b9 100644
->> --- a/net/sctp/protocol.c
->> +++ b/net/sctp/protocol.c
->> @@ -1368,7 +1368,7 @@ static struct pernet_operations sctp_ctrlsock_ops = {
->>  static __init int sctp_init(void)
->>  {
->>  	int i;
->> -	int status = -EINVAL;
->> +	int status;
->>  	unsigned long goal;
->>  	unsigned long limit;
->>  	unsigned long nr_pages = totalram_pages();
->> -- 
->> 2.27.0
+>> This series adds support for usb role switch to dwc2, by using overriding
+>> control of the PHY voltage valid and ID input signals.
 >>
-
+>> It has been tested on stm32mp157c-dk2 [1], which has a Type-C connector
+>> managed by a Type-C port controller, and connected to USB OTG controller.
+>>
+>> [1] https://www.st.com/en/evaluation-tools/stm32mp157c-dk2.html
+>>
+>> Amelie Delaunay (3):
+>>    usb: dwc2: override PHY input signals with usb role switch support
+>>    usb: dwc2: don't use ID/Vbus detection if usb-role-switch on STM32MP15
+>>      SoCs
+>>    ARM: dts: stm32: enable usb-role-switch on USB OTG on stm32mp15xx-dkx
+>>
+>>   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi |   2 +-
+>>   drivers/usb/dwc2/Kconfig               |   1 +
+>>   drivers/usb/dwc2/Makefile              |   2 +-
+>>   drivers/usb/dwc2/core.h                |   8 ++
+>>   drivers/usb/dwc2/drd.c                 | 190 +++++++++++++++++++++++++
+>>   drivers/usb/dwc2/gadget.c              |   2 +-
+>>   drivers/usb/dwc2/params.c              |   4 +-
+>>   drivers/usb/dwc2/platform.c            |  13 ++
+>>   8 files changed, 218 insertions(+), 4 deletions(-)
+>>   create mode 100644 drivers/usb/dwc2/drd.c
+>>
+> 
+> DT patch applied on stm32-next.
+> 
+> Thanks
+> Alex
