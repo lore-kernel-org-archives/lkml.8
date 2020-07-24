@@ -2,83 +2,179 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B074DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 15:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 602C2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 15:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88487206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 15:00:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595602832;
-	bh=RIPb8L5tuFmr36nEbM6kWNkrodrpmItfj74Y1snUV18=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BgKjbwIbIcRBOOMnohmI4HpolgJ94IE93Vb6FyH5iW2u/T7WTTPAwxOs/DnaxTYn5
-	 I5jDaUFEhgAPVM4P87+8IJpLdKAwXJVV3U2KLflSYQkGRcfsILtfOlRfrq2eKoX8DE
-	 Ef3mTm3+mpFCU95p4cKLHpjHCkeyoLk2pzCOMy9Q=
+	by mail.kernel.org (Postfix) with ESMTP id 3C691206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 15:04:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="loHVUzuS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgGXPAb (ORCPT
+        id S1726701AbgGXPEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 11:00:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbgGXPAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 11:00:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07AAB206D8;
-        Fri, 24 Jul 2020 15:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595602830;
-        bh=RIPb8L5tuFmr36nEbM6kWNkrodrpmItfj74Y1snUV18=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TowwC36WHR1KZJhXBbG59vF03xaBbNLtrUsYxTL+t2dNrP/DjqdSarxARP/x0ROiX
-         d6Z+FsgjaWM1g1VYb0lUXoksoFfRhu9nAoy51IYb9vvSzd0Z8TLN9mPt3kz0U9lU8X
-         HZHoaJap5TRwYom0wv+X9lnpGrO9PuDrrnq/8jBA=
-Date:   Fri, 24 Jul 2020 17:00:32 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org,
-        akpm@linuxfoundation.org, linux@rasmusvillemoes.dk
-Subject: Re: [PATCH v5 00/18] dynamic_debug fixes, cleanups, features, export
-Message-ID: <20200724150032.GB330332@kroah.com>
-References: <20200719231058.1586423-1-jim.cromie@gmail.com>
- <4d7244b1-fa4d-f1bd-42e4-7123116e708f@akamai.com>
- <20200724145900.GA330332@kroah.com>
+        Fri, 24 Jul 2020 11:04:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgGXPE3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 11:04:29 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DBB0C0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 08:04:29 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f18so8567376wml.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 08:04:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CwqTzUi/rsF9bmn8x3JnPsegKmJmnxCYF19O9EiQB8g=;
+        b=loHVUzuSXm/GXdrjvO7AU7jZHFLrpAAJsnJpXBS5lUYxZQOZXQIF+xRvuPs3DbZJwC
+         JA/atED/VBunAZuU+Lc0CUar4pSOmbdofW5NR0oU8CB/wpFeotp11dUaouQkkRyWekaV
+         nvJIOGu036olMFpZ1yRHiOSXDx2dZfnlWh4Moz5+LJjRF9ftz7OV84tRwdSBiwfcwOf7
+         4CQW0MLexrp3YA1UAOPs8dVXsLL0ciCmTKs2j8p8iqJw+YR1zAVO4XeUbbzVMEyJR//u
+         C0Ju4QattfSL52v4YmT6xs43zp0r04a+pGzBQLd74Aa/j8JeeGgowi7oIVB2CEsO6iI7
+         FaFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CwqTzUi/rsF9bmn8x3JnPsegKmJmnxCYF19O9EiQB8g=;
+        b=cgjByZ2FjK5y66w43yVrCsRBDKULKYvn9UA+P1rjetQRmAN9AHOcszularRLG5PisL
+         LzD/XCrwQQFP5I1qyqixNesbWkvZCP9wm21ZGwN+GKYGfjjpWEQsvZA40fqtswPmSNDD
+         56o//ff0Y5E2a5ZitQyy/JMkGgBtaB2zluYsb4iMa7kmlBrvcFPzqT4TPdUKrluuFngI
+         WUoG2N/i5XPJH/NNsQpp3VboxDe71Li7rDsNuvPNT6s7fAHYORTLsVqA4v0TC7EjZSeU
+         DjaCk1tHYvxH0HM4Hit/3ZntShk/1k6aQ+4Zs1H3BI0I/Y8nm8JhGrRwNb9xwpgHv9bI
+         dQrg==
+X-Gm-Message-State: AOAM530n3XmHSpQtroa+66WRjNA8pK/dKS8zMy2an1M66gWceNR5NqBf
+        PDsylcoE9mk2UCzf/ZlyY6GHtQ==
+X-Google-Smtp-Source: ABdhPJzl0EVy4Bj5RvkTByOZ6A7C/JVWAHmDOBveLcYBe6Hq1TeuhffCfAo09aU3U03SOlJnohe47A==
+X-Received: by 2002:a05:600c:285:: with SMTP id 5mr9496156wmk.41.1595603068117;
+        Fri, 24 Jul 2020 08:04:28 -0700 (PDT)
+Received: from [192.168.1.4] ([195.24.90.54])
+        by smtp.googlemail.com with ESMTPSA id m126sm407029wmf.3.2020.07.24.08.04.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 08:04:27 -0700 (PDT)
+Subject: Re: [PATCH 1/2] firmware: qcom_scm: Add memory protect virtual
+ address ranges
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Elliot Berman <eberman@codeaurora.org>
+References: <20200709115829.8194-1-stanimir.varbanov@linaro.org>
+ <20200709115829.8194-2-stanimir.varbanov@linaro.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <33a63665-2f75-1b58-8a0c-3b0a8979fb85@linaro.org>
+Date:   Fri, 24 Jul 2020 18:04:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724145900.GA330332@kroah.com>
+In-Reply-To: <20200709115829.8194-2-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 04:59:00PM +0200, Greg KH wrote:
-> On Fri, Jul 24, 2020 at 09:48:54AM -0400, Jason Baron wrote:
-> > 
-> > 
-> > On 7/19/20 7:10 PM, Jim Cromie wrote:
-> > > this is v5, changes from previous:
-> > >  - moved a chunk from patch 13 to 12, per Jason
-> > >  - shorten logging prefix to "dyndbg", drop __func__
-> > >  - now with more commit-log advocacy
-> > >  - shuffle EXPORT_GPL(ddebug_exec_queries) last.
-> > >  - v4+ series Acked-by: jbaron@akamai.com
-> > 
-> > Yes, series looks good to me:
-> > Acked-by: <jbaron@akamai.com>
-> > 
-> > Greg, what do you think about pulling in this series?
-> 
-> Me?  Am I the one who takes these patches?
-> 
-> Ok, will do, give me a few hours...
+Hi,
 
-Nevermind, b4 made quick work of that, now queued up, thanks.
+Gentle ping for review.
 
-greg k-h
+On 7/9/20 2:58 PM, Stanimir Varbanov wrote:
+> This adds a new SCM memprotect command to set virtual address ranges.
+> 
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  drivers/firmware/qcom_scm.c | 24 ++++++++++++++++++++++++
+>  drivers/firmware/qcom_scm.h |  1 +
+>  include/linux/qcom_scm.h    |  8 +++++++-
+>  3 files changed, 32 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index 0e7233a20f34..a73870255c2e 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -864,6 +864,30 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>  }
+>  EXPORT_SYMBOL(qcom_scm_assign_mem);
+>  
+> +int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+> +				   u32 cp_nonpixel_start,
+> +				   u32 cp_nonpixel_size)
+> +{
+> +	int ret;
+> +	struct qcom_scm_desc desc = {
+> +		.svc = QCOM_SCM_SVC_MP,
+> +		.cmd = QCOM_SCM_MP_VIDEO_VAR,
+> +		.arginfo = QCOM_SCM_ARGS(4, QCOM_SCM_VAL, QCOM_SCM_VAL,
+> +					 QCOM_SCM_VAL, QCOM_SCM_VAL),
+> +		.args[0] = cp_start,
+> +		.args[1] = cp_size,
+> +		.args[2] = cp_nonpixel_start,
+> +		.args[3] = cp_nonpixel_size,
+> +		.owner = ARM_SMCCC_OWNER_SIP,
+> +	};
+> +	struct qcom_scm_res res;
+> +
+> +	ret = qcom_scm_call(__scm->dev, &desc, &res);
+> +
+> +	return ret ? : res.result[0];
+> +}
+> +EXPORT_SYMBOL(qcom_scm_mem_protect_video_var);
+> +
+>  /**
+>   * qcom_scm_ocmem_lock_available() - is OCMEM lock/unlock interface available
+>   */
+> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+> index d9ed670da222..14da834ac593 100644
+> --- a/drivers/firmware/qcom_scm.h
+> +++ b/drivers/firmware/qcom_scm.h
+> @@ -97,6 +97,7 @@ extern int scm_legacy_call(struct device *dev, const struct qcom_scm_desc *desc,
+>  #define QCOM_SCM_MP_RESTORE_SEC_CFG		0x02
+>  #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE	0x03
+>  #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT	0x04
+> +#define QCOM_SCM_MP_VIDEO_VAR			0x08
+>  #define QCOM_SCM_MP_ASSIGN			0x16
+>  
+>  #define QCOM_SCM_SVC_OCMEM		0x0f
+> diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
+> index 3d6a24697761..19b5188d17f4 100644
+> --- a/include/linux/qcom_scm.h
+> +++ b/include/linux/qcom_scm.h
+> @@ -81,7 +81,9 @@ extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>  			       unsigned int *src,
+>  			       const struct qcom_scm_vmperm *newvm,
+>  			       unsigned int dest_cnt);
+> -
+> +extern int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+> +					  u32 cp_nonpixel_start,
+> +					  u32 cp_nonpixel_size);
+>  extern bool qcom_scm_ocmem_lock_available(void);
+>  extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
+>  			       u32 size, u32 mode);
+> @@ -131,6 +133,10 @@ static inline int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
+>  static inline int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>  		unsigned int *src, const struct qcom_scm_vmperm *newvm,
+>  		unsigned int dest_cnt) { return -ENODEV; }
+> +extern inline int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+> +						 u32 cp_nonpixel_start,
+> +						 u32 cp_nonpixel_size)
+> +		{ return -ENODEV; }
+>  
+>  static inline bool qcom_scm_ocmem_lock_available(void) { return false; }
+>  static inline int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
+> 
+
+-- 
+regards,
+Stan
