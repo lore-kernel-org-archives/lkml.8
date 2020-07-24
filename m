@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BEBC433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45425C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4861C2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B6520714
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:00:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XgaUDS6l"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="URAz3B9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgGXHAf (ORCPT
+        id S1726572AbgGXHAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:00:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33488 "EHLO
+        Fri, 24 Jul 2020 03:00:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbgGXHAc (ORCPT
+        with ESMTP id S1726861AbgGXHAi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:00:32 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 685C8C0619E4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:00:32 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 7so7213723ybl.5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:00:32 -0700 (PDT)
+        Fri, 24 Jul 2020 03:00:38 -0400
+Received: from mail-wm1-x34a.google.com (mail-wm1-x34a.google.com [IPv6:2a00:1450:4864:20::34a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB57C0619E5
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:00:38 -0700 (PDT)
+Received: by mail-wm1-x34a.google.com with SMTP id y204so3620151wmd.2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:00:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=5cayCuPk2wPjGrqLjRjs0da5Omg5sZGp1EbJR3QFOWA=;
-        b=XgaUDS6lp9nfPXqDpwi2F+CnJNkzEBfzakfczBxRxMHopo8/GKoQHgb1J4G2BLOPId
-         Tj7TokenLtlE0yd10U3xLpw2pvexm+cQHg8qZDXd1Hds+R8Ya60ZJRzH+X1ph8/9V0NP
-         gWGpMVej7a3D2OA5JAw31HMddDv9tUp2mmDz2ZVfGLMEWvFVPBmAWMbP2ZgSVe7ESAqV
-         W8GVG/bfHd984S3my9TIYv7ONr7HbP4/d7XOruVcCrWouarTuQeqHybf1gWxg8jKLCOd
-         1XOxupusauqtoiWHSTZ/+XEgsRxcCjs9WGMhPi069xiPfUBLCQtcY6BeixmJGEmKEamC
-         JG7g==
+        bh=nzPB/8gD7tiXvmPnGkXWvRfHEEqZYmZWnzjoz4lCFa4=;
+        b=URAz3B9pmI3bMj/6AQUMnQQhW0rplCGsl7EloPnKMvSTNGhtNnCDfpGQ/8+TWhN/lS
+         eu93QjVcDkQhVrqUknfjSvB0XOajZEZToOyVflz40sULKVkXx6GdG2Jl9RetHholLscb
+         PoV5V60V4M9lw/Srge2zKAj1zk8uQFxfbooBj805sbbIK/sv+2won75T8Ek6ZGQN9uEK
+         4+p+bDebrCVEHu50+mjp7zz0MS0fpWFGfLHruk2rEJmQEiqiXAcTlPldK0MredKRg7Tu
+         hIeWfrLaMilSJpOi81uGZWmzYRa14TOKhpPwhFvIXdYF90TU+Nm8AI28zeAGN4zl+ncI
+         mmoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=5cayCuPk2wPjGrqLjRjs0da5Omg5sZGp1EbJR3QFOWA=;
-        b=ac+l+B0MT4P4zXWw36YBXZiOW2+Kddk1aP9IXgmzGYbeCFJ1xNdMRqgJgpgws2FVpI
-         ViGfEKg+zjee77PhGDZHhEhaoMbXHO5YXOYKQ8LWzsd/y4zt3pUaUuhxunfNb9MrqOle
-         ouO1DG1RYbHedCN1JEZL/NYQbkf8DQeYpz/ADipnLPGbf7/tUeXmqe+9vjGROz4SMYoy
-         nsNFZvYFEbifSN3YMnnN59zNypP/PwXknhixp+dXbxX6u89v1PMOCZn8+AcwVUUvDhPp
-         UYImAqwlFCcQ1x1jiyyR4wnqUB3hnIG/VyZp64Dl+k3E4iRfq4yjY5KV578lmRN6W51x
-         SRrA==
-X-Gm-Message-State: AOAM531PsPttsvkt3zyMonShnb78HXWic/6B69kHTMNSBQOpCvZpn5mB
-        DE5jbJZLkvcFgzhud0UGdMaD0qaJbg==
-X-Google-Smtp-Source: ABdhPJzcsx9MWCrFPtOouS3kHQd2xrtiLfC+0hwi+LxDJkH7/b/r8aGAco8bTXZRQ9ZDKDFku2rj0XEIzA==
-X-Received: by 2002:a25:b68d:: with SMTP id s13mr13979168ybj.330.1595574031586;
- Fri, 24 Jul 2020 00:00:31 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 09:00:04 +0200
+        bh=nzPB/8gD7tiXvmPnGkXWvRfHEEqZYmZWnzjoz4lCFa4=;
+        b=DPdnI6hfocQ613QiKJWG1iGnz8pDvvgiqsYSybAIEcmYsvgHjuKFiYA4Ph5qKdbKCg
+         4tpf/1F0GV3HP+83Ez0oDxfV22jRops1ggKKfvrosf51umCyRMxWcPdJ0ZXVIsvOIcFi
+         WWynvVaG01brC7W9gLNzu8hC3f8a9pPYIRtTzChCqKHOleLd2evDBij7orwXVt3aQJS/
+         VTIJVMnwhoZ+4U9Ha8ZTnNZghO9tBV8EnpM/7RiqF0+53Dh1eI/ZdPntIIRM8z0Q8NLq
+         U5GbKURa3+TAPN7nNWR4KhdhilgUzElB5hjQeQKxT4Ug21yxxRj4zGekLGw4ArqVIjVP
+         OOFw==
+X-Gm-Message-State: AOAM530MblObt+YXH6rqVytauFIvIFPhwygAxFP9JqD6cwFYgKBR7cFm
+        KAKjUUyYGbTqBGTAhqCyP/XqU8bchQ==
+X-Google-Smtp-Source: ABdhPJx2JoNHbcPJzjn4ZQvYwamZ3dXW5+J9rF1Ytf7+0vXB5i7gS14K5hdGsJuzH9+fJNjTZ5Y2F4/QdQ==
+X-Received: by 2002:adf:e805:: with SMTP id o5mr7608214wrm.419.1595574036687;
+ Fri, 24 Jul 2020 00:00:36 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 09:00:06 +0200
 In-Reply-To: <20200724070008.1389205-1-elver@google.com>
-Message-Id: <20200724070008.1389205-5-elver@google.com>
+Message-Id: <20200724070008.1389205-7-elver@google.com>
 Mime-Version: 1.0
 References: <20200724070008.1389205-1-elver@google.com>
 X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH v2 4/8] kcsan: Add missing CONFIG_KCSAN_IGNORE_ATOMICS checks
+Subject: [PATCH v2 6/8] instrumented.h: Introduce read-write instrumentation hooks
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com, paulmck@kernel.org
 Cc:     will@kernel.org, peterz@infradead.org, arnd@arndb.de,
@@ -75,87 +75,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing CONFIG_KCSAN_IGNORE_ATOMICS checks for the builtin atomics
-instrumentation.
+Introduce read-write instrumentation hooks, to more precisely denote an
+operation's behaviour.
+
+KCSAN is able to distinguish compound instrumentation, and with the new
+instrumentation we then benefit from improved reporting. More
+importantly, read-write compound operations should not implicitly be
+treated as atomic, if they aren't actually atomic.
 
 Signed-off-by: Marco Elver <elver@google.com>
 ---
-v2:
-* Add {} for readability.
+ include/linux/instrumented.h | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Added to this series, as it would otherwise cause patch conflicts.
----
- kernel/kcsan/core.c | 30 ++++++++++++++++++++++--------
- 1 file changed, 22 insertions(+), 8 deletions(-)
-
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 4633baebf84e..e43a55643e00 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -892,14 +892,19 @@ EXPORT_SYMBOL(__tsan_init);
- 	u##bits __tsan_atomic##bits##_load(const u##bits *ptr, int memorder);                      \
- 	u##bits __tsan_atomic##bits##_load(const u##bits *ptr, int memorder)                       \
- 	{                                                                                          \
--		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_ATOMIC);                      \
-+		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS)) {                                    \
-+			check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_ATOMIC);              \
-+		}                                                                                  \
- 		return __atomic_load_n(ptr, memorder);                                             \
- 	}                                                                                          \
- 	EXPORT_SYMBOL(__tsan_atomic##bits##_load);                                                 \
- 	void __tsan_atomic##bits##_store(u##bits *ptr, u##bits v, int memorder);                   \
- 	void __tsan_atomic##bits##_store(u##bits *ptr, u##bits v, int memorder)                    \
- 	{                                                                                          \
--		check_access(ptr, bits / BITS_PER_BYTE, KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC); \
-+		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS)) {                                    \
-+			check_access(ptr, bits / BITS_PER_BYTE,                                    \
-+				     KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);                    \
-+		}                                                                                  \
- 		__atomic_store_n(ptr, v, memorder);                                                \
- 	}                                                                                          \
- 	EXPORT_SYMBOL(__tsan_atomic##bits##_store)
-@@ -908,8 +913,11 @@ EXPORT_SYMBOL(__tsan_init);
- 	u##bits __tsan_atomic##bits##_##op(u##bits *ptr, u##bits v, int memorder);                 \
- 	u##bits __tsan_atomic##bits##_##op(u##bits *ptr, u##bits v, int memorder)                  \
- 	{                                                                                          \
--		check_access(ptr, bits / BITS_PER_BYTE,                                            \
--			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);    \
-+		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS)) {                                    \
-+			check_access(ptr, bits / BITS_PER_BYTE,                                    \
-+				     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE |                  \
-+					     KCSAN_ACCESS_ATOMIC);                                 \
-+		}                                                                                  \
- 		return __atomic_##op##suffix(ptr, v, memorder);                                    \
- 	}                                                                                          \
- 	EXPORT_SYMBOL(__tsan_atomic##bits##_##op)
-@@ -937,8 +945,11 @@ EXPORT_SYMBOL(__tsan_init);
- 	int __tsan_atomic##bits##_compare_exchange_##strength(u##bits *ptr, u##bits *exp,          \
- 							      u##bits val, int mo, int fail_mo)    \
- 	{                                                                                          \
--		check_access(ptr, bits / BITS_PER_BYTE,                                            \
--			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);    \
-+		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS)) {                                    \
-+			check_access(ptr, bits / BITS_PER_BYTE,                                    \
-+				     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE |                  \
-+					     KCSAN_ACCESS_ATOMIC);                                 \
-+		}                                                                                  \
- 		return __atomic_compare_exchange_n(ptr, exp, val, weak, mo, fail_mo);              \
- 	}                                                                                          \
- 	EXPORT_SYMBOL(__tsan_atomic##bits##_compare_exchange_##strength)
-@@ -949,8 +960,11 @@ EXPORT_SYMBOL(__tsan_init);
- 	u##bits __tsan_atomic##bits##_compare_exchange_val(u##bits *ptr, u##bits exp, u##bits val, \
- 							   int mo, int fail_mo)                    \
- 	{                                                                                          \
--		check_access(ptr, bits / BITS_PER_BYTE,                                            \
--			     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC);    \
-+		if (!IS_ENABLED(CONFIG_KCSAN_IGNORE_ATOMICS)) {                                    \
-+			check_access(ptr, bits / BITS_PER_BYTE,                                    \
-+				     KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_WRITE |                  \
-+					     KCSAN_ACCESS_ATOMIC);                                 \
-+		}                                                                                  \
- 		__atomic_compare_exchange_n(ptr, &exp, val, 0, mo, fail_mo);                       \
- 		return exp;                                                                        \
- 	}                                                                                          \
+diff --git a/include/linux/instrumented.h b/include/linux/instrumented.h
+index 43e6ea591975..42faebbaa202 100644
+--- a/include/linux/instrumented.h
++++ b/include/linux/instrumented.h
+@@ -42,6 +42,21 @@ static __always_inline void instrument_write(const volatile void *v, size_t size
+ 	kcsan_check_write(v, size);
+ }
+ 
++/**
++ * instrument_read_write - instrument regular read-write access
++ *
++ * Instrument a regular write access. The instrumentation should be inserted
++ * before the actual write happens.
++ *
++ * @ptr address of access
++ * @size size of access
++ */
++static __always_inline void instrument_read_write(const volatile void *v, size_t size)
++{
++	kasan_check_write(v, size);
++	kcsan_check_read_write(v, size);
++}
++
+ /**
+  * instrument_atomic_read - instrument atomic read access
+  *
+@@ -72,6 +87,21 @@ static __always_inline void instrument_atomic_write(const volatile void *v, size
+ 	kcsan_check_atomic_write(v, size);
+ }
+ 
++/**
++ * instrument_atomic_read_write - instrument atomic read-write access
++ *
++ * Instrument an atomic read-write access. The instrumentation should be
++ * inserted before the actual write happens.
++ *
++ * @ptr address of access
++ * @size size of access
++ */
++static __always_inline void instrument_atomic_read_write(const volatile void *v, size_t size)
++{
++	kasan_check_write(v, size);
++	kcsan_check_atomic_read_write(v, size);
++}
++
+ /**
+  * instrument_copy_to_user - instrument reads of copy_to_user
+  *
 -- 
 2.28.0.rc0.142.g3c755180ce-goog
 
