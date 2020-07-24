@@ -2,153 +2,126 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9F0C433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29213C433F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6427020674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E7F20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:11:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B4BlKfbm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgGXQL2 (ORCPT
+        id S1728662AbgGXQLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:11:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbgGXQD7 (ORCPT
+        Fri, 24 Jul 2020 12:11:36 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37866 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728458AbgGXQLb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:03:59 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A4ADC0619D3;
-        Fri, 24 Jul 2020 09:03:59 -0700 (PDT)
-Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 9412F6FA;
-        Fri, 24 Jul 2020 18:03:56 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 01/75] KVM: SVM: Add GHCB definitions
-Date:   Fri, 24 Jul 2020 18:02:22 +0200
-Message-Id: <20200724160336.5435-2-joro@8bytes.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
-References: <20200724160336.5435-1-joro@8bytes.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 24 Jul 2020 12:11:31 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OG2oQZ078805;
+        Fri, 24 Jul 2020 16:11:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=WMp6kqTxYWGFRT/ot1iZ7DJpa+AfJh3DHPgpyzjSXbE=;
+ b=B4BlKfbmGkrr4ajeKkxrPNbrQpEoayl5/YajI350Ge3teyZxKxvsYvo8I4iDv9fquzhx
+ YuAudkKyo//A/BGNczJ6vbQ7MJ2HbAXtOiVN6UR4q5DxJ1KMrHG4sLvEaomfdICyNlsu
+ dqJxM4j7CGXIyNpeByAc/iYV1ExhPqqWasrTfpci3iOXxNsAGB+n0c5QAeosEURnUN05
+ ioXtnrPH3to+G2UiVlb0yGWKb9qSfALL1NjbZnms/UhwS2KUlBVFtAn3FlVwvouq2Pci
+ fVe8dmQQeuki2SwJa8XVeqdnnOvQ7AnjJxDh1ZDFFZU6ikP4Euj1I74XJXau5vWxZiXm Zw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 32brgs00ae-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Jul 2020 16:11:26 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OG4ORI058161;
+        Fri, 24 Jul 2020 16:09:26 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 32fswssb5h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jul 2020 16:09:25 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06OG9On1003112;
+        Fri, 24 Jul 2020 16:09:24 GMT
+Received: from brm-x32-03.us.oracle.com (/10.80.150.35)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 Jul 2020 16:09:24 +0000
+From:   Jane Chu <jane.chu@oracle.com>
+To:     dan.j.williams@intel.com, vishal.l.verma@intel.com,
+        dave.jiang@intel.com, ira.weiny@intel.com, jmoyer@redhat.com,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Cc:     jane.chu@oracle.com
+Subject: [PATCH 2/2] libnvdimm/security: ensure sysfs poll thread woke up and fetch updated attr
+Date:   Fri, 24 Jul 2020 10:09:19 -0600
+Message-Id: <1595606959-8516-2-git-send-email-jane.chu@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1595606959-8516-1-git-send-email-jane.chu@oracle.com>
+References: <1595606959-8516-1-git-send-email-jane.chu@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ malwarescore=0 bulkscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007240127
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007240126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+commit 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
+adds a sysfs_notify_dirent() to wake up userspace poll thread when the "overwrite"
+operation has completed. But the notification is issued before the internal
+dimm security state and flags have been updated, so the userspace poll thread
+wakes up and fetches the not-yet-updated attr and falls back to sleep, forever.
+But if user from another terminal issue "ndctl wait-overwrite nmemX" again,
+the command returns instantly.
 
-Extend the vmcb_safe_area with SEV-ES fields and add a new
-'struct ghcb' which will be used for guest-hypervisor communication.
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Fixes: 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
+Signed-off-by: Jane Chu <jane.chu@oracle.com>
 ---
- arch/x86/include/asm/svm.h | 45 +++++++++++++++++++++++++++++++++++++-
- arch/x86/kvm/svm/svm.c     |  2 ++
- 2 files changed, 46 insertions(+), 1 deletion(-)
+ drivers/nvdimm/security.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index 8a1f5382a4ea..9a3e0b802716 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -200,13 +200,56 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
- 	u64 br_to;
- 	u64 last_excp_from;
- 	u64 last_excp_to;
-+
+diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
+index 8f3971c..4b80150 100644
+--- a/drivers/nvdimm/security.c
++++ b/drivers/nvdimm/security.c
+@@ -450,14 +450,19 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
+ 	else
+ 		dev_dbg(&nvdimm->dev, "overwrite completed\n");
+ 
+-	if (nvdimm->sec.overwrite_state)
+-		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
 +	/*
-+	 * The following part of the save area is valid only for
-+	 * SEV-ES guests when referenced through the GHCB.
++	 * Mark the overwrite work done and update dimm security flags,
++	 * then send a sysfs event notification to wake up userspace
++	 * poll threads to picked up the changed state.
 +	 */
-+	u8 reserved_7[104];
-+	u64 reserved_8;		/* rax already available at 0x01f8 */
-+	u64 rcx;
-+	u64 rdx;
-+	u64 rbx;
-+	u64 reserved_9;		/* rsp already available at 0x01d8 */
-+	u64 rbp;
-+	u64 rsi;
-+	u64 rdi;
-+	u64 r8;
-+	u64 r9;
-+	u64 r10;
-+	u64 r11;
-+	u64 r12;
-+	u64 r13;
-+	u64 r14;
-+	u64 r15;
-+	u8 reserved_10[16];
-+	u64 sw_exit_code;
-+	u64 sw_exit_info_1;
-+	u64 sw_exit_info_2;
-+	u64 sw_scratch;
-+	u8 reserved_11[56];
-+	u64 xcr0;
-+	u8 valid_bitmap[16];
-+	u64 x87_state_gpa;
-+};
-+
-+struct __attribute__ ((__packed__)) ghcb {
-+	struct vmcb_save_area save;
-+	u8 reserved_save[2048 - sizeof(struct vmcb_save_area)];
-+
-+	u8 shared_buffer[2032];
-+
-+	u8 reserved_1[10];
-+	u16 protocol_version;	/* negotiated SEV-ES/GHCB protocol version */
-+	u32 ghcb_usage;
- };
- 
- 
- static inline void __unused_size_checks(void)
- {
--	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 0x298);
-+	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 1032);
- 	BUILD_BUG_ON(sizeof(struct vmcb_control_area) != 256);
-+	BUILD_BUG_ON(sizeof(struct ghcb) != 4096);
+ 	nvdimm->sec.overwrite_tmo = 0;
+ 	clear_bit(NDD_SECURITY_OVERWRITE, &nvdimm->flags);
+ 	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
+-	put_device(&nvdimm->dev);
+ 	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
+ 	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
++	if (nvdimm->sec.overwrite_state)
++		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
++	put_device(&nvdimm->dev);
  }
  
- struct __attribute__ ((__packed__)) vmcb {
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index c0da4dd78ac5..af6dc22437c1 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -4099,6 +4099,8 @@ static struct kvm_x86_init_ops svm_init_ops __initdata = {
- 
- static int __init svm_init(void)
- {
-+	__unused_size_checks();
-+
- 	return kvm_init(&svm_init_ops, sizeof(struct vcpu_svm),
- 			__alignof__(struct vcpu_svm), THIS_MODULE);
- }
+ void nvdimm_security_overwrite_query(struct work_struct *work)
 -- 
-2.27.0
+1.8.3.1
 
