@@ -2,125 +2,90 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2846FC433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77286C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01CD520737
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442D5207FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QQsGRhL6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CHcYskn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgGXDBB (ORCPT
+        id S1726731AbgGXDED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 23:01:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41939 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726178AbgGXDBA (ORCPT
+        Thu, 23 Jul 2020 23:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgGXDEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 23:01:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595559658;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xnkanCRIM062ProhdGg7SX02oIMnz/wnozev/bBtcZI=;
-        b=QQsGRhL6qOwc788PDSWIyPc+Lgj+skSVn1mWocRe6NsemJnYY9KGSWPnRUwrevNxbDmKsl
-        LDdgo+USkGD0AUZZ8Jv/cb1ctk4t5524f71EDKct1Ds0Ke/eUURNZlzdADUv2p5QZb25UH
-        6lUFxA7j2ZPorugSko+Wt1eEwk7F1m0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-124-dPBfuT8yPHSvcsSJBoqEXw-1; Thu, 23 Jul 2020 23:00:54 -0400
-X-MC-Unique: dPBfuT8yPHSvcsSJBoqEXw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4707257;
-        Fri, 24 Jul 2020 03:00:52 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-119-128.rdu2.redhat.com [10.10.119.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 83F775D9D3;
-        Fri, 24 Jul 2020 03:00:50 +0000 (UTC)
-Subject: Re: [PATCH for 5.9 1/3] futex: introduce FUTEX_SWAP operation
-To:     Peter Oskolkov <posk@posk.io>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Peter Oskolkov <posk@google.com>,
-        Andrei Vagin <avagin@google.com>, Paul Turner <pjt@google.com>,
-        Ben Segall <bsegall@google.com>, Aaron Lu <aaron.lwe@gmail.com>
-References: <20200722234538.166697-1-posk@posk.io>
- <20200722234538.166697-2-posk@posk.io>
- <20200723112757.GN5523@worktop.programming.kicks-ass.net>
- <CAFTs51UJhC9TmXkzz8VbDNmkSEyZE29=dRdUi65TDpSYqoK5vw@mail.gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <00ec99e0-2164-123e-44ed-229c52119d7e@redhat.com>
-Date:   Thu, 23 Jul 2020 23:00:50 -0400
+        Thu, 23 Jul 2020 23:04:02 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E1B9C0619D3;
+        Thu, 23 Jul 2020 20:04:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=Bkjf0CIjG+04GJ1x/Bn4xTvGvn1CQ2PafE9rcjMKdes=; b=CHcYskn9xYfy1pXPgXpf/V6HQF
+        PHfWhfVfTGM2mPUbpzMsE9bDxE31DqHbWroUmE/COHuStmeIDtWRq0ne8yPNgVdXICtEY1elQ1ZNH
+        WX8zatzewbn8hJEGOpD8YqmJelUgoHPx+bk8RKdFZ9rNc4yFxwR1U3snUG9r0S69zETAAdP7jwBRp
+        X7Qq6YreokoQiiScgamZtUevV7NOZZFL0nWoCgvoUheMh3Z4SrMRXtWuVZGpLFbkzKF8dBO2XBubL
+        PT4wqeLfj8RF6AjRDsVZHXoaCXUgmRPpAyB/b5BoskMk1KfEWmuLlN7TKg8lg2N0jjP34n4CabbdB
+        ioae9HaQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyo04-0007d6-H1; Fri, 24 Jul 2020 03:03:57 +0000
+Subject: Re: [PATCH v2 0/4] Modularization of DFL private feature drivers
+To:     Xu Yilun <yilun.xu@intel.com>, mdf@kernel.org,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, lgoncalv@redhat.com
+References: <1595556555-9903-1-git-send-email-yilun.xu@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <7ff4653b-dcf0-e7d4-9d09-a30a9f857661@infradead.org>
+Date:   Thu, 23 Jul 2020 20:03:52 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAFTs51UJhC9TmXkzz8VbDNmkSEyZE29=dRdUi65TDpSYqoK5vw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1595556555-9903-1-git-send-email-yilun.xu@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/20 8:25 PM, Peter Oskolkov wrote:
-> On Thu, Jul 23, 2020 at 4:28 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Thanks a lot for your comments, Peter! My answers below.
->
->> On Wed, Jul 22, 2020 at 04:45:36PM -0700, Peter Oskolkov wrote:
->>> This patchset is the first step to open-source this work. As explained
->>> in the linked pdf and video, SwitchTo API has three core operations: wait,
->>> resume, and swap (=switch). So this patchset adds a FUTEX_SWAP operation
->>> that, in addition to FUTEX_WAIT and FUTEX_WAKE, will provide a foundation
->>> on top of which user-space threading libraries can be built.
->> The PDF and video can go pound sand; you get to fully explain things
->> here.
-> Will do. Should I expand the cover letter or the commit message? (I'll probably
-> split the first patch into two in the latter case).
+On 7/23/20 7:09 PM, Xu Yilun wrote:
+> This patchset makes it possible to develop independent driver modules
+> for DFL private features. It also helps to leverage existing kernel
+> drivers to enable some IP blocks in DFL.
+> 
+> Patch #1: An improvement of feature id definition. The feature id will be used
+> 	  as the key field for dfl device/driver matching.
+> Patch #2: Release the dfl mmio regions after enumeration, so that private
+> 	  feature drivers could request mmio region in their own drivers.
+> Patch #3: Introduce the dfl bus, then dfl devices could be supported by
+> 	  independent dfl drivers.
+> Patch #4: An example of the dfl driver for N3000 nios private feature.
+> 
 
-You should put it mostly in the commit message which will be part of the 
-git log history. The cover letter, on the other hand, is not part of the 
-git log.
+Hi,
+What is "nios"?  Is that explained or described anywhere?
 
+> 
+> Main changes from v1:
+> - Add the new Patch #1, to improve the feature id definition.
+> - Change the dfl bus uevent format.
+> - Change the dfl device's sysfs name format.
+> - refactor dfl_dev_add()
+> - Add the Patch #4 as an example of the dfl driver.
+> - A lot of minor fixes for comments from Hao and Tom.
 
->
->> What worries me is how FUTEX_SWAP would interact with the future
->> FUTEX_LOCK / FUTEX_UNLOCK. When we implement pthread_mutex with those,
->> there's very few WAIT/WAKE left.
-> [+cc Waiman Long]
->
-> I've looked through the latest FUTEX_LOCK patchset I could find (
-> https://lore.kernel.org/patchwork/cover/772643/ and related), and it seems
-> that FUTEX_SWAP and FUTEX_LOCK/FUTEX_UNLOCK patchsets
-> address the same issue (slow wakeups) but for different use cases:
->
-> FUTEX_LOCK/FUTEX_UNLOCK uses spinning and lock stealing to
-> improve futex wake/wait performance in high contention situations;
-> FUTEX_SWAP is designed to be used for fast context switching with
-> _no_ contention by design: the waker that is going to sleep, and the wakee
-> are using different futexes; the userspace will have a futex per thread/task,
-> and when needed the thread/task will either simply sleep on its futex,
-> or context switch (=FUTEX_SWAP) into a different thread/task.
-
-I agree that it is a different use case. I just hope that you keep the 
-possible future extension to support FUTEX_LOCK/UNLOCK in mind so that 
-they won't conflict with each other.
-
-Cheers,
-Longman
+thanks.
+-- 
+~Randy
 
