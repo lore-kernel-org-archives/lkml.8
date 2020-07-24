@@ -2,62 +2,107 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58355C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FB6C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 317412067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB682067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:27:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bPXXLRhx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgGXWVj (ORCPT
+        id S1726719AbgGXW1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 18:21:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36632 "EHLO
+        Fri, 24 Jul 2020 18:27:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgGXWVi (ORCPT
+        with ESMTP id S1726552AbgGXW1d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 18:21:38 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88F27C0619D3;
-        Fri, 24 Jul 2020 15:21:38 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0A2871274C3A1;
-        Fri, 24 Jul 2020 15:04:53 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 15:21:36 -0700 (PDT)
-Message-Id: <20200724.152136.239820662240192829.davem@davemloft.net>
-To:     m-karicheri2@ti.com
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        nsekhar@ti.com, grygorii.strashko@ti.com, vinicius.gomes@intel.com
-Subject: Re: [net-next v5 PATCH 0/7] Add PRP driver
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <7133d5ca-e72b-b406-feb2-21429085c96a@ti.com>
-References: <20200722144022.15746-1-m-karicheri2@ti.com>
-        <7133d5ca-e72b-b406-feb2-21429085c96a@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 24 Jul 2020 15:04:53 -0700 (PDT)
+        Fri, 24 Jul 2020 18:27:33 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A8A5C0619D3;
+        Fri, 24 Jul 2020 15:27:33 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id c10so3293602ejs.5;
+        Fri, 24 Jul 2020 15:27:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q4hf+QcXjlYFII3kXRk/O+OAgoKCkXx1KoxT9fj98uM=;
+        b=bPXXLRhx/DBJLBzy31tbfdnreP2A/3C7EQXsJBdEhJmi13ZsBr74iEsirnR0coTvB3
+         EHv/+fNAmwyKxos/sgQRInDoBMFAIJsvMBjA3NLRA3EYeDjvQgCzEmV034yykv/a2ajE
+         28neU/RPcrOUoE5O03me8XuYtoUSQ8leEmSb1L08tKbSNEZWGaqlxEq4jgvmaXxEBs5z
+         YR11gOEKP1u5TUdcq8CTIOa1nfZExCRnUuQhjaJA56gKf9LRaFPJlJ4nHiGKjneE2Vgs
+         cCr4w6EROVSXSpF9UMTOE/U4vxAAzR6gkEdZxpR+CSznmH5Z65rGChOZ+m9aUSwjx9WS
+         42tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q4hf+QcXjlYFII3kXRk/O+OAgoKCkXx1KoxT9fj98uM=;
+        b=lVwowZ5vHv8hllRqdTE3kDW+3VsPTfGy7PWJYBB9m5hplq9ynj2AVM7ji96WiT9xZu
+         jZsTl2rnUY9MU/gAGiajfgLAQPpPoBEF4dRGkDFEiaHHESv/r0HLwEo5cTisQ8/zSuon
+         0D92UBAEMaDljI/lIAw6TWWao2zwUAkU90YzXu5ji2qTeACnK3B9r6GIY7jszTs2MsA2
+         XR1G1SeEnr0IyhtfTMJazey/S6FtkxVXm3PwgduU80XhV6vZiSilOhuHtd98U2YY1B/h
+         H20yO/Ghe+kupCi8zJYNkkN6y6EYfac35THreS25Y5Nz6prM91IJe3BTM6m9YDb9RomJ
+         CrWw==
+X-Gm-Message-State: AOAM533OcdIZqHt2q/zj1OeW40oUJ0VjLyztQHrcacx3gtWJlflxHF0e
+        Mht9HdD4ES8GtNUfOUR6Ef8mDLarBHUNeOwMz98=
+X-Google-Smtp-Source: ABdhPJyr1DTsH/bA8sD09MlUURcHYnx3ZityhfcMVaAp+YaHiCg0at8CxoAPgraUolFiRIvc4HPvFnk8U1iR9tJs5uo=
+X-Received: by 2002:a17:906:1c0d:: with SMTP id k13mr11603383ejg.477.1595629652224;
+ Fri, 24 Jul 2020 15:27:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200724213659.273599-1-martin.botka1@gmail.com> <20200724220516.GA21965@amd>
+In-Reply-To: <20200724220516.GA21965@amd>
+From:   Martin Botka <martin.botka1@gmail.com>
+Date:   Sat, 25 Jul 2020 00:26:57 +0200
+Message-ID: <CADQ2G_Fvyyh6-foswczkQgX54rH6oH-m8xyS6Qp2yS6D5L4Q9A@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/6] Add QCOM pwm-lpg and tri-led drivers
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Murali Karicheri <m-karicheri2@ti.com>
-Date: Fri, 24 Jul 2020 08:27:01 -0400
+Hi,
 
-> If there are no more comments, can we consider merging this to
-> net-next? I could re-base and repost if there is any conflict.
+Dalsi cech co hackuje LEDky?
 
-I can't apply them until I next merge net into net-next, and I don't
-know exactly when that will happen yet.
+Nie. Slovak.
 
-It'd also be nice to get some review and ACK's on this series
-meanwhile.
+Bindings should go first, they may need to be converted to yml
+(devicetree people will know).
+
+OK
+
+Can generic pwm driver be used here?
+
+I have not tried to do that. But considering it's custom chip from
+Qualcomm then it's unlikely.
+
+This is for RGB modules, right? It will need to use multicolor
+framework.
+
+This is for RGB LEDs in phones that are connected via pmic.
+
+Is this for phone, btw? If so, which one?
+
+Yes it is. And it's for many many phones actually. I have done this
+mainly for SONY phones (Xperia 10, 10 Plus, XA2, XA2 Plus, XA2 Ultra).
+All of them use these drivers for generating the PWM and controlling the LEDs.
+
+P.S resending because i sent it as HTML apparently.
+Best Regards,
+Martin
