@@ -2,174 +2,236 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0828C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA40C433F8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D86E206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1FA72070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bhcHp287"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YiScMk/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgGXVgY (ORCPT
+        id S1726993AbgGXVgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57684 "EHLO
+        Fri, 24 Jul 2020 17:36:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbgGXVgY (ORCPT
+        with ESMTP id S1726895AbgGXVgr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:36:24 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC991C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:36:23 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id w126so5815025pfw.8
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:36:23 -0700 (PDT)
+        Fri, 24 Jul 2020 17:36:47 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 549D1C08C5DC
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:36:47 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id p1so5301416pls.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:36:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=opG3nW4I5rCe1WXghjH5zHF3uH0DeDd34QtX5YmytYo=;
-        b=bhcHp287NTRAuUPpjDb0FIIrsLNcEo9h8fImzbO06pVAN20KtOUPdlZEcEsWy3Vj8M
-         anX8Wf5x0H5H1KFyaw7bQZlFmjA0iBUCpZB1aSYpOkqESuKAfhAp6ZXpLQDeavjhQVhN
-         PpPVmpK4yT9oH13DFieSVLeBj90yDBgjovfSU=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JyyC+ze79w5yy/5GZgduMt6jr2+u0ZDeBjstvpXzNxo=;
+        b=YiScMk/XWtUXVqYh5p1sBcHBoq+HKiwfKwQokdA4qc2uFvlvr8ibk4w/rEjwOvKZVY
+         Ef7qg3WQ69UMP03as9mRkf095U8s4WtfJWI565xJLRkXVYze/57p62D37j5EtVpML7qy
+         T0EL2Si3ru8lyGWzqcWFBA8owK3JVx8pMLKUY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=opG3nW4I5rCe1WXghjH5zHF3uH0DeDd34QtX5YmytYo=;
-        b=j6nrKXCrGXY3yqPDjyWmnXV2hertt2qurMfPgYPXcTEeky0ZRX5qiW2fGIWIjOJYL9
-         YkO6FV9HzX3HocJaTmfPAidtzRxCF+mat83dzIgOqdyD2ABGfwYwC5iq5OKJkYK/w1LL
-         jxfkskisStgRcjS1eMSBOaVyXL4OqYdime08nECkM9xBE+l1PYXfJWfc2Er6ij7UP+mq
-         QIisEizYmpLgysy7Wn3MICGY8bms/O9C+B0R7M+xih7KyzFY75QasYAGQ92M8/HDz4sy
-         CyoZuTeZYIRRR2TLgA8zcJDJClFApi0owhxjPRhuA7TIIvtig+fNm6iBFHOwefaSghzm
-         t4VA==
-X-Gm-Message-State: AOAM530XlyGghq+DvIsgdgWgkzWVF7WqhFhWC9TymUM1CGBbxpKaXfKS
-        54xCy+aVilnxim1SJZzORZORkQ==
-X-Google-Smtp-Source: ABdhPJy0zuMXOSAiFIUc2m9qjxFtdLkdHu6M3LtvCsg9sjsn7n8N6UxDl/jcILWQb8Bvpg3WVe7m1w==
-X-Received: by 2002:a63:ee48:: with SMTP id n8mr10324355pgk.292.1595626583401;
-        Fri, 24 Jul 2020 14:36:23 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id k98sm6809320pjb.42.2020.07.24.14.36.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JyyC+ze79w5yy/5GZgduMt6jr2+u0ZDeBjstvpXzNxo=;
+        b=jGKk7AGiNlLRaCXbcMXHYtTMVxeUBdew0dLP23pfkWTReNSUKFV0WbKP4zx/zHHfqY
+         PiGrYZIIHVQ9BxVxvnAWkBqMZB08x17xbXy846v9Vfw64amVLIwVbpFhZclTr82qc1FK
+         7ce3KiTWbDxO+bUBGC2Q3RMUF7wfppV4Wwh95NHt8u3zB2qI4wZYqduwhUZI7m0uM0bS
+         bs7rdki2ZzFUBhIEIL8ie6wFLFJWhHyNApMjtG3g+2Bt7SJNDCcVPNUBjW6Yo33+03n/
+         SmQdt/Xm+nf6FPabf+bpJb1jTFRKFyOTLrSnbzYdzPOYyoi+gHqLeELq4xE710R6ey3z
+         d6FQ==
+X-Gm-Message-State: AOAM533W6WNYZkAKYaEb82Rzt0P4q/nhZHQtSGPJjHvaBh5WRWXFhGS7
+        Og0gPleIFIW9lUlewG/7XEEp5g==
+X-Google-Smtp-Source: ABdhPJyxsu62BcSNwCFWCj25rWr4izXVmF12tIRkYF1HLqnOMvTdzTKIxsfpP8hZUY20o+rsIAcniA==
+X-Received: by 2002:a17:90b:1b11:: with SMTP id nu17mr7081861pjb.182.1595626606832;
+        Fri, 24 Jul 2020 14:36:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s14sm7180427pjl.14.2020.07.24.14.36.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 14:36:22 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200724213329.899216-2-swboyd@chromium.org>
-References: <20200724213329.899216-1-swboyd@chromium.org> <20200724213329.899216-2-swboyd@chromium.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: iio: Add bindings for sx9310 sensor
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Daniel Campello <campello@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        <devicetree@vger.kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
+        Fri, 24 Jul 2020 14:36:43 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
+        Scott Branden <scott.branden@broadcom.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 01/19] test_firmware: Test platform fw loading on non-EFI systems
 Date:   Fri, 24 Jul 2020 14:36:22 -0700
-Message-ID: <159562658210.3847286.6400483831020769497@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Message-Id: <20200724213640.389191-2-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200724213640.389191-1-keescook@chromium.org>
+References: <20200724213640.389191-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Boyd (2020-07-24 14:33:25)
-> From: Daniel Campello <campello@chromium.org>
->=20
-> Adds device tree bandings for sx9310 sensor.
->=20
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> [swboyd@chromium.org: Add both regulators and make them optional]
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
+On non-EFI systems, it wasn't possible to test the platform firmware
+loader because it will have never set "checked_fw" during __init.
+Instead, allow the test code to override this check. Additionally split
+the declarations into a private header file so it there is greater
+enforcement of the symbol visibility.
 
-I forgot to Cc devicetree list. Will do next time around.
+Fixes: 548193cba2a7 ("test_firmware: add support for firmware_request_platform")
+Cc: stable@vger.kernel.org
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/firmware/efi/embedded-firmware.c | 21 ++++++++++++++++-----
+ drivers/firmware/efi/embedded-firmware.h | 19 +++++++++++++++++++
+ include/linux/efi_embedded_fw.h          | 13 -------------
+ lib/test_firmware.c                      |  5 +++++
+ 4 files changed, 40 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/firmware/efi/embedded-firmware.h
 
--Stephen
+diff --git a/drivers/firmware/efi/embedded-firmware.c b/drivers/firmware/efi/embedded-firmware.c
+index a1b199de9006..0fb03cd0a5a2 100644
+--- a/drivers/firmware/efi/embedded-firmware.c
++++ b/drivers/firmware/efi/embedded-firmware.c
+@@ -14,11 +14,22 @@
+ #include <linux/vmalloc.h>
+ #include <crypto/sha.h>
+ 
++#include "embedded-firmware.h"
++
++#ifdef CONFIG_TEST_FIRMWARE
++# define EFI_EMBEDDED_FW_VISIBILITY
++#else
++# define EFI_EMBEDDED_FW_VISIBILITY static
++#endif
++
++EFI_EMBEDDED_FW_VISIBILITY LIST_HEAD(efi_embedded_fw_list);
++EFI_EMBEDDED_FW_VISIBILITY bool efi_embedded_fw_checked;
++
+ /* Exported for use by lib/test_firmware.c only */
+-LIST_HEAD(efi_embedded_fw_list);
++#ifdef CONFIG_TEST_FIRMWARE
+ EXPORT_SYMBOL_GPL(efi_embedded_fw_list);
+-
+-static bool checked_for_fw;
++EXPORT_SYMBOL_GPL(efi_embedded_fw_checked);
++#endif
+ 
+ static const struct dmi_system_id * const embedded_fw_table[] = {
+ #ifdef CONFIG_TOUCHSCREEN_DMI
+@@ -119,14 +130,14 @@ void __init efi_check_for_embedded_firmwares(void)
+ 		}
+ 	}
+ 
+-	checked_for_fw = true;
++	efi_embedded_fw_checked = true;
+ }
+ 
+ int efi_get_embedded_fw(const char *name, const u8 **data, size_t *size)
+ {
+ 	struct efi_embedded_fw *iter, *fw = NULL;
+ 
+-	if (!checked_for_fw) {
++	if (!efi_embedded_fw_checked) {
+ 		pr_warn("Warning %s called while we did not check for embedded fw\n",
+ 			__func__);
+ 		return -ENOENT;
+diff --git a/drivers/firmware/efi/embedded-firmware.h b/drivers/firmware/efi/embedded-firmware.h
+new file mode 100644
+index 000000000000..34113316d068
+--- /dev/null
++++ b/drivers/firmware/efi/embedded-firmware.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _EFI_EMBEDDED_FW_INTERNAL_H_
++#define _EFI_EMBEDDED_FW_INTERNAL_H_
++
++/*
++ * This struct and efi_embedded_fw_list are private to the efi-embedded fw
++ * implementation they only in separate header for use by lib/test_firmware.c.
++ */
++struct efi_embedded_fw {
++	struct list_head list;
++	const char *name;
++	const u8 *data;
++	size_t length;
++};
++
++extern struct list_head efi_embedded_fw_list;
++extern bool efi_embedded_fw_checked;
++
++#endif /* _EFI_EMBEDDED_FW_INTERNAL_H_ */
+diff --git a/include/linux/efi_embedded_fw.h b/include/linux/efi_embedded_fw.h
+index 57eac5241303..4ad5db9f5312 100644
+--- a/include/linux/efi_embedded_fw.h
++++ b/include/linux/efi_embedded_fw.h
+@@ -7,19 +7,6 @@
+ 
+ #define EFI_EMBEDDED_FW_PREFIX_LEN		8
+ 
+-/*
+- * This struct and efi_embedded_fw_list are private to the efi-embedded fw
+- * implementation they are in this header for use by lib/test_firmware.c only!
+- */
+-struct efi_embedded_fw {
+-	struct list_head list;
+-	const char *name;
+-	const u8 *data;
+-	size_t length;
+-};
+-
+-extern struct list_head efi_embedded_fw_list;
+-
+ /**
+  * struct efi_embedded_fw_desc - This struct is used by the EFI embedded-fw
+  *                               code to search for embedded firmwares.
+diff --git a/lib/test_firmware.c b/lib/test_firmware.c
+index 9fee2b93a8d1..62af792e151c 100644
+--- a/lib/test_firmware.c
++++ b/lib/test_firmware.c
+@@ -489,6 +489,7 @@ static ssize_t trigger_request_store(struct device *dev,
+ static DEVICE_ATTR_WO(trigger_request);
+ 
+ #ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
++#include "../drivers/firmware/efi/embedded-firmware.h"
+ static ssize_t trigger_request_platform_store(struct device *dev,
+ 					      struct device_attribute *attr,
+ 					      const char *buf, size_t count)
+@@ -501,6 +502,7 @@ static ssize_t trigger_request_platform_store(struct device *dev,
+ 	};
+ 	struct efi_embedded_fw efi_embedded_fw;
+ 	const struct firmware *firmware = NULL;
++	bool saved_efi_embedded_fw_checked;
+ 	char *name;
+ 	int rc;
+ 
+@@ -513,6 +515,8 @@ static ssize_t trigger_request_platform_store(struct device *dev,
+ 	efi_embedded_fw.data = (void *)test_data;
+ 	efi_embedded_fw.length = sizeof(test_data);
+ 	list_add(&efi_embedded_fw.list, &efi_embedded_fw_list);
++	saved_efi_embedded_fw_checked = efi_embedded_fw_checked;
++	efi_embedded_fw_checked = true;
+ 
+ 	pr_info("loading '%s'\n", name);
+ 	rc = firmware_request_platform(&firmware, name, dev);
+@@ -530,6 +534,7 @@ static ssize_t trigger_request_platform_store(struct device *dev,
+ 	rc = count;
+ 
+ out:
++	efi_embedded_fw_checked = saved_efi_embedded_fw_checked;
+ 	release_firmware(firmware);
+ 	list_del(&efi_embedded_fw.list);
+ 	kfree(name);
+-- 
+2.25.1
 
->  .../iio/proximity/semtech,sx9310.yaml         | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/semte=
-ch,sx9310.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx93=
-10.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.ya=
-ml
-> new file mode 100644
-> index 000000000000..ba734ee868c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/semtech,sx9310.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Semtech's SX9310 capacitive proximity sensor
-> +
-> +maintainers:
-> +  - Daniel Campello <campello@chromium.org>
-> +
-> +description: |
-> +  Semtech's SX9310/SX9311 capacitive proximity/button solution.
-> +
-> +  Specifications about the devices can be found at:
-> +  https://www.semtech.com/products/smart-sensing/sar-sensors/sx9310
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - semtech,sx9310
-> +      - semtech,sx9311
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      The sole interrupt generated by the device used to announce the
-> +      preceding reading request has finished and that data is
-> +      available or that a close/far proximity event has happened.
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: Main power supply
-> +
-> +  svdd-supply:
-> +    description: Host interface power supply
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +      proximity@28 {
-> +        compatible =3D "semtech,sx9310";
-> +        reg =3D <0x28>;
-> +        interrupt-parent =3D <&pio>;
-> +        interrupts =3D <5 IRQ_TYPE_LEVEL_LOW 5>;
-> +        vdd-supply =3D <&pp3300_a>;
-> +        svdd-supply =3D <&pp1800_prox>;
-> +      };
-> +    };
