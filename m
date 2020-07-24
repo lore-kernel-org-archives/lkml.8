@@ -2,167 +2,111 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAA2C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBCCC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDFAD20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:57:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595584671;
-	bh=Tzy5QTb0tsnt2rk03Yyme+JWpakyFFZ1jiVfPMesZLE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IEm3HKOH+59w4OvFTKDeBIOFpga3FRpVntzR2EGaL0ij1lVsCEvx2QtirAVRTQHc+
-	 XhfRYrvQBH3KmiA6bYSBxXs4lyx9lygBpmf/w07kjn4+EEt0BMa1PoL9VY/wT+BdwO
-	 kSEhV48Y99fabmEod0wrF0sr+MI/UrVDGfTnRAPU=
+	by mail.kernel.org (Postfix) with ESMTP id D577720737
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:57:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgGXJ5u (ORCPT
+        id S1727892AbgGXJ54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:57:50 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38760 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgGXJ5t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:57:49 -0400
-Received: by mail-oi1-f194.google.com with SMTP id r8so7569102oij.5;
-        Fri, 24 Jul 2020 02:57:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lfdi8y7XT/GLwjnF+qwRBjmFZVJUF6UVVDZU9wm5TaQ=;
-        b=Ez+sMokykO4w4KpZehFNr7BA5uhHCSc4xXzgwp5QiYK+vnky5ScwO5vFCaqqqiaYSf
-         ObCXes2JOIvaMkcOnz96S3/aL+SMR29FNyVhT7bkwPklTXLczgsepDnfS+TsJpv5cLUP
-         MH9X7F/TQIQTnZoRhyJ1/uTFczOp2BIarRVFRftbtRpTsqNRVx7wm6irfs5vC2Bu4dNS
-         1lnVRr7VALhlvO08+oULoaBKjyEMTteLb6xPW9Ks8doOURX6yI+JjhEg3oBtENL6yguq
-         eCKZxdGqWqs+LmgPJ9UpxRocBzE1dFm6fYRUOZ6Xx4TkjjDr3CxEgcXVTUNfO6bKFoT9
-         hL6A==
-X-Gm-Message-State: AOAM5327SSChE3uN6u+HJEVr8bY3b8flL10O2gVJpff++tBBr0fYSriE
-        WAtwbsSaydo9ui7hq5XOzwVbuA4Yuq0TlPbcj8pwEA==
-X-Google-Smtp-Source: ABdhPJwmw50/j/jb4uqGVrXM5kRvrFzs5LGQOnnkqUtcmCKjUVWpuSyy9Ti+bMSPaa4DokJrmiScLfe79eQwwUT3sQc=
-X-Received: by 2002:a05:6808:34e:: with SMTP id j14mr7576095oie.110.1595584668419;
- Fri, 24 Jul 2020 02:57:48 -0700 (PDT)
+        Fri, 24 Jul 2020 05:57:56 -0400
+Received: from mga06.intel.com ([134.134.136.31]:11514 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726114AbgGXJ54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 05:57:56 -0400
+IronPort-SDR: V32r2pIyF8oQqic5JDUoSVyKSi2QHVEEj57/b3YD0cmdpiPCWVs4rZwGEftxurAiFXKRMPMKm6
+ SCUcBLZQ1WBw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="212218703"
+X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
+   d="scan'208";a="212218703"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 02:57:55 -0700
+IronPort-SDR: cS6AjwGmqe1CzASREo9m3bSD0i7nq6nx2NdTBrfCiDcatBkQp2JO/2N1o/OCEYIcYy8doDCyNu
+ L5Yqc3r1+Ymg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,390,1589266800"; 
+   d="scan'208";a="393270148"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 24 Jul 2020 02:57:51 -0700
+Received: by lahna (sSMTP sendmail emulation); Fri, 24 Jul 2020 12:57:51 +0300
+Date:   Fri, 24 Jul 2020 12:57:51 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Patrick Volkerding <volkerdi@gmail.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: nouveau regression with 5.7 caused by "PCI/PM: Assume ports
+ without DLL Link Active train links in 100 ms"
+Message-ID: <20200724095751.GU1375436@lahna.fi.intel.com>
+References: <CACO55tuA+XMgv=GREf178NzTLTHri4kyD5mJjKuDpKxExauvVg@mail.gmail.com>
+ <20200716235440.GA675421@bjorn-Precision-5520>
+ <CACO55tuVJHjEbsW657ToczN++_iehXA8pimPAkzc=NOnx4Ztnw@mail.gmail.com>
+ <CACO55tso5SVipAR=AZfqhp6GGkKO9angv6f+nd61wvgAJtrOKg@mail.gmail.com>
+ <20200721122247.GI5180@lahna.fi.intel.com>
+ <f951fba07ca7fa2fdfd590cd5023d1b31f515fa2.camel@redhat.com>
+ <20200721152737.GS5180@lahna.fi.intel.com>
+ <d3253a47-09ff-8bc7-3ca1-a80bdc09d1c2@gmail.com>
+ <20200722092507.GC5180@lahna.fi.intel.com>
+ <CACO55tsv63VP93F7xJ3nfZ7SkOk0c6WkgvuP+8fY14gypmn4Fg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1594005196-16327-1-git-send-email-neal.liu@mediatek.com>
- <1594005196-16327-2-git-send-email-neal.liu@mediatek.com> <CAJZ5v0ihB5AJwSRpjaOnXAmciregzxARL5xfudu1h+=_LXaE_w@mail.gmail.com>
- <1594350535.4670.13.camel@mtkswgap22> <1595233294.8055.0.camel@mtkswgap22> <20200723190724.GA1339461@google.com>
-In-Reply-To: <20200723190724.GA1339461@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 24 Jul 2020 11:57:37 +0200
-Message-ID: <CAJZ5v0g_14D-tyWFEZ9eOJC=GmzR-31iAAPff=Ch8KjFyK2wfw@mail.gmail.com>
-Subject: Re: [PATCH v2] cpuidle: change enter_s2idle() prototype
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Neal Liu <neal.liu@mediatek.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACO55tsv63VP93F7xJ3nfZ7SkOk0c6WkgvuP+8fY14gypmn4Fg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 9:07 PM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> On Mon, Jul 20, 2020 at 04:21:34PM +0800, Neal Liu wrote:
-> > Gentle ping on this patch.
+On Thu, Jul 23, 2020 at 10:30:58PM +0200, Karol Herbst wrote:
+> On Wed, Jul 22, 2020 at 11:25 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
 > >
+> > On Tue, Jul 21, 2020 at 01:37:12PM -0500, Patrick Volkerding wrote:
+> > > On 7/21/20 10:27 AM, Mika Westerberg wrote:
+> > > > On Tue, Jul 21, 2020 at 11:01:55AM -0400, Lyude Paul wrote:
+> > > >> Sure thing. Also, feel free to let me know if you'd like access to one of the
+> > > >> systems we saw breaking with this patch - I'm fairly sure I've got one of them
+> > > >> locally at my apartment and don't mind setting up AMT/KVM/SSH
+> > > > Probably no need for remote access (thanks for the offer, though). I
+> > > > attached a test patch to the bug report:
+> > > >
+> > > >   https://bugzilla.kernel.org/show_bug.cgi?id=208597
+> > > >
+> > > > that tries to work it around (based on the ->pm_cap == 0). I wonder if
+> > > > anyone would have time to try it out.
+> > >
+> > >
+> > > Hi Mika,
+> > >
+> > > I can confirm that this patch applied to 5.4.52 fixes the issue with
+> > > hybrid graphics on the Thinkpad X1 Extreme gen2.
 > >
-> > On Fri, 2020-07-10 at 11:08 +0800, Neal Liu wrote:
-> > > On Thu, 2020-07-09 at 14:18 +0200, Rafael J. Wysocki wrote:
-> > > > On Mon, Jul 6, 2020 at 5:13 AM Neal Liu <neal.liu@mediatek.com> wrote:
-> > > > >
-> > > > > Control Flow Integrity(CFI) is a security mechanism that disallows
-> > > > > changes to the original control flow graph of a compiled binary,
-> > > > > making it significantly harder to perform such attacks.
-> > > > >
-> > > > > init_state_node() assign same function callback to different
-> > > > > function pointer declarations.
-> > > > >
-> > > > > static int init_state_node(struct cpuidle_state *idle_state,
-> > > > >                            const struct of_device_id *matches,
-> > > > >                            struct device_node *state_node) { ...
-> > > > >         idle_state->enter = match_id->data; ...
-> > > > >         idle_state->enter_s2idle = match_id->data; }
-> > > > >
-> > > > > Function declarations:
-> > > > >
-> > > > > struct cpuidle_state { ...
-> > > > >         int (*enter) (struct cpuidle_device *dev,
-> > > > >                       struct cpuidle_driver *drv,
-> > > > >                       int index);
-> > > > >
-> > > > >         void (*enter_s2idle) (struct cpuidle_device *dev,
-> > > > >                               struct cpuidle_driver *drv,
-> > > > >                               int index); };
-> > > > >
-> > > > > In this case, either enter() or enter_s2idle() would cause CFI check
-> > > > > failed since they use same callee.
-> > > >
-> > > > Can you please explain this in a bit more detail?
-> > > >
-> > > > As it stands, I don't understand the problem statement enough to apply
-> > > > the patch.
-> > > >
-> > >
-> > > Okay, Let's me try to explain more details.
-> > > Control Flow Integrity(CFI) is a security mechanism that disallows
-> > > changes to the original control flow graph of a compiled binary, making
-> > > it significantly harder to perform such attacks.
-> > >
-> > > There are multiple control flow instructions that could be manipulated
-> > > by the attacker and subvert control flow. The target instructions that
-> > > use data to determine the actual destination.
-> > > - indirect jump
-> > > - indirect call
-> > > - return
-> > >
-> > > In this case, function prototype between caller and callee are mismatch.
-> > > Caller: (type A)funcA
-> > > Callee: (type A)funcB
-> > > Callee: (type C)funcC
-> > >
-> > > funcA calls funcB -> no problem
-> > > funcA calls funcC -> CFI check failed
-> > >
-> > > That's why we try to align function prototype.
-> > > Please feel free to feedback if you have any questions.
->
-> I think you should include a better explanation in the commit message.
-> Perhaps something like this?
->
->   init_state_node assigns the same callback function to both enter and
->   enter_s2idle despite mismatching function types, which trips indirect
->   call checking with Control-Flow Integrity (CFI).
->
-> > > > > Align function prototype of enter() since it needs return value for
-> > > > > some use cases. The return value of enter_s2idle() is no
-> > > > > need currently.
-> > > >
-> > > > So last time I requested you to document why ->enter_s2idle needs to
-> > > > return an int in the code, which has not been done.  Please do that.
->
-> Rafael, are you happy with the commit message documenting the reason,
-> or would you prefer to also add a comment before enter_s2idle?
+> > Great, thanks for testing!
+> >
+> 
+> yeah, works on the P1G2 as well.
 
-As I said before, it would be good to have a comment in the code as
-well or people will be wondering why it is necessary to return
-anything from that callback, because its return value is never used.
+Thanks for testing!
 
-Thanks!
+Since we have the revert queued for this release cycle, I think I will
+send an updated version of "PCI/PM: Assume ports without DLL Link Active
+train links in 100 ms" after v5.9-rc1 is released that has this
+workaround in place.
+
+(I'm continuing my vacation so will be offline next week).
