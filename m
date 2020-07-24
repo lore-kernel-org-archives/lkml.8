@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB71C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E021C433E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8400C2063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E36B22063A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:18:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgGXJSH (ORCPT
+        id S1728174AbgGXJSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:18:07 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56724 "EHLO huawei.com"
+        Fri, 24 Jul 2020 05:18:11 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56786 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726572AbgGXJSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:18:04 -0400
+        id S1728134AbgGXJSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 05:18:05 -0400
 Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DAB427DECD0A04FB1572;
+        by Forcepoint Email with ESMTP id E4A3DE6E6F2762F6A3B8;
         Fri, 24 Jul 2020 17:18:02 +0800 (CST)
 Received: from euler.huawei.com (10.175.124.27) by
  DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 24 Jul 2020 17:17:53 +0800
+ 14.3.487.0; Fri, 24 Jul 2020 17:17:54 +0800
 From:   Wei Li <liwei391@huawei.com>
 To:     Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -40,9 +40,9 @@ To:     Adrian Hunter <adrian.hunter@intel.com>,
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>, <guohanjun@huawei.com>
-Subject: [PATCH 2/4] perf: arm-spe: Add support for ARMv8.3-SPE
-Date:   Fri, 24 Jul 2020 17:16:05 +0800
-Message-ID: <20200724091607.41903-3-liwei391@huawei.com>
+Subject: [PATCH 4/4] perf: arm-spe: Synthesize new events for ARMv8.3-SPE
+Date:   Fri, 24 Jul 2020 17:16:07 +0800
+Message-ID: <20200724091607.41903-5-liwei391@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200724091607.41903-1-liwei391@huawei.com>
 References: <20200724091607.41903-1-liwei391@huawei.com>
@@ -55,119 +55,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Armv8.3 extends the SPE by adding:
-- Alignment field in the Events packet, and filtering on this event
-  using PMSEVFR_EL1.
-- Support for the Scalable Vector Extension (SVE).
+Synthesize unaligned address access events and partial/empty
+predicated SVE operation introduced by ARMv8.3-SPE.
 
-The main additions for SVE are:
-- Recording the vector length for SVE operations in the Operation Type
-  packet. It is not possible to filter on vector length.
-- Incomplete predicate and empty predicate fields in the Events packet,
-  and filtering on these events using PMSEVFR_EL1.
-
-Add the corresponding decode process of Events packet and Operation Type
-packet in perf tool.
+They can be filtered by itrace options when reporting.
 
 Signed-off-by: Wei Li <liwei391@huawei.com>
 ---
- .../arm-spe-decoder/arm-spe-pkt-decoder.c     | 69 ++++++++++++++++++-
- 1 file changed, 67 insertions(+), 2 deletions(-)
+ .../util/arm-spe-decoder/arm-spe-decoder.c    | 11 ++++
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  3 +
+ tools/perf/util/arm-spe.c                     | 61 +++++++++++++++++++
+ 3 files changed, 75 insertions(+)
 
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-index b94001b756c7..10a3692839de 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-@@ -347,6 +347,24 @@ int arm_spe_pkt_desc(const struct arm_spe_pkt *packet, char *buf,
- 				blen -= ret;
- 			}
- 		}
-+		if (idx > 2) {
-+			if (payload & 0x800) {
-+				ret = snprintf(buf, buf_len, " ALIGNMENT");
-+				buf += ret;
-+				blen -= ret;
-+			}
-+			if (payload & 0x20000) {
-+				ret = snprintf(buf, buf_len, " SVE-PRED-PARTIAL");
-+				buf += ret;
-+				blen -= ret;
-+			}
-+			if (payload & 0x40000) {
-+				ret = snprintf(buf, buf_len, " SVE-PRED-EMPTY");
-+				buf += ret;
-+				blen -= ret;
-+			}
-+		}
-+
- 		if (ret < 0)
- 			return ret;
- 		blen -= ret;
-@@ -354,8 +372,38 @@ int arm_spe_pkt_desc(const struct arm_spe_pkt *packet, char *buf,
- 	}
- 	case ARM_SPE_OP_TYPE:
- 		switch (idx) {
--		case 0:	return snprintf(buf, buf_len, "%s", payload & 0x1 ?
--					"COND-SELECT" : "INSN-OTHER");
-+		case 0:	{
-+			if (payload & 0x8) {
-+				size_t blen = buf_len;
-+
-+				ret = snprintf(buf, buf_len, "SVE-OTHER");
-+				buf += ret;
-+				blen -= ret;
-+				if (payload & 0x2) {
-+					ret = snprintf(buf, buf_len, " FP");
-+					buf += ret;
-+					blen -= ret;
-+				}
-+				if (payload & 0x4) {
-+					ret = snprintf(buf, buf_len, " PRED");
-+					buf += ret;
-+					blen -= ret;
-+				}
-+				if (payload & 0x70) {
-+					ret = snprintf(buf, buf_len, " EVL %d",
-+						32 << ((payload & 0x70) >> 4));
-+					buf += ret;
-+					blen -= ret;
-+				}
-+				if (ret < 0)
-+					return ret;
-+				blen -= ret;
-+				return buf_len - blen;
-+			} else {
-+				return snprintf(buf, buf_len, "%s", payload & 0x1 ?
-+						"COND-SELECT" : "INSN-OTHER");
-+			}
-+		}
- 		case 1:	{
- 			size_t blen = buf_len;
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+index 93e063f22be5..fac8102c0149 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+@@ -197,6 +197,17 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+ 			if (payload & BIT(EV_MISPRED))
+ 				decoder->record.type |= ARM_SPE_BRANCH_MISS;
  
-@@ -385,6 +433,23 @@ int arm_spe_pkt_desc(const struct arm_spe_pkt *packet, char *buf,
- 				ret = snprintf(buf, buf_len, " SIMD-FP");
- 				buf += ret;
- 				blen -= ret;
-+			} else if (payload & 0x8) {
-+				if (payload & 0x4) {
-+					ret = snprintf(buf, buf_len, " PRED");
-+					buf += ret;
-+					blen -= ret;
-+				}
-+				if (payload & 0x70) {
-+					ret = snprintf(buf, buf_len, " EVL %d",
-+						32 << ((payload & 0x70) >> 4));
-+					buf += ret;
-+					blen -= ret;
-+				}
-+				if (payload & 0x80) {
-+					ret = snprintf(buf, buf_len, " SG");
-+					buf += ret;
-+					blen -= ret;
-+				}
- 			}
- 			if (ret < 0)
- 				return ret;
++			if ((idx == 4 || idx == 8) &&
++			    (payload & BIT(EV_ALIGNMENT)))
++				decoder->record.type |= ARM_SPE_ALIGNMENT;
++
++			if ((idx == 4 || idx == 8) &&
++			    (payload & BIT(EV_PARTIAL_PREDICATE)))
++				decoder->record.type |= ARM_SPE_PARTIAL_PREDICATE;
++
++			if ((idx == 4 || idx == 8) &&
++			    (payload & BIT(EV_EMPTY_PREDICATE)))
++				decoder->record.type |= ARM_SPE_EMPTY_PREDICATE;
+ 			break;
+ 		case ARM_SPE_DATA_SOURCE:
+ 			break;
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+index a5111a8d4360..d165418fcc13 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+@@ -39,6 +39,9 @@ enum arm_spe_sample_type {
+ 	ARM_SPE_TLB_MISS	= 1 << 5,
+ 	ARM_SPE_BRANCH_MISS	= 1 << 6,
+ 	ARM_SPE_REMOTE_ACCESS	= 1 << 7,
++	ARM_SPE_ALIGNMENT	= 1 << 8,
++	ARM_SPE_PARTIAL_PREDICATE	= 1 << 9,
++	ARM_SPE_EMPTY_PREDICATE	= 1 << 10,
+ };
+ 
+ struct arm_spe_record {
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 3882a5360ada..e36d6eea269b 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -53,6 +53,8 @@ struct arm_spe {
+ 	u8				sample_tlb;
+ 	u8				sample_branch;
+ 	u8				sample_remote_access;
++	u8				sample_alignment;
++	u8				sample_sve;
+ 
+ 	u64				l1d_miss_id;
+ 	u64				l1d_access_id;
+@@ -62,6 +64,9 @@ struct arm_spe {
+ 	u64				tlb_access_id;
+ 	u64				branch_miss_id;
+ 	u64				remote_access_id;
++	u64				alignment_id;
++	u64				epred_sve_id;
++	u64				ppred_sve_id;
+ 
+ 	u64				kernel_start;
+ 
+@@ -344,6 +349,30 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+ 			return err;
+ 	}
+ 
++	if (spe->sample_alignment &&
++	    (record->type & ARM_SPE_ALIGNMENT)) {
++		err = arm_spe_synth_spe_events_sample(speq,
++						      spe->alignment_id);
++		if (err)
++			return err;
++	}
++
++	if (spe->sample_sve) {
++		if (record->type & ARM_SPE_EMPTY_PREDICATE) {
++			err = arm_spe_synth_spe_events_sample(
++					speq, spe->epred_sve_id);
++			if (err)
++				return err;
++		}
++
++		if (record->type & ARM_SPE_PARTIAL_PREDICATE) {
++			err = arm_spe_synth_spe_events_sample(
++					speq, spe->ppred_sve_id);
++			if (err)
++				return err;
++		}
++	}
++
+ 	return 0;
+ }
+ 
+@@ -907,6 +936,38 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 		id += 1;
+ 	}
+ 
++	if (spe->synth_opts.alignment) {
++		spe->sample_alignment = true;
++
++		/* Alignment */
++		err = arm_spe_synth_event(session, &attr, id);
++		if (err)
++			return err;
++		spe->alignment_id = id;
++		arm_spe_set_event_name(evlist, id, "alignment");
++		id += 1;
++	}
++
++	if (spe->synth_opts.sve) {
++		spe->sample_sve = true;
++
++		/* Empty predicated SVE */
++		err = arm_spe_synth_event(session, &attr, id);
++		if (err)
++			return err;
++		spe->epred_sve_id = id;
++		arm_spe_set_event_name(evlist, id, "sve-pred-empty");
++		id += 1;
++
++		/* Partial predicated SVE */
++		err = arm_spe_synth_event(session, &attr, id);
++		if (err)
++			return err;
++		spe->ppred_sve_id = id;
++		arm_spe_set_event_name(evlist, id, "sve-pred-partial");
++		id += 1;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.17.1
 
