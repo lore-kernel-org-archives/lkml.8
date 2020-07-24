@@ -2,209 +2,217 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035B6C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C2DC433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF58420674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FauBewUn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PYQzksp8"
+	by mail.kernel.org (Postfix) with ESMTP id 2CE1A20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgGXQIT (ORCPT
+        id S1728290AbgGXQIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728521AbgGXQIR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:08:17 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD77C0619E4;
-        Fri, 24 Jul 2020 09:08:16 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595606893;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3s3Aqgk8wYEb6C7q76eOXNAqiLkE4bQcw2wKh9KEzyY=;
-        b=FauBewUnsIbIwsfTsUPJbI07vZky8mAkl6COdDJH8e9nhi7dsgWxCcZiz5++vGloYa3wt8
-        DJLWCHMQl5O+zK5Wo7MD6tkkesSF1QuLohYDxKaCf0tCms6mlkKUlTx+gFAoWQfqdrOUCX
-        6gvrKASHtAoTZ5eOZ8EqInEwe7CMPWx5Df0krM3ODVoHV0ImV1dkgHnRCLwSbObdmwf00d
-        UYNksdCl1f7je5OMYZLvE4+kDNmU8JuDBUQaLZxKRTMkC2HsVUCHhqMXTC+maDkF9LaN8Z
-        7+t3sUmjMF4iXbA2ZhMq/CxAMXm+W+hORXO5U35Xvx30ERGSYcFgpxttvrVdCg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595606893;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3s3Aqgk8wYEb6C7q76eOXNAqiLkE4bQcw2wKh9KEzyY=;
-        b=PYQzksp8119gJXWIbAR97q2k9vMn1xwijpvcyOhpepzX0j2WJs2GqqH2gviiTC/qtVWSyE
-        M3LwSBgwFVJNHgCA==
-To:     Alex Belits <abelits@marvell.com>,
-        "peterz\@infradead.org" <peterz@infradead.org>
-Cc:     "mingo\@kernel.org" <mingo@kernel.org>,
-        Prasun Kapoor <pkapoor@marvell.com>,
-        "linux-api\@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "rostedt\@goodmis.org" <rostedt@goodmis.org>,
-        "frederic\@kernel.org" <frederic@kernel.org>,
-        "catalin.marinas\@arm.com" <catalin.marinas@arm.com>,
-        "will\@kernel.org" <will@kernel.org>,
-        "linux-arch\@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "davem\@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel\@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v4 00/13] "Task_isolation" mode
-In-Reply-To: <851ee54e8317cd186338a76a045f738476144fcc.camel@marvell.com>
-References: <04be044c1bcd76b7438b7563edc35383417f12c8.camel@marvell.com> <87imeextf3.fsf@nanos.tec.linutronix.de> <831e023422aa0e4cb3da37ceef6fdcd5bc854682.camel@marvell.com> <20200723154933.GB709@worktop.programming.kicks-ass.net> <3ff1383e669b543462737b0d12c0d1fb7d409e3e.camel@marvell.com> <877dutx5xj.fsf@nanos.tec.linutronix.de> <851ee54e8317cd186338a76a045f738476144fcc.camel@marvell.com>
-Date:   Fri, 24 Jul 2020 18:08:13 +0200
-Message-ID: <87mu3ouc9e.fsf@nanos.tec.linutronix.de>
+        Fri, 24 Jul 2020 12:08:09 -0400
+Received: from 8bytes.org ([81.169.241.247]:60432 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727938AbgGXQEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:30 -0400
+Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 3E0F5FC3;
+        Fri, 24 Jul 2020 18:04:22 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v5 41/75] x86/sev-es: Setup early #VC handler
+Date:   Fri, 24 Jul 2020 18:03:02 +0200
+Message-Id: <20200724160336.5435-42-joro@8bytes.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
+References: <20200724160336.5435-1-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alex,
+From: Joerg Roedel <jroedel@suse.de>
 
-Alex Belits <abelits@marvell.com> writes:
-> On Thu, 2020-07-23 at 23:44 +0200, Thomas Gleixner wrote:
->>  1) That inline function can be put out of line by the compiler and
->>     placed into the regular text section which makes it subject to
->>     instrumentation
->> 
->>  2) That inline function invokes local_irq_save() which is subject to
->>     instrumentation _before_ the entry state for the instrumentation
->>     mechanisms is established.
->> 
->>  3) That inline function invokes sync_core() before important state
->> has
->>     been established, which is especially interesting in NMI like
->>     exceptions.
->> 
->> As you clearly documented why all of the above is safe and does not
->> cause any problems, it's just me and Peter being silly, right?
->> 
->> Try again.
->
-> I don't think, accusations and mockery are really necessary here.
+Setup an early handler for #VC exceptions. There is no GHCB mapped
+yet, so just re-use the vc_no_ghcb_handler. It can only handle CPUID
+exit-codes, but that should be enough to get the kernel through
+verify_cpu() and __startup_64() until it runs on virtual addresses.
 
-Let's get some context to this.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/include/asm/setup.h  |  1 +
+ arch/x86/include/asm/sev-es.h |  3 +++
+ arch/x86/kernel/head64.c      |  1 +
+ arch/x86/kernel/head_64.S     | 34 +++++++++++++++++++++++++++++++++
+ arch/x86/kernel/idt.c         | 36 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 75 insertions(+)
 
-  I told you in my first mail, that this breaks noinstr and that
-  building with full debug would have told you.
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index 78bdc0f686fb..c7c31fdc5ace 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -51,6 +51,7 @@ extern unsigned long __startup_secondary_64(void);
+ extern void startup_64_setup_env(unsigned long physbase);
+ extern void early_idt_setup_early_handler(unsigned long physaddr);
+ extern void early_load_idt(void);
++extern void early_idt_setup(unsigned long physbase);
+ 
+ #ifdef CONFIG_X86_INTEL_MID
+ extern void x86_intel_mid_early_setup(void);
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+index 7c0807b84546..ec0e112a742b 100644
+--- a/arch/x86/include/asm/sev-es.h
++++ b/arch/x86/include/asm/sev-es.h
+@@ -73,4 +73,7 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
+ 	return (val & mask);
+ }
+ 
++/* Early IDT entry points for #VC handler */
++extern void vc_no_ghcb(void);
++
+ #endif
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 41514ec1e6f0..250fae33bf66 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -39,6 +39,7 @@
+ #include <asm/realmode.h>
+ #include <asm/extable.h>
+ #include <asm/trapnr.h>
++#include <asm/sev-es.h>
+ 
+ /*
+  * Manage page tables very early on.
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 4622940134a5..12bf6f11fd83 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -95,6 +95,13 @@ SYM_CODE_START_NOALIGN(startup_64)
+ .Lon_kernel_cs:
+ 	UNWIND_HINT_EMPTY
+ 
++	/* Setup IDT - Needed for SEV-ES */
++	pushq	%rsi
++	/* early_idt_setup - physbase as first parameter */
++	leaq	_text(%rip), %rdi
++	call	early_idt_setup
++	popq	%rsi
++
+ 	/* Sanitize CPU configuration */
+ 	call verify_cpu
+ 
+@@ -363,6 +370,33 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
+ 	jmp restore_regs_and_return_to_kernel
+ SYM_CODE_END(early_idt_handler_common)
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++/*
++ * VC Exception handler used during very early boot. The
++ * early_idt_handler_array can't be used because it returns via the
++ * paravirtualized INTERRUPT_RETURN and pv-ops don't work that early.
++ */
++SYM_CODE_START_NOALIGN(vc_no_ghcb)
++	UNWIND_HINT_IRET_REGS offset=8
++
++	/* Build pt_regs */
++	PUSH_AND_CLEAR_REGS
++
++	/* Call C handler */
++	movq    %rsp, %rdi
++	movq	ORIG_RAX(%rsp), %rsi
++	call    do_vc_no_ghcb
++
++	/* Unwind pt_regs */
++	POP_REGS
++
++	/* Remove Error Code */
++	addq    $8, %rsp
++
++	/* Pure iret required here - don't use INTERRUPT_RETURN */
++	iretq
++SYM_CODE_END(vc_no_ghcb)
++#endif
+ 
+ #define SYM_DATA_START_PAGE_ALIGNED(name)			\
+ 	SYM_START(name, SYM_L_GLOBAL, .balign PAGE_SIZE)
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index e2777cc264f5..0d560a1218e1 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -11,6 +11,7 @@
+ #include <asm/desc.h>
+ #include <asm/hw_irq.h>
+ #include <asm/setup.h>
++#include <asm/sev-es.h>
+ 
+ struct idt_data {
+ 	unsigned int	vector;
+@@ -408,3 +409,38 @@ void early_load_idt(void)
+ {
+ 	load_idt(&idt_descr);
+ }
++
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++static void set_early_idt_handler(gate_desc *idt, int n, void *handler)
++{
++	struct idt_data data;
++	gate_desc desc;
++
++	init_idt_data(&data, n, handler);
++	idt_init_desc(&desc, &data);
++	native_write_idt_entry(idt, n, &desc);
++}
++#endif
++
++static struct desc_ptr early_idt_descr __initdata = {
++	.size		= IDT_TABLE_SIZE - 1,
++	.address	= 0 /* Needs physical address of idt_table - initialized at runtime. */,
++};
++
++void __init early_idt_setup(unsigned long physbase)
++{
++	void __maybe_unused *handler;
++	gate_desc *idt;
++
++	idt = fixup_pointer(idt_table, physbase);
++
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	/* VMM Communication Exception */
++	handler = fixup_pointer(vc_no_ghcb, physbase);
++	set_early_idt_handler(idt, X86_TRAP_VC, handler);
++#endif
++
++	/* Initialize IDT descriptor and load IDT */
++	early_idt_descr.address = (unsigned long)idt;
++	native_load_idt(&early_idt_descr);
++}
+-- 
+2.27.0
 
-  Peter gave you a clear hint where to look.
-
-Now it might be expected that you investigate that or at least ask
-questions before making the bold claim:
-
->> > Unless something else is involved, those operations are safe, so I
->> > am not adding anything that can break those.
-
-Surely I could have avoided the snide remark, but after you demonstrably
-ignored technically valid concerns and suggestions in your other reply,
-I was surely not in the mood to be overly careful in my choice of words.
-
-> The result of this may be not a "design" per se, but an understanding
-> of how things are implemented, and what rules are being followed, so I
-> could add my code in a manner consistent with what is done, and
-> document the whole thing.
-
-Every other big and technically complex project which has to change the
-very inner workings of the kernel started the same way. I'm not aware of
-any of them getting accepted as is or in a big code dump.
-
-What you have now qualifies as proof of concept and the big challenge is
-to turn it into something which is acceptable and maintainable.
-
-You talk in great length about how inconsistent stuff is all over the
-place. Yes, it is indeed. You even call that inconsistency an existing
-design:
-
-> My patches reflect what is already in code and in its design.
-
-I agree that you just work with the code as is, but you might have
-noticed that quite some of this stuff is clearly not designed at all or
-designed badly.
-
-The solution is not to pile on top of the inconsistency, the solution is
-to make it consistent in the first place.
-
-You are surely going to say, that's beyond the scope of your project. I
-can tell you that it is in the scope of your project simply because just
-proliferating the status quo and piling new stuff on top is not an
-option. And no, there are no people waiting in a row to mop up after
-you either.
-
-Quite some of the big technology projects have spent and still spend
-considerable amount of time to do exactly this kind of consolidation
-work upfront in order to make their features acceptable in a
-maintainable form.
-
-All of these projects have been merged or are still being merged
-piecewise in reviewable chunks.
-
-We are talking about intrusive technology which requires a very careful
-integration to prevent it from becoming a roadblock or a maintenaince
-headache. The approach and implementation has to be _agreed_ on by the
-involved parties, i.e. submitters, reviewers and maintainers.
-
-> While I understand that this is an unusual feature and by its nature
-> it affects kernel in multiple places, it does not deserve to be called
-> a "mess" and other synonyms of "mess".
-
-The feature is perfectly fine and I completely understand why you want
-it. Guess who started to lay the grounds for NOHZ_FULL more than a
-decade ago and why?
-
-The implementation is not acceptable on technical grounds,
-maintainability reasons, lack of design and proper consolidated
-integration.
-
-> Another issue that you have asked me to defend is the existence and
-> scope of task isolation itself.
-
-I have not asked you to defend the existance. I asked you for coherent
-explanations how the implementation works and why the chosen approach is
-correct and valid. That's a completely different thing.
-
-> It's an attempt to introduce a feature that turns Linux userspace into
-> superior replacement of RTOS.....
-
-Can you please spare me the advertising and marketing? I'm very well
-aware what an RTOS is and I'm also very well aware that there is no such
-thing like a 'superior replacement' for RTOS in general.
-
-If your view of RTOS is limited to this particular feature, then I have
-to tell you that this particular feature is only useful for a very small
-portion of the overall RTOS use cases.
-
-> However most definitely this is not a "mess", and it I do not believe
-> that I have to defend the validity of this direction of development, or
-> be accused of general incompetence every time someone finds a
-> frustrating mistake in my code.
-
-Nobody accuses you of incompetence, but you will have to defend the
-validity of your approach and implementation and accept that things
-might not be as shiny as you think they are. That's not hostility,
-that's just how Linux kernel development works whether you like it or
-not. 
-
-I surely can understand your frustration over my view of this series,
-but you might have noticed that aside of criticism I gave you very clear
-technical arguments and suggestions how to proceed.
-
-It's your decision what you make of that.
-
-Thanks,
-
-        tglx
