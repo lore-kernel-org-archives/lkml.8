@@ -2,263 +2,126 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBECC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC56C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F79206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:56:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Roo8z/H8"
+	by mail.kernel.org (Postfix) with ESMTP id 56BC72067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgGXQ4s (ORCPT
+        id S1726801AbgGXRAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:56:48 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:41483 "EHLO m43-7.mailgun.net"
+        Fri, 24 Jul 2020 13:00:33 -0400
+Received: from mga18.intel.com ([134.134.136.126]:12416 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726455AbgGXQ4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:56:47 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595609806; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=slIS97vKV63QCr6QxPvaBZfhezqga3Y61b7WNCJyBcs=;
- b=Roo8z/H8n984OqDmlf5lgMuXMBAHGfb+3AsYH+B7gZDAS/XY8xNYSAlkfIkp/mW+op+wCSMz
- UwAtiZOMJxRHTZ8wajTbKJWbjEap9sZkwVALtoJ0f0f6UBgUjJOfS/f3iqV+qQoUgg++z/55
- el3b3CgDv6RpnLqqwBgCPrPvk7A=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
- 5f1b129e35f3e3d3162f0a41 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Jul 2020 16:55:58
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1E1EEC43391; Fri, 24 Jul 2020 16:55:58 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S1726381AbgGXRAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:00:32 -0400
+IronPort-SDR: J+Im2xHnxTdEIj5ktuhQdb9xbQQXesExXlVsPAd+KbSROub+pWwTTEFmpWIZEbC+si2FodhUzV
+ nCGzrFfXS9cA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="138245666"
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="138245666"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:00:31 -0700
+IronPort-SDR: G6zJ9jlbWHEOMhv6Hj4P4IuC68udFVXIBCA/yuNM45GHvKH2Gyu0xJVeyhsY/k9PcKukfG/xjF
+ HqLYGEcsaIow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="284985355"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2020 10:00:30 -0700
+Received: from [10.252.140.222] (kliang2-mobl.ccr.corp.intel.com [10.252.140.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 35514C433C9;
-        Fri, 24 Jul 2020 16:55:57 +0000 (UTC)
+        by linux.intel.com (Postfix) with ESMTPS id 0AA4A580297;
+        Fri, 24 Jul 2020 10:00:29 -0700 (PDT)
+Subject: Re: [PATCH V7 07/14] perf/core: Add a new PERF_EV_CAP_COEXIST event
+ capability
+To:     peterz@infradead.org, Andi Kleen <ak@linux.intel.com>
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, like.xu@linux.intel.com
+References: <20200723171117.9918-1-kan.liang@linux.intel.com>
+ <20200723171117.9918-8-kan.liang@linux.intel.com>
+ <20200724105543.GV119549@hirez.programming.kicks-ass.net>
+ <20200724114628.GJ43129@hirez.programming.kicks-ass.net>
+ <0d33a25c-cfe4-af7f-c915-a98dba17b53b@linux.intel.com>
+ <20200724135412.GA10769@hirez.programming.kicks-ass.net>
+ <e04f1708-e8c0-3787-1572-443f03ab73ca@linux.intel.com>
+ <20200724143258.GB10769@hirez.programming.kicks-ass.net>
+ <20200724144632.GE1180481@tassilo.jf.intel.com>
+ <20200724145934.GD10769@hirez.programming.kicks-ass.net>
+ <20200724164356.GL43129@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <af274c58-6935-22cd-2830-519c3977e136@linux.intel.com>
+Date:   Fri, 24 Jul 2020 13:00:28 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Fri, 24 Jul 2020 22:25:57 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] arm64: dts: qcom: sm8250: add interconnect nodes
-In-Reply-To: <2b77bdaf-0c9e-c054-77d1-3bc21e857773@marek.ca>
-References: <20200713154121.22094-1-jonathan@marek.ca>
- <20200713154121.22094-8-jonathan@marek.ca>
- <630319740d3f06cfb0435cae025e0ca1@codeaurora.org>
- <2b77bdaf-0c9e-c054-77d1-3bc21e857773@marek.ca>
-Message-ID: <4d984ecd68adc249f12eeb18bb7e5792@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <20200724164356.GL43129@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-24 20:06, Jonathan Marek wrote:
-> On 7/24/20 10:13 AM, Sibi Sankar wrote:
->> Hey Jonathan,
->> 
->> Thanks for the patch! Please use the
->> suggested register space definitions
->> instead.
->> 
-> 
-> Thanks for the suggestions, I was unsure what to use for the sizes.
-> The reg field is unused by the upstream driver so it is hard to figure
-> out.
-> 
-> However, I'm not sure about some of your suggestions for the base
-> address. For example, for "mc_virt" you suggest 0x0163d000, and I have
-> 0x09100000. In the downstream dts, "mc_virt-base" is 0x9100000 and
-> qcom,base-offset for fab_mc_virt is 0. Do you have an explanation for
-> why your suggestion is so different?
 
-AFAIK for providers with virt suffix the
-register space definition is just an
-arbitrary choice and doesn't matter.
-Since mc_virt was just re-using gem_noc
-address space I suggested we stick to
-how it was done on sc7180 i.e place it
-between system_noc and aggre1_noc.
+
+On 7/24/2020 12:43 PM, peterz@infradead.org wrote:
+> On Fri, Jul 24, 2020 at 04:59:34PM +0200, Peter Zijlstra wrote:
+>> On Fri, Jul 24, 2020 at 07:46:32AM -0700, Andi Kleen wrote:
+>>>> Something that seems to 'work' is:
+>>>> '{cycles,cpu/instructions,period=50000/}', so maybe you can make the
+>>>> group modifier :S use any sampling event if there is one, and otherwise
+>>>> designate the leader.
+>>>>
+>>>> Then you can write things like:
+>>>>
+>>>>    '{slots, metric1, metric2, cpu/cycles,freq=50000/}:S'
+>>>>
+>>>> and then since cycles is specified as a sampling event, it will use
+>>>> that.
+>>>
+>>> Okay possible, but it makes things more complicated
+>>> for the user to understand and requires special documentation.
+>>> Hopefully it's worth it the internal simplification.
+>>
+>> You already require special documentation for this metrics stuff. We
+>> already need to state that SLOTS cannot be a sampling event, so you
+>> already need to pay attention to this anyway.
+>>
+>> A shortcut could be a :s event modifier, then you can write:
+>>
+>>   '{slots, metric1, metric2, cycles:s}:S'
+>>
+>> and have the tool select the :s tagged one.
+
+It looks like PT encountered a similar issue as us.
+They use the 2nd event of the group as the
+"leader". I think we can simply extend the function to check the slots 
+event in perf tool.
+https://lore.kernel.org/lkml/20200401101613.6201-17-adrian.hunter@intel.com/
+
 
 > 
->> On 2020-07-13 21:11, Jonathan Marek wrote:
->>> Add the interconnect dts nodes for sm8250.
->>> 
->>> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
->>> ---
->>>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 82 
->>> ++++++++++++++++++++++++++++
->>>  1 file changed, 82 insertions(+)
->>> 
->>> diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi
->>> b/arch/arm64/boot/dts/qcom/sm8250.dtsi
->>> index 636e2196138c..dfc1b7fa7d85 100644
->>> --- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
->>> @@ -11,6 +11,7 @@
->>>  #include <dt-bindings/power/qcom-aoss-qmp.h>
->>>  #include <dt-bindings/power/qcom-rpmpd.h>
->>>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->>> +#include <dt-bindings/interconnect/qcom,sm8250.h>
->> 
->> please fix ^^ sort order
->> 
->>> 
->>>  / {
->>>      interrupt-parent = <&intc>;
->>> @@ -978,6 +979,55 @@ spi13: spi@a94000 {
->>>              };
->>>          };
->>> 
->>> +        config_noc: interconnect@1500000 {
->>> +            compatible = "qcom,sm8250-config-noc";
->>> +            reg = <0 0x01500000 0 0x1000>;
->> 
->> 0x01500000 0xa580
->> 
->>> +            #interconnect-cells = <1>;
->>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>> +        };
->>> +
->>> +        ipa_virt: interconnect@1620000 {
->>> +            compatible = "qcom,sm8250-ipa-virt";
->>> +            reg = <0 0x01620000 0 0x1000>;
->> 
->> 0x01e00000 0x1000
->> 
->>> +            #interconnect-cells = <1>;
->>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>> +        };
->>> +
->>> +        system_noc: interconnect@1632000 {
->>> +            compatible = "qcom,sm8250-system-noc";
->>> +            reg = <0 0x01632000 0 0x1000>;
->> 
->> 0x01620000 0x1C200
->> 
->>> +            #interconnect-cells = <1>;
->>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>> +        };
->>> +
->>> +        aggre1_noc: interconnect@16e2000 {
->>> +            compatible = "qcom,sm8250-aggre1-noc";
->>> +            reg = <0 0x016e2000 0 0x1000>;
->> 
->> 0x016e0000 0x1f180
->> 
->>> +            #interconnect-cells = <1>;
->>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>> +        };
->>> +
->>> +        aggre2_noc: interconnect@1703000 {
->>> +            compatible = "qcom,sm8250-aggre2-noc";
->>> +            reg = <0 0x01703000 0 0x1000>;
->> 
->> 0x01700000 0x33000
->> 
->>> +            #interconnect-cells = <1>;
->>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>> +        };
->>> +
->>> +        compute_noc: interconnect@1733000 {
->>> +            compatible = "qcom,sm8250-compute-noc";
->>> +            reg = <0 0x01733000 0 0x1000>;
->> 
->> 0x01733000 0xd180
->> 
->>> +            #interconnect-cells = <1>;
->>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>> +        };
->>> +
->>> +        mmss_noc: interconnect@174a000 {
->>> +            compatible = "qcom,sm8250-mmss-noc";
->>> +            reg = <0 0x0174a000 0 0x1000>;
->> 
->> 0x01740000 0x1f080
->> 
->>> +            #interconnect-cells = <1>;
->>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>> +        };
->>> +
->>>          ufs_mem_hc: ufshc@1d84000 {
->>>              compatible = "qcom,sm8250-ufshc", "qcom,ufshc",
->>>                       "jedec,ufs-2.0";
->>> @@ -1364,6 +1414,34 @@ usb_2_ssphy: lane@88eb200 {
->>>              };
->>>          };
->>> 
->>> +        dc_noc: interconnect@90c0000 {
->>> +            compatible = "qcom,sm8250-dc-noc";
->>> +            reg = <0 0x090c0000 0 0x1000>;
->> 
->> 0x090c0000 0x4200
->> 
->>> +            #interconnect-cells = <1>;
->>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>> +        };
->>> +
->>> +        mc_virt: interconnect@9100000 {
->>> +            compatible = "qcom,sm8250-mc-virt";
->>> +            reg = <0 0x09100000 0 0x1000>;
->> 
->> 0x0163d000 0x1000
->> 
->>> +            #interconnect-cells = <1>;
->>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>> +        };
->>> +
->>> +        gem_noc: interconnect@9121000 {
->>> +            compatible = "qcom,sm8250-gem-noc";
->>> +            reg = <0 0x09121000 0 0x1000>;
->> 
->> 0x09100000 0xb4000
->> 
->>> +            #interconnect-cells = <1>;
->>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>> +        };
->>> +
->>> +        npu_noc: interconnect@9990000 {
->>> +            compatible = "qcom,sm8250-npu-noc";
->>> +            reg = <0 0x09990000 0 0x1000>;
->> 
->> 0x09990000 0x1600
->> 
->>> +            #interconnect-cells = <1>;
->>> +            qcom,bcm-voters = <&apps_bcm_voter>;
->>> +        };
->>> +
->>>          usb_1: usb@a6f8800 {
->>>              compatible = "qcom,sm8250-dwc3", "qcom,dwc3";
->>>              reg = <0 0x0a6f8800 0 0x400>;
->>> @@ -2359,6 +2437,10 @@ rpmhpd_opp_turbo_l1: opp10 {
->>>                      };
->>>                  };
->>>              };
->>> +
->>> +            apps_bcm_voter: bcm_voter {
->>> +                compatible = "qcom,bcm-voter";
->>> +            };
->>>          };
->>>      };
->> 
+> Having slots as leader also would allow doing something like
+> FORMAT_METRIC, where we return sibling/leader in some fashion.
+> 
+> That also makes sense for instructions, because, IIRC,
+> instructions/slots is the better IPC.
+> 
+> And we should probably consider FORMAT_RESET.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+What's FORMAT_RESET for?
+
+Thanks,
+Kan
+
