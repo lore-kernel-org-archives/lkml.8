@@ -2,107 +2,88 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC06C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09595C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B71872074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40522078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 06:41:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GXGBk5yJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FNuNTItz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgGXGgo (ORCPT
+        id S1726719AbgGXGlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 02:36:44 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:15394 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726525AbgGXGgn (ORCPT
+        Fri, 24 Jul 2020 02:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgGXGlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 02:36:43 -0400
-X-UUID: ce487071849c45eda65232134b3a46a0-20200724
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=LqLck1fwSu4qq9+0rFPa49nhL2/61wPAzLCarhjNGK4=;
-        b=GXGBk5yJ1rNUirFNFLv+qwbcnilBv5cgAqDf0vIRrkfeUyn29nsjVsB0j0W47NJRN5no2l1sway7q5RoNKaO00YnuPU4v22DJ9PP2vW3rR5fkQleBfLEHJhgFnMLYrGH7WJCRakn9MOMbCzg0MdGT3WbaCOFDCdo2J67EbmpodU=;
-X-UUID: ce487071849c45eda65232134b3a46a0-20200724
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <crystal.guo@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1363268807; Fri, 24 Jul 2020 14:36:39 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs07n2.mediatek.inc
- (172.21.101.141) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 24 Jul
- 2020 14:36:37 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 24 Jul 2020 14:36:35 +0800
-Message-ID: <1595572526.15289.9.camel@mhfsdcap03>
-Subject: Re: [PATCH 4/4] dt-binding: mediatek: mt8192: update mtk-wdt
- document
-From:   Crystal Guo <crystal.guo@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Rob Herring <robh@kernel.org>,
-        Seiya Wang =?UTF-8?Q?=28=E7=8E=8B=E8=BF=BA=E5=90=9B=29?= 
-        <seiya.wang@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Date:   Fri, 24 Jul 2020 14:35:26 +0800
-In-Reply-To: <d69d441d-b8c7-f4a4-7ae1-a0012d8001f3@gmail.com>
-References: <20200723090731.4482-1-seiya.wang@mediatek.com>
-         <20200723090731.4482-5-seiya.wang@mediatek.com>
-         <20200723212935.GA889594@bogus>
-         <d69d441d-b8c7-f4a4-7ae1-a0012d8001f3@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 24 Jul 2020 02:41:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1BC6C0619D3;
+        Thu, 23 Jul 2020 23:41:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=9Azj/mUx6+f5fk9NY2T38Tsh0GsS8yhWgaldDHz0tL8=; b=FNuNTItzxYtnjPlhenZldsMDjP
+        UJEtFzx9eiLn0Tbo78Z+kWRU+Hwkch6CqZFZInK657N6vhC2wQoww6clvA3lkv1jAUmPRCQgGyvPq
+        YKZ9vBWDPPkDM3plh+tQgac3iS+o5mT9S7WZ2isdHergByE1OO5wHxG/GdQIABZDMUHvzgl7tRMeK
+        hX27fyZY0JGzFau0RCtQ7NEBlbTJnfnKL3coyrtbYsc4bLv6Ah/SmEQ7mPcgHnzHp90KgGLUpQzlH
+        kzxNDVVe2h+SbL9rNVoylyyR2Q7M+R6NRLHjGhxCDikA8K+ZEVbRTDpHKowBCKdUF7w6kf1qyuTgv
+        6HCNTkSA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jyrOP-0002uR-Ew; Fri, 24 Jul 2020 06:41:17 +0000
+Date:   Fri, 24 Jul 2020 07:41:17 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2 04/20] unify generic instances of
+ csum_partial_copy_nocheck()
+Message-ID: <20200724064117.GA10522@infradead.org>
+References: <20200724012512.GK2786714@ZenIV.linux.org.uk>
+ <20200724012546.302155-1-viro@ZenIV.linux.org.uk>
+ <20200724012546.302155-4-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724012546.302155-4-viro@ZenIV.linux.org.uk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA3LTI0IGF0IDA2OjAyICswODAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiANCj4gT24gMjMvMDcvMjAyMCAyMzoyOSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+ID4gT24g
-VGh1LCBKdWwgMjMsIDIwMjAgYXQgMDU6MDc6MzFQTSArMDgwMCwgU2VpeWEgV2FuZyB3cm90ZToN
-Cj4gPj4gRnJvbTogQ3J5c3RhbCBHdW8gPGNyeXN0YWwuZ3VvQG1lZGlhdGVrLmNvbT4NCj4gPj4N
-Cj4gPj4gdXBkYXRlIG10ay13ZHQgZG9jdW1lbnQgZm9yIE1UODE5MiBwbGF0Zm9ybQ0KPiA+Pg0K
-PiA+PiBTaWduZWQtb2ZmLWJ5OiBDcnlzdGFsIEd1byA8Y3J5c3RhbC5ndW9AbWVkaWF0ZWsuY29t
-Pg0KPiA+PiAtLS0NCj4gPj4gICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0
-Y2hkb2cvbXRrLXdkdC50eHQgfCAyICsrDQo+ID4+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0
-aW9ucygrKQ0KPiA+Pg0KPiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3dhdGNoZG9nL210ay13ZHQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3dhdGNoZG9nL210ay13ZHQudHh0DQo+ID4+IGluZGV4IDRkZDM2YmQzZjFhZC4u
-ZDc2MGNhOGE2MzBlIDEwMDY0NA0KPiA+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQNCj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL210ay13ZHQudHh0DQo+ID4+IEBAIC0xMiw2ICsx
-Miw4IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4+ICAgCSJtZWRpYXRlayxtdDc2Mjktd2R0
-IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQ3NjI5DQo+ID4+ICAgCSJtZWRpYXRlayxt
-dDgxODMtd2R0IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQ4MTgzDQo+ID4+ICAgCSJt
-ZWRpYXRlayxtdDg1MTYtd2R0IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQ4NTE2DQo+
-ID4+ICsJIm1lZGlhdGVrLG10ODE5Mi13ZHQiOiBmb3IgTVQ4MTkyDQo+ID4+ICsNCj4gPiANCj4g
-PiBTbywgbm90IGNvbXBhdGlibGUgd2l0aCAibWVkaWF0ZWssbXQ2NTg5LXdkdCI/IElzIHNvLCBw
-ZXJoYXBzIHN1bW1hcml6ZQ0KPiA+IHdoYXQgdGhlIGRpZmZlcmVuY2VzIGFyZS4NCj4gPiANCj4g
-DQo+IEhtLCBsb29rcyB0byBtZSBhcyBpZiB0aGUgYmluZGluZyBkZXNjcmlwdGlvbiBmb3IgbXQy
-NzEyIGFuZCBtdDgxODMgaXNuJ3QgDQo+IGNvcnJlY3QsIGFzIHdlIGhhdmUgYSBPRiBkYXRhIGp1
-c3QgYXMgd2UgaGF2ZSBmb3IgbXQ4MTkyIG5vdy4gQ291bGQgeW91IGZpeCB0aGlzIA0KPiBpbiBh
-IHNlcGFyYXRlIHBhdGNoPw0KPiANCj4gUmVnYXJkcywNCj4gTWF0dGhpYXMNCj4gDQo+IEJlc2lk
-ZXMgd2F0Y2hkb2csIG10ODE5MiB0b3ByZ3UgbW9kdWxlIGFsc28gcHJvdmlkZSBzdWItc3lzdGVt
-IHNvZnR3YXJlIHJlc2V0IGZlYXR1cmVzLg0KPiBtdDI3MTIgYW5kIG10ODE4MyBhcmUgc2FtZSBh
-cyBtdDgxOTIuIEJ1dCBtdDY1ODkgbm90IHN1cHBvcnQgc3ViLXN5c3RlbSBzb2Z0d2FyZSByZXNl
-dC4NCj4gDQo+ID4+ICAgDQo+ID4+ICAgLSByZWcgOiBTcGVjaWZpZXMgYmFzZSBwaHlzaWNhbCBh
-ZGRyZXNzIGFuZCBzaXplIG9mIHRoZSByZWdpc3RlcnMuDQo+ID4+ICAgDQo+ID4+IC0tIA0KPiA+
-PiAyLjE0LjENCg0K
+On Fri, Jul 24, 2020 at 02:25:30AM +0100, Al Viro wrote:
+> From: Al Viro <viro@zeniv.linux.org.uk>
+> 
+> quite a few architectures have the same csum_partial_copy_nocheck() -
+> simply memcpy() the data and then return the csum of the copy.
+> 
+> hexagon, parisc, ia64, s390, um: explicitly spelled out that way.
+> 
+> arc, arm64, csky, h8300, m68k/nommu, microblaze, mips/GENERIC_CSUM, nds32,
+> nios2, openrisc, riscv, unicore32: end up picking the same thing spelled
+> out in lib/checksum.h (with varying amounts of perversions along the way).
+> 
+> everybody else (alpha, arm, c6x, m68k/mmu, mips/!GENERIC_CSUM, powerpc,
+> sh, sparc, x86, xtensa) have non-generic variants.  For all except c6x
+> the declaration is in their asm/checksum.h.  c6x uses the wrapper
+> from asm-generic/checksum.h that would normally lead to the lib/checksum.h
+> instance, but in case of c6x we end up using an asm function from arch/c6x
+> instead.
+> 
+> Screw that mess - have architectures with private instances define
+> _HAVE_ARCH_CSUM_AND_COPY in their asm/checksum.h and have the default
+> one right in net/checksum.h conditional on _HAVE_ARCH_CSUM_AND_COPY
+> *not* defined.
 
+net-next has a patch from me killing off csum_and_copy_from_user
+already:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=f1bfd71c8662f20d53e71ef4e18bfb0e5677c27f
