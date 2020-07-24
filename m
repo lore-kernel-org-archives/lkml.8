@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245ADC433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C5BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 030FC2065E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99BCA20658
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbgGXQE5 (ORCPT
+        id S1728229AbgGXQEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:04:57 -0400
-Received: from 8bytes.org ([81.169.241.247]:33000 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:04:49 -0400
+Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728175AbgGXQEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:45 -0400
+        id S1728046AbgGXQEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:37 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 21FD1FEA;
-        Fri, 24 Jul 2020 18:04:37 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 55146FCE;
+        Fri, 24 Jul 2020 18:04:29 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 68/75] x86/realmode: Setup AP jump table
-Date:   Fri, 24 Jul 2020 18:03:29 +0200
-Message-Id: <20200724160336.5435-69-joro@8bytes.org>
+Subject: [PATCH v5 54/75] x86/sev-es: Handle DR7 read/write events
+Date:   Fri, 24 Jul 2020 18:03:15 +0200
+Message-Id: <20200724160336.5435-55-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,213 +60,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Lendacky <thomas.lendacky@amd.com>
 
-As part of the GHCB specification, the booting of APs under SEV-ES
-requires an AP jump table when transitioning from one layer of code to
-another (e.g. when going from UEFI to the OS). As a result, each layer
-that parks an AP must provide the physical address of an AP jump table
-to the next layer via the hypervisor.
+Add code to handle #VC exceptions on DR7 register reads and writes.
+This is needed early because show_regs() reads DR7 to print it out.
 
-Upon booting of the kernel, read the AP jump table address from the
-hypervisor. Under SEV-ES, APs are started using the INIT-SIPI-SIPI
-sequence. Before issuing the first SIPI request for an AP, the start
-CS and IP is programmed into the AP jump table. Upon issuing the SIPI
-request, the AP will awaken and jump to that start CS:IP address.
+Under SEV-ES there is currently no support for saving/restoring the
+DRx registers, but software expects to be able to write to the DR7
+register. For now, cache the value written to DR7 and return it on
+read attempts, but do not touch the real hardware DR7.
 
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: - Adapted to different code base
-                   - Moved AP table setup from SIPI sending path to
-		     real-mode setup code
-		   - Fix sparse warnings ]
+[ jroedel@suse.de: - Adapt to #VC handling framework
+                   - Support early usage ]
 Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/sev-es.h   |  5 +++
- arch/x86/include/uapi/asm/svm.h |  3 ++
- arch/x86/kernel/sev-es.c        | 68 +++++++++++++++++++++++++++++++++
- arch/x86/realmode/init.c        | 18 ++++++++-
- 4 files changed, 92 insertions(+), 2 deletions(-)
+ arch/x86/kernel/sev-es.c | 85 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
 
-diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
-index 2dd19932a60d..6ca38dc378e0 100644
---- a/arch/x86/include/asm/sev-es.h
-+++ b/arch/x86/include/asm/sev-es.h
-@@ -73,6 +73,9 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
- 	return (val & mask);
- }
- 
-+struct real_mode_header;
-+enum stack_type;
-+
- /* Early IDT entry points for #VC handler */
- extern void vc_no_ghcb(void);
- extern bool handle_vc_boot_ghcb(struct pt_regs *regs);
-@@ -91,9 +94,11 @@ static __always_inline void sev_es_ist_exit(void)
- 	if (static_branch_unlikely(&sev_es_enable_key))
- 		__sev_es_ist_exit();
- }
-+extern int sev_es_setup_ap_jump_table(struct real_mode_header *rmh);
- #else
- static inline void sev_es_ist_enter(struct pt_regs *regs) { }
- static inline void sev_es_ist_exit(void) { }
-+static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh) { return 0; }
- #endif
- 
- #endif
-diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
-index 8f36ae021a7f..a19ce9681ec2 100644
---- a/arch/x86/include/uapi/asm/svm.h
-+++ b/arch/x86/include/uapi/asm/svm.h
-@@ -84,6 +84,9 @@
- /* SEV-ES software-defined VMGEXIT events */
- #define SVM_VMGEXIT_MMIO_READ			0x80000001
- #define SVM_VMGEXIT_MMIO_WRITE			0x80000002
-+#define SVM_VMGEXIT_AP_JUMP_TABLE		0x80000005
-+#define		SVM_VMGEXIT_SET_AP_JUMP_TABLE			0
-+#define		SVM_VMGEXIT_GET_AP_JUMP_TABLE			1
- #define SVM_VMGEXIT_UNSUPPORTED_EVENT		0x8000ffff
- 
- #define SVM_EXIT_ERR           -1
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 88636ff1d451..afd728d6de85 100644
+index 379f9ad63ce8..1a7bfcb37602 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -21,6 +21,8 @@
- #include <linux/mm.h>
+@@ -28,6 +28,8 @@
+ #include <asm/traps.h>
+ #include <asm/svm.h>
  
- #include <asm/cpu_entry_area.h>
-+#include <asm/stacktrace.h>
-+#include <asm/realmode.h>
- #include <asm/sev-es.h>
- #include <asm/insn-eval.h>
- #include <asm/fpu/internal.h>
-@@ -219,6 +221,9 @@ static __always_inline void sev_es_put_ghcb(struct ghcb_state *state)
- 	}
++#define DR7_RESET_VALUE        0x400
++
+ /* For early boot hypervisor communication in SEV-ES enabled guests */
+ static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
+ 
+@@ -75,6 +77,13 @@ struct sev_es_runtime_data {
+ 	 */
+ 	bool ghcb_active;
+ 	bool backup_ghcb_active;
++
++	/*
++	 * Cached DR7 value - write it on DR7 writes and return it on reads.
++	 * That value will never make it to the real hardware DR7 as debugging
++	 * is currently unsupported in SEV-ES guests.
++	 */
++	unsigned long dr7;
+ };
+ 
+ struct ghcb_state {
+@@ -521,6 +530,21 @@ static long *vc_insn_get_reg(struct es_em_ctxt *ctxt)
+ 	return reg_array + offset;
  }
  
-+/* Needed in vc_early_vc_forward_exception */
-+void do_early_exception(struct pt_regs *regs, int trapnr);
-+
- static inline u64 sev_es_rd_ghcb_msr(void)
- {
- 	return native_read_msr(MSR_AMD64_SEV_ES_GHCB);
-@@ -407,6 +412,69 @@ static bool vc_slow_virt_to_phys(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
- /* Include code shared with pre-decompression boot stage */
- #include "sev-es-shared.c"
- 
-+static u64 sev_es_get_jump_table_addr(void)
++static long *vc_insn_get_rm(struct es_em_ctxt *ctxt)
 +{
-+	struct ghcb_state state;
-+	unsigned long flags;
-+	struct ghcb *ghcb;
-+	u64 ret;
++	long *reg_array;
++	int offset;
 +
-+	local_irq_save(flags);
++	reg_array = (long *)ctxt->regs;
++	offset    = insn_get_modrm_rm_off(&ctxt->insn, ctxt->regs);
 +
-+	ghcb = sev_es_get_ghcb(&state);
++	if (offset < 0)
++		return NULL;
 +
-+	vc_ghcb_invalidate(ghcb);
-+	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_JUMP_TABLE);
-+	ghcb_set_sw_exit_info_1(ghcb, SVM_VMGEXIT_GET_AP_JUMP_TABLE);
-+	ghcb_set_sw_exit_info_2(ghcb, 0);
++	offset /= sizeof(long);
 +
-+	sev_es_wr_ghcb_msr(__pa(ghcb));
-+	VMGEXIT();
-+
-+	if (!ghcb_is_valid_sw_exit_info_1(ghcb) ||
-+	    !ghcb_is_valid_sw_exit_info_2(ghcb))
-+		ret = 0;
-+
-+	ret = ghcb->save.sw_exit_info_2;
-+
-+	sev_es_put_ghcb(&state);
-+
-+	local_irq_restore(flags);
-+
-+	return ret;
++	return reg_array + offset;
 +}
-+
-+int sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
-+{
-+	u16 startup_cs, startup_ip;
-+	phys_addr_t jump_table_pa;
-+	u64 jump_table_addr;
-+	u16 __iomem *jump_table;
-+
-+	jump_table_addr = sev_es_get_jump_table_addr();
-+
-+	/* Check if AP Jump Table is non-zero and page-aligned */
-+	if (!jump_table_addr || jump_table_addr & ~PAGE_MASK)
-+		return 0;
-+
-+	jump_table_pa = jump_table_addr & PAGE_MASK;
-+
-+	startup_cs = (u16)(rmh->trampoline_start >> 4);
-+	startup_ip = (u16)(rmh->sev_es_trampoline_start -
-+			   rmh->trampoline_start);
-+
-+	jump_table = ioremap_encrypted(jump_table_pa, PAGE_SIZE);
-+	if (!jump_table)
-+		return -EIO;
-+
-+	writew(startup_ip, &jump_table[0]);
-+	writew(startup_cs, &jump_table[1]);
-+
-+	iounmap(jump_table);
-+
-+	return 0;
-+}
-+
- static enum es_result vc_handle_msr(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+ static enum es_result vc_do_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+ 				 unsigned int bytes, bool read)
  {
- 	struct pt_regs *regs = ctxt->regs;
-diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-index 1ed1208931e0..61a52b925d15 100644
---- a/arch/x86/realmode/init.c
-+++ b/arch/x86/realmode/init.c
-@@ -9,6 +9,7 @@
- #include <asm/realmode.h>
- #include <asm/tlbflush.h>
- #include <asm/crash.h>
-+#include <asm/sev-es.h>
- 
- struct real_mode_header *real_mode_header;
- u32 *trampoline_cr4_features;
-@@ -38,6 +39,19 @@ void __init reserve_real_mode(void)
- 	crash_reserve_low_1M();
+@@ -768,6 +792,61 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
+ 	return ret;
  }
  
-+static void sme_sev_setup_real_mode(struct trampoline_header *th)
++static enum es_result vc_handle_dr7_write(struct ghcb *ghcb,
++					  struct es_em_ctxt *ctxt)
 +{
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	if (sme_active())
-+		th->flags |= TH_FLAGS_SME_ACTIVE;
++	struct sev_es_runtime_data *data = this_cpu_read(runtime_data);
++	long val, *reg = vc_insn_get_rm(ctxt);
++	enum es_result ret;
 +
-+	if (sev_es_active()) {
-+		if (sev_es_setup_ap_jump_table(real_mode_header))
-+			panic("Failed to update SEV-ES AP Jump Table");
++	if (!reg)
++		return ES_DECODE_FAILED;
++
++	val = *reg;
++
++	/* Upper 32 bits must be written as zeroes */
++	if (val >> 32) {
++		ctxt->fi.vector = X86_TRAP_GP;
++		ctxt->fi.error_code = 0;
++		return ES_EXCEPTION;
 +	}
-+#endif
++
++	/* Clear out other reserved bits and set bit 10 */
++	val = (val & 0xffff23ffL) | BIT(10);
++
++	/* Early non-zero writes to DR7 are not supported */
++	if (!data && (val & ~DR7_RESET_VALUE))
++		return ES_UNSUPPORTED;
++
++	/* Using a value of 0 for ExitInfo1 means RAX holds the value */
++	ghcb_set_rax(ghcb, val);
++	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_WRITE_DR7, 0, 0);
++	if (ret != ES_OK)
++		return ret;
++
++	if (data)
++		data->dr7 = val;
++
++	return ES_OK;
 +}
 +
- static void __init setup_real_mode(void)
- {
- 	u16 real_mode_seg;
-@@ -104,13 +118,13 @@ static void __init setup_real_mode(void)
- 	*trampoline_cr4_features = mmu_cr4_features;
- 
- 	trampoline_header->flags = 0;
--	if (sme_active())
--		trampoline_header->flags |= TH_FLAGS_SME_ACTIVE;
- 
- 	trampoline_pgd = (u64 *) __va(real_mode_header->trampoline_pgd);
- 	trampoline_pgd[0] = trampoline_pgd_entry.pgd;
- 	trampoline_pgd[511] = init_top_pgt[511].pgd;
- #endif
++static enum es_result vc_handle_dr7_read(struct ghcb *ghcb,
++					 struct es_em_ctxt *ctxt)
++{
++	struct sev_es_runtime_data *data = this_cpu_read(runtime_data);
++	long *reg = vc_insn_get_rm(ctxt);
 +
-+	sme_sev_setup_real_mode(trampoline_header);
- }
++	if (!reg)
++		return ES_DECODE_FAILED;
++
++	if (data)
++		*reg = data->dr7;
++	else
++		*reg = DR7_RESET_VALUE;
++
++	return ES_OK;
++}
++
+ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 					 struct ghcb *ghcb,
+ 					 unsigned long exit_code)
+@@ -775,6 +854,12 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	enum es_result result;
  
- /*
+ 	switch (exit_code) {
++	case SVM_EXIT_READ_DR7:
++		result = vc_handle_dr7_read(ghcb, ctxt);
++		break;
++	case SVM_EXIT_WRITE_DR7:
++		result = vc_handle_dr7_write(ghcb, ctxt);
++		break;
+ 	case SVM_EXIT_CPUID:
+ 		result = vc_handle_cpuid(ghcb, ctxt);
+ 		break;
 -- 
 2.27.0
 
