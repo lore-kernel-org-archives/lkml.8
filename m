@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D5DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BBBC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D74E206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 821F82070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CpGLRpEh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oQ1M6w5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgGXV41 (ORCPT
+        id S1726736AbgGXV5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:56:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60908 "EHLO
+        Fri, 24 Jul 2020 17:57:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbgGXV40 (ORCPT
+        with ESMTP id S1726593AbgGXV5N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:56:26 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4D63C0619E4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:56:26 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id o25so3431644uar.1
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:56:26 -0700 (PDT)
+        Fri, 24 Jul 2020 17:57:13 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B514CC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:57:13 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id s192so2545005vkh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:57:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Wu9Z19uRtGtJ0NasFeWEnBkj7jELCMCGAKW7BoOuLmA=;
-        b=CpGLRpEhHAWmIvAZYKn0xvAoo10wA4C9CeUytti2gF630AeKnqsyVJEJzVOwEeJheO
-         aNgiUp32xACS0QVxGpuCCGANOs2ewM3UJio6fp8tOoFT4Ait2UiUBODk2u6763JCuFqq
-         PUmmGifrKE4B8YjocgrEo9u0+Zes/x2Bv2n2c=
+        bh=e5ZO7ecIplgVGZE3pSmrS86woNFYgLHmLoVoYXhNGQw=;
+        b=oQ1M6w5QAzqeJzt+SFRvwn2pwYb0joq4H65Na9q8NLD9b/ClfWMJwURqLssOZMsuZA
+         H7DdRRFsellUUWvcItY1KH+MXc6vVT4LJZICuSNnw240Eh6J/+he4MpimjBqh0IrRM3U
+         puqrZHkYW7V/AcEhCyeL/VoD2Jy8CmLexYrz4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Wu9Z19uRtGtJ0NasFeWEnBkj7jELCMCGAKW7BoOuLmA=;
-        b=sbreGIcIYwv43QSzDK1/N2ou0rd5utNUVUHVn3hRkEHktooSlJXELEY2cE9Izkhrda
-         xUT/09PugJkqu92SPPf98XWSMKOouyN5OUURNlmEjZ8Q/L7cIxVy5hN/aXMsTbv3MBH/
-         sXzR6QhESig0cYT6pzYQffhnXj0dgaUOBiJqN2x8ma88hgsupUHGI5+NWcjyCK/FWG4r
-         3o0oeeg7REAqDrHzpiEY2gNuV96NFZw8AxGVEX4fjL4CNovn5B6fTeztGkfvcXlTsFCU
-         1X9Wahl8gmrEmYiKm/unVwSR0EnixWJ7SwuYGqqwXSFS9CporlzVZh7INPniJYfqGHMb
-         r5Eg==
-X-Gm-Message-State: AOAM53202aoWQjWZgZrZPM0GW4WDhaEwfMTCUsxwUF87SUvqOPdFF1J6
-        MJkwojZqHERZ13jXopFbON3uMPmmkJ4=
-X-Google-Smtp-Source: ABdhPJzvgxw7HliE+FqueW9j7DAjTx9iu+VDohUaR8157QsmRQAbk/kPbLa2iBPTkIea9SNRKqfDwQ==
-X-Received: by 2002:ab0:6402:: with SMTP id x2mr9905048uao.134.1595627785577;
-        Fri, 24 Jul 2020 14:56:25 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id w204sm283180vkd.2.2020.07.24.14.56.24
+        bh=e5ZO7ecIplgVGZE3pSmrS86woNFYgLHmLoVoYXhNGQw=;
+        b=W3sdokuE5OJX9lG/nHEziwtZohhlh9ZS61axaw//5S+JK+eb5mLOpOHokWPgvVW8oJ
+         Z3Mie++BAiE2HtU6wWNUse8+M8gHXg34lg6t3VTGyiN1IuidagNGekhsS1fHlJWAGxEm
+         EebqHGNFgDe6xCHj1dTcKI2gxjGkkeXAUpsYkaOGXUSyl2E/uSJ3OdqADGgUORKIH/YD
+         rr7EsnMmDAO+eLqZU9L7p6EV7OfvQV48z9HBiXk12OTpIaDAwjvQL0uog1i+KXgSRDYQ
+         W7gxWFMO/8V22+78amX8X5PMGnq7Ez/psloxd3trC/VZR4X3NzOTpGPW5zsZ2COmc5uw
+         ZbXQ==
+X-Gm-Message-State: AOAM533HCpkPWxH2N1qO6lmAk0bYiiL9Xv4qDJVNwrcGihFF1KT3hXQA
+        MsfXF79x8GLRxz2qY5ScueKbGlhhiR4=
+X-Google-Smtp-Source: ABdhPJxkb5FbmOslDZ8gNI6HNx5LIqzDqAlK35pXIFrVPI8FEOQS1g6+dF3zhRgXvNZq6A3EDaOQzQ==
+X-Received: by 2002:a1f:2706:: with SMTP id n6mr9602198vkn.81.1595627832760;
+        Fri, 24 Jul 2020 14:57:12 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id j189sm247679vsd.24.2020.07.24.14.57.12
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 14:56:24 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id k7so5685842vso.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:56:24 -0700 (PDT)
-X-Received: by 2002:a67:e046:: with SMTP id n6mr9513301vsl.6.1595627783920;
- Fri, 24 Jul 2020 14:56:23 -0700 (PDT)
+        Fri, 24 Jul 2020 14:57:12 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id x205so5661256vsc.11
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:57:12 -0700 (PDT)
+X-Received: by 2002:a05:6102:20a:: with SMTP id z10mr9532703vsp.213.1595627831736;
+ Fri, 24 Jul 2020 14:57:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200724213329.899216-1-swboyd@chromium.org> <20200724213329.899216-4-swboyd@chromium.org>
-In-Reply-To: <20200724213329.899216-4-swboyd@chromium.org>
+References: <20200724213329.899216-1-swboyd@chromium.org> <20200724213329.899216-5-swboyd@chromium.org>
+In-Reply-To: <20200724213329.899216-5-swboyd@chromium.org>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 24 Jul 2020 14:56:12 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WQUpfjk7r-w5f0uP0Xnx39Mv8WxLfjfwxfNoGa_1XBvw@mail.gmail.com>
-Message-ID: <CAD=FV=WQUpfjk7r-w5f0uP0Xnx39Mv8WxLfjfwxfNoGa_1XBvw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] iio: sx9310: whoami is unsigned
+Date:   Fri, 24 Jul 2020 14:57:00 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WL2wb+bj99KgDg4bTV15hU3k6O8UVz8WMNJXLeWNc--Q@mail.gmail.com>
+Message-ID: <CAD=FV=WL2wb+bj99KgDg4bTV15hU3k6O8UVz8WMNJXLeWNc--Q@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] iio: sx9310: Drop channel_users[]
 To:     Stephen Boyd <swboyd@chromium.org>
 Cc:     Jonathan Cameron <jic23@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -88,9 +88,7 @@ Hi,
 
 On Fri, Jul 24, 2020 at 2:33 PM Stephen Boyd <swboyd@chromium.org> wrote:
 >
-> This is an unsigned value, actually it's a u8 but regmap doesn't handle
-> that easily. Let's make it unsigned throughout so that we don't need to
-> worry about signed vs. unsigned comparison behavior.
+> This struct member isn't used. Drop it.
 >
 > Cc: Gwendal Grignou <gwendal@chromium.org>
 > Cc: Daniel Campello <campello@chromium.org>
@@ -101,7 +99,7 @@ On Fri, Jul 24, 2020 at 2:33 PM Stephen Boyd <swboyd@chromium.org> wrote:
 > Fixes: 72ad02b15d63 ("iio: Add SEMTECH SX9310/9311 sensor driver")
 > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  drivers/iio/proximity/sx9310.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  drivers/iio/proximity/sx9310.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
