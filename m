@@ -2,159 +2,108 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C10C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA40E206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:13:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595582005;
-	bh=GwUoeHKlzK+7TgCjiNMlngu0AM0uKPGk+x42+JPepC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tLzH3yjD35Nw963ABOJV5nOuPMaKiDPfURIxbaiUn0Ht9uoe9A7kv0OeqYY7yUzov
-	 l+0mRa3DAdDBe4nyhjwZ43V3KvAAXmkp8d7Q+TVA2HYTA5H5xsBn2brQA9teOEgWdl
-	 7zOQ7ci5KP5Sg8Oequ6fPm+JVN5oLoyclHlcu980=
+	by mail.kernel.org (Postfix) with ESMTP id 0D7B3206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgGXJNY (ORCPT
+        id S1727811AbgGXJOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:13:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgGXJNY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:13:24 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D490BC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 02:13:23 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id ga4so9229444ejb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 02:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=13FtjbtfLSbB7lUu2KMXehtRfJlBejW7Rr8iZY5Tpxo=;
-        b=nDzT8+/vlYwD6OAFh3eCjMgEf1dSl503zdnwgMgotSNyUi0fcH8vWETzUUnuxBH01A
-         x0FfzQ8ksNoPjskd8E1OpmMiR/RotwWL28mY6QuxcqxNWhwW22zwu9ye+CrhX76LbdWY
-         XA1jbo4lWMU1AymNlEoag9jqAE09KwZDuY0KeWcYrYgox9EMg4dOmO98XfbS4MI0z38y
-         l3eyjKKueH+OsqQ6vpMSBSiRfAIl+WTDWWxT4rlx4B8xRYUa4dHO4GLuWRZtHPCdiquc
-         Q8vU3AgF9EgXR7awHe0F500NGUHfp6JZOGvxH0rUNqotEod+yhvtezKGw8tR0x3kzJjF
-         rIgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=13FtjbtfLSbB7lUu2KMXehtRfJlBejW7Rr8iZY5Tpxo=;
-        b=HcZ4s5K0xhunq2UCjn82KrmJfdUiJviZE5PeULCnzvMiDLP4uCL4ywByF2/G0bAWI7
-         X0b5EE9myevL07z448kaXfTs8pJ8xvN6Vv0bM7rX87gDWrVNtnCVpGoLuWQdDDD/pnkb
-         ry7HhwxY36uEKXdCDgL1MotuT4H6n4pMEniz1WKA6krtXLcuroYnP6tNU7SGBYuXe1bN
-         sqdOgbLqqTX2hxX0wvjC0Zk6UUfg84n5Sg6YbZ7ruub/Or3u3eo+kK55Q93D6ax38YRA
-         +b85yps4R0X42CC+rVtvG3pSVv4W4TlISQ4Uoi+jNFINzP7f/a3Rv54Ve0ugs6aG2/Sd
-         ut7g==
-X-Gm-Message-State: AOAM533IT8n6mHY2iXq5T55rZKz0sFm9zNdtAIom5MQPrhC/J2HaQqtO
-        hW7UJSwyn1/3VQkYHwWU6EA=
-X-Google-Smtp-Source: ABdhPJwvMQA7GVtYoy+Xz6ijPiKZoA2xSYef8WE3UDmkEnx3stuv579+IF8wQyCwOkO5U/tjnFfdqA==
-X-Received: by 2002:a17:906:b0d3:: with SMTP id bk19mr8662181ejb.167.1595582002571;
-        Fri, 24 Jul 2020 02:13:22 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id q25sm319164edb.58.2020.07.24.02.13.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 02:13:21 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 11:13:19 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v5 1/6] kprobes: Remove dependency to the module_mutex
-Message-ID: <20200724091319.GA517988@gmail.com>
-References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
- <20200724050553.1724168-2-jarkko.sakkinen@linux.intel.com>
+        Fri, 24 Jul 2020 05:14:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:58236 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726572AbgGXJOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 05:14:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FE71D6E;
+        Fri, 24 Jul 2020 02:14:02 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.5.213])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43EF53F66E;
+        Fri, 24 Jul 2020 02:14:00 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 10:13:52 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Sumit Gupta <sumitg@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hulk Robot <hulkci@huawei.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH -next] arm64: Export __cpu_logical_map
+Message-ID: <20200724091308.GA44746@C02TD0UTHF1T.local>
+References: <20200724030433.22287-1-wangkefeng.wang@huawei.com>
+ <82f750c4-d423-1ed8-a158-e75153745e07@huawei.com>
+ <7998529f-da52-5e46-dd09-b9b11d83ec1a@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200724050553.1724168-2-jarkko.sakkinen@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7998529f-da52-5e46-dd09-b9b11d83ec1a@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-
-> Add lock_modules() and unlock_modules() wrappers for acquiring module_mutex
-> in order to remove the compile time dependency to it.
+On Fri, Jul 24, 2020 at 01:46:18PM +0530, Anshuman Khandual wrote:
 > 
-> Cc: linux-mm@kvack.org
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Suggested-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  include/linux/module.h      | 18 ++++++++++++++++++
->  kernel/kprobes.c            |  4 ++--
->  kernel/trace/trace_kprobe.c |  4 ++--
->  3 files changed, 22 insertions(+), 4 deletions(-)
+> On 07/24/2020 08:38 AM, Kefeng Wang wrote:
+> > +maillist
 > 
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 2e6670860d27..8850b9692b8f 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -705,6 +705,16 @@ static inline bool is_livepatch_module(struct module *mod)
->  bool is_module_sig_enforced(void);
->  void set_module_sig_enforced(void);
->  
-> +static inline void lock_modules(void)
-> +{
-> +	mutex_lock(&module_mutex);
-> +}
-> +
-> +static inline void unlock_modules(void)
-> +{
-> +	mutex_unlock(&module_mutex);
-> +}
-> +
->  #else /* !CONFIG_MODULES... */
->  
->  static inline struct module *__module_address(unsigned long addr)
-> @@ -852,6 +862,14 @@ void *dereference_module_function_descriptor(struct module *mod, void *ptr)
->  	return ptr;
->  }
->  
-> +static inline void lock_modules(void)
-> +{
-> +}
-> +
-> +static inline void unlock_modules(void)
-> +{
-> +}
+> This does not seem to be a correct method of posting any patch.
+> 
+> > 
+> > On 2020/7/24 11:04, Kefeng Wang wrote:
+> >> ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
+> 
+> 
+> >>
+> >> ARM64 tegra194-cpufreq driver use cpu_logical_map, export
+> >> __cpu_logical_map to fix build issue.
+> 
+> Commit 887d5fc82cb4 ("cpufreq: Add Tegra194 cpufreq driver") which adds
+> this particular driver is present just on linux-next. But as expected,
+> the driver does not use __cpu_logical_map directly but instead accesses
+> it via cpu_logical_map() wrapper. Wondering, how did you even trigger
+> the modpost error ?
 
-Minor namespace nit: when introducing new locking wrappers please 
-standardize on the XYZ_lock()/XYZ_unlock() nomenclature, i.e.:
+The wrapper in <asm/smp.h> is:
 
-	modules_lock()
-	...
-	modules_unlock()
+| /*
+|  * Logical CPU mapping.
+|  */
+| extern u64 __cpu_logical_map[NR_CPUS];
+| #define cpu_logical_map(cpu)    __cpu_logical_map[cpu]
 
-Similarly to the mutex_lock/unlock(&module_mutex) API that it is 
-wrapping.
+... and use of that would blow up as described.
 
-Also, JFYI, the overwhelming majority of the modules related APIs use 
-module_*(), i.e. singular - not plural, so 
-module_lock()/module_unlock() would be the more canonical choice. 
-(But both sound fine to me)
+> >>
+> >> Reported-by: Hulk Robot <hulkci@huawei.com>
+> >> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> >> ---
+> >>   arch/arm64/kernel/setup.c | 1 +
+> >>   1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> >> index c793276ec7ad9..3aea05fbb9998 100644
+> >> --- a/arch/arm64/kernel/setup.c
+> >> +++ b/arch/arm64/kernel/setup.c
+> >> @@ -275,6 +275,7 @@ static int __init reserve_memblock_reserved_regions(void)
+> >>   arch_initcall(reserve_memblock_reserved_regions);
+> >>     u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
+> >> +EXPORT_SYMBOL(__cpu_logical_map);
 
-Thanks,
+If modules are using cpu_logical_map(), this looks sane ot me, but I
+wonder if we should instead turn cpu_logical_map() into a C wrapper in
+smp.c, or at least mark __cpu_logical_map as __ro_after_init lest
+someone have the bright idea to fiddle with it.
 
-	Ingo
+Mark.
