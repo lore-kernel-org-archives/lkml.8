@@ -2,158 +2,154 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A446EC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3091C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7869B206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD7D1206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:17:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CE5BNpSO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F52nhKBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgGXWPi (ORCPT
+        id S1726760AbgGXWRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 18:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgGXWPg (ORCPT
+        Fri, 24 Jul 2020 18:17:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37493 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726593AbgGXWRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 18:15:36 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21ABDC0619D3;
-        Fri, 24 Jul 2020 15:15:36 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id y3so9555679wrl.4;
-        Fri, 24 Jul 2020 15:15:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/BL7Yf3SnQJIuGF0q8569+vuKMLzOdJ+rG+5qnHgOgU=;
-        b=CE5BNpSOQqy6VqGkaw2fZp/fIrovbAYuYULSczlA/R3h6XyeJKTPaFn5HojZi3RxVa
-         AfY2ybzsfQ28k4MXExaMpzqmxEnONjGNm19qWq1j8Pz42yjmy2T42ME4IjCBCEToeovE
-         W2mbXrUr5F/cFpyPjXtphNv60SkE0+IVnq4KTGw527dcxjne90EhD1cyPSuKFA/hujkP
-         5LAge8F+1YkjSPSqgSCq3/jzXvJ0MzQRkJ7QXAqSjRv4qzIuyLPsqoZyKkJKHJgdrSJ6
-         C9H5En5fn4A7Nu9BbRrWamDEGUjtYPSrHliRBDbnUVW9rlKJdQewJhJ4AbQsRv65t4zh
-         u9JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/BL7Yf3SnQJIuGF0q8569+vuKMLzOdJ+rG+5qnHgOgU=;
-        b=fJUJAeg+Ocp3Z5qZPy/qA95GXR4fEzCnNluPfcBBtg1Nhm2TZJSlreWHTVq31RnwAm
-         Dp/pFbkAC2ReX4fI5zM7clmb67swmdEYlhuOcO5fjEH8yy+MWE7cDKNlNZu+37a9geIT
-         okkdYICZCGilEQJsKI4wV1jWxRe7vOeu1m0+txQVvSwLVZJZHjEaObUVdOgdBbQHfw/E
-         EzcvTwcBNH7044FweqR0meh3EQ3r9YhGSH3nJlBOQ8s1FX/egwAJrA6wjwwGcjqzw48+
-         0WwcuRhr+ZGeZPhhxKAQL+mWfG6+E0FjtN/le+/Jw/ic1l0/C55n+DUF56wTNg3pQWSK
-         UjqQ==
-X-Gm-Message-State: AOAM531YbGU3gXCLVd6C8iG4Ax5H2zUzdlI5XH1hL1ttGbC6/bym9pHX
-        bpaHL8UiCOz4nI+0CJZccxV5lrtq
-X-Google-Smtp-Source: ABdhPJyKqTF7YKKixNOOMJiDKb42VlLjfn4wQRlnKzo5gtUke5Hn3Sh7VfHlY3e2BUgBvc4P0eiIFQ==
-X-Received: by 2002:adf:efd2:: with SMTP id i18mr9989664wrp.32.1595628934625;
-        Fri, 24 Jul 2020 15:15:34 -0700 (PDT)
-Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id u1sm3095040wrb.78.2020.07.24.15.15.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 15:15:33 -0700 (PDT)
-Subject: Re: [PATCH v4 0/9] bmips: add BCM63xx power domain controller
-To:     =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        hauke@hauke-m.de, zajec5@gmail.com, tsbogend@alpha.franken.de,
-        robh+dt@kernel.org, f.fainelli@gmail.com, jonas.gorski@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200610171630.465579-1-noltari@gmail.com>
- <20200613082140.2009461-1-noltari@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
- xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
- X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
- AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
- ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
- SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
- nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
- qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
- YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
- FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
- 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSDOwU0EVxvH8AEQAOqv6agYuT4x3DgFIJNv9i0e
- S443rCudGwmg+CbjXGA4RUe1bNdPHYgbbIaN8PFkXfb4jqg64SyU66FXJJJO+DmPK/t7dRNA
- 3eMB1h0GbAHlLzsAzD0DKk1ARbjIusnc02aRQNsAUfceqH5fAMfs2hgXBa0ZUJ4bLly5zNbr
- r0t/fqZsyI2rGQT9h1D5OYn4oF3KXpSpo+orJD93PEDeseho1EpmMfsVH7PxjVUlNVzmZ+tc
- IDw24CDSXf0xxnaojoicQi7kzKpUrJodfhNXUnX2JAm/d0f9GR7zClpQMezJ2hYAX7BvBajb
- Wbtzwi34s8lWGI121VjtQNt64mSqsK0iQAE6OYk0uuQbmMaxbBTT63+04rTPBO+gRAWZNDmQ
- b2cTLjrOmdaiPGClSlKx1RhatzW7j1gnUbpfUl91Xzrp6/Rr9BgAZydBE/iu57KWsdMaqu84
- JzO9UBGomh9eyBWBkrBt+Fe1qN78kM7JO6i3/QI56NA4SflV+N4PPgI8TjDVaxgrfUTV0gVa
- cr9gDE5VgnSeSiOleChM1jOByZu0JTShOkT6AcSVW0kCz3fUrd4e5sS3J3uJezSvXjYDZ53k
- +0GS/Hy//7PSvDbNVretLkDWL24Sgxu/v8i3JiYIxe+F5Br8QpkwNa1tm7FK4jOd95xvYADl
- BUI1EZMCPI7zABEBAAHCwagEGBECAAkFAlcbx/ACGwICKQkQYVeZFbVjdg7BXSAEGQECAAYF
- Alcbx/AACgkQh9CWnEQHBwSJBw//Z5n6IO19mVzMy/ZLU/vu8flv0Aa0kwk5qvDyvuvfiDTd
- WQzq2PLs+obX0y1ffntluhvP+8yLzg7h5O6/skOfOV26ZYD9FeV3PIgR3QYF26p2Ocwa3B/k
- P6ENkk2pRL2hh6jaA1Bsi0P34iqC2UzzLq+exctXPa07ioknTIJ09BT31lQ36Udg7NIKalnj
- 5UbkRjqApZ+Rp0RAP9jFtq1n/gjvZGyEfuuo/G+EVCaiCt3Vp/cWxDYf2qsX6JxkwmUNswuL
- C3duQ0AOMNYrT6Pn+Vf0kMboZ5UJEzgnSe2/5m8v6TUc9ZbC5I517niyC4+4DY8E2m2V2LS9
- es9uKpA0yNcd4PfEf8bp29/30MEfBWOf80b1yaubrP5y7yLzplcGRZMF3PgBfi0iGo6kM/V2
- 13iD/wQ45QTV0WTXaHVbklOdRDXDHIpT69hFJ6hAKnnM7AhqZ70Qi31UHkma9i/TeLLzYYXz
- zhLHGIYaR04dFT8sSKTwTSqvm8rmDzMpN54/NeDSoSJitDuIE8givW/oGQFb0HGAF70qLgp0
- 2XiUazRyRU4E4LuhNHGsUxoHOc80B3l+u3jM6xqJht2ZyMZndbAG4LyVA2g9hq2JbpX8BlsF
- skzW1kbzIoIVXT5EhelxYEGqLFsZFdDhCy8tjePOWK069lKuuFSssaZ3C4edHtkZ8gCfWWtA
- 8dMsqeOIg9Trx7ZBCDOZGNAAnjYQmSb2eYOAti3PX3Ex7vI8ZhJCzsNNBEjPuBIQEAC/6NPW
- 6EfQ91ZNU7e/oKWK91kOoYGFTjfdOatp3RKANidHUMSTUcN7J2mxww80AQHKjr3Yu2InXwVX
- SotMMR4UrkQX7jqabqXV5G+88bj0Lkr3gi6qmVkUPgnNkIBe0gaoM523ujYKLreal2OQ3GoJ
- PS6hTRoSUM1BhwLCLIWqdX9AdT6FMlDXhCJ1ffA/F3f3nTN5oTvZ0aVF0SvQb7eIhGVFxrlb
- WS0+dpyulr9hGdU4kzoqmZX9T/r8WCwcfXipmmz3Zt8o2pYWPMq9Utby9IEgPwultaP06MHY
- nhda1jfzGB5ZKco/XEaXNvNYADtAD91dRtNGMwRHWMotIGiWwhEJ6vFc9bw1xcR88oYBs+7p
- gbFSpmMGYAPA66wdDKGj9+cLhkd0SXGht9AJyaRA5AWB85yNmqcXXLkzzh2chIpSEawRsw8B
- rQIZXc5QaAcBN2dzGN9UzqQArtWaTTjMrGesYhN+aVpMHNCmJuISQORhX5lkjeg54oplt6Zn
- QyIsOCH3MfG95ha0TgWwyFtdxOdY/UY2zv5wGivZ3WeS0TtQf/BcGre2y85rAohFziWOzTaS
- BKZKDaBFHwnGcJi61Pnjkz82hena8OmsnsBIucsz4N0wE+hVd6AbDYN8ZcFNIDyt7+oGD1+c
- PfqLz2df6qjXzq27BBUboklbGUObNwADBQ//V45Z51Q4fRl/6/+oY5q+FPbRLDPlUF2lV6mb
- hymkpqIzi1Aj/2FUKOyImGjbLAkuBQj3uMqy+BSSXyQLG3sg8pDDe8AJwXDpG2fQTyTzQm6l
- OnaMCzosvALk2EOPJryMkOCI52+hk67cSFA0HjgTbkAv4Mssd52y/5VZR28a+LW+mJIZDurI
- Y14UIe50G99xYxjuD1lNdTa/Yv6qFfEAqNdjEBKNuOEUQOlTLndOsvxOOPa1mRUk8Bqm9BUt
- LHk3GDb8bfDwdos1/h2QPEi+eI+O/bm8YX7qE7uZ13bRWBY+S4+cd+Cyj8ezKYAJo9B+0g4a
- RVhdhc3AtW44lvZo1h2iml9twMLfewKkGV3oG35CcF9mOd7n6vDad3teeNpYd/5qYhkopQrG
- k2oRBqxyvpSLrJepsyaIpfrt5NNaH7yTCtGXcxlGf2jzGdei6H4xQPjDcVq2Ra5GJohnb/ix
- uOc0pWciL80ohtpSspLlWoPiIowiKJu/D/Y0bQdatUOZcGadkywCZc/dg5hcAYNYchc8AwA4
- 2dp6w8SlIsm1yIGafWlNnfvqbRBglSTnxFuKqVggiz2zk+1wa/oP+B96lm7N4/3Aw6uy7lWC
- HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
- TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <26f1b70f-073d-130e-2a91-35d6dff1fe20@gmail.com>
-Date:   Fri, 24 Jul 2020 15:15:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 18:17:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595629052;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ikn7XLZPTxeIVvUjg9wLFxM7BUnwsYUpP1vYegUNA+s=;
+        b=F52nhKBrOz0C/WnJeqBz3mB0QTsedwc/h3aA0L0K3k86hR+meQdKuqbb1Abo7Nz8L2GlwE
+        jLiz6dYwxGMWLET3EDIgOqJfVwcDgoNlXch14xq1cEc4jEfr9V9N7btZtDrNYivg35BvoC
+        6gBLpmS3k6yOjmZVDjjkewzs+lErZOM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-503-0zdhgtEIODezm04tPgO93g-1; Fri, 24 Jul 2020 18:17:30 -0400
+X-MC-Unique: 0zdhgtEIODezm04tPgO93g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 958461902EA0;
+        Fri, 24 Jul 2020 22:17:28 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 513E18BEF7;
+        Fri, 24 Jul 2020 22:17:27 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] watch_queue: Limit the number of watches a user can hold
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 24 Jul 2020 23:17:26 +0100
+Message-ID: <159562904644.2287160.13294507067766261970.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-In-Reply-To: <20200613082140.2009461-1-noltari@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/20 1:21 AM, Álvaro Fernández Rojas wrote:
-> BCM6318, BCM6328, BCM6362 and BCM63268 SoCs have a power domain controller
-> to enable/disable certain components in order to save power.
-> 
-> v4: Fix device tree bindings documentation.
-> v3: Introduce changes suggested by Florian:
->   - Use dt-bindings definitions in power domain driver.
->   - Separate dt-bindings definitions from power domain .dtsi support.
-> v2: Introduce changes suggested by Florian:
->   - Add separate YAML file for dt-bindings.
->   - Add bcm63xx folder in drivers/soc/bcm.
->   - Update MAINTAINERS.
->   - Add dt-bindings header files.
->   - Also add BCM63268 support.
+Impose a limit on the number of watches that a user can hold so that they
+can't use this mechanism to fill up all the available memory.
 
-Series applied to drivers/next after capitalizing MIPS and BMIPS to
-follow prior contributions to these files, thanks!
--- 
-Florian
+This is done by putting a counter in user_struct that's incremented when a
+watch is allocated and decreased when it is released.  If the number
+exceeds the RLIMIT_NOFILE limit, the watch is rejected with EAGAIN.
+
+This can be tested by the following means:
+
+ (1) Create a watch queue and attach it to fd 5 in the program given - in
+     this case, bash:
+
+	keyctl watch_session /tmp/nlog /tmp/gclog 5 bash
+
+ (2) In the shell, set the maximum number of files to, say, 99:
+
+	ulimit -n 99
+
+ (3) Add 200 keyrings:
+
+	for ((i=0; i<200; i++)); do keyctl newring a$i @s || break; done
+
+ (4) Try to watch all of the keyrings:
+
+	for ((i=0; i<200; i++)); do echo $i; keyctl watch_add 5 %:a$i || break; done
+
+     This should fail when the number of watches belonging to the user hits
+     99.
+
+ (5) Remove all the keyrings and all of those watches should go away:
+
+	for ((i=0; i<200; i++)); do keyctl unlink %:a$i; done
+
+ (6) Kill off the watch queue by exiting the shell spawned by
+     watch_session.
+
+Fixes: c73be61cede5 ("pipe: Add general notification queue support")
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ include/linux/sched/user.h |    3 +++
+ kernel/watch_queue.c       |    8 ++++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/include/linux/sched/user.h b/include/linux/sched/user.h
+index 917d88edb7b9..a8ec3b6093fc 100644
+--- a/include/linux/sched/user.h
++++ b/include/linux/sched/user.h
+@@ -36,6 +36,9 @@ struct user_struct {
+     defined(CONFIG_NET) || defined(CONFIG_IO_URING)
+ 	atomic_long_t locked_vm;
+ #endif
++#ifdef CONFIG_WATCH_QUEUE
++	atomic_t nr_watches;	/* The number of watches this user currently has */
++#endif
+ 
+ 	/* Miscellaneous per-user rate limit */
+ 	struct ratelimit_state ratelimit;
+diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
+index f74020f6bd9d..0ef8f65bd2d7 100644
+--- a/kernel/watch_queue.c
++++ b/kernel/watch_queue.c
+@@ -393,6 +393,7 @@ static void free_watch(struct rcu_head *rcu)
+ 	struct watch *watch = container_of(rcu, struct watch, rcu);
+ 
+ 	put_watch_queue(rcu_access_pointer(watch->queue));
++	atomic_dec(&watch->cred->user->nr_watches);
+ 	put_cred(watch->cred);
+ }
+ 
+@@ -452,6 +453,13 @@ int add_watch_to_object(struct watch *watch, struct watch_list *wlist)
+ 	watch->cred = get_current_cred();
+ 	rcu_assign_pointer(watch->watch_list, wlist);
+ 
++	if (atomic_inc_return(&watch->cred->user->nr_watches) >
++	    task_rlimit(current, RLIMIT_NOFILE)) {
++		atomic_dec(&watch->cred->user->nr_watches);
++		put_cred(watch->cred);
++		return -EAGAIN;
++	}
++
+ 	spin_lock_bh(&wqueue->lock);
+ 	kref_get(&wqueue->usage);
+ 	kref_get(&watch->usage);
+
+
