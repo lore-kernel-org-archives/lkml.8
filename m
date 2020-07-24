@@ -2,113 +2,113 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCC3C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E63ABC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52F6122C9E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:17:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SZPE9yCx"
+	by mail.kernel.org (Postfix) with ESMTP id CCB8E20771
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGXORY (ORCPT
+        id S1726857AbgGXOT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:17:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgGXORY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:17:24 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62724C0619D3;
-        Fri, 24 Jul 2020 07:17:24 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id a21so7074299otq.8;
-        Fri, 24 Jul 2020 07:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aJ77W7VC0CnaHTOKlpJ2EDWmm2cahJBuCdEmwoD17qU=;
-        b=SZPE9yCxR7WrG6Fo2B2u2oUI22IyoJtJqZyEkmNVqWJGnntdt9OjWKCFXQZNUqlSwg
-         1RY+9NO9QLqd8BhbSjv7d2yT6F22Fgwl8zt67LqF06tXBN+VrY6e4wf6YB6qIBB/D1Hq
-         /eAqazUwyQY8Rs5+VdB7Eb18Rf9262TcWLKHRHpBuxZo399IB7FZBemInr/dE1pSc+eP
-         AVbYX6pRSXzgrIc5zlVZ3rftuGchWygZthUZsWim8RcftFZMCkOjLxdcMh96Vntk0d+U
-         JXHo8n+L+PGZy+AqImoJCxvRZgIbllXwu6aGmSdFFnBKQuUx4IMyQSr64lsyiIF/vXmn
-         hY5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aJ77W7VC0CnaHTOKlpJ2EDWmm2cahJBuCdEmwoD17qU=;
-        b=Vj3UckrlOZn4e4RHowUP1BKyzdbVwW6AJqfh8yOswc7VkQYa46GrGq8zwRzkcEU/+a
-         uVkWbciZs+guL3mFf8LYBi+tx0phkWMB9zkH+XGZceZ/aoN8B6hKJNMStltEqiRETmDM
-         hOcHdNJd3tzkUe2NxGL6fQ4vOHeBAwqsAp55Kma+Xlm2RF4Giiewl83CSPx/fPDVaHNl
-         3mmV4tzPVg1J9xskNMXr5zx2k2I2zRE92SFrU0hmdwJl5j+Xz66yfm2fP0YtxuRnveTf
-         oqIdMTPJyMjxzaWQXbo+Ki6Zp8WmyLhg1uE3+Zg/AwXxrrK+8O8TyWB/c9djZJZjigkZ
-         /B2g==
-X-Gm-Message-State: AOAM532DUtbE4ZK66vSbC5wHRRFeb8ghKOQD3AvOEEWevs0D+eM8MyVb
-        CFNqbtRPUYlphfwdBnNMRTsL3PLG014MPo95Mus=
-X-Google-Smtp-Source: ABdhPJxhNtVkYnZ/+BowuavKo7KNnAma7VTzVPnSGK3nZUxq0GAlf5iP/WueQXoZlmk8OEm+7L/wqhbBIm8NKULy0AY=
-X-Received: by 2002:a9d:5e18:: with SMTP id d24mr8814609oti.88.1595600243805;
- Fri, 24 Jul 2020 07:17:23 -0700 (PDT)
+        Fri, 24 Jul 2020 10:19:29 -0400
+Received: from mga09.intel.com ([134.134.136.24]:46189 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726617AbgGXOT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 10:19:29 -0400
+IronPort-SDR: nRnK/G0KWBMIK7bUpz/ktxV2LcA7ZRLGFV+il8k0I4cKFK7IhF62O1H+1jKUfm2BaAHtbrCmW0
+ hU5L0+qTWboQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="151999228"
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="151999228"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 07:19:28 -0700
+IronPort-SDR: M15gSmBAZFSwW5sx31wOEJE5JR2PYjmucNIRxIeU7lc3rLCBd9s9e6270tzXgDV2t2cGQ6K2LT
+ bXjY8SLbMGGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
+   d="scan'208";a="488753651"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Jul 2020 07:19:27 -0700
+Received: from [10.252.140.222] (kliang2-mobl.ccr.corp.intel.com [10.252.140.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id DDA34580638;
+        Fri, 24 Jul 2020 07:19:26 -0700 (PDT)
+Subject: Re: [PATCH V7 07/14] perf/core: Add a new PERF_EV_CAP_COEXIST event
+ capability
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+        like.xu@linux.intel.com
+References: <20200723171117.9918-1-kan.liang@linux.intel.com>
+ <20200723171117.9918-8-kan.liang@linux.intel.com>
+ <20200724105543.GV119549@hirez.programming.kicks-ass.net>
+ <20200724114628.GJ43129@hirez.programming.kicks-ass.net>
+ <0d33a25c-cfe4-af7f-c915-a98dba17b53b@linux.intel.com>
+ <20200724135412.GA10769@hirez.programming.kicks-ass.net>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <e04f1708-e8c0-3787-1572-443f03ab73ca@linux.intel.com>
+Date:   Fri, 24 Jul 2020 10:19:25 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200723170453.432-1-novikov@ispras.ru>
-In-Reply-To: <20200723170453.432-1-novikov@ispras.ru>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 24 Jul 2020 15:16:57 +0100
-Message-ID: <CA+V-a8uNfscxiM1fMjfdvZstZkkzxW41p40jpBXT3NeyiS9-Qw@mail.gmail.com>
-Subject: Re: [PATCH] media: davinci: vpif_capture: fix potential double free
-To:     Evgeny Novikov <novikov@ispras.ru>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, ldv-project@linuxtesting.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200724135412.GA10769@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Evgeny,
 
-Thank you for the patch.
 
-On Thu, Jul 23, 2020 at 6:04 PM Evgeny Novikov <novikov@ispras.ru> wrote:
->
-> In case of errors vpif_probe_complete() releases memory for vpif_obj.sd
-> and unregisters the V4L2 device. But then this is done again by
-> vpif_probe() itself. The patch removes the cleaning from
-> vpif_probe_complete().
->
-> Found by Linux Driver Verification project (linuxtesting.org).
->
-> Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-> ---
->  drivers/media/platform/davinci/vpif_capture.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
-> index d9ec439faefa..72a0e94e2e21 100644
-> --- a/drivers/media/platform/davinci/vpif_capture.c
-> +++ b/drivers/media/platform/davinci/vpif_capture.c
-> @@ -1482,8 +1482,6 @@ static int vpif_probe_complete(void)
->                 /* Unregister video device */
->                 video_unregister_device(&ch->video_dev);
->         }
-> -       kfree(vpif_obj.sd);
-> -       v4l2_device_unregister(&vpif_obj.v4l2_dev);
->
-vpif_probe_complete() is a async callback and probe() should have
-already completed by then.
+On 7/24/2020 9:54 AM, Peter Zijlstra wrote:
+> On Fri, Jul 24, 2020 at 09:43:44AM -0400, Liang, Kan wrote:
+>>
+>>
+>> On 7/24/2020 7:46 AM, peterz@infradead.org wrote:
+>>> On Fri, Jul 24, 2020 at 12:55:43PM +0200, peterz@infradead.org wrote:
+>>>>> +	event_sched_out(event, cpuctx, ctx);
+>>>>> +	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+>>>>> +}
+>>>>
+>>>> Ah, so the problem here is that ERROR is actually recoverable using
+>>>> IOC_ENABLE. We don't want that either. Let me try and figure out of EXIT
+>>>> would work.
+>>>
+>>> EXIT is difficult too.. Also, that COEXIST thing hurt my brian, can't we
+>>> do a simpler SIBLING thing that simply requires the event to be a group
+>>> sibling?
+>>>
+>>> The consequence is that SLOTS must be the leader, is that really a
+>>> problem? You keep providing the {cycles, slots, metric-things} example,
+>>> but afaict {slots, metric-thing, cycles} should work just fine too.
+>>> PERF_SAMPLE_READ with PERF_FORMAT_GROUP doesn't need to the the leader.
+>>
+>> I'm not sure I get your point.
+>> For the PERF_SAMPLE_READ with PERF_FORMAT_GROUP case, other events can be
+>> the leader, e.g., {cycles, slots, metric-things}:S.
+>> In this case, the SLOTS event is not a leader. I don't think we can assume
+>> that the SLOTS event must be the leader.
+> 
+> You can have a sibling event with SAMPLE_READ and FORMAT_GROUP just
+> fine. The sampling event doesn't need to be the leader.
+> 
 
-Cheers,
---Prabhakar
+There will be a problem for the current perf tool, which assumes that 
+the leader event is the sampling event.
 
->         return err;
->  }
-> --
-> 2.16.4
->
+I will check how can we specially handle it in the perf tool.
+
+Thanks,
+Kan
+
