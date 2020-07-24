@@ -2,276 +2,134 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C68C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 032BDC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F47B20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:20:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QzKshWiI"
+	by mail.kernel.org (Postfix) with ESMTP id DE8C320768
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:20:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgGXHUG (ORCPT
+        id S1726941AbgGXHUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbgGXHUF (ORCPT
+        Fri, 24 Jul 2020 03:20:45 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:45293 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbgGXHUp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:20:05 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0829C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:20:05 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id t7so9551736ybk.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=POXlS+qT9R9AKcROkDEZvf/10TDY75vKdOyi/dPct08=;
-        b=QzKshWiIrCbYcSmJDUXo2OV9fLJxqhO8kX8zvLKgxoYj7sjGxQNJUTEF9NG/tcTtES
-         MI931/1CFPXE4cyF4CERizq8dDm7SkdSc3y7JDD95Ftg886kV2wYm1H1QRwI8V7CKsLK
-         L8N6e83ZyQ6K7cpu9JhbF52U64b+ERXZiDjYwNks5gJidLwGl/AiJ/sJCdaTDjXRygXo
-         sQxnALD5VyI3nJ0BzLHytDCG9RrqjQr9skp+euwY4qUkO1ipM43AyxHj6tyvv9yITH0u
-         ygQeTverLNrb5IFwq03tl6344hHewoJ8gMDCxTWVS7CJLjLrOd21BnXg+BhYjMmfap+C
-         3JAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=POXlS+qT9R9AKcROkDEZvf/10TDY75vKdOyi/dPct08=;
-        b=KTeacRVjjVAAvD7sis0crMtF4TS7iA5eOGC+qywwicE0+pfaL/5cU3LKrik+fLTNfM
-         XU2oOvhhYPMmVX4rgcc3l/W3hPnfEOGzjyaM7RPI8l2pRZgadSvnWGxQjfqSclgheyl2
-         +DxKbPNomvXYLLAqeqmmvmhIBLR1ZDphp6Q86XLglWn2MNqIGaE40RISoBk8P98z4S+M
-         Pe7lhOcr/lshFXxcUY1VIp87mBOuk/DkvGouKfIh2N2rYufdeWwCE2OnSeODwAq4R2YT
-         xaFMlOCiEyXpv870nBAJSFevKuQplzTIjE3jC2tO0O4VdujhUy7QdCwfWw+3qjGMRDp0
-         zvGA==
-X-Gm-Message-State: AOAM532WOeF6ss6uoqRFc8no7cIpR3vmbPO5uV9i71BMlyQ/IY8RsniX
-        AU+OtzaEcT+kWM2kU2NHuRWOQwYWv4I4
-X-Google-Smtp-Source: ABdhPJwTgVAmuKeTglX613zE2/z68nnGMZvgkSwpMc5V9tl0tCR0Lu75COiHwWQI0T8ici3bibZejkZQ/Ykl
-X-Received: by 2002:a25:7c45:: with SMTP id x66mr12605043ybc.325.1595575204895;
- Fri, 24 Jul 2020 00:20:04 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 00:19:59 -0700
-Message-Id: <20200724071959.3110510-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH] perf bench: Add benchmark of find_next_bit
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Fri, 24 Jul 2020 03:20:45 -0400
+Received: from mail-qt1-f171.google.com ([209.85.160.171]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MjjGV-1keHEv2wmp-00lBo2 for <linux-kernel@vger.kernel.org>; Fri, 24 Jul
+ 2020 09:20:42 +0200
+Received: by mail-qt1-f171.google.com with SMTP id t23so3149267qto.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:20:42 -0700 (PDT)
+X-Gm-Message-State: AOAM530SuF7OG5XqMfg6GPpaYbF5q46RH1mT0E0GSteu2NH74iM3qB+N
+        iWSyCo+GeZOwFaBxdjis+5M28VZmfusqDhGu4e4=
+X-Google-Smtp-Source: ABdhPJxmIVXnbEioXbPXSA7ZMWes4VKvilueIEtCY7yjI+BhfVsAWHUQWo3DE1p/ihdJ0qb68PSFrNOEs1zZFP+V6+8=
+X-Received: by 2002:ac8:688e:: with SMTP id m14mr1188191qtq.7.1595575241528;
+ Fri, 24 Jul 2020 00:20:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAK8P3a34sT2bQbkZUjaxaShzCkn+s35pXxS0UNhqGFu+t2hZYw@mail.gmail.com>
+ <mhng-820ebe55-b4a3-4ab3-b848-6d3551b43091@palmerdabbelt-glaptop1>
+ <CAK8P3a2VHXDLK6iba=NxSQ-t=9P7LSwzwx3XrK=N=M+qoX_oeQ@mail.gmail.com> <CAOnJCULmX+vUcpEmBd5w7xjtZSFk=Ju2V=wBJCOXHQ8m9yG9-Q@mail.gmail.com>
+In-Reply-To: <CAOnJCULmX+vUcpEmBd5w7xjtZSFk=Ju2V=wBJCOXHQ8m9yG9-Q@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 24 Jul 2020 09:20:25 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2u9Z6wfyRduC7396929t4VnJQ0cXMiMWO7o6tgx_uNOw@mail.gmail.com>
+Message-ID: <CAK8P3a2u9Z6wfyRduC7396929t4VnJQ0cXMiMWO7o6tgx_uNOw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] riscv: Move kernel mapping to vmalloc zone
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexandre Ghiti <alex@ghiti.fr>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Linux-MM <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
+        Zong Li <zong.li@sifive.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:4RxKmOPWc9H9BLSFLVfdf0UfPQUj6IMmf++wlXBiilqiu6BgDbp
+ k42jkriobOIuL+51rooxxuB+q6jzOeCiFJf/LcyZ6ORD/rlw6P0heIhL+L/MAl//rVRqx4A
+ w4VZofKyhsebEzEvwumKMYDH4ksDyradhOXaxaOAxlphb38B13v9gEOM1nriup/ArXpRYF8
+ 2YsXtYKIyg6bxPLYOiUMg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2xAHuEgwJFI=:rfCHtkHsWokaz4xcBIPZQy
+ OZUzWD5xEs7YaQT3R+DJLkoFZRZ+R8HjY6crXeSNBLDBPyXCfkW+yGxP/UWg8z9UVcg7n7bA0
+ DXfjhp2U6RyE/YsQOoCB+P35cdZQldjtJOxrSXV6ipzTP+yuVhzCQB9VK0c8QUpxDrnGeueiR
+ ezG4owhdxVtkAq3L+KcQFcWAxsMfbDMY/pwBeEL9MC0eOKIgeV9NJYCy54Kl5pLCqdS3t1ucu
+ JdccXirMi/CI5dFP1VAmMGIqP70srVikM4myxxk3UDVtGbSfc6ypX4nsCtQAXXE1pn8EX0pAO
+ CxO1zyj3uLN2+R06OcqpG2LbapWroIDaNh0Wip73n1oZ8t/LoErvreX++hUWV9MKi9n8vMDsj
+ ZGwvvO8dUcqmffQxDSYmgIt1K5d5v4EHSQ7r86t81uVfOGS6kULmojkkSVqygsymQXOEMtJOk
+ 7E3rEjVkXVbkC7uE26f2zskWrgHEoQmZEl1X5hgGi8ltwDc7lNGLhW5nQBN0iM6YcqH9emT8H
+ 6qQfs/f3D0loAomPtzUZ6FeucmgO6XHLU9ol8DM5yfXY+Yqan8G+wvpYfvVSCh5gATZ2rYEW+
+ rKLapG5M3FESQS0wFSxTgCQK/DtRFm0tGoYr6iAYqVzkxFmaKySDNceyaXPmMwKXDnNMLh3Hx
+ IDEUs/FlI3EWHCfWDEZq7GaZIHIz3JqogtlFyGI6HWSZ0tRxvbDTfklmE8SlOLaUe/+rdmVRc
+ 38rLHq79CFNfxCMr8731gBxR5bQenX+feVJG5gPD159A9DpoPKJ/fCiPZtQdkZq1fYze0Tx84
+ 47Eg1eHEztfVfzEnTtyvAbRI5gBib4PDt8g2LNQoVxFG6uyox3I9+Pz7DGvviAJ2ln+IYRr6F
+ YgaaX9pS2wQSVtRkgb24qiTY916Q8O6G6HCpshReijiEY+OyXFAmVxPTmeLP/KYTn/qP2U+fV
+ 94Vajy67VckXwljRzIgYmUpZsJslxP9wLuHlNYxGbtLLYeJzi3/gv
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-for_each_set_bit, or similar functions like for_each_cpu, may be hot
-within the kernel. If many bits were set then one could imagine on
-Intel a "bt" instruction with every bit may be faster than the function
-call and word length find_next_bit logic. Add a benchmark to measure
-this.
+On Wed, Jul 22, 2020 at 11:06 PM Atish Patra <atishp@atishpatra.org> wrote:
+>
+> On Wed, Jul 22, 2020 at 1:23 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > I just noticed that rv32 allows 2GB of lowmem rather than just the usual
+> > 768MB or 1GB, at the expense of addressable user memory. This seems
+> > like an unusual choice, but I also don't see any reason to change this
+> > or make it more flexible unless actual users appear.
+> >
+>
+> I am a bit confused here. As per my understanding, RV32 supports 1GB
+> of lowmem only
+> as the page offset is set to 0xC0000000. The config option
+> MAXPHYSMEM_2GB is misleading
+> as RV32 actually allows 1GB of physical memory only.
 
-This benchmark on AMD rome and Intel skylakex shows "bt" is not a good
-option except for very small bitmaps.
+Ok, in that case I was apparently misled by the Kconfig option name.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/bench/Build            |   1 +
- tools/perf/bench/bench.h          |   1 +
- tools/perf/bench/find-bit-bench.c | 135 ++++++++++++++++++++++++++++++
- tools/perf/builtin-bench.c        |   1 +
- 4 files changed, 138 insertions(+)
- create mode 100644 tools/perf/bench/find-bit-bench.c
+I just tried building a kernel to see what the boundaries actually are,
+as this is not the only confusing bit. Here is what I see:
 
-diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
-index 768e408757a0..fb114bca3a8d 100644
---- a/tools/perf/bench/Build
-+++ b/tools/perf/bench/Build
-@@ -10,6 +10,7 @@ perf-y += epoll-wait.o
- perf-y += epoll-ctl.o
- perf-y += synthesize.o
- perf-y += kallsyms-parse.o
-+perf-y += find-bit-bench.o
- 
- perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-lib.o
- perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
-diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-index 61cae4966cae..3291b0ddddfe 100644
---- a/tools/perf/bench/bench.h
-+++ b/tools/perf/bench/bench.h
-@@ -35,6 +35,7 @@ int bench_sched_messaging(int argc, const char **argv);
- int bench_sched_pipe(int argc, const char **argv);
- int bench_mem_memcpy(int argc, const char **argv);
- int bench_mem_memset(int argc, const char **argv);
-+int bench_mem_find_bit(int argc, const char **argv);
- int bench_futex_hash(int argc, const char **argv);
- int bench_futex_wake(int argc, const char **argv);
- int bench_futex_wake_parallel(int argc, const char **argv);
-diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
-new file mode 100644
-index 000000000000..1aadbd9d7e86
---- /dev/null
-+++ b/tools/perf/bench/find-bit-bench.c
-@@ -0,0 +1,135 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Benchmark find_next_bit and related bit operations.
-+ *
-+ * Copyright 2020 Google LLC.
-+ */
-+#include <stdlib.h>
-+#include "bench.h"
-+#include "../util/stat.h"
-+#include <linux/bitmap.h>
-+#include <linux/bitops.h>
-+#include <linux/time64.h>
-+#include <subcmd/parse-options.h>
-+
-+static unsigned int outer_iterations = 5;
-+static unsigned int inner_iterations = 100000;
-+
-+static const struct option options[] = {
-+	OPT_UINTEGER('i', "outer-iterations", &outer_iterations,
-+		"Number of outerer iterations used"),
-+	OPT_UINTEGER('j', "inner-iterations", &inner_iterations,
-+		"Number of outerer iterations used"),
-+	OPT_END()
-+};
-+
-+static const char *const bench_usage[] = {
-+	"perf bench mem find_bit <options>",
-+	NULL
-+};
-+
-+static unsigned int accumulator;
-+static unsigned int use_of_val;
-+
-+static noinline void workload(int val)
-+{
-+	use_of_val += val;
-+	accumulator++;
-+}
-+
-+#if defined(__i386__) || defined(__x86_64__)
-+static bool asm_test_bit(long nr, const unsigned long *addr)
-+{
-+	bool oldbit;
-+
-+	asm volatile("bt %2,%1"
-+		     : "=@ccc" (oldbit)
-+		     : "m" (*(unsigned long *)addr), "Ir" (nr) : "memory");
-+
-+	return oldbit;
-+}
-+#else
-+#define asm_test_bit test_bit
-+#endif
-+
-+static int do_for_each_set_bit(unsigned int num_bits)
-+{
-+	unsigned long *to_test = bitmap_alloc(num_bits);
-+	struct timeval start, end, diff;
-+	u64 runtime_us;
-+	struct stats fb_time_stats, tb_time_stats;
-+	double time_average, time_stddev;
-+	unsigned int bit, i, j;
-+	unsigned int set_bits, skip;
-+	unsigned int old;
-+
-+	init_stats(&fb_time_stats);
-+	init_stats(&tb_time_stats);
-+
-+	for (set_bits = 1; set_bits <= num_bits; set_bits <<= 1) {
-+		bitmap_zero(to_test, num_bits);
-+		skip = num_bits / set_bits;
-+		for (i = 0; i < num_bits; i += skip)
-+			set_bit(i, to_test);
-+
-+		for (i = 0; i < outer_iterations; i++) {
-+			old = accumulator;
-+			gettimeofday(&start, NULL);
-+			for (j = 0; j < inner_iterations; j++) {
-+				for_each_set_bit(bit, to_test, num_bits)
-+					workload(bit);
-+			}
-+			gettimeofday(&end, NULL);
-+			assert(old + (inner_iterations * set_bits) == accumulator);
-+			timersub(&end, &start, &diff);
-+			runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
-+			update_stats(&fb_time_stats, runtime_us);
-+
-+			old = accumulator;
-+			gettimeofday(&start, NULL);
-+			for (j = 0; j < inner_iterations; j++) {
-+				for (bit = 0; bit < num_bits; bit++) {
-+					if (asm_test_bit(bit, to_test))
-+						workload(bit);
-+				}
-+			}
-+			gettimeofday(&end, NULL);
-+			assert(old + (inner_iterations * set_bits) == accumulator);
-+			timersub(&end, &start, &diff);
-+			runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
-+			update_stats(&tb_time_stats, runtime_us);
-+		}
-+
-+		printf("%d operations %d bits set of %d bits\n",
-+			inner_iterations, set_bits, num_bits);
-+		time_average = avg_stats(&fb_time_stats);
-+		time_stddev = stddev_stats(&fb_time_stats);
-+		printf("  Average for_each_set_bit took: %.3f usec (+- %.3f usec)\n",
-+			time_average, time_stddev);
-+		time_average = avg_stats(&tb_time_stats);
-+		time_stddev = stddev_stats(&tb_time_stats);
-+		printf("  Average test_bit loop took:    %.3f usec (+- %.3f usec)\n",
-+			time_average, time_stddev);
-+
-+		if (use_of_val == accumulator)  /* Try to avoid compiler tricks. */
-+			printf("\n");
-+	}
-+	bitmap_free(to_test);
-+	return 0;
-+}
-+
-+int bench_mem_find_bit(int argc, const char **argv)
-+{
-+	int err = 0, i;
-+
-+	argc = parse_options(argc, argv, options, bench_usage, 0);
-+	if (argc) {
-+		usage_with_options(bench_usage, options);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	for (i = 1; i <= 2048; i <<= 1)
-+		do_for_each_set_bit(i);
-+
-+	return err;
-+}
-diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-index cad31b1d3438..690eee1120a7 100644
---- a/tools/perf/builtin-bench.c
-+++ b/tools/perf/builtin-bench.c
-@@ -52,6 +52,7 @@ static struct bench sched_benchmarks[] = {
- static struct bench mem_benchmarks[] = {
- 	{ "memcpy",	"Benchmark for memcpy() functions",		bench_mem_memcpy	},
- 	{ "memset",	"Benchmark for memset() functions",		bench_mem_memset	},
-+	{ "find_bit",	"Benchmark for find_bit() functions",		bench_mem_find_bit	},
- 	{ "all",	"Run all memory access benchmarks",		NULL			},
- 	{ NULL,		NULL,						NULL			}
- };
--- 
-2.28.0.rc0.142.g3c755180ce-goog
+0x9dc00000 TASK_SIZE/FIXADDR_START   /* code comment says 0x9fc00000 */
+0x9e000000 FIXADDR_TOP/PCI_IO_START
+0x9f000000 PCI_IO_END/VMEMMAP_START
+0xa0000000 VMEMMAP_END/VMALLOC_START
+0xc0000000 VMALLOC_END/PAGE_OFFSET
 
+Having exactly 1GB of linear map does make a lot of sense. Having PCI I/O,
+vmemmap and fixmap come out of the user range means you get slightly
+different behavior in user space if there are any changes to that set, but
+that is probably fine as well, if you want the flexibility to go to a 2GB linear
+map and expect user space to deal with that as well.
+
+There is one common trick from arm32 however that you might want to
+consider: if vmalloc was moved above the linear map rather than below,
+the size of the vmalloc area can dynamically depend on the amount of
+RAM that is actually present rather than be set to a fixed value.
+
+On arm32, there is around 240MB of vmalloc space if the linear map
+is fully populated with RAM, but it can grow to use all of the avaialable
+address space if less RAM was detected at boot time (up to 3GB
+depending on CONFIG_VMSPLIT).
+
+> Any memory blocks beyond
+> DRAM + 1GB are removed in setup_bootmem. IMHO, The current config
+> should clarify that.
+>
+> Moreover, we should add 2G split under a separate configuration if we
+> want to support that.
+
+Right. It's probably not needed immediately, but can't hurt either.
+
+    Arnd
