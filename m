@@ -2,77 +2,114 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2567CC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D88C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF7372070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB142070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595632396;
+	bh=HZpnpiku6KxH32mX+B577S8tCYjbRxTgV8cNsa4GI0Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=m2/IiPbYumMw2LhebEkB/28RcHyNeQA1rUB8Swn6ampJcLqnDbJlRraLICWmJwA2M
+	 hzkrGm04G14zlGe1FpkhahOExxQ+f2jhcyqAbId3SaiDTojejAy3GI9yv5LgoZHhJK
+	 X26r8ivOmRG++1qA/KG3KIbGSEJns46rwWLDh+ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgGXXMA (ORCPT
+        id S1726686AbgGXXNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 19:12:00 -0400
-Received: from mga04.intel.com ([192.55.52.120]:19091 "EHLO mga04.intel.com"
+        Fri, 24 Jul 2020 19:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726438AbgGXXMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 19:12:00 -0400
-IronPort-SDR: kdQYQhAbn4+6ZIGa9GhlgW6/AM3D4jAfJ3VEG/nWoQpiDwA+6B4iZt3+2K+zWelYOVVXBsZ/Um
- PItmgp4aXcyw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="148281972"
-X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="148281972"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 16:11:58 -0700
-IronPort-SDR: 22DXrr07uwr7NEldS6kJ7cOEQhwSjvWNXbGYq91IJGf27iqRbDgPlUxDncA6tVLjyye/YZ8/qQ
- 1ioPmEbssuDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="289132518"
-Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.254.52.44]) ([10.254.52.44])
-  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2020 16:11:57 -0700
-Subject: Re: [RFC 2/7] ath10k: Add support to process rx packet in thread
-To:     Rakesh Pillai <pillair@codeaurora.org>,
-        'Rajkumar Manoharan' <rmanohar@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvalo@codeaurora.org,
-        johannes@sipsolutions.net, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org, linux-wireless-owner@vger.kernel.org
-References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
- <1595351666-28193-3-git-send-email-pillair@codeaurora.org>
- <13573549c277b34d4c87c471ff1a7060@codeaurora.org>
- <003001d6611e$9afa0cc0$d0ee2640$@codeaurora.org>
-From:   Jacob Keller <jacob.e.keller@intel.com>
-Organization: Intel Corporation
-Message-ID: <0d9baad4-fba7-d362-41b7-f0b37446c5ef@intel.com>
-Date:   Fri, 24 Jul 2020 16:11:57 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0.1
+        id S1726438AbgGXXNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 19:13:11 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71BE62070B;
+        Fri, 24 Jul 2020 23:13:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595632390;
+        bh=HZpnpiku6KxH32mX+B577S8tCYjbRxTgV8cNsa4GI0Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=PJhmVJgNVwvKOOofJUhYxWH9OJlKHXgaL829NsQ9oUXK4voII5EuZMs9dhXJnGY3a
+         tHN5LR4krlkI2F2vSfIRyDQEHwb/0uswkc/YsXPleq7ui3IRCxM7588YO4p4Udpg/8
+         NTcdV51wVN9JwZA4L1qVSA4PIoAedVR7NdU0dw5s=
+Date:   Fri, 24 Jul 2020 18:13:09 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>
+Cc:     Rui Feng <rui_feng@realsil.com.cn>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Ettle <james@ettle.org.uk>, Len Brown <lenb@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jacopo De Simoi <wilderkde@gmail.com>
+Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
+Message-ID: <20200724231309.GA1551055@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <003001d6611e$9afa0cc0$d0ee2640$@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <83fa1c44e8d342618eb5fbc491ec4779@realtek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/23/2020 11:25 AM, Rakesh Pillai wrote:
-> Hi Rajkumar,
-> In linux, the IRQs are directed to the first core which is booted.
-> I see that all the IRQs are getting routed to CORE0 even if its heavily
-> loaded.
+On Fri, Jul 24, 2020 at 07:16:26AM +0000, 吳昊澄 Ricky wrote:
+> Hi James, Bjorn,
 > 
+> The Card reader(10ec:5287) is a combo chip with Ethernet(10ec:8168),
+> we think it is not cause by setting our device config space in idle
+> time.
+>
+> We dis/enable the ASPM(setting config space) at busy/idle time, it
+> can make our R/W performances well not a work around function
+>
+> PCI Host and Device setting self config space and do handshaking, we
+> think it does not affect the system
 
-You should be able to configure the initial IRQ setup so that they don't
-all go on CPU 0 when you create the IRQ. That obviously doesn't help the
-case of wanting scheduler to dynamically move the processing around to
-other CPUs though.
+Are you able to reproduce the problem?  Specifically, James observes
+that before suspend, ASPM L1 is enabled, but after resume, L0s and L1
+are enabled.  The ASPM state should be the same after resume.
+
+See:
+
+  https://bugzilla.kernel.org/show_bug.cgi?id=208117#c8
+  https://bugzilla.kernel.org/show_bug.cgi?id=208117#c9
+
+James *is* manually enabling ASPM L1 via a udev rule, which
+complicates things a little.  The sysfs link/l1_aspm functionality
+he's using is new and could well be buggy.
+
+Maybe we should simplify this a little bit more.  James, if you don't
+touch ASPM config at all, either manually or via udev, does the ASPM
+configuration stay the same across suspend/resume?
+
+> > -----Original Message-----
+> > From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> > Sent: Friday, July 24, 2020 1:13 AM
+> > To: 吳昊澄 Ricky; Rui Feng
+> > Cc: Arnd Bergmann; Greg Kroah-Hartman; James Ettle; Len Brown; Puranjay
+> > Mohan; linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org; Jacopo De
+> > Simoi
+> > Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
+> > 
+> > [+cc Jacopo]
+> > 
+> > On Thu, Jul 23, 2020 at 11:56:22AM -0500, Bjorn Helgaas wrote:
+> > > James reported this issue with rtsx_pci; can you guys please take a
+> > > look at it?  https://bugzilla.kernel.org/show_bug.cgi?id=208117
+> > >
+> > > There's a lot of good info in the bugzilla already.
+> > 
+> > Likely duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=198951
+> > 
+> > Jacopo, could you please attach a complete dmesg log and "sudo lspci
+> > -vvxxxx" output to your bugzilla?
+> > 
+> > ------Please consider the environment before printing this e-mail.
