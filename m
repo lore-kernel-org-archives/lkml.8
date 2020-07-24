@@ -2,122 +2,168 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A59C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0047BC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0221B2067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF551206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WvZXqq7r"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jO0YNko2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgGXRBM (ORCPT
+        id S1726674AbgGXRFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:01:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgGXRBM (ORCPT
+        Fri, 24 Jul 2020 13:05:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50358 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726326AbgGXRFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:01:12 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92FEC0619D3;
-        Fri, 24 Jul 2020 10:01:11 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id h28so7515094edz.0;
-        Fri, 24 Jul 2020 10:01:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N55p9HlPMBDczNO+FOx56BHvJH2h0tKoLCVXNpo9G3M=;
-        b=WvZXqq7rAaJYphTzFQ9Vvq+Wn/RP5L3aKeqJOEyh76XpdQP96g1hniiru2fEFxQh8N
-         cuh3EHmBNmH1rGSFaUj5+FPAsM+5jEG/yLcmCnQRpFBdjiYPJAXGXjEHnc/cdTBK9Ahb
-         QMVvP7uBiXfNUvDmW7+QeaIFV2OhMP/QUyy5lnBqRVTgLzZmwNozq1QDzq7jjJzGGFCc
-         iST4nAdSfktKCoFtR5wvPKP0mwn1E8eT7e5hl5b09dy0RCD2LG+5F4tMbuyuoA53DAWh
-         esB7DuwLVNy/2QhZ+9q1iK7V7quoMDxV3BJSpSiWKeP+Ac4kXEnqbBHKLDISg5wweq0P
-         M+iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N55p9HlPMBDczNO+FOx56BHvJH2h0tKoLCVXNpo9G3M=;
-        b=FeyTiHlRKkoqiIh+eLjt10Kx6Z9pAvrX7OpeEPDd43O01AHjYska2pmS4IFkL5vV+L
-         ObikjYKnHBA6jJhrPlHFxiJ/zWVgWnk1hnC6NGdJEOxhIheo2u/inCWbW4iJIMWFSDs8
-         U/WSCfPBOGbPl4HGvGP+0ald4trMGDNiwfEeZHequYu3am8TdWcTKctR08QSIZPrwhQQ
-         V5JynQOY2Dw7xqiU2dQ2XKxsoF5Bkmm90nWx7GyThLZ1httuJe7+4iLID9jGKH1Q/FEA
-         1j3rS1jIhvy2gNFsU7QorrCIN1f3uuZDsWfrb3ruUfAPEhblQMOU4XlV5JBbhVGYVb9E
-         +zrg==
-X-Gm-Message-State: AOAM532tbCy1ehH8a3uP64PSMUXgHTjJTaS/1PelaI49zU3hvemJj0DM
-        8NZQTL1rD3ZAMmMi4P+GaE8pqrRX
-X-Google-Smtp-Source: ABdhPJytnSuqN8Rq5+gISeWtuSvudKbnrUSIIGlRetE2zWQZ4mRgW3qWuBpdGiuYKSunbCD5BMDJqQ==
-X-Received: by 2002:a50:ab5c:: with SMTP id t28mr9723421edc.209.1595610070636;
-        Fri, 24 Jul 2020 10:01:10 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id u60sm1066419edc.59.2020.07.24.10.01.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 10:01:09 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Amit Kucheria <amitk@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] thermal: Fix zone lookup by ID
-Date:   Fri, 24 Jul 2020 19:01:05 +0200
-Message-Id: <20200724170105.2705467-1-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 24 Jul 2020 13:05:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595610310;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4rCT7Eihp6YRQLrwt5IMAgWDaBjhIvDiwpbkJJW+EH8=;
+        b=jO0YNko2PkDbMGtKy5fJN2ZukQTVqTZMaKCNWjYA0gK5iMIhptyZ9lDtJuClPlFxebUxxt
+        eVNIXp2KZ/ZGGauV0Yh9HaaizcZsAVHiSzr82Fpu1ljkbANHYSb+uuLkpOg1T9Pwzzyla+
+        t7jwFvoue09ERuh4Dm+MzgJWD5HBBVY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-vXZsF-BCPJim7VMe0o80qA-1; Fri, 24 Jul 2020 13:05:08 -0400
+X-MC-Unique: vXZsF-BCPJim7VMe0o80qA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42348189CEEB;
+        Fri, 24 Jul 2020 17:05:07 +0000 (UTC)
+Received: from Whitewolf.redhat.com (ovpn-119-175.rdu2.redhat.com [10.10.119.175])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 437D95C1D3;
+        Fri, 24 Jul 2020 17:05:04 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] drm/probe_helper: Add drm_connector_helper_funcs->get_modes_ctx()
+Date:   Fri, 24 Jul 2020 13:04:56 -0400
+Message-Id: <20200724170457.711072-2-lyude@redhat.com>
+In-Reply-To: <20200724170457.711072-1-lyude@redhat.com>
+References: <20200724170457.711072-1-lyude@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+Currently nouveau relies on being able to use the
+drm_connector_helper_funcs->mode_valid() hook within
+drm_connector_helper_funcs->get_modes() so that we can ignore invalid
+modes when figuring out the connector's native mode. Since we're about
+to add a ->mode_valid_ctx() hook for MST, we'll also need to be able to
+pass down the current drm acquisition context for use in ->get_modes().
+So, add another version of ->get_modes() which accepts an acquisition
+context, ->get_modes_ctx().
 
-When a thermal zone is looked up by an ID and no zone is found matching
-that ID, the thermal_zone_get_by_id() function will return a pointer to
-the thermal zone list head which isn't actually a valid thermal zone.
-
-This can lead to a subsequent crash because a valid pointer is returned
-to the called, but dereferencing that pointer as struct thermal_zone is
-not safe.
-
-Fixes: 329b064fbd13 ("thermal: core: Get thermal zone by id")
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- drivers/thermal/thermal_core.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_probe_helper.c       | 11 +++++--
+ include/drm/drm_modeset_helper_vtables.h | 42 ++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 007f9618e20a..9748fbb9a3a1 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -751,16 +751,18 @@ int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
- 
- struct thermal_zone_device *thermal_zone_get_by_id(int id)
- {
--	struct thermal_zone_device *tz = NULL;
-+	struct thermal_zone_device *tz, *match = NULL;
- 
- 	mutex_lock(&thermal_list_lock);
- 	list_for_each_entry(tz, &thermal_tz_list, node) {
--		if (tz->id == id)
-+		if (tz->id == id) {
-+			match = tz;
- 			break;
-+		}
+diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
+index d6017726cc2a..fbda6e527b4b 100644
+--- a/drivers/gpu/drm/drm_probe_helper.c
++++ b/drivers/gpu/drm/drm_probe_helper.c
+@@ -377,7 +377,8 @@ EXPORT_SYMBOL(drm_helper_probe_detect);
+  *    drm_mode_probed_add(). New modes start their life with status as OK.
+  *    Modes are added from a single source using the following priority order.
+  *
+- *    - &drm_connector_helper_funcs.get_modes vfunc
++ *    - &drm_connector_helper_funcs.get_modes_ctx vfunc if set, otherwise
++ *      &drm_connector_helper_funcs.get_modes is used
+  *    - if the connector status is connector_status_connected, standard
+  *      VESA DMT modes up to 1024x768 are automatically added
+  *      (drm_add_modes_noedid())
+@@ -506,7 +507,13 @@ int drm_helper_probe_single_connector_modes(struct drm_connector *connector,
+ 		goto prune;
  	}
- 	mutex_unlock(&thermal_list_lock);
  
--	return tz;
-+	return match;
- }
+-	count = (*connector_funcs->get_modes)(connector);
++	if (connector_funcs->get_modes_ctx) {
++		count = connector_funcs->get_modes_ctx(connector, &ctx);
++		if (count < 0)
++			goto retry;
++	} else {
++		count = connector_funcs->get_modes(connector);
++	}
  
- void thermal_zone_device_unbind_exception(struct thermal_zone_device *tz,
+ 	/*
+ 	 * Fallback for when DDC probe failed in drm_get_edid() and thus skipped
+diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
+index 4efec30f8bad..c1eb96404bcf 100644
+--- a/include/drm/drm_modeset_helper_vtables.h
++++ b/include/drm/drm_modeset_helper_vtables.h
+@@ -904,6 +904,48 @@ struct drm_connector_helper_funcs {
+ 	 */
+ 	int (*get_modes)(struct drm_connector *connector);
+ 
++	/**
++	 * @get_modes_ctx:
++	 *
++	 * This function should fill in all modes currently valid for the sink
++	 * into the &drm_connector.probed_modes list. It should also update the
++	 * EDID property by calling drm_connector_update_edid_property().
++	 *
++	 * The usual way to implement this is to cache the EDID retrieved in the
++	 * probe callback somewhere in the driver-private connector structure.
++	 * In this function drivers then parse the modes in the EDID and add
++	 * them by calling drm_add_edid_modes(). But connectors that driver a
++	 * fixed panel can also manually add specific modes using
++	 * drm_mode_probed_add(). Drivers which manually add modes should also
++	 * make sure that the &drm_connector.display_info,
++	 * &drm_connector.width_mm and &drm_connector.height_mm fields are
++	 * filled in.
++	 *
++	 * Virtual drivers that just want some standard VESA mode with a given
++	 * resolution can call drm_add_modes_noedid(), and mark the preferred
++	 * one using drm_set_preferred_mode().
++	 *
++	 * This function is only called after the @detect hook has indicated
++	 * that a sink is connected and when the EDID isn't overridden through
++	 * sysfs or the kernel commandline.
++	 *
++	 * This callback is used by the probe helpers in e.g.
++	 * drm_helper_probe_single_connector_modes().
++	 *
++	 * To allow for accessing the atomic state of modesetting objects, the
++	 * helper libraries always call this with ctx set to a valid context,
++	 * and &drm_mode_config.connection_mutex will always be locked with
++	 * the ctx parameter set to @ctx. This allows for taking additional
++	 * locks as required.
++	 *
++	 * Returns:
++	 *
++	 * The number of modes added by calling drm_mode_probed_add(), or a
++	 * negative error code on failure.
++	 */
++	int (*get_modes_ctx)(struct drm_connector *connector,
++			     struct drm_modeset_acquire_ctx *ctx);
++
+ 	/**
+ 	 * @detect_ctx:
+ 	 *
 -- 
-2.27.0
+2.26.2
 
