@@ -2,269 +2,168 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDF1C4345F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 786C7C2D0AF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90603206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5B52070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mpqSkSnY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e2g/T7ES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgGXViU (ORCPT
+        id S1727994AbgGXVim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58032 "EHLO
+        Fri, 24 Jul 2020 17:38:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727862AbgGXViQ (ORCPT
+        with ESMTP id S1726643AbgGXVgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:38:16 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA8CC0619D3;
-        Fri, 24 Jul 2020 14:38:15 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f18so9426933wml.3;
-        Fri, 24 Jul 2020 14:38:15 -0700 (PDT)
+        Fri, 24 Jul 2020 17:36:46 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0AB9C03CA40
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:36:45 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id k27so6147889pgm.2
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:36:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ReKmclkzMgHNKBI6RqYqYVQYyFJjoWSotqdq4uIKtoE=;
-        b=mpqSkSnYjFcYbJ/x8AazjJWIotT3BhXnRzP62t9pCzUr4B9pezdidFvPAwQ+spFliD
-         IRvuMxKoZ7yNYYZswYH2fUw066PaQfbHxxupPtAuhQYw4oy7CLWdAK4EdLB3WdYUe1E/
-         XzB2o5hzpk54Onyd9mRH+rmOm2cZfcitQg8HRe+5sNyNDB8u33PPQSmhSik+Cg8FX0J+
-         ske3jylRBwkcvhp3/TXE/nFkNQ74B+dFLi1Eo2cOe4wkCfDJQYoApkfEwmD6d7kLp+os
-         uWG75sTe/g6Hc/+veHd8lpTraV/K8ZAPKNb/KHp2x/EYCOZYHbaz2xY7rfpFbHfiAfSP
-         Ft8w==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QuSR5OKebfZG9zBTcnsVSNOUx+p1wthou5r7P45Dqng=;
+        b=e2g/T7ESZvOK2o3dhi05Vn3Jsik1P7GtuHpRHV97nJhR9chmHD3goRnMyfoRIvXkpJ
+         NotPjBIoK9R7ayTLCq5EVGqMimLDdpJZE8JgRudIQ2sj3I259P0AVctQODLLRz2Z1kAe
+         FBmH2mq4JZ0WMzHPmHsazvYGXFK3T17zub/5o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ReKmclkzMgHNKBI6RqYqYVQYyFJjoWSotqdq4uIKtoE=;
-        b=pTrc3tUxrvC7Pu8vJE448xKiIKAazD8p/DtGgCnpKG1q0GNzR+pra5D0m1vgKpBv8B
-         F21nSJQO+cQF4hQg2MZn8TjZbmLEZAUMthomC4lSxkrSK6/ebTecgjOpqIiv9pq4R4XT
-         nZ9VWg+7pIgFREc44bH+n7WKomRo+JnYMpVrVusHVFD4wzVkyLpkTJq9Sg6NXzL7ancP
-         Ty9vw1HMjY9wV+p/oT5F/6+sg5Yhir5DMJoXiiLZlM17/Q5RsdqKpWd3zo835dCoS+0E
-         HJ/ekXtwZfA8LxoMM/nuGRW3agbjpMYM/P7wohpNlA26j6vJxZYy3FaFb0WS/firuO4X
-         0xRA==
-X-Gm-Message-State: AOAM533Cn3N5GrDsvrhfThNDnROqFTfxfW55U0n2l7A8K19utI5Hp1bH
-        aK07976vbhS43zbe8VvLZcM=
-X-Google-Smtp-Source: ABdhPJzzQWyK+zNKP7xb2Ee4+QUwe4rDpfpja+3+LhXpS2/kO8WQmJ7le56laq3odE8ul2hb68YTrw==
-X-Received: by 2002:a1c:44d7:: with SMTP id r206mr9893645wma.7.1595626694422;
-        Fri, 24 Jul 2020 14:38:14 -0700 (PDT)
-Received: from TimeMachine.localdomain (bband-dyn34.178-41-255.t-com.sk. [178.41.255.34])
-        by smtp.googlemail.com with ESMTPSA id 129sm8853400wmd.48.2020.07.24.14.38.13
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QuSR5OKebfZG9zBTcnsVSNOUx+p1wthou5r7P45Dqng=;
+        b=jPSQ1JBbWgizYHA7H00+gRm/2bhWD1WJdC1aakRYWxFPoAGGitDK792DF+5E/qTQjU
+         DDfyiLA98Fa4hPInotahym3SkhmWqC81EuKPOfG5a21ZTRDIemAoo1rRfKdxXnDLLxVZ
+         LL9cpDlxAPzeLrHHzct3cvLWsPEDdUnAqQn93w2D7jhurYC71S6bEooRkJ95438XPFq/
+         iYTjTBdL/32wYxTFgckMBnpu0D6TLBWD7Kw+BGw4FUUBl3HLaJWd0CyV5cTRLptQUdDq
+         aLcJa1TGtHQlTSiw8m9MMtJc4w9IwN4/x4bQWDX/DkzZIevBoYhoFTpXVoNXXfbpPJZB
+         XYiQ==
+X-Gm-Message-State: AOAM531lICHYjM7nRyxIQ9I2ruuNbs5zgxVyr7RHeDYxQ8ElPZevOUHm
+        3dEYG4mL27ThcVOa2D4RaCYMBw==
+X-Google-Smtp-Source: ABdhPJxK435CF+iz91hGK+5NgHvqqee3eWSsmt07ckHJqnxWEFT9dhACW0dihJg65rKzTr+cdKdf2g==
+X-Received: by 2002:a65:6119:: with SMTP id z25mr10602187pgu.52.1595626605323;
+        Fri, 24 Jul 2020 14:36:45 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 19sm7331534pfy.193.2020.07.24.14.36.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 14:38:13 -0700 (PDT)
-From:   Martin Botka <martin.botka1@gmail.com>
-Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
-        Martin Botka <martin.botka1@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: [PATCH RFC 6/6] Documentation: Add binding for pwm-qti-lpg
-Date:   Fri, 24 Jul 2020 23:36:56 +0200
-Message-Id: <20200724213659.273599-7-martin.botka1@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200724213659.273599-1-martin.botka1@gmail.com>
-References: <20200724213659.273599-1-martin.botka1@gmail.com>
+        Fri, 24 Jul 2020 14:36:43 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/19] Introduce partial kernel_read_file() support
+Date:   Fri, 24 Jul 2020 14:36:21 -0700
+Message-Id: <20200724213640.389191-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fenglin Wu <fenglinw@codeaurora.org>
+v3:
+- add reviews/acks
+- add "IMA: Add support for file reads without contents" patch
+- trim CC list, in case that's why vger ignored v2
+v2: [missing from lkml archives! (CC list too long?) repeating changes here]
+- fix issues in firmware test suite
+- add firmware partial read patches
+- various bug fixes/cleanups
+v1: https://lore.kernel.org/lkml/20200717174309.1164575-1-keescook@chromium.org/
 
-Add documentation for pwm-qti-lpg
+Hi,
 
-Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
-Signed-off-by: Martin Botka <martin.botka1@gmail.com>
----
- .../devicetree/bindings/pwm/pwm-qti-lpg.txt   | 163 ++++++++++++++++++
- 1 file changed, 163 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-qti-lpg.txt
+Here's my tree for adding partial read support in kernel_read_file(),
+which fixes a number of issues along the way. It's got Scott's firmware
+and IMA patches ported and everything tests cleanly for me (even with
+CONFIG_IMA_APPRAISE=y).
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-qti-lpg.txt b/Documentation/devicetree/bindings/pwm/pwm-qti-lpg.txt
-new file mode 100644
-index 000000000000..df2810626da4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-qti-lpg.txt
-@@ -0,0 +1,163 @@
-+Qualcomm Technologies, Inc. LPG driver specific bindings
-+
-+This binding document describes the properties of LPG (Light Pulse Generator)
-+device module in Qualcomm Technologies, Inc. PMIC chips.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Must be "qcom,pwm-lpg".
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Register base for LPG and LUT modules.
-+
-+- reg-names:
-+	Usage: required
-+	Value type: <string>
-+	Definition: The name of the register defined in the reg property.
-+		      It must have "lpg-base", "lut-base" is optional but
-+		      it's required if any LPG channels support LUT mode.
-+
-+- #pwm-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: The number of cells in "pwms" property specified in
-+		      PWM user nodes. It should be 2. The first cell is
-+		      the PWM channel ID indexed from 0, and the second
-+		      cell is the PWM default period in nanoseconds.
-+
-+- qcom,num-lpg-channels:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: The number of the consecutive LPG/PWM channels in the chip.
-+
-+- qcom,lut-patterns:
-+	Usage: optional
-+	Value type: <prop-encoded-array>
-+	Definition: Duty ratios in percentages for LPG working at LUT mode.
-+		      These duty ratios will be translated into PWM values
-+		      and stored in LUT module. The LUT module has resource
-+		      to store 47 PWM values at max and shared for all LPG
-+		      channels. This property is required if any LPG channels
-+		      support LUT mode.
-+
-+- qcom,sync-channel-ids:
-+	Usage: optional
-+	Value type: <prop-encoded-array>
-+	Definition: The hardware IDs of the LPG channel that required be
-+		      grouped together. These channels will share the same LUT
-+		      ramping configuration so that they will be enabled with a
-+		      synchronized pattern. If the LUT ramping configuration
-+		      differs for the channels grouped for synchronization,
-+		      configuration of the first channel will be applied for
-+		      all others.
-+
-+Subnode is optional if LUT mode is not required, it's required if any LPG
-+channels expected to be supported in LUT mode.
-+
-+Subnode properties:
-+Subnodes for each LPG channel (lpg@X) can be defined if any of the following
-+parameters needs to be configured for that channel.
-+
-+- qcom,lpg-chan-id:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: The LPG channel's hardware ID indexed from 1. Allowed
-+		      range is 1 - 8. Maximum value depends on the number of
-+		      channels supported on PMIC.
-+
-+- qcom,ramp-step-ms:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: The step duration in milliseconds for LPG staying at each
-+		      duty specified in the LUT pattern. Allowed range is
-+		      1 - 511.
-+
-+- qcom,ramp-high-index:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: The high index of the LUT pattern where LPG ends up
-+		      ramping to. Allowed range is 1 - 47.
-+
-+- qcom,ramp-low-index:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: The low index of the LUT pattern from where LPG begins
-+		      ramping from. Allowed range is 0 - 46.
-+
-+- qcom,ramp-from-low-to-high:
-+	Usage: optional
-+	Value type: <empty>
-+	Definition: The flag to specify the LPG ramping direction. The ramping
-+		      direction is from low index to high index of the LUT
-+		      pattern if it's specified.
-+
-+- qcom,ramp-pattern-repeat:
-+	Usage: optional
-+	Value type: <empty>
-+	Definition: The flag to specify if LPG would be ramping with the LUT
-+		      pattern repeatedly.
-+
-+- qcom,ramp-toggle:
-+	Usage: optional
-+	Value type: <empty>
-+	Definition: The flag to specify if LPG would toggle the LUT pattern
-+		      in ramping. If toggling enabled, LPG would return to the
-+		      low index when high index is reached, or return to the high
-+		      index when low index is reached.
-+
-+- qcom,ramp-pause-hi-count:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: The step count that LPG stop the output when it ramped up
-+		      to the high index of the LUT.
-+
-+- qcom,ramp-pause-lo-count:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: The step count that LPG stop the output when it ramped up
-+		      to the low index of the LUT.
-+Example:
-+
-+	pmi8998_lpg: lpg@b100 {
-+		compatible = "qcom,pwm-lpg";
-+		reg = <0xb100 0x600>, <0xb000 0x100>;
-+		reg-names = "lpg-base", "lut-base";
-+		qcom,num-lpg-channels = <6>;
-+		#pwm-cells = <2>;
-+		qcom,lut-patterns = <0 14 28 42 56 70 84 100
-+					100 84 70 56 42 28 14 0>;
-+		qcom,sync-channel-ids = <3 4 5>;
-+		lpg@3 {
-+			qcom,lpg-chan-id = <3>;
-+			qcom,ramp-step-ms = <200>;
-+			qcom,ramp-pause-hi-count = <10>;
-+			qcom,ramp-pause-lo-count = <10>;
-+			qcom,ramp-low-index = <0>;
-+			qcom,ramp-high-index = <15>;
-+			qcom,ramp-from-low-to-high;
-+			qcom,ramp-pattern-repeat;
-+		};
-+		lpg@4 {
-+			qcom,lpg-chan-id = <4>;
-+			qcom,ramp-step-ms = <200>;
-+			qcom,ramp-pause-hi-count = <10>;
-+			qcom,ramp-pause-lo-count = <10>;
-+			qcom,ramp-low-index = <0>;
-+			qcom,ramp-high-index = <15>;
-+			qcom,ramp-from-low-to-high;
-+			qcom,ramp-pattern-repeat;
-+		};
-+		lpg@5 {
-+			qcom,lpg-chan-id = <5>;
-+			qcom,ramp-step-ms = <200>;
-+			qcom,ramp-pause-hi-count = <10>;
-+			qcom,ramp-pause-lo-count = <10>;
-+			qcom,ramp-low-index = <0>;
-+			qcom,ramp-high-index = <15>;
-+			qcom,ramp-from-low-to-high;
-+			qcom,ramp-pattern-repeat;
-+		};
-+	};
+I think the intention is for this to go via Greg's tree since Scott's
+driver code will depend on it?
+
+Thanks,
+
+-Kees
+
+
+Kees Cook (15):
+  test_firmware: Test platform fw loading on non-EFI systems
+  selftest/firmware: Add selftest timeout in settings
+  firmware_loader: EFI firmware loader must handle pre-allocated buffer
+  fs/kernel_read_file: Remove FIRMWARE_PREALLOC_BUFFER enum
+  fs/kernel_read_file: Remove FIRMWARE_EFI_EMBEDDED enum
+  fs/kernel_read_file: Split into separate source file
+  fs/kernel_read_file: Remove redundant size argument
+  fs/kernel_read_file: Switch buffer size arg to size_t
+  fs/kernel_read_file: Add file_size output argument
+  LSM: Introduce kernel_post_load_data() hook
+  firmware_loader: Use security_post_load_data()
+  module: Call security_kernel_post_load_data()
+  LSM: Add "contents" flag to kernel_read_file hook
+  fs/kernel_file_read: Add "offset" arg for partial reads
+  firmware: Store opt_flags in fw_priv
+
+Scott Branden (4):
+  fs/kernel_read_file: Split into separate include file
+  IMA: Add support for file reads without contents
+  firmware: Add request_partial_firmware_into_buf()
+  test_firmware: Test partial read support
+
+ drivers/base/firmware_loader/fallback.c       |  19 +-
+ drivers/base/firmware_loader/fallback.h       |   5 +-
+ .../base/firmware_loader/fallback_platform.c  |  16 +-
+ drivers/base/firmware_loader/firmware.h       |   7 +-
+ drivers/base/firmware_loader/main.c           | 143 ++++++++++---
+ drivers/firmware/efi/embedded-firmware.c      |  21 +-
+ drivers/firmware/efi/embedded-firmware.h      |  19 ++
+ fs/Makefile                                   |   3 +-
+ fs/exec.c                                     | 132 +-----------
+ fs/kernel_read_file.c                         | 189 ++++++++++++++++++
+ include/linux/efi_embedded_fw.h               |  13 --
+ include/linux/firmware.h                      |  12 ++
+ include/linux/fs.h                            |  39 ----
+ include/linux/ima.h                           |  19 +-
+ include/linux/kernel_read_file.h              |  55 +++++
+ include/linux/lsm_hook_defs.h                 |   6 +-
+ include/linux/lsm_hooks.h                     |  12 ++
+ include/linux/security.h                      |  19 +-
+ kernel/kexec.c                                |   2 +-
+ kernel/kexec_file.c                           |  19 +-
+ kernel/module.c                               |  24 ++-
+ lib/test_firmware.c                           | 159 +++++++++++++--
+ security/integrity/digsig.c                   |   8 +-
+ security/integrity/ima/ima_fs.c               |  10 +-
+ security/integrity/ima/ima_main.c             |  70 +++++--
+ security/integrity/ima/ima_policy.c           |   1 +
+ security/loadpin/loadpin.c                    |  17 +-
+ security/security.c                           |  26 ++-
+ security/selinux/hooks.c                      |   8 +-
+ .../selftests/firmware/fw_filesystem.sh       |  91 +++++++++
+ tools/testing/selftests/firmware/settings     |   8 +
+ tools/testing/selftests/kselftest/runner.sh   |   6 +-
+ 32 files changed, 860 insertions(+), 318 deletions(-)
+ create mode 100644 drivers/firmware/efi/embedded-firmware.h
+ create mode 100644 fs/kernel_read_file.c
+ create mode 100644 include/linux/kernel_read_file.h
+ create mode 100644 tools/testing/selftests/firmware/settings
+
 -- 
-2.27.0
+2.25.1
 
