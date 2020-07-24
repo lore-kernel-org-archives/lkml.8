@@ -7,32 +7,31 @@ X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0010C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D86FC20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C75B2068F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:41:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgGXIk2 (ORCPT
+        id S1726989AbgGXIlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:40:28 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37376 "EHLO
+        Fri, 24 Jul 2020 04:41:15 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:37428 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgGXIk2 (ORCPT
+        with ESMTP id S1726591AbgGXIlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:40:28 -0400
+        Fri, 24 Jul 2020 04:41:14 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9BB161C0BD7; Fri, 24 Jul 2020 10:40:26 +0200 (CEST)
-Date:   Fri, 24 Jul 2020 10:40:25 +0200
+        id 4E5861C0BD2; Fri, 24 Jul 2020 10:41:13 +0200 (CEST)
+Date:   Fri, 24 Jul 2020 10:41:12 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     dmitry.torokhov@gmail.com, corbet@lwn.net,
-        linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
+To:     dledford@redhat.com, jgg@ziepe.ca, linux-rdma@vger.kernel.org,
         linux-kernel@vger.kernel.org, trivial@kernel.org
-Subject: [PATCH] Input: fix typo in function name documentation
-Message-ID: <20200724084025.GB31930@amd>
+Subject: [PATCH] RDMA/mlx5: fix typo in structure name
+Message-ID: <20200724084112.GC31930@amd>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
+        protocol="application/pgp-signature"; boundary="VywGB/WGlW4DM4P8"
 Content-Disposition: inline
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -41,46 +40,30 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---dTy3Mrz/UPE2dbVg
+--VywGB/WGlW4DM4P8
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Fix non-existing constant in documentation.
+This is user API, but likely noone uses it...? Fix it before it
+becomes problem.
 
 Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
 
-diff --git a/Documentation/input/uinput.rst b/Documentation/input/uinput.rst
-index b8e90b6a126c..10c62e62a0a6 100644
---- a/Documentation/input/uinput.rst
-+++ b/Documentation/input/uinput.rst
-@@ -99,7 +99,7 @@ the sake of simplicity.
+
+diff --git a/include/uapi/rdma/mlx5_user_ioctl_cmds.h b/include/uapi/rdma/m=
+lx5_user_ioctl_cmds.h
+index 8e316ef896b5..2d889df38df6 100644
+--- a/include/uapi/rdma/mlx5_user_ioctl_cmds.h
++++ b/include/uapi/rdma/mlx5_user_ioctl_cmds.h
+@@ -259,7 +259,7 @@ enum mlx5_ib_create_flow_attrs {
+ 	MLX5_IB_ATTR_CREATE_FLOW_FLAGS,
+ };
 =20
-       /*
-        * Give userspace some time to read the events before we destroy the
--       * device with UI_DEV_DESTOY.
-+       * device with UI_DEV_DESTROY.
-        */
-       sleep(1);
-=20
-@@ -164,7 +164,7 @@ mouse.
-=20
-       /*
-        * Give userspace some time to read the events before we destroy the
--       * device with UI_DEV_DESTOY.
-+       * device with UI_DEV_DESTROY.
-        */
-       sleep(1);
-=20
-@@ -233,7 +233,7 @@ but interact with uinput via ioctl calls, or use libevd=
-ev.
-=20
-       /*
-        * Give userspace some time to read the events before we destroy the
--       * device with UI_DEV_DESTOY.
-+       * device with UI_DEV_DESTROY.
-        */
-       sleep(1);
+-enum mlx5_ib_destoy_flow_attrs {
++enum mlx5_ib_destroy_flow_attrs {
+ 	MLX5_IB_ATTR_DESTROY_FLOW_HANDLE =3D (1U << UVERBS_ID_NS_SHIFT),
+ };
 =20
 
 --=20
@@ -88,16 +71,16 @@ ev.
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---dTy3Mrz/UPE2dbVg
+--VywGB/WGlW4DM4P8
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAl8annkACgkQMOfwapXb+vKE0ACgrmVjmgkfwf/Bsou77RWZSpSq
-ZD4AnAo1MRXrFQwA1dmO4MjoZar8aG4q
-=m7Ea
+iEYEARECAAYFAl8anqgACgkQMOfwapXb+vJDugCfaYsiuj7DNwprSvQEpcgL6Ny3
+ZI0An1SzQHO9yKKHkQOGUCxPcJlZh9JZ
+=fHM/
 -----END PGP SIGNATURE-----
 
---dTy3Mrz/UPE2dbVg--
+--VywGB/WGlW4DM4P8--
