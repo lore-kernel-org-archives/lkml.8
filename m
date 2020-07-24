@@ -2,149 +2,98 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06C4C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7EC2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:21:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="g6icLpl2"
+	by mail.kernel.org (Postfix) with ESMTP id D5E432074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595593311;
+	bh=pKwG7sz23Jh8BAXh9JAwkl7Df1oVbQNtNUXu8orqNB0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LfHfcCclfWHRkfpxK6KgswmgNeIezcdZ37qn4EurPjVTN7V2ELwpMtx+B19NhH06t
+	 b/6ebnpC4bVYHYvBM/T3O2s7vXhZOPMZcLbgVcwXchiuRkF6Zr0qlEGg7QOSW1UhR2
+	 VMcKT33zFBYBJkmPOHwtnkdkjuT8ytmk7uchAqEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgGXMVM (ORCPT
+        id S1726730AbgGXMVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:21:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbgGXMVL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:21:11 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C3EC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 05:21:11 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id q17so4334325pls.9
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 05:21:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=C2/h5UjeFskvfl8RWhRF+RA8gCVrQiaw+gKjZeYALgY=;
-        b=g6icLpl22LF2yOH4Jey3EDzEKeK33r0xxY/XYlASaeu5H8vv+AB0UTt84LL36sHaQz
-         O0BMqkAXohsZ1bIRdtXpuCP7E+R+UH0mZIdTvB96LTMoC6V0+848/F0lM5TS+YdHliqh
-         934WCQcfywmAhp7xcddThNCHptNNQLnbfsX90PAlELWvnJMU2lSORTDweKJdwKCqjmvB
-         O904lZ2vZoZTLCNob6Qz2vlMMDOEjjPZjH4+RIR1PQt8ngYFZScy4T0TbFmyerEicPrj
-         AU/lDzD0omTuSMpsM0yKvkf1IJHCZ0+YQb+jBJNLLd+CRzrK41Z/DEh/QZmx7r+hLlvb
-         Yr2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=C2/h5UjeFskvfl8RWhRF+RA8gCVrQiaw+gKjZeYALgY=;
-        b=uVdjOTyIF+h09/cjMnSCRm4l+pxtYjunQm+2zNDZHrdmWMbtMF7IvIPYXi6pbnxEA1
-         75zocmPdOcSLY0b6s3QOieveEtQ4vbrz5xvbrf/2LeiC3gSr2PI17ZahjLAgcDYYL/TT
-         O96oRuOgPMTYHvfM8aJU0FX4BdQH67tRkL2u9oTGY+mfqDo6J3h8StGyzjjqTror4SA9
-         XztS3Pp/+nxg93DoPYbPS7vacadxAFHl74m0K8+6PMcBPbSN90w3wZ046Leaivp7T3rP
-         wop5Ff1k1mHzeMmNMXd4aqZX/ek/676JY7kXyTc7ZPk8LKpOcA+5rTaQTDU5kaFQtTsz
-         R7zg==
-X-Gm-Message-State: AOAM532hdxBgSU0D05lddNCgiffkP41bBpDJVHvorwyn+FXCtEeTOShS
-        Q69FDzy2DJ6pczYMXGy4hY8y6g==
-X-Google-Smtp-Source: ABdhPJy9n1m+7gbI5xbxjzWVy7KzIaWQzWQKFwoxokZQFjaDtAZ37o0Mou+xAob6CZtUkTVsJvG//A==
-X-Received: by 2002:a17:90a:20ad:: with SMTP id f42mr4993812pjg.96.1595593270849;
-        Fri, 24 Jul 2020 05:21:10 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
-        by smtp.gmail.com with ESMTPSA id p9sm6334855pja.4.2020.07.24.05.21.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Jul 2020 05:21:10 -0700 (PDT)
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-X-Google-Original-From: Kaaira Gupta <Kaairakgupta@es.iitr.ac.in>
-Date:   Fri, 24 Jul 2020 17:51:04 +0530
-To:     Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH v2 0/3] media: vimc: Allow multiple capture devices to
- use the same sensor
-Message-ID: <20200724122104.GA18482@kaaira-HP-Pavilion-Notebook>
-References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
- <20200724121521.GA2705690@oden.dyn.berto.se>
+        Fri, 24 Jul 2020 08:21:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726258AbgGXMVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 08:21:50 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 711D520737;
+        Fri, 24 Jul 2020 12:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595593310;
+        bh=pKwG7sz23Jh8BAXh9JAwkl7Df1oVbQNtNUXu8orqNB0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eGqQpuA/nsqH8Q973vZszR/rnh/Gp5nGlYXQ1nr618nI+UDrFjh+iwCE+FtDhHtRJ
+         H67R5n7U58FQi2AGdugQWmDDzk2TcDK2M2m4cyNXW3rxp+zb/RBBASKxXMfWLB7b+v
+         6SUBkDL9SMis3R1e/0A2t/1yCCJx3dM7P8ExrEcY=
+Date:   Fri, 24 Jul 2020 13:21:34 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Wen Su <wen.su@mediatek.com>
+Subject: Re: [PATCH 5/8] regulator: mt6359: Add support for MT6359 regulator
+Message-ID: <20200724122134.GD5664@sirena.org.uk>
+References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1595509133-5358-6-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xB0nW4MQa6jZONgY"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200724121521.GA2705690@oden.dyn.berto.se>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1595509133-5358-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Cookie: You will wish you hadn't.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 02:15:21PM +0200, Niklas Söderlund wrote:
-Hi,
 
-> Hi Kaaira,
-> 
-> Thanks for your work.
+--xB0nW4MQa6jZONgY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for yours :D
+On Thu, Jul 23, 2020 at 08:58:50PM +0800, Hsin-Hsiung Wang wrote:
+> From: Wen Su <wen.su@mediatek.com>
+>=20
+> The MT6359 is a regulator found on boards based on MediaTek MT6779 and
+> probably other SoCs. It is a so called pmic and connects as a slave to
+> SoC using SPI, wrapped inside the pmic-wrapper.
 
-> 
-> On 2020-07-24 17:32:10 +0530, Kaaira Gupta wrote:
-> > This is version 2 of the patch series posted by Niklas for allowing
-> > multiple streams in VIMC.
-> > The original series can be found here:
-> > https://patchwork.kernel.org/cover/10948831/
-> > 
-> > This series adds support for two (or more) capture devices to be 
-> > connected to the same sensors and run simultaneously. Each capture device 
-> > can be started and stopped independent of each other.
-> > 
-> > Patch 1/3 and 2/3 deals with solving the issues that arises once two 
-> > capture devices can be part of the same pipeline. While 3/3 allows for 
-> > two capture devices to be part of the same pipeline and thus allows for 
-> > simultaneously use.
-> 
-> I'm just curious if you are aware of this series? It would replace the 
-> need for 1/3 and 2/3 of this series right?
+Acked-by: Mark Brown <broonie@kernel.org>
 
-v3 of this series replaces the need for 1/3, but not the current version
-(ie v4). v4 of patch 2/5 removes the stream_counter that is needed to
-keep count of the calls to s_stream. Hence 1/3 becomes relevant again.
+--xB0nW4MQa6jZONgY
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> 1.  https://lore.kernel.org/linux-media/20200522075522.6190-1-dafna.hirschfeld@collabora.com/
-> 
-> > 
-> > Changes since v1:
-> > 	- All three patches rebased on latest media-tree.
-> > 	Patch 3:
-> > 	- Search for an entity with a non-NULL pipe instead of searching
-> > 	  for sensor. This terminates the search at output itself.
-> > 
-> > Kaaira Gupta (3):
-> >   media: vimc: Add usage count to subdevices
-> >   media: vimc: Serialize vimc_streamer_s_stream()
-> >   media: vimc: Join pipeline if one already exists
-> > 
-> >  .../media/test-drivers/vimc/vimc-capture.c    | 35 ++++++++++++++++++-
-> >  .../media/test-drivers/vimc/vimc-debayer.c    |  8 +++++
-> >  drivers/media/test-drivers/vimc/vimc-scaler.c |  8 +++++
-> >  drivers/media/test-drivers/vimc/vimc-sensor.c |  9 ++++-
-> >  .../media/test-drivers/vimc/vimc-streamer.c   | 23 +++++++-----
-> >  5 files changed, 73 insertions(+), 10 deletions(-)
-> > 
-> > -- 
-> > 2.17.1
-> > 
-> 
-> -- 
-> Regards,
-> Niklas Söderlund
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8a0k4ACgkQJNaLcl1U
+h9Du2gf/U/MC+yoZc1bEJJ7ZixaCMK6ZSIJlbMh6RlAKO1kQAQhLz9i3yinQPaai
+p8cRi3iERLnXzA3RxbvtG/Tq8JOSXZ6PjCVxjHp8OHmc+WMOb63rivRx4fyEzFj3
+FzQJWg7RxoBiJOQQm0dx0KPd0Di4ITh6UxA7jSGtQVVdkI24V/D+Hb47KeZGlOxt
+6awjyRSsyRgrwh686lJq9hinUieKmcyASf8ZnKuDUzqlI4FMC6xsz86/YGwKB82N
+m38XL/zdOMGDDC8yWdAkyn1PWKqgfYa9B3qkAUheivyiXWy1+6sN4UQ59cHoO2+B
+Z7DhweBclspPwW6xEE8Ts/MNL/TlvQ==
+=pp/5
+-----END PGP SIGNATURE-----
+
+--xB0nW4MQa6jZONgY--
