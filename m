@@ -2,146 +2,79 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F60FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D98A9206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF5C2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:31:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Utl4iStv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RHYIU2tM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgGXXbR (ORCPT
+        id S1726728AbgGXXbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 19:31:17 -0400
-Received: from mga06.intel.com ([134.134.136.31]:20826 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726493AbgGXXbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 19:31:17 -0400
-IronPort-SDR: +hp2JxRF9s3cqWeXPIctuQ/3ZwL9CZ1Yu9D9uuihaQIHIigyNvxvft2+U07yiNk8b0+AploN+w
- ze+I8tiAcP0w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="212335271"
-X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="212335271"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 16:31:16 -0700
-IronPort-SDR: vM3hI6y3HwRn5mpCP4pGqF4nVH6OqOUYGJY1CTQX0RM/7wvssCZ6X2+GqfOyotb4deRWrvhyqZ
- sz6OQUzxz+AA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="329064042"
-Received: from assenmac-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.38.15])
-  by orsmga007.jf.intel.com with ESMTP; 24 Jul 2020 16:31:13 -0700
-Date:   Sat, 25 Jul 2020 02:31:12 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
-Subject: Re: [PATCH v4 3/7] vmalloc: Add text_alloc() and text_free()
-Message-ID: <20200724233112.GA1903189@linux.intel.com>
-References: <20200717030422.679972-1-jarkko.sakkinen@linux.intel.com>
- <20200717030422.679972-4-jarkko.sakkinen@linux.intel.com>
- <20200718162359.GA2919062@kernel.org>
- <20200723222835.GC12405@linux.intel.com>
- <20200724101302.GF927924@kernel.org>
+        Fri, 24 Jul 2020 19:31:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41168 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726503AbgGXXbk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 19:31:40 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595633499;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=s86KpX4gEQp9O8JUTp5Kv2QZ3KmBoiheWWny0AIVQrw=;
+        b=Utl4iStvmks4F/x7c50zDmwxsxqWfC484X/c1aGEriQJUQXjdCrez7GOHMCyOooB4JdNQw
+        Q8CsNfQVInlbev77cIGJj1lbIXC7PNymbSD0G8pvUhlCr8uZw3Zyd71GIQLo0ID6waEJ7O
+        7CLBPgcOrpsUhUXJ4EzP6pvBDUFhUij++AxDYqCcRkz/qtt9MLPWos6+8m6wuxvIxV5gFU
+        +Gp+8mJspSLC/uLFw+3J5YGd14jgjMa1v7BObs+OzA404xzYcCFZxp7uHimoXpeFKUVBIh
+        UgADjIeLRF1EwUx7Uxg87uewNLCuZumecSXZ5IhX2P6PhRjCh4RIGKwCZoNdsQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595633499;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=s86KpX4gEQp9O8JUTp5Kv2QZ3KmBoiheWWny0AIVQrw=;
+        b=RHYIU2tMmbWTK4xQgazmPFYe+Wy35hX0U5R04s9JQHcDADlWTPeZwld4q7THZGfX8ZZjnT
+        Gp/SOjSSCx+k0oBQ==
+To:     jun qian <qianjun.kernel@gmail.com>
+Cc:     kernel test robot <lkp@intel.com>, peterz@infradead.org,
+        will@kernel.org, luto@kernel.org, linux-kernel@vger.kernel.org,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Yafang Shao <laoar.shao@gmail.com>, lkp@lists.01.org
+Subject: Re: [Softirq] a76eadba0d: WARNING:at_net/mac80211/rx.c:#ieee80211_rx_napi[mac80211]
+In-Reply-To: <CAKc596Lp3m3Ny9joOckYPsR5Lmok978bceMYNBrzsk6ozFjqhw@mail.gmail.com>
+References: <20200723091715.GL19262@shao2-debian> <87v9iexztl.fsf@nanos.tec.linutronix.de> <CAKc596KA2moT7fgO+Ount5trEbtrYsuLbde5S5Ou-c4EQbHb3g@mail.gmail.com> <874kpyxpro.fsf@nanos.tec.linutronix.de> <CAKc596Lp3m3Ny9joOckYPsR5Lmok978bceMYNBrzsk6ozFjqhw@mail.gmail.com>
+Date:   Sat, 25 Jul 2020 01:31:37 +0200
+Message-ID: <87y2n8sd5y.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724101302.GF927924@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 01:13:02PM +0300, Mike Rapoport wrote:
-> On Fri, Jul 24, 2020 at 01:28:35AM +0300, Jarkko Sakkinen wrote:
-> > On Sat, Jul 18, 2020 at 07:23:59PM +0300, Mike Rapoport wrote:
-> > > On Fri, Jul 17, 2020 at 06:04:17AM +0300, Jarkko Sakkinen wrote:
-> > > > Introduce functions for allocating memory for dynamic trampolines, such
-> > > > as kprobes. An arch can promote the availability of these functions with
-> > > > CONFIG_ARCH_HAS_TEXT_ALLOC. Provide default/fallback implementation
-> > > > wrapping module_alloc() and module_memfree().
-> > > > 
-> > > > Cc: Andi Kleen <ak@linux.intel.com>
-> > > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > > > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > > ---
-> > > >  include/linux/vmalloc.h | 23 +++++++++++++++++++++++
-> > > >  1 file changed, 23 insertions(+)
-> > > > 
-> > > > diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-> > > > index 0221f852a7e1..e981436e30b6 100644
-> > > > --- a/include/linux/vmalloc.h
-> > > > +++ b/include/linux/vmalloc.h
-> > > > @@ -9,6 +9,7 @@
-> > > >  #include <asm/page.h>		/* pgprot_t */
-> > > >  #include <linux/rbtree.h>
-> > > >  #include <linux/overflow.h>
-> > > > +#include <linux/moduleloader.h>
-> > > >  
-> > > >  #include <asm/vmalloc.h>
-> > > >  
-> > > > @@ -249,4 +250,26 @@ pcpu_free_vm_areas(struct vm_struct **vms, int nr_vms)
-> > > >  int register_vmap_purge_notifier(struct notifier_block *nb);
-> > > >  int unregister_vmap_purge_notifier(struct notifier_block *nb);
-> > > >  
-> > > > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > > > +/*
-> > > > + * Allocate memory to be used for dynamic trampoline code.
-> > > > + */
-> > > > +void *text_alloc(unsigned long size);
-> > > > +
-> > > > +/*
-> > > > + * Free memory returned from text_alloc().
-> > > > + */
-> > > > +void text_free(void *region);
-> > > > +#else
-> > > > +static inline void *text_alloc(unsigned long size)
-> > > > +{
-> > > > +	return module_alloc(size);
-> > > > +}
-> > > > +
-> > > > +static inline void text_free(void *region)
-> > > > +{
-> > > > +	module_memfree(region);
-> > > > +}
-> > > 
-> > > Using module_alloc() as the default implementation of generic
-> > > text_alloc() does not sound right to me.
-> > > 
-> > > I would suggest rename module_alloc() to text_alloc() on x86, as Peter
-> > > proposed and then add text_alloc_kprobes() that can be overridden by the
-> > > architectures. x86 could use text_alloc(), arm64 vmalloc() with options
-> > > of their choice and the fallback would remain module_alloc(). Something
-> > > like (untested) patch below:
-> > 
-> > I'm not exactly sure which of the below is relevant as the patch set
-> > includes the exact same changes with maybe different phrasing:
-> 
-> The difference in parsing is what differentiates semantically clean code
-> from duct tape.
-> 
-> As several people pointed out, a single text_alloc(), and apprently a
-> single ARCH_HAS_TEXT_ALLOC, would not fit all architectures and some
-> ground work required to implement a generic text allocation.
-> 
-> Your patch works aroung this for x86 with broken semantics of
-> text_alloc() when ARCH_HAS_TEXT_ALLOC is not defined.
-> 
-> My suggestion does not make text_alloc() a special case of
-> module_alloc() but rather makes text_alloc_kprobes() to fallback to
-> module_alloc() when architecture does not provide its implementation.
+jun qian <qianjun.kernel@gmail.com> writes:
+> I have two questions that need to be discussed.
+>
+> 1. If the __do_sofrirq() is executed in the ksoftirqd, we may not need
+> to check the timeout in the loop.
+> 2. Both the invoke_softirq() and run_ksoftirqd()  will execute
+> __do_sofirq, they all execute the same code=EF=BC=8C
+>     when it is in the ksoftirqd, Do we need to wake up ksoftirqd in
+> the process context according to
+>     max_restart and MAX_SOFTIRQ_TIME. In my opinion, If we  use a flag
+> to distinguish where
+>     __do_softirq() is called from,  we can do what is most suitable
+> for __do_softirq based on this flag.
 
-OK, I see your point now. I'll response in detail to v5 comments.
-
-Thank you.
-
-/Jarkko
+You answered your questions yourself :)
