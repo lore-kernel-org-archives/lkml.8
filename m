@@ -7,52 +7,56 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2696C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC53C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6EDD207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A592074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 08:33:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Yy8gCai4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="53aniql/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xgkUTPzr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qP9gi512"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgGXIdn (ORCPT
+        id S1727014AbgGXIdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 04:33:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36370 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbgGXIdl (ORCPT
+        Fri, 24 Jul 2020 04:33:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbgGXIdn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 04:33:41 -0400
-Date:   Fri, 24 Jul 2020 08:33:38 -0000
+        Fri, 24 Jul 2020 04:33:43 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728A3C0619D3;
+        Fri, 24 Jul 2020 01:33:43 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 08:33:41 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595579619;
+        s=2020; t=1595579622;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=m6Edkp5FBuAdovy3WyQMTLkLFvlqav69MN4qwipEjBM=;
-        b=Yy8gCai44vaBbM1Vz9ZkLYUxyY+jibf8u+G6iT+wkEoic/O3gYvyooeE8iJnYsE/zhIcRT
-        GjvnuKZF0ySpvi4KFRnlUG6354aWduzx2sxWJxpG4Ocmk1+N6TlpIxtiVNpB+TMJTT89YE
-        /VAS5bRsGzXZaakyQcrbprMdnIpVAvK7zsGtfzXl++dzygsyEKm72s1nthVt2EllgzRFzg
-        KDCDioOAEc0NamElx1mNBwmfRxY1P2eybxFJBz1odBkdj+eSl4DR+bUDfT26gUGP79LtHZ
-        Gy+/DDpg2we5emNz6Is8M3nh3+O31MPncAoYCGItyONH9aU2JRPMxzRmrm/d7A==
+        bh=XIfdTQ0SH/I/FUZCCxK2Os2s0+nVpnC71kDMnXL/T7I=;
+        b=xgkUTPzrASf8gLh+Xe2kiWFwWOQyr9Dq+NIdbXKy+5yiC53iNHg/94hTbc8bShylPf9IxV
+        sRm4EiehIvwm/u409ch8XVqngr7TqkqXvk/nGR3hDtKif+wHTvdtAZ8g7PyHr/3LYVp6c6
+        NYrvN7Us2sbsFvDyOx2cu8G0fHfw8U7W2HyDiACqRXmWQROWa8gdckNOhoegyYUi+L9QqB
+        H8sU+L2HqM7xgKjhN7gpBjBDCsg0vM2GjcLEbU1lwg6Rn4veomH8q19i1h8bbk3wJf8Y+K
+        EJ+jmJYnZ3bZbzzmUwHfFwCaeITNq4mcg4ADmR9ZXqnR8oFQd39MaKwcTuHhyg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595579619;
+        s=2020e; t=1595579622;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=m6Edkp5FBuAdovy3WyQMTLkLFvlqav69MN4qwipEjBM=;
-        b=53aniql/EwpS++1YZE1+OHcu7Iq8X6MjWXYb9tPOzdl/F7ZqGocpd0a8IzpaH131aBK3Vf
-        JR9DQVU+kkRNEECg==
+        bh=XIfdTQ0SH/I/FUZCCxK2Os2s0+nVpnC71kDMnXL/T7I=;
+        b=qP9gi512JJL2d+EFgwqbd4Hf77GGRr41Xc3CB7KJBs6CbJBMcHjqtkAhj7U8nXLUZYZqh4
+        iWFejFhI1tFfZGCg==
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/fifo] sched: Remove sched_setscheduler*() EXPORTs
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+Subject: [tip: sched/fifo] sched,locktorture: Convert to sched_set_fifo()
+Cc:     paulmck@kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <159557961866.4006.6136834931450240430.tip-bot2@tip-bot2>
+Message-ID: <159557962125.4006.13758962058893410842.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -64,47 +68,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/fifo branch of tip:
 
-Commit-ID:     616d91b68cd56bcb1954b6a5af7d542401fde772
-Gitweb:        https://git.kernel.org/tip/616d91b68cd56bcb1954b6a5af7d542401fde772
+Commit-ID:     93db9129fa4beb78e2227554d237e8db04ca514c
+Gitweb:        https://git.kernel.org/tip/93db9129fa4beb78e2227554d237e8db04ca514c
 Author:        Peter Zijlstra <peterz@infradead.org>
 AuthorDate:    Tue, 21 Apr 2020 12:09:13 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Mon, 15 Jun 2020 14:10:25 +02:00
+CommitterDate: Mon, 15 Jun 2020 14:10:24 +02:00
 
-sched: Remove sched_setscheduler*() EXPORTs
+sched,locktorture: Convert to sched_set_fifo()
 
-Now that nothing (modular) still uses sched_setscheduler(), remove the
-exports.
+Because SCHED_FIFO is a broken scheduler model (see previous patches)
+take away the priority field, the kernel can't possibly make an
+informed decision.
 
+Effectively changes prio from 99 to 50.
+
+Cc: paulmck@kernel.org
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/sched/core.c | 3 ---
- 1 file changed, 3 deletions(-)
+ kernel/locking/locktorture.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 40d3939..f882d3d 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5135,13 +5135,11 @@ int sched_setscheduler(struct task_struct *p, int policy,
- {
- 	return _sched_setscheduler(p, policy, param, true);
- }
--EXPORT_SYMBOL_GPL(sched_setscheduler);
+diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
+index 5efbfc6..fca41a7 100644
+--- a/kernel/locking/locktorture.c
++++ b/kernel/locking/locktorture.c
+@@ -436,8 +436,6 @@ static int torture_rtmutex_lock(void) __acquires(torture_rtmutex)
  
- int sched_setattr(struct task_struct *p, const struct sched_attr *attr)
+ static void torture_rtmutex_boost(struct torture_random_state *trsp)
  {
- 	return __sched_setscheduler(p, attr, true, true);
- }
--EXPORT_SYMBOL_GPL(sched_setattr);
+-	int policy;
+-	struct sched_param param;
+ 	const unsigned int factor = 50000; /* yes, quite arbitrary */
  
- int sched_setattr_nocheck(struct task_struct *p, const struct sched_attr *attr)
- {
-@@ -5166,7 +5164,6 @@ int sched_setscheduler_nocheck(struct task_struct *p, int policy,
- {
- 	return _sched_setscheduler(p, policy, param, false);
+ 	if (!rt_task(current)) {
+@@ -448,8 +446,7 @@ static void torture_rtmutex_boost(struct torture_random_state *trsp)
+ 		 */
+ 		if (trsp && !(torture_random(trsp) %
+ 			      (cxt.nrealwriters_stress * factor))) {
+-			policy = SCHED_FIFO;
+-			param.sched_priority = MAX_RT_PRIO - 1;
++			sched_set_fifo(current);
+ 		} else /* common case, do nothing */
+ 			return;
+ 	} else {
+@@ -462,13 +459,10 @@ static void torture_rtmutex_boost(struct torture_random_state *trsp)
+ 		 */
+ 		if (!trsp || !(torture_random(trsp) %
+ 			       (cxt.nrealwriters_stress * factor * 2))) {
+-			policy = SCHED_NORMAL;
+-			param.sched_priority = 0;
++			sched_set_normal(current, 0);
+ 		} else /* common case, do nothing */
+ 			return;
+ 	}
+-
+-	sched_setscheduler_nocheck(current, policy, &param);
  }
--EXPORT_SYMBOL_GPL(sched_setscheduler_nocheck);
  
- /*
-  * SCHED_FIFO is a broken scheduler model; that is, it is fundamentally
+ static void torture_rtmutex_delay(struct torture_random_state *trsp)
