@@ -2,91 +2,85 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB42C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB2EC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A652A206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFC22070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:49:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OVdocFiJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgGXWnr (ORCPT
+        id S1726618AbgGXWtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 18:43:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40038 "EHLO
+        Fri, 24 Jul 2020 18:49:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgGXWnq (ORCPT
+        with ESMTP id S1726274AbgGXWte (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 18:43:46 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27EDEC0619D3;
-        Fri, 24 Jul 2020 15:43:46 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7C0081274F734;
-        Fri, 24 Jul 2020 15:26:58 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 15:43:42 -0700 (PDT)
-Message-Id: <20200724.154342.1433271593505001306.davem@davemloft.net>
-To:     hch@lst.de
-Cc:     kuba@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, edumazet@google.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: Re: get rid of the address_space override in setsockopt v2
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200723060908.50081-1-hch@lst.de>
-References: <20200723060908.50081-1-hch@lst.de>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 24 Jul 2020 15:26:59 -0700 (PDT)
+        Fri, 24 Jul 2020 18:49:34 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BBE5C0619D3;
+        Fri, 24 Jul 2020 15:49:34 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id f12so11453592eja.9;
+        Fri, 24 Jul 2020 15:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ruy2+B9ZZKH4K6WjRKkPrWIIYd3py0bPMSuod75K2xg=;
+        b=OVdocFiJ3RunCCxhcQyhF1JxaPYTN52ibTYsTQVyKg7pDxB7rspwF+lt9dc70gDacK
+         w+caEqA5XVQ87C5Fx8cyphtZgDZggqme7c1YK9RzCt611B5PzZV7fbNDf1E+w84ejSsD
+         /RUD0YHYS88ecsYQPhBDQmFKMeL3C6hWxSbA4Kz5azHoZ+ivtS2UC6gf77/HaH4OpnB8
+         4xRtpv1IcbvVHWiRSRqsXr5zyesuEgR2MPJonelH++tQuOxsN4BlJJ/Pcz4Mn1SgL5iE
+         0BH2quN/DfL97zTvwiZRttoIGfFMiJGjCIaVclfkv4nIqgE79Hmey5k9JKfbgjKtmeCX
+         ledA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ruy2+B9ZZKH4K6WjRKkPrWIIYd3py0bPMSuod75K2xg=;
+        b=s03POVoRI0n/DlH4xB2uC2Abp3AUgJbiLF8vLUJCOrWJ4whz+6JMyrQBikR5Wip9qx
+         p1qenlZVjbZlJ8fS3OzuBo8PsNxlEbUYO/qDGGAFMmaurcEdhFN+VDuZlK5c9vhZ/A0z
+         y70ZK3+FXYlulGsdu54Vb6ivLm91xm8P+cbpBg8BvQ6Ciyub0ST2COCkUPbc+XeF/Tw7
+         OIv5Ge0xBJyFAxRzMMwrAEm/51L7BWlmBuZn0O50+Je4WyIbU0L2mxFqmqzx62t7HHA5
+         uSZtv8iD0eOJFvhY3rcZcwHVUJqfMJk1S4YKsGMQGHubyTLtzgM9CbTleinj2K/qb2+Y
+         98Tw==
+X-Gm-Message-State: AOAM533so+n8bK31ONviDn8HVadxo2jMGOeG/WG2EAJ15Eiw04qKZgYZ
+        3FTGMB6LoaNCuYkzgNLHEMAXouGARbGsXre5h3s=
+X-Google-Smtp-Source: ABdhPJy5TKAFOGKYV5rdBfG7ETfl4Br479kihtuWYEdoj1AtvocztuLNqhM2LdQk5RdTaNnDHorCfmenJcZMA2qBVTA=
+X-Received: by 2002:a17:906:b787:: with SMTP id dt7mr10649901ejb.320.1595630972919;
+ Fri, 24 Jul 2020 15:49:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200724213659.273599-1-martin.botka1@gmail.com>
+ <20200724220516.GA21965@amd> <CADQ2G_Fvyyh6-foswczkQgX54rH6oH-m8xyS6Qp2yS6D5L4Q9A@mail.gmail.com>
+ <20200724223252.GC21965@amd>
+In-Reply-To: <20200724223252.GC21965@amd>
+From:   Martin Botka <martin.botka1@gmail.com>
+Date:   Sat, 25 Jul 2020 00:48:58 +0200
+Message-ID: <CADQ2G_FD6CuexZ2NBWnNnh_rLRDtZj4_Jzwt673CDB75z-6ZXg@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/6] Add QCOM pwm-lpg and tri-led drivers
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
-Date: Thu, 23 Jul 2020 08:08:42 +0200
+> First copy was ok. Second had broken formatting. Both were plaintext
+> AFAICT.
 
-> setsockopt is the last place in architecture-independ code that still
-> uses set_fs to force the uaccess routines to operate on kernel pointers.
-> 
-> This series adds a new sockptr_t type that can contained either a kernel
-> or user pointer, and which has accessors that do the right thing, and
-> then uses it for setsockopt, starting by refactoring some low-level
-> helpers and moving them over to it before finally doing the main
-> setsockopt method.
-> 
-> Note that apparently the eBPF selftests do not even cover this path, so
-> the series has been tested with a testing patch that always copies the
-> data first and passes a kernel pointer.  This is something that works for
-> most common sockopts (and is something that the ePBF support relies on),
-> but unfortunately in various corner cases we either don't use the passed
-> in length, or in one case actually copy data back from setsockopt, or in
-> case of bpfilter straight out do not work with kernel pointers at all.
-> 
-> Against net-next/master.
-> 
-> Changes since v1:
->  - check that users don't pass in kernel addresses
->  - more bpfilter cleanups
->  - cosmetic mptcp tweak
-
-Series applied to net-next, I'm build testing and will push this out when
-that is done.
-
-Thanks.
+It's just that gmail was telling me that it didn't send it to some of
+the email addresses because i forgot to check the "Use plain text" in
+Gmail.
