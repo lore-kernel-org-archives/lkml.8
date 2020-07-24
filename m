@@ -2,147 +2,92 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29ACAC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FF6C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08A7F206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C9A206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfk3nWLE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SW92s/n0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgGXT7N (ORCPT
+        id S1726739AbgGXT74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:59:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgGXT7N (ORCPT
+        Fri, 24 Jul 2020 15:59:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45166 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726562AbgGXT7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:59:13 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A107C0619D3;
-        Fri, 24 Jul 2020 12:59:13 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id z3so5801306pfn.12;
-        Fri, 24 Jul 2020 12:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ojcIGO5CAmQ/rrq3+7bdIsRlDzBj1PpBf4wdlTsiCVU=;
-        b=mfk3nWLENugUYagFhxmELMHoOTUIn/A7K/vwYma1v2c3qSpl3bbf2wnRqIoRkdwURt
-         tpmZQmiLo+oIhcO+ejFiJvmA6DjMKJ25+tr8RbFJ6dQTqIf+HG3Fv4IbmYcryGHInhN7
-         cb0YAqAgwiuF/DiZ4swgSz1ZO5lukWreuAh25vWLrkDuF5JHyXM5QEFsMb2Vaaf5bB/L
-         5UVRKeyjUfzr3HfUjp76JlxdGriEp1WGz1Er3vRqYTABJ5RIg7X6h/KbRNo2iHA7S1HW
-         yriVXTNhE7uc8T0JrZIDufremMwv1dYJKeagrOkgV6vT0LOLtmkP2FKxid+hAr5FWsaE
-         RCyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ojcIGO5CAmQ/rrq3+7bdIsRlDzBj1PpBf4wdlTsiCVU=;
-        b=YYBbV3ox6If19NEGMVQX173VJNadsuwFH2OaVKw4T5M7Q0wePrtzK9S6oWJlUlpsMG
-         az90Bi0iiPw5tYbN0Qwxp7E7PV+igQ2SQumKSnOR8QHoycONXx/sMxHoLfrpKK/A/eSH
-         J7hhkbMXs+iw/pP4fHoYkX8iUJZGvyH1QbWaHoT9oeYxqF9yyPC3mATsQBXD7dL3hj7w
-         1NdLmfK1p5Y6kdf/ENnxhxTBLRmiQ+3WGo2hyw/RDddn/g8IL+JBDrkJPpqf7Befack5
-         8vtuT5c1w9yXKtdD60gcY2NiO0h7ncdOh2iZrPncP+amtTJ3zRNmhJSCY519Bl8Jk5z0
-         Jrgw==
-X-Gm-Message-State: AOAM532oR3pDf3SbQaQfGLzd7AC5keHykAly+N8RyjVjwdU0QAF0IINp
-        gruQSSiQ/ahOWh0A6oA8ZcjxKtQRCZuO+BRm6o0=
-X-Google-Smtp-Source: ABdhPJzW0BnWPjCjo818a0nVFHioJ4MmyYZx5d7bur507VD2Ys2Lwlt2ZZbqUxL0/XPIYyiVpBtNW0u8uFVUMC4+ROM=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr10141215pgi.203.1595620752921;
- Fri, 24 Jul 2020 12:59:12 -0700 (PDT)
+        Fri, 24 Jul 2020 15:59:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595620794;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5Y8DAU+5pPrSS4jiBjfZlFxrk4Ru03nSwBoI5HcfmaE=;
+        b=SW92s/n04ZFXZGKc7YHSxEMQT/21vjCt5/CF+3nNHWEWGCWpSlvHuXmbnKliRpsIf8sN4O
+        z2hHA0vkzmaeeJdLCCQWr81cbAwHSzKIFAJwx2ACnvPUSmqSHAs3rWv3DnLcUeuVln2mTv
+        iHUfc24hcZLpRcHpnvvtFvll5jJ5TeY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-vs8mvubXOWuU2pZDAJAw5A-1; Fri, 24 Jul 2020 15:59:51 -0400
+X-MC-Unique: vs8mvubXOWuU2pZDAJAw5A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9D88800688;
+        Fri, 24 Jul 2020 19:59:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 37E9F76210;
+        Fri, 24 Jul 2020 19:59:46 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wjnQArU_BewVKQgYHy2mQD6LNKC5kkKXOm7GpNkJCapQg@mail.gmail.com>
+References: <CAHk-=wjnQArU_BewVKQgYHy2mQD6LNKC5kkKXOm7GpNkJCapQg@mail.gmail.com> <159559628247.2141315.2107013106060144287.stgit@warthog.procyon.org.uk> <159559630912.2141315.16186899692832741137.stgit@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian@brauner.io>,
+        Jeff Layton <jlayton@redhat.com>, Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/4] watch_queue: Implement mount topology and attribute change notifications
 MIME-Version: 1.0
-References: <1595513168-11965-1-git-send-email-srinivas.neeli@xilinx.com>
- <1595513168-11965-3-git-send-email-srinivas.neeli@xilinx.com>
- <CAHp75Vd7BU5DYqyQFGfBtKrb6jWFEQjMCu2MOa_7M8XYkt6BFA@mail.gmail.com> <DM6PR02MB53867D532A3298BE06E32B86AF770@DM6PR02MB5386.namprd02.prod.outlook.com>
-In-Reply-To: <DM6PR02MB53867D532A3298BE06E32B86AF770@DM6PR02MB5386.namprd02.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 24 Jul 2020 22:58:56 +0300
-Message-ID: <CAHp75VeFE3b4mpvkQifuC5WPkTk9RUQy4yM8jTQXtrfNWRmDXA@mail.gmail.com>
-Subject: Re: [PATCH V2 2/3] gpio: xilinx: Add interrupt support
-To:     Srinivas Neeli <sneeli@xilinx.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michals@xilinx.com>,
-        Shubhrajyoti Datta <shubhraj@xilinx.com>,
-        Srinivas Goud <sgoud@xilinx.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        git <git@xilinx.com>, Robert Hancock <hancock@sedsystems.ca>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2189055.1595620785.1@warthog.procyon.org.uk>
+Date:   Fri, 24 Jul 2020 20:59:45 +0100
+Message-ID: <2189056.1595620785@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 8:15 PM Srinivas Neeli <sneeli@xilinx.com> wrote:
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-...
+> So now you can basically allocate as much kernel memory as you want as
+> a regular user, as long as you have a mounted directory you can walk
+> (ie everybody).
+> 
+> Is there any limiting of watches anywhere? I don't see it.
 
-> > > +#include <linux/irqchip/chained_irq.h>
-> >
-> > Not sure I see a user of it.
-> >
-> > ...
-> we are using chained_irq_enter() and chained_irq_exit()
-> APIs , so need "chained_irq.h"
+That's a good point.  Any suggestions on how to do it?  An additional RLIMIT?
 
-I see.  But gpio/driver.h does it for you.
+Or should I do it like I did with keyrings and separately manage a quota for
+each user?
 
-...
+David
 
-> > > +       for (index = 0; index < num_channels; index++) {
-> > > +               if ((status & BIT(index))) {
-> >
-> > If gpio_width is the same among banks, you can use for_each_set_bit()
-> > here as well.
-> >
-> > ...
-> gpio_wdith vary depends on design. We can configure gpio pins for each bank.
-
-I see.
-
-...
-
-> > > +       chip->irq = platform_get_irq_optional(pdev, 0);
-> > > +       if (chip->irq <= 0) {
-> > > +               dev_info(&pdev->dev, "GPIO IRQ not set\n");
-> >
-> > Why do you need an optional variant if you print an error anyway?
->
-> Here intention is just printing a debug message to user.
-
-Debug message should be debug, and not info. But in any case, I would
-rather drop it, or use platform_get_irq() b/c now you have a code
-controversy.
-
-...
-
-> > > +               chip->gc.irq.parents = (unsigned int *)&chip->irq;
-> > > +               chip->gc.irq.num_parents = 1;
-> >
-> > Current pattern is to use devm_kcalloc() for it (Linus has plans to
-> > simplify this in the future and this will help him to find what
-> > patterns are being used)
->
-> I didn't get this , Could you please explain more.
-
-              girq->num_parents = 1;
-              girq->parents = devm_kcalloc(dev, girq->num_parents, ...);
-   if (!girq->parents)
-     return -ENOMEM;
-
-girq->parents[0] = chip->irq;
-
-Also, use temporary variable for IRQ chip structure:
- girq = &chip->gc.irq;
-
-
--- 
-With Best Regards,
-Andy Shevchenko
