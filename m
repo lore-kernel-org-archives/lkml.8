@@ -6,72 +6,86 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FA3C433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49260C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA21206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9C9206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 14:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595601453;
-	bh=Y3rRNtfg71nMx6qz6rx66JXD55K1Y0yFf+scRNRURBs=;
+	s=default; t=1595601460;
+	bh=vvXRFf9DR9prMCJTMjWUgfZ40QqlI5frl3EKxELfXEw=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=Uu2d3SVqvAPoKCkWP/OMSV/RGR3CFalXSqOhZg3XXt2zi58RELXlq23uYPIWYk0HX
-	 HO8dkm/j78+z1DOU2YupO0hZbGUu5vz2spvnlv4a1+xirS7SfRKuUCufZYb0Cq3IjX
-	 /oEQpnecHc6eyXi0uyO96hTwSy8C0Hkz4+zZESAQ=
+	b=WF7fw6L2LR7kZ2EDVFukn+Gv+W3LxCjwL+OiaBRIVMvJsG5TzQfiYmNf4Z9BK3D7V
+	 qCd+WHSE3gCBS9TIA2vHnBAH7/PmPhsJ/QLKjdEyvHa3+C/GTlnIfzvRUqz3r3od2r
+	 Ehjd5+ZahBFzS9oy/e4QshpM7YwLjACv460L06p0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbgGXOhc (ORCPT
+        id S1726931AbgGXOhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 10:37:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54322 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 10:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726366AbgGXOhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 10:37:32 -0400
+        id S1726366AbgGXOhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 10:37:38 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 542FF20674;
-        Fri, 24 Jul 2020 14:37:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15C7F2065C;
+        Fri, 24 Jul 2020 14:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595601451;
-        bh=Y3rRNtfg71nMx6qz6rx66JXD55K1Y0yFf+scRNRURBs=;
+        s=default; t=1595601457;
+        bh=vvXRFf9DR9prMCJTMjWUgfZ40QqlI5frl3EKxELfXEw=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=ZAlWr5O+XTfG91n0rqwmKp3rshphbA6EIBLmuQCyb8izj8jCMReYWja4yrnPq6RYd
-         tcrzxLEoNG6tNr+r9BYGi93QBbwbJscxNs1A5nxmIqgTjor/Mewkq9ihkkhFtf3eYP
-         QihSAcIqt3ewMLFv2S61Lz0msGDRp+q7xneMvyRc=
-Date:   Fri, 24 Jul 2020 15:37:16 +0100
+        b=ccmTg/hZvx3U8RIzCUDQcVoSBByBY/eBTr19sIwu3Ve24JomDxPRzOMMNyRAxtdXv
+         7yDzKKt87pZIQMa2tq1gxB2Utmp0l/pPxgm3m6WQMebl+DkhWBKUHPcedTFYNb2DY4
+         b2+U1imNTH4E1J2Bfg5MLMoRUkqdkIBf5UNjnDY0=
+Date:   Fri, 24 Jul 2020 15:37:22 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200723142020.1338740-1-jbrunet@baylibre.com>
-References: <20200723142020.1338740-1-jbrunet@baylibre.com>
-Subject: Re: [PATCH] ASoC: soc-component: don't report of_xlate_dai_name failures
-Message-Id: <159560143160.13017.4077278524631889799.b4-ty@kernel.org>
+To:     Vladimir Zapolskiy <vz@mleia.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>
+In-Reply-To: <20200724005013.23278-1-vz@mleia.com>
+References: <20200724005013.23278-1-vz@mleia.com>
+Subject: Re: [PATCH] regulator: fix memory leak on error path of regulator_register()
+Message-Id: <159560144247.13250.1416101687025192776.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jul 2020 16:20:20 +0200, Jerome Brunet wrote:
-> With commit e2329eeba45f ("ASoC: soc-component: add soc_component_err()")
-> every error different for ENOTSUPP or EPROBE_DEFER will log an error.
+On Fri, 24 Jul 2020 03:50:13 +0300, Vladimir Zapolskiy wrote:
+> The change corrects registration and deregistration on error path
+> of a regulator, the problem was manifested by a reported memory
+> leak on deferred probe:
 > 
-> However, as explained in snd_soc_get_dai_name(), this callback may error
-> to indicate that the DAI is not matched by the component tested. If the
-> device provides other components, those may still match. Logging an error
-> in this case is misleading.
+>     as3722-regulator as3722-regulator: regulator 13 register failed -517
+> 
+>     # cat /sys/kernel/debug/kmemleak
+>     unreferenced object 0xecc43740 (size 64):
+>       comm "swapper/0", pid 1, jiffies 4294937640 (age 712.880s)
+>       hex dump (first 32 bytes):
+>         72 65 67 75 6c 61 74 6f 72 2e 32 34 00 5a 5a 5a  regulator.24.ZZZ
+>         5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a  ZZZZZZZZZZZZZZZZ
+>       backtrace:
+>         [<0c4c3d1c>] __kmalloc_track_caller+0x15c/0x2c0
+>         [<40c0ad48>] kvasprintf+0x64/0xd4
+>         [<109abd29>] kvasprintf_const+0x70/0x84
+>         [<c4215946>] kobject_set_name_vargs+0x34/0xa8
+>         [<62282ea2>] dev_set_name+0x40/0x64
+>         [<a39b6757>] regulator_register+0x3a4/0x1344
+>         [<16a9543f>] devm_regulator_register+0x4c/0x84
+>         [<51a4c6a1>] as3722_regulator_probe+0x294/0x754
+>         ...
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/1] ASoC: soc-component: don't report of_xlate_dai_name failures
-      commit: cc4d8cebbf2a1239aab71a8077fbe20f24ec2165
+[1/1] regulator: fix memory leak on error path of regulator_register()
+      commit: 9177514ce34902b3adb2abd490b6ad05d1cfcb43
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
