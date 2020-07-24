@@ -2,110 +2,93 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9FAC433F7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A1AC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A77C020748
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D612920748
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="X2ifo8xu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Nl3t6cYn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgGXKrx (ORCPT
+        id S1727051AbgGXKrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:47:53 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51618 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727058AbgGXKrj (ORCPT
+        Fri, 24 Jul 2020 06:47:35 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:59560 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgGXKrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:47:39 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06OAhunt008149;
-        Fri, 24 Jul 2020 12:47:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=i7ijBgfYqNtevxO1Vk+gug8GMNkBspZO4mB3AYmj0Vc=;
- b=X2ifo8xuH8k5gEjgHA/y/GDf4IswT3Z4Uj/vlLyurmxaqSeXqF7PDdJTUlN5qF/WALDX
- v1lNwS5A+MZ61Emtwz5ZHL+C7AccMk3UGIFAo+A/Yqud+uzLEbakZ+bjB1tUyqpVxQ/F
- zjFksVMsJTZjLcaGv1wvZXn7NVc4BF78tYYxTobpaSUmrAMnpfapblSs272ylfzcG+RQ
- rqnVrMH4HKHNxTJ5O4BlkDObTMO6Ds6EuHo8z+HfmivlRqS8ZT3r5crrUO6sHUfjSBKW
- ii7wVrEPab/39bsOQmVNCDXXJDfA+sGdm47BhNXtz+kevhmEbJSG85nslO/g21boAagZ Tg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bsfpys0n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 12:47:19 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 99576100034;
-        Fri, 24 Jul 2020 12:47:18 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8B6802A4D71;
-        Fri, 24 Jul 2020 12:47:18 +0200 (CEST)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 Jul 2020 12:47:18
- +0200
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 2/3] dt-bindings: usb: dwc2: add optional usb-role-switch property
-Date:   Fri, 24 Jul 2020 12:47:10 +0200
-Message-ID: <20200724104711.5474-3-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200724104711.5474-1-amelie.delaunay@st.com>
-References: <20200724104711.5474-1-amelie.delaunay@st.com>
+        Fri, 24 Jul 2020 06:47:35 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OAlVP0035225;
+        Fri, 24 Jul 2020 10:47:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=V7UTj6pGG4terJJFtG5oz1kiiwdHooz6JHEg0pNxRUA=;
+ b=Nl3t6cYnYWP4Kq47QXM2ueSYx80KTMZlb3CIaZIzRxyVZEeY1wSt7C5NdiN48YwH34PH
+ Zjqx7+LpBedvfrKxboy52mpRRzf6YGJdaKLD41SRgyxOX0byiM0z4TsDpnWhVVlg8ky9
+ CzHnftHKUF9MzjoIz1g+B42UR0ZBVZubK4NeEa5V0F/I69zxuew5q0bTy/y3SFzVnpBq
+ zW4uTznQHxJZ5VqXGGoUZbzRC5LJcVOEKgmyTZtYaKyxy9FNQagw9Bp4LbdOLC6WuryZ
+ zqpL87PNTFY9nrpNg4RtRaiOcEM5r4YOHLjrHggm6s0xpamGSSaA5X16OGx4J2WugmVT 9A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 32bs1mxf8t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Jul 2020 10:47:31 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OAgROR014698;
+        Fri, 24 Jul 2020 10:45:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 32fsr74pn7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jul 2020 10:45:31 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06OAjUjr030696;
+        Fri, 24 Jul 2020 10:45:30 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 24 Jul 2020 10:45:29 +0000
+Date:   Fri, 24 Jul 2020 13:45:24 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Muhammad Usama Anjum <musamaanjum@gmail.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: octeon: Indent with tabs instead of spaces
+Message-ID: <20200724104524.GT2549@kadam>
+References: <20200722171950.GA6176@PKL-UANJUM-LT.pkl.mentorg.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-24_03:2020-07-24,2020-07-24 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200722171950.GA6176@PKL-UANJUM-LT.pkl.mentorg.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ bulkscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007240081
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1011
+ spamscore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007240082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch documents the usb-role-switch property in dwc2 bindings, now
-that usb-role-switch support is available in dwc2 driver.
+On Wed, Jul 22, 2020 at 10:19:50PM +0500, Muhammad Usama Anjum wrote:
+> Remove a coding style error. It makes code more readable.
+> 
+> Signed-off-by: Muhammad Usama Anjum <musamaanjum@gmail.com>
+> ---
 
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
-New since v2 patchset.
----
- Documentation/devicetree/bindings/usb/dwc2.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+This isn't a part of the official style guide so the original is fine.
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
-index 9352a8ef60a6..7b226eeffe82 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.yaml
-+++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
-@@ -100,6 +100,10 @@ properties:
-   dr_mode:
-     enum: [host, peripheral, otg]
- 
-+  usb-role-switch:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: Support role switch.
-+
-   g-rx-fifo-size:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description: size of rx fifo size in gadget mode.
--- 
-2.17.1
+regards,
+dan carpenter
 
