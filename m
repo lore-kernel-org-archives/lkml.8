@@ -2,109 +2,140 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553F6C433F2
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CDFC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ACF42074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FCB52074B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:40:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zqdOy/Qv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUIxZHAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgGXMiY (ORCPT
+        id S1726607AbgGXMkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:38:24 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37261 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726892AbgGXMiQ (ORCPT
+        Fri, 24 Jul 2020 08:40:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbgGXMkh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:38:16 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06OCbAbb009760;
-        Fri, 24 Jul 2020 14:37:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=6UtDwAv3qeKN8/V4iakuFjxlVazOXqhLBzSsC4gvvww=;
- b=zqdOy/QvNklM6AW+mN788x7uBwT8sikiSgT0JxlV+O1ZVAccLT+ioS5QtuoYihE+k6fo
- HLM8tTMxetJAqOEjMxAmmKEAhIOLc1YWZboDkv0pfER2G5sLpWL6g2dWX+vkq3bxNO1M
- HOrkZnDw7AbZki+tM2sNk2ELaFsB6IRBsaM/fu3ue68KhTrXhVTeDzjddqyTbdysHeUw
- MjN+uUklAiSY0n+FkRZiLQTDw7hbAORXB3enq2qSuJiACM6ESlm0LUTLwbyTpMQYRIQu
- Y3pT0BpUF1iOzzfKEhlOn5VWZYgfUEKpe92CZq5fyPewyM2950j6H5Occe0QbBn0q715 +g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32bs6vg3g6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Jul 2020 14:37:54 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B85B0100034;
-        Fri, 24 Jul 2020 14:37:53 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A460A2AF334;
-        Fri, 24 Jul 2020 14:37:53 +0200 (CEST)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 24 Jul 2020 14:37:53
- +0200
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/4] dt-bindings: usb: dwc2: add optional usb-role-switch property
-Date:   Fri, 24 Jul 2020 14:37:45 +0200
-Message-ID: <20200724123748.25369-2-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200724123748.25369-1-amelie.delaunay@st.com>
-References: <20200724123748.25369-1-amelie.delaunay@st.com>
+        Fri, 24 Jul 2020 08:40:37 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B8D5C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 05:40:37 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id q5so8177256wru.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 05:40:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QxrC7srIn644JnxZvKZ6CAG4zZpgCwirCY+CCIdJm7s=;
+        b=RUIxZHAJwfFR/SWIIq5sARO+ZVI91NxfVEwDuAIyxMc4FFDGfKuPXPcTjLRrawUz5T
+         JOLP3yG2i6iK6X+JEWG5Mr/S/wFLkRIMHBhH8cjunC0bdW9D+kkT5yzQj/s1EbD1WQ0d
+         Izb0CuHVEHJAqsOaSDZrivMu34x2NZZ4oOnXyLRVW/csm24sIPQJMcZFtAfGeR5v6j4i
+         Sx5Z2z77fukerHtERYPhILwWBIDiIUH+HeNk0KNGlvEQF3T4Z0hyTpwzsJjxkn+nMrqT
+         1idDhwaf1ZFu0TnWp4ilbXL2p9bFFveeMTcv7LutBHv5y7zzmDWe31T3TneLPcSlA9+h
+         xNYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QxrC7srIn644JnxZvKZ6CAG4zZpgCwirCY+CCIdJm7s=;
+        b=PmRKpDUbzxOlMXN6n2elX7wxXF/NKl6WuivinakqaznrzqogUl13cVxmxnnnOZI8Pj
+         NU3PeFNOOCd3ivHcXlcRDSx/S/fAgGx/BF4ACO2afM1RebVfFmKtMX9SYBUd2aXek+eQ
+         sFA0tnu2tkIz8Rm1he9OC5Ix2SNNIYF8nfkgllIi7Nftzj3iwOhWHNi1809PbvLvbdk+
+         flXc4r4EExt25vi/QO476XOPWkrk3fo25qPVSIh8scODBEKkhNwT3Oo1rZKLQyA4Usc0
+         PVsDdql2YxKAyEaAeL6a1ZvmDMgnGtATB2YbUjSWkwGqeq7cyELbXcrru465PggNJXuA
+         nqOw==
+X-Gm-Message-State: AOAM531FmY8ZLrx9t6//jvH3/6oULT9upBxtuFEPT8FGsD9hCQGtEuBR
+        2An1KV++oNC0qflaphVohidlACkMF36DpnaIu2I=
+X-Google-Smtp-Source: ABdhPJwHu4H6yeatS6mWn7YpmMc3Ks5DurPCbQ9atoAsPrbXiJE9vljBZf5TDlWsfo4Y/4e8yJCIF8ksxKiRtgeRcOw=
+X-Received: by 2002:adf:97d3:: with SMTP id t19mr8015728wrb.138.1595594435777;
+ Fri, 24 Jul 2020 05:40:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-24_04:2020-07-24,2020-07-24 signatures=0
+References: <20200723233853.48815-1-humjb_1983@163.com> <CAKfTPtCnewaivay7bftUY27+-qB=ct3eSNEoZW=-2Z6k0S4B4Q@mail.gmail.com>
+ <CAPJCdBnv4W5+u6OZ4vbAdJ2U8ubhfAU7+Zt0JUFjfxKEDuGJSw@mail.gmail.com>
+ <CAKfTPtCXXGEDNG+YxBbRG4vFK1+ig5EBzntmyTxr7MbQw-Q7MA@mail.gmail.com>
+ <CAPJCdBm=FJp8K1SubXP4Rfa-POr8hDh320faE+4Cjcjk3BL1JQ@mail.gmail.com> <20200724123644.GA634690@gmail.com>
+In-Reply-To: <20200724123644.GA634690@gmail.com>
+From:   Jiang Biao <benbjiang@gmail.com>
+Date:   Fri, 24 Jul 2020 20:40:24 +0800
+Message-ID: <CAPJCdBk6qqPi3sgQZdESuERCWHQsc=Vy37nQVSA58EfR2zj2+A@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: consider sched-idle CPU when selecting idle core
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Jiang Biao <humjb_1983@163.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiang Biao <benbjiang@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch documents the usb-role-switch property in dwc2 bindings, now
-that usb-role-switch support is available in dwc2 driver.
+On Fri, 24 Jul 2020 at 20:36, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Jiang Biao <benbjiang@gmail.com> wrote:
+>
+> > On Fri, 24 Jul 2020 at 18:34, Vincent Guittot
+> > <vincent.guittot@linaro.org> wrote:
+> > >
+> > > On Fri, 24 Jul 2020 at 10:12, Jiang Biao <benbjiang@gmail.com> wrote:
+> > > >
+> > > > On Fri, 24 Jul 2020 at 15:24, Vincent Guittot
+> > > > <vincent.guittot@linaro.org> wrote:
+> > > > >
+> > > > > On Fri, 24 Jul 2020 at 01:39, Jiang Biao <humjb_1983@163.com> wrote:
+> > > > > >
+> > > > > > From: Jiang Biao <benbjiang@tencent.com>
+> > > > > >
+> > > > > > Sched-idle CPU has been considered in select_idle_cpu and
+> > > > > > select_idle_smt, it also needs to be considered in select_idle_core to
+> > > > > > be consistent and keep the same *idle* policy.
+> > > > >
+> > > > > In the case of select_idle_core, we are looking for a core that is
+> > > > > fully idle but if one CPU of the core is running a sched_idle task,
+> > > > > the core will not be idle and we might end up having  the wakeup task
+> > > > > on a CPU and a sched_idle task on another CPU of the core which is not
+> > > > > what we want
+> > > > Got it. sched_idle task may interfere its sibling, which brings me
+> > > > another question,
+> > > > If there's a core with smt1 running sched_idle task and smt2 idle,
+> > > > selecting smt1
+> > > > rather than smt2 should be more helpful for wakee task, because wakee task
+> > > > could suppress the sched_idle task without neighbour interfering.
+> > >
+> > > But the sched_idle will then probably quickly move on the idle smt2
+> > >
+> > > > And there seems to be no consideration about that currently.
+> > > > Is it worth improving that?
+> > >
+> > > This will complexify and extend the duration of the search loop  and
+> > > as mentioned above, it will most probably be a nop at the end because
+> > > of sched_idle task moving on smt2
+> > Indeed, the complexity is not worth.
+> > Thanks for the explanation.
+>
+> BTW., if you disagree then you could add a bit of debug
+> instrumentation to measure to what extent it's a nop at the end of the
+> search loop, to turn the "most probably" statement into a specific
+> number.
+>
+> Thanks,
+>
+>         Ingo
+Ok, I'll try.
+Thanks for your reply.
 
-Fixes: bc0f0d4a5853 ("usb: dwc2: override PHY input signals with usb role switch support")
-Reported-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- Documentation/devicetree/bindings/usb/dwc2.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
-index 9352a8ef60a6..7b226eeffe82 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.yaml
-+++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
-@@ -100,6 +100,10 @@ properties:
-   dr_mode:
-     enum: [host, peripheral, otg]
- 
-+  usb-role-switch:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: Support role switch.
-+
-   g-rx-fifo-size:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description: size of rx fifo size in gadget mode.
--- 
-2.17.1
-
+Regards,
+Jiang
