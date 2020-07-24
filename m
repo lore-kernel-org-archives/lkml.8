@@ -2,576 +2,94 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_75_100,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C429FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABACC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94A712065F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595596026;
-	bh=o5cHKS2N7Yat/vhTQEFhlq6AuLEDO57KoGc18xJvPFM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l9uE7d5fEYj0AA2B/8u50SRBQQCNoDYCgBMe2bAfWaFk1gRRF9ml+amISmuFLEXad
-	 EYoW0XkVMT8YZhP8KiTFQeJTiUAw/DZetyMWnbRfm0xWcpr0X4zepuJdpa0nU/InTP
-	 BUooFdNn9YVagsi7pwUARTNm/Jnr7LRvUOVq4eT4=
+	by mail.kernel.org (Postfix) with ESMTP id 49BFB2065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgGXNHF (ORCPT
+        id S1726804AbgGXNJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:07:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbgGXNHC (ORCPT
+        Fri, 24 Jul 2020 09:09:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35926 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbgGXNJ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:07:02 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA79C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:07:00 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id v18so1573228ejb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:07:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/Gqf4cAzo4SSUOYykEqHCXnvd7aGjic8OGmJ7BF7EI8=;
-        b=mwKCuvveZ04m2ZjyGqN5vcGuqlk6EaOxkkwdGla1+chpbM6yoHuLfshqQbXgBPto7g
-         ccfM5ioz3a2vcQy42IDxdOZwLw4ehuThiCZKoK4jHRHRTIbzUt0eoBeefKVm4HDEOZdS
-         yodl4lh7ETDZ9i5e1mDs4vRJg5K6rGQYx/FQt217eYppkkf0PeUm391AyqLxdwDI5w1Z
-         vGmrF5tv8FDhqAP1WtH09UpLual6y66YmRGR1FLZgQhG7gX56pJC0oAlpPiCOujmUhA1
-         gnYFz2MKTo2VGmKRgg++uhb0b7i8h967GRPk5jGPTHa6rqUuriOlyMyo8C4hhqfWBB3k
-         Bs/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=/Gqf4cAzo4SSUOYykEqHCXnvd7aGjic8OGmJ7BF7EI8=;
-        b=H4v/72YLL9Yj+OMriU+mxs1Vflsssar2uZuEk2LY/0br/UCjUVkK5QfAMeY1wgp35W
-         i1LA38jbmEYA80PyFRoH3kOaVYp1lH3oWRTbqWb33+MtK/NUesFAQHwQcXCNJ/yLjg+y
-         8ArongMfL37Uo8QhXp9soqxhyPpccZoMWJ0yyOijYDwHsA+JrT/SvfEmebJwHJoRGhuv
-         4lUZfaAXl5PXPfCtOuotnNzNQ2yCVSf+HfECaaNo0OQaWdu9JaL0y8cMQGb8/iS2zI+m
-         cE1BhpVwJb1mB/iUj8doBeEDnxVtlE7ha5pFwynaPzJH2+5h2VrWpQnmSd4wRCrp0nXP
-         p6xg==
-X-Gm-Message-State: AOAM533CPUehCTNi0t45f1oF5xFFzgLnr7N87+jD3ddhFTgWHDk+uZQ3
-        Z5Cj80hd2pCHjturhiryHEGqkPqF
-X-Google-Smtp-Source: ABdhPJwXmDQt+dOsqmrvSAvSRDS7fN8f4DtzXSqrFgKsUMXTl8NDriGoEKEWwBlXiQDPCUatMl+faQ==
-X-Received: by 2002:a17:907:1114:: with SMTP id qu20mr9443724ejb.41.1595596018803;
-        Fri, 24 Jul 2020 06:06:58 -0700 (PDT)
-Received: from localhost.localdomain (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id y7sm678201edq.25.2020.07.24.06.06.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 06:06:58 -0700 (PDT)
-From:   Ingo Molnar <mingo@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: [PATCH 1/1] x86/defconfigs: Refresh defconfig files
-Date:   Fri, 24 Jul 2020 15:06:38 +0200
-Message-Id: <20200724130638.645844-2-mingo@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200724130638.645844-1-mingo@kernel.org>
-References: <20200724130638.645844-1-mingo@kernel.org>
+        Fri, 24 Jul 2020 09:09:27 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jyxRv-0004tR-PI; Fri, 24 Jul 2020 13:09:19 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][V2] sctp: remove redundant initialization of variable status
+Date:   Fri, 24 Jul 2020 14:09:19 +0100
+Message-Id: <20200724130919.18497-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make a 'make savedefconfig' pass over our main defconfig files,
-which keeps the defconfig result the same, but compresses
-the file where defaults were changed or options removed.
+From: Colin Ian King <colin.king@canonical.com>
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org
+The variable status is being initialized with a value that is never read
+and it is being updated later with a new value.  The initialization is
+redundant and can be removed.  Also put the variable declarations into
+reverse christmas tree order.
+
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 ---
- arch/x86/configs/i386_defconfig   | 91 +++++++++++-------------------
- arch/x86/configs/x86_64_defconfig | 93 +++++++++++--------------------
- 2 files changed, 62 insertions(+), 122 deletions(-)
 
-diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
-index 3a2a89882350..d7577fece9eb 100644
---- a/arch/x86/configs/i386_defconfig
-+++ b/arch/x86/configs/i386_defconfig
-@@ -1,39 +1,29 @@
--# CONFIG_64BIT is not set
- # CONFIG_LOCALVERSION_AUTO is not set
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
-+CONFIG_AUDIT=y
-+CONFIG_NO_HZ=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_PREEMPT_VOLUNTARY=y
- CONFIG_BSD_PROCESS_ACCT=y
- CONFIG_TASKSTATS=y
- CONFIG_TASK_DELAY_ACCT=y
- CONFIG_TASK_XACCT=y
- CONFIG_TASK_IO_ACCOUNTING=y
--CONFIG_FHANDLE=y
--CONFIG_AUDIT=y
--CONFIG_NO_HZ=y
--CONFIG_HIGH_RES_TIMERS=y
- CONFIG_LOG_BUF_SHIFT=18
- CONFIG_CGROUPS=y
-+CONFIG_CGROUP_SCHED=y
- CONFIG_CGROUP_FREEZER=y
- CONFIG_CPUSETS=y
- CONFIG_CGROUP_CPUACCT=y
--CONFIG_CGROUP_SCHED=y
- CONFIG_BLK_DEV_INITRD=y
- # CONFIG_COMPAT_BRK is not set
- CONFIG_PROFILING=y
--CONFIG_KPROBES=y
--CONFIG_JUMP_LABEL=y
--CONFIG_MODULES=y
--CONFIG_MODULE_UNLOAD=y
--CONFIG_MODULE_FORCE_UNLOAD=y
- CONFIG_SMP=y
- CONFIG_X86_GENERIC=y
- CONFIG_HPET_TIMER=y
--CONFIG_SCHED_SMT=y
--CONFIG_PREEMPT_VOLUNTARY=y
- CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y
--CONFIG_X86_MCE=y
- CONFIG_X86_REBOOTFIXUPS=y
--CONFIG_MICROCODE=y
- CONFIG_MICROCODE_AMD=y
- CONFIG_X86_MSR=y
- CONFIG_X86_CPUID=y
-@@ -41,28 +31,25 @@ CONFIG_HIGHPTE=y
- CONFIG_X86_CHECK_BIOS_CORRUPTION=y
- # CONFIG_MTRR_SANITIZER is not set
- CONFIG_EFI=y
-+CONFIG_EFI_STUB=y
- CONFIG_HZ_1000=y
- CONFIG_KEXEC=y
- CONFIG_CRASH_DUMP=y
--CONFIG_RANDOMIZE_BASE=y
--CONFIG_RANDOMIZE_MEMORY=y
--# CONFIG_COMPAT_VDSO is not set
- CONFIG_HIBERNATION=y
- CONFIG_PM_DEBUG=y
- CONFIG_PM_TRACE_RTC=y
- CONFIG_ACPI_DOCK=y
--CONFIG_CPU_FREQ=y
--# CONFIG_CPU_FREQ_STAT is not set
-+CONFIG_ACPI_BGRT=y
- CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE=y
--CONFIG_CPU_FREQ_GOV_PERFORMANCE=y
- CONFIG_CPU_FREQ_GOV_ONDEMAND=y
- CONFIG_X86_ACPI_CPUFREQ=y
--CONFIG_PCI=y
--CONFIG_PCIEPORTBUS=y
--CONFIG_PCI_MSI=y
--CONFIG_PCCARD=y
--CONFIG_YENTA=y
--CONFIG_HOTPLUG_PCI=y
-+CONFIG_EFI_VARS=y
-+CONFIG_KPROBES=y
-+CONFIG_JUMP_LABEL=y
-+CONFIG_MODULES=y
-+CONFIG_MODULE_UNLOAD=y
-+CONFIG_MODULE_FORCE_UNLOAD=y
-+# CONFIG_UNUSED_SYMBOLS is not set
- CONFIG_BINFMT_MISC=y
- CONFIG_NET=y
- CONFIG_PACKET=y
-@@ -82,16 +69,12 @@ CONFIG_IP_MROUTE=y
- CONFIG_IP_PIMSM_V1=y
- CONFIG_IP_PIMSM_V2=y
- CONFIG_SYN_COOKIES=y
--# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
--# CONFIG_INET_XFRM_MODE_TUNNEL is not set
--# CONFIG_INET_XFRM_MODE_BEET is not set
- # CONFIG_INET_DIAG is not set
- CONFIG_TCP_CONG_ADVANCED=y
- # CONFIG_TCP_CONG_BIC is not set
- # CONFIG_TCP_CONG_WESTWOOD is not set
- # CONFIG_TCP_CONG_HTCP is not set
- CONFIG_TCP_MD5SIG=y
--CONFIG_IPV6=y
- CONFIG_INET6_AH=y
- CONFIG_INET6_ESP=y
- CONFIG_NETLABEL=y
-@@ -102,6 +85,7 @@ CONFIG_NF_CONNTRACK_FTP=y
- CONFIG_NF_CONNTRACK_IRC=y
- CONFIG_NF_CONNTRACK_SIP=y
- CONFIG_NF_CT_NETLINK=y
-+CONFIG_NF_NAT=y
- CONFIG_NETFILTER_XT_TARGET_CONNSECMARK=y
- CONFIG_NETFILTER_XT_TARGET_NFLOG=y
- CONFIG_NETFILTER_XT_TARGET_SECMARK=y
-@@ -109,14 +93,11 @@ CONFIG_NETFILTER_XT_TARGET_TCPMSS=y
- CONFIG_NETFILTER_XT_MATCH_CONNTRACK=y
- CONFIG_NETFILTER_XT_MATCH_POLICY=y
- CONFIG_NETFILTER_XT_MATCH_STATE=y
--CONFIG_NF_CONNTRACK_IPV4=y
- CONFIG_IP_NF_IPTABLES=y
- CONFIG_IP_NF_FILTER=y
- CONFIG_IP_NF_TARGET_REJECT=y
--CONFIG_NF_NAT=y
--CONFIG_IP_NF_TARGET_MASQUERADE=y
-+CONFIG_IP_NF_TARGET_MASQUERADE=m
- CONFIG_IP_NF_MANGLE=y
--CONFIG_NF_CONNTRACK_IPV6=y
- CONFIG_IP6_NF_IPTABLES=y
- CONFIG_IP6_NF_MATCH_IPV6HEADER=y
- CONFIG_IP6_NF_FILTER=y
-@@ -129,6 +110,12 @@ CONFIG_CFG80211=y
- CONFIG_MAC80211=y
- CONFIG_MAC80211_LEDS=y
- CONFIG_RFKILL=y
-+CONFIG_PCI=y
-+CONFIG_PCIEPORTBUS=y
-+CONFIG_PCI_MSI=y
-+CONFIG_HOTPLUG_PCI=y
-+CONFIG_PCCARD=y
-+CONFIG_YENTA=y
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_DEBUG_DEVRES=y
-@@ -170,15 +157,12 @@ CONFIG_8139TOO=y
- # CONFIG_8139TOO_PIO is not set
- CONFIG_R8169=y
- CONFIG_INPUT_POLLDEV=y
--# CONFIG_INPUT_MOUSEDEV_PSAUX is not set
- CONFIG_INPUT_EVDEV=y
- CONFIG_INPUT_JOYSTICK=y
- CONFIG_INPUT_TABLET=y
- CONFIG_INPUT_TOUCHSCREEN=y
- CONFIG_INPUT_MISC=y
--CONFIG_VT_HW_CONSOLE_BINDING=y
- # CONFIG_LEGACY_PTYS is not set
--CONFIG_SERIAL_NONSTANDARD=y
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_8250_NR_UARTS=32
-@@ -187,6 +171,7 @@ CONFIG_SERIAL_8250_MANY_PORTS=y
- CONFIG_SERIAL_8250_SHARE_IRQ=y
- CONFIG_SERIAL_8250_DETECT_IRQ=y
- CONFIG_SERIAL_8250_RSA=y
-+CONFIG_SERIAL_NONSTANDARD=y
- CONFIG_HW_RANDOM=y
- CONFIG_NVRAM=y
- CONFIG_HPET=y
-@@ -201,19 +186,15 @@ CONFIG_DRM_I915=y
- CONFIG_FB_MODE_HELPERS=y
- CONFIG_FB_TILEBLITTING=y
- CONFIG_FB_EFI=y
--# CONFIG_LCD_CLASS_DEVICE is not set
- CONFIG_VGACON_SOFT_SCROLLBACK=y
- CONFIG_LOGO=y
- # CONFIG_LOGO_LINUX_MONO is not set
- # CONFIG_LOGO_LINUX_VGA16 is not set
- CONFIG_SOUND=y
- CONFIG_SND=y
-+CONFIG_SND_HRTIMER=y
- CONFIG_SND_SEQUENCER=y
- CONFIG_SND_SEQ_DUMMY=y
--CONFIG_SND_MIXER_OSS=y
--CONFIG_SND_PCM_OSS=y
--CONFIG_SND_SEQUENCER_OSS=y
--CONFIG_SND_HRTIMER=y
- CONFIG_SND_HDA_INTEL=y
- CONFIG_SND_HDA_HWDEP=y
- CONFIG_HIDRAW=y
-@@ -234,17 +215,14 @@ CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
- CONFIG_USB_MON=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_EHCI_HCD=y
--CONFIG_USB_EHCI_TT_NEWSCHED=y
- CONFIG_USB_OHCI_HCD=y
- CONFIG_USB_UHCI_HCD=y
- CONFIG_USB_PRINTER=y
- CONFIG_USB_STORAGE=y
--CONFIG_EDAC=y
- CONFIG_RTC_CLASS=y
- # CONFIG_RTC_HCTOSYS is not set
- CONFIG_DMADEVICES=y
- CONFIG_EEEPC_LAPTOP=y
--CONFIG_EFI_VARS=y
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
- CONFIG_EXT4_FS_SECURITY=y
-@@ -270,26 +248,19 @@ CONFIG_NLS_CODEPAGE_437=y
- CONFIG_NLS_ASCII=y
- CONFIG_NLS_ISO8859_1=y
- CONFIG_NLS_UTF8=y
-+CONFIG_SECURITY=y
-+CONFIG_SECURITY_NETWORK=y
-+CONFIG_SECURITY_SELINUX=y
-+CONFIG_SECURITY_SELINUX_BOOTPARAM=y
-+CONFIG_SECURITY_SELINUX_DISABLE=y
- CONFIG_PRINTK_TIME=y
--CONFIG_FRAME_WARN=1024
- CONFIG_MAGIC_SYSRQ=y
--# CONFIG_UNUSED_SYMBOLS is not set
- CONFIG_DEBUG_KERNEL=y
-+CONFIG_DEBUG_STACK_USAGE=y
-+CONFIG_DEBUG_STACKOVERFLOW=y
- # CONFIG_SCHED_DEBUG is not set
- CONFIG_SCHEDSTATS=y
--CONFIG_TIMER_STATS=y
--CONFIG_DEBUG_STACK_USAGE=y
- CONFIG_BLK_DEV_IO_TRACE=y
- CONFIG_PROVIDE_OHCI1394_DMA_INIT=y
- CONFIG_EARLY_PRINTK_DBGP=y
--CONFIG_DEBUG_STACKOVERFLOW=y
--# CONFIG_DEBUG_RODATA_TEST is not set
- CONFIG_DEBUG_BOOT_PARAMS=y
--CONFIG_SECURITY=y
--CONFIG_SECURITY_NETWORK=y
--CONFIG_SECURITY_SELINUX=y
--CONFIG_SECURITY_SELINUX_BOOTPARAM=y
--CONFIG_SECURITY_SELINUX_DISABLE=y
--# CONFIG_CRYPTO_ANSI_CPRNG is not set
--CONFIG_EFI_STUB=y
--CONFIG_ACPI_BGRT=y
-diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defconfig
-index 614961009075..f85600143747 100644
---- a/arch/x86/configs/x86_64_defconfig
-+++ b/arch/x86/configs/x86_64_defconfig
-@@ -1,36 +1,26 @@
- # CONFIG_LOCALVERSION_AUTO is not set
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
-+CONFIG_AUDIT=y
-+CONFIG_NO_HZ=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_PREEMPT_VOLUNTARY=y
- CONFIG_BSD_PROCESS_ACCT=y
- CONFIG_TASKSTATS=y
- CONFIG_TASK_DELAY_ACCT=y
- CONFIG_TASK_XACCT=y
- CONFIG_TASK_IO_ACCOUNTING=y
--CONFIG_FHANDLE=y
--CONFIG_AUDIT=y
--CONFIG_NO_HZ=y
--CONFIG_HIGH_RES_TIMERS=y
- CONFIG_LOG_BUF_SHIFT=18
- CONFIG_CGROUPS=y
-+CONFIG_CGROUP_SCHED=y
- CONFIG_CGROUP_FREEZER=y
- CONFIG_CPUSETS=y
- CONFIG_CGROUP_CPUACCT=y
--CONFIG_CGROUP_SCHED=y
- CONFIG_BLK_DEV_INITRD=y
- # CONFIG_COMPAT_BRK is not set
- CONFIG_PROFILING=y
--CONFIG_KPROBES=y
--CONFIG_JUMP_LABEL=y
--CONFIG_MODULES=y
--CONFIG_MODULE_UNLOAD=y
--CONFIG_MODULE_FORCE_UNLOAD=y
- CONFIG_SMP=y
--CONFIG_NR_CPUS=64
--CONFIG_SCHED_SMT=y
--CONFIG_PREEMPT_VOLUNTARY=y
- CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y
--CONFIG_X86_MCE=y
--CONFIG_MICROCODE=y
- CONFIG_MICROCODE_AMD=y
- CONFIG_X86_MSR=y
- CONFIG_X86_CPUID=y
-@@ -38,30 +28,28 @@ CONFIG_NUMA=y
- CONFIG_X86_CHECK_BIOS_CORRUPTION=y
- # CONFIG_MTRR_SANITIZER is not set
- CONFIG_EFI=y
-+CONFIG_EFI_STUB=y
-+CONFIG_EFI_MIXED=y
- CONFIG_HZ_1000=y
- CONFIG_KEXEC=y
- CONFIG_CRASH_DUMP=y
--CONFIG_RANDOMIZE_BASE=y
--CONFIG_RANDOMIZE_MEMORY=y
--# CONFIG_COMPAT_VDSO is not set
- CONFIG_HIBERNATION=y
- CONFIG_PM_DEBUG=y
- CONFIG_PM_TRACE_RTC=y
- CONFIG_ACPI_DOCK=y
--CONFIG_CPU_FREQ=y
--# CONFIG_CPU_FREQ_STAT is not set
-+CONFIG_ACPI_BGRT=y
- CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE=y
--CONFIG_CPU_FREQ_GOV_PERFORMANCE=y
- CONFIG_CPU_FREQ_GOV_ONDEMAND=y
- CONFIG_X86_ACPI_CPUFREQ=y
--CONFIG_PCI=y
--CONFIG_PCI_MMCONFIG=y
--CONFIG_PCIEPORTBUS=y
--CONFIG_PCCARD=y
--CONFIG_YENTA=y
--CONFIG_HOTPLUG_PCI=y
--CONFIG_BINFMT_MISC=y
- CONFIG_IA32_EMULATION=y
-+CONFIG_EFI_VARS=y
-+CONFIG_KPROBES=y
-+CONFIG_JUMP_LABEL=y
-+CONFIG_MODULES=y
-+CONFIG_MODULE_UNLOAD=y
-+CONFIG_MODULE_FORCE_UNLOAD=y
-+# CONFIG_UNUSED_SYMBOLS is not set
-+CONFIG_BINFMT_MISC=y
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_UNIX=y
-@@ -80,16 +68,12 @@ CONFIG_IP_MROUTE=y
- CONFIG_IP_PIMSM_V1=y
- CONFIG_IP_PIMSM_V2=y
- CONFIG_SYN_COOKIES=y
--# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
--# CONFIG_INET_XFRM_MODE_TUNNEL is not set
--# CONFIG_INET_XFRM_MODE_BEET is not set
- # CONFIG_INET_DIAG is not set
- CONFIG_TCP_CONG_ADVANCED=y
- # CONFIG_TCP_CONG_BIC is not set
- # CONFIG_TCP_CONG_WESTWOOD is not set
- # CONFIG_TCP_CONG_HTCP is not set
- CONFIG_TCP_MD5SIG=y
--CONFIG_IPV6=y
- CONFIG_INET6_AH=y
- CONFIG_INET6_ESP=y
- CONFIG_NETLABEL=y
-@@ -100,6 +84,7 @@ CONFIG_NF_CONNTRACK_FTP=y
- CONFIG_NF_CONNTRACK_IRC=y
- CONFIG_NF_CONNTRACK_SIP=y
- CONFIG_NF_CT_NETLINK=y
-+CONFIG_NF_NAT=y
- CONFIG_NETFILTER_XT_TARGET_CONNSECMARK=y
- CONFIG_NETFILTER_XT_TARGET_NFLOG=y
- CONFIG_NETFILTER_XT_TARGET_SECMARK=y
-@@ -107,14 +92,11 @@ CONFIG_NETFILTER_XT_TARGET_TCPMSS=y
- CONFIG_NETFILTER_XT_MATCH_CONNTRACK=y
- CONFIG_NETFILTER_XT_MATCH_POLICY=y
- CONFIG_NETFILTER_XT_MATCH_STATE=y
--CONFIG_NF_CONNTRACK_IPV4=y
- CONFIG_IP_NF_IPTABLES=y
- CONFIG_IP_NF_FILTER=y
- CONFIG_IP_NF_TARGET_REJECT=y
--CONFIG_NF_NAT=y
--CONFIG_IP_NF_TARGET_MASQUERADE=y
-+CONFIG_IP_NF_TARGET_MASQUERADE=m
- CONFIG_IP_NF_MANGLE=y
--CONFIG_NF_CONNTRACK_IPV6=y
- CONFIG_IP6_NF_IPTABLES=y
- CONFIG_IP6_NF_MATCH_IPV6HEADER=y
- CONFIG_IP6_NF_FILTER=y
-@@ -127,6 +109,11 @@ CONFIG_CFG80211=y
- CONFIG_MAC80211=y
- CONFIG_MAC80211_LEDS=y
- CONFIG_RFKILL=y
-+CONFIG_PCI=y
-+CONFIG_PCIEPORTBUS=y
-+CONFIG_HOTPLUG_PCI=y
-+CONFIG_PCCARD=y
-+CONFIG_YENTA=y
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
- CONFIG_DEBUG_DEVRES=y
-@@ -163,15 +150,12 @@ CONFIG_FORCEDETH=y
- CONFIG_8139TOO=y
- CONFIG_R8169=y
- CONFIG_INPUT_POLLDEV=y
--# CONFIG_INPUT_MOUSEDEV_PSAUX is not set
- CONFIG_INPUT_EVDEV=y
- CONFIG_INPUT_JOYSTICK=y
- CONFIG_INPUT_TABLET=y
- CONFIG_INPUT_TOUCHSCREEN=y
- CONFIG_INPUT_MISC=y
--CONFIG_VT_HW_CONSOLE_BINDING=y
- # CONFIG_LEGACY_PTYS is not set
--CONFIG_SERIAL_NONSTANDARD=y
- CONFIG_SERIAL_8250=y
- CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_8250_NR_UARTS=32
-@@ -180,6 +164,7 @@ CONFIG_SERIAL_8250_MANY_PORTS=y
- CONFIG_SERIAL_8250_SHARE_IRQ=y
- CONFIG_SERIAL_8250_DETECT_IRQ=y
- CONFIG_SERIAL_8250_RSA=y
-+CONFIG_SERIAL_NONSTANDARD=y
- CONFIG_HW_RANDOM=y
- # CONFIG_HW_RANDOM_INTEL is not set
- # CONFIG_HW_RANDOM_AMD is not set
-@@ -196,19 +181,15 @@ CONFIG_DRM_I915=y
- CONFIG_FB_MODE_HELPERS=y
- CONFIG_FB_TILEBLITTING=y
- CONFIG_FB_EFI=y
--# CONFIG_LCD_CLASS_DEVICE is not set
- CONFIG_VGACON_SOFT_SCROLLBACK=y
- CONFIG_LOGO=y
- # CONFIG_LOGO_LINUX_MONO is not set
- # CONFIG_LOGO_LINUX_VGA16 is not set
- CONFIG_SOUND=y
- CONFIG_SND=y
-+CONFIG_SND_HRTIMER=y
- CONFIG_SND_SEQUENCER=y
- CONFIG_SND_SEQ_DUMMY=y
--CONFIG_SND_MIXER_OSS=y
--CONFIG_SND_PCM_OSS=y
--CONFIG_SND_SEQUENCER_OSS=y
--CONFIG_SND_HRTIMER=y
- CONFIG_SND_HDA_INTEL=y
- CONFIG_SND_HDA_HWDEP=y
- CONFIG_HIDRAW=y
-@@ -229,12 +210,10 @@ CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
- CONFIG_USB_MON=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_EHCI_HCD=y
--CONFIG_USB_EHCI_TT_NEWSCHED=y
- CONFIG_USB_OHCI_HCD=y
- CONFIG_USB_UHCI_HCD=y
- CONFIG_USB_PRINTER=y
- CONFIG_USB_STORAGE=y
--CONFIG_EDAC=y
- CONFIG_RTC_CLASS=y
- # CONFIG_RTC_HCTOSYS is not set
- CONFIG_DMADEVICES=y
-@@ -242,7 +221,6 @@ CONFIG_EEEPC_LAPTOP=y
- CONFIG_AMD_IOMMU=y
- CONFIG_INTEL_IOMMU=y
- # CONFIG_INTEL_IOMMU_DEFAULT_ON is not set
--CONFIG_EFI_VARS=y
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
- CONFIG_EXT4_FS_SECURITY=y
-@@ -268,27 +246,18 @@ CONFIG_NLS_CODEPAGE_437=y
- CONFIG_NLS_ASCII=y
- CONFIG_NLS_ISO8859_1=y
- CONFIG_NLS_UTF8=y
-+CONFIG_SECURITY=y
-+CONFIG_SECURITY_NETWORK=y
-+CONFIG_SECURITY_SELINUX=y
-+CONFIG_SECURITY_SELINUX_BOOTPARAM=y
-+CONFIG_SECURITY_SELINUX_DISABLE=y
- CONFIG_PRINTK_TIME=y
- CONFIG_MAGIC_SYSRQ=y
--# CONFIG_UNUSED_SYMBOLS is not set
- CONFIG_DEBUG_KERNEL=y
-+CONFIG_DEBUG_STACK_USAGE=y
- # CONFIG_SCHED_DEBUG is not set
- CONFIG_SCHEDSTATS=y
--CONFIG_TIMER_STATS=y
--CONFIG_DEBUG_STACK_USAGE=y
- CONFIG_BLK_DEV_IO_TRACE=y
- CONFIG_PROVIDE_OHCI1394_DMA_INIT=y
- CONFIG_EARLY_PRINTK_DBGP=y
--CONFIG_DEBUG_STACKOVERFLOW=y
--# CONFIG_DEBUG_RODATA_TEST is not set
- CONFIG_DEBUG_BOOT_PARAMS=y
--CONFIG_UNWINDER_ORC=y
--CONFIG_SECURITY=y
--CONFIG_SECURITY_NETWORK=y
--CONFIG_SECURITY_SELINUX=y
--CONFIG_SECURITY_SELINUX_BOOTPARAM=y
--CONFIG_SECURITY_SELINUX_DISABLE=y
--# CONFIG_CRYPTO_ANSI_CPRNG is not set
--CONFIG_EFI_STUB=y
--CONFIG_EFI_MIXED=y
--CONFIG_ACPI_BGRT=y
+V2: put variable declarations into reverse christmas tree order.
+
+---
+ net/sctp/protocol.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/net/sctp/protocol.c b/net/sctp/protocol.c
+index 7ecaf7d575c0..d19db22262fd 100644
+--- a/net/sctp/protocol.c
++++ b/net/sctp/protocol.c
+@@ -1367,15 +1367,15 @@ static struct pernet_operations sctp_ctrlsock_ops = {
+ /* Initialize the universe into something sensible.  */
+ static __init int sctp_init(void)
+ {
+-	int i;
+-	int status = -EINVAL;
+-	unsigned long goal;
+-	unsigned long limit;
+ 	unsigned long nr_pages = totalram_pages();
++	unsigned long limit;
++	unsigned long goal;
++	int max_entry_order;
++	int num_entries;
+ 	int max_share;
++	int status;
+ 	int order;
+-	int num_entries;
+-	int max_entry_order;
++	int i;
+ 
+ 	sock_skb_cb_check_size(sizeof(struct sctp_ulpevent));
+ 
 -- 
-2.25.1
+2.27.0
 
