@@ -2,116 +2,120 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FECC433EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09801C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3112E207FC
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SJxKlTLw"
+	by mail.kernel.org (Postfix) with ESMTP id DBD6D20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgGXQIf (ORCPT
+        id S1728328AbgGXQIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:08:35 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:62326 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728197AbgGXQI1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:08:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595606907; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=OuK+fHmOdnHq6Gy5CQQ7gf9CS4eAtdGE5l/i2Hmgl8A=; b=SJxKlTLwXE1VPSAYZBHTje8zUDdhVYJpV4JBj0CxdaSREYr6DHcukpCqiDuQcnPURmjF645G
- 4rTkckgA45Y5xaI4pn5Hh7hgHsEdWrTg97o2YXgRtmBoo7zgF8TO4UohCQ2hzxbMYVLyG1VQ
- qj9LiaRZf823tkJuszSqKwNcGDw=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f1b076d35f3e3d3160dd609 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Jul 2020 16:08:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8DC5AC433A0; Fri, 24 Jul 2020 16:08:13 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 24 Jul 2020 12:08:30 -0400
+Received: from 8bytes.org ([81.169.241.247]:59420 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727809AbgGXQE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:28 -0400
+Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A8D0C433CA;
-        Fri, 24 Jul 2020 16:08:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4A8D0C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v5 0/4] clk: qcom: Support for Low Power Audio Clocks on SC7180
-Date:   Fri, 24 Jul 2020 21:37:54 +0530
-Message-Id: <1595606878-2664-1-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        by theia.8bytes.org (Postfix) with ESMTPSA id 34799FC2;
+        Fri, 24 Jul 2020 18:04:21 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v5 39/75] x86/sev-es: Print SEV-ES info into kernel log
+Date:   Fri, 24 Jul 2020 18:03:00 +0200
+Message-Id: <20200724160336.5435-40-joro@8bytes.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
+References: <20200724160336.5435-1-joro@8bytes.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[v5]
-  * Replace tabs with space in the documentation binding.
-  * Remove .name from parent_data.
+From: Joerg Roedel <jroedel@suse.de>
 
-[v4]
- * Fix minor comments in the documentation binding.
+Refactor the message printed to the kernel log which indicates whether
+SEV or SME is active to print a list of enabled encryption features.
+This will scale better in the future when more memory encryption
+features might be added. Also add SEV-ES to the list of features.
 
-[v3]
- * Update the clock-name to iface instead of gcc_lpass_sway.
- * Update the documentation with the reg descriptions and use maxItems.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/mm/mem_encrypt.c | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-[v2]
- * Update retention macro name.
- * Update the register description in the documentation.
-
-[v1]
- * Add support for Retention of GDSCR.
- * Add YAML schema for LPASS clocks and clock IDs for LPASS.
- * Add clock driver for LPASS core clocks and GCC LPASS clock.
-
-Taniya Das (4):
-  clk: qcom: gdsc: Add support to enable retention of GSDCR
-  dt-bindings: clock: Add YAML schemas for LPASS clocks on SC7180
-  clk: qcom: gcc: Add support for GCC LPASS clock for SC7180
-  clk: qcom: lpass: Add support for LPASS clock controller for SC7180
-
-Taniya Das (4):
-  clk: qcom: gdsc: Add support to enable retention of GSDCR
-  dt-bindings: clock: Add YAML schemas for LPASS clocks on SC7180
-  clk: qcom: gcc: Add support for GCC LPASS clock for SC7180
-  clk: qcom: lpass: Add support for LPASS clock controller for SC7180
-
- .../bindings/clock/qcom,sc7180-lpasscorecc.yaml    | 102 +++++
- drivers/clk/qcom/Kconfig                           |   9 +
- drivers/clk/qcom/Makefile                          |   1 +
- drivers/clk/qcom/gcc-sc7180.c                      |  14 +
- drivers/clk/qcom/gdsc.c                            |  12 +
- drivers/clk/qcom/gdsc.h                            |   1 +
- drivers/clk/qcom/lpasscorecc-sc7180.c              | 477 +++++++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-sc7180.h        |   1 +
- .../dt-bindings/clock/qcom,lpasscorecc-sc7180.h    |  29 ++
- 9 files changed, 646 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
- create mode 100644 drivers/clk/qcom/lpasscorecc-sc7180.c
- create mode 100644 include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index 232d6e1bcfc6..5cec395a4b0d 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -407,6 +407,31 @@ void __init mem_encrypt_free_decrypted_mem(void)
+ 	free_init_pages("unused decrypted", vaddr, vaddr_end);
+ }
+ 
++static void print_mem_encrypt_feature_info(void)
++{
++	pr_info("AMD Memory Encryption Features active:");
++
++	/* Secure Memory Encryption */
++	if (sme_active()) {
++		/*
++		 * SME is mutually exclusive with any of the SEV
++		 * features below.
++		 */
++		pr_cont(" SME\n");
++		return;
++	}
++
++	/* Secure Encrypted Virtualization */
++	if (sev_active())
++		pr_cont(" SEV");
++
++	/* Encrypted Register State */
++	if (sev_es_active())
++		pr_cont(" SEV-ES");
++
++	pr_cont("\n");
++}
++
+ /* Architecture __weak replacement functions */
+ void __init mem_encrypt_init(void)
+ {
+@@ -422,8 +447,6 @@ void __init mem_encrypt_init(void)
+ 	if (sev_active())
+ 		static_branch_enable(&sev_enable_key);
+ 
+-	pr_info("AMD %s active\n",
+-		sev_active() ? "Secure Encrypted Virtualization (SEV)"
+-			     : "Secure Memory Encryption (SME)");
++	print_mem_encrypt_feature_info();
+ }
+ 
+-- 
+2.27.0
 
