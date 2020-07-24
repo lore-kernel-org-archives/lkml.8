@@ -2,94 +2,148 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30558C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 993CB20888
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:27:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="P9E155vI"
+	by mail.kernel.org (Postfix) with ESMTP id 0E9E4208A9
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 00:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgGXA1K (ORCPT
+        id S1728390AbgGXA3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 20:27:10 -0400
-Received: from m12-14.163.com ([220.181.12.14]:45888 "EHLO m12-14.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbgGXA1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 20:27:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=t5tv0
-        2B3pJAcad5nqGAAwIRnW8TEud7RLon8gV+w0Ic=; b=P9E155vIljT9pyTFVDYiZ
-        qEtIf0mEQctrdU0GYlgHAOZ7PqCMysdHWwRsOOQtIkjZ+23P3OE/Oqcj26ZVL/pv
-        kbm0EYKZiFSGvB0G6B7mObEV3DX26tM9COTx6P1Oq3tKTv9LvXHUw8ojAIOEIIxG
-        paiWsrXfQwwJyItrdV+RCM=
-Received: from localhost.localdomain (unknown [223.87.243.26])
-        by smtp10 (Coremail) with SMTP id DsCowAAHC_COHxpfPbmoCg--.12793S2;
-        Fri, 24 Jul 2020 07:38:55 +0800 (CST)
-From:   Jiang Biao <humjb_1983@163.com>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org
-Cc:     dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org,
-        Jiang Biao <benbjiang@tencent.com>
-Subject: [PATCH] sched/fair: consider sched-idle CPU when selecting idle core
-Date:   Fri, 24 Jul 2020 07:38:53 +0800
-Message-Id: <20200723233853.48815-1-humjb_1983@163.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 23 Jul 2020 20:29:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38988 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728008AbgGXA3U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 20:29:20 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06O03fUV149644;
+        Thu, 23 Jul 2020 20:29:07 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32facss112-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 20:29:07 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06O04HcY152265;
+        Thu, 23 Jul 2020 20:29:06 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32facss10w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Jul 2020 20:29:06 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06O0JemK015067;
+        Fri, 24 Jul 2020 00:29:06 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma01wdc.us.ibm.com with ESMTP id 32brq9ge7d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Jul 2020 00:29:06 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06O0T5wW52494840
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jul 2020 00:29:05 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 70272AC05E;
+        Fri, 24 Jul 2020 00:29:05 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E837AC059;
+        Fri, 24 Jul 2020 00:29:00 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.163.53.35])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Fri, 24 Jul 2020 00:28:59 +0000 (GMT)
+References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com> <159524964786.20855.15850644504721928289.stgit@hbathini.in.ibm.com>
+User-agent: mu4e 1.2.0; emacs 26.3
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel test robot <lkp@intel.com>,
+        Pingfan Liu <piliu@redhat.com>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v4 09/12] ppc64/kexec_file: setup backup region for kdump kernel
+In-reply-to: <159524964786.20855.15850644504721928289.stgit@hbathini.in.ibm.com>
+Date:   Thu, 23 Jul 2020 21:28:55 -0300
+Message-ID: <874kpx69iw.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: DsCowAAHC_COHxpfPbmoCg--.12793S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKw4xWr1xtw48CFW5Gr1rZwb_yoWDCrX_Ww
-        s5Kr1qgr1Dtrs0qF4xC397Xrn5Wan2qFWvkw1Iy3yUJ3WDZ393A3sFkFyfur48JFWUJF9r
-        JF90qFn0gr4UCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0wSdDUUUUU==
-X-Originating-IP: [223.87.243.26]
-X-CM-SenderInfo: hkxpyurbrzmji6rwjhhfrp/1tbiPgBqDFxBinBGYAABsY
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-23_09:2020-07-23,2020-07-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 mlxlogscore=999 bulkscore=0 adultscore=0 suspectscore=0
+ clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007230165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiang Biao <benbjiang@tencent.com>
 
-Sched-idle CPU has been considered in select_idle_cpu and
-select_idle_smt, it also needs to be considered in select_idle_core to
-be consistent and keep the same *idle* policy.
+Hari Bathini <hbathini@linux.ibm.com> writes:
 
-Signed-off-by: Jiang Biao <benbjiang@tencent.com>
----
- kernel/sched/fair.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Though kdump kernel boots from loaded address, the first 64K bytes
+> of it is copied down to real 0. So, setup a backup region to copy
+> the first 64K bytes of crashed kernel, in purgatory, before booting
+> into kdump kernel. Also, update reserve map with backup region and
+> crashed kernel's memory to avoid kdump kernel from accidentially
+> using that memory.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> [lkp: In v1, purgatory() declaration was missing]
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 04fa8dbcfa4d..f430a9820d08 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6014,7 +6014,7 @@ void __update_idle_core(struct rq *rq)
- 		if (cpu == core)
- 			continue;
- 
--		if (!available_idle_cpu(cpu))
-+		if (!available_idle_cpu(cpu) && !sched_idle_cpu(cpu))
- 			goto unlock;
- 	}
- 
-@@ -6045,7 +6045,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
- 		bool idle = true;
- 
- 		for_each_cpu(cpu, cpu_smt_mask(core)) {
--			if (!available_idle_cpu(cpu)) {
-+			if (!available_idle_cpu(cpu) && !sched_idle_cpu(cpu)) {
- 				idle = false;
- 				break;
- 			}
--- 
-2.21.0
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
+Just one minor comment below:
 
+> @@ -1047,13 +1120,26 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+>  			goto out;
+>  		}
+>
+> -		/* Ensure we don't touch crashed kernel's memory */
+> -		ret = fdt_add_mem_rsv(fdt, 0, crashk_res.start);
+> +		/*
+> +		 * Ensure we don't touch crashed kernel's memory except the
+> +		 * first 64K of RAM, which will be backed up.
+> +		 */
+> +		ret = fdt_add_mem_rsv(fdt, BACKUP_SRC_SIZE,
+
+I know BACKUP_SRC_START is 0, but please forgive my pedantry when I say
+that I think it's clearer if the start address above is changed to
+BACKUP_SRC_START + BACKUP_SRC_SIZE...
+
+> +				      crashk_res.start - BACKUP_SRC_SIZE);
+>  		if (ret) {
+>  			pr_err("Error reserving crash memory: %s\n",
+>  			       fdt_strerror(ret));
+>  			goto out;
+>  		}
+> +
+> +		/* Ensure backup region is not used by kdump/capture kernel */
+> +		ret = fdt_add_mem_rsv(fdt, image->arch.backup_start,
+> +				      BACKUP_SRC_SIZE);
+> +		if (ret) {
+> +			pr_err("Error reserving memory for backup: %s\n",
+> +			       fdt_strerror(ret));
+> +			goto out;
+> +		}
+>  	}
+>
+>  out:
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
