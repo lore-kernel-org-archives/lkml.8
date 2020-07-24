@@ -2,76 +2,60 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9F9C433EA
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A37C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 372FD2074B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:23:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dWCoZstj"
+	by mail.kernel.org (Postfix) with ESMTP id 12DCE206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgGXMXl (ORCPT
+        id S1726583AbgGXM0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:23:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbgGXMXk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:23:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70A77C0619D3;
-        Fri, 24 Jul 2020 05:23:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0xAtt8OdXDwTj0AGHmBvJe2bIWDAHdVfH+I971pKCts=; b=dWCoZstj6bW9VNbcVyaoonTtsh
-        GtJrh8tIKIiQGqD15HbnXud8AO6HOgCtXDxOsH7vyrug5McH6tf0dpJQDYEwArCXDLODRtqmAqQiQ
-        Cus2hBBz4MxrQ4q2lfxfWLi9v4mQxtOss9CP+t21orFMn5NJiqrNr0pPpQQL5jaeq9LM+utqELT5c
-        7JYs6Vg3siXPoICKLHbI0DTllNhMwgN/ryklTgv1jArKVEGBaqa4Obhq0F2jqSLG6O66ZIdIpI0nj
-        o/AwFN7OwH4173Dx2ulB2iYivxp0rvZ02EZ8d+mRt3bIo+K3579kpQF42OSm8L7wsR+oEwAVtoAM6
-        jpEM5J8g==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jywjh-000668-4R; Fri, 24 Jul 2020 12:23:37 +0000
-Date:   Fri, 24 Jul 2020 13:23:37 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 04/20] unify generic instances of
- csum_partial_copy_nocheck()
-Message-ID: <20200724122337.GA23095@infradead.org>
-References: <20200724012512.GK2786714@ZenIV.linux.org.uk>
- <20200724012546.302155-1-viro@ZenIV.linux.org.uk>
- <20200724012546.302155-4-viro@ZenIV.linux.org.uk>
- <20200724064117.GA10522@infradead.org>
- <20200724121918.GL2786714@ZenIV.linux.org.uk>
+        Fri, 24 Jul 2020 08:26:36 -0400
+Received: from 8bytes.org ([81.169.241.247]:59050 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726258AbgGXM0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 08:26:36 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 7BF3346A; Fri, 24 Jul 2020 14:26:34 +0200 (CEST)
+Date:   Fri, 24 Jul 2020 14:26:33 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, kernel-team@android.com
+Subject: Re: [GIT PULL] iommu/arm-smmu: Updates for 5.9
+Message-ID: <20200724122632.GS27672@8bytes.org>
+References: <20200721080352.GA13023@willie-the-truck>
+ <20200722133323.GG27672@8bytes.org>
+ <20200724115109.GA17451@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200724121918.GL2786714@ZenIV.linux.org.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200724115109.GA17451@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 01:19:18PM +0100, Al Viro wrote:
-> > net-next has a patch from me killing off csum_and_copy_from_user
-> > already:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commit/?id=f1bfd71c8662f20d53e71ef4e18bfb0e5677c27f
+Hi Will,
+
+On Fri, Jul 24, 2020 at 12:51:09PM +0100, Will Deacon wrote:
+> Sure, that makes sense to me: I've included a diff below in case anybody
+> has comments. I've tackled it slightly differently to how the intel and
+> amd drivers are handled, since we have a header file (arm-smmu.h) which
+> is shared by a couple of different drivers. I've also moved the v3 driver
+> under the arm/ directory as Jean Philippe plans to split out the SVA work
+> for 5.10.
 > 
-> Nothing in that patch of yours touches csum_and_copy_from_user(). what
-> are you talking about?
+> I'll send a second pull early next week if there are no objections (or
+> you can pick this patch directly).
 
-Sorry, I meant csum_and_copy_from_nocheck, just as in this patch.
+Thanks, the diff looks fine to me.
 
-Merging your branch into the net-next tree thus will conflict in
-the nios2 and asm-geneeric/checksum.h as well as lib/checksum.c.
+
+	Joerg
