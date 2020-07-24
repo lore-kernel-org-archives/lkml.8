@@ -2,153 +2,129 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED42C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BF2C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F02C82074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6232074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:45:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgGXFoQ (ORCPT
+        id S1726742AbgGXFpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 01:44:16 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:45620 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgGXFoQ (ORCPT
+        Fri, 24 Jul 2020 01:45:55 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:49278 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726277AbgGXFpz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 01:44:16 -0400
-Received: by mail-il1-f197.google.com with SMTP id c1so5000278ilk.12
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 22:44:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=OMRIqu8obzB7sqBNMSf9FQ4q4I4IeW7Bg8oejJNF6U0=;
-        b=tqUeeEXkF/0EQIlw5E2Ns8Zb7nO5D7SFMGxnopDexmONIgVTlpllbg4gKQGMlv87B9
-         7OsFJ5aHtGbVwH0bZEgOiTZ9XY/F2OGAwik8zOz02kv7CNH3M1A7CNfxNAxpB9qTRFbA
-         ddJbGF/dyGNKR9//VwkHPxyngw6zyZjZP7kPI2Hl1LoMLJbvrlJXv01vkNWWioZ4S5Ez
-         +Ik2bo/bGDdYUJd2ffWPFdz0jc2GNdLxuckF6gIEjR7wVB7AFov/EpfxbmLyIsqautIR
-         VkWRWyuYdoIsiAxLbzl5ugbr3rK8UGpYMk75519iV9mF6fBHVn2fydB8hYtnK9HPP6DF
-         SxDw==
-X-Gm-Message-State: AOAM532Wsl09n0eMmYvs+/dJ/gKofRahGd8vmMsiYcOCVLyPD1hbFj7Z
-        SlKkukhY216W0KLIvSETSq3fABoq/WHnkFmUm4S7iRqHvryG
-X-Google-Smtp-Source: ABdhPJz+cEqTGRpwSTZo9WNIglVqLWwOEuLvSiDPE+iKmJWXKYSfuDsc4pBL0flCRkMB3teDVKLvV6dIV7FLzDJdqlvUlkIIrxWx
+        Fri, 24 Jul 2020 01:45:55 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0U3dvC2j_1595569548;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U3dvC2j_1595569548)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 24 Jul 2020 13:45:48 +0800
+Date:   Fri, 24 Jul 2020 13:45:48 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        David Hildenbrand <david@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Huang Ying <ying.huang@intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2 1/3] mm/shuffle: don't move pages between zones and
+ don't read garbage memmaps
+Message-ID: <20200724054548.GA17189@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <2185539f-b210-5d3f-5da2-a497b354eebb@redhat.com>
+ <20200622092221.GA96699@L-31X9LVDL-1304.local>
+ <34f36733-805e-cc61-38da-2ee578ae096c@redhat.com>
+ <20200622131003.GA98415@L-31X9LVDL-1304.local>
+ <0f4edc1f-1ce2-95b4-5866-5c4888db7c65@redhat.com>
+ <20200622215520.wa6gjr2hplurwy57@master>
+ <4b7ee49c-9bee-a905-3497-e3addd8896b8@redhat.com>
+ <c0b62330-11d3-e628-a811-b54789d8f182@redhat.com>
+ <20200623093018.GA6069@L-31X9LVDL-1304.local>
+ <20200723200846.768513d7c122ac11b6e73538@linux-foundation.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d602:: with SMTP id w2mr4817149ilm.247.1595569454951;
- Thu, 23 Jul 2020 22:44:14 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 22:44:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000093b26605ab2976f0@google.com>
-Subject: INFO: rcu detected stall in rtnl_newlink
-From:   syzbot <syzbot+d46d08c4209a3a86ccc5@syzkaller.appspotmail.com>
-To:     fweisbec@gmail.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723200846.768513d7c122ac11b6e73538@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Jul 23, 2020 at 08:08:46PM -0700, Andrew Morton wrote:
+>On Tue, 23 Jun 2020 17:30:18 +0800 Wei Yang <richard.weiyang@linux.alibaba.com> wrote:
+>
+>> On Tue, Jun 23, 2020 at 09:55:43AM +0200, David Hildenbrand wrote:
+>> >On 23.06.20 09:39, David Hildenbrand wrote:
+>> >>> Hmm.. I thought this is the behavior for early section, while it looks current
+>> >>> code doesn't work like this:
+>> >>>
+>> >>>        if (section_is_early && memmap)
+>> >>>                free_map_bootmem(memmap);
+>> >>>        else
+>> >>> 	       depopulate_section_memmap(pfn, nr_pages, altmap);
+>> >>>
+>> >>> section_is_early is always "true" for early section, while memmap is not-NULL
+>> >>> only when sub-section map is empty.
+>> >>>
+>> >>> If my understanding is correct, when we remove a sub-section in early section,
+>> >>> the code would call depopulate_section_memmap(), which in turn free related
+>> >>> memmap. By removing the memmap, the return value from pfn_to_online_page() is
+>> >>> not a valid one.
+>> >> 
+>> >> I think you're right, and pfn_valid() would also return true, as it is
+>> >> an early section. This looks broken.
+>> >> 
+>> >>>
+>> >>> Maybe we want to write the code like this:
+>> >>>
+>> >>>        if (section_is_early)
+>> >>>                if (memmap)
+>> >>>                        free_map_bootmem(memmap);
+>> >>>        else
+>> >>> 	       depopulate_section_memmap(pfn, nr_pages, altmap);
+>> >>>
+>> >> 
+>> >> I guess that should be the way to go
+>> >> 
+>> >> @Dan, I think what Wei proposes here is correct, right? Or how does it
+>> >> work in the VMEMMAP case with early sections?
+>> >> 
+>> >
+>> >Especially, if you would re-hot-add, section_activate() would assume
+>> >there is a memmap, it must not be removed.
+>> >
+>> 
+>> You are right here. I didn't notice it.
+>> 
+>> >@Wei, can you send a patch?
+>> >
+>> 
+>> Sure, let me prepare for it.
+>
+>Still awaiting this, and the v3 patch was identical to this v2 patch.
+>
+>It's tagged for -stable, so there's some urgency.  Should we just go
+>ahead with the decently-tested v2?
 
-syzbot found the following issue on:
+This message is to me right?
 
-HEAD commit:    e6827d1a cxgb4: add missing release on skb in uld_send()
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=17a227b4900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=dddbcb5a9f4192db
-dashboard link: https://syzkaller.appspot.com/bug?extid=d46d08c4209a3a86ccc5
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15a38228900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1302e4c4900000
+I thought the fix patch is merged, the patch link may be
+https://lkml.org/lkml/2020/6/23/380.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d46d08c4209a3a86ccc5@syzkaller.appspotmail.com
-
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu: 	1-....: (10491 ticks this GP) idle=5d2/1/0x4000000000000000 softirq=10100/10100 fqs=5226 
-	(t=10500 jiffies g=8229 q=552)
-NMI backtrace for cpu 1
-CPU: 1 PID: 6812 Comm: syz-executor138 Not tainted 5.8.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
- trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
- rcu_dump_cpu_stacks+0x194/0x1cf kernel/rcu/tree_stall.h:320
- print_cpu_stall kernel/rcu/tree_stall.h:553 [inline]
- check_cpu_stall kernel/rcu/tree_stall.h:627 [inline]
- rcu_pending kernel/rcu/tree.c:3489 [inline]
- rcu_sched_clock_irq.cold+0x5b3/0xccc kernel/rcu/tree.c:2504
- update_process_times+0x25/0x60 kernel/time/timer.c:1726
- tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:176
- tick_sched_timer+0x108/0x290 kernel/time/tick-sched.c:1320
- __run_hrtimer kernel/time/hrtimer.c:1520 [inline]
- __hrtimer_run_queues+0x1d5/0xfc0 kernel/time/hrtimer.c:1584
- hrtimer_interrupt+0x32a/0x930 kernel/time/hrtimer.c:1646
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1080 [inline]
- __sysvec_apic_timer_interrupt+0x142/0x5e0 arch/x86/kernel/apic/apic.c:1097
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- sysvec_apic_timer_interrupt+0xe0/0x120 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:587
-RIP: 0010:should_resched arch/x86/include/asm/preempt.h:102 [inline]
-RIP: 0010:__local_bh_enable_ip+0x189/0x250 kernel/softirq.c:196
-Code: 89 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 0f 85 c4 00 00 00 48 83 3d 60 5a 6e 08 00 74 7b fb 66 0f 1f 44 00 00 <65> 8b 05 80 78 bb 7e 85 c0 74 6b 5b 5d 41 5c c3 80 3d a3 6a 63 09
-RSP: 0018:ffffc90001816d80 EFLAGS: 00000286
-RAX: 1ffffffff1369c12 RBX: 0000000000000201 RCX: 0000000000000002
-RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffffffff81468609
-RBP: ffffffff87cdbce5 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000000 R12: ffff8880a9298400
-R13: 0000000000000001 R14: 0000000000000034 R15: dffffc0000000000
- spin_unlock_bh include/linux/spinlock.h:398 [inline]
- batadv_tt_local_purge+0x285/0x370 net/batman-adv/translation-table.c:1446
- batadv_tt_local_resize_to_mtu+0x8e/0x130 net/batman-adv/translation-table.c:4197
- batadv_hardif_activate_interface.part.0.cold+0x14c/0x1ba net/batman-adv/hard-interface.c:653
- batadv_hardif_activate_interface net/batman-adv/hard-interface.c:800 [inline]
- batadv_hardif_enable_interface+0xa7d/0xb10 net/batman-adv/hard-interface.c:792
- batadv_softif_slave_add+0x92/0x150 net/batman-adv/soft-interface.c:892
- do_set_master+0x1c8/0x220 net/core/rtnetlink.c:2476
- do_setlink+0x903/0x35c0 net/core/rtnetlink.c:2611
- __rtnl_newlink+0xc21/0x1750 net/core/rtnetlink.c:3272
- rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4437d9
-Code: Bad RIP value.
-RSP: 002b:00007ffdfad85898 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004437d9
-RDX: 0000000000000000 RSI: 0000000020000140 RDI: 0000000000000004
-RBP: 00007ffdfad858a0 R08: 0000000001bbbbbb R09: 0000000001bbbbbb
-R10: 0000000001bbbbbb R11: 0000000000000246 R12: 00007ffdfad858b0
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+If I missed something, just let me know.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Wei Yang
+Help you, Help me
