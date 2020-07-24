@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97772C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 01:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA9DC433FC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 01:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBC720714
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 01:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2AB920714
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 01:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgGXB0x (ORCPT
+        id S1728096AbgGXB0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 21:26:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38218 "EHLO
+        Thu, 23 Jul 2020 21:26:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726737AbgGXBZs (ORCPT
+        with ESMTP id S1726781AbgGXBZs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 23 Jul 2020 21:25:48 -0400
 Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30465C0619E6;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B3BCC0619E4;
         Thu, 23 Jul 2020 18:25:48 -0700 (PDT)
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jymT4-001GcZ-UO; Fri, 24 Jul 2020 01:25:46 +0000
+        id 1jymT5-001Gcl-6N; Fri, 24 Jul 2020 01:25:47 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: [PATCH v2 06/20] csum_and_copy_..._user(): pass 0xffffffff instead of 0 as initial sum
-Date:   Fri, 24 Jul 2020 02:25:32 +0100
-Message-Id: <20200724012546.302155-6-viro@ZenIV.linux.org.uk>
+Subject: [PATCH v2 08/20] alpha: propagate the calling convention changes down to csum_partial_copy.c helpers
+Date:   Fri, 24 Jul 2020 02:25:34 +0100
+Message-Id: <20200724012546.302155-8-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200724012546.302155-1-viro@ZenIV.linux.org.uk>
 References: <20200724012512.GK2786714@ZenIV.linux.org.uk>
@@ -45,55 +45,329 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-Preparation for the change of calling conventions; right now all
-callers pass 0 as initial sum.  Passing 0xffffffff instead yields
-the values comparable mod 0xffff and guarantees that 0 will not
-be returned on success.
-
-Note that this relies upon the correct behaviour with arbitrary
-initial sum and the above pretty much says "it's been untested
-with anything other than 0".  Analysis is unpleasant, to put it
-mildly, but the suckers _are_ handling it correctly, surprisingly
-enough.  Perhaps not too surprisingly, since most of the instances
-share the code with csum_partial_copy_nocheck(), which used to get
-some testing due to icmp_push_reply()...
+get rid of set_fs() in csum_partial_copy_nocheck(), while we are at it -
+just take the part of csum_and_copy_from_user() sans the access_ok() check
+into a helper function and have csum_partial_copy_nocheck() call that.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- lib/iov_iter.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/alpha/lib/csum_partial_copy.c | 157 ++++++++++++++++---------------------
+ 1 file changed, 69 insertions(+), 88 deletions(-)
 
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index 7405922caaec..d5b7e204fea6 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -1451,7 +1451,7 @@ size_t csum_and_copy_from_iter(void *addr, size_t bytes, __wsum *csum,
- 		int err = 0;
- 		next = csum_and_copy_from_user(v.iov_base,
- 					       (to += v.iov_len) - v.iov_len,
--					       v.iov_len, 0, &err);
-+					       v.iov_len, ~0U, &err);
- 		if (!err) {
- 			sum = csum_block_add(sum, next, off);
- 			off += v.iov_len;
-@@ -1493,7 +1493,7 @@ bool csum_and_copy_from_iter_full(void *addr, size_t bytes, __wsum *csum,
- 		int err = 0;
- 		next = csum_and_copy_from_user(v.iov_base,
- 					       (to += v.iov_len) - v.iov_len,
--					       v.iov_len, 0, &err);
-+					       v.iov_len, ~0U, &err);
- 		if (err)
- 			return false;
- 		sum = csum_block_add(sum, next, off);
-@@ -1539,7 +1539,7 @@ size_t csum_and_copy_to_iter(const void *addr, size_t bytes, void *csump,
- 		int err = 0;
- 		next = csum_and_copy_to_user((from += v.iov_len) - v.iov_len,
- 					     v.iov_base,
--					     v.iov_len, 0, &err);
-+					     v.iov_len, ~0U, &err);
- 		if (!err) {
- 			sum = csum_block_add(sum, next, off);
- 			off += v.iov_len;
+diff --git a/arch/alpha/lib/csum_partial_copy.c b/arch/alpha/lib/csum_partial_copy.c
+index 3c0e89c39ddb..dc68efbe9367 100644
+--- a/arch/alpha/lib/csum_partial_copy.c
++++ b/arch/alpha/lib/csum_partial_copy.c
+@@ -39,12 +39,11 @@ __asm__ __volatile__("insql %1,%2,%0":"=r" (z):"r" (x),"r" (y))
+ #define insqh(x,y,z) \
+ __asm__ __volatile__("insqh %1,%2,%0":"=r" (z):"r" (x),"r" (y))
+ 
+-
+-#define __get_user_u(x,ptr)				\
++#define __get_word(insn,x,ptr)				\
+ ({							\
+ 	long __guu_err;					\
+ 	__asm__ __volatile__(				\
+-	"1:	ldq_u %0,%2\n"				\
++	"1:	"#insn" %0,%2\n"			\
+ 	"2:\n"						\
+ 	EXC(1b,2b,%0,%1)				\
+ 		: "=r"(x), "=r"(__guu_err)		\
+@@ -52,19 +51,6 @@ __asm__ __volatile__("insqh %1,%2,%0":"=r" (z):"r" (x),"r" (y))
+ 	__guu_err;					\
+ })
+ 
+-#define __put_user_u(x,ptr)				\
+-({							\
+-	long __puu_err;					\
+-	__asm__ __volatile__(				\
+-	"1:	stq_u %2,%1\n"				\
+-	"2:\n"						\
+-	EXC(1b,2b,$31,%0)				\
+-		: "=r"(__puu_err)			\
+-		: "m"(__m(addr)), "rJ"(x), "0"(0));	\
+-	__puu_err;					\
+-})
+-
+-
+ static inline unsigned short from64to16(unsigned long x)
+ {
+ 	/* Using extract instructions is a bit more efficient
+@@ -95,15 +81,15 @@ static inline unsigned short from64to16(unsigned long x)
+  */
+ static inline unsigned long
+ csum_partial_cfu_aligned(const unsigned long __user *src, unsigned long *dst,
+-			 long len, unsigned long checksum,
+-			 int *errp)
++			 long len)
+ {
++	unsigned long checksum = ~0U;
+ 	unsigned long carry = 0;
+-	int err = 0;
+ 
+ 	while (len >= 0) {
+ 		unsigned long word;
+-		err |= __get_user(word, src);
++		if (__get_word(ldq, word, src))
++			return 0;
+ 		checksum += carry;
+ 		src++;
+ 		checksum += word;
+@@ -116,7 +102,8 @@ csum_partial_cfu_aligned(const unsigned long __user *src, unsigned long *dst,
+ 	checksum += carry;
+ 	if (len) {
+ 		unsigned long word, tmp;
+-		err |= __get_user(word, src);
++		if (__get_word(ldq, word, src))
++			return 0;
+ 		tmp = *dst;
+ 		mskql(word, len, word);
+ 		checksum += word;
+@@ -125,7 +112,6 @@ csum_partial_cfu_aligned(const unsigned long __user *src, unsigned long *dst,
+ 		*dst = word | tmp;
+ 		checksum += carry;
+ 	}
+-	if (err && errp) *errp = err;
+ 	return checksum;
+ }
+ 
+@@ -137,20 +123,21 @@ static inline unsigned long
+ csum_partial_cfu_dest_aligned(const unsigned long __user *src,
+ 			      unsigned long *dst,
+ 			      unsigned long soff,
+-			      long len, unsigned long checksum,
+-			      int *errp)
++			      long len)
+ {
+ 	unsigned long first;
+ 	unsigned long word, carry;
+ 	unsigned long lastsrc = 7+len+(unsigned long)src;
+-	int err = 0;
++	unsigned long checksum = ~0U;
+ 
+-	err |= __get_user_u(first,src);
++	if (__get_word(ldq_u, first,src))
++		return 0;
+ 	carry = 0;
+ 	while (len >= 0) {
+ 		unsigned long second;
+ 
+-		err |= __get_user_u(second, src+1);
++		if (__get_word(ldq_u, second, src+1))
++			return 0;
+ 		extql(first, soff, word);
+ 		len -= 8;
+ 		src++;
+@@ -168,7 +155,8 @@ csum_partial_cfu_dest_aligned(const unsigned long __user *src,
+ 	if (len) {
+ 		unsigned long tmp;
+ 		unsigned long second;
+-		err |= __get_user_u(second, lastsrc);
++		if (__get_word(ldq_u, second, lastsrc))
++			return 0;
+ 		tmp = *dst;
+ 		extql(first, soff, word);
+ 		extqh(second, soff, first);
+@@ -180,7 +168,6 @@ csum_partial_cfu_dest_aligned(const unsigned long __user *src,
+ 		*dst = word | tmp;
+ 		checksum += carry;
+ 	}
+-	if (err && errp) *errp = err;
+ 	return checksum;
+ }
+ 
+@@ -191,18 +178,18 @@ static inline unsigned long
+ csum_partial_cfu_src_aligned(const unsigned long __user *src,
+ 			     unsigned long *dst,
+ 			     unsigned long doff,
+-			     long len, unsigned long checksum,
+-			     unsigned long partial_dest,
+-			     int *errp)
++			     long len,
++			     unsigned long partial_dest)
+ {
+ 	unsigned long carry = 0;
+ 	unsigned long word;
+ 	unsigned long second_dest;
+-	int err = 0;
++	unsigned long checksum = ~0U;
+ 
+ 	mskql(partial_dest, doff, partial_dest);
+ 	while (len >= 0) {
+-		err |= __get_user(word, src);
++		if (__get_word(ldq, word, src))
++			return 0;
+ 		len -= 8;
+ 		insql(word, doff, second_dest);
+ 		checksum += carry;
+@@ -216,7 +203,8 @@ csum_partial_cfu_src_aligned(const unsigned long __user *src,
+ 	len += 8;
+ 	if (len) {
+ 		checksum += carry;
+-		err |= __get_user(word, src);
++		if (__get_word(ldq, word, src))
++			return 0;
+ 		mskql(word, len, word);
+ 		len -= 8;
+ 		checksum += word;
+@@ -237,7 +225,6 @@ csum_partial_cfu_src_aligned(const unsigned long __user *src,
+ 	stq_u(partial_dest | second_dest, dst);
+ out:
+ 	checksum += carry;
+-	if (err && errp) *errp = err;
+ 	return checksum;
+ }
+ 
+@@ -249,23 +236,23 @@ static inline unsigned long
+ csum_partial_cfu_unaligned(const unsigned long __user * src,
+ 			   unsigned long * dst,
+ 			   unsigned long soff, unsigned long doff,
+-			   long len, unsigned long checksum,
+-			   unsigned long partial_dest,
+-			   int *errp)
++			   long len, unsigned long partial_dest)
+ {
+ 	unsigned long carry = 0;
+ 	unsigned long first;
+ 	unsigned long lastsrc;
+-	int err = 0;
++	unsigned long checksum = ~0U;
+ 
+-	err |= __get_user_u(first, src);
++	if (__get_word(ldq_u, first, src))
++		return 0;
+ 	lastsrc = 7+len+(unsigned long)src;
+ 	mskql(partial_dest, doff, partial_dest);
+ 	while (len >= 0) {
+ 		unsigned long second, word;
+ 		unsigned long second_dest;
+ 
+-		err |= __get_user_u(second, src+1);
++		if (__get_word(ldq_u, second, src+1))
++			return 0;
+ 		extql(first, soff, word);
+ 		checksum += carry;
+ 		len -= 8;
+@@ -286,7 +273,8 @@ csum_partial_cfu_unaligned(const unsigned long __user * src,
+ 		unsigned long second, word;
+ 		unsigned long second_dest;
+ 
+-		err |= __get_user_u(second, lastsrc);
++		if (__get_word(ldq_u, second, lastsrc))
++			return 0;
+ 		extql(first, soff, word);
+ 		extqh(second, soff, first);
+ 		word |= first;
+@@ -307,7 +295,8 @@ csum_partial_cfu_unaligned(const unsigned long __user * src,
+ 		unsigned long second, word;
+ 		unsigned long second_dest;
+ 
+-		err |= __get_user_u(second, lastsrc);
++		if (__get_word(ldq_u, second, lastsrc))
++			return 0;
+ 		extql(first, soff, word);
+ 		extqh(second, soff, first);
+ 		word |= first;
+@@ -320,63 +309,55 @@ csum_partial_cfu_unaligned(const unsigned long __user * src,
+ 		stq_u(partial_dest | word | second_dest, dst);
+ 		checksum += carry;
+ 	}
+-	if (err && errp) *errp = err;
+ 	return checksum;
+ }
+ 
+-__wsum
+-csum_and_copy_from_user(const void __user *src, void *dst, int len)
++static __wsum __csum_and_copy(const void __user *src, void *dst, int len)
+ {
+-	unsigned long checksum = ~0U;
+ 	unsigned long soff = 7 & (unsigned long) src;
+ 	unsigned long doff = 7 & (unsigned long) dst;
+-	int err = 0;
+-
+-	if (len) {
+-		if (!access_ok(src, len))
+-			return 0;
+-		if (!doff) {
+-			if (!soff)
+-				checksum = csum_partial_cfu_aligned(
+-					(const unsigned long __user *) src,
+-					(unsigned long *) dst,
+-					len-8, checksum, &err);
+-			else
+-				checksum = csum_partial_cfu_dest_aligned(
+-					(const unsigned long __user *) src,
+-					(unsigned long *) dst,
+-					soff, len-8, checksum, &err);
+-		} else {
+-			unsigned long partial_dest;
+-			ldq_u(partial_dest, dst);
+-			if (!soff)
+-				checksum = csum_partial_cfu_src_aligned(
+-					(const unsigned long __user *) src,
+-					(unsigned long *) dst,
+-					doff, len-8, checksum,
+-					partial_dest, &err);
+-			else
+-				checksum = csum_partial_cfu_unaligned(
+-					(const unsigned long __user *) src,
+-					(unsigned long *) dst,
+-					soff, doff, len-8, checksum,
+-					partial_dest, &err);
+-		}
+-		checksum = err ? 0 : from64to16 (checksum);
++	unsigned long checksum;
++
++	if (!doff) {
++		if (!soff)
++			checksum = csum_partial_cfu_aligned(
++				(const unsigned long __user *) src,
++				(unsigned long *) dst, len-8);
++		else
++			checksum = csum_partial_cfu_dest_aligned(
++				(const unsigned long __user *) src,
++				(unsigned long *) dst,
++				soff, len-8);
++	} else {
++		unsigned long partial_dest;
++		ldq_u(partial_dest, dst);
++		if (!soff)
++			checksum = csum_partial_cfu_src_aligned(
++				(const unsigned long __user *) src,
++				(unsigned long *) dst,
++				doff, len-8, partial_dest);
++		else
++			checksum = csum_partial_cfu_unaligned(
++				(const unsigned long __user *) src,
++				(unsigned long *) dst,
++				soff, doff, len-8, partial_dest);
+ 	}
+-	return (__force __wsum)checksum;
++	return (__force __wsum)from64to16 (checksum);
++}
++
++__wsum
++csum_and_copy_from_user(const void __user *src, void *dst, int len)
++{
++	if (!access_ok(src, len))
++		return 0;
++	return __csum_and_copy(src, dst, len);
+ }
+ EXPORT_SYMBOL(csum_and_copy_from_user);
+ 
+ __wsum
+ csum_partial_copy_nocheck(const void *src, void *dst, int len)
+ {
+-	__wsum checksum;
+-	mm_segment_t oldfs = get_fs();
+-	set_fs(KERNEL_DS);
+-	checksum = csum_and_copy_from_user((__force const void __user *)src,
++	return __csum_and_copy((__force const void __user *)src,
+ 						dst, len);
+-	set_fs(oldfs);
+-	return checksum;
+ }
+ EXPORT_SYMBOL(csum_partial_copy_nocheck);
 -- 
 2.11.0
 
