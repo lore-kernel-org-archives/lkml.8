@@ -2,112 +2,118 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC14C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D661A206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB78206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:45:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="RK8P9qip"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="GvZcyUa0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgGXTkg (ORCPT
+        id S1726807AbgGXTpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:40:36 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:60434 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgGXTkg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:40:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1+/vH/LNVq3z6IyOwmadh9LNf0EtvgbHbnnQfZcGz+s=; b=RK8P9qip85bzZhXDx0HGVg69BB
-        RZr1EuZ7AxNgcRDhNl+yiYPUN/e3q7FftCv2bOWx7v4pJE3Vio3JKK4KyMdkKCwrSWJxsybtARvUY
-        JADz0/l/bbHKzv1qIDqW9xrLam5tMqbfcntdvDzXKnUB3LSXtiq21mIPuiZdJW9lyLuO9p/AUC+7Q
-        WGSU5yvbz1b6iIi/Vllc+/by9T5bo+kOaQ98imKJU2FZsaKgq4CKZ8T5Y6bJ/umucVltBTaodx18S
-        5vxdDkr1MO/Z2e/PgN+/rYCniT2qDtmaMpi+nJHZjAdgQpMaFWlCwxiQ6QxTdGh552ffedRdFXEYO
-        IFlnmb2Q==;
-Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jz3YQ-0001DC-LM; Fri, 24 Jul 2020 13:40:27 -0600
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20200724172520.16318-1-logang@deltatee.com>
- <20200724172520.16318-7-logang@deltatee.com>
- <20200724193351.GA2857771@dhcp-10-100-145-180.wdl.wdc.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <d5c64c38-066c-013c-7a79-46230e439c5e@deltatee.com>
-Date:   Fri, 24 Jul 2020 13:40:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 15:45:21 -0400
+Received: from www.zeus03.de ([194.117.254.33]:57802 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726753AbgGXTpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 15:45:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=Eh8C7lhYPilo0pJK1tao0ffKb4ge
+        4wHU1nxtEKHZroI=; b=GvZcyUa0wyKnzpx2a18ZeF1sAqeISBF2gGtUK/re1ydW
+        /a0301/C/639LFzH7bYxkX/pcWGLyBoDZ5xkJeWN6XPJ/7GuQnVnm842vEYbWqA0
+        +klm2epLwU73oxpMsITBkVYEcQd1KUPJuneBdoiYr6Sg+L0Dscg0ugckZKrEaTo=
+Received: (qmail 3785575 invoked from network); 24 Jul 2020 21:45:18 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 24 Jul 2020 21:45:18 +0200
+X-UD-Smtp-Session: l3s3148p1@ecx0NjWrEJ8gAwDPXwcRAJKYSnl1dekZ
+Date:   Fri, 24 Jul 2020 21:45:18 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-i2c@vger.kernel.org, Robert Richter <rrichter@marvell.com>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        David Daney <david.daney@cavium.com>,
+        Jan Glauber <jan.glauber@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] i2c: octeon: check correct size of maximum
+ RECV_LEN packet
+Message-ID: <20200724194518.GE1227@ninjato>
+References: <20200628115245.9638-1-wsa+renesas@sang-engineering.com>
+ <20200628115245.9638-3-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-In-Reply-To: <20200724193351.GA2857771@dhcp-10-100-145-180.wdl.wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 24.64.145.4
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, maxg@mellanox.com, Chaitanya.Kulkarni@wdc.com, axboe@fb.com, sagi@grimberg.me, hch@lst.de, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, kbusch@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v16 6/9] nvmet-passthru: Add passthru code to process
- commands
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xJK8B5Wah2CMJs8h"
+Content-Disposition: inline
+In-Reply-To: <20200628115245.9638-3-wsa+renesas@sang-engineering.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--xJK8B5Wah2CMJs8h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2020-07-24 1:33 p.m., Keith Busch wrote:
-> On Fri, Jul 24, 2020 at 11:25:17AM -0600, Logan Gunthorpe wrote:
->> +	/*
->> +	 * The passthru NVMe driver may have a limit on the number of segments
->> +	 * which depends on the host's memory fragementation. To solve this,
->> +	 * ensure mdts is limitted to the pages equal to the number of
-> 
->                           limited
-> 
->> +	/* don't support fuse commands */
->> +	id->fuses = 0;
-> 
-> If a host were to set a fuse, the target should return an Invalid Field
-> error. Just to future-proof, rejecting commands with any flags set
-> (other than SGL, which you handled in patch 1/9) is probably what should
-> happen, like:
+On Sun, Jun 28, 2020 at 01:52:45PM +0200, Wolfram Sang wrote:
+> I2C_SMBUS_BLOCK_MAX defines already the maximum number as defined in the
+> SMBus 2.0 specs. I don't see a reason to add 1 here.
+>=20
+> Fixes: 886f6f8337dd ("i2c: octeon: Support I2C_M_RECV_LEN")
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
 
-> 
->> +u16 nvmet_parse_passthru_io_cmd(struct nvmet_req *req)
->> +{
-> 
-> 	if (req->cmd->common.flags & ~NVME_CMD_SGL_ALL)
-> 		return NVME_SC_INVALID_FIELD;
+Robert, is this correct?
 
+>=20
+> Only build tested, I don't have the HW. Please let me know if I
+> overlooked something, but to the best of my knowledge, this +1 is wrong.
+>=20
+>  drivers/i2c/busses/i2c-octeon-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-octeon-core.c b/drivers/i2c/busses/i2=
+c-octeon-core.c
+> index d9607905dc2f..845eda70b8ca 100644
+> --- a/drivers/i2c/busses/i2c-octeon-core.c
+> +++ b/drivers/i2c/busses/i2c-octeon-core.c
+> @@ -347,7 +347,7 @@ static int octeon_i2c_read(struct octeon_i2c *i2c, in=
+t target,
+>  		if (result)
+>  			return result;
+>  		if (recv_len && i =3D=3D 0) {
+> -			if (data[i] > I2C_SMBUS_BLOCK_MAX + 1)
+> +			if (data[i] > I2C_SMBUS_BLOCK_MAX)
+>  				return -EPROTO;
+>  			length +=3D data[i];
+>  		}
+> --=20
+> 2.20.1
+>=20
 
-Yes, this seems like a good idea. I can add it.
+--xJK8B5Wah2CMJs8h
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Or maybe we could obviate the need for 1/9 with something like:
-> 
-> 	req->cmd->common.flags &= ~NVME_CMD_SGL_ALL;
-> 	if (req->cmd->common.flags)
-> 		return NVME_SC_INVALID_FIELD;
+-----BEGIN PGP SIGNATURE-----
 
-We used to clear the SGL flags in the target passthru code but Christoph
-asked that it be done in the host code, hence patch 1/9.
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8bOk4ACgkQFA3kzBSg
+KbZ7Og/9HlQQB0vH7HZ75JzWgb891fo1M+KGscuFvi2OhZlBX4bTvQq1ZvdXBRVB
+FjkKmOLhuuC5xveSCxZKMbl0VE8HsteM5GkbNSazuNnlNbnel1GqzCnYXDQSL67J
++B/20Q+LNnreOHeX9LtqDjiA6f2UsIxEqbfzIPyGjGCSXh+/TpH0ftMunKL2Xzci
+svPjHneGv59b5kIgdIkB7Etq9oP+pvMtIJt7zMMaSFtLFY+qNtlnSgIixuOYuuSg
+JLu1qV1GGoMKGI1/61z+65FbKsFeaCKJOmLrmewcp5nqelY0NZCImebAWPBTfXUM
+D+/wCp1izdRe+4kaigrxe8klRU81n1twBIBerO/saSAgGjGV56fVYWjRAq4ZbvTx
+kh5IPSKN3uzbbipDzul+kOm1AV/AYYIr9Xu+aQuIZnWfjGztAqLmRLe5wh+K3mog
+fxtrlxHU6q/anv4cjL+KnzIxqwri+l1Jj7wqb9YYWVLLRGSNIT4vKCaO7cbZjIDu
+J1rJjR4QS1ZJpzsuCxH0Zkos97Gj/TKRTFZA5VB1UL5GqSvWDj+E30eOKuIVs9kn
+SWosT+f8P9t9eBKEZ93RBH9DCFknjIgYQ/+9oJuQYvoegu/1Xp0G2YfVFP0AMi3T
+P1BagBiYIHo3vyyk3tEhjeUsie2k8f/v592VODK+kynt+bqYOv8=
+=CkOK
+-----END PGP SIGNATURE-----
 
-Logan
+--xJK8B5Wah2CMJs8h--
