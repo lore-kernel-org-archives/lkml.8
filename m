@@ -2,110 +2,196 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7274C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B4EC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C065120714
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FB92073E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgGXHBX (ORCPT
+        id S1726982AbgGXHBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:01:23 -0400
-Received: from mga03.intel.com ([134.134.136.65]:50659 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726503AbgGXHBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:01:21 -0400
-IronPort-SDR: pFbzpoJiBnbDzraEPMyvnqH2OFySzKHeW2Wfv2VrA/mKFYXexUVGiejZuQ20ZGlKY4aeTwEUxb
- ztCdHjmvpRCQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9691"; a="150653763"
-X-IronPort-AV: E=Sophos;i="5.75,389,1589266800"; 
-   d="scan'208";a="150653763"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 00:01:21 -0700
-IronPort-SDR: B2ZkeVsNbC1TL2UgERXWT+X+mLWOrsf2xDSTHXBt3soZPstyH/CXEcPindDaacqcnldLUK9Ohs
- LSQJcxn/K02A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,389,1589266800"; 
-   d="scan'208";a="284845692"
-Received: from cbuerkle-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.36.184])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2020 00:01:18 -0700
-Date:   Fri, 24 Jul 2020 10:01:16 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v5 0/6] arch/x86: kprobes: Remove MODULES dependency
-Message-ID: <20200724070116.GA1872085@linux.intel.com>
-References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
+        Fri, 24 Jul 2020 03:01:19 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:59914 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726503AbgGXHBT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 03:01:19 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.8966789|0.1167637;BR=01201311R511ec;CH=green;DM=|AD|false|;DS=SPAM|spam_other|0.913775-0.00286365-0.0833614;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03298;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.I6q5Ffb_1595574068;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.I6q5Ffb_1595574068)
+          by smtp.aliyun-inc.com(10.147.41.178);
+          Fri, 24 Jul 2020 15:01:13 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org, mripard@kernel.org,
+        wens@csie.org
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com, Yangtao Li <frank@allwinnertech.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 03/16] dt-bindings: pinctrl: sunxi: Get rid of continual nesting
+Date:   Fri, 24 Jul 2020 15:00:31 +0800
+Message-Id: <229e4870dab1b34797304c384e68c7d04196423b.1595572867.git.frank@allwinnertech.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <cover.1595572867.git.frank@allwinnertech.com>
+References: <cover.1595572867.git.frank@allwinnertech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 08:05:47AM +0300, Jarkko Sakkinen wrote:
-> Remove MODULES dependency by migrating from module_alloc() to the new
-> text_alloc() API. Essentially these changes provide preliminaries for
-> allowing to compile a static kernel with a proper tracing support.
-> 
-> The same API can be used later on in other sites that allocate space for
-> trampolines, and trivially scaled to other arch's. An arch can inform
-> with CONFIG_ARCH_HAS_TEXT_ALLOC that it's providing implementation for
-> text_alloc().
-> 
-> Cc: linux-mm@kvack.org
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> 
-> v4:
-> * Squash lock_modules() patches into one.
-> * Remove fallback versions of text_alloc() and text_free(). Instead, use
->   ARCH_HAS_TEXT_ALLOC at site when required.
-> * Use lockdep_assert_irqs_enabled() in text_free() instead of
->   WARN_ON(in_interrupt()).
-> 
-> v3:
-> * Make text_alloc() API disjoint.
-> * Remove all the possible extra clutter not absolutely required and
->   split into more logical pieces.
-> 
-> Jarkko Sakkinen (6):
->   kprobes: Remove dependency to the module_mutex
->   vmalloc: Add text_alloc() and text_free()
->   arch/x86: Implement text_alloc() and text_free()
->   arch/x86: kprobes: Use text_alloc() and text_free()
->   kprobes: Use text_alloc() and text_free()
->   kprobes: Remove CONFIG_MODULES dependency
-> 
->  arch/Kconfig                   |  2 +-
->  arch/x86/Kconfig               |  3 ++
->  arch/x86/kernel/Makefile       |  1 +
->  arch/x86/kernel/kprobes/core.c |  4 +--
->  arch/x86/kernel/text_alloc.c   | 41 +++++++++++++++++++++++
->  include/linux/module.h         | 32 ++++++++++++++----
->  include/linux/vmalloc.h        | 17 ++++++++++
->  kernel/kprobes.c               | 61 +++++++++++++++++++++++-----------
->  kernel/trace/trace_kprobe.c    | 20 ++++++++---
->  9 files changed, 147 insertions(+), 34 deletions(-)
->  create mode 100644 arch/x86/kernel/text_alloc.c
-> 
-> -- 
-> 2.25.1
-> 
+From: Yangtao Li <frank@allwinnertech.com>
 
-Duplicates were caused by Internet connection breaking up in the
-middle. Apologies.
+Rather than a continual nesting of 'else' clauses, just make
+each 'if' a new entry under 'allOf' and get rid of the else.
 
-/Jarkko
+Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../pinctrl/allwinner,sun4i-a10-pinctrl.yaml  | 124 ++++++++++--------
+ 1 file changed, 68 insertions(+), 56 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+index 7556be6e2754..35a26abb02e7 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun4i-a10-pinctrl.yaml
+@@ -155,62 +155,74 @@ allOf:
+           minItems: 5
+           maxItems: 5
+ 
+-    else:
+-      if:
+-        properties:
+-          compatible:
+-            enum:
+-              - allwinner,sun6i-a31-pinctrl
+-              - allwinner,sun6i-a31s-pinctrl
+-              - allwinner,sun50i-h6-pinctrl
+-
+-      then:
+-        properties:
+-          interrupts:
+-            minItems: 4
+-            maxItems: 4
+-
+-      else:
+-        if:
+-          properties:
+-            compatible:
+-              enum:
+-                - allwinner,sun8i-a23-pinctrl
+-                - allwinner,sun8i-a83t-pinctrl
+-                - allwinner,sun50i-a64-pinctrl
+-                - allwinner,sun50i-h5-pinctrl
+-                - allwinner,suniv-f1c100s-pinctrl
+-
+-        then:
+-          properties:
+-            interrupts:
+-              minItems: 3
+-              maxItems: 3
+-
+-        else:
+-          if:
+-            properties:
+-              compatible:
+-                enum:
+-                  - allwinner,sun6i-a31-r-pinctrl
+-                  - allwinner,sun8i-a33-pinctrl
+-                  - allwinner,sun8i-h3-pinctrl
+-                  - allwinner,sun8i-v3-pinctrl
+-                  - allwinner,sun8i-v3s-pinctrl
+-                  - allwinner,sun9i-a80-r-pinctrl
+-                  - allwinner,sun50i-h6-r-pinctrl
+-
+-          then:
+-            properties:
+-              interrupts:
+-                minItems: 2
+-                maxItems: 2
+-
+-          else:
+-            properties:
+-              interrupts:
+-                minItems: 1
+-                maxItems: 1
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun6i-a31-pinctrl
++            - allwinner,sun6i-a31s-pinctrl
++            - allwinner,sun50i-h6-pinctrl
++
++    then:
++      properties:
++        interrupts:
++          minItems: 4
++          maxItems: 4
++
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun8i-a23-pinctrl
++            - allwinner,sun8i-a83t-pinctrl
++            - allwinner,sun50i-a64-pinctrl
++            - allwinner,sun50i-h5-pinctrl
++            - allwinner,suniv-f1c100s-pinctrl
++
++    then:
++      properties:
++        interrupts:
++          minItems: 3
++          maxItems: 3
++
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun6i-a31-r-pinctrl
++            - allwinner,sun8i-a33-pinctrl
++            - allwinner,sun8i-h3-pinctrl
++            - allwinner,sun8i-v3-pinctrl
++            - allwinner,sun8i-v3s-pinctrl
++            - allwinner,sun9i-a80-r-pinctrl
++            - allwinner,sun50i-h6-r-pinctrl
++
++    then:
++      properties:
++        interrupts:
++          minItems: 2
++          maxItems: 2
++
++  - if:
++      properties:
++        compatible:
++          enum:
++            - allwinner,sun4i-a10-pinctrl
++            - allwinner,sun5i-a10s-pinctrl
++            - allwinner,sun5i-a13-pinctrl
++            - allwinner,sun7i-a20-pinctrl
++            - allwinner,sun8i-a23-r-pinctrl
++            - allwinner,sun8i-a83t-r-pinctrl
++            - allwinner,sun8i-h3-r-pinctrl
++            - allwinner,sun8i-r40-pinctrl
++            - allwinner,sun50i-a64-r-pinctrl
++            - nextthing,gr8-pinctrl
++
++    then:
++      properties:
++        interrupts:
++          minItems: 1
++          maxItems: 1
+ 
+ additionalProperties: false
+ 
+-- 
+2.24.0
+
