@@ -2,137 +2,176 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6385C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5433AC433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0168206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31113206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:44:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mk+WRy0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgGXTn6 (ORCPT
+        id S1726736AbgGXTos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:43:58 -0400
-Received: from mga18.intel.com ([134.134.136.126]:28554 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbgGXTn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:43:57 -0400
-IronPort-SDR: EfyhiW3llWlszXI3GBFqhly+qsP2rPDJX12B1ZCW1e0fDLHBKP+784TFknVpFI6TXo/vf9mqp7
- UoYWvt582+sA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="138282996"
-X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="138282996"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 12:43:56 -0700
-IronPort-SDR: xw35vgWVMvuh2FxBDPdLOZ98hPNSo7kyjZ00bcaGwKX/k2DG8gIcu2MZetY8wt/D3BJ5XnscaB
- FrmYkinokGDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="272667289"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Jul 2020 12:43:56 -0700
-Date:   Fri, 24 Jul 2020 12:43:56 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across
- exceptions
-Message-ID: <20200724194355.GA844234@iweiny-DESK2.sc.intel.com>
-References: <20200724172344.GO844235@iweiny-DESK2.sc.intel.com>
- <D866BD75-42A2-43B2-B07A-55BCC3781FEC@amacapital.net>
+        Fri, 24 Jul 2020 15:44:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgGXTor (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 15:44:47 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90198C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:44:47 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id p1so5095882pls.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:44:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=GoHCwmbzVzBre/i+XFFjGlgzIQcO8cz5Ijth2WsQR68=;
+        b=mk+WRy0SCcT29iDihjgngxYvJKgdz3HvJc5hCn4RXObEA2Ur2RclSuU91mrIDMWoOb
+         KNxBhbyahIREGac3gg9VCNy7n3BAfSkrET5h8p+K++4mAwzHUefy4cIsXJh5sYYcKqMp
+         s1TljNl+Oety9TCq0Li8E0A9hA4Mm5Ld5UvF4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=GoHCwmbzVzBre/i+XFFjGlgzIQcO8cz5Ijth2WsQR68=;
+        b=UgQb3lXjxbbdltOvZlSuVcDEO0NuSPsaUuN6VtfTuB+f98SG3G8VVGEDb+HX5kQpvU
+         EScL34adSo5oOO3SBJqZf2ZKf2m7ZFQ3WeUVFi9/jQtbBv38bVCqsenmXPjV/6FHJF8M
+         kxXup7LuMY2b8taRsg/TXaai05ps69ErjaDmDoamlkSDclYgCHQVJrFTwi0T5CNCbPR7
+         tBT5XCVlh8cMWczAOmu387mHObjIKubjmxtLuIwiS9Ld7Wic1YTrkfXUP5KvmyZy/Yyx
+         oQfrn1H0c+l224V/+qMgNklXPRn3rsDzknlxe6w0mu0ZOEXaTYGbNN5Rz742qn6LRjWZ
+         TYiA==
+X-Gm-Message-State: AOAM533wwD8F6uQdk0PHjQSP0KdS9hlUjb84yqZfv7hOHT441TBzGTvh
+        1+0zSwVwpzu4+IABC3gOUnANFjKnkhk=
+X-Google-Smtp-Source: ABdhPJw8+1mzNhYhvKffNffPjmnAWh4eVKuNJ2xJ17Uzw5pvN8DTpankN+GUMJ4/IQLRyfIrLhSiFw==
+X-Received: by 2002:a17:90a:c68e:: with SMTP id n14mr6678770pjt.182.1595619886613;
+        Fri, 24 Jul 2020 12:44:46 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id d18sm6390813pjv.25.2020.07.24.12.44.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 12:44:46 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D866BD75-42A2-43B2-B07A-55BCC3781FEC@amacapital.net>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAD=FV=WtjyYY+bmocc17S9NbRs6inkAWjj7=c9qBsVf3LtG99Q@mail.gmail.com>
+References: <20200723010137.3127584-1-swboyd@chromium.org> <CAD=FV=WtjyYY+bmocc17S9NbRs6inkAWjj7=c9qBsVf3LtG99Q@mail.gmail.com>
+Subject: Re: [PATCH] soc: qcom: rpmh-rsc: Sleep waiting for tcs slots to be free
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Date:   Fri, 24 Jul 2020 12:44:45 -0700
+Message-ID: <159561988523.3847286.14763422711224252201@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 10:29:23AM -0700, Andy Lutomirski wrote:
-> 
-> > On Jul 24, 2020, at 10:23 AM, Ira Weiny <ira.weiny@intel.com> wrote:
-> > 
-> > ﻿On Thu, Jul 23, 2020 at 10:15:17PM +0200, Thomas Gleixner wrote:
-> >> Thomas Gleixner <tglx@linutronix.de> writes:
-> >> 
-> >>> Ira Weiny <ira.weiny@intel.com> writes:
-> >>>> On Fri, Jul 17, 2020 at 12:06:10PM +0200, Peter Zijlstra wrote:
-> >>>>>> On Fri, Jul 17, 2020 at 12:20:56AM -0700, ira.weiny@intel.com wrote:
-> >>>>> I've been really digging into this today and I'm very concerned that I'm
-> >>>>> completely missing something WRT idtentry_enter() and idtentry_exit().
-> >>>>> 
-> >>>>> I've instrumented idt_{save,restore}_pkrs(), and __dev_access_{en,dis}able()
-> >>>>> with trace_printk()'s.
-> >>>>> 
-> >>>>> With this debug code, I have found an instance where it seems like
-> >>>>> idtentry_enter() is called without a corresponding idtentry_exit().  This has
-> >>>>> left the thread ref counter at 0 which results in very bad things happening
-> >>>>> when __dev_access_disable() is called and the ref count goes negative.
-> >>>>> 
-> >>>>> Effectively this seems to be happening:
-> >>>>> 
-> >>>>> ...
-> >>>>>    // ref == 0
-> >>>>>    dev_access_enable()  // ref += 1 ==> disable protection
-> >>>>>        // exception  (which one I don't know)
-> >>>>>            idtentry_enter()
-> >>>>>                // ref = 0
-> >>>>>                _handler() // or whatever code...
-> >>>>>            // *_exit() not called [at least there is no trace_printk() output]...
-> >>>>>            // Regardless of trace output, the ref is left at 0
-> >>>>>    dev_access_disable() // ref -= 1 ==> -1 ==> does not enable protection
-> >>>>>    (Bad stuff is bound to happen now...)
-> >>> 
-> >>> Well, if any exception which calls idtentry_enter() would return without
-> >>> going through idtentry_exit() then lots of bad stuff would happen even
-> >>> without your patches.
-> >>> 
-> >>>> Also is there any chance that the process could be getting scheduled and that
-> >>>> is causing an issue?
-> >>> 
-> >>> Only from #PF, but after the fault has been resolved and the tasks is
-> >>> scheduled in again then the task returns through idtentry_exit() to the
-> >>> place where it took the fault. That's not guaranteed to be on the same
-> >>> CPU. If schedule is not aware of the fact that the exception turned off
-> >>> stuff then you surely get into trouble. So you really want to store it
-> >>> in the task itself then the context switch code can actually see the
-> >>> state and act accordingly.
-> >> 
-> >> Actually thats nasty as well as you need a stack of PKRS values to
-> >> handle nested exceptions. But it might be still the most reasonable
-> >> thing to do. 7 PKRS values plus an index should be really sufficient,
-> >> that's 32bytes total, not that bad.
-> > 
-> > I've thought about this a bit more and unless I'm wrong I think the
-> > idtentry_state provides for that because each nested exception has it's own
-> > idtentry_state doesn't it?
-> 
-> Only the ones that use idtentry_enter() instead of, say, nmi_enter().
+Quoting Doug Anderson (2020-07-24 10:42:55)
+> Hi,
+>=20
+> On Wed, Jul 22, 2020 at 6:01 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> > diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-i=
+nternal.h
+> > index ef60e790a750..9a325bac58fe 100644
+> > --- a/drivers/soc/qcom/rpmh-internal.h
+> > +++ b/drivers/soc/qcom/rpmh-internal.h
+> > @@ -118,6 +119,7 @@ struct rsc_drv {
+> >         struct tcs_group tcs[TCS_TYPE_NR];
+> >         DECLARE_BITMAP(tcs_in_use, MAX_TCS_NR);
+> >         spinlock_t lock;
+> > +       wait_queue_head_t tcs_wait;
+>=20
+> nit: this structure has a kernel-doc comment above it describing the
+> elements.  Could you add yours?
 
-Oh agreed...
+Sure.
 
-But with this patch we are still better off than just preserving during context
-switch.
+>=20
+>=20
+> >         struct rpmh_ctrlr client;
+> >  };
+> >
+> > diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> > index 076fd27f3081..6c758b052c95 100644
+> > --- a/drivers/soc/qcom/rpmh-rsc.c
+> > +++ b/drivers/soc/qcom/rpmh-rsc.c
+> > @@ -19,6 +19,7 @@
+> >  #include <linux/platform_device.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/spinlock.h>
+> > +#include <linux/wait.h>
+> >
+> >  #include <soc/qcom/cmd-db.h>
+> >  #include <soc/qcom/tcs.h>
+> > @@ -444,6 +445,7 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
+> >                  */
+> >                 if (!drv->tcs[ACTIVE_TCS].num_tcs)
+> >                         enable_tcs_irq(drv, i, false);
+> > +               wake_up(&drv->tcs_wait);
+> >                 spin_unlock(&drv->lock);
+>=20
+> nit: I think it's slightly better to do the wake_up() after the
+> spin_unlock(), no?  The first thing the other task will do is to try
+> to grab the spinlock and we might as well give it a chance of
+> succeeding without looping.  I don't see any reason why we'd need to
+> be holding the lock while calling wake_up().
 
-I need to update the commit message here to make this clear though.
+Right that's better.
 
-Thanks,
-Ira
+>=20
+>=20
+> >                 if (req)
+> >                         rpmh_tx_done(req, err);
+> > @@ -562,44 +564,59 @@ static int find_free_tcs(struct tcs_group *tcs)
+> >         return -EBUSY;
+> >  }
+> >
+> > +static int claim_tcs_for_req(struct rsc_drv *drv, struct tcs_group *tc=
+s,
+> > +                            const struct tcs_request *msg)
+>=20
+> nit: I know this is a short function and kernel convention doesn't
+> strictly require comments in front of all functions.  However, every
+> other function in this file has a comment and I had a really hard time
+> dealing with the rpmh-rsc code before the comments.  Could you add one
+> for your function, even if it's short?  One thing that would be nice
+> to note is that the only error it returns is -EBUSY.  See below.
+
+Sure I'll write up some kernel-doc.
+
+>=20
+> > -       if (ret)
+> > -               goto unlock;
+> >
+> > -       ret =3D find_free_tcs(tcs);
+> > -       if (ret < 0)
+> > -               goto unlock;
+> > -       tcs_id =3D ret;
+> > +       wait_event_lock_irq(drv->tcs_wait,
+> > +                           (tcs_id =3D claim_tcs_for_req(drv, tcs, msg=
+)) >=3D 0,
+>=20
+> Even though claim_tcs_for_req() only returns 0 or -EBUSY today (IOW it
+> never returns error codes other than -EBUSY), should we handle it?  If
+> we don't, claim_tcs_for_req() should be very clear that it shouldn't
+> return any errors other than -EBUSY.
+
+Do you mean you want to change it to be
+
+	(tcs_id =3D claim_tcs_for_req(drv, tcs, msg)) !=3D -EBUSY
+
+instead of >=3D 0? It should return the tcs_id that was claimed, not just
+0 or -EBUSY.
