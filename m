@@ -7,40 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3204DC433EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF642063A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0682065D
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="LWa7njuG"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="XWi27uu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgGXJZh (ORCPT
+        id S1728194AbgGXJZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:25:37 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46265 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726572AbgGXJZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 05:25:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728040AbgGXJZf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 24 Jul 2020 05:25:35 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD86AC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 02:25:35 -0700 (PDT)
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 4BCkMH5gf4z9sSt; Fri, 24 Jul 2020 19:25:31 +1000 (AEST)
+        id 4BCkML15nCz9sTH; Fri, 24 Jul 2020 19:25:33 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1595582731;
-        bh=db7R72ZCTisKVf7zjg1eF+11M6bWtithNyKdSD6Yy7Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LWa7njuGH8XC/7WYQ9I+Fvz4wp1NfljqIs2M3eJ+hh9RMLYq4UyydX36ygZfTH2jy
-         8Js6U/Lj59593SngNB/9f4XRyoi5cKwIn/p07pTz26TpSAHo0D/CW5ht48yLqhlN+v
-         /1Z4tN1y96jNduFccmLpVvC8BQTYl8mIjXdTPTHnonkhWVUhMMEw3uc3Kvf0gY4m5L
-         6vAGvvBTwYY8MWiJ5sTinSzpwM4aioWUgiYNakujRenhERh6j4q6PMdF6FHpjW0mgu
-         uAncQh2oQbKQD1e+0+4bHeRI852mIep0LHrh8SNqNvlIeEiz4pG1F5vlobMMA8L8Hv
-         Qv5nMcKzj3gpg==
+        s=201909; t=1595582734;
+        bh=+8cqjkqHaV2Fdc+XJiRrtGzQPkh7+z+f1xp0j/Xr3Gc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XWi27uu7R1nVGiZeI8S20drXeMQ3IsVk028DUF/7CI1vOI3XvVuL3z567R+IFbGF6
+         I+ouzWrWBIv5F5vf1409baseyFg0AWvwivHdRmYGSQiCLfF0dUA6SyLinQauLNjQQs
+         mYopcr4Zeg5wjW6CZTv0aQTybVJ/LG0QqCefOFJ81f9/Huw9RjDFhRvqTu06eBX6up
+         1IkVzfIz5VtYVU0vl01QiZ1LFvtT6gp8HrkcUH++0wpMv+m4yBasw/46EWP7RwUZdz
+         bpb5EDJAa8TnkMlMQbqdHQ0PWRncfie6SjI+5PO2ShRwTOPG9PDh5g4fYSLRufbt1P
+         MUUFlNoHSWQdg==
 From:   Michael Ellerman <mpe@ellerman.id.au>
 To:     linuxppc-dev@ozlabs.org
 Cc:     dja@axtens.net, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] selftests/powerpc: Add test of stack expansion logic
-Date:   Fri, 24 Jul 2020 19:25:24 +1000
-Message-Id: <20200724092528.1578671-1-mpe@ellerman.id.au>
+Subject: [PATCH v2 4/5] powerpc/mm: Remove custom stack expansion checking
+Date:   Fri, 24 Jul 2020 19:25:27 +1000
+Message-Id: <20200724092528.1578671-4-mpe@ellerman.id.au>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200724092528.1578671-1-mpe@ellerman.id.au>
+References: <20200724092528.1578671-1-mpe@ellerman.id.au>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,445 +54,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have custom stack expansion checks that it turns out are extremely
-badly tested and contain bugs, surprise. So add some tests that
-exercise the code and capture the current boundary conditions.
+We have powerpc specific logic in our page fault handling to decide if
+an access to an unmapped address below the stack pointer should expand
+the stack VMA.
 
-The signal test currently fails on 64-bit kernels because the 2048
-byte allowance for the signal frame is too small, we will fix that in
-a subsequent patch.
+The logic aims to prevent userspace from doing bad accesses below the
+stack pointer. However as long as the stack is < 1MB in size, we allow
+all accesses without further checks. Adding some debug I see that I
+can do a full kernel build and LTP run, and not a single process has
+used more than 1MB of stack. So for the majority of processes the
+logic never even fires.
+
+We also recently found a nasty bug in this code which could cause
+userspace programs to be killed during signal delivery. It went
+unnoticed presumably because most processes use < 1MB of stack.
+
+The generic mm code has also grown support for stack guard pages since
+this code was originally written, so the most heinous case of the
+stack expanding into other mappings is now handled for us.
+
+Finally although some other arches have special logic in this path,
+from what I can tell none of x86, arm64, arm and s390 impose any extra
+checks other than those in expand_stack().
+
+So drop our complicated logic and like other architectures just let
+the stack expand as long as its within the rlimit.
 
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 ---
+ arch/powerpc/mm/fault.c | 109 ++--------------------------------------
+ 1 file changed, 5 insertions(+), 104 deletions(-)
 
-v2:
- - Concentrate on used stack around the 1MB size, as that's where our
-   custom logic kicks in.
- - Increment the used stack size by 64 so we can exercise the case
-   where we overflow the page by less than 128 (__SIGNAL_FRAMESIZE).
+v2: no change just rebased.
 
----
- tools/testing/selftests/powerpc/mm/.gitignore |   2 +
- tools/testing/selftests/powerpc/mm/Makefile   |   9 +-
- .../powerpc/mm/stack_expansion_ldst.c         | 233 ++++++++++++++++++
- .../powerpc/mm/stack_expansion_signal.c       | 118 +++++++++
- tools/testing/selftests/powerpc/pmu/lib.h     |   1 +
- 5 files changed, 362 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/powerpc/mm/stack_expansion_ldst.c
- create mode 100644 tools/testing/selftests/powerpc/mm/stack_expansion_signal.c
-
-diff --git a/tools/testing/selftests/powerpc/mm/.gitignore b/tools/testing/selftests/powerpc/mm/.gitignore
-index 8d041f508a51..52308f42b7de 100644
---- a/tools/testing/selftests/powerpc/mm/.gitignore
-+++ b/tools/testing/selftests/powerpc/mm/.gitignore
-@@ -8,3 +8,5 @@ large_vm_fork_separation
- bad_accesses
- tlbie_test
- pkey_exec_prot
-+stack_expansion_ldst
-+stack_expansion_signal
-diff --git a/tools/testing/selftests/powerpc/mm/Makefile b/tools/testing/selftests/powerpc/mm/Makefile
-index 5a86d59441dc..6cd772e0e374 100644
---- a/tools/testing/selftests/powerpc/mm/Makefile
-+++ b/tools/testing/selftests/powerpc/mm/Makefile
-@@ -3,7 +3,9 @@
- 	$(MAKE) -C ../
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 3ebb1792e636..925a7231abb3 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -42,39 +42,7 @@
+ #include <asm/kup.h>
+ #include <asm/inst.h>
  
- TEST_GEN_PROGS := hugetlb_vs_thp_test subpage_prot segv_errors wild_bctr \
--		  large_vm_fork_separation bad_accesses pkey_exec_prot
-+		  large_vm_fork_separation bad_accesses pkey_exec_prot stack_expansion_signal \
-+		  stack_expansion_ldst
+-/*
+- * Check whether the instruction inst is a store using
+- * an update addressing form which will update r1.
+- */
+-static bool store_updates_sp(struct ppc_inst inst)
+-{
+-	/* check for 1 in the rA field */
+-	if (((ppc_inst_val(inst) >> 16) & 0x1f) != 1)
+-		return false;
+-	/* check major opcode */
+-	switch (ppc_inst_primary_opcode(inst)) {
+-	case OP_STWU:
+-	case OP_STBU:
+-	case OP_STHU:
+-	case OP_STFSU:
+-	case OP_STFDU:
+-		return true;
+-	case OP_STD:	/* std or stdu */
+-		return (ppc_inst_val(inst) & 3) == 1;
+-	case OP_31:
+-		/* check minor opcode */
+-		switch ((ppc_inst_val(inst) >> 1) & 0x3ff) {
+-		case OP_31_XOP_STDUX:
+-		case OP_31_XOP_STWUX:
+-		case OP_31_XOP_STBUX:
+-		case OP_31_XOP_STHUX:
+-		case OP_31_XOP_STFSUX:
+-		case OP_31_XOP_STFDUX:
+-			return true;
+-		}
+-	}
+-	return false;
+-}
 +
- TEST_GEN_PROGS_EXTENDED := tlbie_test
- TEST_GEN_FILES := tempfile
+ /*
+  * do_page_fault error handling helpers
+  */
+@@ -267,57 +235,6 @@ static bool bad_kernel_fault(struct pt_regs *regs, unsigned long error_code,
+ 	return false;
+ }
  
-@@ -17,6 +19,11 @@ $(OUTPUT)/large_vm_fork_separation: CFLAGS += -m64
- $(OUTPUT)/bad_accesses: CFLAGS += -m64
- $(OUTPUT)/pkey_exec_prot: CFLAGS += -m64
+-// This comes from 64-bit struct rt_sigframe + __SIGNAL_FRAMESIZE
+-#define SIGFRAME_MAX_SIZE	(4096 + 128)
+-
+-static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
+-				struct vm_area_struct *vma, unsigned int flags,
+-				bool *must_retry)
+-{
+-	/*
+-	 * N.B. The POWER/Open ABI allows programs to access up to
+-	 * 288 bytes below the stack pointer.
+-	 * The kernel signal delivery code writes a bit over 4KB
+-	 * below the stack pointer (r1) before decrementing it.
+-	 * The exec code can write slightly over 640kB to the stack
+-	 * before setting the user r1.  Thus we allow the stack to
+-	 * expand to 1MB without further checks.
+-	 */
+-	if (address + 0x100000 < vma->vm_end) {
+-		struct ppc_inst __user *nip = (struct ppc_inst __user *)regs->nip;
+-		/* get user regs even if this fault is in kernel mode */
+-		struct pt_regs *uregs = current->thread.regs;
+-		if (uregs == NULL)
+-			return true;
+-
+-		/*
+-		 * A user-mode access to an address a long way below
+-		 * the stack pointer is only valid if the instruction
+-		 * is one which would update the stack pointer to the
+-		 * address accessed if the instruction completed,
+-		 * i.e. either stwu rs,n(r1) or stwux rs,r1,rb
+-		 * (or the byte, halfword, float or double forms).
+-		 *
+-		 * If we don't check this then any write to the area
+-		 * between the last mapped region and the stack will
+-		 * expand the stack rather than segfaulting.
+-		 */
+-		if (address + SIGFRAME_MAX_SIZE >= uregs->gpr[1])
+-			return false;
+-
+-		if ((flags & FAULT_FLAG_WRITE) && (flags & FAULT_FLAG_USER) &&
+-		    access_ok(nip, sizeof(*nip))) {
+-			struct ppc_inst inst;
+-
+-			if (!probe_user_read_inst(&inst, nip))
+-				return !store_updates_sp(inst);
+-			*must_retry = true;
+-		}
+-		return true;
+-	}
+-	return false;
+-}
+-
+ #ifdef CONFIG_PPC_MEM_KEYS
+ static bool access_pkey_error(bool is_write, bool is_exec, bool is_pkey,
+ 			      struct vm_area_struct *vma)
+@@ -483,7 +400,6 @@ static int __do_page_fault(struct pt_regs *regs, unsigned long address,
+ 	int is_user = user_mode(regs);
+ 	int is_write = page_fault_is_write(error_code);
+ 	vm_fault_t fault, major = 0;
+-	bool must_retry = false;
+ 	bool kprobe_fault = kprobe_page_fault(regs, 11);
  
-+$(OUTPUT)/stack_expansion_signal: ../utils.c ../pmu/lib.c
-+
-+$(OUTPUT)/stack_expansion_ldst: CFLAGS += -fno-stack-protector
-+$(OUTPUT)/stack_expansion_ldst: ../utils.c
-+
- $(OUTPUT)/tempfile:
- 	dd if=/dev/zero of=$@ bs=64k count=1
+ 	if (unlikely(debugger_fault_handler(regs) || kprobe_fault))
+@@ -572,30 +488,15 @@ static int __do_page_fault(struct pt_regs *regs, unsigned long address,
+ 	vma = find_vma(mm, address);
+ 	if (unlikely(!vma))
+ 		return bad_area(regs, address);
+-	if (likely(vma->vm_start <= address))
+-		goto good_area;
+-	if (unlikely(!(vma->vm_flags & VM_GROWSDOWN)))
+-		return bad_area(regs, address);
  
-diff --git a/tools/testing/selftests/powerpc/mm/stack_expansion_ldst.c b/tools/testing/selftests/powerpc/mm/stack_expansion_ldst.c
-new file mode 100644
-index 000000000000..0587e11437f5
---- /dev/null
-+++ b/tools/testing/selftests/powerpc/mm/stack_expansion_ldst.c
-@@ -0,0 +1,233 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Test that loads/stores expand the stack segment, or trigger a SEGV, in
-+ * various conditions.
-+ *
-+ * Based on test code by Tom Lane.
-+ */
-+
-+#undef NDEBUG
-+#include <assert.h>
-+
-+#include <err.h>
-+#include <errno.h>
-+#include <stdio.h>
-+#include <signal.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/resource.h>
-+#include <sys/time.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+
-+#define _KB (1024)
-+#define _MB (1024 * 1024)
-+
-+volatile char *stack_top_ptr;
-+volatile unsigned long stack_top_sp;
-+volatile char c;
-+
-+enum access_type {
-+	LOAD,
-+	STORE,
-+};
-+
-+/*
-+ * Consume stack until the stack pointer is below @target_sp, then do an access
-+ * (load or store) at offset @delta from either the base of the stack or the
-+ * current stack pointer.
-+ */
-+__attribute__ ((noinline))
-+int consume_stack(unsigned long target_sp, unsigned long stack_high, int delta, enum access_type type)
-+{
-+	unsigned long target;
-+	char stack_cur;
-+
-+	if ((unsigned long)&stack_cur > target_sp)
-+		return consume_stack(target_sp, stack_high, delta, type);
-+	else {
-+		// We don't really need this, but without it GCC might not
-+		// generate a recursive call above.
-+		stack_top_ptr = &stack_cur;
-+
-+#ifdef __powerpc__
-+		asm volatile ("mr %[sp], %%r1" : [sp] "=r" (stack_top_sp));
-+#else
-+		asm volatile ("mov %%rsp, %[sp]" : [sp] "=r" (stack_top_sp));
-+#endif
-+
-+		// Kludge, delta < 0 indicates relative to SP
-+		if (delta < 0)
-+			target = stack_top_sp + delta;
-+		else
-+			target = stack_high - delta + 1;
-+
-+		volatile char *p = (char *)target;
-+
-+		if (type == STORE)
-+			*p = c;
-+		else
-+			c = *p;
-+
-+		// Do something to prevent the stack frame being popped prior to
-+		// our access above.
-+		getpid();
-+	}
-+
-+	return 0;
-+}
-+
-+static int search_proc_maps(char *needle, unsigned long *low, unsigned long *high)
-+{
-+	unsigned long start, end;
-+	static char buf[4096];
-+	char name[128];
-+	FILE *f;
-+	int rc;
-+
-+	f = fopen("/proc/self/maps", "r");
-+	if (!f) {
-+		perror("fopen");
-+		return -1;
-+	}
-+
-+	while (fgets(buf, sizeof(buf), f)) {
-+		rc = sscanf(buf, "%lx-%lx %*c%*c%*c%*c %*x %*d:%*d %*d %127s\n",
-+			    &start, &end, name);
-+		if (rc == 2)
-+			continue;
-+
-+		if (rc != 3) {
-+			printf("sscanf errored\n");
-+			rc = -1;
-+			break;
-+		}
-+
-+		if (strstr(name, needle)) {
-+			*low = start;
-+			*high = end - 1;
-+			rc = 0;
-+			break;
-+		}
-+	}
-+
-+	fclose(f);
-+
-+	return rc;
-+}
-+
-+int child(unsigned int stack_used, int delta, enum access_type type)
-+{
-+	unsigned long low, stack_high;
-+
-+	assert(search_proc_maps("[stack]", &low, &stack_high) == 0);
-+
-+	assert(consume_stack(stack_high - stack_used, stack_high, delta, type) == 0);
-+
-+	printf("Access OK: %s delta %-7d used size 0x%06x stack high 0x%lx top_ptr %p top sp 0x%lx actual used 0x%lx\n",
-+	       type == LOAD ? "load" : "store", delta, stack_used, stack_high,
-+	       stack_top_ptr, stack_top_sp, stack_high - stack_top_sp + 1);
-+
-+	return 0;
-+}
-+
-+static int test_one(unsigned int stack_used, int delta, enum access_type type)
-+{
-+	pid_t pid;
-+	int rc;
-+
-+	pid = fork();
-+	if (pid == 0)
-+		exit(child(stack_used, delta, type));
-+
-+	assert(waitpid(pid, &rc, 0) != -1);
-+
-+	if (WIFEXITED(rc) && WEXITSTATUS(rc) == 0)
-+		return 0;
-+
-+	// We don't expect a non-zero exit that's not a signal
-+	assert(!WIFEXITED(rc));
-+
-+	printf("Faulted:   %s delta %-7d used size 0x%06x signal %d\n",
-+	       type == LOAD ? "load" : "store", delta, stack_used,
-+	       WTERMSIG(rc));
-+
-+	return 1;
-+}
-+
-+// This is fairly arbitrary but is well below any of the targets below,
-+// so that the delta between the stack pointer and the target is large.
-+#define DEFAULT_SIZE	(32 * _KB)
-+
-+static void test_one_type(enum access_type type, unsigned long page_size, unsigned long rlim_cur)
-+{
-+	assert(test_one(DEFAULT_SIZE, 512 * _KB, type) == 0);
-+
-+	// powerpc has a special case to allow up to 1MB
-+	assert(test_one(DEFAULT_SIZE, 1 * _MB, type) == 0);
-+
-+#ifdef __powerpc__
-+	// This fails on powerpc because it's > 1MB and is not a stdu &
-+	// not close to r1
-+	assert(test_one(DEFAULT_SIZE, 1 * _MB + 8, type) != 0);
-+#else
-+	assert(test_one(DEFAULT_SIZE, 1 * _MB + 8, type) == 0);
-+#endif
-+
-+#ifdef __powerpc__
-+	// Accessing way past the stack pointer is not allowed on powerpc
-+	assert(test_one(DEFAULT_SIZE, rlim_cur, type) != 0);
-+#else
-+	// We should be able to access anywhere within the rlimit
-+	assert(test_one(DEFAULT_SIZE, rlim_cur, type) == 0);
-+#endif
-+
-+	// But if we go past the rlimit it should fail
-+	assert(test_one(DEFAULT_SIZE, rlim_cur + 1, type) != 0);
-+
-+	// Above 1MB powerpc only allows accesses within 2048 bytes of
-+	// r1 for accesses that aren't stdu
-+	assert(test_one(1 * _MB + page_size - 128, -2048, type) == 0);
-+#ifdef __powerpc__
-+	assert(test_one(1 * _MB + page_size - 128, -2049, type) != 0);
-+#else
-+	assert(test_one(1 * _MB + page_size - 128, -2049, type) == 0);
-+#endif
-+
-+	// By consuming 2MB of stack we test the stdu case
-+	assert(test_one(2 * _MB + page_size - 128, -2048, type) == 0);
-+}
-+
-+static int test(void)
-+{
-+	unsigned long page_size;
-+	struct rlimit rlimit;
-+
-+	page_size = getpagesize();
-+	getrlimit(RLIMIT_STACK, &rlimit);
-+	printf("Stack rlimit is 0x%lx\n", rlimit.rlim_cur);
-+
-+	printf("Testing loads ...\n");
-+	test_one_type(LOAD, page_size, rlimit.rlim_cur);
-+	printf("Testing stores ...\n");
-+	test_one_type(STORE, page_size, rlimit.rlim_cur);
-+
-+	printf("All OK\n");
-+
-+	return 0;
-+}
-+
-+#ifdef __powerpc__
-+#include "utils.h"
-+
-+int main(void)
-+{
-+	return test_harness(test, "stack_expansion_ldst");
-+}
-+#else
-+int main(void)
-+{
-+	return test();
-+}
-+#endif
-diff --git a/tools/testing/selftests/powerpc/mm/stack_expansion_signal.c b/tools/testing/selftests/powerpc/mm/stack_expansion_signal.c
-new file mode 100644
-index 000000000000..c8b32a29e274
---- /dev/null
-+++ b/tools/testing/selftests/powerpc/mm/stack_expansion_signal.c
-@@ -0,0 +1,118 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Test that signal delivery is able to expand the stack segment without
-+ * triggering a SEGV.
-+ *
-+ * Based on test code by Tom Lane.
-+ */
-+
-+#include <err.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <signal.h>
-+#include <sys/types.h>
-+#include <unistd.h>
-+
-+#include "../pmu/lib.h"
-+#include "utils.h"
-+
-+#define _KB (1024)
-+#define _MB (1024 * 1024)
-+
-+static char *stack_base_ptr;
-+static char *stack_top_ptr;
-+
-+static volatile sig_atomic_t sig_occurred = 0;
-+
-+static void sigusr1_handler(int signal_arg)
-+{
-+	sig_occurred = 1;
-+}
-+
-+static int consume_stack(unsigned int stack_size, union pipe write_pipe)
-+{
-+	char stack_cur;
-+
-+	if ((stack_base_ptr - &stack_cur) < stack_size)
-+		return consume_stack(stack_size, write_pipe);
-+	else {
-+		stack_top_ptr = &stack_cur;
-+
-+		FAIL_IF(notify_parent(write_pipe));
-+
-+		while (!sig_occurred)
-+			barrier();
-+	}
-+
-+	return 0;
-+}
-+
-+static int child(unsigned int stack_size, union pipe write_pipe)
-+{
-+	struct sigaction act;
-+	char stack_base;
-+
-+	act.sa_handler = sigusr1_handler;
-+	sigemptyset(&act.sa_mask);
-+	act.sa_flags = 0;
-+	if (sigaction(SIGUSR1, &act, NULL) < 0)
-+		err(1, "sigaction");
-+
-+	stack_base_ptr = (char *) (((size_t) &stack_base + 65535) & ~65535UL);
-+
-+	FAIL_IF(consume_stack(stack_size, write_pipe));
-+
-+	printf("size 0x%06x: OK, stack base %p top %p (%zx used)\n",
-+		stack_size, stack_base_ptr, stack_top_ptr,
-+		stack_base_ptr - stack_top_ptr);
-+
-+	return 0;
-+}
-+
-+static int test_one_size(unsigned int stack_size)
-+{
-+	union pipe read_pipe, write_pipe;
-+	pid_t pid;
-+
-+	FAIL_IF(pipe(read_pipe.fds) == -1);
-+	FAIL_IF(pipe(write_pipe.fds) == -1);
-+
-+	pid = fork();
-+	if (pid == 0) {
-+		close(read_pipe.read_fd);
-+		close(write_pipe.write_fd);
-+		exit(child(stack_size, read_pipe));
-+	}
-+
-+	close(read_pipe.write_fd);
-+	close(write_pipe.read_fd);
-+	FAIL_IF(sync_with_child(read_pipe, write_pipe));
-+
-+	kill(pid, SIGUSR1);
-+
-+	FAIL_IF(wait_for_child(pid));
-+
-+	close(read_pipe.read_fd);
-+	close(write_pipe.write_fd);
-+
-+	return 0;
-+}
-+
-+int test(void)
-+{
-+	unsigned int i, size;
-+
-+	// Test with used stack from 1MB - 64K to 1MB + 64K
-+	// Increment by 64 to get more coverage of odd sizes
-+	for (i = 0; i < (128 * _KB); i += 64) {
-+		size = i + (1 * _MB) - (64 * _KB);
-+		FAIL_IF(test_one_size(size));
-+	}
-+
-+	return 0;
-+}
-+
-+int main(void)
-+{
-+	return test_harness(test, "stack_expansion_signal");
-+}
-diff --git a/tools/testing/selftests/powerpc/pmu/lib.h b/tools/testing/selftests/powerpc/pmu/lib.h
-index fa12e7d0b4d3..bf1bec013bbb 100644
---- a/tools/testing/selftests/powerpc/pmu/lib.h
-+++ b/tools/testing/selftests/powerpc/pmu/lib.h
-@@ -6,6 +6,7 @@
- #ifndef __SELFTESTS_POWERPC_PMU_LIB_H
- #define __SELFTESTS_POWERPC_PMU_LIB_H
+-	/* The stack is being expanded, check if it's valid */
+-	if (unlikely(bad_stack_expansion(regs, address, vma, flags,
+-					 &must_retry))) {
+-		if (!must_retry)
++	if (unlikely(vma->vm_start > address)) {
++		if (unlikely(!(vma->vm_flags & VM_GROWSDOWN)))
+ 			return bad_area(regs, address);
  
-+#include <stdbool.h>
- #include <stdio.h>
- #include <stdint.h>
- #include <string.h>
+-		mmap_read_unlock(mm);
+-		if (fault_in_pages_readable((const char __user *)regs->nip,
+-					    sizeof(unsigned int)))
+-			return bad_area_nosemaphore(regs, address);
+-		goto retry;
++		if (unlikely(expand_stack(vma, address)))
++			return bad_area(regs, address);
+ 	}
+ 
+-	/* Try to expand it */
+-	if (unlikely(expand_stack(vma, address)))
+-		return bad_area(regs, address);
+-
+-good_area:
+-
+ #ifdef CONFIG_PPC_MEM_KEYS
+ 	if (unlikely(access_pkey_error(is_write, is_exec,
+ 				       (error_code & DSISR_KEYFAULT), vma)))
 -- 
 2.25.1
 
