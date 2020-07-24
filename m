@@ -2,99 +2,77 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E05C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2567CC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9E6D206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:04:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZ+LwkvW"
+	by mail.kernel.org (Postfix) with ESMTP id EF7372070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbgGXXEj (ORCPT
+        id S1726651AbgGXXMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 19:04:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43270 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgGXXEj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 19:04:39 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02599C0619D3;
-        Fri, 24 Jul 2020 16:04:39 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id p1so5387828pls.4;
-        Fri, 24 Jul 2020 16:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=viZb3dP6geDF5PURTYvDmlf2wCQUcIL8mMEXCiYeHMg=;
-        b=bZ+LwkvWNxLJKSe5Xbe7GFCWoRJk0DvL/BQdw4lPKW7w35GCunmmRXG9gFcbKbGlhj
-         wAefg0H+eHbHNlOy+Kcfm4Ilsjyl+uZGhBWE1TZ5rZ8Wn7WPRVEJwWiYP1X8EAWlksmv
-         sqdSo3LIoKnpAlCbuhx6t1hX2YXteItPzysuZmuofCba6xfoQvQEEw6o7Poe4xXpWHJi
-         Yde5nNfp4HkN1VGxToHfRbkOdflNgi5qTtKvzpuIIgWegJeKMjQ67glBtXBcvq57kDKH
-         TwNdYXmS13k8vWsEXBHua6mc+1cPHc+TQ6TLMid6g0wINoeJ2GjfoKPf1evlDQYxCyMf
-         KavQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=viZb3dP6geDF5PURTYvDmlf2wCQUcIL8mMEXCiYeHMg=;
-        b=aYAYLAJLmg4JSHCAzF2TcdU0O1i2CeW5apmnesqc5bGjbVztzZ4Qcul4ba8+F2iJAU
-         QihBoZNWkfYfX7C06suHAn6Bh78SWjOa22hgYkUzpcXSjgFXXvZC+s+f/8Yoy9uPZqf+
-         ppyahtsj6XXQ+GjIo4ILTi18bYuxXHVVZS+6Uq7NmzvA2fdF5+vN7mHmKC4GkwC+Grzv
-         HGi5PH+yDBl6FNo7UJLViQxKEbM8I1LmstaJA75zKxjEtMGJk7NqA3RWDBEETzygBMB3
-         ufucLQVFaWR1W/liK/JW3PfxsLoa1RCQM4ekM6aq3Bt8e0dyxkXYKWLKhfZo2+NcXTF9
-         /Cdg==
-X-Gm-Message-State: AOAM5324x7tSt7L8cL+Q/fdVkhA/Nhnp1pfgfIr+Iir3O5BA72blpW6P
-        J81M+fqd/8jG0i37z+/7apuZfSDC/C2JyH3Ncw8=
-X-Google-Smtp-Source: ABdhPJyc1gV36DEfDbuWmuPOnYjENlVAWiB9XdB9wwOWnhnCUDyHqS1gIvuAEtEHEYIoabTXO0jzcKu36u5GGIaMNOw=
-X-Received: by 2002:a17:90a:6acb:: with SMTP id b11mr7489368pjm.71.1595631878392;
- Fri, 24 Jul 2020 16:04:38 -0700 (PDT)
+        Fri, 24 Jul 2020 19:12:00 -0400
+Received: from mga04.intel.com ([192.55.52.120]:19091 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726438AbgGXXMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 19:12:00 -0400
+IronPort-SDR: kdQYQhAbn4+6ZIGa9GhlgW6/AM3D4jAfJ3VEG/nWoQpiDwA+6B4iZt3+2K+zWelYOVVXBsZ/Um
+ PItmgp4aXcyw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="148281972"
+X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
+   d="scan'208";a="148281972"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 16:11:58 -0700
+IronPort-SDR: 22DXrr07uwr7NEldS6kJ7cOEQhwSjvWNXbGYq91IJGf27iqRbDgPlUxDncA6tVLjyye/YZ8/qQ
+ 1ioPmEbssuDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
+   d="scan'208";a="289132518"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.254.52.44]) ([10.254.52.44])
+  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2020 16:11:57 -0700
+Subject: Re: [RFC 2/7] ath10k: Add support to process rx packet in thread
+To:     Rakesh Pillai <pillair@codeaurora.org>,
+        'Rajkumar Manoharan' <rmanohar@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvalo@codeaurora.org,
+        johannes@sipsolutions.net, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org, linux-wireless-owner@vger.kernel.org
+References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
+ <1595351666-28193-3-git-send-email-pillair@codeaurora.org>
+ <13573549c277b34d4c87c471ff1a7060@codeaurora.org>
+ <003001d6611e$9afa0cc0$d0ee2640$@codeaurora.org>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <0d9baad4-fba7-d362-41b7-f0b37446c5ef@intel.com>
+Date:   Fri, 24 Jul 2020 16:11:57 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0.1
 MIME-Version: 1.0
-References: <20200724164606.43699-1-lkmlabelt@gmail.com> <20200724101047.34de7e49@hermes.lan>
-In-Reply-To: <20200724101047.34de7e49@hermes.lan>
-From:   Andres Beltran <lkmlabelt@gmail.com>
-Date:   Fri, 24 Jul 2020 19:04:27 -0400
-Message-ID: <CAGpZZ6ugh-SprR=oMkktEVuEJvNrK06TLqgskey0JkCdZCmvMA@mail.gmail.com>
-Subject: Re: [PATCH] Drivers: hv: vmbus: Fix variable assignments in hv_ringbuffer_read()
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Saruhan Karademir <skarade@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <003001d6611e$9afa0cc0$d0ee2640$@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 1:10 PM Stephen Hemminger
-<stephen@networkplumber.org> wrote:
-> What is the rationale for this change, it may break other code.
->
-> A common API model in Windows world where this originated
-> is to have a call where caller first
-> makes request and then if the requested buffer is not big enough the
-> caller look at the actual length and allocate a bigger buffer.
->
-> Did you audit all the users of this API to make sure they aren't doing that.
->
 
-The rationale for the change was to solve instances like the one
-@Haiyang Zhang pointed out, especially in hv_utils, which needs
-additional hardening. Unfortunately, there is an instance in
-hv_pci_onchannelcallback() that does what you just described. Thus,
-the fix will have to be made to all the callers of vmbus_recvpacket()
-and vmbus_recvpacket_raw() to make sure they check the return value,
-which most callers are not doing now. Thanks for pointing out this
-behavior. I was not aware that the length can be checked by callers to
-allocate a bigger buffer.
+
+On 7/23/2020 11:25 AM, Rakesh Pillai wrote:
+> Hi Rajkumar,
+> In linux, the IRQs are directed to the first core which is booted.
+> I see that all the IRQs are getting routed to CORE0 even if its heavily
+> loaded.
+> 
+
+You should be able to configure the initial IRQ setup so that they don't
+all go on CPU 0 when you create the IRQ. That obviously doesn't help the
+case of wanting scheduler to dynamically move the processing around to
+other CPUs though.
