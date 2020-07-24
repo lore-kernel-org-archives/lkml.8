@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30913C433F8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D87C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6FF206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99E32070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595615067;
-	bh=RYyMMVgWEW5lCfaf1U/r/2g9DqYwNBNdPlUu9TPs1gE=;
+	s=default; t=1595615076;
+	bh=j4OZBd61HSNkr1Rlja2ZzFgA907VpAkAmZpKbAqpmVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UM/rIOsSKEzxooVP2xNMgze8UThcYdOB05WNMHzLmgeDWD8sxJiUz6CyGjrSf3u+X
-	 E56vLKsHnXNlmCPfEjQI+idVp+4apsJGdfJAoasvK/0ttkUD1j2aRUlp3DaO8xNQHh
-	 rwIGwCf/SpplRpj1ErBb2rt/eNjSIPfBYbop8L1Q=
+	b=TnNBobVSVvOa7UiorPEqqQBjYr0bi2VrvCiw2Ya70ij30OG1Zb4ZrcM4t5x+/Xvw3
+	 dCgyvDTRUC9mOCPEQvwBYLBfGhBRWkKqJ4zvCikkZmKM/sNT+DhblTte18BLtVB7AR
+	 qLcUyaClDRApJikvSCM0lya/bgBdnEOmbCOz1BXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgGXSY0 (ORCPT
+        id S1727015AbgGXSYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 14:24:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32850 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 14:24:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbgGXSYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 14:24:25 -0400
+        id S1726988AbgGXSYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 14:24:34 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.213])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D42A206F6;
-        Fri, 24 Jul 2020 18:24:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87B7F2073E;
+        Fri, 24 Jul 2020 18:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595615064;
-        bh=RYyMMVgWEW5lCfaf1U/r/2g9DqYwNBNdPlUu9TPs1gE=;
+        s=default; t=1595615073;
+        bh=j4OZBd61HSNkr1Rlja2ZzFgA907VpAkAmZpKbAqpmVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qGalTqKQdG9AB0+FVyM/3wXLT5iBamCBhy9/dVYN8uAw+n7wXaldq22/Swb0GrnUv
-         g+opoNOZnYA0AAex3pQK4LmItDWwWPjGtozqtpkbXimlucvwGuAxIm3qAs3BrqbUHz
-         vJl8m47EPrzIBthvU/MS+EkFyou+yGlrrrOIcpMs=
+        b=k8QAns7qKb8Dc2oZQ/yfh5QXJZiffCMebqBOUuQS/n3u0dNw1MP9UNKdN9CfXyxUv
+         42wvVlq4zIQ3R+8VW9b2MVS0KBJ88HgJvxQcJXOQDbggs/neMOTEwHwcFwdGxD8hKW
+         ddpcK2x6tzwTXJ4ERLJkOutwIka1XgMsxGymt67Y=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Florian Fainelli <f.fainelli@gmail.com>,
         Ray Jui <rjui@broadcom.com>,
@@ -58,9 +58,9 @@ To:     Florian Fainelli <f.fainelli@gmail.com>,
         linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
         linux-pm@vger.kernel.org
 Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 03/16] memory: mvebu-devbus: Align with open parenthesis
-Date:   Fri, 24 Jul 2020 20:23:15 +0200
-Message-Id: <20200724182328.3348-4-krzk@kernel.org>
+Subject: [PATCH 05/16] memory: omap-gpmc: Enclose macro argument usage in parenthesis
+Date:   Fri, 24 Jul 2020 20:23:17 +0200
+Message-Id: <20200724182328.3348-6-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200724182328.3348-1-krzk@kernel.org>
 References: <20200724182328.3348-1-krzk@kernel.org>
@@ -69,66 +69,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The line continuation contained spaces but still failed to properly
-align with open parenthesis.
+Macros arguments should be enclosed by parenthesis for safety.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/memory/mvebu-devbus.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/memory/omap-gpmc.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/memory/mvebu-devbus.c b/drivers/memory/mvebu-devbus.c
-index 76efc653dc7e..8450638e8670 100644
---- a/drivers/memory/mvebu-devbus.c
-+++ b/drivers/memory/mvebu-devbus.c
-@@ -134,22 +134,22 @@ static int devbus_get_timing_params(struct devbus *devbus,
- 	}
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index c91a021ac421..62577255ba0f 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -107,8 +107,8 @@
+ #define ENABLE_PREFETCH		(0x1 << 7)
+ #define DMA_MPU_MODE		2
  
- 	err = get_timing_param_ps(devbus, node, "devbus,badr-skew-ps",
--				 &r->badr_skew);
-+				  &r->badr_skew);
- 	if (err < 0)
- 		return err;
+-#define	GPMC_REVISION_MAJOR(l)		((l >> 4) & 0xf)
+-#define	GPMC_REVISION_MINOR(l)		(l & 0xf)
++#define	GPMC_REVISION_MAJOR(l)		(((l) >> 4) & 0xf)
++#define	GPMC_REVISION_MINOR(l)		((l) & 0xf)
  
- 	err = get_timing_param_ps(devbus, node, "devbus,turn-off-ps",
--				 &r->turn_off);
-+				  &r->turn_off);
- 	if (err < 0)
- 		return err;
- 
- 	err = get_timing_param_ps(devbus, node, "devbus,acc-first-ps",
--				 &r->acc_first);
-+				  &r->acc_first);
- 	if (err < 0)
- 		return err;
- 
- 	err = get_timing_param_ps(devbus, node, "devbus,acc-next-ps",
--				 &r->acc_next);
-+				  &r->acc_next);
- 	if (err < 0)
- 		return err;
- 
-@@ -175,17 +175,17 @@ static int devbus_get_timing_params(struct devbus *devbus,
- 	}
- 
- 	err = get_timing_param_ps(devbus, node, "devbus,ale-wr-ps",
--				 &w->ale_wr);
-+				  &w->ale_wr);
- 	if (err < 0)
- 		return err;
- 
- 	err = get_timing_param_ps(devbus, node, "devbus,wr-low-ps",
--				 &w->wr_low);
-+				  &w->wr_low);
- 	if (err < 0)
- 		return err;
- 
- 	err = get_timing_param_ps(devbus, node, "devbus,wr-high-ps",
--				 &w->wr_high);
-+				  &w->wr_high);
- 	if (err < 0)
- 		return err;
- 
+ #define	GPMC_HAS_WR_ACCESS		0x1
+ #define	GPMC_HAS_WR_DATA_MUX_BUS	0x2
+@@ -139,27 +139,27 @@
+ #define GPMC_CONFIG1_WRITEMULTIPLE_SUPP (1 << 28)
+ #define GPMC_CONFIG1_WRITETYPE_ASYNC    (0 << 27)
+ #define GPMC_CONFIG1_WRITETYPE_SYNC     (1 << 27)
+-#define GPMC_CONFIG1_CLKACTIVATIONTIME(val) ((val & 3) << 25)
++#define GPMC_CONFIG1_CLKACTIVATIONTIME(val) (((val) & 3) << 25)
+ /** CLKACTIVATIONTIME Max Ticks */
+ #define GPMC_CONFIG1_CLKACTIVATIONTIME_MAX 2
+-#define GPMC_CONFIG1_PAGE_LEN(val)      ((val & 3) << 23)
++#define GPMC_CONFIG1_PAGE_LEN(val)      (((val) & 3) << 23)
+ /** ATTACHEDDEVICEPAGELENGTH Max Value */
+ #define GPMC_CONFIG1_ATTACHEDDEVICEPAGELENGTH_MAX 2
+ #define GPMC_CONFIG1_WAIT_READ_MON      (1 << 22)
+ #define GPMC_CONFIG1_WAIT_WRITE_MON     (1 << 21)
+-#define GPMC_CONFIG1_WAIT_MON_TIME(val) ((val & 3) << 18)
++#define GPMC_CONFIG1_WAIT_MON_TIME(val) (((val) & 3) << 18)
+ /** WAITMONITORINGTIME Max Ticks */
+ #define GPMC_CONFIG1_WAITMONITORINGTIME_MAX  2
+-#define GPMC_CONFIG1_WAIT_PIN_SEL(val)  ((val & 3) << 16)
+-#define GPMC_CONFIG1_DEVICESIZE(val)    ((val & 3) << 12)
++#define GPMC_CONFIG1_WAIT_PIN_SEL(val)  (((val) & 3) << 16)
++#define GPMC_CONFIG1_DEVICESIZE(val)    (((val) & 3) << 12)
+ #define GPMC_CONFIG1_DEVICESIZE_16      GPMC_CONFIG1_DEVICESIZE(1)
+ /** DEVICESIZE Max Value */
+ #define GPMC_CONFIG1_DEVICESIZE_MAX     1
+-#define GPMC_CONFIG1_DEVICETYPE(val)    ((val & 3) << 10)
++#define GPMC_CONFIG1_DEVICETYPE(val)    (((val) & 3) << 10)
+ #define GPMC_CONFIG1_DEVICETYPE_NOR     GPMC_CONFIG1_DEVICETYPE(0)
+-#define GPMC_CONFIG1_MUXTYPE(val)       ((val & 3) << 8)
++#define GPMC_CONFIG1_MUXTYPE(val)       (((val) & 3) << 8)
+ #define GPMC_CONFIG1_TIME_PARA_GRAN     (1 << 4)
+-#define GPMC_CONFIG1_FCLK_DIV(val)      (val & 3)
++#define GPMC_CONFIG1_FCLK_DIV(val)      ((val) & 3)
+ #define GPMC_CONFIG1_FCLK_DIV2          (GPMC_CONFIG1_FCLK_DIV(1))
+ #define GPMC_CONFIG1_FCLK_DIV3          (GPMC_CONFIG1_FCLK_DIV(2))
+ #define GPMC_CONFIG1_FCLK_DIV4          (GPMC_CONFIG1_FCLK_DIV(3))
 -- 
 2.17.1
 
