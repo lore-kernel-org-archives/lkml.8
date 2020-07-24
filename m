@@ -2,285 +2,111 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5444C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DDBC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF7F206F6
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:38:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bs6DKgfC"
+	by mail.kernel.org (Postfix) with ESMTP id DC84B2070E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:39:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595619557;
+	bh=aEsJK/on98H+OBWg+Fvivyaoij+CSyJ7aAWyHCS83rA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bEqhl4vTg/ipTyr3H7KDA4X/mam7s8dVQ2qOGwGWhey5OcukCbFsLnJlSkemQLAv2
+	 o5+nmDUTJmxAvt122cUjse7ORJ/+0ImjMBgwDhZezux3SrAEeM43w5djRJ4ZuDsqTR
+	 iecsoU6+sPpob42o+5GzXrgzsjztiMoN5YdS4uFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgGXTiy (ORCPT
+        id S1726742AbgGXTjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:38:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgGXTix (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:38:53 -0400
-Received: from mail-il1-x149.google.com (mail-il1-x149.google.com [IPv6:2607:f8b0:4864:20::149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E11CC0619E5
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:38:53 -0700 (PDT)
-Received: by mail-il1-x149.google.com with SMTP id o17so6375412ilt.19
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=Cag1ZM+/G+EzkwVW+TvczGhDnD9T00FBkMW8L2Yy0Fo=;
-        b=bs6DKgfCH69EJPnwnMTjxieor1UktNHbPrfEhVniGeWvdWT9PtCI17L+GqPkTDQOLu
-         BA97cRTKcB0KxKX38uGRpVjfh7QRKGUxCV/FH2vpSOCbs5CLg6lUaCiNeo4LWVPo7A+Q
-         rOYNreHALZlJT0bd2cNkHzsV6Wjy3bXws8Uw0xAxbASsjthUXHJT21vqcQJcrMb//kP+
-         GwBsHLQWcEZb3BeG51jrldWAp5qIDomi18OfPvQPlhFlYQE2BGcObQ47kng+p3uBNR2R
-         VLAvTHD7YTypCCG9RzwJ1/UG+4hMhp8H8++dUMtpkJ5EPUmA55B6xccRyL99JCwsHhrq
-         KYMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Cag1ZM+/G+EzkwVW+TvczGhDnD9T00FBkMW8L2Yy0Fo=;
-        b=gPR+ysZV2SGnc9WKHS34j6XhdMsllou3NcRwd3ijqqByXoQornoMrKG7v7/O9BVVIs
-         dukfeT1qeVVabdcjE06KeN0GI1+k1eiULrmar9n/UeY99c2klOKpZ1KqMX5Bn72f9Z6/
-         L6XfAnF7A6fKsufLLhI4eLV3HwNNStjqgPoTRhS6bhyhqJQL7yt0x+bWNeRlV3iyGzOJ
-         kHc9fKBPth2Gw66ypU8hUikCy+9O3BZryG5hvAR7m1CUUkYJT84poS2l5Bpk41Y5Tekg
-         BkHJNucCbpmpnZqdIqAKxpGqhLCxVgv4xK4QoxT87zqFKygpyCC9ou+s7olpCaK05SWD
-         0HbA==
-X-Gm-Message-State: AOAM531dzCpqeMqcloBVbYVtOtvsZ01SS0gTb9Cetzxu0Xr60h2tZ3kX
-        z3AWfWHxedRfR+T6eXqoQogJe/mQbg==
-X-Google-Smtp-Source: ABdhPJy3zIQfqr8MEgOKanOroLoquQ8BmPrwZznF3KDc3rGYbWF7mJkT6e5wzKjB4hLZRVuaXmraaZDIQA==
-X-Received: by 2002:a6b:6d07:: with SMTP id a7mr5210991iod.166.1595619532420;
- Fri, 24 Jul 2020 12:38:52 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 19:35:51 +0000
-In-Reply-To: <CAGG=3QWw3szocG=xyUCmHKVKYiBn9CuETbh8Q_rWHiSW5yw5Ng@mail.gmail.com>
-Message-Id: <20200724193551.2158677-1-nhuck@google.com>
-Mime-Version: 1.0
-References: <CAGG=3QWw3szocG=xyUCmHKVKYiBn9CuETbh8Q_rWHiSW5yw5Ng@mail.gmail.com>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH v6] Makefile: Add clang-tidy and static analyzer support to makefile
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     masahiroy@kernel.org, michal.lkml@markovi.net
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com, pirama@google.com,
-        morbo@google.com, Nathan Huckleberry <nhuck@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 24 Jul 2020 15:39:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726455AbgGXTjQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 15:39:16 -0400
+Received: from localhost (p54b3305c.dip0.t-ipconnect.de [84.179.48.92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F690206F6;
+        Fri, 24 Jul 2020 19:39:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595619556;
+        bh=aEsJK/on98H+OBWg+Fvivyaoij+CSyJ7aAWyHCS83rA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eiOTuRbtNrpPuvVetfi8oOZnREKbgxRLyG6liJKI+RarW/ryGKDl0WKv0ewht0HAL
+         RrH/HbI3u16u5kBSO2Dh59GpPlvL/N/VukGbfUj6tqPVtN5QXHVGuU303/OGpHuP4D
+         3Zy6iiSXfJgy02u8ltSNKLCxpW3eah0D8oRfQvik=
+Date:   Fri, 24 Jul 2020 21:39:13 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, ludovic.desroches@microchip.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        kamel.bouhara@bootlin.com
+Subject: Re: [RFC PATCH 1/4] dt-binding: i2c: add generic properties for GPIO
+ bus recovery
+Message-ID: <20200724193913.GD1227@ninjato>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+ <20200619141904.910889-2-codrin.ciubotariu@microchip.com>
+ <20200705211918.GB1055@kunai>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="C+ts3FVlLX8+P6JN"
+Content-Disposition: inline
+In-Reply-To: <20200705211918.GB1055@kunai>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds clang-tidy and the clang static-analyzer as make
-targets. The goal of this patch is to make static analysis tools
-usable and extendable by any developer or researcher who is familiar
-with basic c++.
 
-The current static analysis tools require intimate knowledge of the
-internal workings of the static analysis. Clang-tidy and the clang
-static analyzers expose an easy to use api and allow users unfamiliar
-with clang to write new checks with relative ease.
+--C+ts3FVlLX8+P6JN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-===Clang-tidy===
+On Sun, Jul 05, 2020 at 11:19:18PM +0200, Wolfram Sang wrote:
+>=20
+> > +- pinctrl
+> > +	add extra pinctrl to configure SCL/SDA pins to GPIO function for bus
+> > +	recovery, call it "gpio" or "recovery" state
+>=20
+> I think we should stick with "gpio" only. That is what at91 and imx have
+> in their bindings. pxa uses "recovery" as a pinctrl state name but I
+> can't find any further use or documentation of that. PXA is not fully
+> converted to the best of my knowledge, so maybe it is no problem for PXA
+> to switch to "gpio", too? We should ask Russell King (cced).
+>=20
+> Russell, do you object naming the pinctrl state for bus recovery in
+> the pxa i2c driver from "recovery" to "gpio"?
 
-Clang-tidy is an easily extendable 'linter' that runs on the AST.
-Clang-tidy checks are easy to write and understand. A check consists of
-two parts, a matcher and a checker. The matcher is created using a
-domain specific language that acts on the AST
-(https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
-nodes are found by the matcher a callback is made to the checker. The
-checker can then execute additional checks and issue warnings.
+No response, so far. I suggest now to support the "recovery" naming but
+mark it as deprecated. Opinions?
 
-Here is an example clang-tidy check to report functions that have calls
-to local_irq_disable without calls to local_irq_enable and vice-versa.
-Functions flagged with __attribute((annotation("ignore_irq_balancing")))
-are ignored for analysis. (https://reviews.llvm.org/D65828)
 
-===Clang static analyzer===
+--C+ts3FVlLX8+P6JN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The clang static analyzer is a more powerful static analysis tool that
-uses symbolic execution to find bugs. Currently there is a check that
-looks for potential security bugs from invalid uses of kmalloc and
-kfree. There are several more general purpose checks that are useful for
-the kernel.
+-----BEGIN PGP SIGNATURE-----
 
-The clang static analyzer is well documented and designed to be
-extensible.
-(https://clang-analyzer.llvm.org/checker_dev_manual.html)
-(https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8bOOEACgkQFA3kzBSg
+KbatLxAAk2OVhHrxdm0fEryvCzcONGEOEuKWTg4HCQ4cut68iX+MXLitGPJ9+vWQ
+OtvgHiP6RQ/btXSkdxTdIrybUHke0J1++CzmDnWHkHmwUjECBKbfpxq/1WblwvC5
+np+5JNo0yCwuC89MfV5B9P7elybuwro+q2HtxiZuoeDBp040GV/0T0hvV++JOiF6
+TMLUYjP3ucaOI2KQEnSk931hVzoZE42uWoN8SdsOA/ieYETISy1cf1ghuq/WLh9A
+4tvjCnJ55yAgK4rVIn6koY6hYk9waDRgSn5zdn/XvE0KnzA+9Wm/B+qiH8WLk0IN
+DfoXNWMrssgQ11B1l3uhkHM21uTIJSpofhWA1lvi2rgXoXtIptWnNv4BsEg+NEfq
+Vh6qOaPpEVG2L0uqToSLLbcRqBQbfS1iUWLSvAjoGVNLdzW7334PFC5DZ8BnVOZv
+uXt1kpVFzSRkzPk+lpX4JjWPjMw764cpXlFTQXJRbo7pyQMXEPEf4Om3Uh5eRyiL
+uRjlFkwgvOrA9gLaep3WlSRQZmdw+JQbYGDOD6jNya80V/IkjGMrfXQu9k6F0nD/
+QLHhAErkdIIXxLczXftQiGvXc1sWp83Wo5wKZvwxIzaPRhvC/d7WNmXjR8WZ76mC
+a8GLnQnzsOFN/F8ubjoEB8ABtxUO1x7PYJQk+AFRmz2AUhj9GIE=
+=ZcrW
+-----END PGP SIGNATURE-----
 
-The main draw of the clang tools is how accessible they are. The clang
-documentation is very nice and these tools are built specifically to be
-easily extendable by any developer. They provide an accessible method of
-bug-finding and research to people who are not overly familiar with the
-kernel codebase.
-
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
----
-Changes v5->v6
-* Minor style fixes
- MAINTAINERS                                   |  1 +
- Makefile                                      |  3 +
- scripts/clang-tools/Makefile.clang-tools      | 23 ++++++
- .../{ => clang-tools}/gen_compile_commands.py |  0
- scripts/clang-tools/run-clang-tools.py        | 77 +++++++++++++++++++
- 5 files changed, 104 insertions(+)
- create mode 100644 scripts/clang-tools/Makefile.clang-tools
- rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
- create mode 100755 scripts/clang-tools/run-clang-tools.py
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1d4aa7f942de..a444564e5572 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4198,6 +4198,7 @@ W:	https://clangbuiltlinux.github.io/
- B:	https://github.com/ClangBuiltLinux/linux/issues
- C:	irc://chat.freenode.net/clangbuiltlinux
- F:	Documentation/kbuild/llvm.rst
-+F:	scripts/clang-tools/
- K:	\b(?i:clang|llvm)\b
- 
- CLEANCACHE API
-diff --git a/Makefile b/Makefile
-index fe0164a654c7..3e2df010b342 100644
---- a/Makefile
-+++ b/Makefile
-@@ -747,6 +747,7 @@ KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
- 
- include scripts/Makefile.kcov
- include scripts/Makefile.gcc-plugins
-+include scripts/clang-tools/Makefile.clang-tools
- 
- ifdef CONFIG_READABLE_ASM
- # Disable optimizations that make assembler listings hard to read.
-@@ -1543,6 +1544,8 @@ help:
- 	@echo  '  export_report   - List the usages of all exported symbols'
- 	@echo  '  headerdep       - Detect inclusion cycles in headers'
- 	@echo  '  coccicheck      - Check with Coccinelle'
-+	@echo  '  clang-analyzer  - Check with clang static analyzer'
-+	@echo  '  clang-tidy      - Check with clang-tidy'
- 	@echo  ''
- 	@echo  'Tools:'
- 	@echo  '  nsdeps          - Generate missing symbol namespace dependencies'
-diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
-new file mode 100644
-index 000000000000..5c9d76f77595
---- /dev/null
-+++ b/scripts/clang-tools/Makefile.clang-tools
-@@ -0,0 +1,23 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) Google LLC, 2020
-+#
-+# Author: Nathan Huckleberry <nhuck@google.com>
-+#
-+PHONY += clang-tidy
-+clang-tidy:
-+ifdef CONFIG_CC_IS_CLANG
-+	$(PYTHON3) scripts/clang-tools/gen_compile_commands.py
-+	$(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-tidy compile_commands.json
-+else
-+	$(error clang-tidy requires CC=clang)
-+endif
-+
-+PHONY += clang-analyzer
-+clang-analyzer:
-+ifdef CONFIG_CC_IS_CLANG
-+	$(PYTHON3) scripts/clang-tools/gen_compile_commands.py
-+	$(PYTHON3) scripts/clang-tools/run-clang-tools.py clang-analyzer compile_commands.json
-+else
-+	$(error clang-analyzer requires CC=clang)
-+endif
-diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
-similarity index 100%
-rename from scripts/gen_compile_commands.py
-rename to scripts/clang-tools/gen_compile_commands.py
-diff --git a/scripts/clang-tools/run-clang-tools.py b/scripts/clang-tools/run-clang-tools.py
-new file mode 100755
-index 000000000000..1f4cd706ec01
---- /dev/null
-+++ b/scripts/clang-tools/run-clang-tools.py
-@@ -0,0 +1,77 @@
-+#!/usr/bin/env python
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) Google LLC, 2020
-+#
-+# Author: Nathan Huckleberry <nhuck@google.com>
-+#
-+"""A helper routine run clang-tidy and the clang static-analyzer on
-+compile_commands.json.
-+"""
-+
-+import argparse
-+import json
-+import logging
-+import multiprocessing
-+import os
-+import subprocess
-+import sys
-+
-+
-+def parse_arguments():
-+    """Set up and parses command-line arguments.
-+    Returns:
-+        args: Dict of parsed args
-+        Has keys: [file, type]
-+    """
-+    usage = """Run clang-tidy or the clang static-analyzer on a
-+        compilation database."""
-+    parser = argparse.ArgumentParser(description=usage)
-+
-+    type_help = "Type of analysis to be performed"
-+    parser.add_argument("type",
-+                        choices=["clang-tidy", "clang-analyzer"],
-+                        help=type_help)
-+    file_path_help = "Path to the compilation database to parse"
-+    parser.add_argument("file", type=str, help=file_path_help)
-+
-+    return parser.parse_args()
-+
-+
-+def init(l, t):
-+    global lock
-+    global analysis_type
-+    lock = l
-+    analysis_type = t
-+
-+
-+def run_analysis(entry):
-+    filename = entry["file"]
-+    # Disable all checks, then re-enable the ones we want
-+    checks = "-checks=-*,"
-+    if analysis_type == "clang-tidy":
-+        checks += "linuxkernel-*"
-+    else:
-+        checks += "clang-analyzer-*"
-+    p = subprocess.run(
-+        ["clang-tidy", "-p", os.getcwd(), checks, filename],
-+        stdout=subprocess.PIPE,
-+        stderr=subprocess.STDOUT)
-+    with lock:
-+        sys.stderr.buffer.write(p.stdout)
-+
-+
-+def main():
-+    args = parse_arguments()
-+    filename = args.file
-+
-+    lock = multiprocessing.Lock()
-+    pool = multiprocessing.Pool(initializer=init, initargs=(lock, args.type))
-+    # Read JSON data into the datastore variable
-+    with open(filename, "r") as f:
-+        datastore = json.load(f)
-+        pool.map(run_analysis, datastore)
-+
-+
-+if __name__ == "__main__":
-+    main()
--- 
-2.28.0.rc0.142.g3c755180ce-goog
-
+--C+ts3FVlLX8+P6JN--
