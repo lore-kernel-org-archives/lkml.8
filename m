@@ -7,67 +7,69 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB87C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29986C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0562065E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DB8206F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 02:12:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcQDVaOe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HAoD8qC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgGXCL1 (ORCPT
+        id S1726703AbgGXCML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 22:11:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45222 "EHLO
+        Thu, 23 Jul 2020 22:12:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbgGXCLZ (ORCPT
+        with ESMTP id S1726355AbgGXCML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 22:11:25 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E844EC0619D3
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 19:11:24 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id m16so3620691pls.5
-        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 19:11:24 -0700 (PDT)
+        Thu, 23 Jul 2020 22:12:11 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3796C0619D3
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 19:12:10 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mn17so4330170pjb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 23 Jul 2020 19:12:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=JyrL1L2WwAwU/zTxIdLQLyyDFKn9MNNL5Q0BQ8TqQ8g=;
-        b=BcQDVaOeXNuLXwq6rEFIaWdLfSrKWRpPdhCiKJDpWB3PInmdzs2Ns3o++eaMKCn+mq
-         qfkEdY0JDk/B+Jjf2ciYFcb7NCHU8UTjsLHY+U83mCgOE7XKE6+HVCcPy7RanyBWN53y
-         WEHKLvvHmk4g6bq8pZ4H2Am7yV9ce3gWnTqVhxLVXcCkVEVdedLokoCgXgiG8YkpPdev
-         fODQtrz7/V9QpHRCG0U3IfVT2IpeXxFrD4kS9VahwI5zLig6fgxvFhVrmkG37hr7bb+p
-         hN41Xr/SsUS5Z8CkHQPRSEQqDAgxBr0HAXhPKdf7TaBKa5PXKJkxckk42ePeghFZ5H9/
-         M64A==
+        bh=n1r9gs/1oOlKdtxJmiDpQ0ejqypIDVtgS1hLMNr7XyI=;
+        b=HAoD8qC1Rru49WhhH5abOrYnmKvKiPuolGMKLb/kh+ixiZjKcOOrrkFLKoyu3r39GR
+         yjwQiqKDaCcY8SGNlkcizpsJuY4Ty09FvNBlfok+TMbg4wvjakp1jzNAGKZ0OUwCXcEF
+         Tn0AfJwHFUaUIGb1gGCM03YxcgLHSshfVijhhbpw/kni6bQ0PscDTFyaTbls2AD6zFE2
+         +nsB/rTcJXcfjI2yC26W5/C0SA7nAXEB9fBpJiSrtyzUvMRTw2cRcO8vPrxg8Dl0JIkV
+         nvJ2gvAjcjjLaRcrewRt1OKu0Jp5E75Dbl8XodiGW6/aXj71fCMFW9j7wixjq3XjqKw2
+         yFFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=JyrL1L2WwAwU/zTxIdLQLyyDFKn9MNNL5Q0BQ8TqQ8g=;
-        b=Gp0PZdoDdTfDK0JB4q3zwZ7y/6sMahPY/4aGAkimNFM0zoHHipLz4uKF8oXKlfAiJo
-         c2IdmSnMZbiYOraXZSeJD0O75cd3JYlR5nj/8GEOx//fdZMnwzO37EisZq33lKzyAJtn
-         mx2UGzkV/wvB3CowDaY3UPcm0YJSBrJNYrQoIC/Olyn/B1Q5z7ztoZnd4OKT6Kg5tw4j
-         omTjuP0U72jLs7z2ABMTND1DvDvpG3TbaYu3/EImr2Jpjdv1AYy/fhj95Ux6XpCYMjtE
-         NE13+IvtqmCRb00YtnFH+S9+4kx1aiaXvElNH2IZ9gwi2hcKf1fn8ph9W/ArlGP6jfk4
-         BaNg==
-X-Gm-Message-State: AOAM532szDzHgmMW60uaoeTQQBxZoUKzHfjZq4j7m2AmhfXwRn5ehpft
-        YfYFwM3C38CpQNqFb3GGMEEuZEht
-X-Google-Smtp-Source: ABdhPJwECU3do/mOtZcqdCz+JZ2lrkj7A9fIVio5Py4eptDG0qfr5sLhjbeQGoxA2aXcG52JE9319g==
-X-Received: by 2002:a17:902:c697:: with SMTP id r23mr6567030plx.35.1595556684359;
-        Thu, 23 Jul 2020 19:11:24 -0700 (PDT)
+        bh=n1r9gs/1oOlKdtxJmiDpQ0ejqypIDVtgS1hLMNr7XyI=;
+        b=lxVySPOuKW6Ua8rZZ0pYhz7MACMkGnK/NDL1RPHPMxK3uMWTakKcTmBot9kD9uIu2M
+         E8jqzd0TUkDGGKPSY6bTbcR+HgT0T/H39RrhCDnDrmiDFOIuxFKkhneiq2pjBr0IBC0k
+         FwqHEyabZMUY7cVDOiyH0/3Zg4VvySWwg+y/V/WvV3Yy3XpqlWr6PpDbUm/PXdxaan8r
+         sizk6aaP5B1BlbUCvW3a6/e/B2wx53k0c/Arm6nYuy8ZSUrUGSQML4xb64xLf12d1R3t
+         KvyEuXGzBuhrUCCDZScY8II0ceVuqNdGWbdWP8R3JZ7hJiS7kBu0SUQque6wy9hVBQQF
+         AhKA==
+X-Gm-Message-State: AOAM530UNX4rtJd+UE2HbJ5qg4ZjCCLDAdteN9dlqm57GPjKZTPtYLj2
+        0LMKtFqRZPZTdzYNzSsQKEq3YyB2
+X-Google-Smtp-Source: ABdhPJxI/WrRBGDgLWWPSdgHmmN603cHfLbNzjXrX+kZOrUJj5NTE11kEjLkQh7IKDO++uTHmMHh9w==
+X-Received: by 2002:a17:902:a713:: with SMTP id w19mr6385711plq.146.1595556730582;
+        Thu, 23 Jul 2020 19:12:10 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m1sm3872727pjy.0.2020.07.23.19.11.22
+        by smtp.gmail.com with ESMTPSA id t137sm4553440pgc.32.2020.07.23.19.12.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Jul 2020 19:11:23 -0700 (PDT)
-Subject: Re: [PATCH 1/2] lib/Kconfig.debug: Make TEST_LOCKUP depend on module
+        Thu, 23 Jul 2020 19:12:10 -0700 (PDT)
+Subject: Re: [PATCH 2/2] lib/test_lockup.c: Fix return value of
+ test_lockup_init()
 To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
         Andrew Morton <akpm@linux-foundation.org>,
         Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         Kees Cook <keescook@chromium.org>
 Cc:     linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
 References: <1595555407-29875-1-git-send-email-yangtiezhu@loongson.cn>
+ <1595555407-29875-2-git-send-email-yangtiezhu@loongson.cn>
 From:   Guenter Roeck <linux@roeck-us.net>
 Autocrypt: addr=linux@roeck-us.net; keydata=
  xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
@@ -112,12 +114,12 @@ Autocrypt: addr=linux@roeck-us.net; keydata=
  WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
  HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
  mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <7dab63b2-4bd9-2e1a-deb2-ceb3791d71e9@roeck-us.net>
-Date:   Thu, 23 Jul 2020 19:11:22 -0700
+Message-ID: <6916d710-9cfb-bea5-9464-4c2d8aa140f2@roeck-us.net>
+Date:   Thu, 23 Jul 2020 19:12:09 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1595555407-29875-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1595555407-29875-2-git-send-email-yangtiezhu@loongson.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -127,31 +129,51 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 7/23/20 6:50 PM, Tiezhu Yang wrote:
-> Since test_lockup is a test module to generate lockups, it is better to
-> limit TEST_LOCKUP to module (=m) or disabled (=n) because we can not use
-> the module parameters when CONFIG_TEST_LOCKUP=y.
+> Since filp_open() returns an error pointer, we should use IS_ERR() to
+> check the return value and then return PTR_ERR() if failed to get the
+> actual return value instead of always -EINVAL.
 > 
+> E.g. without this patch:
+> 
+> [root@localhost loongson]# ls no_such_file
+> ls: cannot access no_such_file: No such file or directory
+> [root@localhost loongson]# modprobe test_lockup file_path=no_such_file lock_sb_umount time_secs=60 state=S
+> modprobe: ERROR: could not insert 'test_lockup': Invalid argument
+> [root@localhost loongson]# dmesg | tail -1
+> [  126.100596] test_lockup: cannot find file_path
+> 
+> With this patch:
+> 
+> [root@localhost loongson]# ls no_such_file
+> ls: cannot access no_such_file: No such file or directory
+> [root@localhost loongson]# modprobe test_lockup file_path=no_such_file lock_sb_umount time_secs=60 state=S
+> modprobe: ERROR: could not insert 'test_lockup': Unknown symbol in module, or unknown parameter (see dmesg)
+> [root@localhost loongson]# dmesg | tail -1
+> [   95.134362] test_lockup: failed to open no_such_file: -2
+> 
+> Fixes: aecd42df6d39 ("lib/test_lockup.c: add parameters for locking generic vfs locks")
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-
-Makes sense.
 
 Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
 > ---
->  lib/Kconfig.debug | 1 +
->  1 file changed, 1 insertion(+)
+>  lib/test_lockup.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 9ad9210..18b7c67 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1035,6 +1035,7 @@ config WQ_WATCHDOG
->  
->  config TEST_LOCKUP
->  	tristate "Test module to generate lockups"
-> +	depends on m
->  	help
->  	  This builds the "test_lockup" module that helps to make sure
->  	  that watchdogs and lockup detectors are working properly.
+> diff --git a/lib/test_lockup.c b/lib/test_lockup.c
+> index bd7c7ff..e720276 100644
+> --- a/lib/test_lockup.c
+> +++ b/lib/test_lockup.c
+> @@ -512,8 +512,8 @@ static int __init test_lockup_init(void)
+>  	if (test_file_path[0]) {
+>  		test_file = filp_open(test_file_path, O_RDONLY, 0);
+>  		if (IS_ERR(test_file)) {
+> -			pr_err("cannot find file_path\n");
+> -			return -EINVAL;
+> +			pr_err("failed to open %s: %ld\n", test_file_path, PTR_ERR(test_file));
+> +			return PTR_ERR(test_file);
+>  		}
+>  		test_inode = file_inode(test_file);
+>  	} else if (test_lock_inode ||
 > 
 
