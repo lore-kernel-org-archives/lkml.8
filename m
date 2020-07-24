@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A61C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A01FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA69206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523392065E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgGXQEz (ORCPT
+        id S1728307AbgGXQFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:04:55 -0400
-Received: from 8bytes.org ([81.169.241.247]:60312 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:05:00 -0400
+Received: from 8bytes.org ([81.169.241.247]:60034 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728129AbgGXQEm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:42 -0400
+        id S1727871AbgGXQEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:45 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 38CF9FE4;
-        Fri, 24 Jul 2020 18:04:34 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id B117CFF0;
+        Fri, 24 Jul 2020 18:04:38 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 63/75] x86/sev-es: Handle #DB Events
-Date:   Fri, 24 Jul 2020 18:03:24 +0200
-Message-Id: <20200724160336.5435-64-joro@8bytes.org>
+Subject: [PATCH v5 71/75] x86/head/64: Rename start_cpu0
+Date:   Fri, 24 Jul 2020 18:03:32 +0200
+Message-Id: <20200724160336.5435-72-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,52 +60,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Handle #VC exceptions caused by #DB exceptions in the guest. Those
-must be handled outside of instrumentation_begin()/end() so that the
-handler will not be raised recursivly.
-
-Handle them by calling the kernels debug exception handler.
+For SEV-ES this entry point will be used for restarting APs after they
+have been offlined. Remove the '0' from the name to reflect that.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/x86/include/asm/cpu.h | 2 +-
+ arch/x86/kernel/head_32.S  | 4 ++--
+ arch/x86/kernel/head_64.S  | 6 +++---
+ arch/x86/kernel/smpboot.c  | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 58278f9f16a2..8b9e4e852d2c 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -922,6 +922,14 @@ static enum es_result vc_handle_trap_ac(struct ghcb *ghcb,
- 	return ES_EXCEPTION;
+diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+index da78ccbd493b..1536b607971f 100644
+--- a/arch/x86/include/asm/cpu.h
++++ b/arch/x86/include/asm/cpu.h
+@@ -29,7 +29,7 @@ struct x86_cpu {
+ #ifdef CONFIG_HOTPLUG_CPU
+ extern int arch_register_cpu(int num);
+ extern void arch_unregister_cpu(int);
+-extern void start_cpu0(void);
++extern void start_cpu(void);
+ #ifdef CONFIG_DEBUG_HOTPLUG_CPU0
+ extern int _debug_hotplug_cpu(int cpu, int action);
+ #endif
+diff --git a/arch/x86/kernel/head_32.S b/arch/x86/kernel/head_32.S
+index f66a6b90f954..aad62c677486 100644
+--- a/arch/x86/kernel/head_32.S
++++ b/arch/x86/kernel/head_32.S
+@@ -174,12 +174,12 @@ SYM_CODE_END(startup_32)
+  * up already except stack. We just set up stack here. Then call
+  * start_secondary().
+  */
+-SYM_FUNC_START(start_cpu0)
++SYM_FUNC_START(start_cpu)
+ 	movl initial_stack, %ecx
+ 	movl %ecx, %esp
+ 	call *(initial_code)
+ 1:	jmp 1b
+-SYM_FUNC_END(start_cpu0)
++SYM_FUNC_END(start_cpu)
+ #endif
+ 
+ /*
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index a708107688a2..352311c5d8d1 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -309,15 +309,15 @@ SYM_CODE_END(secondary_startup_64)
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+ /*
+- * Boot CPU0 entry point. It's called from play_dead(). Everything has been set
++ * CPU entry point. It's called from play_dead(). Everything has been set
+  * up already except stack. We just set up stack here. Then call
+  * start_secondary() via .Ljump_to_C_code.
+  */
+-SYM_CODE_START(start_cpu0)
++SYM_CODE_START(start_cpu)
+ 	UNWIND_HINT_EMPTY
+ 	movq	initial_stack(%rip), %rsp
+ 	jmp	.Ljump_to_C_code
+-SYM_CODE_END(start_cpu0)
++SYM_CODE_END(start_cpu)
+ #endif
+ 
+ 	/* Both SMP bootup and ACPI suspend change these variables */
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index fb55d28332e2..c6311c55b84c 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1726,7 +1726,7 @@ static inline void mwait_play_dead(void)
+ 		 * If NMI wants to wake up CPU0, start CPU0.
+ 		 */
+ 		if (wakeup_cpu0())
+-			start_cpu0();
++			start_cpu();
+ 	}
  }
  
-+static __always_inline void vc_handle_trap_db(struct pt_regs *regs)
-+{
-+	if (user_mode(regs))
-+		noist_exc_debug(regs);
-+	else
-+		exc_debug(regs);
-+}
-+
- static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 					 struct ghcb *ghcb,
- 					 unsigned long exit_code)
-@@ -1033,6 +1041,15 @@ DEFINE_IDTENTRY_VC_SAFE_STACK(exc_vmm_communication)
- 	struct ghcb *ghcb;
+@@ -1741,7 +1741,7 @@ void hlt_play_dead(void)
+ 		 * If NMI wants to wake up CPU0, start CPU0.
+ 		 */
+ 		if (wakeup_cpu0())
+-			start_cpu0();
++			start_cpu();
+ 	}
+ }
  
- 	lockdep_assert_irqs_disabled();
-+
-+	/*
-+	 * Handle #DB before calling into !noinstr code to avoid recursive #DB.
-+	 */
-+	if (error_code == SVM_EXIT_EXCP_BASE + X86_TRAP_DB) {
-+		vc_handle_trap_db(regs);
-+		return;
-+	}
-+
- 	instrumentation_begin();
- 
- 	/*
 -- 
 2.27.0
 
