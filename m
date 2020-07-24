@@ -2,154 +2,65 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3091C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC31C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD7D1206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:17:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F52nhKBr"
+	by mail.kernel.org (Postfix) with ESMTP id 7E23820737
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 22:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgGXWRe (ORCPT
+        id S1726764AbgGXWSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 18:17:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37493 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726593AbgGXWRe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 18:17:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595629052;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ikn7XLZPTxeIVvUjg9wLFxM7BUnwsYUpP1vYegUNA+s=;
-        b=F52nhKBrOz0C/WnJeqBz3mB0QTsedwc/h3aA0L0K3k86hR+meQdKuqbb1Abo7Nz8L2GlwE
-        jLiz6dYwxGMWLET3EDIgOqJfVwcDgoNlXch14xq1cEc4jEfr9V9N7btZtDrNYivg35BvoC
-        6gBLpmS3k6yOjmZVDjjkewzs+lErZOM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-503-0zdhgtEIODezm04tPgO93g-1; Fri, 24 Jul 2020 18:17:30 -0400
-X-MC-Unique: 0zdhgtEIODezm04tPgO93g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 24 Jul 2020 18:18:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726593AbgGXWSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 18:18:50 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 958461902EA0;
-        Fri, 24 Jul 2020 22:17:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 513E18BEF7;
-        Fri, 24 Jul 2020 22:17:27 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] watch_queue: Limit the number of watches a user can hold
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, jarkko.sakkinen@linux.intel.com,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 24 Jul 2020 23:17:26 +0100
-Message-ID: <159562904644.2287160.13294507067766261970.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        by mail.kernel.org (Postfix) with ESMTPSA id C1D71206D7;
+        Fri, 24 Jul 2020 22:18:48 +0000 (UTC)
+Date:   Fri, 24 Jul 2020 18:18:46 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     peterz@infradead.org
+Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, sfr@canb.auug.org.au
+Subject: Re: [PATCH v2] sched,tracing: Convert to sched_set_fifo()
+Message-ID: <20200724181846.415bfd43@oasis.local.home>
+In-Reply-To: <20200724215003.GY119549@hirez.programming.kicks-ass.net>
+References: <202006192249.AYnVBGCH%lkp@intel.com>
+        <20200709124505.GT597537@hirez.programming.kicks-ass.net>
+        <20200709115818.36a956a4@oasis.local.home>
+        <20200720214918.GM5523@worktop.programming.kicks-ass.net>
+        <20200724213911.GX119549@hirez.programming.kicks-ass.net>
+        <20200724174618.7487ee7c@oasis.local.home>
+        <20200724215003.GY119549@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Impose a limit on the number of watches that a user can hold so that they
-can't use this mechanism to fill up all the available memory.
+On Fri, 24 Jul 2020 23:50:03 +0200
+peterz@infradead.org wrote:
 
-This is done by putting a counter in user_struct that's incremented when a
-watch is allocated and decreased when it is released.  If the number
-exceeds the RLIMIT_NOFILE limit, the watch is rejected with EAGAIN.
+> -	if (producer_fifo < 0)
+> +	if (producer_fifo)
+> +		trace_printk("Running Producer at SCHED_FIFO %s\n",
+> +			     consumer_fifo == 1 ? "low" : "high");
 
-This can be tested by the following means:
+I'm going to take cut-and-paste away from you!
 
- (1) Create a watch queue and attach it to fd 5 in the program given - in
-     this case, bash:
+-- Steve
 
-	keyctl watch_session /tmp/nlog /tmp/gclog 5 bash
-
- (2) In the shell, set the maximum number of files to, say, 99:
-
-	ulimit -n 99
-
- (3) Add 200 keyrings:
-
-	for ((i=0; i<200; i++)); do keyctl newring a$i @s || break; done
-
- (4) Try to watch all of the keyrings:
-
-	for ((i=0; i<200; i++)); do echo $i; keyctl watch_add 5 %:a$i || break; done
-
-     This should fail when the number of watches belonging to the user hits
-     99.
-
- (5) Remove all the keyrings and all of those watches should go away:
-
-	for ((i=0; i<200; i++)); do keyctl unlink %:a$i; done
-
- (6) Kill off the watch queue by exiting the shell spawned by
-     watch_session.
-
-Fixes: c73be61cede5 ("pipe: Add general notification queue support")
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- include/linux/sched/user.h |    3 +++
- kernel/watch_queue.c       |    8 ++++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/include/linux/sched/user.h b/include/linux/sched/user.h
-index 917d88edb7b9..a8ec3b6093fc 100644
---- a/include/linux/sched/user.h
-+++ b/include/linux/sched/user.h
-@@ -36,6 +36,9 @@ struct user_struct {
-     defined(CONFIG_NET) || defined(CONFIG_IO_URING)
- 	atomic_long_t locked_vm;
- #endif
-+#ifdef CONFIG_WATCH_QUEUE
-+	atomic_t nr_watches;	/* The number of watches this user currently has */
-+#endif
- 
- 	/* Miscellaneous per-user rate limit */
- 	struct ratelimit_state ratelimit;
-diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
-index f74020f6bd9d..0ef8f65bd2d7 100644
---- a/kernel/watch_queue.c
-+++ b/kernel/watch_queue.c
-@@ -393,6 +393,7 @@ static void free_watch(struct rcu_head *rcu)
- 	struct watch *watch = container_of(rcu, struct watch, rcu);
- 
- 	put_watch_queue(rcu_access_pointer(watch->queue));
-+	atomic_dec(&watch->cred->user->nr_watches);
- 	put_cred(watch->cred);
- }
- 
-@@ -452,6 +453,13 @@ int add_watch_to_object(struct watch *watch, struct watch_list *wlist)
- 	watch->cred = get_current_cred();
- 	rcu_assign_pointer(watch->watch_list, wlist);
- 
-+	if (atomic_inc_return(&watch->cred->user->nr_watches) >
-+	    task_rlimit(current, RLIMIT_NOFILE)) {
-+		atomic_dec(&watch->cred->user->nr_watches);
-+		put_cred(watch->cred);
-+		return -EAGAIN;
-+	}
-+
- 	spin_lock_bh(&wqueue->lock);
- 	kref_get(&wqueue->usage);
- 	kref_get(&watch->usage);
-
-
+> +	else
+>  		trace_printk("Running Producer at nice: %d\n",
+>  			     producer_nice);
