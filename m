@@ -2,102 +2,57 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E45C433F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E755C433F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31B522074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:25:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595597113;
-	bh=pp/ojK1FzfEWYVM4WBKudjbEzP9+0SYYLSoiNjE9YLU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1/mgzM9a7DodWsxHRnfGU/cS+ToyhJvsR4/m7zPyuwFmAm1c+FCLvX+m+7NVz9jjH
-	 WTIoJLHZm5vpj1hIwlIDaX5EzQXHK3s4Bkk8kyYsUOzok5GVbDyzJhtjMR7Sq2tvzA
-	 LoK6CoDdT18bFWNcuN45q3TjAVlhdI+VeRmawPE8=
+	by mail.kernel.org (Postfix) with ESMTP id 83ED92065F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgGXNZM (ORCPT
+        id S1727053AbgGXNZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:25:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgGXNZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:25:11 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB9AA2065F;
-        Fri, 24 Jul 2020 13:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595597111;
-        bh=pp/ojK1FzfEWYVM4WBKudjbEzP9+0SYYLSoiNjE9YLU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=w0c8S6XQ+gzkzI5LxJL+XfMrR2B7El+RZsYxvDnwnzjYv73NtN/9hjndd4B8c/C+s
-         uA97p96af+HrUn/IfyHzz6aoHGb20RrTkI6J064UIp5zTTa9KoM3kW1mLISRMsaXIp
-         e32E/jNou3sLIkTCyJ2e/Kfp2Fr3xpZxJ526gUy8=
-Received: by pali.im (Postfix)
-        id 2AA4788C; Fri, 24 Jul 2020 15:25:09 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH] pinctrl: armada-37xx: Add comment for pcie1_reset pin group
-Date:   Fri, 24 Jul 2020 15:24:57 +0200
-Message-Id: <20200724132457.7094-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 24 Jul 2020 09:25:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726759AbgGXNZP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:25:15 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7602C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 06:25:15 -0700 (PDT)
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 4BCqgs5ZZwz9sVG; Fri, 24 Jul 2020 23:25:12 +1000 (AEST)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Will Deacon <willdeacon@google.com>
+Cc:     npiggin@gmail.com, tglx@linutronix.de, bigeasy@linutronix.de,
+        jniethe5@gmail.com, msuchanek@suse.de, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20200716193820.1141936-1-palmer@dabbelt.com>
+References: <20200716193820.1141936-1-palmer@dabbelt.com>
+Subject: Re: [PATCH] powerpc/64: Fix an out of date comment about MMIO ordering
+Message-Id: <159559697172.1657499.14368228495374762010.b4-ty@ellerman.id.au>
+Date:   Fri, 24 Jul 2020 23:25:12 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Group name 'pcie1' is misleading as it controls only PCIe reset pin. Like
-other PCIe groups it should have been called 'pcie1_reset'. But due to
-backward compatibility it is not possible to change existing group name.
-So just add comment describing this PCIe reset functionality.
+On Thu, 16 Jul 2020 12:38:20 -0700, Palmer Dabbelt wrote:
+> This primitive has been renamed, but because it was spelled incorrectly in the
+> first place it must have escaped the fixup patch.  As far as I can tell this
+> logic is still correct: smp_mb__after_spinlock() uses the default smp_mb()
+> implementation, which is "sync" rather than "hwsync" but those are the same
+> (though I'm not that familiar with PowerPC).
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 2 +-
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Applied to powerpc/next.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 2bbc69b4dc99..d5b6c0a1c54a 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -316,7 +316,7 @@
- 				};
- 
- 				pcie_reset_pins: pcie-reset-pins {
--					groups = "pcie1";
-+					groups = "pcie1"; /* this actually controls "pcie1_reset" */
- 					function = "gpio";
- 				};
- 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 5f125bd6279d..8fd8b2af9216 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -196,7 +196,7 @@ static struct armada_37xx_pin_group armada_37xx_sb_groups[] = {
- 	PIN_GRP_GPIO("sdio_sb", 24, 6, BIT(2), "sdio"),
- 	PIN_GRP_GPIO("rgmii", 6, 12, BIT(3), "mii"),
- 	PIN_GRP_GPIO("smi", 18, 2, BIT(4), "smi"),
--	PIN_GRP_GPIO("pcie1", 3, 1, BIT(5), "pcie"),
-+	PIN_GRP_GPIO("pcie1", 3, 1, BIT(5), "pcie"), /* this actually controls "pcie1_reset" */
- 	PIN_GRP_GPIO("pcie1_clkreq", 4, 1, BIT(9), "pcie"),
- 	PIN_GRP_GPIO("pcie1_wakeup", 5, 1, BIT(10), "pcie"),
- 	PIN_GRP_GPIO("ptp", 20, 3, BIT(11) | BIT(12) | BIT(13), "ptp"),
--- 
-2.20.1
+[1/1] powerpc/64: Fix an out of date comment about MMIO ordering
+      https://git.kernel.org/powerpc/c/147c13413c04bc6a2bd76f2503402905e5e98cff
 
+cheers
