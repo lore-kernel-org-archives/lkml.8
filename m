@@ -3,95 +3,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFB0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7DAC433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B29AD20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCDEA20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 05:32:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rqxeQur2"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="Di956j2a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgGXFc0 (ORCPT
+        id S1726763AbgGXFcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 01:32:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48000 "EHLO
+        Fri, 24 Jul 2020 01:32:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725860AbgGXFcZ (ORCPT
+        with ESMTP id S1726277AbgGXFcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 01:32:25 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8836AC0619D3;
-        Thu, 23 Jul 2020 22:32:24 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id z3so4456566pfn.12;
-        Thu, 23 Jul 2020 22:32:24 -0700 (PDT)
+        Fri, 24 Jul 2020 01:32:45 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30451C0619D3;
+        Thu, 23 Jul 2020 22:32:44 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id gg18so5310900ejb.6;
+        Thu, 23 Jul 2020 22:32:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Gw6qwe9hZyk10sI0UvBBcocF5vy86tjSPTY0BqZ8UQM=;
-        b=rqxeQur2k0IeMSKNTQeqgntS1E57Ho2o2CSzw5WpKaGO/T2adV5GKLcB9I9JvtpItZ
-         EFX+qA+gpwYXw92ikKCi9AhBJM6VhzC8WxHpz+6WbSIwXJKH2OKF8HVHlsad+17f0ZNr
-         SmnxqJXXZiUnU15UFzWXvWDuJD5tFEu4iejire+UAFmrJID9IlbYdP9ilE1ewJqstC41
-         0tzNhlpP4qddxvlqKreJ7HyQ4Uu5VwgmLaYCaL5w9gA1XGM63Wt4Lm4cgyc/Dt+NVZAg
-         0qGcfMHMM7vuzQjqIBWJ5ghz195TTWBVteHBJMCEyv/57+muZ5A0sMdimO+Z/tMs+9fB
-         L1SQ==
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lxeF3MdXzIoVsbazhbqXkh5Gq8fRGjKClAu6VjOvpaQ=;
+        b=Di956j2aZtrmMHcejr07uX82Ow70coVnOGXPMEEuPUjfwmVcAT2UMOPHutzGowc6ee
+         PrcgaF2BmKXQcGyY3GplupS/zOgati5XyXj7L+kKf0sWU3xvRDx/o3eysq3xLNtd5B8d
+         UIkRU1OgFsWoBWSJR53ArBd94RfbELr182ysY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Gw6qwe9hZyk10sI0UvBBcocF5vy86tjSPTY0BqZ8UQM=;
-        b=ftmKv4iUSfTinUicge/LzJuxwdNxLu+lSh5SZmOeQiYdnfzz+YKG7AYJzqPwMnpia5
-         bIugoQ4HQcJXnS6REW1JnftN1ioc9ttwBP8d8x4cwRGScNc7QoYww2lnVrMkpFvSFrHC
-         CQw0BD1RomYefj4R+GYyZbXkv0LQRYSPCTkVPnWGp2Xho+8IIBJqY/0ihmbC6C4ZKKG0
-         ZvBkvokKjvqm88iiZnVwZ19Q7v+6vs/wD5hU/vmHCh0NBGHk4/z2pG9TeK1bmlH3zFbG
-         yRMy3fjK4Bc4RObp2JY3BpTKNsOHbueam9F+45nNNeotMIKbwJtvklthxyv+zu2/WDgg
-         Ze6Q==
-X-Gm-Message-State: AOAM531r7cS2osUx1Fy76zaCg+cPPSFQ49Ak1Sxp6KZoM0LLXa48o94w
-        6YgWKhtWR0Kipl2W8HOQCkQ=
-X-Google-Smtp-Source: ABdhPJweosQbkxclrfGxb4N8JekqfS6yj6Tlb2CmEm598P9mmNEPJw/0bIQEuC6fXLYR3rOeStNnjA==
-X-Received: by 2002:a63:4d3:: with SMTP id 202mr7279457pge.14.1595568743717;
-        Thu, 23 Jul 2020 22:32:23 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:dfa8])
-        by smtp.gmail.com with ESMTPSA id m20sm4832686pgn.62.2020.07.23.22.32.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 22:32:22 -0700 (PDT)
-Date:   Thu, 23 Jul 2020 22:32:20 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kernel-team@fb.com, john.fastabend@gmail.com, kpsingh@chromium.org,
-        brouer@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH v5 bpf-next 5/5] selftests/bpf: add
- get_stackid_cannot_attach
-Message-ID: <20200724053220.dtega3r7i3jewgxx@ast-mbp.dhcp.thefacebook.com>
-References: <20200723180648.1429892-1-songliubraving@fb.com>
- <20200723180648.1429892-6-songliubraving@fb.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lxeF3MdXzIoVsbazhbqXkh5Gq8fRGjKClAu6VjOvpaQ=;
+        b=TaSgl7Ytas0s/M+CY9FxhPbTd3KvYqGa98YhsbRzYCo9xLeK8ABh1Bb5JRQIORUDad
+         GEBt7wiOqffg8ZTlBINb1zEgbELLsp6DK1sSoh+uro39llL7S5bhr7kh38lLGfb9i1gA
+         BouamtDZmgLJMxyU+lRNq0YeMpdzZ8XPAMAuUGD3T5IM/F8uaZhZ40AEx8lOBvBbMcL/
+         8lmm/8Va6zggi6edfEyBqHyvRBgLlroZAEoiaSnmFzdagaa4aj8Q0H4dM5EVEq+DhkMb
+         YYbIQ4Vh6pT8EUNoQeqpWq3IzmCWLVnR0mvDjc+EQpfDCK8BpMio7K/7hkTx9Ho6DM6/
+         Reow==
+X-Gm-Message-State: AOAM532A8LpomImtnX1LFSz4JnKatvVkfhUdeDQh0UcaOp0Q0JWKuI0M
+        0XvkN3tMXAupJJYGOXxzu4zizmGQuC653kj9YYs=
+X-Google-Smtp-Source: ABdhPJyvBQHzeEYsM37+wecHEG0VWauRr3W7csro+jM1re12/9nqf22Nc6d1EFG2E/ReH5XyqMDpOAvaHjCnOFMBhaA=
+X-Received: by 2002:a17:906:c187:: with SMTP id g7mr8032732ejz.108.1595568762913;
+ Thu, 23 Jul 2020 22:32:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723180648.1429892-6-songliubraving@fb.com>
+References: <20200723230539.17860-1-rentao.bupt@gmail.com>
+In-Reply-To: <20200723230539.17860-1-rentao.bupt@gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 24 Jul 2020 05:32:30 +0000
+Message-ID: <CACPK8XdiHLcBBhXjCpTZotVPuRj4bFh0x8TFhSj1TBK2xB0SiQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] ARM: dts: aspeed: fixup wedge40 device tree
+To:     Tao Ren <rentao.bupt@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tao Ren <taoren@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 11:06:48AM -0700, Song Liu wrote:
-> +	pmu_fd = syscall(__NR_perf_event_open, &attr, -1 /* pid */,
-> +			 0 /* cpu 0 */, -1 /* group id */,
-> +			 0 /* flags */);
-> +	if (pmu_fd < 0 && errno == ENOENT) {
-> +		printf("%s:SKIP:cannot open PERF_COUNT_HW_CPU_CYCLES with precise_ip > 0\n",
-> +		       __func__);
-> +		test__skip();
-> +		goto cleanup;
-> +	}
+On Thu, 23 Jul 2020 at 23:05, <rentao.bupt@gmail.com> wrote:
+>
+> From: Tao Ren <rentao.bupt@gmail.com>
+>
+> The patch series update several devices' settings in Facebook Wedge40
+> device tree.
+>
+> Patch #1 disables a few i2c controllers as they are not being used at
+> present.
+>
+> Patch #2 enables adc device for voltage monitoring.
+>
+> Patch #3 enables pwm_tacho device for fan control and monitoring.
+>
+> Tao Ren (3):
+>   ARM: dts: aspeed: wedge40: disable a few i2c controllers
+>   ARM: dts: aspeed: wedge40: enable adc device
+>   ARM: dts: aspeed: wedge40: enable pwm_tacho device
 
-That wasn't enough in my test VM.
-I've changed it to be: (errno == ENOENT || errno == EOPNOTSUPP)
-and applied the set.
-Thanks
+I have merged this series into the aspeed dt-for-5.9 branch.
+
+Cheers,
+
+Joel
+
+>
+>  .../boot/dts/aspeed-bmc-facebook-wedge40.dts  | 42 +++++++++++++++----
+>  1 file changed, 34 insertions(+), 8 deletions(-)
+>
+> --
+> 2.17.1
+>
