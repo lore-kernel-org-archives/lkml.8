@@ -2,157 +2,216 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D72C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF03C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 972772065E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:21:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="P+weo+cY"
+	by mail.kernel.org (Postfix) with ESMTP id 882822065E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 19:23:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgGXTVI (ORCPT
+        id S1726617AbgGXTXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 15:21:08 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:60198 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgGXTVH (ORCPT
+        Fri, 24 Jul 2020 15:23:21 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:32843 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgGXTXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 15:21:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3uSMvInD2Jk/6cMDVdGrLAgWn9ZHoqePo02Lz6hivfE=; b=P+weo+cY0o/lpm5Nzy0Xmn5+jK
-        dix62OJ3ciCGa5qYQThWzrPst7nAnSt2UJBWzBb0n6JLallV8DS8wMhcPcvyEqTWmTCOfCssOS7GD
-        uyh1Bdnu92ZzqaNHboHbwHAVTKv6nNvz3kRMt0bGpCxUIM4oKgcD16r3lVquIZjcDVMDmblq+8qLe
-        aF5ywXjS3PsILAhPbfyVRPxB4hryFcP3JlD45yM7bZU1olKdE0lHfNaj4NGTnC38MWG/zwaNZNOhI
-        YRjBYQ/8LRQNTL0cB1Gh+En1J1Rjkhy1y4iD99pT0KP1EcldanXJujY8LROUTcOP45Rrh/CZ9pr/X
-        C+mC+d3w==;
-Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jz3Fc-0000ue-JE; Fri, 24 Jul 2020 13:21:02 -0600
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Andrew Maier <andrew.maier@eideticom.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <20200723195742.GA1447143@bjorn-Precision-5520>
- <89d853d1-9e45-1ba5-5be7-4bbce79c7fb8@deltatee.com>
- <CADnq5_NMKK83GaNA+w85MR8bqDbFqvcdvn9MCqZtLwctJKmOUw@mail.gmail.com>
- <CADnq5_MCPTyxG31guPFL-uvs7HisGxwO5KpALnufc=Bj4MfYCw@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <7ba8fff5-990a-a59c-53cf-b0c9e9b54a6e@deltatee.com>
-Date:   Fri, 24 Jul 2020 13:20:57 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 15:23:20 -0400
+Received: by mail-il1-f199.google.com with SMTP id c1so6362962ilr.0
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 12:23:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ZFrCqHnU0jwNxTDbdv/+Y2rg6p740vaEs4B70N81Dt4=;
+        b=SaPUUPe/EgX9rpu1kyUykLGmqVGxvzUD/aGDyyjUeiA+oBrGGVyn8w13wObGO7MxNj
+         cE3oWguIjWmvdvMLfJ+fMO6Dv/gDsFgth1ntXWyI24ZW/8c8DJDr3hBrjc2s/6th9frw
+         j2bwVfnLIuJeetESGFXyFxLJtNIDpvfWwFe8Eu11RCK2m3nJ50l2uzKFCMcqNcjFf7qN
+         d8m/UAIgE9x+J12sDEgMzIo1W9qxQYbuaiyYAduYKeJESDOb91Mt74JOQl/pkwSUqQo1
+         YZzZxwNHIQWMMpWzg2so/7Vw/4PKkPJR0QVNppJ5kKyj5E0G0Sm9vy1hVmGlBvFlk09e
+         45uA==
+X-Gm-Message-State: AOAM530nLVwqS2NuUBIJ0l3B9r4Gp3FA8wspPjpxPRw+RMwXTXeb8l8n
+        IjNaaYE0jWUHqxCD+MiM6IuvxJXSTJf226zfp2r1eBJdI0Qk
+X-Google-Smtp-Source: ABdhPJyiYXjAP74BUXo+JnuBfzva/JGy5CbxHrAyHoIncs1sRsBfWvnbytqgEz6PFEJXocWOxcfcQm7LxFbAA6279YCi4QFgfP3a
 MIME-Version: 1.0
-In-Reply-To: <CADnq5_MCPTyxG31guPFL-uvs7HisGxwO5KpALnufc=Bj4MfYCw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 24.64.145.4
-X-SA-Exim-Rcpt-To: hpa@zytor.com, andrew.maier@eideticom.com, ray.huang@amd.com, christian.koenig@amd.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org, alexdeucher@gmail.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
- allowed bridges
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-Received: by 2002:a92:c205:: with SMTP id j5mr12051519ilo.137.1595618599068;
+ Fri, 24 Jul 2020 12:23:19 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 12:23:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cb6afe05ab34e77e@google.com>
+Subject: BUG: stack guard page was hit in unwind_next_frame (2)
+From:   syzbot <syzbot+5bdf123b3320cc241813@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, jpoimboe@redhat.com,
+        linux-kernel@vger.kernel.org, mbenes@suse.cz, mingo@redhat.com,
+        peterz@infradead.org, shile.zhang@linux.alibaba.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    5714ee50 copy_xstate_to_kernel: Fix typo which caused GDB ..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=116964c8900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f87a5e4232fdb267
+dashboard link: https://syzkaller.appspot.com/bug?extid=5bdf123b3320cc241813
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5bdf123b3320cc241813@syzkaller.appspotmail.com
+
+BUG: stack guard page was hit at 00000000e936347d (stack is 00000000047987e0..00000000cd28eac3)
+kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 24253 Comm: syz-executor.5 Not tainted 5.8.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:unwind_next_frame+0x1e/0x1f90 arch/x86/kernel/unwind_orc.c:424
+Code: 48 8b 0c 24 e9 72 ff ff ff 0f 1f 00 48 b8 00 00 00 00 00 fc ff df 41 57 49 89 ff 41 56 41 55 41 54 55 53 48 81 ec a0 00 00 00 <48> c7 44 24 40 b3 8a b5 41 48 8d 5c 24 40 48 c7 44 24 48 98 a5 67
+RSP: 0018:ffffc90008367f68 EFLAGS: 00010282
+RAX: dffffc0000000000 RBX: ffffc90008368118 RCX: ffffc90008368120
+RDX: ffffc90008370000 RSI: 1ffff9200106d014 RDI: ffffc90008368090
+RBP: dffffc0000000000 R08: 0000000000000000 R09: ffffc90008368090
+R10: fffff5200106d01d R11: 0000000000000000 R12: fffff5200106d014
+R13: fffff5200106d013 R14: ffffc900083680c8 R15: ffffc90008368090
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0063) knlGS:00000000f5cfeb40
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: ffffc90008367f58 CR3: 00000000524e1000 CR4: 00000000001426e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __unwind_start+0x4dd/0x7c0 arch/x86/kernel/unwind_orc.c:698
+ unwind_start arch/x86/include/asm/unwind.h:60 [inline]
+ arch_stack_walk+0x5e/0xf0 arch/x86/kernel/stacktrace.c:24
+ stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+ slab_post_alloc_hook mm/slab.h:586 [inline]
+ slab_alloc_node mm/slab.c:3263 [inline]
+ kmem_cache_alloc_node+0x130/0x3c0 mm/slab.c:3575
+ __alloc_skb+0x71/0x550 net/core/skbuff.c:198
+ alloc_skb include/linux/skbuff.h:1083 [inline]
+ nlmsg_new include/net/netlink.h:940 [inline]
+ rtmsg_ifinfo_build_skb+0x72/0x1a0 net/core/rtnetlink.c:3701
+ rtmsg_ifinfo_event net/core/rtnetlink.c:3737 [inline]
+ rtmsg_ifinfo_event net/core/rtnetlink.c:3728 [inline]
+ rtnetlink_event+0x123/0x1d0 net/core/rtnetlink.c:5511
+ notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ netdev_features_change net/core/dev.c:1443 [inline]
+ netdev_sync_lower_features net/core/dev.c:9056 [inline]
+ __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+ bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ netdev_features_change net/core/dev.c:1443 [inline]
+ netdev_sync_lower_features net/core/dev.c:9056 [inline]
+ __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+ bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ netdev_features_change net/core/dev.c:1443 [inline]
+ netdev_sync_lower_features net/core/dev.c:9056 [inline]
+ __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+ bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ netdev_features_change net/core/dev.c:1443 [inline]
+ netdev_sync_lower_features net/core/dev.c:9056 [inline]
+ __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+ bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ netdev_features_change net/core/dev.c:1443 [inline]
+ netdev_sync_lower_features net/core/dev.c:9056 [inline]
+ __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+ bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ netdev_features_change net/core/dev.c:1443 [inline]
+ netdev_sync_lower_features net/core/dev.c:9056 [inline]
+ __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+ bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ netdev_features_change net/core/dev.c:1443 [inline]
+ netdev_sync_lower_features net/core/dev.c:9056 [inline]
+ __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+ bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+ bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+ bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+ notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+ call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+ call_netdevice_notifiers net/core/dev.c:2053 [inline]
+ netdev_features_change net/core/dev.c:1443 [inline]
+ netdev_sync_lower_features net/core/dev.c:9056 [inline]
+ __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+Lost 528 message(s)!
+---[ end trace 2343dddd6fe8f1bd ]---
+RIP: 0010:unwind_next_frame+0x1e/0x1f90 arch/x86/kernel/unwind_orc.c:424
+Code: 48 8b 0c 24 e9 72 ff ff ff 0f 1f 00 48 b8 00 00 00 00 00 fc ff df 41 57 49 89 ff 41 56 41 55 41 54 55 53 48 81 ec a0 00 00 00 <48> c7 44 24 40 b3 8a b5 41 48 8d 5c 24 40 48 c7 44 24 48 98 a5 67
+RSP: 0018:ffffc90008367f68 EFLAGS: 00010282
+RAX: dffffc0000000000 RBX: ffffc90008368118 RCX: ffffc90008368120
+RDX: ffffc90008370000 RSI: 1ffff9200106d014 RDI: ffffc90008368090
+RBP: dffffc0000000000 R08: 0000000000000000 R09: ffffc90008368090
+R10: fffff5200106d01d R11: 0000000000000000 R12: fffff5200106d014
+R13: fffff5200106d013 R14: ffffc900083680c8 R15: ffffc90008368090
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0063) knlGS:00000000f5cfeb40
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: ffffc90008367f58 CR3: 00000000524e1000 CR4: 00000000001426e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-On 2020-07-24 10:07 a.m., Alex Deucher wrote:
-> On Thu, Jul 23, 2020 at 4:18 PM Alex Deucher <alexdeucher@gmail.com> wrote:
->>
->> On Thu, Jul 23, 2020 at 4:11 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->>>
->>>
->>>
->>> On 2020-07-23 1:57 p.m., Bjorn Helgaas wrote:
->>>> [+cc Andrew, Armen, hpa]
->>>>
->>>> On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:
->>>>> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->>>>>>
->>>>>> The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
->>>>>> transactions between root ports and found to work. Therefore add it
->>>>>> to the list.
->>>>>>
->>>>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->>>>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
->>>>>> Cc: Christian König <christian.koenig@amd.com>
->>>>>> Cc: Huang Rui <ray.huang@amd.com>
->>>>>> Cc: Alex Deucher <alexdeucher@gmail.com>
->>>>>
->>>>> Starting with Zen, all AMD platforms support P2P for reads and writes.
->>>>
->>>> What's the plan for getting out of the cycle of "update this list for
->>>> every new chip"?  Any new _DSMs planned, for instance?
->>>
->>> Well there was an effort to add capabilities in the PCI spec to describe
->>> this but, as far as I know, they never got anywhere, and hardware still
->>> doesn't self describe with this.
->>>
->>>> A continuous trickle of updates like this is not really appealing.  So
->>>> far we have:
->>>>
->>>>   7d5b10fcb81e ("PCI/P2PDMA: Add AMD Zen Raven and Renoir Root Ports to whitelist")
->>>>   7b94b53db34f ("PCI/P2PDMA: Add Intel Sky Lake-E Root Ports B, C, D to the whitelist")
->>>>   bc123a515cb7 ("PCI/P2PDMA: Add Intel SkyLake-E to the whitelist")
->>>>   494d63b0d5d0 ("PCI/P2PDMA: Whitelist some Intel host bridges")
->>>>   0f97da831026 ("PCI/P2PDMA: Allow P2P DMA between any devices under AMD ZEN Root Complex")
->>>>
->>>> And that's just from the last year, not including this patch.
->>>
->>> Yes, it's not ideal. But most of these are adding old devices as people
->>> test and care about running on those platforms -- a lot of this is
->>> bootstrapping the list. I'd expect this to slow down a bit as by now we
->>> have hopefully got a lot of the existing platforms people care about.
->>> But we'd still probably expect to be adding a new Intel and AMD devices
->>> about once a year as they produce new hardware designs.
->>>
->>> Unless, the Intel and AMD folks know of a way to detect this, or even to
->>> query if a root complex is newer than a certain generation, I'm not sure
->>> what else we can do here.
->>
->> I started a thread internally to see if I can find a way.  FWIW,
->> pre-ZEN parts also support p2p DMA, but only for writes.  If I can get
->> a definitive list, maybe we could switch to a blacklist for the old
->> ones?
-> 
-> After talking with a few people internally, for AMD chips, it would
-> probably be easiest to just whitelist based on the CPU family id for
-> zen and newer (e.g., >= 0x17).
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-That seems sensible. I was trying to see if we could do something
-similar for Intel, and just allow anything after Skylake. I found
-this[1]. It seems they have been on family 6 for a long time, and I'm
-not comfortable enabling the whole family. Their model numbers also
-don't seem to increment in a favorable fashion, in that "small core"
-atoms (which have different host bridges with very much unknown support)
-have model numbers interspersed with regular "big core" CPUS.
-
-So we might be stuck with the Intel white list for a while, but using
-the AMD family number will at least cut the number of additions down a
-fair amount. I can try to put a patch together in place of this one.
-
-Logan
-
-[1]
-https://elixir.bootlin.com/linux/latest/source/arch/x86/include/asm/intel-family.h#L73
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
