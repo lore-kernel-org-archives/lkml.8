@@ -2,112 +2,131 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38676C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524A4C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20E61206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A03206D8
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:46:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595598370;
+	bh=vu7AEch6tVK5sMQvHGR0dpGgNZ7jy5+kRB2EBTC0xyY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=Ld6JRbpyYkqakcNv7tLZcdyfITj18Qmgv7yKOXX5IpME9NKQCqXz6r84JfU1ZMDQd
+	 NrSCjXAl42PG9Od6Y45CRzKLpY/TmHD6drNtIL0ket9DZ0xwO6gB2wqPPHVCEUS2pK
+	 jv+HbURJHGhIkVLonEhbkI/xzH287qCRFxtOBlp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgGXNp5 (ORCPT
+        id S1727790AbgGXNqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:45:57 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:41219 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726235AbgGXNp4 (ORCPT
+        Fri, 24 Jul 2020 09:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726235AbgGXNqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:45:56 -0400
-Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MIdS1-1k4imt21Lh-00EaUk; Fri, 24 Jul 2020 15:45:54 +0200
-Received: by mail-qv1-f46.google.com with SMTP id y11so1156506qvl.4;
-        Fri, 24 Jul 2020 06:45:54 -0700 (PDT)
-X-Gm-Message-State: AOAM530KOvLES40vz+Mtlbj1P8O/qulL2EQTSP6ecmbnfgk04I68s9fc
-        YIxh7YfjmOAuLJVkAlzzjUcKRhgC3qCcZQ7uHKE=
-X-Google-Smtp-Source: ABdhPJyEqdZ1Ds6rBzMmh7FhmiJq043DLd+gXjlj19IcD1ElA3GGqGC9iWVYViBP8To1mNjzEbIjhOKDCmec66ErY0E=
-X-Received: by 2002:a0c:f802:: with SMTP id r2mr9798584qvn.197.1595598353111;
- Fri, 24 Jul 2020 06:45:53 -0700 (PDT)
+        Fri, 24 Jul 2020 09:46:07 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E3CEC0619D3;
+        Fri, 24 Jul 2020 06:46:07 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f5so10021469ljj.10;
+        Fri, 24 Jul 2020 06:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=vu7AEch6tVK5sMQvHGR0dpGgNZ7jy5+kRB2EBTC0xyY=;
+        b=md52HGXBAlYTKVX/vc+E2YSVjr9cCh2sxaZhVBVMKsXRzJ4CSFyeQgo+AsUD4dBhbH
+         a+BJdAwGPp0mmtKuPJL/woOC7G3k+QGxLaapfHOUSN0vYTKjBXGf/ygoJDNZPNATlrL0
+         lNBgyM5+CJa8MnczwRhZChC9rFVwHfVd6CbkuRTgZgYh7KbAgWs/wIVNNOiIvRFqg4gz
+         xRvu7Hd09vR3832fkvN3VcVhqg2p/mq5PMfAt7NeAdPXmlGPQ/PKxc4K6BJY5ohcLDUt
+         Msp6JmptEwjxnEOlrjyoWSGU7e8dftJ575WnnlCkva/edVsbnfW6GLkF0WLowrlXU+NN
+         5pJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=vu7AEch6tVK5sMQvHGR0dpGgNZ7jy5+kRB2EBTC0xyY=;
+        b=nNo5euy3vaChnnTa84b86I5+FbwnRlQRTZ3gBk+6bCYSirDOt+ssoO8Ok5ZJe0sVam
+         Zz2Mw+EnCO0YkJTOj2K70Yjox54tSJwMOR39ozHOxRlmTcqgreca1DNCs2iGhw79camE
+         q3+tZ99clo32Y50RVJUNklBFUipmyvjMMyehw7UhBEfXi5QT88aPpWaJvUbzGnT7Q2AL
+         jDbhXW4qBqyYqMZt2EZ9sLFtwrciJR/rlyDMgoll5CEVUgjEu+Wh83i0egt4tJojNGje
+         pJromSbCZGWwxMmYvGNJbCrspYFyKR+xKlkN56tq0VxM30kEVlkhXuonfswxOgoEjtJb
+         yRRQ==
+X-Gm-Message-State: AOAM533Czrfj24CdhZGyUS1HbsF0YmpKP3WPjXrWYz4G0SOQQs/hKE6h
+        iqM3pessbjvqguy3LlyGXkI=
+X-Google-Smtp-Source: ABdhPJxRLBdkoLiQ3bIn3g2yWD91G8Xg1O///R4OxhiwVBRMiIkVf0EyOqY9YyLcvXE7EpEcZxM0Cw==
+X-Received: by 2002:a2e:9ac4:: with SMTP id p4mr4663110ljj.143.1595598363953;
+        Fri, 24 Jul 2020 06:46:03 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id i11sm289423lfl.31.2020.07.24.06.46.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 Jul 2020 06:46:03 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Amelie DELAUNAY <amelie.delaunay@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 0/3] Add USB role switch support to DWC2
+In-Reply-To: <97cd44c1-9e19-94bc-54f8-204d79b79975@st.com>
+References: <20200616140717.28465-1-amelie.delaunay@st.com> <d8069a78-2640-d112-a2fb-d86b99a8e44f@st.com> <97cd44c1-9e19-94bc-54f8-204d79b79975@st.com>
+Date:   Fri, 24 Jul 2020 16:45:51 +0300
+Message-ID: <87blk5owkw.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200724074038.5597-1-krzk@kernel.org> <20200724074038.5597-6-krzk@kernel.org>
-In-Reply-To: <20200724074038.5597-6-krzk@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 24 Jul 2020 15:45:37 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0h3dMRH_wuGX5dZ5znnx+EHJKYwQeZ9aB7cFGudo6vmw@mail.gmail.com>
-Message-ID: <CAK8P3a0h3dMRH_wuGX5dZ5znnx+EHJKYwQeZ9aB7cFGudo6vmw@mail.gmail.com>
-Subject: Re: [PATCH v2 05/29] memory: jz4780-nemc: Do not enable by default on
- every compile test
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Olof Johansson <olof@lixom.net>,
-        Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Roger Quadros <rogerq@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:soHCVb3seYD56gHy/0SdQglapEtOH69xvweH3No/Ge7qobhcnyA
- QyP5hC+SvP4JLRYULNtEV08zE5B1rpsfVd1ZJyfamzHbRY7to3c6MHQuHMfGoft5MfoPTz/
- FwBdNnv91f8FpuqM4WKd8sJGH/7PIf76Gu5ZxWu3PgsaiN503W4HB66u97KTr7ZYCe3KYBf
- glBFGLHLMpXRgCoCnC78w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MC6hDKZPP8c=:lxsAByWiIwd7nLKBlXwA2h
- u2L1lzJkH1z9AbhW9pNwd1V9yjGEo9SoklbUN5xRi2eb+mF3bXUbtkhTUkrWs0fykQ7HrOnUH
- TG66nx+giyGuWwd0QSuK8pCbz7BDXpPM71bsGc97d8wqOEaYzxbbHdUGOoUShGZWT7M4Ciq7R
- P++efFKFNYIz4K+4lE3SjaepHtCGiy4GTWA5Mt4mUWzSHIpvOQ91vhkspZEnzHIsdRDl8JCm3
- 1c5JJH5le2ZRKx2x++lpcl9vI4CLfYIXY8JiQlB8dTGXkajbkj4QqYmtg7V5jOIqrtmJqOFS+
- 67MmBf9gSyWBn5iBoNCzZGCKZXqbQx5RSCIXO2z/I8ObHFww6+J+x/yMufpuELQ5K3wAoeK1T
- slpd+VmZid7iGYoUGf8D3fkKQH5g3VngNTlyFO1BtbtWODy/SeNQXcgdPUJC1sCiR00i+D/X5
- Ua3y3d9e9qMEDisPUYdUQCnMU/ZezBQ3ldnzLdl+C6bDfw+OobNbAiqSXcmaje7MbJ/Lybmuj
- NyiMqFVXDwlANDkgwZ3qBFTEE0JXBN/5rEkDDUABWUDzptopAbRoXcI4n3/J0I1m9n4/SxYAK
- ya0YyN+RLn77vh7tJz12q90LYzklq8WvD9lj3PTGvNaBiBl3/y7v8EYJozIEMKXo5sHGr985q
- B/u4wpIywaNsOcDFRKb+5+IH0s+/++b+Ug7aROataTg1RZjyGdNEieVg5AJAMXfgu+S3CBveh
- EFoNj0hIx++LxEguptHMNbGhTBkDJL8ZQJrNouyjy9m0/xEz5GGShjRHFVvcDMflrckox3znY
- /dZCBZx75JL4k7Lz45dZxW2pmZiRGX9MRD5cfnj88CWh4+bsW7uakVeONvAOJIMsQCq3Vqvme
- we7wzDEM2cCEuX0tCGjeDJxgy3FRB47XGrtV8jtmc9fNXs2FWwLFXv2iFMTv39wal32HyNNkn
- d8CTHC084LO5H7Gn9jtnAbyXxrC31y1pMIvN4/pxalvayw9lgEyZJ
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 9:41 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> When compile testing, enable the driver by default only on MIPS
-> architecture.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
->
-> Changes since v1:
-> 1. New patch
- @@ -141,7 +141,7 @@ config FSL_IFC
->
->  config JZ4780_NEMC
->         bool "Ingenic JZ4780 SoC NEMC driver"
-> -       default y
-> +       default y if MIPS
->         depends on MIPS || COMPILE_TEST
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-Actually I think this should be 'default MACH_INGENIC',
-and probably also 'depends on MACH_INGENIC || COMPILE_TEST'.
+(please, no top-posting ;-)
 
-     Arnd
+Hi,
+
+Amelie DELAUNAY <amelie.delaunay@st.com> writes:
+
+> Hi Felipe,
+>
+> I saw that you took DT patch (ARM: dts: stm32: enable usb-role-switch on=
+=20
+> USB OTG on stm32mp15xx-dkx) in your next branch. As it was already in
+> Alex' stm32-next branch, a potential merge conflict could occurred.
+
+Thanks for letting me know, I have dropped it.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl8a5g8ACgkQzL64meEa
+mQa6GA//dv6un4DfWkydBfBMjWWl9DuRCyLB80t59IsGJejlkudKuN4qaqQSbEI2
+DVpyiZKw/1Nt8aTpQJTJgsgf69vIzkhsxvkQ8tIrYZlXWwUoB/HKClA9R1gGR8Rq
+oI50A35v0hRHTFoE3TlOXxC+NBeGkHw+O+yCEhOFbevHJ5N9JW6s+Vkaur11mgc8
+kYIW1WYPrQ2oTAPlEgdv5HRoA2UCZX/E9poNn83gWSe8r3FL55huLPEb3Caem01y
+8LKRFgDSbvoiVrVZM+bQ7JUlu0ORvwKlTak4q4InvqE9VqAsHBstN7iNvutYwtCM
+X1RPT8npXN+mR8U+r1QZOZ549YDuVe/ToTPBoz6IaAf7H4OH2ET00nfEcEbJGWxJ
+rap1HuJDfKFJb+4B9j5lkqoaTE25JyNqk1XY3UBKtnU4tfMeJVHw8GxJIdy3xiM/
+knkPyZEk3nCRbcEoUaVhFPCvKzGweMtaer/xIw6VEM25bPZzRa2+r+2kz9k8nYnO
+WfXC2r1IS2WXJC5arwG5dStHuhngmEPzYQdvV0SPCnhMHwJO9Z5rmD3F8fRNsZMS
+e1kTs9dcurhVJz/Gm0RS/66kIJJGQT1xxf8/Z/sjln8+ShrPe1HDJlhsn3MEqP2l
+BMh1Hh8L66Sl4tNmIB8NKl0Zryn3G/gIL8w+ExILXYzPMzhRYkk=
+=6nN4
+-----END PGP SIGNATURE-----
+--=-=-=--
