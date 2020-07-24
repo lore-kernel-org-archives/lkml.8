@@ -2,131 +2,162 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0774BC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB35AC433E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8DD20825
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595560129;
-	bh=Mi81Uejk0h0q25VxMgNb+0huSyrbkp+jl5hwFhOM7Z0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zF8UPmk609NN3rTRICPjgPkrVsSSU6amqiHMnc5GIuSpvaMiQ8/RHu36hET+MyuJt
-	 MyA4cP7b54GoXFnorW2zhiBPEdRlZ75adR/rWnf3DmGeFyhQ/WwJ4upF0HoZBnJzu5
-	 Eb2b0YFazswT8SbIqLVqcrwNED6DIFa8xo3O39ek=
+	by mail.kernel.org (Postfix) with ESMTP id CB70520786
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 03:09:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Gx0y6LVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgGXDIs (ORCPT
+        id S1726742AbgGXDJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 23 Jul 2020 23:08:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42484 "EHLO mail.kernel.org"
+        Thu, 23 Jul 2020 23:09:55 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58623 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbgGXDIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 23 Jul 2020 23:08:47 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726317AbgGXDJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 23 Jul 2020 23:09:55 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F134B20786;
-        Fri, 24 Jul 2020 03:08:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595560127;
-        bh=Mi81Uejk0h0q25VxMgNb+0huSyrbkp+jl5hwFhOM7Z0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BePtWmcWENl9v0Un95gA1NkIlo1AIrn4iCnulq4SWSlp3W7wd0wplS/5Z8Du5wfTv
-         4Bq8wsbGQI1eLG0tcA+Y8Bt0VjyZzx19HW5H1UcFQekAoV76WwecT7n0i6aA+R7Pgq
-         zMavmYb/bTO5zXpkM/5oaHTftWqqiqK88KfPBDmU=
-Date:   Thu, 23 Jul 2020 20:08:46 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@suse.com>, stable@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2 1/3] mm/shuffle: don't move pages between zones and
- don't read garbage memmaps
-Message-Id: <20200723200846.768513d7c122ac11b6e73538@linux-foundation.org>
-In-Reply-To: <20200623093018.GA6069@L-31X9LVDL-1304.local>
-References: <20200619125923.22602-2-david@redhat.com>
-        <20200622082635.GA93552@L-31X9LVDL-1304.local>
-        <2185539f-b210-5d3f-5da2-a497b354eebb@redhat.com>
-        <20200622092221.GA96699@L-31X9LVDL-1304.local>
-        <34f36733-805e-cc61-38da-2ee578ae096c@redhat.com>
-        <20200622131003.GA98415@L-31X9LVDL-1304.local>
-        <0f4edc1f-1ce2-95b4-5866-5c4888db7c65@redhat.com>
-        <20200622215520.wa6gjr2hplurwy57@master>
-        <4b7ee49c-9bee-a905-3497-e3addd8896b8@redhat.com>
-        <c0b62330-11d3-e628-a811-b54789d8f182@redhat.com>
-        <20200623093018.GA6069@L-31X9LVDL-1304.local>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BCZ1r06q6z9sR4;
+        Fri, 24 Jul 2020 13:09:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595560192;
+        bh=JMyV1D9kt2gAi4H5USAM4UKG8u63RFAYH2U6HpUh4Mg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Gx0y6LVtETGyjCBJcV5q1yxh+iieSqatCVmmFV+ILXQvZmSsQppUBEmop1NenZTVT
+         IWrtqNP0nTTFb5l4rjSmsDvMzDXLdjcJu3KVucASOm5ImanRDoFtnUuk3l5hky0VxA
+         qYZDGowCun2FnE/hhavCmhGjMj1EqGkCEtFblDh84cox4aoKz5jEGYTNJphD7dcAd5
+         eDX32HKIy6DLAy31uL9J4YrJjVi4PVGdhm1TM/VKwrg/PMPlHtdge8KLvmpnkPjl+g
+         ug1Q9+o0KlgIvlBqv+9/Q3dgu2g44iF0RnLyS3gk/dg19UFJ+HjbWDdv4SIiXwkkRb
+         q4fN7UGV7SHXw==
+Date:   Fri, 24 Jul 2020 13:09:51 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto List <linux-crypto@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: linux-next: manual merge of the crypto tree with the jc_docs tree
+Message-ID: <20200724130951.5b99a9c9@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/VIJwA+efFIsvhi_Eq.TH6uZ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 23 Jun 2020 17:30:18 +0800 Wei Yang <richard.weiyang@linux.alibaba.com> wrote:
+--Sig_/VIJwA+efFIsvhi_Eq.TH6uZ
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> On Tue, Jun 23, 2020 at 09:55:43AM +0200, David Hildenbrand wrote:
-> >On 23.06.20 09:39, David Hildenbrand wrote:
-> >>> Hmm.. I thought this is the behavior for early section, while it looks current
-> >>> code doesn't work like this:
-> >>>
-> >>>        if (section_is_early && memmap)
-> >>>                free_map_bootmem(memmap);
-> >>>        else
-> >>> 	       depopulate_section_memmap(pfn, nr_pages, altmap);
-> >>>
-> >>> section_is_early is always "true" for early section, while memmap is not-NULL
-> >>> only when sub-section map is empty.
-> >>>
-> >>> If my understanding is correct, when we remove a sub-section in early section,
-> >>> the code would call depopulate_section_memmap(), which in turn free related
-> >>> memmap. By removing the memmap, the return value from pfn_to_online_page() is
-> >>> not a valid one.
-> >> 
-> >> I think you're right, and pfn_valid() would also return true, as it is
-> >> an early section. This looks broken.
-> >> 
-> >>>
-> >>> Maybe we want to write the code like this:
-> >>>
-> >>>        if (section_is_early)
-> >>>                if (memmap)
-> >>>                        free_map_bootmem(memmap);
-> >>>        else
-> >>> 	       depopulate_section_memmap(pfn, nr_pages, altmap);
-> >>>
-> >> 
-> >> I guess that should be the way to go
-> >> 
-> >> @Dan, I think what Wei proposes here is correct, right? Or how does it
-> >> work in the VMEMMAP case with early sections?
-> >> 
-> >
-> >Especially, if you would re-hot-add, section_activate() would assume
-> >there is a memmap, it must not be removed.
-> >
-> 
-> You are right here. I didn't notice it.
-> 
-> >@Wei, can you send a patch?
-> >
-> 
-> Sure, let me prepare for it.
+Hi all,
 
-Still awaiting this, and the v3 patch was identical to this v2 patch.
+Today's linux-next merge of the crypto tree got a conflict in:
 
-It's tagged for -stable, so there's some urgency.  Should we just go
-ahead with the decently-tested v2?
+  Documentation/crypto/api-intro.rst
 
+between commit:
+
+  5846551bb147 ("docs: crypto: convert api-intro.txt to ReST format")
+
+from the jc_docs tree and commit:
+
+  9332a9e73918 ("crypto: Replace HTTP links with HTTPS ones")
+
+from the crypto tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/crypto/api-intro.rst
+index bcff47d42189,40137f93e04f..000000000000
+--- a/Documentation/crypto/api-intro.rst
++++ b/Documentation/crypto/api-intro.rst
+@@@ -159,31 -146,31 +159,31 @@@ Credit
+  The following people provided invaluable feedback during the development
+  of the API:
+ =20
+ -  Alexey Kuznetzov
+ -  Rusty Russell
+ -  Herbert Valerio Riedel
+ -  Jeff Garzik
+ -  Michael Richardson
+ -  Andrew Morton
+ -  Ingo Oeser
+ -  Christoph Hellwig
+ +  - Alexey Kuznetzov
+ +  - Rusty Russell
+ +  - Herbert Valerio Riedel
+ +  - Jeff Garzik
+ +  - Michael Richardson
+ +  - Andrew Morton
+ +  - Ingo Oeser
+ +  - Christoph Hellwig
+ =20
+  Portions of this API were derived from the following projects:
+ - =20
+ +
+    Kerneli Cryptoapi (http://www.kerneli.org/)
+ -    Alexander Kjeldaas
+ -    Herbert Valerio Riedel
+ -    Kyle McMartin
+ -    Jean-Luc Cooke
+ -    David Bryson
+ -    Clemens Fruhwirth
+ -    Tobias Ringstrom
+ -    Harald Welte
+ +   - Alexander Kjeldaas
+ +   - Herbert Valerio Riedel
+ +   - Kyle McMartin
+ +   - Jean-Luc Cooke
+ +   - David Bryson
+ +   - Clemens Fruhwirth
+ +   - Tobias Ringstrom
+ +   - Harald Welte
+ =20
+  and;
+ - =20
+ +
+-   Nettle (http://www.lysator.liu.se/~nisse/nettle/)
++   Nettle (https://www.lysator.liu.se/~nisse/nettle/)
+ -    Niels M=C3=B6ller
+ +   - Niels M=C3=B6ller
+ =20
+  Original developers of the crypto algorithms:
+ =20
+
+--Sig_/VIJwA+efFIsvhi_Eq.TH6uZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8aUP8ACgkQAVBC80lX
+0GwK6gf5ASvaTROcfQXXob7S7o5gNJ/nm1LtCXWpaAopVPAklGB8dQfd78C5uvgd
+bWIBve/aLsfpj7826voSRZTUBfA84SSuoRDpDZT5kxSuXdiRjDsCMMklXxWipSvw
+4XVfSY8m1RxVx7RZPzKvFyqr9TlvTH6BDDlkwycp0/AZR14IEMaA2nabpWftMfSv
+rfdUIATa3hMCpyp+9lMmvfODkqb8lSqIfSR5WByh2ek13Fcfoh12VOd7FhPAc5K2
+O0aIZO0ZPWotv876+CTtELgt8wTTfB4Y7ipuVHYimQ8m2kvUtQwTen9X+5ZfHOz/
+YYNMFSNR3yjGZ5H2PYhG3N0g9GpNSg==
+=41P1
+-----END PGP SIGNATURE-----
+
+--Sig_/VIJwA+efFIsvhi_Eq.TH6uZ--
