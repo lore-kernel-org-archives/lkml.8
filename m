@@ -2,159 +2,132 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7110AC433FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F445C433F2
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1D220674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD2220674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:08:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IKINh5c2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgGXQIj (ORCPT
+        id S1728348AbgGXQIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:08:39 -0400
-Received: from 8bytes.org ([81.169.241.247]:60034 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:08:47 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:64167 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbgGXQE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:28 -0400
-Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1727959AbgGXQIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:08:45 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595606925; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=Z7VcFhGfQeC2uFAHORg1EVlpA7tEAa/KJ7mZGO2/rp0=; b=IKINh5c2ex71+DmU98wKdFLzFaoWWL3khnuWaKVqB/A3PJUfr8Joob2GFlzKbZ9s+FGI1SkM
+ 8voTV7E1Cpn0B+bnOZC3B05C9c3wen+a68pH5zDPipneRlBfQjGiSOWTHWMvxYJ0i08F6lWR
+ h9Qk2p867g85plgS9nh3BGt4TkE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f1b078449176bd38251886c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Jul 2020 16:08:36
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 77416C433CB; Fri, 24 Jul 2020 16:08:36 +0000 (UTC)
+Received: from tdas-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id A8017FBE;
-        Fri, 24 Jul 2020 18:04:20 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 38/75] x86/sev-es: Add SEV-ES Feature Detection
-Date:   Fri, 24 Jul 2020 18:02:59 +0200
-Message-Id: <20200724160336.5435-39-joro@8bytes.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
-References: <20200724160336.5435-1-joro@8bytes.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 17BC3C433A1;
+        Fri, 24 Jul 2020 16:08:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 17BC3C433A1
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v5 1/4] clk: qcom: gdsc: Add support to enable retention of GSDCR
+Date:   Fri, 24 Jul 2020 21:37:55 +0530
+Message-Id: <1595606878-2664-2-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595606878-2664-1-git-send-email-tdas@codeaurora.org>
+References: <1595606878-2664-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+Add support for the RETAIN_FF_ENABLE feature which enables the
+usage of retention registers. These registers maintain their
+state after disabling and re-enabling a GDSC.
 
-Add the sev_es_active function for checking whether SEV-ES is enabled.
-Also cache the value of MSR_AMD64_SEV at boot to speed up the feature
-checking in the running code.
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
 ---
- arch/x86/include/asm/mem_encrypt.h | 3 +++
- arch/x86/include/asm/msr-index.h   | 2 ++
- arch/x86/mm/mem_encrypt.c          | 9 ++++++++-
- arch/x86/mm/mem_encrypt_identity.c | 3 +++
- 4 files changed, 16 insertions(+), 1 deletion(-)
+ drivers/clk/qcom/gdsc.c | 12 ++++++++++++
+ drivers/clk/qcom/gdsc.h |  1 +
+ 2 files changed, 13 insertions(+)
 
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 5049f6c22683..4e72b73a9cb5 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -19,6 +19,7 @@
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- 
- extern u64 sme_me_mask;
-+extern u64 sev_status;
- extern bool sev_enabled;
- 
- void sme_encrypt_execute(unsigned long encrypted_kernel_vaddr,
-@@ -50,6 +51,7 @@ void __init mem_encrypt_init(void);
- 
- bool sme_active(void);
- bool sev_active(void);
-+bool sev_es_active(void);
- 
- #define __bss_decrypted __attribute__((__section__(".bss..decrypted")))
- 
-@@ -72,6 +74,7 @@ static inline void __init sme_enable(struct boot_params *bp) { }
- 
- static inline bool sme_active(void) { return false; }
- static inline bool sev_active(void) { return false; }
-+static inline bool sev_es_active(void) { return false; }
- 
- static inline int __init
- early_set_memory_decrypted(unsigned long vaddr, unsigned long size) { return 0; }
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index aa61e63d8fd6..5595e299ad7f 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -467,7 +467,9 @@
- #define MSR_AMD64_SEV_ES_GHCB		0xc0010130
- #define MSR_AMD64_SEV			0xc0010131
- #define MSR_AMD64_SEV_ENABLED_BIT	0
-+#define MSR_AMD64_SEV_ES_ENABLED_BIT	1
- #define MSR_AMD64_SEV_ENABLED		BIT_ULL(MSR_AMD64_SEV_ENABLED_BIT)
-+#define MSR_AMD64_SEV_ES_ENABLED	BIT_ULL(MSR_AMD64_SEV_ES_ENABLED_BIT)
- 
- #define MSR_AMD64_VIRT_SPEC_CTRL	0xc001011f
- 
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 9f1177edc2e7..232d6e1bcfc6 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -38,6 +38,7 @@
-  * section is later cleared.
-  */
- u64 sme_me_mask __section(.data) = 0;
-+u64 sev_status __section(.data) = 0;
- EXPORT_SYMBOL(sme_me_mask);
- DEFINE_STATIC_KEY_FALSE(sev_enable_key);
- EXPORT_SYMBOL_GPL(sev_enable_key);
-@@ -347,7 +348,13 @@ bool sme_active(void)
- 
- bool sev_active(void)
- {
--	return sme_me_mask && sev_enabled;
-+	return !!(sev_status & MSR_AMD64_SEV_ENABLED);
+diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
+index 04944f1..2502430 100644
+--- a/drivers/clk/qcom/gdsc.c
++++ b/drivers/clk/qcom/gdsc.c
+@@ -29,6 +29,7 @@
+ /* CFG_GDSCR */
+ #define GDSC_POWER_UP_COMPLETE		BIT(16)
+ #define GDSC_POWER_DOWN_COMPLETE	BIT(15)
++#define GDSC_RETAIN_FF_ENABLE		BIT(11)
+ #define CFG_GDSCR_OFFSET		0x4
+
+ /* Wait 2^n CXO cycles between all states. Here, n=2 (4 cycles). */
+@@ -216,6 +217,14 @@ static inline void gdsc_assert_reset_aon(struct gdsc *sc)
+ 	regmap_update_bits(sc->regmap, sc->clamp_io_ctrl,
+ 			   GMEM_RESET_MASK, 0);
+ }
++
++static void gdsc_retain_ff_on(struct gdsc *sc)
++{
++	u32 mask = GDSC_RETAIN_FF_ENABLE;
++
++	regmap_update_bits(sc->regmap, sc->gdscr, mask, mask);
 +}
 +
-+/* Needs to be called from non-instrumentable code */
-+bool noinstr sev_es_active(void)
-+{
-+	return !!(sev_status & MSR_AMD64_SEV_ES_ENABLED);
- }
- 
- /* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
-diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
-index e2b0e2ac07bb..68d75379e06a 100644
---- a/arch/x86/mm/mem_encrypt_identity.c
-+++ b/arch/x86/mm/mem_encrypt_identity.c
-@@ -540,6 +540,9 @@ void __init sme_enable(struct boot_params *bp)
- 		if (!(msr & MSR_AMD64_SEV_ENABLED))
- 			return;
- 
-+		/* Save SEV_STATUS to avoid reading MSR again */
-+		sev_status = msr;
+ static int gdsc_enable(struct generic_pm_domain *domain)
+ {
+ 	struct gdsc *sc = domain_to_gdsc(domain);
+@@ -268,6 +277,9 @@ static int gdsc_enable(struct generic_pm_domain *domain)
+ 		udelay(1);
+ 	}
+
++	if (sc->flags & RETAIN_FF_ENABLE)
++		gdsc_retain_ff_on(sc);
 +
- 		/* SEV state cannot be controlled by a command line option */
- 		sme_me_mask = me_mask;
- 		sev_enabled = true;
--- 
-2.27.0
+ 	return 0;
+ }
+
+diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
+index c36fc26..a5076fe 100644
+--- a/drivers/clk/qcom/gdsc.h
++++ b/drivers/clk/qcom/gdsc.h
+@@ -50,6 +50,7 @@ struct gdsc {
+ #define AON_RESET	BIT(4)
+ #define POLL_CFG_GDSCR	BIT(5)
+ #define ALWAYS_ON	BIT(6)
++#define RETAIN_FF_ENABLE	BIT(7)
+ 	struct reset_controller_dev	*rcdev;
+ 	unsigned int			*resets;
+ 	unsigned int			reset_count;
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
 
