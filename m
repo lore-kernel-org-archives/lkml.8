@@ -2,130 +2,123 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E88AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8981C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 568352073E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A5C2074F
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:15:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G7YuvgTi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MdVUML15"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbgGXHOf (ORCPT
+        id S1726899AbgGXHPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:14:35 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46294 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726543AbgGXHOe (ORCPT
+        Fri, 24 Jul 2020 03:15:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbgGXHPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:14:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595574873;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/5K07WFbnYzpw23Eyz/mfTqQbQ4feMmgm06DmRfK4gw=;
-        b=G7YuvgTihJLznHzZ5EQaUb9gI9nZPc7pRVAoseO9F0FHsZT4inYtn0UVQTvxDqh15weJ2T
-        fUA/9ImAPfAmnMztY0rASZOp0Ib0HQi43cVYWnyizFBbOUKTGfGUz+S1NMEevB79Ox/co7
-        ZWBkjEI5fhOn8dTSnj/QIoIfolqnEAk=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-254-Yn_UAiYjOcOEgoBr_whdEQ-1; Fri, 24 Jul 2020 03:14:31 -0400
-X-MC-Unique: Yn_UAiYjOcOEgoBr_whdEQ-1
-Received: by mail-wm1-f69.google.com with SMTP id v8so2930242wma.6
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:14:31 -0700 (PDT)
+        Fri, 24 Jul 2020 03:15:12 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B055EC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:15:12 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z3so4570931pfn.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 00:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=xY8I4pf+pixvGdggE0GUWeMOFhv+/4UQbvE/fhfVRRE=;
+        b=MdVUML15EvCtvB6RqedwgUH8PVDTER0vLv8exMiOSppxNU0hMnzjWPGJ6+yIPinPYZ
+         USMtfYMe1Mg29OSkrh4+ncgGKoqUf84HHFMiEPNMzhqXURCJiPAj5BgUTw3nEcuSF86g
+         7C6FeFA6lrdsl8WHJFwLbhhyj2tsvkDYn3GVORm2/d2ip4Du5uYld5CXGgab69JjqhrZ
+         muU0epdnTXhd0Dfb5/cLq1onDvFinndst+6Kp+DonqBnXszXDA9pkkm4GADjVAseyO8u
+         sx/YaSYDsGCQhqSTK52A3mUR6kEQmQIvRpMVU3mx5vI3YUZEx2Ac8SKDC+7w0ExpHkND
+         j1cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/5K07WFbnYzpw23Eyz/mfTqQbQ4feMmgm06DmRfK4gw=;
-        b=jXp5J+Cv7jhCXrC0cxx9JG41JMjcU+EA48Rx3NrvCAuZCD1MGZ4dBnIZOqEnuC+3YA
-         K/iNH8q1rwIBhZmWoinrAKe0/zbmP7fpvhocIevIJb9H5zaMnnMzOS5vOYs9OdhCdTnO
-         ZxqjHscnY8c4EyFVM04fRppRlYl14nmxqLTWhmsBqgUazUl+og+1gN9T49cUMUAYkZki
-         OG8Sm4+pakdgN8QCMXI5EcW8Ji6kFjN/fBJh6fzltjvIEhiB7TtnQ3AZI+c5zs19Q8Vj
-         mb99Dr2nmYsW+Yj+rgbQwACdaPllPogGQBNcYf+3owQVspJzl08uzIWOwIQiDZusiOma
-         1Rvg==
-X-Gm-Message-State: AOAM530B6qmWkudfT7QaJRdhUBAoC3pkRzVw73zDBNoULVWfzQwHlC83
-        X5n0M/gP07ugN1Whd+PdWimhmRytSGYuoVUPovvKSHGscbf6taZS7TYdCdUT6dBlJHb2Y9id4cJ
-        dT6fy5yOGZi2MjBQYOCC5y8Fs
-X-Received: by 2002:a1c:988a:: with SMTP id a132mr7196230wme.14.1595574870050;
-        Fri, 24 Jul 2020 00:14:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwn4RnXakBtQEe/CdhK6+XDT3nF8XxcMdpkIbJsMpsIbqcJ3aKdpKNcDmpvmn7fNPLD+hAtyQ==
-X-Received: by 2002:a1c:988a:: with SMTP id a132mr7196208wme.14.1595574869790;
-        Fri, 24 Jul 2020 00:14:29 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.94.4])
-        by smtp.gmail.com with ESMTPSA id e5sm221437wrc.37.2020.07.24.00.14.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 00:14:28 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 09:14:26 +0200
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Peng Liu <iwtbavbm@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, Daniel Bristot de Oliveira <bristot@redhat.com>
-Subject: Re: [PATCH] sched/deadline: dome some cleanup for push_dl_task()
-Message-ID: <20200724071426.GD14912@localhost.localdomain>
-References: <20200706160442.GA19741@iZj6chx1xj0e0buvshuecpZ>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=xY8I4pf+pixvGdggE0GUWeMOFhv+/4UQbvE/fhfVRRE=;
+        b=dJp7uxe3GN4u7WHEOynMvL2/lPsGlMKz6pyeIEbzu1RDTW3USB/XCJQZM9DjRa2AkF
+         JU7JH1jSpro9p6fqUyt73/W4EJtlbNbV0Z2Ptyf7Z94E8NomG2IxRNXOUo+fqwPVrZkj
+         a8+wa8B/Taknjwk7rxA/hKJPG75nIdlwszNu8UHsLhZlw9rglaauljbNRA88nh/hc9Sr
+         BQ5yfKtLxpOadpKsXv5mHl5DLKEcXpi3GYBGw3PgE+hbYSL0hRSdAv4BI0tzy51uTPUf
+         ejtTox1YK9MqM4OFuT8K57yWqstUGl0OmV2qxWQiL3/pxOKVDJuVb3nE15gL/c0Es2nJ
+         QyVw==
+X-Gm-Message-State: AOAM530ntLWVf4am4Dz7Tqpad/teN41ze3nY8LcsqnpnDJrv7P2TEkxS
+        awM/fXy4juinYDf/5AkluIY=
+X-Google-Smtp-Source: ABdhPJy9XNSqdDfyNmh+cwRYlTex+cdfMsnGlG5GORVDB7ZAgLE5ksaLMF8GUDkGkGSqsaowboAnhw==
+X-Received: by 2002:a62:a20d:: with SMTP id m13mr7914886pff.201.1595574912239;
+        Fri, 24 Jul 2020 00:15:12 -0700 (PDT)
+Received: from aaronlu-desktop ([47.89.83.67])
+        by smtp.gmail.com with ESMTPSA id x3sm5100680pfn.154.2020.07.24.00.15.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 Jul 2020 00:15:11 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 15:14:58 +0800
+From:   Aaron Lu <aaron.lwe@gmail.com>
+To:     =?utf-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pjt@google.com" <pjt@google.com>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "subhra.mazumdar@oracle.com" <subhra.mazumdar@oracle.com>,
+        "fweisbec@gmail.com" <fweisbec@gmail.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "kerrnel@google.com" <kerrnel@google.com>,
+        Phil Auld <pauld@redhat.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "vineethrp@gmail.com" <vineethrp@gmail.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Aaron Lu <ziqian.lzq@antfin.com>
+Subject: Re: [RFC PATCH 09/16] sched/fair: core wide cfs task priority
+ comparison(Internet mail)
+Message-ID: <20200724071458.lah33iacywx35hdi@aaronlu-desktop>
+References: <cover.1593530334.git.vpillai@digitalocean.com>
+ <2d0e3da8c80c314048d598fb03ae3fe52d9619f3.1593530334.git.vpillai@digitalocean.com>
+ <4229D3E1-8792-4B43-9AC4-F648D49CCC99@tencent.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200706160442.GA19741@iZj6chx1xj0e0buvshuecpZ>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4229D3E1-8792-4B43-9AC4-F648D49CCC99@tencent.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 07/07/20 00:04, Peng Liu wrote:
-> 'commit 840d719604b0 ("sched/deadline: Update rq_clock of later_rq when pushing a task")'
-> introduced the update_rq_clock() to fix the "used-before-update" bug.
+On Wed, Jul 22, 2020 at 12:23:44AM +0000, benbjiang(蒋彪) wrote:
 > 
-> 'commit f4904815f97a ("sched/deadline: Fix double accounting of rq/running bw in push & pull")'
-> took away the bug source(add_running_bw()).
 > 
-> We no longer need to update rq_clock in advance, let activate_task()
-> worry about that.
+> > +/*
+> > + * This function takes care of adjusting the min_vruntime of siblings of
+> > + * a core during coresched enable/disable.
+> > + * This is called in stop machine context so no need to take the rq lock.
+> Hi,
 > 
-> Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
-> ---
->  kernel/sched/deadline.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
+> IMHO, it seems that stop machine context cannot guarantee race free. The param *cpu* maybe not *this_cpu*, rq lock should be taken even in stop machine context, and irq should be disabled too, to avoid potential races with other contexts.
 > 
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index 504d2f51b0d6..c3fa11f84d93 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -2104,13 +2104,7 @@ static int push_dl_task(struct rq *rq)
->  
->  	deactivate_task(rq, next_task, 0);
->  	set_task_cpu(next_task, later_rq->cpu);
-> -
-> -	/*
-> -	 * Update the later_rq clock here, because the clock is used
-> -	 * by the cpufreq_update_util() inside __add_running_bw().
-> -	 */
-> -	update_rq_clock(later_rq);
-> -	activate_task(later_rq, next_task, ENQUEUE_NOCLOCK);
-> +	activate_task(later_rq, next_task, 0);
->  	ret = 1;
 
-The change looks good to me, since now add_running_bw() is called later
-by enqueue_task_dl(), but rq_clock has already been updated by core's
-enqueue_task().
-
-Daniel, Dietmar, a second pair of eyes (since you authored the commits
-above)?
-
-I'd chage subject to something like "sched/deadline: Stop updating
-rq_clock before pushing a task".
-
-Thanks,
-
-Juri
-
+In stop machine context, all CPUs except the active ones are spinning
+with irq disabled and in this invocation of stop_machine(), only one
+CPU is active so I don't think race is possible.
