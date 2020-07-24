@@ -2,267 +2,98 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58762C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E16FC433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B20E2065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CCBD2065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y/rInoxs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MmVbG9Mt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgGXKQ2 (ORCPT
+        id S1726742AbgGXKUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbgGXKQ1 (ORCPT
+        Fri, 24 Jul 2020 06:20:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58948 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726271AbgGXKUL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:16:27 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BFA4C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 03:16:26 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f1so7250997wro.2
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 03:16:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/crr1B0GqubjNwG43KatHyRCC39WbnEB7v+bZrA77SA=;
-        b=Y/rInoxsn92r02GUndlt2TNOypplp+8emBTWlbR2c0Wew3bKj8Sr2RSzFpxMI5Wdf1
-         56VXN131Cn3xSmujxU/KVzkhQtyvXLIgKLw/JQoExLR95fd7MNzGz55+2h39ogEqON9y
-         eS/4HB9KdFUymYt2gaE3XOoOOy7hkcM9zGzArxAvPVsrSdaIUoa2ERgS5Q4Q1QwVhNs8
-         yvVp+UccvZ/lTEwwihjy3Ti6MSKomGhr5MkYpXvuLqsZKUOBUMCJgtc8uNMJm0lz/JeX
-         vsyzqHZUZHq65GHF3xA37hGBz9aiGqwrsq+vDpU8IjqSMuNQVdqMQB8haK1TRqoEljIk
-         ExyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/crr1B0GqubjNwG43KatHyRCC39WbnEB7v+bZrA77SA=;
-        b=Pyzby7DhDsieqNdjwQ5h1fEjtQx5gN+0JTzr/imun9o1+8u7LeiKc0Ps3cnOawH0lD
-         og/H4nxqTNOpETA6dulTJEJw9y7dI1TLrsLkvO/d9vsdKYEgsfX1QDdeoo8qTX/m4hiS
-         k0SGar9AbD49e1Vs1wdGAb2V0weqf3SvgXiJsJbXLmw7UD6dje8iW9ge0lVuObFnbEYY
-         ztANo31MzcJOpc2kwAOCjShtGHmrj76+kE9p4LZNh5aHSpFT4bSpKLkFh1dr513RJQ0x
-         hCzRI5lhJRn6jQBNEq75frM/ToraEQAhZqQsg0Fl81HNCGKjQJ3PNowDFATFhS8hRRTw
-         VAlA==
-X-Gm-Message-State: AOAM531uQMmhUrkzeEY/Y+vmriVOnqIzWURqIVJ6Iv5E8w/YEBX4nq4m
-        oLQoyij8wvAvayBmfXAVvbsgyQ==
-X-Google-Smtp-Source: ABdhPJz4y+AV7oH5TqR49qAmZppza0iAQtDgZzmmFAPnCpOfFNS/dkNyqoaFZUFkPp+CMzp7c4/nmQ==
-X-Received: by 2002:adf:de8d:: with SMTP id w13mr7786164wrl.129.1595585784885;
-        Fri, 24 Jul 2020 03:16:24 -0700 (PDT)
-Received: from [192.168.1.4] ([195.24.90.54])
-        by smtp.googlemail.com with ESMTPSA id x4sm953873wru.81.2020.07.24.03.16.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 03:16:24 -0700 (PDT)
-Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
- power-domains for venus
-To:     Rajendra Nayak <rnayak@codeaurora.org>, robh+dt@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org
-References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
- <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
- <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
- <a2935e9c-6908-05cb-a137-7dd2d5e50a33@codeaurora.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <8b60fc8b-7c7e-f904-3444-fc35641a3a08@linaro.org>
-Date:   Fri, 24 Jul 2020 13:16:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 24 Jul 2020 06:20:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595586010;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iNwJ2cEmHYj+S0Ahc6f50GridTdh2KfTtR3COy4a8r0=;
+        b=MmVbG9MtebtRZ9rxu0KRIZz5heV5WTCt/ZQqYS3dUwXu83XQy1OPw5uAyuScyJ//+4oaGj
+        2waAwW1pu/B6s5Px5yHnhL2aMR3g4kPVT53y7PVyZcpTJ7PBMT8QLGjbaVDf1AOCAsm0LN
+        H/lrnM+naSCee6TpudWCkiPqhEzLzmk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-109-tpfvniXtPBmBGWTxVCEyVQ-1; Fri, 24 Jul 2020 06:20:07 -0400
+X-MC-Unique: tpfvniXtPBmBGWTxVCEyVQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26212800597;
+        Fri, 24 Jul 2020 10:20:04 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3EF84872E5;
+        Fri, 24 Jul 2020 10:20:00 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <1293241.1595501326@warthog.procyon.org.uk>
+References: <1293241.1595501326@warthog.procyon.org.uk> <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com> <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk> <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
+        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and attribute change notifications [ver #5]
 MIME-Version: 1.0
-In-Reply-To: <a2935e9c-6908-05cb-a137-7dd2d5e50a33@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2003786.1595585999.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Fri, 24 Jul 2020 11:19:59 +0100
+Message-ID: <2003787.1595585999@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+David Howells <dhowells@redhat.com> wrote:
 
-On 7/24/20 11:49 AM, Rajendra Nayak wrote:
-> Hey Stan,
-> 
-> On 7/23/2020 11:36 PM, Stanimir Varbanov wrote:
->> Hi Rajendra,
->>
->> After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
->> below messages on db845:
->>
->> qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
->> current OPP for freq 533000097 (-34)
->>
->> ^^^ This one is new.
-> 
-> I was hoping to be able to reproduce this on the 845 mtp (I don't have
-> a db845), but I can;t seem to get venus working on mainline [1]
-> (neither with linux-next, nor with linaro integration)
+> > What guarantees that mount_id is going to remain a 32bit entity?
+> =
 
-The driver should at least load without errors on -next and
-linaro-integration for db845. As to MTP and haven't checked because I
-don't have such board with me.
+> You think it likely we'd have >4 billion concurrent mounts on a system? =
+ That
+> would require >1.2TiB of RAM just for the struct mount allocations.
+> =
 
-I will try to debug dev_pm_opp_set_rate -ERANGE error.
+> But I can expand it to __u64.
 
-> Do you know if I might be missing some fix?
-> 
->>
->> qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
->>
->> ^^^ and this message is annoying, can we make it pr_debug in rpmh?
-> 
-> Sure, I'll send a patch for that and see what the rpmh owners have to say.
-> 
-> [1]
-> 
-> [    1.632147] qcom-venus aa00000.video-codec: Adding to iommu group 2
-> [    1.638920] qcom-venus aa00000.video-codec: non legacy binding
-> [    1.648313] ------------[ cut here ]------------
-> [    1.652976] video_cc_venus_ctl_axi_clk status stuck at 'off'
+That said, sys_name_to_handle_at() assumes it's a 32-bit signed integer, s=
+o
+we're currently limited to ~2 billion concurrent mounts:-/
 
-I guess this means that venus_gdsc is not powered on.
+David
 
-> [    1.653068] WARNING: CPU: 7 PID: 1 at
-> drivers/clk/qcom/clk-branch.c:92 clk_b8
-> [    1.667977] Modules linked in:
-> [    1.671076] CPU: 7 PID: 1 Comm: swapper/0 Not tainted
-> 5.8.0-rc6-00254-gc43551
-> [    1.678704] Hardware name: Qualcomm Technologies, Inc. SDM845 MTP (DT)
-> [    1.685294] pstate: 60c00085 (nZCv daIf +PAN +UAO BTYPE=--)
-> [    1.690911] pc : clk_branch_toggle+0x14c/0x168
-> [    1.695397] lr : clk_branch_toggle+0x14c/0x168
-> [    1.699881] sp : ffff80001005b900
-> [    1.703232] x29: ffff80001005b900 x28: ffffb58586ac2f38
-> [    1.708594] x27: ffff0000f86c6d48 x26: ffffb58586f09000
-> [    1.713953] x25: ffffb585867c0bd8 x24: 0000000000000000
-> [    1.719312] x23: ffffb5858702df28 x22: ffffb58585a3c6a8
-> [    1.724672] x21: 0000000000000001 x20: ffffb58586f09000
-> [    1.730031] x19: 0000000000000000 x18: ffffb58586f09948
-> [    1.735390] x17: 0000000000000001 x16: 0000000000000019
-> [    1.740749] x15: ffff80009005b5a7 x14: 0000000000000006
-> [    1.746107] x13: ffff80001005b5b5 x12: ffffb58586f21d68
-> [    1.751466] x11: 0000000000000000 x10: 0000000005f5e0ff
-> [    1.756825] x9 : ffff80001005b900 x8 : 2766666f27207461
-> [    1.762184] x7 : 206b637574732073 x6 : ffffb58587141848
-> [    1.767543] x5 : 0000000000000000 x4 : 0000000000000000
-> [    1.772902] x3 : 00000000ffffffff x2 : ffff4a7b76cd8000
-> [    1.778261] x1 : ad405f90446fcf00 x0 : 0000000000000000
-> [    1.783624] Call trace:
-> [    1.786103]  clk_branch_toggle+0x14c/0x168
-> [    1.790241]  clk_branch2_enable+0x18/0x20
-> [    1.794306]  clk_core_enable+0x60/0xa8
-> [    1.798090]  clk_core_enable_lock+0x20/0x40
-> [    1.802316]  clk_enable+0x14/0x28
-> [    1.805682]  core_clks_enable+0x94/0xd8
-> [    1.809562]  core_power_v4+0x48/0x50
-> [    1.813178]  venus_runtime_resume+0x24/0x40
-> [    1.817417]  pm_generic_runtime_resume+0x28/0x40
-> [    1.822079]  __rpm_callback+0xa0/0x138
-> [    1.825861]  rpm_callback+0x24/0x98
-> [    1.829390]  rpm_resume+0x32c/0x490
-> [    1.832917]  __pm_runtime_resume+0x38/0x88
-> [    1.837051]  venus_probe+0x1f0/0x34c
-> [    1.840667]  platform_drv_probe+0x4c/0xa8
-> [    1.844727]  really_probe+0x100/0x388
-> [    1.848428]  driver_probe_device+0x54/0xb8
-> [    1.852563]  device_driver_attach+0x6c/0x78
-> [    1.856790]  __driver_attach+0xb0/0xf0
-> [    1.860576]  bus_for_each_dev+0x68/0xc8
-> [    1.864456]  driver_attach+0x20/0x28
-> [    1.868064]  bus_add_driver+0x148/0x200
-> [    1.871941]  driver_register+0x60/0x110
-> [    1.875819]  __platform_driver_register+0x44/0x50
-> [    1.880576]  qcom_venus_driver_init+0x18/0x20
-> [    1.884990]  do_one_initcall+0x58/0x1a0
-> [    1.888878]  kernel_init_freeable+0x1fc/0x28c
-> [    1.893292]  kernel_init+0x10/0x108
-> [    1.896821]  ret_from_fork+0x10/0x1c
-> [    1.900441] ---[ end trace f12a7e5e182f3e4e ]---
-> [    1.906415] qcom-venus: probe of aa00000.video-codec failed with
-> error -16
-> 
->>
->> On 7/23/20 2:26 PM, Rajendra Nayak wrote:
->>> Add the OPP tables in order to be able to vote on the performance
->>> state of
->>> a power-domain.
->>>
->>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->>> ---
->>>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 40
->>> ++++++++++++++++++++++++++++++++++--
->>>   1 file changed, 38 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> index e506793..5ca2265 100644
->>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> @@ -3631,8 +3631,10 @@
->>>               interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
->>>               power-domains = <&videocc VENUS_GDSC>,
->>>                       <&videocc VCODEC0_GDSC>,
->>> -                    <&videocc VCODEC1_GDSC>;
->>> -            power-domain-names = "venus", "vcodec0", "vcodec1";
->>> +                    <&videocc VCODEC1_GDSC>,
->>> +                    <&rpmhpd SDM845_CX>;
->>> +            power-domain-names = "venus", "vcodec0", "vcodec1", "cx";
->>> +            operating-points-v2 = <&venus_opp_table>;
->>>               clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
->>>                    <&videocc VIDEO_CC_VENUS_AHB_CLK>,
->>>                    <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
->>> @@ -3654,6 +3656,40 @@
->>>               video-core1 {
->>>                   compatible = "venus-encoder";
->>>               };
->>> +
->>> +            venus_opp_table: venus-opp-table {
->>> +                compatible = "operating-points-v2";
->>> +
->>> +                opp-100000000 {
->>> +                    opp-hz = /bits/ 64 <100000000>;
->>> +                    required-opps = <&rpmhpd_opp_min_svs>;
->>> +                };
->>> +
->>> +                opp-200000000 {
->>> +                    opp-hz = /bits/ 64 <200000000>;
->>> +                    required-opps = <&rpmhpd_opp_low_svs>;
->>> +                };
->>> +
->>> +                opp-320000000 {
->>> +                    opp-hz = /bits/ 64 <320000000>;
->>> +                    required-opps = <&rpmhpd_opp_svs>;
->>> +                };
->>> +
->>> +                opp-380000000 {
->>> +                    opp-hz = /bits/ 64 <380000000>;
->>> +                    required-opps = <&rpmhpd_opp_svs_l1>;
->>> +                };
->>> +
->>> +                opp-444000000 {
->>> +                    opp-hz = /bits/ 64 <444000000>;
->>> +                    required-opps = <&rpmhpd_opp_nom>;
->>> +                };
->>> +
->>> +                opp-533000000 {
->>> +                    opp-hz = /bits/ 64 <533000000>;
->>> +                    required-opps = <&rpmhpd_opp_turbo>;
->>> +                };
->>> +            };
->>>           };
->>>             videocc: clock-controller@ab00000 {
->>>
->>
-> 
-
--- 
-regards,
-Stan
