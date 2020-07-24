@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199F5C433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB30C433ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2FB120674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D7720674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgGXQKn (ORCPT
+        id S1728466AbgGXQKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:10:43 -0400
-Received: from 8bytes.org ([81.169.241.247]:59268 "EHLO theia.8bytes.org"
+        Fri, 24 Jul 2020 12:10:55 -0400
+Received: from 8bytes.org ([81.169.241.247]:59394 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726895AbgGXQEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:04:07 -0400
+        id S1726841AbgGXQEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 12:04:06 -0400
 Received: from cap.home.8bytes.org (p5b006776.dip0.t-ipconnect.de [91.0.103.118])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id CBDE9E2D;
-        Fri, 24 Jul 2020 18:04:04 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 3A019DAC;
+        Fri, 24 Jul 2020 18:04:03 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v5 16/75] x86/boot/compressed/64: Don't pre-map memory in KASLR code
-Date:   Fri, 24 Jul 2020 18:02:37 +0200
-Message-Id: <20200724160336.5435-17-joro@8bytes.org>
+Subject: [PATCH v5 13/75] x86/boot/compressed/64: Rename kaslr_64.c to ident_map_64.c
+Date:   Fri, 24 Jul 2020 18:02:34 +0200
+Message-Id: <20200724160336.5435-14-joro@8bytes.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724160336.5435-1-joro@8bytes.org>
 References: <20200724160336.5435-1-joro@8bytes.org>
@@ -60,119 +60,96 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-With the page-fault handler in place the identity mapping can be built
-on-demand. So remove the code which manually creates the mappings and
-unexport/remove the functions used for it.
+The file contains only code related to identity mapped page-tables.
+Rename the file and compile it always in.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/boot/compressed/ident_map_64.c |  6 ++----
- arch/x86/boot/compressed/kaslr.c        | 24 +-----------------------
- arch/x86/boot/compressed/misc.h         | 10 ----------
- 3 files changed, 3 insertions(+), 37 deletions(-)
+ arch/x86/boot/compressed/Makefile                       | 2 +-
+ arch/x86/boot/compressed/{kaslr_64.c => ident_map_64.c} | 9 +++++++++
+ arch/x86/boot/compressed/kaslr.c                        | 9 ---------
+ arch/x86/boot/compressed/misc.h                         | 8 ++++++++
+ 4 files changed, 18 insertions(+), 10 deletions(-)
+ rename arch/x86/boot/compressed/{kaslr_64.c => ident_map_64.c} (95%)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index ecf9353b064d..c63257bf8373 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index e6d1af3bae86..75bddf282f4c 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -83,7 +83,7 @@ vmlinux-objs-y := $(obj)/vmlinux.lds $(obj)/kernel_info.o $(obj)/head_$(BITS).o
+ vmlinux-objs-$(CONFIG_EARLY_PRINTK) += $(obj)/early_serial_console.o
+ vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr.o
+ ifdef CONFIG_X86_64
+-	vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr_64.o
++	vmlinux-objs-y += $(obj)/ident_map_64.o
+ 	vmlinux-objs-y += $(obj)/idt_64.o $(obj)/idt_handlers_64.o
+ 	vmlinux-objs-y += $(obj)/mem_encrypt.o
+ 	vmlinux-objs-y += $(obj)/pgtable_64.o
+diff --git a/arch/x86/boot/compressed/kaslr_64.c b/arch/x86/boot/compressed/ident_map_64.c
+similarity index 95%
+rename from arch/x86/boot/compressed/kaslr_64.c
+rename to arch/x86/boot/compressed/ident_map_64.c
+index f9c5c13d979b..d9932a133ac9 100644
+--- a/arch/x86/boot/compressed/kaslr_64.c
 +++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -87,11 +87,9 @@ phys_addr_t physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
- static struct x86_mapping_info mapping_info;
+@@ -29,6 +29,15 @@
+ #define __PAGE_OFFSET __PAGE_OFFSET_BASE
+ #include "../../mm/ident_map.c"
  
- /*
-- * Adds the specified range to what will become the new identity mappings.
-- * Once all ranges have been added, the new mapping is activated by calling
-- * finalize_identity_maps() below.
-+ * Adds the specified range to the identity mappings.
-  */
--void add_identity_map(unsigned long start, unsigned long size)
-+static void add_identity_map(unsigned long start, unsigned long size)
- {
- 	unsigned long end = start + size;
- 
++#ifdef CONFIG_X86_5LEVEL
++unsigned int __pgtable_l5_enabled;
++unsigned int pgdir_shift = 39;
++unsigned int ptrs_per_p4d = 1;
++#endif
++
++/* Used by PAGE_KERN* macros: */
++pteval_t __default_kernel_pte_mask __read_mostly = ~0;
++
+ /* Used to track our page table allocation area. */
+ struct alloc_pgt_data {
+ 	unsigned char *pgt_buf;
 diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 856dc1c9bb0d..c466fb738de0 100644
+index d7408af55738..7c61a8c5b9cf 100644
 --- a/arch/x86/boot/compressed/kaslr.c
 +++ b/arch/x86/boot/compressed/kaslr.c
-@@ -399,8 +399,6 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
- 	 */
- 	mem_avoid[MEM_AVOID_ZO_RANGE].start = input;
- 	mem_avoid[MEM_AVOID_ZO_RANGE].size = (output + init_size) - input;
--	add_identity_map(mem_avoid[MEM_AVOID_ZO_RANGE].start,
--			 mem_avoid[MEM_AVOID_ZO_RANGE].size);
+@@ -43,17 +43,8 @@
+ #define STATIC
+ #include <linux/decompress/mm.h>
  
- 	/* Avoid initrd. */
- 	initrd_start  = (u64)boot_params->ext_ramdisk_image << 32;
-@@ -420,14 +418,10 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
- 		;
- 	mem_avoid[MEM_AVOID_CMDLINE].start = cmd_line;
- 	mem_avoid[MEM_AVOID_CMDLINE].size = cmd_line_size;
--	add_identity_map(mem_avoid[MEM_AVOID_CMDLINE].start,
--			 mem_avoid[MEM_AVOID_CMDLINE].size);
- 
- 	/* Avoid boot parameters. */
- 	mem_avoid[MEM_AVOID_BOOTPARAMS].start = (unsigned long)boot_params;
- 	mem_avoid[MEM_AVOID_BOOTPARAMS].size = sizeof(*boot_params);
--	add_identity_map(mem_avoid[MEM_AVOID_BOOTPARAMS].start,
--			 mem_avoid[MEM_AVOID_BOOTPARAMS].size);
- 
- 	/* We don't need to set a mapping for setup_data. */
- 
-@@ -436,11 +430,6 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
- 
- 	/* Enumerate the immovable memory regions */
- 	num_immovable_mem = count_immovable_mem_regions();
--
--#ifdef CONFIG_X86_VERBOSE_BOOTUP
--	/* Make sure video RAM can be used. */
--	add_identity_map(0, PMD_SIZE);
+-#ifdef CONFIG_X86_5LEVEL
+-unsigned int __pgtable_l5_enabled;
+-unsigned int pgdir_shift __ro_after_init = 39;
+-unsigned int ptrs_per_p4d __ro_after_init = 1;
 -#endif
- }
- 
- /*
-@@ -919,19 +908,8 @@ void choose_random_location(unsigned long input,
- 		warn("Physical KASLR disabled: no suitable memory region!");
- 	} else {
- 		/* Update the new physical address location. */
--		if (*output != random_addr) {
--			add_identity_map(random_addr, output_size);
-+		if (*output != random_addr)
- 			*output = random_addr;
--		}
 -
--		/*
--		 * This loads the identity mapping page table.
--		 * This should only be done if a new physical address
--		 * is found for the kernel, otherwise we should keep
--		 * the old page table to make it be like the "nokaslr"
--		 * case.
--		 */
--		finalize_identity_maps();
- 	}
+ extern unsigned long get_cmd_line_ptr(void);
  
- 
+-/* Used by PAGE_KERN* macros: */
+-pteval_t __default_kernel_pte_mask __read_mostly = ~0;
+-
+ /* Simplified build-specific string for starting entropy. */
+ static const char build_str[] = UTS_RELEASE " (" LINUX_COMPILE_BY "@"
+ 		LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION;
 diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 345c90fbc500..ea6174bad699 100644
+index 062ae3ae6930..3a030a878d53 100644
 --- a/arch/x86/boot/compressed/misc.h
 +++ b/arch/x86/boot/compressed/misc.h
-@@ -98,17 +98,7 @@ static inline void choose_random_location(unsigned long input,
+@@ -134,6 +134,14 @@ int count_immovable_mem_regions(void);
+ static inline int count_immovable_mem_regions(void) { return 0; }
  #endif
  
- #ifdef CONFIG_X86_64
--void initialize_identity_maps(void);
--void add_identity_map(unsigned long start, unsigned long size);
--void finalize_identity_maps(void);
- extern unsigned char _pgtable[];
--#else
--static inline void initialize_identity_maps(void)
--{ }
--static inline void add_identity_map(unsigned long start, unsigned long size)
--{ }
--static inline void finalize_identity_maps(void)
--{ }
- #endif
- 
- #ifdef CONFIG_EARLY_PRINTK
++/* ident_map_64.c */
++#ifdef CONFIG_X86_5LEVEL
++extern unsigned int __pgtable_l5_enabled, pgdir_shift, ptrs_per_p4d;
++#endif
++
++/* Used by PAGE_KERN* macros: */
++extern pteval_t __default_kernel_pte_mask;
++
+ /* idt_64.c */
+ extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
+ extern struct desc_ptr boot_idt_desc;
 -- 
 2.27.0
 
