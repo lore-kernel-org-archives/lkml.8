@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A3FC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0ABEC433EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFE5206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73AE206F0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 07:34:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H9chBPz8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aR1KCIqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgGXHeW (ORCPT
+        id S1727927AbgGXHep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 03:34:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38664 "EHLO
+        Fri, 24 Jul 2020 03:34:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgGXHdu (ORCPT
+        with ESMTP id S1726753AbgGXHdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 03:33:50 -0400
+        Fri, 24 Jul 2020 03:33:32 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758ADC0619D3;
-        Fri, 24 Jul 2020 00:33:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E2C2C0619E5;
+        Fri, 24 Jul 2020 00:33:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=r6GVNDpJ00GIAfQlV8fGdOFlOngs4z7GOfztVZ4Wopg=; b=H9chBPz8VW3nrS8D/DH/sVlU/F
-        qTE3kQJSkvGa29xlm3sAbuZDi82AskW2+7fjPxCRR3QbJ5YsVUt0Kj+m8PmTj83HPitCjtfgBFagh
-        inT+4I3iJoCyCsHSTaIY4hPuGyKoQeZH4Fsyw/aa5PL9uBdYUAkMYnBp1k4e49Ul7v1pqEWn0UxsY
-        XfablgUGRHFB9tB8aOnvgmsHzlderU2IxPDewd6CL5W8+uAmGEFj9vyCWe9GiPc0TNVvHCRXS+iuy
-        Q2LFPaHq7JyKjuiOcqQ6wzIBvrK2CfwQ8vwUbz+CDh8leY7Wq2+X79x5o+SCC6EhkmwDHXTZLDR9y
-        agi2Ht8Q==;
+        bh=7sLr773opB4TCq8qFsHUwDVwSWroJwloCS8BnU42JTo=; b=aR1KCIqU5n3FMWmkqvfO7SpcKF
+        oqOEcqMBDy4oPLrhK8z58Kb4aFYC56ib7WkOV9Eo5iXWtlWSKfwC9pUJEyuwbFsu58Gc7rKbmcIUJ
+        xDn+MArcv16FPVSVV7UQT04aQcPsMrfkWuJLEO6NswAGWPoHNHXizcW1yFFJ91M7+faKZZt8IdPcc
+        ZyxkID6zriUcdp1HFJKnJQtO5cQuj8R8RTe4C42VJeo3G4fYSgMja3CP+OC0D77pnE9UFLrYmlNWM
+        mgz5hVzBB6jOsNeZSyfZBSb6sAgFsM2bwzHXro4uLqQX7zgrSR31MkAnkkMBP4ijZftw4LxBMmYex
+        6AXV4PNQ==;
 Received: from [2001:4bb8:18c:2acc:8dfe:be3c:592c:efc5] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jysD6-0006Dz-GF; Fri, 24 Jul 2020 07:33:41 +0000
+        id 1jysCm-0006Bh-OU; Fri, 24 Jul 2020 07:33:21 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
@@ -49,9 +49,9 @@ Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
         drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         cgroups@vger.kernel.org
-Subject: [PATCH 11/14] mm: use SWP_SYNCHRONOUS_IO more intelligently
-Date:   Fri, 24 Jul 2020 09:33:10 +0200
-Message-Id: <20200724073313.138789-12-hch@lst.de>
+Subject: [PATCH 02/14] drbd: remove dead code in device_to_statistics
+Date:   Fri, 24 Jul 2020 09:33:01 +0200
+Message-Id: <20200724073313.138789-3-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200724073313.138789-1-hch@lst.de>
 References: <20200724073313.138789-1-hch@lst.de>
@@ -63,44 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no point in trying to call bdev_read_page if SWP_SYNCHRONOUS_IO
-is not set, as the device won't support it.
+Ever since the switch to blk-mq, a lower device not used for VM
+writeback will not be marked congested, so the check will never
+trigger.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- mm/page_io.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/block/drbd/drbd_nl.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/mm/page_io.c b/mm/page_io.c
-index ccda7679008851..7eef3c84766abc 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -403,15 +403,17 @@ int swap_readpage(struct page *page, bool synchronous)
- 		goto out;
+diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
+index d0d9a549b58388..650372ee2c7822 100644
+--- a/drivers/block/drbd/drbd_nl.c
++++ b/drivers/block/drbd/drbd_nl.c
+@@ -3370,7 +3370,6 @@ static void device_to_statistics(struct device_statistics *s,
+ 	if (get_ldev(device)) {
+ 		struct drbd_md *md = &device->ldev->md;
+ 		u64 *history_uuids = (u64 *)s->history_uuids;
+-		struct request_queue *q;
+ 		int n;
+ 
+ 		spin_lock_irq(&md->uuid_lock);
+@@ -3384,11 +3383,6 @@ static void device_to_statistics(struct device_statistics *s,
+ 		spin_unlock_irq(&md->uuid_lock);
+ 
+ 		s->dev_disk_flags = md->flags;
+-		q = bdev_get_queue(device->ldev->backing_bdev);
+-		s->dev_lower_blocked =
+-			bdi_congested(q->backing_dev_info,
+-				      (1 << WB_async_congested) |
+-				      (1 << WB_sync_congested));
+ 		put_ldev(device);
  	}
- 
--	ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
--	if (!ret) {
--		if (trylock_page(page)) {
--			swap_slot_free_notify(page);
--			unlock_page(page);
--		}
-+	if (sis->flags & SWP_SYNCHRONOUS_IO) {
-+		ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
-+		if (!ret) {
-+			if (trylock_page(page)) {
-+				swap_slot_free_notify(page);
-+				unlock_page(page);
-+			}
- 
--		count_vm_event(PSWPIN);
--		goto out;
-+			count_vm_event(PSWPIN);
-+			goto out;
-+		}
- 	}
- 
- 	ret = 0;
+ 	s->dev_size = drbd_get_capacity(device->this_bdev);
 -- 
 2.27.0
 
