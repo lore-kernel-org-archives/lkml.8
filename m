@@ -2,125 +2,253 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00708C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E030A20674
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CD9B20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 17:24:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=metanate.com header.i=@metanate.com header.b="jZAyb0fH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgGXRXq (ORCPT
+        id S1727817AbgGXRYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 13:23:46 -0400
-Received: from mga11.intel.com ([192.55.52.93]:37270 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726488AbgGXRXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 13:23:45 -0400
-IronPort-SDR: 9gFTjqXOuyPvcfytVO5ev51AbIBPrNR8FuEKpKk2orj2VQQP1t6d/JOb0WAaMHq/ZpPLNhvSUH
- +aISKKy95zYA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="148664560"
-X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="148664560"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 10:23:45 -0700
-IronPort-SDR: X1JW4FggRo3qDiJx0NWoLol6p1tsq6DYf4Mj7qGG/ohJuRs2TnDCp10u9BuuIVBIeURlyoIeXD
- g8wFtHdotI8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,391,1589266800"; 
-   d="scan'208";a="311467245"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Jul 2020 10:23:45 -0700
-Date:   Fri, 24 Jul 2020 10:23:44 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
+        Fri, 24 Jul 2020 13:24:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbgGXRYa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 13:24:30 -0400
+Received: from metanate.com (unknown [IPv6:2001:8b0:1628:5005::111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A6F8C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 10:24:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=metanate.com; s=stronger; h=Content-Transfer-Encoding:Content-Type:
+        References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID
+        :Content-Description; bh=ZirEMoqFChKVP997rHvVKSuAF3dK0iS+WiW9fGpcVZQ=; b=jZAy
+        b0fHk5lUfr3iaep4NHYBlvy/1pOM7SLSOGdJaCYPtdx2tmIYGjSVLsqkBoBMToeid0YSyFtErfE+k
+        XjsOe/+x9wxVJbu01SQq2XjYHJBL9gii3O7pJN8f5tfzp5ajmNHY9OrbJjBCJOXVDethzgr2SzRwr
+        kIrJWM3aqpODr8Z1qtquUEn4kWC2px61RoNA8ZRN9Jr4wwuwnPaACKtW0y+t6uIztOfmFdKmLz7go
+        aJ/JMvgYeBoFO8cLHJgEKOr4B3g3Wo26xcLntA5431o3GctO2rdKKaLk5LEUVMACxgfenoHVaKzJ1
+        7H2aWT4gq1hoYLkt9mRC8G12+5jk3g==;
+Received: from [81.174.171.191] (helo=donbot)
+        by email.metanate.com with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <john@metanate.com>)
+        id 1jz1Qp-0000oh-OD; Fri, 24 Jul 2020 18:24:28 +0100
+Date:   Fri, 24 Jul 2020 18:24:22 +0100
+From:   John Keeping <john@metanate.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across
- exceptions
-Message-ID: <20200724172344.GO844235@iweiny-DESK2.sc.intel.com>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
- <20200717072056.73134-18-ira.weiny@intel.com>
- <20200717100610.GH10769@hirez.programming.kicks-ass.net>
- <20200722052709.GB478587@iweiny-DESK2.sc.intel.com>
- <87o8o6vvt0.fsf@nanos.tec.linutronix.de>
- <87lfjavvhm.fsf@nanos.tec.linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Ben Herrenschmidt <benh@amazon.com>,
+        Ali Saidi <alisaidi@amazon.com>, Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V2] genirq/affinity: Handle affinity setting on inactive
+ interrupts correctly
+Message-ID: <20200724182422.27ddced6.john@metanate.com>
+In-Reply-To: <877dv2rv25.fsf@nanos.tec.linutronix.de>
+References: <87k0z2s2q3.fsf@nanos.tec.linutronix.de>
+        <877dv2rv25.fsf@nanos.tec.linutronix.de>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87lfjavvhm.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Authenticated: YES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:15:17PM +0200, Thomas Gleixner wrote:
-> Thomas Gleixner <tglx@linutronix.de> writes:
-> 
-> > Ira Weiny <ira.weiny@intel.com> writes:
-> >> On Fri, Jul 17, 2020 at 12:06:10PM +0200, Peter Zijlstra wrote:
-> >>> On Fri, Jul 17, 2020 at 12:20:56AM -0700, ira.weiny@intel.com wrote:
-> >> I've been really digging into this today and I'm very concerned that I'm
-> >> completely missing something WRT idtentry_enter() and idtentry_exit().
-> >>
-> >> I've instrumented idt_{save,restore}_pkrs(), and __dev_access_{en,dis}able()
-> >> with trace_printk()'s.
-> >>
-> >> With this debug code, I have found an instance where it seems like
-> >> idtentry_enter() is called without a corresponding idtentry_exit().  This has
-> >> left the thread ref counter at 0 which results in very bad things happening
-> >> when __dev_access_disable() is called and the ref count goes negative.
-> >>
-> >> Effectively this seems to be happening:
-> >>
-> >> ...
-> >> 	// ref == 0
-> >> 	dev_access_enable()  // ref += 1 ==> disable protection
-> >> 		// exception  (which one I don't know)
-> >> 			idtentry_enter()
-> >> 				// ref = 0
-> >> 				_handler() // or whatever code...
-> >> 			// *_exit() not called [at least there is no trace_printk() output]...
-> >> 			// Regardless of trace output, the ref is left at 0
-> >> 	dev_access_disable() // ref -= 1 ==> -1 ==> does not enable protection
-> >> 	(Bad stuff is bound to happen now...)
-> >
-> > Well, if any exception which calls idtentry_enter() would return without
-> > going through idtentry_exit() then lots of bad stuff would happen even
-> > without your patches.
-> >
-> >> Also is there any chance that the process could be getting scheduled and that
-> >> is causing an issue?
-> >
-> > Only from #PF, but after the fault has been resolved and the tasks is
-> > scheduled in again then the task returns through idtentry_exit() to the
-> > place where it took the fault. That's not guaranteed to be on the same
-> > CPU. If schedule is not aware of the fact that the exception turned off
-> > stuff then you surely get into trouble. So you really want to store it
-> > in the task itself then the context switch code can actually see the
-> > state and act accordingly.
-> 
-> Actually thats nasty as well as you need a stack of PKRS values to
-> handle nested exceptions. But it might be still the most reasonable
-> thing to do. 7 PKRS values plus an index should be really sufficient,
-> that's 32bytes total, not that bad.
+Hi,
 
-I've thought about this a bit more and unless I'm wrong I think the
-idtentry_state provides for that because each nested exception has it's own
-idtentry_state doesn't it?
+On Fri, 17 Jul 2020 18:00:02 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-Ira
+> Setting interrupt affinity on inactive interrupts is inconsistent when
+> hierarchical irq domains are enabled. The core code should just store the
+> affinity and not call into the irq chip driver for inactive interrupts
+> because the chip drivers may not be in a state to handle such requests.
+> 
+> X86 has a hacky workaround for that but all other irq chips have not which
+> causes problems e.g. on GIC V3 ITS.
+> 
+> Instead of adding more ugly hacks all over the place, solve the problem in
+> the core code. If the affinity is set on an inactive interrupt then:
+> 
+>     - Store it in the irq descriptors affinity mask
+>     - Update the effective affinity to reflect that so user space has
+>       a consistent view
+>     - Don't call into the irq chip driver
+> 
+> This is the core equivalent of the X86 workaround and works correctly
+> because the affinity setting is established in the irq chip when the
+> interrupt is activated later on.
+> 
+> Note, that this is only effective when hierarchical irq domains are enabled
+> by the architecture. Doing it unconditionally would break legacy irq chip
+> implementations.
+> 
+> For hierarchial irq domains this works correctly as none of the drivers can
+> have a dependency on affinity setting in inactive state by design.
+> 
+> Remove the X86 workaround as it is not longer required.
+> 
+> Fixes: 02edee152d6e ("x86/apic/vector: Ignore set_affinity call for inactive interrupts")
+> Reported-by: Ali Saidi <alisaidi@amazon.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: stable@vger.kernel.org
+> Link: https://lore.kernel.org/r/20200529015501.15771-1-alisaidi@amazon.com
+> ---
+> V2: Fix the fallout for CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK=n (0day)
+
+It seems that this patch breaks perf events on RK3288 because the PMU
+interrupts that should be per-cpu are now all on CPU0 so no events are
+collected from CPUs 1-3 and those interrupts are killed as spurious
+after a few seconds.
+
+I'm seeing this on 4.19.134 and 5.4.53 but as far as I can tell the
+relevant code hasn't changed through to next-20200723.  Reverting the
+backport of this change fixes the problem.
+
+It looks like what happens is that because the interrupts are not
+per-CPU in the hardware, armpmu_request_irq() calls irq_force_affinity()
+while the interrupt is deactivated and then request_irq() with
+IRQF_PERCPU | IRQF_NOBALANCING.
+
+Now when irq_startup() runs with IRQ_STARTUP_NORMAL, it calls
+irq_setup_affinity() which returns early because IRQF_PERCPU and
+IRQF_NOBALANCING are set, leaving the interrupt on its original CPU.
+
+At this point /proc/interrupts clearly shows the interrupts occurring on
+CPU0 despite /proc/irq/N/effective_affinity and /proc/irq/N/smp_affinity
+showing them spread across the cores as expected.
+
+I don't think I understand what's meant to happen well enough to propose
+a patch, but hopefully the above explanation explains the problem.
+
+
+Regards,
+John
+
+> ---
+>  arch/x86/kernel/apic/vector.c |   22 +++++-----------------
+>  kernel/irq/manage.c           |   37 +++++++++++++++++++++++++++++++++++--
+>  2 files changed, 40 insertions(+), 19 deletions(-)
+> 
+> --- a/arch/x86/kernel/apic/vector.c
+> +++ b/arch/x86/kernel/apic/vector.c
+> @@ -446,12 +446,10 @@ static int x86_vector_activate(struct ir
+>  	trace_vector_activate(irqd->irq, apicd->is_managed,
+>  			      apicd->can_reserve, reserve);
+>  
+> -	/* Nothing to do for fixed assigned vectors */
+> -	if (!apicd->can_reserve && !apicd->is_managed)
+> -		return 0;
+> -
+>  	raw_spin_lock_irqsave(&vector_lock, flags);
+> -	if (reserve || irqd_is_managed_and_shutdown(irqd))
+> +	if (!apicd->can_reserve && !apicd->is_managed)
+> +		assign_irq_vector_any_locked(irqd);
+> +	else if (reserve || irqd_is_managed_and_shutdown(irqd))
+>  		vector_assign_managed_shutdown(irqd);
+>  	else if (apicd->is_managed)
+>  		ret = activate_managed(irqd);
+> @@ -775,20 +773,10 @@ void lapic_offline(void)
+>  static int apic_set_affinity(struct irq_data *irqd,
+>  			     const struct cpumask *dest, bool force)
+>  {
+> -	struct apic_chip_data *apicd = apic_chip_data(irqd);
+>  	int err;
+>  
+> -	/*
+> -	 * Core code can call here for inactive interrupts. For inactive
+> -	 * interrupts which use managed or reservation mode there is no
+> -	 * point in going through the vector assignment right now as the
+> -	 * activation will assign a vector which fits the destination
+> -	 * cpumask. Let the core code store the destination mask and be
+> -	 * done with it.
+> -	 */
+> -	if (!irqd_is_activated(irqd) &&
+> -	    (apicd->is_managed || apicd->can_reserve))
+> -		return IRQ_SET_MASK_OK;
+> +	if (WARN_ON_ONCE(!irqd_is_activated(irqd)))
+> +		return -EIO;
+>  
+>  	raw_spin_lock(&vector_lock);
+>  	cpumask_and(vector_searchmask, dest, cpu_online_mask);
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -195,9 +195,9 @@ void irq_set_thread_affinity(struct irq_
+>  			set_bit(IRQTF_AFFINITY, &action->thread_flags);
+>  }
+>  
+> +#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
+>  static void irq_validate_effective_affinity(struct irq_data *data)
+>  {
+> -#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
+>  	const struct cpumask *m = irq_data_get_effective_affinity_mask(data);
+>  	struct irq_chip *chip = irq_data_get_irq_chip(data);
+>  
+> @@ -205,9 +205,19 @@ static void irq_validate_effective_affin
+>  		return;
+>  	pr_warn_once("irq_chip %s did not update eff. affinity mask of irq %u\n",
+>  		     chip->name, data->irq);
+> -#endif
+>  }
+>  
+> +static inline void irq_init_effective_affinity(struct irq_data *data,
+> +					       const struct cpumask *mask)
+> +{
+> +	cpumask_copy(irq_data_get_effective_affinity_mask(data), mask);
+> +}
+> +#else
+> +static inline void irq_validate_effective_affinity(struct irq_data *data) { }
+> +static inline void irq_init_effective_affinity(struct irq_data *data,
+> +					       const struct cpumask *mask) { }
+> +#endif
+> +
+>  int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+>  			bool force)
+>  {
+> @@ -304,6 +314,26 @@ static int irq_try_set_affinity(struct i
+>  	return ret;
+>  }
+>  
+> +static bool irq_set_affinity_deactivated(struct irq_data *data,
+> +					 const struct cpumask *mask, bool force)
+> +{
+> +	struct irq_desc *desc = irq_data_to_desc(data);
+> +
+> +	/*
+> +	 * If the interrupt is not yet activated, just store the affinity
+> +	 * mask and do not call the chip driver at all. On activation the
+> +	 * driver has to make sure anyway that the interrupt is in a
+> +	 * useable state so startup works.
+> +	 */
+> +	if (!IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) || irqd_is_activated(data))
+> +		return false;
+> +
+> +	cpumask_copy(desc->irq_common_data.affinity, mask);
+> +	irq_init_effective_affinity(data, mask);
+> +	irqd_set(data, IRQD_AFFINITY_SET);
+> +	return true;
+> +}
+> +
+>  int irq_set_affinity_locked(struct irq_data *data, const struct cpumask *mask,
+>  			    bool force)
+>  {
+> @@ -314,6 +344,9 @@ int irq_set_affinity_locked(struct irq_d
+>  	if (!chip || !chip->irq_set_affinity)
+>  		return -EINVAL;
+>  
+> +	if (irq_set_affinity_deactivated(data, mask, force))
+> +		return 0;
+> +
+>  	if (irq_can_move_pcntxt(data) && !irqd_is_setaffinity_pending(data)) {
+>  		ret = irq_try_set_affinity(data, mask, force);
+>  	} else {
+
