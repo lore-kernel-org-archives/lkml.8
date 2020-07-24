@@ -2,118 +2,131 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA166C433E5
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0232065C
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CA02065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgGXK2w (ORCPT
+        id S1727034AbgGXK3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:28:52 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:57836 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgGXK2v (ORCPT
+        Fri, 24 Jul 2020 06:29:06 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:44866 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgGXK3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:28:51 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 34A2672CCDC;
-        Fri, 24 Jul 2020 13:28:49 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 279C57CFF79; Fri, 24 Jul 2020 13:28:49 +0300 (MSK)
-Date:   Fri, 24 Jul 2020 13:28:49 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Serge Hallyn <serge@hallyn.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        =?utf-8?B?w4Frb3M=?= Uzonyi <uzonyi.akos@gmail.com>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fs/nsfs.c: fix ioctl support of compat processes
-Message-ID: <20200724102848.GA1654@altlinux.org>
-References: <20200724001248.GC25522@altlinux.org>
- <CAK8P3a0JM8dytW6C8P9HoPcGksg0d5JCut1yT7JzBcUCAm-WcQ@mail.gmail.com>
+        Fri, 24 Jul 2020 06:29:05 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 2AACD1C0BD2; Fri, 24 Jul 2020 12:29:02 +0200 (CEST)
+Date:   Fri, 24 Jul 2020 12:29:01 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>
+Cc:     linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
+        Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC leds + net-next v2 0/1] Add support for LEDs on
+ Marvell PHYs
+Message-ID: <20200724102901.qp65rtkxucauglsp@duo.ucw.cz>
+References: <20200723181319.15988-1-marek.behun@nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="pj7n3lfazigoupyj"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK8P3a0JM8dytW6C8P9HoPcGksg0d5JCut1yT7JzBcUCAm-WcQ@mail.gmail.com>
+In-Reply-To: <20200723181319.15988-1-marek.behun@nic.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 11:20:26AM +0200, Arnd Bergmann wrote:
-> On Fri, Jul 24, 2020 at 2:12 AM Dmitry V. Levin <ldv@altlinux.org> wrote:
-> >
-> > According to Documentation/driver-api/ioctl.rst, in order to support
-> > 32-bit user space running on a 64-bit kernel, each subsystem or driver
-> > that implements an ioctl callback handler must also implement the
-> > corresponding compat_ioctl handler.  The compat_ptr_ioctl() helper can
-> > be used in place of a custom compat_ioctl file operation for drivers
-> > that only take arguments that are pointers to compatible data
-> > structures.
-> >
-> > In case of NS_* ioctls only NS_GET_OWNER_UID accepts an argument, and
-> > this argument is a pointer to uid_t type, which is universally defined
-> > to __kernel_uid32_t.
-> 
-> This is potentially dangerous to rely on, as there are two parts that
-> are mismatched:
-> 
-> - user space does not see the kernel's uid_t definition, but has its own,
->   which may be either the 16-bit or the 32-bit type. 32-bit uid_t was
->   introduced with linux-2.3.39 in back in 2000. glibc was already
->   using 32-bit uid_t at the time in user space, but uclibc only changed
->   in 2003, and others may have been even later.
-> 
-> - the ioctl command number is defined (incorrectly) as if there was no
->   argument, so if there is any user space that happens to be built with
->   a 16-bit uid_t, this does not get caught.
 
-Note that NS_GET_OWNER_UID is provided on 32-bit architectures, too, so
-this 16-bit vs 32-bit uid_t issue was exposed to userspace long time ago
-when NS_GET_OWNER_UID was introduced, and making NS_GET_OWNER_UID
-available for compat processes won't make any difference, as the mismatch
-is not between native and compat types, but rather between 16-bit and
-32-bit uid_t types.
+--pj7n3lfazigoupyj
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I agree it would be correct to define NS_GET_OWNER_UID as
-_IOR(NSIO, 0x4, uid_t) instead of _IO(NSIO, 0x4), but nobody Cc'ed me
-on this topic when NS_GET_OWNER_UID was discussed, and that ship has long
-sailed.
+On Thu 2020-07-23 20:13:18, Marek Beh=FAn wrote:
+> Hi,
+>=20
+> this is v2 of my RFC adding support for LEDs connected to Marvell PHYs.
+>=20
+> The LED subsystem patches are not contained:
+> - the patch adding support for LED private triggers is already accepted
+>   in Pavel Machek's for-next tree.
+>   If you want to try this patch on top of net-next, please also apply
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/co=
+mmit/?h=3Dfor-next&id=3D93690cdf3060c61dfce813121d0bfc055e7fa30d
+> - the other led-trigger patch is not needed in this version of the RFC
+>=20
+> The main difference from v1 is that only one trigger, named
+> "hw-control", is added to the /sys/class/leds/<LED>/trigger file.
+>=20
+> When this trigger is activated, another file called "hw_control" is
+> created in the /sys/class/leds/<LED>/ directory. This file lists
+> available HW control modes for this LED in the same way the trigger
+> file does for triggers.
+>=20
+> Example:
+>=20
+>   # cd /sys/class/leds/eth0\:green\:link/
+>   # cat trigger
+>   [none] hw-control timer oneshot heartbeat ...
+>   # echo hw-control >trigger
 
-> > This change fixes compat strace --pidns-translation.
-> > 
-> > Note: when backporting this patch to stable kernels, commit
-> > "compat_ioctl: add compat_ptr_ioctl()" is needed as well.
-> > 
-> > Reported-by: Ákos Uzonyi <uzonyi.akos@gmail.com>
-> > Fixes: 6786741dbf99 ("nsfs: add ioctl to get an owning user namespace for ns file descriptor")
-> > Cc: stable@vger.kernel.org # v4.9+
-> > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
-> > ---
-> >  fs/nsfs.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/fs/nsfs.c b/fs/nsfs.c
-> > index 800c1d0eb0d0..a00236bffa2c 100644
-> > --- a/fs/nsfs.c
-> > +++ b/fs/nsfs.c
-> > @@ -21,6 +21,7 @@ static long ns_ioctl(struct file *filp, unsigned int ioctl,
-> >  static const struct file_operations ns_file_operations = {
-> >         .llseek         = no_llseek,
-> >         .unlocked_ioctl = ns_ioctl,
-> > +       .compat_ioctl   = compat_ptr_ioctl,
-> >  };
-> >
-> >  static char *ns_dname(struct dentry *dentry, char *buffer, int buflen)
+Make this "hw-phy-mode" or something. hw-control is a bit too generic.
 
--- 
-ldv
+>   # cat trigger
+>   none [hw-control] timer oneshot heartbeat ...
+>   # cat hw_control
+>   link/nolink link/act/nolink 1000/100/10/nolink act/noact
+>   blink-act/noact transmit/notransmit copperlink/else [1000/else]
+>   force-hi-z force-blink
+>   # echo 1000/100/10/nolink >hw_control
+>   # cat hw_control
+>   link/nolink link/act/nolink [1000/100/10/nolink] act/noact
+>   blink-act/noact transmit/notransmit copperlink/else 1000/else
+>   force-hi-z force-blink
+>=20
+> The benefit here is that only one trigger is registered via LED API.
+> I guess there are other PHY drivers which too support HW controlled
+> blinking modes. So of this way of controlling PHY LED HW controlled
+> modes is accepted, the code creating the hw-control trigger and
+> hw_control file should be made into library code so that it can be
+> reused.
+>=20
+> What do you think?
+
+So.. you have 10 of them right now. I guess both hw_control and making
+it into the trigger directly is acceptable here.
+
+In future, would you expect having software "1000/100/10/nolink"
+triggers I could activate on my scrollock LED (or on GPIO controlled
+LEDs) to indicate network activity?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--pj7n3lfazigoupyj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXxq37QAKCRAw5/Bqldv6
+8s8VAKCscET8lo4WWmkdRQg79/ZmaIn60wCgjFAt0j1QgaN7Erm+//4upTRKchY=
+=k67K
+-----END PGP SIGNATURE-----
+
+--pj7n3lfazigoupyj--
