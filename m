@@ -2,138 +2,140 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3865C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D39D2070B
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9A5206F6
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 21:29:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mcpxjpBa";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BRWV0W95"
+	dkim=pass (2048-bit key) header.d=eclypsium.com header.i=@eclypsium.com header.b="M3fN3srJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgGXVZD (ORCPT
+        id S1726658AbgGXV3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 17:25:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55916 "EHLO
+        Fri, 24 Jul 2020 17:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgGXVZC (ORCPT
+        with ESMTP id S1726411AbgGXV3O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 17:25:02 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B58C0619D3;
-        Fri, 24 Jul 2020 14:25:02 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595625899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GvMyNHsN0q61AeYEdZRSIrvuxMsl65bOxTzAFe7Crcg=;
-        b=mcpxjpBay3zaosMLUpZIESiZjX70tWRDRrx62Lm4RZUZc66n2tEF+jIigzon1ulXqPAERq
-        ZJBeRZcLuvLk3InOnvs226uLjvp9EwdGzfEf4sHXWe38EjioooEeyVEX2Kksr7QK6jVkr+
-        gApsCDCed1fI1bDW7RK9ps9yfftC50U2AXId0QshkdkkGOfTL5UPVuBaBWUBWhbMGefq0a
-        MAKXzZK9hoR8BnVhzGZPhLTTEPNpSkPkqD7AcTV1UJTp0GZt3J4BCnJi/biHikXZ5HE40c
-        xE35FKIFCpdNFLF7Crv+6ifPiyZlxBEA9V8tCb6fCPFnzN/br8LG0AYI/g9MTw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595625899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GvMyNHsN0q61AeYEdZRSIrvuxMsl65bOxTzAFe7Crcg=;
-        b=BRWV0W9529yicWf3VvB2bX366+Nsr1sxb73tdd6g/5PhodE1uYx58ywUoVNKdnXJW4fZmr
-        4hAZGvRtWU1J8ICw==
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across exceptions
-In-Reply-To: <87mu3pvly7.fsf@nanos.tec.linutronix.de>
-References: <20200717072056.73134-1-ira.weiny@intel.com> <20200717072056.73134-18-ira.weiny@intel.com> <87r1t2vwi7.fsf@nanos.tec.linutronix.de> <20200723220435.GI844235@iweiny-DESK2.sc.intel.com> <87mu3pvly7.fsf@nanos.tec.linutronix.de>
-Date:   Fri, 24 Jul 2020 23:24:58 +0200
-Message-ID: <874kpwtxlh.fsf@nanos.tec.linutronix.de>
+        Fri, 24 Jul 2020 17:29:14 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5245C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:29:13 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id o2so4762143qvk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 14:29:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=eclypsium.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0IwUFhaabh/nXh3QEUZEDpYs1syuDyPDgcXgIKM8icc=;
+        b=M3fN3srJWK4wZCZQQtn7XxJP42rIvQg08x8E33MCjq7j9nhRRdCy8t5nlIcD+KSIjq
+         AI1ytt8VTE7Ip0c4gvu9reBmAa4My6LSkAQII1gJR9TwnfSTABvAKkLLbILh8iCQ12BW
+         AAJdy5ppk44j/FUobN7U2GscswkShLiuBleIJtiywE96IOzLknpDNMSJrF6h+0Z1c+K0
+         LsQ1WNswd7r9pigvQSg1k25lmK2pxThZ6cYPBhYCnz1dYDd4Q/7oqfQ7x43olx0PcwVM
+         cs2zvOR2gk6RIpmRfCgw8DY3TsczcO5riQFtWWdGARWG/KudN0Sugk4IxUtZyXfgsxRe
+         RL9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0IwUFhaabh/nXh3QEUZEDpYs1syuDyPDgcXgIKM8icc=;
+        b=eXJ5TYNwzKTOfnQvBDAeLzBVjzNZ/ZXEqwjSO702oLbQwGhwiiLcwZNkPYmSJo18iX
+         MAt/89Dci6XAR/1FjEH2rw9PxHR5dg56PY+XT3xQ/nTSKgI2Q4bwbHwg3dYsdXCL3/v9
+         YHY9OI+e0yIZa/0cZBrDN4VjLV6vl7OQQ+CsQcuiGyQKTi5BgdKqJFZ0xZcMvyaiPvpm
+         r2HdjIYmgBNFytfEy8prvjmIwAB1I3H6O/qUMk3s8n5IGvm8SQJo30JbZJRY/Gj8+Gea
+         zgV0+wqaOCPvReyNXNs9mEyHn1ukZGMQgiPm937oRCVXoNL8C12QOL32fiLR8pLdUzme
+         p+vA==
+X-Gm-Message-State: AOAM532LKIeLnV2zKnZUpzq2px8CrWdchfekJiLXdtvQ1DNQTYwCB88G
+        C+TjvLFf1liwUvM2CXbms1zm+w==
+X-Google-Smtp-Source: ABdhPJyNdEPcfYzQHlPqEuCVHXHTCMhlXskpv805tJl0l+zUNf5Xt0TaQfFkQT307jEtgWwPUdclqQ==
+X-Received: by 2002:ad4:5042:: with SMTP id m2mr11509729qvq.225.1595626152945;
+        Fri, 24 Jul 2020 14:29:12 -0700 (PDT)
+Received: from localhost ([190.190.138.51])
+        by smtp.gmail.com with ESMTPSA id p202sm5224758qke.97.2020.07.24.14.29.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 14:29:12 -0700 (PDT)
+From:   Daniel Gutson <daniel.gutson@eclypsium.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Daniel Gutson <daniel.gutson@eclypsium.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] Module argument to control whether intel-spi-pci attempts to turn the SPI flash chip writeable
+Date:   Fri, 24 Jul 2020 18:28:53 -0300
+Message-Id: <20200724212853.11601-1-daniel.gutson@eclypsium.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ira,
+Currently, intel-spi has a module argument that controls whether the driver
+attempts to turn the SPI flash chip writeable. The default value
+is FALSE (don't try to make it writeable).
+However, this flag applies only for a number of devices, coming from the
+platform driver, whereas the devices detected through the PCI driver
+(intel-spi-pci) are not subject to this check since the configuration
+takes place in intel-spi-pci which doesn't have an argument.
 
-Thomas Gleixner <tglx@linutronix.de> writes:
-> Ira Weiny <ira.weiny@intel.com> writes:
->> On Thu, Jul 23, 2020 at 09:53:20PM +0200, Thomas Gleixner wrote:
->> I think, after fixing my code (see below), using idtentry_state could still
->> work.  If the per-cpu cache and the MSR is updated in idtentry_exit() that
->> should carry the state to the new cpu, correct?
->
-> I'm way too tired to think about that now. Will have a look tomorrow
-> with brain awake.
+That's why I propose this patch to add such argument to intel-spi-pci,
+so the user can control whether the driver tries to make the chip
+writeable or not, being the default FALSE as is the argument of
+intel-spi.
 
-Not that I'm way more awake now, but at least I have the feeling that my
-brain is not completely useless.
+Signed-off-by: Daniel Gutson <daniel.gutson@eclypsium.com>
+---
+ drivers/mtd/spi-nor/controllers/intel-spi-pci.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-Let me summarize what I understood:
+diff --git a/drivers/mtd/spi-nor/controllers/intel-spi-pci.c b/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
+index 81329f680bec..77e57450f166 100644
+--- a/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
++++ b/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
+@@ -24,6 +24,10 @@ static const struct intel_spi_boardinfo cnl_info = {
+ 	.type = INTEL_SPI_CNL,
+ };
+ 
++static bool writeable;
++module_param(writeable, bool, 0);
++MODULE_PARM_DESC(writeable, "Enable write access to SPI flash chip (default=0)");
++
+ static int intel_spi_pci_probe(struct pci_dev *pdev,
+ 			       const struct pci_device_id *id)
+ {
+@@ -41,12 +45,14 @@ static int intel_spi_pci_probe(struct pci_dev *pdev,
+ 	if (!info)
+ 		return -ENOMEM;
+ 
+-	/* Try to make the chip read/write */
+-	pci_read_config_dword(pdev, BCR, &bcr);
+-	if (!(bcr & BCR_WPD)) {
+-		bcr |= BCR_WPD;
+-		pci_write_config_dword(pdev, BCR, bcr);
++	if (writeable) {
++		/* Try to make the chip read/write */
+ 		pci_read_config_dword(pdev, BCR, &bcr);
++		if (!(bcr & BCR_WPD)) {
++			bcr |= BCR_WPD;
++			pci_write_config_dword(pdev, BCR, bcr);
++			pci_read_config_dword(pdev, BCR, &bcr);
++		}
+ 	}
+ 	info->writeable = !!(bcr & BCR_WPD);
+ 
+-- 
+2.25.1
 
-  1) A per CPU cache which shadows the current state of the MSR, i.e. the
-     current valid key. You use that to avoid costly MSR writes if the
-     key does not change.
-
-  2) On idtentry you store the key on entry in idtentry_state, clear it
-     in the MSR and shadow state if necessary and restore it on exit.
-
-  3) On context switch out you save the per CPU cache value in the task
-     and on context switch in you restore it from there.
-
-Yes, that works (see below for #2) and sorry for my confusion yesterday
-about storing this in task state.
-
-#2 requires to handle the exceptions which do not go through
-idtentry_enter/exit() seperately, but that's a manageable amount. It's
-the ones which use IDTENTRY_RAW or a variant of it.
-
-#BP, #MC, #NMI, #DB, #DF need extra local storage as all the kernel
-entries for those use nmi_enter()/exit(). So you just can create
-wrappers around those. Somehting like this
-
-static __always_inline idtentry_state_t idtentry_nmi_enter(void)
-{
-     	idtentry_state_t state = {};
-
-        nmi_enter();
-        instrumentation_begin();
-        state.key = save_and_clear_key();
-        instrumentation_end();
-}
-
-static __always_inline void idtentry_nmi_exit(idtentry_state_t state)
-{
-        instrumentation_begin();
-        restore_key(state.key);
-        instrumentation_end();
-        nmi_exit();
-}
-
-#UD and #PF are using the raw entry variant as well but still invoke
-idtentry_enter()/exit(). #PF does not need any work. #UD handles
-WARN/BUG without going through idtentry_enter() first, but I don't think
-that's an issue unless a not 0 key would prevent writing to the console
-device. You surely can figure that out.
-
-Hope that helps.
-
-Thanks,
-
-        tglx
