@@ -2,104 +2,167 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAA2C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8C520714
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDFAD20674
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 09:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595584671;
+	bh=Tzy5QTb0tsnt2rk03Yyme+JWpakyFFZ1jiVfPMesZLE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IEm3HKOH+59w4OvFTKDeBIOFpga3FRpVntzR2EGaL0ij1lVsCEvx2QtirAVRTQHc+
+	 XhfRYrvQBH3KmiA6bYSBxXs4lyx9lygBpmf/w07kjn4+EEt0BMa1PoL9VY/wT+BdwO
+	 kSEhV48Y99fabmEod0wrF0sr+MI/UrVDGfTnRAPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgGXJ5m (ORCPT
+        id S1727856AbgGXJ5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 05:57:42 -0400
-Received: from dispatch1-us1.ppe-hosted.com ([67.231.154.164]:33686 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726114AbgGXJ5l (ORCPT
+        Fri, 24 Jul 2020 05:57:50 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38760 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgGXJ5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 05:57:41 -0400
-Received: from mx1-us1.ppe-hosted.com (unknown [10.110.50.144])
-        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 84A7020054;
-        Fri, 24 Jul 2020 09:57:40 +0000 (UTC)
-Received: from us4-mdac16-43.at1.mdlocal (unknown [10.110.48.14])
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 831C5800A4;
-        Fri, 24 Jul 2020 09:57:40 +0000 (UTC)
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mx1-us1.ppe-hosted.com (unknown [10.110.50.8])
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 2E41840060;
-        Fri, 24 Jul 2020 09:57:40 +0000 (UTC)
-Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id E58A14C0068;
-        Fri, 24 Jul 2020 09:57:39 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
- (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 24 Jul
- 2020 10:57:34 +0100
-Subject: Re: [PATCH net-next v3 1/2] hinic: add support to handle hw abnormal
- event
-To:     David Miller <davem@davemloft.net>, <luobin9@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
-References: <20200723144038.10430-1-luobin9@huawei.com>
- <20200723144038.10430-2-luobin9@huawei.com>
- <20200723.120852.1882569285026023193.davem@davemloft.net>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <92dac9af-8623-bd1e-7a4d-9d12671699ad@solarflare.com>
-Date:   Fri, 24 Jul 2020 10:57:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 24 Jul 2020 05:57:49 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r8so7569102oij.5;
+        Fri, 24 Jul 2020 02:57:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lfdi8y7XT/GLwjnF+qwRBjmFZVJUF6UVVDZU9wm5TaQ=;
+        b=Ez+sMokykO4w4KpZehFNr7BA5uhHCSc4xXzgwp5QiYK+vnky5ScwO5vFCaqqqiaYSf
+         ObCXes2JOIvaMkcOnz96S3/aL+SMR29FNyVhT7bkwPklTXLczgsepDnfS+TsJpv5cLUP
+         MH9X7F/TQIQTnZoRhyJ1/uTFczOp2BIarRVFRftbtRpTsqNRVx7wm6irfs5vC2Bu4dNS
+         1lnVRr7VALhlvO08+oULoaBKjyEMTteLb6xPW9Ks8doOURX6yI+JjhEg3oBtENL6yguq
+         eCKZxdGqWqs+LmgPJ9UpxRocBzE1dFm6fYRUOZ6Xx4TkjjDr3CxEgcXVTUNfO6bKFoT9
+         hL6A==
+X-Gm-Message-State: AOAM5327SSChE3uN6u+HJEVr8bY3b8flL10O2gVJpff++tBBr0fYSriE
+        WAtwbsSaydo9ui7hq5XOzwVbuA4Yuq0TlPbcj8pwEA==
+X-Google-Smtp-Source: ABdhPJwmw50/j/jb4uqGVrXM5kRvrFzs5LGQOnnkqUtcmCKjUVWpuSyy9Ti+bMSPaa4DokJrmiScLfe79eQwwUT3sQc=
+X-Received: by 2002:a05:6808:34e:: with SMTP id j14mr7576095oie.110.1595584668419;
+ Fri, 24 Jul 2020 02:57:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200723.120852.1882569285026023193.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Originating-IP: [10.17.20.203]
-X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
- ukex01.SolarFlarecom.com (10.17.10.4)
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.6.1012-25560.003
-X-TM-AS-Result: No-8.820400-8.000000-10
-X-TMASE-MatchedRID: pBwXUM+nCwvmLzc6AOD8DfHkpkyUphL905gx+zrdgZaQzLINxjetpFbY
-        KMhwSW1CNnZ1cmyQc4mPr625QdxYkvFR4E58OzUoIp8MIsmMqvtUENBIMyKD0Zsoi2XrUn/JyeM
-        tMD9QOgADpAZ2/B/Blp1jVwOAgjOIavP8b9lJtWr6C0ePs7A07Q2y0JeZ/zscixCcHJ0l6L9U9V
-        7w4C4apCDeObfXRMUe1Ur+PJUaME0VVZKExyWDBgcRwsRXSGo3rrPhI00pdvPwClow2+L85TI9C
-        U2hgdVOUdNvZjjOj9C63BPMcrcQuXeYWV2RaAfD+kkf6HhPsBc=
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--8.820400-8.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.6.1012-25560.003
-X-MDID: 1595584660-TA2_liJbFgvR
+References: <1594005196-16327-1-git-send-email-neal.liu@mediatek.com>
+ <1594005196-16327-2-git-send-email-neal.liu@mediatek.com> <CAJZ5v0ihB5AJwSRpjaOnXAmciregzxARL5xfudu1h+=_LXaE_w@mail.gmail.com>
+ <1594350535.4670.13.camel@mtkswgap22> <1595233294.8055.0.camel@mtkswgap22> <20200723190724.GA1339461@google.com>
+In-Reply-To: <20200723190724.GA1339461@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 24 Jul 2020 11:57:37 +0200
+Message-ID: <CAJZ5v0g_14D-tyWFEZ9eOJC=GmzR-31iAAPff=Ch8KjFyK2wfw@mail.gmail.com>
+Subject: Re: [PATCH v2] cpuidle: change enter_s2idle() prototype
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Neal Liu <neal.liu@mediatek.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23/07/2020 20:08, David Miller wrote:
-> From: Luo bin <luobin9@huawei.com>
-> Date: Thu, 23 Jul 2020 22:40:37 +0800
+On Thu, Jul 23, 2020 at 9:07 PM Sami Tolvanen <samitolvanen@google.com> wrote:
 >
->> +static int hinic_fw_reporter_dump(struct devlink_health_reporter *reporter,
->> +				  struct devlink_fmsg *fmsg, void *priv_ctx,
->> +				  struct netlink_ext_ack *extack)
->> +{
->> +	struct hinic_mgmt_watchdog_info *watchdog_info;
->> +	int err;
->> +
->> +	if (priv_ctx) {
->> +		watchdog_info = priv_ctx;
->> +		err = mgmt_watchdog_report_show(fmsg, watchdog_info);
->> +		if (err)
->> +			return err;
->> +	}
->> +
->> +	return 0;
->> +}
-> This 'watchdog_info' variable is completely unnecessary, just pass
-> 'priv_ctx' as-is into mgmt_watchdog_report_show().
-Looks like the 'err' variable is unnecessary too...
+> On Mon, Jul 20, 2020 at 04:21:34PM +0800, Neal Liu wrote:
+> > Gentle ping on this patch.
+> >
+> >
+> > On Fri, 2020-07-10 at 11:08 +0800, Neal Liu wrote:
+> > > On Thu, 2020-07-09 at 14:18 +0200, Rafael J. Wysocki wrote:
+> > > > On Mon, Jul 6, 2020 at 5:13 AM Neal Liu <neal.liu@mediatek.com> wrote:
+> > > > >
+> > > > > Control Flow Integrity(CFI) is a security mechanism that disallows
+> > > > > changes to the original control flow graph of a compiled binary,
+> > > > > making it significantly harder to perform such attacks.
+> > > > >
+> > > > > init_state_node() assign same function callback to different
+> > > > > function pointer declarations.
+> > > > >
+> > > > > static int init_state_node(struct cpuidle_state *idle_state,
+> > > > >                            const struct of_device_id *matches,
+> > > > >                            struct device_node *state_node) { ...
+> > > > >         idle_state->enter = match_id->data; ...
+> > > > >         idle_state->enter_s2idle = match_id->data; }
+> > > > >
+> > > > > Function declarations:
+> > > > >
+> > > > > struct cpuidle_state { ...
+> > > > >         int (*enter) (struct cpuidle_device *dev,
+> > > > >                       struct cpuidle_driver *drv,
+> > > > >                       int index);
+> > > > >
+> > > > >         void (*enter_s2idle) (struct cpuidle_device *dev,
+> > > > >                               struct cpuidle_driver *drv,
+> > > > >                               int index); };
+> > > > >
+> > > > > In this case, either enter() or enter_s2idle() would cause CFI check
+> > > > > failed since they use same callee.
+> > > >
+> > > > Can you please explain this in a bit more detail?
+> > > >
+> > > > As it stands, I don't understand the problem statement enough to apply
+> > > > the patch.
+> > > >
+> > >
+> > > Okay, Let's me try to explain more details.
+> > > Control Flow Integrity(CFI) is a security mechanism that disallows
+> > > changes to the original control flow graph of a compiled binary, making
+> > > it significantly harder to perform such attacks.
+> > >
+> > > There are multiple control flow instructions that could be manipulated
+> > > by the attacker and subvert control flow. The target instructions that
+> > > use data to determine the actual destination.
+> > > - indirect jump
+> > > - indirect call
+> > > - return
+> > >
+> > > In this case, function prototype between caller and callee are mismatch.
+> > > Caller: (type A)funcA
+> > > Callee: (type A)funcB
+> > > Callee: (type C)funcC
+> > >
+> > > funcA calls funcB -> no problem
+> > > funcA calls funcC -> CFI check failed
+> > >
+> > > That's why we try to align function prototype.
+> > > Please feel free to feedback if you have any questions.
+>
+> I think you should include a better explanation in the commit message.
+> Perhaps something like this?
+>
+>   init_state_node assigns the same callback function to both enter and
+>   enter_s2idle despite mismatching function types, which trips indirect
+>   call checking with Control-Flow Integrity (CFI).
+>
+> > > > > Align function prototype of enter() since it needs return value for
+> > > > > some use cases. The return value of enter_s2idle() is no
+> > > > > need currently.
+> > > >
+> > > > So last time I requested you to document why ->enter_s2idle needs to
+> > > > return an int in the code, which has not been done.  Please do that.
+>
+> Rafael, are you happy with the commit message documenting the reason,
+> or would you prefer to also add a comment before enter_s2idle?
 
--ed
+As I said before, it would be good to have a comment in the code as
+well or people will be wondering why it is necessary to return
+anything from that callback, because its return value is never used.
+
+Thanks!
