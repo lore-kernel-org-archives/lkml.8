@@ -2,112 +2,74 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE308C433E5
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC099C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9A98206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:10:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gLIIckYS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3hZ18Njd"
+	by mail.kernel.org (Postfix) with ESMTP id D05E0206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgGXNKb (ORCPT
+        id S1726583AbgGXNLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:10:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:38116 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgGXNKb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:10:31 -0400
-Date:   Fri, 24 Jul 2020 13:10:28 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595596229;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yNAycmSVcZT0Mky2S23YQykAtqrpZVnbnF3k8dnxZlM=;
-        b=gLIIckYSyqGUg5gW2Oa2Nll7qc0HUAQ8gBTV1qYUp/om99V1DQ7X14WTOZnAN0qXdWKNpU
-        r02RioIYdPKJjzsaaiR432HgQTv3Y6FHgUloEenPoOkCK/0PQVVEM5XmGFEHEqQZ1nyv2y
-        E67wMKfoRj/ohLdoGDdhlawIZp72DWpEZMGgcNaNCgEIh4hvJMdyYFetGlPT+U4LvDpOkw
-        ReCCSsJ+HUcbrz2c6xQcfOZZ+0N1FNyRr+JwpDMjKwnHvEWyRduiQzZlm0eah9gGHg5vhe
-        oMVKJrVhgxMIWX438w2XheMFR2ZrQwk6pLbVZt7Ti0BwJig5cjwZoN4OtCiPYw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595596229;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yNAycmSVcZT0Mky2S23YQykAtqrpZVnbnF3k8dnxZlM=;
-        b=3hZ18Njdiq09aydCh8XEgusfaSbphb8Yj/OtLPlR0Z5Mw4AxObAyKd8UhGLZzAXXuiseoL
-        +cMs0AWDwTDNkhDg==
-From:   "tip-bot2 for Sedat Dilek" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/build] x86/defconfigs: Remove CONFIG_CRYPTO_AES_586 from
- i386_defconfig
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200723171119.9881-1-sedat.dilek@gmail.com>
-References: <20200723171119.9881-1-sedat.dilek@gmail.com>
+        Fri, 24 Jul 2020 09:11:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:33816 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726235AbgGXNLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:11:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A52BAD6E;
+        Fri, 24 Jul 2020 06:11:04 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.41])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 174233F66F;
+        Fri, 24 Jul 2020 06:11:01 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 14:10:59 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Sumit Gupta <sumitg@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH -next] arm64: Export __cpu_logical_map
+Message-ID: <20200724131059.GB6521@bogus>
+References: <20200724030433.22287-1-wangkefeng.wang@huawei.com>
+ <82f750c4-d423-1ed8-a158-e75153745e07@huawei.com>
 MIME-Version: 1.0
-Message-ID: <159559622819.4006.8469899009265842837.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <82f750c4-d423-1ed8-a158-e75153745e07@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/build branch of tip:
+On Fri, Jul 24, 2020 at 11:08:03AM +0800, Kefeng Wang wrote:
+> +maillist
+> 
+> On 2020/7/24 11:04, Kefeng Wang wrote:
+> > ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
+> > 
+> > ARM64 tegra194-cpufreq driver use cpu_logical_map, export
+> > __cpu_logical_map to fix build issue.
+> >
 
-Commit-ID:     6526b12de07588253a52577f42ec99fc7ca26a1f
-Gitweb:        https://git.kernel.org/tip/6526b12de07588253a52577f42ec99fc7ca26a1f
-Author:        Sedat Dilek <sedat.dilek@gmail.com>
-AuthorDate:    Thu, 23 Jul 2020 19:11:14 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 24 Jul 2020 14:55:55 +02:00
+I wonder why like other instances in the drivers, the mpidr is not get
+directly from the cpu. The cpufreq_driver->init call happens when the cpu
+is being brought online and is executed on the required cpu IIUC.
 
-x86/defconfigs: Remove CONFIG_CRYPTO_AES_586 from i386_defconfig
+read_cpuid_mpidr() is inline and avoids having to export the logical_cpu_map.
+Though we may not add physical hotplug anytime soon, less dependency
+on this cpu_logical_map is better given that we can resolve this without
+the need to access the map.
 
-Initially CONFIG_CRYPTO_AES_586=y was added to the i386_defconfig file in:
-
-  c1b362e3b4d3: ("x86: update defconfigs")
-
-The code and Kconfig for CONFIG_CRYPTO_AES_586 was removed in:
-
-  1d2c3279311e: ("crypto: x86/aes - drop scalar assembler implementations")
-
-Remove the leftover from the i386_defconfig file as well.
-
-Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/r/20200723171119.9881-1-sedat.dilek@gmail.com
----
- arch/x86/configs/i386_defconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
-index 5509045..3a2a898 100644
---- a/arch/x86/configs/i386_defconfig
-+++ b/arch/x86/configs/i386_defconfig
-@@ -290,7 +290,6 @@ CONFIG_SECURITY_NETWORK=y
- CONFIG_SECURITY_SELINUX=y
- CONFIG_SECURITY_SELINUX_BOOTPARAM=y
- CONFIG_SECURITY_SELINUX_DISABLE=y
--CONFIG_CRYPTO_AES_586=y
- # CONFIG_CRYPTO_ANSI_CPRNG is not set
- CONFIG_EFI_STUB=y
- CONFIG_ACPI_BGRT=y
+-- 
+Regards,
+Sudeep
