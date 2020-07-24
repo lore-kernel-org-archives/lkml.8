@@ -2,144 +2,124 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03E3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29C4D20825
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C790820656
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595598799;
+	bh=r+K7XG2E4IIGXClkVyV1Vfe2nn3RLsaCsu3NSVBIemk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EhmACSFLv6UoY3Lroe3/8sZv6oTy3vsiVFR0VnA+DTkxOU77WnSMQm1BM1VYCr0Ah
+	 4eQMd0kG2ZaoRNfCPgDTNMeudbp72DlYlyS3mUNDw8v0SonDZi49wAY5q18F1U97f+
+	 sou0rOY+RTFKfzjAm3ATOTqK1gPl1heak/VUV75c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgGXNwf convert rfc822-to-8bit (ORCPT
+        id S1726863AbgGXNxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:52:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbgGXNwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:52:35 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA32F20656;
-        Fri, 24 Jul 2020 13:52:33 +0000 (UTC)
-Date:   Fri, 24 Jul 2020 09:52:32 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "=?UTF-8?B?VGhpw6liYXVk?= Weksteen" <tweek@google.com>
-Cc:     Paul Moore <paul@paul-moore.com>, Nick Kralevich <nnk@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        selinux@vger.kernel.org
-Subject: Re: [PATCH] selinux: add tracepoint on denials
-Message-ID: <20200724095232.5f9d3f17@oasis.local.home>
-In-Reply-To: <20200724091520.880211-1-tweek@google.com>
-References: <20200724091520.880211-1-tweek@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 24 Jul 2020 09:53:18 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39904 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgGXNxR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:53:17 -0400
+Received: by mail-ed1-f65.google.com with SMTP id d18so7087978edv.6;
+        Fri, 24 Jul 2020 06:53:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wHJM9ZNtQPPVokcpsCbdp5GsMdp3YHUZAH6Xvy0iTKM=;
+        b=ZmSpJpw2lApyVrUgRqpAUwKUgIOfM2GzFdGJzvpAfcYRY+m4ZKqAs7TcGXbTz50gja
+         TrGnK6EET1TpeImy5mJDGjOg1+iHlgDommFFTqu+GXYYaB9iPt778nKPo/SIajcckhii
+         QamtcK1frWOq3xjeEV/4TnwQrBApGjWErmkC9Mb1N4Ahxb0BvWQfJzZGY0fzb+Iqljw7
+         aOuKo9+bQ2VugslwL9CdrlemzvVJubYOOBZDMWn9OBpm90KFi5PTSsiNT+hmEMbXRAUZ
+         RnJeDD5yNJn4g8X+fAwVApnqvb24+E37u5uZON/bZp+tC9ZbiXhpQevgWNCJ4J7xvDXR
+         giqg==
+X-Gm-Message-State: AOAM530oPE28Nn3bwcpiBYP6idNM2AlhvYpxRKz5AXGyPjj5C3PyTlJo
+        n0/SSedOd4deJUEVsPR/QJ8=
+X-Google-Smtp-Source: ABdhPJxQatp/16zc2FQj9pOk/YrBsNh8emgbUp3CY5xYniVLl6YIl4y8V3SdvTEG1nFeCNjq8TSdOA==
+X-Received: by 2002:a50:dacf:: with SMTP id s15mr9448134edj.136.1595598795606;
+        Fri, 24 Jul 2020 06:53:15 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id x10sm737481ejc.46.2020.07.24.06.53.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 Jul 2020 06:53:14 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 15:53:11 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Olof Johansson <olof@lixom.net>,
+        Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 05/29] memory: jz4780-nemc: Do not enable by default
+ on every compile test
+Message-ID: <20200724135311.GA13472@kozik-lap>
+References: <20200724074038.5597-1-krzk@kernel.org>
+ <20200724074038.5597-6-krzk@kernel.org>
+ <CAK8P3a0h3dMRH_wuGX5dZ5znnx+EHJKYwQeZ9aB7cFGudo6vmw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0h3dMRH_wuGX5dZ5znnx+EHJKYwQeZ9aB7cFGudo6vmw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 11:15:03 +0200
-"Thiébaud Weksteen" <tweek@google.com> wrote:
-> diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-> index d18cb32a242a..85d2e22ab656 100644
-> --- a/security/selinux/avc.c
-> +++ b/security/selinux/avc.c
-> @@ -31,6 +31,9 @@
->  #include "avc_ss.h"
->  #include "classmap.h"
->  
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/selinux.h>
-> +
->  #define AVC_CACHE_SLOTS			512
->  #define AVC_DEF_CACHE_THRESHOLD		512
->  #define AVC_CACHE_RECLAIM		16
-> @@ -672,6 +675,9 @@ static void avc_audit_pre_callback(struct audit_buffer *ab, void *a)
->  		return;
->  	}
->  
-> +	if (sad->denied)
+On Fri, Jul 24, 2020 at 03:45:37PM +0200, Arnd Bergmann wrote:
+> On Fri, Jul 24, 2020 at 9:41 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > When compile testing, enable the driver by default only on MIPS
+> > architecture.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > ---
+> >
+> > Changes since v1:
+> > 1. New patch
+>  @@ -141,7 +141,7 @@ config FSL_IFC
+> >
+> >  config JZ4780_NEMC
+> >         bool "Ingenic JZ4780 SoC NEMC driver"
+> > -       default y
+> > +       default y if MIPS
+> >         depends on MIPS || COMPILE_TEST
+> 
+> 
+> Actually I think this should be 'default MACH_INGENIC',
+> and probably also 'depends on MACH_INGENIC || COMPILE_TEST'.
 
-First, I would like to deny sadness as well ;-)
+Makes sense, especially for default.
 
-Now, there is a way to add that branch within the "nop" area of the
-trace event, and remove the conditional branch from the main code.
+For the depends, there is also MTD_NAND_JZ4780 (depending on
+JZ4780_NEMC) which also requires MIPS. I could fix both then.
 
-> +		trace_selinux_denied(sad->tclass, av);
-> +
+Best regards,
+Krzysztof
 
-Instead have this:
-
-	trace_selinux_denied(sad, av);
-
->  	perms = secclass_map[sad->tclass-1].perms;
->  
->  	audit_log_format(ab, " {");
-
-> --- /dev/null
-> +++ b/include/trace/events/selinux.h
-> @@ -0,0 +1,35 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM selinux
-> +
-> +#if !defined(_TRACE_SELINUX_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_SELINUX_H
-> +
-> +#include <linux/ktime.h>
-> +#include <linux/tracepoint.h>
-> +
-> +TRACE_EVENT(selinux_denied,
-
-TRACE_EVENT_CONDITION(selinux_denied,
-
-> +
-> +	TP_PROTO(int cls, int av),
-
-	TP_PROTO(struct selinux_audit_data sad, int av)
-
-> +
-> +	TP_ARGS(cls, av),
-> +
-
-	TP_CONDITION(sad->denied),
-
-The above condition will be tested before calling the tracepoint. But
-only if the trace event is enabled.
-
-> +	TP_STRUCT__entry(
-> +		__field(int, cls)
-> +		__field(int, av)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->cls = cls;
-
-		__entry->cls = sad->tclass;
-
-> +		__entry->av = av;
-> +	),
-> +
-> +	TP_printk("denied %d %d",
-> +		__entry->cls,
-> +		__entry->av)
-> +);
-> +
-> +#endif
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-
--- Steve
