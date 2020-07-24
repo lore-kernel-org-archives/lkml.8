@@ -2,113 +2,114 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7BCC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 968B2206E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595634239;
-	bh=NLbAgHtGgeQxtaCOB9wJHQvS0ZQCla3hz1cp9416XGk=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=gMA8lCbNGIoBUfKDwZeVDms+41UYSnnpGiySJOXxMuKz8sxrmYZImJ+TtYFASfLwq
-	 yur7xbOUagEjUuhayFme0WpQulAEIiFOgH17ztHochOtmAja14R6mELizYfeNEz16h
-	 UujGYmHdx58oOY3UCxAl1isjpIB0RUJscJuwpP+I=
+	by mail.kernel.org (Postfix) with ESMTP id 513B1206E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 23:44:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GSE9Xo3H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgGXXn6 (ORCPT
+        id S1726731AbgGXXoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 19:43:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49316 "EHLO
+        Fri, 24 Jul 2020 19:44:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgGXXn5 (ORCPT
+        with ESMTP id S1726573AbgGXXoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 19:43:57 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C0F2C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 16:43:57 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id q3so8580357ilt.8
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 16:43:57 -0700 (PDT)
+        Fri, 24 Jul 2020 19:44:19 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73FE1C0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 16:44:19 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id t82so6145291qka.1
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 16:44:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1fir2Ti2vt4whQ7PfuONH4brXyBlFuZOiejdcjiZKP0=;
-        b=TPrVIO1v++AChz4Bqi+RZcJGPZjnLyuwOFy5wr7UXmIl6+8cixWsmtRvpbClRNRyqF
-         /dD3PyhMQemSRiMGdb7vCZRr7PkkVFypzKaDJ7lNgKmQOTQGEBpKDup9+nrpekm9AosR
-         8c0ZmZg02o/3hhCf8AGCaWXK42gF/2hqYczHM=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=cx5rtLU8xqliH8LTX82DtFOmXnkZhOGKEwyJ8VR9z80=;
+        b=GSE9Xo3HSLQ8K4OR7/wOyR7U9WgENeEP5zZGO+4owVsDbz5Dejlv7E7ipVfkrvZ1kv
+         G/RSI0eudaXFehUGRLeFUTKwjShcjT97LMBV69BTuVkoqCNnC4E1gBTVxoKOiLSQwMjf
+         nLo9dMWKgMLKfu0pOdtDOaBr5VHrZDqeN3HBFkaOY4itEKqRmdF+Q8PpxuHvopv3wq67
+         u5pYYoeZEokZrL9OKqFEi20ORBb7aLnDywbMRnQAsyjSPSvbxMsD0oiyuzeolkWbQYbu
+         9Z5tIXW0wqmxgzPrUVVC6DI1ugXK5mtfJKmDaJU4tAci2ctoaKgtZSKT12boNHUtbCM3
+         FySA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1fir2Ti2vt4whQ7PfuONH4brXyBlFuZOiejdcjiZKP0=;
-        b=mnXeBpBJNJ3Y5/cxTpp9kU046DaoWmsYLo8xcuafSpS7ISEQdD0cf2w6p0I2qgY9s7
-         /uC6SSdOIj7XXuHdWvJItgz8G8HYZI1im4VpSqjzgcnLs17jKrgyxct55b22tC6WY4hz
-         oDzrtx68/Z2N/PFS5eh1HvHkYqIBW6CE69c5ZtQwUSnqIdb5/MJaQla47rRJ4Od41mXJ
-         Xkr8N3TbxW+y/vycmM2be6SUshNZDybKlRncpFWXLdrcCa9JWvJ2POEJwZ+2a4Yhofac
-         Wqb3DyFd1IF2pgxR2Af+oMFaH4zBpzLX3Vy+z2feSY84n9myaO0t6KD80xj4fgNokcVS
-         bbIw==
-X-Gm-Message-State: AOAM5310KsfWlRQ/97nqE7cBtE8QC/o7PsoIgcEa2wpYeGxIK2S/XKH9
-        ndPqVZsEdgg7qLWr+WEYcQz1Mw==
-X-Google-Smtp-Source: ABdhPJwjWL78P+pBkbmROVcLBBLCbM5S7VGXisEEDMSKQJdGuhaMmSnHQaEqYio2dRLZciYoWMe4PA==
-X-Received: by 2002:a05:6e02:e89:: with SMTP id t9mr9076460ilj.292.1595634236821;
-        Fri, 24 Jul 2020 16:43:56 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id l17sm3924984ilm.70.2020.07.24.16.43.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 16:43:56 -0700 (PDT)
-Subject: Re: [RFC, WIP, v7 0/4] media: vidtv: implement a virtual DVB driver
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        mchehab+huawei@kernel.org, sean@mess.org,
-        kstewart@linuxfoundation.org, allison@lohutok.net,
-        tglx@linutronix.de
-Cc:     linux-media@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200608191333.1784963-1-dwlsalmeida@gmail.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <1cd01ac5-55f7-68f5-791b-ae4955d916d7@linuxfoundation.org>
-Date:   Fri, 24 Jul 2020 17:43:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200608191333.1784963-1-dwlsalmeida@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=cx5rtLU8xqliH8LTX82DtFOmXnkZhOGKEwyJ8VR9z80=;
+        b=Xl6FnusDkAnDI+E6R4wAdx16/Iqltf+8jnuDprS2TG4LTh6ARsZ/g5hOJ4wxA3CAdP
+         X8QchSfN58tYe6cXHtDMf9waNOUH6d9xJ0MCXpAvkFNFwBWbnBzRj970NsFa+YEsKeZ3
+         2mCYi3Crmv7IgrPHTT3xHDnSS/L879AFdIVYyPMm5ZlWGqLxrzuiiSjRxyNvpugsnhqu
+         oSQLXYxT2NXlqE/J2xa2jZVv0Q8IkarBasI8/vMWSkKwWmqzWvsPAIoPg48xNEBvuRFK
+         G1fqRLRCYUsgicjtqchpQPULssVzpGXThqZkJZ7Qhr4I42ukHnp7WY6904uxWmQYKxaY
+         iIFA==
+X-Gm-Message-State: AOAM532uVOo0kda9Sf+j0EMq4429TidcKtCtDqXzJR5uGoKkyP/5leOQ
+        wA0UAeiOUugSYDPomCRUQxF2S3Hesnmp6HE=
+X-Google-Smtp-Source: ABdhPJxol4qZmmuGdPWMn98HVFoQcIjnalYXFwE84XH5FOS0tGNY5axHz/B6a5xOisRHey4JcQ0xpUEB9HC2Ztk=
+X-Received: by 2002:a0c:eb46:: with SMTP id c6mr2030423qvq.137.1595634258604;
+ Fri, 24 Jul 2020 16:44:18 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 16:44:14 -0700
+Message-Id: <20200724234415.1651639-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+Subject: [PATCH v2 1/2] of: property: Add device link support for multiple DT bindings
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
+Add support for creating device links out of the following DT bindings:
+- interrupts-extended
+- nvmem-cells
+- phys
+- wakeup-parent
 
-On 6/8/20 1:13 PM, Daniel W. S. Almeida wrote:
-> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-> 
-> This series is work in progress. It represents the current work done on a
-> virtual DVB driver for the Linux media subsystem. I am new to the media
-> subsystem and to kernel development in general.
-> 
-> This driver aims to:
-> 	- Serve as template for new DVB driver writers
-> 	- Help userspace application writers in general
-> 	- Push fake audio/video to userspace for testing
-> 		purposes
-> 	- Push debug information to userspace via debugfs
-> The Virtual Digital TV Driver (vidtv)
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+v1->v2: No changes. Just sending again because v2 has changes in Patch 2/2.
 
-Any feedback on this patch series for Daniel. He has been waiting for
-reviews and feedback from media developers for a while now.
+ drivers/of/property.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Please review the patches and give him feedback and help him with
-next steps.
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index 6a5760f0d6cd..b06edeb1f88b 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1269,6 +1269,11 @@ DEFINE_SIMPLE_PROP(dmas, "dmas", "#dma-cells")
+ DEFINE_SIMPLE_PROP(power_domains, "power-domains", "#power-domain-cells")
+ DEFINE_SIMPLE_PROP(hwlocks, "hwlocks", "#hwlock-cells")
+ DEFINE_SIMPLE_PROP(extcon, "extcon", NULL)
++DEFINE_SIMPLE_PROP(interrupts_extended, "interrupts-extended",
++					"#interrupt-cells")
++DEFINE_SIMPLE_PROP(nvmem_cells, "nvmem-cells", NULL)
++DEFINE_SIMPLE_PROP(phys, "phys", "#phy-cells")
++DEFINE_SIMPLE_PROP(wakeup_parent, "wakeup-parent", NULL)
+ DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
+ DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
+ DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
+@@ -1294,6 +1299,10 @@ static const struct supplier_bindings of_supplier_bindings[] = {
+ 	{ .parse_prop = parse_power_domains, },
+ 	{ .parse_prop = parse_hwlocks, },
+ 	{ .parse_prop = parse_extcon, },
++	{ .parse_prop = parse_interrupts_extended, },
++	{ .parse_prop = parse_nvmem_cells, },
++	{ .parse_prop = parse_phys, },
++	{ .parse_prop = parse_wakeup_parent, },
+ 	{ .parse_prop = parse_regulators, },
+ 	{ .parse_prop = parse_gpio, },
+ 	{ .parse_prop = parse_gpios, },
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
 
-thanks,
--- Shuah
