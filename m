@@ -2,119 +2,118 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B2FC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE3FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7E75208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:27:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595586478;
-	bh=rTxGRGk7C2mffWe9YQ5WA7WqwJtcr2BteH9NQ77nZv0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fPglyYtv5cQEegG+A2anEI6htOH9BjTFgJzENybJVYVV07XQc/eoabufDu+PnLnPd
-	 G7Eirzw+90d2NnnoGKvKd1Zucf34Kr6Y6AWpIxHPII7ZkelaR3L/nZGM+DhKn+mUi/
-	 hzgZmJBFKKGen6Q5n6As/POjmC4ftS86sDmguV/s=
+	by mail.kernel.org (Postfix) with ESMTP id 1E0232065C
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 10:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgGXK15 (ORCPT
+        id S1726915AbgGXK2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 06:27:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726520AbgGXK15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 06:27:57 -0400
-Received: from kernel.org (unknown [87.71.40.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C42C72065C;
-        Fri, 24 Jul 2020 10:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595586476;
-        bh=rTxGRGk7C2mffWe9YQ5WA7WqwJtcr2BteH9NQ77nZv0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vihE7SOo3lD4LC4+CIPQCOoOudzMuHnNuJbbTSv86K3VmmOoshAkXr/uxwxKzvfIU
-         KToD3j1GADq0268CJz4CmRLe0JbPbLqZb2itF7bI7BkVi+lkxrhdYW+HmqLDrMb+8K
-         OkBeauy5MurtdVDrclLFQxjJ+BEbo0lOnCQe1VMQ=
-Date:   Fri, 24 Jul 2020 13:27:48 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v5 5/6] kprobes: Use text_alloc() and text_free()
-Message-ID: <20200724102748.GD2831654@kernel.org>
-References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
- <20200724050553.1724168-6-jarkko.sakkinen@linux.intel.com>
+        Fri, 24 Jul 2020 06:28:52 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:57836 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgGXK2v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 06:28:51 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 34A2672CCDC;
+        Fri, 24 Jul 2020 13:28:49 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 279C57CFF79; Fri, 24 Jul 2020 13:28:49 +0300 (MSK)
+Date:   Fri, 24 Jul 2020 13:28:49 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Serge Hallyn <serge@hallyn.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        =?utf-8?B?w4Frb3M=?= Uzonyi <uzonyi.akos@gmail.com>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fs/nsfs.c: fix ioctl support of compat processes
+Message-ID: <20200724102848.GA1654@altlinux.org>
+References: <20200724001248.GC25522@altlinux.org>
+ <CAK8P3a0JM8dytW6C8P9HoPcGksg0d5JCut1yT7JzBcUCAm-WcQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200724050553.1724168-6-jarkko.sakkinen@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a0JM8dytW6C8P9HoPcGksg0d5JCut1yT7JzBcUCAm-WcQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 08:05:52AM +0300, Jarkko Sakkinen wrote:
-> Use text_alloc() and text_free() instead of module_alloc() and
-> module_memfree() when an arch provides them.
+On Fri, Jul 24, 2020 at 11:20:26AM +0200, Arnd Bergmann wrote:
+> On Fri, Jul 24, 2020 at 2:12 AM Dmitry V. Levin <ldv@altlinux.org> wrote:
+> >
+> > According to Documentation/driver-api/ioctl.rst, in order to support
+> > 32-bit user space running on a 64-bit kernel, each subsystem or driver
+> > that implements an ioctl callback handler must also implement the
+> > corresponding compat_ioctl handler.  The compat_ptr_ioctl() helper can
+> > be used in place of a custom compat_ioctl file operation for drivers
+> > that only take arguments that are pointers to compatible data
+> > structures.
+> >
+> > In case of NS_* ioctls only NS_GET_OWNER_UID accepts an argument, and
+> > this argument is a pointer to uid_t type, which is universally defined
+> > to __kernel_uid32_t.
 > 
-> Cc: linux-mm@kvack.org
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  kernel/kprobes.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> This is potentially dangerous to rely on, as there are two parts that
+> are mismatched:
 > 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 4e46d96d4e16..611fcda9f6bf 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -40,6 +40,7 @@
->  #include <asm/cacheflush.h>
->  #include <asm/errno.h>
->  #include <linux/uaccess.h>
-> +#include <linux/vmalloc.h>
->  
->  #define KPROBE_HASH_BITS 6
->  #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
-> @@ -111,12 +112,20 @@ enum kprobe_slot_state {
->  
->  void __weak *alloc_insn_page(void)
->  {
-> +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> +	return text_alloc(PAGE_SIZE);
-> +#else
->  	return module_alloc(PAGE_SIZE);
-> +#endif
->  }
->  
->  void __weak free_insn_page(void *page)
->  {
-> +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> +	text_free(page);
-> +#else
->  	module_memfree(page);
-> +#endif
->  }
+> - user space does not see the kernel's uid_t definition, but has its own,
+>   which may be either the 16-bit or the 32-bit type. 32-bit uid_t was
+>   introduced with linux-2.3.39 in back in 2000. glibc was already
+>   using 32-bit uid_t at the time in user space, but uclibc only changed
+>   in 2003, and others may have been even later.
+> 
+> - the ioctl command number is defined (incorrectly) as if there was no
+>   argument, so if there is any user space that happens to be built with
+>   a 16-bit uid_t, this does not get caught.
 
-Both alloc_insn_page() and free_insn_page() are __weak and can be simple
-overriden in arch/x86 code.
-  
->  struct kprobe_insn_cache kprobe_insn_slots = {
-> -- 
-> 2.25.1
-> 
+Note that NS_GET_OWNER_UID is provided on 32-bit architectures, too, so
+this 16-bit vs 32-bit uid_t issue was exposed to userspace long time ago
+when NS_GET_OWNER_UID was introduced, and making NS_GET_OWNER_UID
+available for compat processes won't make any difference, as the mismatch
+is not between native and compat types, but rather between 16-bit and
+32-bit uid_t types.
+
+I agree it would be correct to define NS_GET_OWNER_UID as
+_IOR(NSIO, 0x4, uid_t) instead of _IO(NSIO, 0x4), but nobody Cc'ed me
+on this topic when NS_GET_OWNER_UID was discussed, and that ship has long
+sailed.
+
+> > This change fixes compat strace --pidns-translation.
+> > 
+> > Note: when backporting this patch to stable kernels, commit
+> > "compat_ioctl: add compat_ptr_ioctl()" is needed as well.
+> > 
+> > Reported-by: Ákos Uzonyi <uzonyi.akos@gmail.com>
+> > Fixes: 6786741dbf99 ("nsfs: add ioctl to get an owning user namespace for ns file descriptor")
+> > Cc: stable@vger.kernel.org # v4.9+
+> > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+> > ---
+> >  fs/nsfs.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/fs/nsfs.c b/fs/nsfs.c
+> > index 800c1d0eb0d0..a00236bffa2c 100644
+> > --- a/fs/nsfs.c
+> > +++ b/fs/nsfs.c
+> > @@ -21,6 +21,7 @@ static long ns_ioctl(struct file *filp, unsigned int ioctl,
+> >  static const struct file_operations ns_file_operations = {
+> >         .llseek         = no_llseek,
+> >         .unlocked_ioctl = ns_ioctl,
+> > +       .compat_ioctl   = compat_ptr_ioctl,
+> >  };
+> >
+> >  static char *ns_dname(struct dentry *dentry, char *buffer, int buflen)
 
 -- 
-Sincerely yours,
-Mike.
+ldv
