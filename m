@@ -2,105 +2,267 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E9DC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEF9C433E0
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80E5D206F0
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3991F2070B
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 20:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gTwVBgw3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DF8nOXoT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726782AbgGXU1e (ORCPT
+        id S1726719AbgGXU3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 16:27:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46962 "EHLO
+        Fri, 24 Jul 2020 16:29:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbgGXU1e (ORCPT
+        with ESMTP id S1726397AbgGXU3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 16:27:34 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA38CC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:27:33 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id g22so2493545vke.9
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:27:33 -0700 (PDT)
+        Fri, 24 Jul 2020 16:29:18 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5AB3C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:29:17 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id q5so9380111wru.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:29:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b2ruj0z8uszwGspJCW6p4c9P/N6BQb51KF9h33pNyFs=;
-        b=gTwVBgw3J0BD/uJ5XicjBCeS+kjnEBhCXyjixE8mPUgsBsei2Y9WlpbTkFCkqVV7Zb
-         RoIyUfEgwdF+XErM9mrmXe2hv5+O9Da2Q2MpiA00rDeJfjOMpn23dTjk8NKhDCclzXqi
-         msFpOIG/Xnb1D9ankx7iexK8zmAvem+uYH8LA=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=L07tsuhny1pQ7gNIGv0W+sGyHA4OEZwfZ804u+Y4cII=;
+        b=DF8nOXoT5Vpgt5UR6qZs0jtHQo5QYKFVieQgdfBl355rWZ5o6OF2ubY2W+OsiUJo+L
+         TTLdQ+kh40Uc6VBzZNTZlL3+oOoCxwGFLbDlBIo+5qK2f6OK6eo+8HkI5qUhJo0CIhca
+         of1dMvtPvfGzP0LWYxnx968z2i1CyYPTpr3/oju2NLvy5TaCEK4cZkBEm0gFYTa52YnT
+         +tEMmhMSNBm9LVO+7P+PJqq5fzV2bFFDUMaAU+KV+zZDWHNEPRp+MxDpDravrZDoO+Kq
+         vweLC6A6lGwFY0xvHgeq3uP/62zVLowcZAQULZwRZur40JClapS7VycUIsBp+Uyh8pNp
+         Epsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b2ruj0z8uszwGspJCW6p4c9P/N6BQb51KF9h33pNyFs=;
-        b=k880qS7wiivcGPWLQBx33bKgNZKSwzp7HIMdy5FyPeZkAEY20dHiZw97iSphEYABB3
-         Jvz15SQMSMfMZW0i9u1EDm82MNUfD6GmcPvmycRLZe8sydvhSN3PI2bTpfZnGYLoS3b1
-         HvaaAHLyCMcQwb2VbaMIPVY2Wfzkif76FRPwq3qAmwn+bCT3jl+CcIditNxCndLVEMzr
-         pJ4aaZ2klBHoEWF3x46nmRSBzIta1WeaDgf67LV0OGmMHAbPmFiLTUAIM6RcUTkjN/k5
-         7U6YOQfQVFgapM8qJ/391T/fqxJjowa2hqUVuOC+1rDrnlyflBcYJ7TWJ+GKOoybSNPO
-         jDnA==
-X-Gm-Message-State: AOAM533W0N5hh6sg8BGHta1qF5UsoVoI9v6vr1QjLFnVmH5GSLTWdikm
-        Q5Pl6hxtzB9WYEdkiW8WXwMwNREXUl8=
-X-Google-Smtp-Source: ABdhPJysKP9iLCOiCO0CEaiU/5yFOkN2F+HdnPPGnYgS76k+HJuecp8lEeqK1QBBiuVeGA2nRcqHGQ==
-X-Received: by 2002:ac5:c74b:: with SMTP id b11mr9224371vkn.73.1595622453029;
-        Fri, 24 Jul 2020 13:27:33 -0700 (PDT)
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com. [209.85.221.172])
-        by smtp.gmail.com with ESMTPSA id q83sm244524vkq.46.2020.07.24.13.27.31
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=L07tsuhny1pQ7gNIGv0W+sGyHA4OEZwfZ804u+Y4cII=;
+        b=Zdlj+vPG9ThauGND8UjntvHW5w/PH3Ms+3VBMW7IKLfKgnH7DQZHI+M/M1QQqGzzwg
+         q1pbUtehxNwMvipILJDb6eCWnEuRDuNED6aE71svq95srxtFEKm0P7pT7TfxCjHRCaA3
+         TWfu5U6m96/0lKiao0LdcKN6qe0gA+3F6u8XysBgm1Ry+FGWblfmfvjuw62I3Q1qJab/
+         te6ZLKkg29wjJn+MZ8Z4+/VOWjihVvEQvQZ9enU+gEs0kpmd0dktJfQqTKhBjcQo/NYo
+         KGPjGBOhZi5q431B2V3km4tfqt2cfscVwz0rD/qfI6bi5PHjZWx8YGDzok4TG5lFcyRs
+         HLEA==
+X-Gm-Message-State: AOAM531shGDexBNQS1bp90AROMfnOAizfDNyz42oJMuEAXn5F42kjYjj
+        rC9T5JTsEUqJesZjf/Q1ef5UAQ==
+X-Google-Smtp-Source: ABdhPJyzRdzYTFbYtKdMcntCUB597vb1oJdNYRyDUSK/27uPOgqo14mViDSwcS8m67v1HoLFvNo+Pg==
+X-Received: by 2002:a05:6000:8b:: with SMTP id m11mr5955036wrx.245.1595622556568;
+        Fri, 24 Jul 2020 13:29:16 -0700 (PDT)
+Received: from [192.168.1.4] ([195.24.90.54])
+        by smtp.googlemail.com with ESMTPSA id b63sm8622338wme.41.2020.07.24.13.29.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2020 13:27:32 -0700 (PDT)
-Received: by mail-vk1-f172.google.com with SMTP id s192so2497628vkh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 13:27:31 -0700 (PDT)
-X-Received: by 2002:a1f:4e81:: with SMTP id c123mr9478657vkb.100.1595622451504;
- Fri, 24 Jul 2020 13:27:31 -0700 (PDT)
+        Fri, 24 Jul 2020 13:29:15 -0700 (PDT)
+Subject: Re: [PATCH] v4l2-ctrl: Add VP9 codec levels
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+References: <20200713081501.28609-1-stanimir.varbanov@linaro.org>
+ <dade9f23deba2f12ad8ab2f277e08047af73f46c.camel@ndufresne.ca>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <08d230f6-b017-df6a-f43e-77e7511e8afd@linaro.org>
+Date:   Fri, 24 Jul 2020 23:29:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200723230344.1422750-1-swboyd@chromium.org> <20200723230344.1422750-3-swboyd@chromium.org>
-In-Reply-To: <20200723230344.1422750-3-swboyd@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 24 Jul 2020 13:27:20 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W9Ksm+=EdkLB2xenXxx5PoB_z3E7Vfi5JQ0a+dJj2dMQ@mail.gmail.com>
-Message-ID: <CAD=FV=W9Ksm+=EdkLB2xenXxx5PoB_z3E7Vfi5JQ0a+dJj2dMQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] iio: sx9310: Add newlines to printks
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Daniel Campello <campello@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <dade9f23deba2f12ad8ab2f277e08047af73f46c.camel@ndufresne.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Thu, Jul 23, 2020 at 4:03 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Printks in the kernel have newlines at the end. Add them to the few
-> printks in this driver.
->
-> Cc: Gwendal Grignou <gwendal@chromium.org>
-> Cc: Daniel Campello <campello@chromium.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Fixes: 72ad02b15d63 ("iio: Add SEMTECH SX9310/9311 sensor driver")
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  drivers/iio/proximity/sx9310.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+On 7/14/20 7:09 PM, Nicolas Dufresne wrote:
+> Le lundi 13 juillet 2020 à 11:15 +0300, Stanimir Varbanov a écrit :
+>> Add menu control for VP9 codec levels. A total of 14 levels are
+>> defined for Profile 0 (8bit) and Profile 2 (10bit). Each level
+>> is a set of constrained bitstreams coded with targeted resolutions,
+>> frame rates, and bitrates.
+> 
+> Looks good to me. Perhaps literally put the link in the message ?
+> 
+> https://www.webmproject.org/vp9/levels/
+
+sure, I will do that.
+
+> 
+>>
+>> The definition has been taken from webm project.
+>>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> ---
+>>  .../media/v4l/ext-ctrls-codec.rst             | 42 +++++++++++++++++++
+>>  drivers/media/v4l2-core/v4l2-ctrls.c          | 21 ++++++++++
+>>  include/uapi/linux/v4l2-controls.h            | 17 ++++++++
+>>  3 files changed, 80 insertions(+)
+>>
+>> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>> index d0d506a444b1..d49bdafa768a 100644
+>> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+>> @@ -3316,6 +3316,48 @@ enum v4l2_mpeg_video_vp9_profile -
+>>      * - ``V4L2_MPEG_VIDEO_VP9_PROFILE_3``
+>>        - Profile 3
+>>  
+>> +.. _v4l2-mpeg-video-vp9-level:
+>> +
+>> +``V4L2_CID_MPEG_VIDEO_VP9_LEVEL (enum)``
+>> +
+>> +enum v4l2_mpeg_video_vp9_level -
+>> +    This control allows selecting the level for VP9 encoder.
+>> +    This is also used to enumerate supported levels by VP9 encoder or decoder.
+>> +    Possible values are:
+> 
+> Shall we add some hint in the doc itself upon where these levels are
+> from so one can figure-out what constraints they impose.
+
+Fine by me. The same link as in the commit message?
+
+> 
+> Also, as for other levels (H264/HEVC), all drivers are mostly dummy and
+> don't validate any of this, shall we keep it this way ? Levels are in
+> fact complex, because some of the constraints are in image size, and
+> most of the other constraints are raw or compressed size over time, so
+> requires timing information for let's say a CBR encoder to enforce it,
+> for the S_FMT function for the raw constraints.
+
+I think this should be a driver responsibility.
+
+> 
+>> +
+>> +.. flat-table::
+>> +    :header-rows:  0
+>> +    :stub-columns: 0
+>> +
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_1_0``
+>> +      - Level 1
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_1_1``
+>> +      - Level 1.1
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_2_0``
+>> +      - Level 2
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_2_1``
+>> +      - Level 2.1
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_3_0``
+>> +      - Level 3
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_3_1``
+>> +      - Level 3.1
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_4_0``
+>> +      - Level 4
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_4_1``
+>> +      - Level 4.1
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_5_0``
+>> +      - Level 5
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_5_1``
+>> +      - Level 5.1
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_5_2``
+>> +      - Level 5.2
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_6_0``
+>> +      - Level 6
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_6_1``
+>> +      - Level 6.1
+>> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_6_2``
+>> +      - Level 6.2
+>> +
+>>  
+>>  High Efficiency Video Coding (HEVC/H.265) Control Reference
+>>  ===========================================================
+>> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+>> index 3f3fbcd60cc6..359dc737053d 100644
+>> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+>> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+>> @@ -474,6 +474,23 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+>>  		"3",
+>>  		NULL,
+>>  	};
+>> +	static const char * const vp9_level[] = {
+>> +		"1",
+>> +		"1.1",
+>> +		"2",
+>> +		"2.1",
+>> +		"3",
+>> +		"3.1",
+>> +		"4",
+>> +		"4.1",
+>> +		"5",
+>> +		"5.1",
+>> +		"5.2",
+>> +		"6",
+>> +		"6.1",
+>> +		"6.2",
+>> +		NULL,
+>> +	};
+>>  
+>>  	static const char * const flash_led_mode[] = {
+>>  		"Off",
+>> @@ -685,6 +702,8 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+>>  		return vp8_profile;
+>>  	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:
+>>  		return vp9_profile;
+>> +	case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:
+>> +		return vp9_level;
+>>  	case V4L2_CID_JPEG_CHROMA_SUBSAMPLING:
+>>  		return jpeg_chroma_subsampling;
+>>  	case V4L2_CID_DV_TX_MODE:
+>> @@ -938,6 +957,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>>  	case V4L2_CID_MPEG_VIDEO_VPX_P_FRAME_QP:		return "VPX P-Frame QP Value";
+>>  	case V4L2_CID_MPEG_VIDEO_VP8_PROFILE:			return "VP8 Profile";
+>>  	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:			return "VP9 Profile";
+>> +	case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:			return "VP9 Level";
+>>  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:		return "VP8 Frame Header";
+>>  
+>>  	/* HEVC controls */
+>> @@ -1294,6 +1314,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>>  	case V4L2_CID_MPEG_VIDEO_VPX_GOLDEN_FRAME_SEL:
+>>  	case V4L2_CID_MPEG_VIDEO_VP8_PROFILE:
+>>  	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:
+>> +	case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:
+>>  	case V4L2_CID_DETECT_MD_MODE:
+>>  	case V4L2_CID_MPEG_VIDEO_HEVC_PROFILE:
+>>  	case V4L2_CID_MPEG_VIDEO_HEVC_LEVEL:
+>> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+>> index 62271418c1be..1b0bc79c1bc3 100644
+>> --- a/include/uapi/linux/v4l2-controls.h
+>> +++ b/include/uapi/linux/v4l2-controls.h
+>> @@ -650,6 +650,23 @@ enum v4l2_mpeg_video_vp9_profile {
+>>  	V4L2_MPEG_VIDEO_VP9_PROFILE_2				= 2,
+>>  	V4L2_MPEG_VIDEO_VP9_PROFILE_3				= 3,
+>>  };
+>> +#define V4L2_CID_MPEG_VIDEO_VP9_LEVEL			(V4L2_CID_MPEG_BASE+513)
+>> +enum v4l2_mpeg_video_vp9_level {
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_1_0	= 0,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_1_1	= 1,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_2_0	= 2,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_2_1	= 3,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_3_0	= 4,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_3_1	= 5,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_4_0	= 6,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_4_1	= 7,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_5_0	= 8,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_5_1	= 9,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_5_2	= 10,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_6_0	= 11,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_6_1	= 12,
+>> +	V4L2_MPEG_VIDEO_VP9_LEVEL_6_2	= 13,
+>> +};
+>>  
+>>  /* CIDs for HEVC encoding. */
+>>  
+> 
+
+-- 
+regards,
+Stan
