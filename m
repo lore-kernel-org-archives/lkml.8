@@ -2,77 +2,120 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EF2C433EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E569C433EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2A82065E
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8190C2065E
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 18:42:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tchdv+ux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgGXSmh (ORCPT
+        id S1726717AbgGXSmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 14:42:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726411AbgGXSmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 14:42:36 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1F152065E;
-        Fri, 24 Jul 2020 18:42:35 +0000 (UTC)
-Date:   Fri, 24 Jul 2020 14:42:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, Neil Brown <neilb@suse.de>
-Subject: Re: Minor RST rant
-Message-ID: <20200724144234.3227b501@oasis.local.home>
-In-Reply-To: <20200724113325.44923f75@lwn.net>
-References: <20200724132200.51fd2065@oasis.local.home>
-        <20200724113325.44923f75@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 24 Jul 2020 14:42:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgGXSmc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 14:42:32 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AADB0C0619D3;
+        Fri, 24 Jul 2020 11:42:31 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f1so8621742wro.2;
+        Fri, 24 Jul 2020 11:42:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=cJWPebvtfVQ4yMs95Aqk9HAmQuQ6TAMDSj0SSlM6Zyw=;
+        b=tchdv+uxYUIl91/+iKeAO23o2+daCsLjEzFBzBJ6nYL8WWL7/6shYVFUMrLlJ57wB0
+         YXrNyajSU8JqBrP6bd+yTRO9rEkoDlLTzPxgzYMilO/l3tsETh3tS2xRvlFnGBUOrG36
+         VwxueDDXHJj8AuaM78U+5YBM1chgmtCQnKrAcheq8CY74N7c78l9MXj0hLsJzeC+L4rn
+         9sPI9aDHFx222TxGJhTwKjLW5lK5T9nTl2UAOUIVwwKVmV1h8obiE2qr6BMles7cP9dA
+         EFZTy3q/SfOTNJfk7cKp4O78CMkJsQJ3Vw1jhcG2FiU3MsH0NNISBjddLadgeZw+IW++
+         97wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cJWPebvtfVQ4yMs95Aqk9HAmQuQ6TAMDSj0SSlM6Zyw=;
+        b=l8IGwpfeGTApepR6xe8AHDQAC/EEJNACvzYfgGrS+F6rJXXpCjZSBB600htsov2IIt
+         lyADwh2fG4ydB8pW1fTplqn8pfBsJ84ZviSf8pf0q3d4I7jsJoB5+nlPKAv3QvxEbqd5
+         aPSyorxXo6Gc8fBKLDBb0p4VLocxHYN2GOnPzEFeP5m+cbiGEdXqAbPUWKRD8kg3SvbL
+         wjXiPRZNP20k7/yY4G4Z1UrpZ/JdcCzBaWPzPwPl0SnTNqNu7xc+6oQMUqQpAyyIokSx
+         1mLUGm3MnVrfYRlX2vff2n6wTJR83tEYqLiweHU1lOgg/taN2F+lxzzs+RzLzN2QVuJG
+         oN6Q==
+X-Gm-Message-State: AOAM530xvc8j3tMJj+IdlGxM53hoohGaTG/hbRM/jsor23+hqt7kK1tS
+        WStOj/Akx0f5FJfrqyMSMQ0T+ado
+X-Google-Smtp-Source: ABdhPJxqhvPctvXXdP0cG+tS9quJNro8PhQnOhAKWyWR68ZFJCc5uDLpM661JfE8Tgg5Mymb3EexZw==
+X-Received: by 2002:adf:c981:: with SMTP id f1mr9684667wrh.14.1595616150183;
+        Fri, 24 Jul 2020 11:42:30 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id s205sm2248948wme.7.2020.07.24.11.42.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 11:42:29 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel test robot <lkp@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Justin Chen <justinpopo6@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM BMIPS MIPS
+        ARCHITECTURE),
+        linux-mips@vger.kernel.org (open list:BROADCOM BMIPS MIPS ARCHITECTURE)
+Subject: [PATCH] irqchip/irq-bcm7038-l1: Guard uses of cpu_logical_map
+Date:   Fri, 24 Jul 2020 11:41:56 -0700
+Message-Id: <20200724184157.29150-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 11:33:25 -0600
-Jonathan Corbet <corbet@lwn.net> wrote:
+cpu_logical_map is only defined for CONFIG_SMP builds, when we are in an
+UP configuration, the boot CPU is 0.
 
-> Give people a tool, some of them will make more use of it than you might
-> like. I do my best to push back against excessive markup (which all of the
-> above qualifies as, as far as I'm concerned), but I can't really even do
-> that will all that goes through my tree, much less all the docs stuff
-> merged by others.
-> 
-> The markup in question was seemingly added by Neil; I've added him to CC
-> in case he wants to comment on it.
+Reported-by: kernel test robot <lkp@intel.com>
+Fixes: 6468fc18b006 ("irqchip/irq-bcm7038-l1: Add PM support")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/irqchip/irq-bcm7038-l1.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-I saw Neil as the author and should have Cc'd him.
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index fd7c537fb42a..4127eeab10af 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -327,7 +327,11 @@ static int bcm7038_l1_suspend(void)
+ 	u32 val;
+ 
+ 	/* Wakeup interrupt should only come from the boot cpu */
++#ifdef CONFIG_SMP
+ 	boot_cpu = cpu_logical_map(0);
++#else
++	boot_cpu = 0;
++#endif
+ 
+ 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
+ 		for (word = 0; word < intc->n_words; word++) {
+@@ -347,7 +351,11 @@ static void bcm7038_l1_resume(void)
+ 	struct bcm7038_l1_chip *intc;
+ 	int boot_cpu, word;
+ 
++#ifdef CONFIG_SMP
+ 	boot_cpu = cpu_logical_map(0);
++#else
++	boot_cpu = 0;
++#endif
+ 
+ 	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
+ 		for (word = 0; word < intc->n_words; word++) {
+-- 
+2.17.1
 
-Neil, you can read my full email here:
-
-  https://lore.kernel.org/r/20200724132200.51fd2065@oasis.local.home
-
-> 
-> I'm not sure what to do other than to continue to push for minimal use of
-> intrusive markup.
-
-Yeah, I really didn't expect an action item to come from this. It was
-just some feedback, and perhaps you can use this as an example of "too
-much markup" when dealing with others.
-
-Looking at the web page that Matthew pointed out to, does make it much
-easier to read. But one still needs to remember that a large audience
-of this work is still those of us that will read the plain text.
-
-My viewer of choice is "less" ;-)
-
--- Steve
