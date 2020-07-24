@@ -2,136 +2,118 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3277C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C44BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2ABB2074F
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595595241;
-	bh=RCrAinQ2iDuDhggp9uedY0HcB9B27aaB8nmj+Icx1yE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=T4JOgrHU6ULzPziIdlBryyCkIhC7zPljXXzYQRBDdDlTWh7inm1+GqUW1AcQ0Di1B
-	 2rMdIrULUMznktVFjMPLKKGnz/8cHArQdyfKr5YiYHOayj8jBipEzjYAceCzFBXljt
-	 Rpp55Aq3fS8dNtQsgol2k43s+j0oa9xNFrpYmiws=
+	by mail.kernel.org (Postfix) with ESMTP id 14F6C206C1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 12:55:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ekCsocUO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgGXMyB (ORCPT
+        id S1726689AbgGXMzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 08:54:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726235AbgGXMyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 08:54:00 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F9482065E;
-        Fri, 24 Jul 2020 12:53:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595595240;
-        bh=RCrAinQ2iDuDhggp9uedY0HcB9B27aaB8nmj+Icx1yE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WAsXnhiTgA0OwmYAAGY2bi1ZOLtYr0IpsWrWSm7wrq8zyu6slm4urI3hx+aIDux3P
-         9prU0ZLHq0fmPv1OEmWSNy4C6e00KjPEr4Rtg/b3tiHkTc/GqreyRo6wIPMBGBvzBM
-         b7sXXBKNGQA0aag2kHNgPTS62/ooAw6+Yakege2o=
-Date:   Fri, 24 Jul 2020 07:53:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Wangkefeng (OS Kernel Lab)" <wangkefeng.wang@huawei.com>,
-        "jroedel@suse.de" <jroedel@suse.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        yangyicong <yangyicong@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>
-Subject: Re: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
- (vendor) CPER records
-Message-ID: <20200724125357.GA1510118@bjorn-Precision-5520>
+        Fri, 24 Jul 2020 08:55:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbgGXMzT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 08:55:19 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC975C0619E4;
+        Fri, 24 Jul 2020 05:55:18 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b14so6756705qkn.4;
+        Fri, 24 Jul 2020 05:55:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GNMerot99Zeu/Bh6VW3arO7rd3rYubmecPGy0caKX3E=;
+        b=ekCsocUOSo/zo3tEgFNAi/6W0U9E4eGmnp8aB2nH98F2cOwizaiK/zEe/WYspLPre0
+         MWEg+L2szqwztlPy8iCtAB/Ovhrnd80ZN68HEn6Xyu/G/o2yXGhtResbvSF8xWAISm7m
+         lSY2YsmiDR9krpFghavrr7IvrSebJd83rPRz169cHD0037S7qcH4+5MaxMyMa2ms0dLW
+         2zjbSwj8Qfq3HjFyi2VNDTmA6JD9O0OwNvAymW25FSDxG/L9JWzLbP8Kmc4wJl5lly4E
+         oXnRbS8MdZsTyggCWnHaAQsgcJwiTbZGcBLu+OjAYOTl/lNMGsaUlmLmCKlCNqO2NI8v
+         22Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GNMerot99Zeu/Bh6VW3arO7rd3rYubmecPGy0caKX3E=;
+        b=hBIZCFS73genpi32X/csCoFO++vtq7DWe/ygKw7gctYDHNd1hQ9Hyh5lCLyju/0InT
+         3huyHh0bVKCyfd9mPthlFb+BWzkCNXX3AzCzhBF8Tf/xlr70EgWA+0T4TL39PB5FuhuA
+         JX9Sb2UKYj+UMwolPIrWA0aC/+VQJ3nQe0kBFf+coZ0TCxxlF3TRjXQzwMTmLkWxjibA
+         +VwB3tfOtKWlSvdo7EXVG2IRGzFnP04/+6hg74PZCTDg4a51ZvQWrCs+kLdqxF4lLrvn
+         yHYK7yoMBhDlVer8eL7zbCJEb6OgzzLfFoObARsBEKN72u/0J6hnHj8u0yL/yF7G7pEA
+         A8Xg==
+X-Gm-Message-State: AOAM531GYbi2E7QPFjwhgs0M3H+EbbioE8WT6Hcokr1WmnA0ijzlQD8M
+        9aHQl2AD/lEug+KJF4TJtQA=
+X-Google-Smtp-Source: ABdhPJyuV2Tew144v8vmayLqTAfO56JUBskXHd+e7izup1lF7JGMP/AHMj4jUcChEewEpcLrUiMmsQ==
+X-Received: by 2002:a37:9987:: with SMTP id b129mr10123268qke.315.1595595317935;
+        Fri, 24 Jul 2020 05:55:17 -0700 (PDT)
+Received: from localhost.localdomain ([2001:1284:f016:a4f2:f184:dd41:1f10:d998])
+        by smtp.gmail.com with ESMTPSA id g24sm1195650qta.27.2020.07.24.05.55.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 05:55:17 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 9FB76C0EB8; Fri, 24 Jul 2020 09:55:14 -0300 (-03)
+Date:   Fri, 24 Jul 2020 09:55:14 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sctp: remove redundant initialization of variable status
+Message-ID: <20200724125514.GD3399@localhost.localdomain>
+References: <20200724121753.16721-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b76444fed0a2468983b2a2c45d7d31b2@huawei.com>
+In-Reply-To: <20200724121753.16721-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 09:00:41AM +0000, Shiju Jose wrote:
-> >-----Original Message-----
-> >From: Bjorn Helgaas [mailto:helgaas@kernel.org]
-> >Sent: 24 July 2020 00:21
-> >To: Shiju Jose <shiju.jose@huawei.com>
-> >Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
-> >kernel@vger.kernel.org; rjw@rjwysocki.net; bp@alien8.de;
-> >james.morse@arm.com; lenb@kernel.org; tony.luck@intel.com;
-> >dan.carpenter@oracle.com; zhangliguang@linux.alibaba.com;
-> >andriy.shevchenko@linux.intel.com; Wangkefeng (OS Kernel Lab)
-> ><wangkefeng.wang@huawei.com>; jroedel@suse.de; Linuxarm
-> ><linuxarm@huawei.com>; yangyicong <yangyicong@huawei.com>; Jonathan
-> >Cameron <jonathan.cameron@huawei.com>; tanxiaofei
-> ><tanxiaofei@huawei.com>
-> >Subject: Re: [PATCH v13 1/2] ACPI / APEI: Add a notifier chain for unknown
-> >(vendor) CPER records
-> >
-> >On Wed, Jul 22, 2020 at 11:39:51AM +0100, Shiju Jose wrote:
-> >> CPER records describing a firmware-first error are identified by GUID.
-> >> The ghes driver currently logs, but ignores any unknown CPER records.
-> >> This prevents describing errors that can't be represented by a
-> >> standard entry, that would otherwise allow a driver to recover from an
-> >error.
-> >> The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
-> >> version 2.8).
-> >
-> >> +#ifdef CONFIG_ACPI_APEI_GHES
-> >> +/**
-> >> + * ghes_register_vendor_record_notifier - register a notifier for
-> >> +vendor
-> >> + * records that the kernel would otherwise ignore.
-> >> + * @nb: pointer to the notifier_block structure of the event handler.
-> >> + *
-> >> + * return 0 : SUCCESS, non-zero : FAIL  */ int
-> >> +ghes_register_vendor_record_notifier(struct notifier_block *nb);
-> >> +
-> >> +/**
-> >> + * ghes_unregister_vendor_record_notifier - unregister the previously
-> >> + * registered vendor record notifier.
-> >> + * @nb: pointer to the notifier_block structure of the vendor record
-> >handler.
-> >> + */
-> >> +void ghes_unregister_vendor_record_notifier(struct notifier_block
-> >> +*nb); #else static inline int
-> >> +ghes_register_vendor_record_notifier(struct notifier_block *nb) {
-> >> +	return -ENODEV;
-> >> +}
-> >> +
-> >> +static inline void ghes_unregister_vendor_record_notifier(struct
-> >> +notifier_block *nb) { }
-> >
-> >If you made CONFIG_PCIE_HISI_ERR depend on CONFIG_ACPI_APEI_GHES,
-> >you'd be able to get rid of these stubs, wouldn't you?  It doesn't
-> >look like there's any point in building pcie-hisi-error.c at all
-> >unless CONFIG_ACPI_APEI_GHES is enabled.
->
-> The stub is added because this interface is expected to use by the
-> other drivers as well.  Some drivers may not want add the build
-> depend on the CONFIG_ACPI_APEI_GHES if the error reporting has less
-> priority in the driver.  However we can add dependency on
-> CONFIG_ACPI_APEI_GHES for building pcie-hisi-error.c.  
+On Fri, Jul 24, 2020 at 01:17:53PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable status is being initialized with a value that is never read
+> and it is being updated later with a new value.  The initialization is
+> redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-The usual route is to add stubs when they're needed, not just in
-anticipation of some need that may never materialize.
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+
+Are you willing to send another to patch to fix the var ordering in
+reverse christmass tree in there?
+
+> ---
+>  net/sctp/protocol.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/sctp/protocol.c b/net/sctp/protocol.c
+> index 7ecaf7d575c0..a0448f7c64b9 100644
+> --- a/net/sctp/protocol.c
+> +++ b/net/sctp/protocol.c
+> @@ -1368,7 +1368,7 @@ static struct pernet_operations sctp_ctrlsock_ops = {
+>  static __init int sctp_init(void)
+>  {
+>  	int i;
+> -	int status = -EINVAL;
+> +	int status;
+>  	unsigned long goal;
+>  	unsigned long limit;
+>  	unsigned long nr_pages = totalram_pages();
+> -- 
+> 2.27.0
+> 
