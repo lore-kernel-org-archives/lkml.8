@@ -2,40 +2,75 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D879C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3385A206D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA118206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 16:34:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qylaa520"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgGXQ0I (ORCPT
+        id S1726704AbgGXQeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 12:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37276 "EHLO
+        Fri, 24 Jul 2020 12:34:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726455AbgGXQ0H (ORCPT
+        with ESMTP id S1726317AbgGXQeD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 12:26:07 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54BF6C0619D3;
-        Fri, 24 Jul 2020 09:26:07 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id BF34E29931C
-From:   Helen Koike <helen.koike@collabora.com>
-To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, hverkuil-cisco@xs4all.nl,
-        kernel@collabora.com, dafna.hirschfeld@collabora.com,
-        tfiga@chromium.org
-Subject: [PATCH] media: staging: rkisp1: uapi: remove __packed
-Date:   Fri, 24 Jul 2020 13:25:55 -0300
-Message-Id: <20200724162555.393631-1-helen.koike@collabora.com>
-X-Mailer: git-send-email 2.28.0.rc1
+        Fri, 24 Jul 2020 12:34:03 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 092ACC0619D3;
+        Fri, 24 Jul 2020 09:34:03 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id m16so4744080pls.5;
+        Fri, 24 Jul 2020 09:34:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tleO8aHfa26cflMwMSnhPp+xAxg7WwjI5PBYDPHCheU=;
+        b=Qylaa520Hj/O37egAj+G+sflQYcdH7NLiPNI3wt4S2q/G4DmrIlCE+Xq/avII/pdHG
+         H4t3ZhBnKc6OsGE8P8UIpqi9PG4sj0YAewaT7LJShrFb5xyMrcR3SKN1pe5wek5Nc75g
+         CEi/iVj4m4IesZzmVHw/1DJRPnxq7e11IEMNmEMHtA3q6k1nWhcVEGAcsw3aqJCkENIl
+         PKqeoTJ4R8jw2oCT+B8xn/8TMXAjISjYUwDbnOONzZHTGE3+5L0njzWgn3995Zbp9lPx
+         oYt8ozGiPEsAq6apS+O+yCSQ8eBMiHsXLwzlAC/LUqum3cLbJ6/FaLeKgaIlUrWKNpTz
+         JnRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tleO8aHfa26cflMwMSnhPp+xAxg7WwjI5PBYDPHCheU=;
+        b=q+CeK5xge3g3HdLFlQUzaKxRgXlmhYLiMRdjFsCtsf5lur2rlWlDBYL24Ok86BpUhF
+         cy2IAAcDuedusuuZSqFrXzcuZGqhxT6VbkDeF2afqmOdy4Cv6xNFTk4DChyr3sZmrCc+
+         v2J2JUdQQHPONlwxlMtvo5FIwGfIgdc/iDSd6ChRz+rmZKFbvVEazdHoCWYLfu6lobc+
+         zacysMIV7olFrVcQf3ceWLNDxqfwJXLJwo6HlgpBXKMuR3Z2voKPreHRnDgsUhd0L3KE
+         s/72PF61bsRHWZevwwKhVP2eDJ0lZJLl3iG1TkEmkvmiJRR4aJIiTqqyEL0PqpNvKdbJ
+         NpUQ==
+X-Gm-Message-State: AOAM533+sGxNYzpJINynoxaElXK5j3uISrmAfGj/zeuxJM0Y9UNcAA9i
+        ZZTBnOtyqcx6XYQO4nIN4EI=
+X-Google-Smtp-Source: ABdhPJytZCyVPJi5TSQoqP4Ledc7YVOgh+gWU6Myty60Q9uEG7msRL3dz0q+ZUi5xpptQ0RVX7uqxw==
+X-Received: by 2002:a17:90b:2285:: with SMTP id kx5mr6572659pjb.83.1595608442414;
+        Fri, 24 Jul 2020 09:34:02 -0700 (PDT)
+Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:bc56:3377:e9ed:63f0])
+        by smtp.gmail.com with ESMTPSA id b8sm6138393pjd.5.2020.07.24.09.34.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 09:34:01 -0700 (PDT)
+From:   Xie He <xie.he.0141@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Martin Schiller <ms@dev.tdt.de>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
+Cc:     Xie He <xie.he.0141@gmail.com>
+Subject: [PATCH] drivers/net/wan: lapb: Corrected the usage of skb_cow
+Date:   Fri, 24 Jul 2020 09:33:47 -0700
+Message-Id: <20200724163347.57213-1-xie.he.0141@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,356 +78,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver access struct's fields one by one, they are not blindly
-copied to/from the hardware, so we can remove __packed from the
-structs.
+This patch fixed 2 issues with the usage of skb_cow in LAPB drivers
+"lapbether" and "hdlc_x25":
 
-Tested on Scarlet Chromebook with ChromeOS stack and verified images
-with the Camera app.
+1) After skb_cow fails, kfree_skb should be called to drop a reference
+to the skb. But in both drivers, kfree_skb is not called.
 
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
+2) skb_cow should be called before skb_push so that is can ensure the
+safety of skb_push. But in "lapbether", it is incorrectly called after
+skb_push.
+
+More details about these 2 issues:
+
+1) The behavior of calling kfree_skb on failure is also the behavior of
+netif_rx, which is called by this function with "return netif_rx(skb);".
+So this function should follow this behavior, too.
+
+2) In "lapbether", skb_cow is called after skb_push. This results in 2
+logical issues:
+   a) skb_push is not protected by skb_cow;
+   b) An extra headroom of 1 byte is ensured after skb_push. This extra
+      headroom has no use in this function. It also has no use in the
+      upper-layer function that this function passes the skb to
+      (x25_lapb_receive_frame in net/x25/x25_dev.c).
+So logically skb_cow should instead be called before skb_push.
+
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
 ---
- .../staging/media/rkisp1/uapi/rkisp1-config.h | 76 +++++++++----------
- 1 file changed, 38 insertions(+), 38 deletions(-)
+ drivers/net/wan/hdlc_x25.c  | 4 +++-
+ drivers/net/wan/lapbether.c | 8 +++++---
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/media/rkisp1/uapi/rkisp1-config.h b/drivers/staging/media/rkisp1/uapi/rkisp1-config.h
-index 8f9b061e5b6b6..dbcb5933185e3 100644
---- a/drivers/staging/media/rkisp1/uapi/rkisp1-config.h
-+++ b/drivers/staging/media/rkisp1/uapi/rkisp1-config.h
-@@ -163,7 +163,7 @@ struct rkisp1_cif_isp_window {
- 	__u16 v_offs;
- 	__u16 h_size;
- 	__u16 v_size;
--} __packed;
-+};
+diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
+index c84536b03aa8..f70336bb6f52 100644
+--- a/drivers/net/wan/hdlc_x25.c
++++ b/drivers/net/wan/hdlc_x25.c
+@@ -71,8 +71,10 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	unsigned char *ptr;
  
- /**
-  * struct rkisp1_cif_isp_bls_fixed_val - BLS fixed subtraction values
-@@ -181,7 +181,7 @@ struct rkisp1_cif_isp_bls_fixed_val {
- 	__s16 gr;
- 	__s16 gb;
- 	__s16 b;
--} __packed;
-+};
+-	if (skb_cow(skb, 1))
++	if (skb_cow(skb, 1)) {
++		kfree_skb(skb);
+ 		return NET_RX_DROP;
++	}
  
- /**
-  * struct rkisp1_cif_isp_bls_config - Configuration used by black level subtraction
-@@ -203,7 +203,7 @@ struct rkisp1_cif_isp_bls_config {
- 	struct rkisp1_cif_isp_window bls_window2;
- 	__u8 bls_samples;
- 	struct rkisp1_cif_isp_bls_fixed_val fixed_val;
--} __packed;
-+};
+ 	skb_push(skb, 1);
+ 	skb_reset_network_header(skb);
+diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+index 284832314f31..b2868433718f 100644
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -128,10 +128,12 @@ static int lapbeth_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	unsigned char *ptr;
  
- /**
-  * struct rkisp1_cif_isp_dpcc_methods_config - Methods Configuration used by DPCC
-@@ -224,7 +224,7 @@ struct rkisp1_cif_isp_dpcc_methods_config {
- 	__u32 pg_fac;
- 	__u32 rnd_thresh;
- 	__u32 rg_fac;
--} __packed;
-+};
+-	skb_push(skb, 1);
+-
+-	if (skb_cow(skb, 1))
++	if (skb_cow(skb, 1)) {
++		kfree_skb(skb);
+ 		return NET_RX_DROP;
++	}
++
++	skb_push(skb, 1);
  
- /**
-  * struct rkisp1_cif_isp_dpcc_config - Configuration used by DPCC
-@@ -245,16 +245,16 @@ struct rkisp1_cif_isp_dpcc_config {
- 	struct rkisp1_cif_isp_dpcc_methods_config methods[RKISP1_CIF_ISP_DPCC_METHODS_MAX];
- 	__u32 ro_limits;
- 	__u32 rnd_offs;
--} __packed;
-+};
- 
- struct rkisp1_cif_isp_gamma_corr_curve {
- 	__u16 gamma_y[RKISP1_CIF_ISP_DEGAMMA_CURVE_SIZE];
--} __packed;
-+};
- 
- struct rkisp1_cif_isp_gamma_curve_x_axis_pnts {
- 	__u32 gamma_dx0;
- 	__u32 gamma_dx1;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_sdg_config - Configuration used by sensor degamma
-@@ -267,7 +267,7 @@ struct rkisp1_cif_isp_sdg_config {
- 	struct rkisp1_cif_isp_gamma_corr_curve curve_g;
- 	struct rkisp1_cif_isp_gamma_corr_curve curve_b;
- 	struct rkisp1_cif_isp_gamma_curve_x_axis_pnts xa_pnts;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_lsc_config - Configuration used by Lens shading correction
-@@ -287,7 +287,7 @@ struct rkisp1_cif_isp_lsc_config {
- 	__u32 y_size_tbl[RKISP1_CIF_ISP_LSC_SIZE_TBL_SIZE];
- 	__u16 config_width;
- 	__u16 config_height;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_ie_config - Configuration used by image effects
-@@ -308,7 +308,7 @@ struct rkisp1_cif_isp_ie_config {
- 	__u16 eff_mat_4;
- 	__u16 eff_mat_5;
- 	__u16 eff_tint;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_cproc_config - Configuration used by Color Processing
-@@ -330,7 +330,7 @@ struct rkisp1_cif_isp_cproc_config {
- 	__u8 brightness;
- 	__u8 sat;
- 	__u8 hue;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_awb_meas_config - Configuration used by auto white balance
-@@ -363,7 +363,7 @@ struct rkisp1_cif_isp_awb_meas_config {
- 	__u8 awb_ref_cr;
- 	__u8 awb_ref_cb;
- 	__u8 enable_ymax_cmp;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_awb_gain_config - Configuration used by auto white balance gain
-@@ -375,7 +375,7 @@ struct rkisp1_cif_isp_awb_gain_config {
- 	__u16 gain_green_r;
- 	__u16 gain_blue;
- 	__u16 gain_green_b;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_flt_config - Configuration used by ISP filtering
-@@ -403,7 +403,7 @@ struct rkisp1_cif_isp_flt_config {
- 	__u32 fac_mid;
- 	__u32 fac_bl0;
- 	__u32 fac_bl1;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_bdm_config - Configuration used by Bayer DeMosaic
-@@ -412,7 +412,7 @@ struct rkisp1_cif_isp_flt_config {
-  */
- struct rkisp1_cif_isp_bdm_config {
- 	__u8 demosaic_th;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_ctk_config - Configuration used by Cross Talk correction
-@@ -433,7 +433,7 @@ struct rkisp1_cif_isp_ctk_config {
- 	__u16 ct_offset_r;
- 	__u16 ct_offset_g;
- 	__u16 ct_offset_b;
--} __packed;
-+};
- 
- enum rkisp1_cif_isp_goc_mode {
- 	RKISP1_CIF_ISP_GOC_MODE_LOGARITHMIC,
-@@ -449,7 +449,7 @@ enum rkisp1_cif_isp_goc_mode {
- struct rkisp1_cif_isp_goc_config {
- 	__u32 mode;
- 	__u16 gamma_y[RKISP1_CIF_ISP_GAMMA_OUT_MAX_SAMPLES];
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_hst_config - Configuration used by Histogram
-@@ -465,7 +465,7 @@ struct rkisp1_cif_isp_hst_config {
- 	__u8 histogram_predivider;
- 	struct rkisp1_cif_isp_window meas_window;
- 	__u8 hist_weight[RKISP1_CIF_ISP_HISTOGRAM_WEIGHT_GRIDS_SIZE];
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_aec_config - Configuration used by Auto Exposure Control
-@@ -478,7 +478,7 @@ struct rkisp1_cif_isp_aec_config {
- 	__u32 mode;
- 	__u32 autostop;
- 	struct rkisp1_cif_isp_window meas_window;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_afc_config - Configuration used by Auto Focus Control
-@@ -494,7 +494,7 @@ struct rkisp1_cif_isp_afc_config {
- 	struct rkisp1_cif_isp_window afm_win[RKISP1_CIF_ISP_AFM_MAX_WINDOWS];
- 	__u32 thres;
- 	__u32 var_shift;
--} __packed;
-+};
- 
- /**
-  * enum rkisp1_cif_isp_dpf_gain_usage - dpf gain usage
-@@ -549,7 +549,7 @@ enum rkisp1_cif_isp_dpf_nll_scale_mode {
- struct rkisp1_cif_isp_dpf_nll {
- 	__u16 coeff[RKISP1_CIF_ISP_DPF_MAX_NLF_COEFFS];
- 	__u32 scale_mode;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_dpf_rb_flt - Red blue filter config
-@@ -565,7 +565,7 @@ struct rkisp1_cif_isp_dpf_rb_flt {
- 	__u8 spatial_coeff[RKISP1_CIF_ISP_DPF_MAX_SPATIAL_COEFFS];
- 	__u8 r_enable;
- 	__u8 b_enable;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_dpf_g_flt - Green filter Configuration
-@@ -578,7 +578,7 @@ struct rkisp1_cif_isp_dpf_g_flt {
- 	__u8 spatial_coeff[RKISP1_CIF_ISP_DPF_MAX_SPATIAL_COEFFS];
- 	__u8 gr_enable;
- 	__u8 gb_enable;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_dpf_gain - Noise function Configuration
-@@ -597,7 +597,7 @@ struct rkisp1_cif_isp_dpf_gain {
- 	__u16 nf_b_gain;
- 	__u16 nf_gr_gain;
- 	__u16 nf_gb_gain;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_dpf_config - Configuration used by De-noising pre-filter
-@@ -612,7 +612,7 @@ struct rkisp1_cif_isp_dpf_config {
- 	struct rkisp1_cif_isp_dpf_g_flt g_flt;
- 	struct rkisp1_cif_isp_dpf_rb_flt rb_flt;
- 	struct rkisp1_cif_isp_dpf_nll nll;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_dpf_strength_config - strength of the filter
-@@ -625,7 +625,7 @@ struct rkisp1_cif_isp_dpf_strength_config {
- 	__u8 r;
- 	__u8 g;
- 	__u8 b;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_isp_other_cfg - Parameters for some blocks in rockchip isp1
-@@ -659,7 +659,7 @@ struct rkisp1_cif_isp_isp_other_cfg {
- 	struct rkisp1_cif_isp_dpf_strength_config dpf_strength_config;
- 	struct rkisp1_cif_isp_cproc_config cproc_config;
- 	struct rkisp1_cif_isp_ie_config ie_config;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_isp_meas_cfg - Rockchip ISP1 Measure Parameters
-@@ -674,7 +674,7 @@ struct rkisp1_cif_isp_isp_meas_cfg {
- 	struct rkisp1_cif_isp_hst_config hst_config;
- 	struct rkisp1_cif_isp_aec_config aec_config;
- 	struct rkisp1_cif_isp_afc_config afc_config;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_params_cfg - Rockchip ISP1 Input Parameters Meta Data
-@@ -693,7 +693,7 @@ struct rkisp1_params_cfg {
- 
- 	struct rkisp1_cif_isp_isp_meas_cfg meas;
- 	struct rkisp1_cif_isp_isp_other_cfg others;
--} __packed;
-+};
- 
- /*---------- PART2: Measurement Statistics ------------*/
- 
-@@ -714,7 +714,7 @@ struct rkisp1_cif_isp_awb_meas {
- 	__u8 mean_y_or_g;
- 	__u8 mean_cb_or_b;
- 	__u8 mean_cr_or_r;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_awb_stat - statistics automatic white balance data
-@@ -723,7 +723,7 @@ struct rkisp1_cif_isp_awb_meas {
-  */
- struct rkisp1_cif_isp_awb_stat {
- 	struct rkisp1_cif_isp_awb_meas awb_mean[RKISP1_CIF_ISP_AWB_MAX_GRID];
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_bls_meas_val - BLS measured values
-@@ -738,7 +738,7 @@ struct rkisp1_cif_isp_bls_meas_val {
- 	__u16 meas_gr;
- 	__u16 meas_gb;
- 	__u16 meas_b;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_ae_stat - statistics auto exposure data
-@@ -751,7 +751,7 @@ struct rkisp1_cif_isp_bls_meas_val {
- struct rkisp1_cif_isp_ae_stat {
- 	__u8 exp_mean[RKISP1_CIF_ISP_AE_MEAN_MAX];
- 	struct rkisp1_cif_isp_bls_meas_val bls_val;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_af_meas_val - AF measured values
-@@ -762,7 +762,7 @@ struct rkisp1_cif_isp_ae_stat {
- struct rkisp1_cif_isp_af_meas_val {
- 	__u32 sum;
- 	__u32 lum;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_af_stat - statistics auto focus data
-@@ -774,7 +774,7 @@ struct rkisp1_cif_isp_af_meas_val {
-  */
- struct rkisp1_cif_isp_af_stat {
- 	struct rkisp1_cif_isp_af_meas_val window[RKISP1_CIF_ISP_AFM_MAX_WINDOWS];
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_cif_isp_hist_stat - statistics histogram data
-@@ -786,7 +786,7 @@ struct rkisp1_cif_isp_af_stat {
-  */
- struct rkisp1_cif_isp_hist_stat {
- 	__u16 hist_bins[RKISP1_CIF_ISP_HIST_BIN_N_MAX];
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_stat_buffer - Rockchip ISP1 Statistics Data
-@@ -801,7 +801,7 @@ struct rkisp1_cif_isp_stat {
- 	struct rkisp1_cif_isp_ae_stat ae;
- 	struct rkisp1_cif_isp_af_stat af;
- 	struct rkisp1_cif_isp_hist_stat hist;
--} __packed;
-+};
- 
- /**
-  * struct rkisp1_stat_buffer - Rockchip ISP1 Statistics Meta Data
-@@ -814,6 +814,6 @@ struct rkisp1_stat_buffer {
- 	__u32 meas_type;
- 	__u32 frame_id;
- 	struct rkisp1_cif_isp_stat params;
--} __packed;
-+};
- 
- #endif /* _UAPI_RKISP1_CONFIG_H */
+ 	ptr  = skb->data;
+ 	*ptr = X25_IFACE_DATA;
 -- 
-2.28.0.rc1
+2.25.1
 
