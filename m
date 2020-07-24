@@ -2,112 +2,60 @@ Return-Path: <SRS0=4orP=BD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9701C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21080C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7EA320656
-	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:18:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="FVPTQE9D"
+	by mail.kernel.org (Postfix) with ESMTP id 0341920714
+	for <linux-kernel@archiver.kernel.org>; Fri, 24 Jul 2020 13:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgGXNSP (ORCPT
+        id S1726658AbgGXNNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 09:18:15 -0400
-Received: from lists.nic.cz ([217.31.204.67]:53008 "EHLO mail.nic.cz"
+        Fri, 24 Jul 2020 09:13:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37304 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbgGXNSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 09:18:15 -0400
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTPSA id 652B11409C6;
-        Fri, 24 Jul 2020 15:18:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1595596693; bh=FXLBwI943Zogfi1PcdT70A/ip4Rj0lpCR1CpsVo5qq0=;
-        h=Date:From:To;
-        b=FVPTQE9Dxx4THp/tl+1Yt14Tpfj33iMP6a4zAWmEfqgZqQ5/0rZYa0w+lAnXU4UxL
-         tZ61dxJZoxBxhGX7e6pQxT7U5hIYFTtAobg2ahQBmuIZEqZW7J0uv9KEQPc5AW9bjb
-         oC3ukslRt89OfSQvxv9KuK95m4WsYCPVr9Qz2xvE=
-Date:   Fri, 24 Jul 2020 15:18:13 +0200
-From:   Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com,
-        Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v2 0/1] Add support for LEDs on
- Marvell PHYs
-Message-ID: <20200724151813.709f2a4e@dellmb.labs.office.nic.cz>
-In-Reply-To: <20200724151233.35d799e8@dellmb.labs.office.nic.cz>
-References: <20200723181319.15988-1-marek.behun@nic.cz>
-        <20200724102901.qp65rtkxucauglsp@duo.ucw.cz>
-        <20200724151233.35d799e8@dellmb.labs.office.nic.cz>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726182AbgGXNNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 09:13:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 679B3AC46;
+        Fri, 24 Jul 2020 13:13:51 +0000 (UTC)
+Subject: Re: [PATCH v2 2/4] xen/balloon: make the balloon wait interruptible
+To:     Roger Pau Monne <roger.pau@citrix.com>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+References: <20200724124241.48208-1-roger.pau@citrix.com>
+ <20200724124241.48208-3-roger.pau@citrix.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <57d403c1-5df4-d4cf-3faa-2aae2ba1faa1@suse.com>
+Date:   Fri, 24 Jul 2020 15:13:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+In-Reply-To: <20200724124241.48208-3-roger.pau@citrix.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 15:12:33 +0200
-Marek Beh=C3=BAn <marek.behun@nic.cz> wrote:
+On 24.07.20 14:42, Roger Pau Monne wrote:
+> So it can be killed, or else processes can get hung indefinitely
+> waiting for balloon pages.
+> 
+> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
 
-> On Fri, 24 Jul 2020 12:29:01 +0200
-> Pavel Machek <pavel@ucw.cz> wrote:
->=20
-> > In future, would you expect having software "1000/100/10/nolink"
-> > triggers I could activate on my scrollock LED (or on GPIO controlled
-> > LEDs) to indicate network activity? =20
->=20
-> Look at drivers/net/phy/phy_led_triggers.c, something like that could
-> be actually implemented there.
->=20
-> Some of the modes are useful, like the "1000/100/10/nolink". But some
-> of them are pretty weird, and I don't think anyone actually uses it
-> ("1000-10/else", which is on if the device is linked at 1000mbps ar
-> 10mbps, and else off? who would sacrifies a LED for this?).
->=20
-> I actually wanted to talk about the phy_led_triggers.c code. It
-> registers several trigger for each PHY, with the name in form:
->   phy-device-name:mode
-> where
->   phy-device-name is derived from OF
->     - sometimes it is in the form
->       d0032004.mdio-mii:01
->     - but sometimes in the form of whole OF path followed by ":" and
->       the PHY address:
->       /soc/internal-regs@d0000000/mdio@32004/switch0@10/mdio:08
->   mode is "link", "1Gbps", "100Mbps", "10Mbps" and so on"
->=20
-> So I have a GPIO LED, and I can set it to sw trigger so that it is on
-> when a specific PHY is linked on 1Gbps.
->=20
-> The problem is that on Turris Mox I can connect up to three 8-port
-> switches, which yields in 25 network PHYs overall. So reading the
-> trigger file results in 4290 bytes (look at attachment
-> cat_trigger.txt). I think the phy_led_triggers should have gone this
-> way of having just one trigger (like netdev has), and specifying phy
-> device via and mode via another file.
->=20
-> Marek
->=20
+Reviewed-by: Juergen Gross <jgross@suse.com>
 
-In fact I think the way the phy_led_triggers does this should be
-deprecated. I new kernel config options should be create, something
-like "new user API for PHY LED trigger", which would create just one
-trigger, with name phydev, like we have netdev, and like in the netdev
-trigger, the mode and device should be configured via other files.
 
-This phydev trigger could then be made similar to phy-hw-mode trigger...
+Juergen
 
-Marek
