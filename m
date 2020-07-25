@@ -7,43 +7,40 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D55FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7DA20674
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938A9206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:36:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="KirK2Giu"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Tmj0rhVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgGYL2s (ORCPT
+        id S1726842AbgGYLgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 07:28:48 -0400
-Received: from mout.web.de ([212.227.15.14]:36503 "EHLO mout.web.de"
+        Sat, 25 Jul 2020 07:36:08 -0400
+Received: from mout.web.de ([212.227.15.3]:52021 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbgGYL2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 07:28:47 -0400
+        id S1726593AbgGYLgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 07:36:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1595676482;
+        s=dbaedf251592; t=1595676956;
         bh=tL632JoesBjA1nIjOOtilNQQx0JJmdlSdql+Vgh01R0=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=KirK2Giuq/oI0i9/TOwFC7RXcEVUDLETNSS3bDPmLGguFu4QpmFB0EjuKG7YQfUTx
-         n77JiO1TlmZo0+HhUZ4eX2jVCRvM8NSU4hdo9vYBMBNU4BayknUHNvcgHob8NGp27H
-         SmOsXcr7SZGursUrDGx5OH6y0WmnC5AJf/W0wfQU=
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=Tmj0rhVYBtMO2v9NcBxUwh20IPVhwePRmDQ2SlW0arpOGmt/QPfvxfqRSXLEmMEYB
+         en3ENpj2301lVsU7k/flndv6r5ZFWtHYEqwbsf24Nq0v5m1t00wpEL6CPOv/wZT1+p
+         LgbIP9Z96eprRoigXcyA6ek4xENWwsazjtZkUHi4=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.94.55]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M8hxz-1kmhdp2cDb-00wBcX; Sat, 25
- Jul 2020 13:28:02 +0200
+Received: from [192.168.1.2] ([93.135.94.55]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LmLK6-1kZBW53gva-00Zu6Q; Sat, 25
+ Jul 2020 13:35:56 +0200
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Wang Liang <wang.liang82@zte.com.cn>,
+        Xue Zhihong <xue.zhihong@zte.com.cn>
+Subject: Re: [PATCH] block: Fix reference count leak in blk_integrity_add
 To:     Yi Wang <wang.yi59@zte.com.cn>,
         Liao Pingfang <liao.pingfang@zte.com.cn>,
-        linux-sh@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rich Felker <dalias@libc.org>,
-        Wang Liang <wang.liang82@zte.com.cn>,
-        Xue Zhihong <xue.zhihong@zte.com.cn>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: Re: [PATCH] sh: sh4: Fix reference count leak in sq_dev_add
+        linux-block@vger.kernel.org
 From:   Markus Elfring <Markus.Elfring@web.de>
 Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
@@ -88,37 +85,37 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <12d84b44-96c8-ee11-fff8-b1a7ea6b0d7c@web.de>
-Date:   Sat, 25 Jul 2020 13:27:56 +0200
+Message-ID: <6301315e-1613-0970-ce9b-019d18458819@web.de>
+Date:   Sat, 25 Jul 2020 13:35:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:bFIRIPpz0mwd/cEGOsK55a8GXJvnM2pc8bURK7XeKErXRWl7aJn
- +GvcuU4gLrwyL7LKdv5kRg/eIAGScGG5uMzJHwmVJen3ACg+cXpLA8r8PNreZ77AYoIF70g
- CSe40jrf0WRB6tmoNJpW2WcTbYexM4OgSz5p0nVSzpiPuDs+0FBn0xs+3GW6YCG+5PtzMb+
- fOH1wb1VzuKcH4EjsBzFw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IhFmOiaMMh0=:/xAZbNULFM+YFruV7Bhasf
- CjrEQuyG8fc8TEQoFPuoYZlYIzBMSwECYS5Fg1FSJt6EfN2qRKpRqW/saAQr2cSuDsQ1WRz4O
- zLltHWydBtRzJtXitdcnqFoMANVUF2zusw0bItySYlWfjv77najf2OibKI71oKKq2n3uS4krA
- eWY729dko+qS2n8tnP5Wn+ZK0NA5BCPBtz2T7QqfWzzI58YFEJU0pXTs6q1XSIpYm+1/zpzbI
- XiYswl/8lpMVAJfwm2e7BnBSroOmgZaOXqRI8WccAXlZSftRPG1SqxiE1MSUDdThWHqFPczUw
- ZbH5+gZPCq2CV8hQGWDH8ZlMhfHasLRg9KRxum2zGqBze4ySjHGCPUHT+IQoo9HCTOByOECHk
- xPJbq2s6hWfy28jN18t3KxxFTBxIt8fvxrtYupiLe5+eEI7SY3tnm997cNB366J+V99GV68FT
- +vkc1FG/vdiQv/MDyNr7Az5SYXct1dVBWmGRtr3j10gC0ZB6UKrE4W/AXPoNY6fb6grRdfJ8v
- Lpy0wkMrQvZr+4rDQX1fvFlcFgGGyKtMps9/WEdx3b+wOJNaGjJNaoA1jU75QORbzpZqq5P5h
- yM4Ta5BBEtm2DKKh0o8FQCOrAIMpkOJrK6My+bMSvG8ax7/ijIEAtI2Q8qii6NuAPjg3JBSQs
- 3cH0Re5eFTqcWSN0IsXDZYLVIK9PtI52K25jDJTtIRdtEgkTuhyJU/tc/fhhei2j9VSjaAe9h
- i0MvOwpsQ3KJU3r0uAMfJDFG6y+y42kCNzjOU9NE8Z9FYNGsEWl2v01v1wGuo9S5Z/XPBKSlj
- Z7vXB4WpUPhTiTm7WvW9nntS/pJGNWMLADX9kBtxc78dlGGMpz5vCWbLTs7/e2KqcYHJiBjHM
- t9PZc8UU2cXOSTd6S8Hbe7sM/PoFQe/tNv4Hr+OL7F7XXn4cNuoAz1Jl/YDzqD/eDYnpeAHhp
- nknrn+bZ8oPP7rYp3ImWEOM5Ztd/OkBffVJqmeWnLf26K5dGIdIKYHNi3HTLkTnjIN/4KGjKX
- KAI7XKNzRW7JT02c1cyzin/bXCz2Jz0JZ+n0ZJQZ4fFCFoyuHyz2GaXJYLA85+IZFXh0UbyD3
- YApPYfmtPt3AXTJo1ITiV+c2inD+k4IBmz9gx4mZtX1HQ402LvBBqUX+SGiiUB6ozlav+4BYW
- SZEI2Ug49YFbZo5RjJwCyf6H47DMLS3Iyby7XBDS6yh6xdlapOPdwV8fVdyzcKYwsu/ysMT6s
- 964HF7j5aY0b4nuqmdHF0vo0nn2tgTtmo4RGzmQ==
+X-Provags-ID: V03:K1:XfHm/7x7X87q7ow25EkeuukmVKR88tw1SDzdqxDdDUzGIDzOEXy
+ zQdV32f2j+uMjFN/E7kkeh7D2TASJ4MVIDDWqjjHTU4ry4B2DM+hxB7B7cQij2Ws33nvviH
+ vFmMrkEvxYptoQGr7mWUu3aJ4EGJyeoyRReyNQkojWYcZd55quXovnKoGaDCD611u+D5igm
+ u5k6A5hmu0VPUTDvIzchg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DyzV1VLVpu4=:Fm6QWsnHUAFGLZmmcBBdO/
+ 2T4uTzLG02bzVkUXhSAnWw7toP5bz3RluDB626xSYnhAFu6700ytrmgBFbBxERkbFmQGDiCLl
+ 5uxzcIFXVtSd9zpPoMHtlQ1wX0Y/cieSHi2n3Ep1u6alsLF0Bg5+t+kWss8AKT5czF0Rf9Jf2
+ ddkgOGfseSERmaJje8mv/IyiXXaUm6nLtZ3IDzsuWjReCWShDwNqJR3kcWpIOocaoO9+LYFbu
+ mmSaEMcN6hFMZ61EJoVe5FbilfhEQIqWzVK7O7E7BvHZF4EovcP8s5N3h+iSBI/DYngnFpoO2
+ QeM7ZvJLeFVVCjCho+cBNoXUHCbo6WVdrihtkgGwnzPY4ug5lzsGZxXF9NtXEBtr7S44lrA9e
+ NaTSgtIYKvYOQI+pX0f3TQO4Ns7PRpGmNXMk/+aj9bN6dcDNvzyXgAzufcBgrqxsJcKxAzbp2
+ VopnYbUkiMufyaoYBpHo5MlF7i7s/7OQsW6+lKZkEIHk5zPUbjJ0P3W+AVYPX1BOMkiX1d1Ki
+ YRrMbhSv1LzqUVFz3GkjXXn2ITmh3ZBYHFGeTHlAyPVkocNJrtgJrOBsAOcJlINW9pAQtttul
+ tJJz6EVIRF2r0gkxmflFKYIHgR1WfPtuUOOPkvlAIXF/8SsxgfXBRVRx1KJgYh5PVHtu9IXfk
+ LLzkfIbmtnUnJDcBk9qmU9pwWSRWNZnefNM9yZBPdOIcXcXTEpSuHzVOJ16apdNzJ3IBNDCmZ
+ W1tBDpN3xd3U9PgeY8lZ5uK+Jqy8MIzW8eTbksLGYFvwoapDy5dt+my3M88zDoV4GTr2tECNL
+ ph+xGa/ZibeVGp5ov0ZWzYNa8x/5lnDN18nevow01hb06qlTIJocOS9AlK8EXceYn8mCOx1H4
+ VZiXgXhe3irmFVyNtQZRsu/TQKfZAf7vm4UhY9LONEoBpEEIcC6XO9eUpK+CG/SjrvuDO0MsD
+ E5k/S1jW5Yjf1KjPlzEyeXRV0bzCNhVN9oPLB4gp3RNddUBaVOeXKRr8WLB/lljTa804Bah68
+ XvIm3cX324iFrtnN4Y1M8d7PoPrfaLhDdVBuSNS20tUC+xiqmNnCVAUioXvSE9SnKmtG7PYl0
+ th/USxeOeRewandQjYsm1Jd339FbqrCJU2cTWpIxsp1EVdDzbKnFQ6BOxgcnwlert636FKIm4
+ 4raof7AQTIj3Pc5iuGYhvHiG+mQShtF50gqnrTq/KE/Oe+vfuV58nyYbMvXRfF6oLue6lbpOU
+ LGXIm5F6KYktApoBfobFOLad6amBrHBJTFqgIww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
