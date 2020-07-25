@@ -4,140 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAF9C433E8
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DC1C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 402BA206EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F73206EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595672476;
-	bh=4fB3ZwogdcdVPIDLLsbHLV1b+WfAbVyxUhEIUsq9urw=;
+	s=default; t=1595672765;
+	bh=J+APbsd0fEirJmTTj1oX5Mw3BNB/ycIoN90LOc29dE4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kB9qfLEH8Obbk2t4HbXjwr9IAjZJeSWmkx2T3IVELmkGw/3MvjcLmOt2SabyMrSyf
-	 LNgkT3N36LstmiNutdGwGeIkwIfPTjp2qRfyBVGiWSt2IiZzVI/W81IpoFO2fEAKrt
-	 QRd2SdRP+EYGx+Mc8LT95qayhOun48DppUVqq014=
+	b=h56+uPlwEC1mI0ZWehfbn3ZJJAJMVFOqdWZYKIvuWY3KWPiDTsW0/M4CNDG/yOsa8
+	 z/Au/5KDdXMcC2oCvXMIc0oQrtwIcR4x+meUnnGbfObiFygIuW6/QrSPifZRNKODBA
+	 1c7V2v9OfWuF/3udKXxrlR8jTiYHyR0OGKFkRpMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgGYKVP (ORCPT
+        id S1726728AbgGYK0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 06:21:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34654 "EHLO
+        Sat, 25 Jul 2020 06:26:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgGYKVO (ORCPT
+        with ESMTP id S1726572AbgGYK0D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 06:21:14 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F7E4C0619D3
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 03:21:14 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id lx13so12390650ejb.4
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 03:21:14 -0700 (PDT)
+        Sat, 25 Jul 2020 06:26:03 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51456C0619D3;
+        Sat, 25 Jul 2020 03:26:03 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id z17so8711325edr.9;
+        Sat, 25 Jul 2020 03:26:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=missdBsNUzT7ukHWexKwYjiaX2t9R6jTrHE5vOnris8=;
-        b=fCRC7859xWOSbmhU4JKMCe+akFDWIyPM7HAKB7nU55UPjnpS/tGtO7rZE+MhfZB0Bt
-         8U8Wz/5zhFEDQfnQH8/dZhyml4+1go+4t2QL13eB53s1B3OgARiKuu0ARZrm4ZVZMAvG
-         pqUh3m+EzE04nIceDtofchMlX3oNWsSqEDUrd6tZlexJw85bhjKQ30Tqu4D0FUtrJG1+
-         /DCqtBGF0sp3p1Gqh92PRQ/SUEpgqaOfBY1NSn/fcLC7rzifhOmIoIjLlm76s/Zp0H7I
-         fNVMy1K/Naw5Q08yS5vesNwJnwxu0iuONkI4J9Dt2RccNkL/6ynBNcCgJwfFxkTy56yD
-         MFTQ==
+        bh=taXyyIg9HQgDUeqgJutr9j6azE5mPr32nbXBE8+jcsA=;
+        b=heoJsy/sLGZ8AXN/DQcF3CpRSkdT16DTWOrhYJegxg0KfItLi7dPAnQi4JKgv3kfeq
+         GjKcavcYkWvSOrHRkbWGJCqFM3oxjUDNnbiAdSsXr64BjSfS5Q360TdWfXpQh+55BL5q
+         KOqY2GT9KZnz0erHQkPe0gLg7ti/LqMtx1+9aSCHO1M/GW2/55eTkVUNwFxs+kDuXq/l
+         S4bf2DDIez25tWyumCqygwHbhb/rY7HyaU8sjZvyw/2L/3ZMb6JZNKBzGdYwbdKvpFn9
+         s0s0e1HlNuPLHOuetw4HJ+RK4xlIcvOzfO2faKbUjtUCN9LRf2kHA/xrb3hafwQFQvCJ
+         9nyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to;
-        bh=missdBsNUzT7ukHWexKwYjiaX2t9R6jTrHE5vOnris8=;
-        b=CZ3xZXfPkDX8eIgZsUVPFIukqds1ZI2jKWcVRIWeG2bqaP2m7I9UunQhVPheaQKOMQ
-         M6NQD0w1TUKUfv4xtvnFJqREveauhQRpjBOA2/j9h24xtqLJu1sJVIF0zaxtezw6zEDb
-         9ELFGZeqE5d6fUB+6ZmaCL/yHWRjC6kXXb1gr+e4kFnTTH1TKrMv6qLLGfCmLQ8va+nC
-         TQMvp4XB3qm2E2ZoRrCS5IIDSBtSVr5lC43C5DIHXiQdGagYqecOihsD4+yah/3/IuDg
-         n4qatA94aLLJlPni48OJhqoAz4cUoBVsYOjC+kEUIXGDASd+XqnS2UFnxyv+x5ulkuvC
-         A04g==
-X-Gm-Message-State: AOAM532fwj6D8ZPug2etGUrEMqch7rHgdScMec6RApYJUsFgzVlBz1UO
-        6OC/4Eqjwr6QYD6Zghc5QRhE07SN
-X-Google-Smtp-Source: ABdhPJx407E1T3MUmslE6VBYvrrgVuh+hSPQmhXYtTVqRvBkBBl4j1YkzdCwe9/0Qjrceq6yTr7DKg==
-X-Received: by 2002:a17:906:8595:: with SMTP id v21mr13457349ejx.333.1595672473007;
-        Sat, 25 Jul 2020 03:21:13 -0700 (PDT)
+        bh=taXyyIg9HQgDUeqgJutr9j6azE5mPr32nbXBE8+jcsA=;
+        b=VIBnUta87dFGjkq40HOXq2rSuNMIHdNHBmRB0alDiykF8cQIabtU97ygFFvdpzuXha
+         +5rk+5l18RE9IB77AuHTc+runFCtl7UaIWcPRzxhgCEVFnWV5MH7Auj4vnRTmy8S3Djq
+         lad2SSYxvODWuzw4ol+uFi7iOE9Vaxd4QcX3vrB40tDR9XWlnW7iGOaQD+ROORJLK4wc
+         82nKFywMGhWGhyfzifZe2fcUhMsvV1TiD1jEYYP0M+LZZgjkVuNOnOA+8HK9JgcgZVXH
+         cqr3Nl7P/IqoZPGZZBUbtCe1aOO6jdKYQOLmNvtaOZ9Fibf4B3oQ/v+3l1M+IpbLOORu
+         nV0A==
+X-Gm-Message-State: AOAM530Ji1V88yBhB5NDMjIXZ8ySwM/oBZojVBb2qSIdV1rZGKdLTqjb
+        ExeOJPDKtLFHkv2ncWOOgk9EJtKf
+X-Google-Smtp-Source: ABdhPJys+Ykps/4KLTuDE+mkOgM3KbhJT2sHQsbhDYUoOFDEdpRVDg1e1igOYZTLJmXVQ/nbBYtNoA==
+X-Received: by 2002:a05:6402:1bc1:: with SMTP id ch1mr4196887edb.142.1595672762017;
+        Sat, 25 Jul 2020 03:26:02 -0700 (PDT)
 Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id i7sm2605033eds.91.2020.07.25.03.21.11
+        by smtp.gmail.com with ESMTPSA id kt1sm2571657ejb.78.2020.07.25.03.26.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 03:21:12 -0700 (PDT)
-Date:   Sat, 25 Jul 2020 12:21:10 +0200
+        Sat, 25 Jul 2020 03:26:01 -0700 (PDT)
+Date:   Sat, 25 Jul 2020 12:25:59 +0200
 From:   Ingo Molnar <mingo@kernel.org>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v5 1/6] kprobes: Remove dependency to the module_mutex
-Message-ID: <20200725102110.GA757173@gmail.com>
-References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
- <20200724050553.1724168-2-jarkko.sakkinen@linux.intel.com>
- <20200724091711.GB517988@gmail.com>
- <20200725030107.GF17052@linux.intel.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [GIT PULL] EFI fixes for v5.8-rc
+Message-ID: <20200725102559.GA757519@gmail.com>
+References: <20200709132807.32232-1-ardb@kernel.org>
+ <CAMj1kXGHDS7PnuPsCnHWGDFdtcaJUuXboZUZQwowzw0LfrQ+pw@mail.gmail.com>
+ <CAMj1kXFQt4f0XT6C_4_xAuDALv_jVsc+z0zkSnxh6MU-zHxj2g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200725030107.GF17052@linux.intel.com>
+In-Reply-To: <CAMj1kXFQt4f0XT6C_4_xAuDALv_jVsc+z0zkSnxh6MU-zHxj2g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-> On Fri, Jul 24, 2020 at 11:17:11AM +0200, Ingo Molnar wrote:
-> > 
-> > * Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-> > 
-> > > --- a/kernel/kprobes.c
-> > > +++ b/kernel/kprobes.c
-> > > @@ -564,7 +564,7 @@ static void kprobe_optimizer(struct work_struct *work)
-> > >  	cpus_read_lock();
-> > >  	mutex_lock(&text_mutex);
-> > >  	/* Lock modules while optimizing kprobes */
-> > > -	mutex_lock(&module_mutex);
-> > > +	lock_modules();
-> > >  
-> > >  	/*
-> > >  	 * Step 1: Unoptimize kprobes and collect cleaned (unused and disarmed)
-> > > @@ -589,7 +589,7 @@ static void kprobe_optimizer(struct work_struct *work)
-> > >  	/* Step 4: Free cleaned kprobes after quiesence period */
-> > >  	do_free_cleaned_kprobes();
-> > >  
-> > > -	mutex_unlock(&module_mutex);
-> > > +	unlock_modules();
-> > >  	mutex_unlock(&text_mutex);
-> > >  	cpus_read_unlock();
-> > 
-> > BTW., it would be nice to expand on the comments above - exactly which 
-> > parts of the modules code is being serialized against and why?
-> > 
-> > We already hold the text_mutex here, which should protect against most 
-> > kprobes related activities interfering - and it's unclear (to me) 
-> > which part of the modules code is being serialized with here, and the 
-> > 'lock modules while optimizing kprobes' comments is unhelpful. :-)
-> > 
-> > Thanks,
-> > 
-> > 	Ingo
-> 
-> AFAIK, only if you need to call find_module(), you ever need to acquire
-> this mutex. 99% of time it is internally taken care by kernel/module.c.
-> 
-> I cannot make up any obvious reason to acquire it here.
+> Ping again?
 
-If it's unnecessary, then it needs to be removed.
-
-If it's necessary, then it needs to be documented better.
+Sorry about the delay - sending it to Linus now.
 
 Thanks,
 
