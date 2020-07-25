@@ -7,39 +7,33 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 08:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17118C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 08:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9022206D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 08:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3916206EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 08:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgGYIxJ (ORCPT
+        id S1727040AbgGYIxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 04:53:09 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56226 "EHLO huawei.com"
+        Sat, 25 Jul 2020 04:53:25 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56608 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726613AbgGYIxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 04:53:09 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 88D0470C795AA4CB473E;
-        Sat, 25 Jul 2020 16:53:06 +0800 (CST)
+        id S1726613AbgGYIxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 04:53:25 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 077BA79EE19677F73A12;
+        Sat, 25 Jul 2020 16:53:22 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 25 Jul 2020 16:53:02 +0800
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 25 Jul 2020 16:53:17 +0800
 From:   Qinglang Miao <miaoqinglang@huawei.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        "Mel Gorman" <mgorman@suse.de>,
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] sched/uclamp: kill unnecessary mutex_init()
-Date:   Sat, 25 Jul 2020 16:56:29 +0800
-Message-ID: <20200725085629.98292-1-miaoqinglang@huawei.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] nfsd: use DEFINE_SPINLOCK() for spinlock
+Date:   Sat, 25 Jul 2020 16:56:42 +0800
+Message-ID: <20200725085642.98356-1-miaoqinglang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -51,26 +45,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mutex uclamp_mutex is initialized statically. It is
-unnecessary to initialize by mutex_init().
+nfsd_drc_lock can be initialized automatically with
+DEFINE_SPINLOCK() rather than explicitly calling spin_lock_init().
 
 Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 ---
- kernel/sched/core.c | 2 --
- 1 file changed, 2 deletions(-)
+ fs/nfsd/nfssvc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 29d557c1f..9a8b7ed3a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1331,8 +1331,6 @@ static void __init init_uclamp(void)
- 	enum uclamp_id clamp_id;
- 	int cpu;
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index b603dfcdd..20f0a27fe 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -88,7 +88,7 @@ DEFINE_MUTEX(nfsd_mutex);
+  * version 4.1 DRC caches.
+  * nfsd_drc_pages_used tracks the current version 4.1 DRC memory usage.
+  */
+-spinlock_t	nfsd_drc_lock;
++DEFINE_SPINLOCK(nfsd_drc_lock);
+ unsigned long	nfsd_drc_max_mem;
+ unsigned long	nfsd_drc_mem_used;
  
--	mutex_init(&uclamp_mutex);
--
- 	for_each_possible_cpu(cpu)
- 		init_uclamp_rq(cpu_rq(cpu));
+@@ -568,7 +568,6 @@ static void set_max_drc(void)
+ 	nfsd_drc_max_mem = (nr_free_buffer_pages()
+ 					>> NFSD_DRC_SIZE_SHIFT) * PAGE_SIZE;
+ 	nfsd_drc_mem_used = 0;
+-	spin_lock_init(&nfsd_drc_lock);
+ 	dprintk("%s nfsd_drc_max_mem %lu \n", __func__, nfsd_drc_max_mem);
+ }
  
 -- 
 2.25.1
