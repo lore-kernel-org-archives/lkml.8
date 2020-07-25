@@ -3,121 +3,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAACC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3C420714
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:14:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y++mNFQ3"
+	by mail.kernel.org (Postfix) with ESMTP id 06AEA206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595672305;
+	bh=yYZoeGiaL2Yy7dXLxE3HYWDSogCl38mNwgjNFgnjc+c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BBroYi1T/nojqjj9MT6bijuacE89SnSGFIWxAhMobXNjHB1LMmo9gqHQjMcniO2im
+	 Fy+jKOQSGSUG3Yhpv2DF7qg1o3bETRm398ajyBwgNHdeJs97qFi3JE9/2B+6qJ01G2
+	 Ff3b9rEvL5v2mYkzfW5ffY9qPZLbb0q0EXPFyDqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgGYKOz (ORCPT
+        id S1726736AbgGYKSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 06:14:55 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54524 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726618AbgGYKOz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 06:14:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595672093;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=b0AOSE86PGeB1I9Z9HMCGCB3b0fmc6DBmuHd8pPAROo=;
-        b=Y++mNFQ3HrrYgRlxqSr5x4gYDeFBSX8pnpAxzpi/v/SQG884gBTS34yElOXTcrd1PC3Op1
-        UktxA6xzKyK/MazrAWkVMpn+U62+EM4qbBsbaDJ+Z6iGpUAWLtRe7YTLYEWWW8Lph9qKm1
-        ZR2jF3BXAXp2LMDmwAjiE0HI0Ve558c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-nScs2uXVMfyq-xnABE0aEg-1; Sat, 25 Jul 2020 06:14:51 -0400
-X-MC-Unique: nScs2uXVMfyq-xnABE0aEg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 25 Jul 2020 06:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726572AbgGYKSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 06:18:23 -0400
+Received: from localhost (p5486c508.dip0.t-ipconnect.de [84.134.197.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 289B91009600;
-        Sat, 25 Jul 2020 10:14:50 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.25])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C482270105;
-        Sat, 25 Jul 2020 10:14:47 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Sat, 25 Jul 2020 12:14:49 +0200 (CEST)
-Date:   Sat, 25 Jul 2020 12:14:46 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Hugh Dickins <hughd@google.com>, Michal Hocko <mhocko@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-Message-ID: <20200725101445.GB3870@redhat.com>
-References: <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com>
- <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com>
- <20200723124749.GA7428@redhat.com>
- <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
- <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com>
- <alpine.LSU.2.11.2007231549540.1016@eggly.anvils>
- <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com>
- <20200724152424.GC17209@redhat.com>
- <CAHk-=whuG+5pUeUqdiW4gk0prvqu7GZSMo-6oWv5PdDC5dBr=A@mail.gmail.com>
- <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A9DB206D7;
+        Sat, 25 Jul 2020 10:18:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595672302;
+        bh=yYZoeGiaL2Yy7dXLxE3HYWDSogCl38mNwgjNFgnjc+c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qe+QBna9WOi7vzaW7vSPMkaVsYAt9JxYecsoEPWMmLKYqg/JMdWxsrTo+zazQsXL/
+         0RXnCdPZ8Gur7V9bNMvK1F4tz0lVrzPaglmJmDTNqZS3wo2YWA+fv/mePMZXtSlNi7
+         lBsBytEUNBmTctcB3E6thweZpJCaocz0ystXpo3g=
+Date:   Sat, 25 Jul 2020 12:18:16 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
+Message-ID: <20200725101815.GA1519@ninjato>
+References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
+ <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
+ <20200722104128.GK1030@ninjato>
+ <5048cf44-e2c2-ee31-a9fb-b823f16c2c7d@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <5048cf44-e2c2-ee31-a9fb-b823f16c2c7d@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/24, Linus Torvalds wrote:
->
-> I just realized that one thing we could do is to not even test the
-> page bit for the shared case in the wakeup path.
->
-> Because anybody who uses the non-exclusive "wait_on_page_locked()" or
-> "wait_on_page_writeback()" isn't actually interested in the bit state
-> any more at that point. All they care about is that somebody cleared
-> it - not whether it was then re-taken again.
->
-> So instead of keeping them on the list - or stopping the waitqueue
-> walk because somebody else got the bit - we could just mark them
-> successfully done, wake them up, and remove those entries from the
-> list.
 
-Heh. I too thought about this. And just in case, your patch looks correct
-to me. But I can't really comment this behavioural change. Perhaps it
-should come in a separate patch?
-
-In essense, this partly reverts your commit 3510ca20ece0150
-("Minor page waitqueue cleanups"). I mean this part:
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-     (b) we don't want to put the non-locking waiters always on the front of
-         the queue, and the locking waiters always on the back.  Not only is
-         that unfair, it means that we wake up thousands of reading threads
-         that will just end up being blocked by the writer later anyway.
-...
+> I think the following sequence needs to be implemented to make this
+> safe, i.e., after 'synchronize_irq', no further slave interrupt will be
+> fired.
+>=20
+> In 'bcm_iproc_i2c_unreg_slave':
+>=20
+> 1. Set an atomic variable 'unreg_slave' (I'm bad in names so please come
+> up with a better name than this)
+>=20
+> 2. Disable all slave interrupts
+>=20
+> 3. synchronize_irq
+>=20
+> 4. Set slave to NULL
+>=20
+> 5. Erase slave addresses
 
-	@@ -972,10 +976,7 @@ static inline int wait_on_page_bit_common(wait_queue_head_t *q,
-			spin_lock_irq(&q->lock);
-	 
-			if (likely(list_empty(&wait->entry))) {
-	-			if (lock)
-	-				__add_wait_queue_entry_tail_exclusive(q, wait);
-	-			else
-	-				__add_wait_queue(q, wait);
-	+			__add_wait_queue_entry_tail(q, wait);
-				SetPageWaiters(page);
-			}
+What about this in unreg_slave?
 
-Oleg.
+1. disable_irq()
+	This includes synchronize_irq() and avoids the race. Because irq
+	will be masked at interrupt controller level, interrupts coming
+	in at the I2C IP core level should still be pending once we
+	reenable the irq.
 
+2. disable all slave interrupts
+
+3. enable_irq()
+
+4. clean up the rest (pointer, address)
+
+Or am I overlooking something?
+
+
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8cBuMACgkQFA3kzBSg
+KbbLAA/9FeHjhGwyMXJIQXFvczJdKOmip+UeBbnpfmqsfpfLCTIt3VsyEN3mW9er
+ljA3+RwocPDUJxYpSRqQGZmCP70Aec8z7PJ1criCXG+zUAZuJYABIQrDUaKDEOiE
+FzJi6hqJ2nFhwVrforfaotkvlco/F7PcEoIGA1eoAI27Oe9Hem+J1KcWNGFcw4NM
+cjQhnZgQSv0zGquTKdLjlI425z5bxUGaIz+EN0CmVp+lLrJ/tjI5yIJIbdBF8nQQ
+kDaTv3Q5NlgXsQbRHbvzMsw2UHlBRje/Nqb0KkX7kArS3fRtN/av3tur2wLfyyYY
+rNKxDy0d4Z2ltG6gF9ysQyWf+BYSrzeEBR6md+oMnJ7GUR5Q0IB5+LyzTtDLHxV/
+eqeX5ZqOz63qpxuBdJfwTUnSFfQ1o3NzzRK05YN+nHu6SUYlwveniaRZmrKwuNpV
+vNkOvhQiOD4aiugIh43g/mIPVVPrrnmkbOm0O4XldlG/6LW5636E4GVFmgi2Gi3O
+Qe7zRBNrxJ0oA2v5CC+pRanDVGFcWr67EHzObIDE7e/wxd8WdjyjmEPMtz/Ef7E9
+JGlO66wXCuxyLydCEdqLkNp1H+0W1A9pzwMSjV052OEW1yCJFfkmsWVMTNKGNUXQ
+XBAX3znGu7Nhz9HJsgD+adLfW8hua3nIYC6GJfbRNdn14O8W6FA=
+=ol3x
+-----END PGP SIGNATURE-----
+
+--qMm9M+Fa2AknHoGS--
