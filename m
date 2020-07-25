@@ -2,168 +2,115 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DB1C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5C1206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAACC206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgGYSXp (ORCPT
+        id S1727881AbgGYSbQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 14:23:45 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:55430 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726727AbgGYSXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 14:23:44 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jzOpb-006pw9-R7; Sat, 25 Jul 2020 20:23:35 +0200
-Date:   Sat, 25 Jul 2020 20:23:35 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Marek Behun <marek.behun@nic.cz>
-Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
-        Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v3 2/2] net: phy: marvell: add
- support for PHY LEDs via LED class
-Message-ID: <20200725182335.GN1472201@lunn.ch>
-References: <20200724164603.29148-1-marek.behun@nic.cz>
- <20200724164603.29148-3-marek.behun@nic.cz>
- <20200725172318.GK1472201@lunn.ch>
- <20200725200224.3f03c041@nic.cz>
+        Sat, 25 Jul 2020 14:31:16 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:40755 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727036AbgGYSbQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 14:31:16 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mrxjf-1kcGWt1uvF-00nw44 for <linux-kernel@vger.kernel.org>; Sat, 25 Jul
+ 2020 20:31:14 +0200
+Received: by mail-qt1-f182.google.com with SMTP id d27so9352923qtg.4
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 11:31:14 -0700 (PDT)
+X-Gm-Message-State: AOAM5301xd2oIbOYOjo/q/r1MPGJ+YVzepFdV9GvQa7L87ishQG5rhn6
+        yQymadWi59KJ2nC/6V6jd892hulGhmpyvCD1lYU=
+X-Google-Smtp-Source: ABdhPJzHTyApat0bw84tF3h2Af+bo13zlqQHPFO7nlxTyX9nNY7CCrPypsrX45LFfU24UHEra8Rxd1j0sNISFQyNMFw=
+X-Received: by 2002:ac8:5195:: with SMTP id c21mr454635qtn.304.1595701873366;
+ Sat, 25 Jul 2020 11:31:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200725200224.3f03c041@nic.cz>
+References: <20200724145401.2566-1-krzk@kernel.org> <20200724145401.2566-3-krzk@kernel.org>
+ <PWBZDQ.D1XCW6N2YMRA@crapouillou.net> <CAJKOXPc2w0QHQDEwqoeg9Nm361MszM4LRaCoJD2En-fPgPp+4Q@mail.gmail.com>
+ <IBDZDQ.K28R5FAI0BXI2@crapouillou.net> <20200724155436.GA7460@kozik-lap> <K5Y0EQ.WYAK00ADM46F3@crapouillou.net>
+In-Reply-To: <K5Y0EQ.WYAK00ADM46F3@crapouillou.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sat, 25 Jul 2020 20:30:56 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0HDu15u5dREd6gk_e9D6mrZ9JqT0DJs9AeC9C2602nAw@mail.gmail.com>
+Message-ID: <CAK8P3a0HDu15u5dREd6gk_e9D6mrZ9JqT0DJs9AeC9C2602nAw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] mtd: rawnand: ingenic: Limit MTD_NAND_JZ4780 to
+ architecture only
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:H2XqmAMuyGphOIpbigKAPK09HPpmKnkYoLEhmeGweI/C798jmwW
+ czcR82TdRmHP7zVVafOrCcCe6yMr+UC382js6yKm2K8h50Yv926koJWrF3r25b0iZlbMWZO
+ ei00/nDjKHVyjMZtyi5p/9+r6KT0aomIqb1QGeiTg6ziqobDdwKQwRdbFocC0ZwesiQL0Yf
+ fiE+tmOVwuL6aezksr9FQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:RiioCsFudRg=:Rj734fPAkZEIeZMBMjzidc
+ TXqy1SwAn03UCGz5zSGKvkfnX9A41ZUzHB+6vZgmXXicFxGpuXtchlppua+ziCulObMOvQznA
+ uW9gjTfkx7jfm2Nf5ETxgXcNacSIqbqqR/lgq9aOhnJzXYsXPCPxo4gOfCi5nN8f+2XnYrKPJ
+ MBxlEpHV2sVXiBd1kxZoyvmCQmU9xLDeb7pzaNM5UwZ9KGxruBevBTo+AEuygVlU+m0hPzOr8
+ 1E/kXlOjSmLkVRK8hWIPJOzbgxL3QtgnO+SxqAxE/fAWtZTA9Mg9AzJRzFsCnU8kTL79Gftbd
+ kSCVDoKvgezEINfa+Uf1WkSnpOmmpHB2RoJqPfBLUUXrwTizKLXX5V1mYA8HD5rFO8hyDrFLa
+ sJVTN2O0vWimdXjl/7jcadiIuq/TpUxXl9WhWnp8JF7tNg/pz09yyMz8+fMmD0kzdMsrnzH59
+ 6oyI+tkFFFPdk+7+HYbl2+ybJjUizavI57HIXzwJ//OynUunNV+Dzk2TAEU3QcDcTNquK8Idh
+ c2ycqzBTYbIGr7utw+fd7gS2C1gbasUe1k/Akp3rV1IY7Eu38ua28f3J5QwVK0w2ZgT2LeMxe
+ 43Tc3Qjda0pJzibCxzVcqIuflhqlKCzoSXyiRNCxVa3NMZmMAt6S/9wXr8p0AbYTTofF7dWm2
+ MqFo1FhS8bXc5kGSbWriKCT6GTFai3QUEO/PYSp8DkHQdGuP0ypvzJ8oEgvCQNhZe0XH7CQtW
+ 364aKB8mIUfX3ba126jbJjwhhald2JZZvhfRK5RG6ZbKgWqDf9O98pBQh1Rl4Du8ju83/zV2s
+ 7+CQmRF41avEPzjanzd44vRCm2FiuYO7hNYuAspmVpu/zKHu83MqPRiU6L1ak+BCg/JNuM1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 08:02:24PM +0200, Marek Behun wrote:
-> On Sat, 25 Jul 2020 19:23:18 +0200
-> Andrew Lunn <andrew@lunn.ch> wrote:
-> 
-> > On Fri, Jul 24, 2020 at 06:46:03PM +0200, Marek Beh�n wrote:
-> > > This patch adds support for controlling the LEDs connected to several
-> > > families of Marvell PHYs via the PHY HW LED trigger API. These families
-> > > are: 88E1112, 88E1121R, 88E1240, 88E1340S, 88E1510 and 88E1545. More can
-> > > be added.
-> > > 
-> > > The code reads LEDs definitions from the device-tree node of the PHY.
-> > > 
-> > > This patch does not yet add support for compound LED modes. This could
-> > > be achieved via the LED multicolor framework (which is not yet in
-> > > upstream).
-> > > 
-> > > Settings such as HW blink rate or pulse stretch duration are not yet
-> > > supported, nor are LED polarity settings.
-> > > 
-> > > Signed-off-by: Marek Beh�n <marek.behun@nic.cz>
-> > > ---
-> > >  drivers/net/phy/Kconfig   |   1 +
-> > >  drivers/net/phy/marvell.c | 364 ++++++++++++++++++++++++++++++++++++++
-> > >  2 files changed, 365 insertions(+)
-> > > 
-> > > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> > > index ffea11f73acd..5428a8af26d2 100644
-> > > --- a/drivers/net/phy/Kconfig
-> > > +++ b/drivers/net/phy/Kconfig
-> > > @@ -462,6 +462,7 @@ config LXT_PHY
-> > >  
-> > >  config MARVELL_PHY
-> > >  	tristate "Marvell PHYs"
-> > > +	depends on LED_TRIGGER_PHY_HW  
-> > 
-> > Does it really depend on it? I think the driver will work fine without
-> > it, just the LED control will be missing.
-> > 
-> > It is really a policy question. Cable test is always available, there
-> > is no Kconfig'ury to stop it getting built. Is LED support really big
-> > so that somebody might want to disable it? I think not. So lets just
-> > enable it all the time.
-> 
-> OK
-> 
-> > >  	help
-> > >  	  Currently has a driver for the 88E1011S
-> > >    
-> > 
-> > > +enum {
-> > > +	L1V0_RECV		= BIT(0),
-> > > +	L1V0_COPPER		= BIT(1),
-> > > +	L1V5_100_FIBER		= BIT(2),
-> > > +	L1V5_100_10		= BIT(3),
-> > > +	L2V2_INIT		= BIT(4),
-> > > +	L2V2_PTP		= BIT(5),
-> > > +	L2V2_DUPLEX		= BIT(6),
-> > > +	L3V0_FIBER		= BIT(7),
-> > > +	L3V0_LOS		= BIT(8),
-> > > +	L3V5_TRANS		= BIT(9),
-> > > +	L3V7_FIBER		= BIT(10),
-> > > +	L3V7_DUPLEX		= BIT(11),  
+On Sat, Jul 25, 2020 at 2:17 PM Paul Cercueil <paul@crapouillou.net> wrote:
+> Le ven. 24 juil. 2020 à 17:54, Krzysztof Kozlowski <krzk@kernel.org> a
+> écrit :
+> > On Fri, Jul 24, 2020 at 05:50:06PM +0200, Paul Cercueil wrote:
+> >>  Le ven. 24 juil. 2020 à 17:33, Krzysztof Kozlowski
+> >> <krzk@kernel.org> a écrit:
+> >>  > On Fri, 24 Jul 2020 at 17:19, Paul Cercueil <paul@crapouillou.net>
+> >>  > wrote:
+> >>
+> >>  On MIPS, the SoC selection is a Kconfig "choice", so you can only
+> >> support
+> >>  one SoC family, unfortunately.
+> >
+> > Let's say someone selected then some other architecture
+> > (MIPS_ALCHEMY).
+> > They could select this MTD driver.
+> >
+> > Does it mean they would be able to run it on Ingenic hardware?
+>
+> In *theory* yes, as long as the Kconfig options that MACH_INGENIC
+> selects are enabled, the kernel should boot and work on Ingenic SoCs.
 
-        COMMON			= BIT(32),
+Right now, this won't work yet, because there are platform specific
+functions that are implemented by each of the platforms in arch/mips,
+e.g. arch/mips/generic/init.c and arch/mips/jz4740/setup.c.
 
-> > > +static const struct marvell_led_mode_info marvell_led_mode_info[] = {
-> > > +	{ "link/act",			{ 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, }, COMMON },
-> > > +	{ "1Gbps/100Mbps/10Mbps",	{ 0x2,  -1,  -1,  -1,  -1,  -1, }, COMMON },
-> > > +	{ "act",			{ 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, }, COMMON },
-> > > +	{ "blink-act",			{ 0x4, 0x4, 0x4, 0x4, 0x4, 0x4, }, COMMON },
-> > > +	{ "tx",				{ 0x5,  -1, 0x5,  -1, 0x5, 0x5, }, COMMON },
-> > > +	{ "tx",				{  -1,  -1,  -1, 0x5,  -1,  -1, }, L3V5_TRANS },
-> > > +	{ "rx",				{  -1,  -1,  -1,  -1, 0x0, 0x0, }, COMMON },
-> > > +	{ "rx",				{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_RECV },
-> > > +	{ "copper",			{ 0x6,  -1,  -1,  -1,  -1,  -1, }, COMMON },
-> > > +	{ "copper",			{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_COPPER },
-> > > +	{ "1Gbps",			{ 0x7,  -1,  -1,  -1,  -1,  -1, }, COMMON },
-> > > +	{ "link/rx",			{  -1, 0x2,  -1, 0x2, 0x2, 0x2, }, COMMON },
-> > > +	{ "100Mbps-fiber",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_FIBER },
-> > > +	{ "100Mbps-10Mbps",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_10 },
-> > > +	{ "1Gbps-100Mbps",		{  -1, 0x6,  -1,  -1,  -1,  -1, }, COMMON },
-> > > +	{ "1Gbps-10Mbps",		{  -1,  -1, 0x6, 0x6,  -1,  -1, }, COMMON },
-> > > +	{ "100Mbps",			{  -1, 0x7,  -1,  -1,  -1,  -1, }, COMMON },
-> > > +	{ "10Mbps",			{  -1,  -1, 0x7,  -1,  -1,  -1, }, COMMON },
-> > > +	{ "fiber",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_FIBER },
-> > > +	{ "fiber",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_FIBER },
-> > > +	{ "FullDuplex",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_DUPLEX },
-> > > +	{ "FullDuplex",			{  -1,  -1,  -1,  -1, 0x6, 0x6, }, COMMON },
-> > > +	{ "FullDuplex/collision",	{  -1,  -1,  -1,  -1, 0x7, 0x7, }, COMMON },
-> > > +	{ "FullDuplex/collision",	{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_DUPLEX },
-> > > +	{ "ptp",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_PTP },
-> > > +	{ "init",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_INIT },
-> > > +	{ "los",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_LOS },
-> > > +	{ "hi-z",			{ 0xa, 0xa, 0xa, 0xa, 0xa, 0xa, }, COMMON },
-> > > +	{ "blink",			{ 0xb, 0xb, 0xb, 0xb, 0xb, 0xb, }, COMMON },
-> > > +};
-> > > +
+A lot of the newer platforms are part of arch/mips/generic
+(CONFIG_MIPS_GENERIC), which roughly corresponds to
+CONFIG_ARCH_MULTIPLATFORM on in arch/arm/.
+Similarly, there are header files in arch/mips/include/asm/mach-*/
+that conflict and you need to have the right one.
 
-> > > +static const struct marvell_leds_info marvell_leds_info[] = {
-> > > +	LED(1112,  4, COMMON | L1V0_COPPER | L1V5_100_FIBER | L2V2_INIT | L3V0_LOS | L3V5_TRANS | L3V7_FIBER),
-> > > +	LED(1121R, 3, COMMON | L1V5_100_10),
-> > > +	LED(1240,  6, COMMON | L3V5_TRANS),
-> > > +	LED(1340S, 6, COMMON | L1V0_COPPER | L1V5_100_FIBER | L2V2_PTP | L3V0_FIBER | L3V7_DUPLEX),
-> > > +	LED(1510,  3, COMMON | L1V0_RECV | L1V5_100_FIBER | L2V2_DUPLEX),
-> > > +	LED(1545,  6, COMMON | L1V5_100_FIBER | L3V0_FIBER | L3V7_DUPLEX),
-> > > +};
-> > > +
+To have more than one platform enabled, each one needs to
+have all of that platform code converted to fit into the
+MIPS_GENERIC framework. This can be a lot of work, but
+I suppose the ingenic platform would be a candidate for
+which this makes sense, as long as new SoCs of that family
+still come out.
 
-> > > +{
-> > > +	return mode->regval[led->idx] != -1 && (!mode->flags || (priv->led_flags & mode->flags));  
-
-This then becomes
-
-return mode->regval[led->idx] != -1 && (priv->led_flags & mode->flags));  
-
-       Andrew
+       Arnd
