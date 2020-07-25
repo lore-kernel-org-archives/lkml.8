@@ -2,176 +2,195 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB7CC433FC
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362ADC433EA
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2F99206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B7CE206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:14:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="XekTCJaA"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Uz3IlXv+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgGYFMp (ORCPT
+        id S1726877AbgGYFOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 01:12:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43500 "EHLO
+        Sat, 25 Jul 2020 01:14:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgGYFMn (ORCPT
+        with ESMTP id S1726651AbgGYFOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 01:12:43 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A53DBC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 22:12:42 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id f185so1443527pfg.10
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 22:12:42 -0700 (PDT)
+        Sat, 25 Jul 2020 01:14:35 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CB54C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 22:14:35 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id p1so5638171pls.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 22:14:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kOPPuWlVHyyfzF11390Fpz2zidkHqu8nIIZggO9E2Qw=;
-        b=XekTCJaA1u6Vu2uYjKpjFF03jpNaU3Ohspp+WB2uUchHTwwY8EPX1+ehEmmGYMMF0M
-         8OFur5aqo4Cp2a2sgAhteKj3mzlFclLu8l62MZ2358b8GSaFo4ZPd/fZC3juTWcxIlOd
-         MhxH1kO6JUewARAyoq5PT40gzrUYSrdTzCzVMUYNk/1Z2u477AzaSOaS+WZTfUx66jFQ
-         PDEhcTL7Bqv1hOtTf3Plvf61XtfK7FdUORo99OB2CC6NdlJfn3QKRgzCrcZant8QwIOx
-         KGk9xUuwWQm0kgRNFiyRtXPDLgeDdBjorZF8lRFNDSQCOZVcdbX2gSrH1Hi1SDYqlFzm
-         vTVg==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=zgyWqznSRtZ8AuY3tULsDjN5RpahufiDT3f0fggLh5s=;
+        b=Uz3IlXv+sKUEtS5eC2DkIZtfS1Xha2bB4TKPa3hP+w1M1cIds1A7Bc9dmlvPRbvChZ
+         wRrWcllSzjbfwURKIlVM3R6geZktvtQVkAUVECySvW+9t8BX+7Y+Mwnbg2+kr26wyHyc
+         0WBa5P7q9VQ2U9GlcuKszMphubHxHCT/n6acs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=kOPPuWlVHyyfzF11390Fpz2zidkHqu8nIIZggO9E2Qw=;
-        b=pWuVUEy13R7HDSslhAz5yxeExzl2DBujx9Gizz4IKOQ8RcOmID4cw2WfBwA41mXsvL
-         T6xulOSosWrqa8M5YBbzERRH4Qz4BPO98ucGqgEqq0KV2fVnZ43ww96EFK/wEToAf8nm
-         DQQ9ke9TdE7A8VUR1YqWPu4RvKuUL8BVlAAXOK2DO/dy1hDQqZ18ws2vm2gWk+SCF4Qi
-         Q9yEsdyxRSYxja74fhAI65+DSPu/UQW24MA5h92sZbStJDG24cd60jp8gwFl/tNuncCK
-         WTAdmBkERYJ78Da9iYa2cDBjxsIYy1r/5gT6Ml1taNVhBaOn0vt+wof4jXq1KyGmIctn
-         mPsw==
-X-Gm-Message-State: AOAM531Rv5hEZmbDWcJMYaNRwE1hC3EHljjTbelgrYQdHeuSYj2OX9Ho
-        3FZdE6cb4jANkrNUF2+Ab9sUXi9Hy6o=
-X-Google-Smtp-Source: ABdhPJyb7LkncfmV8eU5KLB/nojTUKjhnaxJ1MOXGp+mJpQOWTgcuyfqGf5jRHnACpU7ztFX45gd+A==
-X-Received: by 2002:a63:6cd:: with SMTP id 196mr11269117pgg.169.1595653961764;
-        Fri, 24 Jul 2020 22:12:41 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id h9sm7749457pfk.155.2020.07.24.22.12.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 22:12:41 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 22:12:41 -0700 (PDT)
-X-Google-Original-Date: Fri, 24 Jul 2020 21:24:41 PDT (-0700)
-Subject:     Re: [PATCH 3/4] RISC-V: Do not rely on initrd_start/end computed during early dt parsing
-In-Reply-To: <20200715233009.27183-4-atish.patra@wdc.com>
-CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
-        aou@eecs.berkeley.edu, Anup Patel <Anup.Patel@wdc.com>,
-        greentime.hu@sifive.com, linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul.walmsley@sifive.com>, sudeep.holla@arm.com,
-        vincent.chen@sifive.com, zong.li@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Atish Patra <Atish.Patra@wdc.com>
-Message-ID: <mhng-cb081342-c17d-40ed-8ecb-b58fe259af2c@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=zgyWqznSRtZ8AuY3tULsDjN5RpahufiDT3f0fggLh5s=;
+        b=iVPqMSHnFvTY/SSOn0PnHdYEDNj9xqsOKqAtF/hGhEedCJn9Wfyo8zAG7c/MTSzjmV
+         iEvFbbyZsdd6uxAaVGKdcF/VLVvMTL8ryVq+4KU/qyygPF8hWjYaRZc9K4ec8iW3t245
+         HlOr7hfWLq2gUmBKZ032WWf+GWxVSwEsiRT0QJKucf3EdOJk69YuReR+9cIsBCMvPAeR
+         pTDBOu87bAr7nAAChP1iQoDPc3SJojnV7+UVWKgJxg0Ac9xWO7j2VudjZ/dFqD2A69+d
+         UZH2JlgYALWY+KGvyVVyqw4xpIC7zljRN4eWu1HjFNwAYmBKgUKDLaE+mKXpTiPQ3evJ
+         4khQ==
+X-Gm-Message-State: AOAM532Upz3gnvZQqiYt7LxvMYzN/5yzScTPDi+Go/Dx4BXohltHLYFS
+        gbleQqQ/+MVQqmBOHb4tyQ1XmEa7yxDNLjgehYaj4Y2ixAS8VKz9w6R22H6OmHQovPyIesDdGEZ
+        UzURluwsYdGHWzUBuvA4njKJ1IAKlmDhqavlfExRwpTx83cwS/XVhMHHGdjuE79xmHeUEwGZAeD
+        2JAWrAHiCv
+X-Google-Smtp-Source: ABdhPJz6ILO9KJmQAo9dsBlTgCVjwv22IuoZPDOnnhlk6scO1A0oZWI5P9disMNuzZklnQGqIVBuug==
+X-Received: by 2002:a17:90a:fe08:: with SMTP id ck8mr8549438pjb.90.1595654074430;
+        Fri, 24 Jul 2020 22:14:34 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id 193sm7829508pfz.85.2020.07.24.22.14.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 22:14:33 -0700 (PDT)
+Subject: Re: [PATCH v3 00/19] Introduce partial kernel_read_file() support
+To:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200724213640.389191-1-keescook@chromium.org>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <09bd8cc0-8073-c26a-fb7c-010a62f88c74@broadcom.com>
+Date:   Fri, 24 Jul 2020 22:14:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200724213640.389191-1-keescook@chromium.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 16:30:08 PDT (-0700), Atish Patra wrote:
-> Currently, initrd_start/end are computed during early_init_dt_scan
-> but used during arch_setup. We will get the following panic if initrd is used
-> and CONFIG_DEBUG_VIRTUAL is turned on.
+On 2020-07-24 2:36 p.m., Kees Cook wrote:
+> v3:
+> - add reviews/acks
+> - add "IMA: Add support for file reads without contents" patch
+> - trim CC list, in case that's why vger ignored v2
+> v2: [missing from lkml archives! (CC list too long?) repeating changes here]
+> - fix issues in firmware test suite
+> - add firmware partial read patches
+> - various bug fixes/cleanups
+> v1: https://lore.kernel.org/lkml/20200717174309.1164575-1-keescook@chromium.org/
 >
-> [    0.000000] ------------[ cut here ]------------
-> [    0.000000] kernel BUG at arch/riscv/mm/physaddr.c:33!
-> [    0.000000] Kernel BUG [#1]
-> [    0.000000] Modules linked in:
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.8.0-rc4-00015-ged0b226fed02 #886
-> [    0.000000] epc: ffffffe0002058d2 ra : ffffffe0000053f0 sp : ffffffe001001f40
-> [    0.000000]  gp : ffffffe00106e250 tp : ffffffe001009d40 t0 : ffffffe00107ee28
-> [    0.000000]  t1 : 0000000000000000 t2 : ffffffe000a2e880 s0 : ffffffe001001f50
-> [    0.000000]  s1 : ffffffe0001383e8 a0 : ffffffe00c087e00 a1 : 0000000080200000
-> [    0.000000]  a2 : 00000000010bf000 a3 : ffffffe00106f3c8 a4 : ffffffe0010bf000
-> [    0.000000]  a5 : ffffffe000000000 a6 : 0000000000000006 a7 : 0000000000000001
-> [    0.000000]  s2 : ffffffe00106f068 s3 : ffffffe00106f070 s4 : 0000000080200000
-> [    0.000000]  s5 : 0000000082200000 s6 : 0000000000000000 s7 : 0000000000000000
-> [    0.000000]  s8 : 0000000080011010 s9 : 0000000080012700 s10: 0000000000000000
-> [    0.000000]  s11: 0000000000000000 t3 : 000000000001fe30 t4 : 000000000001fe30
-> [    0.000000]  t5 : 0000000000000000 t6 : ffffffe00107c471
-> [    0.000000] status: 0000000000000100 badaddr: 0000000000000000 cause: 0000000000000003
-> [    0.000000] random: get_random_bytes called from print_oops_end_marker+0x22/0x46 with crng_init=0
+> Hi,
 >
-> To avoid the error, initrd_start/end can be computed from phys_initrd_start/size
-> in setup itself. It also improves the initrd placement by aligning the start
-> and size with the page size.
+> Here's my tree for adding partial read support in kernel_read_file(),
+> which fixes a number of issues along the way. It's got Scott's firmware
+> and IMA patches ported and everything tests cleanly for me (even with
+> CONFIG_IMA_APPRAISE=y).
 >
-> Fixes: 6435f773d81f (riscv: mm: add support for CONFIG_DEBUG_VIRTUAL)
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> ---
->  arch/riscv/mm/init.c | 33 +++++++++++++++++++++++++++------
->  1 file changed, 27 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 8d22973bde40..f818a47a72d1 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -95,19 +95,40 @@ void __init mem_init(void)
->  #ifdef CONFIG_BLK_DEV_INITRD
->  static void __init setup_initrd(void)
->  {
-> +	phys_addr_t start;
->  	unsigned long size;
->
-> -	if (initrd_start >= initrd_end) {
-> -		pr_info("initrd not found or empty");
-> +	/* Ignore the virtul address computed during device tree parsing */
-> +	initrd_start = initrd_end = 0;
-> +
-> +	if (!phys_initrd_size)
-> +		return;
-> +	/*
-> +	 * Round the memory region to page boundaries as per free_initrd_mem()
-> +	 * This allows us to detect whether the pages overlapping the initrd
-> +	 * are in use, but more importantly, reserves the entire set of pages
-> +	 * as we don't want these pages allocated for other purposes.
-> +	 */
-> +	start = round_down(phys_initrd_start, PAGE_SIZE);
-> +	size = phys_initrd_size + (phys_initrd_start - start);
-> +	size = round_up(size, PAGE_SIZE);
-> +
-> +	if (!memblock_is_region_memory(start, size)) {
-> +		pr_err("INITRD: 0x%08llx+0x%08lx is not a memory region",
-> +		       (u64)start, size);
->  		goto disable;
->  	}
-> -	if (__pa_symbol(initrd_end) > PFN_PHYS(max_low_pfn)) {
-> -		pr_err("initrd extends beyond end of memory");
-> +
-> +	if (memblock_is_region_reserved(start, size)) {
-> +		pr_err("INITRD: 0x%08llx+0x%08lx overlaps in-use memory region\n",
-> +		       (u64)start, size);
->  		goto disable;
->  	}
->
-> -	size = initrd_end - initrd_start;
-> -	memblock_reserve(__pa_symbol(initrd_start), size);
-> +	memblock_reserve(start, size);
-> +	/* Now convert initrd to virtual addresses */
-> +	initrd_start = (unsigned long)__va(phys_initrd_start);
-> +	initrd_end = initrd_start + phys_initrd_size;
->  	initrd_below_start_ok = 1;
->
->  	pr_info("Initial ramdisk at: 0x%p (%lu bytes)\n",
+> I think the intention is for this to go via Greg's tree since Scott's
+> driver code will depend on it?
+v3 of this patch series looks good and passes all of my tests.
+Remaining patches
+Acked-by: Scott Branden <scott.branden@broadcom.com>
 
-I'm going to put this one on fixes, but I don't think that's the right:
-DEBUG_VIRTUAL just catches the bug, but as far as I can tell it's been there
-since the beginning.  I'm going to replace this with
+I have added latest bcm-vk driver code to Kees' patch series and added 
+it here:
+https://github.com/sbranden/linux/tree/kernel_read_file_for_kees_v3
 
-Fixes: 76d2a0493a17 ("RISC-V: Init and Halt Code")
+If everyone finds Kees' patch series acceptable then the 3 patches 
+adding the bcm-vk driver
+need to be added to the series.  I can send the 3 patches out separately 
+and then
+the two patch series can be combined in Greg or someone's tree if that 
+works?
+Or if an in-kernel user beyond kernel selftest is needed for 
+request_partial_firmware_into_buf
+in Kees' patch series then another PATCH v4 needs to be sent out 
+including the bcm-vk driver.
+>
+> Thanks,
+>
+> -Kees
+>
+>
+> Kees Cook (15):
 
-It's not going to apply back that far, but we can always backport it where it
-fails.
+Thanks for help Kees, it's works now.
+>    test_firmware: Test platform fw loading on non-EFI systems
+>    selftest/firmware: Add selftest timeout in settings
+>    firmware_loader: EFI firmware loader must handle pre-allocated buffer
+>    fs/kernel_read_file: Remove FIRMWARE_PREALLOC_BUFFER enum
+>    fs/kernel_read_file: Remove FIRMWARE_EFI_EMBEDDED enum
+>    fs/kernel_read_file: Split into separate source file
+>    fs/kernel_read_file: Remove redundant size argument
+>    fs/kernel_read_file: Switch buffer size arg to size_t
+>    fs/kernel_read_file: Add file_size output argument
+>    LSM: Introduce kernel_post_load_data() hook
+>    firmware_loader: Use security_post_load_data()
+>    module: Call security_kernel_post_load_data()
+>    LSM: Add "contents" flag to kernel_read_file hook
+>    fs/kernel_file_read: Add "offset" arg for partial reads
+>    firmware: Store opt_flags in fw_priv
+>
+> Scott Branden (4):
+>    fs/kernel_read_file: Split into separate include file
+>    IMA: Add support for file reads without contents
+>    firmware: Add request_partial_firmware_into_buf()
+>    test_firmware: Test partial read support
+>
+>   drivers/base/firmware_loader/fallback.c       |  19 +-
+>   drivers/base/firmware_loader/fallback.h       |   5 +-
+>   .../base/firmware_loader/fallback_platform.c  |  16 +-
+>   drivers/base/firmware_loader/firmware.h       |   7 +-
+>   drivers/base/firmware_loader/main.c           | 143 ++++++++++---
+>   drivers/firmware/efi/embedded-firmware.c      |  21 +-
+>   drivers/firmware/efi/embedded-firmware.h      |  19 ++
+>   fs/Makefile                                   |   3 +-
+>   fs/exec.c                                     | 132 +-----------
+>   fs/kernel_read_file.c                         | 189 ++++++++++++++++++
+>   include/linux/efi_embedded_fw.h               |  13 --
+>   include/linux/firmware.h                      |  12 ++
+>   include/linux/fs.h                            |  39 ----
+>   include/linux/ima.h                           |  19 +-
+>   include/linux/kernel_read_file.h              |  55 +++++
+>   include/linux/lsm_hook_defs.h                 |   6 +-
+>   include/linux/lsm_hooks.h                     |  12 ++
+>   include/linux/security.h                      |  19 +-
+>   kernel/kexec.c                                |   2 +-
+>   kernel/kexec_file.c                           |  19 +-
+>   kernel/module.c                               |  24 ++-
+>   lib/test_firmware.c                           | 159 +++++++++++++--
+>   security/integrity/digsig.c                   |   8 +-
+>   security/integrity/ima/ima_fs.c               |  10 +-
+>   security/integrity/ima/ima_main.c             |  70 +++++--
+>   security/integrity/ima/ima_policy.c           |   1 +
+>   security/loadpin/loadpin.c                    |  17 +-
+>   security/security.c                           |  26 ++-
+>   security/selinux/hooks.c                      |   8 +-
+>   .../selftests/firmware/fw_filesystem.sh       |  91 +++++++++
+>   tools/testing/selftests/firmware/settings     |   8 +
+>   tools/testing/selftests/kselftest/runner.sh   |   6 +-
+>   32 files changed, 860 insertions(+), 318 deletions(-)
+>   create mode 100644 drivers/firmware/efi/embedded-firmware.h
+>   create mode 100644 fs/kernel_read_file.c
+>   create mode 100644 include/linux/kernel_read_file.h
+>   create mode 100644 tools/testing/selftests/firmware/settings
+>
 
-Thanks!
