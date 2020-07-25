@@ -2,90 +2,115 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCED1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9E9C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABE65206E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3EB920674
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgGYSja (ORCPT
+        id S1727854AbgGYSsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 14:39:30 -0400
-Received: from smtprelay0169.hostedemail.com ([216.40.44.169]:37382 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727034AbgGYSja (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 14:39:30 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 610AD182CED2A;
-        Sat, 25 Jul 2020 18:39:29 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: spoon68_5e0c79a26f52
-X-Filterd-Recvd-Size: 2538
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 25 Jul 2020 18:39:27 +0000 (UTC)
-Message-ID: <d4427fb12f9d4735ec82355bbe99f7b3098fc1a4.camel@perches.com>
-Subject: Re: [PATCH 1/1] STAGING - REALTEK RTL8188EU DRIVERS: Fix Coding
- Style Error
-From:   Joe Perches <joe@perches.com>
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Anant Thazhemadam <anant.thazhemadam@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anoop S <anoop.skumar1507@gmail.com>,
-        Michael Straube <straube.linux@gmail.com>,
-        Merwin Trever Ferrao <merwintf@gmail.com>,
-        Rahul Gottipati <rahul.blr97@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Date:   Sat, 25 Jul 2020 11:39:26 -0700
-In-Reply-To: <aab59eb1-baff-5de1-4e14-88ffc42db1fe@lwfinger.net>
-References: <20200725122041.5663-1-anant.thazhemadam@gmail.com>
-         <aab59eb1-baff-5de1-4e14-88ffc42db1fe@lwfinger.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Sat, 25 Jul 2020 14:48:55 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:55456 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726035AbgGYSsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 14:48:55 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jzPDy-006q6K-2A; Sat, 25 Jul 2020 20:48:46 +0200
+Date:   Sat, 25 Jul 2020 20:48:46 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
+        Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC leds + net-next v3 2/2] net: phy: marvell: add
+ support for PHY LEDs via LED class
+Message-ID: <20200725184846.GO1472201@lunn.ch>
+References: <20200724164603.29148-1-marek.behun@nic.cz>
+ <20200724164603.29148-3-marek.behun@nic.cz>
+ <20200725172318.GK1472201@lunn.ch>
+ <20200725200224.3f03c041@nic.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200725200224.3f03c041@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-07-25 at 12:47 -0500, Larry Finger wrote:
-> On 7/25/20 7:20 AM, Anant Thazhemadam wrote:
-> > Running the checkpatch.pl script on the file for which patch was created, the
-> > following error was found to exist.
-> > ERROR: space required after that ',' (ctx:VxV)
+> > > +#if 0
+> > > +	/* LED_COLOR_ID_MULTI is not yet merged in Linus' tree */
+> > > +	/* TODO: Support DUAL MODE */
+> > > +	if (color == LED_COLOR_ID_MULTI) {
+> > > +		phydev_warn(phydev, "node %pOF: This driver does not yet support multicolor LEDs\n",
+> > > +			    np);
+> > > +		return -ENOTSUPP;
+> > > +	}
+> > > +#endif  
 > > 
-> > Fixed the above error which was found on line #721 by inserting a blank
-> > space at the appropriate position.
-[]
-> > diff --git a/drivers/staging/rtl8188eu/core/rtw_security.c b/drivers/staging/rtl8188eu/core/rtw_security.c
-[]
-> > @@ -718,7 +718,7 @@ u32 rtw_tkip_decrypt(struct adapter *padapter, u8 *precvframe)
-> >   				res = _FAIL;
-> >   			}
-> >   		} else {
-> > -			RT_TRACE(_module_rtl871x_security_c_, _drv_err_, ("%s: stainfo==NULL!!!\n",__func__));
-> > +			RT_TRACE(_module_rtl871x_security_c_, _drv_err_, ("%s: stainfo==NULL!!!\n", __func__));
-> >   			res = _FAIL;
-> >   		}
-> >   	}
+> > Code getting committed should not be using #if 0. Is the needed code
+> > in the LED tree? Do we want to consider a stable branch of the LED
+> > tree which DaveM can pull into net-next? Or do you want to wait until
+> > the next merge cycle?
 > 
-> In fixing one checkpatch.pl condition, you introduced another - the resulting 
-> line is too long. You should fix only one such condition, but you should fix any 
-> others that are introduced. You do need to document it.
+> That's why this is RFC. But yes, I would like to have this merged for
+> 5.9, so maybe we should ask Dave. Is this common? Do we also need to
+> tell Pavel or how does this work?
 
-I think that doesn't matter as it was also too long
-before this change.
+The Pavel needs to create a stable branch. DaveM then merges that
+branch into net-next. Your patches can then be merged. When Linus
+pulls the two branches, led and net-next, git sees the exact same
+patches twice, and simply drops them from the second pull request.
 
-> Patch subjects for this driver should be written as "staging: rtl8188eu: .....".
+So you need to ask Pavel and DaveM if they are willing to do this.
 
-How likely is it that this driver would ever be
-moved to drivers/net/wireless/realtek/rtlwifi?
+> > > +	init_data.fwnode = &np->fwnode;
+> > > +	init_data.devname_mandatory = true;
+> > > +	init_data.devicename = phydev->attached_dev ? netdev_name(phydev->attached_dev) : "";  
+> > 
+> > This we need to think about. Are you running this on a system with
+> > systemd? Does the interface have a name like enp2s0? Does the LED get
+> > registered before or after systemd renames it from eth0 to enp2s0?
+> 
+> Yes, well, this should be discussed also with LED guys. I don't suppose
+> that renaming the sysfs symlink on interface rename event is
+> appropriate, but who knows?
+> The interfaces are platform specific, on mvebu. They aren't connected
+> via PCI, so their names remain eth0, eth1 ...
 
+But the Marvell driver is used with more than just mvebu. And we need
+this generic. There are USB Ethernet dongles which used phylib. They
+will get their interfaces renamed to include the MAC address, etc.
 
+It is possible to hook the notifier so we know when an interface is
+renamed. We can then either destroy and re-create the LED, or if the
+LED framework allows it, rename it.
+
+Or we avoid interface names all together and stick with the phy name,
+which is stable. To make it more user friendly, you could create
+additional symlinks. We already have /sys/class/net/ethX/phydev
+linking into sys/bus/mdio_bus/devices/.. .  We could add
+/sys/class/net/ethX/ledY linking into /sys/class/led/...
+
+It would also be possible to teach ethtool about LEDs, so that it
+follows the symbolic links, and manipulates the LED class files.
+
+> I also want this code to be generalized somehow so that it can be
+> reused. The problem is that I want to have support for DUAL mode, which
+> is Marvell specific, and a DUAL LED needs to be defined in device tree.
+
+It sounds like you first need to teach the LED core about dual LEDs
+and triggers which affect two LEDs..
+
+   Andrew
