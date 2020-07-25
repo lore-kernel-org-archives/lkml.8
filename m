@@ -2,152 +2,198 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DATE_IN_PAST_12_24,
+	DKIM_SIGNED,DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1909FC433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC1EC433E3
 	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 21:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E95C7206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 21:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8EDF20663
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 21:29:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tfz-net.20150623.gappssmtp.com header.i=@tfz-net.20150623.gappssmtp.com header.b="SiQ/TcpG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbgGYV2K (ORCPT
+        id S1727945AbgGYV3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 17:28:10 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:59556 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726870AbgGYV2J (ORCPT
+        Sat, 25 Jul 2020 17:29:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727897AbgGYV3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 17:28:09 -0400
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jzRi5-0003wV-Fu; Sat, 25 Jul 2020 22:28:01 +0100
-Received: from ben by deadeye with local (Exim 4.94)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1jzRi5-001HP4-2h; Sat, 25 Jul 2020 22:28:01 +0100
-Message-ID: <6898a5af75e165fb9524558804fca9f46f98b633.camel@decadent.org.uk>
-Subject: Re: process '/usr/bin/rsync' started with executable stack
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Kees Cook <keescook@chromium.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Christian Kujau <lists@nerdbynature.de>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>, linux-kernel@vger.kernel.org,
-        klibc@lists.zytor.com, "H. Peter Anvin" <hpa@zytor.com>
-Date:   Sat, 25 Jul 2020 22:27:56 +0100
-In-Reply-To: <202006251253.2893D4F67@keescook>
-References: <alpine.DEB.2.22.1.446.2006231023390.3892@trent.utfs.org>
-         <20200624165148.GD31008@kadam> <202006241238.E9CB1CE85B@keescook>
-         <20200625100429.GB2571@kadam> <202006251253.2893D4F67@keescook>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-9s2wXGQEeGkArEPHaR7g"
-User-Agent: Evolution 3.36.3-1 
+        Sat, 25 Jul 2020 17:29:01 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5284FC08C5CE
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 14:29:01 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id a32so9552366qtb.5
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 14:29:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tfz-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9vUjQUwq1PEERKf5qY60lLL26f/JpD/pXHJh6zM3IeM=;
+        b=SiQ/TcpGmb4nIYR2tjY/C67/FDysFa43NfqWK5sh5Hx2lBSouWujK2NCbEsIJebtEd
+         tojt5nScJQqxhwQo2UT4dTfanai5SFMOeWM3wbW2UGRg/GOgnXrFEu/+mFWQ3MnP1Yb7
+         iMIa5ei9q/lAJLiOifV8v6LOAScv3Ps1y6rYztN9UHKw8j7NHb25Lzv4hXbmkJ4ZZYg6
+         litzpjUq08/OFHnunvH80Kxv3oeAUNDmMr2UPu50xH7f+jQM2uBSoF1ZXUtvMz5kxJyC
+         FVpx8B3J2ThVo5Hi2QwlBjTh8zv5peDOyKYjaeT0RI9ziaedfbYAhVswskDLXAA8ax/E
+         xelg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9vUjQUwq1PEERKf5qY60lLL26f/JpD/pXHJh6zM3IeM=;
+        b=foMYF711M+XWzfMKZbvbBkh1w93CNi3exmdrUkWYUXg2/Qq+ROlBCZjpLzgDAoO0KR
+         Sv471IiFZEitXlQHVdWkzYN35VzbaPnRfOPKeV5m90PKY0akIHnVWxojZKM+eJ65hdcB
+         Z11tZy1yzQ1o4ArRZAVeFP5nDKF5fscaLUS2xbi5V8U2BYe0IPSn8TMDK/H2W6DjlkBF
+         xXpdOfx3NAvAq8fSAaM+pagE8kQGooqR2/GIExa8TtpSQ1x7I/JCuDCTDvyZbtNG0sdk
+         O+b+4nAkLTBO6uvngNHQXtOp/eyuA2fqraSvPiSAUB2IBlkVXPA7F0pFZ6km2QC8isT4
+         VdSQ==
+X-Gm-Message-State: AOAM531MaTpR43Ep2/CaMOxkNaAZ6lNpJGgUQKGbjw3tKmVG7+F+4G7W
+        DUAJDSfuIqtn08ktB368kjUKCbiF0xsEKw==
+X-Google-Smtp-Source: ABdhPJz+WCEHOOOvq9Cyg192KCiTDbh0OP4VCr5T++Wwp2jd2SAHr3ridCcBzehvmcV6KJxYgmQmvQ==
+X-Received: by 2002:ac8:4411:: with SMTP id j17mr15433311qtn.77.1595712540240;
+        Sat, 25 Jul 2020 14:29:00 -0700 (PDT)
+Received: from foo.attlocal.net (108-232-117-128.lightspeed.sntcca.sbcglobal.net. [108.232.117.128])
+        by smtp.gmail.com with ESMTPSA id w1sm11597735qkj.90.2020.07.25.14.28.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jul 2020 14:28:59 -0700 (PDT)
+From:   Pascal Bouchareine <kalou@tfz.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     Pascal Bouchareine <kalou@tfz.net>, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, "Alexey Dobriyan" <adobriyan@gmail.com>,
+        "Jeff Layton" <jlayton@poochiereds.net>,
+        "J. Bruce Fields" <bfields@fieldses.org>
+Subject: [PATCH] proc,fcntl: introduce F_SET_DESCRIPTION
+Date:   Fri, 24 Jul 2020 17:40:43 -0700
+Message-Id: <20200725004043.32326-1-kalou@tfz.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This command attaches a description to a file descriptor for
+troubleshooting purposes. The free string is displayed in the
+process fdinfo file for that fd /proc/pid/fdinfo/fd.
 
---=-9s2wXGQEeGkArEPHaR7g
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+One intended usage is to allow processes to self-document sockets
+for netstat and friends to report
 
-On Thu, 2020-06-25 at 13:20 -0700, Kees Cook wrote:
-> On Thu, Jun 25, 2020 at 01:04:29PM +0300, Dan Carpenter wrote:
-> > On Wed, Jun 24, 2020 at 12:39:24PM -0700, Kees Cook wrote:
-> > > On Wed, Jun 24, 2020 at 07:51:48PM +0300, Dan Carpenter wrote:
-> > > > In Debian testing the initrd triggers the warning.
-> > > >=20
-> > > > [   34.529809] process '/usr/bin/fstype' started with executable st=
-ack
-> > >=20
-> > > Where does fstype come from there? I am going to guess it is either
-> > > busybox or linked against klibc?
-> > >=20
-> > > klibc has known problems with executable stacks due to its trampoline
-> > > implementation:
-> > > https://wiki.ubuntu.com/SecurityTeam/Roadmap/ExecutableStacks
-> >=20
-> > Yeah.  It comes from klibc-utils.
->=20
-> This is exactly what I was worried about back in Feb:
-> https://lore.kernel.org/lkml/202002251341.48BC06E@keescook/
->=20
-> This warning, combined with klibc-based initrds, makes the whole thing
-> pointless because it will always warn once on boot for the klibc stack,
-> and then not warn about anything else after that.
->=20
-> It looks like upstream klibc hasn't been touched in about 4 years, and
-> it's been up to Ben to keep it alive in Debian.
->=20
-> A couple ideas, in order of my preference:
->=20
-> 1) stop using klibc-utils[1]. initramfs-tools-core is the only thing with=
- a
->    dependency on klibc-utils. Only a few things are missing from busybox.
->=20
-> 2) make the warning rate-limited instead?
->=20
-> 3) fix the use of trampolines in klibc
+Signed-off-by: Pascal Bouchareine <kalou@tfz.net>
+---
 
-It only uses trampolines on alpha, m68k, parisc, s390, and sparc32.  As
-of today, the master branch should correctly enable executable stacks
-on these and only these architecture.
+More context sent earlier this week: https://lore.kernel.org/linux-api/CAGbU3_nVvuzMn2wo4_ZKufWcGfmGsopVujzTWw-Bbeky=xS+GA@mail.gmail.com/T/#u
 
-I have a development branch that sets sa_restorer and disables
-executable stacks on alpha, s390, and sparc32:
-
-https://git.kernel.org/pub/scm/libs/klibc/klibc.git/log/?h=3Dexecstack-fixe=
-s
-
-But I haven't yet tested those changes other than on qemu-user.
-
-The m68k and parisc kernel ports still don't support any alternatives
-to trampolines for signal return, or they didn't when I reviewed this
-a few months ago.
-
-Ben.
-
-> Thoughts?
->=20
-> -Kees
->=20
->=20
-> [1] Ben appears well aware of this idea, as he suggested it in 2018. :)
->     https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D887159
->=20
---=20
-Ben Hutchings
-Anthony's Law of Force: Don't force it, get a larger hammer.
+ Documentation/filesystems/proc.rst |  3 +++
+ fs/fcntl.c                         | 19 +++++++++++++++++++
+ fs/proc/fd.c                       |  5 +++++
+ include/linux/fs.h                 |  3 +++
+ include/uapi/linux/fcntl.h         |  5 +++++
+ 5 files changed, 35 insertions(+)
 
 
---=-9s2wXGQEeGkArEPHaR7g
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
+index 996f3cfe7030..ae8045650836 100644
+--- a/Documentation/filesystems/proc.rst
++++ b/Documentation/filesystems/proc.rst
+@@ -1918,6 +1918,9 @@ A typical output is::
+ 	flags:	0100002
+ 	mnt_id:	19
+ 
++An optional 'desc' is set if the process documented its usage of
++the file via the fcntl command F_SET_DESCRIPTION.
++
+ All locks associated with a file descriptor are shown in its fdinfo too::
+ 
+     lock:       1: FLOCK  ADVISORY  WRITE 359 00:13:11691 0 EOF
+diff --git a/fs/fcntl.c b/fs/fcntl.c
+index 2e4c0fa2074b..c1ef724a906e 100644
+--- a/fs/fcntl.c
++++ b/fs/fcntl.c
+@@ -319,6 +319,22 @@ static long fcntl_rw_hint(struct file *file, unsigned int cmd,
+ 	}
+ }
+ 
++static long fcntl_set_description(struct file *file, char __user *desc)
++{
++	char *d;
++
++	d = strndup_user(desc, MAX_FILE_DESC_SIZE);
++	if (IS_ERR(d))
++		return PTR_ERR(d);
++
++	spin_lock(&file->f_lock);
++	kfree(file->f_description);
++	file->f_description = d;
++	spin_unlock(&file->f_lock);
++
++	return 0;
++}
++
+ static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
+ 		struct file *filp)
+ {
+@@ -426,6 +442,9 @@ static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
+ 	case F_SET_FILE_RW_HINT:
+ 		err = fcntl_rw_hint(filp, cmd, arg);
+ 		break;
++	case F_SET_DESCRIPTION:
++		err = fcntl_set_description(filp, argp);
++		break;
+ 	default:
+ 		break;
+ 	}
+diff --git a/fs/proc/fd.c b/fs/proc/fd.c
+index 81882a13212d..60b3ff971b2b 100644
+--- a/fs/proc/fd.c
++++ b/fs/proc/fd.c
+@@ -57,6 +57,11 @@ static int seq_show(struct seq_file *m, void *v)
+ 		   (long long)file->f_pos, f_flags,
+ 		   real_mount(file->f_path.mnt)->mnt_id);
+ 
++	spin_lock(&file->f_lock);
++	if (file->f_description)
++		seq_printf(m, "desc:\t%s\n", file->f_description);
++	spin_unlock(&file->f_lock);
++
+ 	show_fd_locks(m, file, files);
+ 	if (seq_has_overflowed(m))
+ 		goto out;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index f5abba86107d..09717bfa4e3b 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -980,6 +980,9 @@ struct file {
+ 	struct address_space	*f_mapping;
+ 	errseq_t		f_wb_err;
+ 	errseq_t		f_sb_err; /* for syncfs */
++
++#define MAX_FILE_DESC_SIZE 256
++	char                    *f_description;
+ } __randomize_layout
+   __attribute__((aligned(4)));	/* lest something weird decides that 2 is OK */
+ 
+diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+index 2f86b2ad6d7e..f86ff6dc45c7 100644
+--- a/include/uapi/linux/fcntl.h
++++ b/include/uapi/linux/fcntl.h
+@@ -55,6 +55,11 @@
+ #define F_GET_FILE_RW_HINT	(F_LINUX_SPECIFIC_BASE + 13)
+ #define F_SET_FILE_RW_HINT	(F_LINUX_SPECIFIC_BASE + 14)
+ 
++/*
++ * Set file description
++ */
++#define F_SET_DESCRIPTION	(F_LINUX_SPECIFIC_BASE + 15)
++
+ /*
+  * Valid hint values for F_{GET,SET}_RW_HINT. 0 is "not set", or can be
+  * used to clear any hints previously set.
+-- 
+2.25.1
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl8co9wACgkQ57/I7JWG
-EQkXsA/9Gbdsr1lUAsnm01IzmA+B2l2ioKNZ5fpmjADK5cEXPyvVsJn+5DPWdHxs
-O9j032ExQvM816R3dWpzO23DdqO05AYL+VdqTOpgIdwx8CZTCFc9Pv1ua1PhiaKY
-vJsNpPSu+nRfAcTStXZUjbMvMtJnev2wSv+zT3+eUX73/b5+BbKGnn1Zdkq8P4/R
-4Zdv6q17QXYTe37SFLxRPfAXIURZIoIJwdym/PlxxkfdKXl0W+zYJmQhbBCc17Et
-dBx5i3HyhtxowCv3vElKLqtzU2cFqVQGowdlcuw2sg3yWKIpopGH1Da6cnaCAmCp
-iTpkn26+lyHVuavirUGcRRhm4ROW5YSPEgpQhXL6hpuQwbUf/Nm+Egaxe+p0yQI3
-u5Es7vnjC9xCuHvA6apd+mDnmTsqV8IXPVrng+P07M47LS3r71Pb2lYWoKgpzoZv
-8mvYESVPS+95d3zsvy72+AwBAmgoEHgYiDoBcrZwqjsaAu0lQzCKjxw7e3aQUo9Y
-1srn2zFuTfqWdOt8iU3w8Ld/mNHgplCRtNVP9sM3AsV1ilZZqD4QKzrGHGbd0VaW
-ZcuOa89NIIo+MYS0E7U22z+qI/L9KipKP4jPhG9U9UGn2VMBGR7qbeXikgd91T9F
-XV6pNmjNn1NrU2PjegtogkxwaLdC1dZPVulJkpzT71eNpmQa0GA=
-=sL/U
------END PGP SIGNATURE-----
-
---=-9s2wXGQEeGkArEPHaR7g--
