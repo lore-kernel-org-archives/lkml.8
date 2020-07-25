@@ -2,258 +2,140 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE461C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBC52065F
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595677606;
-	bh=aIgeJw7FjVTh98J/Xk4LZQhH/4nW/KAvksCjLBGICSA=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=NK20b4IZ/7w+VZISO3k60Lgxlk+4N7uhRjWTVjr5u3WkimFIHrYINPs9KDzbolhI/
-	 7it+kSQHaSV/MU7um3tyVLgGmgbnVuQE0yGwq4hZSlwnlCjkgQLDIkdFrLtx2eY6Nw
-	 8cg2Py2tvUdAsu0hBefBRe6fPxFzatI4Rr4/WW58=
+	by mail.kernel.org (Postfix) with ESMTP id 9AD88206EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:51:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X1VnkpQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgGYLqm (ORCPT
+        id S1726870AbgGYLv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 07:46:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726583AbgGYLqm (ORCPT
+        Sat, 25 Jul 2020 07:51:57 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29908 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726583AbgGYLv4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 07:46:42 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB706C0619D3
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 04:46:41 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id y10so12554834eje.1
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 04:46:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=EVbnWxiSdo6tI+OSHkP9KL2Ub8jslTkkkswf8qLkvYE=;
-        b=ndeNAYRJN7D7Ejb8uZoTp4gC+9a//CJYnfzy70YWJ8TvoVOIcSqRUkLwtOs8SYTlhX
-         1Lru6V25YlmEnKG3Y8GFRnqEOGOs4+POwppYm2hs/mEYsTCYCz7vbO3xQjzmEUfqgHL9
-         Q1qGLLYt5oYs9b/YzSog8EWl6U7b6ELdxQChhjMXI+8+L2ttZkWfxP08QPjo88/Yepk/
-         lVg9KmuQXPfI1naJt57iKUqogcLR2mQjwShpYpnb+ihH0YBFr/as98jOP5ubz0m8aLEI
-         +2Y2YFv5nw46vpXVokguAex5+NsBw2JdtR0gbCDSlhFtz26DmSC7I87BJNl7tEHudVfp
-         2q7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=EVbnWxiSdo6tI+OSHkP9KL2Ub8jslTkkkswf8qLkvYE=;
-        b=LEXeLobWfx8oDdAPuYt+pn5wHMRY5QiIMlSdNIL4IUw8WDYcr/Sj7HoQMygOW6IdP+
-         VBZbqrPvr6VV0awgT1gRN8RZoNkRNf7JIySgqu1E3Lubh1onPzfRyI0U3olndv/F+Ckp
-         T51nfMbksxskVCxTj4TFC4nsUn1TRwosAATKz2AerlpW72T/+xxEKrjW3GXYx0gc0vKh
-         7skeacmMfzDG2mKg5DkVP/CGKX8KUo7+kfl4KlRryPI33GbrPjzZkRa2qfwga6qi/1yj
-         DOeGb69/nF7mhkXd3iIqM24rnWtYAM+JBH164/SrWdM7AUlUEYWS/0iPqyvwxsXbzrFc
-         F+dg==
-X-Gm-Message-State: AOAM53035TXZqvTV3Pdi1nyxTKs1r14r0LyYWxusWsoeN7Tc6+mQwpH2
-        meeqdIgWfpz5T6ZfsU9VKvY=
-X-Google-Smtp-Source: ABdhPJzfTt7CpECTIIb0XsIODuNNWSvn5+Iq36aHWsVU52XPBH63yt+VKQRGiOpXo+qxTjxTBntptQ==
-X-Received: by 2002:a17:906:3c02:: with SMTP id h2mr2156858ejg.437.1595677600532;
-        Sat, 25 Jul 2020 04:46:40 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id l26sm2720231ejq.39.2020.07.25.04.46.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 04:46:39 -0700 (PDT)
-Date:   Sat, 25 Jul 2020 13:46:37 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: [GIT PULL] x86 fixes
-Message-ID: <20200725114637.GA943758@gmail.com>
+        Sat, 25 Jul 2020 07:51:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595677914;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0afFqAur257GK/ap6tytilWq+yG+Tf9kQhohDroojF8=;
+        b=X1VnkpQHfyA27izlH2HPmzMkbKVo4/31YVrH3pAO6TrjGMR8A7TLfP5W0ej+cgAHl1J1ZV
+        Kfn3veNpkOy4gSBc7rDtexZOcrLlimwTaT06uBJgtjSmIg1qs5UKxf1/mtPDuKnW5r2KiC
+        Bo2PvaBnVxgbxw+gIa9QCt6JKR2I9CU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-139-frKsRCXQN2a7QYS_tvh5nw-1; Sat, 25 Jul 2020 07:51:50 -0400
+X-MC-Unique: frKsRCXQN2a7QYS_tvh5nw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CC0D57;
+        Sat, 25 Jul 2020 11:51:48 +0000 (UTC)
+Received: from krava (unknown [10.40.192.11])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 6A6A110013C2;
+        Sat, 25 Jul 2020 11:51:44 +0000 (UTC)
+Date:   Sat, 25 Jul 2020 13:51:43 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     kajoljain <kjain@linux.ibm.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Subject: Re: [PATCHv3 00/19] perf metric: Add support to reuse metric
+Message-ID: <20200725115143.GA1157288@krava>
+References: <20200719181320.785305-1-jolsa@kernel.org>
+ <dbe59791-937d-de95-4ba0-c34e7a1cd273@linux.ibm.com>
+ <20200720072237.GC760733@krava>
+ <6cb72b48-5244-9faf-a9e5-67858c732b83@linux.ibm.com>
+ <20200720081943.GE760733@krava>
+ <dd465647-da63-c473-9944-bdfec2abe484@linux.ibm.com>
+ <20200720191625.GL760733@krava>
+ <eec934d1-5f45-739e-d5df-847a4b995fa5@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <eec934d1-5f45-739e-d5df-847a4b995fa5@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Fri, Jul 24, 2020 at 11:22:28AM +0530, kajoljain wrote:
 
-Please pull the latest x86/urgent git tree from:
+SNIP
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2020-07-25
+> 
+> Hi Jiri,
+>        The change looks good to me. I tried with adding this patch on top of your perf/metric branch. It did resolve the issue of not printing
+> all chips data. And now I can see proper values for hv-24x7 metric events.
+> 
+> I was also trying by adding new metric using the feature added in this patchset with something like this:
+> 
+> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> index 8383a37647ad..dfe4bd63b587 100644
+> --- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> +++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> @@ -16,6 +16,11 @@
+>          "MetricName": "PowerBUS_Frequency",
+>          "ScaleUnit": "2.5e-7GHz"
+>      },
+> +    {
+> +       "MetricExpr": "Memory_WR_BW_Chip + Memory_RD_BW_Chip",
+> +        "MetricName": "Total_Memory_BW",
+> +        "ScaleUnit": "1.6e-2MB"
+> +    },
 
-   # HEAD: d181d2da0141371bbc360eaea78719203e165e1c x86/dumpstack: Dump user space code correctly again
+hum, we'll need special case this.. because Memory_WR_BW_Chip will
+unwind to Memory_WR_BW_Chip_[01] and Total_Memory_BW is not aware of
+that.. what's the expected behaviour in here?
 
-Misc fixes:
+have Total_Memory_BW_[01] for each runtime arg?
 
- - Fix a section end page alignment assumption that was causing crashes
+I think this will need to come on top of this changes,
+it's already too big
 
- - Fix ORC unwinding on freshly forked tasks which haven't executed yet
-   and which have empty user task stacks
+thanks,
+jirka
 
- - Fix the debug.exception-trace=1 sysctl dumping of user stacks, which
-   was broken by recent maccess changes
+> 
+> I guess as we have dependency on '?' symbol, I am not able to see all chips data for Total_Memory_BW.
+> I am not sure if Its expected behavior?
+> 
+> This is what I am getting:
+> 
+> [root@ltc-zz189-lp4 perf]# ./perf stat --metric-only -M Total_Memory_BW,Memory_WR_BW_Chip,Memory_RD_BW_Chip -I 1000 -C 0
+> #           time  MB  Total_Memory_BW MB  Memory_RD_BW_Chip_1 MB  Memory_WR_BW_Chip_1 MB  Memory_WR_BW_Chip_0 MB  Memory_RD_BW_Chip_0 
+>      1.000067388                 36.4                      0.2                     36.3                     65.0                     72.1 
+>      2.000374276                 36.2                      0.3                     35.9                     65.4                     77.9 
+>      3.000543202                 36.3                      0.3                     36.0                     68.7                     81.2 
+>      4.000702855                 36.3                      0.3                     36.0                     70.9                     93.3 
+>      5.000856837                 36.0                      0.2                     35.8                     67.4                     81.5 
+> ^C     5.367865273                 13.2                      0.1                     13.1                     23.5                     28.3 
+>  Performance counter stats for 'CPU(s) 0':
+>                194.4                      1.3                    193.1                    361.0                    434.3 
+>        5.368039176 seconds time elapsed
+> 
+> We can only get single chip data's sum in Total_Memory_BW. Please let me know if I am missing something.
 
+SNIP
 
-  out-of-topic modifications in x86-urgent-2020-07-25:
-  ------------------------------------------------------
-  include/asm-generic/vmlinux.lds.h  # de2b41be8fcc: x86, vmlinux.lds: Page-align
-
- Thanks,
-
-	Ingo
-
------------------->
-Joerg Roedel (1):
-      x86, vmlinux.lds: Page-align end of ..page_aligned sections
-
-Josh Poimboeuf (2):
-      x86/unwind/orc: Fix ORC for newly forked tasks
-      x86/stacktrace: Fix reliable check for empty user task stacks
-
-Thomas Gleixner (1):
-      x86/dumpstack: Dump user space code correctly again
-
-
- arch/x86/kernel/dumpstack.c       | 27 +++++++++++++++++----------
- arch/x86/kernel/stacktrace.c      |  5 -----
- arch/x86/kernel/unwind_orc.c      |  8 ++++++--
- arch/x86/kernel/vmlinux.lds.S     |  1 +
- include/asm-generic/vmlinux.lds.h |  5 ++++-
- 5 files changed, 28 insertions(+), 18 deletions(-)
-
-diff --git a/arch/x86/kernel/dumpstack.c b/arch/x86/kernel/dumpstack.c
-index b037cfa7c0c5..7401cc12c3cc 100644
---- a/arch/x86/kernel/dumpstack.c
-+++ b/arch/x86/kernel/dumpstack.c
-@@ -71,6 +71,22 @@ static void printk_stack_address(unsigned long address, int reliable,
- 	printk("%s %s%pB\n", log_lvl, reliable ? "" : "? ", (void *)address);
- }
- 
-+static int copy_code(struct pt_regs *regs, u8 *buf, unsigned long src,
-+		     unsigned int nbytes)
-+{
-+	if (!user_mode(regs))
-+		return copy_from_kernel_nofault(buf, (u8 *)src, nbytes);
-+
-+	/*
-+	 * Make sure userspace isn't trying to trick us into dumping kernel
-+	 * memory by pointing the userspace instruction pointer at it.
-+	 */
-+	if (__chk_range_not_ok(src, nbytes, TASK_SIZE_MAX))
-+		return -EINVAL;
-+
-+	return copy_from_user_nmi(buf, (void __user *)src, nbytes);
-+}
-+
- /*
-  * There are a couple of reasons for the 2/3rd prologue, courtesy of Linus:
-  *
-@@ -97,17 +113,8 @@ void show_opcodes(struct pt_regs *regs, const char *loglvl)
- #define OPCODE_BUFSIZE (PROLOGUE_SIZE + 1 + EPILOGUE_SIZE)
- 	u8 opcodes[OPCODE_BUFSIZE];
- 	unsigned long prologue = regs->ip - PROLOGUE_SIZE;
--	bool bad_ip;
--
--	/*
--	 * Make sure userspace isn't trying to trick us into dumping kernel
--	 * memory by pointing the userspace instruction pointer at it.
--	 */
--	bad_ip = user_mode(regs) &&
--		__chk_range_not_ok(prologue, OPCODE_BUFSIZE, TASK_SIZE_MAX);
- 
--	if (bad_ip || copy_from_kernel_nofault(opcodes, (u8 *)prologue,
--					OPCODE_BUFSIZE)) {
-+	if (copy_code(regs, opcodes, prologue, sizeof(opcodes))) {
- 		printk("%sCode: Bad RIP value.\n", loglvl);
- 	} else {
- 		printk("%sCode: %" __stringify(PROLOGUE_SIZE) "ph <%02x> %"
-diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
-index 6ad43fc44556..2fd698e28e4d 100644
---- a/arch/x86/kernel/stacktrace.c
-+++ b/arch/x86/kernel/stacktrace.c
-@@ -58,7 +58,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
- 			 * or a page fault), which can make frame pointers
- 			 * unreliable.
- 			 */
--
- 			if (IS_ENABLED(CONFIG_FRAME_POINTER))
- 				return -EINVAL;
- 		}
-@@ -81,10 +80,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
- 	if (unwind_error(&state))
- 		return -EINVAL;
- 
--	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
--	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
--		return -EINVAL;
--
- 	return 0;
- }
- 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 7f969b2d240f..ec88bbe08a32 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -440,8 +440,11 @@ bool unwind_next_frame(struct unwind_state *state)
- 	/*
- 	 * Find the orc_entry associated with the text address.
- 	 *
--	 * Decrement call return addresses by one so they work for sibling
--	 * calls and calls to noreturn functions.
-+	 * For a call frame (as opposed to a signal frame), state->ip points to
-+	 * the instruction after the call.  That instruction's stack layout
-+	 * could be different from the call instruction's layout, for example
-+	 * if the call was to a noreturn function.  So get the ORC data for the
-+	 * call instruction itself.
- 	 */
- 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
- 	if (!orc) {
-@@ -662,6 +665,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 		state->sp = task->thread.sp;
- 		state->bp = READ_ONCE_NOCHECK(frame->bp);
- 		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-+		state->signal = (void *)state->ip == ret_from_fork;
- 	}
- 
- 	if (get_stack_info((unsigned long *)state->sp, state->task,
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 3bfc8dd8a43d..9a03e5b23135 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -358,6 +358,7 @@ SECTIONS
- 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {
- 		__bss_start = .;
- 		*(.bss..page_aligned)
-+		. = ALIGN(PAGE_SIZE);
- 		*(BSS_MAIN)
- 		BSS_DECRYPTED
- 		. = ALIGN(PAGE_SIZE);
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index db600ef218d7..052e0f05a984 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -341,7 +341,8 @@
- 
- #define PAGE_ALIGNED_DATA(page_align)					\
- 	. = ALIGN(page_align);						\
--	*(.data..page_aligned)
-+	*(.data..page_aligned)						\
-+	. = ALIGN(page_align);
- 
- #define READ_MOSTLY_DATA(align)						\
- 	. = ALIGN(align);						\
-@@ -737,7 +738,9 @@
- 	. = ALIGN(bss_align);						\
- 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {				\
- 		BSS_FIRST_SECTIONS					\
-+		. = ALIGN(PAGE_SIZE);					\
- 		*(.bss..page_aligned)					\
-+		. = ALIGN(PAGE_SIZE);					\
- 		*(.dynbss)						\
- 		*(BSS_MAIN)						\
- 		*(COMMON)						\
