@@ -2,71 +2,154 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB94C433EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 13:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 13:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3938920674
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 13:02:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="mV4P+rZd"
+	by mail.kernel.org (Postfix) with ESMTP id B38A5206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 13:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595682325;
+	bh=U21PYTA1AoTnI+6WAR2N7tODWRug+TPepUmK7ssjKF0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VcEcPsRNV0CgsG1jJTCPvPVlCHv3KODx1cq7i918VRrDW0O6CBAMH25D2TXioJ8NK
+	 XkTEqelC8u5iGN51fwh/uv5Sz7QXHOqNletiDH/wjmVJQRq2t5Kug0OsZ19tNr4EKE
+	 viTUvOR1FyyU8NmjUI4El4XkT3vRxUsBvOhpWdvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgGYNCx (ORCPT
+        id S1727034AbgGYNFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 09:02:53 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:34144 "EHLO rere.qmqm.pl"
+        Sat, 25 Jul 2020 09:05:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726639AbgGYNCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 09:02:52 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BDR7Z19ynz4D;
-        Sat, 25 Jul 2020 15:02:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1595682170; bh=D0/hPNw6b/gGh/gKDmVNpzkoyYq/5IAZlJL18d7KTmQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mV4P+rZdsMRWGuUEjtrNLDiuN1dF5pTE6M6G4V2OH00Jl1H4C2x+cIrMLph/K+tal
-         vPHxMYiVkFEc0u2w+zWc/Zb5teEQ0CB511nn7uvxnVRUnanhioZWy69U6IldE+nOyK
-         CygVmGUXjNxySZbNs6ZwPA7phh8rQ5rVwy+DJP8wBfyE+Ooiy5GCSBdIfFr7EnqTPA
-         QsHQO7kIMDsE9MPShC76GbXU4ViiO3u32Hsi2d7akvNeVXzoEY8DsgSBzJXhx8iiU3
-         9fsCNwBiCL7LAb/i/fjbllXKALuumRh5KnlDZP7TRVm6BulZnPc8JibMet7wqVmji3
-         S06MMunJcRh+w==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.3 at mail
-Date:   Sat, 25 Jul 2020 15:02:48 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        apw@canonical.com, joe@perches.com, colin.king@canonical.com,
-        sj38.park@gmail.com, jslaby@suse.cz, pavel@ucw.cz
-Subject: Re: checkpatch: support deprecated terms checking
-Message-ID: <20200725130248.GC18633@qmqm.qmqm.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200611062550.20113-2-sjpark@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726583AbgGYNFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 09:05:24 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E582206D7;
+        Sat, 25 Jul 2020 13:05:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595682323;
+        bh=U21PYTA1AoTnI+6WAR2N7tODWRug+TPepUmK7ssjKF0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OGcRtXQaT7esYQbJV3DAzP+rqwK0aCLprAjgzKhptZnvia93fP4YWaUCSPNJ7EVTy
+         YOvvetqW1FEw7mNHd3GWQfSEdH8EEmRb5aFohi7q8LQ71URFpuqj/bkgg0fSe2GPsC
+         26AfzpLjDmsqCXoVA+gQM9riJ7yWjmtM53s4ilcM=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jzJrd-00EqVm-RZ; Sat, 25 Jul 2020 14:05:22 +0100
+Date:   Sat, 25 Jul 2020 14:05:20 +0100
+Message-ID: <87365fycbz.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 1/1] irqchip: imx-intmux: implement intmux PM
+In-Reply-To: <20200720104237.13119-2-qiangqing.zhang@nxp.com>
+References: <20200720104237.13119-1-qiangqing.zhang@nxp.com>
+        <20200720104237.13119-2-qiangqing.zhang@nxp.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: qiangqing.zhang@nxp.com, tglx@linutronix.de, jason@lakedaemon.net, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, 20 Jul 2020 11:42:37 +0100,
+Joakim Zhang <qiangqing.zhang@nxp.com> wrote:
+> 
+> When system suspended, we could explicitly disable clock to save power.
+> And we need save registers' state since it could be lost after power
+> off.
+> 
+> Implement PM which will:
+> 1) Without CONFIG_PM, clock is always on after probe stage.
+> 2) With CONFIG_PM, clock is off after probe stage.
+> 3) Disable clock and save registers' state when do system suspend and
+> enable clock and restore registers' state while system resume.
+> 4) Make Power Domain framework be able to shutdown the corresponding
+> power domain of this device.
+> 
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> ---
+>  drivers/irqchip/irq-imx-intmux.c | 70 +++++++++++++++++++++++++++++++-
+>  1 file changed, 68 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-imx-intmux.c b/drivers/irqchip/irq-imx-intmux.c
+> index c27577c81126..5971603cc607 100644
+> --- a/drivers/irqchip/irq-imx-intmux.c
+> +++ b/drivers/irqchip/irq-imx-intmux.c
+> @@ -53,6 +53,7 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/spinlock.h>
+> +#include <linux/pm_runtime.h>
+>  
+>  #define CHANIER(n)	(0x10 + (0x40 * n))
+>  #define CHANIPR(n)	(0x20 + (0x40 * n))
+> @@ -60,6 +61,7 @@
+>  #define CHAN_MAX_NUM		0x8
+>  
+>  struct intmux_irqchip_data {
+> +	struct irq_chip		chip;
+>  	int			chanidx;
+>  	int			irq;
+>  	struct irq_domain	*domain;
+> @@ -70,6 +72,7 @@ struct intmux_data {
+>  	void __iomem			*regs;
+>  	struct clk			*ipg_clk;
+>  	int				channum;
+> +	u32				*saved_reg;
+>  	struct intmux_irqchip_data	irqchip_data[];
+>  };
+>  
+> @@ -120,8 +123,10 @@ static struct irq_chip imx_intmux_irq_chip = {
+>  static int imx_intmux_irq_map(struct irq_domain *h, unsigned int irq,
+>  			      irq_hw_number_t hwirq)
+>  {
+> -	irq_set_chip_data(irq, h->host_data);
+> -	irq_set_chip_and_handler(irq, &imx_intmux_irq_chip, handle_level_irq);
+> +	struct intmux_irqchip_data *data = h->host_data;
+> +
+> +	irq_set_chip_data(irq, data);
+> +	irq_set_chip_and_handler(irq, &data->chip, handle_level_irq);
+>  
+>  	return 0;
+>  }
+> @@ -232,6 +237,19 @@ static int imx_intmux_probe(struct platform_device *pdev)
+>  	data->channum = channum;
+>  	raw_spin_lock_init(&data->lock);
+>  
+> +	if (IS_ENABLED(CONFIG_PM)) {
+> +		/* save CHANIER register */
+> +		data->saved_reg = devm_kzalloc(&pdev->dev,
+> +					       sizeof(unsigned int) * channum,
 
-I see that this patch went into next and is already inciting people to
-do wrong things [1]. Can you please fix it to require '--subjective'
-switch or otherwise mark it clearly as suggestion-only?
+This isn't consistent with the type of data->saved_reg. Consider using
+sizeof(*data->saved_reg), which is guaranteed to be the right type.
 
-The coding-style as in Linus' master says about *NEW* uses of the words
-listed (those introductions I expect to be actually rare) and not about
-existing use in the code or industry. Making a noise about all uses
-found surely will generate a lot more irrelevant patches.
+It also begs the question: since this saved_reg array is allocated on
+a per channel basis, why don't you have a per-channel additional u32
+in the intmux_irqchip_data structure instead? This would sidestep this
+extra allocation altogether.
 
-[1] https://www.spinics.net/lists/linux-tegra/msg51849.html
+Thanks,
 
-Best Regards
-Micha³ Miros³aw
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
