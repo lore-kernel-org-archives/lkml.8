@@ -2,151 +2,142 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D573EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74A30206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1DDE20674
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvXHuh6j"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Xhf417/R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgGYTUA (ORCPT
+        id S1727951AbgGYTU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 15:20:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32826 "EHLO
+        Sat, 25 Jul 2020 15:20:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726381AbgGYTT7 (ORCPT
+        with ESMTP id S1726681AbgGYTU4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 15:19:59 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40FBEC08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 12:19:59 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id d17so13245172ljl.3
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 12:19:59 -0700 (PDT)
+        Sat, 25 Jul 2020 15:20:56 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D72AC08C5C1
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 12:20:55 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id q75so4977357iod.1
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 12:20:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=g4J6dkRqHFKiKhjcRC8q/JmeC/kbD2LNmS8StOCmtOU=;
-        b=mvXHuh6jpM3ry5QoR34JW1d8FG1E/6i19D+6eHevdB/BJD97IyC8wD2xC+bM8l5Ujc
-         48KF5bxobuUlIlCULXPavhfxF3h1KYr8QgsIyILVedJSXIv54uInP6GcUT1iXSG+ayYu
-         EUD7recqFSD++W9kn404rRgoXuFpxT5nBnjmX6YS6TX57Bn99MxgL9v8Ty2mxycVSlz9
-         lFPJy/ecKwv3YkQic14JYKpV3fDDMlwGCrzbXwY0ocmBn8/Wkw7sQcmAuR6xMs5JLrnE
-         TvooKIp0/sJ+Z9iwMaWOvHuMMjRAhrsvnR6k1debndHhInU3NvFu9JxZ3LxaPSPWVaS3
-         e1Qg==
+        bh=BAKD43YZW+XuTJpWzZ9VYyNMQYro/UXMGluF3fF4RYs=;
+        b=Xhf417/RwG3NeXd9PMir029lydvfWTPF/8jJlWtZ2kMEl6apVCGbNy22lOShc2CrJ3
+         6fnIVRmhU2MH8kyyigQzB6BYr4f+E9VuXQ6oP7TySgZkjacZl34d4lC4uoSJu2X+1hFG
+         PD/Amz7tkEbGbbrMctrB8Ux5faMcAaurEl/N72CcGFuk98JoYpRMEgCv4qHsTHcqo0wZ
+         ZQxQYyDYayi+9wtQZ4UwHACQyPddT2V2GsU+SgMaqmOojihG6eO/Anl8mxsIQYRSrMDo
+         jlDWC2/3MbLFSliD3ej5bAfhCbvVO/8/PYfVbRZw4b61VKvCvrAAK4Zva6pD1WTHc67C
+         +dng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=g4J6dkRqHFKiKhjcRC8q/JmeC/kbD2LNmS8StOCmtOU=;
-        b=jWKF1yuH9FO3Rxl/YYOsrv3FCF9C9dsI8Qw9PZpOegJN8EKjSSwcbZK5GeoLPiK7ZA
-         WI7YyRhIJEcy1Q25jnto777/+B7VC6CSVDQGVbzPKgsH+y9uWixfUoLvC4qo4DjUteIF
-         N6CrjnJ3mHHvfd0uob0BlGli1SmL3Y8HzU6pqISisetqqgGki7D5kxAIuWbYUH1v4+4F
-         YlkhI8FLeOYmmpBRQrv8SJWEJ+X0UZHa+60yUaXBFeh78DDQpI+anoMov4IDIjVtGPJ4
-         Umeru5My6EERtZtuaTQckKryOOSCGw0GtylPtoHAghF356YreND39CN4WiM5/M9sVM4N
-         k5VQ==
-X-Gm-Message-State: AOAM531dDVTdVunRZMa6WY/u1WZmL7OeXzjkm4026Hn/t4cFyfKbnI/v
-        i3Tfec1OHJvRLvDZCX9PYmukqqlrjTKObMDJW25TtQ==
-X-Google-Smtp-Source: ABdhPJwX2YWaS3FX13+Q0LtCtGPNZAsAPnsJBOyVicKVnyzv1PltkImBXj4c5goex61U5pVCv5ilQrP7FYqxDuxoALY=
-X-Received: by 2002:a2e:9d0b:: with SMTP id t11mr589477lji.365.1595704797729;
- Sat, 25 Jul 2020 12:19:57 -0700 (PDT)
+        bh=BAKD43YZW+XuTJpWzZ9VYyNMQYro/UXMGluF3fF4RYs=;
+        b=oky1YLs6wryueH0I8Wmfah6sOEHhBy64F4OQqIBuCIllwcr1/7+uMQsi6z3SlcWkCf
+         6i5lYu9h4ur3A+p3N+4y3uAL9NnM7iP9w7mIqaEl3VK7rkto7k4J5M9F/bxoB6yluVfu
+         KWWu4QwZU+pUtNC7+eqzQ/RflawBsqMTglFHhWPB9Ke7gROxRpL9wywF+FLBxfXnXNIN
+         CLCMU7AoUtmLDc3m+uFl4RoXE7i10hqjxVxRqTpLb0S58mPLp4Rpv/QN57ztrQSxZgxN
+         FUq5bONV6LeQJy2WVJuXMftojpWSfs6cspZFqrGXVZk3o/jMZuvEyw2feVwP8KStW1lg
+         KJnw==
+X-Gm-Message-State: AOAM532RAtemYABDJRWrUKm3xKb4uf5t12G2t07iThbgs5LTy1bHbviq
+        u5bAGndjgrPx2VUNmwd31tS8P5PqyYlMc/deIqbBNA==
+X-Google-Smtp-Source: ABdhPJx6JxsimzPomfM2WuKjX7IWCzlyMb7jOINulu+5K1XUglCEFIKyVyJiLS58iWiQ3f7gDzo6FNe8rcOgwXN1sCs=
+X-Received: by 2002:a05:6602:2c01:: with SMTP id w1mr16805753iov.130.1595704854695;
+ Sat, 25 Jul 2020 12:20:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200722110411.ebkv6knvc6mzw5uf@smtp.gmail.com>
- <20200722120502.GK6419@phenom.ffwll.local> <20200722140604.27dfzfnzug5vb75r@smtp.gmail.com>
- <CAKMK7uHWCnJ+3YnP2FwVGH6cEDkmPnH9ALjY_1R51QVs0HPG0Q@mail.gmail.com>
- <20200725011737.GA2851@realwakka> <CAKMK7uEWPCzx+K=+nJsLT5HRBVJ+s8tqx30Ljkr4BCBDComyWQ@mail.gmail.com>
- <20200725174514.esh4gqek6oddizvh@smtp.gmail.com> <CAKMK7uEi0UFSwYTO7h6_YKN+UykOuVcmhMSG_ySy9uyo_7Pz-g@mail.gmail.com>
- <20200725184918.togb54bxuifrq77c@smtp.gmail.com>
-In-Reply-To: <20200725184918.togb54bxuifrq77c@smtp.gmail.com>
-From:   Melissa Wen <melissa.srw@gmail.com>
-Date:   Sat, 25 Jul 2020 16:19:46 -0300
-Message-ID: <CAJeY4oEr1mDASzdjfyeXqfqUmM6n1ULgnedM7dif6db6Qk-r2g@mail.gmail.com>
-Subject: Re: [PATCH] drm/vkms: add missing drm_crtc_vblank_put to the get/put
- pair on flush
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Sidong Yang <realwakka@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+References: <20200715092528.8136-1-brgl@bgdev.pl> <20200715092528.8136-2-brgl@bgdev.pl>
+In-Reply-To: <20200715092528.8136-2-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sat, 25 Jul 2020 21:20:43 +0200
+Message-ID: <CAMRc=Mcjv9ykTy8BQSzvG_FnpP1s_SyhyTMpV=fZ1U=SJTy-iA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] devres: provide devm_krealloc()
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kernel-usp@googlegroups.com
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> No, this very first warning continues (only once) :(
-> From here (drm_crtc_vblank_on):
->         if (atomic_read(&vblank->refcount) != 0 || drm_vblank_offdelay == 0)
->                 drm_WARN_ON(dev, drm_vblank_enable(dev, pipe));
+On Wed, Jul 15, 2020 at 11:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Implement the managed variant of krealloc(). This function works with
+> all memory allocated by devm_kmalloc() (or devres functions using it
+> implicitly like devm_kmemdup(), devm_kstrdup() etc.).
+>
+> Managed realloc'ed chunks can be manually released with devm_kfree().
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
 
-Sorry, not sure when this warning is triggered.
+[snip!]
 
->
-> > But I'm still wondering why after step 3 we don't get -EINVAL from
-> > vblank_get() - after vblank_off() vblank->enabled should be false
-> > again, getting us back to the same state as after 1. Is that not
-> > happening?
->
-> Yes (sorry if it got confused), we got -EINVAL after setp 3:
->
-> In step 3, at the end of the 2nd running, we have:
-> atomic_disable
-> --> vblank_off [!vblank->inmodeset + refcount going 0->1 + inmodeset=1]
-> and then in next vblank_get: -EINVAL (!vblank->enabled + refcount ends 1)
-> as in the first step.
->
-> Melissa
->
-> > -Daniel
-> >
-> > >
-> > > > >
-> > > > > Thanks
-> > > > > -Sidong
-> > > > >
-> > > > > > > >
-> > > > > > > > >             crtc->state->event = NULL;
-> > > > > > > > >     }
-> > > > > > > > >
-> > > > > > > > > --
-> > > > > > > > > 2.27.0
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > --
-> > > > > > > > Daniel Vetter
-> > > > > > > > Software Engineer, Intel Corporation
-> > > > > > > > http://blog.ffwll.ch
-> > > > > >
-> > > > > >
-> > > > > >
-> > > > > > --
-> > > > > > Daniel Vetter
-> > > > > > Software Engineer, Intel Corporation
-> > > > > > http://blog.ffwll.ch
-> > > > > > _______________________________________________
-> > > > > > dri-devel mailing list
-> > > > > > dri-devel@lists.freedesktop.org
-> > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > > >
-> > > >
-> > > >
-> > > > --
-> > > > Daniel Vetter
-> > > > Software Engineer, Intel Corporation
-> > > > http://blog.ffwll.ch
-> >
-> >
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
+> +void *devm_krealloc(struct device *dev, void *ptr, size_t new_size, gfp_t gfp)
+> +{
+> +       struct devres *old_dr, *new_dr;
+> +       struct list_head old_head;
+> +       unsigned long flags;
+> +       size_t total_size;
+> +       void *ret = NULL;
+> +
+> +       if (unlikely(!new_size)) {
+> +               devm_kfree(dev, ptr);
+> +               return ZERO_SIZE_PTR;
+> +       }
+> +
+> +       if (unlikely(ZERO_OR_NULL_PTR(ptr)))
+> +               return devm_kmalloc(dev, new_size, gfp);
+> +
+> +       if (WARN_ON(is_kernel_rodata((unsigned long)ptr)))
+> +               /*
+> +                * We cannot reliably realloc a const string returned by
+> +                * devm_kstrdup_const().
+> +                */
+> +               return NULL;
+> +
+> +       if (!check_dr_size(new_size, &total_size))
+> +               return NULL;
+> +
+> +       spin_lock_irqsave(&dev->devres_lock, flags);
+> +
+> +       old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
+> +       if (!old_dr) {
+> +               spin_unlock_irqrestore(&dev->devres_lock, flags);
+> +               WARN(1, "Memory chunk not managed or managed by a different device.");
+> +               return NULL;
+> +       }
+> +
+> +       old_head = old_dr->node.entry;
+> +
+> +       new_dr = krealloc(old_dr, total_size, gfp);
+
+Ugh, I wanted to check up on this patch and, after looking at it now,
+realized it's wrong. If the user calls devm_krealloc() with GFP_KERNEL
+we may end up sleeping with spinlock taken.
+
+Let me prepare another version.
+
+Bartosz
