@@ -2,153 +2,193 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E0CC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5323BC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA2E206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E351206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:26:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RbNTN2vP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbgGYDZW (ORCPT
+        id S1726899AbgGYD0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 23:25:22 -0400
-Received: from mga04.intel.com ([192.55.52.120]:10202 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726572AbgGYDZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 23:25:22 -0400
-IronPort-SDR: o9RvZeBGp7YEphIY6umZ+RWxEQzbk+q1PBhyJFp4EgJ+gNZ1reYjjrGVopff1x0qF8xKs9CIpg
- XRXMGqAUr7ow==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="148297666"
-X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="148297666"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 20:25:21 -0700
-IronPort-SDR: eOIC+S4SulEMj5oJcjW9Qdy4I/m4tVpBq2wf0qTX16TbvS5WituY8v9vhrcYi+Sw5+PB1sWWu/
- Ta50tujzkKYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="289178631"
-Received: from jcrametz-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.73])
-  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2020 20:25:18 -0700
-Date:   Sat, 25 Jul 2020 06:25:16 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     torvalds@linux-foundation.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] watch_queue: Limit the number of watches a user can hold
-Message-ID: <20200725032516.GA78242@linux.intel.com>
-References: <159562904644.2287160.13294507067766261970.stgit@warthog.procyon.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159562904644.2287160.13294507067766261970.stgit@warthog.procyon.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Fri, 24 Jul 2020 23:26:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbgGYD0i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 23:26:38 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15203C0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 20:26:38 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z3so6277759pfn.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 20:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=H0jwgkKJw1F2QGrxp3XRsBO4Zv0vbxAb7H7LFDlABiQ=;
+        b=RbNTN2vPJ+dA/LwMFiC3sJgHNi9P7iDpEf0QPN9vRRqQ7v6rh8ugXQpi5Vouhpb/+x
+         E/SZz2L0MCrCHEVHr9cQu4Fa+J9Oq6lk738yyuyDRw+2Ej5YQOGNQjVEs6rpQ38YxvVY
+         mrkXyY/dpROjus1mzoaCe3ZvJaPBbZsCVRiB3LkavibRHIGwVH5CbMFDNohLUpHSyO1R
+         Hf0jM7DvjDSq3Id5l1M0ElsmQ1zPlI5eziR8fpmSC7io0yxpn4ckZiTj+RBX2EA7SUhy
+         pmLxYj5HhfjFkeeE+7fkuSm24xWP8b4xfqAthKMGLZI9OKgeJEKSaT1uD/uQzBOK3UST
+         A6Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=H0jwgkKJw1F2QGrxp3XRsBO4Zv0vbxAb7H7LFDlABiQ=;
+        b=HjMc6+t0mkuA9ryhQigN2+sRZG5IU/ir9amK3VC35Db+0ddzSsNnFkiFTc0XiUtJE8
+         5civnDgS7A7CGGMW0y5N8hMaWiOvREshoGR73/AAmZiH7WZrzGF3jAi/Z1C7Arl7UGxR
+         Qk4QGkhUHOXSUTSEpqJLPjTnx8Rd4lUlmhlnh56JA1kFM+to2Xui2zZ8AX4EiAt5jeZl
+         uVRwINNZ5mtKWCy7mncsyKMMIscTCt/NAqFuBiVANlo21RnlrFXKAZrHulg17NCDV70M
+         4rRffyNNosF3ig00FZS1WTOT7AfXG0tmLz8P4dnw3w6h7h3O5U4bUPPCXhUDR30HZYih
+         ApJw==
+X-Gm-Message-State: AOAM531jdahI41mi2EdpCwxfniwmDxyJIYylZhG+OHSuVw6fYY/rD6lb
+        pNfYveznmNBsZJk376YWDJvFpPJeuxE=
+X-Google-Smtp-Source: ABdhPJye4Zi1p+g7i5EeVNtB5XOqoG/SM8okB5VAhbaF1GX8NRKfTkCuaLkqofWvksTtGS/kYQYgww==
+X-Received: by 2002:a63:fe42:: with SMTP id x2mr11177808pgj.207.1595647597349;
+        Fri, 24 Jul 2020 20:26:37 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id 204sm7754074pfx.3.2020.07.24.20.26.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 20:26:36 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Laura Abbott <labbott@kernel.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: [RFC][PATCH] dma-heap: Add proper kref handling on dma-buf heaps
+Date:   Sat, 25 Jul 2020 03:26:33 +0000
+Message-Id: <20200725032633.125006-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 11:17:26PM +0100, David Howells wrote:
-> Impose a limit on the number of watches that a user can hold so that they
-> can't use this mechanism to fill up all the available memory.
-> 
-> This is done by putting a counter in user_struct that's incremented when a
-> watch is allocated and decreased when it is released.  If the number
-> exceeds the RLIMIT_NOFILE limit, the watch is rejected with EAGAIN.
-> 
-> This can be tested by the following means:
-> 
->  (1) Create a watch queue and attach it to fd 5 in the program given - in
->      this case, bash:
-> 
-> 	keyctl watch_session /tmp/nlog /tmp/gclog 5 bash
-> 
->  (2) In the shell, set the maximum number of files to, say, 99:
-> 
-> 	ulimit -n 99
-> 
->  (3) Add 200 keyrings:
-> 
-> 	for ((i=0; i<200; i++)); do keyctl newring a$i @s || break; done
-> 
->  (4) Try to watch all of the keyrings:
-> 
-> 	for ((i=0; i<200; i++)); do echo $i; keyctl watch_add 5 %:a$i || break; done
-> 
->      This should fail when the number of watches belonging to the user hits
->      99.
-> 
->  (5) Remove all the keyrings and all of those watches should go away:
-> 
-> 	for ((i=0; i<200; i++)); do keyctl unlink %:a$i; done
-> 
->  (6) Kill off the watch queue by exiting the shell spawned by
->      watch_session.
-> 
-> Fixes: c73be61cede5 ("pipe: Add general notification queue support")
-> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> ---
-> 
->  include/linux/sched/user.h |    3 +++
->  kernel/watch_queue.c       |    8 ++++++++
->  2 files changed, 11 insertions(+)
-> 
-> diff --git a/include/linux/sched/user.h b/include/linux/sched/user.h
-> index 917d88edb7b9..a8ec3b6093fc 100644
-> --- a/include/linux/sched/user.h
-> +++ b/include/linux/sched/user.h
-> @@ -36,6 +36,9 @@ struct user_struct {
->      defined(CONFIG_NET) || defined(CONFIG_IO_URING)
->  	atomic_long_t locked_vm;
->  #endif
-> +#ifdef CONFIG_WATCH_QUEUE
-> +	atomic_t nr_watches;	/* The number of watches this user currently has */
-> +#endif
->  
->  	/* Miscellaneous per-user rate limit */
->  	struct ratelimit_state ratelimit;
-> diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
-> index f74020f6bd9d..0ef8f65bd2d7 100644
-> --- a/kernel/watch_queue.c
-> +++ b/kernel/watch_queue.c
-> @@ -393,6 +393,7 @@ static void free_watch(struct rcu_head *rcu)
->  	struct watch *watch = container_of(rcu, struct watch, rcu);
->  
->  	put_watch_queue(rcu_access_pointer(watch->queue));
-> +	atomic_dec(&watch->cred->user->nr_watches);
->  	put_cred(watch->cred);
->  }
->  
-> @@ -452,6 +453,13 @@ int add_watch_to_object(struct watch *watch, struct watch_list *wlist)
->  	watch->cred = get_current_cred();
->  	rcu_assign_pointer(watch->watch_list, wlist);
->  
-> +	if (atomic_inc_return(&watch->cred->user->nr_watches) >
-> +	    task_rlimit(current, RLIMIT_NOFILE)) {
-> +		atomic_dec(&watch->cred->user->nr_watches);
-> +		put_cred(watch->cred);
-> +		return -EAGAIN;
-> +	}
-> +
->  	spin_lock_bh(&wqueue->lock);
->  	kref_get(&wqueue->usage);
->  	kref_get(&watch->usage);
-> 
-> 
+Add proper refcounting on the dma_heap structure.
+While existing heaps are built-in, we may eventually
+have heaps loaded from modules, and we'll need to be
+able to properly handle the references to the heaps
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Andrew F. Davis <afd@ti.com>
+Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Liam Mark <lmark@codeaurora.org>
+Cc: Laura Abbott <labbott@kernel.org>
+Cc: Brian Starkey <Brian.Starkey@arm.com>
+Cc: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ drivers/dma-buf/dma-heap.c | 31 +++++++++++++++++++++++++++----
+ include/linux/dma-heap.h   |  6 ++++++
+ 2 files changed, 33 insertions(+), 4 deletions(-)
 
-David, BTW, would it be possible to push keyrings to lore.kernel.org?
+diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
+index afd22c9dbdcf..90c3720acc1c 100644
+--- a/drivers/dma-buf/dma-heap.c
++++ b/drivers/dma-buf/dma-heap.c
+@@ -40,6 +40,8 @@ struct dma_heap {
+ 	dev_t heap_devt;
+ 	struct list_head list;
+ 	struct cdev heap_cdev;
++	int minor;
++	struct kref refcount;
+ };
+ 
+ static LIST_HEAD(heap_list);
+@@ -190,11 +192,31 @@ void *dma_heap_get_drvdata(struct dma_heap *heap)
+ 	return heap->priv;
+ }
+ 
++static void dma_heap_release(struct kref *ref)
++{
++	struct dma_heap *heap = container_of(ref, struct dma_heap, refcount);
++
++	/* Remove heap from the list */
++	mutex_lock(&heap_list_lock);
++	list_del(&heap->list);
++	mutex_unlock(&heap_list_lock);
++
++	device_destroy(dma_heap_class, heap->heap_devt);
++	cdev_del(&heap->heap_cdev);
++	xa_erase(&dma_heap_minors, heap->minor);
++
++	kfree(heap);
++}
++
++void dma_heap_put(struct dma_heap *h)
++{
++	kref_put(&h->refcount, dma_heap_release);
++}
++
+ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
+ {
+ 	struct dma_heap *heap, *h, *err_ret;
+ 	struct device *dev_ret;
+-	unsigned int minor;
+ 	int ret;
+ 
+ 	if (!exp_info->name || !strcmp(exp_info->name, "")) {
+@@ -223,12 +245,13 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
+ 	if (!heap)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	kref_init(&heap->refcount);
+ 	heap->name = exp_info->name;
+ 	heap->ops = exp_info->ops;
+ 	heap->priv = exp_info->priv;
+ 
+ 	/* Find unused minor number */
+-	ret = xa_alloc(&dma_heap_minors, &minor, heap,
++	ret = xa_alloc(&dma_heap_minors, &heap->minor, heap,
+ 		       XA_LIMIT(0, NUM_HEAP_MINORS - 1), GFP_KERNEL);
+ 	if (ret < 0) {
+ 		pr_err("dma_heap: Unable to get minor number for heap\n");
+@@ -237,7 +260,7 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
+ 	}
+ 
+ 	/* Create device */
+-	heap->heap_devt = MKDEV(MAJOR(dma_heap_devt), minor);
++	heap->heap_devt = MKDEV(MAJOR(dma_heap_devt), heap->minor);
+ 
+ 	cdev_init(&heap->heap_cdev, &dma_heap_fops);
+ 	ret = cdev_add(&heap->heap_cdev, heap->heap_devt, 1);
+@@ -267,7 +290,7 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
+ err2:
+ 	cdev_del(&heap->heap_cdev);
+ err1:
+-	xa_erase(&dma_heap_minors, minor);
++	xa_erase(&dma_heap_minors, heap->minor);
+ err0:
+ 	kfree(heap);
+ 	return err_ret;
+diff --git a/include/linux/dma-heap.h b/include/linux/dma-heap.h
+index 454e354d1ffb..c1572f29cfac 100644
+--- a/include/linux/dma-heap.h
++++ b/include/linux/dma-heap.h
+@@ -56,4 +56,10 @@ void *dma_heap_get_drvdata(struct dma_heap *heap);
+  */
+ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info);
+ 
++/**
++ * dma_heap_put - drops a reference to a dmabuf heaps, potentially freeing it
++ * @heap:		heap pointer
++ */
++void dma_heap_put(struct dma_heap *heap);
++
+ #endif /* _DMA_HEAPS_H */
+-- 
+2.17.1
 
-I don't have an archive for keyrings, which means that I cannot push
-this forward.
-
-/Jarkko
