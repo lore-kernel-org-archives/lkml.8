@@ -2,85 +2,68 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5529DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 21:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7F2C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 21:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8C2206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 21:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F00CB206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 21:03:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgGYVDT (ORCPT
+        id S1728114AbgGYVDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 17:03:19 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:43018 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbgGYVDT (ORCPT
+        Sat, 25 Jul 2020 17:03:45 -0400
+Received: from smtprelay0013.hostedemail.com ([216.40.44.13]:53398 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728015AbgGYVDp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 17:03:19 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 7FFEC1C0BD9; Sat, 25 Jul 2020 23:03:15 +0200 (CEST)
-Date:   Sat, 25 Jul 2020 23:03:15 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     maemo-leste@lists.dyne.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
-        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
-        martin_rysavy@centrum.cz
-Subject: modem:audio-codec has problems
-Message-ID: <20200725210314.GA6701@amd>
+        Sat, 25 Jul 2020 17:03:45 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 83030100E7B47;
+        Sat, 25 Jul 2020 21:03:44 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sun63_59013f726f53
+X-Filterd-Recvd-Size: 1432
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 25 Jul 2020 21:03:42 +0000 (UTC)
+Message-ID: <f7349cdd968aa8e8fa6552d62999a7e05fa875f7.camel@perches.com>
+Subject: Re: [PATCH 0/6] rtlwifi: Convert RT_TRACE to rtl_dbg and neatening
+From:   Joe Perches <joe@perches.com>
+To:     Ping-Ke Shih <pkshih@realtek.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        linux-wireless@vger.kernel.org
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Sat, 25 Jul 2020 14:03:41 -0700
+In-Reply-To: <cover.1595706419.git.joe@perches.com>
+References: <cover.1595706419.git.joe@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 2020-07-25 at 12:55 -0700, Joe Perches wrote:
+> RT_TRACE seems like it should be associated to tracing but it's not.
+> It's a generic debug logging mechanism.
+> Rename it to a more typical name.
+> Miscellaneous neatening around these changes.
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Patch 1/6 is over 1MB and is too large for some mailing lists.
 
-Hi!
+These patches are based on wireless-drivers-next and are also
+available at:
 
-While debugging something else I noticed this:
+git://repo.or.cz/linux-2.6/trivial-mods.git in branch 20200724_rtlwifi
 
-[  335.627838] mot-mdm6600-codec 4806a000.serial:modem:audio-codec@2:
-command U3559AT+DTSE=3D,1 error +DTSE:ERROR
-[  335.772064] mot-mdm6600-codec 4806a000.serial:modem:audio-codec@2:
-motmdm_voice_get_state: ciev=3D1,7,0
 
-user@devuan-droid4:/my/ofono/test$ uname -a
-Linux devuan-droid4 5.7.0 #1 SMP PREEMPT Mon Jun 29 14:51:54 UTC 2020
-armv7l GNU/Linux
-
-It looks wrong, not sure if it causes any problems.
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8cnhIACgkQMOfwapXb+vJlYgCgjG8pHo0IlZGhvMjtGHyooWDn
-jHsAoL94yT1xbGN6WKx0X0atihZt95Ga
-=z5fs
------END PGP SIGNATURE-----
-
---UlVJffcvxoiEqYs2--
