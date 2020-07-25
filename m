@@ -2,145 +2,220 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F92C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFCCC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2134206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5642C206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:33:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="fEtcjr24"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgGYO1K (ORCPT
+        id S1727085AbgGYOdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 10:27:10 -0400
-Received: from mga09.intel.com ([134.134.136.24]:59113 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726745AbgGYO1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 10:27:09 -0400
-IronPort-SDR: W7Ic5KTimq5paDhmlaaDJk6awYo7F1LnraaOKO78PHo7IM6VSvr9FS7ptnjQAnGgI9CqxlvuRv
- SCdZQjyG4sLg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9693"; a="152111422"
-X-IronPort-AV: E=Sophos;i="5.75,394,1589266800"; 
-   d="scan'208";a="152111422"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2020 07:27:08 -0700
-IronPort-SDR: ZStQ/9Wz/FI48OqFwcJvpsPcrFRrclPvSNlfklYxTAYxb6/Vy2TQv3gukqVjDITAlXtTXmBO5u
- fKLCzFm8mBfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,394,1589266800"; 
-   d="scan'208";a="433375477"
-Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 25 Jul 2020 07:27:07 -0700
-Received: from kbuild by df0563f96c37 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jzL8l-0000yh-1I; Sat, 25 Jul 2020 14:27:07 +0000
-Date:   Sat, 25 Jul 2020 22:25:58 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.07.20a] BUILD SUCCESS
- 80f707206fe3d3ab5b83f8180538f8a70e095ead
-Message-ID: <5f1c40f6.ES2Rfe0TnqyWlS2x%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 25 Jul 2020 10:33:01 -0400
+Received: from mail-40133.protonmail.ch ([185.70.40.133]:59704 "EHLO
+        mail-40133.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgGYOdB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 10:33:01 -0400
+Date:   Sat, 25 Jul 2020 14:32:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
+        t=1595687576; bh=K+ObGPhBCBIghSTkK89aQbGjHSVPXNygWfDYBW9wc3U=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=fEtcjr24TN6HnqL9MWmytl8OgmXju88Ram2SLx3dG9JyTW1xa4T+RUIP56zbqV7w7
+         UlmQ9H0f1rtmpddU/+2m3BVa6LAUelDJOmnboEbbjXNtpEPsjsWZZK7z7JEo9MsBbv
+         +zn9QILdl0A8Bj87MV4aonM0gUFNCdNK4JG6Qg1HP38UkXvh04cP/FZrX11cMMTzaS
+         Ua/eG5sn7reh9TK9SFMJJjUQsqGMqducb/t5r5E0v7cKx/R6z2MDxnIl6b2G511q7X
+         KZikAoFPcbNVwvr/BcV7YCU8qaXkfO+BWYWvwAdG+uElR5jj4W4yvN1dWllerBuPd7
+         AZJl2UukfrkRg==
+To:     Romain Naour <romain.naour@gmail.com>
+From:   Alexander Lobakin <alobakin@pm.me>
+Cc:     Alexander Lobakin <alobakin@pm.me>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Reply-To: Alexander Lobakin <alobakin@pm.me>
+Subject: Re: [PATCH] mips: Do not include hi and lo in clobber list for R6
+Message-ID: <1ASmWH5c3covyVGVn1zArosoLlRC98vkQ6Ww4wFSchBjH8_jrScPAdXVD08qeStKkFOA-SGqKIPZ80zib9FmHiIkRvJ4uiWaPKvorjdodDs=@pm.me>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.07.20a
-branch HEAD: 80f707206fe3d3ab5b83f8180538f8a70e095ead  fixup! kernel/smp: Provide CSD lock timeout diagnostics
+Hi Romain,
 
-elapsed time: 1112m
+From: Romain Naour <romain.naour@gmail.com>
+Date: Sat, 25 Jul 2020 15:25:33 +0200
 
-configs tested: 74
-configs skipped: 1
+> From [1]
+> "GCC 10 (PR 91233) won't silently allow registers that are not architectu=
+rally
+> available to be present in the clobber list anymore, resulting in build f=
+ailure
+> for mips*r6 targets in form of:
+> ...
+> .../sysdep.h:146:2: error: the register =E2=80=98lo=E2=80=99 cannot be cl=
+obbered in =E2=80=98asm=E2=80=99 for the current target
+>   146 |  __asm__ volatile (      \
+>       |  ^~~~~~~
+>=20
+> This is because base R6 ISA doesn't define hi and lo registers w/o DSP ex=
+tension.
+> This patch provides the alternative clobber list for r6 targets that won'=
+t include
+> those registers."
+>=20
+> Since kernel 5.4 and mips support for generic vDSO [2], the kernel fail t=
+o build
+> for mips r6 cpus with gcc 10 for the same reason as glibc.
+>=20
+> [1] https://sourceware.org/git/?p=3Dglibc.git;a=3Dcommit;h=3D020b2a97bb15=
+f807c0482f0faee2184ed05bcad8
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/comm=
+it/?id=3D24640f233b466051ad3a5d2786d2951e43026c9d
+>=20
+> Signed-off-by: Romain Naour <romain.naour@gmail.com>
+> ---
+>  arch/mips/include/asm/vdso/gettimeofday.h | 45 +++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>=20
+> diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/includ=
+e/asm/vdso/gettimeofday.h
+> index c63ddcaea54c..6192d94928b9 100644
+> --- a/arch/mips/include/asm/vdso/gettimeofday.h
+> +++ b/arch/mips/include/asm/vdso/gettimeofday.h
+> @@ -30,12 +30,21 @@ static __always_inline long gettimeofday_fallback(
+>  =09register long nr asm("v0") =3D __NR_gettimeofday;
+>  =09register long error asm("a3");
+> =20
+> +#if __mips_isa_rev >=3D 6
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+You should use MIPS_ISA_REV macro from arch/mips/include/asm/isa-rev.h
+instead of compiler definitions.
+The main reason is that __mips_isa_rev is not defined by GCC for
+pre-MIPS32 processors, so you'll get a compiler warning like:
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
+"Warning: macro '__mips_isa_rev' is not defined, evaluates to 0"
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+MIPS_ISA_REV handles this case and is always defined regardless of
+the actual ISA family.
+
+> +=09asm volatile(
+> +=09"       syscall\n"
+> +=09: "=3Dr" (ret), "=3Dr" (error)
+> +=09: "r" (tv), "r" (tz), "r" (nr)
+> +=09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
+> +=09  "$14", "$15", "$24", "$25", "memory");
+> +#else
+>  =09asm volatile(
+>  =09"       syscall\n"
+>  =09: "=3Dr" (ret), "=3Dr" (error)
+>  =09: "r" (tv), "r" (tz), "r" (nr)
+>  =09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
+>  =09  "$14", "$15", "$24", "$25", "hi", "lo", "memory");
+> +#endif
+> =20
+>  =09return error ? -ret : ret;
+>  }
+> @@ -54,12 +63,21 @@ static __always_inline long clock_gettime_fallback(
+>  #endif
+>  =09register long error asm("a3");
+> =20
+> +#if __mips_isa_rev >=3D 6
+> +=09asm volatile(
+> +=09"       syscall\n"
+> +=09: "=3Dr" (ret), "=3Dr" (error)
+> +=09: "r" (clkid), "r" (ts), "r" (nr)
+> +=09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
+> +=09  "$14", "$15", "$24", "$25", "memory");
+> +#else
+>  =09asm volatile(
+>  =09"       syscall\n"
+>  =09: "=3Dr" (ret), "=3Dr" (error)
+>  =09: "r" (clkid), "r" (ts), "r" (nr)
+>  =09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
+>  =09  "$14", "$15", "$24", "$25", "hi", "lo", "memory");
+> +#endif
+> =20
+>  =09return error ? -ret : ret;
+>  }
+> @@ -78,12 +96,21 @@ static __always_inline int clock_getres_fallback(
+>  #endif
+>  =09register long error asm("a3");
+> =20
+> +#if __mips_isa_rev >=3D 6
+> +=09asm volatile(
+> +=09"       syscall\n"
+> +=09: "=3Dr" (ret), "=3Dr" (error)
+> +=09: "r" (clkid), "r" (ts), "r" (nr)
+> +=09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
+> +=09  "$14", "$15", "$24", "$25", "memory");
+> +#else
+>  =09asm volatile(
+>  =09"       syscall\n"
+>  =09: "=3Dr" (ret), "=3Dr" (error)
+>  =09: "r" (clkid), "r" (ts), "r" (nr)
+>  =09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
+>  =09  "$14", "$15", "$24", "$25", "hi", "lo", "memory");
+> +#endif
+> =20
+>  =09return error ? -ret : ret;
+>  }
+> @@ -100,12 +127,21 @@ static __always_inline long clock_gettime32_fallbac=
+k(
+>  =09register long nr asm("v0") =3D __NR_clock_gettime;
+>  =09register long error asm("a3");
+> =20
+> +#if __mips_isa_rev >=3D 6
+> +=09asm volatile(
+> +=09"       syscall\n"
+> +=09: "=3Dr" (ret), "=3Dr" (error)
+> +=09: "r" (clkid), "r" (ts), "r" (nr)
+> +=09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
+> +=09  "$14", "$15", "$24", "$25", "memory");
+> +#else
+>  =09asm volatile(
+>  =09"       syscall\n"
+>  =09: "=3Dr" (ret), "=3Dr" (error)
+>  =09: "r" (clkid), "r" (ts), "r" (nr)
+>  =09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
+>  =09  "$14", "$15", "$24", "$25", "hi", "lo", "memory");
+> +#endif
+> =20
+>  =09return error ? -ret : ret;
+>  }
+> @@ -120,12 +156,21 @@ static __always_inline int clock_getres32_fallback(
+>  =09register long nr asm("v0") =3D __NR_clock_getres;
+>  =09register long error asm("a3");
+> =20
+> +#if __mips_isa_rev >=3D 6
+> +=09asm volatile(
+> +=09"       syscall\n"
+> +=09: "=3Dr" (ret), "=3Dr" (error)
+> +=09: "r" (clkid), "r" (ts), "r" (nr)
+> +=09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
+> +=09  "$14", "$15", "$24", "$25", "memory");
+> +#else
+>  =09asm volatile(
+>  =09"       syscall\n"
+>  =09: "=3Dr" (ret), "=3Dr" (error)
+>  =09: "r" (clkid), "r" (ts), "r" (nr)
+>  =09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
+>  =09  "$14", "$15", "$24", "$25", "hi", "lo", "memory");
+> +#endif
+> =20
+>  =09return error ? -ret : ret;
+>  }
+> --=20
+> 2.25.4
+
