@@ -4,134 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3756C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 20:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5529DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 21:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC548206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 20:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8C2206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 21:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgGYU6o (ORCPT
+        id S1728051AbgGYVDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 16:58:44 -0400
-Received: from mail.nic.cz ([217.31.204.67]:40542 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727818AbgGYU6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 16:58:44 -0400
-Received: from localhost (unknown [IPv6:2a0e:b107:ae1:0:3e97:eff:fe61:c680])
-        by mail.nic.cz (Postfix) with ESMTPSA id 77C9C140713;
-        Sat, 25 Jul 2020 22:58:41 +0200 (CEST)
-Date:   Sat, 25 Jul 2020 22:58:40 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
-        Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v3 2/2] net: phy: marvell: add
- support for PHY LEDs via LED class
-Message-ID: <20200725225840.4202dcac@nic.cz>
-In-Reply-To: <20200725184846.GO1472201@lunn.ch>
-References: <20200724164603.29148-1-marek.behun@nic.cz>
-        <20200724164603.29148-3-marek.behun@nic.cz>
-        <20200725172318.GK1472201@lunn.ch>
-        <20200725200224.3f03c041@nic.cz>
-        <20200725184846.GO1472201@lunn.ch>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 25 Jul 2020 17:03:19 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:43018 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728015AbgGYVDT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 17:03:19 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 7FFEC1C0BD9; Sat, 25 Jul 2020 23:03:15 +0200 (CEST)
+Date:   Sat, 25 Jul 2020 23:03:15 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     maemo-leste@lists.dyne.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        martin_rysavy@centrum.cz
+Subject: modem:audio-codec has problems
+Message-ID: <20200725210314.GA6701@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Jul 2020 20:48:46 +0200
-Andrew Lunn <andrew@lunn.ch> wrote:
 
-> > > > +#if 0
-> > > > +	/* LED_COLOR_ID_MULTI is not yet merged in Linus' tree */
-> > > > +	/* TODO: Support DUAL MODE */
-> > > > +	if (color == LED_COLOR_ID_MULTI) {
-> > > > +		phydev_warn(phydev, "node %pOF: This driver does not yet support multicolor LEDs\n",
-> > > > +			    np);
-> > > > +		return -ENOTSUPP;
-> > > > +	}
-> > > > +#endif    
-> > > 
-> > > Code getting committed should not be using #if 0. Is the needed code
-> > > in the LED tree? Do we want to consider a stable branch of the LED
-> > > tree which DaveM can pull into net-next? Or do you want to wait until
-> > > the next merge cycle?  
-> > 
-> > That's why this is RFC. But yes, I would like to have this merged for
-> > 5.9, so maybe we should ask Dave. Is this common? Do we also need to
-> > tell Pavel or how does this work?  
-> 
-> The Pavel needs to create a stable branch. DaveM then merges that
-> branch into net-next. Your patches can then be merged. When Linus
-> pulls the two branches, led and net-next, git sees the exact same
-> patches twice, and simply drops them from the second pull request.
-> 
-> So you need to ask Pavel and DaveM if they are willing to do this.
-> 
-> > > > +	init_data.fwnode = &np->fwnode;
-> > > > +	init_data.devname_mandatory = true;
-> > > > +	init_data.devicename = phydev->attached_dev ? netdev_name(phydev->attached_dev) : "";    
-> > > 
-> > > This we need to think about. Are you running this on a system with
-> > > systemd? Does the interface have a name like enp2s0? Does the LED get
-> > > registered before or after systemd renames it from eth0 to enp2s0?  
-> > 
-> > Yes, well, this should be discussed also with LED guys. I don't suppose
-> > that renaming the sysfs symlink on interface rename event is
-> > appropriate, but who knows?
-> > The interfaces are platform specific, on mvebu. They aren't connected
-> > via PCI, so their names remain eth0, eth1 ...  
-> 
-> But the Marvell driver is used with more than just mvebu. And we need
-> this generic. There are USB Ethernet dongles which used phylib. They
-> will get their interfaces renamed to include the MAC address, etc.
-> 
-> It is possible to hook the notifier so we know when an interface is
-> renamed. We can then either destroy and re-create the LED, or if the
-> LED framework allows it, rename it.
-> 
-> Or we avoid interface names all together and stick with the phy name,
-> which is stable. To make it more user friendly, you could create
-> additional symlinks. We already have /sys/class/net/ethX/phydev
-> linking into sys/bus/mdio_bus/devices/.. .  We could add
-> /sys/class/net/ethX/ledY linking into /sys/class/led/...
-> 
-> It would also be possible to teach ethtool about LEDs, so that it
-> follows the symbolic links, and manipulates the LED class files.
+--UlVJffcvxoiEqYs2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I will propose rename of the LED name on interface rename event.
+Hi!
 
-> > I also want this code to be generalized somehow so that it can be
-> > reused. The problem is that I want to have support for DUAL mode, which
-> > is Marvell specific, and a DUAL LED needs to be defined in device tree.  
-> 
-> It sounds like you first need to teach the LED core about dual LEDs
-> and triggers which affect two LEDs..
+While debugging something else I noticed this:
 
-This is already done. DUAL LEDs will be handled by the multicolor LED
-framework which also is already in Pavel's tree. The problem is that if
-we make PHY LEDs OF parsing code generic in phy-core, it will also need
-to be robust enough to take care of DUAL LEDs OF parsing. That is
-something which is Marvell specific. It is possible that some other
-vendor also manufactures PHYs with something like that, but the LEDs
-on other PHYs may have different maximum value of brightness, or
-additional configurations which will need to be in device tree...
+[  335.627838] mot-mdm6600-codec 4806a000.serial:modem:audio-codec@2:
+command U3559AT+DTSE=3D,1 error +DTSE:ERROR
+[  335.772064] mot-mdm6600-codec 4806a000.serial:modem:audio-codec@2:
+motmdm_voice_get_state: ciev=3D1,7,0
 
-But I will try to make it generic and then we will see where it goes...
+user@devuan-droid4:/my/ofono/test$ uname -a
+Linux devuan-droid4 5.7.0 #1 SMP PREEMPT Mon Jun 29 14:51:54 UTC 2020
+armv7l GNU/Linux
 
-Marek
+It looks wrong, not sure if it causes any problems.
 
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--UlVJffcvxoiEqYs2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8cnhIACgkQMOfwapXb+vJlYgCgjG8pHo0IlZGhvMjtGHyooWDn
+jHsAoL94yT1xbGN6WKx0X0atihZt95Ga
+=z5fs
+-----END PGP SIGNATURE-----
+
+--UlVJffcvxoiEqYs2--
