@@ -2,224 +2,497 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28244C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A55C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F071D2065F
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299B8206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:12:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbgGYE4Y (ORCPT
+        id S1726895AbgGYFMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 00:56:24 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:53008 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgGYE4Y (ORCPT
+        Sat, 25 Jul 2020 01:12:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgGYFMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 00:56:24 -0400
-Received: by mail-il1-f198.google.com with SMTP id o17so7126294ilt.19
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 21:56:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=9KVRjLors2ySg6gcXfpxGGvjcoTKeKoUGNiHR7H9iHY=;
-        b=t58HmJ+5Lv6bFOY6wCWbAKbOJ2SN+jgRYGIuOJY9TpM78NGVnt4L2xB3xzdAGtU2Pt
-         yQhFDErXYKJCfjlNViKGM2wEZR37HJ4L5VsZvpldQO7I4o28BbqejMuuoe/zSl+cWzYu
-         MH72jXDlKZoeNJbyCeNp8exuVWv/pVgoQc+Q2H3voPjPcM/Oz2artVB6NBet7ypBzXcM
-         It5gGBYmDKCYEVrHZDtWS8tHK9daV87w0xr74oBkmLXj8c2kQMwhTYiDiQBArhpCD70X
-         S2WVR6vvgWVVf9rePesgml9xin2QJroQLzr5EEDyK1rdvNw1tkmZTaXEecvkMSjhGOFt
-         c2yg==
-X-Gm-Message-State: AOAM531hTVqgLwE39KKM0dCYxXJOEagY59RvXwB38JX4HPz/35HkfWnK
-        E2PDMxe+xvFmkB4FtwFVwsWN0cBwTb+kagdJgtl/Ulz0OPBo
-X-Google-Smtp-Source: ABdhPJxM1LX644khymLTDZEWkSq4NIeCbrDZKJAwEVMsgj8wgiLpyCigw/oZYwU/L2EoYzKGFjPobuvmEmqlaJoN3yUOFyaIC2N+
-MIME-Version: 1.0
-X-Received: by 2002:a6b:ee15:: with SMTP id i21mr13788075ioh.25.1595652982273;
- Fri, 24 Jul 2020 21:56:22 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 21:56:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000317f1805ab3ce936@google.com>
-Subject: INFO: task hung in ovs_dp_cmd_del
-From:   syzbot <syzbot+1d3e60b5f711ff9872f4@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dev@openvswitch.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        pshelar@ovn.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 25 Jul 2020 01:12:10 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4AB2C0619D3;
+        Fri, 24 Jul 2020 22:12:09 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 20F5612786F1D;
+        Fri, 24 Jul 2020 21:55:22 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 22:12:04 -0700 (PDT)
+Message-Id: <20200724.221204.1658413840252419526.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Networking
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 24 Jul 2020 21:55:22 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following issue on:
+1) Fix RCU locaking in iwlwifi, from Johannes Berg.
 
-HEAD commit:    e0145983 Merge branch 'fix-bpf_get_stack-with-PEBS'
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=16ce401f100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2b7b67c0c1819c87
-dashboard link: https://syzkaller.appspot.com/bug?extid=1d3e60b5f711ff9872f4
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+2) mt76 can access uninitialized NAPI struct, from Felix Fietkau.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+3) Fix race in updating pause settings in bnxt_en, from Vasundhara Volam.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+1d3e60b5f711ff9872f4@syzkaller.appspotmail.com
+4) Propagate error return properly during unbind failures in ax88172a,
+   from George Kennedy.
 
-INFO: task syz-executor.1:18190 blocked for more than 143 seconds.
-      Not tainted 5.8.0-rc4-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.1  D28320 18190   6934 0x00004004
-Call Trace:
- context_switch kernel/sched/core.c:3453 [inline]
- __schedule+0x8e1/0x1eb0 kernel/sched/core.c:4178
- schedule+0xd0/0x2a0 kernel/sched/core.c:4253
- schedule_preempt_disabled+0xf/0x20 kernel/sched/core.c:4312
- __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
- __mutex_lock+0x3e2/0x10d0 kernel/locking/mutex.c:1103
- ovs_lock net/openvswitch/datapath.c:105 [inline]
- ovs_dp_cmd_del+0x4a/0x270 net/openvswitch/datapath.c:1780
- genl_family_rcv_msg_doit net/netlink/genetlink.c:669 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:714 [inline]
- genl_rcv_msg+0x61d/0x980 net/netlink/genetlink.c:731
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2470
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:742
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:671
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2363
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2417
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2450
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c1f9
-Code: Bad RIP value.
-RSP: 002b:00007f18d3135c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 000000000002b3c0 RCX: 000000000045c1f9
-RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000003
-RBP: 000000000078bfe0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bfac
-R13: 00007ffef201616f R14: 00007f18d31369c0 R15: 000000000078bfac
+5) Fix memleak in adf7242_probe, from Liu Jian.
 
-Showing all locks held in the system:
-3 locks held by kworker/1:1/27:
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
- #1: ffffc90000e17da8 ((work_completion)(&(&dp->masks_rebalance)->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
- #2: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
- #2: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_masks_rebalance+0x18/0x80 net/openvswitch/datapath.c:2355
-1 lock held by khungtaskd/1148:
- #0: ffffffff89bc0ec0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5779
-3 locks held by kworker/0:11/2521:
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
- #1: ffffc90007b87da8 ((work_completion)(&(&dp->masks_rebalance)->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
- #2: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
- #2: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_masks_rebalance+0x18/0x80 net/openvswitch/datapath.c:2355
-3 locks held by kworker/1:4/2580:
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
- #1: ffffc90007d17da8 ((work_completion)(&(&dp->masks_rebalance)->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
- #2: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
- #2: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_masks_rebalance+0x18/0x80 net/openvswitch/datapath.c:2355
-3 locks held by kworker/1:8/2760:
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
- #1: ffffc90008447da8 ((work_completion)(&(&dp->masks_rebalance)->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
- #2: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
- #2: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_masks_rebalance+0x18/0x80 net/openvswitch/datapath.c:2355
-3 locks held by kworker/1:10/2763:
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
- #1: ffffc90008457da8 ((work_completion)(&(&dp->masks_rebalance)->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
- #2: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
- #2: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_masks_rebalance+0x18/0x80 net/openvswitch/datapath.c:2355
-1 lock held by in:imklog/6484:
- #0: ffff88809a6b96b0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:826
-8 locks held by kworker/u4:5/6544:
-2 locks held by syz-executor.1/18189:
- #0: ffffffff8a818590 (cb_lock){++++}-{3:3}, at: genl_rcv+0x15/0x40 net/netlink/genetlink.c:741
- #1: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
- #1: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_cmd_del+0x4a/0x270 net/openvswitch/datapath.c:1780
-2 locks held by syz-executor.1/18190:
- #0: ffffffff8a818590 (cb_lock){++++}-{3:3}, at: genl_rcv+0x15/0x40 net/netlink/genetlink.c:741
- #1: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
- #1: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_cmd_del+0x4a/0x270 net/openvswitch/datapath.c:1780
-3 locks held by kworker/1:0/18221:
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8880aa026d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
- #1: ffffc90002407da8 ((work_completion)(&(&dp->masks_rebalance)->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
- #2: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
- #2: ffffffff8aa5e968 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_masks_rebalance+0x18/0x80 net/openvswitch/datapath.c:2355
+6) smc_drv_probe() can leak, from Wang Hai.
 
-=============================================
+7) Don't muck with the carrier state if register_netdevice() fails in
+   the bonding driver, from Taehee Yoo.
 
-NMI backtrace for cpu 1
-CPU: 1 PID: 1148 Comm: khungtaskd Not tainted 5.8.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb1 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:209 [inline]
- watchdog+0xd7d/0x1000 kernel/hung_task.c:295
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 PID: 3877 Comm: systemd-journal Not tainted 5.8.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:0xffffffffa0008180
-Code: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc <0f> 1f 44 00 00 55 48 89 e5 48 81 ec 00 00 00 00 53 41 55 41 56 41
-RSP: 0018:ffffc90001077d40 EFLAGS: 00010246
-RAX: 1ffff920001acc06 RBX: ffff888096d96300 RCX: dffffc0000000000
-RDX: ffff888094558380 RSI: ffffc90000d66038 RDI: ffffc90001077ed0
-RBP: ffffc90000d66000 R08: 0000000000000000 R09: 0000000000000000
-R10: 000000007fff0000 R11: 0000000000000000 R12: dffffc0000000000
-R13: 000000007fff0000 R14: 000000007fff0000 R15: ffffc90001077ed0
-FS:  00007fcf9c3b78c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000c0000b7000 CR3: 00000000945b0000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
-Call Trace:
+8) Fix memleak in dpaa_eth_probe, from Liu Jian.
 
+9) Need to check skb_put_padto() return value in hsr_fill_tag(), from
+   Murali Karicheri.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+10) Don't lose ionic RSS hash settings across FW update, from Shannon
+    Nelson.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+11) Fix clobbered SKB control block in act_ct, from Wen Xu.
+
+12) Missing newlink in "tx_timeout" sysfs output, from Xiongfeng Wang.
+
+13) IS_UDPLITE cleanup a long time ago, incorrectly handled transformations
+    involving UDPLITE_RECV_CC.  From Miaohe Lin.
+
+14) Unbalanced locking in netdevsim, from Taehee Yoo.
+
+15) Suppress false-positive error messages in qed driver, from
+    Alexander Lobakin.
+
+16) Out of bounds read in ax25_connect and ax25_sendmsg, from Peilin Ye.
+
+17) Missing SKB release in cxgb4's uld_send(), from Navid Emamdoost.
+
+18) Uninitialized value in geneve_changelink(), from Cong Wang.
+
+19) Fix deadlock in xen-netfront, from Andera Righi.
+
+19) flush_backlog() frees skbs with IRQs disabled, so should use
+    dev_kfree_skb_irq() instead of kfree_skb().  From Subash Abhinov
+    Kasiviswanathan.
+
+Please pull, thanks a lot!
+
+The following changes since commit 1df0d8960499e58963fd6c8ac75e544f2b417b29:
+
+  Merge tag 'libnvdimm-fix-v5.8-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm (2020-07-10 21:23:10 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net 
+
+for you to fetch changes up to 8754e1379e7089516a449821f88e1fe1ebbae5e1:
+
+  drivers/net/wan: lapb: Corrected the usage of skb_cow (2020-07-24 20:17:42 -0700)
+
+----------------------------------------------------------------
+Alessio Bonfiglio (1):
+      iwlwifi: Make some Killer Wireless-AC 1550 cards work again
+
+Alexander A. Klimov (1):
+      net: ieee802154: adf7242: Replace HTTP links with HTTPS ones
+
+Alexander Lobakin (2):
+      qed: suppress "don't support RoCE & iWARP" flooding on HW init
+      qed: suppress false-positives interrupt error messages on HW init
+
+Alexandre Belloni (1):
+      net: macb: use phy_interface_mode_is_rgmii everywhere
+
+Andrea Righi (1):
+      xen-netfront: fix potential deadlock in xennet_remove()
+
+Bixuan Cui (1):
+      net: neterion: vxge: reduce stack usage in VXGE_COMPLETE_VPATH_TX
+
+Christophe JAILLET (1):
+      hippi: Fix a size used in a 'pci_free_consistent()' in an error handling path
+
+Claudiu Manoil (1):
+      enetc: Remove the mdio bus on PF probe bailout
+
+Cong Wang (3):
+      bonding: check return value of register_netdevice() in bond_newlink()
+      geneve: fix an uninitialized value in geneve_changelink()
+      qrtr: orphan socket in qrtr_release()
+
+Dan Carpenter (1):
+      AX.25: Prevent integer overflows in connect and sendmsg
+
+David Howells (1):
+      rxrpc: Fix sendmsg() returning EPIPE due to recvmsg() returning ENODATA
+
+David S. Miller (13):
+      Merge branch 'bnxt_en-fixes'
+      Merge tag 'wireless-drivers-2020-07-13' of git://git.kernel.org/.../kvalo/wireless-drivers
+      Merge branch 'bcmgenet-WAKE_FILTER'
+      Merge branch 'net-smc-fixes'
+      Merge tag 'ieee802154-for-davem-2020-07-20' of git://git.kernel.org/.../sschmidt/wpan
+      Merge branch 'smc-fixes'
+      Merge branch 'ionic-locking-and-filter-fixes'
+      Merge branch 'udp-Fix-reuseport-selection-with-connected-sockets'
+      Merge branch 'hns3-fixes'
+      Merge branch 'qed-suppress-irrelevant-error-messages-on-HW-init'
+      Merge branch 'sctp-shrink-stream-outq-in-the-right-place'
+      Merge git://git.kernel.org/.../pablo/nf
+      Merge tag 'wireless-drivers-2020-07-24' of git://git.kernel.org/.../kvalo/wireless-drivers
+
+Doug Berger (3):
+      net: bcmgenet: test MPD_EN when resuming
+      net: bcmgenet: test RBUF_ACPI_EN when resuming
+      net: bcmgenet: restore HFB filters on resume
+
+Egor Pomozov (1):
+      net: atlantic: fix PTP on AQC10X
+
+Felix Fietkau (2):
+      mt76: mt76x02: do not access uninitialized NAPI structs
+      mt76: mt7615: fix EEPROM buffer size
+
+Florian Westphal (1):
+      netfilter: nf_tables: fix nat hook table deletion
+
+Geert Uytterhoeven (1):
+      usb: hso: Fix debug compile warning on sparc32
+
+George Kennedy (1):
+      ax88172a: fix ax88172a_unbind() failures
+
+Guillaume Nault (1):
+      Documentation: bareudp: update iproute2 sample commands
+
+Hauke Mehrtens (1):
+      ath10k: Fix NULL pointer dereference in AHB device probe
+
+Helmut Grohne (1):
+      net: dsa: microchip: call phy_remove_link_mode during probe
+
+Herbert Xu (1):
+      flow_offload: Move rhashtable inclusion to the source file
+
+Huang Guobin (1):
+      net: ag71xx: add missed clk_disable_unprepare in error path of probe
+
+Ioana Ciornei (1):
+      dpaa2-eth: check fsl_mc_get_endpoint for IS_ERR_OR_NULL()
+
+Jian Shen (1):
+      net: hns3: fix return value error when query MAC link status fail
+
+Jiri Slaby (1):
+      iwlwifi: fix crash in iwl_dbg_tlv_alloc_trigger
+
+Johannes Berg (1):
+      iwlwifi: mvm: don't call iwl_mvm_free_inactive_queue() under RCU
+
+Kalle Valo (1):
+      Merge tag 'mt76-for-kvalo-2020-06-07' of https://github.com/nbd168/wireless
+
+Karsten Graul (12):
+      net/smc: handle unexpected response types for confirm link
+      net/smc: clear link during SMC client link down processing
+      net/smc: fix link lookup for new rdma connections
+      net/smc: protect smc ib device initialization
+      net/smc: drop out-of-flow llc response messages
+      net/smc: move add link processing for new device into llc layer
+      net/smc: fix handling of delete link requests
+      net/smc: do not call dma sync for unmapped memory
+      net/smc: remove freed buffer from list
+      net/smc: fix restoring of fallback changes
+      net/smc: put slot when connection is killed
+      net/smc: fix dmb buffer shortage
+
+Kuniyuki Iwashima (2):
+      udp: Copy has_conns in reuseport_grow().
+      udp: Improve load balancing for SO_REUSEPORT.
+
+Laurence Oberman (1):
+      qed: Disable "MFW indication via attention" SPAM every 5 minutes
+
+Liu Jian (3):
+      ieee802154: fix one possible memleak in adf7242_probe
+      dpaa_eth: Fix one possible memleak in dpaa_eth_probe
+      mlxsw: destroy workqueue when trap_register in mlxsw_emad_init
+
+Lorenzo Bianconi (5):
+      mt76: add missing lock configuring coverage class
+      mt76: mt7615: fix lmac queue debugsfs entry
+      mt76: mt7615: fix hw queue mapping
+      mt76: overwrite qid for non-bufferable mgmt frames
+      mt76: mt7663u: fix memory leaks in mt7663u_probe
+
+Mark O'Donovan (1):
+      ath9k: Fix regression with Atheros 9271
+
+Maxim Kochetkov (1):
+      gianfar: Use random MAC address when none is given
+
+Miaohe Lin (1):
+      net: udp: Fix wrong clean up for IS_UDPLITE macro
+
+Michael Chan (1):
+      bnxt_en: Fix completion ring sizing with TPA enabled.
+
+Min Li (1):
+      docs: ptp.rst: add support for Renesas (IDT) ClockMatrix
+
+Murali Karicheri (4):
+      net: hsr: fix incorrect lsdu size in the tag of HSR frames for small frames
+      net: hsr: validate address B before copying to skb
+      net: hsr: check for return value of skb_put_padto()
+      net: ethernet: ti: add NETIF_F_HW_TC hw feature flag for taprio offload
+
+Navid Emamdoost (2):
+      nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
+      cxgb4: add missing release on skb in uld_send()
+
+Nikita Danilov (1):
+      net: atlantic: disable PTP on AQC111, AQC112
+
+Paolo Pisati (3):
+      selftests: fib_nexthop_multiprefix: fix cleanup() netns deletion
+      selftests: net: ip_defrag: modprobe missing nf_defrag_ipv6 support
+      selftest: txtimestamp: fix net ns entry logic
+
+Peilin Ye (2):
+      AX.25: Fix out-of-bounds read in ax25_connect()
+      AX.25: Prevent out-of-bounds read in ax25_sendmsg()
+
+Randy Dunlap (1):
+      rhashtable: drop duplicated word in <linux/rhashtable.h>
+
+Russell King (2):
+      net: dsa: mv88e6xxx: fix in-band AN link establishment
+      arm64: dts: clearfog-gt-8k: fix switch link configuration
+
+Sergey Organov (2):
+      net: fec: fix hardware time stamping by external devices
+      net: dp83640: fix SIOCSHWTSTAMP to update the struct with actual configuration
+
+Shannon Nelson (5):
+      ionic: use offset for ethtool regs data
+      ionic: fix up filter locks and debug msgs
+      ionic: update filter id after replay
+      ionic: keep rss hash after fw update
+      ionic: use mutex to protect queue operations
+
+Stefano Garzarella (1):
+      vsock/virtio: annotate 'the_virtio_vsock' RCU pointer
+
+Subash Abhinov Kasiviswanathan (1):
+      dev: Defer free of skbs in flush_backlog
+
+Taehee Yoo (2):
+      bonding: check error value of register_netdevice() immediately
+      netdevsim: fix unbalaced locking in nsim_create()
+
+Tung Nguyen (1):
+      tipc: allow to build NACK message in link timeout function
+
+Vadim Pasternak (1):
+      mlxsw: core: Fix wrong SFP EEPROM reading for upper pages 1-3
+
+Vasundhara Volam (2):
+      bnxt_en: Fix race when modifying pause settings.
+      bnxt_en: Init ethtool link settings after reading updated PHY configuration.
+
+Vinay Kumar Yadav (2):
+      crypto/chtls: fix tls alert messages corrupted by tls data
+      crypto/chtls: correct net_device reference count
+
+Wang Hai (3):
+      net: smc91x: Fix possible memory leak in smc_drv_probe()
+      nfc: nci: add missed destroy_workqueue in nci_register_device
+      net: ethernet: ave: Fix error returns in ave_init
+
+Wei Yongjun (1):
+      ip6_gre: fix null-ptr-deref in ip6gre_init_net()
+
+Weilong Chen (1):
+      rtnetlink: Fix memory(net_device) leak when ->newlink fails
+
+Xie He (2):
+      drivers/net/wan/x25_asy: Fix to make it work
+      drivers/net/wan: lapb: Corrected the usage of skb_cow
+
+Xin Long (2):
+      sctp: shrink stream outq only when new outcnt < old outcnt
+      sctp: shrink stream outq when fails to do addstream reconf
+
+Xiongfeng Wang (1):
+      net-sysfs: add a newline when printing 'tx_timeout' by sysfs
+
+Yoshihiro Shimoda (1):
+      net: ethernet: ravb: exit if re-initialization fails in tx timeout
+
+Yuchung Cheng (1):
+      tcp: allow at most one TLP probe per flight
+
+Yunsheng Lin (3):
+      net: hns3: fix for not unmapping TX buffer correctly
+      net: hns3: fix for not calculating TX BD send size correctly
+      net: hns3: fix error handling for desc filling
+
+Zhang Changzhong (2):
+      net: bcmgenet: fix error returns in bcmgenet_probe()
+      net: bcmgenet: add missed clk_disable_unprepare in bcmgenet_probe
+
+guodeqing (1):
+      ipvs: fix the connection sync failed in some cases
+
+wenxu (1):
+      net/sched: act_ct: fix restore the qdisc_skb_cb after defrag
+
+ Documentation/driver-api/ptp.rst                           |  12 +++++++
+ Documentation/networking/bareudp.rst                       |  19 +++++++----
+ arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts |   5 +--
+ drivers/crypto/chelsio/chtls/chtls_cm.c                    |   2 +-
+ drivers/crypto/chelsio/chtls/chtls_io.c                    |   7 ++--
+ drivers/net/bonding/bond_main.c                            |  10 ++++--
+ drivers/net/bonding/bond_netlink.c                         |   3 +-
+ drivers/net/dsa/microchip/ksz9477.c                        |  42 +++++++++++++-----------
+ drivers/net/dsa/microchip/ksz_common.c                     |   2 --
+ drivers/net/dsa/microchip/ksz_common.h                     |   2 --
+ drivers/net/dsa/mv88e6xxx/chip.c                           |  22 +++++++++++--
+ drivers/net/dsa/mv88e6xxx/chip.h                           |   1 +
+ drivers/net/ethernet/aquantia/atlantic/aq_hw.h             |   1 +
+ drivers/net/ethernet/aquantia/atlantic/aq_nic.c            |   9 ++++++
+ drivers/net/ethernet/aquantia/atlantic/aq_nic.h            |   2 ++
+ drivers/net/ethernet/aquantia/atlantic/aq_phy.c            |  29 +++++++++++++++--
+ drivers/net/ethernet/aquantia/atlantic/aq_phy.h            |   8 +++--
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c  |  26 ++++++++++++++-
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.h  |  10 +++---
+ drivers/net/ethernet/atheros/ag71xx.c                      |   3 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c                  |  22 +++++++++----
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c          |   5 ++-
+ drivers/net/ethernet/broadcom/genet/bcmgenet.c             | 144 +++++++++++++++++++++++++++++++++++++---------------------------------------------
+ drivers/net/ethernet/broadcom/genet/bcmgenet.h             |   1 -
+ drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c         |  22 +++++++++----
+ drivers/net/ethernet/cadence/macb_main.c                   |   2 +-
+ drivers/net/ethernet/chelsio/cxgb4/sge.c                   |   1 +
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c             |   2 +-
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c           |   2 +-
+ drivers/net/ethernet/freescale/enetc/enetc_pf.c            |   1 +
+ drivers/net/ethernet/freescale/fec.h                       |   1 +
+ drivers/net/ethernet/freescale/fec_main.c                  |  23 +++++++++----
+ drivers/net/ethernet/freescale/fec_ptp.c                   |  12 +++++++
+ drivers/net/ethernet/freescale/gianfar.c                   |   6 +++-
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h                |   1 +
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c            |  24 +++++++-------
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.h            |   2 --
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c    |  49 +++++++++++++---------------
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   3 ++
+ drivers/net/ethernet/mellanox/mlxsw/core.c                 |   3 +-
+ drivers/net/ethernet/mellanox/mlxsw/core_env.c             |  48 ++++++++++++++++++----------
+ drivers/net/ethernet/neterion/vxge/vxge-main.c             |   2 +-
+ drivers/net/ethernet/pensando/ionic/ionic_ethtool.c        |   7 ++--
+ drivers/net/ethernet/pensando/ionic/ionic_lif.c            |  50 ++++++++++++++---------------
+ drivers/net/ethernet/pensando/ionic/ionic_lif.h            |   8 +----
+ drivers/net/ethernet/pensando/ionic/ionic_rx_filter.c      |  29 +++++++++++++++++
+ drivers/net/ethernet/pensando/ionic/ionic_txrx.c           |   6 ----
+ drivers/net/ethernet/qlogic/qed/qed_cxt.c                  |   4 +--
+ drivers/net/ethernet/qlogic/qed/qed_dev.c                  |   2 +-
+ drivers/net/ethernet/qlogic/qed/qed_int.c                  |  53 +++++++++++++++++-------------
+ drivers/net/ethernet/qlogic/qed/qed_int.h                  |   4 +--
+ drivers/net/ethernet/renesas/ravb_main.c                   |  26 +++++++++++++--
+ drivers/net/ethernet/smsc/smc91x.c                         |   4 +--
+ drivers/net/ethernet/socionext/sni_ave.c                   |   2 +-
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c                   |   3 +-
+ drivers/net/geneve.c                                       |   2 +-
+ drivers/net/hippi/rrunner.c                                |   2 +-
+ drivers/net/ieee802154/adf7242.c                           |   6 ++--
+ drivers/net/netdevsim/netdev.c                             |   4 +--
+ drivers/net/phy/dp83640.c                                  |   4 +++
+ drivers/net/usb/ax88172a.c                                 |   1 +
+ drivers/net/usb/hso.c                                      |   5 +--
+ drivers/net/wan/hdlc_x25.c                                 |   4 ++-
+ drivers/net/wan/lapbether.c                                |   8 +++--
+ drivers/net/wan/x25_asy.c                                  |  21 ++++++++----
+ drivers/net/wireless/ath/ath10k/ahb.c                      |   2 +-
+ drivers/net/wireless/ath/ath10k/pci.c                      |  78 +++++++++++++++++++++-----------------------
+ drivers/net/wireless/ath/ath9k/hif_usb.c                   |   4 ++-
+ drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c           |  16 ++++++++--
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c               |   8 ++---
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c              |   2 ++
+ drivers/net/wireless/mediatek/mt76/mt76.h                  |   1 +
+ drivers/net/wireless/mediatek/mt76/mt7603/main.c           |   2 ++
+ drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c        |   9 +++---
+ drivers/net/wireless/mediatek/mt76/mt7615/dma.c            |   9 +++---
+ drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c         |   3 +-
+ drivers/net/wireless/mediatek/mt76/mt7615/eeprom.h         |   2 +-
+ drivers/net/wireless/mediatek/mt76/mt7615/mac.c            |  20 ++++--------
+ drivers/net/wireless/mediatek/mt76/mt7615/mac.h            |  15 ---------
+ drivers/net/wireless/mediatek/mt76/mt7615/main.c           |   4 +++
+ drivers/net/wireless/mediatek/mt76/mt7615/mmio.c           |   2 +-
+ drivers/net/wireless/mediatek/mt76/mt7615/mt7615.h         |  30 +++++++++++++++++
+ drivers/net/wireless/mediatek/mt76/mt7615/usb.c            |  13 ++++----
+ drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c          |   5 +--
+ drivers/net/wireless/mediatek/mt76/mt7915/main.c           |   3 ++
+ drivers/net/wireless/mediatek/mt76/tx.c                    |   7 ++++
+ drivers/net/wireless/mediatek/mt76/usb.c                   |  39 ++++++++++++++--------
+ drivers/net/xen-netfront.c                                 |  64 ++++++++++++++++++++++++-------------
+ drivers/nfc/s3fwrn5/core.c                                 |   1 +
+ include/linux/rhashtable.h                                 |   2 +-
+ include/linux/tcp.h                                        |   6 ++--
+ include/net/flow_offload.h                                 |   1 -
+ net/ax25/af_ax25.c                                         |  10 ++++--
+ net/core/dev.c                                             |   2 +-
+ net/core/flow_offload.c                                    |   1 +
+ net/core/net-sysfs.c                                       |   2 +-
+ net/core/rtnetlink.c                                       |   3 +-
+ net/core/sock_reuseport.c                                  |   1 +
+ net/hsr/hsr_forward.c                                      |  18 ++++++++---
+ net/hsr/hsr_framereg.c                                     |   3 +-
+ net/ipv4/tcp_input.c                                       |  11 ++++---
+ net/ipv4/tcp_output.c                                      |  13 +++++---
+ net/ipv4/udp.c                                             |  17 ++++++----
+ net/ipv6/ip6_gre.c                                         |  11 ++++---
+ net/ipv6/udp.c                                             |  17 ++++++----
+ net/netfilter/ipvs/ip_vs_sync.c                            |  12 ++++---
+ net/netfilter/nf_tables_api.c                              |  41 ++++++++----------------
+ net/nfc/nci/core.c                                         |   5 ++-
+ net/qrtr/qrtr.c                                            |   1 +
+ net/rxrpc/recvmsg.c                                        |   2 +-
+ net/rxrpc/sendmsg.c                                        |   2 +-
+ net/sched/act_ct.c                                         |  16 ++++++++--
+ net/sched/cls_api.c                                        |   1 -
+ net/sctp/stream.c                                          |  27 ++++++++++------
+ net/smc/af_smc.c                                           |  12 ++++---
+ net/smc/smc_cdc.c                                          |   6 +++-
+ net/smc/smc_core.c                                         | 109 ++++++++++++++------------------------------------------------
+ net/smc/smc_core.h                                         |   5 +++
+ net/smc/smc_ib.c                                           |  16 ++++++++--
+ net/smc/smc_ib.h                                           |   1 +
+ net/smc/smc_llc.c                                          | 127 ++++++++++++++++++++++++++++++++++++++++++++++++------------------------
+ net/smc/smc_llc.h                                          |   2 +-
+ net/tipc/link.c                                            |   2 +-
+ net/vmw_vsock/virtio_transport.c                           |   2 +-
+ tools/testing/selftests/net/fib_nexthop_multiprefix.sh     |   2 +-
+ tools/testing/selftests/net/ip_defrag.sh                   |   2 ++
+ tools/testing/selftests/net/txtimestamp.sh                 |   2 +-
+ 127 files changed, 1022 insertions(+), 676 deletions(-)
