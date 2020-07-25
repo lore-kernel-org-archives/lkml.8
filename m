@@ -2,91 +2,169 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5664C433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 20:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4735C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 20:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2CF5206D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 20:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13DB206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 20:30:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpmyHvZt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgGYU1t (ORCPT
+        id S1727978AbgGYUaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 16:27:49 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:60735 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgGYU1t (ORCPT
+        Sat, 25 Jul 2020 16:30:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbgGYUaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 16:27:49 -0400
-Received: from dante.cb.ettle ([143.159.226.70]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.163]) with ESMTPSA (Nemesis) id
- 1MG9c4-1k0YHa0v5Y-00GVa0; Sat, 25 Jul 2020 22:27:34 +0200
-Message-ID: <aaa64572fac0fc411b79a9adb59b5bbcbdf4b1a8.camel@ettle.org.uk>
-Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
-From:   James Ettle <james@ettle.org.uk>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        =?UTF-8?Q?=E5=90=B3=E6=98=8A=E6=BE=84?= Ricky 
-        <ricky_wu@realtek.com>
-Cc:     Rui Feng <rui_feng@realsil.com.cn>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <lenb@kernel.org>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jacopo De Simoi <wilderkde@gmail.com>
-Date:   Sat, 25 Jul 2020 21:27:11 +0100
-In-Reply-To: <20200724231309.GA1551055@bjorn-Precision-5520>
-References: <20200724231309.GA1551055@bjorn-Precision-5520>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.4 (3.36.4-1.fc32) 
+        Sat, 25 Jul 2020 16:30:07 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5540CC08C5C0;
+        Sat, 25 Jul 2020 13:30:07 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a9so7076053pjd.3;
+        Sat, 25 Jul 2020 13:30:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nwY+/tJ0rnnwCDiaWmm+N+wbOgL2p5NbRLZLkADAyRw=;
+        b=YpmyHvZtSrZ6atS0RCrqRZ1Z0vHqKFnlljCO8iS8qa0Tmiznt12PZprJuqovWCPno7
+         qamlb0T3rj+7Zm63S68BPi23q7OEN+gTqVr0fSeEjB8RJw4/NQgX8jvDnboWSa5zN/Lk
+         fDbaeU+CVw1V7SJtghaqbBM8RTTN2fgk/cYpy16TjS4YdAgnt39mdb+iW7oIoKqBXU3/
+         pLXrQRKLrAjp8QPFcu2S+pjy7uqB3Iz5C9LmBgXF4ShJiDRluqXHfoqujDVSbZ+O7WPF
+         dUGQyTCRut4ARqVmw0/6WRDP9EvWY7TKO6d4NuV7vRXSO/MMG6aGyPDj0bFq0U3vFgda
+         W59A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nwY+/tJ0rnnwCDiaWmm+N+wbOgL2p5NbRLZLkADAyRw=;
+        b=F4H7ZmGQhRihb6jkokbSgK3cqVlX/zb0TEyKhw5wEx4jTwly3q/j6Qn/k5ysWg4eZr
+         mFSfFywCVtySBQBss/IMXIMBA99FUZPp4PcG6fbI7Hx2hRAIBdcNOor6heYcjrgxl1RG
+         cdKH8TLJWxtipfWWuVBOJ5Lt7gZ2UPe1XIgErAwa2jdc/SNtMLx4EiHcL6hBi9iZkQBj
+         SegpPBsm9iZh2pUdbcR3LWlCdW5rhw0hW5LziN86N6EsxyktZfaIi60jtqZIyi7oWjmr
+         UJ14C0P6qYyYzNg3b5ErfTCq5T+JaO1sOJP63nSpHxc5ZWtcYkEuQo3QUVlOgsR8q6O6
+         FO4g==
+X-Gm-Message-State: AOAM533DPqLZKhghKHVLUo26iswqbeF8QGIArc/vwv4ofksgISMycnsi
+        o02zmM5QrBOY8bLX5Qdq7EimEndPNBm5l0sPwTk=
+X-Google-Smtp-Source: ABdhPJxlR7PFFbFXWRPb5neSRyvjY1sUwyQAN09BBPm++FcmYgvy9mLJeggjDUJMCiVpjfdPkEkatYmxMJEchR75TXo=
+X-Received: by 2002:a17:902:9a4b:: with SMTP id x11mr13333727plv.255.1595709006739;
+ Sat, 25 Jul 2020 13:30:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:EA9tER/Bd2hSFPo8Zx7zt1ovwlzKiRiE/2Mb+rFMyCQNZ94yn8h
- 32trVTFpvlNCdZG2EdRTb4vpPYGEpkDE7A3vE0QEHETZfcuJACx8jSLHgPRWwhcatGnhYPl
- gzm8up2coi4KEamEz0R6ksGfJI/Qf14K+Kto4gaXCHTXgJ6+4ouWpXbeYAQY4gIDS7iTy+9
- +hjMgTPvIj7NUgQZnV2yw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:JZjZTjOj7SQ=:0KLvKiujkBxA7xC2K0ojRP
- ehek6TkvcfaKJtlg1SEXJn49se4KFhN6rU6nhURuL7+L3+LZyldDNxpOwJPB2nQSb2fuNdyau
- l2ngyyK6drHvr1UICh26PK8iiKwUQhg57UCsaZm81zC9S/mnsD7UR5WMa0eGtOYkul04k+0jD
- 081QD9JqXZ0kxUABDyG0wu2An3sGeOAwVHQLt3wjTYSFaU3HdtfsIS7FSuKKpq5Vwo3//HUz+
- JzzB874Y6vqCtTHoeyxJNGCYSMAvJh4n6iz9+HmMZie5/SStSZnXAsw7xrFFMAOyPdZEKzzfF
- Emk/o/ZxWdH5aT/PwMX7FQpl8+gQPzptQywRgAnhcAlqdAu25sa2p/qqwl0/CE/bOHY67smtY
- Ox3BXyZ68F9RjpQqWFR/ABHYFbK0Ci6slvdMnC4ncJGXUTksIA3npZSTBib/50SL+zUkYu/CY
- oM4jcmpTSZiX4y41K+WNSz2gwU/YSHvCSgu0MImdOePchi9g5LHotWqe2pSi7wIiSVFxDcGVQ
- aDdrpQRUJ7ne9QwpTByT1kXuUbR76yQoVFLEgN5yZlhvUlDs2JSwbkoWiQCxocZMebwBP2yht
- eD0azSCJOJMooBskIMuQB+vXw6ApPJTkD6+AA0evsxodGjZkVDDvdbW0bAjMiy0K5eIgtjbL/
- 1LdfXgeLJC0Ur/HUvor9W4ZVz/QQpyiZ11CL67hUZ9HCI/2mmzIk7zXAO/Z9FJPVCkl+KYMbc
- KegWW4/1lSrZUd7YmMuGDvONxOo3l8NZMhqFjIufkmYxS5qdHKZSWBKQW/xl4ryJ/17EAJEsG
- FzWqRSGPjvf6fI0dIWgTiyrtCq3ALaT9f3V56s55NfAf0pkDH79xkhVy9LD0tgHNrUV4LK5
+References: <20200725041955.9985-1-warthog618@gmail.com> <20200725041955.9985-4-warthog618@gmail.com>
+In-Reply-To: <20200725041955.9985-4-warthog618@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 25 Jul 2020 23:29:50 +0300
+Message-ID: <CAHp75Ve4e4JdAQ2YGWqm9JEaKViw861fSUbCfxEP7HnKBDj_fQ@mail.gmail.com>
+Subject: Re: [PATCH v2 03/18] gpiolib: make cdev a build option
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-24 at 18:13 -0500, Bjorn Helgaas wrote:
-> 
-> Maybe we should simplify this a little bit more.  James, if you don't
-> touch ASPM config at all, either manually or via udev, does the ASPM
-> configuration stay the same across suspend/resume?
-> 
+On Sat, Jul 25, 2020 at 7:21 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> Make the gpiolib-cdev module a build option.  This allows the CDEV
+> interface to be removed from the kernel to reduce kernel size in
+> applications where is it not required, and provides the parent for
+> other other CDEV interface specific build options to follow.
+>
+> Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
+>  drivers/gpio/Kconfig        | 16 ++++++++++++++--
+>  drivers/gpio/Makefile       |  2 +-
+>  drivers/gpio/gpiolib-cdev.h | 15 +++++++++++++++
+>  3 files changed, 30 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 8030fd91a3cc..b5bb9efc1092 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -66,8 +66,20 @@ config GPIO_SYSFS
+>
+>           This ABI is deprecated. If you want to use GPIO from userspace,
+>           use the character device /dev/gpiochipN with the appropriate
+> -         ioctl() operations instead. The character device is always
+> -         available.
+> +         ioctl() operations instead.
+> +
+> +config GPIO_CDEV
+> +       bool "/dev/gpiochipN (character device interface)"
+> +       default y
+> +       help
+> +         Say Y here to add the character device /dev/gpiochipN interface
+> +         for GPIOs. The character device allows userspace to control GPIOs
+> +         using ioctl() operations.
+> +
+> +         Only say N is you are sure that the GPIO character device is not
 
-Yes, it stays the same. Explicitly: 
+is -> if
 
-With the udev rule disabled, immediately following clean boot from
-power-off (and no additional tinkering), ASPM is OFF to the best of my
-knowledge:
+> +         required.
+> +
+> +         If unsure, say Y.
+>
+>  config GPIO_GENERIC
+>         depends on HAS_IOMEM # Only for IOMEM drivers
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 4f9abff4f2dc..7c24c8d77068 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -7,8 +7,8 @@ obj-$(CONFIG_GPIOLIB)           += gpiolib.o
+>  obj-$(CONFIG_GPIOLIB)          += gpiolib-devres.o
+>  obj-$(CONFIG_GPIOLIB)          += gpiolib-legacy.o
+>  obj-$(CONFIG_GPIOLIB)          += gpiolib-devprop.o
+> -obj-$(CONFIG_GPIOLIB)          += gpiolib-cdev.o
+>  obj-$(CONFIG_OF_GPIO)          += gpiolib-of.o
+> +obj-$(CONFIG_GPIO_CDEV)                += gpiolib-cdev.o
+>  obj-$(CONFIG_GPIO_SYSFS)       += gpiolib-sysfs.o
+>  obj-$(CONFIG_GPIO_ACPI)                += gpiolib-acpi.o
+>
+> diff --git a/drivers/gpio/gpiolib-cdev.h b/drivers/gpio/gpiolib-cdev.h
+> index 973578e7ad10..19a4e3d57120 100644
+> --- a/drivers/gpio/gpiolib-cdev.h
+> +++ b/drivers/gpio/gpiolib-cdev.h
+> @@ -5,7 +5,22 @@
+>
+>  #include <linux/device.h>
+>
+> +#ifdef CONFIG_GPIO_CDEV
+> +
+>  int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt);
+>  void gpiolib_cdev_unregister(struct gpio_device *gdev);
+>
+> +#else
+> +
+> +static inline int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
+> +{
+> +       return 0;
+> +}
+> +
+> +static inline void gpiolib_cdev_unregister(struct gpio_device *gdev)
+> +{
+> +}
+> +
+> +#endif /* CONFIG_GPIO_CDEV */
+> +
+>  #endif /* GPIOLIB_CDEV_H */
+> --
+> 2.27.0
+>
 
- - link/l1_aspm in sysfs is 0 for PCI devices 0000:01:00.[01];
- - the processor sleeps no deeper than package C3.
 
-The situation above is the same following a suspend/resume cycle --
-both in terms of sysfs, and observed package C-state occupancy.
-
-[Tested on kernel 5.7.10, but the behaviour is the same as prior
-kernels.]
-
-Thanks,
-James.
-
+-- 
+With Best Regards,
+Andy Shevchenko
