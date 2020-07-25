@@ -6,61 +6,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E160C433E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 22:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA37C433E8
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 22:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 431DB206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 22:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7EB206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 22:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595716215;
-	bh=LiH7ghpFyjIxyFjKFEpsMpPqnVCzGwVcSJlmToPZAAc=;
+	s=default; t=1595716213;
+	bh=5eei+xGbwhPCgRFXPyLEluUSF8hdPtvhc71bTraY59s=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=e6ghdusBj6SFEo9RrynWhZrewhBn5RmgcIaH24IMjtMl11BRRKO+AL7Bq/kIAknEh
-	 ZvyakO16NnL1VXDWncFCTGPtAAvqL8OHRXEBbNCclzDGyHY4dnu91rgLvKULhSPEyr
-	 Arv/2ZAbPNSii//2GsJ54FBeuc/LpBG/+WT1sYLk=
+	b=oW5fgHtCbyKW8Kdhrbh74sFkp6bBqNB5LRc0Cs/8mIV+1XIWRwPZtAsOkt50hzPL4
+	 B22pZfEj10zNYtrMxQDLPnIlMt90E+nKh21/GzyeSBApNhpcm28sQDqvlCSNWEGk+v
+	 uHt7YbOJ5FV9YLoFQe/J8GR+QzMzhBAfroKUpuPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgGYWaO (ORCPT
+        id S1728236AbgGYWaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 18:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58864 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbgGYWaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 25 Jul 2020 18:30:06 -0400
-Subject: Re: [GIT PULL] RISC-V Fixes for 5.8-rc7
+Received: from mail.kernel.org ([198.145.29.99]:58850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728029AbgGYWaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 18:30:04 -0400
+Subject: Re: [GIT PULL] EFI fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595716206;
-        bh=LiH7ghpFyjIxyFjKFEpsMpPqnVCzGwVcSJlmToPZAAc=;
+        s=default; t=1595716204;
+        bh=5eei+xGbwhPCgRFXPyLEluUSF8hdPtvhc71bTraY59s=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=iy+zFC9XEdxro1O25f5vVsUzSczJ5EWorn8G9q1yh9/j2OUL43vSoetRGWxlEyITR
-         oSWW6DGMvnCzujWxDLk0viFLg3a+CBD98/vdc6+bCnJBTBm0HdEeiYsj+isgJkvxsw
-         4hA2HCWq/rZpzgGq7XxO16L0bS+Lc00XEj29JRBs=
+        b=kMEYfnvczl/wZ6Te4igQs4l4weuNwqnpnXiGZk2z/pVblBXMjzrht7FyL5qQ7oFmi
+         BEntS77jkCD/s10QqCTpfe4GLuyhFbPgr5338a6lak4ladgvebIXoMA5vDu/dfY24N
+         qKLRHRUiWK3rekZo3zuyd40Q2VgQojLaEwt16F6k=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <mhng-f2bb3f7e-e2d6-48e5-a8f6-5e47edf5441e@palmerdabbelt-glaptop1>
-References: <mhng-f2bb3f7e-e2d6-48e5-a8f6-5e47edf5441e@palmerdabbelt-glaptop1>
+In-Reply-To: <20200725103259.GA823698@gmail.com>
+References: <20200725103259.GA823698@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <mhng-f2bb3f7e-e2d6-48e5-a8f6-5e47edf5441e@palmerdabbelt-glaptop1>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git
- tags/riscv-for-linus-5.8-rc7
-X-PR-Tracked-Commit-Id: fa5a198359053c8e21dcc2b39c0e13871059bc9f
+X-PR-Tracked-Message-Id: <20200725103259.GA823698@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ efi-urgent-2020-07-25
+X-PR-Tracked-Commit-Id: 74f85551666fe40bd739e95b5ecb20f53f8ad4df
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 04300d66f0a06d572d9f2ad6768c38cabde22179
-Message-Id: <159571620619.7388.9227787519310326935.pr-tracker-bot@kernel.org>
-Date:   Sat, 25 Jul 2020 22:30:06 +0000
-To:     Palmer Dabbelt <palmer@dabbelt.com>
+X-PR-Merge-Commit-Id: 17baa442864254cb2aadf3a4d668c0f81d2f07c5
+Message-Id: <159571620453.7388.11647176182336327209.pr-tracker-bot@kernel.org>
+Date:   Sat, 25 Jul 2020 22:30:04 +0000
+To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+        linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 25 Jul 2020 11:30:54 -0700 (PDT):
+The pull request you sent on Sat, 25 Jul 2020 12:32:59 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.8-rc7
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-urgent-2020-07-25
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/04300d66f0a06d572d9f2ad6768c38cabde22179
+https://git.kernel.org/torvalds/c/17baa442864254cb2aadf3a4d668c0f81d2f07c5
 
 Thank you!
 
