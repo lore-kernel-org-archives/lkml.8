@@ -2,81 +2,123 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC734C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754C4C433F1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 860B02070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F29420748
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:06:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="PryLGD8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgGYACV (ORCPT
+        id S1726618AbgGYAGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 20:02:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgGYACV (ORCPT
+        Fri, 24 Jul 2020 20:06:42 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:39652 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727096AbgGYAEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 20:02:21 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ECE5C0619D3;
-        Fri, 24 Jul 2020 17:02:21 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 961C612756FEE;
-        Fri, 24 Jul 2020 16:45:35 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 17:02:20 -0700 (PDT)
-Message-Id: <20200724.170220.1275270219725381485.davem@davemloft.net>
-To:     andrea.righi@canonical.com
-Cc:     boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, kuba@kernel.org,
-        xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] xen-netfront: fix potential deadlock in
- xennet_remove()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200724085910.GA1043801@xps-13>
-References: <20200724085910.GA1043801@xps-13>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 24 Jul 2020 16:45:35 -0700 (PDT)
+        Fri, 24 Jul 2020 20:04:38 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 06ONmpXD007005
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=m9nqxqECxychr9pV9MaWkZGUlt3JX3XgdCcRN5eRYho=;
+ b=PryLGD8e1VbAEoeCAE51w5FU5FUmOfm9xdzIuxE70U7Ng7VVe68qGDoZCpTn1xn1qGTI
+ t05kDCM0wCLSpAAcPhlBkndy7CF9OUMFd/sng22ZsE71GGz8O7l1OZXfcDahAk3Nj71N
+ fyaRcIDSvDu70yliPgGwf0pz/Ygk8MhEefY= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 32er2fn965-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:37 -0700
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 24 Jul 2020 17:04:36 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id 2F1CD1B35A9E; Fri, 24 Jul 2020 17:04:27 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     <bpf@vger.kernel.org>
+CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH bpf-next 25/35] bpf: eliminate rlimit-based memory accounting for socket storage maps
+Date:   Fri, 24 Jul 2020 17:04:00 -0700
+Message-ID: <20200725000410.3566700-26-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200725000410.3566700-1-guro@fb.com>
+References: <20200725000410.3566700-1-guro@fb.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-24_10:2020-07-24,2020-07-24 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1015
+ impostorscore=0 mlxscore=0 malwarescore=0 bulkscore=0 mlxlogscore=924
+ phishscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0
+ spamscore=0 suspectscore=13 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007240164
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Righi <andrea.righi@canonical.com>
-Date: Fri, 24 Jul 2020 10:59:10 +0200
+Do not use rlimit-based memory accounting for socket storage maps.
+It has been replaced with the memcg-based memory accounting.
 
-> There's a potential race in xennet_remove(); this is what the driver is
-> doing upon unregistering a network device:
-> 
->   1. state = read bus state
->   2. if state is not "Closed":
->   3.    request to set state to "Closing"
->   4.    wait for state to be set to "Closing"
->   5.    request to set state to "Closed"
->   6.    wait for state to be set to "Closed"
-> 
-> If the state changes to "Closed" immediately after step 1 we are stuck
-> forever in step 4, because the state will never go back from "Closed" to
-> "Closing".
-> 
-> Make sure to check also for state == "Closed" in step 4 to prevent the
-> deadlock.
-> 
-> Also add a 5 sec timeout any time we wait for the bus state to change,
-> to avoid getting stuck forever in wait_event().
-> 
-> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-> ---
-> Changes in v2:
->  - remove all dev_dbg() calls (as suggested by David Miller)
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ net/core/bpf_sk_storage.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-Applied, thank you.
+diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
+index fbcd03cd00d3..c0a35b6368af 100644
+--- a/net/core/bpf_sk_storage.c
++++ b/net/core/bpf_sk_storage.c
+@@ -676,8 +676,6 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union=
+ bpf_attr *attr)
+ 	struct bpf_sk_storage_map *smap;
+ 	unsigned int i;
+ 	u32 nbuckets;
+-	u64 cost;
+-	int ret;
+=20
+ 	smap =3D kzalloc(sizeof(*smap), GFP_USER | __GFP_NOWARN | __GFP_ACCOUNT=
+);
+ 	if (!smap)
+@@ -688,18 +686,9 @@ static struct bpf_map *bpf_sk_storage_map_alloc(unio=
+n bpf_attr *attr)
+ 	/* Use at least 2 buckets, select_bucket() is undefined behavior with 1=
+ bucket */
+ 	nbuckets =3D max_t(u32, 2, nbuckets);
+ 	smap->bucket_log =3D ilog2(nbuckets);
+-	cost =3D sizeof(*smap->buckets) * nbuckets + sizeof(*smap);
+-
+-	ret =3D bpf_map_charge_init(&smap->map.memory, cost);
+-	if (ret < 0) {
+-		kfree(smap);
+-		return ERR_PTR(ret);
+-	}
+-
+ 	smap->buckets =3D kvcalloc(sizeof(*smap->buckets), nbuckets,
+ 				 GFP_USER | __GFP_NOWARN | __GFP_ACCOUNT);
+ 	if (!smap->buckets) {
+-		bpf_map_charge_finish(&smap->map.memory);
+ 		kfree(smap);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+--=20
+2.26.2
+
