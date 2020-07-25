@@ -2,122 +2,102 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5807C4345E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DC0C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3842070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:14:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F17206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:15:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOXyDauP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jt8+hJpY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgGYSO1 (ORCPT
+        id S1728024AbgGYSPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 14:14:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50940 "EHLO
+        Sat, 25 Jul 2020 14:15:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgGYSOZ (ORCPT
+        with ESMTP id S1726727AbgGYSPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 14:14:25 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8B3BC08C5C0;
-        Sat, 25 Jul 2020 11:14:24 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id gg18so9732029ejb.6;
-        Sat, 25 Jul 2020 11:14:24 -0700 (PDT)
+        Sat, 25 Jul 2020 14:15:34 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FD9FC08C5C0;
+        Sat, 25 Jul 2020 11:15:34 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id w9so9333848qts.6;
+        Sat, 25 Jul 2020 11:15:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WiwnYihBtixDJzDpzWlD4k6I3xmTQHOsKsy9q7yUDY4=;
-        b=gOXyDauPjCBBEN92duKWIXnR1RNC3Ip8+jtR47XfISeB26t1GWY0X6lg5SHy8TPEjW
-         Xl8GpmHilFoA7woS6N5TDdNSYO2ANDRX0vJDugf8NujUr933hJ0d/UaYy4nlZnA6D80L
-         ej2tacQOtXCdp01xUG8waVAdmiGmwEVYKdNLz2TP/5jLMoOjtvVsVaEjeOURfKDFD6J/
-         ZsxAlKgb1X+9dbKDD9qaBBJnbiFdahMmQTsmpF3LpPGvxWcSmaTCcUc+SIkn1xy9vvvF
-         d2EwkybxeoZYtYCMK5yHrSxNyXw54WxdbiU+Gdo0N4z3GAoigmTGklWoo2uGs7fqC2ui
-         g+tQ==
+        h=from:to:subject:date:message-id;
+        bh=BoLLs9pL25bQsh1K8AZlZy8BCoVEU1VbiiHrpjhJ70k=;
+        b=jt8+hJpYx7U7Pv4o2UdmKJnGDCnIYuK7uaPWiLSuPerSnu/1L9O+7cW1Se5svGYhBq
+         PGZN5uls/Pto4Vf8OVG6r0LfbTqSTYWzZ6dhgYu/LwwpKeF7H2iN9ZCqxnST7LDMPY44
+         m+WLoh1ICZwjWcMswMJXNyzFCk7+FYnXesjgx8VPwC72onuXCRtKugi7xXofHe5bCsZl
+         dIGiubPw2iiJSqPVzRwcJcr52Kq0GlUIMug5dee0xyCLfV2uOtWLjR6QAB+ZyVrdl8JK
+         yo/RS/RzGqC+pjxl2B+88wB2t5fQDXYExVbKqi4ThXbx5oczuTI7hPQirh1Uc7bY/uhQ
+         Qr+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WiwnYihBtixDJzDpzWlD4k6I3xmTQHOsKsy9q7yUDY4=;
-        b=TjQSstOIbEAMvvnL1bUr/PAZnqU5l8AYh9RO+O4cxtCb47FfNsXmBxkMmLpLjpbphN
-         e+tPvS+r2kadmcjzOilZI/fFWhHwPzDmz3DKRGR+AwUnPJOQ/8jD8WEizShy9mwDlTyo
-         LjNldnwLbLv93ITZCwH2VQ7O5pPW3WHs1qHdC5uLF7cf+G+nL6anOUcFqgUb+c6cLzos
-         CJpqw/Zv7MkJYySkv1KsvnD1SFTp0ULlvQ78wKKldqKsQrCX2K4xL/Ig2fYOaTbyijWd
-         DgoFwrH5TRrc+JaeYFLpRFFarI1N7NAQOq4jJ6PQpdqNq6bWCy0S/1S9RL/NCM6VSxVy
-         sgOg==
-X-Gm-Message-State: AOAM533rkZLJoDAedSzqAeILPcrykwPaQsgajdvm6raup62ADUdfZK5P
-        XOnY0yAOdT9cEaTyIsSVSQQPoGA6334=
-X-Google-Smtp-Source: ABdhPJypVwaMtyAB2CYK/4ceL7rXI6q8zQ7u3cYnaITT90LoOeNxa0zgLHOowZ0j8RNSjSmKJ7f6Gw==
-X-Received: by 2002:a17:906:2b54:: with SMTP id b20mr14291952ejg.366.1595700862147;
-        Sat, 25 Jul 2020 11:14:22 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host-79-22-5-125.retail.telecomitalia.it. [79.22.5.125])
-        by smtp.googlemail.com with ESMTPSA id qn10sm220922ejb.39.2020.07.25.11.14.20
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=BoLLs9pL25bQsh1K8AZlZy8BCoVEU1VbiiHrpjhJ70k=;
+        b=qxkyAcEMGR+OkytRYFFV3m3OScuPtnlRvY9T6+KqWFnldbMBkwsrqp0YWG8/jHOcGa
+         /4m4XXl10WYesVIkYITNks66VGSO5lVvQ/DwnPoCv7gll1qvdcrWbJySI74iKSpJfNsP
+         5qh6S3QDglXr7Wm4o10sT2suk3RkZKBjUzdUD/Fhu3eyeGdKXaywiqjG4X1ZZRrsK3wu
+         t6S8qsikw9pXuCIvqd0tYeqeYeEs/uyupw9gb9VkC6ujZZ1F0l91d75eO8Yaa4sGW9bR
+         XFXo8WZk+EmPe1eKuUauzX3RsnnVGjXnmHErSICMc+BZ66kTdDWbUlB7qCVW4id3dEx5
+         He3w==
+X-Gm-Message-State: AOAM530uK7oCNMHlxwXiHLXit1zVa5zeAZgfI2s+xvuKQrH2qCtPgPyV
+        dy2FSWFgiN/Tw9AjmUL1QSRdcGqJEVyuXQ==
+X-Google-Smtp-Source: ABdhPJxGFMafz00I9Zqenkqzb2gAb3+rqPW8PStREmdM83sDRCB6ZQeowtht6kGoIDWaz3WOadCKOQ==
+X-Received: by 2002:ac8:478e:: with SMTP id k14mr12856517qtq.21.1595700933813;
+        Sat, 25 Jul 2020 11:15:33 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:dd0e:1a59:cbe4:73ee])
+        by smtp.googlemail.com with ESMTPSA id o184sm12177664qkd.41.2020.07.25.11.15.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 11:14:21 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v5 0/7] Add support for ipq8064 tsens
-Date:   Sat, 25 Jul 2020 20:13:56 +0200
-Message-Id: <20200725181404.18951-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 25 Jul 2020 11:15:33 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, Shuah Khan <shuah@kernel.org>,
+        Tejun Heo <tj@kernel.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] [cgroup/testing] cg_read_strcmp: Fix null pointer dereference
+Date:   Sat, 25 Jul 2020 14:14:51 -0400
+Message-Id: <20200725181506.20199-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset convert msm8960 to reg_filed, use int_common instead 
-of a custom function and fix wrong tsens get_temp function for msm8960.
-Ipq8064 SoCs tsens driver is based on 8960 tsens driver. Ipq8064 needs
-to be registered as a gcc child as the tsens regs on this platform are
-shared with the controller.
-This is based on work and code here
-https://git.linaro.org/people/amit.kucheria/kernel.git/log/?h=wrk3/tsens-8960-breakage
+Passing NULL in strcmp will cause a segmentation fault.
+Fix this by returning -1 if expected is NULL pointer. 
 
-v5:
-* Conver driver to use reg_fiedl
-* Use init_common 
-* Drop custom set_trip and set_interrupt
-* Use common set_trip and set_interrupt
-* Fix bad get_temp function
-* Add missing hardcoded slope
-v4:
-* Fix compilation error and warning reported by the bot
-v3:
-* Change driver to register as child instead of use phandle
-v2:
-* Fix dt-bindings problems
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+---
+ tools/testing/selftests/cgroup/cgroup_util.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ansuel Smith (7):
-  drivers: thermal: tsens: Add VER_0 tsens version
-  drivers: thermal: tsens: Convert msm8960 to reg_field
-  drivers: thermal: tsens: Use init_common for msm8960
-  drivers: thermal: tsens: Fix wrong get_temp for msm8960
-  drivers: thermal: tsens: Change calib_backup name for msm8960
-  drivers: thermal: tsens: Add support for ipq8064-tsens
-  dt-bindings: thermal: tsens: Document ipq8064 bindings
-
- .../bindings/thermal/qcom-tsens.yaml          |  50 ++++-
- drivers/thermal/qcom/tsens-8960.c             | 172 +++++++++++-------
- drivers/thermal/qcom/tsens.c                  | 156 +++++++++++++---
- drivers/thermal/qcom/tsens.h                  |   7 +-
- 4 files changed, 284 insertions(+), 101 deletions(-)
-
+diff --git a/tools/testing/selftests/cgroup/cgroup_util.c b/tools/testing/selftests/cgroup/cgroup_util.c
+index 8a637ca7d73a..05853b0b8831 100644
+--- a/tools/testing/selftests/cgroup/cgroup_util.c
++++ b/tools/testing/selftests/cgroup/cgroup_util.c
+@@ -106,7 +106,7 @@ int cg_read_strcmp(const char *cgroup, const char *control,
+ 
+ 	/* Handle the case of comparing against empty string */
+ 	if (!expected)
+-		size = 32;
++		return -1;
+ 	else
+ 		size = strlen(expected) + 1;
+ 
 -- 
-2.27.0
+2.17.1
 
