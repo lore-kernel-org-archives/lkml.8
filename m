@@ -2,189 +2,118 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22F2C433F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 04:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C311C433E5
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 04:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6A57206EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 04:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE6D32078A
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 04:44:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uanmk9Vs"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="ibIWiXjG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgGYEW4 (ORCPT
+        id S1726805AbgGYEo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 00:22:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35866 "EHLO
+        Sat, 25 Jul 2020 00:44:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgGYEWz (ORCPT
+        with ESMTP id S1725825AbgGYEoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 00:22:55 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9AB3C0619D3;
-        Fri, 24 Jul 2020 21:22:55 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id o22so6571059pjw.2;
-        Fri, 24 Jul 2020 21:22:55 -0700 (PDT)
+        Sat, 25 Jul 2020 00:44:25 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66863C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 21:44:25 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id y3so9964381wrl.4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 21:44:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=crje8LMEWe+nPqJPbXwwSKHdTWnnedlQivtsgNuFZH4=;
-        b=Uanmk9VszHznxuEAObcgraGn8/jp9vuHuVYtqZJacfUqod2gSlD/nOwYq57wWSH1ss
-         HNGDD16WRMvtkg8Z7iOLFxPtA5t/9y4B/+g1d2q85KzIbQszgZUi1N9LE23B1zGpHzpO
-         OGXXCyfNZ+WWK9+p69A2wHr6PHLFMKyC7i3pSjzXDnrKAx72LXpYK+x/pf6axcSOu9Qn
-         xL5qzNckku9LLREmdFPeE1OQJwn42LgY51lIBSWLB07g7W7+JV33MpS7dM9JHldqwIb5
-         EaLy4Oq+T4cf2gezp31xs3sznF6GWxO+RF/FvqU8JawF0O+u8/FhjqivMk9pHoALyQqz
-         gkgA==
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5VrwN5/UnygvMy3zMm6TjQrq+luQNTXvPZ+NbPuQVPA=;
+        b=ibIWiXjGWI4kz9I5MrfgGQdY71Zw+k0eXM7gC5w5R+lLsuD/rVVn4l5bB7vbyRpgSF
+         CV+8imaGR1JjGgXBgy9BLroi7X+UhQOc0W+LxYQAbq+YPThjVyOrAleyn+J44L5k/1pZ
+         ATDUYH0iFCuMMtfyo4nNuUBNgpolxBm3o3+jo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=crje8LMEWe+nPqJPbXwwSKHdTWnnedlQivtsgNuFZH4=;
-        b=JKTfMvCe8m5PDm01e7RKJ5GOcfYy3ZwrJc/2UotqfohfIJeqtJnOq/MbK6Q5PBRLo7
-         SC+GsUkyb4LORU1Ea9iEnXW11xzmV+PKFUF3B5GNfvkNcBq9Fk+Ez4nTnW4/MmX/wzGS
-         bPKouNOjMhPqPu9BLQvI9nWXEoYzcKmYUbllCixaimX2Hx4VHS4dMlohsKFrh6/3DFum
-         CI+8YMEYfDGmPHwmS6eLiySOGmUhTaNHiNtITIc7LliCtaqBbwX+BdGdv9JQtIwGx/hq
-         oXTsDhDJ9ZGcEETxxGs4qJ7ak2TIqpM0GjUrKWxZwfvNbRZS4ZlOdrHaB6Kxbm8eZwYd
-         0UNw==
-X-Gm-Message-State: AOAM5319cwB4D4yd1JlOOFm1+geLY996glOsZJraqz1IbkQLJH/t3JBa
-        pyZmKjR1Hiuawj3wbdRRCHA+/fbH
-X-Google-Smtp-Source: ABdhPJwhot18b7leVQGxHESQMPoPRY7tGw2gtNAK/3ffKbNpUBGqNRD4PAUhdd+5b8Ls1HU5Mupt1A==
-X-Received: by 2002:a17:90a:2dcb:: with SMTP id q11mr8561605pjm.135.1595650974930;
-        Fri, 24 Jul 2020 21:22:54 -0700 (PDT)
-Received: from sol.lan (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id p1sm885320pjp.10.2020.07.24.21.22.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 21:22:54 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v2 18/18] tools: gpio: add multi-line monitoring to gpio-event-mon
-Date:   Sat, 25 Jul 2020 12:19:55 +0800
-Message-Id: <20200725041955.9985-19-warthog618@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200725041955.9985-1-warthog618@gmail.com>
-References: <20200725041955.9985-1-warthog618@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5VrwN5/UnygvMy3zMm6TjQrq+luQNTXvPZ+NbPuQVPA=;
+        b=djbQUGIpBidPX57iGgb+ZpBWozIGDnLxsrKi4+obvHwCv/eQkKGBsZWdSlzh6/59k3
+         vQIyYLmNpY0ezuDoTkXKWY0IfummEnQJRY88xjZWWzqKMzoDRUxAcr4uD3P7O5eKXkCm
+         Fhau+XR14KrBat+FAw+QINem7JmtOtvFbNfdH/LUSaGKJHLetY1lcgefcuXUZdEEqDUM
+         EEf2gddufh2NtXxVVrPWiY156i8Emx8DsgjC4BI8vFdYSUFYnALSyLZTOenXvLOQXlQq
+         Sd0BcURu9XIZMhDB55gzk0bAaCWCAvRfhCrvXYSvzr+6imiNEw/lDRFE35//jKuikJGj
+         3rGQ==
+X-Gm-Message-State: AOAM532kJ7JwBpTx8+R5NUlBiGQHrlxRdPvMM21NPHKvy0qWDcLOuD5l
+        erLsk/T7ctVzQZzCzLNmPXJoIyvffSqPkJ3zbWtBsw==
+X-Google-Smtp-Source: ABdhPJyibJBX0jw3LQVOdkevS7Z9trwmeRbeB+lDZ+bqAHr4vmhNL3sBrn1KJuO9i4ieIVDSG6EKmvewA3ljP/CM5q4=
+X-Received: by 2002:adf:cd91:: with SMTP id q17mr11312969wrj.5.1595652264082;
+ Fri, 24 Jul 2020 21:44:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200710094544.430258-1-daniel@0x0f.com> <CAK8P3a2xQmba=ikPjRZCu+PhMGMRKDWW=WbgzjRypD9U43WHDw@mail.gmail.com>
+In-Reply-To: <CAK8P3a2xQmba=ikPjRZCu+PhMGMRKDWW=WbgzjRypD9U43WHDw@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Sat, 25 Jul 2020 13:44:13 +0900
+Message-ID: <CAFr9PX=jMd1hogK9_JPU4N+QsDgiFyMMqON0_7-SytX2Kuh6Pg@mail.gmail.com>
+Subject: Re: [PATCH v5 00/12] Initial MStar/Sigmastar ARMv7 SoC support
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Marc Zyngier <maz@kernel.org>, Willy Tarreau <w@1wt.eu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend gpio-event-mon to support monitoring multiple lines.
-This would require multiple lineevent requests to implement using uAPI v1,
-but can be performed with a single line request using uAPI v2.
+Hi Arnd,
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- tools/gpio/gpio-event-mon.c | 41 ++++++++++++++++++++++++++++---------
- 1 file changed, 31 insertions(+), 10 deletions(-)
+Thanks.
 
-diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
-index b64427d78942..e22cbf631e49 100644
---- a/tools/gpio/gpio-event-mon.c
-+++ b/tools/gpio/gpio-event-mon.c
-@@ -26,7 +26,8 @@
- #include "gpio-utils.h"
- 
- int monitor_device(const char *device_name,
--		   unsigned int line,
-+		   unsigned int *lines,
-+		   unsigned int num_lines,
- 		   struct gpioline_config *config,
- 		   unsigned int loops)
- {
-@@ -47,7 +48,7 @@ int monitor_device(const char *device_name,
- 		goto exit_free_name;
- 	}
- 
--	ret = gpiotools_request_line(device_name, &line, 1, config,
-+	ret = gpiotools_request_line(device_name, lines, num_lines, config,
- 				     "gpio-event-mon");
- 	if (ret < 0)
- 		goto exit_device_close;
-@@ -63,9 +64,23 @@ int monitor_device(const char *device_name,
- 		goto exit_line_close;
- 	}
- 
--	fprintf(stdout, "Monitoring line %d on %s\n", line, device_name);
--	fprintf(stdout, "Initial line value: %d\n",
--		gpiotools_test_bit(values.bits, 0));
-+	if (num_lines == 1) {
-+		fprintf(stdout, "Monitoring line %d on %s\n", lines[0], device_name);
-+		fprintf(stdout, "Initial line value: %d\n",
-+			gpiotools_test_bit(values.bits, 0));
-+	} else {
-+		fprintf(stdout, "Monitoring lines %d", lines[0]);
-+		for (i = 1; i < num_lines - 1; i++)
-+			fprintf(stdout, ", %d", lines[i]);
-+		fprintf(stdout, " and %d on %s\n", lines[i], device_name);
-+		fprintf(stdout, "Initial line values: %d",
-+			gpiotools_test_bit(values.bits, 0));
-+		for (i = 1; i < num_lines - 1; i++)
-+			fprintf(stdout, ", %d",
-+				gpiotools_test_bit(values.bits, i));
-+		fprintf(stdout, " and %d\n",
-+			gpiotools_test_bit(values.bits, i));
-+	}
- 
- 	while (1) {
- 		struct gpioline_event event;
-@@ -124,7 +139,7 @@ void print_usage(void)
- 	fprintf(stderr, "Usage: gpio-event-mon [options]...\n"
- 		"Listen to events on GPIO lines, 0->1 1->0\n"
- 		"  -n <name>  Listen on GPIOs on a named device (must be stated)\n"
--		"  -o <n>     Offset to monitor\n"
-+		"  -o <n>     Offset of line to monitor (may be repeated)\n"
- 		"  -d         Set line as open drain\n"
- 		"  -s         Set line as open source\n"
- 		"  -r         Listen for rising edges\n"
-@@ -145,7 +160,8 @@ void print_usage(void)
- int main(int argc, char **argv)
- {
- 	const char *device_name = NULL;
--	unsigned int line = -1;
-+	unsigned int lines[GPIOLINES_MAX];
-+	unsigned int num_lines = 0;
- 	unsigned int loops = 0;
- 	struct gpioline_config config;
- 	int c, attr;
-@@ -161,7 +177,12 @@ int main(int argc, char **argv)
- 			device_name = optarg;
- 			break;
- 		case 'o':
--			line = strtoul(optarg, NULL, 10);
-+			if (num_lines >= GPIOLINES_MAX) {
-+				print_usage();
-+				return -1;
-+			}
-+			lines[num_lines] = strtoul(optarg, NULL, 10);
-+			num_lines++;
- 			break;
- 		case 'b':
- 			attr = config.num_attrs;
-@@ -189,7 +210,7 @@ int main(int argc, char **argv)
- 		}
- 	}
- 
--	if (!device_name || line == -1) {
-+	if (!device_name || num_lines == 0) {
- 		print_usage();
- 		return -1;
- 	}
-@@ -198,5 +219,5 @@ int main(int argc, char **argv)
- 		       "falling edges\n");
- 		config.flags |= EDGE_FLAGS;
- 	}
--	return monitor_device(device_name, line, &config, loops);
-+	return monitor_device(device_name, lines, num_lines, &config, loops);
- }
--- 
-2.27.0
+There is one small fix for the v5 set. One of the DTS file names got
+broken when I rebased on a different machine.
+I'll send a patch for that later today.
 
+Cheer,
+
+Daniel
+
+On Fri, 24 Jul 2020 at 23:37, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Fri, Jul 10, 2020 at 11:46 AM Daniel Palmer <daniel@0x0f.com> wrote:
+> >
+> > This patch set adds initial support for MStar/Sigmastar's
+> > Armv7 based SoCs. There is just enough here to get to a shell
+> > with an initramfs but support for a lot of the hardware is
+> > in progress and will follow.
+> >
+> > MStar also shipped chips with MIPS cores and ARM9 etc which
+> > are incompatible so I've tried to make the distinction in the
+> > code that this is strictly for the Armv7 based chips.
+> >
+> > Sorry for the spamming this. I just really want to make some
+> > progress on this because I'm worried the other bits that are
+> > needed for these SoCs (Really old AT91 support in macb and
+> > the fotg210 usb host) will be lost or stop working in the meantime.
+> > This already happened in u-boot.
+>
+> Hi Daniel,
+>
+> I just found the series again after looking through some backlog,
+> and noticing I missed your submission from July 10. This looks
+> all good to me now, so I've merged the series into the arm/newsoc
+> branch that already contains added support for the keembay and
+> sparx5 SoCs.
+>
+> If you require any changes to this, please send incremental
+> patches against the soc tree, and submit it to soc@kernel.org
+> so it makes it gets into patchwork.
+>
+>        Arnd
