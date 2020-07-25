@@ -2,81 +2,161 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E984C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AAAC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 06:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2342064B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95145206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 06:04:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/Y556oH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgGYFzb (ORCPT
+        id S1726731AbgGYGEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 01:55:31 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:40140 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725825AbgGYFza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 01:55:30 -0400
-Received: by ajax-webmail-mail-app3 (Coremail) ; Sat, 25 Jul 2020 13:55:09
- +0800 (GMT+08:00)
-X-Originating-IP: [210.32.144.186]
-Date:   Sat, 25 Jul 2020 13:55:09 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "David Miller" <davem@davemloft.net>
-Cc:     kjlu@umn.edu, sgoutham@marvell.com, lcherian@marvell.com,
-        gakula@marvell.com, jerinj@marvell.com, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] octeontx2-af: Fix use of uninitialized pointer bmap
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20200724.165722.526735468993909990.davem@davemloft.net>
-References: <20200724080657.19182-1-dinghao.liu@zju.edu.cn>
- <20200724.165722.526735468993909990.davem@davemloft.net>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Sat, 25 Jul 2020 02:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgGYGEk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 02:04:40 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 930E6C0619D3;
+        Fri, 24 Jul 2020 23:04:40 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 11so10762763qkn.2;
+        Fri, 24 Jul 2020 23:04:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8vmqEFkkhuc83ajpghYQrC7IIiCrJVCK+qai3kO/Nh0=;
+        b=n/Y556oHtWThq9k02J6p4NlstrrUlu24H0ROko8CgA1zXORv+Ci/GmaMf6LIhl6KJT
+         tStzU6gS7onMVs0zYdmAkRMkjoxtzI+UYPMb2XPiRBLwQzhuF24jWPtYhJhuX/9k1jv9
+         m8E0WdZ08rHy7tOA5SUNDFDCnA4mAHHgnSzSJP7iXMNmC5/PZEIVaalR0cgESK+xPALa
+         vUqaXhGHioWuxMjmTVY+n/GNmutb5z80yK2upN/VaqPXsFjNx4zmgTDxWXD/8KdLcW94
+         9O/Zmt5PAvkaeo3wWVfVv9yTNvk6vjKDm4y2CFJewiNzhD5VA3rtfttrnO4/t6opxFIa
+         K8+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8vmqEFkkhuc83ajpghYQrC7IIiCrJVCK+qai3kO/Nh0=;
+        b=C8+NG0Z9VWb2CItELS8+Mh2wGJSgwTBIXFow6SbIoVoKW5+YZ+LoplBUVkSGXrJ++b
+         JsgVK85t+uXrdU5KwTnYsmvxOVzv0RNSlTARhEPIosaOp83HQ3un2nSbxXgA70Cz8Z5R
+         GcndZpUOuHhCu3oRprC2s5njn314yShLkviPRPepNDFnzEJnnHKbUhvGuK0wPTwStz4q
+         yypXmAqpO5iMU6M7CW+3KhFf8J4qkrFv/iOzHRT68zZhHNgQMo49dvDkhpDUO4yQ+tGS
+         sX26hnpLX57bd0bbJ1JSQQJrOZBQnmxk7wYgKJrsxoLjO2rCcZJseH9V5XuCfo3ctBU/
+         DFXg==
+X-Gm-Message-State: AOAM533vbkZHx+FDRgkXaubElkNII3oIADdpzbw/b8BE1TTBhlwP8WHg
+        fUK2yqMZ24rM7NHOJEUFwFo=
+X-Google-Smtp-Source: ABdhPJwtnnHQ01RLq4pKY3XEJgGBDv5enPBTjDkFUg+CjpA0ZhCxkTrCrY0MA/XzPplnVHpP3xrmJQ==
+X-Received: by 2002:a05:620a:22b4:: with SMTP id p20mr13437598qkh.340.1595657079586;
+        Fri, 24 Jul 2020 23:04:39 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id 139sm9781548qkl.13.2020.07.24.23.04.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 23:04:38 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] usb: dwc2: Fix parameter type in function pointer prototype
+Date:   Fri, 24 Jul 2020 23:03:54 -0700
+Message-Id: <20200725060354.177009-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.28.0.rc1
 MIME-Version: 1.0
-Message-ID: <4107fd31.2d71b.173848a1987.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cC_KCgA3Ut49yRtf8O1nAQ--.19856W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAggHBlZdtPRcawAWsh
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbX0S07vEb7Iv0x
-        C_JF4lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
-        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8WwCS07vEc2IjII80xcxEwVAKI48JMI
-        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
-        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
-        k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY
-        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU=
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBEaW5naGFvIExpdSA8ZGluZ2hhby5saXVAemp1LmVkdS5jbj4KPiBEYXRlOiBGcmks
-IDI0IEp1bCAyMDIwIDE2OjA2OjU3ICswODAwCj4gCj4gPiBJZiByZXEtPmN0eXBlIGRvZXMgbm90
-IG1hdGNoIGFueSBvZiBOSVhfQVFfQ1RZUEVfQ1EsCj4gPiBOSVhfQVFfQ1RZUEVfU1Egb3IgTklY
-X0FRX0NUWVBFX1JRLCBwb2ludGVyIGJtYXAgd2lsbCByZW1haW4KPiA+IHVuaW5pdGlhbGl6ZWQg
-YW5kIGJlIGFjY2Vzc2VkIGluIHRlc3RfYml0KCksIHdoaWNoIGNhbiBsZWFkCj4gPiB0byBrZXJu
-YWwgY3Jhc2guCj4gCj4gVGhpcyBjYW4gbmV2ZXIgaGFwcGVuLgo+IAo+ID4gRml4IHRoaXMgYnkg
-cmV0dXJuaW5nIGFuIGVycm9yIGNvZGUgaWYgdGhpcyBjYXNlIGlzIHRyaWdnZXJlZC4KPiA+IAo+
-ID4gU2lnbmVkLW9mZi1ieTogRGluZ2hhbyBMaXUgPGRpbmdoYW8ubGl1QHpqdS5lZHUuY24+Cj4g
-Cj4gSSBzdHJvbmdseSBkaXNsaWtlIGNoYW5nZXMgbGlrZSB0aGlzLgo+IAo+IE1vc3QgY2FsbGVy
-cyBvZiBuaXhfbGZfaHdjdHhfZGlzYWJsZSgpIGluc2lkZSBvZiBydnVfbml4LmMgc2V0Cj4gcmVx
-LT5jdHlwZSB0byBvbmUgb2YgdGhlIGhhbmRsZWQgdmFsdWVzLgo+IAo+IFRoZSBvbmx5IG90aGVy
-IGNhc2UsIHJ2dV9tYm94X2hhbmRsZXJfbml4X2h3Y3R4X2Rpc2FibGUoKSwgaXMgYQo+IGNvbXBs
-ZXRlbHkgdW51c2VkIGZ1bmN0aW9uIGFuZCBzaG91bGQgYmUgcmVtb3ZlZC4KPiAKPiBUaGVyZSBp
-cyBubyBmdW5jdGlvbmFsIHByb2JsZW0gaW4gdGhpcyBjb2RlIGF0IGFsbC4KPiAKPiBJdCBpcyBu
-b3QgcG9zc2libGUgc2hvdyBhIGNvZGUgcGF0aCB3aGVyZSB0aGUgc3RhdGVkIHByb2JsZW0gY2Fu
-Cj4gYWN0dWFsbHkgb2NjdXIuCgpJdCdzIGNsZWFyIHRvIG1lIG5vdy4gVGhhbmtzLgoKUmVnYXJk
-cywKRGluZ2hhbw==
+When booting up on a Raspberry Pi 4 with Control Flow Integrity checking
+enabled, the following warning/panic happens:
+
+[    1.626435] CFI failure (target: dwc2_set_bcm_params+0x0/0x4):
+[    1.632408] WARNING: CPU: 0 PID: 32 at kernel/cfi.c:30 __cfi_check_fail+0x54/0x5c
+[    1.640021] Modules linked in:
+[    1.643137] CPU: 0 PID: 32 Comm: kworker/0:1 Not tainted 5.8.0-rc6-next-20200724-00051-g89ba619726de #1
+[    1.652693] Hardware name: Raspberry Pi 4 Model B Rev 1.2 (DT)
+[    1.658637] Workqueue: events deferred_probe_work_func
+[    1.663870] pstate: 60000005 (nZCv daif -PAN -UAO BTYPE=--)
+[    1.669542] pc : __cfi_check_fail+0x54/0x5c
+[    1.673798] lr : __cfi_check_fail+0x54/0x5c
+[    1.678050] sp : ffff8000102bbaa0
+[    1.681419] x29: ffff8000102bbaa0 x28: ffffab09e21c7000
+[    1.686829] x27: 0000000000000402 x26: ffff0000f6e7c228
+[    1.692238] x25: 00000000fb7cdb0d x24: 0000000000000005
+[    1.697647] x23: ffffab09e2515000 x22: ffffab09e069a000
+[    1.703055] x21: 4c550309df1cf4c1 x20: ffffab09e2433c60
+[    1.708462] x19: ffffab09e160dc50 x18: ffff0000f6e8cc78
+[    1.713870] x17: 0000000000000041 x16: ffffab09e0bce6f8
+[    1.719278] x15: ffffab09e1c819b7 x14: 0000000000000003
+[    1.724686] x13: 00000000ffffefff x12: 0000000000000000
+[    1.730094] x11: 0000000000000000 x10: 00000000ffffffff
+[    1.735501] x9 : c932f7abfc4bc600 x8 : c932f7abfc4bc600
+[    1.740910] x7 : 077207610770075f x6 : ffff0000f6c38f00
+[    1.746317] x5 : 0000000000000000 x4 : 0000000000000000
+[    1.751723] x3 : 0000000000000000 x2 : 0000000000000000
+[    1.757129] x1 : ffff8000102bb7d8 x0 : 0000000000000032
+[    1.762539] Call trace:
+[    1.765030]  __cfi_check_fail+0x54/0x5c
+[    1.768938]  __cfi_check+0x5fa6c/0x66afc
+[    1.772932]  dwc2_init_params+0xd74/0xd78
+[    1.777012]  dwc2_driver_probe+0x484/0x6ec
+[    1.781180]  platform_drv_probe+0xb4/0x100
+[    1.785350]  really_probe+0x228/0x63c
+[    1.789076]  driver_probe_device+0x80/0xc0
+[    1.793247]  __device_attach_driver+0x114/0x160
+[    1.797857]  bus_for_each_drv+0xa8/0x128
+[    1.801851]  __device_attach.llvm.14901095709067289134+0xc0/0x170
+[    1.808050]  bus_probe_device+0x44/0x100
+[    1.812044]  deferred_probe_work_func+0x78/0xb8
+[    1.816656]  process_one_work+0x204/0x3c4
+[    1.820736]  worker_thread+0x2f0/0x4c4
+[    1.824552]  kthread+0x174/0x184
+[    1.827837]  ret_from_fork+0x10/0x18
+
+CFI validates that all indirect calls go to a function with the same
+exact function pointer prototype. In this case, dwc2_set_bcm_params
+is the target, which has a parameter of type 'struct dwc2_hsotg *',
+but it is being implicitly cast to have a parameter of type 'void *'
+because that is the set_params function pointer prototype. Make the
+function pointer protoype match the definitions so that there is no
+more violation.
+
+Cc: stable@vger.kernel.org
+Fixes: 7de1debcd2de ("usb: dwc2: Remove platform static params")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1107
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/usb/dwc2/params.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+index ce736d67c7c3..fd73ddd8eb75 100644
+--- a/drivers/usb/dwc2/params.c
++++ b/drivers/usb/dwc2/params.c
+@@ -860,7 +860,7 @@ int dwc2_get_hwparams(struct dwc2_hsotg *hsotg)
+ int dwc2_init_params(struct dwc2_hsotg *hsotg)
+ {
+ 	const struct of_device_id *match;
+-	void (*set_params)(void *data);
++	void (*set_params)(struct dwc2_hsotg *data);
+ 
+ 	dwc2_set_default_params(hsotg);
+ 	dwc2_get_device_properties(hsotg);
+
+base-commit: 23ee3e4e5bd27bdbc0f1785eef7209ce872794c7
+-- 
+2.28.0.rc1
+
