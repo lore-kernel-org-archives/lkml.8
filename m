@@ -2,106 +2,145 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D78C433F2
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F92C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 307DA207DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595687045;
-	bh=BAz1TW4/bVZUS2IHFjl3Yw+2naG6uIjsWVeWFxtMKUA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lCLJvD9JQhYIBrfuF4SKuzchVvp87qyu0d69Av5XYX2Ggq/LBZrlJ5DzkjbaRGvbj
-	 sIWLjjpIwMgkktZHsJs5ciTyo47arbt8+2fEnLY/DDja2rLoI2CPRxtz0ql4pp3yJg
-	 VrQg/0YeT+NqCKc1mZZv2pUyaAIZVJXHS6APauRo=
+	by mail.kernel.org (Postfix) with ESMTP id E2134206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbgGYOX6 (ORCPT
+        id S1727777AbgGYO1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 10:23:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42078 "EHLO mail.kernel.org"
+        Sat, 25 Jul 2020 10:27:10 -0400
+Received: from mga09.intel.com ([134.134.136.24]:59113 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727790AbgGYOXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 10:23:52 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3BC62070E;
-        Sat, 25 Jul 2020 14:23:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595687032;
-        bh=BAz1TW4/bVZUS2IHFjl3Yw+2naG6uIjsWVeWFxtMKUA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fdAxckovDYl++IXQ+ImgWscI/ZX1zozAjt0Ut7vpMiEqp2GmXLrvSyI3ODI0UOCfz
-         bCtN67WyIWhDJ6onbMFc4cLzojDDf/Yq7h8UG/Ms4tujP+gS1GZ66vEXmiiAc/nYV9
-         jh/86A0RQ5FW3rwdW7gkxMWCu1WwvtzahHK/cMy0=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jzL5a-00Er45-Ed; Sat, 25 Jul 2020 15:23:50 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jason Cooper <jason@lakedaemon.net>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        marex@denx.de, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, Loda Chou <loda.chou@mediatek.com>,
-        kernel-team@android.com, linux-mediatek@lists.infradead.org,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Hanks Chen <hanks.chen@mediatek.com>,
-        John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH v3 0/4] irqchip: Add IRQCHIP_PLATFORM_DRIVER helper macros
-Date:   Sat, 25 Jul 2020 15:23:34 +0100
-Message-Id: <159568680935.564881.11936174169505990646.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200718000637.3632841-1-saravanak@google.com>
-References: <20200718000637.3632841-1-saravanak@google.com>
+        id S1726745AbgGYO1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 10:27:09 -0400
+IronPort-SDR: W7Ic5KTimq5paDhmlaaDJk6awYo7F1LnraaOKO78PHo7IM6VSvr9FS7ptnjQAnGgI9CqxlvuRv
+ SCdZQjyG4sLg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9693"; a="152111422"
+X-IronPort-AV: E=Sophos;i="5.75,394,1589266800"; 
+   d="scan'208";a="152111422"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2020 07:27:08 -0700
+IronPort-SDR: ZStQ/9Wz/FI48OqFwcJvpsPcrFRrclPvSNlfklYxTAYxb6/Vy2TQv3gukqVjDITAlXtTXmBO5u
+ fKLCzFm8mBfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,394,1589266800"; 
+   d="scan'208";a="433375477"
+Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 25 Jul 2020 07:27:07 -0700
+Received: from kbuild by df0563f96c37 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jzL8l-0000yh-1I; Sat, 25 Jul 2020 14:27:07 +0000
+Date:   Sat, 25 Jul 2020 22:25:58 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:dev.2020.07.20a] BUILD SUCCESS
+ 80f707206fe3d3ab5b83f8180538f8a70e095ead
+Message-ID: <5f1c40f6.ES2Rfe0TnqyWlS2x%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: jason@lakedaemon.net, alexandre.torgue@st.com, tglx@linutronix.de, bjorn.andersson@linaro.org, agross@kernel.org, saravanak@google.com, matthias.bgg@gmail.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, marex@denx.de, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, loda.chou@mediatek.com, kernel-team@android.com, linux-mediatek@lists.infradead.org, cc.hwang@mediatek.com, hanks.chen@mediatek.com, john.stultz@linaro.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020 17:06:33 -0700, Saravana Kannan wrote:
-> Made a series out of the previous v2 patch + some example uses of the
-> macros.
-> 
-> Not sure if the MTK changes work (just compile tested), but saw that
-> Hanks was trying to make those drivers into tristate. So I assume
-> they'll work as platform drivers. Please wait for MTK Ack before picking
-> up patches 3 and 4.
-> 
-> [...]
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.07.20a
+branch HEAD: 80f707206fe3d3ab5b83f8180538f8a70e095ead  fixup! kernel/smp: Provide CSD lock timeout diagnostics
 
-Applied to irq/irqchip-5.9, thanks!
+elapsed time: 1112m
 
-[1/4] irqchip: Add IRQCHIP_PLATFORM_DRIVER_BEGIN/END and IRQCHIP_MATCH helper macros
-      commit: f3b5e608ed6d17bdf04dacbf2374f10d51fe9b09
-[2/4] irqchip/qcom-pdc: Switch to using IRQCHIP_PLATFORM_DRIVER helper macros
-      commit: 04741740254cd83fb4f2b7747aeb35202104f8fe
-[3/4] irqchip/mtk-sysirq: Convert to a platform driver
-      commit: 3ae3022690e6787839dafa8ea3496450248b53e1
-[4/4] irqchip/mtk-cirq: Convert to a platform driver
-      commit: 538b63351607960ff2249460089daa31337ddeba
+configs tested: 74
+configs skipped: 1
 
-Cheers,
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
