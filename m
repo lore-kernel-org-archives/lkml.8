@@ -2,142 +2,108 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D573EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1488C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1DDE20674
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8509C206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:41:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Xhf417/R"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JpqjVj1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgGYTU5 (ORCPT
+        id S1727803AbgGYT2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 15:20:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726681AbgGYTU4 (ORCPT
+        Sat, 25 Jul 2020 15:28:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28250 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726381AbgGYT2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 15:20:56 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D72AC08C5C1
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 12:20:55 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id q75so4977357iod.1
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 12:20:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BAKD43YZW+XuTJpWzZ9VYyNMQYro/UXMGluF3fF4RYs=;
-        b=Xhf417/RwG3NeXd9PMir029lydvfWTPF/8jJlWtZ2kMEl6apVCGbNy22lOShc2CrJ3
-         6fnIVRmhU2MH8kyyigQzB6BYr4f+E9VuXQ6oP7TySgZkjacZl34d4lC4uoSJu2X+1hFG
-         PD/Amz7tkEbGbbrMctrB8Ux5faMcAaurEl/N72CcGFuk98JoYpRMEgCv4qHsTHcqo0wZ
-         ZQxQYyDYayi+9wtQZ4UwHACQyPddT2V2GsU+SgMaqmOojihG6eO/Anl8mxsIQYRSrMDo
-         jlDWC2/3MbLFSliD3ej5bAfhCbvVO/8/PYfVbRZw4b61VKvCvrAAK4Zva6pD1WTHc67C
-         +dng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BAKD43YZW+XuTJpWzZ9VYyNMQYro/UXMGluF3fF4RYs=;
-        b=oky1YLs6wryueH0I8Wmfah6sOEHhBy64F4OQqIBuCIllwcr1/7+uMQsi6z3SlcWkCf
-         6i5lYu9h4ur3A+p3N+4y3uAL9NnM7iP9w7mIqaEl3VK7rkto7k4J5M9F/bxoB6yluVfu
-         KWWu4QwZU+pUtNC7+eqzQ/RflawBsqMTglFHhWPB9Ke7gROxRpL9wywF+FLBxfXnXNIN
-         CLCMU7AoUtmLDc3m+uFl4RoXE7i10hqjxVxRqTpLb0S58mPLp4Rpv/QN57ztrQSxZgxN
-         FUq5bONV6LeQJy2WVJuXMftojpWSfs6cspZFqrGXVZk3o/jMZuvEyw2feVwP8KStW1lg
-         KJnw==
-X-Gm-Message-State: AOAM532RAtemYABDJRWrUKm3xKb4uf5t12G2t07iThbgs5LTy1bHbviq
-        u5bAGndjgrPx2VUNmwd31tS8P5PqyYlMc/deIqbBNA==
-X-Google-Smtp-Source: ABdhPJx6JxsimzPomfM2WuKjX7IWCzlyMb7jOINulu+5K1XUglCEFIKyVyJiLS58iWiQ3f7gDzo6FNe8rcOgwXN1sCs=
-X-Received: by 2002:a05:6602:2c01:: with SMTP id w1mr16805753iov.130.1595704854695;
- Sat, 25 Jul 2020 12:20:54 -0700 (PDT)
+        Sat, 25 Jul 2020 15:28:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595705282;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=E4b8xOE1a+SCo8hP5TdzZ/KYctFwKJKu7PER0hCduYU=;
+        b=JpqjVj1NbLi1j2yZoeqWUY6JUrBbiC9KzZU/dZQcTI/91qXn02X7KowlTlnBY5H5H3Fn7n
+        hbDFCVXb6PeB7f3+SDR3NVPlLpWGQkncCfjx/nL3N9aA4z4qs77SwuUdZZPgO7NJmy+nKb
+        vMkTgEmVaR/dxAV3lEGh3O3rjvItgds=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-340-OtXHO55vMHqSr1UcLHQKag-1; Sat, 25 Jul 2020 15:27:58 -0400
+X-MC-Unique: OtXHO55vMHqSr1UcLHQKag-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2C47C185BDF9;
+        Sat, 25 Jul 2020 19:27:57 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.14])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 111741C4;
+        Sat, 25 Jul 2020 19:27:54 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Sat, 25 Jul 2020 21:27:56 +0200 (CEST)
+Date:   Sat, 25 Jul 2020 21:27:53 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Hugh Dickins <hughd@google.com>, Michal Hocko <mhocko@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
+Message-ID: <20200725192753.GA21962@redhat.com>
+References: <20200723124749.GA7428@redhat.com>
+ <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
+ <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com>
+ <alpine.LSU.2.11.2007231549540.1016@eggly.anvils>
+ <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com>
+ <20200724152424.GC17209@redhat.com>
+ <CAHk-=whuG+5pUeUqdiW4gk0prvqu7GZSMo-6oWv5PdDC5dBr=A@mail.gmail.com>
+ <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com>
+ <20200725101445.GB3870@redhat.com>
+ <CAHk-=whSJbODMVmxxDs64f7BaESKWuMqOxWGpjUSDn6Jzqa71g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200715092528.8136-1-brgl@bgdev.pl> <20200715092528.8136-2-brgl@bgdev.pl>
-In-Reply-To: <20200715092528.8136-2-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 25 Jul 2020 21:20:43 +0200
-Message-ID: <CAMRc=Mcjv9ykTy8BQSzvG_FnpP1s_SyhyTMpV=fZ1U=SJTy-iA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] devres: provide devm_krealloc()
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whSJbODMVmxxDs64f7BaESKWuMqOxWGpjUSDn6Jzqa71g@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 11:25 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+Firstly, to avoid the confusion, let me repeat I think your patch is fine.
+
+I too thought that non-exclusive waiters do not care about the bit state
+and thus wake_page_function() can simply wake them all up.
+
+But then I did "git blame", found your commit 3510ca20ece0150 and came to
+conclusion there are reasons we should not do this.
+
+On 07/25, Linus Torvalds wrote:
 >
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> On Sat, Jul 25, 2020 at 3:14 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > In essense, this partly reverts your commit 3510ca20ece0150
+> > ("Minor page waitqueue cleanups"). I mean this part:
 >
-> Implement the managed variant of krealloc(). This function works with
-> all memory allocated by devm_kmalloc() (or devres functions using it
-> implicitly like devm_kmemdup(), devm_kstrdup() etc.).
->
-> Managed realloc'ed chunks can be manually released with devm_kfree().
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
+> Well, no. I mean, it keeps the "always add to the fail" behavior.
 
-[snip!]
+Ah, sorry for confusion, this doesn't matter. I didn't mean "fairness".
 
-> +void *devm_krealloc(struct device *dev, void *ptr, size_t new_size, gfp_t gfp)
-> +{
-> +       struct devres *old_dr, *new_dr;
-> +       struct list_head old_head;
-> +       unsigned long flags;
-> +       size_t total_size;
-> +       void *ret = NULL;
-> +
-> +       if (unlikely(!new_size)) {
-> +               devm_kfree(dev, ptr);
-> +               return ZERO_SIZE_PTR;
-> +       }
-> +
-> +       if (unlikely(ZERO_OR_NULL_PTR(ptr)))
-> +               return devm_kmalloc(dev, new_size, gfp);
-> +
-> +       if (WARN_ON(is_kernel_rodata((unsigned long)ptr)))
-> +               /*
-> +                * We cannot reliably realloc a const string returned by
-> +                * devm_kstrdup_const().
-> +                */
-> +               return NULL;
-> +
-> +       if (!check_dr_size(new_size, &total_size))
-> +               return NULL;
-> +
-> +       spin_lock_irqsave(&dev->devres_lock, flags);
-> +
-> +       old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
-> +       if (!old_dr) {
-> +               spin_unlock_irqrestore(&dev->devres_lock, flags);
-> +               WARN(1, "Memory chunk not managed or managed by a different device.");
-> +               return NULL;
-> +       }
-> +
-> +       old_head = old_dr->node.entry;
-> +
-> +       new_dr = krealloc(old_dr, total_size, gfp);
+What I tried to say. AFAICS before that commit we had (almost) the same
+behaviour you propose now: unlock_page/etc wakes all the non-exclusive
+waiters up.
 
-Ugh, I wanted to check up on this patch and, after looking at it now,
-realized it's wrong. If the user calls devm_krealloc() with GFP_KERNEL
-we may end up sleeping with spinlock taken.
+No?
 
-Let me prepare another version.
+Or I misunderstood your reply? Quite possibly, too late for me...
 
-Bartosz
+Oleg.
+
