@@ -2,114 +2,122 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56239C433E8
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3275920714
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3C420714
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:14:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cT3KOa4g";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HiIRxt+T"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y++mNFQ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgGYKNv (ORCPT
+        id S1726763AbgGYKOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 06:13:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726938AbgGYKNm (ORCPT
+        Sat, 25 Jul 2020 06:14:55 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54524 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726618AbgGYKOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 06:13:42 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C3DAC0619D3;
-        Sat, 25 Jul 2020 03:13:42 -0700 (PDT)
-Date:   Sat, 25 Jul 2020 10:13:40 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595672020;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        Sat, 25 Jul 2020 06:14:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595672093;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=Qwu/iZaf7EOvYkm7ogUMnahRsySRRaJFOiD0v/N0Q4o=;
-        b=cT3KOa4gdJ/pJvw9ILHq5nHj2Qs0ojmumBHqcvFkNESytfd/48FQAJAZhneGnEZ7O8yozt
-        Jazs4fGI2FFH62HRF4unksTTr7ZIUZ1r01NbdN4C9+vGQcFHmXC5Sg6mL7zDx+JzMhV3YC
-        mSkxll4jRiA7Q9ndEustpKK4/rCSzjAwkanmZ3QbGhUZPQyHDwQpv03fJwX/SpctowwN/S
-        xFbiOKNMJ/9ugg2xtAjCCSXViXuzgo54L34rS1m0ravwXNFSYQxUsalVwBQRqfpW9GdSmS
-        BcrXGSXXw3RgfvHer/2ksR0Oe7xDWcwNhgSPPNdtz8z5bACAiSIDmQLFqwhzjg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595672020;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qwu/iZaf7EOvYkm7ogUMnahRsySRRaJFOiD0v/N0Q4o=;
-        b=HiIRxt+T5brj7graxC8ETkYFdTnox1Mff/RyBwywMEfiOe6V5nMu+4jZ3oltzVwuKbHkaR
-        qYXFZrZ7naj8e1BQ==
-From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/tsc: Remove unused "US_SCALE" and "NS_SCALE"
- leftover macros
-Cc:     Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200724114418.629021-3-mingo@kernel.org>
-References: <20200724114418.629021-3-mingo@kernel.org>
+        bh=b0AOSE86PGeB1I9Z9HMCGCB3b0fmc6DBmuHd8pPAROo=;
+        b=Y++mNFQ3HrrYgRlxqSr5x4gYDeFBSX8pnpAxzpi/v/SQG884gBTS34yElOXTcrd1PC3Op1
+        UktxA6xzKyK/MazrAWkVMpn+U62+EM4qbBsbaDJ+Z6iGpUAWLtRe7YTLYEWWW8Lph9qKm1
+        ZR2jF3BXAXp2LMDmwAjiE0HI0Ve558c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-384-nScs2uXVMfyq-xnABE0aEg-1; Sat, 25 Jul 2020 06:14:51 -0400
+X-MC-Unique: nScs2uXVMfyq-xnABE0aEg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 289B91009600;
+        Sat, 25 Jul 2020 10:14:50 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.25])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C482270105;
+        Sat, 25 Jul 2020 10:14:47 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Sat, 25 Jul 2020 12:14:49 +0200 (CEST)
+Date:   Sat, 25 Jul 2020 12:14:46 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Hugh Dickins <hughd@google.com>, Michal Hocko <mhocko@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
+Message-ID: <20200725101445.GB3870@redhat.com>
+References: <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com>
+ <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com>
+ <20200723124749.GA7428@redhat.com>
+ <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
+ <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com>
+ <alpine.LSU.2.11.2007231549540.1016@eggly.anvils>
+ <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com>
+ <20200724152424.GC17209@redhat.com>
+ <CAHk-=whuG+5pUeUqdiW4gk0prvqu7GZSMo-6oWv5PdDC5dBr=A@mail.gmail.com>
+ <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <159567202032.4006.6639431900725796846.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+On 07/24, Linus Torvalds wrote:
+>
+> I just realized that one thing we could do is to not even test the
+> page bit for the shared case in the wakeup path.
+>
+> Because anybody who uses the non-exclusive "wait_on_page_locked()" or
+> "wait_on_page_writeback()" isn't actually interested in the bit state
+> any more at that point. All they care about is that somebody cleared
+> it - not whether it was then re-taken again.
+>
+> So instead of keeping them on the list - or stopping the waitqueue
+> walk because somebody else got the bit - we could just mark them
+> successfully done, wake them up, and remove those entries from the
+> list.
 
-Commit-ID:     161449bad5053d66f2310744ba8498158ab12c89
-Gitweb:        https://git.kernel.org/tip/161449bad5053d66f2310744ba8498158ab12c89
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Fri, 24 Jul 2020 13:44:17 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 25 Jul 2020 12:00:57 +02:00
+Heh. I too thought about this. And just in case, your patch looks correct
+to me. But I can't really comment this behavioural change. Perhaps it
+should come in a separate patch?
 
-x86/tsc: Remove unused "US_SCALE" and "NS_SCALE" leftover macros
+In essense, this partly reverts your commit 3510ca20ece0150
+("Minor page waitqueue cleanups"). I mean this part:
 
-Last use of them was removed 13 years ago, when the code was converted
-to use CYC2NS_SCALE_FACTOR:
 
-  53d517cdbaac: ("x86: scale cyc_2_nsec according to CPU frequency")
+     (b) we don't want to put the non-locking waiters always on the front of
+         the queue, and the locking waiters always on the back.  Not only is
+         that unfair, it means that we wake up thousands of reading threads
+         that will just end up being blocked by the writer later anyway.
+...
 
-The current TSC code uses the 'struct cyc2ns_data' scaling abstraction,
-the old fixed scaling approach is long gone.
+	@@ -972,10 +976,7 @@ static inline int wait_on_page_bit_common(wait_queue_head_t *q,
+			spin_lock_irq(&q->lock);
+	 
+			if (likely(list_empty(&wait->entry))) {
+	-			if (lock)
+	-				__add_wait_queue_entry_tail_exclusive(q, wait);
+	-			else
+	-				__add_wait_queue(q, wait);
+	+			__add_wait_queue_entry_tail(q, wait);
+				SetPageWaiters(page);
+			}
 
-This cleanup also removes the 'arbitralrily' typo from the comment,
-so win-win. ;-)
+Oleg.
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200724114418.629021-3-mingo@kernel.org
----
- arch/x86/include/asm/tsc.h | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/tsc.h b/arch/x86/include/asm/tsc.h
-index 8a0c25c..b7b2624 100644
---- a/arch/x86/include/asm/tsc.h
-+++ b/arch/x86/include/asm/tsc.h
-@@ -7,9 +7,6 @@
- 
- #include <asm/processor.h>
- 
--#define NS_SCALE	10 /* 2^10, carefully chosen */
--#define US_SCALE	32 /* 2^32, arbitralrily chosen */
--
- /*
-  * Standard way to access the cycle counter.
-  */
