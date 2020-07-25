@@ -2,95 +2,168 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88EAC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3D81206E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:25:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595701512;
-	bh=Dq8mUWOBlA+CBHS/3t+mQ9cNSU1dWsOLOi1XG49t8hM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ePRuQLp9gmlVMQ8DNkbklVj8L7zxPu+xzP3vgzWKZITamTUzfQQdd/COK5H85dYTU
-	 rMoQ6zJ6FS8GE19UXM08/pM104t+z+O3bjCb809Ni60HBQ+f7M6D5PYE90iG5Z/O0p
-	 EjqIBE+T3+8Nx7etbJbB5dT/GIjabOrUhPGrY0CQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8F5C1206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgGYSZL (ORCPT
+        id S1727828AbgGYSXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 14:25:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49644 "EHLO mail.kernel.org"
+        Sat, 25 Jul 2020 14:23:45 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:55430 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726727AbgGYSZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 14:25:11 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88CC5206D7;
-        Sat, 25 Jul 2020 18:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595701510;
-        bh=Dq8mUWOBlA+CBHS/3t+mQ9cNSU1dWsOLOi1XG49t8hM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=G2n1xKBvRbijSrFphE2XU2ZGjv478I3RfCkDSELHUv000Xni/x4J58J1pzLJIRCTL
-         D4TmaMr1sn7yH7BH9vsQnUrM3tBlX0Aju3Atdgg+lQ3Ea7qaGDdiIVXG5oSDYHxhZp
-         ZW+jINN+N3ZXma0l7P5zkSjoDq6E7034huYJwPsw=
-Date:   Sat, 25 Jul 2020 20:25:06 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>, sean@mess.org,
-        kstewart@linuxfoundation.org, allison@lohutok.net,
-        tglx@linutronix.de, linux-media@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
+        id S1726727AbgGYSXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 14:23:44 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jzOpb-006pw9-R7; Sat, 25 Jul 2020 20:23:35 +0200
+Date:   Sat, 25 Jul 2020 20:23:35 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Marek Behun <marek.behun@nic.cz>
+Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
+        Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [RFC, WIP, v7 0/4] media: vidtv: implement a virtual DVB driver
-Message-ID: <20200725202506.1db9dd3b@coco.lan>
-In-Reply-To: <1cd01ac5-55f7-68f5-791b-ae4955d916d7@linuxfoundation.org>
-References: <20200608191333.1784963-1-dwlsalmeida@gmail.com>
-        <1cd01ac5-55f7-68f5-791b-ae4955d916d7@linuxfoundation.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+Subject: Re: [PATCH RFC leds + net-next v3 2/2] net: phy: marvell: add
+ support for PHY LEDs via LED class
+Message-ID: <20200725182335.GN1472201@lunn.ch>
+References: <20200724164603.29148-1-marek.behun@nic.cz>
+ <20200724164603.29148-3-marek.behun@nic.cz>
+ <20200725172318.GK1472201@lunn.ch>
+ <20200725200224.3f03c041@nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200725200224.3f03c041@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 24 Jul 2020 17:43:55 -0600
-Shuah Khan <skhan@linuxfoundation.org> escreveu:
-
-> Hi Mauro,
+On Sat, Jul 25, 2020 at 08:02:24PM +0200, Marek Behun wrote:
+> On Sat, 25 Jul 2020 19:23:18 +0200
+> Andrew Lunn <andrew@lunn.ch> wrote:
 > 
-> On 6/8/20 1:13 PM, Daniel W. S. Almeida wrote:
-> > From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+> > On Fri, Jul 24, 2020 at 06:46:03PM +0200, Marek Behún wrote:
+> > > This patch adds support for controlling the LEDs connected to several
+> > > families of Marvell PHYs via the PHY HW LED trigger API. These families
+> > > are: 88E1112, 88E1121R, 88E1240, 88E1340S, 88E1510 and 88E1545. More can
+> > > be added.
+> > > 
+> > > The code reads LEDs definitions from the device-tree node of the PHY.
+> > > 
+> > > This patch does not yet add support for compound LED modes. This could
+> > > be achieved via the LED multicolor framework (which is not yet in
+> > > upstream).
+> > > 
+> > > Settings such as HW blink rate or pulse stretch duration are not yet
+> > > supported, nor are LED polarity settings.
+> > > 
+> > > Signed-off-by: Marek Behún <marek.behun@nic.cz>
+> > > ---
+> > >  drivers/net/phy/Kconfig   |   1 +
+> > >  drivers/net/phy/marvell.c | 364 ++++++++++++++++++++++++++++++++++++++
+> > >  2 files changed, 365 insertions(+)
+> > > 
+> > > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> > > index ffea11f73acd..5428a8af26d2 100644
+> > > --- a/drivers/net/phy/Kconfig
+> > > +++ b/drivers/net/phy/Kconfig
+> > > @@ -462,6 +462,7 @@ config LXT_PHY
+> > >  
+> > >  config MARVELL_PHY
+> > >  	tristate "Marvell PHYs"
+> > > +	depends on LED_TRIGGER_PHY_HW  
 > > 
-> > This series is work in progress. It represents the current work done on a
-> > virtual DVB driver for the Linux media subsystem. I am new to the media
-> > subsystem and to kernel development in general.
+> > Does it really depend on it? I think the driver will work fine without
+> > it, just the LED control will be missing.
 > > 
-> > This driver aims to:
-> > 	- Serve as template for new DVB driver writers
-> > 	- Help userspace application writers in general
-> > 	- Push fake audio/video to userspace for testing
-> > 		purposes
-> > 	- Push debug information to userspace via debugfs
-> > The Virtual Digital TV Driver (vidtv)  
+> > It is really a policy question. Cable test is always available, there
+> > is no Kconfig'ury to stop it getting built. Is LED support really big
+> > so that somebody might want to disable it? I think not. So lets just
+> > enable it all the time.
 > 
-> Any feedback on this patch series for Daniel. He has been waiting for
-> reviews and feedback from media developers for a while now.
+> OK
 > 
-> Please review the patches and give him feedback and help him with
-> next steps.
+> > >  	help
+> > >  	  Currently has a driver for the 88E1011S
+> > >    
+> > 
+> > > +enum {
+> > > +	L1V0_RECV		= BIT(0),
+> > > +	L1V0_COPPER		= BIT(1),
+> > > +	L1V5_100_FIBER		= BIT(2),
+> > > +	L1V5_100_10		= BIT(3),
+> > > +	L2V2_INIT		= BIT(4),
+> > > +	L2V2_PTP		= BIT(5),
+> > > +	L2V2_DUPLEX		= BIT(6),
+> > > +	L3V0_FIBER		= BIT(7),
+> > > +	L3V0_LOS		= BIT(8),
+> > > +	L3V5_TRANS		= BIT(9),
+> > > +	L3V7_FIBER		= BIT(10),
+> > > +	L3V7_DUPLEX		= BIT(11),  
 
-I'll seek for some time to look and review them next week.
+        COMMON			= BIT(32),
 
-What's the current status of it? Is it probing properly and working
-fine, or are there any known bugs at the code?
+> > > +static const struct marvell_led_mode_info marvell_led_mode_info[] = {
+> > > +	{ "link/act",			{ 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, }, COMMON },
+> > > +	{ "1Gbps/100Mbps/10Mbps",	{ 0x2,  -1,  -1,  -1,  -1,  -1, }, COMMON },
+> > > +	{ "act",			{ 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, }, COMMON },
+> > > +	{ "blink-act",			{ 0x4, 0x4, 0x4, 0x4, 0x4, 0x4, }, COMMON },
+> > > +	{ "tx",				{ 0x5,  -1, 0x5,  -1, 0x5, 0x5, }, COMMON },
+> > > +	{ "tx",				{  -1,  -1,  -1, 0x5,  -1,  -1, }, L3V5_TRANS },
+> > > +	{ "rx",				{  -1,  -1,  -1,  -1, 0x0, 0x0, }, COMMON },
+> > > +	{ "rx",				{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_RECV },
+> > > +	{ "copper",			{ 0x6,  -1,  -1,  -1,  -1,  -1, }, COMMON },
+> > > +	{ "copper",			{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_COPPER },
+> > > +	{ "1Gbps",			{ 0x7,  -1,  -1,  -1,  -1,  -1, }, COMMON },
+> > > +	{ "link/rx",			{  -1, 0x2,  -1, 0x2, 0x2, 0x2, }, COMMON },
+> > > +	{ "100Mbps-fiber",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_FIBER },
+> > > +	{ "100Mbps-10Mbps",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_10 },
+> > > +	{ "1Gbps-100Mbps",		{  -1, 0x6,  -1,  -1,  -1,  -1, }, COMMON },
+> > > +	{ "1Gbps-10Mbps",		{  -1,  -1, 0x6, 0x6,  -1,  -1, }, COMMON },
+> > > +	{ "100Mbps",			{  -1, 0x7,  -1,  -1,  -1,  -1, }, COMMON },
+> > > +	{ "10Mbps",			{  -1,  -1, 0x7,  -1,  -1,  -1, }, COMMON },
+> > > +	{ "fiber",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_FIBER },
+> > > +	{ "fiber",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_FIBER },
+> > > +	{ "FullDuplex",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_DUPLEX },
+> > > +	{ "FullDuplex",			{  -1,  -1,  -1,  -1, 0x6, 0x6, }, COMMON },
+> > > +	{ "FullDuplex/collision",	{  -1,  -1,  -1,  -1, 0x7, 0x7, }, COMMON },
+> > > +	{ "FullDuplex/collision",	{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_DUPLEX },
+> > > +	{ "ptp",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_PTP },
+> > > +	{ "init",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_INIT },
+> > > +	{ "los",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_LOS },
+> > > +	{ "hi-z",			{ 0xa, 0xa, 0xa, 0xa, 0xa, 0xa, }, COMMON },
+> > > +	{ "blink",			{ 0xb, 0xb, 0xb, 0xb, 0xb, 0xb, }, COMMON },
+> > > +};
+> > > +
 
-Thanks,
-Mauro
+> > > +static const struct marvell_leds_info marvell_leds_info[] = {
+> > > +	LED(1112,  4, COMMON | L1V0_COPPER | L1V5_100_FIBER | L2V2_INIT | L3V0_LOS | L3V5_TRANS | L3V7_FIBER),
+> > > +	LED(1121R, 3, COMMON | L1V5_100_10),
+> > > +	LED(1240,  6, COMMON | L3V5_TRANS),
+> > > +	LED(1340S, 6, COMMON | L1V0_COPPER | L1V5_100_FIBER | L2V2_PTP | L3V0_FIBER | L3V7_DUPLEX),
+> > > +	LED(1510,  3, COMMON | L1V0_RECV | L1V5_100_FIBER | L2V2_DUPLEX),
+> > > +	LED(1545,  6, COMMON | L1V5_100_FIBER | L3V0_FIBER | L3V7_DUPLEX),
+> > > +};
+> > > +
+
+> > > +{
+> > > +	return mode->regval[led->idx] != -1 && (!mode->flags || (priv->led_flags & mode->flags));  
+
+This then becomes
+
+return mode->regval[led->idx] != -1 && (priv->led_flags & mode->flags));  
+
+       Andrew
