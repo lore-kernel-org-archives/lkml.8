@@ -2,124 +2,93 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E21C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3EFC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B92206EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B3A206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgGYLPK (ORCPT
+        id S1726985AbgGYLSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 07:15:10 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:37408 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbgGYLPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 07:15:09 -0400
-X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Sat, 25 Jul 2020 07:15:08 EDT
-Received: from localhost.localdomain (80-110-125-173.cgn.dynamic.surfer.at [80.110.125.173])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 6D62DC8DE4;
-        Sat, 25 Jul 2020 11:08:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1595675308; bh=XGCgnG3zaA6+JlKqdyeyx7BIoqEDrm/wMUBHk9wYz5A=;
-        h=From:To:Cc:Subject:Date;
-        b=I3YwHjrzdGV0mj4IygSFtz10bUCzT4ak1a1dqmSaIWRzyjkZrncZRgNTb+ZWAa0tP
-         aENeUq5LGblOB7aI4nrdU6IpbQRq3utoZMLDtrga5czAYqonNtZiFs2P/acXxxxO58
-         qkYqsME4grc9Avg3vJEP9PhcfJs5loQN/TL3wHAQ=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: sun50i-pinephone: add led flash
-Date:   Sat, 25 Jul 2020 13:08:12 +0200
-Message-Id: <20200725110812.199529-1-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.27.0
+        Sat, 25 Jul 2020 07:18:48 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38635 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgGYLSs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 07:18:48 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jzI9n-0006EM-Of; Sat, 25 Jul 2020 11:15:59 +0000
+Date:   Sat, 25 Jul 2020 13:15:58 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v7 0/7] Add support for O_MAYEXEC
+Message-ID: <20200725111558.sawfxujpsxpzw6fk@wittgenstein>
+References: <20200723171227.446711-1-mic@digikod.net>
+ <202007241205.751EBE7@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202007241205.751EBE7@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All revisions of the PinePhone have an SGM3140 LED flash. The gpios were
-swapped on v1.0 of the board but this was fixed in later revisions.
+On Fri, Jul 24, 2020 at 12:06:53PM -0700, Kees Cook wrote:
+> I think this looks good now.
+> 
+> Andrew, since you're already carrying my exec clean-ups (repeated here
+> in patch 1-3), can you pick the rest of this series too?
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- .../boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts   |  5 +++++
- .../boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts   |  5 +++++
- .../boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts   |  5 +++++
- .../boot/dts/allwinner/sun50i-a64-pinephone.dtsi      | 11 +++++++++++
- 4 files changed, 26 insertions(+)
+Al,
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
-index 0c42272106afa..b579b03d4e026 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
-@@ -9,3 +9,8 @@ / {
- 	model = "Pine64 PinePhone Developer Batch (1.0)";
- 	compatible = "pine64,pinephone-1.0", "allwinner,sun50i-a64";
- };
-+
-+&sgm3140 {
-+	flash-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
-+	enable-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
-+};
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-index 3e99a87e9ce52..8552587aac248 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
-@@ -28,3 +28,8 @@ &backlight {
- 	num-interpolated-steps = <50>;
- 	default-brightness-level = <400>;
- };
-+
-+&sgm3140 {
-+	flash-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
-+	enable-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
-+};
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts
-index a9f5b670c9b82..ec77715ba4a2a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts
-@@ -38,3 +38,8 @@ &lis3mdl {
- 	interrupt-parent = <&pio>;
- 	interrupts = <1 1 IRQ_TYPE_EDGE_RISING>; /* PB1 */
- };
-+
-+&sgm3140 {
-+	flash-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
-+	enable-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
-+};
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-index 25150aba749dc..e0bc1bcc1c1f3 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -60,6 +60,17 @@ vibrator {
- 		enable-gpios = <&pio 3 2 GPIO_ACTIVE_HIGH>; /* PD2 */
- 		vcc-supply = <&reg_dcdc1>;
- 	};
-+
-+	sgm3140: led-controller {
-+		compatible = "sgmicro,sgm3140";
-+		vin-supply = <&reg_dcdc1>;
-+
-+		sgm3140_flash: led {
-+			function = LED_FUNCTION_FLASH;
-+			color = <LED_COLOR_ID_WHITE>;
-+			flash-max-timeout-us = <250000>;
-+		};
-+	};
- };
- 
- &codec {
--- 
-2.27.0
+Not sure if you have already re-surfaced from your
+csum()/raw_copy_from_user() work completely yet but you had thoughts
+about this series iirc.
 
+Aleksa, thoughts?
+
+Thanks!
+Christian
