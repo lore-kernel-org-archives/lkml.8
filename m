@@ -2,103 +2,145 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A53BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88935C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD2F206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66CC62070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="xqchFIz3"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Yx8cy7p6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgGYSaz (ORCPT
+        id S1727886AbgGYSnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 14:30:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbgGYSaz (ORCPT
+        Sat, 25 Jul 2020 14:43:20 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47392 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbgGYSnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 14:30:55 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E36C08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 11:30:55 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w2so7143177pgg.10
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 11:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:cc:from:to:message-id;
-        bh=RpLA+fP+DoLvbUEvg6utInkVa5lt66wslkma7Mkucds=;
-        b=xqchFIz3EfC5rjOlPK5SwVCU2Hutak9YpYOb4GS4j6KEy8w82eIBqWXUjJJl0vra0x
-         jFtrQzf50jI+hRpAQo6UreFtU1A2Y2A5IHDPuxl6BuBOVzXt8jckw6w4BkMrdrRsBOEl
-         XRrD+de4uODky1/HBnJjoaMcTJEbVSuTwGgi06M7IUeKdTNfXVGYISY0F4pSS+nsNn0h
-         pVsBgDhzVlMOikrsFsi3XK+RgoI0EvzP2OTKhEL11N3YTXDoGz5lVWBcOzu48WpDBf8Q
-         xBmEwTOJ1nXSliKHw9kpDyYIHH0pNKkw2XBDYjbCo9pxvzcvyLdDOGff1O74u9pBzFqd
-         eQ+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:cc:from:to:message-id;
-        bh=RpLA+fP+DoLvbUEvg6utInkVa5lt66wslkma7Mkucds=;
-        b=DuBx9i3p5ZcHv1zefMhEc2U5kjzEMOgEhD/BrxUHU02ePSKpg8Q2S6dkAoswYzvnCe
-         W+bgG1TnQbj+C0qcpPhEK/O/4O8vNHoLCzr58ZttTLepHT47abmNtvFfe1Vin5I2ak8T
-         /oJOJANItSoyWA6Vgj2caJViaHHzOeQQxyjWui8AaKCyY7/2y7qWYUnS91bvWnSpTyh4
-         ljDgSOLGbhNYxTFRBL/hrPdQfEB3W7JYwRWqOKdtvfw82pmHBXQM2SlZSe43u5wM7k85
-         EiIR2CtLbgo522NI1NnK9BYUBnVImDHTdVAPUzDyOZNr+rV8wZO1VNPmVuX9N7RO9JTe
-         l0Dg==
-X-Gm-Message-State: AOAM533LADzCP40MPEMGEHbObY5hL2UpNvpSTZFkK4exOV2Zp7d73KZ9
-        2s6lIMU4kdKWvremqt0apsEz/Q==
-X-Google-Smtp-Source: ABdhPJzkcgAw5QaTaebC9kG4nrkATQ3qDp2O73dkpdQpImjpzDubCoAEBaBw4g8NzSFaCp5LppMGGw==
-X-Received: by 2002:a62:b409:: with SMTP id h9mr13600700pfn.305.1595701854895;
-        Sat, 25 Jul 2020 11:30:54 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id u8sm9276274pjn.24.2020.07.25.11.30.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 11:30:54 -0700 (PDT)
-Date:   Sat, 25 Jul 2020 11:30:54 -0700 (PDT)
-X-Google-Original-Date: Sat, 25 Jul 2020 11:29:26 PDT (-0700)
-Subject: [GIT PULL] RISC-V Fixes for 5.8-rc7
-CC:         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <mhng-f2bb3f7e-e2d6-48e5-a8f6-5e47edf5441e@palmerdabbelt-glaptop1>
+        Sat, 25 Jul 2020 14:43:19 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06PIcTPv013083;
+        Sat, 25 Jul 2020 18:42:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=eJEpSUfkla/agpQCH51QK4tTiRteg4fcYTB66EtN8tQ=;
+ b=Yx8cy7p67Y5KTFOgF6BIWxEauFiKJbYC5hs59KFAKYaoDXQ7q0/QJZrmXubBYVNqyj9/
+ +yctd08tOKOjvwNMth5YbSOPZljx5/NBNkr+WVThUqXCaB3K+1s5PEmUpGE2kzQHFhkU
+ cweo6BAulel5xko8d1VwvdDXo2ni12KqIFskMmGf1cKNZZQ6a4o+7ZMdDTsubU8DS6Og
+ 2Fz3t4uJECScBEr8o/X3IXFn5ioMFhjZ2aoRDMsf5v1TxLOUchi2cJOlH+bdNedfrOzm
+ S1Jb5x/wgCAzvNQNgkp1OPFsZ10S1wGYOLqO+I1G3NYpuVctqVzoVmOeyn3Tn2/0ernd qQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 32gcpksed4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 25 Jul 2020 18:42:40 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06PIdCSi098561;
+        Sat, 25 Jul 2020 18:42:39 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 32ghx0kp29-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 25 Jul 2020 18:42:39 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06PIgbX8020632;
+        Sat, 25 Jul 2020 18:42:38 GMT
+Received: from [20.15.0.12] (/73.88.28.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 25 Jul 2020 11:42:37 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] nbd: add missed destroy_workqueue when nbd_start_device
+ fails
+From:   Michael Christie <michael.christie@oracle.com>
+In-Reply-To: <1595644070-26293-1-git-send-email-liheng40@huawei.com>
+Date:   Sat, 25 Jul 2020 13:42:35 -0500
+Cc:     josef@toxicpanda.com, axboe@kernel.dk, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6A2BE179-5545-4486-81B6-5CB9020F9522@oracle.com>
+References: <1595644070-26293-1-git-send-email-liheng40@huawei.com>
+To:     Li Heng <liheng40@huawei.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9693 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 bulkscore=0 suspectscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007250154
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9693 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 bulkscore=0
+ priorityscore=1501 phishscore=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 impostorscore=0 clxscore=1011 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007250154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit ba47d845d715a010f7b51f6f89bae32845e6acb7:
 
-  Linux 5.8-rc6 (2020-07-19 15:41:18 -0700)
 
-are available in the Git repository at:
+> On Jul 24, 2020, at 9:27 PM, Li Heng <liheng40@huawei.com> wrote:
+>=20
+> destroy_workqueue() should be called to destroy ndev->tx_wq
+> when nbd_start_device init resources fails.
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Li Heng <liheng40@huawei.com>
+> ---
+> drivers/block/nbd.c | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index ce7e9f22..45e0a9f4 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -4,7 +4,7 @@
+>  *
+>  * Note that you can not swap over this thing, yet. Seems to work but
+>  * deadlocks sometimes - you can not swap over TCP in general.
+> - *=20
+> + *
+>  * Copyright 1997-2000, 2008 Pavel Machek <pavel@ucw.cz>
+>  * Parts copyright 2001 Steven Whitehouse <steve@chygwyn.com>
+>  *
+> @@ -1270,6 +1270,7 @@ static int nbd_start_device(struct nbd_device =
+*nbd)
+> 	error =3D device_create_file(disk_to_dev(nbd->disk), &pid_attr);
+> 	if (error) {
+> 		dev_err(disk_to_dev(nbd->disk), "device_create_file =
+failed!\n");
+> +		destroy_workqueue(nbd->recv_workq);
+> 		return error;
+> 	}
+> 	set_bit(NBD_RT_HAS_PID_FILE, &config->runtime_flags);
+> @@ -1291,6 +1292,7 @@ static int nbd_start_device(struct nbd_device =
+*nbd)
+> 			 */
+> 			if (i)
+> 				flush_workqueue(nbd->recv_workq);
+> +			destroy_workqueue(nbd->recv_workq);
+> 			return -ENOMEM;
+> 		}
+> 		sk_set_memalloc(config->socks[i]->sock->sk);
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-5.8-rc7
+For the netlink error path, we end up cleaning up everything when =
+nbd_config_put is called in the error path.
 
-for you to fetch changes up to fa5a198359053c8e21dcc2b39c0e13871059bc9f:
+Are you seeing an issue with the ioctl interface and this code path? I =
+thought normally if the the NBD_DO_IT ioctl fails, then userspace closes =
+the device and that does the nbd_config_put that will clean this up like =
+is done in the netlink path.
 
-  riscv: Parse all memory blocks to remove unusable memory (2020-07-24 22:08:25 -0700)
+If userspace is not closing the device and is trying to maybe retry the =
+NBD_DO_IT ioctl or reuse the device some other way, then I think you =
+need to also NULL nbd->task_recv, remove pid file, NULL recv_workq after =
+you destroy for the cases nbd_config_put is called right after a =
+failure.
 
-----------------------------------------------------------------
-RISC-V Fixes for 5.8-rc7
 
-I have a few more fixes this week:
-
-* A fix to avoid using SBI calls during kasan initialization, as the SBI calls
-  themselves have not been probed yet.
-* Three fixes related to systems with multiple memory regions.
-
-----------------------------------------------------------------
-Atish Patra (3):
-      RISC-V: Set maximum number of mapped pages correctly
-      RISC-V: Do not rely on initrd_start/end computed during early dt parsing
-      riscv: Parse all memory blocks to remove unusable memory
-
-Vincent Chen (1):
-      riscv: kasan: use local_tlb_flush_all() to avoid uninitialized __sbi_rfence
-
- arch/riscv/mm/init.c       | 66 +++++++++++++++++++++++++++++++---------------
- arch/riscv/mm/kasan_init.c |  4 +--
- 2 files changed, 47 insertions(+), 23 deletions(-)
