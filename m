@@ -2,81 +2,166 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C9DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 15:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB15C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 16:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39D672076A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 15:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86AA920674
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 16:22:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgGYP7T (ORCPT
+        id S1727103AbgGYQWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 11:59:19 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41450 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgGYP7T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 11:59:19 -0400
-Received: by mail-qk1-f196.google.com with SMTP id l64so4746968qkb.8;
-        Sat, 25 Jul 2020 08:59:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mMGEOs38oJF3yC1EryMyVjgRpVr9wn9qQ6Mpuxbj1sw=;
-        b=YaMeFhFS/fbIvmX34LDJOnFowVYY8S92dfOjgQV3bMxOIKiDHbGdnnnjZkdQIBQAe1
-         PCIi35Hh4b69L//UNwO5LX05HEcOi1yeay9RM8AyrTlIm23lxCw301vBLz5K92XnWnmP
-         P468bcXh5xqZZxCkQCbGLUaAvlu9+PZFf5I+5NQ86pFORLzrW/94VxQVgf3gMaAIRzP1
-         dISvBMxGFkbdLZSmQh9aaIbvfM4yjj8pf1SI0B+NgQV/QqQazM/xpRBj82HqcHLVupOV
-         ETamVOlbX8kKWJPTe1vMCw2JY1B3mzgGyaBIJu1zcASdq4TGZb7Lj70cZCa23ivkgm7v
-         Qh/g==
-X-Gm-Message-State: AOAM533KMAbEHVpTsfCkdmS6FnzQ2942G9RgULevA3SG6xEP5IFbFp3Z
-        7WxySTbFbypxViUwxj7ma7RHFikG
-X-Google-Smtp-Source: ABdhPJxH3dFFWEp6cISIOWcwXAJHwpbjX0DvVEawFuC81dbhHVPxdxlf+zQ8GCdr5vFoRaqn2JVqAQ==
-X-Received: by 2002:a37:a5c1:: with SMTP id o184mr10290360qke.323.1595692757808;
-        Sat, 25 Jul 2020 08:59:17 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id h15sm6126671qtr.2.2020.07.25.08.59.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 08:59:17 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     linux-efi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] efi/libstub: Stop parsing arguments at "--"
-Date:   Sat, 25 Jul 2020 11:59:16 -0400
-Message-Id: <20200725155916.1376773-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
+        Sat, 25 Jul 2020 12:22:46 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:55278 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbgGYQWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 12:22:46 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jzMwR-006pHK-D0; Sat, 25 Jul 2020 18:22:31 +0200
+Date:   Sat, 25 Jul 2020 18:22:31 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+        Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
+        Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC leds + net-next v3 1/2] net: phy: add API for LEDs
+ controlled by PHY HW
+Message-ID: <20200725162231.GJ1472201@lunn.ch>
+References: <20200724164603.29148-1-marek.behun@nic.cz>
+ <20200724164603.29148-2-marek.behun@nic.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200724164603.29148-2-marek.behun@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arguments after "--" are arguments for init, not for the kernel.
+On Fri, Jul 24, 2020 at 06:46:02PM +0200, Marek Behún wrote:
+> Many PHYs support various HW control modes for LEDs connected directly
+> to them.
+> 
+> This code adds a new private LED trigger called phydev-hw-mode. When
+> this trigger is enabled for a LED, the various HW control modes which
+> the PHY supports for given LED can be get/set via hw_mode sysfs file.
+> 
+> A PHY driver wishing to utilize this API needs to register the LEDs on
+> its own and set the .trigger_type member of LED classdev to
+> &phy_hw_led_trig_type. It also needs to implement the methods
+> .led_iter_hw_mode, .led_set_hw_mode and .led_get_hw_mode in struct
+> phydev.
+> 
+> Signed-off-by: Marek Behún <marek.behun@nic.cz>
+> ---
+>  drivers/net/phy/Kconfig           |  9 +++
+>  drivers/net/phy/Makefile          |  1 +
+>  drivers/net/phy/phy_hw_led_mode.c | 96 +++++++++++++++++++++++++++++++
+>  include/linux/phy.h               | 15 +++++
+>  4 files changed, 121 insertions(+)
+>  create mode 100644 drivers/net/phy/phy_hw_led_mode.c
+> 
+> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> index dd20c2c27c2f..ffea11f73acd 100644
+> --- a/drivers/net/phy/Kconfig
+> +++ b/drivers/net/phy/Kconfig
+> @@ -283,6 +283,15 @@ config LED_TRIGGER_PHY
+>  		<Speed in megabits>Mbps OR <Speed in gigabits>Gbps OR link
+>  		for any speed known to the PHY.
+>  
+> +config LED_TRIGGER_PHY_HW
+> +	bool "Support HW LED control modes"
+> +	depends on LEDS_TRIGGERS
+> +	help
+> +	  Many PHYs can control blinking of LEDs connected directly to them.
+> +	  This adds a special LED trigger called phydev-hw-mode. When enabled,
+> +	  the various control modes supported by the PHY on given LED can be
+> +	  chosen via hw_mode sysfs file.
+> +
+>  
+>  comment "MII PHY device drivers"
+>  
+> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> index d84bab489a53..fd0253ab8097 100644
+> --- a/drivers/net/phy/Makefile
+> +++ b/drivers/net/phy/Makefile
+> @@ -20,6 +20,7 @@ endif
+>  obj-$(CONFIG_MDIO_DEVRES)	+= mdio_devres.o
+>  libphy-$(CONFIG_SWPHY)		+= swphy.o
+>  libphy-$(CONFIG_LED_TRIGGER_PHY)	+= phy_led_triggers.o
+> +libphy-$(CONFIG_LED_TRIGGER_PHY_HW)	+= phy_hw_led_mode.o
+>  
+>  obj-$(CONFIG_PHYLINK)		+= phylink.o
+>  obj-$(CONFIG_PHYLIB)		+= libphy.o
+> diff --git a/drivers/net/phy/phy_hw_led_mode.c b/drivers/net/phy/phy_hw_led_mode.c
+> new file mode 100644
+> index 000000000000..b4c2f25266a5
+> --- /dev/null
+> +++ b/drivers/net/phy/phy_hw_led_mode.c
+> @@ -0,0 +1,96 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * drivers/net/phy/phy_hw_led_mode.c
+> + *
+> + * PHY HW LED mode trigger
+> + *
+> + * Copyright (C) 2020 Marek Behun <marek.behun@nic.cz>
+> + */
+> +#include <linux/leds.h>
+> +#include <linux/phy.h>
+> +
+> +static void phy_hw_led_trig_deactivate(struct led_classdev *cdev)
+> +{
+> +	struct phy_device *phydev = to_phy_device(cdev->dev->parent);
+> +	int ret;
+> +
+> +	ret = phydev->drv->led_set_hw_mode(phydev, cdev, NULL);
+> +	if (ret < 0) {
+> +		phydev_err(phydev, "failed deactivating HW mode on LED %s\n", cdev->name);
+> +		return;
+> +	}
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- drivers/firmware/efi/libstub/efi-stub-helper.c | 2 ++
- 1 file changed, 2 insertions(+)
+The core holds the phydev mutex when calling into the driver. There
+are a few exceptions, but it would be good if all the LED calls into
+the driver also held the mutex.
 
-diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-index 6bca70bbb43d..37ff34e7b85e 100644
---- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-+++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-@@ -201,6 +201,8 @@ efi_status_t efi_parse_options(char const *cmdline)
- 		char *param, *val;
- 
- 		str = next_arg(str, &param, &val);
-+		if (!val && !strcmp(param, "--"))
-+			break;
- 
- 		if (!strcmp(param, "nokaslr")) {
- 			efi_nokaslr = true;
--- 
-2.26.2
+> +}
+> +
+> +static ssize_t hw_mode_show(struct device *dev, struct device_attribute *attr, char *buf)
+> +{
+> +	struct led_classdev *cdev = led_trigger_get_led(dev);
+> +	struct phy_device *phydev = to_phy_device(cdev->dev->parent);
+> +	const char *mode, *cur_mode;
+> +	void *iter = NULL;
+> +	int len = 0;
 
+Reverse christmas tree.  
+
+> +static int __init phy_led_triggers_init(void)
+> +{
+> +	return led_trigger_register(&phy_hw_led_trig);
+> +}
+> +
+> +module_init(phy_led_triggers_init);
+> +
+> +static void __exit phy_led_triggers_exit(void)
+> +{
+> +	led_trigger_unregister(&phy_hw_led_trig);
+> +}
+> +
+> +module_exit(phy_led_triggers_exit);
+
+It is a bit of a surprise to find the module init/exit calls here, and
+not in phy.c. I think they should be moved.
+
+    Andrew
