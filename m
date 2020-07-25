@@ -2,91 +2,124 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5562AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E21C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A720206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B92206EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbgGYLHg (ORCPT
+        id S1726893AbgGYLPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 07:07:36 -0400
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:52761 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgGYLHg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 07:07:36 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 327BC30000D16;
-        Sat, 25 Jul 2020 13:07:34 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id EE7682CCD1; Sat, 25 Jul 2020 13:07:33 +0200 (CEST)
-Date:   Sat, 25 Jul 2020 13:07:33 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, 0day robot <lkp@intel.com>,
-        lkp@lists.01.org
-Subject: Re: [driver core] e3b1cb5c89:
- WARNING:possible_recursive_locking_detected
-Message-ID: <20200725110733.u6hi2tz3rmvpcy6s@wunner.de>
-References: <f2d349b5ba67b5ca70cb19577725167642eb69c5.1594214103.git.lukas@wunner.de>
- <20200724142950.GG1850@shao2-debian>
+        Sat, 25 Jul 2020 07:15:10 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:37408 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726651AbgGYLPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 07:15:09 -0400
+X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Sat, 25 Jul 2020 07:15:08 EDT
+Received: from localhost.localdomain (80-110-125-173.cgn.dynamic.surfer.at [80.110.125.173])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 6D62DC8DE4;
+        Sat, 25 Jul 2020 11:08:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1595675308; bh=XGCgnG3zaA6+JlKqdyeyx7BIoqEDrm/wMUBHk9wYz5A=;
+        h=From:To:Cc:Subject:Date;
+        b=I3YwHjrzdGV0mj4IygSFtz10bUCzT4ak1a1dqmSaIWRzyjkZrncZRgNTb+ZWAa0tP
+         aENeUq5LGblOB7aI4nrdU6IpbQRq3utoZMLDtrga5czAYqonNtZiFs2P/acXxxxO58
+         qkYqsME4grc9Avg3vJEP9PhcfJs5loQN/TL3wHAQ=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: sun50i-pinephone: add led flash
+Date:   Sat, 25 Jul 2020 13:08:12 +0200
+Message-Id: <20200725110812.199529-1-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724142950.GG1850@shao2-debian>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 10:29:50PM +0800, kernel test robot wrote:
-> commit: e3b1cb5c896ba748d8f848238c8ea1f89520bde3 ("[PATCH 3/3] driver core: Avoid adding children below a dead parent")
-[...]
-> [    1.392584] WARNING: possible recursive locking detected
-> [    1.393350] 5.8.0-rc3-00011-ge3b1cb5c896ba7 #1 Not tainted
-> [    1.393350] --------------------------------------------
-> [    1.393350] swapper/0/1 is trying to acquire lock:
-> [    1.393350] ffff88841fc6ff70 (&dev->p->dead_sem){.+.+}-{3:3}, at: __device_attach+0x51/0x1a0
-> [    1.393350] 
-> [    1.393350] but task is already holding lock:
-> [    1.393350] ffff888107f42770 (&dev->p->dead_sem){.+.+}-{3:3}, at: device_add+0xf8/0x890
+All revisions of the PinePhone have an SGM3140 LED flash. The gpios were
+swapped on v1.0 of the board but this was fixed in later revisions.
 
-False positive:
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+ .../boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts   |  5 +++++
+ .../boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts   |  5 +++++
+ .../boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts   |  5 +++++
+ .../boot/dts/allwinner/sun50i-a64-pinephone.dtsi      | 11 +++++++++++
+ 4 files changed, 26 insertions(+)
 
-__device_attach() takes a device's dead_sem whereas device_add() takes
-the *parent's* dead_sem.  But lockdep thinks they're the same because
-they're in the same lock class.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
+index 0c42272106afa..b579b03d4e026 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.0.dts
+@@ -9,3 +9,8 @@ / {
+ 	model = "Pine64 PinePhone Developer Batch (1.0)";
+ 	compatible = "pine64,pinephone-1.0", "allwinner,sun50i-a64";
+ };
++
++&sgm3140 {
++	flash-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
++	enable-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
++};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
+index 3e99a87e9ce52..8552587aac248 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
+@@ -28,3 +28,8 @@ &backlight {
+ 	num-interpolated-steps = <50>;
+ 	default-brightness-level = <400>;
+ };
++
++&sgm3140 {
++	flash-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
++	enable-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
++};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts
+index a9f5b670c9b82..ec77715ba4a2a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.2.dts
+@@ -38,3 +38,8 @@ &lis3mdl {
+ 	interrupt-parent = <&pio>;
+ 	interrupts = <1 1 IRQ_TYPE_EDGE_RISING>; /* PB1 */
+ };
++
++&sgm3140 {
++	flash-gpios = <&pio 2 3 GPIO_ACTIVE_HIGH>; /* PC3 */
++	enable-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
++};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+index 25150aba749dc..e0bc1bcc1c1f3 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+@@ -60,6 +60,17 @@ vibrator {
+ 		enable-gpios = <&pio 3 2 GPIO_ACTIVE_HIGH>; /* PD2 */
+ 		vcc-supply = <&reg_dcdc1>;
+ 	};
++
++	sgm3140: led-controller {
++		compatible = "sgmicro,sgm3140";
++		vin-supply = <&reg_dcdc1>;
++
++		sgm3140_flash: led {
++			function = LED_FUNCTION_FLASH;
++			color = <LED_COLOR_ID_WHITE>;
++			flash-max-timeout-us = <250000>;
++		};
++	};
+ };
+ 
+ &codec {
+-- 
+2.27.0
 
-We would normally see the same lockdep splat for device_lock() but
-commit 1704f47b50b5 silenced it by assigning device_lock() to the
-novalidate class.
-
-I could silence this lockdep splat by assigning dead_sem to the
-novalidate class as well.  But I also have an idea how we could
-fix it properly by introducing a per-device class for bus_types
-that need it and by putting the device_lock, dead_sem etc in
-separate subclasses within that per-device class.
-
-Any preference as to which solution I should pursue?
-Any thoughts on this series in general?
-Does the newly introduced dead_sem evoke approval or rejection?
-Anyone?
-
-Thanks,
-
-Lukas
