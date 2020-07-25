@@ -2,98 +2,91 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1557C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5562AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C97E206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595675180;
-	bh=7vlb1HHPpldNtaNTZpRtZTb1tg4MXxIayT7+Jy7ak/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vqIg3HxqpGHBEETLZgCy9j4DQoHMH+Qz2EiNCWAMljAhzk06RHOiGXbfxXnEV1K/Y
-	 eyO58a9gYs92kFAv0FHVym7rTagC8kCn0bcBgv8vVvKToiDI7uQGNkaKuXQFFl8icJ
-	 uLagfD/jod9bw2O7D1s0xPeJ4HKpw5V/JymWhPE4=
+	by mail.kernel.org (Postfix) with ESMTP id 3A720206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgGYLFa (ORCPT
+        id S1726969AbgGYLHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 07:05:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726651AbgGYLFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 07:05:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Sat, 25 Jul 2020 07:07:36 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:52761 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgGYLHg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 07:07:36 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F9B3206C1;
-        Sat, 25 Jul 2020 11:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595675130;
-        bh=7vlb1HHPpldNtaNTZpRtZTb1tg4MXxIayT7+Jy7ak/8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jqudBdMhr3YiRRCeXhrGK43HI2oCCVeKBYsXTf0hhHhBC5itNI9dE4Gc+OrK8GNNI
-         v/Q3hg/dmQ4CFILSais2+tIlZwfIwgoMhlqSmAFTfnnxljc1WKV3fvl1dq8IMlYMCk
-         8Abjk/t7W242/z0pZP4qyB43WFv5UfWjHzihRjS8=
-Date:   Sat, 25 Jul 2020 13:05:26 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Anant Thazhemadam <anant.thazhemadam@gmail.com>
-Cc:     Merwin Trever Ferrao <merwintf@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Joe Perches <joe@perches.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: Re: [PATCH] Fix one coding style issue
-Message-ID: <20200725110526.GA396778@kroah.com>
-References: <20200725103008.7261-1-anant.thazhemadam@gmail.com>
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 327BC30000D16;
+        Sat, 25 Jul 2020 13:07:34 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id EE7682CCD1; Sat, 25 Jul 2020 13:07:33 +0200 (CEST)
+Date:   Sat, 25 Jul 2020 13:07:33 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, 0day robot <lkp@intel.com>,
+        lkp@lists.01.org
+Subject: Re: [driver core] e3b1cb5c89:
+ WARNING:possible_recursive_locking_detected
+Message-ID: <20200725110733.u6hi2tz3rmvpcy6s@wunner.de>
+References: <f2d349b5ba67b5ca70cb19577725167642eb69c5.1594214103.git.lukas@wunner.de>
+ <20200724142950.GG1850@shao2-debian>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200725103008.7261-1-anant.thazhemadam@gmail.com>
+In-Reply-To: <20200724142950.GG1850@shao2-debian>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 04:00:03PM +0530, Anant Thazhemadam wrote:
-> The coding style issue that raised an error (upon checking against
-> checkpatch.pl) has been fixed.
+On Fri, Jul 24, 2020 at 10:29:50PM +0800, kernel test robot wrote:
+> commit: e3b1cb5c896ba748d8f848238c8ea1f89520bde3 ("[PATCH 3/3] driver core: Avoid adding children below a dead parent")
+[...]
+> [    1.392584] WARNING: possible recursive locking detected
+> [    1.393350] 5.8.0-rc3-00011-ge3b1cb5c896ba7 #1 Not tainted
+> [    1.393350] --------------------------------------------
+> [    1.393350] swapper/0/1 is trying to acquire lock:
+> [    1.393350] ffff88841fc6ff70 (&dev->p->dead_sem){.+.+}-{3:3}, at: __device_attach+0x51/0x1a0
+> [    1.393350] 
+> [    1.393350] but task is already holding lock:
+> [    1.393350] ffff888107f42770 (&dev->p->dead_sem){.+.+}-{3:3}, at: device_add+0xf8/0x890
 
-You are not saying what issue was fixed.
+False positive:
 
-Also, your subject line needs to be fixed, please see the link provided
-by the bot previously for what to do.
+__device_attach() takes a device's dead_sem whereas device_add() takes
+the *parent's* dead_sem.  But lockdep thinks they're the same because
+they're in the same lock class.
 
-> Exactly one coding style issue has been fixed; as required by Task 10
-> of the Eudyptula Challenge.
+We would normally see the same lockdep splat for device_lock() but
+commit 1704f47b50b5 silenced it by assigning device_lock() to the
+novalidate class.
 
-We don't care why you are doing this work, no need to put that in the
-changelog.
+I could silence this lockdep splat by assigning dead_sem to the
+novalidate class as well.  But I also have an idea how we could
+fix it properly by introducing a per-device class for bus_types
+that need it and by putting the device_lock, dead_sem etc in
+separate subclasses within that per-device class.
 
-> 
-> Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
-> ---
->  drivers/staging/rtl8188eu/core/rtw_security.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/rtl8188eu/core/rtw_security.c b/drivers/staging/rtl8188eu/core/rtw_security.c
-> index 21f6652dd69f..dc22ee9c24ad 100644
-> --- a/drivers/staging/rtl8188eu/core/rtw_security.c
-> +++ b/drivers/staging/rtl8188eu/core/rtw_security.c
-> @@ -718,7 +718,9 @@ u32 rtw_tkip_decrypt(struct adapter *padapter, u8 *precvframe)
->  				res = _FAIL;
->  			}
->  		} else {
-> -			RT_TRACE(_module_rtl871x_security_c_, _drv_err_, ("%s: stainfo==NULL!!!\n",__func__));
-> +			RT_TRACE(_module_rtl871x_security_c_, _drv_err_,
-> +				 ("%s: stainfo==NULL!!!\n", __func__)
-> +				);
+Any preference as to which solution I should pursue?
+Any thoughts on this series in general?
+Does the newly introduced dead_sem evoke approval or rejection?
+Anyone?
 
-Very odd line breaks, this now looks worse than before :(
+Thanks,
 
-thanks,
-
-greg k-h
+Lukas
