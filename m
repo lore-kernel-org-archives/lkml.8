@@ -4,41 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73679C4345A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 23:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3B8C4345B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 23:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1B92070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 23:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E452070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 23:19:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="frlgzOeJ"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="kBVLkIEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgGYXTZ (ORCPT
+        id S1728270AbgGYXTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 19:19:25 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:37405 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728155AbgGYXTJ (ORCPT
+        Sat, 25 Jul 2020 19:19:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728165AbgGYXTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 19:19:09 -0400
+        Sat, 25 Jul 2020 19:19:10 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 980EAC08C5CE;
+        Sat, 25 Jul 2020 16:19:10 -0700 (PDT)
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id F0E6823E4D;
-        Sun, 26 Jul 2020 01:19:05 +0200 (CEST)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 7C23B23E55;
+        Sun, 26 Jul 2020 01:19:08 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1595719146;
+        t=1595719149;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=EzYqQ9RsAteBsFVLbk29ft1E2vQYeteOFHnfkivX47M=;
-        b=frlgzOeJfwdhNBvZK1NRTVkvJHyYvYi/Fi49V9HZ1R/fjErEVd3Z250m3HSHWAZZ8uyBoD
-        S/hUOf8kdGOb6X3EYX2qWAKuLpa8zia3uifj7D1IQDkH/KUO1tPZyx9QTbRFOkqbvXTxz2
-        3rtIK8y2wCV160gsFPWjmy39EG9xoPA=
+        bh=PNc2RG8Tt+EkQg/L/MGAMSEh8dcuaImVAHmm6o6jhBo=;
+        b=kBVLkIEP/C2ReoLMyukzWmgQonAia/PsYLqogFg5iMR5wqlp5oiy3e4/jE9FCMUs+CI+iZ
+        9sq5luyHjrUqugUIRSqr00X1nFrqOMPqukhSU4mAxlWwGGzbsPqqVg12Y+lEyMH34kOrlS
+        A2WaSgaF6BMMipDcQPTQFKHffbMnw+g=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
@@ -63,9 +67,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
         Michael Walle <michael@walle.cc>
-Subject: [PATCH v6 10/13] arm64: dts: freescale: sl28: map GPIOs to input events
-Date:   Sun, 26 Jul 2020 01:18:31 +0200
-Message-Id: <20200725231834.25642-11-michael@walle.cc>
+Subject: [PATCH v6 13/13] arm64: defconfig: enable the sl28cpld board management controller
+Date:   Sun, 26 Jul 2020 01:18:34 +0200
+Message-Id: <20200725231834.25642-14-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200725231834.25642-1-michael@walle.cc>
 References: <20200725231834.25642-1-michael@walle.cc>
@@ -77,76 +81,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have support for GPIO lines of the SMARC connector, map the
-sleep, power and lid switch signals to the corresponding keys using the
-gpio-keys and gpio-keys-polled drivers. The power and sleep signals have
-dedicated interrupts, thus we use these ones. The lid switch is just
-mapped to a GPIO input and needs polling.
+Enable the kernel modules for the board management controller "sl28cpld"
+which is used on the SMARC-sAL28 board.
 
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
 Changes since v5:
- - none
+ - new patch
 
-Changes since v4:
- - none
+ arch/arm64/configs/defconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Changes since v3:
- - see cover letter
-
- .../freescale/fsl-ls1028a-kontron-sl28.dts    | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-index 8712fe82727b..c4fd99efdbba 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-kontron-sl28.dts
-@@ -9,6 +9,8 @@
- /dts-v1/;
- #include "fsl-ls1028a.dtsi"
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "Kontron SMARC-sAL28";
-@@ -23,6 +25,36 @@
- 		spi1 = &dspi2;
- 	};
- 
-+	buttons0 {
-+		compatible = "gpio-keys";
-+
-+		power-button {
-+			interrupts-extended = <&sl28cpld_intc
-+					       4 IRQ_TYPE_EDGE_BOTH>;
-+			linux,code = <KEY_POWER>;
-+			label = "Power";
-+		};
-+
-+		sleep-button {
-+			interrupts-extended = <&sl28cpld_intc
-+					       5 IRQ_TYPE_EDGE_BOTH>;
-+			linux,code = <KEY_SLEEP>;
-+			label = "Sleep";
-+		};
-+	};
-+
-+	buttons1 {
-+		compatible = "gpio-keys-polled";
-+		poll-interval = <200>;
-+
-+		lid-switch {
-+			linux,input-type = <EV_SW>;
-+			linux,code = <SW_LID>;
-+			gpios = <&sl28cpld_gpio3 4 GPIO_ACTIVE_LOW>;
-+			label = "Lid";
-+		};
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index e0f33826819f..d45a33ccf7d7 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -500,6 +500,7 @@ CONFIG_GPIO_PCA953X=y
+ CONFIG_GPIO_PCA953X_IRQ=y
+ CONFIG_GPIO_BD9571MWV=m
+ CONFIG_GPIO_MAX77620=y
++CONFIG_GPIO_SL28CPLD=m
+ CONFIG_POWER_AVS=y
+ CONFIG_QCOM_CPR=y
+ CONFIG_ROCKCHIP_IODOMAIN=y
+@@ -513,6 +514,7 @@ CONFIG_SENSORS_ARM_SCPI=y
+ CONFIG_SENSORS_LM90=m
+ CONFIG_SENSORS_PWM_FAN=m
+ CONFIG_SENSORS_RASPBERRYPI_HWMON=m
++CONFIG_SENSORS_SL28CPLD=m
+ CONFIG_SENSORS_INA2XX=m
+ CONFIG_SENSORS_INA3221=m
+ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
+@@ -535,6 +537,7 @@ CONFIG_QCOM_TSENS=y
+ CONFIG_QCOM_SPMI_TEMP_ALARM=m
+ CONFIG_UNIPHIER_THERMAL=y
+ CONFIG_WATCHDOG=y
++CONFIG_SL28CPLD_WATCHDOG=m
+ CONFIG_ARM_SP805_WATCHDOG=y
+ CONFIG_ARM_SBSA_WATCHDOG=y
+ CONFIG_ARM_SMC_WATCHDOG=y
+@@ -934,8 +937,10 @@ CONFIG_PWM_MESON=m
+ CONFIG_PWM_RCAR=m
+ CONFIG_PWM_ROCKCHIP=y
+ CONFIG_PWM_SAMSUNG=y
++CONFIG_PWM_SL28CPLD=m
+ CONFIG_PWM_SUN4I=m
+ CONFIG_PWM_TEGRA=m
++CONFIG_SL28CPLD_INTC=y
+ CONFIG_QCOM_PDC=y
+ CONFIG_RESET_QCOM_AOSS=y
+ CONFIG_RESET_QCOM_PDC=m
 -- 
 2.20.1
 
