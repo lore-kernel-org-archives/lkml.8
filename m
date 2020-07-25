@@ -4,76 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C86C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C51C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2446206EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D5D220738
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:19:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgGYHLX (ORCPT
+        id S1727045AbgGYHTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 03:11:23 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8820 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726572AbgGYHLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 03:11:23 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D79CB5C983F28B5AAC04;
-        Sat, 25 Jul 2020 15:11:18 +0800 (CST)
-Received: from localhost.localdomain (10.175.118.36) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 25 Jul 2020 15:11:13 +0800
-From:   Luo bin <luobin9@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoxianjun@huawei.com>, <yin.yinshi@huawei.com>,
-        <cloud.wangxiaoyun@huawei.com>, <chiqijun@huawei.com>
-Subject: [PATCH net-next v5 0/2] hinic: add some error messages for debug
-Date:   Sat, 25 Jul 2020 15:11:17 +0800
-Message-ID: <20200725071119.31773-1-luobin9@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 25 Jul 2020 03:19:34 -0400
+Received: from out28-51.mail.aliyun.com ([115.124.28.51]:58670 "EHLO
+        out28-51.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbgGYHTe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 03:19:34 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1404662|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.040148-0.00170086-0.958151;FP=18364405763956004600|2|2|11|0|-1|-1|-1;HT=e02c03306;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=19;RT=19;SR=0;TI=SMTPD_---.I7IIM8t_1595661564;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I7IIM8t_1595661564)
+          by smtp.aliyun-inc.com(10.147.42.253);
+          Sat, 25 Jul 2020 15:19:29 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, kishon@ti.com, vkoul@kernel.org,
+        gor@linux.ibm.com, hca@linux.ibm.com,
+        christophe.jaillet@wanadoo.fr, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: Add USB PHY support for new Ingenic SoCs.
+Date:   Sat, 25 Jul 2020 15:18:58 +0800
+Message-Id: <20200725071903.63315-1-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.118.36]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-patch #1: support to handle hw abnormal event
-patch #2: improve the error messages when functions return failure and
-	  dump relevant registers in some exception handling processes
+v5->v6:
+1.Fix the warning that appears during compilation.
+2.Used the generic PHY framework API to create the PHY,
+  and move the driver to driver/phy/ingenic.
 
-Luo bin (2):
-  hinic: add support to handle hw abnormal event
-  hinic: add log in exception handling processes
+周琰杰 (Zhou Yanjie) (5):
+  dt-bindings: USB: Add bindings for new Ingenic SoCs.
+  USB: PHY: JZ4770: Unify code style and simplify code.
+  USB: PHY: JZ4770: Add support for new Ingenic SoCs.
+  USB: PHY: JZ4770: Reformat the code to align it.
+  USB: PHY: JZ4770: Usethe generic PHY framework.
 
- drivers/net/ethernet/huawei/hinic/hinic_dev.h |   4 +
- .../net/ethernet/huawei/hinic/hinic_devlink.c | 286 +++++++++++++++++-
- .../net/ethernet/huawei/hinic/hinic_devlink.h |   8 +-
- .../net/ethernet/huawei/hinic/hinic_ethtool.c |  20 ++
- .../ethernet/huawei/hinic/hinic_hw_api_cmd.c  |  27 +-
- .../ethernet/huawei/hinic/hinic_hw_api_cmd.h  |   4 +
- .../net/ethernet/huawei/hinic/hinic_hw_cmdq.c |   2 +
- .../net/ethernet/huawei/hinic/hinic_hw_cmdq.h |   2 +
- .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 160 +++++++++-
- .../net/ethernet/huawei/hinic/hinic_hw_dev.h  | 148 ++++++++-
- .../net/ethernet/huawei/hinic/hinic_hw_eqs.c  |  39 +++
- .../net/ethernet/huawei/hinic/hinic_hw_eqs.h  |   6 +-
- .../net/ethernet/huawei/hinic/hinic_hw_if.c   |  23 ++
- .../net/ethernet/huawei/hinic/hinic_hw_if.h   |  10 +-
- .../net/ethernet/huawei/hinic/hinic_hw_mbox.c |   2 +
- .../net/ethernet/huawei/hinic/hinic_hw_mgmt.c |  11 +
- .../net/ethernet/huawei/hinic/hinic_hw_mgmt.h |   4 +
- .../net/ethernet/huawei/hinic/hinic_main.c    |  87 ++++--
- .../net/ethernet/huawei/hinic/hinic_port.c    |  62 ++--
- .../net/ethernet/huawei/hinic/hinic_port.h    |  25 ++
- .../net/ethernet/huawei/hinic/hinic_sriov.c   |   6 +-
- 21 files changed, 855 insertions(+), 81 deletions(-)
+ .../bindings/usb/ingenic,jz4770-phy.yaml           |   6 +-
+ drivers/phy/Kconfig                                |   1 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/ingenic/Kconfig                        |  12 +
+ drivers/phy/ingenic/Makefile                       |   2 +
+ drivers/phy/ingenic/phy-ingenic-usb.c              | 403 +++++++++++++++++++++
+ drivers/usb/phy/Kconfig                            |   8 -
+ drivers/usb/phy/Makefile                           |   1 -
+ drivers/usb/phy/phy-jz4770.c                       | 243 -------------
+ 9 files changed, 424 insertions(+), 253 deletions(-)
+ create mode 100644 drivers/phy/ingenic/Kconfig
+ create mode 100644 drivers/phy/ingenic/Makefile
+ create mode 100644 drivers/phy/ingenic/phy-ingenic-usb.c
+ delete mode 100644 drivers/usb/phy/phy-jz4770.c
 
 -- 
-2.17.1
+2.11.0
 
