@@ -2,118 +2,161 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C311C433E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 04:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF75C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 04:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE6D32078A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 04:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014AC20786
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 04:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="ibIWiXjG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eluQCNvZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgGYEo0 (ORCPT
+        id S1726674AbgGYEsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 00:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
+        Sat, 25 Jul 2020 00:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgGYEoZ (ORCPT
+        with ESMTP id S1725874AbgGYEse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 00:44:25 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66863C0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 21:44:25 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id y3so9964381wrl.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 21:44:25 -0700 (PDT)
+        Sat, 25 Jul 2020 00:48:34 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8589C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 21:48:34 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id u64so10616484qka.12
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 21:48:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5VrwN5/UnygvMy3zMm6TjQrq+luQNTXvPZ+NbPuQVPA=;
-        b=ibIWiXjGWI4kz9I5MrfgGQdY71Zw+k0eXM7gC5w5R+lLsuD/rVVn4l5bB7vbyRpgSF
-         CV+8imaGR1JjGgXBgy9BLroi7X+UhQOc0W+LxYQAbq+YPThjVyOrAleyn+J44L5k/1pZ
-         ATDUYH0iFCuMMtfyo4nNuUBNgpolxBm3o3+jo=
+        bh=M900l+pHGFzlMD+an1AOPOSVrqFC82MZzg5BDb5VOU0=;
+        b=eluQCNvZ0DsqX2W/4AKjDbydgSFvfJn/nDNQymfqWRlSiNUz4Tj7w2YpyrcG92//GO
+         RBzgz2vwKb3IXOQej496GWrrEK4d/O4Ug2H7s/kNFeyA1oyCbYzLbyQvclKAhDuv5BzK
+         Pib7ScrVjpKI/M1sRG+vEJLhNxz1HzxATbKFmobUFe3JD66B/AK9Lot/umW53TID8o+Q
+         W36hoNJDpl4hZ7H4Q4qFGH/TffX75SYLfcj87JQ0Tp4lSAIq9fH1ex5fxbh+gTvDY+vK
+         cauPpWbtKQGMQiBf5mGFcOHgtsyReNfp5DOrVkO5u7jxKn9FK4dp20etF6MR1fWaeZYu
+         7/8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5VrwN5/UnygvMy3zMm6TjQrq+luQNTXvPZ+NbPuQVPA=;
-        b=djbQUGIpBidPX57iGgb+ZpBWozIGDnLxsrKi4+obvHwCv/eQkKGBsZWdSlzh6/59k3
-         vQIyYLmNpY0ezuDoTkXKWY0IfummEnQJRY88xjZWWzqKMzoDRUxAcr4uD3P7O5eKXkCm
-         Fhau+XR14KrBat+FAw+QINem7JmtOtvFbNfdH/LUSaGKJHLetY1lcgefcuXUZdEEqDUM
-         EEf2gddufh2NtXxVVrPWiY156i8Emx8DsgjC4BI8vFdYSUFYnALSyLZTOenXvLOQXlQq
-         Sd0BcURu9XIZMhDB55gzk0bAaCWCAvRfhCrvXYSvzr+6imiNEw/lDRFE35//jKuikJGj
-         3rGQ==
-X-Gm-Message-State: AOAM532kJ7JwBpTx8+R5NUlBiGQHrlxRdPvMM21NPHKvy0qWDcLOuD5l
-        erLsk/T7ctVzQZzCzLNmPXJoIyvffSqPkJ3zbWtBsw==
-X-Google-Smtp-Source: ABdhPJyibJBX0jw3LQVOdkevS7Z9trwmeRbeB+lDZ+bqAHr4vmhNL3sBrn1KJuO9i4ieIVDSG6EKmvewA3ljP/CM5q4=
-X-Received: by 2002:adf:cd91:: with SMTP id q17mr11312969wrj.5.1595652264082;
- Fri, 24 Jul 2020 21:44:24 -0700 (PDT)
+        bh=M900l+pHGFzlMD+an1AOPOSVrqFC82MZzg5BDb5VOU0=;
+        b=Gw6XAnONQs99YfdKqwFORma9QWdT8Xf7nxh8d+gvp/JqiCU4y4SpLayUmW+WmGHPtT
+         sokkMUV1zv1FwA50P1PKcR/6d/9JXgvDGAb7jcy4YF73UcHeueRFR1m+ROeuCw/d+chT
+         jGnh+zFu0ZMiiPA/ener+petFRoJiB+HD+9sFGGDC5vFf/+W7Cbmc/54VbVdPZi2A0GM
+         4pFddKPtMWqX8+gvWaBYkEjQgQUud4UQc+qS15UWrPwp2pXB8XOpmET9viU37PSnID61
+         0T7jYYXtWO2jHtS+3o1m65fmTi8EujwQT9ZsCNMuP3o8PFHLE7e6U1BmJPlscn5TR5Rv
+         HC7A==
+X-Gm-Message-State: AOAM531hTLjRDxeDe9KpfaGrtNYQaLdlLoiG4IfKvbGIPadfXZXt0YOI
+        +LqztCEak0dhb8E/ZctIdST6zHMiO2OTl2p67ZoxTQ==
+X-Google-Smtp-Source: ABdhPJx9+xpSAg5N1Pu2t9E6yzh6mPxCD36TC/FufaKPAYgMCuAi6SDqIK1bfjaKcvKnTGo0khfkUW0KwwMgMMOzBhI=
+X-Received: by 2002:a37:7c05:: with SMTP id x5mr13264146qkc.256.1595652513494;
+ Fri, 24 Jul 2020 21:48:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200710094544.430258-1-daniel@0x0f.com> <CAK8P3a2xQmba=ikPjRZCu+PhMGMRKDWW=WbgzjRypD9U43WHDw@mail.gmail.com>
-In-Reply-To: <CAK8P3a2xQmba=ikPjRZCu+PhMGMRKDWW=WbgzjRypD9U43WHDw@mail.gmail.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Sat, 25 Jul 2020 13:44:13 +0900
-Message-ID: <CAFr9PX=jMd1hogK9_JPU4N+QsDgiFyMMqON0_7-SytX2Kuh6Pg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/12] Initial MStar/Sigmastar ARMv7 SoC support
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Marc Zyngier <maz@kernel.org>, Willy Tarreau <w@1wt.eu>
+References: <1595640639-9310-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <1595640639-9310-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Sat, 25 Jul 2020 06:48:21 +0200
+Message-ID: <CACT4Y+YXT9iLij-AbrUwj=yPq-YNFw=Au9g0LQJCKwYonaHCDQ@mail.gmail.com>
+Subject: Re: [PATCH] lockdep: Introduce CONFIG_LOCKDEP_LARGE
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+62ebe501c1ce9a91f68c@syzkaller.appspotmail.com>,
+        syzbot <syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com>,
+        syzbot <syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
-
-Thanks.
-
-There is one small fix for the v5 set. One of the DTS file names got
-broken when I rebased on a different machine.
-I'll send a patch for that later today.
-
-Cheer,
-
-Daniel
-
-On Fri, 24 Jul 2020 at 23:37, Arnd Bergmann <arnd@arndb.de> wrote:
+On Sat, Jul 25, 2020 at 3:30 AM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
 >
-> On Fri, Jul 10, 2020 at 11:46 AM Daniel Palmer <daniel@0x0f.com> wrote:
-> >
-> > This patch set adds initial support for MStar/Sigmastar's
-> > Armv7 based SoCs. There is just enough here to get to a shell
-> > with an initramfs but support for a lot of the hardware is
-> > in progress and will follow.
-> >
-> > MStar also shipped chips with MIPS cores and ARM9 etc which
-> > are incompatible so I've tried to make the distinction in the
-> > code that this is strictly for the Armv7 based chips.
-> >
-> > Sorry for the spamming this. I just really want to make some
-> > progress on this because I'm worried the other bits that are
-> > needed for these SoCs (Really old AT91 support in macb and
-> > the fotg210 usb host) will be lost or stop working in the meantime.
-> > This already happened in u-boot.
+> Since syzkaller continues various test cases until the kernel crashes,
+> syzkaller tends to examine more locking dependencies than normal systems.
+> As a result, syzbot is reporting that the fuzz testing was terminated
+> due to hitting upper limits lockdep can track [1] [2] [3].
 >
-> Hi Daniel,
+> Like CONFIG_LOCKDEP_SMALL which halves the upper limits, let's introduce
+> CONFIG_LOCKDEP_LARGE which doubles the upper limits.
 >
-> I just found the series again after looking through some backlog,
-> and noticing I missed your submission from July 10. This looks
-> all good to me now, so I've merged the series into the arm/newsoc
-> branch that already contains added support for the keembay and
-> sparx5 SoCs.
+> [1] https://syzkaller.appspot.com/bug?id=3d97ba93fb3566000c1c59691ea427370d33ea1b
+> [2] https://syzkaller.appspot.com/bug?id=381cb436fe60dc03d7fd2a092b46d7f09542a72a
+> [3] https://syzkaller.appspot.com/bug?id=a588183ac34c1437fc0785e8f220e88282e5a29f
 >
-> If you require any changes to this, please send incremental
-> patches against the soc tree, and submit it to soc@kernel.org
-> so it makes it gets into patchwork.
+> Reported-by: syzbot <syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com>
+> Reported-by: syzbot <syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com>
+> Reported-by: syzbot <syzbot+62ebe501c1ce9a91f68c@syzkaller.appspotmail.com>
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> ---
+>  kernel/locking/lockdep.c           | 4 ++++
+>  kernel/locking/lockdep_internals.h | 5 +++++
+>  lib/Kconfig.debug                  | 8 ++++++++
+>  3 files changed, 17 insertions(+)
 >
->        Arnd
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 29a8de4..85ba7eb 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -1349,7 +1349,11 @@ static int add_lock_to_list(struct lock_class *this,
+>  /*
+>   * For good efficiency of modular, we use power of 2
+>   */
+> +#ifdef CONFIG_LOCKDEP_LARGE
+> +#define MAX_CIRCULAR_QUEUE_SIZE                8192UL
+> +#else
+>  #define MAX_CIRCULAR_QUEUE_SIZE                4096UL
+
+Maybe this number should be the config value? So that we don't ever
+return here to introduce "VERY_LARGE" :)
+Also somebody may use it to _reduce_ size of the table for a smaller kernel.
+
+> +#endif
+>  #define CQ_MASK                                (MAX_CIRCULAR_QUEUE_SIZE-1)
+>
+>  /*
+> diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
+> index baca699..00a3ec3 100644
+> --- a/kernel/locking/lockdep_internals.h
+> +++ b/kernel/locking/lockdep_internals.h
+> @@ -93,6 +93,11 @@ enum {
+>  #define MAX_LOCKDEP_CHAINS_BITS        15
+>  #define MAX_STACK_TRACE_ENTRIES        262144UL
+>  #define STACK_TRACE_HASH_SIZE  8192
+> +#elif defined(CONFIG_LOCKDEP_LARGE)
+> +#define MAX_LOCKDEP_ENTRIES    65536UL
+> +#define MAX_LOCKDEP_CHAINS_BITS        17
+> +#define MAX_STACK_TRACE_ENTRIES        1048576UL
+> +#define STACK_TRACE_HASH_SIZE  32768
+>  #else
+>  #define MAX_LOCKDEP_ENTRIES    32768UL
+>
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 9ad9210..69ba624 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -1266,6 +1266,14 @@ config LOCKDEP
+>  config LOCKDEP_SMALL
+>         bool
+>
+> +config LOCKDEP_LARGE
+> +       bool "Use larger buffer for tracking more locking dependencies"
+> +       depends on LOCKDEP && !LOCKDEP_SMALL
+> +       help
+> +         If you say Y here, the upper limits the lock dependency engine uses will
+> +         be doubled. Useful for fuzz testing which tends to test many complecated
+> +         dependencies than normal systems.
+> +
+>  config DEBUG_LOCKDEP
+>         bool "Lock dependency engine debugging"
+>         depends on DEBUG_KERNEL && LOCKDEP
+> --
+> 1.8.3.1
+>
