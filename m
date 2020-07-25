@@ -2,162 +2,70 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAFAC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7980A206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:09:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595635757;
-	bh=btOIZU1MW+6PlkkqDJUz7DcCUStR/8qT0xAu53GlQ6s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TJZzgWFHhjXmdQRpQx1MCzxs7VTQl7+kHxvuCKjfC1fo6BMn7gjZ8uYCtbc62YQh5
-	 PO8tlgDgx+naSk1aV6n0mqGAmit516vdpRES8cdzb5rZ3c0Fepei6/Xr9fjV0lTNX9
-	 T8IB08RqMDnaAi3nx684KUuem80lYSPxVmlxg5YU=
+	by mail.kernel.org (Postfix) with ESMTP id BC96A2078E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgGYAJP (ORCPT
+        id S1727032AbgGYAKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 20:09:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726882AbgGYAJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 20:09:15 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F2AF207FC
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 00:09:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595635754;
-        bh=btOIZU1MW+6PlkkqDJUz7DcCUStR/8qT0xAu53GlQ6s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sxS88DZLD1Ub3RW0YPgyikY7BDShzwcfepCzbZBjkaqBJP77hyvnz9aXpp551L9Pb
-         zU2WTGc5yM4bV7AnuKssI6OXXS3oITRb+uD4VVa0gWA1nxKyleZhPlLV48Zgna5QtC
-         kYQUX5BdvbpUC+Yv/uFXlOSxeVLIjzbZ7mfuQHwg=
-Received: by mail-wm1-f44.google.com with SMTP id t142so3249656wmt.4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:09:13 -0700 (PDT)
-X-Gm-Message-State: AOAM530CRDq0ilzbjqfdzYLyrJJ7OR5J089RW7jdAEKxOU23ISZEVqac
-        lQLEOs/oi2NA6yUKIKK9fJ8jWfzsJUQkoCj3G0R4Eg==
-X-Google-Smtp-Source: ABdhPJzODXWRSR4bEqjZdQmjvnAm94COixhWx/ZHwpxi601Bsr0u6vIlMnxzH7evHcvtBmUNUEDn46VTXFtuOAxUs7I=
-X-Received: by 2002:a1c:56c3:: with SMTP id k186mr10711218wmb.21.1595635752371;
- Fri, 24 Jul 2020 17:09:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200717072056.73134-1-ira.weiny@intel.com> <20200717072056.73134-18-ira.weiny@intel.com>
- <87r1t2vwi7.fsf@nanos.tec.linutronix.de> <20200723220435.GI844235@iweiny-DESK2.sc.intel.com>
- <87mu3pvly7.fsf@nanos.tec.linutronix.de> <874kpwtxlh.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <874kpwtxlh.fsf@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 24 Jul 2020 17:09:00 -0700
-X-Gmail-Original-Message-ID: <CALCETrXM1q664Udfq-LnU8SaUxSn-S+FkFRP1M9n3Aav9bjChA@mail.gmail.com>
-Message-ID: <CALCETrXM1q664Udfq-LnU8SaUxSn-S+FkFRP1M9n3Aav9bjChA@mail.gmail.com>
-Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across exceptions
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        X86 ML <x86@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 24 Jul 2020 20:10:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbgGYAKh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 20:10:37 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03FA4C0619D3;
+        Fri, 24 Jul 2020 17:10:37 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2C2E61275D089;
+        Fri, 24 Jul 2020 16:53:51 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 17:10:35 -0700 (PDT)
+Message-Id: <20200724.171035.1263967627297774729.davem@davemloft.net>
+To:     colin.king@canonical.com
+Cc:     vyasevich@gmail.com, nhorman@tuxdriver.com,
+        marcelo.leitner@gmail.com, kuba@kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][V2] sctp: remove redundant initialization of variable
+ status
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200724130919.18497-1-colin.king@canonical.com>
+References: <20200724130919.18497-1-colin.king@canonical.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 24 Jul 2020 16:53:51 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 2:25 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Ira,
->
-> Thomas Gleixner <tglx@linutronix.de> writes:
-> > Ira Weiny <ira.weiny@intel.com> writes:
-> >> On Thu, Jul 23, 2020 at 09:53:20PM +0200, Thomas Gleixner wrote:
-> >> I think, after fixing my code (see below), using idtentry_state could still
-> >> work.  If the per-cpu cache and the MSR is updated in idtentry_exit() that
-> >> should carry the state to the new cpu, correct?
-> >
-> > I'm way too tired to think about that now. Will have a look tomorrow
-> > with brain awake.
->
-> Not that I'm way more awake now, but at least I have the feeling that my
-> brain is not completely useless.
->
-> Let me summarize what I understood:
->
->   1) A per CPU cache which shadows the current state of the MSR, i.e. the
->      current valid key. You use that to avoid costly MSR writes if the
->      key does not change.
->
->   2) On idtentry you store the key on entry in idtentry_state, clear it
->      in the MSR and shadow state if necessary and restore it on exit.
->
->   3) On context switch out you save the per CPU cache value in the task
->      and on context switch in you restore it from there.
->
-> Yes, that works (see below for #2) and sorry for my confusion yesterday
-> about storing this in task state.
->
-> #2 requires to handle the exceptions which do not go through
-> idtentry_enter/exit() seperately, but that's a manageable amount. It's
-> the ones which use IDTENTRY_RAW or a variant of it.
->
-> #BP, #MC, #NMI, #DB, #DF need extra local storage as all the kernel
-> entries for those use nmi_enter()/exit(). So you just can create
-> wrappers around those. Somehting like this
->
-> static __always_inline idtentry_state_t idtentry_nmi_enter(void)
-> {
->         idtentry_state_t state = {};
->
->         nmi_enter();
->         instrumentation_begin();
->         state.key = save_and_clear_key();
->         instrumentation_end();
-> }
->
-> static __always_inline void idtentry_nmi_exit(idtentry_state_t state)
-> {
->         instrumentation_begin();
->         restore_key(state.key);
->         instrumentation_end();
->         nmi_exit();
-> }
->
-> #UD and #PF are using the raw entry variant as well but still invoke
-> idtentry_enter()/exit(). #PF does not need any work. #UD handles
-> WARN/BUG without going through idtentry_enter() first, but I don't think
-> that's an issue unless a not 0 key would prevent writing to the console
-> device. You surely can figure that out.
+From: Colin King <colin.king@canonical.com>
+Date: Fri, 24 Jul 2020 14:09:19 +0100
 
-Putting on my mm maintainer hat for a moment, I really think that we
-want oopses to print PKRS along with all the other registers when we
-inevitably oops due to a page fault.  And we probably also want it in
-the nasty nested case where we get infinite page faults and eventually
-double fault.
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable status is being initialized with a value that is never read
+> and it is being updated later with a new value.  The initialization is
+> redundant and can be removed.  Also put the variable declarations into
+> reverse christmas tree order.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+> ---
+> 
+> V2: put variable declarations into reverse christmas tree order.
 
-I'm sure it's *possible* to wire this up if we stick it in
-idtentry_state, but it's trivial if we stick it in pt_regs.  I'm okay
-with doing the save/restore in C (in fact, I prefer that), but I think
-that either the value should be stuck in pt_regs or we should find a
-way to teach the unwinder to locate idtentry_state.
-
-And, if we go with idtentry_state, we should make a signature change
-to nmi_enter() to also provide idtentry_state or some equivalent
-object.
-
---Andy
+Applied to net-next, thanks.
