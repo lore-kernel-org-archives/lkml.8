@@ -2,81 +2,101 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BCDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17948C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18024206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E917A2065F
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:14:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SjdFktkR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbgGYAOH (ORCPT
+        id S1726981AbgGYAOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 20:14:07 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:5258 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbgGYAOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 20:14:07 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 485E53F5D3827F249023;
-        Sat, 25 Jul 2020 08:14:05 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id 06P0Dxpl089151;
-        Sat, 25 Jul 2020 08:13:59 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2020072508144113-4388909 ;
-          Sat, 25 Jul 2020 08:14:41 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     ysato@users.sourceforge.jp
-Cc:     dalias@libc.org, akpm@linux-foundation.org, peterz@infradead.org,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
-Subject: [PATCH] sh: sh4: Fix reference count leak in sq_dev_add
-Date:   Sat, 25 Jul 2020 08:17:26 +0800
-Message-Id: <1595636246-15392-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2020-07-25 08:14:41,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2020-07-25 08:14:05,
-        Serialize complete at 2020-07-25 08:14:05
-X-MAIL: mse-fl1.zte.com.cn 06P0Dxpl089151
+        Fri, 24 Jul 2020 20:14:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbgGYAOr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 20:14:47 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF967C0619E4
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:14:46 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id n22so11612533ejy.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z+Vu9pSlrXeJ0YA5vWHf53k6LVNR1H6tyHZmx21hYRQ=;
+        b=SjdFktkRZL5d9npLMGNf69oDrZeerMTNoyzDanecRnbmMLkkCIovy5VZzvZI9H6ZrE
+         wf7ggS1ZDWHplJE+/Rr6YYYW2Z/GmcKEAOxxbY8kHCtfA1cZZuMsSF4unXlrp05YmoKp
+         BzaKkLMhAS/juljjaUHYbMbZIBZuyPfCEsagQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z+Vu9pSlrXeJ0YA5vWHf53k6LVNR1H6tyHZmx21hYRQ=;
+        b=l6q71a9hTAO7Rawpx4LfdKpRNg88V1vURcUCdZGoXDwp6z3HoU77oc2XdePB21+ch4
+         VJULb+STHeDzKJPDYU8HklAzHRws3duHcQapkjumMrmc4YTvUnDU/Ukv3/zZthW8oiTd
+         eA7j3S9t7g295oTs3VVYC+R3IENZIjvK9sX6yRqcIufv8MqFmDJieSKYa3v9yzRzWXeR
+         9nzERbSV042F4BMextZKkyYJH19lyqKWIpuMqTFQ0Yn+2DhzjQu5XV+Qu9PfMxXgHrH4
+         niTn85lGuXMmpDFjEaHv+7EWbz+9cOxSPUAbTXGmRhBTmjRD9S4yevWRU6voSUxzaEdq
+         SBRw==
+X-Gm-Message-State: AOAM531Un/I5b7DLXFjRL2MvMRveF3vPED6J9mczQ6Fwy5/rGQFEHe71
+        9T+DZNFXT6dzP7dq0qFPUTxeTB/f15k=
+X-Google-Smtp-Source: ABdhPJy/SPdQuy9cb0v0GIEBBosy4QeRBSV4FrVR6r8IBAJ+q737dR4RMmiXE/kCZiMD1XCpPzHaWA==
+X-Received: by 2002:a17:906:960a:: with SMTP id s10mr1741142ejx.60.1595636085053;
+        Fri, 24 Jul 2020 17:14:45 -0700 (PDT)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
+        by smtp.gmail.com with ESMTPSA id y7sm1613432ejd.73.2020.07.24.17.14.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Jul 2020 17:14:44 -0700 (PDT)
+Received: by mail-wr1-f51.google.com with SMTP id 88so9712559wrh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:14:44 -0700 (PDT)
+X-Received: by 2002:a5d:6744:: with SMTP id l4mr8918727wrw.105.1595636083918;
+ Fri, 24 Jul 2020 17:14:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200724213329.899216-1-swboyd@chromium.org> <20200724213329.899216-4-swboyd@chromium.org>
+In-Reply-To: <20200724213329.899216-4-swboyd@chromium.org>
+From:   Daniel Campello <campello@chromium.org>
+Date:   Fri, 24 Jul 2020 18:14:07 -0600
+X-Gmail-Original-Message-ID: <CAHcu+Va3wWW_5eONbdD_VL2H3p-u3-jv_MxBR7G5hFwCr6w+tA@mail.gmail.com>
+Message-ID: <CAHcu+Va3wWW_5eONbdD_VL2H3p-u3-jv_MxBR7G5hFwCr6w+tA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] iio: sx9310: whoami is unsigned
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liao Pingfang <liao.pingfang@zte.com.cn>
+On Fri, Jul 24, 2020 at 3:33 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> This is an unsigned value, actually it's a u8 but regmap doesn't handle
+> that easily. Let's make it unsigned throughout so that we don't need to
+> worry about signed vs. unsigned comparison behavior.
+>
+> Cc: Gwendal Grignou <gwendal@chromium.org>
+> Cc: Daniel Campello <campello@chromium.org>
+> Cc: Hartmut Knaack <knaack.h@gmx.de>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Fixes: 72ad02b15d63 ("iio: Add SEMTECH SX9310/9311 sensor driver")
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-kobject_init_and_add() takes reference even when it fails. If this
-function returns an error, kobject_put() must be called to properly
-clean up the memory associated with the object.
-
-Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
----
- arch/sh/kernel/cpu/sh4/sq.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/sh/kernel/cpu/sh4/sq.c b/arch/sh/kernel/cpu/sh4/sq.c
-index d432164..3fbd6fd 100644
---- a/arch/sh/kernel/cpu/sh4/sq.c
-+++ b/arch/sh/kernel/cpu/sh4/sq.c
-@@ -350,6 +350,8 @@ static int sq_dev_add(struct device *dev, struct subsys_interface *sif)
- 				     "%s", "sq");
- 	if (!error)
- 		kobject_uevent(kobj, KOBJ_ADD);
-+	else
-+		kobject_put(kobj);
- 	return error;
- }
- 
--- 
-2.9.5
-
+Reviewed-by: Daniel Campello <campello@chromium.org>
