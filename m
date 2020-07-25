@@ -2,144 +2,143 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CDAC433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985EEC43463
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBF32065F
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C3A2065F
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:05:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="jbFIBOvA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgGYAGK (ORCPT
+        id S1727819AbgGYAEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 20:06:10 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:39460 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727798AbgGYAGF (ORCPT
+        Fri, 24 Jul 2020 20:04:41 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:57578 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726726AbgGYAEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 20:06:05 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 61EAF8040A69;
-        Sat, 25 Jul 2020 00:05:59 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id kuyiWnH92oZU; Sat, 25 Jul 2020 03:05:58 +0300 (MSK)
-Date:   Sat, 25 Jul 2020 03:05:57 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Rob Herring <robh+dt@kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
- GPIO-lib-based IRQ-chip
-Message-ID: <20200725000557.ru4h5twwd4ha4l6x@mobilestation>
-References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
- <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
- <20200723140815.GL3703480@smile.fi.intel.com>
+        Fri, 24 Jul 2020 20:04:34 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 06ONnmXj028001
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:33 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=yZVcgIKOzM2xyUhwAi8wclQ8zsNO09LHWnp3/VpJR04=;
+ b=jbFIBOvAU1k3BmT9Ee7XSnPP7Wo21Hdbfju7MnIS/grr81iwFSacdEL8kkZMr1Ym3V2l
+ 9CIFU4DgKORaQjc6kQmWa4KIYZTU6jdzGmBNKSbfrYBRJSID9L01JID8YsCoxC6zb66m
+ sMI9LIrK80qQS9HQOfpvdVhPipqikxrmILQ= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 32esdjvm6w-7
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:33 -0700
+Received: from intmgw003.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 24 Jul 2020 17:04:32 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id 09E7E1B35A8E; Fri, 24 Jul 2020 17:04:27 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     <bpf@vger.kernel.org>
+CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH bpf-next 17/35] bpf: eliminate rlimit-based memory accounting for devmap maps
+Date:   Fri, 24 Jul 2020 17:03:52 -0700
+Message-ID: <20200725000410.3566700-18-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200725000410.3566700-1-guro@fb.com>
+References: <20200725000410.3566700-1-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200723140815.GL3703480@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-24_10:2020-07-24,2020-07-24 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 clxscore=1015
+ malwarescore=0 spamscore=0 adultscore=0 impostorscore=0 phishscore=0
+ suspectscore=38 bulkscore=0 priorityscore=1501 mlxlogscore=987
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007240164
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 05:08:15PM +0300, Andy Shevchenko wrote:
-> On Thu, Jul 23, 2020 at 04:38:55AM +0300, Serge Semin wrote:
-> > GPIO-lib provides a ready-to-use interface to initialize an IRQ-chip on
-> > top of a GPIO chip. It's better from maintainability and readability
-> > point of view to use one instead of supporting a hand-written Generic
-> > IRQ-chip-based implementation. Moreover the new implementation won't
-> > cause much functional overhead but will provide a cleaner driver code.
-> > All of that makes the DW APB GPIO driver conversion pretty much justified
-> > especially seeing a tendency of the other GPIO drivers getting converted
-> > too.
-> > 
-> > Here is what we do in the framework of this commit to convert the driver
-> > to using the GPIO-lib-based IRQ-chip interface:
-> > 1) IRQ ack, mask and unmask callbacks are locally defined instead of
-> > using the Generic IRQ-chip ones.
-> > 2) An irq_chip structure instance is embedded into the dwapb_gpio
-> > private data. Note we can't have a static instance of that structure since
-> > GPIO-lib will add some hooks into it by calling gpiochip_set_irq_hooks().
-> > A warning about that would have been printed by the GPIO-lib code if we
-> > used a single irq_chip structure instance for multiple DW APB GPIO
-> > controllers.
-> > 3) Initialize the gpio_irq_chip structure embedded into the gpio_chip
-> > descriptor. By default there is no IRQ enabled so any event raised will be
-> > handled by the handle_bad_irq() IRQ flow handler. If DW APB GPIO IP-core
-> > is synthesized to have non-shared reference IRQ-lines, then as before the
-> > hierarchical and cascaded cases are distinguished by checking how many
-> > parental IRQs are defined. (Note irq_set_chained_handler_and_data() won't
-> > initialize IRQs, which descriptors couldn't be found.) If DW APB GPIO IP
-> > is used on a platform with shared IRQ line, then we simply won't let the
-> > GPIO-lib to initialize the parental IRQs, but will handle them locally in
-> > the driver.
-> > 4) Discard linear IRQ-domain and Generic IRQ-chip initialization, since
-> > GPIO-lib IRQ-chip interface will create a new domain and accept a standard
-> > IRQ-chip structure pointer based on the setting we provided in the
-> > gpio_irq_chip structure.
-> > 5) Manually select a proper IRQ flow handler directly in the
-> > irq_set_type() callback by calling irq_set_handler_locked() method, since
-> > an ordinary (not Generic) irq_chip descriptor is now utilized.
-> > 6) Discard the custom GPIO-to-IRQ mapping function since GPIO-lib defines
-> > the standard method gpiochip_to_irq(), which will be used anyway no matter
-> > whether the custom to_irq callback is specified or not.
-> > 7) Discard the acpi_gpiochip_{request,free}_interrupts()
-> > invocations, since they will be called from
-> > gpiochip_add_irqchip()/gpiochip_irqchip_remove() anyway.
-> > 8) Alter CONFIG_GPIO_DWAPB kernel config to select
-> > CONFIG_GPIOLIB_IRQCHIP instead of CONFIG_GENERIC_IRQ_CHIP.
-> 
-> 
-> ...
-> 
-> One more thing...
-> 
-> >  static u32 dwapb_do_irq(struct dwapb_gpio *gpio)
-> >  {
-> > +	struct gpio_chip *gc = &gpio->ports[0].gc;
-> >  	unsigned long irq_status;
-> >  	irq_hw_number_t hwirq;
-> >  
-> >  	irq_status = dwapb_read(gpio, GPIO_INTSTATUS);
-> >  	for_each_set_bit(hwirq, &irq_status, 32) {
-> > -		int gpio_irq = irq_find_mapping(gpio->domain, hwirq);
-> > +		int gpio_irq = gc->to_irq(gc, hwirq);
-> 
+Do not use rlimit-based memory accounting for devmap maps.
+It has been replaced with the memcg-based memory accounting.
 
-> Very, very few do this.
-> Can we stick with the original one?
-> (See plenty of other examples in the GPIO / pin control subsystems.
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ kernel/bpf/devmap.c | 18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-You are right. After more thorough studying the IRQ-domain code I've found out
-that irq_domain_add_simple() provides the on-the-fly mapping creation. We
-don't have to call irq_create_mapping() first before using irq_find_mapping().
-So the irq_find_mapping(gc->irq.domain, hwirq) method can be freely called here
-the same way as the most of the GPIO drivers do. Thanks for noticing this.
+diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+index 05bf93088063..8148c7260a54 100644
+--- a/kernel/bpf/devmap.c
++++ b/kernel/bpf/devmap.c
+@@ -109,8 +109,6 @@ static inline struct hlist_head *dev_map_index_hash(s=
+truct bpf_dtab *dtab,
+ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
+ {
+ 	u32 valsize =3D attr->value_size;
+-	u64 cost =3D 0;
+-	int err;
+=20
+ 	/* check sanity of attributes. 2 value sizes supported:
+ 	 * 4 bytes: ifindex
+@@ -135,21 +133,13 @@ static int dev_map_init_map(struct bpf_dtab *dtab, =
+union bpf_attr *attr)
+=20
+ 		if (!dtab->n_buckets) /* Overflow check */
+ 			return -EINVAL;
+-		cost +=3D (u64) sizeof(struct hlist_head) * dtab->n_buckets;
+-	} else {
+-		cost +=3D (u64) dtab->map.max_entries * sizeof(struct bpf_dtab_netdev =
+*);
+ 	}
+=20
+-	/* if map size is larger than memlock limit, reject it */
+-	err =3D bpf_map_charge_init(&dtab->map.memory, cost);
+-	if (err)
+-		return -EINVAL;
+-
+ 	if (attr->map_type =3D=3D BPF_MAP_TYPE_DEVMAP_HASH) {
+ 		dtab->dev_index_head =3D dev_map_create_hash(dtab->n_buckets,
+ 							   dtab->map.numa_node);
+ 		if (!dtab->dev_index_head)
+-			goto free_charge;
++			return -ENOMEM;
+=20
+ 		spin_lock_init(&dtab->index_lock);
+ 	} else {
+@@ -157,14 +147,10 @@ static int dev_map_init_map(struct bpf_dtab *dtab, =
+union bpf_attr *attr)
+ 						      sizeof(struct bpf_dtab_netdev *),
+ 						      dtab->map.numa_node);
+ 		if (!dtab->netdev_map)
+-			goto free_charge;
++			return -ENOMEM;
+ 	}
+=20
+ 	return 0;
+-
+-free_charge:
+-	bpf_map_charge_finish(&dtab->map.memory);
+-	return -ENOMEM;
+ }
+=20
+ static struct bpf_map *dev_map_alloc(union bpf_attr *attr)
+--=20
+2.26.2
 
--Sergey
-
-> 
-> >  		u32 irq_type = irq_get_trigger_type(gpio_irq);
-> >  
-> >  		generic_handle_irq(gpio_irq);
-> 
-> 
-> >  }
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
