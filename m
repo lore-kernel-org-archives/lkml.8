@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48858C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F572C433E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C79A2070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424BB2070E
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgGYDd0 (ORCPT
+        id S1726979AbgGYDdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 23:33:26 -0400
-Received: from mga03.intel.com ([134.134.136.65]:38831 "EHLO mga03.intel.com"
+        Fri, 24 Jul 2020 23:33:21 -0400
+Received: from mga18.intel.com ([134.134.136.126]:61823 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbgGYDdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 23:33:24 -0400
-IronPort-SDR: iULw1MfonKzZet4/kVNXtxPfZZOzbRa6xJ5l7KLfOz4f5xN9+wKKE0Zz+P9CgkZ0jPkWb9ej0S
- j7GyxP8iz8Dg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="150802050"
+        id S1726969AbgGYDdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 23:33:19 -0400
+IronPort-SDR: uHSnCStimwvNMyG4+e4uJdyZvvw9phsluHrwbhDwHEJjJd4qmS7ftrL56ZOmwD5uX301NYtdoq
+ xJQAh8k4oTSw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="138321782"
 X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="150802050"
+   d="scan'208";a="138321782"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 20:33:23 -0700
-IronPort-SDR: 9Jhb61pk/rsCyL0ppQmF9wTzz7FgIXFvTWdyx71+WhYmqgBkIF43h+hFExNWGET+torRsaukIh
- DsKpGx2sd8hA==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 20:33:18 -0700
+IronPort-SDR: X0xT+/jQfWPnWGxScj3KaCW8Zb7s7wD0+gDtsEu/KrM8BZCCMmQB+XzHprpgs1zKyUG5YyWB3N
+ duHzkBIbvWUQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="488939774"
+   d="scan'208";a="463441674"
 Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Jul 2020 20:33:22 -0700
+  by orsmga005.jf.intel.com with ESMTP; 24 Jul 2020 20:33:17 -0700
 Received: from kbuild by df0563f96c37 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jzAw5-0000jQ-Q7; Sat, 25 Jul 2020 03:33:21 +0000
-Date:   Sat, 25 Jul 2020 11:32:20 +0800
+        id 1jzAw1-0000jK-1W; Sat, 25 Jul 2020 03:33:17 +0000
+Date:   Sat, 25 Jul 2020 11:32:17 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- ada8a84a9bb8ed2f17d30fff369c7c191a94bb9e
-Message-ID: <5f1ba7c4.lBRFokdaXK4H4gr9%lkp@intel.com>
+Subject: [tip:timers/core] BUILD SUCCESS
+ 31cd0e119d50cf27ebe214d1a8f7ca36692f13a5
+Message-ID: <5f1ba7c1.TXGw2EiBsuqx4pjs%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -55,12 +55,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: ada8a84a9bb8ed2f17d30fff369c7c191a94bb9e  Merge branch 'WIP.x86/build'
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  timers/core
+branch HEAD: 31cd0e119d50cf27ebe214d1a8f7ca36692f13a5  timers: Recalculate next timer interrupt only when necessary
 
-elapsed time: 722m
+i386-tinyconfig vmlinux size:
 
-configs tested: 80
+=================================================================================================================================
+ TOTAL  TEXT  run_timer_softirq()  calc_wheel_index()                                                                            
+=================================================================================================================================
+     0     0                    0                   0  30c66fc30ee7 timer: Prevent base->clk from moving backward                
+    +7    +5                    0                  +5  e2a71bdea816 timer: Fix wheel index calculation on last level             
+     0     0                    0                   0  3d2e83a2a6a0 timers: Preserve higher bits of expiration on index calculat 
+  +110  +110                    0                +103  1f32cab0db4b timers: Use only bucket expiry for base->next_expiry value   
+     0     0                    0                   0  9a2b764b06c8 timers: Move trigger_dyntick_cpu() to enqueue_timer()        
+     0     0                    0                   0  446889721162 timers: Add comments about calc_index() ceiling work         
+     0     0                    0                   0  001ec1b3925d timers: Optimize _next_timer_interrupt() level iteration     
+  +213  +213                 +171                   0  dc2a0f1fb2a0 timers: Always keep track of next expiry                     
+     0     0                    0                   0  90d52f65f303 timers: Reuse next expiry cache after nohz exit              
+   +82   +82                   +7                   0  1f8a4212dc83 timers: Expand clk forward logic beyond nohz                 
+   +22   +22                  +22                   0  d4f7dae87096 timers: Spare timer softirq until next expiry                
+   -21   -21                  -14                   0  0975fb565b8b timers: Remove must_forward_clk                              
+    +1    +1                    0                   0  36cd28a4cdd0 timers: Lower base clock forwarding threshold                
+    -1     0                    0                   0  1b7efaa61549 Merge tag 'timers-v5.9' of https://git.linaro.org/people/dan 
+   +16   +15                   +7                   0  31cd0e119d50 timers: Recalculate next timer interrupt only when necessary 
+  +429  +427                 +193                +108  dcb7fd82c75e..31cd0e119d50 (ALL COMMITS)                                  
+=================================================================================================================================
+
+elapsed time: 910m
+
+configs tested: 74
 configs skipped: 1
 
 The following configs have been built successfully.
@@ -120,12 +143,6 @@ powerpc                          allyesconfig
 powerpc                          rhel-kconfig
 powerpc                          allmodconfig
 powerpc                           allnoconfig
-x86_64               randconfig-a014-20200724
-x86_64               randconfig-a016-20200724
-x86_64               randconfig-a015-20200724
-x86_64               randconfig-a012-20200724
-x86_64               randconfig-a013-20200724
-x86_64               randconfig-a011-20200724
 riscv                            allyesconfig
 riscv                             allnoconfig
 riscv                               defconfig
