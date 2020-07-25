@@ -2,103 +2,80 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2125AC433E8
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4577206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595662198;
-	bh=hB6uVkjwCMK34TmzSaMhWlBKz+LwQTzt38V7rDwEM+g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B6hG0r7hO+06/GhjOO0y/fG19sozmavd/sznu1K6acttNxvhwi1qqC8hKcTFFQfEi
-	 KTZhj8191JCdFyamAl+luLm3QqWpEKKgNeN2o6Mbq/OsrWOCUo0YSWu9dt95e92OH6
-	 QfwGtoMvxDoEJs2G+IdRFlieLkLEkEgHklLQUxeQ=
+	by mail.kernel.org (Postfix) with ESMTP id 01833206EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgGYH3s (ORCPT
+        id S1726963AbgGYHef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 03:29:48 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43789 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgGYH3r (ORCPT
+        Sat, 25 Jul 2020 03:34:35 -0400
+Received: from out28-172.mail.aliyun.com ([115.124.28.172]:54028 "EHLO
+        out28-172.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgGYHee (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 03:29:47 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f5so12160684ljj.10
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 00:29:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NFKiTLk4YQj4CQlqKNPWANcICm1Rabpmzh+rUQVs7dg=;
-        b=nEEo4uaxJi655H9db3UXmorToxufcurQcrOvCzWNwDlNNs2hYk5YuFpB64D9ziKQxU
-         v//qVfTi46CkbxuDCMYdqCsd2MJoY1+FdwPOhYheI72CD3Y3JaQWa9eIFTBgCXggrhNR
-         49jgHYm7KqGRlfWWXhDojwcdVZftP961urzbwEeVY5VTiul4x7Q/0L4AYjg7X8YrXKZD
-         qTdFOQDvhZvVhDcXfneNFVPfhb0GH0CUuuR1gLepIoWE+5qTYDmX14tNH1mitlgsSzn8
-         /i5N2xQRqIMySYiLADMg7Pz1euRxuJD04JczveNmEajL7/6knQ4m/0+947xK+g0oJvAe
-         s+7A==
-X-Gm-Message-State: AOAM533mrjyQuynpZcFJ7xk6E0xyh4Cq7FPfeGQp4wPfYyrXGhRcP8C+
-        Jby2Q7h7vNVe6LOo9luX894=
-X-Google-Smtp-Source: ABdhPJzpoD92jn7emirtBlyhivTUkCCnZY+Bbfmlt2Mn/k6pRPDuIo0iv/HdUCEAwLL8BnvDkPy2LA==
-X-Received: by 2002:a2e:864b:: with SMTP id i11mr5746421ljj.64.1595662185716;
-        Sat, 25 Jul 2020 00:29:45 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id n29sm1158278lfi.9.2020.07.25.00.29.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 00:29:44 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jzEci-0008MI-7r; Sat, 25 Jul 2020 09:29:36 +0200
-Date:   Sat, 25 Jul 2020 09:29:36 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Li Heng <liheng40@huawei.com>
-Cc:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
-        viresh.kumar@linaro.org, greybus-dev@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] svc: add missed destroy_workqueue when gb_svc_create
- fails
-Message-ID: <20200725072936.GQ3634@localhost>
-References: <1595646397-53868-1-git-send-email-liheng40@huawei.com>
+        Sat, 25 Jul 2020 03:34:34 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08203816|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0177248-0.0104604-0.971815;FP=0|0|0|0|0|-1|-1|-1;HT=e01l04362;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=19;RT=19;SR=0;TI=SMTPD_---.I7IhCHO_1595662469;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I7IhCHO_1595662469)
+          by smtp.aliyun-inc.com(10.147.40.44);
+          Sat, 25 Jul 2020 15:34:30 +0800
+Subject: Re: [PATCH v6 3/5] USB: PHY: JZ4770: Add support for new Ingenic
+ SoCs.
+To:     Felipe Balbi <balbi@kernel.org>, gregkh@linuxfoundation.org,
+        robh+dt@kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, kishon@ti.com, vkoul@kernel.org,
+        gor@linux.ibm.com, hca@linux.ibm.com,
+        christophe.jaillet@wanadoo.fr, dongsheng.qiu@ingenic.com,
+        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+References: <20200725035159.31231-1-zhouyanjie@wanyeetech.com>
+ <20200725035159.31231-4-zhouyanjie@wanyeetech.com>
+ <87r1t0nmpr.fsf@kernel.org>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <1727b5db-5cdf-b88a-4672-bfb4e9809bb0@wanyeetech.com>
+Date:   Sat, 25 Jul 2020 15:34:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595646397-53868-1-git-send-email-liheng40@huawei.com>
+In-Reply-To: <87r1t0nmpr.fsf@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 11:06:37AM +0800, Li Heng wrote:
-> destroy_workqueue() should be called to destroy svc->wq
-> when gb_svc_create() init resources fails.
-> 
-> Fixes: 8465def499c7 ("staging: greybus: move the greybus core to drivers/greybus")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Li Heng <liheng40@huawei.com>
-> ---
->  drivers/greybus/svc.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/greybus/svc.c b/drivers/greybus/svc.c
-> index ce7740e..38f858f 100644
-> --- a/drivers/greybus/svc.c
-> +++ b/drivers/greybus/svc.c
-> @@ -1340,6 +1340,7 @@ struct gb_svc *gb_svc_create(struct gb_host_device *hd)
->  
->  err_put_device:
->  	put_device(&svc->dev);
-> +	destroy_workqueue(svc->wq);
+Hi Felipe,
 
-Your bot is broken; the workqueue is released in gb_svc_release(). 
+在 2020/7/25 下午2:16, Felipe Balbi 写道:
+> Hi,
+>
+> 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com> writes:
+>> Add support for probing the phy-jz4770 driver on the JZ4780 SoC,
+>> the X1000 SoC and the X1830 SoC from Ingenic.
+>>
+>> Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+>> Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+>> Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> It would be better to move this driver to drivers/phy before adding
+> support for new SoCs. We want to remove drivers/usb/phy/ in the near
+> future, any help is welcome.
+>
+Seems my mailbox have something wrong, the [5/5] patch in this series is 
+used to move this river to drivers/phy, but seems that it has not been 
+sent out correctly, I already resend it.
 
-And please fix your internal review process so that you catch things
-like this before posting.
+Thanks and best regards!
 
->  	return NULL;
->  }
 
-Johan
