@@ -2,174 +2,120 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7242BC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC43C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4960E2065F
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:04:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="WEHHTg4b"
+	by mail.kernel.org (Postfix) with ESMTP id B288620674
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgGYFEp (ORCPT
+        id S1726783AbgGYFGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 01:04:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgGYFEo (ORCPT
+        Sat, 25 Jul 2020 01:06:38 -0400
+Received: from omta015.useast.a.cloudfilter.net ([34.195.253.206]:33642 "EHLO
+        omta015.useast.a.cloudfilter.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725941AbgGYFGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 01:04:44 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D626C0619E4
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 22:04:44 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id j18so9554655wmi.3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 22:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d0dV2iws6uddsenYWAYMkWA+zVZMQ5+yYDWKXhWbbSQ=;
-        b=WEHHTg4beksBQ7vroTRmltI3g6curLkD166WwiL4Dxtfln8Ff3lGwkRIlGZuHvbSKu
-         O5MNgM0tt+tB3+BsHpVnC9DCPAyDf1Vcqo7jzAtq64Nicz5DoPTqvSGbJ35TIantjMCM
-         VuVttfjZ2WA6fzPWni1AP8D9p6+iKM8fhPtiU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d0dV2iws6uddsenYWAYMkWA+zVZMQ5+yYDWKXhWbbSQ=;
-        b=H3mcC4Ome7GFRNQ8cFaGJNmW23YWm3/mbY200bpxAWxt0mlu9OS9L39IYNvRs5nHHi
-         PMechrkRBYiYFcP5Bgx4MEYPltfYG7QiCozEUvrxnvVDHTUp0TefYgoDO54cCVv/VKJ+
-         j7GVYkELYTMcxY2rGjOLxjCu27+WmPkKNjqSTYCrj9zTQZJZndD9pVBabLQGmjh9Yxk8
-         8bhQAls0RLR+7SNWV95XccSk/p+Qhu3gCxWaCWhloiS+yDb4QtVRMYONI4B0V5ZQ2sBf
-         MLHW5E5kaY8+Q0sGhEscdn4KshWWSWB1Xh6v7CfEauwXPPEww+Ry9VAdmg40pY46RaS1
-         AIDw==
-X-Gm-Message-State: AOAM532mAB/sY4HMZqj0MHjdBoA7MHsWRb237guBZSus2hsM9BlyrIWf
-        IS44MJvtV6PS8DGtQcXiyr+hKt4bJwzXa6IWxYpI
-X-Google-Smtp-Source: ABdhPJwowXforkH2kxs2VccCNf7vTEQdsTB93/wdFK6X6NUSYQbseWUxeAD3SlVT3geAqA1PlMFz5w+a7ix4YVgalLE=
-X-Received: by 2002:a05:600c:2f88:: with SMTP id t8mr11403103wmn.186.1595653482851;
- Fri, 24 Jul 2020 22:04:42 -0700 (PDT)
+        Sat, 25 Jul 2020 01:06:37 -0400
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Sat, 25 Jul 2020 01:06:37 EDT
+Received: from cxr.smtp.a.cloudfilter.net ([10.0.17.148])
+        by cmsmtp with ESMTP
+        id zCAvj635BxItlzCHRj4ffd; Sat, 25 Jul 2020 04:59:29 +0000
+Received: from ws ([68.106.48.162])
+        by cmsmtp with ESMTPSA
+        id zCHCjSjHrxMRGzCHEjMZC8; Sat, 25 Jul 2020 04:59:29 +0000
+Authentication-Results: cox.net; auth=pass (LOGIN)
+ smtp.auth=1i5t5.duncan@cox.net
+X-Authority-Analysis: v=2.4 cv=CvABzl0D c=1 sm=1 tr=0 ts=5f1bbc31
+ a=fEuF7Lzz1MGHEe1xFtqdOg==:117 a=fEuF7Lzz1MGHEe1xFtqdOg==:17
+ a=kj9zAlcOel0A:10 a=sfOm8-O8AAAA:8 a=VwQbUJbxAAAA:8 a=9Cd_nbZdC8ucnf_FNXIA:9
+ a=CjuIK1q_8ugA:10 a=TvTJqdcANYtsRzA46cdi:22 a=AjGcO6oz07-iQ99wixmX:22
+Date:   Fri, 24 Jul 2020 21:59:14 -0700
+From:   Duncan <1i5t5.duncan@cox.net>
+To:     Mazin Rezk <mnrzk@protonmail.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Harry Wentland <Harry.Wentland@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        sunpeng.li@amd.com, Alexander Deucher <Alexander.Deucher@amd.com>,
+        mphantomx@yahoo.com.br, regressions@leemhuis.info,
+        anthony.ruhier@gmail.com
+Subject: Re: [PATCH] amdgpu_dm: fix nonblocking atomic commit use-after-free
+Message-ID: <20200724215914.6297cc7e@ws>
+In-Reply-To: <_vGVoFJcOuoIAvGYtkyemUvqEFeZ-AdO4Jk8wsyVv3MwO-6NEVtULxnZzuBJNeHNkCsQ5Kxn5TPQ_VJ6qyj9wXXXX8v-hc3HptnCAu0UYsk=@protonmail.com>
+References: <YIGsJ9LlFquvBI2iWPKhJwjKBwDUr_C-38oVpLJJHJ5rDCY_Zrrv392o6UPNxHoeQrcpLYC9U4fZdpD9ilz6Amg2IxkSexGLQMCQIBek8rc=@protonmail.com>
+        <202007231524.A24720C@keescook>
+        <a86cba0b-4513-e7c3-ae75-bb331433f664@molgen.mpg.de>
+        <202007241016.922B094AAA@keescook>
+        <3c92db94-3b62-a70b-8ace-f5e34e8f268f@molgen.mpg.de>
+        <_vGVoFJcOuoIAvGYtkyemUvqEFeZ-AdO4Jk8wsyVv3MwO-6NEVtULxnZzuBJNeHNkCsQ5Kxn5TPQ_VJ6qyj9wXXXX8v-hc3HptnCAu0UYsk=@protonmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200724071822.126758-1-anup.patel@wdc.com> <20200724071822.126758-5-anup.patel@wdc.com>
-In-Reply-To: <20200724071822.126758-5-anup.patel@wdc.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Fri, 24 Jul 2020 22:04:31 -0700
-Message-ID: <CAOnJCU+Hb5bvp19wOXOWD+3DQi7UG+E+k5TCheaZWHBWL153Gg@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] dt-bindings: timer: Add CLINT bindings
-To:     Anup Patel <anup.patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Emil Renner Berhing <kernel@esmil.dk>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfMOyWF+lgqFhfod06LAwUnkRPRHDXxXCpYb5boN5EhzZB7C7s44DLE44/O5KjX7Jrld57OdZsMN5bIRCnIXZjnwbaT4/ieJNTKG7VLmU8it+Hst31XoT
+ hZ9bzjc0FIHbORAf+Ch0ibr55N6DFIWQ9/fET++K3Xse8DwqrzeOFjIilHM9aSTr8Dnd6PjzZBhkcNpDhcy7zjrqf9iy2wfp1aKzagNUtSJafY5dPEaCiTPi
+ ahBHqR2wiOkrrOWh8FmzosjjXtR+HlEk1h7nJpMBiJUieGLjgxy7AoIiy2Fly7H2a2SCv4Gp6z9+2MQGidm3uSV+FMgPHOdQr1gyYw9EmY5Pc+oM3lEbWOSv
+ MMsr2KKH1udWcb+RWyetv+xtYn930s6dGHeLj/+6l9qgU9lNqKegJYnOlFgaXSkieomKhJbGxmzOqrVGDWDN50dKYpLjMvhk73fvqlerFd0oOzEUsxKBXrov
+ LFRLmK3pWdIv2jWHWBYQb3eIwGiAPZw///TwAcGhoArrQ+fQZlcPNgvCnpeh/3GiWv81ngAKBbfZ6lUyXvr4JLBO7bQeJsc6MRIZ/lOHbJp/hJj3+MTgGPAq
+ NBVfUnmq216vL5rvNmR/U03gjp8erofgyVAOqW3yYEklX4DfPqROhBmP6EAfXCR/BZHEMxxxBkYqDzVifke0beKTNZe0rjICCuYnqsTrPyzZ2w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 12:19 AM Anup Patel <anup.patel@wdc.com> wrote:
->
-> We add DT bindings documentation for CLINT device.
->
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-> Tested-by: Emil Renner Berhing <kernel@esmil.dk>
-> ---
->  .../bindings/timer/sifive,clint.yaml          | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
->
-> diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> new file mode 100644
-> index 000000000000..2a0e9cd9fbcf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/sifive,clint.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SiFive Core Local Interruptor
-> +
-> +maintainers:
-> +  - Palmer Dabbelt <palmer@dabbelt.com>
-> +  - Anup Patel <anup.patel@wdc.com>
-> +
-> +description:
-> +  SiFive (and other RISC-V) SOCs include an implementation of the SiFive
-> +  Core Local Interruptor (CLINT) for M-mode timer and M-mode inter-processor
-> +  interrupts. It directly connects to the timer and inter-processor interrupt
-> +  lines of various HARTs (or CPUs) so RISC-V per-HART (or per-CPU) local
-> +  interrupt controller is the parent interrupt controller for CLINT device.
-> +  The clock frequency of CLINT is specified via "timebase-frequency" DT
-> +  property of "/cpus" DT node. The "timebase-frequency" DT property is
-> +  described in Documentation/devicetree/bindings/riscv/cpus.yaml
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: sifive,fu540-c000-clint
-> +      - const: sifive,clint0
-> +
-> +    description:
-> +      Should be "sifive,<chip>-clint" and "sifive,clint<version>".
-> +      Supported compatible strings are -
-> +      "sifive,fu540-c000-clint" for the SiFive CLINT v0 as integrated
-> +      onto the SiFive FU540 chip, and "sifive,clint0" for the SiFive
-> +      CLINT v0 IP block with no chip integration tweaks.
-> +      Please refer to sifive-blocks-ip-versioning.txt for details
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts-extended:
-> +    minItems: 1
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts-extended
-> +
-> +examples:
-> +  - |
-> +    timer@2000000 {
-> +      compatible = "sifive,fu540-c000-clint", "sifive,clint0";
-> +      interrupts-extended = <&cpu1intc 3 &cpu1intc 7
-> +                             &cpu2intc 3 &cpu2intc 7
-> +                             &cpu3intc 3 &cpu3intc 7
-> +                             &cpu4intc 3 &cpu4intc 7>;
-> +       reg = <0x2000000 0x10000>;
-> +    };
-> +...
-> --
-> 2.25.1
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+On Sat, 25 Jul 2020 03:03:52 +0000
+Mazin Rezk <mnrzk@protonmail.com> wrote:
 
+> > Am 24.07.20 um 19:33 schrieb Kees Cook:
+> >  
+> > > There was a fix to disable the async path for this driver that
+> > > worked around the bug too, yes? That seems like a safer and more
+> > > focused change that doesn't revert the SLUB defense for all
+> > > users, and would actually provide a complete, I think, workaround
+> 
+> That said, I haven't seen the async disabling patch. If you could
+> link to it, I'd be glad to test it out and perhaps we can use that
+> instead.
 
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
+I'm confused.  Not to put words in Kees' mouth; /I/ am confused (which
+admittedly could well be just because I make no claims to be a
+coder and am simply reading the bug and thread, but I'd appreciate some
+"unconfusing" anyway).
+
+My interpretation of the "async disabling" reference was that it was to
+comment #30 on the bug:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=207383#c30
+
+... which (if I'm not confused on this point too) appears to be yours.
+There it was stated...
+
+>>>>
+I've also found that this bug exclusively occurs when commit_work is on
+the workqueue. After forcing drm_atomic_helper_commit to run all of the
+commits without adding to the workqueue and running the OS, the issue
+seems to have disappeared.
+<<<<
+
+Would not forcing all commits to run directly, without placing them on
+the workqueue, be "async disabling"?  That's what I /thought/ he was
+referencing.
+
+OTOH your base/context swap idea sounds like a possibly "less
+disturbance" workaround, if it works, and given the point in the
+commit cycle... (But if it's out Sunday it's likely too late to test
+and get it in now anyway; if it's another week, tho...)
 
 -- 
-Regards,
-Atish
+Duncan - No HTML messages please; they are filtered as spam.
+"Every nonfree program has a lord, a master --
+and if you use the program, he is your master."  Richard Stallman
