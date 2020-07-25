@@ -2,97 +2,140 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 04:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16629C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 04:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E38620786
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 04:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5DA9206EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 04:20:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBdGItRI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgGYECE (ORCPT
+        id S1726618AbgGYEUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 00:02:04 -0400
-Received: from lucky1.263xmail.com ([211.157.147.132]:54728 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgGYECE (ORCPT
+        Sat, 25 Jul 2020 00:20:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgGYEUd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 00:02:04 -0400
-Received: from localhost (unknown [192.168.167.13])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 11EEEEC493;
-        Sat, 25 Jul 2020 12:01:58 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [111.204.108.116])
-        by smtp.263.net (postfix) whith ESMTP id P5979T140275804518144S1595649718262681_;
-        Sat, 25 Jul 2020 12:01:58 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <8979ef735d1a662965749e452507493a>
-X-RL-SENDER: penghao@uniontech.com
-X-SENDER: penghao@uniontech.com
-X-LOGIN-NAME: penghao@uniontech.com
-X-FST-TO: perex@perex.cz
-X-SENDER-IP: 111.204.108.116
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   penghao <penghao@uniontech.com>
-To:     perex@perex.cz, tiwai@suse.com, gregkh@linuxfoundation.org,
-        alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, phz0008@163.com,
-        penghao@uniontech.com, "penghao@deepin.com" <penghao@deepin.com>
-Subject: [PATCH 14216/14216] ALSA: usb-audio: This patch for prevent auto wakeup from s3 trig by usb disconnect signal from Lenovo Thinkcentre TI024Gen3  USB-audio.
-Date:   Sat, 25 Jul 2020 12:01:55 +0800
-Message-Id: <20200725040155.27648-1-penghao@uniontech.com>
-X-Mailer: git-send-email 2.11.0
+        Sat, 25 Jul 2020 00:20:33 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BE5C0619D3;
+        Fri, 24 Jul 2020 21:20:33 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a23so6318571pfk.13;
+        Fri, 24 Jul 2020 21:20:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sfk5gtagFj7YmZIk6i0tCwvqKzgSYsHyvZTbiJMmuNY=;
+        b=OBdGItRI19BUrUCt2BShHy3fp+gs6X/rr6sgnFBjDTs9pCjg0K/wpvSW356B1UaSDL
+         +BznRfNKDYZdef/t7b3k231OQE8/OdDs8/M0ccEQQ+AdVThZb7oRRr04Z5f3VDl9b99y
+         2c1eDCCDgVe1Qlt78fLIv+LKCaKHkizK4jbOyu9tUZ1RXsYiHAWW14tppEsnaRV3VDv3
+         oE3HwAaxkuUDZ3MSacSHcuAjx7tEEm3A7thTYq3paxwKs1i1uOHqk4PiFkRYsPAUmySS
+         CG4bSIHMBN0nwZ93PZKdsJUAFb8sjph2OM63aCzdbMqUN2YlIYAXs5SCVTlJ/RS12nSZ
+         IehQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Sfk5gtagFj7YmZIk6i0tCwvqKzgSYsHyvZTbiJMmuNY=;
+        b=M/mbnH9sLDEbIBxsdB9GutBrf6K2YXibCt0zRfZv9PcUDh9dprw12u/oJmYe+TeRC0
+         dw88Lxefi1gi7YhaREBmvpB2gtSDd/TpSKnjvuV03xciVhfCBr7Ei90qgEJNmWpsCc+6
+         R4URdJl7T0qQDtwBg4xRmWUUR7NHERbVjd+hOHM9s9NLq6mNWAU9B/+M9jNYJrSbB/kP
+         EEJ5PdQe/LuM15eX4vjL5NSEEnt9Dcs+mEMna88hxrUNVkYRP26xU7cZ1MuS7lIarW7+
+         Y/GeAcHB4iaR3P5tylAQwvGMWzEPGfiIa2ucevIsG963HXPsSrOaAUxXdKESJUJDWd14
+         isfg==
+X-Gm-Message-State: AOAM533hF8V6AY1J7kaC+zOBDD/GO8q+MOc2ZZFx/aHlq30si6mpEtpS
+        fOsj4icjuf69Dy1SFJhjmvQtVR9z
+X-Google-Smtp-Source: ABdhPJxxkc5LytEVwf4QvQbMfyF+/rM0g3xHrSwbSVNtJRkAFf4JwlgnjkOgRZ+MNImiLG4nGUpShw==
+X-Received: by 2002:a63:8949:: with SMTP id v70mr11073170pgd.256.1595650832575;
+        Fri, 24 Jul 2020 21:20:32 -0700 (PDT)
+Received: from sol.lan (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
+        by smtp.gmail.com with ESMTPSA id p1sm885320pjp.10.2020.07.24.21.20.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 21:20:31 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v2 00/18] gpio: cdev: add uAPI V2
+Date:   Sat, 25 Jul 2020 12:19:37 +0800
+Message-Id: <20200725041955.9985-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "penghao@deepin.com" <penghao@deepin.com>
+This patchset defines and implements adds a new version of the
+GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
+support for debounce, event sequence numbers, and allowing for requested
+lines with different configurations.
+It provides some future proofing by adding optional configuration fields
+and padding reserved for future use.
 
- TI024Gen3 USB-audio is controlled by TI024Gen3,when TI024Gens
- enter sleep mode, USB-audio will disconnect from USB bus port,
- so disabled the /sys/bus/usb/*/power/wakeup Fixesimmediately
- wakup form s3 state
+The series can be partitioned into two sets; the first eleven
+contain the V2 uAPI implementation, and the final seven port
+the GPIO tools to the V2 uAPI and extend them to use new uAPI features.
 
-Signed-off-by: penghao@uniontech.com <penghao@uniontech.com>
-Signed-off-by: penghao@deepin.com <penghao@deepin.com>
----
- sound/usb/card.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+The more complicated patches include their own commentary where
+appropriate.
 
-diff --git a/sound/usb/card.c b/sound/usb/card.c
-index 2644a5ae2b75..969c3809e051 100644
---- a/sound/usb/card.c
-+++ b/sound/usb/card.c
-@@ -640,6 +640,12 @@ static int usb_audio_probe(struct usb_interface *intf,
- 		}
- 	}
- 	dev_set_drvdata(&dev->dev, chip);
-+	/*
-+	 * ALSA: usb-audio: Add prevent wakeup from s3 state trig by lenovo
-+	 * ThinkCentre TI024Gen3 USB-audio
-+	 */
-+	if ((usb_id->idVendor == 0x17ef) && (usb_id->idProduct == 0xa012))
-+		device_set_wakeup_enable(&dev->dev, 0);
- 
- 	/*
- 	 * For devices with more than one control interface, we assume the
-@@ -914,3 +920,4 @@ static struct usb_driver usb_audio_driver = {
- };
- 
- module_usb_driver(usb_audio_driver);
-+
+Cheers,
+Kent.
+
+Changes since v1:
+ - split out cleanup patches into a separate series.
+ - split implementation patch into a patch for each ioctl or major feature.
+ - split tool port patch into a patch per tool.
+ - rework uAPI to allow requested lines with different configurations.
+
+Kent Gibson (18):
+  gpio: uapi: define GPIO_MAX_NAME_SIZE for array sizes
+  gpio: uapi: define uAPI v2
+  gpiolib: make cdev a build option
+  gpiolib: add build option for CDEV v1 ABI
+  gpiolib: cdev: support GPIO_GET_LINE_IOCTL and
+    GPIOLINE_GET_VALUES_IOCTL
+  gpiolib: cdev: support GPIO_GET_LINEINFO_V2_IOCTL and
+    GPIO_GET_LINEINFO_WATCH_V2_IOCTL
+  gpiolib: cdev: support edge detection for uAPI v2
+  gpiolib: cdev: support GPIOLINE_SET_CONFIG_IOCTL
+  gpiolib: cdev: support GPIOLINE_SET_VALUES_IOCTL
+  gpiolib: cdev: support setting debounce
+  gpio: uapi: document uAPI v1 as deprecated
+  tools: gpio: port lsgpio to v2 uAPI
+  tools: gpio: port gpio-watch to v2 uAPI
+  tools: gpio: rename nlines to num_lines
+  tools: gpio: port gpio-hammer to v2 uAPI
+  tools: gpio: port gpio-event-mon to v2 uAPI
+  tools: gpio: add debounce support to gpio-event-mon
+  tools: gpio: add multi-line monitoring to gpio-event-mon
+
+ drivers/gpio/Kconfig        |   28 +-
+ drivers/gpio/Makefile       |    2 +-
+ drivers/gpio/gpiolib-cdev.c | 1296 ++++++++++++++++++++++++++++++++++-
+ drivers/gpio/gpiolib-cdev.h |   15 +
+ drivers/gpio/gpiolib.c      |    2 +
+ drivers/gpio/gpiolib.h      |    6 +
+ include/uapi/linux/gpio.h   |  327 ++++++++-
+ tools/gpio/gpio-event-mon.c |  137 ++--
+ tools/gpio/gpio-hammer.c    |   27 +-
+ tools/gpio/gpio-utils.c     |  117 ++--
+ tools/gpio/gpio-utils.h     |   48 +-
+ tools/gpio/gpio-watch.c     |   10 +-
+ tools/gpio/lsgpio.c         |  102 ++-
+ 13 files changed, 1882 insertions(+), 235 deletions(-)
+
+
+base-commit: 8fc3ed3a474d76cd76dd0a154ea904373e9a5530
 -- 
-2.11.0
-
-
+2.27.0
 
