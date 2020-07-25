@@ -2,452 +2,149 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB2DC433ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20853C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 20:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF2F206D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C642070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 20:11:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KOcxNFyF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgGYT4Y (ORCPT
+        id S1727976AbgGYUKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 15:56:24 -0400
-Received: from smtprelay0156.hostedemail.com ([216.40.44.156]:55788 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728125AbgGYT4W (ORCPT
+        Sat, 25 Jul 2020 16:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgGYUKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 15:56:22 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 8BAEA181D3026;
-        Sat, 25 Jul 2020 19:56:19 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: crate03_310ca5526f52
-X-Filterd-Recvd-Size: 19597
-Received: from joe-laptop.perches.com (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 25 Jul 2020 19:56:17 +0000 (UTC)
-From:   Joe Perches <joe@perches.com>
-To:     Ping-Ke Shih <pkshih@realtek.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        linux-kernel@vger.kernel.org
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH 5/6] rtlwifi: Avoid multiline dereferences in rtl_dbg uses
-Date:   Sat, 25 Jul 2020 12:55:07 -0700
-Message-Id: <3a2fa7dadb9c0beb5e268dd2e6e71c537f29f9f5.1595706420.git.joe@perches.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <cover.1595706419.git.joe@perches.com>
-References: <cover.1595706419.git.joe@perches.com>
+        Sat, 25 Jul 2020 16:10:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2421AC08C5C0
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 13:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Pw5RUMobivqcNCfDWDHWYkXzCXE5qOoVsxCJP/NEQ88=; b=KOcxNFyFQPJAlT02SO5ozn3dyO
+        VP7SPGW0orHgpa2x5jdZSazYY62jrFX+6p4Ucc8IXcpM4Evn1qHatKG2Kc7bdHSLI8Tpo+jFDneVf
+        4GKx5s3nzq/5mnut6zoyoAgmdugvTAuPujSNJQys21qcMbDbIorBhAix3ErioCMUA3YBALhYaTHb0
+        CM8MiFLp/UwIz4K2JerjC/7a5Ul0eH9gCoE/KSq00jjQq9ZqbOI8QqixkOZmbWal988elBSsqgak2
+        FQVzGJrsrJclOnMrp0Zc4SU6MW0yxjSvsoZ/apvt96rrD8Kz9O3AW7Ka8LyQZgV50SJjo+H4cfBoI
+        JKKOwWgw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzQUr-0008Hv-PC; Sat, 25 Jul 2020 20:10:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 757B03013E5;
+        Sat, 25 Jul 2020 22:10:13 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6045B2B8A8164; Sat, 25 Jul 2020 22:10:13 +0200 (CEST)
+Date:   Sat, 25 Jul 2020 22:10:13 +0200
+From:   peterz@infradead.org
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] kcsan: Add option to allow watcher interruptions
+Message-ID: <20200725201013.GZ119549@hirez.programming.kicks-ass.net>
+References: <20200220141551.166537-1-elver@google.com>
+ <20200220185855.GY2935@paulmck-ThinkPad-P72>
+ <20200220213317.GA35033@google.com>
+ <20200725145623.GZ9247@paulmck-ThinkPad-P72>
+ <CANpmjNPhuvrhRHAiuv2Zju1VNSe7dO0aaYn+1TB99OF2Hv0S_A@mail.gmail.com>
+ <20200725174430.GH10769@hirez.programming.kicks-ass.net>
+ <20200725193909.GB9247@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200725193909.GB9247@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a more typical kernel style in rtl_dbg uses.
+On Sat, Jul 25, 2020 at 12:39:09PM -0700, Paul E. McKenney wrote:
+> On Sat, Jul 25, 2020 at 07:44:30PM +0200, Peter Zijlstra wrote:
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- .../wireless/realtek/rtlwifi/rtl8188ee/phy.c  |  3 +-
- .../realtek/rtlwifi/rtl8192c/phy_common.c     | 48 +++++++------------
- .../wireless/realtek/rtlwifi/rtl8192ce/phy.c  |  3 +-
- .../wireless/realtek/rtlwifi/rtl8192se/phy.c  |  3 +-
- .../wireless/realtek/rtlwifi/rtl8723ae/phy.c  | 48 +++++++------------
- .../wireless/realtek/rtlwifi/rtl8821ae/phy.c  |  3 +-
- 6 files changed, 36 insertions(+), 72 deletions(-)
+> > So the thing is, since RCU count is 0 per context (an IRQ must have an
+> > equal amount of rcu_read_unlock() as it has rcu_read_lock()), interrupts
+> > are not in fact a problem, even on load-store (RISC) architectures
+> > (preempt_count has the same thing).
+> 
+> True enough!
+> 
+> > So the addition/subtraction in rcu_preempt_read_{enter,exit}() doesn't
+> > need to be atomic vs interrupts. The only thing we really do need is
+> > them being single-copy-atomic.
+> > 
+> > The problem with READ/WRITE_ONCE is that if we were to use it, we'd end
+> > up with a load-store, even on x86, which is sub-optimal.
+> 
+> Agreed.
+> 
+> > I suppose the 'correct' code here would be something like:
+> > 
+> > 	*((volatile int *)&current->rcu_read_lock_nesting)++;
+> > 
+> > then the compiler can either do a single memop (x86 and the like) or a
+> > load-store that is free from tearing.
+> 
+> Hah!!!  That is the original ACCESS_ONCE(), isn't it?  ;-)
+> 
+> 	ACCESS_ONCE(current->rcu_read_lock_nesting)++;
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/phy.c
-index 40ebc3f726f4..4771b76bdefa 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/phy.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8188ee/phy.c
-@@ -2191,8 +2191,7 @@ static bool _rtl88ee_phy_set_rf_power_state(struct ieee80211_hw *hw,
- 			rtl_dbg(rtlpriv, COMP_RF, DBG_DMESG,
- 				"Set ERFON sleeped:%d ms\n",
- 				jiffies_to_msecs(jiffies -
--						 ppsc->
--						 last_sleep_jiffies));
-+						 ppsc->last_sleep_jiffies));
- 			ppsc->last_awake_jiffies = jiffies;
- 			rtl88ee_phy_set_rf_on(hw);
- 		}
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192c/phy_common.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192c/phy_common.c
-index f7b3b55e9776..3f3a7f196843 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192c/phy_common.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192c/phy_common.c
-@@ -230,8 +230,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][0] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][0]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][0]);
- 	}
- 	if (regaddr == RTXAGC_A_RATE54_24) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][1] =
-@@ -239,8 +238,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][1] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][1]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][1]);
- 	}
- 	if (regaddr == RTXAGC_A_CCK1_MCS32) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][6] =
-@@ -248,8 +246,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][6] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][6]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][6]);
- 	}
- 	if (regaddr == RTXAGC_B_CCK11_A_CCK2_11 && bitmask == 0xffffff00) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][7] =
-@@ -257,8 +254,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][7] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][7]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][7]);
- 	}
- 	if (regaddr == RTXAGC_A_MCS03_MCS00) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][2] =
-@@ -266,8 +262,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][2] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][2]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][2]);
- 	}
- 	if (regaddr == RTXAGC_A_MCS07_MCS04) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][3] =
-@@ -275,8 +270,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][3] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][3]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][3]);
- 	}
- 	if (regaddr == RTXAGC_A_MCS11_MCS08) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][4] =
-@@ -284,8 +278,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][4] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][4]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][4]);
- 	}
- 	if (regaddr == RTXAGC_A_MCS15_MCS12) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][5] =
-@@ -293,8 +286,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][5] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][5]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][5]);
- 	}
- 	if (regaddr == RTXAGC_B_RATE18_06) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][8] =
-@@ -302,8 +294,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][8] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][8]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][8]);
- 	}
- 	if (regaddr == RTXAGC_B_RATE54_24) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][9] =
-@@ -311,8 +302,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][9] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][9]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][9]);
- 	}
- 	if (regaddr == RTXAGC_B_CCK1_55_MCS32) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][14] =
-@@ -320,8 +310,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][14] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][14]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][14]);
- 	}
- 	if (regaddr == RTXAGC_B_CCK11_A_CCK2_11 && bitmask == 0x000000ff) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][15] =
-@@ -329,8 +318,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][15] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][15]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][15]);
- 	}
- 	if (regaddr == RTXAGC_B_MCS03_MCS00) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][10] =
-@@ -338,8 +326,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][10] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][10]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][10]);
- 	}
- 	if (regaddr == RTXAGC_B_MCS07_MCS04) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][11] =
-@@ -347,8 +334,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][11] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][11]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][11]);
- 	}
- 	if (regaddr == RTXAGC_B_MCS11_MCS08) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][12] =
-@@ -356,8 +342,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][12] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][12]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][12]);
- 	}
- 	if (regaddr == RTXAGC_B_MCS15_MCS12) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][13] =
-@@ -365,8 +350,7 @@ void _rtl92c_store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][13] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][13]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][13]);
- 
- 		rtlphy->pwrgroup_cnt++;
- 	}
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/phy.c
-index 1e9978773c8d..b0a978ff6193 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/phy.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/phy.c
-@@ -456,8 +456,7 @@ static bool _rtl92ce_phy_set_rf_power_state(struct ieee80211_hw *hw,
- 				rtl_dbg(rtlpriv, COMP_RF, DBG_DMESG,
- 					"Set ERFON sleeped:%d ms\n",
- 					jiffies_to_msecs(jiffies -
--							 ppsc->
--							 last_sleep_jiffies));
-+							 ppsc->last_sleep_jiffies));
- 				ppsc->last_awake_jiffies = jiffies;
- 				rtl92ce_phy_set_rf_on(hw);
- 			}
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192se/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192se/phy.c
-index db378370802d..56d795418e18 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192se/phy.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192se/phy.c
-@@ -541,8 +541,7 @@ bool rtl92s_phy_set_rf_power_state(struct ieee80211_hw *hw,
- 				rtl_dbg(rtlpriv, COMP_POWER, DBG_DMESG,
- 					"awake, sleeped:%d ms state_inap:%x\n",
- 					jiffies_to_msecs(jiffies -
--							 ppsc->
--							 last_sleep_jiffies),
-+							 ppsc->last_sleep_jiffies),
- 					rtlpriv->psc.state_inap);
- 				ppsc->last_awake_jiffies = jiffies;
- 				rtl_write_word(rtlpriv, CMDR, 0x37FC);
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c
-index 393bec07618f..e7445fb74075 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c
-@@ -299,8 +299,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][0] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][0]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][0]);
- 	}
- 	if (regaddr == RTXAGC_A_RATE54_24) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][1] =
-@@ -308,8 +307,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][1] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][1]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][1]);
- 	}
- 	if (regaddr == RTXAGC_A_CCK1_MCS32) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][6] =
-@@ -317,8 +315,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][6] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][6]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][6]);
- 	}
- 	if (regaddr == RTXAGC_B_CCK11_A_CCK2_11 && bitmask == 0xffffff00) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][7] =
-@@ -326,8 +323,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][7] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][7]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][7]);
- 	}
- 	if (regaddr == RTXAGC_A_MCS03_MCS00) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][2] =
-@@ -335,8 +331,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][2] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][2]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][2]);
- 	}
- 	if (regaddr == RTXAGC_A_MCS07_MCS04) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][3] =
-@@ -344,8 +339,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][3] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][3]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][3]);
- 	}
- 	if (regaddr == RTXAGC_A_MCS11_MCS08) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][4] =
-@@ -353,8 +347,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][4] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][4]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][4]);
- 	}
- 	if (regaddr == RTXAGC_A_MCS15_MCS12) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][5] =
-@@ -362,8 +355,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][5] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][5]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][5]);
- 	}
- 	if (regaddr == RTXAGC_B_RATE18_06) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][8] =
-@@ -371,8 +363,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][8] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][8]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][8]);
- 	}
- 	if (regaddr == RTXAGC_B_RATE54_24) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][9] =
-@@ -380,8 +371,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][9] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][9]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][9]);
- 	}
- 	if (regaddr == RTXAGC_B_CCK1_55_MCS32) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][14] =
-@@ -398,8 +388,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][15] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][15]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][15]);
- 	}
- 	if (regaddr == RTXAGC_B_MCS03_MCS00) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][10] =
-@@ -407,8 +396,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][10] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][10]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][10]);
- 	}
- 	if (regaddr == RTXAGC_B_MCS07_MCS04) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][11] =
-@@ -416,8 +404,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][11] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][11]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][11]);
- 	}
- 	if (regaddr == RTXAGC_B_MCS11_MCS08) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][12] =
-@@ -425,8 +412,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][12] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][12]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][12]);
- 	}
- 	if (regaddr == RTXAGC_B_MCS15_MCS12) {
- 		rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][13] =
-@@ -434,8 +420,7 @@ static void store_pwrindex_diffrate_offset(struct ieee80211_hw *hw,
- 		rtl_dbg(rtlpriv, COMP_INIT, DBG_TRACE,
- 			"MCSTxPowerLevelOriginalOffset[%d][13] = 0x%x\n",
- 			rtlphy->pwrgroup_cnt,
--			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->
--							  pwrgroup_cnt][13]);
-+			rtlphy->mcs_txpwrlevel_origoffset[rtlphy->pwrgroup_cnt][13]);
- 
- 		rtlphy->pwrgroup_cnt++;
- 	}
-@@ -1579,8 +1564,7 @@ static bool _rtl8723e_phy_set_rf_power_state(struct ieee80211_hw *hw,
- 			rtl_dbg(rtlpriv, COMP_RF, DBG_DMESG,
- 				"Set ERFON sleeped:%d ms\n",
- 				jiffies_to_msecs(jiffies -
--						 ppsc->
--						 last_sleep_jiffies));
-+						 ppsc->last_sleep_jiffies));
- 			ppsc->last_awake_jiffies = jiffies;
- 			rtl8723e_phy_set_rf_on(hw);
- 		}
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c
-index 085d9e9c44ed..2255c9b9fc16 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c
-@@ -4738,8 +4738,7 @@ static bool _rtl8821ae_phy_set_rf_power_state(struct ieee80211_hw *hw,
- 			rtl_dbg(rtlpriv, COMP_RF, DBG_DMESG,
- 				"Set ERFON sleeped:%d ms\n",
- 				jiffies_to_msecs(jiffies -
--						 ppsc->
--						 last_sleep_jiffies));
-+						 ppsc->last_sleep_jiffies));
- 			ppsc->last_awake_jiffies = jiffies;
- 			rtl8821ae_phy_set_rf_on(hw);
- 		}
--- 
-2.26.0
+Indeed :-)
 
+> But open-coding makes sense unless a lot of other places need something
+> similar.  Besides, open-coding allows me to defer bikeshedding on the
+> name, given that there are actually two accesses.  :-/
+
+Yeah, ISTR that being one of the reasons we got rid of it.
+
+> So:
+> 	(*(volatile int *)&(current->rcu_read_lock_nesting))++;
+
+Urgh, sorry for messing that up.
+
+> This gets me the following for __rcu_read_lock():
+> 
+> 00000000000000e0 <__rcu_read_lock>:
+>       e0:	48 8b 14 25 00 00 00 	mov    0x0,%rdx
+>       e7:	00 
+>       e8:	8b 82 e0 02 00 00    	mov    0x2e0(%rdx),%eax
+>       ee:	83 c0 01             	add    $0x1,%eax
+>       f1:	89 82 e0 02 00 00    	mov    %eax,0x2e0(%rdx)
+>       f7:	c3                   	retq   
+>       f8:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+>       ff:	00 
+> 
+> One might hope for a dec instruction, but this isn't bad.  We do lose
+> a few instructions compared to the C-language case due to differences
+> in address calculation:
+> 
+> 00000000000000e0 <__rcu_read_lock>:
+>       e0:	48 8b 04 25 00 00 00 	mov    0x0,%rax
+>       e7:	00 
+>       e8:	83 80 e0 02 00 00 01 	addl   $0x1,0x2e0(%rax)
+>       ef:	c3                   	retq   
+
+Shees, that's daft... I think this is one of the cases where GCC is
+perhaps overly cautious when presented with 'volatile'.
+
+It has a history of generating excessively crap code around volatile,
+and while it has improved somewhat, this seems to show there's still
+room for improvement...
+
+I suppose this is the point where we go bug a friendly compiler person.
+
+Alternatively we can employ data_race() and trust the compiler not to be
+daft about tearing... which we've been relying with this code anyway.
