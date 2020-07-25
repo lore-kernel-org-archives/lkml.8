@@ -2,347 +2,125 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD766C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DDBC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE3E206D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F5C206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:26:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IYNVHfAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgGYRXe (ORCPT
+        id S1727103AbgGYR0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 13:23:34 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:55350 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726904AbgGYRXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 13:23:33 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jzNtG-006pYV-U0; Sat, 25 Jul 2020 19:23:18 +0200
-Date:   Sat, 25 Jul 2020 19:23:18 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
-        Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v3 2/2] net: phy: marvell: add
- support for PHY LEDs via LED class
-Message-ID: <20200725172318.GK1472201@lunn.ch>
-References: <20200724164603.29148-1-marek.behun@nic.cz>
- <20200724164603.29148-3-marek.behun@nic.cz>
+        Sat, 25 Jul 2020 13:26:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726904AbgGYR0t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 13:26:49 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74B13C08C5C0;
+        Sat, 25 Jul 2020 10:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7SRpwoL15MtwcU8wbHwQcUF2uHBMY5fJRBYQrQ9053Y=; b=IYNVHfAHG5lpuAIueljasDi0oa
+        Du5FVq5sa5MBLzFTzDkALOkYTPbrWp+rPmZ49KvQiDoqMERlml1qgQDzXOWd9wJJUAqpv5z/KMH8q
+        jEXc7o3zrIfO5GWST7gOXHKqoICiOWrtLHPTp25XxoYQPCKYOo3l8etKJ9b7O7ZMKacWEckk/xv+9
+        m7fRAOGPr3/6uLPu135C3GbMy7l3GoowiIKV33kjTJEJ12Ww0hRSIsoue6YoyX1FmOkJt374qooD5
+        YAAVcRYciUuV3iaqNnTf0TbSoY9YxM47y4xSiXqeoGXuk530lxCfga9DOXa1LMsJCASUDAFsFtBba
+        RlnJdyfg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzNwO-0001Ol-2h; Sat, 25 Jul 2020 17:26:33 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1A0E0301179;
+        Sat, 25 Jul 2020 19:26:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4E6062B8AA3CC; Sat, 25 Jul 2020 19:26:30 +0200 (CEST)
+Date:   Sat, 25 Jul 2020 19:26:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Boqun Feng <boqun.feng@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH v3 5/6] powerpc/pseries: implement paravirt qspinlocks
+ for SPLPAR
+Message-ID: <20200725172630.GF10769@hirez.programming.kicks-ass.net>
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+ <20200706043540.1563616-6-npiggin@gmail.com>
+ <874kqhvu1v.fsf@mpe.ellerman.id.au>
+ <8265d782-4e50-a9b2-a908-0cb588ffa09c@redhat.com>
+ <20200723140011.GR5523@worktop.programming.kicks-ass.net>
+ <845de183-56f5-2958-3159-faa131d46401@redhat.com>
+ <20200723184759.GS119549@hirez.programming.kicks-ass.net>
+ <20200724081647.GA16642@willie-the-truck>
+ <8532332b-85dd-661b-cf72-81a8ceb70747@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200724164603.29148-3-marek.behun@nic.cz>
+In-Reply-To: <8532332b-85dd-661b-cf72-81a8ceb70747@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 06:46:03PM +0200, Marek Behún wrote:
-> This patch adds support for controlling the LEDs connected to several
-> families of Marvell PHYs via the PHY HW LED trigger API. These families
-> are: 88E1112, 88E1121R, 88E1240, 88E1340S, 88E1510 and 88E1545. More can
-> be added.
+On Fri, Jul 24, 2020 at 03:10:59PM -0400, Waiman Long wrote:
+> On 7/24/20 4:16 AM, Will Deacon wrote:
+> > On Thu, Jul 23, 2020 at 08:47:59PM +0200, peterz@infradead.org wrote:
+> > > On Thu, Jul 23, 2020 at 02:32:36PM -0400, Waiman Long wrote:
+> > > > BTW, do you have any comment on my v2 lock holder cpu info qspinlock patch?
+> > > > I will have to update the patch to fix the reported 0-day test problem, but
+> > > > I want to collect other feedback before sending out v3.
+> > > I want to say I hate it all, it adds instructions to a path we spend an
+> > > aweful lot of time optimizing without really getting anything back for
+> > > it.
+> > > 
+> > > Will, how do you feel about it?
+> > I can see it potentially being useful for debugging, but I hate the
+> > limitation to 256 CPUs. Even arm64 is hitting that now.
 > 
-> The code reads LEDs definitions from the device-tree node of the PHY.
+> After thinking more about that, I think we can use all the remaining bits in
+> the 16-bit locked_pending. Reserving 1 bit for locked and 1 bit for pending,
+> there are 14 bits left. So as long as NR_CPUS < 16k (requirement for 16-bit
+> locked_pending), we can put all possible cpu numbers into the lock. We can
+> also just use smp_processor_id() without additional percpu data.
+
+That sounds horrific, wouldn't that destroy the whole point of using a
+byte for pending?
+
+> > Also, you're talking ~1% gains here. I think our collective time would
+> > be better spent off reviewing the CNA series and trying to make it more
+> > deterministic.
 > 
-> This patch does not yet add support for compound LED modes. This could
-> be achieved via the LED multicolor framework (which is not yet in
-> upstream).
-> 
-> Settings such as HW blink rate or pulse stretch duration are not yet
-> supported, nor are LED polarity settings.
-> 
-> Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> ---
->  drivers/net/phy/Kconfig   |   1 +
->  drivers/net/phy/marvell.c | 364 ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 365 insertions(+)
-> 
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index ffea11f73acd..5428a8af26d2 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -462,6 +462,7 @@ config LXT_PHY
->  
->  config MARVELL_PHY
->  	tristate "Marvell PHYs"
-> +	depends on LED_TRIGGER_PHY_HW
+> I thought you guys are not interested in CNA. I do want to get CNA merged,
+> if possible. Let review the current version again and see if there are ways
+> we can further improve it.
 
-Does it really depend on it? I think the driver will work fine without
-it, just the LED control will be missing.
+It's not a lack of interrest. We were struggling with the fairness
+issues and the complexity of the thing. I forgot the current state of
+matters, but at one point UNLOCK was O(n) in waiters, which is, of
+course, 'unfortunate'.
 
-It is really a policy question. Cable test is always available, there
-is no Kconfig'ury to stop it getting built. Is LED support really big
-so that somebody might want to disable it? I think not. So lets just
-enable it all the time.
+I'll have to look up whatever notes remain, but the basic idea of
+keeping remote nodes on a secondary list is obviously breaking all sorts
+of fairness. After that they pile on a bunch of hacks to fix the worst
+of them, but it feels exactly like that, a bunch of hacks.
 
->  	help
->  	  Currently has a driver for the 88E1011S
->  
+One of the things I suppose we ought to do is see if some of the ideas
+of phase-fair locks can be applied to this.
 
-> +enum {
-> +	L1V0_RECV		= BIT(0),
-> +	L1V0_COPPER		= BIT(1),
-> +	L1V5_100_FIBER		= BIT(2),
-> +	L1V5_100_10		= BIT(3),
-> +	L2V2_INIT		= BIT(4),
-> +	L2V2_PTP		= BIT(5),
-> +	L2V2_DUPLEX		= BIT(6),
-> +	L3V0_FIBER		= BIT(7),
-> +	L3V0_LOS		= BIT(8),
-> +	L3V5_TRANS		= BIT(9),
-> +	L3V7_FIBER		= BIT(10),
-> +	L3V7_DUPLEX		= BIT(11),
-
-Maybe also add COMMON?
-
-> +};
-> +
-> +struct marvell_led_mode_info {
-> +	const char *name;
-> +	s8 regval[MARVELL_PHY_MAX_LEDS];
-> +	u32 flags;
-
-Maybe give the enum a name, and use it here? It can be quite hard
-tracking the meaning of flags in this code. Here, it is an indication
-of an individual feature.
-
-> +};
-> +
-> +static const struct marvell_led_mode_info marvell_led_mode_info[] = {
-> +	{ "link",			{ 0x0,  -1, 0x0,  -1,  -1,  -1, }, 0 },
-
-Replace flags 0 with COMMON?
-
-> +	{ "link/act",			{ 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, }, 0 },
-> +	{ "1Gbps/100Mbps/10Mbps",	{ 0x2,  -1,  -1,  -1,  -1,  -1, }, 0 },
-> +	{ "act",			{ 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, }, 0 },
-> +	{ "blink-act",			{ 0x4, 0x4, 0x4, 0x4, 0x4, 0x4, }, 0 },
-> +	{ "tx",				{ 0x5,  -1, 0x5,  -1, 0x5, 0x5, }, 0 },
-> +	{ "tx",				{  -1,  -1,  -1, 0x5,  -1,  -1, }, L3V5_TRANS },
-> +	{ "rx",				{  -1,  -1,  -1,  -1, 0x0, 0x0, }, 0 },
-> +	{ "rx",				{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_RECV },
-> +	{ "copper",			{ 0x6,  -1,  -1,  -1,  -1,  -1, }, 0 },
-> +	{ "copper",			{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_COPPER },
-> +	{ "1Gbps",			{ 0x7,  -1,  -1,  -1,  -1,  -1, }, 0 },
-> +	{ "link/rx",			{  -1, 0x2,  -1, 0x2, 0x2, 0x2, }, 0 },
-> +	{ "100Mbps-fiber",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_FIBER },
-> +	{ "100Mbps-10Mbps",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_10 },
-> +	{ "1Gbps-100Mbps",		{  -1, 0x6,  -1,  -1,  -1,  -1, }, 0 },
-> +	{ "1Gbps-10Mbps",		{  -1,  -1, 0x6, 0x6,  -1,  -1, }, 0 },
-> +	{ "100Mbps",			{  -1, 0x7,  -1,  -1,  -1,  -1, }, 0 },
-> +	{ "10Mbps",			{  -1,  -1, 0x7,  -1,  -1,  -1, }, 0 },
-> +	{ "fiber",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_FIBER },
-> +	{ "fiber",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_FIBER },
-> +	{ "FullDuplex",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_DUPLEX },
-> +	{ "FullDuplex",			{  -1,  -1,  -1,  -1, 0x6, 0x6, }, 0 },
-> +	{ "FullDuplex/collision",	{  -1,  -1,  -1,  -1, 0x7, 0x7, }, 0 },
-> +	{ "FullDuplex/collision",	{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_DUPLEX },
-> +	{ "ptp",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_PTP },
-> +	{ "init",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_INIT },
-> +	{ "los",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_LOS },
-> +	{ "hi-z",			{ 0xa, 0xa, 0xa, 0xa, 0xa, 0xa, }, 0 },
-> +	{ "blink",			{ 0xb, 0xb, 0xb, 0xb, 0xb, 0xb, }, 0 },
-> +};
-> +
-> +struct marvell_leds_info {
-> +	u32 family;
-> +	int nleds;
-> +	u32 flags;
-
-Here flags is a combination of all the features this specific PHY
-supports.
-
-> +};
-> +
-> +#define LED(fam,n,flg)								\
-> +	{									\
-> +		.family = MARVELL_PHY_FAMILY_ID(MARVELL_PHY_ID_88E##fam),	\
-> +		.nleds = (n),							\
-> +		.flags = (flg),							\
-> +	}									\
-> +
-> +static const struct marvell_leds_info marvell_leds_info[] = {
-> +	LED(1112,  4, L1V0_COPPER | L1V5_100_FIBER | L2V2_INIT | L3V0_LOS | L3V5_TRANS | L3V7_FIBER),
-> +	LED(1121R, 3, L1V5_100_10),
-> +	LED(1240,  6, L3V5_TRANS),
-> +	LED(1340S, 6, L1V0_COPPER | L1V5_100_FIBER | L2V2_PTP | L3V0_FIBER | L3V7_DUPLEX),
-> +	LED(1510,  3, L1V0_RECV | L1V5_100_FIBER | L2V2_DUPLEX),
-> +	LED(1545,  6, L1V0_COPPER | L1V5_100_FIBER | L3V0_FIBER | L3V7_DUPLEX),
-> +};
-> +
-> +static inline int marvell_led_reg(int led)
-
-No inline functions in C code. Let the compiler decide.
-
-> +{
-> +	switch (led) {
-> +	case 0 ... 3:
-> +		return MII_PHY_LED_CTRL;
-> +	case 4 ... 5:
-> +		return MII_PHY_LED45_CTRL;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-
-> +static inline bool is_valid_led_mode(struct marvell_priv *priv, struct marvell_phy_led *led,
-> +				     const struct marvell_led_mode_info *mode)
-
-Same here, and anywhere else you might of used inline.
-
-> +{
-> +	return mode->regval[led->idx] != -1 && (!mode->flags || (priv->led_flags & mode->flags));
-
-If you have COMMON, this gets simpler.
-
-> +}
-> +
-
-> +static int marvell_register_led(struct phy_device *phydev, struct device_node *np, int nleds)
-> +{
-> +	struct marvell_priv *priv = phydev->priv;
-> +	struct led_init_data init_data = {};
-> +	struct marvell_phy_led *led;
-> +	u32 reg, color;
-> +	int err;
-> +
-> +	err = of_property_read_u32(np, "reg", &reg);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/*
-> +	 * Maybe we should check here if reg >= nleds, where nleds is number of LEDs of this specific
-> +	 * PHY.
-> +	 */
-> +	if (reg >= nleds) {
-> +		phydev_err(phydev,
-> +			   "LED node %pOF 'reg' property too large (%u, PHY supports max %u)\n",
-> +			   np, reg, nleds - 1);
-> +		return -EINVAL;
-> +	}
-> +
-> +	led = &priv->leds[reg];
-> +
-> +	err = of_property_read_u32(np, "color", &color);
-> +	if (err < 0) {
-> +		phydev_err(phydev, "LED node %pOF does not specify color\n", np);
-> +		return -EINVAL;
-> +	}
-> +
-> +#if 0
-> +	/* LED_COLOR_ID_MULTI is not yet merged in Linus' tree */
-> +	/* TODO: Support DUAL MODE */
-> +	if (color == LED_COLOR_ID_MULTI) {
-> +		phydev_warn(phydev, "node %pOF: This driver does not yet support multicolor LEDs\n",
-> +			    np);
-> +		return -ENOTSUPP;
-> +	}
-> +#endif
-
-Code getting committed should not be using #if 0. Is the needed code
-in the LED tree? Do we want to consider a stable branch of the LED
-tree which DaveM can pull into net-next? Or do you want to wait until
-the next merge cycle?
-
-> +
-> +	init_data.fwnode = &np->fwnode;
-> +	init_data.devname_mandatory = true;
-> +	init_data.devicename = phydev->attached_dev ? netdev_name(phydev->attached_dev) : "";
-
-This we need to think about. Are you running this on a system with
-systemd? Does the interface have a name like enp2s0? Does the LED get
-registered before or after systemd renames it from eth0 to enp2s0?
-
-> +
-> +	if (led->cdev.max_brightness) {
-> +		phydev_err(phydev, "LED node %pOF 'reg' property collision with another LED\n", np);
-> +		return -EEXIST;
-> +	}
-> +
-> +	led->cdev.max_brightness = 1;
-> +	led->cdev.brightness_set_blocking = marvell_led_brightness_set;
-> +	led->cdev.trigger_type = &phy_hw_led_trig_type;
-> +	led->idx = reg;
-> +
-> +	of_property_read_string(np, "linux,default-trigger", &led->cdev.default_trigger);
-> +
-> +	err = devm_led_classdev_register_ext(&phydev->mdio.dev, &led->cdev, &init_data);
-> +	if (err < 0) {
-> +		phydev_err(phydev, "Cannot register LED %pOF: %i\n", np, err);
-> +		return err;
-> +	}
-
-I don't like having the DT binding in the driver. We want all PHY
-drivers to use the same binding, and not feel free to implement
-whatever they want in their own driver. These are all standard
-properties which all PHY drivers should be using. So lets move it into
-phylib core. That also allows us to specify the properties in DT,
-maybe just pulling in the core LED yaml stuff.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void marvell_register_leds(struct phy_device *phydev)
-> +{
-> +	struct marvell_priv *priv = phydev->priv;
-> +	struct device_node *node = phydev->mdio.dev.of_node;
-> +	struct device_node *leds, *led;
-> +	const struct marvell_leds_info *info = NULL;
-> +	int i;
-
-Reverse Christmas tree.
-
-> +
-> +	/* some families don't support LED control in this driver yet */
-> +	if (!phydev->drv->led_set_hw_mode)
-> +		return;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(marvell_leds_info); ++i) {
-> +		if (MARVELL_PHY_FAMILY_ID(phydev->phy_id) == marvell_leds_info[i].family) {
-> +			info = &marvell_leds_info[i];
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!info)
-> +		return;
-> +
-> +	priv->led_flags = info->flags;
-> +
-> +#if 0
-> +	/*
-> +	 * TODO: here priv->led_flags should be changed so that hw_control values
-> +	 * for unsupported modes won't be shown. This cannot be deduced from
-> +	 * family only: for example the 88E1510 family contains 88E1510 which
-> +	 * does not support fiber, but also 88E1512, which supports fiber.
-> +	 */
-> +	switch (MARVELL_PHY_FAMILY_ID(phydev->phy_id)) {
-> +	}
-> +#endif
-> +
-> +	leds = of_get_child_by_name(node, "leds");
-> +	if (!leds)
-> +		return;
-> +
-> +	for_each_available_child_of_node(leds, led) {
-> +		/* Should this check if some LED registration failed? */
-> +		marvell_register_led(phydev, led, info->nleds);
-> +	}
-> +}
-> +
-
-  Andrew
+That coupled with a chronic lack of time for anything :-(
