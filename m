@@ -4,69 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF46C433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 01:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FB3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 01:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA0002070E
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 01:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A9BB20737
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 01:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595641509;
-	bh=TLPSRgQNl4mELXBsWUruist1EL/Q5kutrSoa4wfjJ3g=;
+	s=default; t=1595641504;
+	bh=nDbzQo4FlsDr4K65K1frCbw1Qd15cnpLVdjpGufbwQ8=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=JcwvVQ2aIQzG9zmhkaDpdUOPswgRsSCTiLs8CYzkc4BIwl8ilIEYzF07RLFVNGMzY
-	 IiWDMiPEWLxlUiqphm7vqXTmz81McZ/e3B2dp9T90EyR4VOC7V6czdUduVtLSrr8hB
-	 PWrXMwnhm6f4Rb+vnjmwKqPGRg8Xlh3m4LzhufeI=
+	b=BFLjhj/4iFJBKJbWWbjwaXvqSggTtUI6+wuCSKdxYxo1AnBXbL4SQMwy2Y5tQ10YE
+	 2Ga7b3CprT3cHfOMbAAV9gJrkn8ndQ00PHntd2YUz148hjpQm8lhNFrGq535ymxd5N
+	 9PSWz44fksbgTpH9HcUYcC4igB/H+wlh7iMOYL7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgGYBpI (ORCPT
+        id S1726970AbgGYBpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 21:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33512 "EHLO mail.kernel.org"
+        Fri, 24 Jul 2020 21:45:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726777AbgGYBpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 21:45:04 -0400
-Subject: Re: [GIT PULL] PCI fixes for v5.8
+        id S1726777AbgGYBpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 21:45:02 -0400
+Subject: Re: [GIT PULL] nfsd bugfix for 5.8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595641504;
-        bh=TLPSRgQNl4mELXBsWUruist1EL/Q5kutrSoa4wfjJ3g=;
+        s=default; t=1595641502;
+        bh=nDbzQo4FlsDr4K65K1frCbw1Qd15cnpLVdjpGufbwQ8=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=pE5YKB9fgRWEMCGpjoCXkYBkRsyNFmD3agN1chDL2k0i+51ZQd2NhkR6FSi/4+LW0
-         cxkkk6aYY7+hSkM1NeyHlPvK3pf5ZVejjfw1/d7e9kkRzeGln8MIiu6g1WYPPz7R/v
-         bAhqj/Surc49Ktg61E0i18B75o5/LcgFxwh0u+Xw=
+        b=CEDc17dghSZNvODiPp1qjilQKtbLLLxdYPNGyLDkL9NEz43y3SYGd7cZTfQZ7o/XR
+         VOgqbSudzaLBnVSENg19c63TKrmhpn5PstjAnwsXx+W6eRfN/r8EExXVgQLs6u5kG4
+         ZF8u17U2F0dS5M2Qlyg+0aqsI0Gbrw3QEA1KuKSc=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200725001753.GA1556558@bjorn-Precision-5520>
-References: <20200725001753.GA1556558@bjorn-Precision-5520>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200725001753.GA1556558@bjorn-Precision-5520>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
- tags/pci-v5.8-fixes-2
-X-PR-Tracked-Commit-Id: d08c30d7a0d1826f771f16cde32bd86e48401791
+In-Reply-To: <20200724220225.GE9244@fieldses.org>
+References: <20200724220225.GE9244@fieldses.org>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200724220225.GE9244@fieldses.org>
+X-PR-Tracked-Remote: git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.8-2
+X-PR-Tracked-Commit-Id: 9affa435817711861d774f5626c393c80f16d044
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 23ee3e4e5bd27bdbc0f1785eef7209ce872794c7
-Message-Id: <159564150443.24850.11511871924806850622.pr-tracker-bot@kernel.org>
-Date:   Sat, 25 Jul 2020 01:45:04 +0000
-To:     Bjorn Helgaas <helgaas@kernel.org>
+X-PR-Merge-Commit-Id: 5876aa073f52541f4787b6111c8494ea9cfcde15
+Message-Id: <159564150212.24850.3724812187204727939.pr-tracker-bot@kernel.org>
+Date:   Sat, 25 Jul 2020 01:45:02 +0000
+To:     "J. Bruce Fields" <bfields@fieldses.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Patrick Volkerding <volkerdi@gmail.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 24 Jul 2020 19:17:53 -0500:
+The pull request you sent on Fri, 24 Jul 2020 18:02:25 -0400:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.8-fixes-2
+> git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.8-2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/23ee3e4e5bd27bdbc0f1785eef7209ce872794c7
+https://git.kernel.org/torvalds/c/5876aa073f52541f4787b6111c8494ea9cfcde15
 
 Thank you!
 
