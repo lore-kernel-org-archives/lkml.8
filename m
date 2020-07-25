@@ -2,442 +2,631 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA753C433EA
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 095DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7BD206EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C885D206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbgGYHTn (ORCPT
+        id S1726962AbgGYHSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 03:19:43 -0400
-Received: from out28-148.mail.aliyun.com ([115.124.28.148]:48721 "EHLO
-        out28-148.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgGYHTl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 03:19:41 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.00871611-0.000117381-0.991166;FP=11394096582174137571|2|2|11|0|-1|-1|-1;HT=e02c03300;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=19;RT=19;SR=0;TI=SMTPD_---.I7IIM8t_1595661564;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I7IIM8t_1595661564)
-          by smtp.aliyun-inc.com(10.147.42.253);
-          Sat, 25 Jul 2020 15:19:33 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, paul@crapouillou.net,
-        prasannatsmkumar@gmail.com, kishon@ti.com, vkoul@kernel.org,
-        gor@linux.ibm.com, hca@linux.ibm.com,
-        christophe.jaillet@wanadoo.fr, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: [PATCH RESEND v6 3/5] USB: PHY: JZ4770: Add support for new Ingenic SoCs.
-Date:   Sat, 25 Jul 2020 15:19:01 +0800
-Message-Id: <20200725071903.63315-4-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200725071903.63315-1-zhouyanjie@wanyeetech.com>
-References: <20200725071903.63315-1-zhouyanjie@wanyeetech.com>
+        Sat, 25 Jul 2020 03:18:47 -0400
+Received: from mga07.intel.com ([134.134.136.100]:51936 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726434AbgGYHSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 03:18:46 -0400
+IronPort-SDR: tsw5jgEhG0+VbDIOSP4nsMF3Ppv4achmQmmUvasnt+g6f/JVBrC52kZCqgdtlHFmxn3MMui7rB
+ m0aeEYHtIN7Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="215393966"
+X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
+   d="gz'50?scan'50,208,50";a="215393966"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2020 00:16:32 -0700
+IronPort-SDR: wNMR/Bz/UEA+I1gHZjMxjX6xWYo3BV8rran68CAGlPiSH5Ztrz9PTjKupZy+H6bTkzchykdCR+
+ TqqA5G6DGyMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
+   d="gz'50?scan'50,208,50";a="488973528"
+Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 25 Jul 2020 00:16:30 -0700
+Received: from kbuild by df0563f96c37 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jzEQ1-0000oR-M4; Sat, 25 Jul 2020 07:16:29 +0000
+Date:   Sat, 25 Jul 2020 15:15:39 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Gao Xiang <hsiangkao@aol.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: arch/alpha/include/asm/xchg.h:234:32: sparse: sparse: cast truncates
+ bits from constant value (5f0ecafe becomes fe)
+Message-ID: <202007251532.y5A10ZoO%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="3V7upXqbjpZ4EhLz"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for probing the phy-jz4770 driver on the JZ4780 SoC,
-the X1000 SoC and the X1830 SoC from Ingenic.
 
-Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   23ee3e4e5bd27bdbc0f1785eef7209ce872794c7
+commit: 47e4937a4a7ca4184fd282791dfee76c6799966a erofs: move erofs out of staging
+date:   11 months ago
+config: alpha-randconfig-s031-20200725 (attached as .config)
+compiler: alpha-linux-gcc (GCC) 9.3.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # apt-get install sparse
+        # sparse version: v0.6.2-93-g4c6cbe55-dirty
+        git checkout 47e4937a4a7ca4184fd282791dfee76c6799966a
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=alpha 
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+   fs/erofs/zdata.c: note: in included file (through arch/alpha/include/asm/cmpxchg.h, arch/alpha/include/asm/atomic.h, include/linux/atomic.h, ...):
+>> arch/alpha/include/asm/xchg.h:234:32: sparse: sparse: cast truncates bits from constant value (5f0ecafe becomes fe)
+>> arch/alpha/include/asm/xchg.h:236:32: sparse: sparse: cast truncates bits from constant value (5f0ecafe becomes cafe)
+>> arch/alpha/include/asm/xchg.h:234:32: sparse: sparse: cast truncates bits from constant value (5f0ecafe becomes fe)
+>> arch/alpha/include/asm/xchg.h:234:32: sparse: sparse: cast truncates bits from constant value (5f0edead becomes ad)
+>> arch/alpha/include/asm/xchg.h:236:32: sparse: sparse: cast truncates bits from constant value (5f0ecafe becomes cafe)
+>> arch/alpha/include/asm/xchg.h:236:32: sparse: sparse: cast truncates bits from constant value (5f0edead becomes dead)
+
+vim +234 arch/alpha/include/asm/xchg.h
+
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  227  
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  228  static __always_inline unsigned long
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  229  ____cmpxchg(, volatile void *ptr, unsigned long old, unsigned long new,
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  230  	      int size)
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  231  {
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  232  	switch (size) {
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  233  		case 1:
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31 @234  			return ____cmpxchg(_u8, ptr, old, new);
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  235  		case 2:
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31 @236  			return ____cmpxchg(_u16, ptr, old, new);
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  237  		case 4:
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  238  			return ____cmpxchg(_u32, ptr, old, new);
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  239  		case 8:
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  240  			return ____cmpxchg(_u64, ptr, old, new);
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  241  	}
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  242  	__cmpxchg_called_with_bad_pointer();
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  243  	return old;
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  244  }
+a6209d6d71f2ab Ivan Kokshaysky 2009-03-31  245  
+
+:::::: The code at line 234 was first introduced by commit
+:::::: a6209d6d71f2ab8c63cc1587ef65490d83022baf alpha: xchg/cmpxchg cleanup and fixes
+
+:::::: TO: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
+
 ---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-Notes:
-    v1->v2:
-    Add bindings for the JZ4780 SoC.
-    
-    v2->v3:
-    Use "of_device_get_match_data" instead "of_match_device"
-    to get version information.
-    
-    v3->v4:
-    Fix typos.
-    
-    v4->v5:
-    1.Modify the help message, make it more future-proof.
-    2.Drop the unnecessary comment about hardware reset.
-    3.Create 'soc_info' structures instead having ID_* as platform data.
-    
-    v5->v6:
-    Fix the warning that appears during compilation.
-    Reported-by: kernel test robot <lkp@intel.com>
+--3V7upXqbjpZ4EhLz
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
- drivers/usb/phy/Kconfig      |   4 +-
- drivers/usb/phy/phy-jz4770.c | 206 ++++++++++++++++++++++++++++++++++++-------
- 2 files changed, 177 insertions(+), 33 deletions(-)
+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
+NiG0UsWN9hVY25R7sTQmq6IZpD1KImNcxJZV5bgOSsUEYqroqWcaWEty8OHeyz/XGVh2ZuiC
+PcvKM8nKiyTtSASCtGAzSDRPZSeU1WVU/+P3H/40nOILJdK+WwSciebcGIAjF015qBnpqHvg
+cUSnIpc7mFNShRTa8QBCMKS1/dBMs7PSkKki+q5raJ9qa/KbVPh+T04JrpLOIslFuZUqupJD
+o4wsM54aC/KDZPNIuDbZO8JvrAddtjpDKcXve9b8XjRWvWYdRkgen1w97X0ysmgcqYokv+d4
+hOszrW3Q1VS7yNfHvz6+3PxBdSvh8hNJdx49F0HYpOpzFYkVuA/Py4KD3YUJyR15ltS6M7K7
+tC70iWjtAuSm36wTEmhlwuLBJYe2ytonfVyn4FTXUOHgD7Ewjls8t/OmLLlQl3Wy9k2a63Kl
+hisr5/uyxClnRPYj87jk4OJgfZmJOFyGeW9u/Ou8hMBGla7Fzq0ykvxDcucvKfW1NZZSQG+q
++q3WVuVad9bI71smjmQup85aCXIOcYsM6Z5bnXqsLMJ90S1d0srKeSA5UQDqoQBqmkhpZzpO
+VhSwnshA1Y/L3HmTYnJmD+XEpc2nEVzO4LNTioSPMVmGzblZhj/F9yCa5CcqrVXYrdPcntGI
+5Frrlw630wsOwz8//3f5T6dk+UuUnodTAwvcb/krUzPTE9lFnHyjvvWNiLSeVJd5igy0KxNs
+YPkJLXfKzCcBJ4YH/Xx0osZSLDRo3XIAR2Q5b/4VTGtV2oALMVrYFdZ0gd+6boe/DSd4iuLZ
+FSJovN4Eijh7TtMUe087E67LsgEOb8pB2fHioF2qIEtSEydX8YEJFrQ0AyarodTTQakHxSnc
+BfFSuydC+Wf9hJ4wOtLxT9wWdRXbv/uDKRYGqn+YxWl19Ehrbi4I8Fvpm5RBJqLg/e4sRyvu
+5cb+M9Zc4DpjDNgzWP/TxuvI1VbwNtCP+wY7go7Enqn0qcWMg6/sqvc+OlSMP1G/awMsLhPm
+kyPMv7BuK49CqRtuyR+zVHx6fdlsou1vwT91GN704mRf6s/MDWTtR9aGcyID25BeFCyW0JPx
+Joq8yNpf5Io2YrKYqPf5Fou3XqvFldKpB9UWi7dZq5UX2XqQ7cKXZgzuS6eipqzJYnoqMquz
+pt3kAJPcdsEI6ynTfiOTINSNo20oMCE0PzNJY0GBXc0R8DVxxJ2vOAI/bhx9S6lzUB6wdNwZ
+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
+n22j66P/A4Xk9mnkowEA
 
-diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-index 4b3fa78995cf..ef4787cd3d37 100644
---- a/drivers/usb/phy/Kconfig
-+++ b/drivers/usb/phy/Kconfig
-@@ -185,11 +185,11 @@ config USB_ULPI_VIEWPORT
- 	  controllers with a viewport register (e.g. Chipidea/ARC controllers).
- 
- config JZ4770_PHY
--	tristate "Ingenic JZ4770 Transceiver Driver"
-+	tristate "Ingenic SoCs Transceiver Driver"
- 	depends on MIPS || COMPILE_TEST
- 	select USB_PHY
- 	help
- 	  This driver provides PHY support for the USB controller found
--	  on the JZ4770 SoC from Ingenic.
-+	  on the JZ-series and X-series SoCs from Ingenic.
- 
- endmenu
-diff --git a/drivers/usb/phy/phy-jz4770.c b/drivers/usb/phy/phy-jz4770.c
-index 00209d5469d3..b1540e059a09 100644
---- a/drivers/usb/phy/phy-jz4770.c
-+++ b/drivers/usb/phy/phy-jz4770.c
-@@ -1,7 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Ingenic JZ4770 USB PHY driver
-+ * Ingenic SoCs USB PHY driver
-  * Copyright (c) Paul Cercueil <paul@crapouillou.net>
-+ * Copyright (c) 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-+ * Copyright (c) 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-  */
- 
- #include <linux/clk.h>
-@@ -12,12 +14,13 @@
- #include <linux/usb/otg.h>
- #include <linux/usb/phy.h>
- 
-+/* OTGPHY register offsets */
- #define REG_USBPCR_OFFSET	0x00
- #define REG_USBRDT_OFFSET	0x04
- #define REG_USBVBFIL_OFFSET	0x08
- #define REG_USBPCR1_OFFSET	0x0c
- 
--/* USBPCR */
-+/* bits within the USBPCR register */
- #define USBPCR_USB_MODE		BIT(31)
- #define USBPCR_AVLD_REG		BIT(30)
- #define USBPCR_COMMONONN	BIT(25)
-@@ -44,11 +47,21 @@
- 
- #define USBPCR_SQRXTUNE_LSB	11
- #define USBPCR_SQRXTUNE_MASK	GENMASK(13, USBPCR_SQRXTUNE_LSB)
-+#define USBPCR_SQRXTUNE_DCR_20PCT	(0x7 << USBPCR_SQRXTUNE_LSB)
- #define USBPCR_SQRXTUNE_DFT	(0x3 << USBPCR_SQRXTUNE_LSB)
- 
- #define USBPCR_TXFSLSTUNE_LSB	7
- #define USBPCR_TXFSLSTUNE_MASK	GENMASK(10, USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_DCR_50PPT	(0xf << USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_DCR_25PPT	(0x7 << USBPCR_TXFSLSTUNE_LSB)
- #define USBPCR_TXFSLSTUNE_DFT	(0x3 << USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_INC_25PPT	(0x1 << USBPCR_TXFSLSTUNE_LSB)
-+#define USBPCR_TXFSLSTUNE_INC_50PPT	(0x0 << USBPCR_TXFSLSTUNE_LSB)
-+
-+#define USBPCR_TXHSXVTUNE_LSB		4
-+#define USBPCR_TXHSXVTUNE_MASK		GENMASK(5, USBPCR_TXHSXVTUNE_LSB)
-+#define USBPCR_TXHSXVTUNE_DFT		(0x3 << USBPCR_TXHSXVTUNE_LSB)
-+#define USBPCR_TXHSXVTUNE_DCR_15MV	(0x1 << USBPCR_TXHSXVTUNE_LSB)
- 
- #define USBPCR_TXRISETUNE_LSB	4
- #define USBPCR_TXRISETUNE_MASK	GENMASK(5, USBPCR_TXRISETUNE_LSB)
-@@ -56,14 +69,40 @@
- 
- #define USBPCR_TXVREFTUNE_LSB	0
- #define USBPCR_TXVREFTUNE_MASK	GENMASK(3, USBPCR_TXVREFTUNE_LSB)
-+#define USBPCR_TXVREFTUNE_INC_25PPT	(0x7 << USBPCR_TXVREFTUNE_LSB)
- #define USBPCR_TXVREFTUNE_DFT	(0x5 << USBPCR_TXVREFTUNE_LSB)
- 
--/* USBRDT */
-+/* bits within the USBRDTR register */
-+#define USBRDT_UTMI_RST				BIT(27)
-+#define USBRDT_HB_MASK				BIT(26)
- #define USBRDT_VBFIL_LD_EN	BIT(25)
- #define USBRDT_IDDIG_EN		BIT(24)
- #define USBRDT_IDDIG_REG	BIT(23)
-+#define USBRDT_VBFIL_EN				BIT(2)
-+
-+/* bits within the USBPCR1 register */
-+#define USBPCR1_BVLD_REG			BIT(31)
-+#define USBPCR1_DPPD				BIT(29)
-+#define USBPCR1_DMPD				BIT(28)
-+#define USBPCR1_USB_SEL				BIT(28)
-+#define USBPCR1_WORD_IF_16BIT		BIT(19)
-+
-+enum ingenic_usb_phy_version {
-+	ID_JZ4770,
-+	ID_JZ4780,
-+	ID_X1000,
-+	ID_X1830,
-+};
-+
-+struct ingenic_soc_info {
-+	enum ingenic_usb_phy_version version;
-+
-+	void (*usb_phy_init)(struct usb_phy *phy);
-+};
- 
- struct jz4770_phy {
-+	const struct ingenic_soc_info *soc_info;
-+
- 	struct usb_phy phy;
- 	struct usb_otg otg;
- 	struct device *dev;
-@@ -82,12 +121,18 @@ static inline struct jz4770_phy *phy_to_jz4770_phy(struct usb_phy *phy)
- 	return container_of(phy, struct jz4770_phy, phy);
- }
- 
--static int jz4770_phy_set_peripheral(struct usb_otg *otg,
-+static int ingenic_usb_phy_set_peripheral(struct usb_otg *otg,
- 				     struct usb_gadget *gadget)
- {
- 	struct jz4770_phy *priv = otg_to_jz4770_phy(otg);
- 	u32 reg;
- 
-+	if (priv->soc_info->version >= ID_X1000) {
-+		reg = readl(priv->base + REG_USBPCR1_OFFSET);
-+		reg |= USBPCR1_BVLD_REG;
-+		writel(reg, priv->base + REG_USBPCR1_OFFSET);
-+	}
-+
- 	reg = readl(priv->base + REG_USBPCR_OFFSET);
- 	reg &= ~USBPCR_USB_MODE;
- 	reg |= USBPCR_VBUSVLDEXT | USBPCR_VBUSVLDEXTSEL | USBPCR_OTG_DISABLE;
-@@ -96,7 +141,7 @@ static int jz4770_phy_set_peripheral(struct usb_otg *otg,
- 	return 0;
- }
- 
--static int jz4770_phy_set_host(struct usb_otg *otg, struct usb_bus *host)
-+static int ingenic_usb_phy_set_host(struct usb_otg *otg, struct usb_bus *host)
- {
- 	struct jz4770_phy *priv = otg_to_jz4770_phy(otg);
- 	u32 reg;
-@@ -109,11 +154,10 @@ static int jz4770_phy_set_host(struct usb_otg *otg, struct usb_bus *host)
- 	return 0;
- }
- 
--static int jz4770_phy_init(struct usb_phy *phy)
-+static int ingenic_usb_phy_init(struct usb_phy *phy)
- {
- 	struct jz4770_phy *priv = phy_to_jz4770_phy(phy);
- 	int err;
--	u32 reg;
- 
- 	err = regulator_enable(priv->vcc_supply);
- 	if (err) {
-@@ -127,6 +171,29 @@ static int jz4770_phy_init(struct usb_phy *phy)
- 		return err;
- 	}
- 
-+	priv->soc_info->usb_phy_init(phy);
-+
-+	return 0;
-+}
-+
-+static void ingenic_usb_phy_shutdown(struct usb_phy *phy)
-+{
-+	struct jz4770_phy *priv = phy_to_jz4770_phy(phy);
-+
-+	clk_disable_unprepare(priv->clk);
-+	regulator_disable(priv->vcc_supply);
-+}
-+
-+static void ingenic_usb_phy_remove(void *phy)
-+{
-+	usb_remove_phy(phy);
-+}
-+
-+static void jz4770_usb_phy_init(struct usb_phy *phy)
-+{
-+	struct jz4770_phy *priv = phy_to_jz4770_phy(phy);
-+	u32 reg;
-+
- 	reg = USBPCR_AVLD_REG | USBPCR_COMMONONN | USBPCR_IDPULLUP_ALWAYS |
- 		USBPCR_COMPDISTUNE_DFT | USBPCR_OTGTUNE_DFT | USBPCR_SQRXTUNE_DFT |
- 		USBPCR_TXFSLSTUNE_DFT | USBPCR_TXRISETUNE_DFT | USBPCR_TXVREFTUNE_DFT |
-@@ -137,23 +204,100 @@ static int jz4770_phy_init(struct usb_phy *phy)
- 	usleep_range(30, 300);
- 	writel(reg & ~USBPCR_POR, priv->base + REG_USBPCR_OFFSET);
- 	usleep_range(300, 1000);
-+}
- 
--	return 0;
-+static void jz4780_usb_phy_init(struct usb_phy *phy)
-+{
-+	struct jz4770_phy *priv = phy_to_jz4770_phy(phy);
-+	u32 reg;
-+
-+	reg = readl(priv->base + REG_USBPCR1_OFFSET) | USBPCR1_USB_SEL |
-+		USBPCR1_WORD_IF_16BIT;
-+	writel(reg, priv->base + REG_USBPCR1_OFFSET);
-+
-+	reg = USBPCR_TXPREEMPHTUNE | USBPCR_COMMONONN | USBPCR_POR;
-+	writel(reg, priv->base + REG_USBPCR_OFFSET);
-+
-+	/* Wait for PHY to reset */
-+	usleep_range(30, 300);
-+	writel(reg & ~USBPCR_POR, priv->base + REG_USBPCR_OFFSET);
-+	usleep_range(300, 1000);
- }
- 
--static void jz4770_phy_shutdown(struct usb_phy *phy)
-+static void x1000_usb_phy_init(struct usb_phy *phy)
- {
- 	struct jz4770_phy *priv = phy_to_jz4770_phy(phy);
-+	u32 reg;
- 
--	clk_disable_unprepare(priv->clk);
--	regulator_disable(priv->vcc_supply);
-+	reg = readl(priv->base + REG_USBPCR1_OFFSET) | USBPCR1_WORD_IF_16BIT;
-+	writel(reg, priv->base + REG_USBPCR1_OFFSET);
-+
-+	reg = USBPCR_SQRXTUNE_DCR_20PCT | USBPCR_TXPREEMPHTUNE |
-+		USBPCR_TXHSXVTUNE_DCR_15MV | USBPCR_TXVREFTUNE_INC_25PPT |
-+		USBPCR_COMMONONN | USBPCR_POR;
-+	writel(reg, priv->base + REG_USBPCR_OFFSET);
-+
-+	/* Wait for PHY to reset */
-+	usleep_range(30, 300);
-+	writel(reg & ~USBPCR_POR, priv->base + REG_USBPCR_OFFSET);
-+	usleep_range(300, 1000);
- }
- 
--static void jz4770_phy_remove(void *phy)
-+static void x1830_usb_phy_init(struct usb_phy *phy)
- {
--	usb_remove_phy(phy);
-+	struct jz4770_phy *priv = phy_to_jz4770_phy(phy);
-+	u32 reg;
-+
-+	/* rdt */
-+	writel(USBRDT_VBFIL_EN | USBRDT_UTMI_RST, priv->base + REG_USBRDT_OFFSET);
-+
-+	reg = readl(priv->base + REG_USBPCR1_OFFSET) | USBPCR1_WORD_IF_16BIT |
-+		USBPCR1_DMPD | USBPCR1_DPPD;
-+	writel(reg, priv->base + REG_USBPCR1_OFFSET);
-+
-+	reg = USBPCR_IDPULLUP_OTG | USBPCR_VBUSVLDEXT |	USBPCR_TXPREEMPHTUNE |
-+		USBPCR_COMMONONN | USBPCR_POR;
-+	writel(reg, priv->base + REG_USBPCR_OFFSET);
-+
-+	/* Wait for PHY to reset */
-+	usleep_range(30, 300);
-+	writel(reg & ~USBPCR_POR, priv->base + REG_USBPCR_OFFSET);
-+	usleep_range(300, 1000);
- }
- 
-+static const struct ingenic_soc_info jz4770_soc_info = {
-+	.version = ID_JZ4770,
-+
-+	.usb_phy_init = jz4770_usb_phy_init,
-+};
-+
-+static const struct ingenic_soc_info jz4780_soc_info = {
-+	.version = ID_JZ4780,
-+
-+	.usb_phy_init = jz4780_usb_phy_init,
-+};
-+
-+static const struct ingenic_soc_info x1000_soc_info = {
-+	.version = ID_X1000,
-+
-+	.usb_phy_init = x1000_usb_phy_init,
-+};
-+
-+static const struct ingenic_soc_info x1830_soc_info = {
-+	.version = ID_X1830,
-+
-+	.usb_phy_init = x1830_usb_phy_init,
-+};
-+
-+static const struct of_device_id ingenic_usb_phy_of_matches[] = {
-+	{ .compatible = "ingenic,jz4770-phy", .data = &jz4770_soc_info },
-+	{ .compatible = "ingenic,jz4780-phy", .data = &jz4780_soc_info },
-+	{ .compatible = "ingenic,x1000-phy", .data = &x1000_soc_info },
-+	{ .compatible = "ingenic,x1830-phy", .data = &x1830_soc_info },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ingenic_usb_phy_of_matches);
-+
- static int jz4770_phy_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -164,18 +308,24 @@ static int jz4770_phy_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	priv->soc_info = device_get_match_data(&pdev->dev);
-+	if (!priv->soc_info) {
-+		dev_err(&pdev->dev, "Error: No device match found\n");
-+		return -ENODEV;
-+	}
-+
- 	platform_set_drvdata(pdev, priv);
- 	priv->dev = dev;
- 	priv->phy.dev = dev;
- 	priv->phy.otg = &priv->otg;
--	priv->phy.label = "jz4770-phy";
--	priv->phy.init = jz4770_phy_init;
--	priv->phy.shutdown = jz4770_phy_shutdown;
-+	priv->phy.label = "ingenic-usb-phy";
-+	priv->phy.init = ingenic_usb_phy_init;
-+	priv->phy.shutdown = ingenic_usb_phy_shutdown;
- 
- 	priv->otg.state = OTG_STATE_UNDEFINED;
- 	priv->otg.usb_phy = &priv->phy;
--	priv->otg.set_host = jz4770_phy_set_host;
--	priv->otg.set_peripheral = jz4770_phy_set_peripheral;
-+	priv->otg.set_host = ingenic_usb_phy_set_host;
-+	priv->otg.set_peripheral = ingenic_usb_phy_set_peripheral;
- 
- 	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base)) {
-@@ -206,26 +356,20 @@ static int jz4770_phy_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
--	return devm_add_action_or_reset(dev, jz4770_phy_remove, &priv->phy);
-+	return devm_add_action_or_reset(dev, ingenic_usb_phy_remove, &priv->phy);
- }
- 
--#ifdef CONFIG_OF
--static const struct of_device_id jz4770_phy_of_matches[] = {
--	{ .compatible = "ingenic,jz4770-phy" },
--	{ }
--};
--MODULE_DEVICE_TABLE(of, jz4770_phy_of_matches);
--#endif
--
--static struct platform_driver jz4770_phy_driver = {
-+static struct platform_driver ingenic_phy_driver = {
- 	.probe		= jz4770_phy_probe,
- 	.driver		= {
- 		.name	= "jz4770-phy",
--		.of_match_table = of_match_ptr(jz4770_phy_of_matches),
-+		.of_match_table = of_match_ptr(ingenic_usb_phy_of_matches),
- 	},
- };
--module_platform_driver(jz4770_phy_driver);
-+module_platform_driver(ingenic_phy_driver);
- 
-+MODULE_AUTHOR("周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>");
-+MODULE_AUTHOR("漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>");
- MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
--MODULE_DESCRIPTION("Ingenic JZ4770 USB PHY driver");
-+MODULE_DESCRIPTION("Ingenic SoCs USB PHY driver");
- MODULE_LICENSE("GPL");
--- 
-2.11.0
-
+--3V7upXqbjpZ4EhLz--
