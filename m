@@ -2,106 +2,125 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F8FC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5493DC433E4
 	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 22:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E454E2070B
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 22:07:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TA5BzKw5"
+	by mail.kernel.org (Postfix) with ESMTP id 3303C2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 22:07:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595714873;
+	bh=AlMyIIkUYdkMEf9k/MgUwkj3Brxoh7KvszXwKDV1774=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=oG6befAFh22Hn5ynQhhYOMLOn06pRt5Y37L4Q/MYRWebl60TtdAGFXqRm5oE/GfLo
+	 yUiUhEhveP04NdzEOK18z1InH6upvf/QIelmjlB1ht+zLTvvcAFT2erh+PCaBle/EW
+	 6MJhdKYegXu5BNiYDkmND9KdnCbHIxj5+K4jcN+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgGYWFB (ORCPT
+        id S1727975AbgGYWHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 18:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgGYWFA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 18:05:00 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6169CC08C5C0;
-        Sat, 25 Jul 2020 15:04:59 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id v22so3665638qtq.8;
-        Sat, 25 Jul 2020 15:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ORj8ts7tAGRiEo5hGbERimOD2nuQgJZB1dWj3IpTlc4=;
-        b=TA5BzKw5Fy2VrqhNGS5adDNkjAMk2Ozonbl6X+CNDcQBSjU8dH70YBm/mgJxQZDeEU
-         mTtYJLs0Wi3OI/09FXhe4itg8dg0Z8VtmBfOqAsjmvGp8zzObsoVApdHkEHyqiT1oKDI
-         CYA3m4GEkeQJ/yopNwx8cyY94qFAA7u7PKi4L2Q8lZYogQRe8oealTjJgZHj8DQRGCiY
-         +L61pUqPA7g09eha1VNdn63zV8SdKUBgOYSwLfSJ5uAtJxXKRZ7aSbpuGQJmkeEtPUwh
-         CVgK7Kof7xEC4UD9/yJMgTCKRt2TQ1UxuYAwezs8EBkoMIea43Fgh1bj2MQTVlSlrn52
-         lQEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ORj8ts7tAGRiEo5hGbERimOD2nuQgJZB1dWj3IpTlc4=;
-        b=J6yzedAS+4IVrp61vlyIOI/Axvh1YM23BgyZUt4UyL2qLs0oBl1mp9lezqFaNsXs1L
-         FWfvPKQUl/HtV1v+ubDCGlDNbJKNmyOz84W4KbTvKagXkGKRCYUqynxV9xTImxZQXAx6
-         U05AL+YvLK1jPG9qXK8HNkoUN08J7N4Urq7zbWTmSifUMyVkLj6XdzHA7mWi6YERLJMn
-         NPylvbf/lN3qyti8monwXewhPoi4B+K8uBNkArBI8voNhG23RkJDc5JHpjfqHuZt9Zmh
-         aLQ+Gv7xJTplc7cbIBrlY3/7/+Cq/9Cirf1UdVpf4Od+nKFqwK8aGeFlL8yk6g/qdE3I
-         f0Bw==
-X-Gm-Message-State: AOAM532/yF5ui7UQsa8gUqi/WmRmuwxC3cen7fDGPRSZU6PUBzjrIGqT
-        U/OP6NnN54748fB4+bxnVOKi8wDjqg==
-X-Google-Smtp-Source: ABdhPJz7E+iPwoBo/pvoBW9iN5HOxLTbBllS4XSHUeC2hqrK35sLHRmkovlHKJAn8ey4pn3T5jsLlA==
-X-Received: by 2002:ac8:4e2f:: with SMTP id d15mr15620334qtw.125.1595714698435;
-        Sat, 25 Jul 2020 15:04:58 -0700 (PDT)
-Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id 8sm12306554qkh.77.2020.07.25.15.04.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 15:04:57 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH] infiniband: Prevent uninit-value in ucma_accept()
-Date:   Sat, 25 Jul 2020 18:02:03 -0400
-Message-Id: <20200725220203.624557-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200725194839.623653-1-yepeilin.cs@gmail.com>
-References: <20200725194839.623653-1-yepeilin.cs@gmail.com>
+        Sat, 25 Jul 2020 18:07:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbgGYWHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 18:07:51 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 758AC20663;
+        Sat, 25 Jul 2020 22:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595714870;
+        bh=AlMyIIkUYdkMEf9k/MgUwkj3Brxoh7KvszXwKDV1774=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=efq8CSlTgBFCRntwHutc9xUTzBypUSo8HSNxGPySj1yWeFPRQKWzPe6cjctCFMOR4
+         Pv0cTU1pqBF22dVZkp28B6x7WLs6AuE3XXslgX8/zDzijVD0zkM0Lg9e5pCpOMdA1/
+         O6W0mUCe7XGXx4ZrutPB/7RzyhddqagNsXpv3aqc=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 427EE3522767; Sat, 25 Jul 2020 15:07:50 -0700 (PDT)
+Date:   Sat, 25 Jul 2020 15:07:50 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     peterz@infradead.org
+Cc:     Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] kcsan: Add option to allow watcher interruptions
+Message-ID: <20200725220750.GC9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200220141551.166537-1-elver@google.com>
+ <20200220185855.GY2935@paulmck-ThinkPad-P72>
+ <20200220213317.GA35033@google.com>
+ <20200725145623.GZ9247@paulmck-ThinkPad-P72>
+ <CANpmjNPhuvrhRHAiuv2Zju1VNSe7dO0aaYn+1TB99OF2Hv0S_A@mail.gmail.com>
+ <20200725174430.GH10769@hirez.programming.kicks-ass.net>
+ <20200725193909.GB9247@paulmck-ThinkPad-P72>
+ <20200725201013.GZ119549@hirez.programming.kicks-ass.net>
+ <20200725202131.GM43129@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200725202131.GM43129@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ucma_accept() is reading uninitialized memory when `in_len` is
-less than `offsetof(struct rdma_ucm_accept, ece)`. Fix it.
+On Sat, Jul 25, 2020 at 10:21:31PM +0200, peterz@infradead.org wrote:
+> On Sat, Jul 25, 2020 at 10:10:13PM +0200, peterz@infradead.org wrote:
+> > On Sat, Jul 25, 2020 at 12:39:09PM -0700, Paul E. McKenney wrote:
+> 
+> > > This gets me the following for __rcu_read_lock():
+> > > 
+> > > 00000000000000e0 <__rcu_read_lock>:
+> > >       e0:	48 8b 14 25 00 00 00 	mov    0x0,%rdx
+> > >       e7:	00 
+> > >       e8:	8b 82 e0 02 00 00    	mov    0x2e0(%rdx),%eax
+> > >       ee:	83 c0 01             	add    $0x1,%eax
+> > >       f1:	89 82 e0 02 00 00    	mov    %eax,0x2e0(%rdx)
+> > >       f7:	c3                   	retq   
+> > >       f8:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+> > >       ff:	00 
+> > > 
+> > > One might hope for a dec instruction, but this isn't bad.  We do lose
+> > > a few instructions compared to the C-language case due to differences
+> > > in address calculation:
+> > > 
+> > > 00000000000000e0 <__rcu_read_lock>:
+> > >       e0:	48 8b 04 25 00 00 00 	mov    0x0,%rax
+> > >       e7:	00 
+> > >       e8:	83 80 e0 02 00 00 01 	addl   $0x1,0x2e0(%rax)
+> > >       ef:	c3                   	retq   
+> > 
+> > Shees, that's daft... I think this is one of the cases where GCC is
+> > perhaps overly cautious when presented with 'volatile'.
+> > 
+> > It has a history of generating excessively crap code around volatile,
+> > and while it has improved somewhat, this seems to show there's still
+> > room for improvement...
+> > 
+> > I suppose this is the point where we go bug a friendly compiler person.
 
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
- drivers/infiniband/core/ucma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sounds very good!  Do you have someone specific in mind?
 
-diff --git a/drivers/infiniband/core/ucma.c b/drivers/infiniband/core/ucma.c
-index a591fdccdce0..842d297903c0 100644
---- a/drivers/infiniband/core/ucma.c
-+++ b/drivers/infiniband/core/ucma.c
-@@ -1134,7 +1134,7 @@ static ssize_t ucma_listen(struct ucma_file *file, const char __user *inbuf,
- static ssize_t ucma_accept(struct ucma_file *file, const char __user *inbuf,
- 			   int in_len, int out_len)
- {
--	struct rdma_ucm_accept cmd;
-+	struct rdma_ucm_accept cmd = {};
- 	struct rdma_conn_param conn_param;
- 	struct rdma_ucm_ece ece = {};
- 	struct ucma_context *ctx;
--- 
-2.25.1
+> Having had a play with godbolt.org, it seems clang isn't affected by
+> this particular flavour of crazy, but GCC does indeed refuse to fuse the
+> address calculation and the addition.
 
+So there is hope, then!
+
+And even GCC's current state is an improvement.  Last I messed with this,
+the ACCESS_ONCE()++ approach generated a load, a register increment,
+and a store.
+
+Do you still have the godbolt.org URLs?  I would be happy to file
+a bugzilla.
+
+							Thanx, Paul
