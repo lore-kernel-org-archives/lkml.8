@@ -2,106 +2,115 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5689EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A87C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B39220748
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573BE206EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:03:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Anfbl2kc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgGYDBP (ORCPT
+        id S1726782AbgGYDDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 23:01:15 -0400
-Received: from mga11.intel.com ([192.55.52.93]:1363 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726572AbgGYDBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 23:01:15 -0400
-IronPort-SDR: 2WFHRbUfifyDb0LFVipTnlThgRhZ4C44Zzw2TeObdPSzO2DYE3+/iEX/5QqP8+ix07Mxsq6oKK
- d+0HLcMhvOFA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="148715924"
-X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="148715924"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 20:01:15 -0700
-IronPort-SDR: Zb1abh/qM98LiRVzVkmiiDoP7rGOSDUXza0TOyRuPkDFnnvZt/7ajicbDb/7B1D/7SWcoRNjF5
- 0l5d4ObrS97A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="311611969"
-Received: from jcrametz-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.73])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Jul 2020 20:01:09 -0700
-Date:   Sat, 25 Jul 2020 06:01:07 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH v5 1/6] kprobes: Remove dependency to the module_mutex
-Message-ID: <20200725030107.GF17052@linux.intel.com>
-References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
- <20200724050553.1724168-2-jarkko.sakkinen@linux.intel.com>
- <20200724091711.GB517988@gmail.com>
+        Fri, 24 Jul 2020 23:03:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55504 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726572AbgGYDDH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 23:03:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595646186;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dJKlmgtXl7uNqK+gi01GLPol8dXOhIFF+vRj8dKFHJ4=;
+        b=Anfbl2kcsBmd0PI36qol9zAkRgk0jUE4SYT3TPGKkKjzvAS3che2+YFxVTPSqRXDyfgpzm
+        LmpNe/cBem1mtkTk9js6lFbJ4UVjgW3QeWTr2joXPbTaN1ezEPrLtj+xi4sTGzyCy+lZ2W
+        jk5KGjDzM1hkF1Z/u+KA3PY92MHdlsI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-388-taJbuqtoOr-9IUyajzXA8A-1; Fri, 24 Jul 2020 23:03:02 -0400
+X-MC-Unique: taJbuqtoOr-9IUyajzXA8A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AA6B958;
+        Sat, 25 Jul 2020 03:03:00 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-117-203.rdu2.redhat.com [10.10.117.203])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B17D18FA2A;
+        Sat, 25 Jul 2020 03:02:58 +0000 (UTC)
+Subject: Re: [PATCH v3 5/6] powerpc/pseries: implement paravirt qspinlocks for
+ SPLPAR
+From:   Waiman Long <longman@redhat.com>
+To:     Will Deacon <will@kernel.org>, peterz@infradead.org
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Boqun Feng <boqun.feng@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+ <20200706043540.1563616-6-npiggin@gmail.com>
+ <874kqhvu1v.fsf@mpe.ellerman.id.au>
+ <8265d782-4e50-a9b2-a908-0cb588ffa09c@redhat.com>
+ <20200723140011.GR5523@worktop.programming.kicks-ass.net>
+ <845de183-56f5-2958-3159-faa131d46401@redhat.com>
+ <20200723184759.GS119549@hirez.programming.kicks-ass.net>
+ <20200724081647.GA16642@willie-the-truck>
+ <8532332b-85dd-661b-cf72-81a8ceb70747@redhat.com>
+Organization: Red Hat
+Message-ID: <ccf0c6a6-b7c3-8909-cc8f-0c5e7434c372@redhat.com>
+Date:   Fri, 24 Jul 2020 23:02:58 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724091711.GB517988@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <8532332b-85dd-661b-cf72-81a8ceb70747@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 11:17:11AM +0200, Ingo Molnar wrote:
-> 
-> * Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-> 
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -564,7 +564,7 @@ static void kprobe_optimizer(struct work_struct *work)
-> >  	cpus_read_lock();
-> >  	mutex_lock(&text_mutex);
-> >  	/* Lock modules while optimizing kprobes */
-> > -	mutex_lock(&module_mutex);
-> > +	lock_modules();
-> >  
-> >  	/*
-> >  	 * Step 1: Unoptimize kprobes and collect cleaned (unused and disarmed)
-> > @@ -589,7 +589,7 @@ static void kprobe_optimizer(struct work_struct *work)
-> >  	/* Step 4: Free cleaned kprobes after quiesence period */
-> >  	do_free_cleaned_kprobes();
-> >  
-> > -	mutex_unlock(&module_mutex);
-> > +	unlock_modules();
-> >  	mutex_unlock(&text_mutex);
-> >  	cpus_read_unlock();
-> 
-> BTW., it would be nice to expand on the comments above - exactly which 
-> parts of the modules code is being serialized against and why?
-> 
-> We already hold the text_mutex here, which should protect against most 
-> kprobes related activities interfering - and it's unclear (to me) 
-> which part of the modules code is being serialized with here, and the 
-> 'lock modules while optimizing kprobes' comments is unhelpful. :-)
-> 
-> Thanks,
-> 
-> 	Ingo
+On 7/24/20 3:10 PM, Waiman Long wrote:
+> On 7/24/20 4:16 AM, Will Deacon wrote:
+>> On Thu, Jul 23, 2020 at 08:47:59PM +0200, peterz@infradead.org wrote:
+>>> On Thu, Jul 23, 2020 at 02:32:36PM -0400, Waiman Long wrote:
+>>>> BTW, do you have any comment on my v2 lock holder cpu info 
+>>>> qspinlock patch?
+>>>> I will have to update the patch to fix the reported 0-day test 
+>>>> problem, but
+>>>> I want to collect other feedback before sending out v3.
+>>> I want to say I hate it all, it adds instructions to a path we spend an
+>>> aweful lot of time optimizing without really getting anything back for
+>>> it.
+>>>
+>>> Will, how do you feel about it?
+>> I can see it potentially being useful for debugging, but I hate the
+>> limitation to 256 CPUs. Even arm64 is hitting that now.
+>
+> After thinking more about that, I think we can use all the remaining 
+> bits in the 16-bit locked_pending. Reserving 1 bit for locked and 1 
+> bit for pending, there are 14 bits left. So as long as NR_CPUS < 16k 
+> (requirement for 16-bit locked_pending), we can put all possible cpu 
+> numbers into the lock. We can also just use smp_processor_id() without 
+> additional percpu data. 
 
-AFAIK, only if you need to call find_module(), you ever need to acquire
-this mutex. 99% of time it is internally taken care by kernel/module.c.
+Sorry, that doesn't work. The extra bits in the pending byte won't get 
+cleared on unlock. That will have noticeable performance impact. 
+Clearing the pending byte on unlock will cause other performance 
+problem. So I guess we will have to limit the cpu number in the locked byte.
 
-I cannot make up any obvious reason to acquire it here.
+Regards,
+Longman
 
-/Jarkko
