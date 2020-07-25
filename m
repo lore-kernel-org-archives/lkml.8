@@ -2,109 +2,159 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D920FC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 13:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCF0C433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 13:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B87A620674
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 13:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E194920674
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 13:52:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="avbKNi5L";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EobXRciR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqWuWZ01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgGYNxk (ORCPT
+        id S1727116AbgGYNwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 09:53:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39098 "EHLO
+        Sat, 25 Jul 2020 09:52:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726639AbgGYNxk (ORCPT
+        with ESMTP id S1726639AbgGYNwi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 09:53:40 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1328FC08C5C0;
-        Sat, 25 Jul 2020 06:53:40 -0700 (PDT)
-Date:   Sat, 25 Jul 2020 13:53:36 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595685218;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=i7L5Uokminw2hb/ot5HyS/DIJKPw+2NAd2RMYA9W+u0=;
-        b=avbKNi5LD7FIeafHqpn/AAejrYmW8v9oK5uhbDi8Pk4qgKLQEo3q8Dxxu2x1DM/NNW5vsg
-        AEJBXKcGHTR3DLsGe5SIEJZ4II0tr4dFbvQR8sYtXfK7pW7YBB1oQ4sGEsFP0zpwzYeybz
-        238NZubAjyFk3cTJ+eLX+t0qk1Sm2E1KdtVcmnlE22nbt0w5EAQglF2gLBQGBiFmrKvExx
-        bkrvaWV0MRzkhGbzNJxCfrG02iDMdpbun/T8AtWoV6ZP+0LBK27RXEeN/Y+4BxNEnNT/qv
-        X8cNw5w6wk+k+BlWKrEOuACSFUVotSbqXsZU4d5B3dSFFslYTDAYCCu+zT2pdg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595685218;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=i7L5Uokminw2hb/ot5HyS/DIJKPw+2NAd2RMYA9W+u0=;
-        b=EobXRciR5eYl+jDPtleNmNlRI3O2xUGSAfF7IwOeOoLqbaTuoAkcrkz3YAYU0mgu4BSgq/
-        mr3HUz9Ul6uW/tBg==
-From:   "tip-bot2 for Hayato Ohhashi" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/timers] x86/xen/time: Set the X86_FEATURE_TSC_KNOWN_FREQ
- flag in xen_tsc_khz()
-Cc:     Hayato Ohhashi <o8@vmm.dev>, Ingo Molnar <mingo@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200721161231.6019-1-o8@vmm.dev>
-References: <20200721161231.6019-1-o8@vmm.dev>
+        Sat, 25 Jul 2020 09:52:38 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65348C08C5C0
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 06:52:38 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id c2so3100260edx.8
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 06:52:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=ypjj5pTRTJCGG8++SxjYKdcYv0L6mq3Sd3wiJ6Jmy7Q=;
+        b=AqWuWZ01ZIfafFnzObb2vAa1rB2DLoBdSS0ArEZ3p5K4zu9zu9IlBTcZwtgvYdqc2T
+         4CDIKRlioidVKO3p3jxd/KbHzeMBvOY2U6iaT1CpJk1QpDxxuV0PTgJOp8uYYVdB2im4
+         ajqqStEIsRMVSNDtUIASh9bPBKtXpyfUj3PFCj3+3VaejqN6DOdQOu7tTkzodx2J+bVw
+         dPy1ZuLGlepWxQykDzVt3Xon74ilyvqvlhDwe9sqIZ/LM9PLXnfxGo/mspbHF0nhkdt7
+         7SXNf0okLTxf2NzgJwIH05UH6n+uX6r6KwT9S3juUMJcUXZHKHYCyTmlVQm/lCpabky/
+         LQdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ypjj5pTRTJCGG8++SxjYKdcYv0L6mq3Sd3wiJ6Jmy7Q=;
+        b=hhSNA2dmpa1dERrWDKtPSApg85Gc5B43Cxvxdn29xI9GQeieUDUGF7n3oysp27Q3hD
+         3r7qUNbSz0A7kxz75xP7pAKoGjnQ1xcY7MKiyxlUQDwjlhBYPISQRB9YHA0HvK67VqoV
+         qE7uWhnCKoNaBQW2knLbaN+hfnLd7iLC0C4nX5eq4EURIMCnmVzstVO2NYOEpMcUuAtN
+         KmvEgbfbrkQIJFIeCRgNISzsJpBcLPegNdkc23sU3F9pEi3bbIq0Ktk6AHr4BlOVpYfT
+         im+wlLan0K7v47WhX/WFZ4XEenqATAtvWbF3WmgwVhtc6DFP+znEQ9WizCzCyvUOPdbQ
+         CcPA==
+X-Gm-Message-State: AOAM532WBPY8ZRlbvU9RWrzFiALcuXhZz09MTEjdN1gn4PaGoKw6S2uf
+        OkWRHXMDVJJd0w+qqul/hVaTCd/G7g==
+X-Google-Smtp-Source: ABdhPJwVPbbE/10wTaNlUQ+7jgUBZiCUFb1Mn8lF5I2ve12C9A0eUah4bQzroLp5+LuSwKgsGcqfnw==
+X-Received: by 2002:a05:6402:2037:: with SMTP id ay23mr7361933edb.48.1595685156785;
+        Sat, 25 Jul 2020 06:52:36 -0700 (PDT)
+Received: from [192.168.200.34] (ip5b436a54.dynamic.kabel-deutschland.de. [91.67.106.84])
+        by smtp.gmail.com with ESMTPSA id d24sm2918549eje.21.2020.07.25.06.52.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Jul 2020 06:52:36 -0700 (PDT)
+Subject: Re: [PATCH v2 0/5] drm: rockchip: various ports for older VOPs
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200722181332.26995-1-knaerzche@gmail.com>
+ <CAKMK7uGKyYea_9MamAQw2=ebjW=raYCDeFCf_5jyyJPHL9AZWA@mail.gmail.com>
+From:   Alex Bee <knaerzche@gmail.com>
+Message-ID: <47599ce1-2a3b-87eb-c46e-8f7f79ca945e@gmail.com>
+Date:   Sat, 25 Jul 2020 15:52:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-ID: <159568521657.4006.636725222719551278.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CAKMK7uGKyYea_9MamAQw2=ebjW=raYCDeFCf_5jyyJPHL9AZWA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/timers branch of tip:
 
-Commit-ID:     898ec52d2ba05915aaedcdb21bff2e944c883cb8
-Gitweb:        https://git.kernel.org/tip/898ec52d2ba05915aaedcdb21bff2e944c883cb8
-Author:        Hayato Ohhashi <o8@vmm.dev>
-AuthorDate:    Tue, 21 Jul 2020 16:12:31 
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 25 Jul 2020 15:49:41 +02:00
+Am 22.07.20 um 23:43 schrieb Daniel Vetter:
+> On Wed, Jul 22, 2020 at 8:13 PM Alex Bee <knaerzche@gmail.com> wrote:
+>> Hi,
+>>
+>> this series mainly ports existining functionality to older SoCs - most
+>> importantly enables alpha blending for RK3036, RK3066, RK3126 and
+>> RK3188.
+>> Besides that, it also changes the window type from DRM_PLANE_TYPE_CURSOR
+>> to DRM_PLANE_TYPE_OVERLAY for VOPs that have only one (1) overlay window.
+> This doesn't make much sense, the cursor overlay is really just a hint
+> for legacy ioctls that this is the overlay that should be used for
+> cursors. Compositors should try to use such planes as full overlays
+> (if they don't want to use them as a cursor). So sounds like a case of
+> "fix your compositor".
+I agree here - but: If HWC windows would have been implemented in this 
+particular driver, their max size would be 128x128 on some SoCs - so 
+they woudn't be really suitable to create an OSD overlay at 4K, for 
+example. I don't know, but I guess other vendors implement their HWC 
+windows on this reduced HW resources as well. I guess that is one of the 
+reasons, why userspace, which aims to be cross-plattfrom, avoids 
+DRM_PLANE_TYPE_CURSOR when its looking for an usable overlay plane. (a 
+heuristic, indeed)
+> For atomic there's 0 difference between a overlay or a cursor (primary
+> plane is still treated somewhat special in the RMFB ioctl, but again
+> that's for backwards compat reasons with existing uapi, not because
+> the primary plane is different).
+>
+> What does happen though is that this breaks cursor for legacy
+> userspace, which is probably not really what you want.
 
-x86/xen/time: Set the X86_FEATURE_TSC_KNOWN_FREQ flag in xen_tsc_khz()
+Indeed not.
 
-If the TSC frequency is known from the pvclock page,
-the TSC frequency does not need to be recalibrated.
+Beforhand I was submiiting this, I looked arround and couldn't find 
+anything which relies or even depends of a cursor window to be 
+available. Even if: as per spec only one DRM_PLANE_TYPE_PRIMARY is 
+mandatory, everything else is optional.
 
-We can avoid recalibration by setting X86_FEATURE_TSC_KNOWN_FREQ.
+> -Daniel
+>
+>
+>> Regards,
+>> Alex
+>>
+>> Changes in v2:
+>> - drop not yet upstreamed dsp_data_swap from RK3188 regs
+>> - rephrase most commit messages
+>>
+>> Alex Bee (5):
+>>    drm: rockchip: add scaling for RK3036 win1
+>>    drm: rockchip: add missing registers for RK3188
+>>    drm: rockchip: add alpha support for RK3036, RK3066, RK3126 and RK3188
+>>    drm: rockchip: set alpha_en to 0 if it is not used
+>>    drm: rockchip: use overlay windows as such
+>>
+>>   drivers/gpu/drm/rockchip/rockchip_drm_vop.c |  1 +
+>>   drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 42 ++++++++++++++++++---
+>>   drivers/gpu/drm/rockchip/rockchip_vop_reg.h |  1 +
+>>   3 files changed, 38 insertions(+), 6 deletions(-)
+>>
+>> --
+>> 2.17.1
+>>
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
 
-Signed-off-by: Hayato Ohhashi <o8@vmm.dev>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Link: https://lore.kernel.org/r/20200721161231.6019-1-o8@vmm.dev
----
- arch/x86/xen/time.c | 1 +
- 1 file changed, 1 insertion(+)
+Best Regards
 
-diff --git a/arch/x86/xen/time.c b/arch/x86/xen/time.c
-index c8897aa..91f5b33 100644
---- a/arch/x86/xen/time.c
-+++ b/arch/x86/xen/time.c
-@@ -39,6 +39,7 @@ static unsigned long xen_tsc_khz(void)
- 	struct pvclock_vcpu_time_info *info =
- 		&HYPERVISOR_shared_info->vcpu_info[0].time;
- 
-+	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
- 	return pvclock_tsc_khz(info);
- }
- 
