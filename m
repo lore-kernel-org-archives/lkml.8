@@ -2,101 +2,155 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C65C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2329C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0D3D20758
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:54:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Xg7p7nod"
+	by mail.kernel.org (Postfix) with ESMTP id 94688206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgGYTym (ORCPT
+        id S1728047AbgGYTzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 15:54:42 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60824 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726727AbgGYTym (ORCPT
+        Sat, 25 Jul 2020 15:55:36 -0400
+Received: from smtprelay0110.hostedemail.com ([216.40.44.110]:59088 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726727AbgGYTzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 15:54:42 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06PJsap0001301;
-        Sat, 25 Jul 2020 14:54:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1595706876;
-        bh=Aaksztzrfs7ZnVJl7Uo5foZqIiLfpt+fEVbTgERsXos=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Xg7p7nodeeTjLodTkGLLHQeT4TBNHYWrsyzYeeznqT5JCgo1ethS6CZKbF+wDQucA
-         YS6pXI5rioij19trS5r4zfHKcgiM2UI3uD+S5hy/mH+X4z56KGq9BP7xNgYlqOLy9I
-         YHHJ1+wyD2izVqK8W5ScHTZ5e9/f0797niNjamww=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06PJsaVr042359
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 25 Jul 2020 14:54:36 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sat, 25
- Jul 2020 14:54:36 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Sat, 25 Jul 2020 14:54:36 -0500
-Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06PJsW3X043152;
-        Sat, 25 Jul 2020 14:54:33 -0500
-Subject: Re: [PATCH v4 0/2] Add new PHY APIs to framework to get/set PHY
- attributes
-To:     Swapnil Jakhade <sjakhade@cadence.com>, <vkoul@kernel.org>,
-        <kishon@ti.com>, <linux-kernel@vger.kernel.org>,
-        <maxime@cerno.tech>
-CC:     <mparab@cadence.com>, <yamonkar@cadence.com>,
-        <tomi.valkeinen@ti.com>, <jsarha@ti.com>, <praneeth@ti.com>
-References: <1594968633-12535-1-git-send-email-sjakhade@cadence.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <f1f2cdca-99a1-2bcc-6fe2-9ce95553a7cd@ti.com>
-Date:   Sun, 26 Jul 2020 01:24:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 25 Jul 2020 15:55:36 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 9D4951822383C;
+        Sat, 25 Jul 2020 19:55:34 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: comb92_0614f4a26f52
+X-Filterd-Recvd-Size: 6550
+Received: from joe-laptop.perches.com (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 25 Jul 2020 19:55:33 +0000 (UTC)
+From:   Joe Perches <joe@perches.com>
+To:     Ping-Ke Shih <pkshih@realtek.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        linux-wireless@vger.kernel.org
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] rtlwifi: Convert RT_TRACE to rtl_dbg and neatening
+Date:   Sat, 25 Jul 2020 12:55:02 -0700
+Message-Id: <cover.1595706419.git.joe@perches.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <1594968633-12535-1-git-send-email-sjakhade@cadence.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+RT_TRACE seems like it should be associated to tracing but it's not.
+It's a generic debug logging mechanism.
+Rename it to a more typical name.
+Miscellaneous neatening around these changes.
 
-On 7/17/20 12:20 PM, Swapnil Jakhade wrote:
-> This patch series adds a new pair of PHY APIs that can be used to get/set
-> all the PHY attributes. It also adds a new PHY attribute max_link_rate.
-> 
-> It includes following patches:
-> 
-> 1. v4-0001-phy-Add-new-PHY-attribute-max_link_rate-and-APIs-.patch
-> This patch adds max_link_rate as a new PHY attribute along with a pair of
-> APIs that allow using the generic PHY subsystem to get/set PHY attributes
-> supported by the PHY.
-> 
-> 2. v4-0002-phy-cadence-torrent-Use-kernel-PHY-API-to-set-PHY.patch
-> This patch uses PHY API phy_set_attrs() to set corresponding PHY properties
-> in Cadence Torrent PHY driver. This will enable drivers using this PHY to
-> read these properties using PHY framework.
-> 
-> The phy_get_attrs() API will be used in the DRM bridge driver [1] which is
-> in the process of upstreaming.
+Joe Perches (6):
+  rtlwifi: Convert RT_TRACE to rtl_dbg
+  rtlwifi: Remove unnecessary parenthese in rtl_dbg uses
+  rtlwifi: Better spacing around rtl_dbg uses
+  rtlwifi: Convert rtl_dbg embedded function names to %s: ..., __func__
+  rtlwifi: Avoid multiline dereferences in rtl_dbg uses
+  rtlwifi: Convert sleeped to slept in rtl_dbg uses
 
-Is it possible to queue these for v5.9 also? I did notice that phy
-updates for v5.9-rc1 are posted already. But these APIs are needed for
-the DisplayPort driver thats getting ready for merge too. Having these
-queued now will make managing dependencies much easier.
+ drivers/net/wireless/realtek/rtlwifi/base.c   | 144 +--
+ .../rtlwifi/btcoexist/halbtc8192e2ant.c       | 733 ++++++++--------
+ .../rtlwifi/btcoexist/halbtc8723b1ant.c       | 366 ++++----
+ .../rtlwifi/btcoexist/halbtc8723b2ant.c       | 720 +++++++--------
+ .../rtlwifi/btcoexist/halbtc8821a1ant.c       | 670 +++++++-------
+ .../rtlwifi/btcoexist/halbtc8821a2ant.c       | 760 ++++++++--------
+ .../realtek/rtlwifi/btcoexist/halbtcoutsrc.c  |  36 +-
+ .../realtek/rtlwifi/btcoexist/rtl_btc.c       |   6 +-
+ drivers/net/wireless/realtek/rtlwifi/cam.c    |  82 +-
+ drivers/net/wireless/realtek/rtlwifi/core.c   | 261 +++---
+ drivers/net/wireless/realtek/rtlwifi/debug.c  |   4 +-
+ drivers/net/wireless/realtek/rtlwifi/debug.h  |  11 +-
+ drivers/net/wireless/realtek/rtlwifi/efuse.c  |  72 +-
+ drivers/net/wireless/realtek/rtlwifi/pci.c    | 290 +++---
+ drivers/net/wireless/realtek/rtlwifi/ps.c     |  98 +--
+ drivers/net/wireless/realtek/rtlwifi/regd.c   |  18 +-
+ .../wireless/realtek/rtlwifi/rtl8188ee/dm.c   | 201 +++--
+ .../wireless/realtek/rtlwifi/rtl8188ee/fw.c   |  90 +-
+ .../wireless/realtek/rtlwifi/rtl8188ee/hw.c   | 194 ++---
+ .../wireless/realtek/rtlwifi/rtl8188ee/led.c  |  20 +-
+ .../wireless/realtek/rtlwifi/rtl8188ee/phy.c  | 385 ++++----
+ .../wireless/realtek/rtlwifi/rtl8188ee/rf.c   |   6 +-
+ .../wireless/realtek/rtlwifi/rtl8188ee/trx.c  |  24 +-
+ .../realtek/rtlwifi/rtl8192c/dm_common.c      | 225 +++--
+ .../realtek/rtlwifi/rtl8192c/fw_common.c      |  88 +-
+ .../realtek/rtlwifi/rtl8192c/phy_common.c     | 268 +++---
+ .../wireless/realtek/rtlwifi/rtl8192ce/dm.c   |  40 +-
+ .../wireless/realtek/rtlwifi/rtl8192ce/hw.c   | 178 ++--
+ .../wireless/realtek/rtlwifi/rtl8192ce/led.c  |  12 +-
+ .../wireless/realtek/rtlwifi/rtl8192ce/phy.c  | 121 ++-
+ .../wireless/realtek/rtlwifi/rtl8192ce/rf.c   |   6 +-
+ .../wireless/realtek/rtlwifi/rtl8192ce/trx.c  |  14 +-
+ .../wireless/realtek/rtlwifi/rtl8192cu/dm.c   |  40 +-
+ .../wireless/realtek/rtlwifi/rtl8192cu/hw.c   | 154 ++--
+ .../wireless/realtek/rtlwifi/rtl8192cu/led.c  |  10 +-
+ .../wireless/realtek/rtlwifi/rtl8192cu/mac.c  |  66 +-
+ .../wireless/realtek/rtlwifi/rtl8192cu/phy.c  | 134 +--
+ .../wireless/realtek/rtlwifi/rtl8192cu/rf.c   |   6 +-
+ .../wireless/realtek/rtlwifi/rtl8192cu/trx.c  |  58 +-
+ .../wireless/realtek/rtlwifi/rtl8192de/dm.c   | 314 +++----
+ .../wireless/realtek/rtlwifi/rtl8192de/fw.c   | 116 +--
+ .../wireless/realtek/rtlwifi/rtl8192de/hw.c   | 206 ++---
+ .../wireless/realtek/rtlwifi/rtl8192de/led.c  |  10 +-
+ .../wireless/realtek/rtlwifi/rtl8192de/phy.c  | 422 ++++-----
+ .../wireless/realtek/rtlwifi/rtl8192de/rf.c   |  30 +-
+ .../wireless/realtek/rtlwifi/rtl8192de/trx.c  |  20 +-
+ .../wireless/realtek/rtlwifi/rtl8192ee/dm.c   |  66 +-
+ .../wireless/realtek/rtlwifi/rtl8192ee/fw.c   | 102 +--
+ .../wireless/realtek/rtlwifi/rtl8192ee/hw.c   | 208 ++---
+ .../wireless/realtek/rtlwifi/rtl8192ee/led.c  |  18 +-
+ .../wireless/realtek/rtlwifi/rtl8192ee/phy.c  | 357 ++++----
+ .../wireless/realtek/rtlwifi/rtl8192ee/rf.c   |   6 +-
+ .../wireless/realtek/rtlwifi/rtl8192ee/trx.c  |  32 +-
+ .../wireless/realtek/rtlwifi/rtl8192se/dm.c   |  42 +-
+ .../wireless/realtek/rtlwifi/rtl8192se/fw.c   |  40 +-
+ .../wireless/realtek/rtlwifi/rtl8192se/hw.c   | 158 ++--
+ .../wireless/realtek/rtlwifi/rtl8192se/led.c  |  10 +-
+ .../wireless/realtek/rtlwifi/rtl8192se/phy.c  | 215 +++--
+ .../wireless/realtek/rtlwifi/rtl8192se/rf.c   |  70 +-
+ .../wireless/realtek/rtlwifi/rtl8192se/sw.c   |   4 +-
+ .../wireless/realtek/rtlwifi/rtl8192se/trx.c  |  10 +-
+ .../wireless/realtek/rtlwifi/rtl8723ae/dm.c   | 162 ++--
+ .../wireless/realtek/rtlwifi/rtl8723ae/fw.c   |  64 +-
+ .../rtlwifi/rtl8723ae/hal_bt_coexist.c        | 151 ++--
+ .../realtek/rtlwifi/rtl8723ae/hal_btc.c       | 654 +++++++-------
+ .../wireless/realtek/rtlwifi/rtl8723ae/hw.c   | 234 ++---
+ .../wireless/realtek/rtlwifi/rtl8723ae/led.c  |  12 +-
+ .../wireless/realtek/rtlwifi/rtl8723ae/phy.c  | 344 ++++----
+ .../wireless/realtek/rtlwifi/rtl8723ae/rf.c   |   6 +-
+ .../wireless/realtek/rtlwifi/rtl8723ae/trx.c  |  14 +-
+ .../wireless/realtek/rtlwifi/rtl8723be/dm.c   | 119 ++-
+ .../wireless/realtek/rtlwifi/rtl8723be/fw.c   |  66 +-
+ .../wireless/realtek/rtlwifi/rtl8723be/hw.c   | 202 ++---
+ .../wireless/realtek/rtlwifi/rtl8723be/led.c  |  10 +-
+ .../wireless/realtek/rtlwifi/rtl8723be/phy.c  | 309 ++++---
+ .../wireless/realtek/rtlwifi/rtl8723be/rf.c   |   6 +-
+ .../wireless/realtek/rtlwifi/rtl8723be/trx.c  |  24 +-
+ .../realtek/rtlwifi/rtl8723com/fw_common.c    |  22 +-
+ .../realtek/rtlwifi/rtl8723com/phy_common.c   |  36 +-
+ .../wireless/realtek/rtlwifi/rtl8821ae/dm.c   | 823 +++++++++---------
+ .../wireless/realtek/rtlwifi/rtl8821ae/fw.c   | 134 +--
+ .../wireless/realtek/rtlwifi/rtl8821ae/hw.c   | 466 +++++-----
+ .../wireless/realtek/rtlwifi/rtl8821ae/led.c  |  32 +-
+ .../wireless/realtek/rtlwifi/rtl8821ae/phy.c  | 538 ++++++------
+ .../wireless/realtek/rtlwifi/rtl8821ae/rf.c   |   6 +-
+ .../wireless/realtek/rtlwifi/rtl8821ae/trx.c  |  58 +-
+ drivers/net/wireless/realtek/rtlwifi/usb.c    |  18 +-
+ 87 files changed, 6766 insertions(+), 6811 deletions(-)
 
-Thanks,
-Sekhar
+-- 
+2.26.0
+
