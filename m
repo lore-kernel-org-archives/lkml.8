@@ -2,99 +2,157 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E3DC433F2
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 416E8C433F8
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96699206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E282074F
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:12:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="ktmEEWGp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgGYFMP (ORCPT
+        id S1727036AbgGYFMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 01:12:15 -0400
-Received: from out28-51.mail.aliyun.com ([115.124.28.51]:49239 "EHLO
-        out28-51.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgGYFMN (ORCPT
+        Sat, 25 Jul 2020 01:12:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgGYFMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 01:12:13 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1552631|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0239945-0.00119476-0.974811;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03294;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.I7G.t3W_1595653922;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I7G.t3W_1595653922)
-          by smtp.aliyun-inc.com(10.147.40.26);
-          Sat, 25 Jul 2020 13:12:09 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, paul@crapouillou.net,
-        prasannatsmkumar@gmail.com, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: [PATCH 1/3] dt-bindings: clock: Add RTC related clocks for Ingenic SoCs.
-Date:   Sat, 25 Jul 2020 13:11:34 +0800
-Message-Id: <20200725051136.58220-2-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200725051136.58220-1-zhouyanjie@wanyeetech.com>
-References: <20200725051136.58220-1-zhouyanjie@wanyeetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Sat, 25 Jul 2020 01:12:40 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01D66C0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 22:12:40 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a23so6355526pfk.13
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 22:12:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PcyXn/F49Fqhz4TOynaWt+U5OFlKuzg22AoeOH0QnA0=;
+        b=ktmEEWGpMHiP+vgSZ4fYLmAS+aXx6GO1YWFpZX15mUTDxKR3uOTnlQKCjHxyM3wOfM
+         Hx+FneH6aBrYNZjL5ZNRYudAWvoyKMzRKK4CZG2UESygEPoEEVHdVeKyet0fOI2povme
+         WYZDkntiKH+LoMKj37839Qj08Eyy2si3v9E6G6VhEQOUpriwsUEKxz/9IpSIRPQUEo8X
+         s0G0YrBpRxjb7y0HRa5hO/cEku7U3ssAYSzqoqb7sISfkIGBjl8Eja/zugaQI0f/S/SI
+         rX5jqD65eKosX/9hJY1Miep0uQ4yTsdMox7T4XAzeooWv8/3YJUM1ru9/haBBdSiSl1I
+         h+Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=PcyXn/F49Fqhz4TOynaWt+U5OFlKuzg22AoeOH0QnA0=;
+        b=jRprdOYwH5QAXdg63kJda83CpivCZHOJ936BLnxQzCgo4minbdPRCO7sLwzFGSFD3V
+         BVRMmsp/wB0WPh5JBnMx1aOPX/KL1GZ018SoYybfzSEuALDzswp8In0kTIW+NcR07cUe
+         Yu8yb5KjwSD+zmP6OpEVxbYSGhOd8SvQ/NunSRQQ9Ww7/9bk6ue3S31i8tUtBBsIkAAf
+         28QmUN1EOnDhsSGkTVGgHtYNJVAyLPWbITkR7wwKdQFR9QDXERIO9MdyD5HELtb4uPkD
+         f7jyIAz+oQu5xVl6HpoRimO1JymXVzPV3DjLjdk/o4prPs2omAsFgE0S4Fmqax635pi4
+         cGDA==
+X-Gm-Message-State: AOAM533Znsq4jMiDELLR5FblUEkU/EQwT349cnVwXIMPcQ+on/IWn6IH
+        3qyE+87wZrP8lFSScvPp4yJPlCu4krs=
+X-Google-Smtp-Source: ABdhPJxkaiVy/YeIQXdACLL0DGaA+9WA17ylQocN96rHcnrOuZmk8/7frgv7Swmg5udIZJ/k/gRq0A==
+X-Received: by 2002:a62:3684:: with SMTP id d126mr509500pfa.234.1595653959099;
+        Fri, 24 Jul 2020 22:12:39 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id b22sm7107670pju.26.2020.07.24.22.12.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 22:12:38 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 22:12:38 -0700 (PDT)
+X-Google-Original-Date: Fri, 24 Jul 2020 18:49:48 PDT (-0700)
+Subject:     Re: [PATCH 1/4] RISC-V: Setup exception vector early
+In-Reply-To: <20200715233009.27183-2-atish.patra@wdc.com>
+CC:     linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
+        aou@eecs.berkeley.edu, Anup Patel <Anup.Patel@wdc.com>,
+        greentime.hu@sifive.com, linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, sudeep.holla@arm.com,
+        vincent.chen@sifive.com, zong.li@sifive.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Atish Patra <Atish.Patra@wdc.com>
+Message-ID: <mhng-8ce8d920-4b65-432c-8b51-8d81f55936c0@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add RTC related clocks bindings for the JZ4780 SoC, the X1000 SoC,
-and the X1830 SoC from Ingenic.
+On Wed, 15 Jul 2020 16:30:06 PDT (-0700), Atish Patra wrote:
+> The trap vector is set only in trap_init which may be too late in some
+> cases. Early ioremap/efi spits many warning messages which may be useful.
+>
+> Setup the trap vector early so that any warning/bug can be handled before
+> generic code invokes trap_init.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/kernel/head.S    | 10 ++++++++--
+>  arch/riscv/kernel/smpboot.c |  1 -
+>  arch/riscv/kernel/traps.c   |  8 +-------
+>  3 files changed, 9 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index 7ed1b22950fd..d0c5c316e9bb 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -77,10 +77,16 @@ relocate:
+>  	csrw CSR_SATP, a0
+>  .align 2
+>  1:
+> -	/* Set trap vector to spin forever to help debug */
+> -	la a0, .Lsecondary_park
+> +	/* Set trap vector to exception handler */
+> +	la a0, handle_exception
+>  	csrw CSR_TVEC, a0
+>
+> +	/*
+> +	 * Set sup0 scratch register to 0, indicating to exception vector that
+> +	 * we are presently executing in kernel.
+> +	 */
+> +	csrw CSR_SCRATCH, zero
+> +
+>  	/* Reload the global pointer */
+>  .option push
+>  .option norelax
+> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> index 4e9922790f6e..5a9c127a380e 100644
+> --- a/arch/riscv/kernel/smpboot.c
+> +++ b/arch/riscv/kernel/smpboot.c
+> @@ -154,7 +154,6 @@ asmlinkage __visible void smp_callin(void)
+>  	mmgrab(mm);
+>  	current->active_mm = mm;
+>
+> -	trap_init();
+>  	notify_cpu_starting(smp_processor_id());
+>  	update_siblings_masks(smp_processor_id());
+>  	set_cpu_online(smp_processor_id(), 1);
+> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> index 7d95cce5e47c..ad14f4466d92 100644
+> --- a/arch/riscv/kernel/traps.c
+> +++ b/arch/riscv/kernel/traps.c
+> @@ -174,13 +174,7 @@ int is_valid_bugaddr(unsigned long pc)
+>  }
+>  #endif /* CONFIG_GENERIC_BUG */
+>
+> +/* stvec & scratch is already set from head.S */
+>  void trap_init(void)
+>  {
+> -	/*
+> -	 * Set sup0 scratch register to 0, indicating to exception vector
+> -	 * that we are presently executing in the kernel
+> -	 */
+> -	csr_write(CSR_SCRATCH, 0);
+> -	/* Set the exception vector address */
+> -	csr_write(CSR_TVEC, &handle_exception);
+>  }
 
-Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
- include/dt-bindings/clock/jz4780-cgu.h | 2 ++
- include/dt-bindings/clock/x1000-cgu.h  | 2 ++
- include/dt-bindings/clock/x1830-cgu.h  | 2 ++
- 3 files changed, 6 insertions(+)
+While I think these are all actual fixes, it's pretty late in the cycle here so
+I'm going to a bit on the careful side and only take the patches that actually
+manifest as bugs in the current port.  Assuming this doesn't manifest until
+early_ioremap is enabled (and we don't do that yet), I've put it on for-next.
 
-diff --git a/include/dt-bindings/clock/jz4780-cgu.h b/include/dt-bindings/clock/jz4780-cgu.h
-index 1859ce53ee38..cb07a0978301 100644
---- a/include/dt-bindings/clock/jz4780-cgu.h
-+++ b/include/dt-bindings/clock/jz4780-cgu.h
-@@ -85,5 +85,7 @@
- #define JZ4780_CLK_DES		70
- #define JZ4780_CLK_X2D		71
- #define JZ4780_CLK_CORE1	72
-+#define JZ4780_CLK_EXCLK_DIV512	73
-+#define JZ4780_CLK_RTC		74
- 
- #endif /* __DT_BINDINGS_CLOCK_JZ4780_CGU_H__ */
-diff --git a/include/dt-bindings/clock/x1000-cgu.h b/include/dt-bindings/clock/x1000-cgu.h
-index 0367c8c02e16..f187e0719fd3 100644
---- a/include/dt-bindings/clock/x1000-cgu.h
-+++ b/include/dt-bindings/clock/x1000-cgu.h
-@@ -48,5 +48,7 @@
- #define X1000_CLK_SSI			33
- #define X1000_CLK_OST			34
- #define X1000_CLK_PDMA			35
-+#define X1000_CLK_EXCLK_DIV512	36
-+#define X1000_CLK_RTC			37
- 
- #endif /* __DT_BINDINGS_CLOCK_X1000_CGU_H__ */
-diff --git a/include/dt-bindings/clock/x1830-cgu.h b/include/dt-bindings/clock/x1830-cgu.h
-index 801e1d09c881..88455376a950 100644
---- a/include/dt-bindings/clock/x1830-cgu.h
-+++ b/include/dt-bindings/clock/x1830-cgu.h
-@@ -51,5 +51,7 @@
- #define X1830_CLK_TCU			36
- #define X1830_CLK_DTRNG			37
- #define X1830_CLK_OST			38
-+#define X1830_CLK_EXCLK_DIV512	39
-+#define X1830_CLK_RTC			40
- 
- #endif /* __DT_BINDINGS_CLOCK_X1830_CGU_H__ */
--- 
-2.11.0
+LMK if I'm wrong about this, or the following ones.
 
+Thanks!
