@@ -2,119 +2,233 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3E7C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 08:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10911C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 08:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99B69206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 08:44:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yfqr1Xn2"
+	by mail.kernel.org (Postfix) with ESMTP id E3F32206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 08:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgGYIo0 (ORCPT
+        id S1726904AbgGYIsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 04:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbgGYIoY (ORCPT
+        Sat, 25 Jul 2020 04:48:18 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:49560 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726593AbgGYIsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 04:44:24 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD11C0619D3
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 01:44:24 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id g7so3971656ejw.12
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 01:44:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=reply-to:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=0eCpXv6tlNwLNhcVnFmKjptKWSpAoc1WprIax3wqYt8=;
-        b=Yfqr1Xn2CpzkXvW05kqAPg1Wb2BmyojgU7C2S/xPA5DNKfeU6qT2I/sIyd7PpFFt1r
-         rh7yNWHL1h8qL2li5zAQccddcwKjYyjEuZSHXlq/txVDqhUfxeokKkMQ8jeNNh6b7NDx
-         fjSn/dl3wmxBWef2KzXFoVUkNwdbWW7CI/f3PVAxTS6eAjHFApKftKyuZWi0gXAYAswx
-         mGJGJ2KT52nRwvs2yYzSCyeDJq9P5WYOmQP+QSzTr6etupk/BI50ouKbYWlpgTh+aMCJ
-         CjJ1SclTV9LHEoDR25yoJT2yu5jIamIIXx2VRHKtTFBJNUC8YKN2pD/D0lgxR/o3ewH1
-         aC4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=0eCpXv6tlNwLNhcVnFmKjptKWSpAoc1WprIax3wqYt8=;
-        b=k3OOC53fYC/S2tCMTYqIyJITG903qryg1Nonnm2w1vDRJIKcHLTL1Gb4qt8WJ9VDMU
-         OfdyJF22clOF5OIcjSPGSuG0cUp4Px1iObi7BNYQh5iSAMBPQGzYoygtDk/AHrg/g6Cq
-         pMRROaIiXjg/8R2Dc8wsAoR+1ifWSCVP2W49VXG/WGZYuAPJ5qTDs6U5+Wv7LYA8RFIc
-         QfYCald6edZbP4ltwqtuJDT9k1OR5tP8D7tbp0ypM7JNtAB0q/jiwop0aaStUl0ZvnqS
-         P9IFlTd7YeHicq8Tch83khLcwMljKowKEstvJZ4lNHAjMmlIA71Wm64NBpBhrAdEaiLI
-         9C/g==
-X-Gm-Message-State: AOAM5314ax2YMBIIfZvTU1pc/PDl1na5i6SIMqyrSJfqfSfWUQznBFa/
-        NHrpdfjXcR3IbaZUOloKmk5sAaK0
-X-Google-Smtp-Source: ABdhPJxinqP5dwikN8TBnCxJAAC2Z2DTLNdUzENaL5EBSYp+fl33xszs7Azq5+ZHIN6Wv0lOGnanPw==
-X-Received: by 2002:a17:906:c259:: with SMTP id bl25mr12537887ejb.303.1595666662998;
-        Sat, 25 Jul 2020 01:44:22 -0700 (PDT)
-Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
-        by smtp.gmail.com with ESMTPSA id v19sm2426156edy.50.2020.07.25.01.44.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 Jul 2020 01:44:22 -0700 (PDT)
-Reply-To: christian.koenig@amd.com
-Subject: Re: [PATCH v3 3/3] drm/amdgpu: Change type of module param
- `ppfeaturemask` to hexint
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org
-References: <20200703142939.28663-1-pmenzel@molgen.mpg.de>
- <20200703142939.28663-3-pmenzel@molgen.mpg.de>
- <50e7239f-9fab-8484-7aec-085acc5ec658@amd.com>
- <7e5b2284-0549-185c-4afd-f7d193e2faf9@molgen.mpg.de>
- <54ad054c-2cf4-765e-4ecc-44e2b98422f0@amd.com>
- <CAHk-=whxP-2tFBX9ctP242TsgJhtp7yhNrkG6Tj+Ng=FiT1FbQ@mail.gmail.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Message-ID: <14c71f74-654d-5d03-4865-249751cf65a2@gmail.com>
-Date:   Sat, 25 Jul 2020 10:44:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sat, 25 Jul 2020 04:48:18 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 8BA2F634C87;
+        Sat, 25 Jul 2020 11:47:40 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jzFqG-0000kc-Bl; Sat, 25 Jul 2020 11:47:40 +0300
+Date:   Sat, 25 Jul 2020 11:47:40 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>, Hans Verkuil <hverkuil@xs4all.nl>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [PATCH v10 2/4] media: i2c: Add MAX9286 driver
+Message-ID: <20200725084740.GD829@valkosipuli.retiisi.org.uk>
+References: <20200612144713.502006-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200612144713.502006-3-kieran.bingham+renesas@ideasonboard.com>
+ <1fb4a023-d177-744f-41f4-755aafbfa7f2@ideasonboard.com>
+ <20200723222834.GC829@valkosipuli.retiisi.org.uk>
+ <c4b0e30f-b0b7-1b19-f43e-36d417eb6d28@ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whxP-2tFBX9ctP242TsgJhtp7yhNrkG6Tj+Ng=FiT1FbQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c4b0e30f-b0b7-1b19-f43e-36d417eb6d28@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 24.07.20 um 22:29 schrieb Linus Torvalds:
-> On Fri, Jul 24, 2020 at 12:54 AM Christian König
-> <christian.koenig@amd.com> wrote:
->> But since you already addressed Linus comments and it looks rather clean
->> I think I can just push it to drm-misc-next on Monday if nobody objects
->> over the weekend.
-> Yeah, no objections from me.
->
-> Add a note to it to the pull request, so that when my bird-brain sees
-> the pull during the next merge window and I've forgotten this thread,
-> I don't go "why is the drm tree modifying code files"?
+Kieran,
 
-Well Dave is sending those requests to you usually.
+On Fri, Jul 24, 2020 at 10:32:11AM +0100, Kieran Bingham wrote:
+> Hi Sakari,
+> 
+> On 23/07/2020 23:28, Sakari Ailus wrote:
+> > Hi Kieran,
+> > 
+> > On Thu, Jul 16, 2020 at 10:02:24AM +0100, Kieran Bingham wrote:
+> >> Hi Sakari,
+> >>
+> >> This is the output of checkpatch --strict on this driver. Sorry for not
+> >> detailing this in the commit or cover letter.
+> > 
+> > No worries.
+> > 
+> >>
+> >>> ./patches/gmsl/v10/v10-0001-dt-bindings-media-i2c-Add-bindings-for-Maxim-Int.patch has style problems, please review.
+> >>> --------------------------------------------------------------
+> >>> ./patches/gmsl/v10/v10-0002-media-i2c-Add-MAX9286-driver.patch
+> >>> --------------------------------------------------------------
+> >>> CHECK: Prefer using the BIT macro
+> >>> #246: FILE: drivers/media/i2c/max9286.c:40:
+> >>> +#define MAX9286_FSYNCMODE_INT_OUT	(1 << 6)
+> >>>
+> >>> CHECK: Prefer using the BIT macro
+> >>> #251: FILE: drivers/media/i2c/max9286.c:45:
+> >>> +#define MAX9286_FSYNCMETH_SEMI_AUTO	(1 << 0)
+> >>>
+> >>> CHECK: Prefer using the BIT macro
+> >>> #262: FILE: drivers/media/i2c/max9286.c:56:
+> >>> +#define MAX9286_EDC_6BIT_CRC		(1 << 5)
+> >>>
+> >>> CHECK: Prefer using the BIT macro
+> >>> #268: FILE: drivers/media/i2c/max9286.c:62:
+> >>> +#define MAX9286_HVSRC_D14		(1 << 0)
+> >>>
+> >>> CHECK: Prefer using the BIT macro
+> >>> #286: FILE: drivers/media/i2c/max9286.c:80:
+> >>> +#define MAX9286_DATATYPE_RGB565		(1 << 0)
+> >>>
+> >>> CHECK: Prefer using the BIT macro
+> >>> #304: FILE: drivers/media/i2c/max9286.c:98:
+> >>> +#define MAX9286_I2CSLVSH_469NS_234NS	(1 << 5)
+> >>>
+> >>> CHECK: Prefer using the BIT macro
+> >>> #312: FILE: drivers/media/i2c/max9286.c:106:
+> >>> +#define MAX9286_I2CMSTBT_28KBPS		(1 << 2)
+> >>>
+> >>> CHECK: Prefer using the BIT macro
+> >>> #316: FILE: drivers/media/i2c/max9286.c:110:
+> >>> +#define MAX9286_I2CSLVTO_256US		(1 << 0)
+> >>
+> >> None of those are appropriate to use the BIT() macro, as they are all
+> >> entries of a specific field with a shift, such as:
+> >>
+> >> #define MAX9286_FSYNCMODE_ECU           (3 << 6)
+> >> #define MAX9286_FSYNCMODE_EXT           (2 << 6)
+> >> #define MAX9286_FSYNCMODE_INT_OUT       (1 << 6)
+> >> #define MAX9286_FSYNCMODE_INT_HIZ       (0 << 6)
+> >>
+> >> Checkpatch is only picking up on the "1 << x" variant of each entry.
+> > 
+> > Ideally you should use "1U << x" everywhere. If you happen to have a
+> > register with 31st bit signifying something, mayhem would follow. So the
+> > practice is to make all such definitions unsigned.
+> 
+> Just to clarify, because of the location you've put your x, which is not
+> the variable in the above case.
+> 
+> These definitions are possible field values with a shift (enum << y),
+> not bit values (1 << x)
+> 
+> They can of course be unsigned though.
+> 
+> Is your statement that you would like to see these as:
+> 
+>  #define MAX9286_FSYNCMODE_ECU           (3U << 6)
+>  #define MAX9286_FSYNCMODE_EXT           (2U << 6)
+>  #define MAX9286_FSYNCMODE_INT_OUT       (1U << 6)
+>  #define MAX9286_FSYNCMODE_INT_HIZ       (0U << 6)
 
-I will just add an Acked-by: Linus Torvalds 
-<torvalds@linux-foundation.org> to the patch before pushing :)
+Yes, please. This avoids shifting a non-zero bit to the 31st position of a
+32-bit register.
 
-Thanks,
-Christian.
+> 
+> 
+> Or that you would prefer a macro'ised version:
+> 
+> #define FIELD_ENTRY(value, shift) (value U << shift)
+> 
+> 
+> Or rather, I could just convert them all to use FIELD_PREP:
+> 
+> #define MAX9286_FSYNCMODE GENMASK(7,6)
+> 
+> #define MAX9286_FSYNCMODE_ECU      FIELD_PREP(MAX9286_FSYNCMODE, 3)
+> #define MAX9286_FSYNCMODE_EXT      FIELD_PREP(MAX9286_FSYNCMODE, 2)
+> #define MAX9286_FSYNCMODE_INT_OUT  FIELD_PREP(MAX9286_FSYNCMODE, 1)
+> #define MAX9286_FSYNCMODE_INT_HIZ  FIELD_PREP(MAX9286_FSYNCMODE, 0)
+> 
+> If you want me to change these entries, I suspect moving wholly to use
+> FIELD_PREP/FIELD_GET throughout the driver would be the best course of
+> action.
+> 
+> A bit of churn, but I can do that if you wish.
+> 
+> --
+> Kieran
+> 
+> 
+> 
+> >>> CHECK: Macro argument reuse 'source' - possible side-effects?
+> >>> #399: FILE: drivers/media/i2c/max9286.c:193:
+> >>> +#define for_each_source(priv, source) \
+> >>> +	for ((source) = NULL; ((source) = next_source((priv), (source))); )
+> >>
+> >> This warns against possible side effects, but the 're-use' effects are
+> >> desired ;-)
+> >>
+> >> If you'd prefer this macro to be re-written please let me know.
+> > 
+> > Works for me. Some warnigns are just not useful. I bet quite a few macros
+> > elsewhere in the kernel would trigger this.
+> 
+> 
+> I think we'll just leave this one ;-)
+> 
+> 
+> >>> CHECK: Lines should not end with a '('
+> >>> #1372: FILE: drivers/media/i2c/max9286.c:1166:
+> >>> +			ret = v4l2_fwnode_endpoint_parse(
+> >>
+> >> Full code block:
+> >>
+> >>>                         ret = v4l2_fwnode_endpoint_parse(
+> >>>                                         of_fwnode_handle(node), &vep);
+> >>>                         if (ret) {
+> >>>                                 of_node_put(node);
+> >>>                                 return ret;
+> >>>                         }
+> >>
+> >> That one is awkward, and I chose to keep it as a lesser evil.
+> >> Of course now that we can officially go up to 120 chars, I could move
+> >> this line up.
+> >>
+> >> If you'd like this to be moved to a single line now we can go over 80
+> >> chars, please confirm.
+> > 
+> > I don't mind that. Mauro, any thoughts on this?
+> 
+> 
+> And I'll let Mauro decide that as it will impact my line-length choices
+> in the future ;-)
 
->
->               Linus
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+I think it's actually much better to end a line with opening parenthesis
+than have a line longer than 80, but I recognise there are differing
+opinions.
 
+My terminal window width is 80 and having more terminals is more useful
+than being able to see a rare line over 80 completely.
+
+-- 
+Regards,
+
+Sakari Ailus
