@@ -2,56 +2,126 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79387C433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 12:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FA3C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 12:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A41D206EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 12:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1094E2070C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 12:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595678917;
+	bh=P2fyKAWwICs4KEcQ2YA/VKfeCFmFjqOOBXeOxw6GlGk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WvbAa/NhFEmhWFHBQ0/tNuH2QcPLeRM2mn6ytyA3yNOPwED1D8TfASNshhqYp2EbE
+	 hcQapUrgTuH+2n7OVg3RDUsj2ra3NNrmq+lkhMu5c7B+SEBfun3RkE/VIqtJE2Esun
+	 vgL549lsjHR2S2+y6MeytPMwm3l1dTi7tA4fRYcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgGYMGH (ORCPT
+        id S1726973AbgGYMIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 08:06:07 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:44362 "EHLO fornost.hmeau.com"
+        Sat, 25 Jul 2020 08:08:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbgGYMGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 08:06:07 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jzIw5-0006XY-4K; Sat, 25 Jul 2020 22:05:54 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Sat, 25 Jul 2020 22:05:53 +1000
-Date:   Sat, 25 Jul 2020 22:05:53 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     miaoqinglang <miaoqinglang@huawei.com>
-Cc:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-        gregkh@linuxfoundation.org, aymen.sghaier@nxp.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] crypto: caam: Convert to DEFINE_SHOW_ATTRIBUTE
-Message-ID: <20200725120552.GA20145@gondor.apana.org.au>
-References: <20200723072511.GA6095@gondor.apana.org.au>
- <62dc973d-71b6-c8ec-9f7a-f1c421a7b1d3@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62dc973d-71b6-c8ec-9f7a-f1c421a7b1d3@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726612AbgGYMIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 08:08:34 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E179720674;
+        Sat, 25 Jul 2020 12:08:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595678914;
+        bh=P2fyKAWwICs4KEcQ2YA/VKfeCFmFjqOOBXeOxw6GlGk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=L/x8l1MZX478b7h9FDYbNhu7NRy1DqkzZgprkEm70nR6lQLWl8AiC5xbyue8hWeTI
+         ws+ekbetSwqxDRzTc4o9eqmi2ljk0ZWqSWoI1QAmrREmQjdT1GT/ZNoIcZHAz6eYYJ
+         VGub7fgLrn0IbSNQTOpUl5YeicOhSn9D1XDAO8J8=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jzIye-00Epz5-2N; Sat, 25 Jul 2020 13:08:32 +0100
+Date:   Sat, 25 Jul 2020 13:08:31 +0100
+Message-ID: <875zabyeyo.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     John Keeping <john@metanate.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Ben Herrenschmidt <benh@amazon.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH V2] genirq/affinity: Handle affinity setting on inactive interrupts correctly
+In-Reply-To: <87h7twu1cp.fsf@nanos.tec.linutronix.de>
+References: <87k0z2s2q3.fsf@nanos.tec.linutronix.de>
+        <877dv2rv25.fsf@nanos.tec.linutronix.de>
+        <20200724182422.27ddced6.john@metanate.com>
+        <87h7twu1cp.fsf@nanos.tec.linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, john@metanate.com, linux-kernel@vger.kernel.org, x86@kernel.org, benh@amazon.com, alisaidi@amazon.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 05:00:02PM +0800, miaoqinglang wrote:
+Hi both,
+
+On Fri, 24 Jul 2020 21:03:50 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> Or If you don't mind, I can resend a patch besed on mainline rather than
-> -next now.
+> John,
+> 
+> John Keeping <john@metanate.com> writes:
+> > On Fri, 17 Jul 2020 18:00:02 +0200
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> > It seems that this patch breaks perf events on RK3288 because the PMU
+> > interrupts that should be per-cpu are now all on CPU0 so no events are
+> > collected from CPUs 1-3 and those interrupts are killed as spurious
+> > after a few seconds.
 
-Please don't as that will just cause more conflicts.
+SPI-backed PMUs. Urgh...
 
-Thanks,
+> >
+> > I'm seeing this on 4.19.134 and 5.4.53 but as far as I can tell the
+> > relevant code hasn't changed through to next-20200723.  Reverting the
+> > backport of this change fixes the problem.
+> 
+> Bah.
+> 
+> > It looks like what happens is that because the interrupts are not
+> > per-CPU in the hardware, armpmu_request_irq() calls irq_force_affinity()
+> > while the interrupt is deactivated and then request_irq() with
+> > IRQF_PERCPU | IRQF_NOBALANCING.
+> >
+> > Now when irq_startup() runs with IRQ_STARTUP_NORMAL, it calls
+> > irq_setup_affinity() which returns early because IRQF_PERCPU and
+> > IRQF_NOBALANCING are set, leaving the interrupt on its original CPU.
+> 
+> Right. My brain tricked me to believe that we made activation mandatory,
+> but that's not.
+> 
+> I have some ideas for a trivial generic way to solve this without
+> undoing the commit in question and without going through all the irq
+> chip drivers. So far everything I came up with is butt ugly. Maybe Marc
+> has some brilliant idea.
+
+Not really. We have contradicting behaviours here, where some
+interrupts want to see the set_affinity early (the above case), and
+some cannot handle that (x86 vectors and the GICv3 ITS). We could key
+it on the presence of an activate callback, but it feels fragile.
+
+I'll follow up on your patch in the next email, which seems like a
+sensible approach.
+
+	M.
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Without deviation from the norm, progress is not possible.
