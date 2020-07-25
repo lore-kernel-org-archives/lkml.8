@@ -8,42 +8,42 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60856C433F7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29B6C43457
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 382F620737
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 929182070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:05:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="I+Af238N"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Uto0v55F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgGYAEv (ORCPT
+        id S1728028AbgGYAFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 20:04:51 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:39268 "EHLO
+        Fri, 24 Jul 2020 20:05:06 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:49708 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727929AbgGYAEs (ORCPT
+        by vger.kernel.org with ESMTP id S1727959AbgGYAEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 20:04:48 -0400
+        Fri, 24 Jul 2020 20:04:50 -0400
 Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ONlaFH032723
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:48 -0700
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ONkkuV031620
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:50 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=pVPR7Cu3xYhrx38YFyxPm1H8m1+ErWwPVI25d5Vz8oY=;
- b=I+Af238NfBVhqzHLNWrjxtCMctDQst4/SfN2LzEi8cQNFVZScqmfxsS4jDWsI9piuTr6
- FAtyPrMJdaaFZDZtDhvEIhs7PYoGR3xy5JrcORHfGSir7WeQxDaQVoEzI92LY407alXF
- eRYZvUdTgKf5TNcV5dPhrpE830Xixs2ATzc= 
+ bh=oEnmyUCkDbp6GsiBTaBZObGYGFPu+HplQnEkNgp2CuY=;
+ b=Uto0v55FZzOqaYlQG+DX1vJCW+Gc1rj90AVujKQMzsrV7W1ErsHz9Khx704IiAWQn3EK
+ M3+nwwbV3jfEU0jz5lQyxOX1+f+MxMmajJKH5AELOzWEgs/7MzMY9aiT59lbcz97mDRp
+ Ql14qUHNgNNr99HAH4Sj93MU7P0BZd//mxM= 
 Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 32etmwm9es-14
+        by mx0a-00082601.pphosted.com with ESMTP id 32etmwm9f4-8
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:47 -0700
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:50 -0700
 Received: from intmgw002.41.prn1.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.1.1979.3; Fri, 24 Jul 2020 17:04:43 -0700
 Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id 4949B1B35AA8; Fri, 24 Jul 2020 17:04:27 -0700 (PDT)
+        id 436091B35AA6; Fri, 24 Jul 2020 17:04:27 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
@@ -52,9 +52,9 @@ CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next 30/35] bpf: bpftool: do not touch RLIMIT_MEMLOCK
-Date:   Fri, 24 Jul 2020 17:04:05 -0700
-Message-ID: <20200725000410.3566700-31-guro@fb.com>
+Subject: [PATCH bpf-next 29/35] bpf: libbpf: cleanup RLIMIT_MEMLOCK usage
+Date:   Fri, 24 Jul 2020 17:04:04 -0700
+Message-ID: <20200725000410.3566700-30-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200725000410.3566700-1-guro@fb.com>
 References: <20200725000410.3566700-1-guro@fb.com>
@@ -75,126 +75,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since bpf stopped using memlock rlimit to limit the memory usage,
-there is no more reason for bpftool to alter its own limits.
+As bpf is not using memlock rlimit for memory accounting anymore,
+let's remove the related code from libbpf.
+
+Bpf operations can't fail because of exceeding the limit anymore.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 ---
- tools/bpf/bpftool/common.c     | 7 -------
- tools/bpf/bpftool/feature.c    | 2 --
- tools/bpf/bpftool/main.h       | 2 --
- tools/bpf/bpftool/map.c        | 2 --
- tools/bpf/bpftool/pids.c       | 1 -
- tools/bpf/bpftool/prog.c       | 3 ---
- tools/bpf/bpftool/struct_ops.c | 2 --
- 7 files changed, 19 deletions(-)
+ tools/lib/bpf/libbpf.c | 31 +------------------------------
+ tools/lib/bpf/libbpf.h |  5 -----
+ 2 files changed, 1 insertion(+), 35 deletions(-)
 
-diff --git a/tools/bpf/bpftool/common.c b/tools/bpf/bpftool/common.c
-index 65303664417e..01b87e8c3040 100644
---- a/tools/bpf/bpftool/common.c
-+++ b/tools/bpf/bpftool/common.c
-@@ -109,13 +109,6 @@ static bool is_bpffs(char *path)
- 	return (unsigned long)st_fs.f_type =3D=3D BPF_FS_MAGIC;
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index e51479d60285..841060f5cee3 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -112,32 +112,6 @@ void libbpf_print(enum libbpf_print_level level, con=
+st char *format, ...)
+ 	va_end(args);
  }
 =20
--void set_max_rlimit(void)
+-static void pr_perm_msg(int err)
 -{
--	struct rlimit rinf =3D { RLIM_INFINITY, RLIM_INFINITY };
+-	struct rlimit limit;
+-	char buf[100];
 -
--	setrlimit(RLIMIT_MEMLOCK, &rinf);
+-	if (err !=3D -EPERM || geteuid() !=3D 0)
+-		return;
+-
+-	err =3D getrlimit(RLIMIT_MEMLOCK, &limit);
+-	if (err)
+-		return;
+-
+-	if (limit.rlim_cur =3D=3D RLIM_INFINITY)
+-		return;
+-
+-	if (limit.rlim_cur < 1024)
+-		snprintf(buf, sizeof(buf), "%zu bytes", (size_t)limit.rlim_cur);
+-	else if (limit.rlim_cur < 1024*1024)
+-		snprintf(buf, sizeof(buf), "%.1f KiB", (double)limit.rlim_cur / 1024);
+-	else
+-		snprintf(buf, sizeof(buf), "%.1f MiB", (double)limit.rlim_cur / (1024*=
+1024));
+-
+-	pr_warn("permission error while running as root; try raising 'ulimit -l=
+'? current value: %s\n",
+-		buf);
 -}
 -
- static int
- mnt_fs(const char *target, const char *type, char *buff, size_t bufflen)
- {
-diff --git a/tools/bpf/bpftool/feature.c b/tools/bpf/bpftool/feature.c
-index 1cd75807673e..2d6c6bff934e 100644
---- a/tools/bpf/bpftool/feature.c
-+++ b/tools/bpf/bpftool/feature.c
-@@ -885,8 +885,6 @@ static int do_probe(int argc, char **argv)
- 	__u32 ifindex =3D 0;
- 	char *ifname;
+ #define STRERR_BUFSIZE  128
 =20
--	set_max_rlimit();
--
- 	while (argc) {
- 		if (is_prefix(*argv, "kernel")) {
- 			if (target !=3D COMPONENT_UNSPEC) {
-diff --git a/tools/bpf/bpftool/main.h b/tools/bpf/bpftool/main.h
-index e3a79b5a9960..0a3bd1ff14da 100644
---- a/tools/bpf/bpftool/main.h
-+++ b/tools/bpf/bpftool/main.h
-@@ -95,8 +95,6 @@ int detect_common_prefix(const char *arg, ...);
- void fprint_hex(FILE *f, void *arg, unsigned int n, const char *sep);
- void usage(void) __noreturn;
-=20
--void set_max_rlimit(void);
--
- int mount_tracefs(const char *target);
-=20
- struct pinned_obj_table {
-diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
-index 3a27d31a1856..f08b9e707511 100644
---- a/tools/bpf/bpftool/map.c
-+++ b/tools/bpf/bpftool/map.c
-@@ -1315,8 +1315,6 @@ static int do_create(int argc, char **argv)
- 		return -1;
+ /* Copied from tools/perf/util/util.h */
+@@ -3420,8 +3394,7 @@ bpf_object__probe_loading(struct bpf_object *obj)
+ 		cp =3D libbpf_strerror_r(ret, errmsg, sizeof(errmsg));
+ 		pr_warn("Error in %s():%s(%d). Couldn't load trivial BPF "
+ 			"program. Make sure your kernel supports BPF "
+-			"(CONFIG_BPF_SYSCALL=3Dy) and/or that RLIMIT_MEMLOCK is "
+-			"set to big enough value.\n", __func__, cp, ret);
++			"(CONFIG_BPF_SYSCALL=3Dy)", __func__, cp, ret);
+ 		return -ret;
  	}
+ 	close(ret);
+@@ -3918,7 +3891,6 @@ bpf_object__create_maps(struct bpf_object *obj)
+ err_out:
+ 	cp =3D libbpf_strerror_r(err, errmsg, sizeof(errmsg));
+ 	pr_warn("map '%s': failed to create: %s(%d)\n", map->name, cp, err);
+-	pr_perm_msg(err);
+ 	for (j =3D 0; j < i; j++)
+ 		zclose(obj->maps[j].fd);
+ 	return err;
+@@ -5419,7 +5391,6 @@ load_program(struct bpf_program *prog, struct bpf_i=
+nsn *insns, int insns_cnt,
+ 	ret =3D -errno;
+ 	cp =3D libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
+ 	pr_warn("load bpf program failed: %s\n", cp);
+-	pr_perm_msg(ret);
 =20
--	set_max_rlimit();
--
- 	fd =3D bpf_create_map_xattr(&attr);
- 	if (fd < 0) {
- 		p_err("map create failed: %s", strerror(errno));
-diff --git a/tools/bpf/bpftool/pids.c b/tools/bpf/bpftool/pids.c
-index e3b116325403..4c559a8ae4e8 100644
---- a/tools/bpf/bpftool/pids.c
-+++ b/tools/bpf/bpftool/pids.c
-@@ -96,7 +96,6 @@ int build_obj_refs_table(struct obj_refs_table *table, =
-enum bpf_obj_type type)
- 	libbpf_print_fn_t default_print;
+ 	if (log_buf && log_buf[0] !=3D '\0') {
+ 		ret =3D -LIBBPF_ERRNO__VERIFY;
+diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+index c6813791fa7e..8d2f1194cb02 100644
+--- a/tools/lib/bpf/libbpf.h
++++ b/tools/lib/bpf/libbpf.h
+@@ -610,11 +610,6 @@ bpf_prog_linfo__lfind(const struct bpf_prog_linfo *p=
+rog_linfo,
 =20
- 	hash_init(table->table);
--	set_max_rlimit();
-=20
- 	skel =3D pid_iter_bpf__open();
- 	if (!skel) {
-diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-index 3e6ecc6332e2..40e50db60332 100644
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -1291,8 +1291,6 @@ static int load_with_options(int argc, char **argv,=
- bool first_prog_only)
- 		}
- 	}
-=20
--	set_max_rlimit();
--
- 	obj =3D bpf_object__open_file(file, &open_opts);
- 	if (IS_ERR_OR_NULL(obj)) {
- 		p_err("failed to open object file");
-@@ -1833,7 +1831,6 @@ static int do_profile(int argc, char **argv)
- 		}
- 	}
-=20
--	set_max_rlimit();
- 	err =3D profiler_bpf__load(profile_obj);
- 	if (err) {
- 		p_err("failed to load profile_obj");
-diff --git a/tools/bpf/bpftool/struct_ops.c b/tools/bpf/bpftool/struct_op=
-s.c
-index b58b91f62ffb..0915e1e9b7c0 100644
---- a/tools/bpf/bpftool/struct_ops.c
-+++ b/tools/bpf/bpftool/struct_ops.c
-@@ -498,8 +498,6 @@ static int do_register(int argc, char **argv)
- 	if (IS_ERR_OR_NULL(obj))
- 		return -1;
-=20
--	set_max_rlimit();
--
- 	load_attr.obj =3D obj;
- 	if (verifier_logs)
- 		/* log_level1 + log_level2 + stats, but not stable UAPI */
+ /*
+  * Probe for supported system features
+- *
+- * Note that running many of these probes in a short amount of time can =
+cause
+- * the kernel to reach the maximal size of lockable memory allowed for t=
+he
+- * user, causing subsequent probes to fail. In this case, the caller may=
+ want
+- * to adjust that limit with setrlimit().
+  */
+ LIBBPF_API bool bpf_probe_prog_type(enum bpf_prog_type prog_type,
+ 				    __u32 ifindex);
 --=20
 2.26.2
 
