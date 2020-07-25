@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DATE_IN_PAST_12_24,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E98C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089A4C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB073206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DABFE2070C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:04:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tfz-net.20150623.gappssmtp.com header.i=@tfz-net.20150623.gappssmtp.com header.b="SELSPIYI"
+	dkim=pass (2048-bit key) header.d=tfz-net.20150623.gappssmtp.com header.i=@tfz-net.20150623.gappssmtp.com header.b="YMwNAYIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgGZBsk (ORCPT
+        id S1727983AbgGZCE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 21:48:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36148 "EHLO
+        Sat, 25 Jul 2020 22:04:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726931AbgGZBsj (ORCPT
+        with ESMTP id S1727013AbgGZCE1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 21:48:39 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99759C08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 18:48:39 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 11so12326671qkn.2
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 18:48:39 -0700 (PDT)
+        Sat, 25 Jul 2020 22:04:27 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2069BC08C5C0
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 19:04:27 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id dm12so5910437qvb.9
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 19:04:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=tfz-net.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QWkgvkaS5dEVqlfPqdK/IEg0sV/Gm0tJLgo2eizioCs=;
-        b=SELSPIYIIOdLkttp20A0r+f6mIi7cYDmZVV22M46LiYOd9pszpZfCY6CGcCF3bzfH6
-         uZ1cDwnr6hZ/0DhXnyarJZ90yg/P/8Wqjyyof6PVjDNkUf3y6MT27UMjt8PAF2JwtnBD
-         12JFBN4lrGrer87b5fT0Gm4IO5Y+EBjpQZF63uUVIdEkeeLXlYWqNZN1Oh4OaJYbQ/Lx
-         GjT322Y4J8RXyJ/pqcFy8HDemlCTbd9KBHrLSMXBYfoi6NwjJey1ghqiYu5DlejaOChE
-         41gTnC7mFY1ujbOta5D5oiqHKQztFw7ylvY4e3cN6Rt9IyOdRAu0LGYmDAJ/9aWI4YNZ
-         IaYA==
+        bh=Omdab1nC5MtSModjV2PS7fPsUJ+lDgcnp0n1JPTjxRo=;
+        b=YMwNAYIX8mFOI7SAohY0EXyneQkLsbKI/55OHSL4POy90WKjrWT7T0bEST+X/H+3wV
+         tz3rPlwfeABkbiKw+Lwilgn4o61YnXv/xm9/E38LQWujC0vkdC4Zg0QvRWDTFGyNvadd
+         QjZoIoz9146mbVyAwiCce/zNKtBIwPQ7JjXqu6+f9gIohhOpIS4KylfUZWwVKY7tm8vJ
+         ItP44HhvNmiinuTlfGdKWkLokGamprvTZW0iB8ryznQsvv5FrVglV4x5nNA/6b17A88n
+         tE34iMJTwoFnKXsNXRI+gQRBQKGPUzu8pMT6lEMt0S+j8EZOST8WEu/oDJY4t0CpeIYz
+         u1iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QWkgvkaS5dEVqlfPqdK/IEg0sV/Gm0tJLgo2eizioCs=;
-        b=Oxlm7aNO8SzxFkovKEk18BkkTpIsfqVCp9hN2nr3hj7olepvFxROa7aArLiW1xH+6y
-         LjEvKBb9Ky30OUjHPbN2iz6y+yxpMW/iFbgQIO7SL3MdV5+FZFn77IyRBM74FZRL2Eys
-         iJ66+TE0no9gEwDdxespZKKc0/XQqGD3RV/fgFr2Gsn6hm/6G7kSTPpQdoaErbnSidVB
-         k+8NsXUpu5FaEf6x8GbsCsnDQo4CDDzB2PeXdpBfEeSXcJe+eBVT5f1eseDf8Wlr6hia
-         meZACBBuo0lJZ8pgNf7srO0RGVZ1zYTPioJnNLTpKP+cFxlGbvML5nYqAE6gop4+1PzA
-         G5EA==
-X-Gm-Message-State: AOAM531Q62FDyQEktfy9jrGKsYwkzxo/isN5lnoUPNc3+9w/HcOYgSKr
-        wHo8lLM2T0CEpmnlX6SLWttYriXSmQPCOg==
-X-Google-Smtp-Source: ABdhPJxuwIliaGhCAp0pFXm5yOjCVWhZyKKm9l1MMVARb45o2aw3/ZbPf43yLBwHdIFleU++wxEEUQ==
-X-Received: by 2002:ae9:e507:: with SMTP id w7mr17174181qkf.264.1595728118487;
-        Sat, 25 Jul 2020 18:48:38 -0700 (PDT)
+        bh=Omdab1nC5MtSModjV2PS7fPsUJ+lDgcnp0n1JPTjxRo=;
+        b=B8KCEBpHSMJ33iX5Joo39mHsrbEanJoviUk/rYg7vFkQNSMARnkygKkbZ8zSl2FrEA
+         1TG0vxM/6n9WSyTUboaNI/KtOrbE91XeaSKwyGe/m70B7JmT16o5wESoL1hVYsqv9poE
+         ooTULPzxR3BXPRoJkuWM419/1/H/63ElrRerH3gotLp9V8Kn5tz8kynV1XjBpsm5RNd0
+         4IFaE5yMGwo3ZfQGdA9CHx0h3j+DV0Rf8k77SUSC2S3N5cnU4YoU+uZhtO2RvaVyqJGS
+         CLNHks75LVX3loP0c7deuKk8Frs/rtRc7H5Fl4Na7GTFSnfETmqhxydFKLZQKF4xR7Ly
+         Z6hw==
+X-Gm-Message-State: AOAM532FT9E7IDcaHhlJlsmI2im26H9UJ4sDR+nHQ/xRzabLgBSg5q+s
+        2JnGL71L1LsAqcs5S+kyTCpA3WY8GOjcNQ==
+X-Google-Smtp-Source: ABdhPJyu2yaYA5YqCBXbtUuWqfBWJxFzSIYLeivhZi6g24tvrR/LD6i0Lr1beQ4D7FQtBVIz3jVCQQ==
+X-Received: by 2002:a0c:a2c1:: with SMTP id g59mr16889122qva.138.1595729066049;
+        Sat, 25 Jul 2020 19:04:26 -0700 (PDT)
 Received: from foo.attlocal.net (108-232-117-128.lightspeed.sntcca.sbcglobal.net. [108.232.117.128])
-        by smtp.gmail.com with ESMTPSA id z17sm10835748qki.95.2020.07.25.18.48.36
+        by smtp.gmail.com with ESMTPSA id p17sm12624093qkj.69.2020.07.25.19.04.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 18:48:37 -0700 (PDT)
+        Sat, 25 Jul 2020 19:04:25 -0700 (PDT)
 From:   Pascal Bouchareine <kalou@tfz.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     Pascal Bouchareine <kalou@tfz.net>, linux-fsdevel@vger.kernel.org,
@@ -67,22 +67,18 @@ Cc:     Pascal Bouchareine <kalou@tfz.net>, linux-fsdevel@vger.kernel.org,
         "Al Viro" <viro@zeniv.linux.org.uk>,
         "Jeff Layton" <jlayton@poochiereds.net>,
         "J. Bruce Fields" <bfields@fieldses.org>
-Subject: [PATCH v2] proc,fcntl: introduce F_SET_DESCRIPTION
-Date:   Fri, 24 Jul 2020 21:59:21 -0700
-Message-Id: <20200725045921.2723-1-kalou@tfz.net>
+Subject: [PATCH v3] This command attaches a description to a file descriptor for troubleshooting purposes. The free string is displayed in the process fdinfo file for that fd /proc/pid/fdinfo/fd.
+Date:   Fri, 24 Jul 2020 22:15:47 -0700
+Message-Id: <20200725051547.3718-1-kalou@tfz.net>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200725004043.32326-1-kalou@tfz.net>
-References: <20200725004043.32326-1-kalou@tfz.net>
+In-Reply-To: <20200725045921.2723-1-kalou@tfz.net>
+References: <20200725045921.2723-1-kalou@tfz.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-
-This command attaches a description to a file descriptor for
-troubleshooting purposes. The free string is displayed in the
-process fdinfo file for that fd /proc/pid/fdinfo/fd.
 
 One intended usage is to allow processes to self-document sockets
 for netstat and friends to report
@@ -91,12 +87,11 @@ Signed-off-by: Pascal Bouchareine <kalou@tfz.net>
 ---
  Documentation/filesystems/proc.rst |  3 +++
  fs/fcntl.c                         | 19 +++++++++++++++++++
- fs/file_table.c                    |  3 +++
+ fs/file_table.c                    |  2 ++
  fs/proc/fd.c                       |  5 +++++
  include/linux/fs.h                 |  3 +++
  include/uapi/linux/fcntl.h         |  5 +++++
- scripts/get_maintainer.pl          |  2 ++
- 7 files changed, 40 insertions(+)
+ 6 files changed, 37 insertions(+)
 
 diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
 index 996f3cfe7030..ae8045650836 100644
@@ -150,15 +145,14 @@ index 2e4c0fa2074b..c1ef724a906e 100644
  		break;
  	}
 diff --git a/fs/file_table.c b/fs/file_table.c
-index 656647f9575a..f2d9be7b6459 100644
+index 656647f9575a..6673a48d2ea1 100644
 --- a/fs/file_table.c
 +++ b/fs/file_table.c
-@@ -272,6 +272,9 @@ static void __fput(struct file *file)
+@@ -272,6 +272,8 @@ static void __fput(struct file *file)
  	eventpoll_release(file);
  	locks_remove_file(file);
  
-+	if (file->f_description)
-+		kfree(file->f_description);
++	kfree(file->f_description);
 +
  	ima_file_free(file);
  	if (unlikely(file->f_flags & FASYNC)) {
@@ -209,19 +203,6 @@ index 2f86b2ad6d7e..f86ff6dc45c7 100644
  /*
   * Valid hint values for F_{GET,SET}_RW_HINT. 0 is "not set", or can be
   * used to clear any hints previously set.
-diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-index 484d2fbf5921..2e7c434b2b2d 100755
---- a/scripts/get_maintainer.pl
-+++ b/scripts/get_maintainer.pl
-@@ -2309,6 +2309,8 @@ sub vcs_file_blame {
- 		my @commit_signers = ();
- 		my $cmd;
- 
-+		print STDERR "checking commit $commit\n";
-+
- 		$cmd = $VCS_cmds{"find_commit_signers_cmd"};
- 		$cmd =~ s/(\$\w+)/$1/eeg;	#substitute variables in $cmd
- 
 -- 
 2.25.1
 
