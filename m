@@ -2,99 +2,140 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F0DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F561C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D15E7206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16950206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:21:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="OQzc1PSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgGYFXa (ORCPT
+        id S1726651AbgGYFUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 01:23:30 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:50262 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgGYFX3 (ORCPT
+        Sat, 25 Jul 2020 01:20:46 -0400
+Received: from mail-40135.protonmail.ch ([185.70.40.135]:20590 "EHLO
+        mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgGYFUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 01:23:29 -0400
-Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 06P5NR7e089533;
-        Sat, 25 Jul 2020 14:23:27 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp);
- Sat, 25 Jul 2020 14:23:27 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 06P5NRmR089529
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Sat, 25 Jul 2020 14:23:27 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] lockdep: Introduce CONFIG_LOCKDEP_LARGE
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+62ebe501c1ce9a91f68c@syzkaller.appspotmail.com>,
-        syzbot <syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com>,
-        syzbot <syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com>
-References: <1595640639-9310-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <CACT4Y+YXT9iLij-AbrUwj=yPq-YNFw=Au9g0LQJCKwYonaHCDQ@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <46674d71-1e41-cb68-ed99-72c25a73dfef@i-love.sakura.ne.jp>
-Date:   Sat, 25 Jul 2020 14:23:25 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 25 Jul 2020 01:20:46 -0400
+Date:   Sat, 25 Jul 2020 05:20:37 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1595654443;
+        bh=fNtUVokgzqgxDWagukyFnXesfhfXrJW8Fu9a6W33bSc=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=OQzc1PSECV5erApTpM9sgdrgHIVCb90BdRniY6MR5dux8QWFg7kfwtmEiZuYQDrYl
+         Gpp3PRhkEfg6G86Ji8X9kKwj/khlrEuqyFsVqJhHuy2rNKfbXfL2S/nnC6B5y5RF+1
+         teW/dchZ6Jzl4dKUsWs7bcGILdMbRFGofvrld0xs=
+To:     Duncan <1i5t5.duncan@cox.net>
+From:   Mazin Rezk <mnrzk@protonmail.com>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Harry Wentland <Harry.Wentland@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        sunpeng.li@amd.com, Alexander Deucher <Alexander.Deucher@amd.com>,
+        mphantomx@yahoo.com.br, regressions@leemhuis.info,
+        anthony.ruhier@gmail.com
+Reply-To: Mazin Rezk <mnrzk@protonmail.com>
+Subject: Re: [PATCH] amdgpu_dm: fix nonblocking atomic commit use-after-free
+Message-ID: <c7mHa5xU_kh7K9KM5P1UJoCY00b3Oxj3s_y3vr0LGQzUPtWlhv5JjjhT4CnnbDhuTZhCuHT2uMbjdDCZ-JLmHVlS7B_k-wj1OTmZpMD7cg4=@protonmail.com>
+In-Reply-To: <20200724215914.6297cc7e@ws>
+References: <YIGsJ9LlFquvBI2iWPKhJwjKBwDUr_C-38oVpLJJHJ5rDCY_Zrrv392o6UPNxHoeQrcpLYC9U4fZdpD9ilz6Amg2IxkSexGLQMCQIBek8rc=@protonmail.com> <202007231524.A24720C@keescook> <a86cba0b-4513-e7c3-ae75-bb331433f664@molgen.mpg.de> <202007241016.922B094AAA@keescook> <3c92db94-3b62-a70b-8ace-f5e34e8f268f@molgen.mpg.de> <_vGVoFJcOuoIAvGYtkyemUvqEFeZ-AdO4Jk8wsyVv3MwO-6NEVtULxnZzuBJNeHNkCsQ5Kxn5TPQ_VJ6qyj9wXXXX8v-hc3HptnCAu0UYsk=@protonmail.com> <20200724215914.6297cc7e@ws>
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+YXT9iLij-AbrUwj=yPq-YNFw=Au9g0LQJCKwYonaHCDQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/07/25 13:48, Dmitry Vyukov wrote:
->> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
->> index 29a8de4..85ba7eb 100644
->> --- a/kernel/locking/lockdep.c
->> +++ b/kernel/locking/lockdep.c
->> @@ -1349,7 +1349,11 @@ static int add_lock_to_list(struct lock_class *this,
->>  /*
->>   * For good efficiency of modular, we use power of 2
->>   */
->> +#ifdef CONFIG_LOCKDEP_LARGE
->> +#define MAX_CIRCULAR_QUEUE_SIZE                8192UL
->> +#else
->>  #define MAX_CIRCULAR_QUEUE_SIZE                4096UL
-> 
-> Maybe this number should be the config value? So that we don't ever
-> return here to introduce "VERY_LARGE" :)
+On Saturday, July 25, 2020 12:59 AM, Duncan <1i5t5.duncan@cox.net> wrote:
 
-They can be "tiny, small, medium, compact, large and huge". Yeah, it's a joke. :-)
+> On Sat, 25 Jul 2020 03:03:52 +0000
+> Mazin Rezk mnrzk@protonmail.com wrote:
+>
+> > > Am 24.07.20 um 19:33 schrieb Kees Cook:
+> > >
+> > > > There was a fix to disable the async path for this driver that
+> > > > worked around the bug too, yes? That seems like a safer and more
+> > > > focused change that doesn't revert the SLUB defense for all
+> > > > users, and would actually provide a complete, I think, workaround
+> >
+> > That said, I haven't seen the async disabling patch. If you could
+> > link to it, I'd be glad to test it out and perhaps we can use that
+> > instead.
+>
+> I'm confused. Not to put words in Kees' mouth; /I/ am confused (which
+> admittedly could well be just because I make no claims to be a
+> coder and am simply reading the bug and thread, but I'd appreciate some
+> "unconfusing" anyway).
+>
+> My interpretation of the "async disabling" reference was that it was to
+> comment #30 on the bug:
+>
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D207383#c30
+>
+> ... which (if I'm not confused on this point too) appears to be yours.
+> There it was stated...
+>
+> > > > >
+>
+> I've also found that this bug exclusively occurs when commit_work is on
+> the workqueue. After forcing drm_atomic_helper_commit to run all of the
+> commits without adding to the workqueue and running the OS, the issue
+> seems to have disappeared.
+> <<<<
+>
+> Would not forcing all commits to run directly, without placing them on
+> the workqueue, be "async disabling"? That's what I /thought/ he was
+> referencing.
 
-> Also somebody may use it to _reduce_ size of the table for a smaller kernel.
+Oh, I thought he was referring to a different patch. Kees, could I get
+your confirmation on this?
 
-Maybe. But my feeling is that it is very rare that the kernel actually deadlocks
-as soon as lockdep warned the possibility of deadlock.
+The change I made actually affected all of the DRM code, although this coul=
+d
+easily be changed to be specific to amdgpu. (By forcing blocking on
+amdgpu_dm's non-blocking commit code)
 
-Since syzbot runs many instances in parallel, a lot of CPU resource is spent for
-checking the same dependency tree. However, the possibility of deadlock can be
-warned for only locks held within each kernel boot, and it is impossible to hold
-all locks with one kernel boot.
+That said, I'd still need to test further because I only did test it for a
+couple of hours then. Although it should work in theory.
 
-Then, it might be nice if lockdep can audit only "which lock was held from which
-context and what backtrace" and export that log like KCOV data (instead of evaluating
-the possibility of deadlock), and rebuild the whole dependency (and evaluate the
-possibility of deadlock) across multiple kernel boots in userspace.
+>
+> OTOH your base/context swap idea sounds like a possibly "less
+> disturbance" workaround, if it works, and given the point in the
+> commit cycle... (But if it's out Sunday it's likely too late to test
+> and get it in now anyway; if it's another week, tho...)
 
-> 
->> +#endif
->>  #define CQ_MASK                                (MAX_CIRCULAR_QUEUE_SIZE-1)
+The base/context swap idea should make the use-after-free behave how it
+did in 5.6. Since the bug doesn't cause an issue in 5.6, it's less of a
+"less disturbance" workaround and more of a "no disturbance" workaround.
+
+Thanks,
+Mazin Rezk
+
+>
+> -------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+------------------------------------------------------
+>
+> Duncan - No HTML messages please; they are filtered as spam.
+> "Every nonfree program has a lord, a master --
+> and if you use the program, he is your master." Richard Stallman
+
 
