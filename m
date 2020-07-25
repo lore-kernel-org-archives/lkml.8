@@ -2,167 +2,167 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD29EC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8251C43457
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B63DD2070C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:51:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595649065;
-	bh=IB/6QMM3mNcLq0yp3daj3De1omfUDNO/kHLqyEhsa6Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VMk/pjaPYT+aBniXh+Dv9ZclKybWon0s+ZlC7TP3aDHGq5836oq/jyZfMrfsWinBm
-	 pKLBLcoCskqKRiSffHVl0sh0MYQJNkacw5LtX7FbGyXXwpFEqnNNEvogmuSsHwLtRy
-	 0dpT9pezYVMtmtGUAbdsDoExl/C8UcsDPgUby+/4=
+	by mail.kernel.org (Postfix) with ESMTP id B6E2B206EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgGYDvE (ORCPT
+        id S1727782AbgGYDr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 23:51:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgGYDvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 23:51:04 -0400
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2ED220719;
-        Sat, 25 Jul 2020 03:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595649063;
-        bh=IB/6QMM3mNcLq0yp3daj3De1omfUDNO/kHLqyEhsa6Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=K2KEh7TpNnF0mxAAYCqLboKVGglNo3SHCYHfljAe0xUta6Iitan62CbCecjxUdHwG
-         HXBphKcfLkHGOOtCm8zoVgCHNZ2F3SrYMMzB+yes4gHO1K41s2zWEp/P/TaiTzKW6+
-         AvVEhpyF9jSOP3gHlxMV12o5Wbs1AflrT4CHiD8Q=
-Received: by mail-ej1-f50.google.com with SMTP id l4so11823059ejd.13;
-        Fri, 24 Jul 2020 20:51:02 -0700 (PDT)
-X-Gm-Message-State: AOAM533VU00j56UQ4HWO2koglbN5kpUWRj5y6mVdMYii4SCpV0LqtREG
-        KBbtXd4AdmasLc7LQQA2B8qkkEAybIOP3ACGBg==
-X-Google-Smtp-Source: ABdhPJxcx4pKWckZ+ivOQWgliPqjd8Cxz0hiophWU1IPuWMgAOcngrm0sm/OsQ7JYpawO3hTDs8v8meuDWYVWGhBJ0k=
-X-Received: by 2002:a17:906:7857:: with SMTP id p23mr10925441ejm.260.1595649061371;
- Fri, 24 Jul 2020 20:51:01 -0700 (PDT)
+        Fri, 24 Jul 2020 23:47:26 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8812 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726736AbgGYDqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 23:46:53 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C0E6D647128CF9C716BE;
+        Sat, 25 Jul 2020 11:46:49 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Sat, 25 Jul 2020 11:46:40 +0800
+From:   Yang Shen <shenyang39@huawei.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
+Subject: [PATCH 02/10] crypto: hisilicon/zip - unify naming style for functions and macros
+Date:   Sat, 25 Jul 2020 11:44:35 +0800
+Message-ID: <1595648683-50590-3-git-send-email-shenyang39@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1595648683-50590-1-git-send-email-shenyang39@huawei.com>
+References: <1595648683-50590-1-git-send-email-shenyang39@huawei.com>
 MIME-Version: 1.0
-References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com> <1595469798-3824-7-git-send-email-yongqiang.niu@mediatek.com>
-In-Reply-To: <1595469798-3824-7-git-send-email-yongqiang.niu@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sat, 25 Jul 2020 11:50:50 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9jsunT=PH59yrJ=q_uPM83WVH1m4c379APCUOGL3ZjdQ@mail.gmail.com>
-Message-ID: <CAAOTY_9jsunT=PH59yrJ=q_uPM83WVH1m4c379APCUOGL3ZjdQ@mail.gmail.com>
-Subject: Re: [v7, PATCH 6/7] drm/mediatek: add fifo_size into rdma private data
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The primary thing of this patch is to get fifo size from device tree.
-So you may modify title to show the primary thing.
+1.Add prefix 'HZIP' for some macros
+2.Add prefix 'hisi_zip' for some functions
 
-Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=
-=8823=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8810:12=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
-> the fifo size of rdma in mt8183 is different.
-> rdma0 fifo size is 5k
-> rdma1 fifo size is 2k
+Signed-off-by: Yang Shen <shenyang39@huawei.com>
+Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+---
+ drivers/crypto/hisilicon/zip/zip_main.c | 35 +++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
 
-I would like the description to be "Get the fifo size from device tree
-because each rdma in the same SoC may have different fifo size."
+diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
+index 445db04..058f744 100644
+--- a/drivers/crypto/hisilicon/zip/zip_main.c
++++ b/drivers/crypto/hisilicon/zip/zip_main.c
+@@ -29,18 +29,18 @@
+ #define DECOMP3_ENABLE			BIT(5)
+ #define DECOMP4_ENABLE			BIT(6)
+ #define DECOMP5_ENABLE			BIT(7)
+-#define ALL_COMP_DECOMP_EN		(COMP0_ENABLE | COMP1_ENABLE |	\
++#define HZIP_ALL_COMP_DECOMP_EN		(COMP0_ENABLE | COMP1_ENABLE | \
+ 					 DECOMP0_ENABLE | DECOMP1_ENABLE | \
+ 					 DECOMP2_ENABLE | DECOMP3_ENABLE | \
+ 					 DECOMP4_ENABLE | DECOMP5_ENABLE)
+-#define DECOMP_CHECK_ENABLE		BIT(16)
++#define HZIP_DECOMP_CHECK_ENABLE	BIT(16)
+ #define HZIP_FSM_MAX_CNT		0x301008
 
-Regards,
-Chun-Kuang.
+ #define HZIP_PORT_ARCA_CHE_0		0x301040
+ #define HZIP_PORT_ARCA_CHE_1		0x301044
+ #define HZIP_PORT_AWCA_CHE_0		0x301060
+ #define HZIP_PORT_AWCA_CHE_1		0x301064
+-#define CACHE_ALL_EN			0xffffffff
++#define HZIP_CACHE_ALL_EN		0xffffffff
 
->
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_disp_rdma.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/m=
-ediatek/mtk_disp_rdma.c
-> index e04319f..794acc5 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-> @@ -63,6 +63,7 @@ struct mtk_disp_rdma {
->         struct mtk_ddp_comp             ddp_comp;
->         struct drm_crtc                 *crtc;
->         const struct mtk_disp_rdma_data *data;
-> +       u32                             fifo_size;
->  };
->
->  static inline struct mtk_disp_rdma *comp_to_rdma(struct mtk_ddp_comp *co=
-mp)
-> @@ -131,12 +132,18 @@ static void mtk_rdma_config(struct mtk_ddp_comp *co=
-mp, unsigned int width,
->         unsigned int threshold;
->         unsigned int reg;
->         struct mtk_disp_rdma *rdma =3D comp_to_rdma(comp);
-> +       u32 rdma_fifo_size;
->
->         mtk_ddp_write_mask(cmdq_pkt, width, comp,
->                            DISP_REG_RDMA_SIZE_CON_0, 0xfff);
->         mtk_ddp_write_mask(cmdq_pkt, height, comp,
->                            DISP_REG_RDMA_SIZE_CON_1, 0xfffff);
->
-> +       if (rdma->fifo_size)
-> +               rdma_fifo_size =3D rdma->fifo_size;
-> +       else
-> +               rdma_fifo_size =3D RDMA_FIFO_SIZE(rdma);
-> +
->         /*
->          * Enable FIFO underflow since DSI and DPI can't be blocked.
->          * Keep the FIFO pseudo size reset default of 8 KiB. Set the
-> @@ -145,7 +152,7 @@ static void mtk_rdma_config(struct mtk_ddp_comp *comp=
-, unsigned int width,
->          */
->         threshold =3D width * height * vrefresh * 4 * 7 / 1000000;
->         reg =3D RDMA_FIFO_UNDERFLOW_EN |
-> -             RDMA_FIFO_PSEUDO_SIZE(RDMA_FIFO_SIZE(rdma)) |
-> +             RDMA_FIFO_PSEUDO_SIZE(rdma_fifo_size) |
->               RDMA_OUTPUT_VALID_FIFO_THRESHOLD(threshold);
->         mtk_ddp_write(cmdq_pkt, reg, comp, DISP_REG_RDMA_FIFO_CON);
->  }
-> @@ -291,6 +298,16 @@ static int mtk_disp_rdma_probe(struct platform_devic=
-e *pdev)
->                 return comp_id;
->         }
->
-> +       if (of_find_property(dev->of_node, "mediatek,rdma_fifo_size", &re=
-t)) {
-> +               ret =3D of_property_read_u32(dev->of_node,
-> +                                          "mediatek,rdma_fifo_size",
-> +                                          &priv->fifo_size);
-> +               if (ret) {
-> +                       dev_err(dev, "Failed to get rdma fifo size\n");
-> +                       return ret;
-> +               }
-> +       }
-> +
->         ret =3D mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, com=
-p_id,
->                                 &mtk_disp_rdma_funcs);
->         if (ret) {
-> --
-> 1.8.1.1.dirty
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+ #define HZIP_BD_RUSER_32_63		0x301110
+ #define HZIP_SGL_RUSER_32_63		0x30111c
+@@ -82,7 +82,7 @@
+ #define HZIP_PF_DEF_Q_BASE		0
+
+ #define HZIP_SOFT_CTRL_CNT_CLR_CE	0x301000
+-#define SOFT_CTRL_CNT_CLR_CE_BIT	BIT(0)
++#define HZIP_SOFT_CTRL_CNT_CLR_CE_BIT	BIT(0)
+ #define HZIP_SOFT_CTRL_ZIP_CONTROL	0x30100C
+ #define HZIP_AXI_SHUTDOWN_ENABLE	BIT(14)
+ #define HZIP_WR_PORT			BIT(11)
+@@ -264,10 +264,10 @@ static int hisi_zip_set_user_domain_and_cache(struct hisi_qm *qm)
+ 	writel(PEH_AXUSER_CFG_ENABLE, base + QM_PEH_AXUSER_CFG_ENABLE);
+
+ 	/* cache */
+-	writel(CACHE_ALL_EN, base + HZIP_PORT_ARCA_CHE_0);
+-	writel(CACHE_ALL_EN, base + HZIP_PORT_ARCA_CHE_1);
+-	writel(CACHE_ALL_EN, base + HZIP_PORT_AWCA_CHE_0);
+-	writel(CACHE_ALL_EN, base + HZIP_PORT_AWCA_CHE_1);
++	writel(HZIP_CACHE_ALL_EN, base + HZIP_PORT_ARCA_CHE_0);
++	writel(HZIP_CACHE_ALL_EN, base + HZIP_PORT_ARCA_CHE_1);
++	writel(HZIP_CACHE_ALL_EN, base + HZIP_PORT_AWCA_CHE_0);
++	writel(HZIP_CACHE_ALL_EN, base + HZIP_PORT_AWCA_CHE_1);
+
+ 	/* user domain configurations */
+ 	writel(AXUSER_BASE, base + HZIP_BD_RUSER_32_63);
+@@ -283,7 +283,7 @@ static int hisi_zip_set_user_domain_and_cache(struct hisi_qm *qm)
+ 	}
+
+ 	/* let's open all compression/decompression cores */
+-	writel(DECOMP_CHECK_ENABLE | ALL_COMP_DECOMP_EN,
++	writel(HZIP_DECOMP_CHECK_ENABLE | HZIP_ALL_COMP_DECOMP_EN,
+ 	       base + HZIP_CLOCK_GATE_CTRL);
+
+ 	/* enable sqc writeback */
+@@ -390,7 +390,7 @@ static u32 clear_enable_read(struct ctrl_debug_file *file)
+ 	struct hisi_qm *qm = file_to_qm(file);
+
+ 	return readl(qm->io_base + HZIP_SOFT_CTRL_CNT_CLR_CE) &
+-	       SOFT_CTRL_CNT_CLR_CE_BIT;
++		     HZIP_SOFT_CTRL_CNT_CLR_CE_BIT;
+ }
+
+ static int clear_enable_write(struct ctrl_debug_file *file, u32 val)
+@@ -402,14 +402,14 @@ static int clear_enable_write(struct ctrl_debug_file *file, u32 val)
+ 		return -EINVAL;
+
+ 	tmp = (readl(qm->io_base + HZIP_SOFT_CTRL_CNT_CLR_CE) &
+-	       ~SOFT_CTRL_CNT_CLR_CE_BIT) | val;
++	       ~HZIP_SOFT_CTRL_CNT_CLR_CE_BIT) | val;
+ 	writel(tmp, qm->io_base + HZIP_SOFT_CTRL_CNT_CLR_CE);
+
+ 	return  0;
+ }
+
+-static ssize_t ctrl_debug_read(struct file *filp, char __user *buf,
+-			       size_t count, loff_t *pos)
++static ssize_t hisi_zip_ctrl_debug_read(struct file *filp, char __user *buf,
++					size_t count, loff_t *pos)
+ {
+ 	struct ctrl_debug_file *file = filp->private_data;
+ 	char tbuf[HZIP_BUF_SIZE];
+@@ -433,8 +433,9 @@ static ssize_t ctrl_debug_read(struct file *filp, char __user *buf,
+ 	return simple_read_from_buffer(buf, count, pos, tbuf, ret);
+ }
+
+-static ssize_t ctrl_debug_write(struct file *filp, const char __user *buf,
+-				size_t count, loff_t *pos)
++static ssize_t hisi_zip_ctrl_debug_write(struct file *filp,
++					 const char __user *buf,
++					 size_t count, loff_t *pos)
+ {
+ 	struct ctrl_debug_file *file = filp->private_data;
+ 	char tbuf[HZIP_BUF_SIZE];
+@@ -483,8 +484,8 @@ static ssize_t ctrl_debug_write(struct file *filp, const char __user *buf,
+ static const struct file_operations ctrl_debug_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = simple_open,
+-	.read = ctrl_debug_read,
+-	.write = ctrl_debug_write,
++	.read = hisi_zip_ctrl_debug_read,
++	.write = hisi_zip_ctrl_debug_write,
+ };
+
+
+--
+2.7.4
+
