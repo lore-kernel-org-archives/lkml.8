@@ -2,220 +2,120 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFCCC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A69EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5642C206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8476206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="fEtcjr24"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m/mqefN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgGYOdB (ORCPT
+        id S1727788AbgGYOeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 10:33:01 -0400
-Received: from mail-40133.protonmail.ch ([185.70.40.133]:59704 "EHLO
-        mail-40133.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgGYOdB (ORCPT
+        Sat, 25 Jul 2020 10:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgGYOeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 10:33:01 -0400
-Date:   Sat, 25 Jul 2020 14:32:53 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me; s=protonmail;
-        t=1595687576; bh=K+ObGPhBCBIghSTkK89aQbGjHSVPXNygWfDYBW9wc3U=;
-        h=Date:To:From:Cc:Reply-To:Subject:From;
-        b=fEtcjr24TN6HnqL9MWmytl8OgmXju88Ram2SLx3dG9JyTW1xa4T+RUIP56zbqV7w7
-         UlmQ9H0f1rtmpddU/+2m3BVa6LAUelDJOmnboEbbjXNtpEPsjsWZZK7z7JEo9MsBbv
-         +zn9QILdl0A8Bj87MV4aonM0gUFNCdNK4JG6Qg1HP38UkXvh04cP/FZrX11cMMTzaS
-         Ua/eG5sn7reh9TK9SFMJJjUQsqGMqducb/t5r5E0v7cKx/R6z2MDxnIl6b2G511q7X
-         KZikAoFPcbNVwvr/BcV7YCU8qaXkfO+BWYWvwAdG+uElR5jj4W4yvN1dWllerBuPd7
-         AZJl2UukfrkRg==
-To:     Romain Naour <romain.naour@gmail.com>
-From:   Alexander Lobakin <alobakin@pm.me>
-Cc:     Alexander Lobakin <alobakin@pm.me>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Reply-To: Alexander Lobakin <alobakin@pm.me>
-Subject: Re: [PATCH] mips: Do not include hi and lo in clobber list for R6
-Message-ID: <1ASmWH5c3covyVGVn1zArosoLlRC98vkQ6Ww4wFSchBjH8_jrScPAdXVD08qeStKkFOA-SGqKIPZ80zib9FmHiIkRvJ4uiWaPKvorjdodDs=@pm.me>
+        Sat, 25 Jul 2020 10:34:18 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC44C08C5C0
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 07:34:18 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id r13so853144ool.3
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 07:34:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wrDqlxNNVLuF8POl1GDyeWkvGNEXgQCKCSRteLM6tS4=;
+        b=m/mqefN5jqg+eR2S3kGzASpiUbbyyR6SFj9m2pkRIXzdxs9BCmUDKOeq0H2RmV9p+y
+         g2sB24A7EDA5B66T9zEQOagrTmm8RbfOZDLfQACKwZ9YInx2Fzxp7CWGbLkVMjB/uf+n
+         1HYeToPIeOghavqiZEX1Aecbx/mqCSuMVu35A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wrDqlxNNVLuF8POl1GDyeWkvGNEXgQCKCSRteLM6tS4=;
+        b=sFAF/NSiByFb+bhMyIVp21y0/tPdUrDd7XiSHcJeS6hL1s/XPMgleGFeyJW10SArL9
+         VYjrPTcvGUFAqvXApvahqW2EZ5fVwz9CGWhajEG5//5xfQSKvedicvCAoDYT3uOEeSSC
+         R/IBsPzAvcl65CEziayLPcunkS6GO6s8/7VYp+JHOswqUe5GStnaQoXZlE3bpEmD1ktP
+         CU9MI7Ed2OCjgAHRJpHgFvcdtfK9D/AsGmsjL9e8jD+29pI6Qxe0O++1o46d1Kt1JGbf
+         p9iM8IlraE/fNZniuR1dOjXwvgBPneYA661KSCJFKgLCbhN1uQP9V9aZR4KIfO9rlaR+
+         mQVw==
+X-Gm-Message-State: AOAM530cAZ84WBBZ6R4uLrvPM6dNRO2o6W1HYmQFTJRotcllu9ZAqGYH
+        LsysgPmLXZO7GSmrGVHrQOi9CSSUwEM=
+X-Google-Smtp-Source: ABdhPJwd33B3054e7zMWOxQwF/CcxnvMjeZjeaFbOE1m7l7tAdGeq7AyMBqY+TgDNhVOQVWZarmFhg==
+X-Received: by 2002:a4a:9e05:: with SMTP id t5mr11322583ook.76.1595687656325;
+        Sat, 25 Jul 2020 07:34:16 -0700 (PDT)
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com. [209.85.210.44])
+        by smtp.gmail.com with ESMTPSA id j16sm868990oib.35.2020.07.25.07.34.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Jul 2020 07:34:15 -0700 (PDT)
+Received: by mail-ot1-f44.google.com with SMTP id n24so9128383otr.13
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 07:34:14 -0700 (PDT)
+X-Received: by 2002:a9d:5609:: with SMTP id e9mr12808433oti.141.1595687653817;
+ Sat, 25 Jul 2020 07:34:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200715202233.185680-1-ezequiel@collabora.com> <20200715202233.185680-9-ezequiel@collabora.com>
+In-Reply-To: <20200715202233.185680-9-ezequiel@collabora.com>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Sat, 25 Jul 2020 23:34:00 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MVMXeTcUfb-98McYCKjh=eM=BTo2dSY=L1c6dv2jHqXcg@mail.gmail.com>
+Message-ID: <CAPBb6MVMXeTcUfb-98McYCKjh=eM=BTo2dSY=L1c6dv2jHqXcg@mail.gmail.com>
+Subject: Re: [PATCH 08/10] media: uapi: h264: Clean slice invariants syntax elements
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Romain,
+On Thu, Jul 16, 2020 at 5:23 AM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+>
+> The H.264 specification requires in its "Slice header semantics"
+> section that the following values shall be the same in all slice headers:
+>
+>   pic_parameter_set_id
+>   frame_num
+>   field_pic_flag
+>   bottom_field_flag
+>   idr_pic_id
+>   pic_order_cnt_lsb
+>   delta_pic_order_cnt_bottom
+>   delta_pic_order_cnt[ 0 ]
+>   delta_pic_order_cnt[ 1 ]
+>   sp_for_switch_flag
+>   slice_group_change_cycle
+>
+> and can therefore be moved to the per-frame decode parameters control.
 
-From: Romain Naour <romain.naour@gmail.com>
-Date: Sat, 25 Jul 2020 15:25:33 +0200
+I am really not a H.264 expert, so this question may not be relevant,
+but are these values specified for every slice header in the
+bitstream, or are they specified only once per frame?
 
-> From [1]
-> "GCC 10 (PR 91233) won't silently allow registers that are not architectu=
-rally
-> available to be present in the clobber list anymore, resulting in build f=
-ailure
-> for mips*r6 targets in form of:
-> ...
-> .../sysdep.h:146:2: error: the register =E2=80=98lo=E2=80=99 cannot be cl=
-obbered in =E2=80=98asm=E2=80=99 for the current target
->   146 |  __asm__ volatile (      \
->       |  ^~~~~~~
->=20
-> This is because base R6 ISA doesn't define hi and lo registers w/o DSP ex=
-tension.
-> This patch provides the alternative clobber list for r6 targets that won'=
-t include
-> those registers."
->=20
-> Since kernel 5.4 and mips support for generic vDSO [2], the kernel fail t=
-o build
-> for mips r6 cpus with gcc 10 for the same reason as glibc.
->=20
-> [1] https://sourceware.org/git/?p=3Dglibc.git;a=3Dcommit;h=3D020b2a97bb15=
-f807c0482f0faee2184ed05bcad8
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/comm=
-it/?id=3D24640f233b466051ad3a5d2786d2951e43026c9d
->=20
-> Signed-off-by: Romain Naour <romain.naour@gmail.com>
-> ---
->  arch/mips/include/asm/vdso/gettimeofday.h | 45 +++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->=20
-> diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/includ=
-e/asm/vdso/gettimeofday.h
-> index c63ddcaea54c..6192d94928b9 100644
-> --- a/arch/mips/include/asm/vdso/gettimeofday.h
-> +++ b/arch/mips/include/asm/vdso/gettimeofday.h
-> @@ -30,12 +30,21 @@ static __always_inline long gettimeofday_fallback(
->  =09register long nr asm("v0") =3D __NR_gettimeofday;
->  =09register long error asm("a3");
-> =20
-> +#if __mips_isa_rev >=3D 6
+I am asking this because it would certainly make user-space code
+simpler if we could remain as close to the bitstream as possible. If
+these values are specified once per slice, then factorizing them would
+leave user-space with the burden of deciding what to do if they change
+across slices.
 
-You should use MIPS_ISA_REV macro from arch/mips/include/asm/isa-rev.h
-instead of compiler definitions.
-The main reason is that __mips_isa_rev is not defined by GCC for
-pre-MIPS32 processors, so you'll get a compiler warning like:
-
-"Warning: macro '__mips_isa_rev' is not defined, evaluates to 0"
-
-MIPS_ISA_REV handles this case and is always defined regardless of
-the actual ISA family.
-
-> +=09asm volatile(
-> +=09"       syscall\n"
-> +=09: "=3Dr" (ret), "=3Dr" (error)
-> +=09: "r" (tv), "r" (tz), "r" (nr)
-> +=09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
-> +=09  "$14", "$15", "$24", "$25", "memory");
-> +#else
->  =09asm volatile(
->  =09"       syscall\n"
->  =09: "=3Dr" (ret), "=3Dr" (error)
->  =09: "r" (tv), "r" (tz), "r" (nr)
->  =09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
->  =09  "$14", "$15", "$24", "$25", "hi", "lo", "memory");
-> +#endif
-> =20
->  =09return error ? -ret : ret;
->  }
-> @@ -54,12 +63,21 @@ static __always_inline long clock_gettime_fallback(
->  #endif
->  =09register long error asm("a3");
-> =20
-> +#if __mips_isa_rev >=3D 6
-> +=09asm volatile(
-> +=09"       syscall\n"
-> +=09: "=3Dr" (ret), "=3Dr" (error)
-> +=09: "r" (clkid), "r" (ts), "r" (nr)
-> +=09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
-> +=09  "$14", "$15", "$24", "$25", "memory");
-> +#else
->  =09asm volatile(
->  =09"       syscall\n"
->  =09: "=3Dr" (ret), "=3Dr" (error)
->  =09: "r" (clkid), "r" (ts), "r" (nr)
->  =09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
->  =09  "$14", "$15", "$24", "$25", "hi", "lo", "memory");
-> +#endif
-> =20
->  =09return error ? -ret : ret;
->  }
-> @@ -78,12 +96,21 @@ static __always_inline int clock_getres_fallback(
->  #endif
->  =09register long error asm("a3");
-> =20
-> +#if __mips_isa_rev >=3D 6
-> +=09asm volatile(
-> +=09"       syscall\n"
-> +=09: "=3Dr" (ret), "=3Dr" (error)
-> +=09: "r" (clkid), "r" (ts), "r" (nr)
-> +=09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
-> +=09  "$14", "$15", "$24", "$25", "memory");
-> +#else
->  =09asm volatile(
->  =09"       syscall\n"
->  =09: "=3Dr" (ret), "=3Dr" (error)
->  =09: "r" (clkid), "r" (ts), "r" (nr)
->  =09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
->  =09  "$14", "$15", "$24", "$25", "hi", "lo", "memory");
-> +#endif
-> =20
->  =09return error ? -ret : ret;
->  }
-> @@ -100,12 +127,21 @@ static __always_inline long clock_gettime32_fallbac=
-k(
->  =09register long nr asm("v0") =3D __NR_clock_gettime;
->  =09register long error asm("a3");
-> =20
-> +#if __mips_isa_rev >=3D 6
-> +=09asm volatile(
-> +=09"       syscall\n"
-> +=09: "=3Dr" (ret), "=3Dr" (error)
-> +=09: "r" (clkid), "r" (ts), "r" (nr)
-> +=09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
-> +=09  "$14", "$15", "$24", "$25", "memory");
-> +#else
->  =09asm volatile(
->  =09"       syscall\n"
->  =09: "=3Dr" (ret), "=3Dr" (error)
->  =09: "r" (clkid), "r" (ts), "r" (nr)
->  =09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
->  =09  "$14", "$15", "$24", "$25", "hi", "lo", "memory");
-> +#endif
-> =20
->  =09return error ? -ret : ret;
->  }
-> @@ -120,12 +156,21 @@ static __always_inline int clock_getres32_fallback(
->  =09register long nr asm("v0") =3D __NR_clock_getres;
->  =09register long error asm("a3");
-> =20
-> +#if __mips_isa_rev >=3D 6
-> +=09asm volatile(
-> +=09"       syscall\n"
-> +=09: "=3Dr" (ret), "=3Dr" (error)
-> +=09: "r" (clkid), "r" (ts), "r" (nr)
-> +=09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
-> +=09  "$14", "$15", "$24", "$25", "memory");
-> +#else
->  =09asm volatile(
->  =09"       syscall\n"
->  =09: "=3Dr" (ret), "=3Dr" (error)
->  =09: "r" (clkid), "r" (ts), "r" (nr)
->  =09: "$1", "$3", "$8", "$9", "$10", "$11", "$12", "$13",
->  =09  "$14", "$15", "$24", "$25", "hi", "lo", "memory");
-> +#endif
-> =20
->  =09return error ? -ret : ret;
->  }
-> --=20
-> 2.25.4
-
+Note that this is a double-edged sword, because it is not necessarily
+better to leave the firmware in charge of deciding what to do in such
+a case. :) So hopefully these are only specified once per frame in the
+bitstream, in which case your proposal makes complete sense.
