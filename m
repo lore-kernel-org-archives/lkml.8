@@ -2,166 +2,138 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB15C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 16:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17F9C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 16:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86AA920674
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 16:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D16B206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 16:28:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595694488;
+	bh=ZGJ9wovlL834zONXF71oiA5DPaPlldIbIJTnUFfLbWA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=K7+3Qv/Yd6nAkQG1a5iMqOPhqxI/wloNBKRJN5HzkRj8+SlcrAla2EdrllMiDkhSu
+	 u7JUYhMJJsiiBh5xCzlye7xbNNnDs5D5+YKwy0ww79V0E+X3is5j42SDS6oIXU8/If
+	 iJgsUCxxo/Xm51Ov6l1hl8w0OI78Y+omW7tl49iA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgGYQWq (ORCPT
+        id S1727789AbgGYQ17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 12:22:46 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:55278 "EHLO vps0.lunn.ch"
+        Sat, 25 Jul 2020 12:27:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbgGYQWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 12:22:46 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jzMwR-006pHK-D0; Sat, 25 Jul 2020 18:22:31 +0200
-Date:   Sat, 25 Jul 2020 18:22:31 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
-        Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v3 1/2] net: phy: add API for LEDs
- controlled by PHY HW
-Message-ID: <20200725162231.GJ1472201@lunn.ch>
-References: <20200724164603.29148-1-marek.behun@nic.cz>
- <20200724164603.29148-2-marek.behun@nic.cz>
+        id S1726694AbgGYQ17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 12:27:59 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E271B20674;
+        Sat, 25 Jul 2020 16:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595694479;
+        bh=ZGJ9wovlL834zONXF71oiA5DPaPlldIbIJTnUFfLbWA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=j+FD0H/s0WZrA68Cw9sGGZr0JfKFpXkdH4Yo6gQxeOovekdRKCdH3DIvI6/eYQwjF
+         psSPh7Wf3FpfpBwBiXLrDYzhvnDkW+YiMKgNamA5fxSSg9VLcFjcsWYiVEsmt1v2Au
+         TMJMspVjcBGPdnPthbXM/8Pb7L+R9DAaj8jUn+F8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jzN1h-00Es3k-9y; Sat, 25 Jul 2020 17:27:57 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200724164603.29148-2-marek.behun@nic.cz>
+Date:   Sat, 25 Jul 2020 17:27:57 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org,
+        lee.jones@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
+        wmills@ti.com
+Subject: Re: [PATCHv3 3/6] irqchip/irq-pruss-intc: Add support for shared and
+ invalid interrupts
+In-Reply-To: <14a0978a-f38f-8cd7-3fee-b0e438513396@ti.com>
+References: <1593699479-1445-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1593699479-1445-4-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <2a6b0391f1395eb0aa15ffee6769184e@kernel.org>
+ <3a73bb14-9f7b-970d-fbae-f9c7bb7bdf1e@ti.com> <87imemxv3l.wl-maz@kernel.org>
+ <14a0978a-f38f-8cd7-3fee-b0e438513396@ti.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <1cd0b6c9bfe2dc42e9c6b69baacf4635@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: s-anna@ti.com, grzegorz.jaszczyk@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, david@lechnology.com, wmills@ti.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 06:46:02PM +0200, Marek Beh�n wrote:
-> Many PHYs support various HW control modes for LEDs connected directly
-> to them.
+On 2020-07-25 16:57, Suman Anna wrote:
+
+Suman,
+
+> Hi Marc,
+
+[...]
+
+>>>>> @@ -244,8 +295,14 @@ static int pruss_intc_probe(struct
+>>>>> platform_device *pdev)
+>>>>>           return -ENOMEM;
+>>>>> 
+>>>>>       for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
+>>>>> +        if (intc->invalid_intr & BIT(i))
+>>>>> +            continue;
+>>>>> +
+>>>>>           irq = platform_get_irq_byname(pdev, irq_names[i]);
+>>>>>           if (irq <= 0) {
+>>>>> +            if (intc->shared_intr & BIT(i))
+>>>>> +                continue;
+>>>> 
+>>>> I don't really understand why you are treating these "shared" 
+>>>> interrupts
+>>>> differently from the invalid ones. In all cases, they shouldn't be 
+>>>> used.
+>>> 
+>>> The behavior is the same in how we handle it, but the difference is
+>>> that an "invalid" one is never even connected to the ARM interrupt
+>>> controller, while the "shared" one is a choice. So, unless this
+>>> interrupt is being used/handled by a different processor/entity, you
+>>> would not see this skipped from the dts node.
+>> 
+>> And I'm saying that all that matters is that you are discarding these
+>> interrupts. Whether they are flagged invalid or shared, they are not
+>> available to Linux. So the difference in handling is pointless and
+>> only makes it harder to understand what you are doing.
 > 
-> This code adds a new private LED trigger called phydev-hw-mode. When
-> this trigger is enabled for a LED, the various HW control modes which
-> the PHY supports for given LED can be get/set via hw_mode sysfs file.
-> 
-> A PHY driver wishing to utilize this API needs to register the LEDs on
-> its own and set the .trigger_type member of LED classdev to
-> &phy_hw_led_trig_type. It also needs to implement the methods
-> .led_iter_hw_mode, .led_set_hw_mode and .led_get_hw_mode in struct
-> phydev.
-> 
-> Signed-off-by: Marek Beh�n <marek.behun@nic.cz>
-> ---
->  drivers/net/phy/Kconfig           |  9 +++
->  drivers/net/phy/Makefile          |  1 +
->  drivers/net/phy/phy_hw_led_mode.c | 96 +++++++++++++++++++++++++++++++
->  include/linux/phy.h               | 15 +++++
->  4 files changed, 121 insertions(+)
->  create mode 100644 drivers/net/phy/phy_hw_led_mode.c
-> 
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index dd20c2c27c2f..ffea11f73acd 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -283,6 +283,15 @@ config LED_TRIGGER_PHY
->  		<Speed in megabits>Mbps OR <Speed in gigabits>Gbps OR link
->  		for any speed known to the PHY.
->  
-> +config LED_TRIGGER_PHY_HW
-> +	bool "Support HW LED control modes"
-> +	depends on LEDS_TRIGGERS
-> +	help
-> +	  Many PHYs can control blinking of LEDs connected directly to them.
-> +	  This adds a special LED trigger called phydev-hw-mode. When enabled,
-> +	  the various control modes supported by the PHY on given LED can be
-> +	  chosen via hw_mode sysfs file.
-> +
->  
->  comment "MII PHY device drivers"
->  
-> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> index d84bab489a53..fd0253ab8097 100644
-> --- a/drivers/net/phy/Makefile
-> +++ b/drivers/net/phy/Makefile
-> @@ -20,6 +20,7 @@ endif
->  obj-$(CONFIG_MDIO_DEVRES)	+= mdio_devres.o
->  libphy-$(CONFIG_SWPHY)		+= swphy.o
->  libphy-$(CONFIG_LED_TRIGGER_PHY)	+= phy_led_triggers.o
-> +libphy-$(CONFIG_LED_TRIGGER_PHY_HW)	+= phy_hw_led_mode.o
->  
->  obj-$(CONFIG_PHYLINK)		+= phylink.o
->  obj-$(CONFIG_PHYLIB)		+= libphy.o
-> diff --git a/drivers/net/phy/phy_hw_led_mode.c b/drivers/net/phy/phy_hw_led_mode.c
-> new file mode 100644
-> index 000000000000..b4c2f25266a5
-> --- /dev/null
-> +++ b/drivers/net/phy/phy_hw_led_mode.c
-> @@ -0,0 +1,96 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * drivers/net/phy/phy_hw_led_mode.c
-> + *
-> + * PHY HW LED mode trigger
-> + *
-> + * Copyright (C) 2020 Marek Behun <marek.behun@nic.cz>
-> + */
-> +#include <linux/leds.h>
-> +#include <linux/phy.h>
-> +
-> +static void phy_hw_led_trig_deactivate(struct led_classdev *cdev)
-> +{
-> +	struct phy_device *phydev = to_phy_device(cdev->dev->parent);
-> +	int ret;
-> +
-> +	ret = phydev->drv->led_set_hw_mode(phydev, cdev, NULL);
-> +	if (ret < 0) {
-> +		phydev_err(phydev, "failed deactivating HW mode on LED %s\n", cdev->name);
-> +		return;
-> +	}
+> The primary reason for using two properties and this logic was to
+> accurately describe the h/w and usage of these in the DT bindings to
+> distinguish the "never connected" vs the "optionally can be skipped"
+> interrupts rather than go by how these are handled in the driver. I
+> feel we will loose this description and make it confusing for SoC
+> product integration developers.
 
-The core holds the phydev mutex when calling into the driver. There
-are a few exceptions, but it would be good if all the LED calls into
-the driver also held the mutex.
+This logic makes zero difference to Linux, and I do not see what
+you gain by having two code paths with separate list of unusable
+interrupts. And why on Earth would a "Soc product integration
+developer" have any business to mess with this driver code?
+They should very much stay away from it and deal with their
+precious value add.
 
-> +}
-> +
-> +static ssize_t hw_mode_show(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct led_classdev *cdev = led_trigger_get_led(dev);
-> +	struct phy_device *phydev = to_phy_device(cdev->dev->parent);
-> +	const char *mode, *cur_mode;
-> +	void *iter = NULL;
-> +	int len = 0;
+If you want two properties or even twenty, go for it, and have fun.
+Just don't make this driver even more unreadable than it already is.
+Merge all these interrupts in *one* list of unusable interrupts,
+and be done with it.
 
-Reverse christmas tree.  
+Thanks,
 
-> +static int __init phy_led_triggers_init(void)
-> +{
-> +	return led_trigger_register(&phy_hw_led_trig);
-> +}
-> +
-> +module_init(phy_led_triggers_init);
-> +
-> +static void __exit phy_led_triggers_exit(void)
-> +{
-> +	led_trigger_unregister(&phy_hw_led_trig);
-> +}
-> +
-> +module_exit(phy_led_triggers_exit);
-
-It is a bit of a surprise to find the module init/exit calls here, and
-not in phy.c. I think they should be moved.
-
-    Andrew
+         M.
+-- 
+Jazz is not dead. It just smells funny...
