@@ -2,95 +2,110 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DC1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D07DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F73206EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595672765;
-	bh=J+APbsd0fEirJmTTj1oX5Mw3BNB/ycIoN90LOc29dE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h56+uPlwEC1mI0ZWehfbn3ZJJAJMVFOqdWZYKIvuWY3KWPiDTsW0/M4CNDG/yOsa8
-	 z/Au/5KDdXMcC2oCvXMIc0oQrtwIcR4x+meUnnGbfObiFygIuW6/QrSPifZRNKODBA
-	 1c7V2v9OfWuF/3udKXxrlR8jTiYHyR0OGKFkRpMg=
+	by mail.kernel.org (Postfix) with ESMTP id 77DA9206EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:30:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MeRVsiWK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgGYK0E (ORCPT
+        id S1726784AbgGYKa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 06:26:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35386 "EHLO
+        Sat, 25 Jul 2020 06:30:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbgGYK0D (ORCPT
+        with ESMTP id S1726618AbgGYKa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 06:26:03 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51456C0619D3;
-        Sat, 25 Jul 2020 03:26:03 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id z17so8711325edr.9;
-        Sat, 25 Jul 2020 03:26:03 -0700 (PDT)
+        Sat, 25 Jul 2020 06:30:56 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93FECC0619D3
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 03:30:56 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u185so6616134pfu.1
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 03:30:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=taXyyIg9HQgDUeqgJutr9j6azE5mPr32nbXBE8+jcsA=;
-        b=heoJsy/sLGZ8AXN/DQcF3CpRSkdT16DTWOrhYJegxg0KfItLi7dPAnQi4JKgv3kfeq
-         GjKcavcYkWvSOrHRkbWGJCqFM3oxjUDNnbiAdSsXr64BjSfS5Q360TdWfXpQh+55BL5q
-         KOqY2GT9KZnz0erHQkPe0gLg7ti/LqMtx1+9aSCHO1M/GW2/55eTkVUNwFxs+kDuXq/l
-         S4bf2DDIez25tWyumCqygwHbhb/rY7HyaU8sjZvyw/2L/3ZMb6JZNKBzGdYwbdKvpFn9
-         s0s0e1HlNuPLHOuetw4HJ+RK4xlIcvOzfO2faKbUjtUCN9LRf2kHA/xrb3hafwQFQvCJ
-         9nyQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=57uUt3PSE6mzDygoHqoCo++awV+qrNFKFMncsAlSLb8=;
+        b=MeRVsiWKP7IpjY2Oleb7YUL7lIACw3+XAuJEJydUpvT1lXp/Ggq/oYMqWLUKNFnDyD
+         ihmn35hiaWGUdd16rTB0GNhBaAZH6AssqQKlw1Pa/QjDGMfCeIaNFc7G/zmAyMHIzBiE
+         c01X/Aiw11Xwbnao+Z8ePHD/p0o4b6hE4+hnBq8ZZLmADRnE4NHtYdwHdN2RsaKR6hQB
+         A3KHpI/mnkkEAbeXEv1kooxNEnCtuBkSoN8uc+C6a7JsbhB5jzUCC8XS6Ld6QiUbVxRn
+         AzCepakLEAZPBQvv/UICiOMnXSnwmZaixcN8hUemd/vUFuzjl1146BOu4NUfJV5hun4O
+         GhyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=taXyyIg9HQgDUeqgJutr9j6azE5mPr32nbXBE8+jcsA=;
-        b=VIBnUta87dFGjkq40HOXq2rSuNMIHdNHBmRB0alDiykF8cQIabtU97ygFFvdpzuXha
-         +5rk+5l18RE9IB77AuHTc+runFCtl7UaIWcPRzxhgCEVFnWV5MH7Auj4vnRTmy8S3Djq
-         lad2SSYxvODWuzw4ol+uFi7iOE9Vaxd4QcX3vrB40tDR9XWlnW7iGOaQD+ROORJLK4wc
-         82nKFywMGhWGhyfzifZe2fcUhMsvV1TiD1jEYYP0M+LZZgjkVuNOnOA+8HK9JgcgZVXH
-         cqr3Nl7P/IqoZPGZZBUbtCe1aOO6jdKYQOLmNvtaOZ9Fibf4B3oQ/v+3l1M+IpbLOORu
-         nV0A==
-X-Gm-Message-State: AOAM530Ji1V88yBhB5NDMjIXZ8ySwM/oBZojVBb2qSIdV1rZGKdLTqjb
-        ExeOJPDKtLFHkv2ncWOOgk9EJtKf
-X-Google-Smtp-Source: ABdhPJys+Ykps/4KLTuDE+mkOgM3KbhJT2sHQsbhDYUoOFDEdpRVDg1e1igOYZTLJmXVQ/nbBYtNoA==
-X-Received: by 2002:a05:6402:1bc1:: with SMTP id ch1mr4196887edb.142.1595672762017;
-        Sat, 25 Jul 2020 03:26:02 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id kt1sm2571657ejb.78.2020.07.25.03.26.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=57uUt3PSE6mzDygoHqoCo++awV+qrNFKFMncsAlSLb8=;
+        b=fIivJR6Szrn4mKRmdfv91y6gNvVgxqZrnikbMtvsZRJdOQKJqIDiYJJB5ZVJMJPYLb
+         Ot4n0dsu50Oj+qgXvatrkB56VHZRgqd5EWiH+m9RfCi8qjiwoWmbCof452hDqYPBbpL1
+         UcI6KPU3g3SW68fE543RHA8Zu54usQnsxpo3XvlFjE2/qnKtF+swssJJAQFnMrYA8jNw
+         3k8cpZVQ+iMI56O6SBRkLmXHOHlj8WVpLS5e9HY4JPtgaCHNpJjzBMQMlZcraDHxKCPM
+         JbPc4jPSbg/3lx9Rv1DKlLcdBfFwuJ4xYYic0qENe7kR5iBpiyNMI59M4nZCsdUnivo0
+         Jm3g==
+X-Gm-Message-State: AOAM5317jXPKm1k7BplDKitavfxlWLDkEBm7Tx4c9wVpXLMN1Z8zELWy
+        XZQdUPP+b8kt0zME131aLZw=
+X-Google-Smtp-Source: ABdhPJxPbDsWd3Twe2k17iP3Lf2crJgVogIVE5m2sfYrBO5WFpidaZYLbL8d2Hz/VRJvYkmkGOLYGQ==
+X-Received: by 2002:a63:338c:: with SMTP id z134mr11756797pgz.245.1595673055726;
+        Sat, 25 Jul 2020 03:30:55 -0700 (PDT)
+Received: from localhost.localdomain ([106.51.23.74])
+        by smtp.gmail.com with ESMTPSA id e18sm8964956pff.37.2020.07.25.03.30.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 03:26:01 -0700 (PDT)
-Date:   Sat, 25 Jul 2020 12:25:59 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [GIT PULL] EFI fixes for v5.8-rc
-Message-ID: <20200725102559.GA757519@gmail.com>
-References: <20200709132807.32232-1-ardb@kernel.org>
- <CAMj1kXGHDS7PnuPsCnHWGDFdtcaJUuXboZUZQwowzw0LfrQ+pw@mail.gmail.com>
- <CAMj1kXFQt4f0XT6C_4_xAuDALv_jVsc+z0zkSnxh6MU-zHxj2g@mail.gmail.com>
+        Sat, 25 Jul 2020 03:30:54 -0700 (PDT)
+From:   Anant Thazhemadam <anant.thazhemadam@gmail.com>
+Cc:     anant.thazhemadam@gmail.com,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Rahul Gottipati <rahul.blr97@gmail.com>,
+        Merwin Trever Ferrao <merwintf@gmail.com>,
+        Michael Straube <straube.linux@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Fix one coding style issue
+Date:   Sat, 25 Jul 2020 16:00:03 +0530
+Message-Id: <20200725103008.7261-1-anant.thazhemadam@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXFQt4f0XT6C_4_xAuDALv_jVsc+z0zkSnxh6MU-zHxj2g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The coding style issue that raised an error (upon checking against
+checkpatch.pl) has been fixed.
+Exactly one coding style issue has been fixed; as required by Task 10
+of the Eudyptula Challenge.
 
-* Ard Biesheuvel <ardb@kernel.org> wrote:
+Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
+---
+ drivers/staging/rtl8188eu/core/rtw_security.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> Ping again?
+diff --git a/drivers/staging/rtl8188eu/core/rtw_security.c b/drivers/staging/rtl8188eu/core/rtw_security.c
+index 21f6652dd69f..dc22ee9c24ad 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_security.c
++++ b/drivers/staging/rtl8188eu/core/rtw_security.c
+@@ -718,7 +718,9 @@ u32 rtw_tkip_decrypt(struct adapter *padapter, u8 *precvframe)
+ 				res = _FAIL;
+ 			}
+ 		} else {
+-			RT_TRACE(_module_rtl871x_security_c_, _drv_err_, ("%s: stainfo==NULL!!!\n",__func__));
++			RT_TRACE(_module_rtl871x_security_c_, _drv_err_,
++				 ("%s: stainfo==NULL!!!\n", __func__)
++				);
+ 			res = _FAIL;
+ 		}
+ 	}
+-- 
+2.25.1
 
-Sorry about the delay - sending it to Linus now.
-
-Thanks,
-
-	Ingo
