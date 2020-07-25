@@ -7,37 +7,34 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C80FC433F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 01:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF616C433F2
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 01:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2D020737
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 01:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5F620737
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 01:46:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="J4OB9Vpq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="mEBGy4Fy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgGYBqT (ORCPT
+        id S1727116AbgGYBqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 21:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgGYBqT (ORCPT
+        Fri, 24 Jul 2020 21:46:32 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:41896 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbgGYBqb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 21:46:19 -0400
-Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56350C0619D3;
-        Fri, 24 Jul 2020 18:46:19 -0700 (PDT)
+        Fri, 24 Jul 2020 21:46:31 -0400
 Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 2C2391FEB5;
-        Sat, 25 Jul 2020 01:46:17 +0000 (UTC)
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 764361FECB;
+        Sat, 25 Jul 2020 01:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1595641579; bh=4P7y2LQNJndHKfA8n1MwNs3vn+NoPJ2RNNraQAFSUuM=;
+        t=1595641591; bh=7kyPXpWNdFxYWiKuEJD7T9ohyci+Zzk/Mord055cn14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J4OB9Vpqpe3PxxmmcGSSS1oWb0r/rjR93l0o3WwJvYtiVQJ1PpTbzqxTNwK/sAqql
-         mGYayE40PX1sKEDjvliR3sttcPbbUEc0qEMtV6rFUcPRFxKhd8c+cwSh+bQjCds3Fr
-         7E5oM18nMJbGsJSubqD2cNdMzYjctAF25ghC8UBEaiSJ+eqqwC54n6gWf6ZIOvwYOl
-         0+dlUbiezmSlWR070dJZ3++cJYKEIH/oK2x24cUVRP9xNipNNDYVjllPtjFlngCSbP
-         IDQDJUSgLoc6ijdQr5kJFJFg4XN38anfIi4f1ZdAXmb3+EMw81v4sPkQTbJFHjty1J
-         oBwThxlbBm7pQ==
+        b=mEBGy4Fym6NtnBXRZJkhujgwJrfCIQuHLwfOioTZs3XsccbHul6n1bfGqCAn9yaej
+         lQImQ9vJXBDQmBdQ/UQunZa9PSvcScX2tDnqQgnuFy0imiOAScHRfFBe0GUN/3PZrD
+         HEFQYOJpOz7T63C3QksL43ziksaOgRPoN4wWTn4aWoiB9AB3+0nK3fez+2gAm0Drtb
+         26cvZlnfr9kn8YjE2mXgmxT2V7ios7of3AX2VyztTzM3CVxPAJ1r4/9i0D9cgxT4UO
+         3aQDcDrO1vtrZ1h5NGPmMV3YPqv6EO6Xo3DNx0NvYbcNLSMUokzOEiDmqkduDnOj6J
+         LH5aIWB/VkYgg==
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -46,12 +43,12 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Huacai Chen <chenhc@lemote.com>,
         Frank Rowand <frowand.list@gmail.com>,
         Paul Burton <paulburton@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/5] MIPS: Loongson64: Enlarge IO_SPACE_LIMIT
-Date:   Sat, 25 Jul 2020 09:45:17 +0800
-Message-Id: <20200725014529.1143208-4-jiaxun.yang@flygoat.com>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 4/5] MIPS: Loongson64: DTS: Fix ISA range for RS780E PCH
+Date:   Sat, 25 Jul 2020 09:45:18 +0800
+Message-Id: <20200725014529.1143208-5-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.28.0.rc1
 In-Reply-To: <20200725014529.1143208-1-jiaxun.yang@flygoat.com>
 References: <20200725014529.1143208-1-jiaxun.yang@flygoat.com>
@@ -62,59 +59,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It can be very big on LS7A PCH systems.
+Ranges should express the actual physical address on bus.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
---
-v3: Move IO_SPACE_LIMIT to spaces.h
 ---
- arch/mips/include/asm/io.h                     | 2 --
- arch/mips/include/asm/mach-generic/spaces.h    | 4 ++++
- arch/mips/include/asm/mach-loongson64/spaces.h | 3 +--
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/io.h b/arch/mips/include/asm/io.h
-index 346fffd9e972..8ca53f17c7c2 100644
---- a/arch/mips/include/asm/io.h
-+++ b/arch/mips/include/asm/io.h
-@@ -51,8 +51,6 @@
+diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+index d4c803d74036..99174b52dfb8 100644
+--- a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
++++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+@@ -25,7 +25,7 @@ isa {
+ 			compatible = "isa";
+ 			#address-cells = <2>;
+ 			#size-cells = <1>;
+-			ranges = <1 0 0 0 0x4000>;
++			ranges = <1 0 0 0x18000000 0x4000>;
  
- /* ioswab[bwlq], __mem_ioswab[bwlq] are defined in mangle-port.h */
- 
--#define IO_SPACE_LIMIT 0xffff
--
- /*
-  * On MIPS I/O ports are memory mapped, so we access them using normal
-  * load/store instructions. mips_io_port_base is the virtual address to
-diff --git a/arch/mips/include/asm/mach-generic/spaces.h b/arch/mips/include/asm/mach-generic/spaces.h
-index ee5ebe98f6cf..c3ac06a6acd2 100644
---- a/arch/mips/include/asm/mach-generic/spaces.h
-+++ b/arch/mips/include/asm/mach-generic/spaces.h
-@@ -14,6 +14,10 @@
- 
- #include <asm/mipsregs.h>
- 
-+#ifndef IO_SPACE_LIMIT
-+#define IO_SPACE_LIMIT 0xffff
-+#endif
-+
- /*
-  * This gives the physical RAM offset.
-  */
-diff --git a/arch/mips/include/asm/mach-loongson64/spaces.h b/arch/mips/include/asm/mach-loongson64/spaces.h
-index 3de0ac9d8829..ce04e998a37b 100644
---- a/arch/mips/include/asm/mach-loongson64/spaces.h
-+++ b/arch/mips/include/asm/mach-loongson64/spaces.h
-@@ -11,8 +11,7 @@
- #define PCI_IOSIZE	SZ_16M
- #define MAP_BASE	(PCI_IOBASE + PCI_IOSIZE)
- 
--/* Reserved at the start of PCI_IOBASE for legacy drivers */
--#define MMIO_LOWER_RESERVED	0x10000
-+#define IO_SPACE_LIMIT  (PCI_IOSIZE - 1)
- 
- #include <asm/mach-generic/spaces.h>
- #endif
+ 			rtc0: rtc@70 {
+ 				compatible = "motorola,mc146818";
 -- 
 2.28.0.rc1
 
