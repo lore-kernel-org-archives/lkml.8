@@ -2,140 +2,170 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F561C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F45C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16950206C1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA3F206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 05:26:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="OQzc1PSE"
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="Q1vZe+rK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgGYFUq (ORCPT
+        id S1726593AbgGYF0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 01:20:46 -0400
-Received: from mail-40135.protonmail.ch ([185.70.40.135]:20590 "EHLO
-        mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgGYFUq (ORCPT
+        Sat, 25 Jul 2020 01:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgGYF0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 01:20:46 -0400
-Date:   Sat, 25 Jul 2020 05:20:37 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1595654443;
-        bh=fNtUVokgzqgxDWagukyFnXesfhfXrJW8Fu9a6W33bSc=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=OQzc1PSECV5erApTpM9sgdrgHIVCb90BdRniY6MR5dux8QWFg7kfwtmEiZuYQDrYl
-         Gpp3PRhkEfg6G86Ji8X9kKwj/khlrEuqyFsVqJhHuy2rNKfbXfL2S/nnC6B5y5RF+1
-         teW/dchZ6Jzl4dKUsWs7bcGILdMbRFGofvrld0xs=
-To:     Duncan <1i5t5.duncan@cox.net>
-From:   Mazin Rezk <mnrzk@protonmail.com>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        sunpeng.li@amd.com, Alexander Deucher <Alexander.Deucher@amd.com>,
-        mphantomx@yahoo.com.br, regressions@leemhuis.info,
-        anthony.ruhier@gmail.com
-Reply-To: Mazin Rezk <mnrzk@protonmail.com>
-Subject: Re: [PATCH] amdgpu_dm: fix nonblocking atomic commit use-after-free
-Message-ID: <c7mHa5xU_kh7K9KM5P1UJoCY00b3Oxj3s_y3vr0LGQzUPtWlhv5JjjhT4CnnbDhuTZhCuHT2uMbjdDCZ-JLmHVlS7B_k-wj1OTmZpMD7cg4=@protonmail.com>
-In-Reply-To: <20200724215914.6297cc7e@ws>
-References: <YIGsJ9LlFquvBI2iWPKhJwjKBwDUr_C-38oVpLJJHJ5rDCY_Zrrv392o6UPNxHoeQrcpLYC9U4fZdpD9ilz6Amg2IxkSexGLQMCQIBek8rc=@protonmail.com> <202007231524.A24720C@keescook> <a86cba0b-4513-e7c3-ae75-bb331433f664@molgen.mpg.de> <202007241016.922B094AAA@keescook> <3c92db94-3b62-a70b-8ace-f5e34e8f268f@molgen.mpg.de> <_vGVoFJcOuoIAvGYtkyemUvqEFeZ-AdO4Jk8wsyVv3MwO-6NEVtULxnZzuBJNeHNkCsQ5Kxn5TPQ_VJ6qyj9wXXXX8v-hc3HptnCAu0UYsk=@protonmail.com> <20200724215914.6297cc7e@ws>
+        Sat, 25 Jul 2020 01:26:24 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C50DEC0619D3
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 22:26:23 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a5so20057wrm.6
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 22:26:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a6p0lVxEnhHsvjplpbb7vWgmumCrMN6gGnNK6UWZILU=;
+        b=Q1vZe+rKwyyYjIW6XXvjhhERm0kakS74BuxhRPpXajZcKpBSQrLf4lCSu0NiYL2LFy
+         n5RFcUmb062jxXoc9P482sXmu4tvBwwyPReseQpg5qGh/X58CzCvXB/NzsCvuF4EVd8x
+         /zgGwj9uZmSfxsS3AdLH+E+vyTeIZLdZ6uLJU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a6p0lVxEnhHsvjplpbb7vWgmumCrMN6gGnNK6UWZILU=;
+        b=YSvCp3/6qMt5raWOAmqnytbSTnFLkrC8zpywFV8QgHvuLiu6WswK4odO+2x5Qi4pzf
+         LdbXsBDD1G+KdMNRDZo3c66RxsYQ8jV6iqP2TaLSzMKmBWGDSxwE5x/Lw065RxbtikpG
+         QJfDUtq7Hyy99metlmvxroNNQUI5BCIVRNeEruUm5wXOuZix4LbKB+Urqd2AJZKYxdV9
+         VETZJEuL6LkckrgmWC1shIpkJHmEzwPWwuAZaKKTNNUyR7e1WEoUV/uCQgagMR3Lj2IW
+         KugNyfW5NLQnhULFv/UFDUKn6wjydg8pyf3RSZodXenwwCiidUFav7Xe+FOWLTSp/Tbf
+         7pPg==
+X-Gm-Message-State: AOAM531VTOpQjH0ejNAvjdX2ojuuIjOcKC+V2Fc3U6xrsauMM9bWzXCp
+        PW01c5TKwKwpqnrmwXksZNs9Yipgujj+PF8swO5S
+X-Google-Smtp-Source: ABdhPJwrMR+ET7MBSwIPEVUPSgwSWal0eiCukHggZx1kTuBtHy9ADY6OHBBQ+R7mDwHTpoe4ACM51xX1mQ4QXV1TL1k=
+X-Received: by 2002:adf:d84f:: with SMTP id k15mr10836892wrl.176.1595654782356;
+ Fri, 24 Jul 2020 22:26:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200715233009.27183-2-atish.patra@wdc.com> <mhng-8ce8d920-4b65-432c-8b51-8d81f55936c0@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-8ce8d920-4b65-432c-8b51-8d81f55936c0@palmerdabbelt-glaptop1>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Fri, 24 Jul 2020 22:26:10 -0700
+Message-ID: <CAOnJCUL7=i3XXMDJ5vgnNo==3zOANxGEe3ufznAhn7LE7vVAZQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] RISC-V: Setup exception vector early
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Atish Patra <Atish.Patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Vincent Chen <vincent.chen@sifive.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        sudeep.holla@arm.com, Zong Li <zong.li@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Saturday, July 25, 2020 12:59 AM, Duncan <1i5t5.duncan@cox.net> wrote:
-
-> On Sat, 25 Jul 2020 03:03:52 +0000
-> Mazin Rezk mnrzk@protonmail.com wrote:
+On Fri, Jul 24, 2020 at 10:12 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
 >
-> > > Am 24.07.20 um 19:33 schrieb Kees Cook:
-> > >
-> > > > There was a fix to disable the async path for this driver that
-> > > > worked around the bug too, yes? That seems like a safer and more
-> > > > focused change that doesn't revert the SLUB defense for all
-> > > > users, and would actually provide a complete, I think, workaround
+> On Wed, 15 Jul 2020 16:30:06 PDT (-0700), Atish Patra wrote:
+> > The trap vector is set only in trap_init which may be too late in some
+> > cases. Early ioremap/efi spits many warning messages which may be useful.
 > >
-> > That said, I haven't seen the async disabling patch. If you could
-> > link to it, I'd be glad to test it out and perhaps we can use that
-> > instead.
+> > Setup the trap vector early so that any warning/bug can be handled before
+> > generic code invokes trap_init.
+> >
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > ---
+> >  arch/riscv/kernel/head.S    | 10 ++++++++--
+> >  arch/riscv/kernel/smpboot.c |  1 -
+> >  arch/riscv/kernel/traps.c   |  8 +-------
+> >  3 files changed, 9 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> > index 7ed1b22950fd..d0c5c316e9bb 100644
+> > --- a/arch/riscv/kernel/head.S
+> > +++ b/arch/riscv/kernel/head.S
+> > @@ -77,10 +77,16 @@ relocate:
+> >       csrw CSR_SATP, a0
+> >  .align 2
+> >  1:
+> > -     /* Set trap vector to spin forever to help debug */
+> > -     la a0, .Lsecondary_park
+> > +     /* Set trap vector to exception handler */
+> > +     la a0, handle_exception
+> >       csrw CSR_TVEC, a0
+> >
+> > +     /*
+> > +      * Set sup0 scratch register to 0, indicating to exception vector that
+> > +      * we are presently executing in kernel.
+> > +      */
+> > +     csrw CSR_SCRATCH, zero
+> > +
+> >       /* Reload the global pointer */
+> >  .option push
+> >  .option norelax
+> > diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
+> > index 4e9922790f6e..5a9c127a380e 100644
+> > --- a/arch/riscv/kernel/smpboot.c
+> > +++ b/arch/riscv/kernel/smpboot.c
+> > @@ -154,7 +154,6 @@ asmlinkage __visible void smp_callin(void)
+> >       mmgrab(mm);
+> >       current->active_mm = mm;
+> >
+> > -     trap_init();
+> >       notify_cpu_starting(smp_processor_id());
+> >       update_siblings_masks(smp_processor_id());
+> >       set_cpu_online(smp_processor_id(), 1);
+> > diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> > index 7d95cce5e47c..ad14f4466d92 100644
+> > --- a/arch/riscv/kernel/traps.c
+> > +++ b/arch/riscv/kernel/traps.c
+> > @@ -174,13 +174,7 @@ int is_valid_bugaddr(unsigned long pc)
+> >  }
+> >  #endif /* CONFIG_GENERIC_BUG */
+> >
+> > +/* stvec & scratch is already set from head.S */
+> >  void trap_init(void)
+> >  {
+> > -     /*
+> > -      * Set sup0 scratch register to 0, indicating to exception vector
+> > -      * that we are presently executing in the kernel
+> > -      */
+> > -     csr_write(CSR_SCRATCH, 0);
+> > -     /* Set the exception vector address */
+> > -     csr_write(CSR_TVEC, &handle_exception);
+> >  }
 >
-> I'm confused. Not to put words in Kees' mouth; /I/ am confused (which
-> admittedly could well be just because I make no claims to be a
-> coder and am simply reading the bug and thread, but I'd appreciate some
-> "unconfusing" anyway).
+> While I think these are all actual fixes, it's pretty late in the cycle here so
+> I'm going to a bit on the careful side and only take the patches that actually
+> manifest as bugs in the current port.  Assuming this doesn't manifest until
+> early_ioremap is enabled (and we don't do that yet), I've put it on for-next.
 >
-> My interpretation of the "async disabling" reference was that it was to
-> comment #30 on the bug:
->
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D207383#c30
->
-> ... which (if I'm not confused on this point too) appears to be yours.
-> There it was stated...
->
-> > > > >
->
-> I've also found that this bug exclusively occurs when commit_work is on
-> the workqueue. After forcing drm_atomic_helper_commit to run all of the
-> commits without adding to the workqueue and running the OS, the issue
-> seems to have disappeared.
-> <<<<
->
-> Would not forcing all commits to run directly, without placing them on
-> the workqueue, be "async disabling"? That's what I /thought/ he was
-> referencing.
 
-Oh, I thought he was referring to a different patch. Kees, could I get
-your confirmation on this?
+Yeah. early_ioremap is part of the UEFI series. So this can go into for-next.
+Thanks.
 
-The change I made actually affected all of the DRM code, although this coul=
-d
-easily be changed to be specific to amdgpu. (By forcing blocking on
-amdgpu_dm's non-blocking commit code)
-
-That said, I'd still need to test further because I only did test it for a
-couple of hours then. Although it should work in theory.
-
+> LMK if I'm wrong about this, or the following ones.
 >
-> OTOH your base/context swap idea sounds like a possibly "less
-> disturbance" workaround, if it works, and given the point in the
-> commit cycle... (But if it's out Sunday it's likely too late to test
-> and get it in now anyway; if it's another week, tho...)
-
-The base/context swap idea should make the use-after-free behave how it
-did in 5.6. Since the bug doesn't cause an issue in 5.6, it's less of a
-"less disturbance" workaround and more of a "no disturbance" workaround.
-
-Thanks,
-Mazin Rezk
-
+> Thanks!
 >
-> -------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------------------------------------------------------------=
-------------------------------------------------------
->
-> Duncan - No HTML messages please; they are filtered as spam.
-> "Every nonfree program has a lord, a master --
-> and if you use the program, he is your master." Richard Stallman
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
 
+
+-- 
+Regards,
+Atish
