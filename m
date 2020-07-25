@@ -2,108 +2,93 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A760C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 09:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 09:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50311206EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 09:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97A4206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 09:46:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FJhTvJlu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgGYJlo (ORCPT
+        id S1726694AbgGYJqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 05:41:44 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:40924 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbgGYJln (ORCPT
+        Sat, 25 Jul 2020 05:46:19 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50198 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726572AbgGYJqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 05:41:43 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id E77261C0BD2; Sat, 25 Jul 2020 11:41:39 +0200 (CEST)
-Date:   Sat, 25 Jul 2020 11:41:39 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Marek Behun <marek.behun@nic.cz>, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v2 1/1] net: phy: marvell: add
- support for PHY LEDs via LED class
-Message-ID: <20200725094139.GA29992@amd>
-References: <20200723181319.15988-1-marek.behun@nic.cz>
- <20200723181319.15988-2-marek.behun@nic.cz>
- <20200723213531.GK1553578@lunn.ch>
- <20200724005349.2e90a247@nic.cz>
- <20200724102403.wyuteeql3jn5xouw@duo.ucw.cz>
- <20200724131102.GD1472201@lunn.ch>
+        Sat, 25 Jul 2020 05:46:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595670377;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PN2Xs/Q3DnIYM6SWZ/xYcx0QxiDyrNCnXxiRaYTtKSY=;
+        b=FJhTvJluchvoj0+xfU/MglEGmQI+NF+iV7Qmjj4nHngE9zdFCZCqqMuiWOqobXYL2CRgqJ
+        xJmnBsVLqY71M6QTfNanklnS8jI4p2Y8BYQHvfDbTsOZGU22E1rWQtbDl1aFAmerLduXhA
+        GZEKaKQsyCfqoIK+v4fkSYBYmOZmRU8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-444-47sI9bpKMlmEqrHyB9koyw-1; Sat, 25 Jul 2020 05:46:13 -0400
+X-MC-Unique: 47sI9bpKMlmEqrHyB9koyw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 88AC480BCAC;
+        Sat, 25 Jul 2020 09:39:08 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.25])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7DBA05F1EF;
+        Sat, 25 Jul 2020 09:39:05 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Sat, 25 Jul 2020 11:39:08 +0200 (CEST)
+Date:   Sat, 25 Jul 2020 11:39:03 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Hugh Dickins <hughd@google.com>, Michal Hocko <mhocko@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
+Message-ID: <20200725093902.GA3870@redhat.com>
+References: <alpine.LSU.2.11.2007221359450.1017@eggly.anvils>
+ <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com>
+ <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com>
+ <20200723124749.GA7428@redhat.com>
+ <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com>
+ <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com>
+ <alpine.LSU.2.11.2007231549540.1016@eggly.anvils>
+ <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com>
+ <20200724152424.GC17209@redhat.com>
+ <CAHk-=whuG+5pUeUqdiW4gk0prvqu7GZSMo-6oWv5PdDC5dBr=A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200724131102.GD1472201@lunn.ch>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAHk-=whuG+5pUeUqdiW4gk0prvqu7GZSMo-6oWv5PdDC5dBr=A@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07/24, Linus Torvalds wrote:
+>
+> And in fact, once you do it on top of that, it becomes obvious that we
+> can share even more code: move the WQ_FLAG_WOKEN logic _into_ the
+> trylock_page_bit_common() function.
 
---Dxnq1zWXvFF0Q93v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ah, indeed, somehow I didn't realize this,
 
-Hi!
+> I added your reviewed-by, but maybe you should double-check my changes.
 
-> > > My main issue though is whether one "hw-control" trigger should be
-> > > registered via LED API and the specific mode should be chosen via
-> > > another sysfs file as in this RFC, or whether each HW control mode
-> > > should have its own trigger. The second solution would either result =
-in
-> > > a lot of registered triggers or complicate LED API, though...
-> >=20
-> > If you register say 5 triggers.... that's okay. If you do like 1024
-> > additional triggers (it happened before!)... well please don't.
->=20
-> Hi Pavel
->=20
-> There tends to be around 15 different blink patterns per LED. And
-> there can be 2 to 3 LEDs per PHY. The blink patterns can be different
-> per PHY, or they can be the same. For the Marvell PHY we are looking
-> at around 45. Most of the others PHYs tend to have the same patterns
-> for all LEDs, so 15 triggers could be shared.
->=20
-> But if you then think of a 10 port Ethernet switch, there could be 450
-> triggers, if the triggers are not shared at all.
->=20
-> So to some extent, it is a question of how much effort should be put
-> in to sharing triggers.
+Still looks correct to me, thanks.
 
-It sounds to me ... lot of effort should be put to sharing triggers
-there :-).
+Oleg.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Dxnq1zWXvFF0Q93v
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8b/lMACgkQMOfwapXb+vKimwCfRGK+53fLznJ19wiqfJngn0BJ
-16sAoIn1IOwQhTF57yjnfe5HHzqtQeVC
-=93uu
------END PGP SIGNATURE-----
-
---Dxnq1zWXvFF0Q93v--
