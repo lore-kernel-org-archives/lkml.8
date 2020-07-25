@@ -3,122 +3,210 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A707AC433E8
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 15:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6491BC433EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 15:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86B2D20674
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 15:48:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LLuknkdO"
+	by mail.kernel.org (Postfix) with ESMTP id 3FF9520674
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 15:48:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595692134;
+	bh=9wW8Uj4gUAhhIfHGan5QMeMR2ANgUUO3YVTWvZde0cw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eYXAHraV1L3/PDXIoJgK5JC4Omhc0gx6T0xdb81nbFYBvTVQRJFmQl9eQpc5KG+NT
+	 dq9TXnlyjkV74tLSITc4kprGPSGWsaOjZzMnpst6fMDdgY0bU+seaPRj77ADkBUjm7
+	 7ORLxUwWfLuT+RFB2tMQR2Arvj669Pi03mE4721A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgGYPsY (ORCPT
+        id S1727119AbgGYPsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 11:48:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgGYPsX (ORCPT
+        Sat, 25 Jul 2020 11:48:52 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35334 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726870AbgGYPsw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 11:48:23 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C69C08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 08:48:22 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id w2so7010627pgg.10
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 08:48:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/1vt+B3DVDrdrfR+H/x+bcPYzBM3lx1EeYwS9nHXkv0=;
-        b=LLuknkdOV2ZtuQPqqojqyvetQWZyKdeY9d3pGLpBMsgkaZgVvKIy/AOCpwPfbYes5B
-         H/o0kCTLgkAjS3VbyKJPiw8PQtoBi3SFOF2kTEMS3QjeeRaS8iowUPs0nb2cE46QURNP
-         7+NdSyvlQQugboxyBYham2MUGFHTQgh4+wzjg=
+        Sat, 25 Jul 2020 11:48:52 -0400
+Received: by mail-ot1-f67.google.com with SMTP id d4so9270679otk.2;
+        Sat, 25 Jul 2020 08:48:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/1vt+B3DVDrdrfR+H/x+bcPYzBM3lx1EeYwS9nHXkv0=;
-        b=cjdRRYBOu6Fi3iGk/y9gwpSDt+Y+kRcxOaAv9iSgvRJlOkn4cgHTX4PUaKJi6a2qI6
-         zSyHttR2RQQ6ZFdhSBL++5N5o5/Z0TnOPkyhFjyYQkTaW2skaXIc8z9Al0pbqq+Lizf4
-         +r8PDwANigqpNljG4jdf9xLKGy3FAYGLes6pwmg6p5Gfwc5WLChUBvQ74MBvScE+bsB9
-         GpgoCejHduJTO8y6NG7VTkdgPjOpVF/g2jrS2nBeamTXCeIRA67S6pr2hthHI0JewFK5
-         CZD+1o7SgkOGGABXbwjDMczu0I4TTwwrZWaDIy3Y3kWvnTV7Nt8e6CpiQbW6VMvtOoSp
-         B18g==
-X-Gm-Message-State: AOAM532PS0vSF1vY5BlN3r/uiceAv9BMlkOxaTguI4htBfHnyUSHUs44
-        Irv0TZnziGXz5htQIhb9PygnFw==
-X-Google-Smtp-Source: ABdhPJyxdaNUWfD+EhFI99UZ6LC/JVNqOP8wI3FHvEU/crZf7bnX4W1waM+OsXoJToUlv6T15nEktw==
-X-Received: by 2002:a63:7d16:: with SMTP id y22mr12268714pgc.136.1595692102486;
-        Sat, 25 Jul 2020 08:48:22 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j10sm9458042pgh.28.2020.07.25.08.48.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 08:48:21 -0700 (PDT)
-Date:   Sat, 25 Jul 2020 08:48:19 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/19] Introduce partial kernel_read_file() support
-Message-ID: <202007250843.534DE3DB48@keescook>
-References: <20200724213640.389191-1-keescook@chromium.org>
- <20200725100555.GA1073708@kroah.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C2tWIq6ckvPQ/yQ9n0OcVSF3V7zuB66fdFiG7czZWrM=;
+        b=BomFKCttun5Rrd42mdzfArBexeRjhvuk9CoCD4aQgPr/B7PpJSIy5GHuyPdLdlZgs+
+         Lbe6l59YUrNcBSFgwSVknFv8xZVXV7Vr9BsY5LVC81l3nxoWPovmxr/zOiu161bJC6rH
+         zXYKc2e+1sEsAJzI4i23Oq0NJSFyXeQ5fV6jwUA80J05ShFyQtJtsV9FHrgB8NtAf7s+
+         EPsf7wEAqcfyV7J9A3uOhqVmUxfvod6hSOPespv1UDDEccwJMiM8XtilvEE4bE80BXGx
+         Dfma3IWQJyrzZVDNxN02VfmOgnBvxh2YIzhlfj57V7FbRX6tkcOXaQoCWfdWigJPomAw
+         ir0A==
+X-Gm-Message-State: AOAM532LJ8egY82rR89UBj+L8I2O4wKNvugGFbwKlbODIRmDVsjiCa4l
+        wbNczgCPskIIpDuGvyR2pzrrKEoAy87V5Gz4n0o=
+X-Google-Smtp-Source: ABdhPJxdIbJjT+WXUymtPF9yecfsiFiCGsZKNzDMvi+8ZkivU76IBsZTeqiLhBkUl+vQbEzionhR0LjlVM4VyaFCCjM=
+X-Received: by 2002:a05:6830:30ba:: with SMTP id g26mr13183298ots.118.1595692130877;
+ Sat, 25 Jul 2020 08:48:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200725100555.GA1073708@kroah.com>
+References: <1594005196-16327-1-git-send-email-neal.liu@mediatek.com>
+ <1594005196-16327-2-git-send-email-neal.liu@mediatek.com> <CAJZ5v0ihB5AJwSRpjaOnXAmciregzxARL5xfudu1h+=_LXaE_w@mail.gmail.com>
+ <1594350535.4670.13.camel@mtkswgap22> <1595233294.8055.0.camel@mtkswgap22>
+ <20200723190724.GA1339461@google.com> <CAJZ5v0g_14D-tyWFEZ9eOJC=GmzR-31iAAPff=Ch8KjFyK2wfw@mail.gmail.com>
+ <1595586289.14121.5.camel@mtkswgap22> <CAJZ5v0hnW5NB1T90QNSVuzFSZrrXzxKASWYDTW=mFF6MOan9hQ@mail.gmail.com>
+ <1595591389.14564.3.camel@mtkswgap22>
+In-Reply-To: <1595591389.14564.3.camel@mtkswgap22>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sat, 25 Jul 2020 17:48:39 +0200
+Message-ID: <CAJZ5v0jyWbnztoTGkA88-4FwUjbvQvbW5a+GreJT-uJoNREPOA@mail.gmail.com>
+Subject: Re: [PATCH v2] cpuidle: change enter_s2idle() prototype
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 12:05:55PM +0200, Greg Kroah-Hartman wrote:
-> On Fri, Jul 24, 2020 at 02:36:21PM -0700, Kees Cook wrote:
-> > v3:
-> > - add reviews/acks
-> > - add "IMA: Add support for file reads without contents" patch
-> > - trim CC list, in case that's why vger ignored v2
-> > v2: [missing from lkml archives! (CC list too long?) repeating changes here]
-> > - fix issues in firmware test suite
-> > - add firmware partial read patches
-> > - various bug fixes/cleanups
-> > v1: https://lore.kernel.org/lkml/20200717174309.1164575-1-keescook@chromium.org/
-> > 
-> > Hi,
-> > 
-> > Here's my tree for adding partial read support in kernel_read_file(),
-> > which fixes a number of issues along the way. It's got Scott's firmware
-> > and IMA patches ported and everything tests cleanly for me (even with
-> > CONFIG_IMA_APPRAISE=y).
-> > 
-> > I think the intention is for this to go via Greg's tree since Scott's
-> > driver code will depend on it?
-> 
-> I've applied the first 3 now, as I think I need some acks/reviewed-by
-> from the subsystem owners of the other patches before I can take them.
+On Fri, Jul 24, 2020 at 1:50 PM Neal Liu <neal.liu@mediatek.com> wrote:
+>
+> On Fri, 2020-07-24 at 13:20 +0200, Rafael J. Wysocki wrote:
+> > On Fri, Jul 24, 2020 at 12:24 PM Neal Liu <neal.liu@mediatek.com> wrote:
+> > >
+> > > On Fri, 2020-07-24 at 11:57 +0200, Rafael J. Wysocki wrote:
+> > > > On Thu, Jul 23, 2020 at 9:07 PM Sami Tolvanen <samitolvanen@google.com> wrote:
+> > > > >
+> > > > > On Mon, Jul 20, 2020 at 04:21:34PM +0800, Neal Liu wrote:
+> > > > > > Gentle ping on this patch.
+> > > > > >
+> > > > > >
+> > > > > > On Fri, 2020-07-10 at 11:08 +0800, Neal Liu wrote:
+> > > > > > > On Thu, 2020-07-09 at 14:18 +0200, Rafael J. Wysocki wrote:
+> > > > > > > > On Mon, Jul 6, 2020 at 5:13 AM Neal Liu <neal.liu@mediatek.com> wrote:
+> > > > > > > > >
+> > > > > > > > > Control Flow Integrity(CFI) is a security mechanism that disallows
+> > > > > > > > > changes to the original control flow graph of a compiled binary,
+> > > > > > > > > making it significantly harder to perform such attacks.
+> > > > > > > > >
+> > > > > > > > > init_state_node() assign same function callback to different
+> > > > > > > > > function pointer declarations.
+> > > > > > > > >
+> > > > > > > > > static int init_state_node(struct cpuidle_state *idle_state,
+> > > > > > > > >                            const struct of_device_id *matches,
+> > > > > > > > >                            struct device_node *state_node) { ...
+> > > > > > > > >         idle_state->enter = match_id->data; ...
+> > > > > > > > >         idle_state->enter_s2idle = match_id->data; }
+> > > > > > > > >
+> > > > > > > > > Function declarations:
+> > > > > > > > >
+> > > > > > > > > struct cpuidle_state { ...
+> > > > > > > > >         int (*enter) (struct cpuidle_device *dev,
+> > > > > > > > >                       struct cpuidle_driver *drv,
+> > > > > > > > >                       int index);
+> > > > > > > > >
+> > > > > > > > >         void (*enter_s2idle) (struct cpuidle_device *dev,
+> > > > > > > > >                               struct cpuidle_driver *drv,
+> > > > > > > > >                               int index); };
+> > > > > > > > >
+> > > > > > > > > In this case, either enter() or enter_s2idle() would cause CFI check
+> > > > > > > > > failed since they use same callee.
+> > > > > > > >
+> > > > > > > > Can you please explain this in a bit more detail?
+> > > > > > > >
+> > > > > > > > As it stands, I don't understand the problem statement enough to apply
+> > > > > > > > the patch.
+> > > > > > > >
+> > > > > > >
+> > > > > > > Okay, Let's me try to explain more details.
+> > > > > > > Control Flow Integrity(CFI) is a security mechanism that disallows
+> > > > > > > changes to the original control flow graph of a compiled binary, making
+> > > > > > > it significantly harder to perform such attacks.
+> > > > > > >
+> > > > > > > There are multiple control flow instructions that could be manipulated
+> > > > > > > by the attacker and subvert control flow. The target instructions that
+> > > > > > > use data to determine the actual destination.
+> > > > > > > - indirect jump
+> > > > > > > - indirect call
+> > > > > > > - return
+> > > > > > >
+> > > > > > > In this case, function prototype between caller and callee are mismatch.
+> > > > > > > Caller: (type A)funcA
+> > > > > > > Callee: (type A)funcB
+> > > > > > > Callee: (type C)funcC
+> > > > > > >
+> > > > > > > funcA calls funcB -> no problem
+> > > > > > > funcA calls funcC -> CFI check failed
+> > > > > > >
+> > > > > > > That's why we try to align function prototype.
+> > > > > > > Please feel free to feedback if you have any questions.
+> > > > >
+> > > > > I think you should include a better explanation in the commit message.
+> > > > > Perhaps something like this?
+> > > > >
+> > > > >   init_state_node assigns the same callback function to both enter and
+> > > > >   enter_s2idle despite mismatching function types, which trips indirect
+> > > > >   call checking with Control-Flow Integrity (CFI).
+> > > > >
+> > > > > > > > > Align function prototype of enter() since it needs return value for
+> > > > > > > > > some use cases. The return value of enter_s2idle() is no
+> > > > > > > > > need currently.
+> > > > > > > >
+> > > > > > > > So last time I requested you to document why ->enter_s2idle needs to
+> > > > > > > > return an int in the code, which has not been done.  Please do that.
+> > > > >
+> > > > > Rafael, are you happy with the commit message documenting the reason,
+> > > > > or would you prefer to also add a comment before enter_s2idle?
+> > > >
+> > > > As I said before, it would be good to have a comment in the code as
+> > > > well or people will be wondering why it is necessary to return
+> > > > anything from that callback, because its return value is never used.
+> > > >
+> > > > Thanks!
+> > >
+> > > Is it okay to add these comments before enter_s2idle?
+> > >
+> > > /*
+> > >  * Align function type since init_state_node assigns the same callback
+> >
+> > init_state_node()
+> >
+> > >  * function to both enter and enter_s2idle despite mismatching function
+> >
+> > ->enter_s2idle
+> >
+> > >  * types, which trips indirect call checking with Control-Flow Integrity
+> > >  * (CFI).
+> > >  */
+> > > int (*enter_s2idle)(struct cpuidle_device *dev,
+> > >                     struct cpuidle_driver *drv,
+> > >                     int index);
+> >
+> > But IMO it would be sufficient to add something like this to the
+> > existing comment regarding ->enter_s2idle:
+> >
+> > "This callback may point to the same function as ->enter if all of the
+> > above requirements are met by it."
+> >
+> > That would explain why the signature is the same sufficiently in my view.
+> >
+> > Thanks!
+>
+> For clarification, do you mean add this comment on enter_s2idle function
+> pointer declaration is enough?
 
-Sounds good; thanks!
-
-(I would argue 4 and 5 are also bug fixes, 6 is already Acked by hch and
-you, and 7 is a logical follow-up to 6, but I get your point.)
-
-James, Luis, Mimi, and Jessica, the bulk of these patches are LSM,
-firmware, IMA, and modules. How does this all look to you? And KP,
-you'd mentioned privately that you were interested in being able to
-use the new kernel_post_load_data LSM hook for better visibility into
-non-file-backed blob loading.
+Yes, I do.
 
 Thanks!
-
--Kees
-
--- 
-Kees Cook
