@@ -2,175 +2,405 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1235C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 02:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E72D8C433E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 02:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 973372067D
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 02:08:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XsXuB/GB"
+	by mail.kernel.org (Postfix) with ESMTP id BEACB2067D
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 02:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595643082;
+	bh=MiK1PVba9d6hMg6wGLKI8oBgC2V0lNCvk+9hka8SO+Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CiCZHsqx1UkpeH0e/DO25fa79ZrQXeD1XMFkMbDWpwTgiWiE/DUZ9PZcMEQGE7MAf
+	 Ggph0w+5jh457D8P1mN/gP4roC1VfjyGR8LTS145VDxnawKgep6ZL8FtbRM/OUaFd9
+	 nn8ksYvgzgUpSBU5ozNcFUYijcBY8MijKR+pHJlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgGYCIm (ORCPT
+        id S1726686AbgGYCLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 22:08:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726493AbgGYCIl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 22:08:41 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A066CC0619D3
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 19:08:41 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id k6so9614814oij.11
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 19:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=8RDgSawLErxUlyj8g5FqkrjgTL8CRL7VApm1SCEC0YY=;
-        b=XsXuB/GB7oTa1AwzArH3m6lXpMObJ+CX63nrk2497zUG+wXizcF0Gh415whJ/hOiws
-         /pesNOfXYJarmG8SOprlPGpbvLvhQ9Hcuo5zsBNSxjM0+6mfPby0pSzc/Ghg7DX/kQyj
-         D9FL7BaL0nsUY2VqxDwuHSw9ZVsf/IPxBFH4zkPETxbZKJCiyIa2DkSy7E9eKZ2OLBRj
-         dH4fs13OgxrsDgYjn8gU+jv/rfo/0ACpxXtNC2hPRtPGPj7tJ3ioMBKmsCGNukqt4ag0
-         0kDrVmV1r5VcWxcl9gK3Hrq/MB1z/Jxc4KrZAvyS2HBmu4xVVrGsNAREJfotSvQneRtM
-         +zFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=8RDgSawLErxUlyj8g5FqkrjgTL8CRL7VApm1SCEC0YY=;
-        b=GM+H8Ss5mvJl3dtdrCsDc4kaJFNpIxKs/NqtrkX1LvHRd364T9tzM4y0qj/Cue6DI7
-         /Eq9Tx/NJGoS7gDN/gVvuCCBCJhq/w9SN1f0lUZimtYd+PHBXmozVnzOOwn337L/gYG/
-         SwQeZ0I8DuR91Fn1EIfsHbR36XYyulYC2e10Ce/tR56cqNd7kdswZ8xgNEuRDBnC1bnu
-         0dlIq0QjwT7UeuEGJXAFayB42oRCxN2l8ylftWEfEJpPqKbYEfSzT7QS4bAUe7YnrLA/
-         IO4heZjEY/2FaV2BUhFp1av8X2h3k7l6cw/Kv89bdglK0E+p7xC+NX7nisXuQjYHlANP
-         vYzg==
-X-Gm-Message-State: AOAM533LLLNuNIcO+bwpAKSpMXXf08srwVKGH66KEk9/NshYyadD9FI5
-        Yw1mFelAT/IaLhVesxVRHHj0sA==
-X-Google-Smtp-Source: ABdhPJyAXTaI/fCDQpvRVf6azMTLrIClfPDqSQ7+f191lw7sRb7lCe+O9pjjlGWEnCzohvt8EiZC+A==
-X-Received: by 2002:aca:58c3:: with SMTP id m186mr10620330oib.18.1595642920545;
-        Fri, 24 Jul 2020 19:08:40 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id z2sm1746950otq.17.2020.07.24.19.08.37
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Fri, 24 Jul 2020 19:08:38 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 19:08:24 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Oleg Nesterov <oleg@redhat.com>, Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [RFC PATCH] mm: silence soft lockups from unlock_page
-In-Reply-To: <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com>
-Message-ID: <alpine.LSU.2.11.2007241848300.8192@eggly.anvils>
-References: <CAHk-=whewL14RgwLZTXcNAnrDPt0H+sRJS6iDq0oGb6zwaBMxg@mail.gmail.com> <CAHk-=whb0=rjc1WR+F_r_syw5Ld4=ebuNJmmpaPEzfjZRD5Y-w@mail.gmail.com> <alpine.LSU.2.11.2007221359450.1017@eggly.anvils> <CAHk-=wi=vuc6sdu0m9nYd3gb8x5Xgnc6=TH=DTOy7qU96rZ9nw@mail.gmail.com>
- <CAHk-=whEjnsANEhTA3aqpNLZ3vv7huP7QAmcAEd-GUxm2YMo-Q@mail.gmail.com> <20200723124749.GA7428@redhat.com> <CAHk-=wgyc7en4=HddEYiz_RKJXfqe1JYv3BzHc=+_wYq9ti+LQ@mail.gmail.com> <CAHk-=whQK3OGwExTzCrwwvuuVaQAgs8KsR-Yv8m1BmXoNZZ=jQ@mail.gmail.com>
- <alpine.LSU.2.11.2007231549540.1016@eggly.anvils> <CAHk-=wgvGOnMF0ePU4xS236bOsP8jouj3rps+ysCaGXvCjh2Dg@mail.gmail.com> <20200724152424.GC17209@redhat.com> <CAHk-=whuG+5pUeUqdiW4gk0prvqu7GZSMo-6oWv5PdDC5dBr=A@mail.gmail.com>
- <CAHk-=wjYHvbOs9i39EnUsC6VEJiuJ2e_5gZB5-J5CRKxq80B_Q@mail.gmail.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Fri, 24 Jul 2020 22:11:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38010 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726493AbgGYCLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 22:11:20 -0400
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C89920768;
+        Sat, 25 Jul 2020 02:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595643079;
+        bh=MiK1PVba9d6hMg6wGLKI8oBgC2V0lNCvk+9hka8SO+Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=R0ARucDOpPXl8q8xzkpdzxpN/0aLP4sB7Dxc+7cT8HrVRKXigAOuvNVPzQGZkChPm
+         JPSma0lw83Wo8kCro44XBKrztoV04mZ/TNxXowA8ZfLip4jEVs95br/T7EziapNc2j
+         2fSMvLdRyLVCpvMaAU76YE7yTn5Hl3up4A+i6zOs=
+Received: by mail-ej1-f46.google.com with SMTP id y10so11803339eje.1;
+        Fri, 24 Jul 2020 19:11:19 -0700 (PDT)
+X-Gm-Message-State: AOAM5338pKK24p4GSWzXvBoxdMhmB1+gHgNN/Qp1H7ow8/ty1wA4NwZN
+        2UHli/OkWYjVvEG0N3VVA3+/AVLUqC8XGPu56A==
+X-Google-Smtp-Source: ABdhPJwN4QCvJGX+aHwkNCAkKNmSR1ftSbRuurw8gS+0nF4FVDXZN2SkQuDo/nPWuuv4Nd6/79c3mpHhn0j/pwLsjJs=
+X-Received: by 2002:a17:906:6959:: with SMTP id c25mr11593383ejs.375.1595643077613;
+ Fri, 24 Jul 2020 19:11:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com> <1595469798-3824-3-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1595469798-3824-3-git-send-email-yongqiang.niu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sat, 25 Jul 2020 10:11:06 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9jE1=ff9YU8WT7RJ4_27G+BKu335GT7_iTw1x2t0=UkA@mail.gmail.com>
+Message-ID: <CAAOTY_9jE1=ff9YU8WT7RJ4_27G+BKu335GT7_iTw1x2t0=UkA@mail.gmail.com>
+Subject: Re: [v7, PATCH 2/7] mtk-mmsys: add mmsys private data
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020, Linus Torvalds wrote:
+Hi, Yongqiang:
 
-> On Fri, Jul 24, 2020 at 10:32 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> > Ok, that makes sense. Except you did it on top of the original patch
-> > without the fix to set WQ_FLAG_WOKEN for the non-wakeup case.
-> 
-> Hmm.
-> 
-> I just realized that one thing we could do is to not even test the
-> page bit for the shared case in the wakeup path.
-> 
-> Because anybody who uses the non-exclusive "wait_on_page_locked()" or
-> "wait_on_page_writeback()" isn't actually interested in the bit state
-> any more at that point. All they care about is that somebody cleared
-> it - not whether it was then re-taken again.
-> 
-> So instead of keeping them on the list - or stopping the waitqueue
-> walk because somebody else got the bit - we could just mark them
-> successfully done, wake them up, and remove those entries from the
-> list.
-> 
-> That would be better for everybody - less pointless waiting for a new
-> lock or writeback event, but also fewer entries on the wait queues as
-> we get rid of them more quickly instead of walking them over and over
-> just because somebody else re-took the page lock.
-> 
-> Generally "wait_on_page_locked()" is used for two things
-> 
->  - either wait for the IO to then check if it's now uptodate
-> 
->  - throttle things that can't afford to lock the page (eg page faults
-> that dropped the mm lock, and as such need to go through the whole
-> restart logic, but that don't want to lock the page because it's now
-> too late, but also the page migration things)
-> 
-> In the first case, waiting to actually seeing the locked bit clear is
-> pointless - the code only cared about the "wait for IO in progress"
-> not about the lock bit itself.
-> 
-> And that second case generally might want to retry, but doesn't want
-> to busy-loop.
-> 
-> And "wait_on_page_writeback()" is basically used for similar reasons
-> (ie check if there were IO errors, but also possibly to throttle
-> writeback traffic).
-> 
-> Saying "stop walking, keep it on the list" seems wrong. It makes IO
-> error handling and retries much worse, for example.
-> 
-> So it turns out that the wakeup logic and the initial wait logic don't
-> have so much in common after all, and there is a fundamental
-> conceptual difference between that "check bit one last time" case, and
-> the "we got woken up, now what" case..
-> 
-> End result: one final (yes, hopefully - I think I'm done) version of
-> this patch-series.
-> 
-> This not only makes the code cleaner (the generated code for
-> wake_up_page() is really quite nice now), but getting rid of extra
-> waiting might help the load that Michal reported.
-> 
-> Because a lot of page waiting might be that non-exclusive
-> "wait_on_page_locked()" kind, particularly in the thundering herd kind
-> of situation where one process starts IO, and then other processes
-> wait for it to finish.
-> 
-> Those users don't even care if somebody else then did a "lock_page()"
-> for some other reason (maybe for writeback). They are generally
-> perfectly happy with a locked page, as long as it's now up-to-date.
-> 
-> So this not only simplifies the code, it really might avoid some problems too.
+Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=
+=8823=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8810:05=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> add mmsys private data
+>
+> Feature: drm/mediatek
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/soc/mediatek/Makefile             |   1 +
+>  drivers/soc/mediatek/mmsys/Makefile       |   2 +
+>  drivers/soc/mediatek/mmsys/mt2701-mmsys.c | 250 ++++++++++++++++++++++++=
++++
+>  drivers/soc/mediatek/mtk-mmsys.c          | 271 +++++-------------------=
+------
+>  include/linux/soc/mediatek/mtk-mmsys.h    |  15 ++
+>  5 files changed, 314 insertions(+), 225 deletions(-)
+>  create mode 100644 drivers/soc/mediatek/mmsys/Makefile
+>  create mode 100644 drivers/soc/mediatek/mmsys/mt2701-mmsys.c
+>
+> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefil=
+e
+> index 2afa7b9..b37ac2c 100644
+> --- a/drivers/soc/mediatek/Makefile
+> +++ b/drivers/soc/mediatek/Makefile
+> @@ -3,3 +3,4 @@ obj-$(CONFIG_MTK_CMDQ) +=3D mtk-cmdq-helper.o
+>  obj-$(CONFIG_MTK_PMIC_WRAP) +=3D mtk-pmic-wrap.o
+>  obj-$(CONFIG_MTK_SCPSYS) +=3D mtk-scpsys.o
+>  obj-$(CONFIG_MTK_MMSYS) +=3D mtk-mmsys.o
+> +obj-$(CONFIG_MTK_MMSYS) +=3D mmsys/
+> diff --git a/drivers/soc/mediatek/mmsys/Makefile b/drivers/soc/mediatek/m=
+msys/Makefile
+> new file mode 100644
+> index 0000000..33b0dab
+> --- /dev/null
+> +++ b/drivers/soc/mediatek/mmsys/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +obj-y +=3D mt2701-mmsys.o
+> diff --git a/drivers/soc/mediatek/mmsys/mt2701-mmsys.c b/drivers/soc/medi=
+atek/mmsys/mt2701-mmsys.c
+> new file mode 100644
+> index 0000000..b8e53b0
+> --- /dev/null
+> +++ b/drivers/soc/mediatek/mmsys/mt2701-mmsys.c
+> @@ -0,0 +1,250 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2020 MediaTek Inc.
+> +
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/soc/mediatek/mtk-mmsys.h>
+> +
+> +#define DISP_REG_CONFIG_DISP_OVL0_MOUT_EN      0x040
+> +#define DISP_REG_CONFIG_DISP_OVL1_MOUT_EN      0x044
+> +#define DISP_REG_CONFIG_DISP_OD_MOUT_EN                0x048
+> +#define DISP_REG_CONFIG_DISP_GAMMA_MOUT_EN     0x04c
+> +#define DISP_REG_CONFIG_DISP_UFOE_MOUT_EN      0x050
+> +#define DISP_REG_CONFIG_DISP_COLOR0_SEL_IN     0x084
+> +#define DISP_REG_CONFIG_DISP_COLOR1_SEL_IN     0x088
+> +#define DISP_REG_CONFIG_DSIE_SEL_IN            0x0a4
+> +#define DISP_REG_CONFIG_DSIO_SEL_IN            0x0a8
+> +#define DISP_REG_CONFIG_DPI_SEL_IN             0x0ac
+> +#define DISP_REG_CONFIG_DISP_RDMA2_SOUT                0x0b8
+> +#define DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN     0x0c4
+> +#define DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN     0x0c8
+> +#define DISP_REG_CONFIG_MMSYS_CG_CON0          0x100
+> +
+> +#define DISP_REG_CONFIG_DISP_OVL_MOUT_EN       0x030
+> +#define DISP_REG_CONFIG_OUT_SEL                        0x04c
+> +#define DISP_REG_CONFIG_DSI_SEL                        0x050
+> +#define DISP_REG_CONFIG_DPI_SEL                        0x064
+> +
+> +#define OVL0_MOUT_EN_COLOR0                    0x1
+> +#define OD_MOUT_EN_RDMA0                       0x1
+> +#define OD1_MOUT_EN_RDMA1                      BIT(16)
+> +#define UFOE_MOUT_EN_DSI0                      0x1
+> +#define COLOR0_SEL_IN_OVL0                     0x1
+> +#define OVL1_MOUT_EN_COLOR1                    0x1
+> +#define GAMMA_MOUT_EN_RDMA1                    0x1
+> +#define RDMA0_SOUT_DPI0                                0x2
+> +#define RDMA0_SOUT_DPI1                                0x3
+> +#define RDMA0_SOUT_DSI1                                0x1
+> +#define RDMA0_SOUT_DSI2                                0x4
+> +#define RDMA0_SOUT_DSI3                                0x5
+> +#define RDMA1_SOUT_DPI0                                0x2
+> +#define RDMA1_SOUT_DPI1                                0x3
+> +#define RDMA1_SOUT_DSI1                                0x1
+> +#define RDMA1_SOUT_DSI2                                0x4
+> +#define RDMA1_SOUT_DSI3                                0x5
+> +#define RDMA2_SOUT_DPI0                                0x2
+> +#define RDMA2_SOUT_DPI1                                0x3
+> +#define RDMA2_SOUT_DSI1                                0x1
+> +#define RDMA2_SOUT_DSI2                                0x4
+> +#define RDMA2_SOUT_DSI3                                0x5
+> +#define DPI0_SEL_IN_RDMA1                      0x1
+> +#define DPI0_SEL_IN_RDMA2                      0x3
+> +#define DPI1_SEL_IN_RDMA1                      (0x1 << 8)
+> +#define DPI1_SEL_IN_RDMA2                      (0x3 << 8)
+> +#define DSI0_SEL_IN_RDMA1                      0x1
+> +#define DSI0_SEL_IN_RDMA2                      0x4
+> +#define DSI1_SEL_IN_RDMA1                      0x1
+> +#define DSI1_SEL_IN_RDMA2                      0x4
+> +#define DSI2_SEL_IN_RDMA1                      (0x1 << 16)
+> +#define DSI2_SEL_IN_RDMA2                      (0x4 << 16)
+> +#define DSI3_SEL_IN_RDMA1                      (0x1 << 16)
+> +#define DSI3_SEL_IN_RDMA2                      (0x4 << 16)
+> +#define COLOR1_SEL_IN_OVL1                     0x1
+> +
+> +#define OVL_MOUT_EN_RDMA                       0x1
+> +#define BLS_TO_DSI_RDMA1_TO_DPI1               0x8
+> +#define BLS_TO_DPI_RDMA1_TO_DSI                        0x2
+> +#define DSI_SEL_IN_BLS                         0x0
+> +#define DPI_SEL_IN_BLS                         0x0
+> +#define DSI_SEL_IN_RDMA                                0x1
+> +
+> +static unsigned int mtk_mmsys_ddp_mout_en(enum mtk_ddp_comp_id cur,
+> +                                         enum mtk_ddp_comp_id next,
+> +                                         unsigned int *addr)
+> +{
+> +       unsigned int value;
+> +
+> +       if (cur =3D=3D DDP_COMPONENT_OVL0 && next =3D=3D DDP_COMPONENT_CO=
+LOR0) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_OVL0_MOUT_EN;
+> +               value =3D OVL0_MOUT_EN_COLOR0;
+> +       } else if (cur =3D=3D DDP_COMPONENT_OVL0 && next =3D=3D DDP_COMPO=
+NENT_RDMA0) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_OVL_MOUT_EN;
+> +               value =3D OVL_MOUT_EN_RDMA;
+> +       } else if (cur =3D=3D DDP_COMPONENT_OD0 && next =3D=3D DDP_COMPON=
+ENT_RDMA0) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_OD_MOUT_EN;
+> +               value =3D OD_MOUT_EN_RDMA0;
+> +       } else if (cur =3D=3D DDP_COMPONENT_UFOE && next =3D=3D DDP_COMPO=
+NENT_DSI0) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_UFOE_MOUT_EN;
+> +               value =3D UFOE_MOUT_EN_DSI0;
+> +       } else if (cur =3D=3D DDP_COMPONENT_OVL1 && next =3D=3D DDP_COMPO=
+NENT_COLOR1) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_OVL1_MOUT_EN;
+> +               value =3D OVL1_MOUT_EN_COLOR1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_GAMMA && next =3D=3D DDP_COMP=
+ONENT_RDMA1) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_GAMMA_MOUT_EN;
+> +               value =3D GAMMA_MOUT_EN_RDMA1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_OD1 && next =3D=3D DDP_COMPON=
+ENT_RDMA1) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_OD_MOUT_EN;
+> +               value =3D OD1_MOUT_EN_RDMA1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA0 && next =3D=3D DDP_COMP=
+ONENT_DPI0) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> +               value =3D RDMA0_SOUT_DPI0;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA0 && next =3D=3D DDP_COMP=
+ONENT_DPI1) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> +               value =3D RDMA0_SOUT_DPI1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA0 && next =3D=3D DDP_COMP=
+ONENT_DSI1) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> +               value =3D RDMA0_SOUT_DSI1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA0 && next =3D=3D DDP_COMP=
+ONENT_DSI2) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> +               value =3D RDMA0_SOUT_DSI2;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA0 && next =3D=3D DDP_COMP=
+ONENT_DSI3) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+> +               value =3D RDMA0_SOUT_DSI3;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA1 && next =3D=3D DDP_COMP=
+ONENT_DSI1) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> +               value =3D RDMA1_SOUT_DSI1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA1 && next =3D=3D DDP_COMP=
+ONENT_DSI2) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> +               value =3D RDMA1_SOUT_DSI2;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA1 && next =3D=3D DDP_COMP=
+ONENT_DSI3) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> +               value =3D RDMA1_SOUT_DSI3;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA1 && next =3D=3D DDP_COMP=
+ONENT_DPI0) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> +               value =3D RDMA1_SOUT_DPI0;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA1 && next =3D=3D DDP_COMP=
+ONENT_DPI1) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> +               value =3D RDMA1_SOUT_DPI1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA2 && next =3D=3D DDP_COMP=
+ONENT_DPI0) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> +               value =3D RDMA2_SOUT_DPI0;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA2 && next =3D=3D DDP_COMP=
+ONENT_DPI1) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> +               value =3D RDMA2_SOUT_DPI1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA2 && next =3D=3D DDP_COMP=
+ONENT_DSI1) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> +               value =3D RDMA2_SOUT_DSI1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA2 && next =3D=3D DDP_COMP=
+ONENT_DSI2) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> +               value =3D RDMA2_SOUT_DSI2;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA2 && next =3D=3D DDP_COMP=
+ONENT_DSI3) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+> +               value =3D RDMA2_SOUT_DSI3;
+> +       } else {
+> +               value =3D 0;
+> +       }
+> +
+> +       return value;
+> +}
+> +
+> +static unsigned int mtk_mmsys_ddp_sel_in(enum mtk_ddp_comp_id cur,
+> +                                        enum mtk_ddp_comp_id next,
+> +                                        unsigned int *addr)
+> +{
+> +       unsigned int value;
+> +
+> +       if (cur =3D=3D DDP_COMPONENT_OVL0 && next =3D=3D DDP_COMPONENT_CO=
+LOR0) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_COLOR0_SEL_IN;
+> +               value =3D COLOR0_SEL_IN_OVL0;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA1 && next =3D=3D DDP_COMP=
+ONENT_DPI0) {
+> +               *addr =3D DISP_REG_CONFIG_DPI_SEL_IN;
+> +               value =3D DPI0_SEL_IN_RDMA1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA1 && next =3D=3D DDP_COMP=
+ONENT_DPI1) {
+> +               *addr =3D DISP_REG_CONFIG_DPI_SEL_IN;
+> +               value =3D DPI1_SEL_IN_RDMA1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA1 && next =3D=3D DDP_COMP=
+ONENT_DSI0) {
+> +               *addr =3D DISP_REG_CONFIG_DSIE_SEL_IN;
+> +               value =3D DSI0_SEL_IN_RDMA1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA1 && next =3D=3D DDP_COMP=
+ONENT_DSI1) {
+> +               *addr =3D DISP_REG_CONFIG_DSIO_SEL_IN;
+> +               value =3D DSI1_SEL_IN_RDMA1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA1 && next =3D=3D DDP_COMP=
+ONENT_DSI2) {
+> +               *addr =3D DISP_REG_CONFIG_DSIE_SEL_IN;
+> +               value =3D DSI2_SEL_IN_RDMA1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA1 && next =3D=3D DDP_COMP=
+ONENT_DSI3) {
+> +               *addr =3D DISP_REG_CONFIG_DSIO_SEL_IN;
+> +               value =3D DSI3_SEL_IN_RDMA1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA2 && next =3D=3D DDP_COMP=
+ONENT_DPI0) {
+> +               *addr =3D DISP_REG_CONFIG_DPI_SEL_IN;
+> +               value =3D DPI0_SEL_IN_RDMA2;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA2 && next =3D=3D DDP_COMP=
+ONENT_DPI1) {
+> +               *addr =3D DISP_REG_CONFIG_DPI_SEL_IN;
+> +               value =3D DPI1_SEL_IN_RDMA2;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA2 && next =3D=3D DDP_COMP=
+ONENT_DSI0) {
+> +               *addr =3D DISP_REG_CONFIG_DSIE_SEL_IN;
+> +               value =3D DSI0_SEL_IN_RDMA2;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA2 && next =3D=3D DDP_COMP=
+ONENT_DSI1) {
+> +               *addr =3D DISP_REG_CONFIG_DSIO_SEL_IN;
+> +               value =3D DSI1_SEL_IN_RDMA2;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA2 && next =3D=3D DDP_COMP=
+ONENT_DSI2) {
+> +               *addr =3D DISP_REG_CONFIG_DSIE_SEL_IN;
+> +               value =3D DSI2_SEL_IN_RDMA2;
+> +       } else if (cur =3D=3D DDP_COMPONENT_RDMA2 && next =3D=3D DDP_COMP=
+ONENT_DSI3) {
+> +               *addr =3D DISP_REG_CONFIG_DSIE_SEL_IN;
+> +               value =3D DSI3_SEL_IN_RDMA2;
+> +       } else if (cur =3D=3D DDP_COMPONENT_OVL1 && next =3D=3D DDP_COMPO=
+NENT_COLOR1) {
+> +               *addr =3D DISP_REG_CONFIG_DISP_COLOR1_SEL_IN;
+> +               value =3D COLOR1_SEL_IN_OVL1;
+> +       } else if (cur =3D=3D DDP_COMPONENT_BLS && next =3D=3D DDP_COMPON=
+ENT_DSI0) {
+> +               *addr =3D DISP_REG_CONFIG_DSI_SEL;
+> +               value =3D DSI_SEL_IN_BLS;
+> +       } else {
+> +               value =3D 0;
+> +       }
+> +
+> +       return value;
+> +}
+> +
+> +static void mtk_mmsys_ddp_sout_sel(void __iomem *config_regs,
+> +                                  enum mtk_ddp_comp_id cur,
+> +                                  enum mtk_ddp_comp_id next)
+> +{
+> +       if (cur =3D=3D DDP_COMPONENT_BLS && next =3D=3D DDP_COMPONENT_DSI=
+0) {
+> +               writel_relaxed(BLS_TO_DSI_RDMA1_TO_DPI1,
+> +                              config_regs + DISP_REG_CONFIG_OUT_SEL);
+> +       } else if (cur =3D=3D DDP_COMPONENT_BLS && next =3D=3D DDP_COMPON=
+ENT_DPI0) {
+> +               writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
+> +                              config_regs + DISP_REG_CONFIG_OUT_SEL);
+> +               writel_relaxed(DSI_SEL_IN_RDMA,
+> +                              config_regs + DISP_REG_CONFIG_DSI_SEL);
+> +               writel_relaxed(DPI_SEL_IN_BLS,
+> +                              config_regs + DISP_REG_CONFIG_DPI_SEL);
+> +       }
+> +}
+> +
+> +static struct mtk_mmsys_conn_funcs mmsys_funcs =3D {
+> +       .mout_en =3D mtk_mmsys_ddp_mout_en,
+> +       .sel_in =3D mtk_mmsys_ddp_sel_in,
+> +       .sout_sel =3D mtk_mmsys_ddp_sout_sel,
 
-That set of tests I started yesterday has now completed: no crashes
-due to your changes (though, one machine crashed with an entirely
-unrelated list_del corruption: over in driverland, just a coincidence).
+I think you could implement these three function to be the same as the
+three of mt8183 with mt2701 version of mmsys_mout_en[],
+mmsys_sel_in[], mmsys_sout_sel[]. If you worry that you could not test
+on mt2701, we could temporarily accept this and wait for someone has
+mt2701 (or mt8173) to rewrite these three function to be the same as
+mt8183.
 
-I do see more of these stresstests reporting failure than I remember
-from the last time I ran them, and I wasn't quickly able to work out
-why (usually I just care about not crashing or hanging, rarely delve
-deeper into what they actually call success).  The most likely cause
-would be some internal infrastructural oddity, and nothing for you
-to worry about; but there is a possibility that it's meaningful.
+Regards,
+Chun-Kuang.
 
-But whatever, what happens on the next run, with these latest patches,
-will be more important; and I'll follow this next run with a run on
-the baseline without them, to compare results.
-
-Hugh
+> +};
+> +
