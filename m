@@ -2,216 +2,167 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF12C43445
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD29EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 956BE206EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B63DD2070C
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:51:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595649065;
+	bh=IB/6QMM3mNcLq0yp3daj3De1omfUDNO/kHLqyEhsa6Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VMk/pjaPYT+aBniXh+Dv9ZclKybWon0s+ZlC7TP3aDHGq5836oq/jyZfMrfsWinBm
+	 pKLBLcoCskqKRiSffHVl0sh0MYQJNkacw5LtX7FbGyXXwpFEqnNNEvogmuSsHwLtRy
+	 0dpT9pezYVMtmtGUAbdsDoExl/C8UcsDPgUby+/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgGYDrV (ORCPT
+        id S1726663AbgGYDvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 23:47:21 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8811 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726706AbgGYDqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 23:46:53 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D660E7B2DC9965C47A28;
-        Sat, 25 Jul 2020 11:46:49 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 25 Jul 2020 11:46:40 +0800
-From:   Yang Shen <shenyang39@huawei.com>
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
-Subject: [PATCH 03/10] crypto: hisilicon/zip - modify debugfs interface parameters
-Date:   Sat, 25 Jul 2020 11:44:36 +0800
-Message-ID: <1595648683-50590-4-git-send-email-shenyang39@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1595648683-50590-1-git-send-email-shenyang39@huawei.com>
-References: <1595648683-50590-1-git-send-email-shenyang39@huawei.com>
+        Fri, 24 Jul 2020 23:51:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726591AbgGYDvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 23:51:04 -0400
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2ED220719;
+        Sat, 25 Jul 2020 03:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595649063;
+        bh=IB/6QMM3mNcLq0yp3daj3De1omfUDNO/kHLqyEhsa6Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=K2KEh7TpNnF0mxAAYCqLboKVGglNo3SHCYHfljAe0xUta6Iitan62CbCecjxUdHwG
+         HXBphKcfLkHGOOtCm8zoVgCHNZ2F3SrYMMzB+yes4gHO1K41s2zWEp/P/TaiTzKW6+
+         AvVEhpyF9jSOP3gHlxMV12o5Wbs1AflrT4CHiD8Q=
+Received: by mail-ej1-f50.google.com with SMTP id l4so11823059ejd.13;
+        Fri, 24 Jul 2020 20:51:02 -0700 (PDT)
+X-Gm-Message-State: AOAM533VU00j56UQ4HWO2koglbN5kpUWRj5y6mVdMYii4SCpV0LqtREG
+        KBbtXd4AdmasLc7LQQA2B8qkkEAybIOP3ACGBg==
+X-Google-Smtp-Source: ABdhPJxcx4pKWckZ+ivOQWgliPqjd8Cxz0hiophWU1IPuWMgAOcngrm0sm/OsQ7JYpawO3hTDs8v8meuDWYVWGhBJ0k=
+X-Received: by 2002:a17:906:7857:: with SMTP id p23mr10925441ejm.260.1595649061371;
+ Fri, 24 Jul 2020 20:51:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com> <1595469798-3824-7-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1595469798-3824-7-git-send-email-yongqiang.niu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Sat, 25 Jul 2020 11:50:50 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9jsunT=PH59yrJ=q_uPM83WVH1m4c379APCUOGL3ZjdQ@mail.gmail.com>
+Message-ID: <CAAOTY_9jsunT=PH59yrJ=q_uPM83WVH1m4c379APCUOGL3ZjdQ@mail.gmail.com>
+Subject: Re: [v7, PATCH 6/7] drm/mediatek: add fifo_size into rdma private data
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shukun Tan <tanshukun1@huawei.com>
+The primary thing of this patch is to get fifo size from device tree.
+So you may modify title to show the primary thing.
 
-Update debugfs interface parameters
+Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=
+=8823=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8810:12=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> the fifo size of rdma in mt8183 is different.
+> rdma0 fifo size is 5k
+> rdma1 fifo size is 2k
 
-Signed-off-by: Shukun Tan <tanshukun1@huawei.com>
-Signed-off-by: Yang Shen <shenyang39@huawei.com>
-Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
----
- drivers/crypto/hisilicon/zip/zip_main.c | 55 ++++++++++++++-------------------
- 1 file changed, 24 insertions(+), 31 deletions(-)
+I would like the description to be "Get the fifo size from device tree
+because each rdma in the same SoC may have different fifo size."
 
-diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-index 058f744..df1a16f 100644
---- a/drivers/crypto/hisilicon/zip/zip_main.c
-+++ b/drivers/crypto/hisilicon/zip/zip_main.c
-@@ -156,7 +156,6 @@ struct ctrl_debug_file {
-  */
- struct hisi_zip_ctrl {
- 	struct hisi_zip *hisi_zip;
--	struct dentry *debug_root;
- 	struct ctrl_debug_file files[HZIP_DEBUG_FILE_NUM];
- };
+Regards,
+Chun-Kuang.
 
-@@ -509,10 +508,8 @@ static int zip_debugfs_atomic64_get(void *data, u64 *val)
- DEFINE_DEBUGFS_ATTRIBUTE(zip_atomic64_ops, zip_debugfs_atomic64_get,
- 			 zip_debugfs_atomic64_set, "%llu\n");
-
--static int hisi_zip_core_debug_init(struct hisi_zip_ctrl *ctrl)
-+static int hisi_zip_core_debug_init(struct hisi_qm *qm)
- {
--	struct hisi_zip *hisi_zip = ctrl->hisi_zip;
--	struct hisi_qm *qm = &hisi_zip->qm;
- 	struct device *dev = &qm->pdev->dev;
- 	struct debugfs_regset32 *regset;
- 	struct dentry *tmp_d;
-@@ -533,7 +530,7 @@ static int hisi_zip_core_debug_init(struct hisi_zip_ctrl *ctrl)
- 		regset->nregs = ARRAY_SIZE(hzip_dfx_regs);
- 		regset->base = qm->io_base + core_offsets[i];
-
--		tmp_d = debugfs_create_dir(buf, ctrl->debug_root);
-+		tmp_d = debugfs_create_dir(buf, qm->debug.debug_root);
- 		debugfs_create_regset32("regs", 0444, tmp_d, regset);
- 	}
-
-@@ -552,33 +549,32 @@ static void hisi_zip_dfx_debug_init(struct hisi_qm *qm)
- 	for (i = 0; i < ARRAY_SIZE(zip_dfx_files); i++) {
- 		data = (atomic64_t *)((uintptr_t)dfx + zip_dfx_files[i].offset);
- 		debugfs_create_file(zip_dfx_files[i].name,
--			0644,
--			tmp_dir,
--			data,
--			&zip_atomic64_ops);
-+				    0644, tmp_dir, data,
-+				    &zip_atomic64_ops);
- 	}
- }
-
--static int hisi_zip_ctrl_debug_init(struct hisi_zip_ctrl *ctrl)
-+static int hisi_zip_ctrl_debug_init(struct hisi_qm *qm)
- {
-+	struct hisi_zip *zip = container_of(qm, struct hisi_zip, qm);
- 	int i;
-
- 	for (i = HZIP_CURRENT_QM; i < HZIP_DEBUG_FILE_NUM; i++) {
--		spin_lock_init(&ctrl->files[i].lock);
--		ctrl->files[i].ctrl = ctrl;
--		ctrl->files[i].index = i;
-+		spin_lock_init(&zip->ctrl->files[i].lock);
-+		zip->ctrl->files[i].ctrl = zip->ctrl;
-+		zip->ctrl->files[i].index = i;
-
- 		debugfs_create_file(ctrl_debug_file_name[i], 0600,
--				    ctrl->debug_root, ctrl->files + i,
-+				    qm->debug.debug_root,
-+				    zip->ctrl->files + i,
- 				    &ctrl_debug_fops);
- 	}
-
--	return hisi_zip_core_debug_init(ctrl);
-+	return hisi_zip_core_debug_init(qm);
- }
-
--static int hisi_zip_debugfs_init(struct hisi_zip *hisi_zip)
-+static int hisi_zip_debugfs_init(struct hisi_qm *qm)
- {
--	struct hisi_qm *qm = &hisi_zip->qm;
- 	struct device *dev = &qm->pdev->dev;
- 	struct dentry *dev_d;
- 	int ret;
-@@ -593,8 +589,7 @@ static int hisi_zip_debugfs_init(struct hisi_zip *hisi_zip)
- 		goto failed_to_create;
-
- 	if (qm->fun_type == QM_HW_PF) {
--		hisi_zip->ctrl->debug_root = dev_d;
--		ret = hisi_zip_ctrl_debug_init(hisi_zip->ctrl);
-+		ret = hisi_zip_ctrl_debug_init(qm);
- 		if (ret)
- 			goto failed_to_create;
- 	}
-@@ -608,10 +603,8 @@ static int hisi_zip_debugfs_init(struct hisi_zip *hisi_zip)
- 	return ret;
- }
-
--static void hisi_zip_debug_regs_clear(struct hisi_zip *hisi_zip)
-+static void hisi_zip_debug_regs_clear(struct hisi_qm *qm)
- {
--	struct hisi_qm *qm = &hisi_zip->qm;
--
- 	writel(0x0, qm->io_base + QM_DFX_MB_CNT_VF);
- 	writel(0x0, qm->io_base + QM_DFX_DB_CNT_VF);
- 	writel(0x0, qm->io_base + HZIP_SOFT_CTRL_CNT_CLR_CE);
-@@ -619,14 +612,14 @@ static void hisi_zip_debug_regs_clear(struct hisi_zip *hisi_zip)
- 	hisi_qm_debug_regs_clear(qm);
- }
-
--static void hisi_zip_debugfs_exit(struct hisi_zip *hisi_zip)
-+static void hisi_zip_debugfs_exit(struct hisi_qm *qm)
- {
--	struct hisi_qm *qm = &hisi_zip->qm;
--
- 	debugfs_remove_recursive(qm->debug.debug_root);
-
--	if (qm->fun_type == QM_HW_PF)
--		hisi_zip_debug_regs_clear(hisi_zip);
-+	if (qm->fun_type == QM_HW_PF) {
-+		hisi_zip_debug_regs_clear(qm);
-+		qm->debug.curr_qm_qp_num = 0;
-+	}
- }
-
- static void hisi_zip_log_hw_error(struct hisi_qm *qm, u32 err_sts)
-@@ -733,7 +726,7 @@ static int hisi_zip_pf_probe_init(struct hisi_zip *hisi_zip)
-
- 	hisi_zip_set_user_domain_and_cache(qm);
- 	hisi_qm_dev_err_init(qm);
--	hisi_zip_debug_regs_clear(hisi_zip);
-+	hisi_zip_debug_regs_clear(qm);
-
- 	return 0;
- }
-@@ -809,7 +802,7 @@ static int hisi_zip_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (ret)
- 		goto err_dev_err_uninit;
-
--	ret = hisi_zip_debugfs_init(hisi_zip);
-+	ret = hisi_zip_debugfs_init(qm);
- 	if (ret)
- 		dev_err(&pdev->dev, "Failed to init debugfs (%d)!\n", ret);
-
-@@ -837,7 +830,7 @@ static int hisi_zip_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	hisi_qm_alg_unregister(qm, &zip_devices);
-
- err_qm_stop:
--	hisi_zip_debugfs_exit(hisi_zip);
-+	hisi_zip_debugfs_exit(qm);
- 	hisi_qm_stop(qm, QM_NORMAL);
-
- err_dev_err_uninit:
-@@ -860,7 +853,7 @@ static void hisi_zip_remove(struct pci_dev *pdev)
- 	if (qm->fun_type == QM_HW_PF && qm->vfs_num)
- 		hisi_qm_sriov_disable(pdev, qm->is_frozen);
-
--	hisi_zip_debugfs_exit(hisi_zip);
-+	hisi_zip_debugfs_exit(qm);
- 	hisi_qm_stop(qm, QM_NORMAL);
- 	hisi_qm_dev_err_uninit(qm);
- 	hisi_qm_uninit(qm);
---
-2.7.4
-
+>
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/m=
+ediatek/mtk_disp_rdma.c
+> index e04319f..794acc5 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
+> @@ -63,6 +63,7 @@ struct mtk_disp_rdma {
+>         struct mtk_ddp_comp             ddp_comp;
+>         struct drm_crtc                 *crtc;
+>         const struct mtk_disp_rdma_data *data;
+> +       u32                             fifo_size;
+>  };
+>
+>  static inline struct mtk_disp_rdma *comp_to_rdma(struct mtk_ddp_comp *co=
+mp)
+> @@ -131,12 +132,18 @@ static void mtk_rdma_config(struct mtk_ddp_comp *co=
+mp, unsigned int width,
+>         unsigned int threshold;
+>         unsigned int reg;
+>         struct mtk_disp_rdma *rdma =3D comp_to_rdma(comp);
+> +       u32 rdma_fifo_size;
+>
+>         mtk_ddp_write_mask(cmdq_pkt, width, comp,
+>                            DISP_REG_RDMA_SIZE_CON_0, 0xfff);
+>         mtk_ddp_write_mask(cmdq_pkt, height, comp,
+>                            DISP_REG_RDMA_SIZE_CON_1, 0xfffff);
+>
+> +       if (rdma->fifo_size)
+> +               rdma_fifo_size =3D rdma->fifo_size;
+> +       else
+> +               rdma_fifo_size =3D RDMA_FIFO_SIZE(rdma);
+> +
+>         /*
+>          * Enable FIFO underflow since DSI and DPI can't be blocked.
+>          * Keep the FIFO pseudo size reset default of 8 KiB. Set the
+> @@ -145,7 +152,7 @@ static void mtk_rdma_config(struct mtk_ddp_comp *comp=
+, unsigned int width,
+>          */
+>         threshold =3D width * height * vrefresh * 4 * 7 / 1000000;
+>         reg =3D RDMA_FIFO_UNDERFLOW_EN |
+> -             RDMA_FIFO_PSEUDO_SIZE(RDMA_FIFO_SIZE(rdma)) |
+> +             RDMA_FIFO_PSEUDO_SIZE(rdma_fifo_size) |
+>               RDMA_OUTPUT_VALID_FIFO_THRESHOLD(threshold);
+>         mtk_ddp_write(cmdq_pkt, reg, comp, DISP_REG_RDMA_FIFO_CON);
+>  }
+> @@ -291,6 +298,16 @@ static int mtk_disp_rdma_probe(struct platform_devic=
+e *pdev)
+>                 return comp_id;
+>         }
+>
+> +       if (of_find_property(dev->of_node, "mediatek,rdma_fifo_size", &re=
+t)) {
+> +               ret =3D of_property_read_u32(dev->of_node,
+> +                                          "mediatek,rdma_fifo_size",
+> +                                          &priv->fifo_size);
+> +               if (ret) {
+> +                       dev_err(dev, "Failed to get rdma fifo size\n");
+> +                       return ret;
+> +               }
+> +       }
+> +
+>         ret =3D mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, com=
+p_id,
+>                                 &mtk_disp_rdma_funcs);
+>         if (ret) {
+> --
+> 1.8.1.1.dirty
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
