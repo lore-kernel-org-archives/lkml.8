@@ -2,51 +2,51 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE461C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBADC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD88206EB
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987BC206EB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 11:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X1VnkpQH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EuaZTioi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbgGYLv5 (ORCPT
+        id S1726952AbgGYLw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 07:51:57 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29908 "EHLO
+        Sat, 25 Jul 2020 07:52:59 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52231 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726583AbgGYLv4 (ORCPT
+        by vger.kernel.org with ESMTP id S1726583AbgGYLw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 07:51:56 -0400
+        Sat, 25 Jul 2020 07:52:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595677914;
+        s=mimecast20190719; t=1595677977;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=0afFqAur257GK/ap6tytilWq+yG+Tf9kQhohDroojF8=;
-        b=X1VnkpQHfyA27izlH2HPmzMkbKVo4/31YVrH3pAO6TrjGMR8A7TLfP5W0ej+cgAHl1J1ZV
-        Kfn3veNpkOy4gSBc7rDtexZOcrLlimwTaT06uBJgtjSmIg1qs5UKxf1/mtPDuKnW5r2KiC
-        Bo2PvaBnVxgbxw+gIa9QCt6JKR2I9CU=
+        bh=L6ENQOqyGlC8PQc4e8arGaizO9xFQPQojXBpmwr8+qU=;
+        b=EuaZTioijSh1SZkNnHGUM5FnKMQLu/Fg8e0+XFtbfM9Pdax/kfigA2O1Ga1aBdVBus8cff
+        kqUlOq3RTKwNVFtQh8Fs+koZaa/omZSk831MSqg0Jd5YgCDtxoqETrNkJfNfdWkyXyTQan
+        qi09MqRszGhaJrXz1nPewdpN6z6Yg8Y=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-frKsRCXQN2a7QYS_tvh5nw-1; Sat, 25 Jul 2020 07:51:50 -0400
-X-MC-Unique: frKsRCXQN2a7QYS_tvh5nw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-410-fc95pyLQMqKRsKJQUxY9Dg-1; Sat, 25 Jul 2020 07:52:55 -0400
+X-MC-Unique: fc95pyLQMqKRsKJQUxY9Dg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CC0D57;
-        Sat, 25 Jul 2020 11:51:48 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 60FE980183C;
+        Sat, 25 Jul 2020 11:52:53 +0000 (UTC)
 Received: from krava (unknown [10.40.192.11])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 6A6A110013C2;
-        Sat, 25 Jul 2020 11:51:44 +0000 (UTC)
-Date:   Sat, 25 Jul 2020 13:51:43 +0200
+        by smtp.corp.redhat.com (Postfix) with SMTP id D634960BF3;
+        Sat, 25 Jul 2020 11:52:49 +0000 (UTC)
+Date:   Sat, 25 Jul 2020 13:52:48 +0200
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     kajoljain <kjain@linux.ibm.com>
+To:     "Paul A. Clarke" <pc@us.ibm.com>
 Cc:     Jiri Olsa <jolsa@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         lkml <linux-kernel@vger.kernel.org>,
@@ -56,86 +56,100 @@ Cc:     Jiri Olsa <jolsa@kernel.org>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Michael Petlan <mpetlan@redhat.com>,
         Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
         John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
         Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
 Subject: Re: [PATCHv3 00/19] perf metric: Add support to reuse metric
-Message-ID: <20200725115143.GA1157288@krava>
+Message-ID: <20200725115248.GB1157288@krava>
 References: <20200719181320.785305-1-jolsa@kernel.org>
- <dbe59791-937d-de95-4ba0-c34e7a1cd273@linux.ibm.com>
- <20200720072237.GC760733@krava>
- <6cb72b48-5244-9faf-a9e5-67858c732b83@linux.ibm.com>
- <20200720081943.GE760733@krava>
- <dd465647-da63-c473-9944-bdfec2abe484@linux.ibm.com>
- <20200720191625.GL760733@krava>
- <eec934d1-5f45-739e-d5df-847a4b995fa5@linux.ibm.com>
+ <20200721143702.GA15990@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+ <20200722181158.GF981884@krava>
+ <20200723155958.GA7141@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eec934d1-5f45-739e-d5df-847a4b995fa5@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200723155958.GA7141@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 11:22:28AM +0530, kajoljain wrote:
-
-SNIP
-
+On Thu, Jul 23, 2020 at 10:59:58AM -0500, Paul A. Clarke wrote:
+> On Wed, Jul 22, 2020 at 08:11:58PM +0200, Jiri Olsa wrote:
+> > On Tue, Jul 21, 2020 at 09:48:48AM -0500, Paul A. Clarke wrote:
+> > > On Sun, Jul 19, 2020 at 08:13:01PM +0200, Jiri Olsa wrote:
+> > > > hi,
+> > > > this patchset is adding the support to reused metric in
+> > > > another metric.
+> > > > 
+> > > > For example, to define IPC by using CPI with change like:
+> > > > 
+> > > >      {
+> > > >          "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
+> > > > -        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
+> > > > +        "MetricExpr": "1/CPI",
+> > > >          "MetricGroup": "TopDownL1",
+> > > >          "MetricName": "IPC"
+> > > >      },
+> > > > 
+> > > > I won't be able to find all the possible places we could
+> > > > use this at, so I wonder you guys (who was asking for this)
+> > > > would try it and come up with comments if there's something
+> > > > missing or we could already use it at some places.
+> > > > 
+> > > > It's based on Arnaldo's tmp.perf/core.
+> > > > 
+> > > > v3 changes:
+> > > >   - added some acks
+> > > >   - some patches got merged
+> > > >   - added missing zalloc include [John Garry]
+> > > >   - added ids array outside the egroup object [Ian]
+> > > >   - removed wrong m->has_constraint assignment [Ian]
+> > > >   - renamed 'list' to 'metric_list' [Ian]
+> > > >   - fixed group metric and added test for it [Paul A. Clarke]
+> > > >   - fixed memory leak [Arnaldo]
+> > > >   - using lowercase keys for metrics in hashmap, because jevents
+> > > >     converts metric_expr to lowercase
+> > > > 
+> > > > Also available in here:
+> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+> > > >   perf/metric
+> > > 
+> > > These changes seem to be mostly working for me.
+> > > 
+> > > I attempted to exploit the new capability in the metrics definitions in
+> > > tools/perf/pmu-events/arch/powerpc/power9/metrics.json.  Those changes
+> > > are included below.
+> > > 
+> > > The one problem I found is with the "cpi_breakdown" metric group, as it
+> > > no longer works:
+> > > ```
+> > > # perf stat --metrics cpi_breakdown ./command
+> > > Cannot find metric or group `cpi_breakdown'
+> > > ```
+> > > 
+> > > "cpi_breakdown" does show up in `perf list --metricgroup`, and all of the
+> > > (95!) metrics listed in that group are usable, so it's not obvious whether
+> > > my changes have a problem, or merely provoke one.
+> > 
+> > I underestimated the recursion depth setup for groups,
+> > your change is working for me with following change:
+> > 
+> > -#define RECURSION_ID_MAX 100
+> > +#define RECURSION_ID_MAX 1000
 > 
-> Hi Jiri,
->        The change looks good to me. I tried with adding this patch on top of your perf/metric branch. It did resolve the issue of not printing
-> all chips data. And now I can see proper values for hv-24x7 metric events.
+> That indeed addressed the issue.
 > 
-> I was also trying by adding new metric using the feature added in this patchset with something like this:
-> 
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-> index 8383a37647ad..dfe4bd63b587 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-> @@ -16,6 +16,11 @@
->          "MetricName": "PowerBUS_Frequency",
->          "ScaleUnit": "2.5e-7GHz"
->      },
-> +    {
-> +       "MetricExpr": "Memory_WR_BW_Chip + Memory_RD_BW_Chip",
-> +        "MetricName": "Total_Memory_BW",
-> +        "ScaleUnit": "1.6e-2MB"
-> +    },
+> Is there a point where that limit was being hit and the code silently fails?
 
-hum, we'll need special case this.. because Memory_WR_BW_Chip will
-unwind to Memory_WR_BW_Chip_[01] and Total_Memory_BW is not aware of
-that.. what's the expected behaviour in here?
+yes
 
-have Total_Memory_BW_[01] for each runtime arg?
+> If so, should that failure be less silent?
 
-I think this will need to come on top of this changes,
-it's already too big
+I'll make it more verbose
 
 thanks,
 jirka
-
-> 
-> I guess as we have dependency on '?' symbol, I am not able to see all chips data for Total_Memory_BW.
-> I am not sure if Its expected behavior?
-> 
-> This is what I am getting:
-> 
-> [root@ltc-zz189-lp4 perf]# ./perf stat --metric-only -M Total_Memory_BW,Memory_WR_BW_Chip,Memory_RD_BW_Chip -I 1000 -C 0
-> #           time  MB  Total_Memory_BW MB  Memory_RD_BW_Chip_1 MB  Memory_WR_BW_Chip_1 MB  Memory_WR_BW_Chip_0 MB  Memory_RD_BW_Chip_0 
->      1.000067388                 36.4                      0.2                     36.3                     65.0                     72.1 
->      2.000374276                 36.2                      0.3                     35.9                     65.4                     77.9 
->      3.000543202                 36.3                      0.3                     36.0                     68.7                     81.2 
->      4.000702855                 36.3                      0.3                     36.0                     70.9                     93.3 
->      5.000856837                 36.0                      0.2                     35.8                     67.4                     81.5 
-> ^C     5.367865273                 13.2                      0.1                     13.1                     23.5                     28.3 
->  Performance counter stats for 'CPU(s) 0':
->                194.4                      1.3                    193.1                    361.0                    434.3 
->        5.368039176 seconds time elapsed
-> 
-> We can only get single chip data's sum in Total_Memory_BW. Please let me know if I am missing something.
-
-SNIP
 
