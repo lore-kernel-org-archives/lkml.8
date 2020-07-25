@@ -8,42 +8,42 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A524C433E8
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC8EC433FB
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 124CE2065F
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6940206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:06:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XWo7VR5r"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="GJtRpz5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgGYAGN (ORCPT
+        id S1727776AbgGYAEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 20:06:13 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:20710 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727781AbgGYAEk (ORCPT
+        Fri, 24 Jul 2020 20:04:39 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:22400 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726987AbgGYAEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 20:04:40 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ONmcVZ012914
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:39 -0700
+        Fri, 24 Jul 2020 20:04:33 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ONmpTX014008
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:32 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=8ycK9dyk0krVtM84IjwRBzsABNq6gvRDOeD6Zv8pbc0=;
- b=XWo7VR5rbMLw7v9FSIl4dN0qIDcOrZVZKV9qwPje5jmhY8COZejDW34Uu/Gy4fFhjXW6
- JJBn7Vtf9M9HJJ4kvm7a4fxjyzkIc9bJiH1iY4LXXTkqY5i/vtJiBa4Tebm0aj6tmUpU
- pO2oxJqm3kJiPtPou3aDrFPdGC9t/ve/P2Y= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 32embcegmb-16
+ bh=VdNVeo/r7n5BeWPKriNc/78VSdoV1W6Zt7B5MFzVu6Y=;
+ b=GJtRpz5WhWUxcNxby7A75VtbUMrwRYnocJHNtbWWFb0R5hKyS8fO+NT6CXl+bbbZrm9F
+ pMpYGUz/S6QdEH0Fn40uF47KSUDwsIdhb4sOgh8KBRK7+8kQui0r7VAXt4YAh2gUrsr0
+ ivDQypVThNqLPYebrtVL29+86+kBtS/FbYA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32fh7kpdm7-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:39 -0700
-Received: from intmgw002.06.prn3.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:11d::7) with Microsoft SMTP Server
+        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:32 -0700
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 24 Jul 2020 17:04:33 -0700
+ 15.1.1979.3; Fri, 24 Jul 2020 17:04:30 -0700
 Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id D7B0E1B35A7E; Fri, 24 Jul 2020 17:04:26 -0700 (PDT)
+        id E4C431B35A84; Fri, 24 Jul 2020 17:04:26 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
@@ -52,9 +52,9 @@ CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next 09/35] bpf: memcg-based memory accounting for bpf ringbuffer
-Date:   Fri, 24 Jul 2020 17:03:44 -0700
-Message-ID: <20200725000410.3566700-10-guro@fb.com>
+Subject: [PATCH bpf-next 12/35] bpf: refine memcg-based memory accounting for xskmap maps
+Date:   Fri, 24 Jul 2020 17:03:47 -0700
+Message-ID: <20200725000410.3566700-13-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200725000410.3566700-1-guro@fb.com>
 References: <20200725000410.3566700-1-guro@fb.com>
@@ -64,60 +64,38 @@ X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-24_10:2020-07-24,2020-07-24 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
- mlxlogscore=678 impostorscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 adultscore=0 phishscore=0 mlxscore=0 suspectscore=13
- spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007240164
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1015
+ priorityscore=1501 bulkscore=0 spamscore=0 mlxlogscore=814 adultscore=0
+ lowpriorityscore=0 mlxscore=0 suspectscore=13 malwarescore=0
+ impostorscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007240164
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the memcg-based memory accounting for the memory used by
-the bpf ringbuffer.
+Extend xskmap memory accounting to include the memory taken by
+the xsk_map_node structure.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 ---
- kernel/bpf/ringbuf.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ net/xdp/xskmap.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/ringbuf.c b/kernel/bpf/ringbuf.c
-index 002f8a5c9e51..e8e2c39cbdc9 100644
---- a/kernel/bpf/ringbuf.c
-+++ b/kernel/bpf/ringbuf.c
-@@ -60,8 +60,8 @@ struct bpf_ringbuf_hdr {
+diff --git a/net/xdp/xskmap.c b/net/xdp/xskmap.c
+index 8367adbbe9df..e574b22defe5 100644
+--- a/net/xdp/xskmap.c
++++ b/net/xdp/xskmap.c
+@@ -28,7 +28,8 @@ static struct xsk_map_node *xsk_map_node_alloc(struct x=
+sk_map *map,
+ 	struct xsk_map_node *node;
+ 	int err;
 =20
- static struct bpf_ringbuf *bpf_ringbuf_area_alloc(size_t data_sz, int nu=
-ma_node)
- {
--	const gfp_t flags =3D GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_NOWARN |
--			    __GFP_ZERO;
-+	const gfp_t flags =3D GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL |
-+			    __GFP_NOWARN | __GFP_ZERO;
- 	int nr_meta_pages =3D RINGBUF_PGOFF + RINGBUF_POS_PAGES;
- 	int nr_data_pages =3D data_sz >> PAGE_SHIFT;
- 	int nr_pages =3D nr_meta_pages + nr_data_pages;
-@@ -89,7 +89,8 @@ static struct bpf_ringbuf *bpf_ringbuf_area_alloc(size_=
-t data_sz, int numa_node)
- 	 */
- 	array_size =3D (nr_meta_pages + 2 * nr_data_pages) * sizeof(*pages);
- 	if (array_size > PAGE_SIZE)
--		pages =3D vmalloc_node(array_size, numa_node);
-+		pages =3D __vmalloc_node(array_size, 1, GFP_KERNEL_ACCOUNT,
-+				       numa_node, __builtin_return_address(0));
- 	else
- 		pages =3D kmalloc_node(array_size, flags, numa_node);
- 	if (!pages)
-@@ -167,7 +168,7 @@ static struct bpf_map *ringbuf_map_alloc(union bpf_at=
-tr *attr)
- 		return ERR_PTR(-E2BIG);
- #endif
-=20
--	rb_map =3D kzalloc(sizeof(*rb_map), GFP_USER);
-+	rb_map =3D kzalloc(sizeof(*rb_map), GFP_USER | __GFP_ACCOUNT);
- 	if (!rb_map)
+-	node =3D kzalloc(sizeof(*node), GFP_ATOMIC | __GFP_NOWARN);
++	node =3D kzalloc(sizeof(*node),
++		       GFP_ATOMIC | __GFP_NOWARN | __GFP_ACCOUNT);
+ 	if (!node)
  		return ERR_PTR(-ENOMEM);
 =20
 --=20
