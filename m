@@ -2,165 +2,151 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4170AC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AAF4206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A30206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 19:20:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="AYL24dWC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WlszfhUb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvXHuh6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgGYTSn (ORCPT
+        id S1727907AbgGYTUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 15:18:43 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:34397 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726381AbgGYTSn (ORCPT
+        Sat, 25 Jul 2020 15:20:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgGYTT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 15:18:43 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0443B5C00CA;
-        Sat, 25 Jul 2020 15:18:42 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Sat, 25 Jul 2020 15:18:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=r
-        WYFqMi0Bc4yD9F0ulehRfAQBdRpLQU+sbOfDtxKETM=; b=AYL24dWCsNSJoR3J7
-        49Z604uXy1bARXjeh+9TIP23BVdgIBBs/7KsJ5zdlayVP110mLvMNtIAQqggsAT7
-        5LIr4f2P1hS+dKF5IJUjIeXMADBxH1p5wO10AV+3JbwQT6x5Ezp7Wxqtz0LvFa9c
-        AfnllR5TOI4Erx3Y6OibtgZJonHkGF9gnwh447n4pwJr/25sfH8AGO/oEz5X26m8
-        l0F90yjTA4nlDGlFcc+46bfIYYuWri+ytwbuSJ5HV7Scnde+j5Nigl+Zv++z6Rnp
-        ndG3v61EcxaYw+nZmTVXF+Imk5WYCmddhPi090btGtnIZT6y9MdfWS4CAGMN0pxn
-        shTDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=rWYFqMi0Bc4yD9F0ulehRfAQBdRpLQU+sbOfDtxKE
-        TM=; b=WlszfhUbL/eAqIxpSEN+45puRzOzyhq7lKG/ppk62McHtQ+U4dPV2mi+L
-        uQfsLNWIpx2s0rtxHl614oyePRGj1C+vwbCRiqW5AcTMYOmUdaUBrPeQkpHRX/YY
-        BBO0W8hmnfdvhR0X3HEPqMNYW2HgMfG4uOd4ysyF9+W1PEfymdRk7Vt5dFFHrId6
-        1vqe4Z3CDNreFV5JttQbR31WN0u/SszWGN0pHkny3dXucqLlQ0gkng/dcY5nL78i
-        lyNQa4wZwRkRMVgBi5GTQ2FFVTZWBgZIqnwiUFU8XNcPPoknUejJQGLeNdtN6o6k
-        AmhtU+C5moPYl1hKpJQHIkz43n05Q==
-X-ME-Sender: <xms:kIUcX_j718I3fRag_OLmiodGDTbF-7Kj_qxAEkDlKLlq8EPcLXJv5A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheehgddufeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecugg
-    ftrfgrthhtvghrnhepgfevffetleehffejueekvdekvdeitdehveegfeekheeuieeiueet
-    uefgtedtgeegnecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgr
-    nhgurdhorhhg
-X-ME-Proxy: <xmx:kIUcX8A07aJoVhbI5fnJbcab5Ew8DFOMY1ouuVh0gm-f5KRFYdHo9w>
-    <xmx:kIUcX_FNxJTuGDkpwEWlVX67SFrCyOkpYPT9h_w4SpZxjm79YqETBw>
-    <xmx:kIUcX8Qhq9L5tofcNWTI4_gi4XlYoB2qdnoIOBobyy4tnmTbu5ExTA>
-    <xmx:kYUcX2sqoZX4tKW10J1Gt0dRF1_Hq4YGTZldnHgBQbjJr3VtP9qF2w>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0B20530600A3;
-        Sat, 25 Jul 2020 15:18:40 -0400 (EDT)
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH_1/3=5d_dt-bindings=3a_gpio=3a_sunxi?=
- =?UTF-8?Q?=ef=bc=9acreate_a_DT_header_for_Allwinner_pin_controller?=
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Frank Lee <frank@allwinnertech.com>
-Cc:     robh+dt@kernel.org, wens@csie.org, tiny.windzz@gmail.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200715115412.2544-1-frank@allwinnertech.com>
- <20200717160727.e6y5htg4sjd7bezi@gilmour.lan>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <db1908ae-817c-f30d-7b88-f4afa593b258@sholland.org>
-Date:   Sat, 25 Jul 2020 14:18:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 25 Jul 2020 15:19:59 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40FBEC08C5C0
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 12:19:59 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id d17so13245172ljl.3
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 12:19:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g4J6dkRqHFKiKhjcRC8q/JmeC/kbD2LNmS8StOCmtOU=;
+        b=mvXHuh6jpM3ry5QoR34JW1d8FG1E/6i19D+6eHevdB/BJD97IyC8wD2xC+bM8l5Ujc
+         48KF5bxobuUlIlCULXPavhfxF3h1KYr8QgsIyILVedJSXIv54uInP6GcUT1iXSG+ayYu
+         EUD7recqFSD++W9kn404rRgoXuFpxT5nBnjmX6YS6TX57Bn99MxgL9v8Ty2mxycVSlz9
+         lFPJy/ecKwv3YkQic14JYKpV3fDDMlwGCrzbXwY0ocmBn8/Wkw7sQcmAuR6xMs5JLrnE
+         TvooKIp0/sJ+Z9iwMaWOvHuMMjRAhrsvnR6k1debndHhInU3NvFu9JxZ3LxaPSPWVaS3
+         e1Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g4J6dkRqHFKiKhjcRC8q/JmeC/kbD2LNmS8StOCmtOU=;
+        b=jWKF1yuH9FO3Rxl/YYOsrv3FCF9C9dsI8Qw9PZpOegJN8EKjSSwcbZK5GeoLPiK7ZA
+         WI7YyRhIJEcy1Q25jnto777/+B7VC6CSVDQGVbzPKgsH+y9uWixfUoLvC4qo4DjUteIF
+         N6CrjnJ3mHHvfd0uob0BlGli1SmL3Y8HzU6pqISisetqqgGki7D5kxAIuWbYUH1v4+4F
+         YlkhI8FLeOYmmpBRQrv8SJWEJ+X0UZHa+60yUaXBFeh78DDQpI+anoMov4IDIjVtGPJ4
+         Umeru5My6EERtZtuaTQckKryOOSCGw0GtylPtoHAghF356YreND39CN4WiM5/M9sVM4N
+         k5VQ==
+X-Gm-Message-State: AOAM531dDVTdVunRZMa6WY/u1WZmL7OeXzjkm4026Hn/t4cFyfKbnI/v
+        i3Tfec1OHJvRLvDZCX9PYmukqqlrjTKObMDJW25TtQ==
+X-Google-Smtp-Source: ABdhPJwX2YWaS3FX13+Q0LtCtGPNZAsAPnsJBOyVicKVnyzv1PltkImBXj4c5goex61U5pVCv5ilQrP7FYqxDuxoALY=
+X-Received: by 2002:a2e:9d0b:: with SMTP id t11mr589477lji.365.1595704797729;
+ Sat, 25 Jul 2020 12:19:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200717160727.e6y5htg4sjd7bezi@gilmour.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200722110411.ebkv6knvc6mzw5uf@smtp.gmail.com>
+ <20200722120502.GK6419@phenom.ffwll.local> <20200722140604.27dfzfnzug5vb75r@smtp.gmail.com>
+ <CAKMK7uHWCnJ+3YnP2FwVGH6cEDkmPnH9ALjY_1R51QVs0HPG0Q@mail.gmail.com>
+ <20200725011737.GA2851@realwakka> <CAKMK7uEWPCzx+K=+nJsLT5HRBVJ+s8tqx30Ljkr4BCBDComyWQ@mail.gmail.com>
+ <20200725174514.esh4gqek6oddizvh@smtp.gmail.com> <CAKMK7uEi0UFSwYTO7h6_YKN+UykOuVcmhMSG_ySy9uyo_7Pz-g@mail.gmail.com>
+ <20200725184918.togb54bxuifrq77c@smtp.gmail.com>
+In-Reply-To: <20200725184918.togb54bxuifrq77c@smtp.gmail.com>
+From:   Melissa Wen <melissa.srw@gmail.com>
+Date:   Sat, 25 Jul 2020 16:19:46 -0300
+Message-ID: <CAJeY4oEr1mDASzdjfyeXqfqUmM6n1ULgnedM7dif6db6Qk-r2g@mail.gmail.com>
+Subject: Re: [PATCH] drm/vkms: add missing drm_crtc_vblank_put to the get/put
+ pair on flush
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Sidong Yang <realwakka@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kernel-usp@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxime,
+> No, this very first warning continues (only once) :(
+> From here (drm_crtc_vblank_on):
+>         if (atomic_read(&vblank->refcount) != 0 || drm_vblank_offdelay == 0)
+>                 drm_WARN_ON(dev, drm_vblank_enable(dev, pipe));
 
-On 7/17/20 11:07 AM, Maxime Ripard wrote:
-> Hi!
-> 
-> On Wed, Jul 15, 2020 at 07:54:12PM +0800, Frank Lee wrote:
->> From: Yangtao Li <frank@allwinnertech.com>
->>
->> The sunxi gpio binding defines a few custom cells for its gpio specifier.
->> Provide bank name for those.
->>
->> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> 
-> Thanks for working on this, I wanted to do it at some point but it kept
-> getting pushed further into my todo list.
-> 
->> ---
->>  include/dt-bindings/gpio/sunxi-gpio.h | 29 +++++++++++++++++++++++++++
->>  1 file changed, 29 insertions(+)
->>  create mode 100644 include/dt-bindings/gpio/sunxi-gpio.h
->>
->> diff --git a/include/dt-bindings/gpio/sunxi-gpio.h b/include/dt-bindings/gpio/sunxi-gpio.h
->> new file mode 100644
->> index 000000000000..c692b4360da6
->> --- /dev/null
->> +++ b/include/dt-bindings/gpio/sunxi-gpio.h
-> 
-> So generally we've been using the compatible name as the file name. You
-> should follow that convention too, and since it was added with the A10,
-> using the A10 compatible.
-> 
->> @@ -0,0 +1,29 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * GPIO definitions for Allwinner SoCs
->> + *
->> + * Copyright (C) 2020 Yangtao Li <frank@allwinnertech.com>
->> + */
->> +
->> +#ifndef _DT_BINDINGS_SUNXI_GPIO_H
->> +#define _DT_BINDINGS_SUNXI_GPIO_H
->> +
->> +#include <dt-bindings/gpio/gpio.h>
->> +
->> +/* pio */
->> +#define PA	0
->> +#define PB	1
->> +#define PC	2
->> +#define PD	3
->> +#define PE	4
->> +#define PF	5
->> +#define PG	6
->> +#define PH	7
->> +#define PI	8
->> +
->> +/* r-pio */
->> +#define PL	0
->> +#define PM	1
->> +#define PN	2
->> +
->> +#endif /* _DT_BINDINGS_SUNXI_GPIO_H */
-> 
-> Maybe we can go one step further and use a macro to have something like
-> PIN(A, 12) ?
+Sorry, not sure when this warning is triggered.
 
-Since we have separate cells for the bank and pin, I don't think it would be
-appropriate to have a single macro generating both. And I'm not sure what the
-benefit of the macro would be, if all it does is forward its arguments. Are you
-concerned that P[A-M] could conflict with something else in the device tree?
-
-Cheers,
-Samuel
+>
+> > But I'm still wondering why after step 3 we don't get -EINVAL from
+> > vblank_get() - after vblank_off() vblank->enabled should be false
+> > again, getting us back to the same state as after 1. Is that not
+> > happening?
+>
+> Yes (sorry if it got confused), we got -EINVAL after setp 3:
+>
+> In step 3, at the end of the 2nd running, we have:
+> atomic_disable
+> --> vblank_off [!vblank->inmodeset + refcount going 0->1 + inmodeset=1]
+> and then in next vblank_get: -EINVAL (!vblank->enabled + refcount ends 1)
+> as in the first step.
+>
+> Melissa
+>
+> > -Daniel
+> >
+> > >
+> > > > >
+> > > > > Thanks
+> > > > > -Sidong
+> > > > >
+> > > > > > > >
+> > > > > > > > >             crtc->state->event = NULL;
+> > > > > > > > >     }
+> > > > > > > > >
+> > > > > > > > > --
+> > > > > > > > > 2.27.0
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > --
+> > > > > > > > Daniel Vetter
+> > > > > > > > Software Engineer, Intel Corporation
+> > > > > > > > http://blog.ffwll.ch
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > > --
+> > > > > > Daniel Vetter
+> > > > > > Software Engineer, Intel Corporation
+> > > > > > http://blog.ffwll.ch
+> > > > > > _______________________________________________
+> > > > > > dri-devel mailing list
+> > > > > > dri-devel@lists.freedesktop.org
+> > > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > >
+> > > >
+> > > >
+> > > > --
+> > > > Daniel Vetter
+> > > > Software Engineer, Intel Corporation
+> > > > http://blog.ffwll.ch
+> >
+> >
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
