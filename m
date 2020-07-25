@@ -2,163 +2,172 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A346C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB36C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7691D206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:44:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2UQhjcBh"
+	by mail.kernel.org (Postfix) with ESMTP id A4631206E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595698817;
+	bh=sJTStXJxf1wWNfeh1Vyqzn+5Ew232NcAG80ITNfG5hI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nyQSggccjx1ZHrgMscu9K+sZHSKTT65Vvn09Rs/HfJv9AngmOrhRT7qvzxQqMpJPN
+	 6HTMlJsaeiAeP6M8MaL39rO9ZUi9PxNJm7P42Hl0F5N7E9sQnfLQzm9b73EqBd9EIo
+	 PPXasWALGPEQ+lzsVy0DzHkH6BtUcBQlRQkQWIEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgGYRoi (ORCPT
+        id S1727900AbgGYRkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 13:44:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726995AbgGYRoh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 13:44:37 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FE49C08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 10:44:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IzlB8C4ebbWL5U23JeDEz95EVKPJZOd57Pw+Ihb9yS4=; b=2UQhjcBh9fvIISuXAxoCEifRW3
-        uc5y6cxLCDu3konYEKpwvi1biaFLwBsd96kUVi2T57kwFRHIs4TPN2UIrfaA/Hr0n0eSTLT5327YY
-        9MKVYyaTe1hyQ2SU0fRuUTiuvNMixWOIiNL1ZRRfJ1IB7IlzMm6TymbhSo0CjrTYyeatdz0V7VXUL
-        KIf5E1KDPv97iSrro2CE8AhW42HGtnX3128M7GTiXIfezGFFrNIPIsPtWGcggWpuCcWPFtjfh5eJP
-        876BOX8Wng4CAhnelnuLt3jWciA1GBaHISOxp5Y+cm6jeMjt6MDYqhEfwhjsqpi4QQeqjgbAZZE4m
-        auAgsE/A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzODo-0008IH-Qa; Sat, 25 Jul 2020 17:44:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Sat, 25 Jul 2020 13:40:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726904AbgGYRkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 13:40:16 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1283E301179;
-        Sat, 25 Jul 2020 19:44:31 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EC37120104627; Sat, 25 Jul 2020 19:44:30 +0200 (CEST)
-Date:   Sat, 25 Jul 2020 19:44:30 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kcsan: Add option to allow watcher interruptions
-Message-ID: <20200725174430.GH10769@hirez.programming.kicks-ass.net>
-References: <20200220141551.166537-1-elver@google.com>
- <20200220185855.GY2935@paulmck-ThinkPad-P72>
- <20200220213317.GA35033@google.com>
- <20200725145623.GZ9247@paulmck-ThinkPad-P72>
- <CANpmjNPhuvrhRHAiuv2Zju1VNSe7dO0aaYn+1TB99OF2Hv0S_A@mail.gmail.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20514206D7;
+        Sat, 25 Jul 2020 17:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595698815;
+        bh=sJTStXJxf1wWNfeh1Vyqzn+5Ew232NcAG80ITNfG5hI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uUkwBFhOHVDjpU7noEGFnVI9DSAoxP2OMDAudhOzaP1GS/psPb4m3M44mvCX+IojX
+         xLTQveOr84GVFSSBW3fFF2ds+maI2ShlY5vmyl+b2F4RmKk1ltK0djQfnBtcVcBwTc
+         AAXGU3+mxr47wJ9VkoxCZnvT9sMbCB6K5gBCF/Ww=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jzO9d-00EsjE-IF; Sat, 25 Jul 2020 18:40:13 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNPhuvrhRHAiuv2Zju1VNSe7dO0aaYn+1TB99OF2Hv0S_A@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 25 Jul 2020 18:40:13 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        steven.price@arm.com, mark.rutland@arm.com, ascull@google.com,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com
+Subject: Re: [RESEND RFC PATCH v1] arm64: kvm: flush tlbs by range in
+ unmap_stage2_range function
+In-Reply-To: <20200724134315.805-1-yezhenyu2@huawei.com>
+References: <20200724134315.805-1-yezhenyu2@huawei.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <5d54c860b3b4e7a98e4d53397e6424ae@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yezhenyu2@huawei.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org, steven.price@arm.com, mark.rutland@arm.com, ascull@google.com, kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org, xiexiangyou@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 05:17:43PM +0200, Marco Elver wrote:
-> On Sat, 25 Jul 2020 at 16:56, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > On Thu, Feb 20, 2020 at 10:33:17PM +0100, Marco Elver wrote:
-> > > On Thu, 20 Feb 2020, Paul E. McKenney wrote:
-> > > > On Thu, Feb 20, 2020 at 03:15:51PM +0100, Marco Elver wrote:
-> > > > > Add option to allow interrupts while a watchpoint is set up. This can be
-> > > > > enabled either via CONFIG_KCSAN_INTERRUPT_WATCHER or via the boot
-> > > > > parameter 'kcsan.interrupt_watcher=1'.
-> [...]
-> > > > > As an example, the first data race that this found:
-> > > > >
-> > > > > write to 0xffff88806b3324b8 of 4 bytes by interrupt on cpu 0:
-> > > > >  rcu_preempt_read_enter kernel/rcu/tree_plugin.h:353 [inline]
-> > > > >  __rcu_read_lock+0x3c/0x50 kernel/rcu/tree_plugin.h:373
-> [...]
-> > > > > read to 0xffff88806b3324b8 of 4 bytes by task 6131 on cpu 0:       |
-> > > > >  rcu_preempt_read_enter kernel/rcu/tree_plugin.h:353 [inline]  ----+
-> [...]
-> > > > >
-> > > > > The writer is doing 'current->rcu_read_lock_nesting++'. The read is as
-> > > > > vulnerable to compiler optimizations and would therefore conclude this
-> > > > > is a valid data race.
-> > > >
-> > > > Heh!  That one is a fun one!  It is on a very hot fastpath.  READ_ONCE()
-> > > > and WRITE_ONCE() are likely to be measurable at the system level.
-> > > >
-> > > > Thoughts on other options?
+On 2020-07-24 14:43, Zhenyu Ye wrote:
+> Now in unmap_stage2_range(), we flush tlbs one by one just after the
+> corresponding pages cleared.  However, this may cause some performance
+> problems when the unmap range is very large (such as when the vm
+> migration rollback, this may cause vm downtime too loog).
 
-> > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > > index c6ea81cd41890..e0595abd50c0f 100644
-> > > --- a/kernel/rcu/tree_plugin.h
-> > > +++ b/kernel/rcu/tree_plugin.h
-> > > @@ -350,17 +350,17 @@ static int rcu_preempt_blocked_readers_cgp(struct rcu_node *rnp)
-> > >
-> > >  static void rcu_preempt_read_enter(void)
-> > >  {
-> > > -     current->rcu_read_lock_nesting++;
-> > > +     local_inc(&current->rcu_read_lock_nesting);
-> > >  }
-> > >
-> > >  static void rcu_preempt_read_exit(void)
-> > >  {
-> > > -     current->rcu_read_lock_nesting--;
-> > > +     local_dec(&current->rcu_read_lock_nesting);
-> > >  }
-> > >
-> > >  static void rcu_preempt_depth_set(int val)
-> > >  {
-> > > -     current->rcu_read_lock_nesting = val;
-> > > +     local_set(&current->rcu_read_lock_nesting, val);
+You keep resending this patch, but you don't give any numbers
+that would back your assertion.
+
+> This patch moves the kvm_tlb_flush_vmid_ipa() out of loop, and
+> flush tlbs by range after other operations completed.  Because we
+> do not make new mapping for the pages here, so this doesn't violate
+> the Break-Before-Make rules.
 > 
-> > I agree that this removes the data races, and that the code for x86 is
-> > quite nice, but aren't rcu_read_lock() and rcu_read_unlock() going to
-> > have heavyweight atomic operations on many CPUs?
-> >
-> > Maybe I am stuck with arch-specific code in rcu_read_lock() and
-> > rcu_preempt_read_exit().  I suppose worse things could happen.
+> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+> ---
+>  arch/arm64/include/asm/kvm_asm.h |  2 ++
+>  arch/arm64/kvm/hyp/tlb.c         | 36 ++++++++++++++++++++++++++++++++
+>  arch/arm64/kvm/mmu.c             | 11 +++++++---
+>  3 files changed, 46 insertions(+), 3 deletions(-)
 > 
-> Peter also mentioned to me that while local_t on x86 generates
-> reasonable code, on other architectures it's terrible. So I think
-> something else is needed, and feel free to discard the above idea.
-> With sufficient enough reasoning, how bad would a 'data_race(..)' be?
+> diff --git a/arch/arm64/include/asm/kvm_asm.h 
+> b/arch/arm64/include/asm/kvm_asm.h
+> index 352aaebf4198..ef8203d3ca45 100644
+> --- a/arch/arm64/include/asm/kvm_asm.h
+> +++ b/arch/arm64/include/asm/kvm_asm.h
+> @@ -61,6 +61,8 @@ extern char __kvm_hyp_vector[];
+> 
+>  extern void __kvm_flush_vm_context(void);
+>  extern void __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t 
+> ipa);
+> +extern void __kvm_tlb_flush_vmid_range(struct kvm *kvm, phys_addr_t 
+> start,
+> +				       phys_addr_t end);
+>  extern void __kvm_tlb_flush_vmid(struct kvm *kvm);
+>  extern void __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu);
+> 
+> diff --git a/arch/arm64/kvm/hyp/tlb.c b/arch/arm64/kvm/hyp/tlb.c
+> index d063a576d511..4f4737a7e588 100644
+> --- a/arch/arm64/kvm/hyp/tlb.c
+> +++ b/arch/arm64/kvm/hyp/tlb.c
+> @@ -189,6 +189,42 @@ void __hyp_text __kvm_tlb_flush_vmid_ipa(struct
+> kvm *kvm, phys_addr_t ipa)
+>  	__tlb_switch_to_host(kvm, &cxt);
+>  }
+> 
+> +void __hyp_text __kvm_tlb_flush_vmid_range(struct kvm *kvm, 
+> phys_addr_t start,
+> +					   phys_addr_t end)
+> +{
+> +	struct tlb_inv_context cxt;
+> +	unsigned long addr;
+> +
+> +	start = __TLBI_VADDR(start, 0);
+> +	end = __TLBI_VADDR(end, 0);
+> +
+> +	dsb(ishst);
+> +
+> +	/* Switch to requested VMID */
+> +	kvm = kern_hyp_va(kvm);
+> +	__tlb_switch_to_guest(kvm, &cxt);
+> +
+> +	if ((end - start) >= 512 << (PAGE_SHIFT - 12)) {
+> +		__tlbi(vmalls12e1is);
 
-Right, so local_t it atrocious on many architectures, they fall back to
-atomic_t.
+And what is this magic value based on? You don't even mention in the
+commit log that you are taking this shortcut.
 
-Even architectures that have optimized variants (eg. Power), they're
-quite a lot more expensive than what we actually need here.
+> +		goto end;
+> +	}
+> +
+> +	for (addr = start; addr < end; addr += 1 << (PAGE_SHIFT - 12))
+> +		__tlbi(ipas2e1is, addr);
+> +
+> +	dsb(ish);
+> +	__tlbi(vmalle1is);
+> +
+> +end:
+> +	dsb(ish);
+> +	isb();
+> +
+> +	if (!has_vhe() && icache_is_vpipt())
+> +		__flush_icache_all();
+> +
+> +	__tlb_switch_to_host(kvm, &cxt);
+> +}
+> +
 
-Only architectures like x86 that have single instruction memops can
-generate anywhere near the code that we'd want here.
+I'm sorry, but without numbers backing this approach for a number
+of workloads and a representative set of platforms, this is
+going nowhere.
 
-So the thing is, since RCU count is 0 per context (an IRQ must have an
-equal amount of rcu_read_unlock() as it has rcu_read_lock()), interrupts
-are not in fact a problem, even on load-store (RISC) architectures
-(preempt_count has the same thing).
+Thanks,
 
-So the addition/subtraction in rcu_preempt_read_{enter,exit}() doesn't
-need to be atomic vs interrupts. The only thing we really do need is
-them being single-copy-atomic.
-
-The problem with READ/WRITE_ONCE is that if we were to use it, we'd end
-up with a load-store, even on x86, which is sub-optimal.
-
-I suppose the 'correct' code here would be something like:
-
-	*((volatile int *)&current->rcu_read_lock_nesting)++;
-
-then the compiler can either do a single memop (x86 and the like) or a
-load-store that is free from tearing.
-
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
