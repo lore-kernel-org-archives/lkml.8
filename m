@@ -2,74 +2,111 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52140C433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2D7C433E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 303DF206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:07:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595671622;
-	bh=DXKTp7F9hVX/ZMZ3cMvlM+waZARTWo/ANSvb7sYnEho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l1mxT1OC2OOmqPMSG8GEayMPcVKIAVHLSBvPlUMu9GpfpIitMSBPlA0V6SOVB/1DU
-	 X4lJMgas2Fx9mXMHIuVMuYjDdRBqxlVfLrDbqURl4BK5Jvsw4XZ4t2D9DEFWZfbGvi
-	 IybhdPZ6dteUDo9Y7Yr9wz3Zzzml1SMdD0IfbfgE=
+	by mail.kernel.org (Postfix) with ESMTP id B7806206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:13:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Uph/QBYf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/4TXYni+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgGYKHB (ORCPT
+        id S1726780AbgGYKNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 06:07:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726572AbgGYKHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 06:07:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3EA3206D7;
-        Sat, 25 Jul 2020 10:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595671620;
-        bh=DXKTp7F9hVX/ZMZ3cMvlM+waZARTWo/ANSvb7sYnEho=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=csoeNhZKhfy/PaKNHDzhb6fewTblIs59HKYmONeMkW7H74jifgwJGAr6lPRX4Vxlw
-         Z7+gvZk8JV6ESWik0r9XZf9nTKM+BHkr7Qjq2D4AQsu3HRqL+SabERQUdkBlDdSpup
-         e4N/tbzlVOUSYcVU4+kHmshhXryc9aBAsUBwgFMM=
-Date:   Sat, 25 Jul 2020 12:07:00 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     stable@vger.kernel.org, Scott Branden <scott.branden@broadcom.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 03/19] firmware_loader: EFI firmware loader must
- handle pre-allocated buffer
-Message-ID: <20200725100700.GB1073708@kroah.com>
-References: <20200724213640.389191-1-keescook@chromium.org>
- <20200724213640.389191-4-keescook@chromium.org>
+        Sat, 25 Jul 2020 06:13:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43626 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbgGYKNg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 06:13:36 -0400
+Date:   Sat, 25 Jul 2020 10:13:33 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595672014;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dYoF8hY7myky2pnc6JSt8kEeqXo7a7WL/ip8dCcLkjA=;
+        b=Uph/QBYf+1WaWraTBk8zRHcYFUjwZGHA4ud41oKNGbh5z7sZd1+vzPKNdQpaMradGjmkGR
+        yUgOqd7ZviZSsVEYCIFSpbVf1ij02YAqyAkFHDALsUG38GWirHVkXMeopZlKix+J0DIFno
+        ZVfWw6mzdOTbntZzpIgwVkF2W0LJDaEuy1hYAVhnE4w9yRTXC4VFGZhmCRT0x9bfDDPUs2
+        08d9uGWxfn3F1ILb3qP+bDaM9+1HpsTo8ok4K/dbI6cAgM9QN5m+FZkNsfDGx/0lpXLwBO
+        MicmexzZYwJtNA5XYM2FnJRDRXIlPDm1IAT97MLg4W4hZTq/jlEYhtt3sxUKbg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595672014;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dYoF8hY7myky2pnc6JSt8kEeqXo7a7WL/ip8dCcLkjA=;
+        b=/4TXYni+zFp2xKXUPaGtUfn9K33yUJdg3KY8x+ljEq/AbepvgWGD6fCMR5A/EwZ+6cBPyI
+        QhHsNzjUmncTSaAw==
+From:   "tip-bot2 for Qinglang Miao" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/uclamp: Remove unnecessary mutex_init()
+Cc:     Qinglang Miao <miaoqinglang@huawei.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200725085629.98292-1-miaoqinglang@huawei.com>
+References: <20200725085629.98292-1-miaoqinglang@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724213640.389191-4-keescook@chromium.org>
+Message-ID: <159567201333.4006.12551438170876994206.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 02:36:24PM -0700, Kees Cook wrote:
-> The EFI platform firmware fallback would clobber any pre-allocated
-> buffers. Instead, correctly refuse to reallocate when too small (as
-> already done in the sysfs fallback), or perform allocation normally
-> when needed.
-> 
-> Fixes: e4c2c0ff00ec ("firmware: Add new platform fallback mechanism and firm ware_request_platform()")
+The following commit has been merged into the sched/core branch of tip:
 
-"firmware_request_platform()" :)
+Commit-ID:     13efa616124f7eec7d6a58adeeef31864aa03879
+Gitweb:        https://git.kernel.org/tip/13efa616124f7eec7d6a58adeeef31864aa03879
+Author:        Qinglang Miao <miaoqinglang@huawei.com>
+AuthorDate:    Sat, 25 Jul 2020 16:56:29 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sat, 25 Jul 2020 12:10:36 +02:00
 
+sched/uclamp: Remove unnecessary mutex_init()
+
+The uclamp_mutex lock is initialized statically via DEFINE_MUTEX(),
+it is unnecessary to initialize it runtime via mutex_init().
+
+Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Patrick Bellasi <patrick.bellasi@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Link: https://lore.kernel.org/r/20200725085629.98292-1-miaoqinglang@huawei.com
+---
+ kernel/sched/core.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index bd8e521..6782534 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1425,8 +1425,6 @@ static void __init init_uclamp(void)
+ 	enum uclamp_id clamp_id;
+ 	int cpu;
+ 
+-	mutex_init(&uclamp_mutex);
+-
+ 	for_each_possible_cpu(cpu)
+ 		init_uclamp_rq(cpu_rq(cpu));
+ 
