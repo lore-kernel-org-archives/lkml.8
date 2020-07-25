@@ -2,69 +2,136 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC3FC433E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72717206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA6FC2065F
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:36:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UhvXnIU1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgGYRgJ (ORCPT
+        id S1727886AbgGYRgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 13:36:09 -0400
-Received: from mailomta28-sa.btinternet.com ([213.120.69.34]:24279 "EHLO
-        sa-prd-fep-046.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726904AbgGYRgI (ORCPT
+        Sat, 25 Jul 2020 13:36:39 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56922 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727858AbgGYRgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 13:36:08 -0400
-Received: from sa-prd-rgout-005.btmx-prd.synchronoss.net ([10.2.38.8])
-          by sa-prd-fep-046.btinternet.com with ESMTP
-          id <20200725173607.FDNZ4114.sa-prd-fep-046.btinternet.com@sa-prd-rgout-005.btmx-prd.synchronoss.net>;
-          Sat, 25 Jul 2020 18:36:07 +0100
-Authentication-Results: btinternet.com;
-    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
-X-Originating-IP: [86.152.161.91]
-X-OWM-Source-IP: 86.152.161.91 (GB)
-X-OWM-Env-Sender: j.oldman998@btinternet.com
-X-VadeSecure-score: verdict=clean score=0/300, class=clean
-X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduiedrheehgdduudehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuueftkffvkffujffvgffngfevqffopdfqfgfvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpedfoeflohhhnhcuqfhlughmrghnqedfuceojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqeenucggtffrrghtthgvrhhnpeffveekffekffefhfevvdevieelvdduuedvteeviefgteetfeffffekieduieekveenucfkphepkeeirdduhedvrdduiedurdeludenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhephhgvlhhopehhvghnrhihpdhinhgvthepkeeirdduhedvrdduiedurdeluddpmhgrihhlfhhrohhmpeeojhhohhhnrdholhgumhgrnhesphholhgvhhhilhhlrdgtohdruhhkqedprhgtphhtthhopeeouggvvhgvlhesughrihhvvghruggvvhdrohhsuhhoshhlrdhorhhgqedprhgtphhtthhopeeoghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgqedprhgtphhtthhopeeoghhushhtrghvohesvghmsggvugguvgguohhrrdgtohhmqedprhgtphhtthhopeeolhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgqe
-X-RazorGate-Vade-Verdict: clean 0
-X-RazorGate-Vade-Classification: clean
-Received: from henry (86.152.161.91) by sa-prd-rgout-005.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
-        id 5ED9B8A708925B5B; Sat, 25 Jul 2020 18:36:06 +0100
-Date:   Sat, 25 Jul 2020 18:36:05 +0100
-From:   "<John Oldman>" <john.oldman@polehill.co.uk>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        gustavo@embeddedor.com
-Subject: Re: [PATCH V3] staging: rtl8723bs: core: Using comparison to true is
- error prone
-Message-ID: <20200725173605.GA16980@henry>
-References: <20200725143712.16667-1-john.oldman@polehill.co.uk>
- <20200725172124.GB405510@kroah.com>
+        Sat, 25 Jul 2020 13:36:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595698597;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=B89z7bSsPBlDl23wp5UaTzRFVbTHuOzryOgcGYTtGpc=;
+        b=UhvXnIU1vff9jxxL1kBdKZccTCpmvLl2+pUgkXRsz+wH232dEZOGLfQ9cLemyPNdJggEUq
+        BUtejyuMXEPxvMUdSuMeoy5X5bLFsjWHVFGAktvHrEyUqXhiOjfzegGE/uI73gmUd43Slr
+        nkzKDqLiW160Hr/aPpOeAPWc2iIia5M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-490-BmOl6uFZMzCjad-UsEKw1g-1; Sat, 25 Jul 2020 13:36:33 -0400
+X-MC-Unique: BmOl6uFZMzCjad-UsEKw1g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D649E18C63C0;
+        Sat, 25 Jul 2020 17:36:31 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-112-134.rdu2.redhat.com [10.10.112.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 462B15FC30;
+        Sat, 25 Jul 2020 17:36:30 +0000 (UTC)
+Subject: Re: [PATCH v3 5/6] powerpc/pseries: implement paravirt qspinlocks for
+ SPLPAR
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Boqun Feng <boqun.feng@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org
+References: <20200706043540.1563616-1-npiggin@gmail.com>
+ <20200706043540.1563616-6-npiggin@gmail.com>
+ <874kqhvu1v.fsf@mpe.ellerman.id.au>
+ <8265d782-4e50-a9b2-a908-0cb588ffa09c@redhat.com>
+ <20200723140011.GR5523@worktop.programming.kicks-ass.net>
+ <845de183-56f5-2958-3159-faa131d46401@redhat.com>
+ <20200723184759.GS119549@hirez.programming.kicks-ass.net>
+ <20200724081647.GA16642@willie-the-truck>
+ <8532332b-85dd-661b-cf72-81a8ceb70747@redhat.com>
+ <20200725172630.GF10769@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <4db0cff6-dabb-2f1b-df66-33ce2082088b@redhat.com>
+Date:   Sat, 25 Jul 2020 13:36:29 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200725172124.GB405510@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200725172630.GF10769@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 07:21:24PM +0200, Greg KH wrote:
-> On Sat, Jul 25, 2020 at 03:37:12PM +0100, John Oldman wrote:
-> > clear below issues reported by checkpatch.pl:
-> > 
-> > CHECK: Using comparison to true is error prone
-> 
-> Again, you did more than just this in the patch :(
+On 7/25/20 1:26 PM, Peter Zijlstra wrote:
+> On Fri, Jul 24, 2020 at 03:10:59PM -0400, Waiman Long wrote:
+>> On 7/24/20 4:16 AM, Will Deacon wrote:
+>>> On Thu, Jul 23, 2020 at 08:47:59PM +0200, peterz@infradead.org wrote:
+>>>> On Thu, Jul 23, 2020 at 02:32:36PM -0400, Waiman Long wrote:
+>>>>> BTW, do you have any comment on my v2 lock holder cpu info qspinlock patch?
+>>>>> I will have to update the patch to fix the reported 0-day test problem, but
+>>>>> I want to collect other feedback before sending out v3.
+>>>> I want to say I hate it all, it adds instructions to a path we spend an
+>>>> aweful lot of time optimizing without really getting anything back for
+>>>> it.
+>>>>
+>>>> Will, how do you feel about it?
+>>> I can see it potentially being useful for debugging, but I hate the
+>>> limitation to 256 CPUs. Even arm64 is hitting that now.
+>> After thinking more about that, I think we can use all the remaining bits in
+>> the 16-bit locked_pending. Reserving 1 bit for locked and 1 bit for pending,
+>> there are 14 bits left. So as long as NR_CPUS < 16k (requirement for 16-bit
+>> locked_pending), we can put all possible cpu numbers into the lock. We can
+>> also just use smp_processor_id() without additional percpu data.
+> That sounds horrific, wouldn't that destroy the whole point of using a
+> byte for pending?
+You are right. I realized that later on and had sent a follow-up mail to 
+correct that.
+>>> Also, you're talking ~1% gains here. I think our collective time would
+>>> be better spent off reviewing the CNA series and trying to make it more
+>>> deterministic.
+>> I thought you guys are not interested in CNA. I do want to get CNA merged,
+>> if possible. Let review the current version again and see if there are ways
+>> we can further improve it.
+> It's not a lack of interrest. We were struggling with the fairness
+> issues and the complexity of the thing. I forgot the current state of
+> matters, but at one point UNLOCK was O(n) in waiters, which is, of
+> course, 'unfortunate'.
+>
+> I'll have to look up whatever notes remain, but the basic idea of
+> keeping remote nodes on a secondary list is obviously breaking all sorts
+> of fairness. After that they pile on a bunch of hacks to fix the worst
+> of them, but it feels exactly like that, a bunch of hacks.
+>
+> One of the things I suppose we ought to do is see if some of the ideas
+> of phase-fair locks can be applied to this.
+That could be a possible solution to ensure better fairness.
+>
+> That coupled with a chronic lack of time for anything :-(
+>
+That is always true and I feel this way too:-)
 
-do you mean by reducing line lengths??
-
-
-
+Cheers,
+Longman
 
