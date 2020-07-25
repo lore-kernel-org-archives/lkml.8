@@ -2,172 +2,123 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB36C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A10BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4631206E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595698817;
-	bh=sJTStXJxf1wWNfeh1Vyqzn+5Ew232NcAG80ITNfG5hI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nyQSggccjx1ZHrgMscu9K+sZHSKTT65Vvn09Rs/HfJv9AngmOrhRT7qvzxQqMpJPN
-	 6HTMlJsaeiAeP6M8MaL39rO9ZUi9PxNJm7P42Hl0F5N7E9sQnfLQzm9b73EqBd9EIo
-	 PPXasWALGPEQ+lzsVy0DzHkH6BtUcBQlRQkQWIEg=
+	by mail.kernel.org (Postfix) with ESMTP id E5F37206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:47:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZmPtqyfg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgGYRkQ (ORCPT
+        id S1727820AbgGYRrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 13:40:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726904AbgGYRkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 13:40:16 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20514206D7;
-        Sat, 25 Jul 2020 17:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595698815;
-        bh=sJTStXJxf1wWNfeh1Vyqzn+5Ew232NcAG80ITNfG5hI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uUkwBFhOHVDjpU7noEGFnVI9DSAoxP2OMDAudhOzaP1GS/psPb4m3M44mvCX+IojX
-         xLTQveOr84GVFSSBW3fFF2ds+maI2ShlY5vmyl+b2F4RmKk1ltK0djQfnBtcVcBwTc
-         AAXGU3+mxr47wJ9VkoxCZnvT9sMbCB6K5gBCF/Ww=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jzO9d-00EsjE-IF; Sat, 25 Jul 2020 18:40:13 +0100
+        Sat, 25 Jul 2020 13:47:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726727AbgGYRrv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 13:47:51 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 195BBC08C5C0
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 10:47:51 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id y22so10847936oie.8
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 10:47:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4lhtu1K0BG/0jHhz2IEgTy/+M32YSdppT7D+/e/UP+U=;
+        b=ZmPtqyfgTDS+F2G9Ns7dqDGIfPhORumtj+B5J8LnYD00rv9Su4jkc+VxuCFoZqTtL9
+         Uyap2jFduODRUPm6IOglt30oMSnCrfagIPghJiPo03SWJwGZrts+cYt1w/Iwt5qROpTZ
+         m7+JQEcQFM4T+nTTP+DmMspcHVPmmap38udSTXzahDyqpDz47MBMagTLxmKRJQ3M5AnX
+         EeIk0kJi6FvDVoKIJUMwdxhMbitvU5IeIaXFLDE9T+JB/08QlGaEpcsdA6Nnqc+s2j++
+         YLGGPU2XpZyLX+yzmP3sX5eptl3u0UoZ/ZctvJgSYEW+rPAGiet+FAWlBYv6doKx8wQ1
+         lPMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4lhtu1K0BG/0jHhz2IEgTy/+M32YSdppT7D+/e/UP+U=;
+        b=fIl4RjfO3h6JkF4DWuBpUjpx2OTMw650DMiW32WZ25pENeu3EfJzL7wujI9e1RDb2E
+         VkOgzxeB/bk+7P/CKywv4RsLL2DSqbcKTmrRnhktFnh9IQiFwpksEFbiTLLEzqcY2rbS
+         YhpkY70eWdZD7svqNtQnhnHqvctzbrzitXRUMnumv5iYRkh9r13I8uCz2eQa7HpWQsP/
+         ED5eUvHQdlHy1ui6SpQWiB9xZOoWUPHR5NyYNOV9/PPds+F/E81sFZ90OxD1Rgv7TUer
+         mTW4z76iagMuL0ubbBz1GGpTP1XZVMLtirbA8iSNZ4diRLdSfRh95zJe2Xicqf/BsrAS
+         vazg==
+X-Gm-Message-State: AOAM530bgCf5acb1t3d/AQpWGaN8UdB/aP7myo+NNZmNGbeJX8s888KX
+        oSxJTWy2jXgpcC+0O5EgnaXduDCd
+X-Google-Smtp-Source: ABdhPJwjcJQR+vPB9GPYKs4ugc4uB1N+Xim0+x+S4vy4sqRZza1eFco4CcjKuomuRCZp0OVQ4tQ9kg==
+X-Received: by 2002:aca:a814:: with SMTP id r20mr12687639oie.91.1595699269955;
+        Sat, 25 Jul 2020 10:47:49 -0700 (PDT)
+Received: from localhost.localdomain (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id e203sm692119oia.17.2020.07.25.10.47.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 25 Jul 2020 10:47:49 -0700 (PDT)
+Subject: Re: [PATCH 1/1] STAGING - REALTEK RTL8188EU DRIVERS: Fix Coding Style
+ Error
+To:     Anant Thazhemadam <anant.thazhemadam@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anoop S <anoop.skumar1507@gmail.com>,
+        Michael Straube <straube.linux@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        Merwin Trever Ferrao <merwintf@gmail.com>,
+        Rahul Gottipati <rahul.blr97@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20200725122041.5663-1-anant.thazhemadam@gmail.com>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <aab59eb1-baff-5de1-4e14-88ffc42db1fe@lwfinger.net>
+Date:   Sat, 25 Jul 2020 12:47:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200725122041.5663-1-anant.thazhemadam@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Sat, 25 Jul 2020 18:40:13 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        steven.price@arm.com, mark.rutland@arm.com, ascull@google.com,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
-        xiexiangyou@huawei.com
-Subject: Re: [RESEND RFC PATCH v1] arm64: kvm: flush tlbs by range in
- unmap_stage2_range function
-In-Reply-To: <20200724134315.805-1-yezhenyu2@huawei.com>
-References: <20200724134315.805-1-yezhenyu2@huawei.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <5d54c860b3b4e7a98e4d53397e6424ae@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yezhenyu2@huawei.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org, steven.price@arm.com, mark.rutland@arm.com, ascull@google.com, kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org, xiexiangyou@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-24 14:43, Zhenyu Ye wrote:
-> Now in unmap_stage2_range(), we flush tlbs one by one just after the
-> corresponding pages cleared.  However, this may cause some performance
-> problems when the unmap range is very large (such as when the vm
-> migration rollback, this may cause vm downtime too loog).
-
-You keep resending this patch, but you don't give any numbers
-that would back your assertion.
-
-> This patch moves the kvm_tlb_flush_vmid_ipa() out of loop, and
-> flush tlbs by range after other operations completed.  Because we
-> do not make new mapping for the pages here, so this doesn't violate
-> the Break-Before-Make rules.
+On 7/25/20 7:20 AM, Anant Thazhemadam wrote:
+> Running the checkpatch.pl script on the file for which patch was created, the
+> following error was found to exist.
+> ERROR: space required after that ',' (ctx:VxV)
 > 
-> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+> Fixed the above error which was found on line #721 by inserting a blank
+> space at the appropriate position.
+> 
+> Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
 > ---
->  arch/arm64/include/asm/kvm_asm.h |  2 ++
->  arch/arm64/kvm/hyp/tlb.c         | 36 ++++++++++++++++++++++++++++++++
->  arch/arm64/kvm/mmu.c             | 11 +++++++---
->  3 files changed, 46 insertions(+), 3 deletions(-)
+>   drivers/staging/rtl8188eu/core/rtw_security.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/include/asm/kvm_asm.h 
-> b/arch/arm64/include/asm/kvm_asm.h
-> index 352aaebf4198..ef8203d3ca45 100644
-> --- a/arch/arm64/include/asm/kvm_asm.h
-> +++ b/arch/arm64/include/asm/kvm_asm.h
-> @@ -61,6 +61,8 @@ extern char __kvm_hyp_vector[];
-> 
->  extern void __kvm_flush_vm_context(void);
->  extern void __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t 
-> ipa);
-> +extern void __kvm_tlb_flush_vmid_range(struct kvm *kvm, phys_addr_t 
-> start,
-> +				       phys_addr_t end);
->  extern void __kvm_tlb_flush_vmid(struct kvm *kvm);
->  extern void __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu);
-> 
-> diff --git a/arch/arm64/kvm/hyp/tlb.c b/arch/arm64/kvm/hyp/tlb.c
-> index d063a576d511..4f4737a7e588 100644
-> --- a/arch/arm64/kvm/hyp/tlb.c
-> +++ b/arch/arm64/kvm/hyp/tlb.c
-> @@ -189,6 +189,42 @@ void __hyp_text __kvm_tlb_flush_vmid_ipa(struct
-> kvm *kvm, phys_addr_t ipa)
->  	__tlb_switch_to_host(kvm, &cxt);
->  }
-> 
-> +void __hyp_text __kvm_tlb_flush_vmid_range(struct kvm *kvm, 
-> phys_addr_t start,
-> +					   phys_addr_t end)
-> +{
-> +	struct tlb_inv_context cxt;
-> +	unsigned long addr;
-> +
-> +	start = __TLBI_VADDR(start, 0);
-> +	end = __TLBI_VADDR(end, 0);
-> +
-> +	dsb(ishst);
-> +
-> +	/* Switch to requested VMID */
-> +	kvm = kern_hyp_va(kvm);
-> +	__tlb_switch_to_guest(kvm, &cxt);
-> +
-> +	if ((end - start) >= 512 << (PAGE_SHIFT - 12)) {
-> +		__tlbi(vmalls12e1is);
+> diff --git a/drivers/staging/rtl8188eu/core/rtw_security.c b/drivers/staging/rtl8188eu/core/rtw_security.c
+> index 21f6652dd69f..57e171d3e48d 100644
+> --- a/drivers/staging/rtl8188eu/core/rtw_security.c
+> +++ b/drivers/staging/rtl8188eu/core/rtw_security.c
+> @@ -718,7 +718,7 @@ u32 rtw_tkip_decrypt(struct adapter *padapter, u8 *precvframe)
+>   				res = _FAIL;
+>   			}
+>   		} else {
+> -			RT_TRACE(_module_rtl871x_security_c_, _drv_err_, ("%s: stainfo==NULL!!!\n",__func__));
+> +			RT_TRACE(_module_rtl871x_security_c_, _drv_err_, ("%s: stainfo==NULL!!!\n", __func__));
+>   			res = _FAIL;
+>   		}
+>   	}
 
-And what is this magic value based on? You don't even mention in the
-commit log that you are taking this shortcut.
+In fixing one checkpatch.pl condition, you introduced another - the resulting 
+line is too long. You should fix only one such condition, but you should fix any 
+others that are introduced. You do need to document it.
 
-> +		goto end;
-> +	}
-> +
-> +	for (addr = start; addr < end; addr += 1 << (PAGE_SHIFT - 12))
-> +		__tlbi(ipas2e1is, addr);
-> +
-> +	dsb(ish);
-> +	__tlbi(vmalle1is);
-> +
-> +end:
-> +	dsb(ish);
-> +	isb();
-> +
-> +	if (!has_vhe() && icache_is_vpipt())
-> +		__flush_icache_all();
-> +
-> +	__tlb_switch_to_host(kvm, &cxt);
-> +}
-> +
+Patch subjects for this driver should be written as "staging: rtl8188eu: .....".
 
-I'm sorry, but without numbers backing this approach for a number
-of workloads and a representative set of platforms, this is
-going nowhere.
+Larry
 
-Thanks,
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
