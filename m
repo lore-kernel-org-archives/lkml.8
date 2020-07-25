@@ -2,131 +2,157 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CA5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B27E0206D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 349922065F
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:36:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cmEn754r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="oOORTrLp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgGYRad (ORCPT
+        id S1727809AbgGYRgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 13:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44212 "EHLO
+        Sat, 25 Jul 2020 13:36:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726904AbgGYRad (ORCPT
+        with ESMTP id S1726904AbgGYRgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 13:30:33 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C646CC08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 10:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Oo53oqTaeKwXbhUERILnNfy1lumfPdrAoVj1eZTxRPQ=; b=cmEn754rfARYT3zAusgJHXCYzu
-        +T3KUnfRskMpaNfGkuJ6+CofiYvZ+mulXQc9YLMnS9KDRS5N45hS3Cu0lOrpMULdtcjnLt7SW53dP
-        2T0miagn3FmFJnatNgdBkSPormNgugX1LbGvgi7U0RJFUaprZtLKzKNTN2zQYMWR2bdZatnj4bka4
-        TB6aToS1YMFqo/VpxP2+sF+Ivj1mktvhfu5jdUtSjCGvXHBJq2h7z6witMH/iZ2sQ5DA2LH4BTwij
-        iYUqgUx1WpiMyHRP3XHm/GVYV0mOiTbDIh9ALnZMn+5w27II6eKTENjCLE1Wx3316o+vS0lpAT2R3
-        V5/MHH7A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzNzz-0001Y4-RP; Sat, 25 Jul 2020 17:30:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 533C03013E5;
-        Sat, 25 Jul 2020 19:30:13 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 091E92B8AA3CE; Sat, 25 Jul 2020 19:30:13 +0200 (CEST)
-Date:   Sat, 25 Jul 2020 19:30:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, paulmck@kernel.org, hch@lst.de, axboe@kernel.dk,
-        chris@chris-wilson.co.uk, davem@davemloft.net, kuba@kernel.org,
-        fweisbec@gmail.com, oleg@redhat.com
-Subject: Re: [RFC][PATCH 1/9] irq_work: Cleanup
-Message-ID: <20200725173012.GG10769@hirez.programming.kicks-ass.net>
-References: <20200722150149.525408253@infradead.org>
- <20200722153017.024407984@infradead.org>
- <20200725115828.GA1006124@gmail.com>
+        Sat, 25 Jul 2020 13:36:00 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55B04C08C5C0;
+        Sat, 25 Jul 2020 10:36:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=HowW+Suxtz81TGSiwDpCJ7aR4PS/v+JI8UnNpehKgCE=; b=oOORTrLpzGR+70FTjP4Dkq+xaI
+        Xs0eT0sxpQtOKCzXpGTjR9dJ3uJgMeXl/JrQd5R49//pxd35nUX5TQoSQmzZFfQsZZrC0dYdCfsJx
+        CzspIbVu2x0+Mk/Ha9V9Oq3M0SAT4SqMqmBLZefEWxz4zWwKp3kmmg7oUSWVdNxCp6uGGZ5tT9DjS
+        M+zkf1WNIL22p/zkIJgQ/GHJdTVqoljqFF5H3VA9KmX8vmcGR4kFA3gA5lziS+oSEe9+MFMpmrO/+
+        iyQAyKo0SgS6WtlWbbzyP8xYjpW75u0dDSmNkdSp2A2izmdmoJKgz19wGETqFvKxSmD4RvMH5qeTJ
+        wqrJwTiA==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jzO5P-0003kw-Bu; Sat, 25 Jul 2020 18:35:51 +0100
+Date:   Sat, 25 Jul 2020 18:35:51 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Matthew Hagan <mnhagan88@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] net: dsa: qca8k: Add 802.1q VLAN support
+Message-ID: <20200725173551.GN23489@earth.li>
+References: <20200721171624.GK23489@earth.li>
+ <1bf941f5-fdb3-3d9b-627a-a0464787b0ab@gmail.com>
+ <20200722193850.GM23489@earth.li>
+ <77c136d0-c183-ebb5-5954-647e08c8ec18@gmail.com>
+ <20200722225847.ssuxebcwr3fr5fh7@skbuf>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200725115828.GA1006124@gmail.com>
+In-Reply-To: <20200722225847.ssuxebcwr3fr5fh7@skbuf>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 01:58:28PM +0200, Ingo Molnar wrote:
-> 
-> * Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > Get rid of the __call_single_node union and clean up the API a little
-> > to avoid external code relying on the structure layout as much.
+On Thu, Jul 23, 2020 at 01:58:47AM +0300, Vladimir Oltean wrote:
+> On Wed, Jul 22, 2020 at 03:36:38PM -0700, Florian Fainelli wrote:
+> > On 7/22/20 12:38 PM, Jonathan McDowell wrote:
+> > > On Tue, Jul 21, 2020 at 10:26:07AM -0700, Florian Fainelli wrote:
+> > >> On 7/21/20 10:16 AM, Jonathan McDowell wrote:
+> > >>> This adds full 802.1q VLAN support to the qca8k, allowing the use of
+> > >>> vlan_filtering and more complicated bridging setups than allowed by
+> > >>> basic port VLAN support.
+> > >>>
+> > >>> Tested with a number of untagged ports with separate VLANs and then a
+> > >>> trunk port with all the VLANs tagged on it.
+> > >>
+> > >> This looks good to me at first glance, at least not seeing obvious
+> > >> issue, however below are a few questions:
+> > > 
+> > > Thanks for the comments.
+> > > 
+> > >> - vid == 0 appears to be unsupported according to your port_vlan_prepare
+> > >> callback, is this really the case, or is it more a case of VID 0 should
+> > >> be pvid untagged, which is what dsa_slave_vlan_rx_add_vid() would
+> > >> attempt to program
+> > > 
+> > > I don't quite follow you here. VID 0 doesn't appear to be supported by
+> > > the hardware (and several other DSA drivers don't seem to like it
+> > > either), hence the check; I'm not clear if there's something alternate I
+> > > should be doing in that case instead?
 > > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  drivers/gpu/drm/i915/i915_request.c |    4 ++--
-> >  include/linux/irq_work.h            |   33 +++++++++++++++++++++------------
-> >  include/linux/irqflags.h            |    4 ++--
-> >  kernel/bpf/stackmap.c               |    2 +-
-> >  kernel/irq_work.c                   |   18 +++++++++---------
-> >  kernel/printk/printk.c              |    6 ++----
-> >  kernel/rcu/tree.c                   |    3 +--
-> >  kernel/time/tick-sched.c            |    6 ++----
-> >  kernel/trace/bpf_trace.c            |    2 +-
-> >  9 files changed, 41 insertions(+), 37 deletions(-)
+> > Is it really that the hardware does not support it, or is it that it was
+> > not tried or poorly handled before? If the switch supports programming
+> > the VID 0 entry as PVID egress untagged, which is what
+> > dsa_slave_vlan_rx_add_vid() requests, then this is great, because you
+> > have almost nothing to do.
 > > 
-> > --- a/drivers/gpu/drm/i915/i915_request.c
-> > +++ b/drivers/gpu/drm/i915/i915_request.c
-> > @@ -196,7 +196,7 @@ __notify_execute_cb(struct i915_request
-> >  
-> >  	llist_for_each_entry_safe(cb, cn,
-> >  				  llist_del_all(&rq->execute_cb),
-> > -				  work.llnode)
-> > +				  work.node.llist)
-> >  		fn(&cb->work);
-> >  }
-> >  
-> > @@ -478,7 +478,7 @@ __await_execution(struct i915_request *r
-> >  	 * callback first, then checking the ACTIVE bit, we serialise with
-> >  	 * the completed/retired request.
-> >  	 */
-> > -	if (llist_add(&cb->work.llnode, &signal->execute_cb)) {
-> > +	if (llist_add(&cb->work.node.llist, &signal->execute_cb)) {
-> >  		if (i915_request_is_active(signal) ||
-> >  		    __request_in_flight(signal))
-> >  			__notify_execute_cb_imm(signal);
+> > If not, what you are doing is definitively okay, because you have a
+> > port_bridge_join that ensures that the port matrix gets configured
+> > correctly for bridging, if that was not supported we would be in trouble.
 > 
-> Hm, so I was looking at picking up some of the low risk bits (patches #1, #2, #4)
-> from this series for v5.9, but the above hunk depends non-trivially on the
-> linux-next DRM tree, in particular:
+> Things added by dsa_slave_vlan_rx_add_vid() are definitely not "pvid
+> untagged", they are installed with flags=0 which means "non-pvid,
+> egress-tagged", aka a simple vlan with tagged ingress and egress.
 > 
->   1d9221e9d395: ("drm/i915: Skip signaling a signaled request")
->   3255e00edb91: ("drm/i915: Remove i915_request.lock requirement for execution callbacks")
->   etc.
-> 
-> We could add it sans the i915 bits, but then we'd introduce a semantic 
-> conflict in linux-next which isn't nice so close to the merge window.
-> 
-> One solution would be to delay this into the merge window to after the 
-> DRM tree gets merged by Linus. Another would be to help out Stephen 
-> with the linux-next merge.
-> 
-> What would be your preference?
+> The case of VLAN 0 is special because according to 802.1Q it is "not a
+> VLAN", but simply a way to transmit the other stuff in a VLAN header,
+> namely a class of service (VLAN PCP). The VLAN ID should not be used for
+> segregation of forwarding domains, should not be assigned as port-based
+> VLAN to untagged traffic (from what I recall from the 802.1Q standard)
+> and should always be sent as egress-tagged.
+...
+> So maybe it's worth checking what is your switch's behavior with regard
+> to VLAN 0. If it already does what's supposed to, then you might just as
+> well stop fighting the system and silently accept the configuration
+> while not doing anything.  As Russell implied, the bridge can't add a
+> VLAN of 0. It is just the 8021q module that does it.  The fact that we
+> have the same callbacks being used for both in DSA is merely an artefact
+> of implementation.
 
-The alternative is splitting the above change out into it's own patch
-and see if Chris is willing to carry that in the DRM tree. IIRC these
-'new' names should already work with the current code.
+Ok, thanks for the clarification, that helps a lot.
 
-They're different names for the same field in that giant union thing.
+I've done some experimentation injecting packets on untagged ports with
+VLAN 0 headers. It looks like it's doing the right thing; the intact
+VLAN 0 / classification comes through to the CPU port, and the packet is
+also correctly sent out tagged with the correct VLAN (from the untagged
+port configuration) on a trunk port. So I think I can just silently drop
+the request for VLAN 0 configuration rather than returning an error.
+
+> > >> - since we have a qca8k_port_bridge_join() callback which programs the
+> > >> port lookup control register, putting all ports by default in VID==1
+> > >> does not break per-port isolation between non-bridged and bridged ports,
+> > >> right?
+> > > 
+> > > VLAN_MODE_NONE (set when we don't have VLAN filtering enabled)
+> > > configures us for port filtering, ignoring the VLAN info, so I think
+> > > we're good here.
+> > 
+> > OK, good, so just to be sure, there is no cross talk between non-bridged
+> > ports and bridged ports even when VLAN filtering is not enabled on the
+> > bridge, right?
+
+Yup. When VLAN filtering is off off we only allow ports to talk to each
+other that we get bridge_join calls for (that's the way the device is
+currently supported by the kernel).
+
+J.
+
+-- 
+/-\                             |  Be Ye Not Lost Among Precepts of
+|@/  Debian GNU/Linux Developer |                Order
+\-                              |
