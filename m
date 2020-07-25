@@ -2,159 +2,99 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCF0C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 13:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC7AC433E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E194920674
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 13:52:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqWuWZ01"
+	by mail.kernel.org (Postfix) with ESMTP id 9CE69206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 14:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgGYNwj (ORCPT
+        id S1727087AbgGYOID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 09:52:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726639AbgGYNwi (ORCPT
+        Sat, 25 Jul 2020 10:08:03 -0400
+Received: from mailomta30-sa.btinternet.com ([213.120.69.36]:43229 "EHLO
+        sa-prd-fep-044.btinternet.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726652AbgGYOID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 09:52:38 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65348C08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 06:52:38 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id c2so3100260edx.8
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 06:52:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=ypjj5pTRTJCGG8++SxjYKdcYv0L6mq3Sd3wiJ6Jmy7Q=;
-        b=AqWuWZ01ZIfafFnzObb2vAa1rB2DLoBdSS0ArEZ3p5K4zu9zu9IlBTcZwtgvYdqc2T
-         4CDIKRlioidVKO3p3jxd/KbHzeMBvOY2U6iaT1CpJk1QpDxxuV0PTgJOp8uYYVdB2im4
-         ajqqStEIsRMVSNDtUIASh9bPBKtXpyfUj3PFCj3+3VaejqN6DOdQOu7tTkzodx2J+bVw
-         dPy1ZuLGlepWxQykDzVt3Xon74ilyvqvlhDwe9sqIZ/LM9PLXnfxGo/mspbHF0nhkdt7
-         7SXNf0okLTxf2NzgJwIH05UH6n+uX6r6KwT9S3juUMJcUXZHKHYCyTmlVQm/lCpabky/
-         LQdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=ypjj5pTRTJCGG8++SxjYKdcYv0L6mq3Sd3wiJ6Jmy7Q=;
-        b=hhSNA2dmpa1dERrWDKtPSApg85Gc5B43Cxvxdn29xI9GQeieUDUGF7n3oysp27Q3hD
-         3r7qUNbSz0A7kxz75xP7pAKoGjnQ1xcY7MKiyxlUQDwjlhBYPISQRB9YHA0HvK67VqoV
-         qE7uWhnCKoNaBQW2knLbaN+hfnLd7iLC0C4nX5eq4EURIMCnmVzstVO2NYOEpMcUuAtN
-         KmvEgbfbrkQIJFIeCRgNISzsJpBcLPegNdkc23sU3F9pEi3bbIq0Ktk6AHr4BlOVpYfT
-         im+wlLan0K7v47WhX/WFZ4XEenqATAtvWbF3WmgwVhtc6DFP+znEQ9WizCzCyvUOPdbQ
-         CcPA==
-X-Gm-Message-State: AOAM532WBPY8ZRlbvU9RWrzFiALcuXhZz09MTEjdN1gn4PaGoKw6S2uf
-        OkWRHXMDVJJd0w+qqul/hVaTCd/G7g==
-X-Google-Smtp-Source: ABdhPJwVPbbE/10wTaNlUQ+7jgUBZiCUFb1Mn8lF5I2ve12C9A0eUah4bQzroLp5+LuSwKgsGcqfnw==
-X-Received: by 2002:a05:6402:2037:: with SMTP id ay23mr7361933edb.48.1595685156785;
-        Sat, 25 Jul 2020 06:52:36 -0700 (PDT)
-Received: from [192.168.200.34] (ip5b436a54.dynamic.kabel-deutschland.de. [91.67.106.84])
-        by smtp.gmail.com with ESMTPSA id d24sm2918549eje.21.2020.07.25.06.52.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Jul 2020 06:52:36 -0700 (PDT)
-Subject: Re: [PATCH v2 0/5] drm: rockchip: various ports for older VOPs
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200722181332.26995-1-knaerzche@gmail.com>
- <CAKMK7uGKyYea_9MamAQw2=ebjW=raYCDeFCf_5jyyJPHL9AZWA@mail.gmail.com>
-From:   Alex Bee <knaerzche@gmail.com>
-Message-ID: <47599ce1-2a3b-87eb-c46e-8f7f79ca945e@gmail.com>
-Date:   Sat, 25 Jul 2020 15:52:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 25 Jul 2020 10:08:03 -0400
+Received: from sa-prd-rgout-003.btmx-prd.synchronoss.net ([10.2.38.6])
+          by sa-prd-fep-044.btinternet.com with ESMTP
+          id <20200725140800.FARW3440.sa-prd-fep-044.btinternet.com@sa-prd-rgout-003.btmx-prd.synchronoss.net>;
+          Sat, 25 Jul 2020 15:08:00 +0100
+Authentication-Results: btinternet.com;
+    auth=pass (LOGIN) smtp.auth=j.oldman998@btinternet.com
+X-Originating-IP: [86.152.161.91]
+X-OWM-Source-IP: 86.152.161.91 (GB)
+X-OWM-Env-Sender: j.oldman998@btinternet.com
+X-VadeSecure-score: verdict=clean score=0/300, class=clean
+X-RazorGate-Vade: gggruggvucftvghtrhhoucdtuddrgeduiedrheehgdejfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemuceutffkvffkuffjvffgnffgvefqofdpqfgfvfenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepfdeolfhohhhnucfqlhgumhgrnheqfdcuoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqnecuggftrfgrthhtvghrnhepffevkeffkefffefhvedvveeiledvudeuvdetveeigfetteefffffkeeiudeikeevnecukfhppeekiedrudehvddrudeiuddrledunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehhvghlohephhgvnhhrhidpihhnvghtpeekiedrudehvddrudeiuddrledupdhmrghilhhfrhhomhepoehjohhhnhdrohhlughmrghnsehpohhlvghhihhllhdrtghordhukheqpdhrtghpthhtohepoeguvghvvghlsegurhhivhgvrhguvghvrdhoshhuohhslhdrohhrgheqpdhrtghpthhtohepoehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgheqpdhrtghpthhtohepoehguhhsthgrvhhosegvmhgsvgguuggvughorhdrtghomheqpdhrtghpthhtohepoehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgheq
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from henry (86.152.161.91) by sa-prd-rgout-003.btmx-prd.synchronoss.net (5.8.340) (authenticated as j.oldman998@btinternet.com)
+        id 5ED9AFBE088D266F; Sat, 25 Jul 2020 15:08:00 +0100
+Date:   Sat, 25 Jul 2020 15:07:59 +0100
+From:   "<John Oldman>" <john.oldman@polehill.co.uk>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        gustavo@embeddedor.com
+Subject: Re: [PATCH V2] Subject: [PATCH] staging: rtl8723bs: core: Using
+ comparison to true is error prone
+Message-ID: <20200725140759.GA15113@henry>
+References: <20200725132806.15019-1-john.oldman@polehill.co.uk>
+ <20200725133434.GA1143075@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKMK7uGKyYea_9MamAQw2=ebjW=raYCDeFCf_5jyyJPHL9AZWA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200725133434.GA1143075@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jul 25, 2020 at 03:34:34PM +0200, Greg KH wrote:
+> On Sat, Jul 25, 2020 at 02:28:06PM +0100, John Oldman wrote:
+> > clear below issues reported by checkpatch.pl:
+> > 
+> > CHECK: Using comparison to true is error prone
+> 
+> Your subject line is very odd :(
 
-Am 22.07.20 um 23:43 schrieb Daniel Vetter:
-> On Wed, Jul 22, 2020 at 8:13 PM Alex Bee <knaerzche@gmail.com> wrote:
->> Hi,
->>
->> this series mainly ports existining functionality to older SoCs - most
->> importantly enables alpha blending for RK3036, RK3066, RK3126 and
->> RK3188.
->> Besides that, it also changes the window type from DRM_PLANE_TYPE_CURSOR
->> to DRM_PLANE_TYPE_OVERLAY for VOPs that have only one (1) overlay window.
-> This doesn't make much sense, the cursor overlay is really just a hint
-> for legacy ioctls that this is the overlay that should be used for
-> cursors. Compositors should try to use such planes as full overlays
-> (if they don't want to use them as a cursor). So sounds like a case of
-> "fix your compositor".
-I agree here - but: If HWC windows would have been implemented in this 
-particular driver, their max size would be 128x128 on some SoCs - so 
-they woudn't be really suitable to create an OSD overlay at 4K, for 
-example. I don't know, but I guess other vendors implement their HWC 
-windows on this reduced HW resources as well. I guess that is one of the 
-reasons, why userspace, which aims to be cross-plattfrom, avoids 
-DRM_PLANE_TYPE_CURSOR when its looking for an usable overlay plane. (a 
-heuristic, indeed)
-> For atomic there's 0 difference between a overlay or a cursor (primary
-> plane is still treated somewhat special in the RMFB ioctl, but again
-> that's for backwards compat reasons with existing uapi, not because
-> the primary plane is different).
->
-> What does happen though is that this breaks cursor for legacy
-> userspace, which is probably not really what you want.
+Thanks, I should read all before I send: I will re-send the patch.
 
-Indeed not.
-
-Beforhand I was submiiting this, I looked arround and couldn't find 
-anything which relies or even depends of a cursor window to be 
-available. Even if: as per spec only one DRM_PLANE_TYPE_PRIMARY is 
-mandatory, everything else is optional.
-
-> -Daniel
->
->
->> Regards,
->> Alex
->>
->> Changes in v2:
->> - drop not yet upstreamed dsp_data_swap from RK3188 regs
->> - rephrase most commit messages
->>
->> Alex Bee (5):
->>    drm: rockchip: add scaling for RK3036 win1
->>    drm: rockchip: add missing registers for RK3188
->>    drm: rockchip: add alpha support for RK3036, RK3066, RK3126 and RK3188
->>    drm: rockchip: set alpha_en to 0 if it is not used
->>    drm: rockchip: use overlay windows as such
->>
->>   drivers/gpu/drm/rockchip/rockchip_drm_vop.c |  1 +
->>   drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 42 ++++++++++++++++++---
->>   drivers/gpu/drm/rockchip/rockchip_vop_reg.h |  1 +
->>   3 files changed, 38 insertions(+), 6 deletions(-)
->>
->> --
->> 2.17.1
->>
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
-
-Best Regards
-
+> 
+> > Signed-off-by: John Oldman <john.oldman@polehill.co.uk>
+> > ---
+> > v1: Initial attempt.
+> > v2: Removed unneccessary parentheses around 'pregistrypriv->ht_enable'
+> > Also considered clearing 'CHECK: Logical continuations should be on the previous line' report
+> > but this results in exceeding line length guideline.
+> >  drivers/staging/rtl8723bs/core/rtw_ieee80211.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/staging/rtl8723bs/core/rtw_ieee80211.c b/drivers/staging/rtl8723bs/core/rtw_ieee80211.c
+> > index ca98274ae390..7aacbe1b763e 100644
+> > --- a/drivers/staging/rtl8723bs/core/rtw_ieee80211.c
+> > +++ b/drivers/staging/rtl8723bs/core/rtw_ieee80211.c
+> > @@ -363,8 +363,9 @@ int rtw_generate_ie(struct registry_priv *pregistrypriv)
+> >  	}
+> > 
+> >  	/* HT Cap. */
+> > -	if (((pregistrypriv->wireless_mode&WIRELESS_11_5N) || (pregistrypriv->wireless_mode&WIRELESS_11_24N))
+> > -		&& (pregistrypriv->ht_enable == true)) {
+> > +	if (((pregistrypriv->wireless_mode & WIRELESS_11_5N)
+> > +	      || (pregistrypriv->wireless_mode & WIRELESS_11_24N))
+> > +	      && pregistrypriv->ht_enable) {
+> 
+>  || and && go on the end of the line, not the front.
+> 
+> But you also changed other things that were not needed here, and you did
+> not say that in your changelog text :(
+> 
+> thanks,
+> 
+> greg k-h
