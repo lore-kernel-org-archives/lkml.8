@@ -2,109 +2,128 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 12:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 12:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 197A520674
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 12:14:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z15MJQW3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pMvrkJyg"
+	by mail.kernel.org (Postfix) with ESMTP id 0F812206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 12:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595679615;
+	bh=KaTQvsTEIFtOB1cQHAsUX10SltS7lQqN3GpX7sQ5GPY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=O/H3vqhPoh5ODP/ycurqonOuTLRP5wit6cZmUX0sBC6jTbwGOTu2BAln2L3b0WGvi
+	 2j1La2aCPSu4GDSQRaHpHdoYC0zmvOvVfKuhHRmNoLMwrRQI3ehW9n+L5mkju7JqPm
+	 0e+K2PmLMJjwQ6OCF56bVwxcEc7F+XAJ57z1PtJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgGYMOs (ORCPT
+        id S1727029AbgGYMUO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 08:14:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44114 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbgGYMOq (ORCPT
+        Sat, 25 Jul 2020 08:20:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49518 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726613AbgGYMUN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 08:14:46 -0400
-Date:   Sat, 25 Jul 2020 12:14:42 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595679283;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UWbLuEt0GcJJoCHotHJIuarMWHFXHOnLPSPfL0x79EU=;
-        b=Z15MJQW3+LNXkevbMqW6ETf7Q7K8JYwEgNLP9KyuhcyQUdNIdMSGfJPClUYx2njiRH966w
-        bWU6C+FWdiuU/SCSKNWxgv9g1Vuxrs2FY5dtC1rSrOGiYFoJuSXHD164POiAFdPheNbQN7
-        04G5aGIPQw8YbNiP8Vodj6f3hMOWFVUdNmch8WEUi7p1DPKbWBGEb/LnfJfSdjzCAe/gl2
-        jatrzWIJItwwKMPaNG0y1bMOaXSnCoaJbgcoF/rG29+VEcpnyIygPx9LeQb74qFHU/8spp
-        gd9OMvwgO0WE1JvSlGdkuYV89ypn2oM0n4HnQLtS54qZkWSZ6ldrZSa6utFzxw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595679283;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UWbLuEt0GcJJoCHotHJIuarMWHFXHOnLPSPfL0x79EU=;
-        b=pMvrkJyga2TMB/YHbvagGNleWhyptSpGy4xeDSAySUikubRBxNyb0ENTo1DX5WZN03lz7N
-        h80dcya2DcgrNiAw==
-From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu: Add Lakefield, Alder Lake and Rocket Lake
- models to the to Intel CPU family
-Cc:     Tony Luck <tony.luck@intel.com>, Ingo Molnar <mingo@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200721043749.31567-1-tony.luck@intel.com>
-References: <20200721043749.31567-1-tony.luck@intel.com>
+        Sat, 25 Jul 2020 08:20:13 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-403-OmdSWnoBOd-4mKuThhLMSQ-1; Sat, 25 Jul 2020 08:20:09 -0400
+X-MC-Unique: OmdSWnoBOd-4mKuThhLMSQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 64777106B243;
+        Sat, 25 Jul 2020 12:20:07 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.40.192.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E38E05D9DC;
+        Sat, 25 Jul 2020 12:20:00 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jin Yao <yao.jin@linux.intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH 1/2] perf tools: Allow r0x<HEX> event syntax
+Date:   Sat, 25 Jul 2020 14:19:58 +0200
+Message-Id: <20200725121959.1181869-1-jolsa@kernel.org>
 MIME-Version: 1.0
-Message-ID: <159567928234.4006.15571980059311082712.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cpu branch of tip:
+Adding support to specify raw event with 'r0<HEX>' syntax within
+pmu term syntax like:
 
-Commit-ID:     e00b62f0b06d0ae2b844049f216807617aff0cdb
-Gitweb:        https://git.kernel.org/tip/e00b62f0b06d0ae2b844049f216807617aff0cdb
-Author:        Tony Luck <tony.luck@intel.com>
-AuthorDate:    Mon, 20 Jul 2020 21:37:49 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 25 Jul 2020 12:16:59 +02:00
+  -e cpu/r0xdead/
 
-x86/cpu: Add Lakefield, Alder Lake and Rocket Lake models to the to Intel CPU family
+It will be used to specify raw events in cases where they conflict
+with real pmu terms, like 'read', which is valid raw event syntax,
+but also a possible pmu term name as reported by Jin Yao.
 
-Add three new Intel CPU models.
-
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200721043749.31567-1-tony.luck@intel.com
+Reported-by: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- arch/x86/include/asm/intel-family.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/perf/Documentation/perf-list.txt | 1 +
+ tools/perf/tests/parse-events.c        | 5 +++++
+ tools/perf/util/parse-events.l         | 1 +
+ 3 files changed, 7 insertions(+)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index a338a6d..5e658ba 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -89,8 +89,15 @@
- #define INTEL_FAM6_COMETLAKE		0xA5
- #define INTEL_FAM6_COMETLAKE_L		0xA6
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 376a50b3452d..10ed539a8859 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -119,6 +119,7 @@ It's also possible to use pmu syntax:
  
-+#define INTEL_FAM6_ROCKETLAKE		0xA7
-+
- #define INTEL_FAM6_SAPPHIRERAPIDS_X	0x8F
+  perf record -e r1a8 -a sleep 1
+  perf record -e cpu/r1a8/ ...
++ perf record -e cpu/r0x1a8/ ...
  
-+/* Hybrid Core/Atom Processors */
-+
-+#define	INTEL_FAM6_LAKEFIELD		0x8A
-+#define INTEL_FAM6_ALDERLAKE		0x97
-+
- /* "Small Core" Processors (Atom) */
+ You should refer to the processor specific documentation for getting these
+ details. Some of them are referenced in the SEE ALSO section below.
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 895188b63f96..5aaddcb0058a 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -1766,6 +1766,11 @@ static struct evlist_test test__events_pmu[] = {
+ 		.check = test__checkevent_raw_pmu,
+ 		.id    = 4,
+ 	},
++	{
++		.name  = "software/r0x1a/",
++		.check = test__checkevent_raw_pmu,
++		.id    = 4,
++	},
+ };
  
- #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
+ struct terms_test {
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index 56912c9641f5..44c85fea5d00 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -293,6 +293,7 @@ percore			{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_PERCORE); }
+ aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
+ aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
+ r{num_raw_hex}		{ return raw(yyscanner); }
++r0x{num_raw_hex}	{ return raw(yyscanner); }
+ ,			{ return ','; }
+ "/"			{ BEGIN(INITIAL); return '/'; }
+ {name_minus}		{ return str(yyscanner, PE_NAME); }
+-- 
+2.25.4
+
