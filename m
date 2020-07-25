@@ -2,316 +2,82 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D058EC4346A
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5743C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5909206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:06:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="SNCHn63E"
+	by mail.kernel.org (Postfix) with ESMTP id 8E9102065F
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 00:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgGYAGf (ORCPT
+        id S1726873AbgGYANZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 20:06:35 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:12438 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727103AbgGYAEj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 20:04:39 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ONo4QH016495
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:37 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=VJIpv4KJ99emqMyK/KN1Btfdwg++KpRP9LTaPMgfZ1Q=;
- b=SNCHn63Ek4NaltMrgebIR/SgI+7ZNF2OFppjpUSaXjB5szVB05LRHIIckcAu4Nz7aNK0
- PcBDAQQc0iVUGyxNWGHpAXAY3V3T+3nqTXy4CI+s2+OCbCWFCy/XLHyA1XNSZa1QLvnj
- yRAx+90UAioNQEBfgomLWQuZ2IkwKru8Lhw= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 32g0nu2kne-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 24 Jul 2020 17:04:37 -0700
-Received: from intmgw004.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Fri, 24 Jul 2020 17:04:36 -0700
-Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id 3E9E71B35AA4; Fri, 24 Jul 2020 17:04:27 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
-To:     <bpf@vger.kernel.org>
-CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
-        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next 28/35] bpf: eliminate rlimit-based memory accounting for bpf progs
-Date:   Fri, 24 Jul 2020 17:04:03 -0700
-Message-ID: <20200725000410.3566700-29-guro@fb.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200725000410.3566700-1-guro@fb.com>
-References: <20200725000410.3566700-1-guro@fb.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-24_10:2020-07-24,2020-07-24 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 bulkscore=0 spamscore=0
- suspectscore=38 priorityscore=1501 mlxlogscore=999 impostorscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007240164
-X-FB-Internal: deliver
+        Fri, 24 Jul 2020 20:13:25 -0400
+Received: from out1.zte.com.cn ([202.103.147.172]:63072 "EHLO mxct.zte.com.cn"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726576AbgGYANZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 20:13:25 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id 278F0580FEE0C14D053A;
+        Sat, 25 Jul 2020 08:13:22 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id 06P0DLa9078414;
+        Sat, 25 Jul 2020 08:13:21 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2020072508140226-4388898 ;
+          Sat, 25 Jul 2020 08:14:02 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     linux@armlinux.org.uk
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
+Subject: [PATCH v2] ARM: milbeaut: Fix possible device node reference leak
+Date:   Sat, 25 Jul 2020 08:16:48 +0800
+Message-Id: <1595636208-15179-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2020-07-25 08:14:02,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2020-07-25 08:13:26,
+        Serialize complete at 2020-07-25 08:13:26
+X-MAIL: mse-fl2.zte.com.cn 06P0DLa9078414
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not use rlimit-based memory accounting for bpf progs. It has been
-replaced with memcg-based memory accounting.
+From: Liao Pingfang <liao.pingfang@zte.com.cn>
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
+The variable np in function m10v_smp_init takes the return value
+of of_find_compatible_node, which gets a node but does not put it. If
+this node is not put it may cause a memory leak. Hence put np after its
+life has been exhausted.
+
+Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
 ---
- include/linux/bpf.h  | 11 ------
- kernel/bpf/core.c    | 12 ++-----
- kernel/bpf/syscall.c | 86 ++++++--------------------------------------
- 3 files changed, 12 insertions(+), 97 deletions(-)
+Changes in v2: improve the subject and description of this commit.
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 055c693d9928..0c443468200e 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1095,8 +1095,6 @@ void bpf_prog_sub(struct bpf_prog *prog, int i);
- void bpf_prog_inc(struct bpf_prog *prog);
- struct bpf_prog * __must_check bpf_prog_inc_not_zero(struct bpf_prog *pr=
-og);
- void bpf_prog_put(struct bpf_prog *prog);
--int __bpf_prog_charge(struct user_struct *user, u32 pages);
--void __bpf_prog_uncharge(struct user_struct *user, u32 pages);
- void __bpf_free_used_maps(struct bpf_prog_aux *aux,
- 			  struct bpf_map **used_maps, u32 len);
-=20
-@@ -1380,15 +1378,6 @@ bpf_prog_inc_not_zero(struct bpf_prog *prog)
- 	return ERR_PTR(-EOPNOTSUPP);
- }
-=20
--static inline int __bpf_prog_charge(struct user_struct *user, u32 pages)
--{
--	return 0;
--}
--
--static inline void __bpf_prog_uncharge(struct user_struct *user, u32 pag=
-es)
--{
--}
--
- static inline int bpf_obj_get_user(const char __user *pathname, int flag=
-s)
- {
- 	return -EOPNOTSUPP;
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index daab8dcafbd4..23b8ff109ac8 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -219,23 +219,15 @@ struct bpf_prog *bpf_prog_realloc(struct bpf_prog *=
-fp_old, unsigned int size,
- {
- 	gfp_t gfp_flags =3D GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
- 	struct bpf_prog *fp;
--	u32 pages, delta;
--	int ret;
-+	u32 pages;
-=20
- 	size =3D round_up(size, PAGE_SIZE);
- 	pages =3D size / PAGE_SIZE;
- 	if (pages <=3D fp_old->pages)
- 		return fp_old;
-=20
--	delta =3D pages - fp_old->pages;
--	ret =3D __bpf_prog_charge(fp_old->aux->user, delta);
--	if (ret)
--		return NULL;
--
- 	fp =3D __vmalloc(size, gfp_flags);
--	if (fp =3D=3D NULL) {
--		__bpf_prog_uncharge(fp_old->aux->user, delta);
--	} else {
-+	if (fp) {
- 		memcpy(fp, fp_old, fp_old->pages * PAGE_SIZE);
- 		fp->pages =3D pages;
- 		fp->aux->prog =3D fp;
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index ae51e2363cc1..7f0bf60f5218 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -337,23 +337,6 @@ void bpf_map_init_from_attr(struct bpf_map *map, uni=
-on bpf_attr *attr)
- 	map->numa_node =3D bpf_map_attr_numa_node(attr);
- }
-=20
--static int bpf_charge_memlock(struct user_struct *user, u32 pages)
--{
--	unsigned long memlock_limit =3D rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
--
--	if (atomic_long_add_return(pages, &user->locked_vm) > memlock_limit) {
--		atomic_long_sub(pages, &user->locked_vm);
--		return -EPERM;
--	}
--	return 0;
--}
--
--static void bpf_uncharge_memlock(struct user_struct *user, u32 pages)
--{
--	if (user)
--		atomic_long_sub(pages, &user->locked_vm);
--}
--
- static int bpf_map_alloc_id(struct bpf_map *map)
- {
- 	int id;
-@@ -1563,51 +1546,6 @@ static void bpf_audit_prog(const struct bpf_prog *=
-prog, unsigned int op)
- 	audit_log_end(ab);
- }
-=20
--int __bpf_prog_charge(struct user_struct *user, u32 pages)
--{
--	unsigned long memlock_limit =3D rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
--	unsigned long user_bufs;
--
--	if (user) {
--		user_bufs =3D atomic_long_add_return(pages, &user->locked_vm);
--		if (user_bufs > memlock_limit) {
--			atomic_long_sub(pages, &user->locked_vm);
--			return -EPERM;
--		}
--	}
--
--	return 0;
--}
--
--void __bpf_prog_uncharge(struct user_struct *user, u32 pages)
--{
--	if (user)
--		atomic_long_sub(pages, &user->locked_vm);
--}
--
--static int bpf_prog_charge_memlock(struct bpf_prog *prog)
--{
--	struct user_struct *user =3D get_current_user();
--	int ret;
--
--	ret =3D __bpf_prog_charge(user, prog->pages);
--	if (ret) {
--		free_uid(user);
--		return ret;
--	}
--
--	prog->aux->user =3D user;
--	return 0;
--}
--
--static void bpf_prog_uncharge_memlock(struct bpf_prog *prog)
--{
--	struct user_struct *user =3D prog->aux->user;
--
--	__bpf_prog_uncharge(user, prog->pages);
--	free_uid(user);
--}
--
- static int bpf_prog_alloc_id(struct bpf_prog *prog)
- {
- 	int id;
-@@ -1657,7 +1595,7 @@ static void __bpf_prog_put_rcu(struct rcu_head *rcu=
-)
-=20
- 	kvfree(aux->func_info);
- 	kfree(aux->func_info_aux);
--	bpf_prog_uncharge_memlock(aux->prog);
-+	free_uid(aux->user);
- 	security_bpf_prog_free(aux);
- 	bpf_prog_free(aux->prog);
- }
-@@ -2090,7 +2028,7 @@ static int bpf_prog_load(union bpf_attr *attr, unio=
-n bpf_attr __user *uattr)
- 		tgt_prog =3D bpf_prog_get(attr->attach_prog_fd);
- 		if (IS_ERR(tgt_prog)) {
- 			err =3D PTR_ERR(tgt_prog);
--			goto free_prog_nouncharge;
-+			goto free_prog;
- 		}
- 		prog->aux->linked_prog =3D tgt_prog;
- 	}
-@@ -2099,18 +2037,15 @@ static int bpf_prog_load(union bpf_attr *attr, un=
-ion bpf_attr __user *uattr)
-=20
- 	err =3D security_bpf_prog_alloc(prog->aux);
- 	if (err)
--		goto free_prog_nouncharge;
--
--	err =3D bpf_prog_charge_memlock(prog);
--	if (err)
--		goto free_prog_sec;
-+		goto free_prog;
-=20
-+	prog->aux->user =3D get_current_user();
- 	prog->len =3D attr->insn_cnt;
-=20
- 	err =3D -EFAULT;
- 	if (copy_from_user(prog->insns, u64_to_user_ptr(attr->insns),
- 			   bpf_prog_insn_size(prog)) !=3D 0)
--		goto free_prog;
-+		goto free_prog_sec;
-=20
- 	prog->orig_prog =3D NULL;
- 	prog->jited =3D 0;
-@@ -2121,19 +2056,19 @@ static int bpf_prog_load(union bpf_attr *attr, un=
-ion bpf_attr __user *uattr)
- 	if (bpf_prog_is_dev_bound(prog->aux)) {
- 		err =3D bpf_prog_offload_init(prog, attr);
- 		if (err)
--			goto free_prog;
-+			goto free_prog_sec;
- 	}
-=20
- 	/* find program type: socket_filter vs tracing_filter */
- 	err =3D find_prog_type(type, prog);
- 	if (err < 0)
--		goto free_prog;
-+		goto free_prog_sec;
-=20
- 	prog->aux->load_time =3D ktime_get_boottime_ns();
- 	err =3D bpf_obj_name_cpy(prog->aux->name, attr->prog_name,
- 			       sizeof(attr->prog_name));
- 	if (err < 0)
--		goto free_prog;
-+		goto free_prog_sec;
-=20
- 	/* run eBPF verifier */
- 	err =3D bpf_check(&prog, attr, uattr);
-@@ -2178,11 +2113,10 @@ static int bpf_prog_load(union bpf_attr *attr, un=
-ion bpf_attr __user *uattr)
- 	 */
- 	__bpf_prog_put_noref(prog, prog->aux->func_cnt);
- 	return err;
--free_prog:
--	bpf_prog_uncharge_memlock(prog);
- free_prog_sec:
-+	free_uid(prog->aux->user);
- 	security_bpf_prog_free(prog->aux);
--free_prog_nouncharge:
-+free_prog:
- 	bpf_prog_free(prog);
- 	return err;
- }
---=20
-2.26.2
+ arch/arm/mach-milbeaut/platsmp.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/mach-milbeaut/platsmp.c b/arch/arm/mach-milbeaut/platsmp.c
+index 3ea880f..1f1ff21 100644
+--- a/arch/arm/mach-milbeaut/platsmp.c
++++ b/arch/arm/mach-milbeaut/platsmp.c
+@@ -53,6 +53,7 @@ static void m10v_smp_init(unsigned int max_cpus)
+ 		return;
+ 
+ 	m10v_smp_base = of_iomap(np, 0);
++	of_node_put(np);
+ 	if (!m10v_smp_base)
+ 		return;
+ 
+-- 
+2.9.5
 
