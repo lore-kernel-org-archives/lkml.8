@@ -7,128 +7,148 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E0CC433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 518792070C
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA2E206C1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgGYDTU (ORCPT
+        id S1726732AbgGYDZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 23:19:20 -0400
-Received: from mga03.intel.com ([134.134.136.65]:64414 "EHLO mga03.intel.com"
+        Fri, 24 Jul 2020 23:25:22 -0400
+Received: from mga04.intel.com ([192.55.52.120]:10202 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726572AbgGYDTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 23:19:19 -0400
-IronPort-SDR: p1fCmPYYJggvcYmHPaywObo2/8T0/KAWO4dAHiSVm/gM9toWuh2Cj4G6+B+r60DFzalZ9cYkxn
- kraHVn76qoGw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="150801395"
+        id S1726572AbgGYDZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 23:25:22 -0400
+IronPort-SDR: o9RvZeBGp7YEphIY6umZ+RWxEQzbk+q1PBhyJFp4EgJ+gNZ1reYjjrGVopff1x0qF8xKs9CIpg
+ XRXMGqAUr7ow==
+X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="148297666"
 X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="150801395"
+   d="scan'208";a="148297666"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 20:19:19 -0700
-IronPort-SDR: rF/DkQl54TI4Kf7+dlXHs3+a+C2DbqtD6D7pz5Fjiclb1b+Wq8Nd2Ee4WrJzgbyUzdgZM1Szvp
- tE+SJlCJ+m1Q==
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 20:25:21 -0700
+IronPort-SDR: eOIC+S4SulEMj5oJcjW9Qdy4I/m4tVpBq2wf0qTX16TbvS5WituY8v9vhrcYi+Sw5+PB1sWWu/
+ Ta50tujzkKYw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="363549309"
+   d="scan'208";a="289178631"
 Received: from jcrametz-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.73])
-  by orsmga001.jf.intel.com with ESMTP; 24 Jul 2020 20:19:13 -0700
-Date:   Sat, 25 Jul 2020 06:19:11 +0300
+  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2020 20:25:18 -0700
+Date:   Sat, 25 Jul 2020 06:25:16 +0300
 From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH v5 5/6] kprobes: Use text_alloc() and text_free()]
-Message-ID: <20200725031911.GH17052@linux.intel.com>
-References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
- <20200724050553.1724168-6-jarkko.sakkinen@linux.intel.com>
- <20200724092746.GD517988@gmail.com>
- <CAMj1kXHeSVn7W-Awq2Z57w4OevaLLLX7QrPgnzceiaQ2PooQXg@mail.gmail.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] watch_queue: Limit the number of watches a user can hold
+Message-ID: <20200725032516.GA78242@linux.intel.com>
+References: <159562904644.2287160.13294507067766261970.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXHeSVn7W-Awq2Z57w4OevaLLLX7QrPgnzceiaQ2PooQXg@mail.gmail.com>
+In-Reply-To: <159562904644.2287160.13294507067766261970.stgit@warthog.procyon.org.uk>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 03:16:08PM +0300, Ard Biesheuvel wrote:
-> On Fri, 24 Jul 2020 at 12:27, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >
-> > * Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > > Use text_alloc() and text_free() instead of module_alloc() and
-> > > module_memfree() when an arch provides them.
-> > >
-> > > Cc: linux-mm@kvack.org
-> > > Cc: Andi Kleen <ak@linux.intel.com>
-> > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > > ---
-> > >  kernel/kprobes.c | 9 +++++++++
-> > >  1 file changed, 9 insertions(+)
-> > >
-> > > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > > index 4e46d96d4e16..611fcda9f6bf 100644
-> > > --- a/kernel/kprobes.c
-> > > +++ b/kernel/kprobes.c
-> > > @@ -40,6 +40,7 @@
-> > >  #include <asm/cacheflush.h>
-> > >  #include <asm/errno.h>
-> > >  #include <linux/uaccess.h>
-> > > +#include <linux/vmalloc.h>
-> > >
-> > >  #define KPROBE_HASH_BITS 6
-> > >  #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
-> > > @@ -111,12 +112,20 @@ enum kprobe_slot_state {
-> > >
-> > >  void __weak *alloc_insn_page(void)
-> > >  {
-> > > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > > +     return text_alloc(PAGE_SIZE);
-> > > +#else
-> > >       return module_alloc(PAGE_SIZE);
-> > > +#endif
-> > >  }
-> > >
-> > >  void __weak free_insn_page(void *page)
-> > >  {
-> > > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > > +     text_free(page);
-> > > +#else
-> > >       module_memfree(page);
-> > > +#endif
-> > >  }
-> >
-> > I've read the observations in the other threads, but this #ifdef
-> > jungle is silly, it's a de-facto open coded text_alloc() with a
-> > module_alloc() fallback...
-> >
+On Fri, Jul 24, 2020 at 11:17:26PM +0100, David Howells wrote:
+> Impose a limit on the number of watches that a user can hold so that they
+> can't use this mechanism to fill up all the available memory.
 > 
-> Also, as I attempted to explain before, there is no reason to allocate
-> kasan shadow for any of these use cases, so cloning module_alloc() to
-> implement text_alloc() is not the correct approach even on x86.
+> This is done by putting a counter in user_struct that's incremented when a
+> watch is allocated and decreased when it is released.  If the number
+> exceeds the RLIMIT_NOFILE limit, the watch is rejected with EAGAIN.
 > 
-> I suppose module_alloc() could be reimplemented in terms of
-> text_alloc() in this case, but simply relabelling it like this seems
-> inappropriate on all architectures.
+> This can be tested by the following means:
+> 
+>  (1) Create a watch queue and attach it to fd 5 in the program given - in
+>      this case, bash:
+> 
+> 	keyctl watch_session /tmp/nlog /tmp/gclog 5 bash
+> 
+>  (2) In the shell, set the maximum number of files to, say, 99:
+> 
+> 	ulimit -n 99
+> 
+>  (3) Add 200 keyrings:
+> 
+> 	for ((i=0; i<200; i++)); do keyctl newring a$i @s || break; done
+> 
+>  (4) Try to watch all of the keyrings:
+> 
+> 	for ((i=0; i<200; i++)); do echo $i; keyctl watch_add 5 %:a$i || break; done
+> 
+>      This should fail when the number of watches belonging to the user hits
+>      99.
+> 
+>  (5) Remove all the keyrings and all of those watches should go away:
+> 
+> 	for ((i=0; i<200; i++)); do keyctl unlink %:a$i; done
+> 
+>  (6) Kill off the watch queue by exiting the shell spawned by
+>      watch_session.
+> 
+> Fixes: c73be61cede5 ("pipe: Add general notification queue support")
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> ---
+> 
+>  include/linux/sched/user.h |    3 +++
+>  kernel/watch_queue.c       |    8 ++++++++
+>  2 files changed, 11 insertions(+)
+> 
+> diff --git a/include/linux/sched/user.h b/include/linux/sched/user.h
+> index 917d88edb7b9..a8ec3b6093fc 100644
+> --- a/include/linux/sched/user.h
+> +++ b/include/linux/sched/user.h
+> @@ -36,6 +36,9 @@ struct user_struct {
+>      defined(CONFIG_NET) || defined(CONFIG_IO_URING)
+>  	atomic_long_t locked_vm;
+>  #endif
+> +#ifdef CONFIG_WATCH_QUEUE
+> +	atomic_t nr_watches;	/* The number of watches this user currently has */
+> +#endif
+>  
+>  	/* Miscellaneous per-user rate limit */
+>  	struct ratelimit_state ratelimit;
+> diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
+> index f74020f6bd9d..0ef8f65bd2d7 100644
+> --- a/kernel/watch_queue.c
+> +++ b/kernel/watch_queue.c
+> @@ -393,6 +393,7 @@ static void free_watch(struct rcu_head *rcu)
+>  	struct watch *watch = container_of(rcu, struct watch, rcu);
+>  
+>  	put_watch_queue(rcu_access_pointer(watch->queue));
+> +	atomic_dec(&watch->cred->user->nr_watches);
+>  	put_cred(watch->cred);
+>  }
+>  
+> @@ -452,6 +453,13 @@ int add_watch_to_object(struct watch *watch, struct watch_list *wlist)
+>  	watch->cred = get_current_cred();
+>  	rcu_assign_pointer(watch->watch_list, wlist);
+>  
+> +	if (atomic_inc_return(&watch->cred->user->nr_watches) >
+> +	    task_rlimit(current, RLIMIT_NOFILE)) {
+> +		atomic_dec(&watch->cred->user->nr_watches);
+> +		put_cred(watch->cred);
+> +		return -EAGAIN;
+> +	}
+> +
+>  	spin_lock_bh(&wqueue->lock);
+>  	kref_get(&wqueue->usage);
+>  	kref_get(&watch->usage);
+> 
+> 
 
-I agree with this. Even if there was chance to do a merge of some
-kind, it should probably happen over time and accept some redundancy
-first.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+
+David, BTW, would it be possible to push keyrings to lore.kernel.org?
+
+I don't have an archive for keyrings, which means that I cannot push
+this forward.
 
 /Jarkko
