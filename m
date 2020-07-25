@@ -2,122 +2,299 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1192EC433E3
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D56AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E56A52065F
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B992070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 10:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Hhyjye5x"
+	dkim=pass (1024-bit key) header.d=dd-wrt.com header.i=@dd-wrt.com header.b="s3f/EwNj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgGYKhi (ORCPT
+        id S1726963AbgGYKiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 06:37:38 -0400
-Received: from mout.web.de ([212.227.15.4]:37545 "EHLO mout.web.de"
+        Sat, 25 Jul 2020 06:38:10 -0400
+Received: from mail.as201155.net ([185.84.6.188]:41765 "EHLO mail.as201155.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgGYKhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 06:37:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1595673444;
-        bh=8BMDX0FAWi5z2eYjhdMKeiO1bxSYdDfE+5y4dWfsENc=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=Hhyjye5xwfPohA6Ezv6nz9YxDZqsKfgsRhMDN+4Bv6uM2fWG+zqKXMAdFvD7deIgk
-         jwdBJLCwZDsJWgSYb8bs6MNuo6iXsdbKRkl+6x00MuzZtt2JXrk0w9a5fAXFL/A0e1
-         zCZy5Y1Q1IU29b6DozKresrhxHRCGjdpn13TP72k=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.135.94.55]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MdwNW-1kY4PN3djS-00b4pQ; Sat, 25
- Jul 2020 12:37:23 +0200
-To:     Li Heng <liheng40@huawei.com>, linux-rdma@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: Re: [PATCH] RDMA/core: Fix return error value to negative in
- _ib_modify_qp()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <dea0923d-669e-b5c6-9192-4c4034290b53@web.de>
-Date:   Sat, 25 Jul 2020 12:37:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726763AbgGYKiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 06:38:09 -0400
+Received: from smtps.newmedia-net.de ([2a05:a1c0:0:de::167]:48828 helo=webmail.newmedia-net.de)
+        by mail.as201155.net with esmtps (TLSv1:DHE-RSA-AES256-SHA:256)
+        (Exim 4.82_1-5b7a7c0-XX)
+        (envelope-from <s.gottschall@dd-wrt.com>)
+        id 1jzHZ5-0003nz-2W; Sat, 25 Jul 2020 12:38:03 +0200
+X-CTCH-RefID: str=0001.0A782F21.5F1C0B8B.0051,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=dd-wrt.com; s=mikd;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject; bh=jq3dlc+cdk2c+17CURe7NgYwWb2Z4/X0bonnPMZqnwU=;
+        b=s3f/EwNj9aECmwSa4lZEFSQWpxhwGjBE+CtfnLMUCESNry3Xk03e2WYds8iESztGNVoXOHof93R0U7M4zuFtt512wYXzfolDjd66dYrzxYuFOJx1npOBkEEkI+x+Zea49TfKrAYNPG4lI0EdvzEGYLQ8uCL4J2zTozrXjVgDSEs=;
+Subject: Re: [RFC 0/7] Add support to process rx packets in thread
+To:     Hillf Danton <hdanton@sina.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Rakesh Pillai <pillair@codeaurora.org>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
+        "dianders@chromium.org" <dianders@chromium.org>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        "evgreen@chromium.org" <evgreen@chromium.org>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvalo@codeaurora.org" <kvalo@codeaurora.org>
+References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
+ <20200721172514.GT1339445@lunn.ch> <20200725081633.7432-1-hdanton@sina.com>
+From:   Sebastian Gottschall <s.gottschall@dd-wrt.com>
+Message-ID: <8359a849-2b8a-c842-a501-c6cb6966e345@dd-wrt.com>
+Date:   Sat, 25 Jul 2020 12:38:00 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101
+ Thunderbird/79.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-X-Provags-ID: V03:K1:f577eOn9QmzY+K8qjWlqLBh6N4CbfPRhdTaIe0YMwfMW4BJG//V
- /eJlw4dcuiq8qZpxpTsz3oiNoKpKIdaYpbexaOgoKIxaI/sFVUX3M0qS5teUtAjlwh5BTzs
- mpVgvoQnSC7iNKNn2p1JTMCVxqfEs4as53wM4y+Z+rCZRT6NLoZREClb06rOki0NeKC7DA8
- gg5a5dQfMP2Qf0Uxavi7Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TE6imnC8r9Q=:oO30kOpF8jt5OvIPiH3bwI
- qsn9b+VYyH/Cb4rPtpGtXWomithL8+mEybdDzOET1yfaPqIHZmtvFYa0Nv/mWTuifgXKtiqNC
- pWI576yY8KT2069VqZ9EKj1We2FfPRh0rd5ID7paeFsybZn0yxxvvn6mYFz2SYYTD33KoKraU
- zkQgU3pTR+Xr349A3bFI46PavZo1KPt6NbXWW7WJdbe/axPYKV648nFwbZFglrKBT2fhB4w6k
- XQIr6oqPtIdgG1mze5bVyvD7HC2nVl9jQzVu2yIJWJt8DYS2PwGEphYBGxf5h38t39HEuFzpe
- HOTyceGLTp9UUHc/L8S6wkBbicpwayPpSkwDkEh7+zSAr1yIeFFuJ7aQyDLyRKsXtYDJzSSWd
- WlUmRzI0B89DDZoyb8ZMaHKyJTpFtJEyB+0NnrPbCphzNbKevPbX+4h9yFxsp5zDRpdjcEUL3
- tNic+oobJd8k1/fEm+l7ijjfj91AaEdYpNnk3Ahwg4y9ylFJ4uqvpsH5+VrfdGyigsvWhRsbl
- e0m0Kyk5a13UDLdrjoP56Oo5jY0q/ROEJ95E8GFu4ct+s0cvUJMM5rigw280JTIM2GheXzCsv
- oPBuasN3aRkaGd4vaTueINjdV2nAtf4R4UjUNCchJ/5OUiOpCxgYzyI1AXJX44VkMNxxBlI/7
- jWxrOgxsfpS3U9iO0hnc0ZMPHCZuxX7ug1KU1vS+sVpvsEbIcnQGbjshd7Ejm2GJxNaSkyrW9
- p0aP64MAkhcVWGWfcu1xYLMHc9e/Cau4aH2Z9ggaaU8bLXrFUtuGXOCUb0pgerhNUC3oS2f7P
- JAk2wkV79pHKPqv2sBwaoSSAi6zoyE7TkN+hyNZXsmC5s9zDaLN0d4URCMlrGin7mmdZ8jjbQ
- NwInqCBbqYpfVwkC5IWG4s3biPtEAyj0tXUK42w9lqG4UITxxcNjwwI73Zq2ldqazXVasilNi
- 5+OBNnSPZX3sgiM0WDTOuD8QjsGGJeOuKSaJHzxQ5xMXNLcR7zouo7kbHtS0VHWVqcYSD3T5k
- /CbfDbC1aRW5zOnpsoTaMX8vE+1mwCKb7gOWBQwsO0vJs5tKlf1Cv3wN2+bJ5cYeHhlc+U4BV
- +mlmvnWx2L3bH2BJbMcLQfF5VZo5xCKXVi9wBd7m818IfaQ95UXmFRXO0mCC1/N6IXNoprUHj
- kSNkXwefu+THfGWgKPsyn4sjDCpehbZbfM1OfFz5hL4gFla5yKWhvsrOcDrdgnO2vrzTeahqh
- HZpHI85eUQLVw/iIienhpJYzRsG/RjBwKjAXt6A==
+In-Reply-To: <20200725081633.7432-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Received:  from [2a01:7700:8040:4d00:3da5:f3e1:ed1:597]
+        by webmail.newmedia-net.de with esmtpsa (TLSv1:AES128-SHA:128)
+        (Exim 4.72)
+        (envelope-from <s.gottschall@dd-wrt.com>)
+        id 1jzHZ5-0002yT-Bk; Sat, 25 Jul 2020 12:38:03 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please add a change description (according to a missing minus character).
+you may consider this
 
-Regards,
-Markus
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1142611.html 
+<https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1142611.html>
+
+years ago someone already wanted to bring this feature upstream, but it 
+was denied. i already tested this patch the last 2 days and it worked so 
+far (with some little modifications)
+so such a solution existed already and may be considered here
+
+Sebastian
+
+
+someone
+
+Am 25.07.2020 um 10:16 schrieb Hillf Danton:
+> On Wed, 22 Jul 2020 09:12:42 +0000 David Laight wrote:
+>>> On 21 July 2020 18:25 Andrew Lunn wrote:
+>>>
+>>> On Tue, Jul 21, 2020 at 10:44:19PM +0530, Rakesh Pillai wrote:
+>>>> NAPI gets scheduled on the CPU core which got the
+>>>> interrupt. The linux scheduler cannot move it to a
+>>>> different core, even if the CPU on which NAPI is running
+>>>> is heavily loaded. This can lead to degraded wifi
+>>>> performance when running traffic at peak data rates.
+>>>>
+>>>> A thread on the other hand can be moved to different
+>>>> CPU cores, if the one on which its running is heavily
+>>>> loaded. During high incoming data traffic, this gives
+>>>> better performance, since the thread can be moved to a
+>>>> less loaded or sometimes even a more powerful CPU core
+>>>> to account for the required CPU performance in order
+>>>> to process the incoming packets.
+>>>>
+>>>> This patch series adds the support to use a high priority
+>>>> thread to process the incoming packets, as opposed to
+>>>> everything being done in NAPI context.
+>>> I don't see why this problem is limited to the ath10k driver. I expect
+>>> it applies to all drivers using NAPI. So shouldn't you be solving this
+>>> in the NAPI core? Allow a driver to request the NAPI core uses a
+>>> thread?
+>> It's not just NAPI the problem is with the softint processing.
+>> I suspect a lot of systems would work better if it ran as
+>> a (highish priority) kernel thread.
+> Hi folks
+>
+> Below is a minimunm poc implementation I can imagine on top of workqueue
+> to make napi threaded. Thoughts are appreciated.
+>
+>> I've had to remove the main locks from a multi-threaded application
+>> and replace them with atomic counters.
+>> Consider what happens when the threads remove items from a shared
+>> work list.
+>> The code looks like:
+>> 	mutex_enter();
+>> 	remove_item_from_list();
+>> 	mutex_exit().
+>> The mutex is only held for a few instructions, so while you'd expect
+>> the cache line to be 'hot' you wouldn't get real contention.
+>> However the following scenarios happen:
+>> 1) An ethernet interrupt happens while the mutex is held.
+>>     This stops the other threads until all the softint processing
+>>     has finished.
+>> 2) An ethernet interrupt (and softint) runs on a thread that is
+>>     waiting for the mutex.
+>>     (Or on the cpu that the thread's processor affinity ties it to.)
+>>     In this case the 'fair' (ticket) mutex code won't let any other
+>>     thread acquire the mutex.
+>>     So again everything stops until the softints all complete.
+>>
+>> The second one is also a problem when trying to wake up all
+>> the threads (eg after adding a lot of items to the list).
+>> The ticket locks force them to wake in order, but
+>> sometimes the 'thundering herd' would work better.
+>>
+>> IIRC this is actually worse for processes running under the RT
+>> scheduler (without CONFIG_PREEMPT) because the they are almost
+>> always scheduled on the same cpu they ran on last.
+>> If it is busy, but cannot be pre-empted, they are not moved
+>> to an idle cpu.
+>>     
+>> To confound things there is a very broken workaround for broken
+>> hardware in the driver for the e1000 interface on (at least)
+>> Ivy Bridge cpu that can cause the driver to spin for a very
+>> long time (IIRC milliseconds) whenever it has to write to a
+>> MAC register (ie on every transmit setup).
+>>
+>> 	David
+>>
+>> -
+>> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+>> Registration No: 1397386 (Wales)
+> To make napi threaded, if either irq or softirq thread is entirely ruled
+> out, add napi::work that will be queued on a highpri workqueue. It is
+> actually a unbound one to facilitate scheduler to catter napi loads on to
+> idle CPU cores. What users need to do with the threaded napi
+> is s/netif_napi_add/netif_threaded_napi_add/ and no more.
+>
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -338,6 +338,9 @@ struct napi_struct {
+>   	struct list_head	dev_list;
+>   	struct hlist_node	napi_hash_node;
+>   	unsigned int		napi_id;
+> +#ifdef CONFIG_THREADED_NAPI
+> +	struct work_struct	work;
+> +#endif
+>   };
+>   
+>   enum {
+> @@ -2234,6 +2237,19 @@ static inline void *netdev_priv(const st
+>   void netif_napi_add(struct net_device *dev, struct napi_struct *napi,
+>   		    int (*poll)(struct napi_struct *, int), int weight);
+>   
+> +#ifdef CONFIG_THREADED_NAPI
+> +void netif_threaded_napi_add(struct net_device *dev, struct napi_struct *napi,
+> +		    int (*poll)(struct napi_struct *, int), int weight);
+> +#else
+> +static inline void netif_threaded_napi_add(struct net_device *dev,
+> +					struct napi_struct *napi,
+> +					int (*poll)(struct napi_struct *, int),
+> +					int weight)
+> +{
+> +	netif_napi_add(dev, napi, poll, weight);
+> +}
+> +#endif
+> +
+>   /**
+>    *	netif_tx_napi_add - initialize a NAPI context
+>    *	@dev:  network device
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -6277,6 +6277,61 @@ static int process_backlog(struct napi_s
+>   	return work;
+>   }
+>   
+> +#ifdef CONFIG_THREADED_NAPI
+> +/* unbound highpri workqueue for threaded napi */
+> +static struct workqueue_struct *napi_workq;
+> +
+> +static void napi_workfn(struct work_struct *work)
+> +{
+> +	struct napi_struct *n = container_of(work, struct napi_struct, work);
+> +
+> +	for (;;) {
+> +		if (!test_bit(NAPI_STATE_SCHED, &n->state))
+> +			return;
+> +
+> +		if (n->poll(n, n->weight) < n->weight)
+> +			return;
+> +
+> +		if (need_resched()) {
+> +			/*
+> +			 * have to pay for the latency of task switch even if
+> +			 * napi is scheduled
+> +			 */
+> +			if (test_bit(NAPI_STATE_SCHED, &n->state))
+> +				queue_work(napi_workq, work);
+> +			return;
+> +		}
+> +	}
+> +}
+> +
+> +void netif_threaded_napi_add(struct net_device *dev,
+> +				struct napi_struct *napi,
+> +				int (*poll)(struct napi_struct *, int),
+> +				int weight)
+> +{
+> +	netif_napi_add(dev, napi, poll, weight);
+> +	INIT_WORK(&napi->work, napi_workfn);
+> +}
+> +
+> +static inline bool is_threaded_napi(struct napi_struct *n)
+> +{
+> +	return n->work.func == napi_workfn;
+> +}
+> +
+> +static inline void threaded_napi_sched(struct napi_struct *n)
+> +{
+> +	if (is_threaded_napi(n))
+> +		queue_work(napi_workq, &n->work);
+> +	else
+> +		____napi_schedule(this_cpu_ptr(&softnet_data), n);
+> +}
+> +#else
+> +static inline void threaded_napi_sched(struct napi_struct *n)
+> +{
+> +	____napi_schedule(this_cpu_ptr(&softnet_data), n);
+> +}
+> +#endif
+> +
+>   /**
+>    * __napi_schedule - schedule for receive
+>    * @n: entry to schedule
+> @@ -6289,7 +6344,7 @@ void __napi_schedule(struct napi_struct
+>   	unsigned long flags;
+>   
+>   	local_irq_save(flags);
+> -	____napi_schedule(this_cpu_ptr(&softnet_data), n);
+> +	threaded_napi_sched(n);
+>   	local_irq_restore(flags);
+>   }
+>   EXPORT_SYMBOL(__napi_schedule);
+> @@ -6335,7 +6390,7 @@ EXPORT_SYMBOL(napi_schedule_prep);
+>    */
+>   void __napi_schedule_irqoff(struct napi_struct *n)
+>   {
+> -	____napi_schedule(this_cpu_ptr(&softnet_data), n);
+> +	threaded_napi_sched(n);
+>   }
+>   EXPORT_SYMBOL(__napi_schedule_irqoff);
+>   
+> @@ -10685,6 +10740,10 @@ static int __init net_dev_init(void)
+>   		sd->backlog.weight = weight_p;
+>   	}
+>   
+> +#ifdef CONFIG_THREADED_NAPI
+> +	napi_workq = alloc_workqueue("napi_workq", WQ_UNBOUND | WQ_HIGHPRI,
+> +					    WQ_UNBOUND_MAX_ACTIVE);
+> +#endif
+>   	dev_boot_phase = 0;
+>   
+>   	/* The loopback device is special if any other network devices
+>
+>
+> _______________________________________________
+> ath10k mailing list
+> ath10k@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/ath10k
+>
