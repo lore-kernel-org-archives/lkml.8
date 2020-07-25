@@ -2,85 +2,78 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA99C433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 16:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9C14206D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 16:58:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OEmj9sk3"
+	by mail.kernel.org (Postfix) with ESMTP id A3043206D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 17:02:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgGYQ6r (ORCPT
+        id S1727803AbgGYRCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 12:58:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgGYQ6q (ORCPT
+        Sat, 25 Jul 2020 13:02:14 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:54064 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgGYRCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 12:58:46 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B80F8C08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 09:58:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6ltveWQkhnBb6mzizvV/wAJDe13OC+WrI+RXwa5RzLM=; b=OEmj9sk3+aCTN1rhW4dLSnMDAZ
-        KLE97gsN8PEKVIHUn2yVlrD+h8Im9y0R/2+gVRAO9/YCwybxS2sg8DGWM2LfmA0nhHYhVVx2Xp4y0
-        C6hq8gYsRPEa0NSSIcioNlyU0bYlcFIAxXjthXYtBcXxGQxp3XkwYvU3wtMJ6Uu5ZPSyYUychh3NT
-        5IcFpdSJaFULTa8PZo9cQ4uVMVkzdG0eAeemBCo9d7W8AXNNe6DpgcriEqY8zwR+laHp2efOxA623
-        Pu2JWxoWWY+w1/ZUW9Ay+Os14zE8ZDIGUW6Na4sMgmOH82huASuOe99hU5NE8mATyC0/YipbWtBDw
-        njQL/dbA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzNV4-0000Hb-TV; Sat, 25 Jul 2020 16:58:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C34B23013E5;
-        Sat, 25 Jul 2020 18:58:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5060A20104627; Sat, 25 Jul 2020 18:58:16 +0200 (CEST)
-Date:   Sat, 25 Jul 2020 18:58:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, sfr@canb.auug.org.au
-Subject: Re: [PATCH v2] sched,tracing: Convert to sched_set_fifo()
-Message-ID: <20200725165816.GE10769@hirez.programming.kicks-ass.net>
-References: <202006192249.AYnVBGCH%lkp@intel.com>
- <20200709124505.GT597537@hirez.programming.kicks-ass.net>
- <20200709115818.36a956a4@oasis.local.home>
- <20200720214918.GM5523@worktop.programming.kicks-ass.net>
- <20200724213911.GX119549@hirez.programming.kicks-ass.net>
- <20200724174618.7487ee7c@oasis.local.home>
- <20200724215003.GY119549@hirez.programming.kicks-ass.net>
- <20200724181846.415bfd43@oasis.local.home>
+        Sat, 25 Jul 2020 13:02:14 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id AF60D1C0BDD; Sat, 25 Jul 2020 19:02:11 +0200 (CEST)
+Date:   Sat, 25 Jul 2020 19:02:11 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Karel Zak <kzak@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        util-linux@vger.kernel.org
+Subject: Re: [ANNOUNCE] util-linux v2.36
+Message-ID: <20200725170211.GA2807@amd>
+References: <20200723100828.262ftx3qhie2sc32@ws.net.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
 Content-Disposition: inline
-In-Reply-To: <20200724181846.415bfd43@oasis.local.home>
+In-Reply-To: <20200723100828.262ftx3qhie2sc32@ws.net.home>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 06:18:46PM -0400, Steven Rostedt wrote:
-> On Fri, 24 Jul 2020 23:50:03 +0200
-> peterz@infradead.org wrote:
-> 
-> > -	if (producer_fifo < 0)
-> > +	if (producer_fifo)
-> > +		trace_printk("Running Producer at SCHED_FIFO %s\n",
-> > +			     consumer_fifo == 1 ? "low" : "high");
-> 
-> I'm going to take cut-and-paste away from you!
 
-Well, yes, I said so, I also already have it fixed.
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Aside from that, is the patch ok?
+Hi!
+
+> The commands fdisk(8), sfdisk(8), cfdisk(8), mkswap(8) and wipefs(8) now
+> support block devices locking by flock(2) to better behave with udevd or =
+other
+> tools. Ffor more details see https://systemd.io/BLOCK_DEVICE_LOCKING/.  T=
+his
+
+There's typo "ffor", but I guess it is too late to fix that?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8cZZMACgkQMOfwapXb+vL9XwCbBSLZEvCjGt5yMfUaG1pII7Rn
+AP0AnRQMyE9vGu1xvXbuGuUg3CODmyPW
+=qUWC
+-----END PGP SIGNATURE-----
+
+--Dxnq1zWXvFF0Q93v--
