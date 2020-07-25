@@ -2,28 +2,29 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C51C433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B114C433E3
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5D220738
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DAD0206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 07:19:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbgGYHTe (ORCPT
+        id S1727107AbgGYHTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 03:19:34 -0400
-Received: from out28-51.mail.aliyun.com ([115.124.28.51]:58670 "EHLO
-        out28-51.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbgGYHTe (ORCPT
+        Sat, 25 Jul 2020 03:19:36 -0400
+Received: from out29-147.mail.aliyun.com ([115.124.29.147]:58942 "EHLO
+        out29-147.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726973AbgGYHTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 03:19:34 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1404662|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.040148-0.00170086-0.958151;FP=18364405763956004600|2|2|11|0|-1|-1|-1;HT=e02c03306;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=19;RT=19;SR=0;TI=SMTPD_---.I7IIM8t_1595661564;
+        Sat, 25 Jul 2020 03:19:36 -0400
+X-Alimail-AntiSpam: AC=SUSPECT;BC=0.6496763|-1;BR=01201311R381b1;CH=blue;DM=|SUSPECT|false|;DS=CONTINUE|ham_system_inform|0.0106752-0.00182844-0.987496;FP=16928377606434656682|2|2|11|0|-1|-1|-1;HT=e01l07381;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=19;RT=19;SR=0;TI=SMTPD_---.I7IIM8t_1595661564;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.I7IIM8t_1595661564)
           by smtp.aliyun-inc.com(10.147.42.253);
-          Sat, 25 Jul 2020 15:19:29 +0800
+          Sat, 25 Jul 2020 15:19:31 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org
@@ -35,10 +36,12 @@ Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
         yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
         zhenwenjin@gmail.com
-Subject: Add USB PHY support for new Ingenic SoCs.
-Date:   Sat, 25 Jul 2020 15:18:58 +0800
-Message-Id: <20200725071903.63315-1-zhouyanjie@wanyeetech.com>
+Subject: [PATCH RESEND v6 1/5] dt-bindings: USB: Add bindings for new Ingenic SoCs.
+Date:   Sat, 25 Jul 2020 15:18:59 +0800
+Message-Id: <20200725071903.63315-2-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200725071903.63315-1-zhouyanjie@wanyeetech.com>
+References: <20200725071903.63315-1-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -47,33 +50,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v5->v6:
-1.Fix the warning that appears during compilation.
-2.Used the generic PHY framework API to create the PHY,
-  and move the driver to driver/phy/ingenic.
+Add the USB PHY bindings for the JZ4780 SoC, the X1000 SoC and
+the X1830 SoC from Ingenic.
 
-周琰杰 (Zhou Yanjie) (5):
-  dt-bindings: USB: Add bindings for new Ingenic SoCs.
-  USB: PHY: JZ4770: Unify code style and simplify code.
-  USB: PHY: JZ4770: Add support for new Ingenic SoCs.
-  USB: PHY: JZ4770: Reformat the code to align it.
-  USB: PHY: JZ4770: Usethe generic PHY framework.
+Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
- .../bindings/usb/ingenic,jz4770-phy.yaml           |   6 +-
- drivers/phy/Kconfig                                |   1 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/ingenic/Kconfig                        |  12 +
- drivers/phy/ingenic/Makefile                       |   2 +
- drivers/phy/ingenic/phy-ingenic-usb.c              | 403 +++++++++++++++++++++
- drivers/usb/phy/Kconfig                            |   8 -
- drivers/usb/phy/Makefile                           |   1 -
- drivers/usb/phy/phy-jz4770.c                       | 243 -------------
- 9 files changed, 424 insertions(+), 253 deletions(-)
- create mode 100644 drivers/phy/ingenic/Kconfig
- create mode 100644 drivers/phy/ingenic/Makefile
- create mode 100644 drivers/phy/ingenic/phy-ingenic-usb.c
- delete mode 100644 drivers/usb/phy/phy-jz4770.c
+Notes:
+    v1->v2:
+    Add bindings for the JZ4780 SoC.
+    
+    v2->v3:
+    No change.
+    
+    v3->v4:
+    No change.
+    
+    v4->v5:
+    No change.
+    
+    v5->v6:
+    No change.
 
+ Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml b/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
+index a81b0b1a2226..2d61166ea5cf 100644
+--- a/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
++++ b/Documentation/devicetree/bindings/usb/ingenic,jz4770-phy.yaml
+@@ -4,10 +4,11 @@
+ $id: http://devicetree.org/schemas/usb/ingenic,jz4770-phy.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+-title: Ingenic JZ4770 USB PHY devicetree bindings
++title: Ingenic SoCs USB PHY devicetree bindings
+ 
+ maintainers:
+   - Paul Cercueil <paul@crapouillou.net>
++  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+ 
+ properties:
+   $nodename:
+@@ -16,6 +17,9 @@ properties:
+   compatible:
+     enum:
+       - ingenic,jz4770-phy
++      - ingenic,jz4780-phy
++      - ingenic,x1000-phy
++      - ingenic,x1830-phy
+ 
+   reg:
+     maxItems: 1
 -- 
 2.11.0
 
