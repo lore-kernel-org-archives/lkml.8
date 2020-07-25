@@ -2,169 +2,136 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4735C433E0
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 20:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 292DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 20:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C13DB206D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 20:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028B7206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 20:26:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpmyHvZt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="odRFRlgm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgGYUaH (ORCPT
+        id S1727923AbgGYU00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 16:30:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43580 "EHLO
+        Sat, 25 Jul 2020 16:26:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgGYUaH (ORCPT
+        with ESMTP id S1726834AbgGYU00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 16:30:07 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5540CC08C5C0;
-        Sat, 25 Jul 2020 13:30:07 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id a9so7076053pjd.3;
-        Sat, 25 Jul 2020 13:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nwY+/tJ0rnnwCDiaWmm+N+wbOgL2p5NbRLZLkADAyRw=;
-        b=YpmyHvZtSrZ6atS0RCrqRZ1Z0vHqKFnlljCO8iS8qa0Tmiznt12PZprJuqovWCPno7
-         qamlb0T3rj+7Zm63S68BPi23q7OEN+gTqVr0fSeEjB8RJw4/NQgX8jvDnboWSa5zN/Lk
-         fDbaeU+CVw1V7SJtghaqbBM8RTTN2fgk/cYpy16TjS4YdAgnt39mdb+iW7oIoKqBXU3/
-         pLXrQRKLrAjp8QPFcu2S+pjy7uqB3Iz5C9LmBgXF4ShJiDRluqXHfoqujDVSbZ+O7WPF
-         dUGQyTCRut4ARqVmw0/6WRDP9EvWY7TKO6d4NuV7vRXSO/MMG6aGyPDj0bFq0U3vFgda
-         W59A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nwY+/tJ0rnnwCDiaWmm+N+wbOgL2p5NbRLZLkADAyRw=;
-        b=F4H7ZmGQhRihb6jkokbSgK3cqVlX/zb0TEyKhw5wEx4jTwly3q/j6Qn/k5ysWg4eZr
-         mFSfFywCVtySBQBss/IMXIMBA99FUZPp4PcG6fbI7Hx2hRAIBdcNOor6heYcjrgxl1RG
-         cdKH8TLJWxtipfWWuVBOJ5Lt7gZ2UPe1XIgErAwa2jdc/SNtMLx4EiHcL6hBi9iZkQBj
-         SegpPBsm9iZh2pUdbcR3LWlCdW5rhw0hW5LziN86N6EsxyktZfaIi60jtqZIyi7oWjmr
-         UJ14C0P6qYyYzNg3b5ErfTCq5T+JaO1sOJP63nSpHxc5ZWtcYkEuQo3QUVlOgsR8q6O6
-         FO4g==
-X-Gm-Message-State: AOAM533DPqLZKhghKHVLUo26iswqbeF8QGIArc/vwv4ofksgISMycnsi
-        o02zmM5QrBOY8bLX5Qdq7EimEndPNBm5l0sPwTk=
-X-Google-Smtp-Source: ABdhPJxlR7PFFbFXWRPb5neSRyvjY1sUwyQAN09BBPm++FcmYgvy9mLJeggjDUJMCiVpjfdPkEkatYmxMJEchR75TXo=
-X-Received: by 2002:a17:902:9a4b:: with SMTP id x11mr13333727plv.255.1595709006739;
- Sat, 25 Jul 2020 13:30:06 -0700 (PDT)
+        Sat, 25 Jul 2020 16:26:26 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38EDDC08C5C0;
+        Sat, 25 Jul 2020 13:26:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7azmDqGQO5Za3wCk4hdbgBfXxhZiYOq/pNKw+FtLaYk=; b=odRFRlgmw5mlm1slXQblTZb2F9
+        NzDpKGbskVYn6izccYMa3Q216cUxMpCQ5U9q6hAsYmvSiqWTBAZZG5ydgFk4Qz29kez2t1CKGrzpX
+        muLvEbTcWk8SiWytSlcM8+XLBflgu7QHg21leMbKMPCYlFezg7wbRQvXfsB7s5sIkiYF90UT7GpwR
+        Uf+pwpsheyLGPgtXnVL8a7D1zaCZx47rABRQS/QUu/bAihY5cDYFAtJKB6jaBhroCWrbaPtAMhIdT
+        w4EiEdcNqCuoDUfPSR3IheQOcfuDSNlcxK8CACBuinQAcYAvT5dedokOROCwgU6jDlttyvttrGiko
+        jmFXPzMA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzQkM-0001DS-Kr; Sat, 25 Jul 2020 20:26:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D61783013E5;
+        Sat, 25 Jul 2020 22:26:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BCF6C2143798C; Sat, 25 Jul 2020 22:26:17 +0200 (CEST)
+Date:   Sat, 25 Jul 2020 22:26:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH 1/2] lockdep: improve current->(hard|soft)irqs_enabled
+ synchronisation with actual irq state
+Message-ID: <20200725202617.GI10769@hirez.programming.kicks-ass.net>
+References: <20200723105615.1268126-1-npiggin@gmail.com>
 MIME-Version: 1.0
-References: <20200725041955.9985-1-warthog618@gmail.com> <20200725041955.9985-4-warthog618@gmail.com>
-In-Reply-To: <20200725041955.9985-4-warthog618@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 25 Jul 2020 23:29:50 +0300
-Message-ID: <CAHp75Ve4e4JdAQ2YGWqm9JEaKViw861fSUbCfxEP7HnKBDj_fQ@mail.gmail.com>
-Subject: Re: [PATCH v2 03/18] gpiolib: make cdev a build option
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723105615.1268126-1-npiggin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 7:21 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> Make the gpiolib-cdev module a build option.  This allows the CDEV
-> interface to be removed from the kernel to reduce kernel size in
-> applications where is it not required, and provides the parent for
-> other other CDEV interface specific build options to follow.
->
-> Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->  drivers/gpio/Kconfig        | 16 ++++++++++++++--
->  drivers/gpio/Makefile       |  2 +-
->  drivers/gpio/gpiolib-cdev.h | 15 +++++++++++++++
->  3 files changed, 30 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 8030fd91a3cc..b5bb9efc1092 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -66,8 +66,20 @@ config GPIO_SYSFS
->
->           This ABI is deprecated. If you want to use GPIO from userspace,
->           use the character device /dev/gpiochipN with the appropriate
-> -         ioctl() operations instead. The character device is always
-> -         available.
-> +         ioctl() operations instead.
-> +
-> +config GPIO_CDEV
-> +       bool "/dev/gpiochipN (character device interface)"
-> +       default y
-> +       help
-> +         Say Y here to add the character device /dev/gpiochipN interface
-> +         for GPIOs. The character device allows userspace to control GPIOs
-> +         using ioctl() operations.
-> +
-> +         Only say N is you are sure that the GPIO character device is not
+On Thu, Jul 23, 2020 at 08:56:14PM +1000, Nicholas Piggin wrote:
+> diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
+> index 3a0db7b0b46e..35060be09073 100644
+> --- a/arch/powerpc/include/asm/hw_irq.h
+> +++ b/arch/powerpc/include/asm/hw_irq.h
+> @@ -200,17 +200,14 @@ static inline bool arch_irqs_disabled(void)
+>  #define powerpc_local_irq_pmu_save(flags)			\
+>  	 do {							\
+>  		raw_local_irq_pmu_save(flags);			\
+> -		trace_hardirqs_off();				\
+> +		if (!raw_irqs_disabled_flags(flags))		\
+> +			trace_hardirqs_off();			\
+>  	} while(0)
 
-is -> if
+So one problem with the above is something like this:
 
-> +         required.
-> +
-> +         If unsure, say Y.
->
->  config GPIO_GENERIC
->         depends on HAS_IOMEM # Only for IOMEM drivers
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index 4f9abff4f2dc..7c24c8d77068 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -7,8 +7,8 @@ obj-$(CONFIG_GPIOLIB)           += gpiolib.o
->  obj-$(CONFIG_GPIOLIB)          += gpiolib-devres.o
->  obj-$(CONFIG_GPIOLIB)          += gpiolib-legacy.o
->  obj-$(CONFIG_GPIOLIB)          += gpiolib-devprop.o
-> -obj-$(CONFIG_GPIOLIB)          += gpiolib-cdev.o
->  obj-$(CONFIG_OF_GPIO)          += gpiolib-of.o
-> +obj-$(CONFIG_GPIO_CDEV)                += gpiolib-cdev.o
->  obj-$(CONFIG_GPIO_SYSFS)       += gpiolib-sysfs.o
->  obj-$(CONFIG_GPIO_ACPI)                += gpiolib-acpi.o
->
-> diff --git a/drivers/gpio/gpiolib-cdev.h b/drivers/gpio/gpiolib-cdev.h
-> index 973578e7ad10..19a4e3d57120 100644
-> --- a/drivers/gpio/gpiolib-cdev.h
-> +++ b/drivers/gpio/gpiolib-cdev.h
-> @@ -5,7 +5,22 @@
->
->  #include <linux/device.h>
->
-> +#ifdef CONFIG_GPIO_CDEV
-> +
->  int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt);
->  void gpiolib_cdev_unregister(struct gpio_device *gdev);
->
-> +#else
-> +
-> +static inline int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline void gpiolib_cdev_unregister(struct gpio_device *gdev)
-> +{
-> +}
-> +
-> +#endif /* CONFIG_GPIO_CDEV */
-> +
->  #endif /* GPIOLIB_CDEV_H */
-> --
-> 2.27.0
->
+	raw_local_irq_save();
+	<NMI>
+	  powerpc_local_irq_pmu_save();
+
+that would now no longer call into tracing/lockdep at all. As a
+consequence, lockdep and tracing would show the NMI ran with IRQs
+enabled, which is exceptionally weird..
+
+Similar problem with:
+
+	raw_local_irq_disable();
+	local_irq_save()
+
+Now, most architectures today seem to do what x86 also did:
+
+	<NMI>
+	  trace_hardirqs_off()
+	  ...
+	  if (irqs_unmasked(regs))
+	    trace_hardirqs_on()
+	</NMI>
+
+Which is 'funny' when it interleaves like:
+
+	local_irq_disable();
+	...
+	local_irq_enable()
+	  trace_hardirqs_on();
+	  <NMI/>
+	  raw_local_irq_enable();
+
+Because then it will undo the trace_hardirqs_on() we just did. With the
+result that both tracing and lockdep will see a hardirqs-disable without
+a matching enable, while the hardware state is enabled.
+
+Which is exactly the state Alexey seems to have ran into.
+
+Now, x86, and at least arm64 call nmi_enter() before
+trace_hardirqs_off(), but AFAICT Power never did that, and that's part
+of the problem. nmi_enter() does lockdep_off() and that _used_ to also
+kill IRQ tracking.
+
+Now, my patch changed that, it makes IRQ tracking not respect
+lockdep_off(). And that exposed x86 (and everybody else :/) to the same
+problem you have.
+
+And this is why I made x86 look at software state in NMIs. Because then
+it all works out. For bonus points, trace_hardirqs_*() also has some
+do-it-once logic for tracing.
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+Anyway, it's Saturday evening, time for a beer. I'll stare at this more
+later.
