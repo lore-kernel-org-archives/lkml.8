@@ -2,384 +2,335 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA4CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90655C433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD2A20674
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645EF206D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 18:13:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="SBfoVXqR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgGYSC3 convert rfc822-to-8bit (ORCPT
+        id S1727086AbgGYSMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 14:02:29 -0400
-Received: from lists.nic.cz ([217.31.204.67]:39044 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726727AbgGYSC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 14:02:29 -0400
-Received: from localhost (unknown [IPv6:2a0e:b107:ae1:0:3e97:eff:fe61:c680])
-        by mail.nic.cz (Postfix) with ESMTPSA id 3EBAC140B12;
-        Sat, 25 Jul 2020 20:02:25 +0200 (CEST)
-Date:   Sat, 25 Jul 2020 20:02:24 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, jacek.anaszewski@gmail.com,
-        Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v3 2/2] net: phy: marvell: add
- support for PHY LEDs via LED class
-Message-ID: <20200725200224.3f03c041@nic.cz>
-In-Reply-To: <20200725172318.GK1472201@lunn.ch>
-References: <20200724164603.29148-1-marek.behun@nic.cz>
-        <20200724164603.29148-3-marek.behun@nic.cz>
-        <20200725172318.GK1472201@lunn.ch>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 25 Jul 2020 14:12:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726727AbgGYSMa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 14:12:30 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F084EC08C5C0
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 11:12:29 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id e17so852161oie.1
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 11:12:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qOw3bSj4ynfLBA0GpWFYc0reTxewQ1lEJi7OfnnXBxA=;
+        b=SBfoVXqRZYFt8BqK7O2shlG8zdHWP24YVRvgnWOlTma0y+bKGA1j35bolmsExnF9GF
+         gUWtDvfwWVg5/vj8sbDW/xC9lUkMVooz0I46SynoCA59y4cVAYeZJCZLS794Em8aNfX3
+         vzFu0lPQBqIGmcsSXZcPl7BY+UWri4P/ZW9CM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qOw3bSj4ynfLBA0GpWFYc0reTxewQ1lEJi7OfnnXBxA=;
+        b=qN+NHHXe20hb2uydZa9b4VXkQ7IJbLtES285fgumznGQ22rn0Ug02E48niqWHzP58k
+         GB+10tk4oDFD80BQV5lWw+53V1f+7fYVmsjL21xz3QjPYaoY6lzU4tiTyBUmlAjsTQYo
+         BykwMR+OIL+nhBON2mgbqNQoOs/0pWmQvwfRBUY8AgVKMpexZ6ETNUBwcxXCl9kKD5HQ
+         ahPIk42VN613DRAEtIrg5Ij0lQCk3+2/Tq7d8gMvI3vu+zDdv9C3F8jparGtKRWVtYuZ
+         6VrPbPhpDRgWHYUX5JAI2Vwl/jF8Ovt95SMhwwuVZyr1reS9kHND7M3xkZOzy6NUuBjY
+         Y30g==
+X-Gm-Message-State: AOAM531isS2ddRRmRF5Iwsd6sWnOFR0w2WR+TGz/H7dgPjuP/mUbnCsD
+        Q33d3RT0LWDQMDhrsTfEPoUqNZVuvStuXvKq3IgY/E9Y
+X-Google-Smtp-Source: ABdhPJy/GSoB/surC1CubkkAY9tugTbmxojIt/IJgfJDlTJiG5zVtnEM/2d9Ss3GFkvFdckMPcI/phQhoA+urC6BVm4=
+X-Received: by 2002:aca:7549:: with SMTP id q70mr2864844oic.128.1595700749102;
+ Sat, 25 Jul 2020 11:12:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+References: <20200722110411.ebkv6knvc6mzw5uf@smtp.gmail.com>
+ <20200722120502.GK6419@phenom.ffwll.local> <20200722140604.27dfzfnzug5vb75r@smtp.gmail.com>
+ <CAKMK7uHWCnJ+3YnP2FwVGH6cEDkmPnH9ALjY_1R51QVs0HPG0Q@mail.gmail.com>
+ <20200725011737.GA2851@realwakka> <CAKMK7uEWPCzx+K=+nJsLT5HRBVJ+s8tqx30Ljkr4BCBDComyWQ@mail.gmail.com>
+ <20200725174514.esh4gqek6oddizvh@smtp.gmail.com>
+In-Reply-To: <20200725174514.esh4gqek6oddizvh@smtp.gmail.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Sat, 25 Jul 2020 20:12:18 +0200
+Message-ID: <CAKMK7uEi0UFSwYTO7h6_YKN+UykOuVcmhMSG_ySy9uyo_7Pz-g@mail.gmail.com>
+Subject: Re: [PATCH] drm/vkms: add missing drm_crtc_vblank_put to the get/put
+ pair on flush
+To:     Melissa Wen <melissa.srw@gmail.com>
+Cc:     Sidong Yang <realwakka@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kernel-usp@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Jul 2020 19:23:18 +0200
-Andrew Lunn <andrew@lunn.ch> wrote:
+On Sat, Jul 25, 2020 at 7:45 PM Melissa Wen <melissa.srw@gmail.com> wrote:
+>
+> On 07/25, Daniel Vetter wrote:
+> > On Sat, Jul 25, 2020 at 5:12 AM Sidong Yang <realwakka@gmail.com> wrote:
+> > >
+> > > On Wed, Jul 22, 2020 at 05:17:05PM +0200, Daniel Vetter wrote:
+> > > > On Wed, Jul 22, 2020 at 4:06 PM Melissa Wen <melissa.srw@gmail.com> wrote:
+> > > > >
+> > > > > On 07/22, daniel@ffwll.ch wrote:
+> > > > > > On Wed, Jul 22, 2020 at 08:04:11AM -0300, Melissa Wen wrote:
+> > > > > > > This patch adds a missing drm_crtc_vblank_put op to the pair
+> > > > > > > drm_crtc_vblank_get/put (inc/decrement counter to guarantee vblanks).
+> > > > > > >
+> > > > > > > It clears the execution of the following kms_cursor_crc subtests:
+> > > > > > > 1. pipe-A-cursor-[size,alpha-opaque, NxN-(on-screen, off-screen, sliding,
+> > > > > > >    random, fast-moving])] - successful when running individually.
+> > > > > > > 2. pipe-A-cursor-dpms passes again
+> > > > > > > 3. pipe-A-cursor-suspend also passes
+> > > > > > >
+> > > > > > > The issue was initially tracked in the sequential execution of IGT
+> > > > > > > kms_cursor_crc subtest: when running the test sequence or one of its
+> > > > > > > subtests twice, the odd execs complete and the pairs get stuck in an
+> > > > > > > endless wait. In the IGT code, calling a wait_for_vblank before the start
+> > > > > > > of CRC capture prevented the busy-wait. But the problem persisted in the
+> > > > > > > pipe-A-cursor-dpms and -suspend subtests.
+> > > > > > >
+> > > > > > > Checking the history, the pipe-A-cursor-dpms subtest was successful when,
+> > > > > > > in vkms_atomic_commit_tail, instead of using the flip_done op, it used
+> > > > > > > wait_for_vblanks. Another way to prevent blocking was wait_one_vblank when
+> > > > > > > enabling crtc. However, in both cases, pipe-A-cursor-suspend persisted
+> > > > > > > blocking in the 2nd start of CRC capture, which may indicate that
+> > > > > > > something got stuck in the step of CRC setup. Indeed, wait_one_vblank in
+> > > > > > > the crc setup was able to sync things and free all kms_cursor_crc
+> > > > > > > subtests.
+> > > > > > >
+> > > > > > > Tracing and comparing a clean run with a blocked one:
+> > > > > > > - in a clean one, vkms_crtc_atomic_flush enables vblanks;
+> > > > > > > - when blocked, only in next op, vkms_crtc_atomic_enable, the vblanks
+> > > > > > > started. Moreover, a series of vkms_vblank_simulate flow out until
+> > > > > > > disabling vblanks.
+> > > > > > > Also watching the steps of vkms_crtc_atomic_flush, when the very first
+> > > > > > > drm_crtc_vblank_get returned an error, the subtest crashed. On the other
+> > > > > > > hand, when vblank_get succeeded, the subtest completed. Finally, checking
+> > > > > > > the flush steps: it increases counter to hold a vblank reference (get),
+> > > > > > > but there isn't a op to decreased it and release vblanks (put).
+> > > > > > >
+> > > > > > > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > > > > > > Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> > > > > > > Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
+> > > > > > > Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+> > > > > > > ---
+> > > > > > >  drivers/gpu/drm/vkms/vkms_crtc.c | 1 +
+> > > > > > >  1 file changed, 1 insertion(+)
+> > > > > > >
+> > > > > > > diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > > > > index ac85e17428f8..a99d6b4a92dd 100644
+> > > > > > > --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > > > > +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> > > > > > > @@ -246,6 +246,7 @@ static void vkms_crtc_atomic_flush(struct drm_crtc *crtc,
+> > > > > > >
+> > > > > > >             spin_unlock(&crtc->dev->event_lock);
+> > > > > > >
+> > > > > > > +           drm_crtc_vblank_put(crtc);
+> > > > > >
+> > > > > > Uh so I reviewed this a bit more carefully now, and I dont think this is
+> > > > > > the correct bugfix. From the kerneldoc of drm_crtc_arm_vblank_event():
+> > > > > >
+> > > > > >  * Caller must hold a vblank reference for the event @e acquired by a
+> > > > > >  * drm_crtc_vblank_get(), which will be dropped when the next vblank arrives.
+> > > > > >
+> > > > > > So when we call drm_crtc_arm_vblank_event then the vblank_put gets called
+> > > > > > for us. And that's the only case where we successfully acquired a vblank
+> > > > > > interrupt reference since on failure of drm_crtc_vblank_get (0 indicates
+> > > > > > success for that function, failure negative error number) we directly send
+> > > > > > out the event.
+> > > > > >
+> > > > > > So something else fishy is going on, and now I'm totally confused why this
+> > > > > > even happens.
+> > > > > >
+> > > > > > We also have a pile of WARN_ON checks in drm_crtc_vblank_put to make sure
+> > > > > > we don't underflow the refcount, so it's also not that I think (except if
+> > > > > > this patch creates more WARNING backtraces).
+> > > > > >
+> > > > > > But clearly it changes behaviour somehow ... can you try to figure out
+> > > > > > what changes? Maybe print out the vblank->refcount at various points in
+> > > > > > the driver, and maybe also trace when exactly the fake vkms vblank hrtimer
+> > > > > > is enabled/disabled ...
+> > > > >
+> > > > > :(
+> > > > >
+> > > > > I can check these, but I also have other suspicions. When I place the
+> > > > > drm_crct_vblank_put out of the if (at the end of flush), it not only solve
+> > > > > the issue of blocking on kms_cursor_crc, but also the WARN_ON on kms_flip
+> > > > > doesn't appear anymore (a total cleanup). Just after:
+> > > > >
+> > > > > vkms_output->composer_state = to_vkms_crtc_state(crtc->state);
+> > > > >
+> > > > > looks like there is something stuck around here.
+> > > >
+> > > > Hm do you have the full WARNING for this? Maybe this gives me an idea
+> > > > what's going wrong.
+> > > >
+> > > > > Besides, there is a lock at atomic_begin:
+> > > > >
+> > > > >   /* This lock is held across the atomic commit to block vblank timer
+> > > > >    * from scheduling vkms_composer_worker until the composer is updated
+> > > > >    */
+> > > > >   spin_lock_irq(&vkms_output->lock);
+> > > > >
+> > > > > that seems to be released on atomic_flush and make me suspect something
+> > > > > missing on the composer update.
+> > > >
+> > > > atomic_begin/atomic_flush are symmetric functions an always called
+> > > > around all the plane updates. So having the spin_lock in _begin and
+> > > > the spin_unlock in _flush should be symmetric and correct.
+> > > >
+> > > > If you want to make sure, recompile with CONFIG_PROVE_LOCKING, which
+> > > > should immmediately give you a huge splat in dmesg if there's anything
+> > > > unbalanced with locking.
+> > > >
+> > > > > I'll check all these things and come back with news (hope) :)
+> > > >
+> > > > Have fun chasing stuff :-)
+> > > >
+> > > > Cheers, Daniel
+> > > >
+> > > >
+> > > > >
+> > > > > Thanks,
+> > > > >
+> > > > > Melissa
+> > > > > >
+> > > > > > I'm totally confused about what's going on here now.
+> > > > > > -Daniel
+> > >
+> > > Hi Daniel, Melissa.
+> > > I found something about this problem.
+> > > I traced vblank->refcount that it's important in the problem.
+> > > In normal case, first test run calls commit_tail() and enable vblank in
+> > > atomic_flush(). in drm_vblank_get(), it enable vblank when refcount was zero.
+> > >
+> > > in first test run, it disable crtc for cleanup test. drm_crtc_vblank_off() was
+> > > called by atomic_disable. in this function vblank's refcount was increased for
+> > > prevent subsequent drm_vblank_get() from re-enabling the vblank interrupt.
+> > > and refcount goes one not zero for next test run.
+> > >
+> > > and next test run, drm_vblank_get() was called but it didn't enable vblank
+> > > because refcount was already one. drm_crtc_vblank_on() was called in next. but
+> > > it didn't enable vblank but just increase refcount only.
+> > >
+> > > I think this is why this problem happen. don't know how to fix this correctly.
+> > > should we force to enable vblank after enabling crtc?
+> >
+> > Hm, between drm_crtc_vblank_off and drm_crtc_vblank_on
+> > drm_crtc_vblank_get should fail (and leave the refcount unchanged).
+> > It's convoluted logic, but the check for vblank->enabled should catch
+> > that and return -EINVAL for this case. Does that not happen?
+> >
+> > It would indeed explain the bug (I think, I've been wrong way too many
+> > times with this).
+> > -Daniel
+> >
+> Hi Daniel and Sidong,
+>
+> I don't know if it will be confusing, but I will try to explain in a
+> little more detail (and newbie way) what I saw in this behavior of the
+> refcount (similar to what Sidong evaluated).
+>
+> 1. Starting with the loading of vkms is:
+> In vkms_init:
+> After drm_vblank_init (refcount=0), it calls:
+> vkms_modeset_init
+> --> vkms_output_init
+> ----> drm_mode_config_reset
+> -------> vkms_atomic_crtc_reset
+> (even more inside)--> drm_crtc_vblank_reset that bumps the refcount to
+> prevent vblank_get to enable vblank (refcount=1)
+>
+> 2. So, when we start a subtest, vblank is still disabled and in
+> commit_tail, commit_planes triggers a atomic_begin/flush->vblank_get that
+> return -EINVAL because !vblank->enabled (refcount ends 1) and send_vblank;
+> however the test fails before atomic_enable decrements refcount to 0 and
+> reset timestamp.
+> ** This warning also appears in this very first running:
+> WARNING: CPU: 0 PID: 708 at drivers/gpu/drm/vkms/vkms_crtc.c:91 vkms_get_vblank_timestamp+0x41/0x50 [vkms]
 
-> On Fri, Jul 24, 2020 at 06:46:03PM +0200, Marek Behún wrote:
-> > This patch adds support for controlling the LEDs connected to several
-> > families of Marvell PHYs via the PHY HW LED trigger API. These families
-> > are: 88E1112, 88E1121R, 88E1240, 88E1340S, 88E1510 and 88E1545. More can
-> > be added.
-> > 
-> > The code reads LEDs definitions from the device-tree node of the PHY.
-> > 
-> > This patch does not yet add support for compound LED modes. This could
-> > be achieved via the LED multicolor framework (which is not yet in
-> > upstream).
-> > 
-> > Settings such as HW blink rate or pulse stretch duration are not yet
-> > supported, nor are LED polarity settings.
-> > 
-> > Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> > ---
-> >  drivers/net/phy/Kconfig   |   1 +
-> >  drivers/net/phy/marvell.c | 364 ++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 365 insertions(+)
-> > 
-> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> > index ffea11f73acd..5428a8af26d2 100644
-> > --- a/drivers/net/phy/Kconfig
-> > +++ b/drivers/net/phy/Kconfig
-> > @@ -462,6 +462,7 @@ config LXT_PHY
-> >  
-> >  config MARVELL_PHY
-> >  	tristate "Marvell PHYs"
-> > +	depends on LED_TRIGGER_PHY_HW  
-> 
-> Does it really depend on it? I think the driver will work fine without
-> it, just the LED control will be missing.
-> 
-> It is really a policy question. Cable test is always available, there
-> is no Kconfig'ury to stop it getting built. Is LED support really big
-> so that somebody might want to disable it? I think not. So lets just
-> enable it all the time.
+Hm yeah I guess that's something we should paper over a bit, but maybe
+the bugfix will take care of that.
 
-OK
+> In the end, this sequence modeset_disable -> atomic_begin ->
+> atomic_flush: refcount going from 0 to 1 and than drm_vblank_enable
+> prepares to everything going well in the next subtest (because
+> atomic_disable is not called).
+>
+> 3. It could be nice, but in the next subtest (with success), as refcount +
+> vblank_enabled ok, after doind its job, it calls
+> atomic_disable->vblank_off and here refcount ends 1 and vblank disabled
+> (the problem returns).
+> So, we have a kind of good turn and bad turn.
+>
+> I tried different things, but the only relatively stable result was
+> putting the sequence modeset_disable + modeset_enables + commit_planes in
+> the commit_tail. That didn't convince me and then I keep trying things.
 
-> >  	help
-> >  	  Currently has a driver for the 88E1011S
-> >    
-> 
-> > +enum {
-> > +	L1V0_RECV		= BIT(0),
-> > +	L1V0_COPPER		= BIT(1),
-> > +	L1V5_100_FIBER		= BIT(2),
-> > +	L1V5_100_10		= BIT(3),
-> > +	L2V2_INIT		= BIT(4),
-> > +	L2V2_PTP		= BIT(5),
-> > +	L2V2_DUPLEX		= BIT(6),
-> > +	L3V0_FIBER		= BIT(7),
-> > +	L3V0_LOS		= BIT(8),
-> > +	L3V5_TRANS		= BIT(9),
-> > +	L3V7_FIBER		= BIT(10),
-> > +	L3V7_DUPLEX		= BIT(11),  
-> 
-> Maybe also add COMMON?
+This actually sounds like a good idea, I had the same one. Doing it
+this way should also resolve the WARNING you've pointed out I think?
 
-These are meant to be interpreted as flag bits, one LED can have
-multiple flags. Most time in kernel bit fields use 0, not a constant,
-to express no flag.
+But I'm still wondering why after step 3 we don't get -EINVAL from
+vblank_get() - after vblank_off() vblank->enabled should be false
+again, getting us back to the same state as after 1. Is that not
+happening?
+-Daniel
 
-> > +};
-> > +
-> > +struct marvell_led_mode_info {
-> > +	const char *name;
-> > +	s8 regval[MARVELL_PHY_MAX_LEDS];
-> > +	u32 flags;  
-> 
-> Maybe give the enum a name, and use it here? It can be quite hard
-> tracking the meaning of flags in this code. Here, it is an indication
-> of an individual feature.
+>
+> > >
+> > > Thanks
+> > > -Sidong
+> > >
+> > > > > >
+> > > > > > >             crtc->state->event = NULL;
+> > > > > > >     }
+> > > > > > >
+> > > > > > > --
+> > > > > > > 2.27.0
+> > > > > > >
+> > > > > >
+> > > > > > --
+> > > > > > Daniel Vetter
+> > > > > > Software Engineer, Intel Corporation
+> > > > > > http://blog.ffwll.ch
+> > > >
+> > > >
+> > > >
+> > > > --
+> > > > Daniel Vetter
+> > > > Software Engineer, Intel Corporation
+> > > > http://blog.ffwll.ch
+> > > > _______________________________________________
+> > > > dri-devel mailing list
+> > > > dri-devel@lists.freedesktop.org
+> > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >
+> >
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
 
-led_flags?
 
-> 
-> > +};
-> > +
-> > +static const struct marvell_led_mode_info marvell_led_mode_info[] = {
-> > +	{ "link",			{ 0x0,  -1, 0x0,  -1,  -1,  -1, }, 0 },  
-> 
-> Replace flags 0 with COMMON?
-> 
-> > +	{ "link/act",			{ 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, }, 0 },
-> > +	{ "1Gbps/100Mbps/10Mbps",	{ 0x2,  -1,  -1,  -1,  -1,  -1, }, 0 },
-> > +	{ "act",			{ 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, }, 0 },
-> > +	{ "blink-act",			{ 0x4, 0x4, 0x4, 0x4, 0x4, 0x4, }, 0 },
-> > +	{ "tx",				{ 0x5,  -1, 0x5,  -1, 0x5, 0x5, }, 0 },
-> > +	{ "tx",				{  -1,  -1,  -1, 0x5,  -1,  -1, }, L3V5_TRANS },
-> > +	{ "rx",				{  -1,  -1,  -1,  -1, 0x0, 0x0, }, 0 },
-> > +	{ "rx",				{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_RECV },
-> > +	{ "copper",			{ 0x6,  -1,  -1,  -1,  -1,  -1, }, 0 },
-> > +	{ "copper",			{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_COPPER },
-> > +	{ "1Gbps",			{ 0x7,  -1,  -1,  -1,  -1,  -1, }, 0 },
-> > +	{ "link/rx",			{  -1, 0x2,  -1, 0x2, 0x2, 0x2, }, 0 },
-> > +	{ "100Mbps-fiber",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_FIBER },
-> > +	{ "100Mbps-10Mbps",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_10 },
-> > +	{ "1Gbps-100Mbps",		{  -1, 0x6,  -1,  -1,  -1,  -1, }, 0 },
-> > +	{ "1Gbps-10Mbps",		{  -1,  -1, 0x6, 0x6,  -1,  -1, }, 0 },
-> > +	{ "100Mbps",			{  -1, 0x7,  -1,  -1,  -1,  -1, }, 0 },
-> > +	{ "10Mbps",			{  -1,  -1, 0x7,  -1,  -1,  -1, }, 0 },
-> > +	{ "fiber",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_FIBER },
-> > +	{ "fiber",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_FIBER },
-> > +	{ "FullDuplex",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_DUPLEX },
-> > +	{ "FullDuplex",			{  -1,  -1,  -1,  -1, 0x6, 0x6, }, 0 },
-> > +	{ "FullDuplex/collision",	{  -1,  -1,  -1,  -1, 0x7, 0x7, }, 0 },
-> > +	{ "FullDuplex/collision",	{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_DUPLEX },
-> > +	{ "ptp",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_PTP },
-> > +	{ "init",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_INIT },
-> > +	{ "los",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_LOS },
-> > +	{ "hi-z",			{ 0xa, 0xa, 0xa, 0xa, 0xa, 0xa, }, 0 },
-> > +	{ "blink",			{ 0xb, 0xb, 0xb, 0xb, 0xb, 0xb, }, 0 },
-> > +};
-> > +
-> > +struct marvell_leds_info {
-> > +	u32 family;
-> > +	int nleds;
-> > +	u32 flags;  
-> 
-> Here flags is a combination of all the features this specific PHY
-> supports.
-> 
-> > +};
-> > +
-> > +#define LED(fam,n,flg)								\
-> > +	{									\
-> > +		.family = MARVELL_PHY_FAMILY_ID(MARVELL_PHY_ID_88E##fam),	\
-> > +		.nleds = (n),							\
-> > +		.flags = (flg),							\
-> > +	}									\
-> > +
-> > +static const struct marvell_leds_info marvell_leds_info[] = {
-> > +	LED(1112,  4, L1V0_COPPER | L1V5_100_FIBER | L2V2_INIT | L3V0_LOS | L3V5_TRANS | L3V7_FIBER),
-> > +	LED(1121R, 3, L1V5_100_10),
-> > +	LED(1240,  6, L3V5_TRANS),
-> > +	LED(1340S, 6, L1V0_COPPER | L1V5_100_FIBER | L2V2_PTP | L3V0_FIBER | L3V7_DUPLEX),
-> > +	LED(1510,  3, L1V0_RECV | L1V5_100_FIBER | L2V2_DUPLEX),
-> > +	LED(1545,  6, L1V0_COPPER | L1V5_100_FIBER | L3V0_FIBER | L3V7_DUPLEX),
-> > +};
-> > +
-> > +static inline int marvell_led_reg(int led)  
-> 
-> No inline functions in C code. Let the compiler decide.
 
-OK
-
-> 
-> > +{
-> > +	switch (led) {
-> > +	case 0 ... 3:
-> > +		return MII_PHY_LED_CTRL;
-> > +	case 4 ... 5:
-> > +		return MII_PHY_LED45_CTRL;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +}  
-> 
-> > +static inline bool is_valid_led_mode(struct marvell_priv *priv, struct marvell_phy_led *led,
-> > +				     const struct marvell_led_mode_info *mode)  
-> 
-> Same here, and anywhere else you might of used inline.
-> 
-> > +{
-> > +	return mode->regval[led->idx] != -1 && (!mode->flags || (priv->led_flags & mode->flags));  
-> 
-> If you have COMMON, this gets simpler.
-
-How? I need to check whether this specific LED mode has that specific
-flag bit...
-
-> > +}
-> > +  
-> 
-> > +static int marvell_register_led(struct phy_device *phydev, struct device_node *np, int nleds)
-> > +{
-> > +	struct marvell_priv *priv = phydev->priv;
-> > +	struct led_init_data init_data = {};
-> > +	struct marvell_phy_led *led;
-> > +	u32 reg, color;
-> > +	int err;
-> > +
-> > +	err = of_property_read_u32(np, "reg", &reg);
-> > +	if (err < 0)
-> > +		return err;
-> > +
-> > +	/*
-> > +	 * Maybe we should check here if reg >= nleds, where nleds is number of LEDs of this specific
-> > +	 * PHY.
-> > +	 */
-> > +	if (reg >= nleds) {
-> > +		phydev_err(phydev,
-> > +			   "LED node %pOF 'reg' property too large (%u, PHY supports max %u)\n",
-> > +			   np, reg, nleds - 1);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	led = &priv->leds[reg];
-> > +
-> > +	err = of_property_read_u32(np, "color", &color);
-> > +	if (err < 0) {
-> > +		phydev_err(phydev, "LED node %pOF does not specify color\n", np);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +#if 0
-> > +	/* LED_COLOR_ID_MULTI is not yet merged in Linus' tree */
-> > +	/* TODO: Support DUAL MODE */
-> > +	if (color == LED_COLOR_ID_MULTI) {
-> > +		phydev_warn(phydev, "node %pOF: This driver does not yet support multicolor LEDs\n",
-> > +			    np);
-> > +		return -ENOTSUPP;
-> > +	}
-> > +#endif  
-> 
-> Code getting committed should not be using #if 0. Is the needed code
-> in the LED tree? Do we want to consider a stable branch of the LED
-> tree which DaveM can pull into net-next? Or do you want to wait until
-> the next merge cycle?
-
-That's why this is RFC. But yes, I would like to have this merged for
-5.9, so maybe we should ask Dave. Is this common? Do we also need to
-tell Pavel or how does this work?
-
-> > +
-> > +	init_data.fwnode = &np->fwnode;
-> > +	init_data.devname_mandatory = true;
-> > +	init_data.devicename = phydev->attached_dev ? netdev_name(phydev->attached_dev) : "";  
-> 
-> This we need to think about. Are you running this on a system with
-> systemd? Does the interface have a name like enp2s0? Does the LED get
-> registered before or after systemd renames it from eth0 to enp2s0?
-
-Yes, well, this should be discussed also with LED guys. I don't suppose
-that renaming the sysfs symlink on interface rename event is
-appropriate, but who knows?
-The interfaces are platform specific, on mvebu. They aren't connected
-via PCI, so their names remain eth0, eth1 ...
-
-> > +
-> > +	if (led->cdev.max_brightness) {
-> > +		phydev_err(phydev, "LED node %pOF 'reg' property collision with another LED\n", np);
-> > +		return -EEXIST;
-> > +	}
-> > +
-> > +	led->cdev.max_brightness = 1;
-> > +	led->cdev.brightness_set_blocking = marvell_led_brightness_set;
-> > +	led->cdev.trigger_type = &phy_hw_led_trig_type;
-> > +	led->idx = reg;
-> > +
-> > +	of_property_read_string(np, "linux,default-trigger", &led->cdev.default_trigger);
-> > +
-> > +	err = devm_led_classdev_register_ext(&phydev->mdio.dev, &led->cdev, &init_data);
-> > +	if (err < 0) {
-> > +		phydev_err(phydev, "Cannot register LED %pOF: %i\n", np, err);
-> > +		return err;
-> > +	}  
-> 
-> I don't like having the DT binding in the driver. We want all PHY
-> drivers to use the same binding, and not feel free to implement
-> whatever they want in their own driver. These are all standard
-> properties which all PHY drivers should be using. So lets move it into
-> phylib core. That also allows us to specify the properties in DT,
-> maybe just pulling in the core LED yaml stuff.
-> 
-
-I also want this code to be generalized somehow so that it can be
-reused. The problem is that I want to have support for DUAL mode, which
-is Marvell specific, and a DUAL LED needs to be defined in device tree.
-
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void marvell_register_leds(struct phy_device *phydev)
-> > +{
-> > +	struct marvell_priv *priv = phydev->priv;
-> > +	struct device_node *node = phydev->mdio.dev.of_node;
-> > +	struct device_node *leds, *led;
-> > +	const struct marvell_leds_info *info = NULL;
-> > +	int i;  
-> 
-> Reverse Christmas tree.
-> 
-> > +
-> > +	/* some families don't support LED control in this driver yet */
-> > +	if (!phydev->drv->led_set_hw_mode)
-> > +		return;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(marvell_leds_info); ++i) {
-> > +		if (MARVELL_PHY_FAMILY_ID(phydev->phy_id) == marvell_leds_info[i].family) {
-> > +			info = &marvell_leds_info[i];
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +	if (!info)
-> > +		return;
-> > +
-> > +	priv->led_flags = info->flags;
-> > +
-> > +#if 0
-> > +	/*
-> > +	 * TODO: here priv->led_flags should be changed so that hw_control values
-> > +	 * for unsupported modes won't be shown. This cannot be deduced from
-> > +	 * family only: for example the 88E1510 family contains 88E1510 which
-> > +	 * does not support fiber, but also 88E1512, which supports fiber.
-> > +	 */
-> > +	switch (MARVELL_PHY_FAMILY_ID(phydev->phy_id)) {
-> > +	}
-> > +#endif
-> > +
-> > +	leds = of_get_child_by_name(node, "leds");
-> > +	if (!leds)
-> > +		return;
-> > +
-> > +	for_each_available_child_of_node(leds, led) {
-> > +		/* Should this check if some LED registration failed? */
-> > +		marvell_register_led(phydev, led, info->nleds);
-> > +	}
-> > +}
-> > +  
-> 
->   Andrew
-
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
