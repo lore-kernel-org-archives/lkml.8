@@ -2,136 +2,83 @@ Return-Path: <SRS0=eufF=BE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6117EC433DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF7882067D
-	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ACBB20759
+	for <linux-kernel@archiver.kernel.org>; Sat, 25 Jul 2020 03:18:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgGYDQ4 (ORCPT
+        id S1726870AbgGYDSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 24 Jul 2020 23:16:56 -0400
-Received: from mga04.intel.com ([192.55.52.120]:9484 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726572AbgGYDQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 24 Jul 2020 23:16:56 -0400
-IronPort-SDR: 76meH047grQ2p5ubJdRPHAmNe4hyvfDlE847EQKvFfwLfauxZ++rj5wwkN7amGNprDizw1qhex
- ZHjZsOQud2uQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9692"; a="148297183"
-X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="148297183"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2020 20:16:55 -0700
-IronPort-SDR: TPy3bdlix38xGITNy8b49N+M72nPVehIVpdQv/yMQGR8+GoOVEvNHVvW+P4lbRVn6pVZ+l/SIJ
- BCqZpmBL98gA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,392,1589266800"; 
-   d="scan'208";a="289177446"
-Received: from jcrametz-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.73])
-  by orsmga006.jf.intel.com with ESMTP; 24 Jul 2020 20:16:50 -0700
-Date:   Sat, 25 Jul 2020 06:16:48 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jessica Yu <jeyu@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v5 5/6] kprobes: Use text_alloc() and text_free()
-Message-ID: <20200725031648.GG17052@linux.intel.com>
-References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
- <20200724050553.1724168-6-jarkko.sakkinen@linux.intel.com>
- <20200724092746.GD517988@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724092746.GD517988@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Fri, 24 Jul 2020 23:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726572AbgGYDSA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 24 Jul 2020 23:18:00 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3F9EC0619D3;
+        Fri, 24 Jul 2020 20:18:00 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EBE241277D60E;
+        Fri, 24 Jul 2020 20:01:14 -0700 (PDT)
+Date:   Fri, 24 Jul 2020 20:17:59 -0700 (PDT)
+Message-Id: <20200724.201759.487082545769759347.davem@davemloft.net>
+To:     xie.he.0141@gmail.com
+Cc:     kuba@kernel.org, edumazet@google.com, ms@dev.tdt.de,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-x25@vger.kernel.org
+Subject: Re: [PATCH] drivers/net/wan: lapb: Corrected the usage of skb_cow
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200724163347.57213-1-xie.he.0141@gmail.com>
+References: <20200724163347.57213-1-xie.he.0141@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 24 Jul 2020 20:01:15 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 11:27:46AM +0200, Ingo Molnar wrote:
+From: Xie He <xie.he.0141@gmail.com>
+Date: Fri, 24 Jul 2020 09:33:47 -0700
+
+> This patch fixed 2 issues with the usage of skb_cow in LAPB drivers
+> "lapbether" and "hdlc_x25":
 > 
-> * Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+> 1) After skb_cow fails, kfree_skb should be called to drop a reference
+> to the skb. But in both drivers, kfree_skb is not called.
 > 
-> > Use text_alloc() and text_free() instead of module_alloc() and
-> > module_memfree() when an arch provides them.
-> > 
-> > Cc: linux-mm@kvack.org
-> > Cc: Andi Kleen <ak@linux.intel.com>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  kernel/kprobes.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index 4e46d96d4e16..611fcda9f6bf 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -40,6 +40,7 @@
-> >  #include <asm/cacheflush.h>
-> >  #include <asm/errno.h>
-> >  #include <linux/uaccess.h>
-> > +#include <linux/vmalloc.h>
-> >  
-> >  #define KPROBE_HASH_BITS 6
-> >  #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
-> > @@ -111,12 +112,20 @@ enum kprobe_slot_state {
-> >  
-> >  void __weak *alloc_insn_page(void)
-> >  {
-> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > +	return text_alloc(PAGE_SIZE);
-> > +#else
-> >  	return module_alloc(PAGE_SIZE);
-> > +#endif
-> >  }
-> >  
-> >  void __weak free_insn_page(void *page)
-> >  {
-> > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
-> > +	text_free(page);
-> > +#else
-> >  	module_memfree(page);
-> > +#endif
-> >  }
+> 2) skb_cow should be called before skb_push so that is can ensure the
+> safety of skb_push. But in "lapbether", it is incorrectly called after
+> skb_push.
 > 
-> I've read the observations in the other threads, but this #ifdef 
-> jungle is silly, it's a de-facto open coded text_alloc() with a 
-> module_alloc() fallback...
-
-In the previous version I had:
-
-  https://lore.kernel.org/lkml/20200717030422.679972-4-jarkko.sakkinen@linux.intel.com/
-
-and I had just calls to text_alloc() and text_free() in corresponding
-snippet to the above.
-
-I got this feedback from Mike:
-
-  https://lore.kernel.org/lkml/20200718162359.GA2919062@kernel.org/
-
-I'm not still sure that I fully understand this feedback as I don't see
-any inherent and obvious difference to the v4. In that version fallbacks
-are to module_alloc() and module_memfree() and text_alloc() and
-text_memfree() can be overridden by arch.
-
-> Thanks,
+> More details about these 2 issues:
 > 
-> 	Ingo
+> 1) The behavior of calling kfree_skb on failure is also the behavior of
+> netif_rx, which is called by this function with "return netif_rx(skb);".
+> So this function should follow this behavior, too.
+> 
+> 2) In "lapbether", skb_cow is called after skb_push. This results in 2
+> logical issues:
+>    a) skb_push is not protected by skb_cow;
+>    b) An extra headroom of 1 byte is ensured after skb_push. This extra
+>       headroom has no use in this function. It also has no use in the
+>       upper-layer function that this function passes the skb to
+>       (x25_lapb_receive_frame in net/x25/x25_dev.c).
+> So logically skb_cow should instead be called before skb_push.
+> 
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Martin Schiller <ms@dev.tdt.de>
+> Signed-off-by: Xie He <xie.he.0141@gmail.com>
 
-/Jarkko
+Applied, thank you.
