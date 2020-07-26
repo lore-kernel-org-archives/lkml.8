@@ -2,1255 +2,501 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 19:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 19:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7886C20715
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 19:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D15620658
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 19:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="c4aT/qv+"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="lrIWnp3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgGZTMn (ORCPT
+        id S1727834AbgGZTRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 15:12:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgGZTMm (ORCPT
+        Sun, 26 Jul 2020 15:17:02 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:45765 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgGZTRA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 15:12:42 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 590C2C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 12:12:42 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id s189so7548804iod.2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 12:12:42 -0700 (PDT)
+        Sun, 26 Jul 2020 15:17:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bEmZMuyWQTSPfNgvUpgg44xUwgQHdNkJ28pIaoywzXg=;
-        b=c4aT/qv+HPSTeNbtXtkH3tY9NoLybf2C/kUerwC6tCMiyrKrhgmx4/KrtcUdd8bxFB
-         JUv7ixamVy1BkabZZjOZXIyUykDdgFlPv7s/E0/6bXe10d9VxVTSFuOvMhkZ2tHeTYlT
-         Fo6eUElXqCn+mE6HzrVbhq86NEOq99kIbIzI8iQKfLTJp9lksjJqy8YPBoRFsbomYB8i
-         +nRsiolBK45F6iRHqLf5zuNGfYyt2133LtDiNy+7kcfltKOrq2spz0cmYSTeox2op176
-         /qqJD25+lbjA8/ypY7B6W3RD4R61kjMAIdlH+sDjQm6TNq0ZItfzPmkUxdDcGc1r7TGx
-         F4SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bEmZMuyWQTSPfNgvUpgg44xUwgQHdNkJ28pIaoywzXg=;
-        b=I98FjYRyuPlpLpFWbcPBi63pi17ilI3H/lUNWkgfP+fWIEo5qIUa+916MvsvMBDTRz
-         RotJXagMUBRRAMihCQvz5QRaYdaZSj3A/nj+q1JVEM+KqjuaoSBarBtCnVi/C3CKuU/s
-         I2Jj0Snxr/qPtZ3vCNR9Aqq6hJjTOaoZmLkOI3OCHhiGlVHCDHj3seMLHmMEZ/Q2YDJU
-         V+GDK+XlPw3VVzmElp76HJHBNK1UwxDDiY5S7hcKKwLCTcC3SyvG9vx4by7awMCpHMVy
-         l4QYYGZKmdxAGs+trwIb2MWcVRc17s0jvDftYKioJ2xhYA6H9+w9TBZndl0ZANEmHiIj
-         qYZw==
-X-Gm-Message-State: AOAM533ftmP1LkEi+oUCTZK0ZMG4WPGRO1OjqLR7JY8OkPBnpTQTMi0Z
-        wyb9uw8JFdYpII2dqz8MZifg6BcshsibWXzJEfi9
-X-Google-Smtp-Source: ABdhPJwP24+4KpXrQx79gJZRf8F1GbPFGnW/waalZom3xyZHMT25rq1Ofq5wJOK9CXHcc5bDJdpB2za/RJiOvmgp+ws=
-X-Received: by 2002:a02:cd91:: with SMTP id l17mr21808527jap.88.1595790761064;
- Sun, 26 Jul 2020 12:12:41 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1595791017; x=1627327017;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=WlxI5b9FvNHnwzD/PwtfJcwYJUVrPK6RvHHRToO/26E=;
+  b=lrIWnp3OSSeBidjig/TuYx6QmlUyJj9UqCSuVNRBuQkn8vIMJ9MdHG2p
+   r4RNG1ueRrewj7Pe8swHjNWOFgOTTIdY/oDBb9bx/8yBCn9qyAHNlu1BT
+   PO9FRHROG1QaQUv9kDx8Rh88FPGgGqPglN8AyUUWga92hzHQ3zaX331DX
+   U=;
+IronPort-SDR: pFvlNgP05apl+zk/4vfFb5ISS+YqGRYvMjLP+/qbTmq74CnDFSAiQy/WAQDhfGFk+aO7lhkjt3
+ fcr3d54cfgkw==
+X-IronPort-AV: E=Sophos;i="5.75,399,1589241600"; 
+   d="scan'208";a="44179509"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 26 Jul 2020 19:16:54 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 32F31A25C9;
+        Sun, 26 Jul 2020 19:16:53 +0000 (UTC)
+Received: from EX13D01EUB001.ant.amazon.com (10.43.166.194) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sun, 26 Jul 2020 19:16:52 +0000
+Received: from uf25486d27d2d5b.ant.amazon.com (10.43.161.71) by
+ EX13D01EUB001.ant.amazon.com (10.43.166.194) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Sun, 26 Jul 2020 19:16:43 +0000
+From:   Talel Shenhar <talel@amazon.com>
+To:     <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>,
+        <talel@amazon.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <nicolas.ferre@microchip.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <hhhawa@amazon.com>, <ronenk@amazon.com>, <jonnyc@amazon.com>,
+        <hanochu@amazon.com>, <eitan@amazon.com>
+Subject: [PATCH v8 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna Labs Memory Controller EDAC
+Date:   Sun, 26 Jul 2020 22:15:55 +0300
+Message-ID: <20200726191555.5210-3-talel@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200726191555.5210-1-talel@amazon.com>
+References: <20200726191555.5210-1-talel@amazon.com>
 MIME-Version: 1.0
-References: <20200724120637.GA427284@vaishnav-VirtualBox> <15cab987-6eaa-9137-0f70-4735b3fea87f@linaro.org>
-In-Reply-To: <15cab987-6eaa-9137-0f70-4735b3fea87f@linaro.org>
-From:   Vaishnav M A <vaishnav@beagleboard.org>
-Date:   Mon, 27 Jul 2020 00:42:27 +0530
-Message-ID: <CALudOK6SrEKDdDv4CwPdZqH_KGHxwotbjgajo4dzf8FY22UVEA@mail.gmail.com>
-Subject: Re: [greybus-dev] [PATCH] RFC : mikroBUS driver for add-on boards
-To:     Alex Elder <elder@linaro.org>
-Cc:     greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, arnd@arndb.de, johan@kernel.org,
-        elder@kernel.org, rajkovic@mikroe.com, robh@kernel.org,
-        mchehab+huawei@kernel.org,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        Drew Fustini <drew@beagleboard.org>, davem@davemloft.net,
-        zoran.stojsavljevic@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.71]
+X-ClientProxiedBy: EX13D05UWC001.ant.amazon.com (10.43.162.82) To
+ EX13D01EUB001.ant.amazon.com (10.43.166.194)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 8:34 PM Alex Elder <elder@linaro.org> wrote:
->
-> On 7/24/20 7:06 AM, Vaishnav M A wrote:
-> > Attached is a patch for the mikroBUS driver which helps to
-> > instantiate an add-on board device on a mikrobus port by fetching
-> > the device identifier manifest binary from an EEPROM on-board
-> > the device. mikroBUS is an add-on board socket standard by
-> > MikroElektronika that can be freely used by anyone
-> > following the guidelines, more details and discussions on
-> > the status of the driver can be found here in this eLinux wiki:
-> > https://elinux.org/Mikrobus
->
-> I had some other things I would comment on in this code review,
-> but there are a lot of somewhat superficial things you should
-> fix.  I looked at much--but not all--of this, and I'll want to
-> review this again after you've fixed the simple things.  I also
-> can provide more substantive feedback after I've had more time
-> to digest the bigger picture of microBUS.
->
-Thanks again Alex for the review and the suggestions, I have gone
-through and will make the suggested changes wherever they
-are applicable and get back. I hope the document Jason shared
-will have enough details on the hardware and software
-architecture to give you an overview.
-> You should assume it will take a few iterations to get to the
-> point where things are shaping up for acceptance.
->
-Sure, this is understood
-> All that said, your basic foundation looks good.
->
-> > In the current state of the driver, more than 80 different
-> > add-on boards have been tested on the BeagleBoard.org
-> > PocketBeagle and the manifest binary is generated using the same
-> > manifesto tool used to generate Greybus manifest binaries,
-> > The pull request to manifesto to add new descriptors specific
-> > to mikrobus is here : https://github.com/projectara/manifesto/pull/2
-> > The utilization of Greybus manifest binaries here is not entirely
-> > coincidental, We are evaluating ways to add mikroBUS sockets and
-> > devices via Greybus expansion.
-> >
-> > The mikroBUS standard includes SPI, I2C, UART, PWM, ADC, GPIO
-> > and power (3.3V and 5V) connections to interface common embedded
-> > peripherals, There are more than 750 add-on boards ranging from
-> > wireless connectivity boards to human-machine interface sensors
-> > which conform to the mikroBUS standard, out of which more than 140
-> > boards already have support in the Linux kernel.Today, there is no
-> > mainlinesolution for enabling mikroBUS add-on boards at run-time, the
-> > most straight forward method for loading drivers is to provide
-> > device-tree overlay fragments at boot time, this method suffers
-> > from the need to maintain a large out-of-tree database for which there
-> > is need to maintain an overlay for every mikroBUS add-on board for every
-> > Linux system and for every mikroBUS socket on that system.
-> >
-> > The mikroBUS driver tries to solve the problem by using extended version
-> > of the greybus manifest to describe the add-on board device specific
-> > information required by the device driver and uses it along with the fixed
-> > port specific information to probe the specific device driver.The manifest
-> > binary is now fetched from an I2C EEPROM over the I2C bus on the mikroBUS
-> > port(subject to change in mikroBUS v3 specification) and enumerate drivers
-> > for the add-on devices.There is also ongoing work to define a mikroBUS
-> > v3 standard in which the addon board includes a non-volatile storage to
-> > store the device identifier manifest binary, once the mikroBUS v3 standard
-> > is released, the mikroBUS can be seen as a probeable bus such that the
-> > kernel can discover the device on the bus at boot time.
-> >
-> > The driver also has a few debug SysFS interfaces for testing on add-on
-> > boards without an EEPROM, these can be used in the following manner:
-> > (example for mikroBUS port 1 on BeagleBoard.org PocketBeagle):
->
-> You should probably use debugfs, since this is a temporary thing.
-> But I guess if it's not actually upstream (and it sounds like you
-> might be avoiding the need for this with EEPROM anyway) maybe
-> that doesn't matter much.
->
-> > printf "%b" '\x01\x00\x00\x59\x32\x17' > /sys/bus/mikrobus/add_port
-> >
-> > The bytes in the byte array sequence are (in order):
-> >
-> >       * i2c_adap_nr
-> >       * spi_master_nr
-> >       * serdev_ctlr_nr
-> >       * rst_gpio_nr
-> >       * pwm_gpio_nr
-> >       * int_gpio_nr
-> > * add_port sysFS entry is purely for debug and in the actual state
-> > of the driver, port configuration will be loaded from a suitable
-> > device tree overlay fragment.
-> >
-> > echo 0 > /sys/bus/mikrobus/del_port (to delete the attached port)
-> > echo 1 >  /sys/class/mikrobus-port/mikrobus-0/rescan (to rescan the EEPROM
-> > contents on the I2C bus on the mikroBUS port).
-> >
-> > cat board_manifest.mnfb >  /sys/class/mikrobus-port/mikrobus-0/new_device
-> > * debug interface to pass the manifest binary in case an EEPROM is absent
-> > echo 0 >  /sys/class/mikrobus-port/mikrobus-0/delete_device
-> > * to unload the loaded board on the mikrobus port
-> >
-> > These sysFS interfaces are only implemented for debug purposes and
-> > in the actual implementation of the driver these will be removed and
-> > the manifest binary will be fetched from the non volatile storage on-board
-> > the device.
-> >
-> > The mikroBUS driver enable the mikroBUS to be a probeable bus such that
-> > the kernel can discover the device and automatically load the drivers.
-> > There are already several Linux platforms with mikroBUS sockets and the
-> > mikroBUS driver helps to reduce the time to develop and debug
-> > support for various mikroBUS add-on boards. Further, it opens up
-> > the possibility for support under dynamically instantiated buses
-> > such as with Greybus.
-> >
-> > Please let know the feedback you have on this patch or the approach used.
-> >
-> > Thanks,
-> >
-> > Vaishnav M A
-> >
-> > Signed-off-by: Vaishnav M A <vaishnav@beagleboard.org>
-> > ---
-> >  MAINTAINERS                               |   6 +
-> >  drivers/misc/Kconfig                      |   1 +
-> >  drivers/misc/Makefile                     |   1 +
-> >  drivers/misc/mikrobus/Kconfig             |  16 +
-> >  drivers/misc/mikrobus/Makefile            |   5 +
-> >  drivers/misc/mikrobus/mikrobus_core.c     | 649 ++++++++++++++++++++++
-> >  drivers/misc/mikrobus/mikrobus_core.h     | 130 +++++
-> >  drivers/misc/mikrobus/mikrobus_manifest.c | 390 +++++++++++++
-> >  drivers/misc/mikrobus/mikrobus_manifest.h |  21 +
-> >  include/linux/greybus/greybus_manifest.h  |  53 ++
-> >  10 files changed, 1272 insertions(+)
-> >  create mode 100644 drivers/misc/mikrobus/Kconfig
-> >  create mode 100644 drivers/misc/mikrobus/Makefile
-> >  create mode 100644 drivers/misc/mikrobus/mikrobus_core.c
-> >  create mode 100644 drivers/misc/mikrobus/mikrobus_core.h
-> >  create mode 100644 drivers/misc/mikrobus/mikrobus_manifest.c
-> >  create mode 100644 drivers/misc/mikrobus/mikrobus_manifest.h
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index d53db30d1365..9a049746203f 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -11402,6 +11402,12 @@ M:   Oliver Neukum <oliver@neukum.org>
-> >  S:   Maintained
-> >  F:   drivers/usb/image/microtek.*
-> >
-> > +MIKROBUS ADDON BOARD DRIVER
-> > +M:   Vaishnav M A <vaishnav@beagleboard.org>
-> > +S:   Maintained
-> > +W:   https://elinux.org/Mikrobus
-> > +F:   drivers/misc/mikrobus/
-> > +
-> >  MIPS
-> >  M:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> >  L:   linux-mips@vger.kernel.org
-> > diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> > index e1b1ba5e2b92..334f0c39d56b 100644
-> > --- a/drivers/misc/Kconfig
-> > +++ b/drivers/misc/Kconfig
-> > @@ -472,4 +472,5 @@ source "drivers/misc/ocxl/Kconfig"
-> >  source "drivers/misc/cardreader/Kconfig"
-> >  source "drivers/misc/habanalabs/Kconfig"
-> >  source "drivers/misc/uacce/Kconfig"
-> > +source "drivers/misc/mikrobus/Kconfig"
-> >  endmenu
-> > diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> > index c7bd01ac6291..45486dd77da5 100644
-> > --- a/drivers/misc/Makefile
-> > +++ b/drivers/misc/Makefile
-> > @@ -40,6 +40,7 @@ obj-$(CONFIG_VMWARE_BALLOON)        += vmw_balloon.o
-> >  obj-$(CONFIG_PCH_PHUB)               += pch_phub.o
-> >  obj-y                                += ti-st/
-> >  obj-y                                += lis3lv02d/
-> > +obj-y                                += mikrobus/
-> >  obj-$(CONFIG_ALTERA_STAPL)   +=altera-stapl/
-> >  obj-$(CONFIG_INTEL_MEI)              += mei/
-> >  obj-$(CONFIG_VMWARE_VMCI)    += vmw_vmci/
-> > diff --git a/drivers/misc/mikrobus/Kconfig b/drivers/misc/mikrobus/Kconfig
-> > new file mode 100644
-> > index 000000000000..c3b93e12daad
-> > --- /dev/null
-> > +++ b/drivers/misc/mikrobus/Kconfig
-> > @@ -0,0 +1,16 @@
-> > +menuconfig MIKROBUS
-> > +     tristate "Module for instantiating devices on mikroBUS ports"
-> > +     help
-> > +       This option enables the mikroBUS driver. mikroBUS is an add-on
-> > +       board socket standard that offers maximum expandability with
-> > +       the smallest number of pins. The mikroBUS driver helps in
-> > +       instantiating devices on the mikroBUS port with identifier
-> > +       data fetched from an EEPROM on the device, more details on
-> > +       the mikroBUS driver support and discussion can be found in
-> > +       this eLinux wiki : elinux.org/Mikrobus
->
-> This text could be cleaned up a bit.  For example:
->         The mikroBUS driver instantiates devices on a mikroBUS port
->         described by identifying data present in device-resident EEPROM.
->
-> Using well-defined terms can help a lot.  Is a physical thing that
-> plugs into a microbus port called a "board"?  Can a "board" present
-> more than one device to the system?  Is the EEPROM associated with
-> the board, or a device?  My point isn't that those answers belong
-> here, but that having meaningful terms can help you describe things
-> concisely.
-Will refine the description here, as Jason already replied to this,
-I will add to that, only a very few add-on boards present more than
-one device to the system, the mikrobus driver and additions to
-manifest is made considering this fact and can support multiple
-devices within a single add-on board.
->
-> > +       Say Y here to enable support for this driver.
-> > +
-> > +       To compile this code as a module, chose M here: the module
-> > +       will be called mikrobus.ko
-> > diff --git a/drivers/misc/mikrobus/Makefile b/drivers/misc/mikrobus/Makefile
-> > new file mode 100644
-> > index 000000000000..1f80ed4064d8
-> > --- /dev/null
-> > +++ b/drivers/misc/mikrobus/Makefile
-> > @@ -0,0 +1,5 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# mikroBUS Core
-> > +
-> > +mikrobus-y :=        mikrobus_core.o mikrobus_manifest.o
-> > +obj-$(CONFIG_MIKROBUS) += mikrobus.o
-> > \ No newline at end of file
-> > diff --git a/drivers/misc/mikrobus/mikrobus_core.c b/drivers/misc/mikrobus/mikrobus_core.c
-> > new file mode 100644
-> > index 000000000000..78c96c637632
-> > --- /dev/null
-> > +++ b/drivers/misc/mikrobus/mikrobus_core.c
-> > @@ -0,0 +1,649 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * mikroBUS driver for instantiating add-on
-> > + * board devices with an identifier EEPROM
-> > + *
-> > + * Copyright 2020 Vaishnav M A, BeagleBoard.org Foundation.
-> > + */
-> > +
-> > +#define pr_fmt(fmt) "mikrobus: " fmt
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/idr.h>
-> > +#include <linux/init.h>
-> > +#include <linux/jump_label.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/device.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/gpio.h>
-> > +#include <linux/gpio/machine.h>
-> > +#include <linux/nvmem-consumer.h>
-> > +#include <linux/nvmem-provider.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/spi/spi.h>
-> > +#include <linux/serdev.h>
-> > +#include <linux/property.h>
-> > +#include <linux/slab.h>
-> > +
-> > +#include "mikrobus_core.h"
-> > +#include "mikrobus_manifest.h"
-> > +
-> > +#define ATMEL_24C32_I2C_ADDR 0x57
->
-> I'm just getting started looking through this, so maybe I'll find
-> out soon. But why is this ATMEL I2C address needed in the core code?
->
-This is the address for the EEPROM on the I2C  bus, this is temporary
-and is not expected to exist in the actual driver code as the EEPROM
-will most probably not be on the I2C bus and even if there is any
-configuration required it will go with the device tree fragment that
-contains the port configuration.
+The Amazon's Annapurna Labs Memory Controller EDAC supports ECC capability
+for error detection and correction (Single bit error correction, Double
+detection). This driver introduces EDAC driver for that capability.
 
-> > +static DEFINE_IDR(mikrobus_port_idr);
-> > +static struct class_compat *mikrobus_port_compat_class;
-> > +static bool is_registered;
-> > +
-> > +static ssize_t add_port_store(struct bus_type *bt, const char *buf,
-> > +                           size_t count)
-> > +{
-> > +     struct mikrobus_port_config *cfg;
-> > +
-> > +     if (count < sizeof(*cfg)) {
->
-> Perhaps this should be:
->         if (count != sizeof(*cfg)) {
->
-> > +             pr_err("add_port: incorrect config data received: %s\n", buf);
->
-> I don't think you need to include "add_port: ".
->
-> This is binary data you are writing to this sysfs file, correct?
-Yes, this is the port config binary data writtent to the sysfs file.
-> Don't try to interpret it as a string.  You could avoid the problem
-> with something more like:
->     pr_err("bad port config size (%zu, should be %zu)", count, sizeof(*cfg));
->
-> > +             return -EINVAL;
-> > +     }
-> > +     mikrobus_register_port_config((void *)buf);
->
-> mikrobus_register_port_config() returns an error value, and
-> that should be returned from this function if it's non-zero.
->
-> Don't cast the buffer to a void pointer; cast it to the actual
-> type represents (struct mikrobus_port_config *).
->
-> > +     return count;
-> > +}
-> > +BUS_ATTR_WO(add_port);
-> > +
-> > +static ssize_t del_port_store(struct bus_type *bt, const char *buf,
-> > +                                                       size_t count)
-> > +{
-> > +     int id;
-> > +     char end;
-> > +     int res;
-> > +
-> > +     res = sscanf(buf, "%d%c", &id, &end);
->
-> The id value you pass to idr_find() is an unsigned long.
-> You might as well define "id" with that type and scan that
-> type here.  Make sure it's in the valid range for your
-> identifier as a separate step.  (There might be a good
-> reason you use a signed int as an identifier, but I would
-> recommend unsigned, with a well-defined number of bits,
-> such as u32).
->
-> Is "end" intended to just consume an optional trailing newline?
-yes, end was intended to capture a trailing newline.
->
-> > +     if (res < 1) {
-> > +             pr_err("delete_port: cannot parse mikrobus port ID\n");
->
-> I don't think "delete_port: " here is necessary.  (Take this
-> comment to apply in all similar cases; I won't mention it
-> again.)
->
-> > +             return -EINVAL;
-> > +     }
-> > +     if (!idr_find(&mikrobus_port_idr, id)) {
-> > +             pr_err("attempting to delete unregistered port [%d]\n", id);
->
-> Maybe just "mikrobus port %lu not registered".
->
-> > +             return -EINVAL;
-> > +     }
-> > +     mikrobus_del_port(idr_find(&mikrobus_port_idr, id));
-> > +     return count;
-> > +}
-> > +BUS_ATTR_WO(del_port);
-> > +
-> > +static struct attribute *mikrobus_attrs[] = {
-> > +     &bus_attr_add_port.attr,
-> > +     &bus_attr_del_port.attr,
-> > +      NULL
-> > +};
-> > +ATTRIBUTE_GROUPS(mikrobus);
-> > +
-> > +struct bus_type mikrobus_bus_type = {
-> > +     .name = "mikrobus",
-> > +     .bus_groups = mikrobus_groups,
-> > +};
-> > +EXPORT_SYMBOL_GPL(mikrobus_bus_type);
-> > +
-> > +static int mikrobus_manifest_header_validate(struct mikrobus_port *port)
-> > +{
-> > +     char header[12];
-> > +     struct addon_board_info *board;
-> > +     int manifest_size;
-> > +     int retval;
-> > +     char *buf;
-> > +
-> > +     nvmem_device_read(port->eeprom, 0, 12, header);
->
-> This function returns a value, and if it's less than zero you
-> should return it as the result of mikrobus_manifest_header_validate()
-> (possibly after reporting an error).
->
-> > +     manifest_size = mikrobus_manifest_header_validate(header, 12);
-> > +     if (manifest_size > 0) {
-> > +             buf = kzalloc(manifest_size, GFP_KERNEL);
->
-> Check whether kzalloc() returns NULL, and if so, return -ENOMEM.
->
-> > +             nvmem_device_read(port->eeprom, 0, manifest_size, buf);
->
-> Check the return value here, and if negative, free your buffer
-> and return the error.  (I won't make this comment any more if
-> I see other instances of ignoring the nvmem_device_read()
-> return value.)
->
-> > +             board = kzalloc(sizeof(*board), GFP_KERNEL);
-> > +             if (!board)
-> > +                     return -ENOMEM;
->
-> You need to free the buffer you allocated before you return here.
-> It is helpful to use the "goto <error path>" pattern.  I.e.:
->
->         if (!board) {
->                 retval = -ENOMEM;
->                 goto err_free_buf;
->         }
-> ...
->
-> err_free_buf:
->         kfree(buf);
->
->         return retval;
-> }
->
-> > +             INIT_LIST_HEAD(&board->manifest_descs);
-> > +             INIT_LIST_HEAD(&board->devices);
-> > +             retval = mikrobus_manifest_parse(board, (void *)buf, manifest_size);
->
-> No need to cast buf to (void *).
->
-> I have more comments on mikrobus_manifest_parse() below.  But it
-> might be useful to have it return an integer (0 or error code)
-> rather than Boolean.  Assuming you did that...
->
-> > +             if (!retval) {
-> > +                     pr_err("failed to parse manifest, size: %d", manifest_size);
->
->         if (retval)
->                 goto err_free_board;
-> ...
->
-> err_free_board:
->         free_board(board);
-> err_free_buf:
->         free_buf(buf);
->
->         return retval;
-> }
->
-> > +                     return -EINVAL;
-> > +             }
-> > +             retval = mikrobus_register_board(port, board);
-> > +             if (retval) {
-> > +                     pr_err("failed to register board: %s", board->name);
->
->         goto err_free_board;
->
-> > +                     return -EINVAL;
-> > +             }
-> > +             kfree(buf);
-> > +     } else {
-> > +             pr_err("inavlide manifest port %d", port->id);
->
-> s/inavlide/invalid/
->
-> > +             return -EINVAL;
-> > +     }
-> > +     return 0;
-> > +}
-> > +
-> > +static ssize_t name_show(struct device *dev, struct device_attribute *attr,
-> > +                                              char *buf)
-> > +{
-> > +     return sprintf(buf, "%s\n", to_mikrobus_port(dev)->name);
-> > +}
-> > +static DEVICE_ATTR_RO(name);
-> > +
-> > +static ssize_t new_device_store(struct device *dev, struct device_attribute *attr,
-> > +                                      const char *buf, size_t count)
-> > +{
-> > +     struct mikrobus_port *port = to_mikrobus_port(dev);
-> > +     struct addon_board_info *board;
-> > +     int retval;
-> > +
-> > +     if (port->board == NULL) {
->
-> This is just a style suggestion, but I would prefer this, because it
-> reduces the indentation of the normal path:
->
->         if (port->board) {
->                 pr_err("mikrobus port %d already has a board registered\n",
->                         port->id);
->                 return -EBUSY;
->         }
->
->         port->board = kzalloc(...);
->         if (!port->board)
->                 return -ENOMEM;
->
-> Also note the return values I suggest here.
->
-> > +             board = kzalloc(sizeof(*board), GFP_KERNEL);
-> > +             if (!board)
-> > +                     return -EINVAL;
-> > +             INIT_LIST_HEAD(&board->manifest_descs);
-> > +             INIT_LIST_HEAD(&board->devices);
-> > +     } else {
-> > +             pr_err("port %d already has board registered", port->id);
-> > +             return -EINVAL;
-> > +     }
-> > +     retval = mikrobus_manifest_parse(board, (void *)buf, count);
-> > +     if (!retval) {
-> > +             pr_err("failed to parse manifest");
-> > +             return -EINVAL;
-> > +     }
-> > +     retval = mikrobus_register_board(port, board);
-> > +     if (retval) {
-> > +             pr_err("failed to register board: %s", board->name);
-> > +             return -EINVAL;
-> > +     }
-> > +     return count;
-> > +}
-> > +static DEVICE_ATTR_WO(new_device);
-> > +
-> > +static ssize_t rescan_store(struct device *dev, struct device_attribute *attr,
-> > +                                                     const char *buf, size_t count)
-> > +{
-> > +     struct mikrobus_port *port = to_mikrobus_port(dev);
-> > +     int id;
-> > +     char end;
-> > +     int res;
-> > +     int retval;
-> > +
-> > +     res = sscanf(buf, "%d%c", &id, &end);
-> > +     if (res < 1) {
-> > +             pr_err("rescan: Can't parse trigger\n");
-> > +             return -EINVAL;
-> > +     }
-> > +     if (port->board != NULL) {
-> > +             pr_err("port %d already has board registered", port->id);
-> > +             return -EINVAL;
-> > +     }
-> > +     retval = mikrobus_port_scan_eeprom(port);
-> > +     if (retval) {
-> > +             pr_err("port %d board register from manifest failed", port->id);
-> > +             return -EINVAL;
-> > +     }
-> > +     return count;
-> > +}
-> > +static DEVICE_ATTR_WO(rescan);
-> > +
-> > +static ssize_t delete_device_store(struct device *dev, struct device_attribute *attr,
-> > +                                                     const char *buf, size_t count)
-> > +{
-> > +     int id;
-> > +     char end;
-> > +     int res;
-> > +     struct mikrobus_port *port = to_mikrobus_port(dev);
-> > +
-> > +     res = sscanf(buf, "%d%c", &id, &end);
-> > +     if (res < 1) {
-> > +             pr_err("delete_board: Can't parse board ID\n");
-> > +             return -EINVAL;
-> > +     }
-> > +     if (port->board == NULL) {
->
-> Normally in kernel code this form is used:
->
->         if (!port->board) {
->
-> > +             pr_err("delete_board: port does not have any boards registered\n");
-> > +             return -EINVAL;
-> > +     }
-> > +     mikrobus_unregister_board(port, port->board);
-> > +     return count;
-> > +}
-> > +static DEVICE_ATTR_IGNORE_LOCKDEP(delete_device, 0200, NULL, delete_device_store);
-> > +
-> > +static struct attribute *mikrobus_port_attrs[] = {
-> > +     &dev_attr_new_device.attr, &dev_attr_rescan.attr,
-> > +     &dev_attr_delete_device.attr, &dev_attr_name.attr, NULL};
-> > +ATTRIBUTE_GROUPS(mikrobus_port);
-> > +
-> > +static void mikrobus_dev_release(struct device *dev)
-> > +{
-> > +     struct mikrobus_port *port = to_mikrobus_port(dev);
-> > +
-> > +     idr_remove(&mikrobus_port_idr, port->id);
-> > +     kfree(port);
-> > +}
-> > +
-> > +struct device_type mikrobus_port_type = {
-> > +     .groups = mikrobus_port_groups,
-> > +     .release = mikrobus_dev_release,
-> > +};
-> > +EXPORT_SYMBOL_GPL(mikrobus_port_type);
-> > +
-> > +static int mikrobus_get_irq(struct mikrobus_port *port, int irqno,
-> > +                                                     int irq_type)
-> > +{
-> > +     int irq;
-> > +
-> > +     switch (irqno) {
-> > +     case MIKROBUS_GPIO_INT:
-> > +     irq = gpiod_to_irq(port->int_gpio);
-> > +     break;
->
-> Please fix your indentation here.  (And everywhere; I give
-> an example of the proper way to do it below.)
->
-> > +     case MIKROBUS_GPIO_RST:
-> > +     irq = gpiod_to_irq(port->rst_gpio);
-> > +     break;
-> > +     case MIKROBUS_GPIO_PWM:
-> > +     irq = gpiod_to_irq(port->pwm_gpio);
-> > +     break;
-> > +     default:
-> > +     return -EINVAL;
-> > +     }
-> > +     if (irq < 0) {
-> > +             pr_err("Could not get irq for irq type: %d", irqno);
-> > +             return -EINVAL;
-> > +     }
-> > +     irq_set_irq_type(irq, irq_type);
->
-> It shouldn't return an error, but please check the
-> return value here.
->
-> > +     return irq;
-> > +}
-> > +
-> > +static int mikrobus_setup_gpio(struct gpio_desc *gpio, int gpio_state)
-> > +{
-> > +     int retval;
-> > +
-> > +     if (gpio_state == MIKROBUS_GPIO_UNUSED)
-> > +             return 0;
-> > +     switch (gpio_state) {
-> > +     case MIKROBUS_GPIO_INPUT:
-> > +     retval = gpiod_direction_input(gpio);
-> > +     break;
-> > +     case MIKROBUS_GPIO_OUTPUT_HIGH:
-> > +     retval = gpiod_direction_output(gpio, 1);
-> > +     gpiod_set_value_cansleep(gpio, 1);
-> > +     break;
-> > +     case MIKROBUS_GPIO_OUTPUT_LOW:
-> > +     retval = gpiod_direction_output(gpio, 0);
-> > +     gpiod_set_value_cansleep(gpio, 0);
-> > +     break;
-> > +     default:
-> > +     return -EINVAL;
-> > +     }
-> > +     return retval;
-> > +}
-> > +
-> > +static void mikrobus_spi_device_delete(struct spi_master *master, unsigned int cs)
-> > +{
-> > +     struct device *dev;
-> > +     char str[32];
-> > +
-> > +     snprintf(str, sizeof(str), "%s.%u", dev_name(&master->dev), cs);
-> > +     dev = bus_find_device_by_name(&spi_bus_type, NULL, str);
-> > +     if (dev != NULL) {
-> > +             spi_unregister_device(to_spi_device(dev));
-> > +             put_device(dev);
-> > +     }
-> > +}
-> > +
-> > +static char *mikrobus_get_gpio_chip_name(struct mikrobus_port *port, int gpio)
-> > +{
-> > +     char *name;
-> > +     struct gpio_chip *gpiochip;
-> > +
-> > +     switch (gpio) {
-> > +     case MIKROBUS_GPIO_INT:
-> > +     gpiochip = gpiod_to_chip(port->int_gpio);
-> > +     name = kmemdup(gpiochip->label, 40, GFP_KERNEL);
->
-> Why 40?  Please use a symbolic constant so you can
-> change it easily, and to give you a place to explain
-> why 40 is the limit used.
->
-> > +     break;
-> > +     case MIKROBUS_GPIO_RST:
-> > +     gpiochip = gpiod_to_chip(port->rst_gpio);
-> > +     name = kmemdup(gpiochip->label, 40, GFP_KERNEL);
-> > +     break;
-> > +     case MIKROBUS_GPIO_PWM:
-> > +     gpiochip = gpiod_to_chip(port->pwm_gpio);
-> > +     name = kmemdup(gpiochip->label, 40, GFP_KERNEL);
-> > +     break;
-> > +     }
-> > +     return name;
-> > +}
-> > +
-> > +static int mikrobus_get_gpio_hwnum(struct mikrobus_port *port, int gpio)
-> > +{
-> > +     int hwnum;
-> > +     struct gpio_chip *gpiochip;
-> > +
-> > +     switch (gpio) {
-> > +     case MIKROBUS_GPIO_INT:
-> > +     gpiochip = gpiod_to_chip(port->int_gpio);
-> > +     hwnum = desc_to_gpio(port->int_gpio) - gpiochip->base;
-> > +     break;
-> > +     case MIKROBUS_GPIO_RST:
-> > +     gpiochip = gpiod_to_chip(port->rst_gpio);
-> > +     hwnum = desc_to_gpio(port->rst_gpio) - gpiochip->base;
-> > +     break;
-> > +     case MIKROBUS_GPIO_PWM:
-> > +     gpiochip = gpiod_to_chip(port->pwm_gpio);
-> > +     hwnum = desc_to_gpio(port->pwm_gpio) - gpiochip->base;
-> > +     break;
-> > +     }
-> > +     return hwnum;
-> > +}
-> > +
-> > +static void release_mikrobus_device(struct board_device_info *dev)
->
-> We tend to follow a convention throughout the Greybus code
-> that has the object name as the prefix for things you do
-> to the object.  I don't know how consistent that is, but
-> my suggestion would be that these functions would be named
-> something more like:
->     mikrobus_gpio_chip_name_get()
->     mikrobus_gpio_hwnum_get()
->     mikrobus_board_release_device_all()
->     mikrobus_device_register()
->     mikrobus_device_unregister()
->     mikrobus_board_register()
->     mikrobus_board_unregister()
-> and so on.
->
-> > +{
-> > +     list_del(&dev->links);
-> > +     kfree(dev);
-> > +}
-> > +
->
-> (I skipped reviewing a lot here...)
-> . . .
->
-> > diff --git a/drivers/misc/mikrobus/mikrobus_core.h b/drivers/misc/mikrobus/mikrobus_core.h
-> > new file mode 100644
-> > index 000000000000..9684d315f564
-> > --- /dev/null
-> > +++ b/drivers/misc/mikrobus/mikrobus_core
-> . . .
->
-> > diff --git a/drivers/misc/mikrobus/mikrobus_manifest.c b/drivers/misc/mikrobus/mikrobus_manifest.c
-> > new file mode 100644
-> > index 000000000000..60ebca560f0d
-> > --- /dev/null
-> > +++ b/drivers/misc/mikrobus/mikrobus_manifest.c
-> > @@ -0,0 +1,390 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * mikroBUS manifest parsing, an
-> > + * extension to Greybus Manifest Parsing
-> > + * under drivers/greybus/manifest.c
-> > + *
-> > + * Copyright 2014-2015 Google Inc.
-> > + * Copyright 2014-2015 Linaro Ltd.
-> > + */
-> > +
-> > +#define pr_fmt(fmt) "mikrobus_manifest: " fmt
-> > +
-> > +#include <linux/bits.h>
-> > +#include <linux/types.h>
-> > +#include <linux/property.h>
-> > +#include <linux/greybus/greybus_manifest.h>
-> > +
-> > +#include "mikrobus_manifest.h"
-> > +
-> > +struct manifest_desc {
-> > +     struct list_head links;
-> > +     size_t size;
-> > +     void *data;
-> > +     enum greybus_descriptor_type type;
-> > +};
-> > +
-> > +static void release_manifest_descriptor(struct manifest_desc *descriptor)
-> > +{
-> > +     list_del(&descriptor->links);
-> > +     kfree(descriptor);
-> > +}
-> > +
-> > +static void release_manifest_descriptors(struct addon_board_info *info)
-> > +{
-> > +     struct manifest_desc *descriptor;
-> > +     struct manifest_desc *next;
-> > +
-> > +     list_for_each_entry_safe(descriptor, next, &info->manifest_descs, links)
-> > +             release_manifest_descriptor(descriptor);
-> > +}
-> > +
-> > +static int identify_descriptor(struct addon_board_info *info, struct greybus_descriptor *desc,
-> > +                                                                              size_t size)
-> > +{
->
-> I know it's technically acceptable now, but please limit your lines to
-> 80 characters in the Greybus code if possible.
->
-> > +     struct greybus_descriptor_header *desc_header = &desc->header;
-> > +     struct manifest_desc *descriptor;
-> > +     size_t desc_size;
-> > +     size_t expected_size;
-> > +
-> > +     if (size < sizeof(*desc_header))
-> > +             return -EINVAL;
-> > +     desc_size = le16_to_cpu(desc_header->size);
-> > +     if (desc_size > size)
-> > +             return -EINVAL;
->
-> Probably check if (desc_size != size) here.
->
-> > +     expected_size = sizeof(*desc_header);
-> > +     switch (desc_header->type) {
-> > +     case GREYBUS_TYPE_STRING:
-> > +     expected_size += sizeof(struct greybus_descriptor_string);
-> > +     expected_size += desc->string.length;
-> > +     expected_size = ALIGN(expected_size, 4);
-> > +     break;
->
-> Your indentation is wrong here.  Please use:
->
->         switch (desc_header->type) {
->         case GREYBUS_TYPE_STRING:
->                 expected_size += ...;
->                 ...
->                 break;
->         case GREYBUS_TYPE_PROPERTY:
->                 ...
->
-> > +     case GREYBUS_TYPE_PROPERTY:
-> > +     expected_size += sizeof(struct greybus_descriptor_property);
-> > +     expected_size += desc->property.length;
-> > +     expected_size = ALIGN(expected_size, 4);
-> > +     break;
-> > +     case GREYBUS_TYPE_DEVICE:
-> > +     expected_size += sizeof(struct greybus_descriptor_device);
-> > +     break;
-> > +     case GREYBUS_TYPE_MIKROBUS:
-> > +     expected_size += sizeof(struct greybus_descriptor_mikrobus);
-> > +     break;
-> > +     case GREYBUS_TYPE_INTERFACE:
-> > +     expected_size += sizeof(struct greybus_descriptor_interface);
-> > +     break;
-> > +     case GREYBUS_TYPE_CPORT:
-> > +     expected_size += sizeof(struct greybus_descriptor_cport);
-> > +     break;
-> > +     case GREYBUS_TYPE_BUNDLE:
-> > +     expected_size += sizeof(struct greybus_descriptor_bundle);
-> > +     break;
-> > +     case GREYBUS_TYPE_INVALID:
-> > +     default:
-> > +     return -EINVAL;
-> > +     }
-> > +
-> > +     descriptor = kzalloc(sizeof(*descriptor), GFP_KERNEL);
-> > +     if (!descriptor)
-> > +             return -ENOMEM;
-> > +     descriptor->size = desc_size;
-> > +     descriptor->data = (char *)desc + sizeof(*desc_header);
-> > +     descriptor->type = desc_header->type;
-> > +     list_add_tail(&descriptor->links, &info->manifest_descs);
-> > +     return desc_size;
-> > +}
->
-> . . .
->
-> > +static int mikrobus_manifest_attach_device(struct addon_board_info *info,
-> > +                                             struct greybus_descriptor_device *dev_desc)
-> > +{
-> > +     struct board_device_info *dev;
->
-> I would suggest something other than "dev" as the name of
-> a board_device.  The use of "dev" for (struct device *)
-> is pretty prevalent in the kernel, and so using it here
-> can be more confusing than it has to be.
->
-> > +     struct gpiod_lookup_table *lookup;
-> > +     struct greybus_descriptor_property *desc_property;
-> > +     struct manifest_desc *descriptor;
-> > +     int i;
-> > +     u8 *prop_link;
-> > +     u8 *gpio_desc_link;
-> > +
-> > +     dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-> > +     if (!dev)
-> > +             return -ENOMEM;
-> > +     dev->id = dev_desc->id;
-> > +     dev->drv_name = mikrobus_string_get(info, dev_desc->driver_stringid);
->
-> This can return NULL.  You need to check for that, and free
-> the board device you have already allocated.
->
-> > +     dev->protocol = dev_desc->protocol;
-> > +     dev->reg = dev_desc->reg;
-> > +     dev->irq = dev_desc->irq;
-> > +     dev->irq_type = dev_desc->irq_type;
-> > +     dev->max_speed_hz = le32_to_cpu(dev_desc->max_speed_hz);
-> > +     dev->mode = dev_desc->mode;
-> > +     dev->cs_gpio = dev_desc->cs_gpio;
-> > +     dev->num_gpio_resources = dev_desc->num_gpio_resources;
-> > +     dev->num_properties = dev_desc->num_properties;
-> > +     pr_info("device %d , number of properties=%d , number of gpio resources=%d\n",
-> > +     dev->id, dev->num_properties, dev->num_gpio_resources);
-> > +     if (dev->num_properties > 0) {
-> > +             prop_link = mikrobus_property_link_get(info, dev_desc->prop_link,
-> > +                                                             MIKROBUS_PROPERTY_TYPE_LINK);
-> > +             dev->properties = mikrobus_property_entry_get(info, prop_link, dev->num_properties);
-> > +     }
-> > +     if (dev->num_gpio_resources > 0) {
-> > +             lookup = kzalloc(struct_size(lookup, table, dev->num_gpio_resources),
-> > +                                     GFP_KERNEL);
-> > +     if (!lookup)
-> > +             return -ENOMEM;
->
-> You can't return without freeing your previously-allocated resources.
->
-> > +     gpio_desc_link = mikrobus_property_link_get(info, dev_desc->gpio_link,
-> > +                                             MIKROBUS_PROPERTY_TYPE_GPIO);
-> > +     for (i = 0; i < dev->num_gpio_resources; i++) {
-> > +             list_for_each_entry(descriptor, &info->manifest_descs, links) {
-> > +                     if (descriptor->type != GREYBUS_TYPE_PROPERTY)
-> > +                             continue;
-> > +                     desc_property = descriptor->data;
-> > +                     if (desc_property->id == gpio_desc_link[i]) {
-> > +                             lookup->table[i].chip_hwnum = *desc_property->value;
-> > +                             lookup->table[i].con_id =
-> > +                             mikrobus_string_get(info, desc_property->propname_stringid);
-> > +                             break;
-> > +                             }
-> > +             }
-> > +     }
-> > +     dev->gpio_lookup = lookup;
-> > +     }
-> > +     list_add_tail(&dev->links, &info->devices);
-> > +     return 0;
-> > +}
-> > +
-> > +static int mikrobus_manifest_parse_devices(struct addon_board_info *info)
-> > +{
-> > +     struct greybus_descriptor_device *desc_device;
-> > +     struct manifest_desc *desc, *next;
-> > +     int devcount = 0;
-> > +
-> > +     if (WARN_ON(!list_empty(&info->devices)))
-> > +             return false;
->
-> The manifest comes from outside the kernel  I might be misunderstanding
-> something, but you should not be using WARN_ON() if its content doesn't
-> match what you expect.
->
-> > +     list_for_each_entry_safe(desc, next, &info->manifest_descs, links) {
-> > +             if (desc->type != GREYBUS_TYPE_DEVICE)
-> > +                     continue;
-> > +             desc_device = desc->data;
-> > +             mikrobus_manifest_attach_device(info, desc_device);
->
-> You are ignoring the return value of mikrobus_manifest_attach_device().
->
-> > +             devcount++;
-> > +     }
-> > +     return devcount;
-> > +}
-> > +
-> > +bool mikrobus_manifest_parse(struct addon_board_info *info, void *data,
-> > +                                                      size_t size)
->
-> You use "board" as the name of a "board_info" variable elsewhere.
-> That is much more helpful than "info".  Please use a consistent
-> naming convention for your variables of given types if possible.
-> It makes it easier to follow the code.
->
-> > +{
-> > +     struct greybus_manifest *manifest;
-> > +     struct greybus_manifest_header *header;
-> > +     struct greybus_descriptor *desc;
-> > +     u16 manifest_size;
-> > +     int dev_count;
-> > +     int desc_size;
-> > +
->
-> Check the size before you bother checking anything else.
->
-> > +     if (WARN_ON(!list_empty(&info->manifest_descs)))
-> > +             return false;
-> > +     if (size < sizeof(*header))
-> > +             return false;
-> > +     manifest = data;
-> > +     header = &manifest->header;
-> > +     manifest_size = le16_to_cpu(header->size);
-> > +     if (manifest_size != size)
-> > +             return false;
->
-> It would be helpful to report what the problem with the
-> manifest is (here and in all cases).  Otherwise it's a
-> little mysterious why adding a board fails.
->
-> > +     if (header->version_major > MIKROBUS_VERSION_MAJOR)
-> > +             return false;
->
-> Version checks!!!  This is good!  But the topic is of great
-> interest to Greybus people!  Not sure we ever completely
-> resolved that.  That's my only comment on this for now.
->
-> > +     desc = manifest->descriptors;
-> > +     size -= sizeof(*header);
->
-> Why aren't you using mikrobus_manifest_header_validate() here?
->
-the mikrobus_manifest_header_validate is actually used to validate
-the manifest header and get the manifest size, this is applicable when
-fetching the manifest from an EEPROM and the number of bytes to
-read(manifest size) is not known so in the first pass the manifest
-header will be read from the EEPROM and the size of actual manifest
-binary will be found and in the next pass the entire manifest is read
-and passed to the mikrobus_manifest_parse, while passing the
-manifest binary through sysfs there is no need to parse the manifest
-in two passes that is why the mikrobus_manifest_header_validate()
-is not called here.
-> > +     while (size) {
-> > +             desc_size = identify_descriptor(info, desc, size);
->
-> What you're really doing with identify_descriptor() is adding
-> a valid descriptor to a board's list of descriptors.  I think
-> the name of that function shoudl reflect that.  If it isn't
-> identified, that's an error--but that's not the purpose of
-> that function.  So maybe:
->         desc_ = board_descriptor_add(board, desc, size);
->
-> > +             if (desc_size < 0) {
-> > +                     pr_err("invalid manifest descriptor");
-> > +             return -EINVAL;
-> Your indentation of the return statement here is wrong.
->
-> > +             }
-> > +             desc = (struct greybus_descriptor *)((char *)desc + desc_size);
->
-> I don't know if this is better, but this could be:
->                 desc = (void *)desc + desc_size;
->
-> > +             size -= desc_size;
-> > +     }
-> > +     mikrobus_state_get(info);
-> > +     dev_count = mikrobus_manifest_parse_devices(info);
-> > +     pr_info(" %s manifest parsed with %d device(s)\n", info->name,
-> > +             info->num_devices);
-> > +     release_manifest_descriptors(info);
-> > +     return true;
-> > +}
-> > +
-> > +size_t mikrobus_manifest_header_validate(void *data, size_t size)
-> > +{
-> > +     struct greybus_manifest_header *header;
-> > +     u16 manifest_size;
-> > +
-> > +     if (size < sizeof(*header))
-> > +             return 0;
-> > +
-> > +     header = data;
-> > +     manifest_size = le16_to_cpu(header->size);
-> > +     if (header->version_major > MIKROBUS_VERSION_MAJOR)
-> > +             return 0;
-> > +     return manifest_size;
-> > +}
-> > diff --git a/drivers/misc/mikrobus/mikrobus_manifest.h b/drivers/misc/mikrobus/mikrobus_manifest.h
-> > new file mode 100644
-> > index 000000000000..a195d1c26493
-> > --- /dev/null
-> > +++ b/drivers/misc/mikrobus/mikrobus_manifest.h
-> > @@ -0,0 +1,21 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * mikroBUS manifest definition
-> > + * extension to Greybus Manifest Definition
-> > + *
-> > + * Copyright 2014-2015 Google Inc.
-> > + * Copyright 2014-2015 Linaro Ltd.
-> > + *
-> > + * Released under the GPLv2 and BSD licenses.
-> > + */
-> > +
-> > +#ifndef __MIKROBUS_MANIFEST_H
-> > +#define __MIKROBUS_MANIFEST_H
-> > +
-> > +#include "mikrobus_core.h"
-> > +
-> > +bool mikrobus_manifest_parse(struct addon_board_info *info, void *data,
-> > +                                                      size_t size);
-> > +size_t mikrobus_manifest_header_validate(void *data, size_t size);
-> > +
-> > +#endif /* __MIKROBUS_MANIFEST_H */
-> > diff --git a/include/linux/greybus/greybus_manifest.h b/include/linux/greybus/greybus_manifest.h
-> > index 6e62fe478712..79c8cab9ef96 100644
-> > --- a/include/linux/greybus/greybus_manifest.h
-> > +++ b/include/linux/greybus/greybus_manifest.h
-> > @@ -23,6 +23,9 @@ enum greybus_descriptor_type {
-> >       GREYBUS_TYPE_STRING             = 0x02,
-> >       GREYBUS_TYPE_BUNDLE             = 0x03,
-> >       GREYBUS_TYPE_CPORT              = 0x04,
-> > +     GREYBUS_TYPE_MIKROBUS   = 0x05,
-> > +     GREYBUS_TYPE_PROPERTY   = 0x06,
-> > +     GREYBUS_TYPE_DEVICE     = 0x07,
->
-> Please align your new values with the rest, for consistency.
->
-> >  };
-> >
-> >  enum greybus_protocol {
-> > @@ -151,6 +154,53 @@ struct greybus_descriptor_cport {
-> >       __u8    protocol_id;    /* enum greybus_protocol */
-> >  } __packed;
-> >
-> > +/*
-> > + * A mikrobus descriptor is used to describe the details
-> > + * about the add-on board connected to the mikrobus port.
-> > + * It describes the number of indivdual devices on the
-> > + * add-on board and the default states of the GPIOs
-> > + */
-> > +struct greybus_descriptor_mikrobus {
-> > +     __u8 num_devices;
-> > +     __u8 rst_gpio_state;
-> > +     __u8 pwm_gpio_state;
-> > +     __u8 int_gpio_state;
-> > +} __packed;
-> > +
-> > +/*
-> > + * A property descriptor is used to pass named properties
-> > + * to device drivers through the unified device properties
-> > + * interface under linux/property.h
-> > + */
-> > +struct greybus_descriptor_property {
-> > +     __u8 length;
-> > +     __u8 id;
-> > +     __u8 propname_stringid;
-> > +     __u8 type;
-> > +     __u8 value[0];
-> > +} __packed;
-> > +
-> > +/*
-> > + * A device descriptor is used to describe the
-> > + * details required by a add-on board device
-> > + * driver.
-> > + */
-> > +struct greybus_descriptor_device {
-> > +     __u8 id;
-> > +     __u8 driver_stringid;
-> > +     __u8 num_properties;
-> > +     __u8 protocol;
-> > +     __le32 max_speed_hz;
-> > +     __u8 reg;
-> > +     __u8 mode;
-> > +     __u8 num_gpio_resources;
-> > +     __u8 cs_gpio;
-> > +     __u8 irq;
-> > +     __u8 irq_type;
-> > +     __u8 prop_link;
-> > +     __u8 gpio_link;
-> > +} __packed;
-> > +
-> >  struct greybus_descriptor_header {
-> >       __le16  size;
-> >       __u8    type;           /* enum greybus_descriptor_type */
-> > @@ -164,6 +214,9 @@ struct greybus_descriptor {
-> >               struct greybus_descriptor_interface     interface;
-> >               struct greybus_descriptor_bundle        bundle;
-> >               struct greybus_descriptor_cport         cport;
-> > +             struct greybus_descriptor_mikrobus      mikrobus;
-> > +             struct greybus_descriptor_property      property;
-> > +             struct greybus_descriptor_device        device;
->
-> We're going to need to talk about these things...  But I can't
-> comment much more without learning more about the broader
-> architecture.
->
->                                         -Alex
->
-I have gone through all the suggestions and be back with an
-updated version of the driver patch with the changes added.
-> >       };
-> >  } __packed;
-> >
-> >
->
+Signed-off-by: Talel Shenhar <talel@amazon.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+---
+ MAINTAINERS               |   7 +
+ drivers/edac/Kconfig      |   7 +
+ drivers/edac/Makefile     |   1 +
+ drivers/edac/al_mc_edac.c | 354 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 369 insertions(+)
+ create mode 100644 drivers/edac/al_mc_edac.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 68f21d46614c..0e6532c37bef 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -802,6 +802,13 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
+ F:	drivers/irqchip/irq-al-fic.c
+ 
++AMAZON ANNAPURNA LABS MEMORY CONTROLLER EDAC
++M:	Talel Shenhar <talel@amazon.com>
++M:	Talel Shenhar <talelshenhar@gmail.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
++F:	drivers/edac/al_mc_edac.c
++
+ AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
+ M:	Talel Shenhar <talel@amazon.com>
+ S:	Maintained
+diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+index 7b6ec3014ba2..e3002718b1f5 100644
+--- a/drivers/edac/Kconfig
++++ b/drivers/edac/Kconfig
+@@ -100,6 +100,13 @@ config EDAC_AMD64_ERROR_INJECTION
+ 	  In addition, there are two control files, inject_read and inject_write,
+ 	  which trigger the DRAM ECC Read and Write respectively.
+ 
++config EDAC_AL_MC
++	tristate "Amazon's Annapurna Lab EDAC Memory Controller"
++	depends on (ARCH_ALPINE || COMPILE_TEST)
++	help
++	  Support for error detection and correction for Amazon's Annapurna
++	  Labs Alpine chips which allows 1 bit correction and 2 bits detection.
++
+ config EDAC_AMD76X
+ 	tristate "AMD 76x (760, 762, 768)"
+ 	depends on PCI && X86_32
+diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+index 269e15118cea..3a849168780d 100644
+--- a/drivers/edac/Makefile
++++ b/drivers/edac/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_EDAC_GHES)			+= ghes_edac.o
+ edac_mce_amd-y				:= mce_amd.o
+ obj-$(CONFIG_EDAC_DECODE_MCE)		+= edac_mce_amd.o
+ 
++obj-$(CONFIG_EDAC_AL_MC)		+= al_mc_edac.o
+ obj-$(CONFIG_EDAC_AMD76X)		+= amd76x_edac.o
+ obj-$(CONFIG_EDAC_CPC925)		+= cpc925_edac.o
+ obj-$(CONFIG_EDAC_I5000)		+= i5000_edac.o
+diff --git a/drivers/edac/al_mc_edac.c b/drivers/edac/al_mc_edac.c
+new file mode 100644
+index 000000000000..b0ee48775c62
+--- /dev/null
++++ b/drivers/edac/al_mc_edac.c
+@@ -0,0 +1,354 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ */
++#include <linux/bitfield.h>
++#include <linux/bitops.h>
++#include <linux/edac.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/spinlock.h>
++#include "edac_module.h"
++
++/* Registers Offset */
++#define AL_MC_ECC_CFG		0x70
++#define AL_MC_ECC_CLEAR		0x7c
++#define AL_MC_ECC_ERR_COUNT	0x80
++#define AL_MC_ECC_CE_ADDR0	0x84
++#define AL_MC_ECC_CE_ADDR1	0x88
++#define AL_MC_ECC_UE_ADDR0	0xa4
++#define AL_MC_ECC_UE_ADDR1	0xa8
++#define AL_MC_ECC_CE_SYND0	0x8c
++#define AL_MC_ECC_CE_SYND1	0x90
++#define AL_MC_ECC_CE_SYND2	0x94
++#define AL_MC_ECC_UE_SYND0	0xac
++#define AL_MC_ECC_UE_SYND1	0xb0
++#define AL_MC_ECC_UE_SYND2	0xb4
++
++/* Registers Fields */
++#define AL_MC_ECC_CFG_SCRUB_DISABLED	BIT(4)
++
++#define AL_MC_ECC_CLEAR_UE_COUNT	BIT(3)
++#define AL_MC_ECC_CLEAR_CE_COUNT	BIT(2)
++#define AL_MC_ECC_CLEAR_UE_ERR		BIT(1)
++#define AL_MC_ECC_CLEAR_CE_ERR		BIT(0)
++
++#define AL_MC_ECC_ERR_COUNT_UE		GENMASK(31, 16)
++#define AL_MC_ECC_ERR_COUNT_CE		GENMASK(15, 0)
++
++#define AL_MC_ECC_CE_ADDR0_RANK		GENMASK(25, 24)
++#define AL_MC_ECC_CE_ADDR0_ROW		GENMASK(17, 0)
++
++#define AL_MC_ECC_CE_ADDR1_BG		GENMASK(25, 24)
++#define AL_MC_ECC_CE_ADDR1_BANK		GENMASK(18, 16)
++#define AL_MC_ECC_CE_ADDR1_COLUMN	GENMASK(11, 0)
++
++#define AL_MC_ECC_UE_ADDR0_RANK		GENMASK(25, 24)
++#define AL_MC_ECC_UE_ADDR0_ROW		GENMASK(17, 0)
++
++#define AL_MC_ECC_UE_ADDR1_BG		GENMASK(25, 24)
++#define AL_MC_ECC_UE_ADDR1_BANK		GENMASK(18, 16)
++#define AL_MC_ECC_UE_ADDR1_COLUMN	GENMASK(11, 0)
++
++#define DRV_NAME "al_mc_edac"
++#define AL_MC_EDAC_MSG_MAX 256
++
++struct al_mc_edac {
++	void __iomem *mmio_base;
++	spinlock_t lock;
++	int irq_ce;
++	int irq_ue;
++};
++
++static void prepare_msg(char *message, size_t buffer_size,
++			enum hw_event_mc_err_type type,
++			u8 rank, u32 row, u8 bg, u8 bank, u16 column,
++			u32 syn0, u32 syn1, u32 syn2)
++{
++	snprintf(message, buffer_size,
++		 "%s rank=0x%x row=0x%x bg=0x%x bank=0x%x col=0x%x syn0: 0x%x syn1: 0x%x syn2: 0x%x",
++		 type == HW_EVENT_ERR_UNCORRECTED ? "UE" : "CE",
++		 rank, row, bg, bank, column, syn0, syn1, syn2);
++}
++
++static int handle_ce(struct mem_ctl_info *mci)
++{
++	u32 eccerrcnt, ecccaddr0, ecccaddr1, ecccsyn0, ecccsyn1, ecccsyn2, row;
++	struct al_mc_edac *al_mc = mci->pvt_info;
++	char msg[AL_MC_EDAC_MSG_MAX];
++	u16 ce_count, column;
++	unsigned long flags;
++	u8 rank, bg, bank;
++
++	eccerrcnt = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_ERR_COUNT);
++	ce_count = FIELD_GET(AL_MC_ECC_ERR_COUNT_CE, eccerrcnt);
++	if (!ce_count)
++		return 0;
++
++	ecccaddr0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_CE_ADDR0);
++	ecccaddr1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_CE_ADDR1);
++	ecccsyn0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_CE_SYND0);
++	ecccsyn1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_CE_SYND1);
++	ecccsyn2 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_CE_SYND2);
++
++	writel_relaxed(AL_MC_ECC_CLEAR_CE_COUNT | AL_MC_ECC_CLEAR_CE_ERR,
++		       al_mc->mmio_base + AL_MC_ECC_CLEAR);
++
++	dev_dbg(mci->pdev, "eccuaddr0=0x%08x eccuaddr1=0x%08x\n",
++		ecccaddr0, ecccaddr1);
++
++	rank = FIELD_GET(AL_MC_ECC_CE_ADDR0_RANK, ecccaddr0);
++	row = FIELD_GET(AL_MC_ECC_CE_ADDR0_ROW, ecccaddr0);
++
++	bg = FIELD_GET(AL_MC_ECC_CE_ADDR1_BG, ecccaddr1);
++	bank = FIELD_GET(AL_MC_ECC_CE_ADDR1_BANK, ecccaddr1);
++	column = FIELD_GET(AL_MC_ECC_CE_ADDR1_COLUMN, ecccaddr1);
++
++	prepare_msg(msg, sizeof(msg), HW_EVENT_ERR_CORRECTED,
++		    rank, row, bg, bank, column,
++		    ecccsyn0, ecccsyn1, ecccsyn2);
++
++	spin_lock_irqsave(&al_mc->lock, flags);
++	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
++			     ce_count, 0, 0, 0, 0, 0, -1, mci->ctl_name, msg);
++	spin_unlock_irqrestore(&al_mc->lock, flags);
++
++	return ce_count;
++}
++
++static int handle_ue(struct mem_ctl_info *mci)
++{
++	u32 eccerrcnt, eccuaddr0, eccuaddr1, eccusyn0, eccusyn1, eccusyn2, row;
++	struct al_mc_edac *al_mc = mci->pvt_info;
++	char msg[AL_MC_EDAC_MSG_MAX];
++	u16 ue_count, column;
++	unsigned long flags;
++	u8 rank, bg, bank;
++
++	eccerrcnt = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_ERR_COUNT);
++	ue_count = FIELD_GET(AL_MC_ECC_ERR_COUNT_UE, eccerrcnt);
++	if (!ue_count)
++		return 0;
++
++	eccuaddr0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_ADDR0);
++	eccuaddr1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_ADDR1);
++	eccusyn0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND0);
++	eccusyn1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND1);
++	eccusyn2 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND2);
++
++	writel_relaxed(AL_MC_ECC_CLEAR_UE_COUNT | AL_MC_ECC_CLEAR_UE_ERR,
++		       al_mc->mmio_base + AL_MC_ECC_CLEAR);
++
++	dev_dbg(mci->pdev, "eccuaddr0=0x%08x eccuaddr1=0x%08x\n",
++		eccuaddr0, eccuaddr1);
++
++	rank = FIELD_GET(AL_MC_ECC_UE_ADDR0_RANK, eccuaddr0);
++	row = FIELD_GET(AL_MC_ECC_UE_ADDR0_ROW, eccuaddr0);
++
++	bg = FIELD_GET(AL_MC_ECC_UE_ADDR1_BG, eccuaddr1);
++	bank = FIELD_GET(AL_MC_ECC_UE_ADDR1_BANK, eccuaddr1);
++	column = FIELD_GET(AL_MC_ECC_UE_ADDR1_COLUMN, eccuaddr1);
++
++	prepare_msg(msg, sizeof(msg), HW_EVENT_ERR_UNCORRECTED,
++		    rank, row, bg, bank, column,
++		    eccusyn0, eccusyn1, eccusyn2);
++
++	spin_lock_irqsave(&al_mc->lock, flags);
++	edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
++			     ue_count, 0, 0, 0, 0, 0, -1, mci->ctl_name, msg);
++	spin_unlock_irqrestore(&al_mc->lock, flags);
++
++	return ue_count;
++}
++
++static void al_mc_edac_check(struct mem_ctl_info *mci)
++{
++	struct al_mc_edac *al_mc = mci->pvt_info;
++
++	if (al_mc->irq_ue <= 0)
++		handle_ue(mci);
++
++	if (al_mc->irq_ce <= 0)
++		handle_ce(mci);
++}
++
++static irqreturn_t al_mc_edac_irq_handler_ue(int irq, void *info)
++{
++	struct platform_device *pdev = info;
++	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
++
++	if (handle_ue(mci))
++		return IRQ_HANDLED;
++	return IRQ_NONE;
++}
++
++static irqreturn_t al_mc_edac_irq_handler_ce(int irq, void *info)
++{
++	struct platform_device *pdev = info;
++	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
++
++	if (handle_ce(mci))
++		return IRQ_HANDLED;
++	return IRQ_NONE;
++}
++
++static enum scrub_type al_mc_edac_get_scrub_mode(void __iomem *mmio_base)
++{
++	u32 ecccfg0;
++
++	ecccfg0 = readl(mmio_base + AL_MC_ECC_CFG);
++
++	if (FIELD_GET(AL_MC_ECC_CFG_SCRUB_DISABLED, ecccfg0))
++		return SCRUB_NONE;
++	else
++		return SCRUB_HW_SRC;
++}
++
++static void devm_al_mc_edac_free(void *data)
++{
++	edac_mc_free(data);
++}
++
++static void devm_al_mc_edac_del(void *data)
++{
++	edac_mc_del_mc(data);
++}
++
++static int al_mc_edac_probe(struct platform_device *pdev)
++{
++	struct edac_mc_layer layers[1];
++	struct mem_ctl_info *mci;
++	struct al_mc_edac *al_mc;
++	void __iomem *mmio_base;
++	struct dimm_info *dimm;
++	int ret;
++
++	mmio_base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(mmio_base)) {
++		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
++			PTR_ERR(mmio_base));
++		return PTR_ERR(mmio_base);
++	}
++
++	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
++	layers[0].size = 1;
++	layers[0].is_virt_csrow = false;
++	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
++			    sizeof(struct al_mc_edac));
++	if (!mci)
++		return -ENOMEM;
++
++	ret = devm_add_action(&pdev->dev, devm_al_mc_edac_free, mci);
++	if (ret) {
++		edac_mc_free(mci);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, mci);
++	al_mc = mci->pvt_info;
++
++	al_mc->mmio_base = mmio_base;
++
++	al_mc->irq_ue = of_irq_get_byname(pdev->dev.of_node, "ue");
++	if (al_mc->irq_ue <= 0)
++		dev_dbg(&pdev->dev,
++			"no IRQ defined for UE - falling back to polling\n");
++
++	al_mc->irq_ce = of_irq_get_byname(pdev->dev.of_node, "ce");
++	if (al_mc->irq_ce <= 0)
++		dev_dbg(&pdev->dev,
++			"no IRQ defined for CE - falling back to polling\n");
++
++	/*
++	 * In case both interrupts (ue/ce) are to be found, use interrupt mode.
++	 * In case none of the interrupt are foud, use polling mode.
++	 * In case only one interrupt is found, use interrupt mode for it but
++	 * keep polling mode enable for the other.
++	 */
++	if (al_mc->irq_ue <= 0 || al_mc->irq_ce <= 0) {
++		edac_op_state = EDAC_OPSTATE_POLL;
++		mci->edac_check = al_mc_edac_check;
++	} else {
++		edac_op_state = EDAC_OPSTATE_INT;
++	}
++
++	spin_lock_init(&al_mc->lock);
++
++	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR4;
++	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
++	mci->edac_cap = EDAC_FLAG_SECDED;
++	mci->mod_name = DRV_NAME;
++	mci->ctl_name = "al_mc";
++	mci->pdev = &pdev->dev;
++	mci->scrub_mode = al_mc_edac_get_scrub_mode(mmio_base);
++
++	dimm = *mci->dimms;
++	dimm->grain = 1;
++
++	ret = edac_mc_add_mc(mci);
++	if (ret < 0) {
++		dev_err(&pdev->dev,
++			"fail to add memory controller device (%d)\n",
++			ret);
++		return ret;
++	}
++
++	ret = devm_add_action(&pdev->dev, devm_al_mc_edac_del, &pdev->dev);
++	if (ret) {
++		edac_mc_del_mc(&pdev->dev);
++		return ret;
++	}
++
++	if (al_mc->irq_ue > 0) {
++		ret = devm_request_irq(&pdev->dev,
++				       al_mc->irq_ue,
++				       al_mc_edac_irq_handler_ue,
++				       IRQF_SHARED,
++				       pdev->name,
++				       pdev);
++		if (ret != 0) {
++			dev_err(&pdev->dev,
++				"failed to request UE IRQ %d (%d)\n",
++				al_mc->irq_ue, ret);
++			return ret;
++		}
++	}
++
++	if (al_mc->irq_ce > 0) {
++		ret = devm_request_irq(&pdev->dev,
++				       al_mc->irq_ce,
++				       al_mc_edac_irq_handler_ce,
++				       IRQF_SHARED,
++				       pdev->name,
++				       pdev);
++		if (ret != 0) {
++			dev_err(&pdev->dev,
++				"failed to request CE IRQ %d (%d)\n",
++				al_mc->irq_ce, ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static const struct of_device_id al_mc_edac_of_match[] = {
++	{ .compatible = "amazon,al-mc-edac", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, al_mc_edac_of_match);
++
++static struct platform_driver al_mc_edac_driver = {
++	.probe = al_mc_edac_probe,
++	.driver = {
++		.name = DRV_NAME,
++		.of_match_table = al_mc_edac_of_match,
++	},
++};
++
++module_platform_driver(al_mc_edac_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Talel Shenhar");
++MODULE_DESCRIPTION("Amazon's Annapurna Lab's Memory Controller EDAC Driver");
+-- 
+2.17.1
+
