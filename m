@@ -2,84 +2,157 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56753C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 14:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115EAC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 14:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 394532065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 14:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0BA72065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 14:29:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="cPtQupmk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgGZO1r convert rfc822-to-8bit (ORCPT
+        id S1726764AbgGZO3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 10:27:47 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:28638 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgGZO1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 10:27:46 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BF4yz68Hxz9v1qF;
-        Sun, 26 Jul 2020 16:27:39 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 2zRZtQ7hFE-t; Sun, 26 Jul 2020 16:27:39 +0200 (CEST)
-Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BF4yz57Pnz9v1qD;
-        Sun, 26 Jul 2020 16:27:39 +0200 (CEST)
-Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
-        id 1FEAB2487; Sun, 26 Jul 2020 16:29:02 +0200 (CEST)
-Received: from 37-166-97-133.coucou-networks.fr
- (37-166-97-133.coucou-networks.fr [37.166.97.133]) by messagerie.si.c-s.fr
- (Horde Framework) with HTTP; Sun, 26 Jul 2020 16:29:02 +0200
-Date:   Sun, 26 Jul 2020 16:29:02 +0200
-Message-ID: <20200726162902.Horde.TCqHYaODbkzEpM-rFzDd8A2@messagerie.si.c-s.fr>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@samba.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/9] powerpc: delete duplicated words
-In-Reply-To: <20200726003809.20454-1-rdunlap@infradead.org>
-User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
-Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
+        Sun, 26 Jul 2020 10:29:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725949AbgGZO3N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 10:29:13 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCB39C0619D5
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 07:29:12 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id rk21so14522506ejb.2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 07:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7NgctBmCqLgQBnHYafy5r5rDsgw6j6oRlbINnPPqer0=;
+        b=cPtQupmk1fewrsDSJE9eb5vshcj32eD6Ersn4gDO9eNd6Ue1J8TTT513AbOaU188zs
+         AFhrKzbGgOthhgLIv7kksB+ClxWzSueRE1uglOlaoNsTsZyf9B+bzJiS+tpChshZNnBx
+         jG7QPFt44f1VS8a/+nZT2WeMe/G9NCBDPPm4HUnwcT9dy/zwJ5SzHwOmd7CTs+gwiBqj
+         bzjRkzNxOgk/XBF69w5CuAJhiGIlAC4SmYNINF4Buj0bhy9eQvwlc8yYeeo6BUAlSJfO
+         rCpj9D4E/yEXL1JlRHqSpG0lcFfNFaw3IXioKQHV91iwjY8z8na9xqtHPwMYUOlv9L+k
+         +zCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7NgctBmCqLgQBnHYafy5r5rDsgw6j6oRlbINnPPqer0=;
+        b=YEvm/Z5xRPUA/30Gb++fH7diU/akhruniOQCrx0arOnT4lZPn8c25fq4vgHfspFI07
+         c1UZnTadbkcv+pxE8yldbolNgRDU5kuORbQWwZyu/gRYj694z05l717sj/vS0cIKiRZh
+         kD8jXDdLn2rgCEe+dMSlYlzD8NlZr05e3eymJSMxXewk3IpvbY8mrpIsWrW3JsW6f8PV
+         W41BmH4Q3r7KDjt5vlbJE9jqAwgk2NQg4S+ejtCYL8r1idUbbdFasTiFFEq0DAC/xQOq
+         iRgpd9M0xqRB0L6EF0uWsUlCPZmJ8DGGUeFM5HdjKmVU3bktWlyDsSRoQdcEJ6eaTfkn
+         AJMA==
+X-Gm-Message-State: AOAM532qcZ0jQt6pI+5AiWAph2pQUs7QDd2S6tw7uYJY6cztIOK1xei2
+        JStYXhcOCiUhYgCIRymRjpto0qP/v1pHHYDQCreHkIFobLw=
+X-Google-Smtp-Source: ABdhPJzBeuYaugwjE9rJF2v3mAtHaNmHcXv/fPnmdymnSEvfi/ZfOBepfh/WGmh6X9cuHm1Lqxfnl3IKozqO1B3ATn0=
+X-Received: by 2002:a17:906:1e43:: with SMTP id i3mr16626277ejj.92.1595773751471;
+ Sun, 26 Jul 2020 07:29:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
+References: <20200713060842.471356-1-acourbot@chromium.org> <20200713060842.471356-8-acourbot@chromium.org>
+In-Reply-To: <20200713060842.471356-8-acourbot@chromium.org>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Sun, 26 Jul 2020 11:29:00 -0300
+Message-ID: <CAAEAJfA4Po9R25CzBxiFAV=7-7rPujLc79zLnXyXWk7xNbBtYA@mail.gmail.com>
+Subject: Re: [PATCH v3 07/16] media: mtk-vcodec: venc: specify supported
+ formats per-chip
+To:     Alexandre Courbot <acourbot@chromium.org>
+Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Randy Dunlap <rdunlap@infradead.org> a écrit :
+Hi Alexandre,
 
-> Drop duplicated words in arch/powerpc/ header files.
+Last review on my side, this series looks mostly good.
 
-How did you detect them ? Do you have some script for tgat, or you  
-just read all comments ?
-
+On Mon, 13 Jul 2020 at 03:09, Alexandre Courbot <acourbot@chromium.org> wrote:
 >
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Different chips have different supported bitrate ranges. Move the list
 
-You say you Cc Michael, but in fact you don't ... Allthough he is the  
-powerpc maintainer
+s/bitrate ranges/formats
 
-Christophe
-
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: linuxppc-dev@lists.ozlabs.org
+> of supported formats to the platform data, and split the output and
+> capture formats into two lists to make it easier to find the default
+> format for each queue.
 >
->  arch/powerpc/include/asm/book3s/64/mmu-hash.h |    2 +-
->  arch/powerpc/include/asm/book3s/64/radix-4k.h |    2 +-
->  arch/powerpc/include/asm/cputime.h            |    2 +-
->  arch/powerpc/include/asm/epapr_hcalls.h       |    4 ++--
->  arch/powerpc/include/asm/hw_breakpoint.h      |    2 +-
->  arch/powerpc/include/asm/ppc_asm.h            |    2 +-
->  arch/powerpc/include/asm/reg.h                |    2 +-
->  arch/powerpc/include/asm/smu.h                |    2 +-
->  arch/powerpc/platforms/powernv/pci.h          |    2 +-
->  9 files changed, 10 insertions(+), 10 deletions(-)
+> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
+> ---
+>  .../platform/mtk-vcodec/mtk_vcodec_drv.h      |   8 ++
+>  .../platform/mtk-vcodec/mtk_vcodec_enc.c      | 122 +++++++-----------
+>  .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  |  40 ++++++
+>  3 files changed, 95 insertions(+), 75 deletions(-)
+>
+> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+> index b8f913de8d80..59b4b750666b 100644
+> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+> @@ -313,6 +313,10 @@ enum mtk_chip {
+>   * @has_lt_irq: whether the encoder uses the LT irq
+>   * @min_birate: minimum supported encoding bitrate
+>   * @max_bitrate: maximum supported encoding bitrate
+> + * @capture_formats: array of supported capture formats
+> + * @num_capture_formats: number of entries in capture_formats
+> + * @output_formats: array of supported output formats
+> + * @num_output_formats: number of entries in output_formats
+>   */
+>  struct mtk_vcodec_enc_pdata {
+>         enum mtk_chip chip;
+> @@ -321,6 +325,10 @@ struct mtk_vcodec_enc_pdata {
+>         bool has_lt_irq;
+>         unsigned long min_bitrate;
+>         unsigned long max_bitrate;
+> +       const struct mtk_video_fmt *capture_formats;
+> +       size_t num_capture_formats;
+> +       const struct mtk_video_fmt *output_formats;
+> +       size_t num_output_formats;
+>  };
+>
+>  /**
+> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+> index 50ba9da59153..05743a745a11 100644
+> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+> @@ -23,47 +23,9 @@
+>  #define DFT_CFG_WIDTH  MTK_VENC_MIN_W
+>  #define DFT_CFG_HEIGHT MTK_VENC_MIN_H
+>  #define MTK_MAX_CTRLS_HINT     20
+> -#define OUT_FMT_IDX            0
+> -#define CAP_FMT_IDX            4
+> -
+>
+>  static void mtk_venc_worker(struct work_struct *work);
+>
+> -static const struct mtk_video_fmt mtk_video_formats[] = {
+> -       {
+> -               .fourcc = V4L2_PIX_FMT_NV12M,
+> -               .type = MTK_FMT_FRAME,
+> -               .num_planes = 2,
 
+Again, not an issue with your patch, so feel free to ignore this.
 
+You may avoid keeping track of num_planes (or any other
+property of the pixel format) and use v4l2_fill_pixfmt_mp
+to get all the information you need.
+
+Thanks,
+Ezequiel
