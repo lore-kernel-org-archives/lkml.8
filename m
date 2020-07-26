@@ -2,94 +2,130 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37541C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D05C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 152BB2076A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595767581;
-	bh=FI/9nCBY/E5Ixrb7yl4SCIjDKbdKdR6Lkz97qpX4NqE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UjkBJRMBxIJXiZeFBNoaRdMiarbnn0rgvCdK79JWoIjmtU5ZnQaD+i6DC8PSYsB2s
-	 2OgdRsYQ4L9vSWNv1PPry83NtYPA5GQ0wtScKAFACd64QxXakiUHaB/CDdMy0wfWaU
-	 NwaVJnNXX8+LlDPNqeYcOwR61yGEoMVbH8BD9bDE=
+	by mail.kernel.org (Postfix) with ESMTP id 642B52076A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgGZMqS (ORCPT
+        id S1727787AbgGZMrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 08:46:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44672 "EHLO mail.kernel.org"
+        Sun, 26 Jul 2020 08:47:53 -0400
+Received: from sauhun.de ([88.99.104.3]:53314 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbgGZMqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 08:46:17 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDA6E2076A;
-        Sun, 26 Jul 2020 12:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595767576;
-        bh=FI/9nCBY/E5Ixrb7yl4SCIjDKbdKdR6Lkz97qpX4NqE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fNXKd+bN7yEgi5T+MYwxCkO4OfJhMZ8tdSwJXH6zCbe6tfMi6PrDhlWXxcfUqxPsv
-         limpYOeYJ9lvrsOsqTp975/fRuJrj/wepoQ83XpmG7mroE7SsQpOWoWuGrZpznKSfz
-         6w5+taCgOqvaFNmOSzps0v8x8och5LcDEvvqmZR0=
-Date:   Sun, 26 Jul 2020 13:46:13 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Nishant Malpani <nish.malpani25@gmail.com>
-Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 1/2] iio: gyro: Add driver support for ADXRS290
-Message-ID: <20200726134613.6c483a81@archlinux>
-In-Reply-To: <91b82340-832c-6e02-c595-613322926337@gmail.com>
-References: <20200715092757.14563-1-nish.malpani25@gmail.com>
-        <e369f36c-ec9e-0f90-674f-06c7d51d8b5e@gmail.com>
-        <20200720121315.38500910@archlinux>
-        <91b82340-832c-6e02-c595-613322926337@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726042AbgGZMrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 08:47:52 -0400
+Received: from localhost (p5486c93f.dip0.t-ipconnect.de [84.134.201.63])
+        by pokefinder.org (Postfix) with ESMTPSA id 417252C0610;
+        Sun, 26 Jul 2020 14:47:49 +0200 (CEST)
+Date:   Sun, 26 Jul 2020 14:47:48 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     swboyd@chromium.org, msavaliy@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
+        Sagar Dharia <sdharia@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] i2c: i2c-qcom-geni: Fix DMA transfer race
+Message-ID: <20200726124747.GA16169@ninjato>
+References: <20200722145948.v2.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
+ <20200723195634.GA908@ninjato>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+Content-Disposition: inline
+In-Reply-To: <20200723195634.GA908@ninjato>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jul 2020 00:25:48 +0530
-Nishant Malpani <nish.malpani25@gmail.com> wrote:
 
-> Hello Jonathan,
-> 
-> Thanks a lot for the detailed review. Comments inline...
-> 
-...
-> 
-> >>> +#define ADXRS290_REG_SN0	0x04 /* Serial Number Registers, 4 bytes */
-> >>> +#define ADXRS290_REG_DATAX0	0x08 /* Roll Rate o/p Data Regs, 2 bytes */
-> >>> +#define ADXRS290_REG_DATAY0	0x0A /* Pitch Rate o/p Data Regs, 2 bytes */  
-> > 
-> > Are we actually right to map roll and pitch to x and y?
-> > If so we should probably add that to the docs somewhere.  We need to document
-> > which one maps to x and which to y as that mapping is far from obvious!
-> >   
-> "The ADXRS290 is an x-axis and y-axis rate sensing device that
-> is also called a roll and pitch rate sensing device" (datasheet pg. 4). 
-> I think I'm right in marking the DATA X-axis register as the roll rate 
-> and similarly the DATA Y-axis register as the pitch rate.
-> 
-> Also, I thought it is a known convention to use x for roll, y for pitch, 
-> etc. [2]. But you're right, its not very obvious. Where do I document it?
-> 
-> [2] https://en.wikipedia.org/wiki/Aircraft_principal_axes#Principal_axes
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Documentation/ABI/testing/sysfs-bus-iio
+On Thu, Jul 23, 2020 at 09:56:34PM +0200, Wolfram Sang wrote:
+> On Wed, Jul 22, 2020 at 03:00:21PM -0700, Douglas Anderson wrote:
+> > When I have KASAN enabled on my kernel and I start stressing the
+> > touchscreen my system tends to hang.  The touchscreen is one of the
+> > only things that does a lot of big i2c transfers and ends up hitting
+> > the DMA paths in the geni i2c driver.  It appears that KASAN adds
+> > enough delay in my system to tickle a race condition in the DMA setup
+> > code.
+> >=20
+> > When the system hangs, I found that it was running the geni_i2c_irq()
+> > over and over again.  It had these:
+> >=20
+> > m_stat   =3D 0x04000080
+> > rx_st    =3D 0x30000011
+> > dm_tx_st =3D 0x00000000
+> > dm_rx_st =3D 0x00000000
+> > dma      =3D 0x00000001
+> >=20
+> > Notably we're in DMA mode but are getting M_RX_IRQ_EN and
+> > M_RX_FIFO_WATERMARK_EN over and over again.
+> >=20
+> > Putting some traces in geni_i2c_rx_one_msg() showed that when we
+> > failed we were getting to the start of geni_i2c_rx_one_msg() but were
+> > never executing geni_se_rx_dma_prep().
+> >=20
+> > I believe that the problem here is that we are starting the geni
+> > command before we run geni_se_rx_dma_prep().  If a transfer makes it
+> > far enough before we do that then we get into the state I have
+> > observed.  Let's change the order, which seems to work fine.
+> >=20
+> > Although problems were seen on the RX path, code inspection suggests
+> > that the TX should be changed too.  Change it as well.
+> >=20
+> > Fixes: 37692de5d523 ("i2c: i2c-qcom-geni: Add bus driver for the Qualco=
+mm GENI I2C controller")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> > Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+>=20
+> Applied to for-current, thanks!
+
+Glad we got this sorted. I just wondered that Alok wasn't part of the
+discussion. Is he still interested in maintaining the driver? Also
+because there is an unprocessed patch left for this driver:
+
+http://patchwork.ozlabs.org/project/linux-i2c/patch/20191103212204.13606-1-=
+colin.king@canonical.com/
 
 
-Thanks,
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Jonathan
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8de3MACgkQFA3kzBSg
+KbZfFQ/+IQE8vj6FVFw8UOFQ8gO4XGR5oyKcFYaqngN7SVrbpklAsniO6NCvVdLA
+/BrWDRdvmfsUvQdA1BdnVzpG9T6N5hf5K41ijoHhZU9u8QKwtlTJ4iJVQ7LceArW
+a/iYn1zdN2B3fkfKyUqJIPgS2qdgTcwupi5prnuYYMD0wXwldb56QGzAkfERk14S
+2PNwaSTAJS5OmVzDU4e+4p56V+BG8d4UAz9kI+zGSs9lJ9GggtxN6I8hYJ4/pxv6
+scPz8czhh2gcn94tMxumGlLVZqURrAa8RUgKnPCZgD0xiDxZfkRFJpgtQRUmw7My
+cHsAts7z/ihNiosL41tNkyP9iCbkKUswRexi96+IjchHX/g/bdkccg37ZweXTSyH
+PgRk5Oqc9uD6P471xzLSEowI11kGPhlu06u52kvg77UIGMU8vL0b8NWe2SVaKSPg
+L3WvdgVBNWvCQ5kxjc3w0rva0V73427seGAmQSzIFrYH2IOEj5hD36tEQ6beDGJ3
+q8g3H8saNMec8oVeHmzMZNsokuVbWhX0fGKkdx8d54d/Z9Q7WFQgD7TbeTaatVgp
+XXvUToWCD9XwX7mBYLYoblscVtF8sMExUbO3Y0Jo+hc5tRGw19Jjycwh8zZNID2C
+4RwagbzeBFpiP8lQSoVOC+HQAWWwWdFdlaW8eJg2U+Vw1Y6Gv44=
+=pw9M
+-----END PGP SIGNATURE-----
+
+--1yeeQ81UyVL57Vl7--
