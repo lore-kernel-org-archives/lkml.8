@@ -2,103 +2,132 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0705C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 05:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 05:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C69CA20663
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 05:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94BE8206E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 05:58:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p6kSFEZY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="e9NWSUkn";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="e9NWSUkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgGZFfY (ORCPT
+        id S1726636AbgGZF6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 01:35:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbgGZFfY (ORCPT
+        Sun, 26 Jul 2020 01:58:14 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:45804 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725789AbgGZF6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 01:35:24 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01831C0619D2;
-        Sat, 25 Jul 2020 22:35:24 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id t4so10457481iln.1;
-        Sat, 25 Jul 2020 22:35:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x1bARMh5GgpfdkzzJHqPV/cESh0NbR22EC4SzVKdkYw=;
-        b=p6kSFEZYt44mpd6mt6sRfe1gbGQm+sb7NNXOGEEVW10+D6qbBWsQQ6rBnbKYaVsXKP
-         C5r0Rwy0vj1kBkkeWZ9dIiXIgsZg2Ic5Ro7ojiN2qGj3nFkDTmwlEsA3D/II4kPHSYzZ
-         4TgcpSJgRCVSynfB1+FO6NHRsvJLbqMA2k2QOV1Q2oAhCfFeTVLXbSh3m7tOVZHNFen5
-         S3VQWtI6A+7N/gUfCmWiBfD4eL72fh9ZB1xDejmbIezHBKGlq//JTJYjSUCtBxpBrLot
-         jbikCZOCwtKPswMwG6QpMb7yDOFmxhuzT2+dswy893jMoLbzhDOsdsI4GFSpdf5uYDIg
-         edcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x1bARMh5GgpfdkzzJHqPV/cESh0NbR22EC4SzVKdkYw=;
-        b=G1xu+UUze0iesx/hoM5pCwVjYalGEIuI1CMf5Ps/HNuT8SBJGieJhe+cH+gZ3b5MRn
-         W+Tcd9p05wCMNGRJwN1p6cxBYI/NNsOA84fvh1oerQHiMRGCq4fmYCc7tkqXnWXZCz5S
-         n0plf4RFQhUCEPkjVqH3sWPZDBlzlTarriZwU67nYPjylTc7nlIvWu9Stf0biNa7cRyJ
-         BYxiZVoSS9VdXWIWVtTxp1wbAPw/svkaDocOwXi5XRc/VYHrpKXVVW7QVgba1ViCg878
-         J+w2tYgxYEfJtvD7MOpvmQAglBfUD9W9M2Q+mnrUlqX73WrcrWBgUNyt/Lmefoam0xHY
-         4Jsw==
-X-Gm-Message-State: AOAM533JE5EMa2yFaAENkSAIDh56T164H8CMgauSJEs7iO3qdM251cIN
-        btQnKEUtW5KbZ5GMWaz/LzkpVrpxbpX0DZwke1c=
-X-Google-Smtp-Source: ABdhPJz0GntQMpIOmrj4GRVMLIZcTc3W7DE9ss2ffHETJ+m2psB6WMCmh23STzGSMAgSFeZ48bxWY3UKFovKuCJpomo=
-X-Received: by 2002:a05:6e02:788:: with SMTP id q8mr9248511ils.22.1595741723422;
- Sat, 25 Jul 2020 22:35:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200726030855.q6dfjekazfzl5usw@pesu.pes.edu>
-In-Reply-To: <20200726030855.q6dfjekazfzl5usw@pesu.pes.edu>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Sat, 25 Jul 2020 22:35:12 -0700
-Message-ID: <CAM_iQpUFL7VdCKSgUa6N3pg7ijjZRu6-6UAs2oNosM-EzgXbaQ@mail.gmail.com>
-Subject: Re: [PATCH v2] net: ipv6: fix use-after-free Read in __xfrm6_tunnel_spi_lookup
-To:     B K Karthik <bkkarthik@pesu.pes.edu>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
+        Sun, 26 Jul 2020 01:58:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 8B9468EE100;
+        Sat, 25 Jul 2020 22:58:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1595743093;
+        bh=pJmubbLb3oIxZWNS8+6h1DwP9BNFFr9nuo2r0MyE+jQ=;
+        h=Subject:From:To:Cc:Date:From;
+        b=e9NWSUknzkpbQYWdaA+arAOQNI3ozz0y3rVo7XJ+Dp3AgiYfntBCMY4/c3HR5yrEW
+         3JTQ+l3T/5Dd3koaAsK2zHkazyUgHRFGXcqmu1BdxZ2DPdH+U7ikj7HWGiUUUuWmz5
+         i2YceBvwE0ILmnzTZQXJgA5q9F21xkLZNgwAtC0Q=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id RXshDeMSfpyj; Sat, 25 Jul 2020 22:58:13 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 026528EE0EA;
+        Sat, 25 Jul 2020 22:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1595743093;
+        bh=pJmubbLb3oIxZWNS8+6h1DwP9BNFFr9nuo2r0MyE+jQ=;
+        h=Subject:From:To:Cc:Date:From;
+        b=e9NWSUknzkpbQYWdaA+arAOQNI3ozz0y3rVo7XJ+Dp3AgiYfntBCMY4/c3HR5yrEW
+         3JTQ+l3T/5Dd3koaAsK2zHkazyUgHRFGXcqmu1BdxZ2DPdH+U7ikj7HWGiUUUuWmz5
+         i2YceBvwE0ILmnzTZQXJgA5q9F21xkLZNgwAtC0Q=
+Message-ID: <1595743091.22874.5.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 5.8-rc5
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sat, 25 Jul 2020 22:58:11 -0700
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 8:09 PM B K Karthik <bkkarthik@pesu.pes.edu> wrote:
-> @@ -103,10 +103,10 @@ static int __xfrm6_tunnel_spi_check(struct net *net, u32 spi)
->  {
->         struct xfrm6_tunnel_net *xfrm6_tn = xfrm6_tunnel_pernet(net);
->         struct xfrm6_tunnel_spi *x6spi;
-> -       int index = xfrm6_tunnel_spi_hash_byspi(spi);
-> +       int index = xfrm6_tunnel_spi_hash_byaddr((const xfrm_address_t *)spi);
->
->         hlist_for_each_entry(x6spi,
-> -                            &xfrm6_tn->spi_byspi[index],
-> +                            &xfrm6_tn->spi_byaddr[index],
->                              list_byspi) {
->                 if (x6spi->spi == spi)
+Small core patch to fix a corner case bug: we forgot to run the queues
+to handle starvation in the error exit from the scsi_queue_rq routine,
+which can lead to hangs on error conditions.
 
-How did you convince yourself this is correct? This lookup is still
-using spi. :)
+The patch is available here:
 
-More importantly, can you explain how UAF happens? Apparently
-the syzbot stack traces you quote make no sense at all. I also
-looked at other similar reports, none of them makes sense to me.
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-Thanks.
+The short changelog is:
+
+Ming Lei (1):
+      scsi: core: Run queue in case of I/O resource contention failure
+
+And the diffstat:
+
+ drivers/scsi/scsi_lib.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+With full diff below.
+
+James
+
+---
+
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 0ba7a65e7c8d..06056e9ec333 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -547,6 +547,15 @@ static void scsi_mq_uninit_cmd(struct scsi_cmnd *cmd)
+ 	scsi_uninit_cmd(cmd);
+ }
+ 
++static void scsi_run_queue_async(struct scsi_device *sdev)
++{
++	if (scsi_target(sdev)->single_lun ||
++	    !list_empty(&sdev->host->starved_list))
++		kblockd_schedule_work(&sdev->requeue_work);
++	else
++		blk_mq_run_hw_queues(sdev->request_queue, true);
++}
++
+ /* Returns false when no more bytes to process, true if there are more */
+ static bool scsi_end_request(struct request *req, blk_status_t error,
+ 		unsigned int bytes)
+@@ -591,11 +600,7 @@ static bool scsi_end_request(struct request *req, blk_status_t error,
+ 
+ 	__blk_mq_end_request(req, error);
+ 
+-	if (scsi_target(sdev)->single_lun ||
+-	    !list_empty(&sdev->host->starved_list))
+-		kblockd_schedule_work(&sdev->requeue_work);
+-	else
+-		blk_mq_run_hw_queues(q, true);
++	scsi_run_queue_async(sdev);
+ 
+ 	percpu_ref_put(&q->q_usage_counter);
+ 	return false;
+@@ -1702,6 +1707,7 @@ static blk_status_t scsi_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 		 */
+ 		if (req->rq_flags & RQF_DONTPREP)
+ 			scsi_mq_uninit_cmd(cmd);
++		scsi_run_queue_async(sdev);
+ 		break;
+ 	}
+ 	return ret;
