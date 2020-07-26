@@ -2,84 +2,111 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AB0C433E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD40C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 848A420714
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:31:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595766716;
-	bh=64jkf8HdiGlThD3TjFZUSJwmh+YG4CVPZeKKn7qGpaw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tU4r7uNClk/KfL6s6J8/RZAXbGnxuFh9wP9BYiV2Y1TKnaryiVpRnT9pDFaecvGBM
-	 FBivZ8dr7IT5D7WWMj8ctmFEyPGkk1NL4MJM8Mjs5t5BdTpKhiDltcS7aaPjHXXfwv
-	 dEtdagKpkofRtiwU/dS2nwQ6XX1vCVyD/xFA/Np0=
+	by mail.kernel.org (Postfix) with ESMTP id 7CCAA2065E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:35:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="xOPdX7zI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgGZMbz (ORCPT
+        id S1726982AbgGZMfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 08:31:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60740 "EHLO mail.kernel.org"
+        Sun, 26 Jul 2020 08:35:23 -0400
+Received: from www.zeus03.de ([194.117.254.33]:39916 "EHLO mail.zeus03.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgGZMbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 08:31:55 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C95A206D8;
-        Sun, 26 Jul 2020 12:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595766714;
-        bh=64jkf8HdiGlThD3TjFZUSJwmh+YG4CVPZeKKn7qGpaw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Eo9uitdOnjtC0uvISSt6MaHCKvkOl65P7XYhxs0IrKxgQrvpPDYniRlKh9YTrCzZ7
-         hpVgn2jt5JwJz0lt1vFKt76yaYUIJa8tfxxlDtLt2NrCaxSMREoHxcetUIeZDiD0f+
-         gtzsHfeCbrgi8EXVxjKxlpAREgHVrs9tMyLKXeeo=
-Date:   Sun, 26 Jul 2020 13:31:51 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: Kconfig: ad8366: add entry for HMC1119 chip
-Message-ID: <20200726133151.7a735fbd@archlinux>
-In-Reply-To: <20200720135237.72835-1-alexandru.ardelean@analog.com>
-References: <20200720135237.72835-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726042AbgGZMfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 08:35:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=onAeRnhffhF8ckRwRk4DsGKcuZ5Z
+        A3FW02cG3cQyVvk=; b=xOPdX7zIGdV+hLDlDtvJQrla1xgvXVqgjudDwZNJcY/y
+        UxH6Uxc3rBrfVuJ6qwDWL6hBSBtWw2GhDWVjKC9p7CtD5q6fULK7WI9rNWEzztj8
+        c6QmeBMw5XkrgpSXrqPG+G4nlMniocnv8rbnHt5MagEQJ3i3L88k/ge12XmPocY=
+Received: (qmail 40298 invoked from network); 26 Jul 2020 14:35:19 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 26 Jul 2020 14:35:19 +0200
+X-UD-Smtp-Session: l3s3148p1@D31ocFer/I8gAwDPXy27AOM4pzPBFrIA
+Date:   Sun, 26 Jul 2020 14:35:19 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 11/20] dt-bindings: i2c: renesas,i2c: Document r8a774e1
+ support
+Message-ID: <20200726123519.GC2484@ninjato>
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZwgA9U+XZDXt4+m+"
+Content-Disposition: inline
+In-Reply-To: <1594811350-14066-12-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 20 Jul 2020 16:52:37 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-> The change is mostly cosmetic. When looking into the menuconfig help of the
-> ad8366 driver, the HMC1119 chip should also show up (since the driver
-> supports it).
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied
+--ZwgA9U+XZDXt4+m+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->  drivers/iio/amplifiers/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/iio/amplifiers/Kconfig b/drivers/iio/amplifiers/Kconfig
-> index 9b02c9a2bc8a..5eb1357a9c78 100644
-> --- a/drivers/iio/amplifiers/Kconfig
-> +++ b/drivers/iio/amplifiers/Kconfig
-> @@ -18,6 +18,7 @@ config AD8366
->  	    AD8366 Dual-Digital Variable Gain Amplifier (VGA)
->  	    ADA4961 BiCMOS RF Digital Gain Amplifier (DGA)
->  	    ADL5240 Digitally controlled variable gain amplifier (VGA)
-> +	    HMC1119 0.25 dB LSB, 7-Bit, Silicon Digital Attenuator
->  
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called ad8366.
+On Wed, Jul 15, 2020 at 12:09:01PM +0100, Lad Prabhakar wrote:
+> Document i2c controller for RZ/G2H (R8A774E1) SoC, which is compatible
+> with R-Car Gen3 SoC family.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
+as.com>
 
+Applied to for-next, thanks!
+
+
+--ZwgA9U+XZDXt4+m+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8deIcACgkQFA3kzBSg
+KbZbZA//W705bUta/I2fFJX9THCgPXeyts2P3gy1nQcBJvGROOzL6jZJne4W6nHR
+fJdAUnOfyZMTkCvfgnGGrnCa2QRrIgIYmnx1ZpF+dONaPYJPkZOOXoven13LjohY
+0lswiHVVEsKsESNlA8agcPm9Gniuvb8jpzUfpaTOZd2VQr6vV7YSoq53HXOKka+s
+mXwwe5J31Mc/DnJ7Yu0bZYo9jyFdKg4xSXrTwAz5FK+OqdYEyY9Qnu3ne0JZ4k99
+xPaCx5h0DQcoR4rOqIi21dedGiJ7iRuao1sDBgq5X1BxHIzJ5q+1HW1xiwMTdj/d
+6xA2PN1HxqaZ3Ff6p0tamC5AgmjgMQrFJj2cFI+fF/1VWp62V3O8oNZ/5b3f7bP4
+4f5ZwCfNYTcGB9tJnDxqTsAHAXAhnxlNc56kCWEZhTzKDzE7gW+H6+90OZEtzeA5
+Akq7504HPVrlgmL52JBbNcunDvs1eTc9ROjPVYJPGu5BKrcB+m2a0HCwhi2nJRBT
+XE//0zGPvPpiq+wYvUiyxmrBWTE/qKJekKoyLUmEIYlaDy9IdDEes5m9yJFlmsAy
+tvXt/lsCak31bfhyHa6HQQ3O8tjC5h+DTpJ4G1zp4u3d1yqBJcobgbySqibzKalP
+BdwAoJP8ng3+Q1MBRngxSYyKZvv7J3uderjW7yq8BN8+KwjU+uE=
+=FNmn
+-----END PGP SIGNATURE-----
+
+--ZwgA9U+XZDXt4+m+--
