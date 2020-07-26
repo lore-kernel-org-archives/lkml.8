@@ -2,65 +2,65 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A49C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 232E22065E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 120612065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="e3qylBuP"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="l4ouuUm+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgGZM7L (ORCPT
+        id S1727116AbgGZM5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 08:59:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56426 "EHLO
+        Sun, 26 Jul 2020 08:57:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbgGZM7K (ORCPT
+        with ESMTP id S1726704AbgGZM5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 08:59:10 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2F43C0619D4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 05:59:09 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y3so12256883wrl.4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 05:59:09 -0700 (PDT)
+        Sun, 26 Jul 2020 08:57:30 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD645C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 05:57:29 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id t142so5779673wmt.4
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 05:57:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aJ0QTk1kAr2FXG3tNKxMDTj3E6xC0tBqD5CEm/p3JFE=;
-        b=e3qylBuPPyd36kYi09rS61kEhLJtEb/XiQOym4M3xymiMBeoHEsRYf7Cl7PEyEpyzg
-         c6RjEdgiKjPRk80f99amxldvIWn8kAn2HrIK+4WB97VzHtKsfAq4IidLgJqkLaPb8vf2
-         lgOrGq2sfuOHdd2NQeeywpEG7BhiYWAOtFlnHV9PhGwA855BfYE19uhn8Cud4Mvvd23l
-         pKb4vFdCWBWOzwXwFnKBv/Wod/PlT0wyvHouPqYCoQQpUfqTUYylmYyoq5AYUZC3dbBp
-         LxEonSSWb6BKqUxWs+cLg65BjTqzXH6n5wq0JqZqrEzIBxAzVyPpSfVirsjtlJylWK0p
-         256A==
+        bh=cj1AA+QajmRenSwYh/8g5RjvZ+1Kfi4azWkbk5rVJMY=;
+        b=l4ouuUm+RZKjkDPNsYC7yAU3y2YJaYqK7fRoN7KnpfYrRUJXIdaNeqJraLDSLj+Hsq
+         DoCjcYHNOPx4wQ8IoFKBY8oXq+gP6wlJ5S/+4ZJRUZe7F+op3/uY4m7z1/B2VnkOgD5m
+         t2uIGFEk+6v+lJhjcexw3MSjbYwv9XzgPyuSk2nG7+0gRoCIhPcpMUQxBQ0CXJeMW7Bq
+         Pj3YcVraJh5zWRzVM0CLCI1eEwZtk2hlU89S/EKMlfBzmwOSdLrkBcQe9JB7QgVZ03Q+
+         zeks5A6Odx9k1ILsGYWcElYbzhHbp57Sf/ChsiYlNzHYRcSM26Z/AA8OZ33WJhBEDIgd
+         p68A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aJ0QTk1kAr2FXG3tNKxMDTj3E6xC0tBqD5CEm/p3JFE=;
-        b=iQNqNChuKUe9ZDAKPXLzAvLvwHN1WvsCaAs3l5tSKTGZUdGSoUoKSgr0uxr9t/RGia
-         PG4mMr9ou8dZ+wSrA5hv8IhUL1xwQ7bPk/Wvp5etQi5GxipGdOEoios4YaAB57wK6CCH
-         jx5httsKNKr23Qu9HKffbqxY331Xc16jdGHrwSWghUl5SSTeeLFAxTUF3/MQjx+4KHfp
-         5nzdRqydIwuuWQldr90iMZ97N9+FQJ0hqfppoSDWgO09xQQB86EQ0V1UIowIcvsCKK09
-         nHVSr3hg9efXmx3fo4jrzl7/+fd/3kvoaj50OqVMRU7XnDLAnExyB/7VR/NilQQ81yXu
-         5hJA==
-X-Gm-Message-State: AOAM5304hj2L9KCEfX7aFQYUQZF9MZ5qscx8xqXhz19ltFS0/6ijTxo4
-        /tOjrhzoXC8HRGoewGS4Fzz8TvVEBOq7Y8fyXxtdCPpJ
-X-Google-Smtp-Source: ABdhPJwkwpK6Km+ushc9A1CmJalY7YDxkaZpWvaeV6P1vmcPyklRXsQahQs5E1vm5UD0ctxrGufZWxwQaQTBXHNbh18=
-X-Received: by 2002:adf:f186:: with SMTP id h6mr16468220wro.144.1595768348627;
- Sun, 26 Jul 2020 05:59:08 -0700 (PDT)
+        bh=cj1AA+QajmRenSwYh/8g5RjvZ+1Kfi4azWkbk5rVJMY=;
+        b=LpqwlB1ty8EWHY8BIX4RxdLDfhmXeWPr8R3axdftd0wIBlP1HEKadVdz5iA8mTIQNg
+         JR79f6BoJFmOMtjDGzfIaj7Drv6PBHufrHfs556wkTCKFRMVleuuMJAClTHGbe+HJKHQ
+         588sA9Jcc2OW8pETMwjZy8/oHMYoRP/WQqVp9pUtIl4EBnomRC7EAhh41OijXesL0uVe
+         ZVtwYOLzyBUtgxiJv+Lc4WbjLeuZcbc38avUlNgUtVrfZGWksOfJEw9q0mJ8VqcInsiZ
+         Gl9a/DFddsX7OTYMt4mQjZ0+gKT+FV2qmLWs7GiXU44KhSk01hWvVO5pZodD6Qarb0CA
+         eAJg==
+X-Gm-Message-State: AOAM530oqgKfQLEYrdhsXWut9U92l2uF+ukb5VenCrwhHeYyuW3ibI4W
+        w2fQ1BhJtvOT0dAq6BKrfAsA9mk7SGQ0QLoyuJ7Szg==
+X-Google-Smtp-Source: ABdhPJwiFhCYXoqV5R1BrUk4cFAFcu/0v8ywSpRptTToyE31Qt/lRbVUr0NbxhMSfFzTA3SQmpsU/BUW05YZkVeyxhw=
+X-Received: by 2002:a1c:5f41:: with SMTP id t62mr17178624wmb.134.1595768248343;
+ Sun, 26 Jul 2020 05:57:28 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200724085441.1514-1-jiangyifei@huawei.com> <20200724085441.1514-3-jiangyifei@huawei.com>
 In-Reply-To: <20200724085441.1514-3-jiangyifei@huawei.com>
 From:   Anup Patel <anup@brainfault.org>
-Date:   Sun, 26 Jul 2020 18:28:57 +0530
-Message-ID: <CAAhSdy18+3ub9Lw+2v0WEujYkFJ2yU0x=GqZ+PQGe2DrWCR8Bg@mail.gmail.com>
+Date:   Sun, 26 Jul 2020 18:27:16 +0530
+Message-ID: <CAAhSdy3q3tNUqSxnFy2tdmXOLJZjt4rMAZirZh88-0BXT7-X1g@mail.gmail.com>
 Subject: Re: [RFC 2/2] RISC-V: KVM: read\write kernel mmio device support
 To:     Yifei Jiang <jiangyifei@huawei.com>
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
@@ -82,11 +82,6 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-
-Change subject to:
-RISC-V: KVM: kernel mmio read/write support
-
-Also add 1-2 sentences of commit description.
 
 On Fri, Jul 24, 2020 at 2:25 PM Yifei Jiang <jiangyifei@huawei.com> wrote:
 >
@@ -119,6 +114,9 @@ On Fri, Jul 24, 2020 at 2:25 PM Yifei Jiang <jiangyifei@huawei.com> wrote:
 > +       ret = kvm_io_bus_read(vcpu, KVM_MMIO_BUS, fault_addr, len,
 > +                                                 data_buf);
 > +
+
+Move "ret = kvm_io_bus_read()" just before "if (!ret)".
+
 >         run->mmio.is_write = false;
 >         run->mmio.phys_addr = fault_addr;
 >         run->mmio.len = len;
@@ -155,6 +153,11 @@ On Fri, Jul 24, 2020 at 2:25 PM Yifei Jiang <jiangyifei@huawei.com> wrote:
 > +       ret = kvm_io_bus_write(vcpu, KVM_MMIO_BUS, fault_addr, len,
 > +                                                  run->mmio.data);
 > +
+
+Same as above.
+
+Move "ret = kvm_io_bus_write()" just before "if (!ret) {"
+
 >         run->mmio.is_write = true;
 >         run->mmio.phys_addr = fault_addr;
 >         run->mmio.len = len;
