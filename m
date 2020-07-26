@@ -2,122 +2,121 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2F5F2065C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 991402065C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:56:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="FKbfc6K6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AzC6Rkjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgGZI7k (ORCPT
+        id S1726106AbgGZI4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 04:59:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47784 "EHLO
+        Sun, 26 Jul 2020 04:56:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGZI7k (ORCPT
+        with ESMTP id S1725794AbgGZI4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 04:59:40 -0400
-Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBB42C0619D2;
-        Sun, 26 Jul 2020 01:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=raj459k/Ry/Z+q4J3+wwOawrxeEM4ca9YQ65wIbZMWs=; b=FKbfc6K6S9rPTM7UPjdjDgKVrJ
-        D6LJr3AeYr+fySva3u+UezV1ZolLU9QoWVjTWtrqB9m8Om85RsK9/tw4GWtEYW2aZVuPG5591iaug
-        gDl1ZwVYreM3J+YKXrfnYpCg8omSIgKLA8ckqzMZ3RLvAZ/smIX6TUdYXZMMN2dBLAeo=;
-Received: from p5b206d80.dip0.t-ipconnect.de ([91.32.109.128] helo=nf.local)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1jzcVF-0001wr-0T; Sun, 26 Jul 2020 10:59:29 +0200
-Subject: Re: [RFC 0/7] Add support to process rx packets in thread
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     David Laight <David.Laight@ACULAB.COM>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Rakesh Pillai <pillair@codeaurora.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
-        "dianders@chromium.org" <dianders@chromium.org>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Ding Zhao Nan <oshack@hotmail.com>,
-        "evgreen@chromium.org" <evgreen@chromium.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>
-References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
- <20200721172514.GT1339445@lunn.ch> <20200725081633.7432-1-hdanton@sina.com>
- <20200726012244.15264-1-hdanton@sina.com>
- <20200726083239.5060-1-hdanton@sina.com>
-From:   Felix Fietkau <nbd@nbd.name>
-Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
- xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
- RjMaxwtSdaCKMw3j33ZbsWS4
-Message-ID: <805e66e3-3090-61d2-1fda-50421eb99e3d@nbd.name>
-Date:   Sun, 26 Jul 2020 10:59:27 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Sun, 26 Jul 2020 04:56:06 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D1EC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 01:56:05 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 1so7488863pfn.9
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 01:56:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BiHp5LUc9PuHCot82qcRCOL9br0dFdzgknx8tkEtCyo=;
+        b=AzC6RkjlolNsWZXQ1jzEnFUYelHlzN9vaw4Mo7YjLgPC7C4QvAkSMSvgUsyqrFC5xV
+         cx6O9RKDTsKrQusl0BYJm841lANFn8nUizwXv5tLilClZTJdfmxsqm1eYVx4hsKcZhD8
+         mVf5iPIjvaN5Ml95jYWPGMff0z9LaohLAolIAJZ3jDJhkL6WQIxTLV/lwaGCOvi30BKT
+         ArBZ70amdW4zSqa9mFp5rAqePmoQSqL7yHQoDb9EBJIkVWgGBB3ttB+ixNrQglmtngCz
+         i3/mDjTRyBmEMqiPDquucRPL86ZpNncPo58YnGKdnYMU5T1z/pCkrvsScdOIed7LIwmp
+         B27Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BiHp5LUc9PuHCot82qcRCOL9br0dFdzgknx8tkEtCyo=;
+        b=fuwudOjTMNxRQ4+S6/Ubjs7M7vszqlFU2y1g7I2KHpiqD8IrLd5MuaztCJYCF5s8Xw
+         x4zypcNDALpy4fORJuwnUR4dmc5nNW60QA3eBUoY2UGfFv1io1ilzBflkecxZr2Js93I
+         R0c8IkKiryxTL1C26SdG9lttSGMA5JelxE85oaurhugHFVlkmI+rdmn+ZvIOfUH0SxHF
+         DYCU55/IrjKt7dDrqCHOi9rtVXYkhqnFu+02xbK8kaGTTXfsYMxzzN3rtNColjO6wwJ8
+         A6ZZjFeVoLhF/YkKbnjp1D19kyvNyXi+3aRoMll3xTvjwqU2dx64nLH5mABwCIsHmZeb
+         EhLg==
+X-Gm-Message-State: AOAM532BxrWO9EAzh/mjrzQSFLpJjG4Yac8moN3DKixJTMy3bPz7YDbk
+        4I1DDjo51ObJgAJ/fIrgapxzaaQ/fBOmyU8ZH6Q=
+X-Google-Smtp-Source: ABdhPJyFfPKbmYFTGSrQjEu+YSR9sojkqP2HJW83W3cI7AAOjVWSpnJEqxjzmJC4XyDEYaDuz3qAKc26hLkGxKs1JsY=
+X-Received: by 2002:a63:a05f:: with SMTP id u31mr14817755pgn.4.1595753764903;
+ Sun, 26 Jul 2020 01:56:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200726083239.5060-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200726052804.GA51199@xin-virtual-machine>
+In-Reply-To: <20200726052804.GA51199@xin-virtual-machine>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 26 Jul 2020 11:55:48 +0300
+Message-ID: <CAHp75Vf8h2kXnn-2xf3BFFDvBTSUH3w0z_S-FyKdB7MSJ_1j7g@mail.gmail.com>
+Subject: Re: [PATCH] tty: fix pid refcount leak in tty_signal_session_leader
+To:     Xin Xiong <xiongx18@fudan.edu.cn>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, yuanxzhang@fudan.edu.cn
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-26 10:32, Hillf Danton wrote:
-> 
-> On Sun, 26 Jul 2020 10:10:15 +0200 Felix Fietkau wrote:
->> On 2020-07-26 03:22, Hillf Danton wrote:
->> > 
->> > Feel free to do that. Is it likely for me to select a Cc?
->> > 
->> Shall I use Signed-off-by: Hillf Danton <hdanton@sina.com>?
-> 
-> s/Signed-off-by/Cc/
-> 
->> What Cc do you want me to add?
-> 
-> I prefer Cc over other tags.
-Ah, okay. I was planning on adding you as the author of the patch, since
-you did most of the work on it. If you want to be attributed as author
-(or in Co-developed-by), I'd need your Signed-off-by.
+On Sun, Jul 26, 2020 at 8:30 AM Xin Xiong <xiongx18@fudan.edu.cn> wrote:
+>
+> In the loop, every time when p->signal->leader is true, the function
+> tty_signal_session_leader() will invoke get_pid() and return a
+> reference of tty->pgrp with increased refcount to the local variable
+> tty_pgrp or return NULL if it fails. After finishing the loop, the
+> function invokes put_pid() for only once, decreasing the refcount that
+> tty_pgrp keeps.
+>
+> Refcount leaks may occur when the scenario that p->signal->leader is
+> true happens more than once. In this assumption, if the above scenario
+> happens n times in the loop, the function forgets to decrease the
+> refcount for n-1 times, which causes refcount leaks.
+>
+> Fix the issue by decreasing the current refcount of the local variable
+> tty_pgrp before assigning new objects to it.
+>
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+> Signed-off-by: Xin Xiong <xiongx18@fudan.edu.cn>
 
-If you don't want that, I can submit it under my name and leave you in
-as Cc only.
+This SoB chain is out of order. If you are the author, your SoB should
+go first, if you are a commiter, the From line should correspond to
+the first SoB (not yours), if it's a group of authors (funny for
+one-/twoliner) then you consider to use Co-developed-by. Please, read
+Submitting Patches document.
 
-- Felix
+...
+
+>                         put_pid(p->signal->tty_old_pgrp);  /* A noop */
+>                         spin_lock(&tty->ctrl_lock);
+> +                       if (tty_pgrp)
+> +                               put_pid(tty_pgrp);
+>                         tty_pgrp = get_pid(tty->pgrp);
+>                         if (tty->pgrp)
+>                                 p->signal->tty_old_pgrp = get_pid(tty->pgrp);
+
+I guess this patch wasn't thought thru. You see the get_pid for it
+happens twice in a row. Perhaps you have to get the logic behind all
+these first?
+
+P.S. ...on top of what Greg said.
+
+-- 
+With Best Regards,
+Andy Shevchenko
