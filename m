@@ -7,34 +7,35 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9E7C433ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B839C433F2
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE06A2070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A392070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:40:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgGZLkD (ORCPT
+        id S1728038AbgGZLj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 07:40:03 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:32833
+        Sun, 26 Jul 2020 07:39:56 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:32827
         "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728014AbgGZLj5 (ORCPT
+        by vger.kernel.org with ESMTP id S1725794AbgGZLjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 07:39:57 -0400
+        Sun, 26 Jul 2020 07:39:52 -0400
 X-IronPort-AV: E=Sophos;i="5.75,398,1589234400"; 
-   d="scan'208";a="355309549"
+   d="scan'208";a="355309544"
 Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES256-SHA256; 26 Jul 2020 13:39:48 +0200
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES256-SHA256; 26 Jul 2020 13:39:47 +0200
 From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Kalle Valo <kvalo@codeaurora.org>
+To:     Solarflare linux maintainers <linux-net-drivers@solarflare.com>
 Cc:     kernel-janitors@vger.kernel.org,
+        Edward Cree <ecree@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] ath: drop unnecessary list_empty
-Date:   Sun, 26 Jul 2020 12:58:32 +0200
-Message-Id: <1595761112-11003-8-git-send-email-Julia.Lawall@inria.fr>
+Subject: [PATCH 2/7] sfc: drop unnecessary list_empty
+Date:   Sun, 26 Jul 2020 12:58:27 +0200
+Message-Id: <1595761112-11003-3-git-send-email-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1595761112-11003-1-git-send-email-Julia.Lawall@inria.fr>
 References: <1595761112-11003-1-git-send-email-Julia.Lawall@inria.fr>
@@ -43,77 +44,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-list_for_each_entry{_safe} is able to handle an empty list.
+list_for_each_safe is able to handle an empty list.
 The only effect of avoiding the loop is not initializing the
 index variable.
 Drop list_empty tests in cases where these variables are not
 used.
 
-Note that list_for_each_entry{_safe} is defined in terms of
-list_first_entry, which indicates that it should not be used on an
-empty list.  But in list_for_each_entry{_safe}, the element obtained
-by list_first_entry is not really accessed, only the address of its
-list_head field is compared to the address of the list head, so the
-list_first_entry is safe.
-
-The semantic patch that makes this change for the list_for_each_entry
-case is as follows: (http://coccinelle.lip6.fr/)
+The semantic patch that makes this change is as follows:
+(http://coccinelle.lip6.fr/)
 
 <smpl>
 @@
 expression x,e;
+iterator name list_for_each_safe;
 statement S;
-identifier i;
+identifier i,j;
 @@
 
--if (!(list_empty(x)))
-   list_for_each_entry(i,x,...) S
+-if (!(list_empty(x))) {
+   list_for_each_safe(i,j,x) S
+- }
  ... when != i
-? i = e
+     when != j
+(
+  i = e;
+|
+? j = e;
+)
 </smpl>
 
 Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
 ---
- drivers/net/wireless/ath/dfs_pattern_detector.c |   15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/sfc/ptp.c |   20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/dfs_pattern_detector.c b/drivers/net/wireless/ath/dfs_pattern_detector.c
-index a274eb0..0813473 100644
---- a/drivers/net/wireless/ath/dfs_pattern_detector.c
-+++ b/drivers/net/wireless/ath/dfs_pattern_detector.c
-@@ -253,17 +253,15 @@ static void channel_detector_exit(struct dfs_pattern_detector *dpd,
- static void dpd_reset(struct dfs_pattern_detector *dpd)
- {
- 	struct channel_detector *cd;
--	if (!list_empty(&dpd->channel_detectors))
--		list_for_each_entry(cd, &dpd->channel_detectors, head)
--			channel_detector_reset(dpd, cd);
-+	list_for_each_entry(cd, &dpd->channel_detectors, head)
-+		channel_detector_reset(dpd, cd);
+diff --git a/drivers/net/ethernet/sfc/ptp.c b/drivers/net/ethernet/sfc/ptp.c
+index 393b7cb..bea4725 100644
+--- a/drivers/net/ethernet/sfc/ptp.c
++++ b/drivers/net/ethernet/sfc/ptp.c
+@@ -1154,17 +1154,15 @@ static void efx_ptp_drop_time_expired_events(struct efx_nic *efx)
  
- }
- static void dpd_exit(struct dfs_pattern_detector *dpd)
- {
- 	struct channel_detector *cd, *cd0;
--	if (!list_empty(&dpd->channel_detectors))
--		list_for_each_entry_safe(cd, cd0, &dpd->channel_detectors, head)
--			channel_detector_exit(dpd, cd);
-+	list_for_each_entry_safe(cd, cd0, &dpd->channel_detectors, head)
-+		channel_detector_exit(dpd, cd);
- 	kfree(dpd);
- }
- 
-@@ -331,9 +329,8 @@ static bool dpd_set_domain(struct dfs_pattern_detector *dpd,
- 		return false;
- 
- 	/* delete all channel detectors for previous DFS domain */
--	if (!list_empty(&dpd->channel_detectors))
--		list_for_each_entry_safe(cd, cd0, &dpd->channel_detectors, head)
--			channel_detector_exit(dpd, cd);
-+	list_for_each_entry_safe(cd, cd0, &dpd->channel_detectors, head)
-+		channel_detector_exit(dpd, cd);
- 	dpd->radar_spec = rt->radar_types;
- 	dpd->num_radar_types = rt->num_radar_types;
- 
+ 	/* Drop time-expired events */
+ 	spin_lock_bh(&ptp->evt_lock);
+-	if (!list_empty(&ptp->evt_list)) {
+-		list_for_each_safe(cursor, next, &ptp->evt_list) {
+-			struct efx_ptp_event_rx *evt;
+-
+-			evt = list_entry(cursor, struct efx_ptp_event_rx,
+-					 link);
+-			if (time_after(jiffies, evt->expiry)) {
+-				list_move(&evt->link, &ptp->evt_free_list);
+-				netif_warn(efx, hw, efx->net_dev,
+-					   "PTP rx event dropped\n");
+-			}
++	list_for_each_safe(cursor, next, &ptp->evt_list) {
++		struct efx_ptp_event_rx *evt;
++
++		evt = list_entry(cursor, struct efx_ptp_event_rx,
++				 link);
++		if (time_after(jiffies, evt->expiry)) {
++			list_move(&evt->link, &ptp->evt_free_list);
++			netif_warn(efx, hw, efx->net_dev,
++				   "PTP rx event dropped\n");
+ 		}
+ 	}
+ 	spin_unlock_bh(&ptp->evt_lock);
 
