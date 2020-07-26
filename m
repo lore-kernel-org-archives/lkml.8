@@ -2,256 +2,175 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA726C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06674C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9629920700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:12:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EX7Mtu74"
+	by mail.kernel.org (Postfix) with ESMTP id DF0C820700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:18:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgGZBMv (ORCPT
+        id S1728064AbgGZBRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 21:12:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726931AbgGZBMv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 21:12:51 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF83CC0619D2;
-        Sat, 25 Jul 2020 18:12:50 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k4so6347335pld.12;
-        Sat, 25 Jul 2020 18:12:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lrqn0h4UeYu/NXBjnfBtgYmgcWJ30UKbihkBx7kwfNc=;
-        b=EX7Mtu74e7NNmFrf8Um9TmfMjFl3im3HX0QNWFjH4WSZbbkHWZ7Z4CzJovTf/WTZpP
-         I8tk3T4iXtbCToiSSlErXq+Lyb63rNf2Ny8XKUg0BDeSHIGn1q5iM3yXqtVG5PHZyi2c
-         N9pBql17T61YRvziAGM6sg5mFFlHK/m++OkU9kaAoOENV4EF7Bk/A2vZrEVKCth36y9a
-         Q9udfkmuYbU4D3Kwb7wu3JQ1BJ+bGNgGNzwiKMAylOEENSHD37bMjTropLA9e5+WvodK
-         OLJ3XZAoJPO5zTfU+iJr/U9WmliMLaTEGEheb89Vqqb1rkHP8PPMt782eRUowgVqzRuG
-         6Fqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lrqn0h4UeYu/NXBjnfBtgYmgcWJ30UKbihkBx7kwfNc=;
-        b=EpO9Un7j74RL4G7FYDgmsruj92kjPnaRCm39OVczIwuhDN8sqIkYymk+aZbomPzJvs
-         iCJzBeC/npg6xeRfOV9Mq6V6bgeWXYZBLYTvzUJDethTVpmmQfu8kVuYnp43npTBg70m
-         Z3LTmdTrjBA0CI4WfLxLnHPcMyjSzHn1ER4FW70nANbuZHUNzFoVr8Qls0x3V/ZDyIv+
-         4cHyP05zyjMMpg4wdCX211p41DvuRtE7IHVxXluX+8nAak9L0u1ZglSdqt6KCQVIj9vt
-         vFMGBoZMV99HrfkrZ35ruHvLpZV6JiwRTO27NAH89qS/jUW+fXRTrf8caz5tVH/97aVs
-         9QCA==
-X-Gm-Message-State: AOAM532dU3H1CP/7ms7343o+NtEO7a9hYfchBu8zxXbof3hjpSOLAYf4
-        5XcAc8X7FxLiUZlK/woi8EA=
-X-Google-Smtp-Source: ABdhPJyXAhZUYNB1q8VtC7UJ44VKX/lsqzrXN7JZv9uTuuB+MM8CRyYuJO/+8IYkv3wDiCx0O1mQUg==
-X-Received: by 2002:a17:90b:1907:: with SMTP id mp7mr11392538pjb.220.1595725970253;
-        Sat, 25 Jul 2020 18:12:50 -0700 (PDT)
-Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id b4sm10705169pfo.137.2020.07.25.18.12.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 18:12:49 -0700 (PDT)
-Date:   Sun, 26 Jul 2020 09:12:44 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 05/18] gpiolib: cdev: support GPIO_GET_LINE_IOCTL and
- GPIOLINE_GET_VALUES_IOCTL
-Message-ID: <20200726011244.GA6587@sol>
-References: <20200725041955.9985-1-warthog618@gmail.com>
- <20200725041955.9985-6-warthog618@gmail.com>
- <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
+        Sat, 25 Jul 2020 21:17:53 -0400
+Received: from mga09.intel.com ([134.134.136.24]:29701 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726931AbgGZBRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 21:17:52 -0400
+IronPort-SDR: RlavkHoJJQEVIsdEnK18skivLGjRsCJNsJvLnifpzQusxxxoU4ijvL8gtTMZlHgR0A9RG8bL/y
+ exWV3yRs4VsA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9693"; a="152133480"
+X-IronPort-AV: E=Sophos;i="5.75,395,1589266800"; 
+   d="scan'208";a="152133480"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2020 18:17:51 -0700
+IronPort-SDR: bX6lR3o0mDVAR9J9KlZNif4LBCSljlLYl/dY5ECs+ra+TmFKTq2wNkj1ewbTDLcbraGgSQBF3c
+ FtfjyULuxGYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,395,1589266800"; 
+   d="scan'208";a="327664821"
+Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 25 Jul 2020 18:17:50 -0700
+Received: from kbuild by df0563f96c37 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jzVIT-0001C0-Kk; Sun, 26 Jul 2020 01:17:49 +0000
+Date:   Sun, 26 Jul 2020 09:17:28 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:core/headers] BUILD SUCCESS
+ d19e789f068b3d633cbac430764962f404198022
+Message-ID: <5f1cd9a8.JaV99HRTiTFHL7fQ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 11:51:54PM +0300, Andy Shevchenko wrote:
-> On Sat, Jul 25, 2020 at 7:24 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > Add support for requesting lines using the GPIO_GET_LINE_IOCTL, and
-> > returning their current values using GPIOLINE_GET_VALUES_IOCTL.
-> 
-> ...
-> 
-> > +struct line {
-> > +       struct gpio_device *gdev;
-> > +       const char *label;
-> > +       u32 num_descs;
-> 
-> > +       /* descs must be last so it can be dynamically sized */
-> 
-> I guess [] implies above comment and thus comment can be dropped.
-> 
-> > +       struct gpio_desc *descs[];
-> > +};
-> 
-> ...
-> 
-> > +static bool padding_not_zeroed(__u32 *padding, int pad_size)
-> > +{
-> > +       int i, sum = 0;
-> > +
-> > +       for (i = 0; i < pad_size; i++)
-> > +               sum |= padding[i];
-> > +
-> > +       return sum;
-> > +}
-> 
-> Reimplementation of memchr_inv() ?
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  core/headers
+branch HEAD: d19e789f068b3d633cbac430764962f404198022  compiler.h: Move instrumentation_begin()/end() to new <linux/instrumentation.h> header
 
-I was hoping to find an existing function, surely checking a region is
-zeroed is a common thing, right?, so this was a place holder as much
-as anything.  Not sure memchr_inv fits the bill, but I'll give it a
-try...
+elapsed time: 2216m
 
-> ...
-> 
-> > +static u64 gpioline_config_flags(struct gpioline_config *lc, int line_idx)
-> > +{
-> > +       int i;
-> > +
-> > +       for (i = lc->num_attrs - 1; i >= 0; i--) {
-> 
-> Much better to read is
-> 
-> unsigned int i = lc->num_attrs;
-> 
-> while (i--) {
->  ...
-> }
-> 
+configs tested: 104
+configs skipped: 1
 
-Really? I find that the post-decrement in the while makes determining the
-bounds of the loop more confusing.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> > +               if ((lc->attrs[i].attr.id == GPIOLINE_ATTR_ID_FLAGS) &&
-> 
-> > +                   test_bit(line_idx, (unsigned long *)lc->attrs[i].mask))
-> 
-> This casting is not good. What about BE 32-bit architecture?
-> 
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+i386                 randconfig-a003-20200724
+i386                 randconfig-a005-20200724
+i386                 randconfig-a004-20200724
+i386                 randconfig-a006-20200724
+i386                 randconfig-a002-20200724
+i386                 randconfig-a001-20200724
+i386                 randconfig-a003-20200725
+i386                 randconfig-a005-20200725
+i386                 randconfig-a004-20200725
+i386                 randconfig-a006-20200725
+i386                 randconfig-a002-20200725
+i386                 randconfig-a001-20200725
+x86_64               randconfig-a014-20200724
+x86_64               randconfig-a016-20200724
+x86_64               randconfig-a015-20200724
+x86_64               randconfig-a012-20200724
+x86_64               randconfig-a013-20200724
+x86_64               randconfig-a011-20200724
+i386                 randconfig-a016-20200725
+i386                 randconfig-a013-20200725
+i386                 randconfig-a012-20200725
+i386                 randconfig-a015-20200725
+i386                 randconfig-a014-20200725
+i386                 randconfig-a011-20200725
+i386                 randconfig-a016-20200724
+i386                 randconfig-a013-20200724
+i386                 randconfig-a012-20200724
+i386                 randconfig-a015-20200724
+i386                 randconfig-a014-20200724
+i386                 randconfig-a011-20200724
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
 
-I agree the casting is hideous, but I thought the outcome was correct
-as it is manipulating addresses, not data.
-You think the address of a 64-bit differs based on endian??
-Happy to change it - but not sure what to.
-
-> > +                       return lc->attrs[i].attr.flags;
-> > +       }
-> > +       return lc->flags;
-> > +}
-> > +
-> > +static int gpioline_config_output_value(struct gpioline_config *lc,
-> > +                                       int line_idx)
-> > +{
-> 
-> Same comments as per above.
-> 
-> > +}
-> 
-> ...
-> 
-> > +static long line_get_values(struct line *line, void __user *ip)
-> > +{
-> > +       struct gpioline_values lv;
-> 
-> > +       unsigned long *vals = (unsigned long *)lv.bits;
-> 
-> Casting u64 to unsigned long is not good.
-> 
-
-Same comments as per above.
-
-> > +}
-> 
-> ...
-> 
-> > +static void line_free(struct line *line)
-> > +{
-> > +       int i;
-> > +
-> > +       for (i = 0; i < line->num_descs; i++) {
-> 
-> > +               if (line->descs[i])
-> 
-> Redundant?
-> 
-
-Actually, no.  The line_free is also used to clean up construction
-failures, so the line may be partially constructed.  num_descs is set
-first, but the descs themselves may have failed to allocate.
-And gpiod_free throws a warning if you pass a NULL, hence the extra check here.
-
-> > +                       gpiod_free(line->descs[i]);
-> > +       }
-> > +       kfree(line->label);
-> > +       put_device(&line->gdev->dev);
-> > +       kfree(line);
-> > +}
-> 
-> ...
-> 
-> > +       /* Make sure this is terminated */
-> > +       linereq.consumer[sizeof(linereq.consumer)-1] = '\0';
-> > +       if (strlen(linereq.consumer)) {
-> > +               line->label = kstrdup(linereq.consumer, GFP_KERNEL);
-> 
-> kstrndup() ?
-> 
-
-That was a cut-and-paste from V1...
-
-> > +               if (!line->label) {
-> > +                       ret = -ENOMEM;
-> > +                       goto out_free_line;
-> > +               }
-> > +       }
-> 
-
-... and changing it would result in this logic behaving differently.
-You couldn't distinguish between consumer not being set, and
-so label not being set, and kstrndup returning NULL due to no mem.
-
-> ...
-> 
-> > +               struct gpio_desc *desc = gpiochip_get_desc(gdev->chip, offset);
-> 
-> I prefer to see this split, but it's minor.
-> 
-> > +               if (IS_ERR(desc)) {
-> > +                       ret = PTR_ERR(desc);
-> > +                       goto out_free_line;
-> > +               }
-> 
-> ...
-> 
-> > +               dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
-> > +                       offset);
-> 
-> Perhaps tracepoint / event?
-> 
-
-Again, a cut-and-paste from V1, and I have no experience with
-tracepoints or events, so I have no opinion on that.
-
-So, yeah - perhaps?
-
-Cheers,
-Kent.
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
