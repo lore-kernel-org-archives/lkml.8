@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36FDC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE87C433E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA8B3206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B23C2070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgGZLj5 (ORCPT
+        id S1728067AbgGZLj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 07:39:57 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:32827
+        Sun, 26 Jul 2020 07:39:58 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:32833
         "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727909AbgGZLjy (ORCPT
+        by vger.kernel.org with ESMTP id S1727936AbgGZLjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 07:39:54 -0400
+        Sun, 26 Jul 2020 07:39:55 -0400
 X-IronPort-AV: E=Sophos;i="5.75,398,1589234400"; 
-   d="scan'208";a="355309545"
+   d="scan'208";a="355309547"
 Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES256-SHA256; 26 Jul 2020 13:39:47 +0200
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES256-SHA256; 26 Jul 2020 13:39:48 +0200
 From:   Julia Lawall <Julia.Lawall@inria.fr>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     kernel-janitors@vger.kernel.org, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] [media] cx231xx: drop unnecessary list_empty
-Date:   Sun, 26 Jul 2020 12:58:28 +0200
-Message-Id: <1595761112-11003-4-git-send-email-Julia.Lawall@inria.fr>
+Subject: [PATCH 5/7] [media] saa7134: drop unnecessary list_empty
+Date:   Sun, 26 Jul 2020 12:58:30 +0200
+Message-Id: <1595761112-11003-6-git-send-email-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1595761112-11003-1-git-send-email-Julia.Lawall@inria.fr>
 References: <1595761112-11003-1-git-send-email-Julia.Lawall@inria.fr>
@@ -40,17 +40,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-list_for_each_entry is able to handle an empty list.
+list_for_each_safe is able to handle an empty list.
 The only effect of avoiding the loop is not initializing the
 index variable.
 Drop list_empty tests in cases where these variables are not
 used.
-
-Note that list_for_each_entry is defined in terms of list_first_entry,
-which indicates that it should not be used on an empty list.  But in
-list_for_each_entry, the element obtained by list_first_entry is not
-really accessed, only the address of its list_head field is compared
-to the address of the list head, so the list_first_entry is safe.
 
 The semantic patch that makes this change is as follows:
 (http://coccinelle.lip6.fr/)
@@ -58,56 +52,52 @@ The semantic patch that makes this change is as follows:
 <smpl>
 @@
 expression x,e;
-iterator name list_for_each_entry;
+iterator name list_for_each_safe;
 statement S;
-identifier i;
+identifier i,j;
 @@
 
 -if (!(list_empty(x))) {
-   list_for_each_entry(i,x,...) S
+   list_for_each_safe(i,j,x) S
 - }
  ... when != i
-? i = e
+     when != j
+(
+  i = e;
+|
+? j = e;
+)
 </smpl>
 
 Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
 ---
- drivers/media/usb/cx231xx/cx231xx-core.c |   16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ drivers/media/pci/saa7134/saa7134-core.c |   14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/media/usb/cx231xx/cx231xx-core.c b/drivers/media/usb/cx231xx/cx231xx-core.c
-index 982cb56e..05d91ca 100644
---- a/drivers/media/usb/cx231xx/cx231xx-core.c
-+++ b/drivers/media/usb/cx231xx/cx231xx-core.c
-@@ -115,11 +115,9 @@ void cx231xx_init_extension(struct cx231xx *dev)
- 	struct cx231xx_ops *ops = NULL;
+diff --git a/drivers/media/pci/saa7134/saa7134-core.c b/drivers/media/pci/saa7134/saa7134-core.c
+index e4623ed..5095f25 100644
+--- a/drivers/media/pci/saa7134/saa7134-core.c
++++ b/drivers/media/pci/saa7134/saa7134-core.c
+@@ -359,14 +359,12 @@ void saa7134_stop_streaming(struct saa7134_dev *dev, struct saa7134_dmaqueue *q)
+ 	struct saa7134_buf *tmp;
  
- 	mutex_lock(&cx231xx_devlist_mutex);
--	if (!list_empty(&cx231xx_extension_devlist)) {
--		list_for_each_entry(ops, &cx231xx_extension_devlist, next) {
--			if (ops->init)
--				ops->init(dev);
+ 	spin_lock_irqsave(&dev->slock, flags);
+-	if (!list_empty(&q->queue)) {
+-		list_for_each_safe(pos, n, &q->queue) {
+-			 tmp = list_entry(pos, struct saa7134_buf, entry);
+-			 vb2_buffer_done(&tmp->vb2.vb2_buf,
+-					 VB2_BUF_STATE_ERROR);
+-			 list_del(pos);
+-			 tmp = NULL;
 -		}
-+	list_for_each_entry(ops, &cx231xx_extension_devlist, next) {
-+		if (ops->init)
-+			ops->init(dev);
++	list_for_each_safe(pos, n, &q->queue) {
++		tmp = list_entry(pos, struct saa7134_buf, entry);
++		vb2_buffer_done(&tmp->vb2.vb2_buf,
++				VB2_BUF_STATE_ERROR);
++		list_del(pos);
++		tmp = NULL;
  	}
- 	mutex_unlock(&cx231xx_devlist_mutex);
- }
-@@ -129,11 +127,9 @@ void cx231xx_close_extension(struct cx231xx *dev)
- 	struct cx231xx_ops *ops = NULL;
- 
- 	mutex_lock(&cx231xx_devlist_mutex);
--	if (!list_empty(&cx231xx_extension_devlist)) {
--		list_for_each_entry(ops, &cx231xx_extension_devlist, next) {
--			if (ops->fini)
--				ops->fini(dev);
--		}
-+	list_for_each_entry(ops, &cx231xx_extension_devlist, next) {
-+		if (ops->fini)
-+			ops->fini(dev);
- 	}
- 	mutex_unlock(&cx231xx_devlist_mutex);
- }
+ 	spin_unlock_irqrestore(&dev->slock, flags);
+ 	saa7134_buffer_timeout(&q->timeout); /* also calls del_timer(&q->timeout) */
 
