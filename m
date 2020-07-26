@@ -2,134 +2,158 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A22C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 14:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7586EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 14:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2775A2065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 14:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 475CC20714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 14:33:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWAQBlI/"
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="cHvFGREX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgGZOaS (ORCPT
+        id S1726674AbgGZOdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 10:30:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42184 "EHLO
+        Sun, 26 Jul 2020 10:33:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725949AbgGZOaS (ORCPT
+        with ESMTP id S1725964AbgGZOdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 10:30:18 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BD2C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 07:30:18 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id f9so1746945pju.4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 07:30:18 -0700 (PDT)
+        Sun, 26 Jul 2020 10:33:32 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F21C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 07:33:32 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id g11so2717943ejr.0
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 07:33:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vY769z+hU0QNq3umNJsU8fhPq3Sqpqlbk02TbhcKHjI=;
-        b=cWAQBlI/3sejcpihgKQeEUtBW0SfLHOhHjN+SYmjI98TBcmVR4kfyR3e3CaD/u4JBr
-         rsc2Up5C/9eSFEdcav6J0vroMH+V4dMLCaVL2uJDaDWAshsKy8LBZuSWHXIkBGCtQLrf
-         j3gxNrOIXGUwgON0438ejF1ELONgPcHpa++5CMddLF629DfMiwISY9FFl6SjyT3Mf/KY
-         gvsj/n5c3Sisj67nDFz5oX66Q+2FePl1QN0ggoUQ7oUd9DjI8PgpbA8juJnVy9ub9TK2
-         L3WQf30cg7zMu/xDnO2gjo5cjNAIMjR6d6hInMiF2KvPBBPc3nW0cfdKSALFuR0lBFn+
-         TvgQ==
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h6PjDTHNbJzGCFM7oR6czVYevtbFuByjvgvxELkV44g=;
+        b=cHvFGREXeIYAdMHGV9Us7B6YAzH1cpXsAofFEeZiU4bKarJ0bBTHvJIhRR5jkexoZv
+         F39ZFNAKdNBkZ6tm4PeeiU0zKnBgEZqzV9vbbZ1n/pET7fnu1cADJcXvRGk7X4OXUMuf
+         BHyoTH66YJ/j8KD4yjcjeqoyJdE1QIdELbga1xF/Go8WVWxCSHWBSKsfL3uHZjG/e4Sz
+         qQe9fnJ4P4v8A0RV99gfJDVBWiCA4vGkmc2AfHQmGtX2vKg+vy2NyabllpDcZLJbZ8kT
+         SCQZigjGxMehQ5WX5HIO+G9Kgsusa/Vk2bFi3zUphaq2R85opqe+kllXgbbserAFqLJW
+         Xpng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vY769z+hU0QNq3umNJsU8fhPq3Sqpqlbk02TbhcKHjI=;
-        b=lA5dHfCd3JRrsNE2TIWoCBNziegPTxOY6u5c8gLtQtGUrO7sao1NXHe1rW7poo0Vcj
-         3QaCGcrv+i3v0vakk2YADJxNO2dIE5Uk9OxcRokIKEc7tc36FveGfvIzBKHkp0ldb7zv
-         Cm5UAL7NyCNdF+TfuPuyQhBHUHS5k2BCcyJ+z8foCGkCUNXNnfR+1ZVUIOKPbNREPPVd
-         DCtfw53x2VaZNysGl+yd9pJ6LX3P/tNql/uRAgCsR+xCG/rGCdyJxFDnfo0cVOizRsUM
-         3cHA0Stp3HfLUwAHZSfQnL/NWpVCd2Y1y5q2uBRlw3F2qgNYou8UGsOZoHsVzF2XwIcS
-         Ei+g==
-X-Gm-Message-State: AOAM531g/LclMKKIVsGNh12iZVOEcFD59zRzMYK9mEuhITY6OaAvzSjK
-        e+C8j/79I1YkaeFmKrpwi6M=
-X-Google-Smtp-Source: ABdhPJyNUYiRjXp71swjfyhQNddaolDBWjehpwsPjT/w3ym9VtIcIDmriDLAOHWboXZFNkLu6xs+rw==
-X-Received: by 2002:a17:90b:247:: with SMTP id fz7mr14153120pjb.17.1595773817986;
-        Sun, 26 Jul 2020 07:30:17 -0700 (PDT)
-Received: from iZj6chx1xj0e0buvshuecpZ ([47.75.1.235])
-        by smtp.gmail.com with ESMTPSA id e124sm4855513pfe.176.2020.07.26.07.30.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 Jul 2020 07:30:17 -0700 (PDT)
-Date:   Sun, 26 Jul 2020 22:30:13 +0800
-From:   Peng Liu <iwtbavbm@gmail.com>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, bristot@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/deadline: dome some cleanup for push_dl_task()
-Message-ID: <20200726143013.GA15138@iZj6chx1xj0e0buvshuecpZ>
-References: <20200706160442.GA19741@iZj6chx1xj0e0buvshuecpZ>
- <20200724071426.GD14912@localhost.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h6PjDTHNbJzGCFM7oR6czVYevtbFuByjvgvxELkV44g=;
+        b=YHghYMeRpB7vtaPzTbzcUrahRFVb30wZ0y7ZQcMA2Nfm+gJjBoVoLD7C4ohA/i8XuF
+         CW5P4GDinSRWOndYLw9dZRnOpJyd2H/FY5S1Tb9Ybbm9vR0hifMnWTFSu85R1X6R8d+p
+         hoVNM/vXlJZoFCnQTbYd8xEVP0D3zVMFVzh2+DP2vcgncCXQdSq/OxcXoTIJBfEcp8IZ
+         gzLN2pvK5f7e1t44wB1FN6ZKF6idWvip4QCMVR2S2m3V9HiRaXzatwOTNKIi/6c9y8yx
+         rc3mL/smLTdPBy90s5n4Uced4yDBoXSblzkPA0Wxp4by59vnoBER5cg+eKLF9XobFpOy
+         Ho/w==
+X-Gm-Message-State: AOAM532Clb7lv0RNKQsfn8rG8Y26+bUbxruT9DKYjT7oKp8GFNLeWe6F
+        GQmcQZUTh6dTn5W3ISeVtdT0JJat7ku8mOYGkv5N1w==
+X-Google-Smtp-Source: ABdhPJy1W/4bjZ9ErvmYuBxoIGryOmP7jlkH2GYRNNSWZpkWHE1CIwV6bSkC7L0BGhUkfi3frU4HwDBBPvwDO8iOwMs=
+X-Received: by 2002:a17:906:aed4:: with SMTP id me20mr8903155ejb.141.1595774010704;
+ Sun, 26 Jul 2020 07:33:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724071426.GD14912@localhost.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200520082723.96136-1-acourbot@chromium.org>
+In-Reply-To: <20200520082723.96136-1-acourbot@chromium.org>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Sun, 26 Jul 2020 11:33:19 -0300
+Message-ID: <CAAEAJfCzmEj3X2NdgaD=YSS_fV7MnZw=4o5KJOOSoMOSejv7=g@mail.gmail.com>
+Subject: Re: [PATCH 00/10] media: mtk-vcodec: venc: support for MT8183
+To:     Alexandre Courbot <acourbot@chromium.org>
+Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Rui Wang <gtk_ruiwang@mediatek.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 09:14:26AM +0200, Juri Lelli wrote:
-> Hi,
-> 
-> On 07/07/20 00:04, Peng Liu wrote:
-> > 'commit 840d719604b0 ("sched/deadline: Update rq_clock of later_rq when pushing a task")'
-> > introduced the update_rq_clock() to fix the "used-before-update" bug.
-> > 
-> > 'commit f4904815f97a ("sched/deadline: Fix double accounting of rq/running bw in push & pull")'
-> > took away the bug source(add_running_bw()).
-> > 
-> > We no longer need to update rq_clock in advance, let activate_task()
-> > worry about that.
-> > 
-> > Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
-> > ---
-> >  kernel/sched/deadline.c | 8 +-------
-> >  1 file changed, 1 insertion(+), 7 deletions(-)
-> > 
-> > diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> > index 504d2f51b0d6..c3fa11f84d93 100644
-> > --- a/kernel/sched/deadline.c
-> > +++ b/kernel/sched/deadline.c
-> > @@ -2104,13 +2104,7 @@ static int push_dl_task(struct rq *rq)
-> >  
-> >  	deactivate_task(rq, next_task, 0);
-> >  	set_task_cpu(next_task, later_rq->cpu);
-> > -
-> > -	/*
-> > -	 * Update the later_rq clock here, because the clock is used
-> > -	 * by the cpufreq_update_util() inside __add_running_bw().
-> > -	 */
-> > -	update_rq_clock(later_rq);
-> > -	activate_task(later_rq, next_task, ENQUEUE_NOCLOCK);
-> > +	activate_task(later_rq, next_task, 0);
-> >  	ret = 1;
-> 
-> The change looks good to me, since now add_running_bw() is called later
-> by enqueue_task_dl(), but rq_clock has already been updated by core's
-> enqueue_task().
-> 
++Enric
 
-Thanks for your time.
+Hello Alexandre,
 
-> Daniel, Dietmar, a second pair of eyes (since you authored the commits
-> above)?
-> 
-> I'd chage subject to something like "sched/deadline: Stop updating
-> rq_clock before pushing a task".
-> 
-> Thanks,
-> 
-> Juri
-> 
+Thanks for the series.
+
+On Wed, 20 May 2020 at 05:27, Alexandre Courbot <acourbot@chromium.org> wrote:
+>
+> This series adds support for the encoder present on MT8183. It is very similar
+> to the one in MT8173, but with different capabilities and using a new firmware
+> interface (SCP, while MT8173 talked to the VPU).
+>
+> So this series starts with some preparatory work by putting the firmware
+> interface behind a small abstraction layer instead of directly talking to the
+> VPU, and by adding support for the SCP firmware. Next platform data is completed
+> with features that differ between the chips, like supported formats and bitrate,
+> before support for MT8183 is added.
+>
+> Alexandre Courbot (6):
+>   media: mtk-vcodec: venc: handle firmware version field
+>   media: mtk-vcodec: venc: specify bitrate range per-chip
+>   media: mtk-vcodec: venc: specify supported formats per-chip
+>   media: mtk-vcodec: venc: remove redundant code
+>   media: dt-bindings: mtk-vcodec: specify SCP node
+>   media: dt-bindings: mtk-vcodec: document mediatek,mt8183-vcodec-enc
+>
+> Yunfei Dong (4):
+>   media: mtk-vcodec: abstract firmware interface
+>   media: mtk-vcodec: add SCP firmware ops
+>   media: mtk-vcodec: venc: support SCP firmware
+>   media: mtk-vcodec: add support for MT8183 encoder
+>
+>  .../bindings/media/mediatek-vcodec.txt        |   9 +-
+
+Would it be possible to add the support in
+arch/arm64/boot/dts/mediatek/mt8183.dtsi ?
+
+Given the driver is stateful it should be possible
+for anyone to test it with standard userspace
+such as GStreamer.
+
+Is it possible for the firmware to be pushed to linux-firmware ?
+
+Thanks,
+Ezequiel
+
+>  drivers/media/platform/Kconfig                |   2 +
+>  drivers/media/platform/mtk-vcodec/Makefile    |   4 +-
+>  .../platform/mtk-vcodec/mtk_vcodec_dec_drv.c  |  53 ++--
+>  .../platform/mtk-vcodec/mtk_vcodec_dec_pm.c   |   1 -
+>  .../platform/mtk-vcodec/mtk_vcodec_drv.h      |  38 ++-
+>  .../platform/mtk-vcodec/mtk_vcodec_enc.c      | 141 ++++-------
+>  .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  | 149 ++++++++----
+>  .../platform/mtk-vcodec/mtk_vcodec_enc_pm.c   |   2 -
+>  .../media/platform/mtk-vcodec/mtk_vcodec_fw.c | 228 ++++++++++++++++++
+>  .../media/platform/mtk-vcodec/mtk_vcodec_fw.h |  38 +++
+>  .../platform/mtk-vcodec/mtk_vcodec_util.c     |   1 -
+>  .../platform/mtk-vcodec/vdec/vdec_h264_if.c   |   1 -
+>  .../platform/mtk-vcodec/vdec/vdec_vp8_if.c    |   1 -
+>  .../platform/mtk-vcodec/vdec/vdec_vp9_if.c    |   1 -
+>  .../media/platform/mtk-vcodec/vdec_drv_base.h |   2 -
+>  .../media/platform/mtk-vcodec/vdec_drv_if.c   |   1 -
+>  .../media/platform/mtk-vcodec/vdec_vpu_if.c   |  12 +-
+>  .../media/platform/mtk-vcodec/vdec_vpu_if.h   |  11 +-
+>  .../platform/mtk-vcodec/venc/venc_h264_if.c   |  80 ++++--
+>  .../platform/mtk-vcodec/venc/venc_vp8_if.c    |  11 +-
+>  .../media/platform/mtk-vcodec/venc_drv_if.c   |   1 -
+>  .../media/platform/mtk-vcodec/venc_drv_if.h   |   6 +
+>  .../media/platform/mtk-vcodec/venc_ipi_msg.h  |  24 +-
+>  .../media/platform/mtk-vcodec/venc_vpu_if.c   | 141 ++++++++---
+>  .../media/platform/mtk-vcodec/venc_vpu_if.h   |   8 +-
+>  26 files changed, 711 insertions(+), 255 deletions(-)
+>  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
+>  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
+>
+> --
+> 2.26.2.761.g0e0b3e54be-goog
+>
