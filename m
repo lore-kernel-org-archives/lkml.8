@@ -2,152 +2,109 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED62EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA402065C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF8F2065C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:57:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RaucRnjP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKEnX2zy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbgGZI4h (ORCPT
+        id S1726846AbgGZI5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 04:56:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47316 "EHLO
+        Sun, 26 Jul 2020 04:57:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGZI4g (ORCPT
+        with ESMTP id S1725794AbgGZI5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 04:56:36 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99370C0619D2;
-        Sun, 26 Jul 2020 01:56:36 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id w2so7713597pgg.10;
-        Sun, 26 Jul 2020 01:56:36 -0700 (PDT)
+        Sun, 26 Jul 2020 04:57:17 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6242C0619D2;
+        Sun, 26 Jul 2020 01:57:16 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id c6so940341pje.1;
+        Sun, 26 Jul 2020 01:57:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cAjop5ZjgObLEdrvvwvFABP+HAGhe/69qePNfdSogC0=;
-        b=RaucRnjPITiz7zCD20F3AtFvGykB2zfxUliQRoe3n//7YXiPTVXwUQfNc3dQS0y5ti
-         KEApbPG6Y0mLcL1AhCMC78JRcP8Mk+N1W0Dy0JhoktzBQL0mhKavDpQ6WHysTHLrkpKm
-         3YMax3j7YZ+BYaQub/5ozUcuoDmbbKLjQqbz4mHW31rB02U7dSAJQcg50c59bk95brEc
-         WJrJOTQMVs19xKAxI5UzOrLKq9TUqqAxmh9FA46lbWvlW7kuy1XFsc6m5/R6dQ7/y2+j
-         kKsLE5lp2m7d/g4D4docS8beW79E4kCu1vuHLVo3wun0KTxKQf5wZiGuYH+2HYQQIgeh
-         zyBA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZP6JsF3L+gDvWgHfD54eIIL78/CR3lRmnvV/akntuxo=;
+        b=KKEnX2zyJ6WkI8ZbudaqCNi0gmqCxgGR74WNSBQn1L5ax2cCLiA4yIxbco/HI8MUEe
+         /PWnKwGDsY2c4uH3zi7/nNB2V3aKPytCWS3gguyLYHNVQT1thhG25x7sp1KJBmraHmWh
+         r2sGLen+0xjKZxb2J9K7oQ7IQTnWzz/b9jq+n5oVOF4ZUSMy7sb+cvXakBzJiyN9vdHk
+         95zej/S8i0suWDfeg2ZLV5uLS4Jra1N01tVcu5BP/zccUYoirpfeAzo0J+39lI9zaKge
+         bTvoPhu6kDIHbJ0suV41LNBb51EIHmjXorPfaKxRbwIbXMp03ES7a/6jD50ayrnFh81h
+         Kerg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cAjop5ZjgObLEdrvvwvFABP+HAGhe/69qePNfdSogC0=;
-        b=nNnKNMafn239Pkk3EYzidM9Xd1uUEI7/4+sX8JieLtH5LhtfU+r7/pxzzgDZudyMeo
-         /0Kc/a04rT59nE/ZP8mLlN53ZofYAf48vgqXlPRTUwSVAZrbM1d+teB7oNdM1D+TvpVD
-         yHT68QBDSs7JS+RTAdI0xMpxqMicYkNSevMqoGkj0/c6YDR6PQu/5vdEwqj+gr6zVzjl
-         xwLXHUBkKpOmRw7neirO7v5K13Qs4A/kOqlMt4gEqhTgznKRdvzYty8yj2yOn06ICJka
-         h5VZ73Htav6VitIfrIA9vw0FgtO1J0JuWhU1Mfx8lXLywc9YpbwZXSOSVMoOFM7ZrcjR
-         Pe0Q==
-X-Gm-Message-State: AOAM531d/fZEaKWXnERs503n8NDGg3x3J05Nz7Rc/4dlU4Oqooj9dBxs
-        Clf72nEiAPRc3FZNhav54wA=
-X-Google-Smtp-Source: ABdhPJxIrBw803YT5wSlbdopZtLISFYIUHaIoO3qYOqseXcgMSIdPoSuvOz/zXkIuLeexpWpsjbu1Q==
-X-Received: by 2002:aa7:9575:: with SMTP id x21mr15510611pfq.140.1595753796078;
-        Sun, 26 Jul 2020 01:56:36 -0700 (PDT)
-Received: from localhost.localdomain ([1.186.115.27])
-        by smtp.gmail.com with ESMTPSA id o22sm4577041pfu.206.2020.07.26.01.56.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 01:56:35 -0700 (PDT)
-From:   Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
-To:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
-Subject: [PATCH v2 1/4] fix style of block comments
-Date:   Sun, 26 Jul 2020 14:18:58 +0530
-Message-Id: <20200726084900.19246-1-bharadwaj.rohit8@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZP6JsF3L+gDvWgHfD54eIIL78/CR3lRmnvV/akntuxo=;
+        b=gEW1R0TJyTFrFpqlFeeBAD6okNbiYD39qi8R3du10Eq4dVXyZxDhqKTEFMMtY4qGgg
+         lqFyAwNrUcteg964ky1dUnmU+bkoMtI7nv2B4SzxUovg6g+XW6hLBAmr3W9hqhddL1/9
+         NAR63ehD+5GaR5IH/WaYzW8SgPYJs2MsPevvEkAJaDhFFYkOWXB7j8bn2FkeaNUkZhNy
+         C/aFzEu13kcl4Lrvn/TssRAdegKNJ5L/AKmJHnffloYPAhOg+bWY1gg8DCdksTxVhyzQ
+         gNyp8hD9uLi2yeMV/+hYPSUQzwyKPNVxZasl2E7xBGFVYpssgbuyDHOujlmTsYkSYibu
+         KueQ==
+X-Gm-Message-State: AOAM530B7yLRRwVVCRxQpN0J55+qKGhEraSO/ty4QrQzPg0sJ0VMgTME
+        9g3mQhBTJ++BKagZLhojGVqglMCwd4VfPoCqwW4R43R6
+X-Google-Smtp-Source: ABdhPJz/011v164prAx72VNLA4uAtxCJ1iLFgTJpcujNZYr5oVQ2I6rVwrYZrx3eEti8ZKJeynfcAEuaKvMiXDR5oRA=
+X-Received: by 2002:a17:90a:498b:: with SMTP id d11mr14007458pjh.129.1595753836222;
+ Sun, 26 Jul 2020 01:57:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200726052047.9856-1-gaurav1086@gmail.com>
+In-Reply-To: <20200726052047.9856-1-gaurav1086@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 26 Jul 2020 11:57:00 +0300
+Message-ID: <CAHp75VcL9sT-Ff6FND1v5pWUF=Ey7MXE61uB5Ae3HMpJaOYaUg@mail.gmail.com>
+Subject: Re: [PATCH] [video/fbdev] mbxfb_remove: fix null pointer dereference
+To:     Gaurav Singh <gaurav1086@gmail.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@intel.com>,
+        "open list:FRAMEBUFFER LAYER" <dri-devel@lists.freedesktop.org>,
+        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this patch fixes the coding style of block comments.
+On Sun, Jul 26, 2020 at 8:26 AM Gaurav Singh <gaurav1086@gmail.com> wrote:
+>
+> Function mbxfb_debugfs_remove() accesses fbi->par without NULL check,
+> hence do the NULL check in the caller mbxfb_remove().
 
-Signed-off-by: Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
----
-v2: split patch into sequence of patches 
-v1: fix all coding style issues in single patch
+...
 
- .../media/atomisp/pci/sh_css_firmware.c       | 28 +++++++++++++------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+> @@ -1012,11 +1012,10 @@ static int mbxfb_remove(struct platform_device *dev)
+>
+>         write_reg_dly(SYSRST_RST, SYSRST);
+>
+> -       mbxfb_debugfs_remove(fbi);
+> -
 
-diff --git a/drivers/staging/media/atomisp/pci/sh_css_firmware.c b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-index d4ab15b6d1ac..2907aead98b7 100644
---- a/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-@@ -51,9 +51,12 @@ struct fw_param {
- 
- static struct firmware_header *firmware_header;
- 
--/* The string STR is a place holder
-+/*
-+ * The string STR is a place holder
-  * which will be replaced with the actual RELEASE_VERSION
-- * during package generation. Please do not modify  */
-+ * during package generation. Please do not modify
-+ */
-+
- static const char *isp2400_release_version = STR(irci_stable_candrpv_0415_20150521_0458);
- static const char *isp2401_release_version = STR(irci_ecr - master_20150911_0724);
- 
-@@ -276,10 +279,11 @@ sh_css_load_firmware(struct device *dev, const char *fw_data,
- 	for (i = 0; i < sh_css_num_binaries; i++)
- 	{
- 		struct ia_css_fw_info *bi = &binaries[i];
--		/* note: the var below is made static as it is quite large;
--		   if it is not static it ends up on the stack which could
--		   cause issues for drivers
--		*/
-+		/*
-+		 * note: the var below is made static as it is quite large;
-+		 * if it is not static it ends up on the stack which could
-+		 * cause issues for drivers
-+		 */
- 		static struct ia_css_blob_descr bd;
- 		int err;
- 
-@@ -333,7 +337,11 @@ sh_css_load_firmware(struct device *dev, const char *fw_data,
- 				return err;
- 
- 		} else {
--			/* All subsequent binaries (including bootloaders) (i>NUM_OF_SPS) are ISP firmware */
-+			/*
-+			 * All subsequent binaries
-+			 * (including bootloaders) (i>NUM_OF_SPS)
-+			 * are ISP firmware
-+			 */
- 			if (i < NUM_OF_SPS)
- 				return -EINVAL;
- 
-@@ -374,8 +382,10 @@ ia_css_ptr
- sh_css_load_blob(const unsigned char *blob, unsigned int size)
- {
- 	ia_css_ptr target_addr = hmm_alloc(size, HMM_BO_PRIVATE, 0, NULL, 0);
--	/* this will allocate memory aligned to a DDR word boundary which
--	   is required for the CSS DMA to read the instructions. */
-+	/*
-+	 * this will allocate memory aligned to a DDR word boundary which
-+	 * is required for the CSS DMA to read the instructions.
-+	 */
- 
- 	assert(blob);
- 	if (target_addr)
+>         if (fbi) {
+
+Can you explain how this is NULL on ->remove()?
+
+I bet this check is simply redundant. But you have to check and update
+commit message accordingly.
+
+>                 struct mbxfb_info *mfbi = fbi->par;
+>
+> +               mbxfb_debugfs_remove(fbi);
+>                 unregister_framebuffer(fbi);
+>                 if (mfbi) {
+>                         if (mfbi->platform_remove)
+
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
