@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727D1C43461
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C1FC433F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51FA120738
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74332070B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uvtcnVif"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mV54lJWn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgGZHPO (ORCPT
+        id S1727997AbgGZHPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 03:15:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59932 "EHLO
+        Sun, 26 Jul 2020 03:15:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgGZHOg (ORCPT
+        with ESMTP id S1727072AbgGZHOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 03:14:36 -0400
+        Sun, 26 Jul 2020 03:14:24 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF698C0619D2;
-        Sun, 26 Jul 2020 00:14:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B047C0619D2;
+        Sun, 26 Jul 2020 00:14:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=FLygEUX/lUPRtrxlATG8BWXr35TDNLqXYg82nNdiEGg=; b=uvtcnVif2od8np/uzR68B2QiJG
-        G4mwDa3scaQoGnxeVvgsuJxKbDVpiWw/bJVoFcpiiJpFmzrsuW80TpYAXGjnBhIvKCJ5E5prKYWk3
-        Mc+tA6dzImxamcC51IpB3uUH7+m9ij9TyQDMFZt17bpDNGavA1K/YJtWvRInxIwoaL4h9pzbMPRwl
-        HUipeboomqA1IKpDidDiSD7FlgSBqN/jOtpuhTn2wRCi8Wpl3me0Qw32kbLckHKbG/9KpM7HNEG1w
-        pwGH0wAAQcvbsurqB8NXrYVbOB5q1Udu6378zBewC90OJtwLYDV3Z0L3l+pfCo4BXPrhmo6z15dC0
-        7n+esxJw==;
+        bh=mWjw5FPz4BKYqNZqHXVlWs68hnJR2nwdlH46DWxCYV4=; b=mV54lJWnjHg6WnWesuVNAvkHdc
+        +Y8rdYtIuBiTJM4kaTtLTHg4T/iP7uzkdBwEkZpw3MlkVm73ppXpaDCQxeIzQzHOP+4VMTF/qEDZq
+        wpF1U/B2nI1cynxF/53eXfbMjrGTQAXZ4y1qlqmTzw2KpNLRsuQCb7DGvKYdzY2QBfoanzMOWjjbn
+        4AULWxUt5mqDnXE8qdY1R3KLAWq2atY0uoz+L1NV4BQJXRo2TZUHw5n+UXI8C4tnQzbvIpsXAp1xC
+        q9Nw7KbORRTblTR8Tzqu46nX6X8HPBnowfgikpR3PwyzayseLeLEAuOZQYmUV8C+kDm8p0v9QrApK
+        Cxi8gyxw==;
 Received: from [2001:4bb8:18c:2acc:5ff1:d0b0:8643:670e] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzarf-0002Un-2b; Sun, 26 Jul 2020 07:14:32 +0000
+        id 1jzarU-0002Se-3R; Sun, 26 Jul 2020 07:14:20 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 15/21] init: add an init_eaccess helper
-Date:   Sun, 26 Jul 2020 09:13:50 +0200
-Message-Id: <20200726071356.287160-16-hch@lst.de>
+Subject: [PATCH 10/21] init: add an init_rmdir helper
+Date:   Sun, 26 Jul 2020 09:13:45 +0200
+Message-Id: <20200726071356.287160-11-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200726071356.287160-1-hch@lst.de>
 References: <20200726071356.287160-1-hch@lst.de>
@@ -60,107 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a simple helper to check if a file exists based on kernel space file
-name and switch the early init code over to it.  Note that this
-theoretically changes behavior as it always is based on the effective
-permissions.  But during early init that doesn't make a difference.
+Add a simple helper to rmdir with a kernel space file name and switch
+the early init code over to it.  Remove the now unused ksys_rmdir.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/for_init.c                 | 13 +++++++++++++
- fs/open.c                     |  2 +-
- include/linux/init_syscalls.h |  1 +
- include/linux/syscalls.h      |  7 -------
- init/main.c                   |  4 ++--
- 5 files changed, 17 insertions(+), 10 deletions(-)
+ fs/for_init.c                 | 5 +++++
+ include/linux/init_syscalls.h | 1 +
+ include/linux/syscalls.h      | 7 -------
+ init/initramfs.c              | 2 +-
+ 4 files changed, 7 insertions(+), 8 deletions(-)
 
 diff --git a/fs/for_init.c b/fs/for_init.c
-index 098e9b69c32ef6..abc152f41e648b 100644
+index 32472206d64136..1f10ebe78c1ba1 100644
 --- a/fs/for_init.c
 +++ b/fs/for_init.c
-@@ -105,6 +105,19 @@ int __init init_chmod(const char *filename, umode_t mode)
- 	return error;
- }
- 
-+int __init init_eaccess(const char *filename)
-+{
-+	struct path path;
-+	int error;
-+
-+	error = kern_path(filename, LOOKUP_FOLLOW, &path);
-+	if (error)
-+		return error;
-+	error = inode_permission(d_inode(path.dentry), MAY_ACCESS);
-+	path_put(&path);
-+	return error;
-+}
-+
- int __init init_unlink(const char *pathname)
+@@ -38,3 +38,8 @@ int __init init_unlink(const char *pathname)
  {
  	return do_unlinkat(AT_FDCWD, getname_kernel(pathname));
-diff --git a/fs/open.c b/fs/open.c
-index 7ba89eae46c560..aafecd1f7ba1a5 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -394,7 +394,7 @@ static const struct cred *access_override_creds(void)
- 	return old_cred;
  }
- 
--long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
-+static long do_faccessat(int dfd, const char __user *filename, int mode, int flags)
- {
- 	struct path path;
- 	struct inode *inode;
++
++int __init init_rmdir(const char *pathname)
++{
++	return do_rmdir(AT_FDCWD, getname_kernel(pathname));
++}
 diff --git a/include/linux/init_syscalls.h b/include/linux/init_syscalls.h
-index 2b1b4dc586825f..7031c0934bee9f 100644
+index 00d597249549ee..abf3af563c0b3a 100644
 --- a/include/linux/init_syscalls.h
 +++ b/include/linux/init_syscalls.h
-@@ -7,5 +7,6 @@ int __init init_chdir(const char *filename);
- int __init init_chroot(const char *filename);
- int __init init_chown(const char *filename, uid_t user, gid_t group, int flags);
- int __init init_chmod(const char *filename, umode_t mode);
-+int __init init_eaccess(const char *filename);
+@@ -4,3 +4,4 @@ int __init init_mount(const char *dev_name, const char *dir_name,
+ 		const char *type_page, unsigned long flags, void *data_page);
+ int __init init_umount(const char *name, int flags);
  int __init init_unlink(const char *pathname);
- int __init init_rmdir(const char *pathname);
++int __init init_rmdir(const char *pathname);
 diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 8b71fa321ca20c..a2779638e41445 100644
+index 26f9738e5ab861..a7b14258d245e2 100644
 --- a/include/linux/syscalls.h
 +++ b/include/linux/syscalls.h
-@@ -1304,13 +1304,6 @@ static inline long ksys_link(const char __user *oldname,
- 	return do_linkat(AT_FDCWD, oldname, AT_FDCWD, newname, 0);
- }
- 
--long do_faccessat(int dfd, const char __user *filename, int mode, int flags);
+@@ -1273,13 +1273,6 @@ int compat_ksys_ipc(u32 call, int first, int second,
+  * The following kernel syscall equivalents are just wrappers to fs-internal
+  * functions. Therefore, provide stubs to be inlined at the callsites.
+  */
+-long do_rmdir(int dfd, struct filename *name);
 -
--static inline long ksys_access(const char __user *filename, int mode)
+-static inline long ksys_rmdir(const char __user *pathname)
 -{
--	return do_faccessat(AT_FDCWD, filename, mode, 0);
+-	return do_rmdir(AT_FDCWD, getname(pathname));
 -}
 -
- extern int do_fchownat(int dfd, const char __user *filename, uid_t user,
- 		       gid_t group, int flag);
+ extern long do_mkdirat(int dfd, const char __user *pathname, umode_t mode);
  
-diff --git a/init/main.c b/init/main.c
-index c2c9143db96795..6e2a4a078b78c4 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -96,6 +96,7 @@
- #include <linux/jump_label.h>
- #include <linux/mem_encrypt.h>
- #include <linux/kcsan.h>
-+#include <linux/init_syscalls.h>
+ static inline long ksys_mkdir(const char __user *pathname, umode_t mode)
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 574ab3755203da..1ceba88cfcc052 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -299,7 +299,7 @@ static void __init clean_path(char *path, umode_t fmode)
  
- #include <asm/io.h>
- #include <asm/bugs.h>
-@@ -1514,8 +1515,7 @@ static noinline void __init kernel_init_freeable(void)
- 	 * check if there is an early userspace init.  If yes, let it do all
- 	 * the work
- 	 */
--	if (ksys_access((const char __user *)
--			ramdisk_execute_command, 0) != 0) {
-+	if (init_eaccess(ramdisk_execute_command) != 0) {
- 		ramdisk_execute_command = NULL;
- 		prepare_namespace();
+ 	if (!vfs_lstat(path, &st) && (st.mode ^ fmode) & S_IFMT) {
+ 		if (S_ISDIR(st.mode))
+-			ksys_rmdir(path);
++			init_rmdir(path);
+ 		else
+ 			init_unlink(path);
  	}
 -- 
 2.27.0
