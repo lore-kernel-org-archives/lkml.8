@@ -2,133 +2,92 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CA2C433ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E74C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86E7A206E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3872064B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:55:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="JeF6aey/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgGZXxk (ORCPT
+        id S1728014AbgGZXze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 19:53:40 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:58787 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726522AbgGZXxk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 19:53:40 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id B4C1ED7B18E;
-        Mon, 27 Jul 2020 09:53:36 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jzqSV-0001Lq-3k; Mon, 27 Jul 2020 09:53:35 +1000
-Date:   Mon, 27 Jul 2020 09:53:35 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Brian Foster <bfoster@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iomap: Ensure iop->uptodate matches PageUptodate
-Message-ID: <20200726235335.GU2005@dread.disaster.area>
-References: <20200726091052.30576-1-willy@infradead.org>
- <20200726230657.GT2005@dread.disaster.area>
- <20200726232022.GH23808@casper.infradead.org>
+        Sun, 26 Jul 2020 19:55:34 -0400
+Received: from ozlabs.org ([203.11.71.1]:38673 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726522AbgGZXzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 19:55:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFKZC4Qlcz9sPf;
+        Mon, 27 Jul 2020 09:55:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1595807732;
+        bh=Fr3vWGZnocWpaQCTPNmdNT8S3mTtioms9OXn3Tuj0w0=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=JeF6aey/KplqXVwH5q2jc8UG7RWEutJbIidNvpEBWFC/zXRJfnyoGoMQFcCTAZ24/
+         xs7rXmhuZe4NZHjVHdqGb3EE8mso6nfwidi17u5nPLB1VXtLOfZl9iRDNPT3Q5AsGR
+         Z4xIa+mKPAgM2jfKrUjI0Pj8IClbLHLEQJS+j0HXuh6OZtOXh3sWmGSsnxjPfYtZkW
+         PMVjv3luwjfaC9NYo3EJPD4gpWNx4kSJaeYktmZ8UfU4FGfmmPpLjhggeNZL24quS1
+         ZbDqCtjnQdMPMIaj0JyLws9TFTd/ZbLv8CwmKRPDKfynX01a7eCFI8qRxYM6cDx9Wo
+         3qDKk3/nceWcA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@samba.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/9] powerpc: delete duplicated words
+In-Reply-To: <b796e912-e945-3cb1-03f8-0f38009634a4@infradead.org>
+References: <20200726162902.Horde.TCqHYaODbkzEpM-rFzDd8A2@messagerie.si.c-s.fr> <b796e912-e945-3cb1-03f8-0f38009634a4@infradead.org>
+Date:   Mon, 27 Jul 2020 09:55:31 +1000
+Message-ID: <87wo2pg7bg.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726232022.GH23808@casper.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8
-        a=GbM89rAVvsayrku5YkoA:9 a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:20:22AM +0100, Matthew Wilcox wrote:
-> On Mon, Jul 27, 2020 at 09:06:57AM +1000, Dave Chinner wrote:
-> > On Sun, Jul 26, 2020 at 10:10:52AM +0100, Matthew Wilcox (Oracle) wrote:
-> > > If the filesystem has block size < page size and we end up calling
-> > > iomap_page_create() in iomap_page_mkwrite_actor(), the uptodate bits
-> > > would be zero, which causes us to skip writeback of blocks which are
-> > > !uptodate in iomap_writepage_map().  This can lead to user data loss.
-> > 
-> > I'm still unclear on what condition gets us to
-> > iomap_page_mkwrite_actor() without already having initialised the
-> > page correctly. i.e. via a read() or write() call, or the read fault
-> > prior to ->page_mkwrite() which would have marked the page uptodate
-> > - that operation should have called iomap_page_create() and
-> > iomap_set_range_uptodate() on the page....
-> > 
-> > i.e. you've described the symptom, but not the cause of the issue
-> > you are addressing.
-> 
-> I don't know exactly what condition gets us there either.  It must be
-> possible, or there wouldn't be a call to iomap_page_create() but rather
-> one to to_iomap_page() like the one in iomap_finish_page_writeback().
+Randy Dunlap <rdunlap@infradead.org> writes:
+> On 7/26/20 7:29 AM, Christophe Leroy wrote:
+>> Randy Dunlap <rdunlap@infradead.org> a =C3=A9crit=C2=A0:
+>>=20
+>>> Drop duplicated words in arch/powerpc/ header files.
+>>=20
+>> How did you detect them ? Do you have some script for tgat, or you just =
+read all comments ?
+>
+> Yes, it's a script that finds lots of false positives, so I have to check
+> each and every one of them for validity.
+>
+>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>>=20
+>> You say you Cc Michael, but in fact you don't ... Allthough he is the po=
+werpc maintainer
+>
+> Thanks for noticing that.
+> [time passes]
+> I checked all of my emails for this patch series and they say that Mike w=
+as Cc:ed
+> on all of them.
+>
+> I am adding his email address back to this one.
+> Mike, did you receive this patch series?
 
-Yes, I understand the code accepts it can happen; what I dislike is
-code that asserts subtle behaviour can happen, then doesn't describe
-that exactly why/how that condition can occur. And then, because we
-don't know exactly how something happens, we add work arounds to
-hide issues we can't reason through fully. That's .... suboptimal.
+Yes.
 
-Christoph might know off the top of his head how we get into this
-state. Once we work it out, then we need to add comments...
+There's a mailman option which drops me from being explicity on Cc,
+because I'm subscribed to the list. Otherwise I get two copies of
+everything.
 
-> > > reproduced on mainline using that test (the THP code causes iomap_pages
-> > > to be discarded more frequently), but inspection shows it can happen
-> > > with an appropriate series of operations.
-> > 
-> > That sequence of operations would be? 
-> > 
-> > > Fixes: 9dc55f1389f9 ("iomap: add support for sub-pagesize buffered I/O without buffer heads")
-> > > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> > > ---
-> > >  fs/iomap/buffered-io.c | 7 ++++++-
-> > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> > > index a2b3b5455219..f0c5027bf33f 100644
-> > > --- a/fs/iomap/buffered-io.c
-> > > +++ b/fs/iomap/buffered-io.c
-> > > @@ -53,7 +53,10 @@ iomap_page_create(struct inode *inode, struct page *page)
-> > >  	atomic_set(&iop->read_count, 0);
-> > >  	atomic_set(&iop->write_count, 0);
-> > >  	spin_lock_init(&iop->uptodate_lock);
-> > > -	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
-> > > +	if (PageUptodate(page))
-> > > +		bitmap_fill(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
-> > > +	else
-> > > +		bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
-> > 
-> > I suspect this bitmap_fill call belongs in the iomap_page_mkwrite()
-> > code as is the only code that can call iomap_page_create() with an
-> > uptodate page. Then iomap_page_create() could just use kzalloc() and
-> > drop the atomic_set() and bitmap_zero() calls altogether,
-> 
-> Way ahead of you
-> http://git.infradead.org/users/willy/pagecache.git/commitdiff/5a1de6fc4f815797caa4a2f37c208c67afd7c20b
+So as long as it goes to linuxppc-dev I should see it, regardless of
+whether I'm explicitly listed in Cc.
 
-*nod*
-
-I would suggest breaking that out as a separate cleanup patch and
-not hide is in a patch that contains both THP modifications and bug
-fixes. It stands alone as a valid cleanup.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+cheers
