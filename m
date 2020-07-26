@@ -2,134 +2,114 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E699C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B40012073E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D872065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MzZlWyH8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aFJ14mY5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgGZXS7 (ORCPT
+        id S1727772AbgGZXU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 19:18:59 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40079 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbgGZXS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 19:18:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFJlx34dJz9sPf;
-        Mon, 27 Jul 2020 09:18:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595805533;
-        bh=/X/ChJaJP4iEeTziTLKzpmu8jebl/w6GWG/nzK9ujck=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MzZlWyH8gw+4kWBC8YOvC8glT0aLJImk0DQqFuqq+8KBQhHsZSCwNeoZmMiCczKMH
-         CCwNBR5/jemaMfKDb4tv7OLOqNiIFwVi3hX+JQU/9fN+Om5Z5f0n2+et2DRgnvpkev
-         MLxgs+84sLV1VfkNezLRzMQvlpddcVcXrfBdkPvpNX7Fgc75fumb6vBZ3XwlmvetXD
-         8MySFN+M8jQ6wDOh9YenE3tVXENr1sN5EXYKUQr0lDj2rTbjvaUgMqYw40IfU5wNX0
-         BKJEZ2WVU9NBdavIWfI9PANwkPCCV36MKaW/BrpAC90/Crb4pq+HINbKQlBc2P0+eG
-         anRYtP7dfGjoA==
-Date:   Mon, 27 Jul 2020 09:18:51 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>, Andrei Vagin <avagin@gmail.com>
-Subject: linux-next: manual merge of the arm64 tree with Linus' tree
-Message-ID: <20200727091851.64a0d61b@canb.auug.org.au>
+        Sun, 26 Jul 2020 19:20:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbgGZXU0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 19:20:26 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F16C0619D2;
+        Sun, 26 Jul 2020 16:20:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xzjjRe0yGQi2scmBKmPbc3H6/KI4Gp5nkg73wVNYJgg=; b=aFJ14mY52Cd2VWWYfrR5YV5CZ2
+        E4Fh313Z3eGOZ4n7d2mBRcNTp4OYU5YRsIPkQrZGQATQEumBSRJa1CWobF9cd5yfBaLMdHQUfNQxG
+        8GCFgfY8avEL+8tTihVGJ2lQoEofydAKl94pIZCvBf92wx063r4pPNwYVgHw8HCVBi9peJnFo8UVX
+        hHcqAOTaLN5Zw8oPtxDvGCcVQaGm97jS6sKwJLoc4ge770k58LW0NyGR1icc4wYUfunnjL0sazDpR
+        5OU1xHQz5IE2IgWybmFOcyTZtNIUrR9Fc8ToCJ6OKVOPZib9Wbb34wxNwlusSRWr2iNdAR7VnttFM
+        YCUN5SFA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzpwM-00052B-3S; Sun, 26 Jul 2020 23:20:22 +0000
+Date:   Mon, 27 Jul 2020 00:20:22 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Brian Foster <bfoster@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iomap: Ensure iop->uptodate matches PageUptodate
+Message-ID: <20200726232022.GH23808@casper.infradead.org>
+References: <20200726091052.30576-1-willy@infradead.org>
+ <20200726230657.GT2005@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rMN2ke2O3/fZB.ielbidoKm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726230657.GT2005@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rMN2ke2O3/fZB.ielbidoKm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jul 27, 2020 at 09:06:57AM +1000, Dave Chinner wrote:
+> On Sun, Jul 26, 2020 at 10:10:52AM +0100, Matthew Wilcox (Oracle) wrote:
+> > If the filesystem has block size < page size and we end up calling
+> > iomap_page_create() in iomap_page_mkwrite_actor(), the uptodate bits
+> > would be zero, which causes us to skip writeback of blocks which are
+> > !uptodate in iomap_writepage_map().  This can lead to user data loss.
+> 
+> I'm still unclear on what condition gets us to
+> iomap_page_mkwrite_actor() without already having initialised the
+> page correctly. i.e. via a read() or write() call, or the read fault
+> prior to ->page_mkwrite() which would have marked the page uptodate
+> - that operation should have called iomap_page_create() and
+> iomap_set_range_uptodate() on the page....
+> 
+> i.e. you've described the symptom, but not the cause of the issue
+> you are addressing.
 
-Hi all,
+I don't know exactly what condition gets us there either.  It must be
+possible, or there wouldn't be a call to iomap_page_create() but rather
+one to to_iomap_page() like the one in iomap_finish_page_writeback().
 
-Today's linux-next merge of the arm64 tree got a conflict in:
+> > Found using generic/127 with the THP patches.  I don't think this can be
+> > reproduced on mainline using that test (the THP code causes iomap_pages
+> > to be discarded more frequently), but inspection shows it can happen
+> > with an appropriate series of operations.
+> 
+> That sequence of operations would be? 
+> 
+> > Fixes: 9dc55f1389f9 ("iomap: add support for sub-pagesize buffered I/O without buffer heads")
+> > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > ---
+> >  fs/iomap/buffered-io.c | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> > index a2b3b5455219..f0c5027bf33f 100644
+> > --- a/fs/iomap/buffered-io.c
+> > +++ b/fs/iomap/buffered-io.c
+> > @@ -53,7 +53,10 @@ iomap_page_create(struct inode *inode, struct page *page)
+> >  	atomic_set(&iop->read_count, 0);
+> >  	atomic_set(&iop->write_count, 0);
+> >  	spin_lock_init(&iop->uptodate_lock);
+> > -	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
+> > +	if (PageUptodate(page))
+> > +		bitmap_fill(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
+> > +	else
+> > +		bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
+> 
+> I suspect this bitmap_fill call belongs in the iomap_page_mkwrite()
+> code as is the only code that can call iomap_page_create() with an
+> uptodate page. Then iomap_page_create() could just use kzalloc() and
+> drop the atomic_set() and bitmap_zero() calls altogether,
 
-  arch/arm64/include/asm/vdso/compat_gettimeofday.h
-
-between commit:
-
-  97884ca8c292 ("arm64: Introduce a way to disable the 32bit vdso")
-
-from Linus' tree and commit:
-
-  3503d56cc723 ("arm64/vdso: Add time namespace page")
-
-from the arm64 tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm64/include/asm/vdso/compat_gettimeofday.h
-index 9a625e8947ff,d0cbb04bfc10..000000000000
---- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-@@@ -152,12 -153,18 +153,24 @@@ static __always_inline const struct vds
-  	return ret;
-  }
- =20
- +static inline bool vdso_clocksource_ok(const struct vdso_data *vd)
- +{
- +	return vd->clock_mode =3D=3D VDSO_CLOCKMODE_ARCHTIMER;
- +}
- +#define vdso_clocksource_ok	vdso_clocksource_ok
- +
-+ #ifdef CONFIG_TIME_NS
-+ static __always_inline const struct vdso_data *__arch_get_timens_vdso_dat=
-a(void)
-+ {
-+ 	const struct vdso_data *ret;
-+=20
-+ 	/* See __arch_get_vdso_data(). */
-+ 	asm volatile("mov %0, %1" : "=3Dr"(ret) : "r"(_timens_data));
-+=20
-+ 	return ret;
-+ }
-+ #endif
-+=20
-  #endif /* !__ASSEMBLY__ */
- =20
-  #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
-
---Sig_/rMN2ke2O3/fZB.ielbidoKm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8eD1sACgkQAVBC80lX
-0GzHlQf3Tbsm62ClaMkKAgTIeF2BaVSAhBIllgW4rqoq9HRmpUjQP29wOo6e/Tfh
-TCrJE/7poF9l27CqJebjIeiSJ9Eu+5gSQpQVf/59U0+OXVJQXdaieMm7tuHVWiHu
-40efLVsEMQBA1UA10W3R+jNJiZxJkwNHbimK+ULjw0AKe8Yr3l6GnB/OnZ74cNnJ
-ii2HZyaXOF8zkPNB3Yc43Z26IuA0MwGD2q59W/PYV+4E6Ue2s/2wPXlfMYSmDF9c
-Wf66DKWAeWKvFvlot8Q1+waAE77oWfjkdfBDR2fogb17f0agUHW5N2SAnAEBf8KF
-itgy3fQ0wetRCs8cSOcAOUswg27/
-=A4HT
------END PGP SIGNATURE-----
-
---Sig_/rMN2ke2O3/fZB.ielbidoKm--
+Way ahead of you
+http://git.infradead.org/users/willy/pagecache.git/commitdiff/5a1de6fc4f815797caa4a2f37c208c67afd7c20b
