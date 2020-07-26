@@ -2,150 +2,78 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 878E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 20:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A76C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 20:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637C120719
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 20:07:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R90fe9DZ"
+	by mail.kernel.org (Postfix) with ESMTP id E4B32206E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 20:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgGZUHl (ORCPT
+        id S1727905AbgGZULF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 16:07:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbgGZUHk (ORCPT
+        Sun, 26 Jul 2020 16:11:05 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:39991 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbgGZULF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 16:07:40 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA85C0619D2;
-        Sun, 26 Jul 2020 13:07:39 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id j9so7967479ilc.11;
-        Sun, 26 Jul 2020 13:07:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hepoEcj03sM0CyU8joldRCATVzSo814tkMYfqpOgn8Q=;
-        b=R90fe9DZCZzsKaiZN6ZyStpg7gXNGe8uBdtvnltvSyM1GUusMVJH+adyWtYPGeIQQ5
-         mT+8va8Vauu42JeMx8EvhRq0taB4YYKz+HutaLZI1N38fBKQq0lb+885IKovVZKEuyMk
-         j1HU1yMnnIgHCo7nBsRwJIJltfsJNnVb/DvjoDDyNnIKvfbPyHrlx1NQdBlmkwkWtxIh
-         bIv6nNn8Xe/QrKBXWDgJbvccBox4ItHPIGrIQC/s9YKNirgPktlEB/bLHCe50OJ+bh7w
-         UAoOb9+4lAgZmSgAXjYcA75Td/XPNe23b9OTOMO6qrF3NtwzNZD+BKJyDQoAoBdGC+pS
-         oI2A==
+        Sun, 26 Jul 2020 16:11:05 -0400
+Received: by mail-il1-f200.google.com with SMTP id z16so9975588ill.7
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 13:11:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hepoEcj03sM0CyU8joldRCATVzSo814tkMYfqpOgn8Q=;
-        b=q44chjjjBBSn3WBr8F7UXhO+9CSj1jVBqRfmXNYzFb3g3Wduew49kyyvGcwlV0p86v
-         CahyWLrSlCLr9/VRDKXqkWGnfAm+Rq6st5gABKWuqNgXScCvKh6LRqCuNHDNlPDGwzLA
-         7xj7DI+1aLE+qaiuxQOh3ni9LaPDdTQBBTahgvIhjqAUe35iTmvUQQzgOK52Vjur9EkA
-         q5PAtdP1zPg5cMnkwBb6igwuPOF0A2Xdn9Yyu9D7Go80eU/MB5h4gcRiRNxpIjy0oKzt
-         dHnGTEv11Su2PXNQgedj7N3Fle3PHk6i06Tbo4qZgPjZZDvhOWi6khnU1SKCY+5fBPyO
-         ftDA==
-X-Gm-Message-State: AOAM533VqSdUgS/rqX/yVcxhEYHipynoesdvNkHihvK1OBzurUOvOArs
-        mpxBE21YNjXKvi9DeH89rqzmnlM32Vsx1KRI9E0=
-X-Google-Smtp-Source: ABdhPJzMdNT6/iybFIAQG6sXZTJJd77PEH+FsQ+sZ/OEpvpeVmZKHQ2bJntZvMLWneIs6gNhhyuhZqAiFnl0QABDUYw=
-X-Received: by 2002:a92:9a45:: with SMTP id t66mr18391483ili.268.1595794058048;
- Sun, 26 Jul 2020 13:07:38 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=dudMlHrGLdKPFIb0BzzoKkVe79aQGzC9+73fmHoxPl4=;
+        b=B3ChkOMEblNaef603gDj8Zbh39bMr7FDSbzUwgiwAQJHbR3pQPdekjSCVKqR7juhBU
+         +fEdmKafgbjD4O/fyNxOCXi+46+3KgCvDeeh7UsK74yNqZJqoU5w6NX57B9IfBjfZSB6
+         ze3r+Grr+laspji6wrecjv1xxzSma00jVVAYGHDRYivomCGRYH4/SBTL3XDf4yTXXCU4
+         7kKh+w5xkLQSQMZblivXeS6od6S7m0WHbsPdF2FVFSqS2FS3fpg245e+BuKdh30W7FXo
+         YdMorvLvr2HmCE/HTYJEA5zBbFYBGhD4E/hv/8lcsJEnkuQ4ZN58a/W4q6pFh605Pl+v
+         wlQQ==
+X-Gm-Message-State: AOAM5301IcyhzVs7r+VoB5DXv4pt5V4gvsknRGLrFi/pmKtf19JsWzZC
+        DDnijzoCmfAjTqqu5tpVpyY+igi8fRi4U5ytdE7w5OgfnMtd
+X-Google-Smtp-Source: ABdhPJxlhsn+KetcpoEYX6E8Sqw4cArXJbnl+vGX1w1VtK02FAsTySNjK8rKWmrP7TpfzXn4wYZbP8u14pwiNS94yoEOKeUVblSa
 MIME-Version: 1.0
-References: <20200726030855.q6dfjekazfzl5usw@pesu.pes.edu> <CAM_iQpUFL7VdCKSgUa6N3pg7ijjZRu6-6UAs2oNosM-EzgXbaQ@mail.gmail.com>
- <CAAhDqq28h9_ji=ANttUyx2Q1Md=bZD3-JVCwQRW06W7aikPN0A@mail.gmail.com>
-In-Reply-To: <CAAhDqq28h9_ji=ANttUyx2Q1Md=bZD3-JVCwQRW06W7aikPN0A@mail.gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Sun, 26 Jul 2020 13:07:25 -0700
-Message-ID: <CAM_iQpX+iw+5AALriNZLfx5P-LV_ratiwhMRiHXmuLE2z81aaw@mail.gmail.com>
-Subject: Re: [PATCH v2] net: ipv6: fix use-after-free Read in __xfrm6_tunnel_spi_lookup
-To:     B K Karthik <bkkarthik@pesu.pes.edu>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
+X-Received: by 2002:a92:4983:: with SMTP id k3mr20209144ilg.56.1595794264312;
+ Sun, 26 Jul 2020 13:11:04 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 13:11:04 -0700
+In-Reply-To: <001a11405628bb07410565279f4a@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004251b005ab5dce75@google.com>
+Subject: Re: WARNING in xfrm_policy_insert
+From:   syzbot <syzbot+5cfc132a76d844973259@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, lucien.xin@gmail.com,
+        netdev@vger.kernel.org, steffen.klassert@secunet.com,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 11:12 PM B K Karthik <bkkarthik@pesu.pes.edu> wrote:
->
-> On Sun, Jul 26, 2020 at 11:05 AM Cong Wang <xiyou.wangcong@gmail.com> wrote:
-> >
-> > On Sat, Jul 25, 2020 at 8:09 PM B K Karthik <bkkarthik@pesu.pes.edu> wrote:
-> > > @@ -103,10 +103,10 @@ static int __xfrm6_tunnel_spi_check(struct net *net, u32 spi)
-> > >  {
-> > >         struct xfrm6_tunnel_net *xfrm6_tn = xfrm6_tunnel_pernet(net);
-> > >         struct xfrm6_tunnel_spi *x6spi;
-> > > -       int index = xfrm6_tunnel_spi_hash_byspi(spi);
-> > > +       int index = xfrm6_tunnel_spi_hash_byaddr((const xfrm_address_t *)spi);
-> > >
-> > >         hlist_for_each_entry(x6spi,
-> > > -                            &xfrm6_tn->spi_byspi[index],
-> > > +                            &xfrm6_tn->spi_byaddr[index],
-> > >                              list_byspi) {
-> > >                 if (x6spi->spi == spi)
-> >
-> > How did you convince yourself this is correct? This lookup is still
-> > using spi. :)
->
-> I'm sorry, but my intention behind writing this patch was not to fix
-> the UAF, but to fix a slab-out-of-bound.
+syzbot suspects this issue was fixed by commit:
 
-Odd, your $subject is clearly UAF, so is the stack trace in your changelog.
-:)
+commit ed17b8d377eaf6b4a01d46942b4c647378a79bdd
+Author: Xin Long <lucien.xin@gmail.com>
+Date:   Mon May 25 05:53:37 2020 +0000
 
+    xfrm: fix a warning in xfrm_policy_insert_list
 
-> If required, I can definitely change the subject line and resend the
-> patch, but I figured this was correct for
-> https://syzkaller.appspot.com/bug?id=058d05f470583ab2843b1d6785fa8d0658ef66ae
-> . since that particular report did not have a reproducer,
-> Dmitry Vyukov <dvyukov@google.com> suggested that I test this patch on
-> other reports for xfrm/spi .
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1774b9df100000
+start commit:   6c677750 mlxsw: spectrum: Use NL_SET_ERR_MSG_MOD
+git tree:       net-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=82a189bf69e089b5
+dashboard link: https://syzkaller.appspot.com/bug?extid=5cfc132a76d844973259
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12f8821d800000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ec3c63800000
 
-You have to change it to avoid misleading.
+If the result looks correct, please mark the issue as fixed by replying with:
 
->
-> Forgive me if this was the wrong way to send a patch for that
-> particular report, but I guessed since the reproducer did not trigger
-> the crash
-> for UAF, I would leave the subject line as 'fix UAF' :)
->
-> xfrm6_spi_hash_by_hash seemed more convincing because I had to prevent
-> a slab-out-of-bounds because it uses ipv6_addr_hash.
-> It would be of great help if you could help me understand how this was
-> able to fix a UAF.
+#syz fix: xfrm: fix a warning in xfrm_policy_insert_list
 
-Sure, you just avoid a pointer deref, which of course can fix the UAF,
-but I still don't think it is correct in any aspect.
-
-Even if it is a OOB, you still have to explain why it happened. Once
-again, I can't see how it could happen either.
-
->
-> >
-> > More importantly, can you explain how UAF happens? Apparently
-> > the syzbot stack traces you quote make no sense at all. I also
-> > looked at other similar reports, none of them makes sense to me.
->
-> Forgive me, but I do not understand what you mean by the stack traces
-> (this or other similar reports) "make no sense".
-
-Because the stack trace in your changelog clearly shows it is allocated
-in tomoyo_init_log(), which is a buffer in struct tomoyo_query, but
-none of xfrm paths uses it. Or do you see anything otherwise?
-
-Thanks.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
