@@ -2,104 +2,114 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7589FC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBF4C4346B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4218C20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:51:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595767865;
-	bh=Tiy4JSgM4TpbyNf0slTi9UaPjGZNDHxnwqMnKUaMZss=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EPZpnqjpr0UA3TbndsjoYPPrqgKNajVPJDE8I1BYjTXGoOjHBES3jUVrc6AIC5ldP
-	 F3QcX46y0DHxBvLQY7XRx2ISzUYSlj+L21XqwdexAOhj4OZXtWWgdclUtrYP3YrvRJ
-	 KNmWNiYQi8O5ld9yS+JezRrsoceIQGQTYbyJfk5U=
+	by mail.kernel.org (Postfix) with ESMTP id EEE9F2065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:53:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rU77LQ6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgGZMvE (ORCPT
+        id S1726891AbgGZMxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 08:51:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgGZMvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 08:51:03 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24A3B2065E;
-        Sun, 26 Jul 2020 12:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595767863;
-        bh=Tiy4JSgM4TpbyNf0slTi9UaPjGZNDHxnwqMnKUaMZss=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=00B5D0t9pMPSfc7RlCO3d7GBDmTYzO4D1+hR4pZMlhJN1b48jvUBYH+1JI7IEbha9
-         2tS10Kts27OogQs4aILr2uCngJHdoMsvzgIW6VIMAjUaehP368PzVc164hGUVqi5RN
-         Uj7uV7SJXnfV7XxAXcQaHBzy6IjbWnciooR5prb0=
-Date:   Sun, 26 Jul 2020 13:50:59 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Pop, Cristian" <Cristian.Pop@analog.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] one-bit-adc-dac: Add initial version of one bit
- ADC, DAC
-Message-ID: <20200726135059.1234aa71@archlinux>
-In-Reply-To: <SN2PR03MB2317AC79D13C3A89882534F4E7770@SN2PR03MB2317.namprd03.prod.outlook.com>
-References: <20200716072737.9535-1-cristian.pop@analog.com>
-        <9bd0363c-e8fb-a36f-a107-0afd8f7851d0@metafoo.de>
-        <20200720145225.4f5d552b@archlinux>
-        <SN2PR03MB2317AC79D13C3A89882534F4E7770@SN2PR03MB2317.namprd03.prod.outlook.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 26 Jul 2020 08:53:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgGZMxd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 08:53:33 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B39C0619D2;
+        Sun, 26 Jul 2020 05:53:33 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id a9so7716367pjd.3;
+        Sun, 26 Jul 2020 05:53:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=R4T7tQMcRvlhK7jzS9wpJG+H4i1GMckJZWYDGHoH/II=;
+        b=rU77LQ6i8gZi61P3L9deG+VaqhuXUapmjk1algjVPC2JSElAiPIN/5qEGgW38mfTnj
+         QAX7dULkwcwM6Ubq5rMyHZsOsi4GSWpYDtUCAt5fVozNjLCfpbA9MQy5fD90PADw/mka
+         QepdRFrkGRoT+DQDXJnHe0qwyJ5zifDt9SQeCav2jscmmAFfU5a7fGVZQKdcr8Ocl9kV
+         IxxVrcZluClcwuEl9Di+lcSeqBmbw42UN9IwJezMGs2v/kRpGPn42zDHTyVWK7dVm9uW
+         UCJ1dtoem9CCYI39A0ajsZlt26ESpArPyPRcYNnHgnuvcbey0juBUIOljbZb499WWeJT
+         AXmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=R4T7tQMcRvlhK7jzS9wpJG+H4i1GMckJZWYDGHoH/II=;
+        b=oKu1VNwSlLGA6ikAXfaZN7bf3h7FnFYWVycelq7Ri4IwG26HAzb0O9eus4xDZ8q4Hf
+         jkmqptU4Squr0X+GQ8+S5pVs7DxI2jyK7OyqeXx5ni81wgRCvaC4CjdGgLGqzE7mQcUp
+         QCs/GnkYgAdaMgDQI4rYHqZ3IQKx5Qd6oTNhcvxtEQFm/a7eyfQRpJrb/CesUW80yr9Y
+         IHd5xnngYiqYZIPqPPF+Ws0dBIpcqxI+Va17VLKhCzrba6023eB8k6ThhvroFpU27X/u
+         bkJLl5hs9Jj1acKaTmwaz9WKHoYzgDpSSGkHUgWi/QbYk7SQkpW3Abh02l0eLbjmXlov
+         1eUQ==
+X-Gm-Message-State: AOAM532BPBeYJOKJIcgmMo4SPtZJIuyVLfpn/WozWStRMIPMlQIjQ1M9
+        vX8TNbDXoxXX4glnXqoOxiTZBMbx6t4=
+X-Google-Smtp-Source: ABdhPJy+XjmUnqWgwhLFuieksNeTmaaDQA6UZSj6j+mjeRVxWyBNwf/r/1Tb+sxOqJMyku2EF7qUyA==
+X-Received: by 2002:a17:902:8f8b:: with SMTP id z11mr14408279plo.49.1595768012739;
+        Sun, 26 Jul 2020 05:53:32 -0700 (PDT)
+Received: from localhost (g155.222-224-148.ppp.wakwak.ne.jp. [222.224.148.155])
+        by smtp.gmail.com with ESMTPSA id x7sm12033589pfq.197.2020.07.26.05.53.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 05:53:32 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 21:53:25 +0900
+From:   Stafford Horne <shorne@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH] io: Fix return type of _inb and _inl
+Message-ID: <20200726125325.GC80756@lianli.shorne-pla.net>
+References: <20200726031154.1012044-1-shorne@gmail.com>
+ <CAHp75VciC+gqkCZ9voNKHU3hrtiOVzeWBu9_YEagpCGdTME2yg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VciC+gqkCZ9voNKHU3hrtiOVzeWBu9_YEagpCGdTME2yg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-..
-> >   
-> > > > +	if (ret < 0)
-> > > > +		return ret;
-> > > > +
-> > > > +	for (i = 0; i < num_ch; i++) {
-> > > > +		channels[i] = (struct  
-> > iio_chan_spec)ONE_BIT_ADC_DAC_CHANNEL(i +  
-> > > > +							offset,
-> > > > +							direction);
-> > > > +		channels[i].extend_name = gpio_names[i];  
-> > > I think we want to avoid using extend_name in new drivers because it
-> > > makes for a very clumsy ABI. We should add a label property like we
-> > > have for the device for channels to have a symbolic name of the channel.  
-> The current dts looks like this:
-> one-bit-adc-dac@0 {
-> 				in-gpios = <&gpio 17 0>, <&gpio 27 0>;
-> 				in-gpio-names = "i_17", "i_27";
-> 				out-gpios = <&gpio 23 0>, <&gpio 24 0>;
-> 				out-gpio-names = "o_23", "o_24";
-> 			};
-> Resulting in channels:
-> in_voltage0_i_17_raw
-> in_voltage1_i_27_raw
-> out_voltage2_o_23_raw
-> out_voltage3_o_24_raw
-> If we want to lose extend_name, please provide an example for using labels.
-> How the dts should look like, how do I use it in the driver?
+On Sun, Jul 26, 2020 at 12:00:37PM +0300, Andy Shevchenko wrote:
+> On Sun, Jul 26, 2020 at 6:14 AM Stafford Horne <shorne@gmail.com> wrote:
+> >
+> > The return type of functions _inb, _inw and _inl are all u16 which looks
+> > wrong.  This patch makes them u8, u16 and u32 respectively.
+> >
+> > The original commit text for these does not indicate that these should
+> > be all forced to u16.
+> 
+> Is it in alight with all architectures? that support this interface natively?
+> 
+> (Return value is arch-dependent AFAIU, so it might actually return
+> 16-bit for byte read, but I agree that this is weird for 32-bit value.
+> I think you have elaborate more in the commit message)
 
-Doesn't exist yet :)  Proposal was to add support for a label attribute
-to the iio core.
+Well, this is the generic io code,  at least these api's appear to not be different
+for each architecture.  The output read by the architecture dependant code i.e.
+__raw_readb() below is getting is placed into a u8.  So I think the output of
+the function will be u8.
 
-If we were going to do a generic binding it would have to be part of the
-existing channel bindings. e.g.
-Documentation/devicetree/bindings/iio/adc/adc.txt
+static inline u8 _inb(unsigned long addr)
+{
+	u8 val;
 
-But here it might be fine to use the gpio-names to fill one in.
-Alternative would be to use a binding where the gpio was specified
-as part of the per channel child nodes rather than as a single entry.
+	__io_pbr();
+	val = __raw_readb(PCI_IOBASE + addr);
+	__io_par(val);
+	return val;
+}
 
+I can expand the commit text, but I would like to get some comments from the
+original author to confirm if this is an issue.
 
-
+-Stafford
