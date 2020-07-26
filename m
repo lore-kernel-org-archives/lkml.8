@@ -2,92 +2,90 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90444C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D331C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5B4206F6
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DDF206F6
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595754735;
+	bh=SkIbXYrd9PCUhAfh+KHQ6eWiQH+hjmz6Y3cUt7Ryq8Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fI1JNYDv3dkrN26PuMTSDvdBxrnAjLUWVvimZ2lgzza3ZuS7er2pS649oTj3LcB44
+	 CKyoKioQOYFhh5qKW+fMzJFUTSJHwbGdG6QEjPRDQxr4bLeL/Gxk9QWT4aIHS/2rVi
+	 4mOquAyXephcTC+UrrsRVyuvqRu91c4PzW3WjvOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgGZJMF (ORCPT
+        id S1727114AbgGZJMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 05:12:05 -0400
-Received: from mga09.intel.com ([134.134.136.24]:51178 "EHLO mga09.intel.com"
+        Sun, 26 Jul 2020 05:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbgGZJME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 05:12:04 -0400
-IronPort-SDR: vkeHC7hGzL2wbnpqIPVOi2lqvrSdgmV9XQHWAAYUF4RgVTwRY2P4SXaSOkAZTfp3Q6egFoBdKc
- THF7fxac5pNg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9693"; a="152147463"
-X-IronPort-AV: E=Sophos;i="5.75,398,1589266800"; 
-   d="scan'208";a="152147463"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 02:12:04 -0700
-IronPort-SDR: Eh+bPL5MT3i7V3MlgHbDG6OEXhs4iHxyX9psKdhO2/OpDwC7I3oGWPWIwUY0oHlajUFwKxaFqj
- fqAFM37sc5MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,398,1589266800"; 
-   d="scan'208";a="285368577"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 26 Jul 2020 02:12:02 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jzchO-0045pL-BC; Sun, 26 Jul 2020 12:12:02 +0300
-Date:   Sun, 26 Jul 2020 12:12:02 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v1 0/5] irqdomain: clean up, add
- irq_domain_create_legacy()
-Message-ID: <20200726091202.GJ3703480@smile.fi.intel.com>
-References: <20200708162135.31010-1-andriy.shevchenko@linux.intel.com>
+        id S1725794AbgGZJMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 05:12:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDA9F206F6;
+        Sun, 26 Jul 2020 09:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595754733;
+        bh=SkIbXYrd9PCUhAfh+KHQ6eWiQH+hjmz6Y3cUt7Ryq8Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SFhM2n8ac9C3e3sYuWswrp8xNieMzbpCePZvZBBsCpJCWWHEFw52WZFRSoyy4EO+A
+         rywNPHEIm+uCj8BqqZnqdgHdXL+JssIWMnZqqD1acqNmL/wJZ1RO9h+roz/oRotCIO
+         wVwuJP66Cb+hTz5u0etFnQkM2Xi6oM3ekmmKVWEQ=
+Date:   Sun, 26 Jul 2020 11:12:09 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
+Cc:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] staging: media: atomisp: fix style of block
+ comments
+Message-ID: <20200726091209.GA451376@kroah.com>
+References: <20200726062541.11304-1-bharadwaj.rohit8@gmail.com>
+ <20200726090512.20574-1-bharadwaj.rohit8@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200708162135.31010-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200726090512.20574-1-bharadwaj.rohit8@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 08, 2020 at 07:21:30PM +0300, Andy Shevchenko wrote:
-> In order to make users OF independent provide irq_domain_create_legacy() API.
-> Last patch is an example of such user. First three patches are little cleanups.
+On Sun, Jul 26, 2020 at 02:35:10PM +0530, Rohit K Bharadwaj wrote:
+> this patch fixes the coding style of block comments.
 > 
-> Since regmap patch is dependent to what is now in regmap tree, I suggest to
-> create an immutable branch in IRQ domain tree and Mark can pull it and apply
-> the last one.
-
-Marc, are you okay with the IRQ domain patches?
-
-> Andy Shevchenko (5):
->   irqdomain: Remove unused of_device_id forward declaration
->   irqdomain: Add forward declaration of fwnode_handle
->   irqdomain: Replace open coded of_node_to_fwnode()
->   irqdomain: Introduce irq_domain_create_legacy() API
->   regmap: irq: Convert to use fwnode directly
+> Signed-off-by: Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
+> ---
+> v3: change patch subject prefix
+> v2: split patch into sequence of patches 
+> v1: fix all coding style issues in single patch
 > 
->  Documentation/core-api/irq/irq-domain.rst |  6 ++++++
->  drivers/base/regmap/regmap-irq.c          | 11 +++++------
->  include/linux/irqdomain.h                 |  8 +++++++-
->  kernel/irq/irqdomain.c                    | 19 +++++++++++++++----
->  4 files changed, 33 insertions(+), 11 deletions(-)
+>  .../media/atomisp/pci/sh_css_firmware.c       | 28 +++++++++++++------
+>  1 file changed, 19 insertions(+), 9 deletions(-)
 > 
-> -- 
-> 2.27.0
-> 
+> diff --git a/drivers/staging/media/atomisp/pci/sh_css_firmware.c b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+> index d4ab15b6d1ac..2907aead98b7 100644
+> --- a/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+> +++ b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+> @@ -51,9 +51,12 @@ struct fw_param {
+>  
+>  static struct firmware_header *firmware_header;
+>  
+> -/* The string STR is a place holder
+> +/*
+> + * The string STR is a place holder
+>   * which will be replaced with the actual RELEASE_VERSION
+> - * during package generation. Please do not modify  */
+> + * during package generation. Please do not modify
+> + */
+> +
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Why the blank line?
