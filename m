@@ -2,316 +2,266 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4FC5C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48DB920658
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75E3B20714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:59:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595761198;
+	bh=BlWNHRx81BkVjfiVPZH2lP4OPiWIUw2bTOwNTT+SBNw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zqM5NomCCnGv2Y2ekXRi9q93cD3Rg5tcilbjyduWdWBUyinXJMv4ew/Jr/Qhz9ZuI
+	 Wu9xIveqfVX5V6a9PyZsPEtZhMsgPleXm8wSzCO1ALqvEHT4DP3Qp6fvCuXW5xU+1A
+	 uyhnN5zHZU/0rUVo9adHzIgxiiU8pQyu+TyEa8q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgGZKuU (ORCPT
+        id S1727823AbgGZK75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 06:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGZKuU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 06:50:20 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB57BC0619D2;
-        Sun, 26 Jul 2020 03:50:19 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id 639FC6F630;
-        Sun, 26 Jul 2020 10:50:16 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     torvalds@linux-foundation.org, corbet@lwn.net, dsterba@suse.com,
-        mchehab+huawei@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] fs: Replace HTTP links with HTTPS ones
-Date:   Sun, 26 Jul 2020 12:50:10 +0200
-Message-Id: <20200726105010.16247-1-grandmaster@al2klimov.de>
+        Sun, 26 Jul 2020 06:59:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgGZK74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 06:59:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45071206E3;
+        Sun, 26 Jul 2020 10:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595761195;
+        bh=BlWNHRx81BkVjfiVPZH2lP4OPiWIUw2bTOwNTT+SBNw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t5J1N8320A2lXEGDUBMQ9QLS/rNDPxDuntxRrLJwbyME6byZ7HmDYpa1XgCR+vOIv
+         olt8YyQKpYVhahn09WHv4arWGIMp8hqm430g0Ih6lbrEhvClU2IqBGJmScRSVz2qz0
+         +x8Qd/MkwYW9NCUeHu+uuxffb+CEpQlh5RkiMsSs=
+Date:   Sun, 26 Jul 2020 12:59:52 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Aditya Jain <aditya.jainadityajain.jain@gmail.com>
+Cc:     devel@driverdev.osuosl.org, hdegoede@redhat.com,
+        linux-kernel@vger.kernel.org, Larry.Finger@lwfinger.net
+Subject: Re: [PATCH v2] staging: rtl8723bs: include: Fix coding style issues
+Message-ID: <20200726105952.GA1280500@kroah.com>
+References: <CAJAoDUjVBon2iiztdER82mHgJtVS6s5XYSajbCTne0KWAzoLvg@mail.gmail.com>
+ <20200726105302.52188-1-aditya.jainadityajain.jain@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
-X-Spam: Yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726105302.52188-1-aditya.jainadityajain.jain@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Sun, Jul 26, 2020 at 04:23:02PM +0530, Aditya Jain wrote:
+> Cleaning messy function declartions and fixing code style
+> errors in hal_phy_cfg.h as reported by checkpatch.pl
+> 
+> Signed-off-by: Aditya Jain <aditya.jainadityajain.jain@gmail.com>
+> ---
+>  .../staging/rtl8723bs/include/hal_phy_cfg.h   | 118 +++++-------------
+>  1 file changed, 33 insertions(+), 85 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
+> index 419ddb0733aa..2f123903279c 100644
+> --- a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
+> +++ b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
+> @@ -8,54 +8,31 @@
+>  #define __INC_HAL8723BPHYCFG_H__
+>  
+>  /*--------------------------Define Parameters-------------------------------*/
+> -#define LOOP_LIMIT				5
+> -#define MAX_STALL_TIME			50		/* us */
+> +#define LOOP_LIMIT		5
+> +#define MAX_STALL_TIME		50	/* us */
+>  #define AntennaDiversityValue	0x80	/* Adapter->bSoftwareAntennaDiversity ? 0x00:0x80) */
+>  #define MAX_TXPWR_IDX_NMODE_92S	63
+> -#define Reset_Cnt_Limit			3
+> -
+> -#define MAX_AGGR_NUM	0x07
+> +#define Reset_Cnt_Limit		3
+>  
+> +#define MAX_AGGR_NUM 0x07
+>  
+>  /*--------------------------Define Parameters End-------------------------------*/
+>  
+> -
+>  /*------------------------------Define structure----------------------------*/
+>  
+>  /*------------------------------Define structure End----------------------------*/
+>  
+>  /*--------------------------Exported Function prototype---------------------*/
+> -u32
+> -PHY_QueryBBReg_8723B(
+> -struct adapter *Adapter,
+> -u32 	RegAddr,
+> -u32 	BitMask
+> -	);
+> -
+> -void
+> -PHY_SetBBReg_8723B(
+> -struct adapter *Adapter,
+> -u32 	RegAddr,
+> -u32 	BitMask,
+> -u32 	Data
+> -	);
+> -
+> -u32
+> -PHY_QueryRFReg_8723B(
+> -struct adapter *		Adapter,
+> -u8 		eRFPath,
+> -u32 			RegAddr,
+> -u32 			BitMask
+> -	);
+> -
+> -void
+> -PHY_SetRFReg_8723B(
+> -struct adapter *		Adapter,
+> -u8 		eRFPath,
+> -u32 			RegAddr,
+> -u32 			BitMask,
+> -u32 			Data
+> -	);
+> +u32 PHY_QueryBBReg_8723B(struct adapter *Adapter, u32 RegAddr, u32 BitMask);
+> +
+> +void PHY_SetBBReg_8723B(struct adapter *Adapter, u32 RegAddr,
+> +			u32 BitMask, u32 Data);
+> +
+> +u32 PHY_QueryRFReg_8723B(struct adapter *Adapter, u8 eRFPath,
+> +			 u32 RegAddr, u32 BitMask);
+> +
+> +void PHY_SetRFReg_8723B(struct adapter *Adapter, u8 eRFPath,
+> +			u32 RegAddr, u32 BitMask, u32 Data);
+>  
+>  /* MAC/BB/RF HAL config */
+>  int PHY_BBConfig8723B(struct adapter *Adapter);
+> @@ -64,57 +41,28 @@ int PHY_RFConfig8723B(struct adapter *Adapter);
+>  
+>  s32 PHY_MACConfig8723B(struct adapter *padapter);
+>  
+> -void
+> -PHY_SetTxPowerIndex(
+> -struct adapter *		Adapter,
+> -u32 				PowerIndex,
+> -u8 			RFPath,
+> -u8 			Rate
+> -	);
+> -
+> -u8
+> -PHY_GetTxPowerIndex(
+> -struct adapter *		padapter,
+> -u8 			RFPath,
+> -u8 			Rate,
+> -enum CHANNEL_WIDTH		BandWidth,
+> -u8 			Channel
+> -	);
+> -
+> -void
+> -PHY_GetTxPowerLevel8723B(
+> -struct adapter *	Adapter,
+> -	s32*			powerlevel
+> -	);
+> -
+> -void
+> -PHY_SetTxPowerLevel8723B(
+> -struct adapter *	Adapter,
+> -u8 	channel
+> -	);
+> -
+> -void
+> -PHY_SetBWMode8723B(
+> -struct adapter *			Adapter,
+> -enum CHANNEL_WIDTH			Bandwidth,	/*  20M or 40M */
+> -unsigned char 			Offset		/*  Upper, Lower, or Don't care */
+> -);
+> +void PHY_SetTxPowerIndex(struct adapter *Adapter, u32 PowerIndex,
+> +			 u8 RFPath, u8 Rate);
+>  
+> -void
+> -PHY_SwChnl8723B(/*  Call after initialization */
+> -struct adapter *Adapter,
+> -u8 channel
+> -	);
+> -
+> -void
+> -PHY_SetSwChnlBWMode8723B(
+> -struct adapter *		Adapter,
+> -u8 			channel,
+> -enum CHANNEL_WIDTH		Bandwidth,
+> -u8 			Offset40,
+> -u8 			Offset80
+> +u8 PHY_GetTxPowerIndex(struct adapter *padapter, u8 RFPath, u8 Rate,
+> +			enum CHANNEL_WIDTH BandWidth, u8 Channel);
+> +
+> +void PHY_GetTxPowerLevel8723B(struct adapter *Adapter, s32 *powerlevel);
+> +
+> +void PHY_SetTxPowerLevel8723B(struct adapter *Adapter, u8 channel);
+> +
+> +void PHY_SetBWMode8723B(struct adapter *Adapter,
+> +			enum CHANNEL_WIDTH Bandwidth,	/*  20M or 40M */
+> +			unsigned char Offset	/*  Upper, Lower, or Don't care */
+>  );
+>  
+> +/*  Call after initialization */
+> +void PHY_SwChnl8723B(struct adapter *Adapter, u8 channel);
+> +
+> +void PHY_SetSwChnlBWMode8723B(struct adapter *Adapter, u8 channel,
+> +				enum CHANNEL_WIDTH Bandwidth,
+> +				u8 Offset40, u8 Offset80);
+> +
+>  /*--------------------------Exported Function prototype End---------------------*/
+>  
+>  #endif
+> -- 
+> 2.25.1
+> 
+> _______________________________________________
+> devel mailing list
+> devel@linuxdriverproject.org
+> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5 with unmaintained stuff according to:
- perl scripts/get_maintainer.pl --nogit{,-fallback} --nol
+Hi,
 
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+You are receiving this message because of the following common error(s)
+as indicated below:
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+- Your patch did many different things all at once, making it difficult
+  to review.  All Linux kernel patches need to only do one thing at a
+  time.  If you need to do multiple things (such as clean up all coding
+  style issues in a file/driver), do it in a sequence of patches, each
+  one doing only one thing.  This will make it easier to review the
+  patches to ensure that they are correct, and to help alleviate any
+  merge issues that larger patches can cause.
 
- If you apply the patch, please let me know.
+- You did not specify a description of why the patch is needed, or
+  possibly, any description at all, in the email body.  Please read the
+  section entitled "The canonical patch format" in the kernel file,
+  Documentation/SubmittingPatches for what is needed in order to
+  properly describe the change.
 
+- You did not write a descriptive Subject: for the patch, allowing Greg,
+  and everyone else, to know what this patch is all about.  Please read
+  the section entitled "The canonical patch format" in the kernel file,
+  Documentation/SubmittingPatches for what a proper Subject: line should
+  look like.
 
- fs/hfsplus/btree.c      | 2 +-
- fs/hfsplus/unicode.c    | 2 +-
- fs/isofs/Kconfig        | 6 +++---
- fs/nls/mac-celtic.c     | 2 +-
- fs/nls/mac-centeuro.c   | 2 +-
- fs/nls/mac-croatian.c   | 2 +-
- fs/nls/mac-cyrillic.c   | 2 +-
- fs/nls/mac-gaelic.c     | 2 +-
- fs/nls/mac-greek.c      | 2 +-
- fs/nls/mac-iceland.c    | 2 +-
- fs/nls/mac-inuit.c      | 2 +-
- fs/nls/mac-roman.c      | 2 +-
- fs/nls/mac-romanian.c   | 2 +-
- fs/nls/mac-turkish.c    | 2 +-
- fs/nls/nls_iso8859-14.c | 2 +-
- fs/qnx6/Kconfig         | 2 +-
- 16 files changed, 18 insertions(+), 18 deletions(-)
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
-diff --git a/fs/hfsplus/btree.c b/fs/hfsplus/btree.c
-index 66774f4cb4fd..5168a86fc29b 100644
---- a/fs/hfsplus/btree.c
-+++ b/fs/hfsplus/btree.c
-@@ -18,7 +18,7 @@
- 
- /*
-  * Initial source code of clump size calculation is gotten
-- * from http://opensource.apple.com/tarballs/diskdev_cmds/
-+ * from https://opensource.apple.com/tarballs/diskdev_cmds/
-  */
- #define CLUMP_ENTRIES	15
- 
-diff --git a/fs/hfsplus/unicode.c b/fs/hfsplus/unicode.c
-index c8d1b2be7854..31d0fc7c01f1 100644
---- a/fs/hfsplus/unicode.c
-+++ b/fs/hfsplus/unicode.c
-@@ -304,7 +304,7 @@ static u16 *hfsplus_decompose_nonhangul(wchar_t uc, int *size)
-  * Annex #15: Unicode Normalization Forms, version 3.2.0.
-  *
-  * Copyright (C) 1991-2018 Unicode, Inc.  All rights reserved.  Distributed
-- * under the Terms of Use in http://www.unicode.org/copyright.html.
-+ * under the Terms of Use in https://www.unicode.org/copyright.html.
-  */
- static int hfsplus_try_decompose_hangul(wchar_t uc, u16 *result)
- {
-diff --git a/fs/isofs/Kconfig b/fs/isofs/Kconfig
-index 08ffd37b9bb8..bef876506652 100644
---- a/fs/isofs/Kconfig
-+++ b/fs/isofs/Kconfig
-@@ -9,7 +9,7 @@ config ISO9660_FS
- 	  driver.  If you have a CD-ROM drive and want to do more with it than
- 	  just listen to audio CDs and watch its LEDs, say Y (and read
- 	  <file:Documentation/filesystems/isofs.rst> and the CD-ROM-HOWTO,
--	  available from <http://www.tldp.org/docs.html#howto>), thereby
-+	  available from <https://www.tldp.org/docs.html#howto>), thereby
- 	  enlarging your kernel by about 27 KB; otherwise say N.
- 
- 	  To compile this file system support as a module, choose M here: the
-@@ -24,7 +24,7 @@ config JOLIET
- 	  which allows for long filenames in unicode format (unicode is the
- 	  new 16 bit character code, successor to ASCII, which encodes the
- 	  characters of almost all languages of the world; see
--	  <http://www.unicode.org/> for more information).  Say Y here if you
-+	  <https://www.unicode.org/> for more information).  Say Y here if you
- 	  want to be able to read Joliet CD-ROMs under Linux.
- 
- config ZISOFS
-@@ -35,6 +35,6 @@ config ZISOFS
- 	  This is a Linux-specific extension to RockRidge which lets you store
- 	  data in compressed form on a CD-ROM and have it transparently
- 	  decompressed when the CD-ROM is accessed.  See
--	  <http://www.kernel.org/pub/linux/utils/fs/zisofs/> for the tools
-+	  <https://www.kernel.org/pub/linux/utils/fs/zisofs/> for the tools
- 	  necessary to create such a filesystem.  Say Y here if you want to be
- 	  able to read such compressed CD-ROMs.
-diff --git a/fs/nls/mac-celtic.c b/fs/nls/mac-celtic.c
-index 266c2d7d50bd..180df6d9978c 100644
---- a/fs/nls/mac-celtic.c
-+++ b/fs/nls/mac-celtic.c
-@@ -11,7 +11,7 @@
-  * COPYRIGHT AND PERMISSION NOTICE
-  *
-  * Copyright 1991-2012 Unicode, Inc.  All rights reserved.  Distributed under
-- * the Terms of Use in http://www.unicode.org/copyright.html.
-+ * the Terms of Use in https://www.unicode.org/copyright.html.
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a
-  * copy of the Unicode data files and any associated documentation (the "Data
-diff --git a/fs/nls/mac-centeuro.c b/fs/nls/mac-centeuro.c
-index 9789c6057551..f793435ab858 100644
---- a/fs/nls/mac-centeuro.c
-+++ b/fs/nls/mac-centeuro.c
-@@ -11,7 +11,7 @@
-  * COPYRIGHT AND PERMISSION NOTICE
-  *
-  * Copyright 1991-2012 Unicode, Inc.  All rights reserved.  Distributed under
-- * the Terms of Use in http://www.unicode.org/copyright.html.
-+ * the Terms of Use in https://www.unicode.org/copyright.html.
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a
-  * copy of the Unicode data files and any associated documentation (the "Data
-diff --git a/fs/nls/mac-croatian.c b/fs/nls/mac-croatian.c
-index bb19e7a07d43..e513861b61fe 100644
---- a/fs/nls/mac-croatian.c
-+++ b/fs/nls/mac-croatian.c
-@@ -11,7 +11,7 @@
-  * COPYRIGHT AND PERMISSION NOTICE
-  *
-  * Copyright 1991-2012 Unicode, Inc.  All rights reserved.  Distributed under
-- * the Terms of Use in http://www.unicode.org/copyright.html.
-+ * the Terms of Use in https://www.unicode.org/copyright.html.
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a
-  * copy of the Unicode data files and any associated documentation (the "Data
-diff --git a/fs/nls/mac-cyrillic.c b/fs/nls/mac-cyrillic.c
-index 2a7dea36acba..bb96694d797d 100644
---- a/fs/nls/mac-cyrillic.c
-+++ b/fs/nls/mac-cyrillic.c
-@@ -11,7 +11,7 @@
-  * COPYRIGHT AND PERMISSION NOTICE
-  *
-  * Copyright 1991-2012 Unicode, Inc.  All rights reserved.  Distributed under
-- * the Terms of Use in http://www.unicode.org/copyright.html.
-+ * the Terms of Use in https://www.unicode.org/copyright.html.
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a
-  * copy of the Unicode data files and any associated documentation (the "Data
-diff --git a/fs/nls/mac-gaelic.c b/fs/nls/mac-gaelic.c
-index 77b001653588..997de9de6788 100644
---- a/fs/nls/mac-gaelic.c
-+++ b/fs/nls/mac-gaelic.c
-@@ -11,7 +11,7 @@
-  * COPYRIGHT AND PERMISSION NOTICE
-  *
-  * Copyright 1991-2012 Unicode, Inc.  All rights reserved.  Distributed under
-- * the Terms of Use in http://www.unicode.org/copyright.html.
-+ * the Terms of Use in https://www.unicode.org/copyright.html.
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a
-  * copy of the Unicode data files and any associated documentation (the "Data
-diff --git a/fs/nls/mac-greek.c b/fs/nls/mac-greek.c
-index 1eccf499e2eb..514063fb54b3 100644
---- a/fs/nls/mac-greek.c
-+++ b/fs/nls/mac-greek.c
-@@ -11,7 +11,7 @@
-  * COPYRIGHT AND PERMISSION NOTICE
-  *
-  * Copyright 1991-2012 Unicode, Inc.  All rights reserved.  Distributed under
-- * the Terms of Use in http://www.unicode.org/copyright.html.
-+ * the Terms of Use in https://www.unicode.org/copyright.html.
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a
-  * copy of the Unicode data files and any associated documentation (the "Data
-diff --git a/fs/nls/mac-iceland.c b/fs/nls/mac-iceland.c
-index cbd0875c6d69..1dc42186fac0 100644
---- a/fs/nls/mac-iceland.c
-+++ b/fs/nls/mac-iceland.c
-@@ -11,7 +11,7 @@
-  * COPYRIGHT AND PERMISSION NOTICE
-  *
-  * Copyright 1991-2012 Unicode, Inc.  All rights reserved.  Distributed under
-- * the Terms of Use in http://www.unicode.org/copyright.html.
-+ * the Terms of Use in https://www.unicode.org/copyright.html.
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a
-  * copy of the Unicode data files and any associated documentation (the "Data
-diff --git a/fs/nls/mac-inuit.c b/fs/nls/mac-inuit.c
-index fba8357aaf03..6b6b71d9744e 100644
---- a/fs/nls/mac-inuit.c
-+++ b/fs/nls/mac-inuit.c
-@@ -11,7 +11,7 @@
-  * COPYRIGHT AND PERMISSION NOTICE
-  *
-  * Copyright 1991-2012 Unicode, Inc.  All rights reserved.  Distributed under
-- * the Terms of Use in http://www.unicode.org/copyright.html.
-+ * the Terms of Use in https://www.unicode.org/copyright.html.
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a
-  * copy of the Unicode data files and any associated documentation (the "Data
-diff --git a/fs/nls/mac-roman.c b/fs/nls/mac-roman.c
-index b6a98a5208cd..b725bc18d0d5 100644
---- a/fs/nls/mac-roman.c
-+++ b/fs/nls/mac-roman.c
-@@ -11,7 +11,7 @@
-  * COPYRIGHT AND PERMISSION NOTICE
-  *
-  * Copyright 1991-2012 Unicode, Inc.  All rights reserved.  Distributed under
-- * the Terms of Use in http://www.unicode.org/copyright.html.
-+ * the Terms of Use in https://www.unicode.org/copyright.html.
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a
-  * copy of the Unicode data files and any associated documentation (the "Data
-diff --git a/fs/nls/mac-romanian.c b/fs/nls/mac-romanian.c
-index 25547f023638..82716495c8a0 100644
---- a/fs/nls/mac-romanian.c
-+++ b/fs/nls/mac-romanian.c
-@@ -11,7 +11,7 @@
-  * COPYRIGHT AND PERMISSION NOTICE
-  *
-  * Copyright 1991-2012 Unicode, Inc.  All rights reserved.  Distributed under
-- * the Terms of Use in http://www.unicode.org/copyright.html.
-+ * the Terms of Use in https://www.unicode.org/copyright.html.
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a
-  * copy of the Unicode data files and any associated documentation (the "Data
-diff --git a/fs/nls/mac-turkish.c b/fs/nls/mac-turkish.c
-index b5454bc7b7fa..bbea22dd852e 100644
---- a/fs/nls/mac-turkish.c
-+++ b/fs/nls/mac-turkish.c
-@@ -11,7 +11,7 @@
-  * COPYRIGHT AND PERMISSION NOTICE
-  *
-  * Copyright 1991-2012 Unicode, Inc.  All rights reserved.  Distributed under
-- * the Terms of Use in http://www.unicode.org/copyright.html.
-+ * the Terms of Use in https://www.unicode.org/copyright.html.
-  *
-  * Permission is hereby granted, free of charge, to any person obtaining a
-  * copy of the Unicode data files and any associated documentation (the "Data
-diff --git a/fs/nls/nls_iso8859-14.c b/fs/nls/nls_iso8859-14.c
-index 046370f0b6f0..694a20fe710f 100644
---- a/fs/nls/nls_iso8859-14.c
-+++ b/fs/nls/nls_iso8859-14.c
-@@ -5,7 +5,7 @@
-  *
-  * Generated automatically from the Unicode and charset table
-  * provided by the Unicode Organisation at
-- * http://www.unicode.org/
-+ * https://www.unicode.org/
-  * The Unicode to charset table has only exact mappings.
-  *
-  * Rhys Jones, Swansea University Computer Society
-diff --git a/fs/qnx6/Kconfig b/fs/qnx6/Kconfig
-index 6a9d6bce1586..ff081dd0b074 100644
---- a/fs/qnx6/Kconfig
-+++ b/fs/qnx6/Kconfig
-@@ -5,7 +5,7 @@ config QNX6FS_FS
- 	help
- 	  This is the file system used by the real-time operating systems
- 	  QNX 6 (also called QNX RTP).
--	  Further information is available at <http://www.qnx.com/>.
-+	  Further information is available at <https://www.qnx.com/>.
- 	  Say Y if you intend to mount QNX hard disks or floppies formatted
-           with a mkqnx6fs.
- 	  However, keep in mind that this currently is a readonly driver!
--- 
-2.27.0
+thanks,
 
+greg k-h's patch email bot
