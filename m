@@ -2,58 +2,110 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC78C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C6AC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59471206F6
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C004206F6
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgGZIVW (ORCPT
+        id S1726783AbgGZIZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 04:21:22 -0400
-Received: from verein.lst.de ([213.95.11.211]:39929 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgGZIVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 04:21:22 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id DD91168B05; Sun, 26 Jul 2020 10:21:18 +0200 (CEST)
-Date:   Sun, 26 Jul 2020 10:21:18 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH 04/21] devtmpfs: refactor devtmpfsd()
-Message-ID: <20200726082118.GA17726@lst.de>
-References: <20200726071356.287160-1-hch@lst.de> <20200726071356.287160-5-hch@lst.de> <20200726074306.GA444745@kroah.com>
+        Sun, 26 Jul 2020 04:25:23 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:37932 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgGZIZX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 04:25:23 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 9C0B61C0BD9; Sun, 26 Jul 2020 10:25:20 +0200 (CEST)
+Date:   Sun, 26 Jul 2020 10:25:20 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv8 0/6] n_gsm serdev support and GNSS driver for droid4
+Message-ID: <20200726082520.GA16953@amd>
+References: <20200512214713.40501-1-tony@atomide.com>
+ <20200528083918.GB10358@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
 Content-Disposition: inline
-In-Reply-To: <20200726074306.GA444745@kroah.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200528083918.GB10358@localhost>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 09:43:06AM +0200, Greg Kroah-Hartman wrote:
-> On Sun, Jul 26, 2020 at 09:13:39AM +0200, Christoph Hellwig wrote:
-> > Split the main worker loop into a separate function.  This allows
-> > devtmpfsd itself and devtmpfsd_setup to be marked __init, which will
-> > allows us to call __init routines for the setup work.
-> > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  drivers/base/devtmpfs.c | 47 +++++++++++++++++++++++------------------
-> >  1 file changed, 26 insertions(+), 21 deletions(-)
-> 
-> Nice cleanup, thanks for doing this:
 
-This was actualy Als idea, I should have probably mentioned that.
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > Here's the updated set of these patches fixed up for Johan's and
+> > Pavel's earlier comments.
+> >=20
+> > This series does the following:
+> >=20
+> > 1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
+> >=20
+> > 2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
+> >    TTY ports configured in devicetree with help of n_gsm.c
+> >=20
+> > 3. Allows the use of standard Linux device drivers for dedicated
+> >    TS 27.010 channels for devices like GNSS and ALSA found on some
+> >    modems for example
+>=20
+> Unfortunately that does not seem to be the case just yet. Your gnss
+> driver is still aware that it's using n_gsm for the transport and calls
+> into the "parent" serdev-ngsm driver instead of using the serdev
+> interface (e.g. as if this was still and MFD driver).
+>=20
+> If you model this right, the GNSS driver should work equally well
+> regardless of whether you use the serial interface (with n_gsm) or USB
+> (e.g. cdc-acm or usb-serial).
+
+We are not going to see that protocol anywhere else, so why is that
+a good goal?
+
+Anyway, Tony, is there newer version of this patchset? It would be
+good to get something in...
+
+Can I help somehow?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8dPe8ACgkQMOfwapXb+vJfFQCfa75UABs8B8Futdqki8nIW6pf
+Aj8Anj1t2iSHSeGyQcNSPGbm3jcIOJch
+=vk0S
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
