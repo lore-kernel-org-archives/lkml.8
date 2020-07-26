@@ -2,145 +2,89 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 914F3C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF02C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 769F3206E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76EC2065C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:42:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595756558;
+	bh=xU3mIY5/hOHJA9Dae120zT2CM7tU7BcJpSsWowzvqcU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iBehksFSFHf3ad48Ap4XLexpbZ8dxiebS5XL2Y4iv++B/oYA58rBzQpM2Je5ls9Jc
+	 m87rDBxw+B/fXHEJ+qeRaW8v+eO1efYE5qCrcrkM0D2ryYYZEoyR8AJdtF7Sr/XZxq
+	 vXVc0E66bCrTmfcjTPWVGU83x4unaxGTm+HUag6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbgGZJb1 (ORCPT
+        id S1726916AbgGZJm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 05:31:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2132 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725810AbgGZJb1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 05:31:27 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06Q936HV184067;
-        Sun, 26 Jul 2020 05:31:18 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32ggcs6fgf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 05:31:18 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06Q93Gdu184347;
-        Sun, 26 Jul 2020 05:31:18 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32ggcs6fg3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 05:31:18 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06Q9JIb6015664;
-        Sun, 26 Jul 2020 09:31:16 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma02wdc.us.ibm.com with ESMTP id 32gcq08xxy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 09:31:16 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06Q9VGT351904824
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 26 Jul 2020 09:31:16 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 48AFF2805A;
-        Sun, 26 Jul 2020 09:31:16 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9DBF828058;
-        Sun, 26 Jul 2020 09:31:10 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.34.120])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sun, 26 Jul 2020 09:31:10 +0000 (GMT)
-Subject: Re: [PATCH v4 0/5] powerpc/perf: Add json file support for hv_24x7
- core level events
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, ak@linux.intel.com
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, pc@us.ibm.com,
-        namhyung@kernel.org, yao.jin@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, maddy@linux.ibm.com,
-        ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com,
-        kan.liang@linux.intel.com, nasastry@in.ibm.com
-References: <20200720070127.109234-1-kjain@linux.ibm.com>
- <20200720192133.GM760733@krava> <20200720193149.GA3906670@kernel.org>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <b2830443-8e86-8e70-705b-ac243f7a63f1@linux.ibm.com>
-Date:   Sun, 26 Jul 2020 15:01:09 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 26 Jul 2020 05:42:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbgGZJm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 05:42:28 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A5992065C;
+        Sun, 26 Jul 2020 09:42:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595756548;
+        bh=xU3mIY5/hOHJA9Dae120zT2CM7tU7BcJpSsWowzvqcU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Lm4qRcFfX69sVvN8HloMzZSOCi0Ezg2P6d3048kP4DtpGl11HJxusW9XiM2YhG1Z7
+         nOe9QBhlaD+gvKLOlmPPdYLbfkVxVTO2V0628CnUeQ2TTEgeT5bZkecaUA5I0L5G7h
+         473Xm9s4iPMV22fPUrYd8YUCz+EUgJVrsnyMAEqU=
+Date:   Sun, 26 Jul 2020 11:42:24 +0200
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
+Cc:     sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] staging: media: atomisp: fix style of open brace
+Message-ID: <20200726114224.1825a769@coco.lan>
+In-Reply-To: <20200726090512.20574-2-bharadwaj.rohit8@gmail.com>
+References: <20200726062541.11304-1-bharadwaj.rohit8@gmail.com>
+        <20200726090512.20574-2-bharadwaj.rohit8@gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200720193149.GA3906670@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-26_03:2020-07-24,2020-07-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
- phishscore=0 suspectscore=0 adultscore=0 impostorscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007260069
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Sun, 26 Jul 2020 14:35:12 +0530
+Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com> escreveu:
 
-
-On 7/21/20 1:01 AM, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Jul 20, 2020 at 09:21:33PM +0200, Jiri Olsa escreveu:
->> On Mon, Jul 20, 2020 at 12:31:22PM +0530, Kajol Jain wrote:
->>> Patchset enhance current runtime parameter support. It introduces new
->>> fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
->>> used to specify perpkg events. 
->>>
->>> The "PerCore" and "PerChip" specifies whether its core or chip events.
->>> Based on which we can decide which runtime parameter user want to
->>> access. Now character  '?' can refers different parameter based on user
->>> requirement.
->>>
->>> Initially, every time we want to add new terms like chip, core, thread
->>> etc, we need to create corrsponding fields in pmu_events and event
->>> struct.
->>> This patchset adds an enum called 'aggr_mode_class' which store all these
->>> aggregation like perpkg/percore. It also adds new field 'AggregationMode'
->>> to capture these terms.
->>> Now, if user wants to add any new term, they just need to add it in
->>> the enum defined. I try to test it with  my current setup.
->>>
->>> I also need to replace PerPkg field to AggregationMode in all the
->>> x86 uncore json files. It will great if Andi and team can test it
->>> and let me know if they have any concerns.
->>>
->>> Changelog:
->>> v3 -> v4:
->>> - Include pmu-events.h header file in jevents.c and remove
->>>   redecalaration of enum aggr_mode_class as Suggested by Jiri.
->>> - Add Acked-by tag.
->>
->> looks good to me, but still missing reaction from people maintaining
->> intel's jsons
+> this patch fixes style of open brace after functions and if statements
 > 
-> Yeah, since this is something trying to be generic enough to describe
-> events from different arches, we should not double-fail into
-> generalizing this :-\
+> Signed-off-by: Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
 
-Hi,
-   Yes that make sense. In this patchset we are not doing any logical change from intel side,
-as in all the json file "PerPkg" value map to '1', we are using same value in the
-enum to not break that use case. And just replacing 'PerPkg' to new added field
-`AggregationMode'. 
+> @@ -119,8 +121,9 @@ sh_css_load_blob_info(const char *fw, const struct ia_css_fw_info *bi,
+>  	blob = (const unsigned char *)fw + bi->blob.offset;
+>  
+>  	/* sanity check */
+> -	if (bi->blob.size != bi->blob.text_size + bi->blob.icache_size + bi->blob.data_size + bi->blob.padding_size)
+> -	{
+> +	if (bi->blob.size !=
+> +		bi->blob.text_size + bi->blob.icache_size +
+> +		bi->blob.data_size + bi->blob.padding_size) {
 
-But you are right, it will be good to have Ack from intel people. Any comments how we can push these
-changes?
+
+Please adjust the alignments here. I'm pretty sure checkpatch --strict
+will end complaining with the above, as the first line ends with "=".
+
+I would, instead, code it as:
+
+	if (bi->blob.size != bi->blob.text_size + bi->blob.icache_size +
+			     bi->blob.data_size + bi->blob.padding_size) {
+
 
 Thanks,
-Kajol Jain
-> 
-> - Arnaldo
-> 
+Mauro
