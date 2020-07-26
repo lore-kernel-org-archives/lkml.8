@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4D4C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA02C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0F79206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D3E3206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595766610;
-	bh=s4J6EOGEFA69R9t8lF7e6EZ5gSOJtEn0B6k80Px8dH0=;
+	s=default; t=1595766665;
+	bh=6MWqormlou6YQtHa7H1gjKpUJ28zRS67aZ4XrovKFpk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TS+psf2EguQ6mTt/xJGzB6Gu1CuFizAdcSrzkRBvv3ORIeF9f/+Pn9njjH/gXwKKJ
-	 jYT0BJWbYFbt53W6alga86xU9KNonkwxcpVc4O3jBxgU6yA/r/R1noLoRc8R/48c60
-	 7jaIJnC5oOOpbXfaV/lrA2iGB8uQ1FNzzJQhwcf4=
+	b=c0R07ppL+aInDLzPHOHLlDc3cWjEUE29+Uozi2BR/cFJlViDwiL1fop22qCQ/Tla9
+	 wWF+nrmbHdeJGbVPEJS2T3jSYc7Hz6lqfSYJdHyfdBpn6m5b4XliltJuYONCj6g3IC
+	 MNqN2AnDXOMHDJi3beKxydLTSyLl2/e6eILyoypw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgGZMaI (ORCPT
+        id S1727055AbgGZMbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 08:30:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58614 "EHLO mail.kernel.org"
+        Sun, 26 Jul 2020 08:31:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbgGZMaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 08:30:08 -0400
+        id S1725848AbgGZMbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 08:31:02 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D1D3206D8;
-        Sun, 26 Jul 2020 12:30:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6090E206D8;
+        Sun, 26 Jul 2020 12:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595766608;
-        bh=s4J6EOGEFA69R9t8lF7e6EZ5gSOJtEn0B6k80Px8dH0=;
+        s=default; t=1595766662;
+        bh=6MWqormlou6YQtHa7H1gjKpUJ28zRS67aZ4XrovKFpk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jyE5RME0fADgdc4yS8tRY3IywkvcpbELB3NEzhIbRHVro5oBFuaaz4wbcojPz/A1C
-         JpSKmAOFm0xeYtqVc0oC889MBV7KE6P0O2NE2gpIsTQ/2Gty07NgDXfo/BRVE70ZEy
-         hn4Vt6KbtX7inaFQDa1e5g7CkNlgHHf3qicHAZHM=
-Date:   Sun, 26 Jul 2020 13:30:04 +0100
+        b=WrabNVfILpo2BfBxLTEwhvO2vvndxnabMn6JOY85SyG1s4ZxpQfNaGWC+TNz+JpDh
+         A7yDwW013RJi4VQxdqP/cWHVcsaNvRPsTdNlMu+Z20IabceDEQZOSsE7qImytr9Pio
+         ZpZlDUsqLpIlDSdgpbIRqOp63ugPjaXuAkWLgz6E=
+Date:   Sun, 26 Jul 2020 13:30:58 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] iio: adxl372_spi: change indentation for of_table
-Message-ID: <20200726133004.7336d99c@archlinux>
-In-Reply-To: <20200722072546.65742-1-alexandru.ardelean@analog.com>
-References: <20200720134839.71124-1-alexandru.ardelean@analog.com>
-        <20200722072546.65742-1-alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Stefan Popa <stefan.popa@analog.com>
+Subject: Re: [PATCH v2] iio: adxl372_i2c: Add OF device ID table
+Message-ID: <20200726133058.0b1f43b9@archlinux>
+In-Reply-To: <20200722073003.67373-1-alexandru.ardelean@analog.com>
+References: <20200720134931.71537-1-alexandru.ardelean@analog.com>
+        <20200722073003.67373-1-alexandru.ardelean@analog.com>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -57,36 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jul 2020 10:25:46 +0300
+On Wed, 22 Jul 2020 10:30:03 +0300
 Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-> The change is mostly stylistic. The table should be indented with tabs
-> instead of spaces.
+> From: Stefan Popa <stefan.popa@analog.com>
 > 
+> The driver does not have a struct of_device_id table, but supported
+> devices are registered via Device Trees. This patch adds OF device ID
+> table.
+> 
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied
+Applied.
+
+Thanks,
+
+Jonathan
 
 > ---
 > 
 > Changelog v1 -> v2:
-> * remove trailing comma at null terminator
+> * use linux/mod_devicetable.h include instead for the OF table
+> * remove comma from null terminator
 > 
->  drivers/iio/accel/adxl372_spi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/iio/accel/adxl372_i2c.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/drivers/iio/accel/adxl372_spi.c b/drivers/iio/accel/adxl372_spi.c
-> index 3ef7e3a4804e..1f1352fee99a 100644
-> --- a/drivers/iio/accel/adxl372_spi.c
-> +++ b/drivers/iio/accel/adxl372_spi.c
-> @@ -40,8 +40,8 @@ static const struct spi_device_id adxl372_spi_id[] = {
->  MODULE_DEVICE_TABLE(spi, adxl372_spi_id);
+> diff --git a/drivers/iio/accel/adxl372_i2c.c b/drivers/iio/accel/adxl372_i2c.c
+> index e1affe480c77..9a07ab3d151a 100644
+> --- a/drivers/iio/accel/adxl372_i2c.c
+> +++ b/drivers/iio/accel/adxl372_i2c.c
+> @@ -6,6 +6,7 @@
+>   */
 >  
->  static const struct of_device_id adxl372_of_match[] = {
-> -        { .compatible = "adi,adxl372" },
-> -        { },
+>  #include <linux/i2c.h>
+> +#include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+>  #include <linux/regmap.h>
+>  
+> @@ -46,9 +47,16 @@ static const struct i2c_device_id adxl372_i2c_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, adxl372_i2c_id);
+>  
+> +static const struct of_device_id adxl372_of_match[] = {
 > +	{ .compatible = "adi,adxl372" },
 > +	{ }
->  };
->  MODULE_DEVICE_TABLE(of, adxl372_of_match);
->  
+> +};
+> +MODULE_DEVICE_TABLE(of, adxl372_of_match);
+> +
+>  static struct i2c_driver adxl372_i2c_driver = {
+>  	.driver = {
+>  		.name = "adxl372_i2c",
+> +		.of_match_table = adxl372_of_match,
+>  	},
+>  	.probe = adxl372_i2c_probe,
+>  	.id_table = adxl372_i2c_id,
 
