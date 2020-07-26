@@ -2,184 +2,80 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3619C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F13D9C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9321A20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73D620714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgGZPel (ORCPT
+        id S1726879AbgGZPlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 11:34:41 -0400
-Received: from mga03.intel.com ([134.134.136.65]:17603 "EHLO mga03.intel.com"
+        Sun, 26 Jul 2020 11:41:08 -0400
+Received: from verein.lst.de ([213.95.11.211]:40734 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgGZPek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 11:34:40 -0400
-IronPort-SDR: 3JDtvrYbd/NB2XliehxKueJtDoi/xsVOwa1mKq9vuS13pWJLmh4Ho6zE4TeDncKhhB0itQbBxq
- Ya+Svp0Lyddg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="150890955"
-X-IronPort-AV: E=Sophos;i="5.75,399,1589266800"; 
-   d="scan'208";a="150890955"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 08:34:40 -0700
-IronPort-SDR: rUbsBwb1OF0ZnNlTNb4A+AFbeSGDD2v84/a2gsxpeHuSNf5b1wETG6HQPgJe8c0Vgsbsb/kH6p
- phQhwRJNF7Fg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,399,1589266800"; 
-   d="scan'208";a="303177494"
-Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
-  by orsmga002.jf.intel.com with ESMTP; 26 Jul 2020 08:34:37 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        Like Xu <like.xu@linux.intel.com>
-Subject: [PATCH v13 00/10] Guest Last Branch Recording Enabling (KVM part)
-Date:   Sun, 26 Jul 2020 23:32:18 +0800
-Message-Id: <20200726153229.27149-1-like.xu@linux.intel.com>
-X-Mailer: git-send-email 2.21.3
+        id S1726065AbgGZPlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 11:41:07 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id BDBB068B05; Sun, 26 Jul 2020 17:41:04 +0200 (CEST)
+Date:   Sun, 26 Jul 2020 17:41:04 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [PATCH v16 6/9] nvmet-passthru: Add passthru code to process
+ commands
+Message-ID: <20200726154104.GA23930@lst.de>
+References: <20200724172520.16318-1-logang@deltatee.com> <20200724172520.16318-7-logang@deltatee.com> <20200724193351.GA2857771@dhcp-10-100-145-180.wdl.wdc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724193351.GA2857771@dhcp-10-100-145-180.wdl.wdc.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
+On Fri, Jul 24, 2020 at 12:33:51PM -0700, Keith Busch wrote:
+> On Fri, Jul 24, 2020 at 11:25:17AM -0600, Logan Gunthorpe wrote:
+> > +	/*
+> > +	 * The passthru NVMe driver may have a limit on the number of segments
+> > +	 * which depends on the host's memory fragementation. To solve this,
+> > +	 * ensure mdts is limitted to the pages equal to the number of
+> 
+>                           limited
 
-Please review this new version for the Kernel 5.9 release, and
-Sean may not review them as he said in the previous email
-https://lore.kernel.org/kvm/20200710162819.GF1749@linux.intel.com/
+I've fixed this when applying.
 
-You may cherry-pick the perf patches "3cb9d5464c1c..e1ad1ac2deb8"
-from the branch "tip/perf/core" of scm/linux/kernel/git/tip/tip.git
-as PeterZ said in the previous email
-https://lore.kernel.org/kvm/20200703075646.GJ117543@hirez.programming.kicks-ass.net/
+> > +	/* don't support fuse commands */
+> > +	id->fuses = 0;
+> 
+> If a host were to set a fuse, the target should return an Invalid Field
+> error. Just to future-proof, rejecting commands with any flags set
+> (other than SGL, which you handled in patch 1/9) is probably what should
+> happen, like:
+> 
+> > +u16 nvmet_parse_passthru_io_cmd(struct nvmet_req *req)
+> > +{
+> 
+> 	if (req->cmd->common.flags & ~NVME_CMD_SGL_ALL)
+> 		return NVME_SC_INVALID_FIELD;
+> 
+> Or maybe we could obviate the need for 1/9 with something like:
+> 
+> 	req->cmd->common.flags &= ~NVME_CMD_SGL_ALL;
+> 	if (req->cmd->common.flags)
+> 		return NVME_SC_INVALID_FIELD;
 
-We may also apply the qemu-devel patch to the upstream qemu and try
-the QEMU command lines with '-cpu host' or '-cpu host,pmu=true,lbr=true'.
-
-The following error will be gone forever with the patchset:
-
-  $ perf record -b lbr ${WORKLOAD}
-  or $ perf record --call-graph lbr ${WORKLOAD}
-  Error:
-  cycles: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
-
-Please check more details in each commit and feel free to test.
-
-v12->v13 Changelog:
-- remove perf patches since they're queued in the tip/perf/core;
-- add a minor patch to refactor MSR_IA32_DEBUGCTLMSR set/get handler;
-- add a minor patch to expose vmx_set_intercept_for_msr();
-- add a minor patch to initialize perf_capabilities in the intel_pmu_init();
-- spilt the big patch to three pieces (0004-0006) for better understanding and review
-- make the LBR_FMT exposure patch as the last step to enable guest LBR;
-
-Previous:
-https://lore.kernel.org/kvm/20200613080958.132489-1-like.xu@linux.intel.com/
-
----
-
-The last branch recording (LBR) is a performance monitor unit (PMU)
-feature on Intel processors that records a running trace of the most
-recent branches taken by the processor in the LBR stack. This patch
-series is going to enable this feature for plenty of KVM guests.
-
-The user space could configure whether it's enabled or not for each
-guest via MSR_IA32_PERF_CAPABILITIES msr. As a first step, a guest
-could only enable LBR feature if its cpu model is the same as the
-host since the LBR feature is still one of model specific features.
-
-If it's enabled on the guest, the guest LBR driver would accesses the
-LBR MSR (including IA32_DEBUGCTLMSR and records MSRs) as host does.
-The first guest access on the LBR related MSRs is always interceptible.
-The KVM trap would create a special LBR event (called guest LBR event)
-which enables the callstack mode and none of hardware counter is assigned.
-The host perf would enable and schedule this event as usual. 
-
-Guest's first access to a LBR registers gets trapped to KVM, which
-creates a guest LBR perf event. It's a regular LBR perf event which gets
-the LBR facility assigned from the perf subsystem. Once that succeeds,
-the LBR stack msrs are passed through to the guest for efficient accesses.
-However, if another host LBR event comes in and takes over the LBR
-facility, the LBR msrs will be made interceptible, and guest following
-accesses to the LBR msrs will be trapped and meaningless. 
-
-Because saving/restoring tens of LBR MSRs (e.g. 32 LBR stack entries) in
-VMX transition brings too excessive overhead to frequent vmx transition
-itself, the guest LBR event would help save/restore the LBR stack msrs
-during the context switching with the help of native LBR event callstack
-mechanism, including LBR_SELECT msr.
-
-If the guest no longer accesses the LBR-related MSRs within a scheduling
-time slice and the LBR enable bit is unset, vPMU would release its guest
-LBR event as a normal event of a unused vPMC and the pass-through
-state of the LBR stack msrs would be canceled.
-
----
-
-LBR testcase:
-echo 1 > /proc/sys/kernel/watchdog
-echo 25 > /proc/sys/kernel/perf_cpu_time_max_percent
-echo 5000 > /proc/sys/kernel/perf_event_max_sample_rate
-echo 0 > /proc/sys/kernel/perf_cpu_time_max_percent
-./perf record -b ./br_instr a
-
-- Perf report on the host:
-Samples: 72K of event 'cycles', Event count (approx.): 72512
-Overhead  Command   Source Shared Object           Source Symbol                           Target Symbol                           Basic Block Cycles
-  12.12%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           1
-  11.05%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             5
-   8.81%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             4
-   5.04%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           20
-   4.92%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             6
-   4.88%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           6
-   4.58%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           5
-
-- Perf report on the guest:
-Samples: 92K of event 'cycles', Event count (approx.): 92544
-Overhead  Command   Source Shared Object  Source Symbol                                   Target Symbol                                   Basic Block Cycles
-  12.03%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   1
-  11.09%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     5
-   8.57%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     4
-   5.08%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     6
-   5.06%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   20
-   4.87%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   6
-   4.70%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   5
-
-Conclusion: the profiling results on the guest are similar to that on the host.
-
-Like Xu (10):
-  KVM: x86: Move common set/get handler of MSR_IA32_DEBUGCTLMSR to VMX
-  KVM: x86/vmx: Make vmx_set_intercept_for_msr() non-static and expose it
-  KVM: vmx/pmu: Initialize vcpu perf_capabilities once in intel_pmu_init()
-  KVM: vmx/pmu: Clear PMU_CAP_LBR_FMT when guest LBR is disabled
-  KVM: vmx/pmu: Create a guest LBR event when vcpu sets DEBUGCTLMSR_LBR
-  KVM: vmx/pmu: Pass-through LBR msrs to when the guest LBR event is ACTIVE
-  KVM: vmx/pmu: Reduce the overhead of LBR pass-through or cancellation
-  KVM: vmx/pmu: Emulate legacy freezing LBRs on virtual PMI
-  KVM: vmx/pmu: Expose LBR_FMT in the MSR_IA32_PERF_CAPABILITIES
-  KVM: vmx/pmu: Release guest LBR event via lazy release mechanism
-
- arch/x86/kvm/pmu.c              |  12 +-
- arch/x86/kvm/pmu.h              |   5 +
- arch/x86/kvm/vmx/capabilities.h |  22 ++-
- arch/x86/kvm/vmx/pmu_intel.c    | 296 +++++++++++++++++++++++++++++++-
- arch/x86/kvm/vmx/vmx.c          |  44 ++++-
- arch/x86/kvm/vmx/vmx.h          |  28 +++
- arch/x86/kvm/x86.c              |  15 +-
- 7 files changed, 395 insertions(+), 27 deletions(-)
-
--- 
-2.21.3
-
+We'll also need this for the admin commands, but otherwise this sounds
+like a good idea.  For now I've applied the series as-is, but an
+incremental patch for this would be nice.
