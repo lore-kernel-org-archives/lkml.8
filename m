@@ -2,216 +2,259 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3F1C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA3BC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07BB12065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595778752;
-	bh=beJKTsPGCuk+xMR/uiqaP/qPznimUQvA1tCziW23lO8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HUo4ivXQpoBmu5agM0c8Nd95X/+KlbzcHhwu7q6PRoFS+gJrRXG9E3CMsTElp7u5U
-	 shqcQ6Pi82z9Y9HTpIiPxRkKPZZOnwdQbSwnelq+tOBsfkBSgdC3+97UAQ//TFKZ9s
-	 d0/bt03/69GN7GmlZqt84vP9nOl0AQYk86dv8Ic0=
+	by mail.kernel.org (Postfix) with ESMTP id A46772065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:53:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HzyUFpZ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgGZPwb (ORCPT
+        id S1727001AbgGZPxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 11:52:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37644 "EHLO mail.kernel.org"
+        Sun, 26 Jul 2020 11:53:30 -0400
+Received: from mout.gmx.net ([212.227.17.22]:44649 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726117AbgGZPwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 11:52:30 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.50.161.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB3D72065F;
-        Sun, 26 Jul 2020 15:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595778749;
-        bh=beJKTsPGCuk+xMR/uiqaP/qPznimUQvA1tCziW23lO8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1d3FbSrS3Whoq/2Mnpy78kazzBsxqOXaeqWGxa0qMQ4FC0oBGFREcUgCt1eDBtE1Q
-         9rWF14DAB0KBfOTCjatbjtsnA5DFUi+JjDNvJ4Odoat4VAEacol77qXDxlUSsrIvtP
-         TZZ8AKzsa9tZRSus0T4ZhBmjuuvC5lu9y8kiuDlU=
-Date:   Sun, 26 Jul 2020 21:22:23 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, patong.mxl@gmail.com,
-        linus.walleij@linaro.org, mchehab+huawei@kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [RESEND PATCH v4 2/3] usb: serial: xr_serial: Add gpiochip
- support
-Message-ID: <20200726155223.GB12036@Mani-XPS-13-9360>
-References: <20200607162350.21297-1-mani@kernel.org>
- <20200607162350.21297-3-mani@kernel.org>
- <20200701130206.GD3334@localhost>
+        id S1726117AbgGZPxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 11:53:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1595778765;
+        bh=WGw8FaMSZmhM49wBB1S9XHJc/RTzyoD1eWvPOwCmd6k=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=HzyUFpZ9Hd/C/lKJcZkMZjioaEKS2lk7s5kaptIZMmVhl6mxgYv79yW28MwOl5N1v
+         j8tblL/ICkM639pDUFyYz7/8nw70QZBI3sYZHXuAYod4rDLngoUHRrZpLjQQqugFZH
+         HjFs4llquZB+hGgZnl3K/ZJk+bpdi6PcOte51XvI=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([79.150.73.70]) by mail.gmx.com (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MN5eX-1kG0sr3PCH-00J0JT; Sun, 26
+ Jul 2020 17:52:45 +0200
+Date:   Sun, 26 Jul 2020 17:52:42 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v2 2/2] kernel/trace: Remove function callback casts
+Message-ID: <20200726155148.GA9341@ubuntu>
+References: <20200719155033.24201-3-oscar.carter@gmx.com>
+ <20200721140545.445f0258@oasis.local.home>
+ <20200724161921.GA3123@ubuntu>
+ <20200724123528.36ea9c9e@oasis.local.home>
+ <20200724171418.GB3123@ubuntu>
+ <20200724133656.76c75629@oasis.local.home>
+ <20200724134020.3160dc7c@oasis.local.home>
+ <20200724175500.GD3123@ubuntu>
+ <20200724143457.27755412@oasis.local.home>
+ <20200725150914.GA3362@ubuntu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200701130206.GD3334@localhost>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200725150914.GA3362@ubuntu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:kVMTe1ov4nKM/9d7telveamBIojsiH6hGJFia+U1Pd1CL6ym7zX
+ fBeMrZ7pJNcD1gnSN5uelpRhiNc1xCYX7Lm2GZFc1wHpd+x6YbunBa10BesxY0lGV6pkorH
+ uRVC9KlxCk6FWqlxVNVns4DOi7Uf6FQ9A6ZFOM+PWnwrofGCg8OL5NNlgvTOOpdJnpKaVRy
+ lht/U40KjXin+bGQ3UNyA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TegeHGck9oQ=:/W0Rhz+1yhBiERd893++Lv
+ l97+yJtxMWcsnwO/xAZ7+jyAZZUkxbKhC1JBtJBroypH8Lt/F1vdC4JMWWst3jIRkCQLADNcU
+ hgswVIRSkCXnnxRWOF6p8IquLFEejXdwh8MMjZy1LRlrzwr93hnyoNc7RsymYYGnipJFjsbQW
+ js7pX0FKnQ48u9rXUtYBdDJBMRBcTC9t1cNcTBD6ygKjTKuGSFrZMdl+uZpg/ZfR4KUgzkJMs
+ 1nPe38Y5uePsD3450z/EG6z7wc49S9V/V43rActUTZSL3x+WHgyoG1RPcVff1dOPbEm6CHFaj
+ Blvb1468PpaPGlyGFbUzvLzMjeVnqui8U17amc6jdNimrFpIA5QRyovqH9NHLgYsdwRmncU7p
+ 6vP2LnvJScdTLhttrHzeCyDwn9TmF7wIxUSc99PrPFhYqelUNo3lZDjAUMWx78v2f+5xNrvWs
+ O9jcyKUUe6g/dTWGAytdEujXZq0XRu4MZeEAYqiHGch0L+jlYGt6f/lk+jvT9uClRpfOfVuie
+ rfeWRDCEOD+Nxn6zueRxdDmNcret8UzSdYqhHSJ1JeKcslxZok2OTgGq2xC77BiqjMHjpz+8u
+ 8299M4iXjfTm1iJA61y8fpv5oXmViatU2g9Taat05KEcLQZ+LEdWUk5cdtq4wqfPgYbXMdMm0
+ hVnECLfI5LTT2mQN8vKjfjDWwIlmDRo9pjG7qQRZ1dTAvaT/DXDv8n4lxif9mBeYtcCSpeYs8
+ 88o540MvguPzPysRHi/WJh3VYGSDOpK+QlcO6apupQ9LOEgZjBCRBjbRI3ki0iRNubgmQ+Glp
+ WRQV1gD//ZrPZv/EHhDZU5oN0BgBomKvSxXJZhmsPKx87TnDuuu+xuuagvLgmfxgUyZRm/xVS
+ c4xaYhXkJe8hmUZb2CHIhu0DmZPJJ5wwHOOq6KFcAdlkyz0i1V9JBCjXieS4/blq3kxenoVrB
+ oKmeI6q5ExPV8Mer8PnwjqPZb6H/cfoCwHZ6p8XWyGVDpObSSMcHtld0ssYCaPWfRUkn34EJm
+ 0OEixUd/o80SCjcs+W92ojvCPilHlxQ/MLsCeA3hAoA3/1c0ohtnVtmxCmfNgac5ucO+pqzQX
+ GE+JBD2UObA74tKp601TuIycyoJJitWRo8yeT2ivvc22DR91tvAILH1bkpDOjs5OabPP5WDKV
+ jsycdNBoBZ4DNNnuc24CKpwHct3Lvq6dJ/Zl2rZ0PmkVyAQTsA9FQiy14ai4awDeYfs7cEyu2
+ oe8mXGRsrHqjmjCy4NZ37/t35/Tv5LqqMtDyUYg==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 03:02:06PM +0200, Johan Hovold wrote:
-> On Sun, Jun 07, 2020 at 09:53:49PM +0530, Manivannan Sadhasivam wrote:
-> > Add gpiochip support for Maxlinear/Exar USB to serial converter
-> > for controlling the available gpios.
-> > 
-> > Inspired from cp210x usb to serial converter driver.
-> > 
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: linux-gpio@vger.kernel.org
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-> > ---
-> >  drivers/usb/serial/xr_serial.c | 209 ++++++++++++++++++++++++++++++++-
-> >  1 file changed, 208 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/usb/serial/xr_serial.c b/drivers/usb/serial/xr_serial.c
-> > index bb7df79cc129..2240fbc9ea7f 100644
-> > --- a/drivers/usb/serial/xr_serial.c
-> > +++ b/drivers/usb/serial/xr_serial.c
-> > @@ -10,6 +10,7 @@
-> >   * Copyright (c) 2020 Manivannan Sadhasivam <mani@kernel.org>
-> >   */
-> >  
-> > +#include <linux/gpio/driver.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> >  #include <linux/slab.h>
-> > @@ -17,6 +18,18 @@
-> >  #include <linux/usb.h>
-> >  #include <linux/usb/serial.h>
-> >  
-> > +#ifdef CONFIG_GPIOLIB
-> > +enum gpio_pins {
-> > +	GPIO_RI = 0,
-> > +	GPIO_CD,
-> > +	GPIO_DSR,
-> > +	GPIO_DTR,
-> > +	GPIO_CTS,
-> > +	GPIO_RTS,
-> > +	GPIO_MAX,
-> > +};
-> > +#endif
-> 
-> Try to avoid littering the driver with GPIOLIB ifdefs. One or two is
-> fine, but no more even if it means declaring an unused type. Add
-> stubbed out helpers where appropriate.
-> 
-> > +
-> >  static void xr_set_termios(struct tty_struct *tty,
-> >  			   struct usb_serial_port *port,
-> >  			   struct ktermios *old_termios);
-> > @@ -39,6 +52,11 @@ struct xr_uart_regs {
-> >  };
-> >  
-> >  struct xr_port_private {
-> > +#ifdef CONFIG_GPIOLIB
-> > +	struct gpio_chip gc;
-> > +	bool gpio_registered;
-> > +	enum gpio_pins pin_status[GPIO_MAX];
-> > +#endif
-> >  	const struct xr_uart_regs *regs;
-> >  	bool port_open;
-> >  };
-> > @@ -390,6 +408,13 @@ static void xr_set_flow_mode(struct tty_struct *tty,
-> >  	 */
-> >  	gpio_mode &= ~UART_MODE_GPIO_MASK;
-> >  	if (cflag & CRTSCTS) {
-> > +#ifdef CONFIG_GPIOLIB
-> > +		/* Check if the CTS/RTS pins are occupied */
-> > +		if (port_priv->pin_status[GPIO_RTS] ||
-> > +		    port_priv->pin_status[GPIO_CTS])
-> > +			return;
-> > +#endif
-> 
-> You cannot just bail out as this could leave software flow enabled etc.
-> 
-> You also need to claim these pins once at open or leave them be. We
-> don't want CRTSCTS to suddenly start toggling because a pin is released
-> by gpiolib.
-> 
-> That is, determine who owns each pin at open() and keep it that way till
-> close() (by setting some flags at open).
-> 
-> > +
-> >  		dev_dbg(&port->dev, "Enabling hardware flow ctrl\n");
-> >  		flow = UART_FLOW_MODE_HW;
-> >  		gpio_mode |= UART_MODE_RTS_CTS;
-> > @@ -497,6 +522,17 @@ static int xr_tiocmset_port(struct usb_serial_port *port,
-> >  	u8 gpio_set = 0;
-> >  	u8 gpio_clr = 0;
-> >  
-> > +#ifdef CONFIG_GPIOLIB
-> > +	/* Check if the RTS/DTR pins are occupied */
-> > +	if (set & TIOCM_RTS || clear & TIOCM_RTS)
-> > +		if (port_priv->pin_status[GPIO_RTS])
-> > +			return -EBUSY;
-> > +
-> > +	if (set & TIOCM_DTR || clear & TIOCM_DTR)
-> > +		if (port_priv->pin_status[GPIO_DTR])
-> > +			return -EBUSY;
-> > +#endif
-> 
-> Same here. And perhaps just ignoring the pins managed by gpiolib is
-> better (cf. gpiolib and pinctrl being orthogonal).
+Hi Steven,
 
-You mean, we can just make TX,RX,CTS,RTS pins controlled only by the serial
-driver and the rest only by gpiolib?
+On Sat, Jul 25, 2020 at 05:09:14PM +0200, Oscar Carter wrote:
+> Hi Steven,
+>
+> On Fri, Jul 24, 2020 at 02:34:57PM -0400, Steven Rostedt wrote:
+> > On Fri, 24 Jul 2020 19:55:00 +0200
+> > Oscar Carter <oscar.carter@gmx.com> wrote:
+> >
+> > > > Which one of the above is this patch set for?
+> > >
+> > > This patch is the result of a warning obtained with the following:
+> > >
+> > > make allmodconfig ARCH=3Dpowerpc
+> > > make ARCH=3Dpowerpc CROSS_COMPILE=3Dpowerpc-linux-gnu- -j4
+> > >
+> > > And with the -Wcast-function-type enabled in the top level makefile.
+> >
+> > Looking into powerpc I found this:
+> >
+> > arch/powerpc/include/asm/ftrace.h:
+> >
+> >   #ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+> >   #define ARCH_SUPPORTS_FTRACE_OPS 1
+> >   #endif
+> >
+> >
+> > arch/powerpc/Kconfig:
+> >
+> > 	select HAVE_DYNAMIC_FTRACE_WITH_REGS	if MPROFILE_KERNEL
+> > [..]
+> >
+> >   config MPROFILE_KERNEL
+> > 	depends on PPC64 && CPU_LITTLE_ENDIAN && FUNCTION_TRACER
+> > 	def_bool $(success,$(srctree)/arch/powerpc/tools/gcc-check-mprofile-k=
+ernel.sh $(CC) -I$(srctree)/include -D__KERNEL__)
+> >
+> > So, it looks like you need to be 64bit PowerPC, Little Endian, and gcc
+> > needs to support -mprofile.
+> >
+> > Otherwise, it falls back to the old way that does the type casting.
+> >
+> > If you are really concerned about this, I would recommend adding
+> > support to the architecture you care about, and then this will no
+> > longer be an issue.
+> >
+> > The funny part is, you can still add support for ftrace_ops, without
+> > adding support for DYNAMIC_FTRACE_WITH_REGS, if you only care about no=
+t
+> > having to do that typecast.
+>
+> I agree with you. I will try to add the support for ftrace_ops without
+> adding support for DYNAMIC_FTRACE_WITH_REGS to the powerpc architecture.
+>
+> It's a great solution to allow a clean CFI build and so, protect this
+> arch (powerpc) against attacks that try to modify the normal control
+> flow.
+>
+> I take a look at the kernel documentation about port ftrace to other
+> architectures [1] but it is out of date.
+>
+> If I try to do this I will need some help. Some info that point me to th=
+e
+> right direction would be greatly appreciated. Some advice about what
+> functions I will need to implement would be really helpfull. Or point me
+> to the right piece of code that I can pick as base point.
 
-Thanks,
-Mani
+I've been searching and reading the code as much as possible. I've found
+two patches that I think can be useful to guide me. One [1] adds support
+for ftrace_ops to the riscv architecture. The other one [2] adds support
+for ftrace_ops to the parisc architecture.
 
-> 
-> > +
-> >  	/* Modem control pins are active low, so set & clr are swapped */
-> >  	if (set & TIOCM_RTS)
-> >  		gpio_clr |= UART_MODE_RTS;
-> > @@ -589,9 +625,175 @@ static void xr_break_ctl(struct tty_struct *tty, int break_state)
-> >  		   state);
-> >  }
-> >  
-> > +#ifdef CONFIG_GPIOLIB
-> > +
-> > +static int xr_gpio_request(struct gpio_chip *gc, unsigned int offset)
-> > +{
-> > +	struct usb_serial_port *port = gpiochip_get_data(gc);
-> > +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-> > +
-> > +	/*
-> > +	 * Do not proceed if the port is open. This is done to avoid changing
-> > +	 * the GPIO configuration used by the serial driver.
-> > +	 */
-> > +	if (port_priv->port_open)
-> > +		return -EBUSY;
-> > +
-> > +	/* Mark the GPIO pin as busy */
-> > +	port_priv->pin_status[offset] = true;
-> 
-> You need a lock to serialise against open/close properly.
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void xr_gpio_free(struct gpio_chip *gc, unsigned int offset)
-> > +{
-> > +	struct usb_serial_port *port = gpiochip_get_data(gc);
-> > +	struct xr_port_private *port_priv = usb_get_serial_port_data(port);
-> > +
-> > +	/* Mark the GPIO pin as free */
-> > +	port_priv->pin_status[offset] = false;
-> > +}
-> 
-> Johan
+[1] commit 71e736a7d655 ("riscv/ftrace: Add ARCH_SUPPORTS_FTRACE_OPS suppo=
+rt")
+[2] commit d562aca37a54 ("parisc/ftrace: Add ARCH_SUPPORTS_FTRACE_OPS supp=
+ort")
+
+Due to powerpc arch calls the needed functions from assembly, I based my
+idea on the patch for the RISCV arch.
+
+Can something like the following work?
+
+diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/=
+ftrace.h
+index bc76970b6ee5..1c51ff5afae1 100644
+=2D-- a/arch/powerpc/include/asm/ftrace.h
++++ b/arch/powerpc/include/asm/ftrace.h
+@@ -61,9 +61,8 @@ struct dyn_arch_ftrace {
+ };
+ #endif /* __ASSEMBLY__ */
+
+-#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+ #define ARCH_SUPPORTS_FTRACE_OPS 1
+-#endif
++
+ #endif /* CONFIG_FUNCTION_TRACER */
+
+ #ifndef __ASSEMBLY__
+diff --git a/arch/powerpc/kernel/trace/ftrace_32.S b/arch/powerpc/kernel/t=
+race/ftrace_32.S
+index e023ae59c429..e69a4e945986 100644
+=2D-- a/arch/powerpc/kernel/trace/ftrace_32.S
++++ b/arch/powerpc/kernel/trace/ftrace_32.S
+@@ -29,6 +29,10 @@ _GLOBAL(ftrace_caller)
+        MCOUNT_SAVE_FRAME
+        /* r3 ends up with link register */
+        subi    r3, r3, MCOUNT_INSN_SIZE
++
++       /* Set ftrace_ops (r5) to the global variable function_trace_op */
++       /* Set pt_regs (r6) to NULL */
++
+ .globl ftrace_call
+ ftrace_call:
+        bl      ftrace_stub
+diff --git a/arch/powerpc/kernel/trace/ftrace_64_pg.S b/arch/powerpc/kerne=
+l/trace/ftrace_64_pg.S
+index 6708e24db0ab..a741448b1df9 100644
+=2D-- a/arch/powerpc/kernel/trace/ftrace_64_pg.S
++++ b/arch/powerpc/kernel/trace/ftrace_64_pg.S
+@@ -22,6 +22,10 @@ _GLOBAL_TOC(ftrace_caller)
+        std     r3, 128(r1)
+        ld      r4, 16(r11)
+        subi    r3, r3, MCOUNT_INSN_SIZE
++
++       /* Set ftrace_ops (r5) to the global variable function_trace_op */
++       /* Set pt_regs (r6) to NULL */
++
+ .globl ftrace_call
+ ftrace_call:
+        bl      ftrace_stub
+
+To add support for ftrace_ops to the powerpc architecture is only necessar=
+y
+to fill the r5 and r6 registers before the call to ftrace_stub in all the
+cases. The register r5 is a pointer to ftrace_ops struct and the register
+r6 is a pointer to pt_regs struct. These registers are the third and fourt=
+h
+parameters of a function with the following prototype. The first and secon=
+d
+ones are yet set.
+
+void func(unsigned long ip, unsigned long parent_ip,
+	  struct ftrace_ops *ops, struct pt_regs *regs);
+
+Am I in the right direction? or am I totally wrong?
+
+Thanks for your time and patience.
+Oscar Carter.
+
+> > My NAK still stands. I wont let an intrusive patch be added to the
+> > ftrace core code to deal with an unsupported feature in an architectur=
+e.
+>
+> Don't worry. I agree with you and thanks for finding a better way to
+> accomplish the initial purpose.
+>
+> > I would be will to add that linker trick to remove the warning. Or we
+> > just use that warning as incentive to get architecture developers to
+> > implement this feature ;-)
+>
+> In my opinion it would be better to leave the code as it an make the war=
+ning
+> visible until this feature has been added.
+>
+> > -- Steve
+>
+> [1] https://www.kernel.org/doc/html/latest/trace/ftrace-design.html
+>
+> Thanks again,
+> Oscar Carter
