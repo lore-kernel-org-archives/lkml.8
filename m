@@ -2,146 +2,218 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D75DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B0DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 008332065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D33C2065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:33:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQdhQX7L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOqK9Udg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgGZSaE (ORCPT
+        id S1727001AbgGZSdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 14:30:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50878 "EHLO
+        Sun, 26 Jul 2020 14:33:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgGZSaE (ORCPT
+        with ESMTP id S1726043AbgGZSdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 14:30:04 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57D63C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 11:30:04 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k1so7928244pjt.5
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 11:30:04 -0700 (PDT)
+        Sun, 26 Jul 2020 14:33:32 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68676C0619D2;
+        Sun, 26 Jul 2020 11:33:32 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id b18so6057455ilo.12;
+        Sun, 26 Jul 2020 11:33:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=WGV4I1F24zGyDcgOFIAM1fKYXa7cDhdo3lPZzJ+IeHU=;
-        b=SQdhQX7LOSO8S52kUprbIGF3FK5tDE4p2OCregx1V6MT1FfKnSnp2QFVAYgSStcFcL
-         b75kah/jFr6FFhZAhR0/VGP4zcvxdxJ/HuwfKS9eaUiDXT/kvFQSyuQBt0rsaEoKGA5S
-         oUQm/nB9H1g3OuaEe6UNYT+EK43eRdCCtcgKxGQymmCC03gsPkzUyVd6DJxIc3NsvOv2
-         FsIDM+bQ7gYjKKP5iU0s4TU9ynzqiQ7w8mC9OeSoyV5sUaA8dQcss6BVbeK/t0xx3R/l
-         T2Qudg8q2iaNC9IwTMNmZNC5RQVntTG0M64LIS8rXmpPRxjm1zvPB4O0kK+39+LCooed
-         VkxQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JjG7ZoYlTIlU86cx3B03lhQ3nQqrfFEpaGS9K3Q6ArU=;
+        b=XOqK9Udgi1RcHDYkb5Lc5J6ccoEOeVxHwmqMaf45E7oWVRi5K8qH6Va0CW+Lyu/jqt
+         NdhHW8EazqYMHTAmMGLmhepPswk6BYHr9KddZxu04t8KUGL21QIjxpfIvDMwllsh2E1w
+         p3gSTe1ziK+8TrbxaSOI6Tpbpv0seHofvm5fQp2a5HOb3JBEFMaIVPiaVkOp8zuwFnKv
+         Ax0+SMKLOgoqu7BTO4FSIqf5RrXZQmQknb/MgvznUBiP0TT03vA1Vax80/ZoXJQDqBkn
+         cko3oER9r0pEb7MIQLvs1enJGOadJrcGuSff8ozVx2KcYFc+1cHEqs9fipLtf1AOcKyk
+         WnCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=WGV4I1F24zGyDcgOFIAM1fKYXa7cDhdo3lPZzJ+IeHU=;
-        b=Ydl/sIG1Z642bJ09xl+YI4LX6bJtlPCynujBEz2fvUXOMrV28gEyeXVsYntE5r+sDO
-         dvox0+9fT+PEiuefjFDJLAc19Yf4eXMc0vnTCzu2Pz2ZusNDv7spi9VTL9vis7iCCP3b
-         ZbX362NZyiUwADouID4Ch7nt6LiM3EgauK3LcrZgGEr1/n/vI8W5VSStNjSOaVugNqfM
-         /uzU3J2HhEKB4VN4YfuFzXoOU2t6taxz6tcM/QtJc5Ksi0zYm/56j8sISmZxGzr8wzLt
-         h+leNvvJYi0MyWHcXgnroHAGbOEepS8vWPH3acEjZ0bfd9D2F1QXWCkJi+b87G9e1neh
-         ckPA==
-X-Gm-Message-State: AOAM532uftQ2G3bstsSRDVdbLJwa5at/GBCbn1mDiQ1qdn3on+xfY8cx
-        2Mlu2M8xhj07xfGdb1gXnulNweTZRRDfwg==
-X-Google-Smtp-Source: ABdhPJx9whbcHwiglTcBtEqIK+2T5/5MLdC9HEU/dfBdthL5uoNrZ8YerhCwocoAx/pDtMRDbDVYaA==
-X-Received: by 2002:a17:90b:1812:: with SMTP id lw18mr9449844pjb.70.1595788203264;
-        Sun, 26 Jul 2020 11:30:03 -0700 (PDT)
-Received: from [10.0.2.15] ([122.167.86.75])
-        by smtp.gmail.com with ESMTPSA id f72sm12672731pfa.66.2020.07.26.11.30.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Jul 2020 11:30:02 -0700 (PDT)
-Subject: Re: [PATCH] staging: rtl8723bs: include: Fix coding style errors
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, hdegoede@redhat.com,
-        linux-kernel@vger.kernel.org
-References: <20200726080215.41501-1-aditya.jainadityajain.jain@gmail.com>
- <20200726082636.GA447282@kroah.com>
- <CAJAoDUjVBon2iiztdER82mHgJtVS6s5XYSajbCTne0KWAzoLvg@mail.gmail.com>
- <da3da8d5-7227-ad65-1449-de9fb46561c7@lwfinger.net>
-From:   Aditya Jain <aditya.jainadityajain.jain@gmail.com>
-Message-ID: <9aa9f610-41f2-18cb-e9e6-6980a965c3e3@gmail.com>
-Date:   Sun, 26 Jul 2020 23:59:58 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JjG7ZoYlTIlU86cx3B03lhQ3nQqrfFEpaGS9K3Q6ArU=;
+        b=oBgGBF2N7wwoJMyX4o0BKOLyMpqhJO7mOdAJJOHwkQZjKlcsrNRYERhI9loex+58A/
+         /3d59SkHSc8LQcLXArHXoaECYMVCHaPDhGEMpVUdfr61saKY7M/fMO2bSRp7nZgItxL0
+         573tEhJxT+/LCtpqvypDB8TVoIDCGo9t9BVYcgqxXUZz9AyZqEo7zvUTWxrG3b1QtcDa
+         ei/7gs/FNaKKHFH409MFb5QHPCDmZki/deundsGBJe9aMdwtqwum+ifSYzekawfNUKNk
+         otyEV18PmjHoUBAdcfuqFYHZRXbyebhsnifLlJCoismhQEaxdnAKCtrb5KoG4CoOhtIj
+         TcNA==
+X-Gm-Message-State: AOAM530WOAh5BFuupX3/nX4Dw/8oNPHiDqvr8nZY6XVMneyH7kT1F8O2
+        8HO+GBi8VmvF8PavkqPV56SB4gYmqdgqz3wxNzyfwbU=
+X-Google-Smtp-Source: ABdhPJwZ78Ret661pOnPu9acx4lFJWN7fHXGU3s9HQMQj393fTZdEDKU8RoNSZ9LLsSXDFF1IYwqF1nS72wDxWMYEqg=
+X-Received: by 2002:a92:b112:: with SMTP id t18mr11662345ilh.172.1595788411185;
+ Sun, 26 Jul 2020 11:33:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <da3da8d5-7227-ad65-1449-de9fb46561c7@lwfinger.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200722220520.051234096@linutronix.de> <159562150262.4006.11750463088671474026.tip-bot2@tip-bot2>
+In-Reply-To: <159562150262.4006.11750463088671474026.tip-bot2@tip-bot2>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Sun, 26 Jul 2020 14:33:20 -0400
+Message-ID: <CAMzpN2ipn3tK7hg4njCG-svtbYSP_nmzr0mWHZCrkaJFYMuXWw@mail.gmail.com>
+Subject: Re: [tip: x86/entry] x86/entry: Consolidate 32/64 bit syscall entry
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     linux-tip-commits@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 26/07/20 11:33 pm, Larry Finger wrote:
-> On 7/26/20 3:40 AM, Aditya Jain wrote:
->> On Sun, Jul 26, 2020 at 1:56 PM Greg KH <gregkh@linuxfoundation.org> 
->> wrote:
->>>
->>> On Sun, Jul 26, 2020 at 01:32:15PM +0530, Aditya Jain wrote:
->>>> Fixing ERROR: "foo *  bar" should be "foo *bar" in hal_phy_cfg.h
->>>> as reported by checkpatch.pl
->>>>
->>>> Signed-off-by: Aditya Jain <aditya.jainadityajain.jain@gmail.com>
->>>> ---
->>>>   .../staging/rtl8723bs/include/hal_phy_cfg.h    | 18 
->>>> +++++++++---------
->>>>   1 file changed, 9 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h 
->>>> b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
->>>> index 419ddb0733aa..fd5f377bad4f 100644
->>>> --- a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
->>>> +++ b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
->>>> @@ -42,7 +42,7 @@ u32         Data
->>>>
->>>>   u32
->>>>   PHY_QueryRFReg_8723B(
->>>> -struct adapter *             Adapter,
->>>> +struct adapter               *Adapter,
->>>>   u8           eRFPath,
->>>>   u32                  RegAddr,
->>>>   u32                  BitMask
->>>
->>> Ick, these are all horrid.  How about just making these all on a single
->>> line like most functions have them instead of this one cleanup?
->>>
->>> Same for the other changes you made in this file.
->>>
->>> thanks,
->>>
->>> greg k-h
->>
->> Agreed. I'll clean it up.
+On Fri, Jul 24, 2020 at 4:14 PM tip-bot2 for Thomas Gleixner
+<tip-bot2@linutronix.de> wrote:
 >
-> While you are at it, drop the "include;" from the subject. For 
-> staging, the usual subject is of the form "staging: driver: thing 
-> being done". In your case "staging: rtl8723bs: Fix coding style 
-> errors". The directory of the files are not relevant.
-Ok, I'll take care of this and update the subject in the next version of 
-the Patch series.
+> The following commit has been merged into the x86/entry branch of tip:
 >
-> I am also not in favor of the large white space between the variable 
-> type and the name, but that is probably the subject of separate patches.
+> Commit-ID:     0b085e68f4072024ecaa3889aeeaab5f6c8eba5c
+> Gitweb:        https://git.kernel.org/tip/0b085e68f4072024ecaa3889aeeaab5f6c8eba5c
+> Author:        Thomas Gleixner <tglx@linutronix.de>
+> AuthorDate:    Thu, 23 Jul 2020 00:00:01 +02:00
+> Committer:     Thomas Gleixner <tglx@linutronix.de>
+> CommitterDate: Fri, 24 Jul 2020 15:04:58 +02:00
 >
-I think, the v3 patch series resolves this.
-> Larry
+> x86/entry: Consolidate 32/64 bit syscall entry
 >
+> 64bit and 32bit entry code have the same open coded syscall entry handling
+> after the bitwidth specific bits.
+>
+> Move it to a helper function and share the code.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Link: https://lkml.kernel.org/r/20200722220520.051234096@linutronix.de
+>
+>
+> ---
+>  arch/x86/entry/common.c | 93 +++++++++++++++++-----------------------
+>  1 file changed, 41 insertions(+), 52 deletions(-)
+>
+> diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+> index ab6cb86..68d5c86 100644
+> --- a/arch/x86/entry/common.c
+> +++ b/arch/x86/entry/common.c
+> @@ -366,8 +366,7 @@ __visible noinstr void syscall_return_slowpath(struct pt_regs *regs)
+>         exit_to_user_mode();
+>  }
+>
+> -#ifdef CONFIG_X86_64
+> -__visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
+> +static noinstr long syscall_enter(struct pt_regs *regs, unsigned long nr)
+>  {
+>         struct thread_info *ti;
+>
+> @@ -379,6 +378,16 @@ __visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
+>         if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY)
+>                 nr = syscall_trace_enter(regs);
+>
+> +       instrumentation_end();
+> +       return nr;
+> +}
+> +
+> +#ifdef CONFIG_X86_64
+> +__visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
+> +{
+> +       nr = syscall_enter(regs, nr);
+> +
+> +       instrumentation_begin();
+>         if (likely(nr < NR_syscalls)) {
+>                 nr = array_index_nospec(nr, NR_syscalls);
+>                 regs->ax = sys_call_table[nr](regs);
+> @@ -390,64 +399,53 @@ __visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
+>                 regs->ax = x32_sys_call_table[nr](regs);
+>  #endif
+>         }
+> -       __syscall_return_slowpath(regs);
+> -
+>         instrumentation_end();
+> -       exit_to_user_mode();
+> +       syscall_return_slowpath(regs);
+>  }
+>  #endif
+>
+>  #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
+> +static __always_inline unsigned int syscall_32_enter(struct pt_regs *regs)
+> +{
+> +       if (IS_ENABLED(CONFIG_IA32_EMULATION))
+> +               current_thread_info()->status |= TS_COMPAT;
+> +       /*
+> +        * Subtlety here: if ptrace pokes something larger than 2^32-1 into
+> +        * orig_ax, the unsigned int return value truncates it.  This may
+> +        * or may not be necessary, but it matches the old asm behavior.
+> +        */
+> +       return syscall_enter(regs, (unsigned int)regs->orig_ax);
+> +}
+> +
+>  /*
+> - * Does a 32-bit syscall.  Called with IRQs on in CONTEXT_KERNEL.  Does
+> - * all entry and exit work and returns with IRQs off.  This function is
+> - * extremely hot in workloads that use it, and it's usually called from
+> - * do_fast_syscall_32, so forcibly inline it to improve performance.
+> + * Invoke a 32-bit syscall.  Called with IRQs on in CONTEXT_KERNEL.
+>   */
+> -static void do_syscall_32_irqs_on(struct pt_regs *regs)
+> +static __always_inline void do_syscall_32_irqs_on(struct pt_regs *regs,
+> +                                                 unsigned int nr)
+>  {
+> -       struct thread_info *ti = current_thread_info();
+> -       unsigned int nr = (unsigned int)regs->orig_ax;
+> -
+> -#ifdef CONFIG_IA32_EMULATION
+> -       ti->status |= TS_COMPAT;
+> -#endif
+> -
+> -       if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY) {
+> -               /*
+> -                * Subtlety here: if ptrace pokes something larger than
+> -                * 2^32-1 into orig_ax, this truncates it.  This may or
+> -                * may not be necessary, but it matches the old asm
+> -                * behavior.
+> -                */
+> -               nr = syscall_trace_enter(regs);
+> -       }
+> -
+>         if (likely(nr < IA32_NR_syscalls)) {
+> +               instrumentation_begin();
+>                 nr = array_index_nospec(nr, IA32_NR_syscalls);
+>                 regs->ax = ia32_sys_call_table[nr](regs);
+> +               instrumentation_end();
+>         }
+> -
+> -       __syscall_return_slowpath(regs);
+>  }
+>
+>  /* Handles int $0x80 */
+>  __visible noinstr void do_int80_syscall_32(struct pt_regs *regs)
+>  {
+> -       enter_from_user_mode(regs);
+> -       instrumentation_begin();
+> +       unsigned int nr = syscall_32_enter(regs);
+>
+> -       local_irq_enable();
+> -       do_syscall_32_irqs_on(regs);
+> -
+> -       instrumentation_end();
+> -       exit_to_user_mode();
+> +       do_syscall_32_irqs_on(regs, nr);
+> +       syscall_return_slowpath(regs);
+>  }
+>
+> -static bool __do_fast_syscall_32(struct pt_regs *regs)
+> +static noinstr bool __do_fast_syscall_32(struct pt_regs *regs)
 
-Regards,
+Can __do_fast_syscall_32() be merged back into do_fast_syscall_32()
+now that both are marked noinstr?
 
-Aditya Jain
-
+--
+Brian Gerst
