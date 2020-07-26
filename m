@@ -2,82 +2,120 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D16C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC39DC433EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0E02065C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:58:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hostfission.com header.i=@hostfission.com header.b="PvfEXW/t"
+	by mail.kernel.org (Postfix) with ESMTP id CD19C20719
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:03:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgGZH6O (ORCPT
+        id S1727047AbgGZIDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 03:58:14 -0400
-Received: from mail1.hostfission.com ([139.99.139.48]:58116 "EHLO
-        mail1.hostfission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgGZH6O (ORCPT
+        Sun, 26 Jul 2020 04:03:08 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:35233 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgGZIDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 03:58:14 -0400
-X-Greylist: delayed 545 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 Jul 2020 03:58:13 EDT
-Received: from www1.hostfission.com (www1.hostfission.com [139.99.139.52])
-        by mail1.hostfission.com (Postfix) with ESMTP id 4EEC04216A;
-        Sun, 26 Jul 2020 17:49:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=hostfission.com;
-        s=mail; t=1595749747;
-        bh=5pXpIjVViNIuGvy8ExDLKr/tvQKrwNajc64XDb5pATk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PvfEXW/t1CKOi6Sqb0tOKQrLBxc5KhN3lBOg4b7PFpzRDwA8/XT57VjuTaAdmPZiG
-         0+HVeq0oxb3SKX9qBMcaz+Wkq9tz3kbm0mwXeasiO7gj9+RoNEhKTAqBoW+BoNGyWY
-         H/6ZE/OlMRaV1z0WrNINbV0VyUOt/zkBujYgRt9g=
-Received: from mail.hostfission.com (www1.hostfission.com [127.0.0.1])
-        by www1.hostfission.com (Postfix) with ESMTP id 3480A92426;
-        Sun, 26 Jul 2020 17:49:07 +1000 (AEST)
+        Sun, 26 Jul 2020 04:03:08 -0400
+Received: from localhost.localdomain (unknown [180.110.142.179])
+        (Authenticated sender: fly@kernel.page)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 107BC100007;
+        Sun, 26 Jul 2020 08:02:59 +0000 (UTC)
+From:   Pengfei Li <fly@kernel.page>
+To:     akpm@linux-foundation.org
+Cc:     bmt@zurich.ibm.com, dledford@redhat.com, willy@infradead.org,
+        vbabka@suse.cz, kirill.shutemov@linux.intel.com, jgg@ziepe.ca,
+        alex.williamson@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Pengfei Li <fly@kernel.page>
+Subject: [PATCH 2/2] mm, util: account_locked_vm() does not hold mmap_lock
+Date:   Sun, 26 Jul 2020 16:02:24 +0800
+Message-Id: <20200726080224.205470-2-fly@kernel.page>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200726080224.205470-1-fly@kernel.page>
+References: <20200726080224.205470-1-fly@kernel.page>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 26 Jul 2020 17:49:07 +1000
-From:   Geoffrey McRae <geoff@hostfission.com>
-To:     hdanton@sina.com
-Cc:     tj@kernel.org, jiangshanlai@gmail.com, linux-kernel@vger.kernel.org
-Subject: Poor windows VFIO performance, GPU stalls (bisected)
-Message-ID: <30452714b2935b530b9c2bbf2d20854a@hostfission.com>
-X-Sender: geoff@hostfission.com
-User-Agent: Roundcube Webmail/1.3.8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Since mm->locked_vm is already an atomic counter, account_locked_vm()
+does not need to hold mmap_lock.
 
-The commit 22540ca3d00d2990a4148a13b92209c3dc5422db causes a Windows KVM 
-guest running under QEMU with a VFIO passthrough GPU to randomly stall 
-when using the GPU leading to the guest assuming that the driver has 
-hung. Reverting this commit resolves the problem.
+Signed-off-by: Pengfei Li <fly@kernel.page>
+---
+ drivers/vfio/vfio_iommu_type1.c |  8 ++------
+ mm/util.c                       | 15 +++------------
+ 2 files changed, 5 insertions(+), 18 deletions(-)
 
-The host system is configured with the following kernel arguments which 
-may be related:
-   isolcpus=0-5,24-29,6-11,30-35 rcu_nocbs=0-5,24-29,6-11,30-35
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 78013be07fe7..53818fce78a6 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -376,12 +376,8 @@ static int vfio_lock_acct(struct vfio_dma *dma, long npage, bool async)
+ 	if (!mm)
+ 		return -ESRCH; /* process exited */
+ 
+-	ret = mmap_write_lock_killable(mm);
+-	if (!ret) {
+-		ret = __account_locked_vm(mm, abs(npage), npage > 0, dma->task,
+-					  dma->lock_cap);
+-		mmap_write_unlock(mm);
+-	}
++	ret = __account_locked_vm(mm, abs(npage), npage > 0,
++					dma->task, dma->lock_cap);
+ 
+ 	if (async)
+ 		mmput(mm);
+diff --git a/mm/util.c b/mm/util.c
+index 473add0dc275..320fdd537aea 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -424,8 +424,7 @@ void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
+  * @task:        task used to check RLIMIT_MEMLOCK
+  * @bypass_rlim: %true if checking RLIMIT_MEMLOCK should be skipped
+  *
+- * Assumes @task and @mm are valid (i.e. at least one reference on each), and
+- * that mmap_lock is held as writer.
++ * Assumes @task and @mm are valid (i.e. at least one reference on each).
+  *
+  * Return:
+  * * 0       on success
+@@ -437,8 +436,6 @@ int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
+ 	unsigned long locked_vm, limit;
+ 	int ret = 0;
+ 
+-	mmap_assert_write_locked(mm);
+-
+ 	locked_vm = atomic64_read(&mm->locked_vm);
+ 	if (inc) {
+ 		if (!bypass_rlim) {
+@@ -476,17 +473,11 @@ EXPORT_SYMBOL_GPL(__account_locked_vm);
+  */
+ int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc)
+ {
+-	int ret;
+-
+ 	if (pages == 0 || !mm)
+ 		return 0;
+ 
+-	mmap_write_lock(mm);
+-	ret = __account_locked_vm(mm, pages, inc, current,
+-				  capable(CAP_IPC_LOCK));
+-	mmap_write_unlock(mm);
+-
+-	return ret;
++	return __account_locked_vm(mm, pages, inc,
++					current, capable(CAP_IPC_LOCK));
+ }
+ EXPORT_SYMBOL_GPL(account_locked_vm);
+ 
+-- 
+2.26.2
 
-The system is an AMD Threadripper 2970WX on a Gigabyte x399 AORUS Gaming 
-7 board.
-It has two GPUs each being passed through to two separate KVM guests, 
-one is an AMD Radeon 7 in a Linux guest, the other is a GeForce 1080Ti 
-in a Windows guest.
-The cores used for these two guests are isolated from the host for 
-performance reasons.
-
-Any insight as to why this is occurring would be appreciated. If you 
-need any more information or would like to test patches please let me 
-know.
-
-Kind Regards,
-Geoffrey McRae
-HostFission
-
-https://hostfission.com
