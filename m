@@ -2,158 +2,392 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7586EC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 14:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964B5C433E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 14:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 475CC20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 14:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66BC42065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 14:56:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="cHvFGREX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=earth.li header.i=@earth.li header.b="E2QaGDQW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgGZOdd (ORCPT
+        id S1726663AbgGZO4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 10:33:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42678 "EHLO
+        Sun, 26 Jul 2020 10:56:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725964AbgGZOdc (ORCPT
+        with ESMTP id S1725982AbgGZO4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 10:33:32 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F21C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 07:33:32 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id g11so2717943ejr.0
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 07:33:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h6PjDTHNbJzGCFM7oR6czVYevtbFuByjvgvxELkV44g=;
-        b=cHvFGREXeIYAdMHGV9Us7B6YAzH1cpXsAofFEeZiU4bKarJ0bBTHvJIhRR5jkexoZv
-         F39ZFNAKdNBkZ6tm4PeeiU0zKnBgEZqzV9vbbZ1n/pET7fnu1cADJcXvRGk7X4OXUMuf
-         BHyoTH66YJ/j8KD4yjcjeqoyJdE1QIdELbga1xF/Go8WVWxCSHWBSKsfL3uHZjG/e4Sz
-         qQe9fnJ4P4v8A0RV99gfJDVBWiCA4vGkmc2AfHQmGtX2vKg+vy2NyabllpDcZLJbZ8kT
-         SCQZigjGxMehQ5WX5HIO+G9Kgsusa/Vk2bFi3zUphaq2R85opqe+kllXgbbserAFqLJW
-         Xpng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h6PjDTHNbJzGCFM7oR6czVYevtbFuByjvgvxELkV44g=;
-        b=YHghYMeRpB7vtaPzTbzcUrahRFVb30wZ0y7ZQcMA2Nfm+gJjBoVoLD7C4ohA/i8XuF
-         CW5P4GDinSRWOndYLw9dZRnOpJyd2H/FY5S1Tb9Ybbm9vR0hifMnWTFSu85R1X6R8d+p
-         hoVNM/vXlJZoFCnQTbYd8xEVP0D3zVMFVzh2+DP2vcgncCXQdSq/OxcXoTIJBfEcp8IZ
-         gzLN2pvK5f7e1t44wB1FN6ZKF6idWvip4QCMVR2S2m3V9HiRaXzatwOTNKIi/6c9y8yx
-         rc3mL/smLTdPBy90s5n4Uced4yDBoXSblzkPA0Wxp4by59vnoBER5cg+eKLF9XobFpOy
-         Ho/w==
-X-Gm-Message-State: AOAM532Clb7lv0RNKQsfn8rG8Y26+bUbxruT9DKYjT7oKp8GFNLeWe6F
-        GQmcQZUTh6dTn5W3ISeVtdT0JJat7ku8mOYGkv5N1w==
-X-Google-Smtp-Source: ABdhPJy1W/4bjZ9ErvmYuBxoIGryOmP7jlkH2GYRNNSWZpkWHE1CIwV6bSkC7L0BGhUkfi3frU4HwDBBPvwDO8iOwMs=
-X-Received: by 2002:a17:906:aed4:: with SMTP id me20mr8903155ejb.141.1595774010704;
- Sun, 26 Jul 2020 07:33:30 -0700 (PDT)
+        Sun, 26 Jul 2020 10:56:18 -0400
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D3B3C0619D2;
+        Sun, 26 Jul 2020 07:56:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=1VXAYqhb9ZoRAZACGTY2T4gE6nhXtRtm/AK4oLP4CSM=; b=E2QaGDQWGbH1VvcIDG1QinPCvc
+        fvWilXwiIn8xYUYo+GOCTTSBl+U0SoyYPWrbXdPgrSrXZwzkUVg3SGrkr24rfUd4yRLh/WNCfPs5F
+        3DzO3aud4TasC8FRiuMLKZA8mKfqbKul75smQGOrN7BfG6c7oq/Gij/UL++z0KfTDPJSVgU3g6nPc
+        JmqFt1xRYCCoeVKy2ShSK78K4KDwoRK42zN5uboPZdzQqd9hO2BxYSt2zr9hSn9HTs/j9RgLqVb85
+        2c5LcokWJEmd47tx9trKt4q2bo/1rC4VHhbrU7lzEYMbYm86P4wcoFYQuYTOvPMUY0WPXtl6OGga3
+        WnNXAbQw==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1jzi4R-0008F6-2G; Sun, 26 Jul 2020 15:56:11 +0100
+Date:   Sun, 26 Jul 2020 15:56:11 +0100
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Matthew Hagan <mnhagan88@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2] net: dsa: qca8k: Add 802.1q VLAN support
+Message-ID: <20200726145611.GA31479@earth.li>
+References: <20200721171624.GK23489@earth.li>
 MIME-Version: 1.0
-References: <20200520082723.96136-1-acourbot@chromium.org>
-In-Reply-To: <20200520082723.96136-1-acourbot@chromium.org>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Sun, 26 Jul 2020 11:33:19 -0300
-Message-ID: <CAAEAJfCzmEj3X2NdgaD=YSS_fV7MnZw=4o5KJOOSoMOSejv7=g@mail.gmail.com>
-Subject: Re: [PATCH 00/10] media: mtk-vcodec: venc: support for MT8183
-To:     Alexandre Courbot <acourbot@chromium.org>
-Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Rui Wang <gtk_ruiwang@mediatek.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721171624.GK23489@earth.li>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Enric
+This adds full 802.1q VLAN support to the qca8k, allowing the use of
+vlan_filtering and more complicated bridging setups than allowed by
+basic port VLAN support.
 
-Hello Alexandre,
+Tested with a number of untagged ports with separate VLANs and then a
+trunk port with all the VLANs tagged on it.
 
-Thanks for the series.
+v2:
+- Return sensible errnos on failure rather than -1 (rmk)
+- Style cleanups based on Florian's feedback
+- Silently allow VLAN 0 as device correctly treats this as no tag
 
-On Wed, 20 May 2020 at 05:27, Alexandre Courbot <acourbot@chromium.org> wrote:
->
-> This series adds support for the encoder present on MT8183. It is very similar
-> to the one in MT8173, but with different capabilities and using a new firmware
-> interface (SCP, while MT8173 talked to the VPU).
->
-> So this series starts with some preparatory work by putting the firmware
-> interface behind a small abstraction layer instead of directly talking to the
-> VPU, and by adding support for the SCP firmware. Next platform data is completed
-> with features that differ between the chips, like supported formats and bitrate,
-> before support for MT8183 is added.
->
-> Alexandre Courbot (6):
->   media: mtk-vcodec: venc: handle firmware version field
->   media: mtk-vcodec: venc: specify bitrate range per-chip
->   media: mtk-vcodec: venc: specify supported formats per-chip
->   media: mtk-vcodec: venc: remove redundant code
->   media: dt-bindings: mtk-vcodec: specify SCP node
->   media: dt-bindings: mtk-vcodec: document mediatek,mt8183-vcodec-enc
->
-> Yunfei Dong (4):
->   media: mtk-vcodec: abstract firmware interface
->   media: mtk-vcodec: add SCP firmware ops
->   media: mtk-vcodec: venc: support SCP firmware
->   media: mtk-vcodec: add support for MT8183 encoder
->
->  .../bindings/media/mediatek-vcodec.txt        |   9 +-
+Signed-off-by: Jonathan McDowell <noodles@earth.li>
+---
+ drivers/net/dsa/qca8k.c | 191 ++++++++++++++++++++++++++++++++++++++--
+ drivers/net/dsa/qca8k.h |  28 ++++++
+ 2 files changed, 214 insertions(+), 5 deletions(-)
 
-Would it be possible to add the support in
-arch/arm64/boot/dts/mediatek/mt8183.dtsi ?
+diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+index a5566de82853..1cc61bc8929f 100644
+--- a/drivers/net/dsa/qca8k.c
++++ b/drivers/net/dsa/qca8k.c
+@@ -408,6 +408,111 @@ qca8k_fdb_flush(struct qca8k_priv *priv)
+ 	mutex_unlock(&priv->reg_mutex);
+ }
+ 
++static int
++qca8k_vlan_access(struct qca8k_priv *priv, enum qca8k_vlan_cmd cmd, u16 vid)
++{
++	u32 reg;
++
++	/* Set the command and VLAN index */
++	reg = QCA8K_VTU_FUNC1_BUSY;
++	reg |= cmd;
++	reg |= vid << QCA8K_VTU_FUNC1_VID_S;
++
++	/* Write the function register triggering the table access */
++	qca8k_write(priv, QCA8K_REG_VTU_FUNC1, reg);
++
++	/* wait for completion */
++	if (qca8k_busy_wait(priv, QCA8K_REG_VTU_FUNC1, QCA8K_VTU_FUNC1_BUSY))
++		return -ETIMEDOUT;
++
++	/* Check for table full violation when adding an entry */
++	if (cmd == QCA8K_VLAN_LOAD) {
++		reg = qca8k_read(priv, QCA8K_REG_VTU_FUNC1);
++		if (reg & QCA8K_VTU_FUNC1_FULL)
++			return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static int
++qca8k_vlan_add(struct qca8k_priv *priv, u8 port, u16 vid, bool tagged)
++{
++	u32 reg;
++	int ret;
++
++	/* We do the right thing with VLAN 0 and treat it as untagged */
++	if (vid == 0)
++		return 0;
++
++	mutex_lock(&priv->reg_mutex);
++	ret = qca8k_vlan_access(priv, QCA8K_VLAN_READ, vid);
++	if (ret < 0)
++		goto out;
++
++	reg = qca8k_read(priv, QCA8K_REG_VTU_FUNC0);
++	reg |= QCA8K_VTU_FUNC0_VALID | QCA8K_VTU_FUNC0_IVL_EN;
++	reg &= ~(3 << QCA8K_VTU_FUNC0_EG_MODE_S(port));
++	if (tagged)
++		reg |= QCA8K_VTU_FUNC0_EG_MODE_TAG <<
++				QCA8K_VTU_FUNC0_EG_MODE_S(port);
++	else
++		reg |= QCA8K_VTU_FUNC0_EG_MODE_UNTAG <<
++				QCA8K_VTU_FUNC0_EG_MODE_S(port);
++
++	qca8k_write(priv, QCA8K_REG_VTU_FUNC0, reg);
++	ret = qca8k_vlan_access(priv, QCA8K_VLAN_LOAD, vid);
++
++out:
++	mutex_unlock(&priv->reg_mutex);
++
++	return ret;
++}
++
++static int
++qca8k_vlan_del(struct qca8k_priv *priv, u8 port, u16 vid)
++{
++	u32 reg;
++	u32 mask;
++	int ret;
++	int i;
++	bool del;
++
++	mutex_lock(&priv->reg_mutex);
++	ret = qca8k_vlan_access(priv, QCA8K_VLAN_READ, vid);
++	if (ret < 0)
++		goto out;
++
++	reg = qca8k_read(priv, QCA8K_REG_VTU_FUNC0);
++	reg &= ~(3 << QCA8K_VTU_FUNC0_EG_MODE_S(port));
++	reg |= QCA8K_VTU_FUNC0_EG_MODE_NOT <<
++			QCA8K_VTU_FUNC0_EG_MODE_S(port);
++
++	/* Check if we're the last member to be removed */
++	del = true;
++	for (i = 0; i < QCA8K_NUM_PORTS; i++) {
++		mask = QCA8K_VTU_FUNC0_EG_MODE_NOT;
++		mask <<= QCA8K_VTU_FUNC0_EG_MODE_S(i);
++
++		if ((reg & mask) != mask) {
++			del = false;
++			break;
++		}
++	}
++
++	if (del) {
++		ret = qca8k_vlan_access(priv, QCA8K_VLAN_PURGE, vid);
++	} else {
++		qca8k_write(priv, QCA8K_REG_VTU_FUNC0, reg);
++		ret = qca8k_vlan_access(priv, QCA8K_VLAN_LOAD, vid);
++	}
++
++out:
++	mutex_unlock(&priv->reg_mutex);
++
++	return ret;
++}
++
+ static void
+ qca8k_mib_init(struct qca8k_priv *priv)
+ {
+@@ -663,10 +768,11 @@ qca8k_setup(struct dsa_switch *ds)
+ 			 * default egress vid
+ 			 */
+ 			qca8k_rmw(priv, QCA8K_EGRESS_VLAN(i),
+-				  0xffff << shift, 1 << shift);
++				  0xffff << shift,
++				  QCA8K_PORT_VID_DEF << shift);
+ 			qca8k_write(priv, QCA8K_REG_PORT_VLAN_CTRL0(i),
+-				    QCA8K_PORT_VLAN_CVID(1) |
+-				    QCA8K_PORT_VLAN_SVID(1));
++				    QCA8K_PORT_VLAN_CVID(QCA8K_PORT_VID_DEF) |
++				    QCA8K_PORT_VLAN_SVID(QCA8K_PORT_VID_DEF));
+ 		}
+ 	}
+ 
+@@ -1133,7 +1239,7 @@ qca8k_port_fdb_insert(struct qca8k_priv *priv, const u8 *addr,
+ {
+ 	/* Set the vid to the port vlan id if no vid is set */
+ 	if (!vid)
+-		vid = 1;
++		vid = QCA8K_PORT_VID_DEF;
+ 
+ 	return qca8k_fdb_add(priv, addr, port_mask, vid,
+ 			     QCA8K_ATU_STATUS_STATIC);
+@@ -1157,7 +1263,7 @@ qca8k_port_fdb_del(struct dsa_switch *ds, int port,
+ 	u16 port_mask = BIT(port);
+ 
+ 	if (!vid)
+-		vid = 1;
++		vid = QCA8K_PORT_VID_DEF;
+ 
+ 	return qca8k_fdb_del(priv, addr, port_mask, vid);
+ }
+@@ -1186,6 +1292,76 @@ qca8k_port_fdb_dump(struct dsa_switch *ds, int port,
+ 	return 0;
+ }
+ 
++static int
++qca8k_port_vlan_filtering(struct dsa_switch *ds, int port, bool vlan_filtering)
++{
++	struct qca8k_priv *priv = ds->priv;
++
++	if (vlan_filtering) {
++		qca8k_rmw(priv, QCA8K_PORT_LOOKUP_CTRL(port),
++			  QCA8K_PORT_LOOKUP_VLAN_MODE,
++			  QCA8K_PORT_LOOKUP_VLAN_MODE_SECURE);
++	} else {
++		qca8k_rmw(priv, QCA8K_PORT_LOOKUP_CTRL(port),
++			  QCA8K_PORT_LOOKUP_VLAN_MODE,
++			  QCA8K_PORT_LOOKUP_VLAN_MODE_NONE);
++	}
++
++	return 0;
++}
++
++static int
++qca8k_port_vlan_prepare(struct dsa_switch *ds, int port,
++			const struct switchdev_obj_port_vlan *vlan)
++{
++	return 0;
++}
++
++static void
++qca8k_port_vlan_add(struct dsa_switch *ds, int port,
++		    const struct switchdev_obj_port_vlan *vlan)
++{
++	struct qca8k_priv *priv = ds->priv;
++	bool untagged = vlan->flags & BRIDGE_VLAN_INFO_UNTAGGED;
++	bool pvid = vlan->flags & BRIDGE_VLAN_INFO_PVID;
++	u16 vid;
++	int ret = 0;
++
++	for (vid = vlan->vid_begin; vid <= vlan->vid_end && !ret; ++vid)
++		ret = qca8k_vlan_add(priv, port, vid, !untagged);
++
++	if (ret)
++		dev_err(priv->dev, "Failed to add VLAN to port %d (%d)", port, ret);
++
++	if (pvid) {
++		int shift = 16 * (port % 2);
++
++		qca8k_rmw(priv, QCA8K_EGRESS_VLAN(port),
++			  0xffff << shift,
++			  vlan->vid_end << shift);
++		qca8k_write(priv, QCA8K_REG_PORT_VLAN_CTRL0(port),
++			    QCA8K_PORT_VLAN_CVID(vlan->vid_end) |
++			    QCA8K_PORT_VLAN_SVID(vlan->vid_end));
++	}
++}
++
++static int
++qca8k_port_vlan_del(struct dsa_switch *ds, int port,
++		    const struct switchdev_obj_port_vlan *vlan)
++{
++	struct qca8k_priv *priv = ds->priv;
++	u16 vid;
++	int ret = 0;
++
++	for (vid = vlan->vid_begin; vid <= vlan->vid_end && !ret; ++vid)
++		ret = qca8k_vlan_del(priv, port, vid);
++
++	if (ret)
++		dev_err(priv->dev, "Failed to delete VLAN from port %d (%d)", port, ret);
++
++	return ret;
++}
++
+ static enum dsa_tag_protocol
+ qca8k_get_tag_protocol(struct dsa_switch *ds, int port,
+ 		       enum dsa_tag_protocol mp)
+@@ -1211,6 +1387,10 @@ static const struct dsa_switch_ops qca8k_switch_ops = {
+ 	.port_fdb_add		= qca8k_port_fdb_add,
+ 	.port_fdb_del		= qca8k_port_fdb_del,
+ 	.port_fdb_dump		= qca8k_port_fdb_dump,
++	.port_vlan_filtering	= qca8k_port_vlan_filtering,
++	.port_vlan_prepare	= qca8k_port_vlan_prepare,
++	.port_vlan_add		= qca8k_port_vlan_add,
++	.port_vlan_del		= qca8k_port_vlan_del,
+ 	.phylink_validate	= qca8k_phylink_validate,
+ 	.phylink_mac_link_state	= qca8k_phylink_mac_link_state,
+ 	.phylink_mac_config	= qca8k_phylink_mac_config,
+@@ -1261,6 +1441,7 @@ qca8k_sw_probe(struct mdio_device *mdiodev)
+ 
+ 	priv->ds->dev = &mdiodev->dev;
+ 	priv->ds->num_ports = QCA8K_NUM_PORTS;
++	priv->ds->configure_vlan_while_not_filtering = true;
+ 	priv->ds->priv = priv;
+ 	priv->ops = qca8k_switch_ops;
+ 	priv->ds->ops = &priv->ops;
+diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
+index 31439396401c..4e96275cbc3e 100644
+--- a/drivers/net/dsa/qca8k.h
++++ b/drivers/net/dsa/qca8k.h
+@@ -22,6 +22,8 @@
+ 
+ #define QCA8K_CPU_PORT					0
+ 
++#define QCA8K_PORT_VID_DEF				1
++
+ /* Global control registers */
+ #define QCA8K_REG_MASK_CTRL				0x000
+ #define   QCA8K_MASK_CTRL_ID_M				0xff
+@@ -126,6 +128,18 @@
+ #define   QCA8K_ATU_FUNC_FULL				BIT(12)
+ #define   QCA8K_ATU_FUNC_PORT_M				0xf
+ #define   QCA8K_ATU_FUNC_PORT_S				8
++#define QCA8K_REG_VTU_FUNC0				0x610
++#define   QCA8K_VTU_FUNC0_VALID				BIT(20)
++#define   QCA8K_VTU_FUNC0_IVL_EN			BIT(19)
++#define   QCA8K_VTU_FUNC0_EG_MODE_S(_i)			(4 + (_i) * 2)
++#define   QCA8K_VTU_FUNC0_EG_MODE_UNMOD			0
++#define   QCA8K_VTU_FUNC0_EG_MODE_UNTAG			1
++#define   QCA8K_VTU_FUNC0_EG_MODE_TAG			2
++#define   QCA8K_VTU_FUNC0_EG_MODE_NOT			3
++#define QCA8K_REG_VTU_FUNC1				0x614
++#define   QCA8K_VTU_FUNC1_BUSY				BIT(31)
++#define   QCA8K_VTU_FUNC1_VID_S				16
++#define   QCA8K_VTU_FUNC1_FULL				BIT(4)
+ #define QCA8K_REG_GLOBAL_FW_CTRL0			0x620
+ #define   QCA8K_GLOBAL_FW_CTRL0_CPU_PORT_EN		BIT(10)
+ #define QCA8K_REG_GLOBAL_FW_CTRL1			0x624
+@@ -135,6 +149,11 @@
+ #define   QCA8K_GLOBAL_FW_CTRL1_UC_DP_S			0
+ #define QCA8K_PORT_LOOKUP_CTRL(_i)			(0x660 + (_i) * 0xc)
+ #define   QCA8K_PORT_LOOKUP_MEMBER			GENMASK(6, 0)
++#define   QCA8K_PORT_LOOKUP_VLAN_MODE			GENMASK(9, 8)
++#define   QCA8K_PORT_LOOKUP_VLAN_MODE_NONE		(0 << 8)
++#define   QCA8K_PORT_LOOKUP_VLAN_MODE_FALLBACK		(1 << 8)
++#define   QCA8K_PORT_LOOKUP_VLAN_MODE_CHECK		(2 << 8)
++#define   QCA8K_PORT_LOOKUP_VLAN_MODE_SECURE		(3 << 8)
+ #define   QCA8K_PORT_LOOKUP_STATE_MASK			GENMASK(18, 16)
+ #define   QCA8K_PORT_LOOKUP_STATE_DISABLED		(0 << 16)
+ #define   QCA8K_PORT_LOOKUP_STATE_BLOCKING		(1 << 16)
+@@ -178,6 +197,15 @@ enum qca8k_fdb_cmd {
+ 	QCA8K_FDB_SEARCH = 7,
+ };
+ 
++enum qca8k_vlan_cmd {
++	QCA8K_VLAN_FLUSH = 1,
++	QCA8K_VLAN_LOAD = 2,
++	QCA8K_VLAN_PURGE = 3,
++	QCA8K_VLAN_REMOVE_PORT = 4,
++	QCA8K_VLAN_NEXT = 5,
++	QCA8K_VLAN_READ = 6,
++};
++
+ struct ar8xxx_port_status {
+ 	int enabled;
+ };
+-- 
+2.20.1
 
-Given the driver is stateful it should be possible
-for anyone to test it with standard userspace
-such as GStreamer.
-
-Is it possible for the firmware to be pushed to linux-firmware ?
-
-Thanks,
-Ezequiel
-
->  drivers/media/platform/Kconfig                |   2 +
->  drivers/media/platform/mtk-vcodec/Makefile    |   4 +-
->  .../platform/mtk-vcodec/mtk_vcodec_dec_drv.c  |  53 ++--
->  .../platform/mtk-vcodec/mtk_vcodec_dec_pm.c   |   1 -
->  .../platform/mtk-vcodec/mtk_vcodec_drv.h      |  38 ++-
->  .../platform/mtk-vcodec/mtk_vcodec_enc.c      | 141 ++++-------
->  .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  | 149 ++++++++----
->  .../platform/mtk-vcodec/mtk_vcodec_enc_pm.c   |   2 -
->  .../media/platform/mtk-vcodec/mtk_vcodec_fw.c | 228 ++++++++++++++++++
->  .../media/platform/mtk-vcodec/mtk_vcodec_fw.h |  38 +++
->  .../platform/mtk-vcodec/mtk_vcodec_util.c     |   1 -
->  .../platform/mtk-vcodec/vdec/vdec_h264_if.c   |   1 -
->  .../platform/mtk-vcodec/vdec/vdec_vp8_if.c    |   1 -
->  .../platform/mtk-vcodec/vdec/vdec_vp9_if.c    |   1 -
->  .../media/platform/mtk-vcodec/vdec_drv_base.h |   2 -
->  .../media/platform/mtk-vcodec/vdec_drv_if.c   |   1 -
->  .../media/platform/mtk-vcodec/vdec_vpu_if.c   |  12 +-
->  .../media/platform/mtk-vcodec/vdec_vpu_if.h   |  11 +-
->  .../platform/mtk-vcodec/venc/venc_h264_if.c   |  80 ++++--
->  .../platform/mtk-vcodec/venc/venc_vp8_if.c    |  11 +-
->  .../media/platform/mtk-vcodec/venc_drv_if.c   |   1 -
->  .../media/platform/mtk-vcodec/venc_drv_if.h   |   6 +
->  .../media/platform/mtk-vcodec/venc_ipi_msg.h  |  24 +-
->  .../media/platform/mtk-vcodec/venc_vpu_if.c   | 141 ++++++++---
->  .../media/platform/mtk-vcodec/venc_vpu_if.h   |   8 +-
->  26 files changed, 711 insertions(+), 255 deletions(-)
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
->  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
->
-> --
-> 2.26.2.761.g0e0b3e54be-goog
->
