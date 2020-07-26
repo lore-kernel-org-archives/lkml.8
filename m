@@ -2,91 +2,90 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C71CBC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8414C433E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A14E7206F6
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:25:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gVCxvhIk"
+	by mail.kernel.org (Postfix) with ESMTP id A069920578
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgGZRZm (ORCPT
+        id S1727055AbgGZRZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 13:25:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgGZRZm (ORCPT
+        Sun, 26 Jul 2020 13:25:53 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:58994 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbgGZRZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 13:25:42 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D487BC0619D2;
-        Sun, 26 Jul 2020 10:25:41 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id a21so14723718ejj.10;
-        Sun, 26 Jul 2020 10:25:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lJ0vbTF+4g0+R92swO8etJBBne94tfH4VmsrcgeyQ58=;
-        b=gVCxvhIkJjiwQeygXoc4epeIIgc2pTHisZU5nWDKMc8n3pzt1MqlUwSKYhoq2V9FAl
-         kuMKHr5sycwFceCiLic8DEqGcDWxgFW9PCsDnCrZSmu8pthYHrhMNYBeQgzRqJo1tSkv
-         v+ecKVqgFi3TPP8XQiwc9XbJ4pfpmS4l1yRsU7FpLNJT6FN1xTWjF1KDFMm+9+kqQ2hV
-         CH9YoHEUH4DTUQFJ9d9QbTr6KqJ5pqhakxQGviHOA9xeG0q9/ZUf8PZWdSLAZv/26dJO
-         n2ptm6ZEKQUC4b+D1je0ImD2554crr79bDQmineeEF56awk4HQULFnPM3KiOIey/ZeIo
-         1ZnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lJ0vbTF+4g0+R92swO8etJBBne94tfH4VmsrcgeyQ58=;
-        b=jVmuIz/Sbbrsj5Z52gQ23pnPBNW0fa6I7eNAw9JS+wBkN56zF714iGKmpsqE8c77qE
-         AHV7WA2JvnztYf1KIRvZNuCUbyKRmpH5RmS+5AnmFUBdqwtpTpC0bwMGqQLHh8t0+hRu
-         BTBdx2B11c7RmRpPrJIAwHzZqfjxf/uHXAMwbvHiO1dzaRe5Erp+xFrmLu6ZHY+wMzhw
-         jBgPi6nKRCiwdr/g/2gQLdLiDnCYmdJO2NXM3DCE6OVEPH3dfir9zvn+VVrUbV9unAbV
-         H1iQEEfskuJlwndLqzHht+2WWmZkUvEPPskUgE7TuW25vz3o0tGmKAm75CYumhUpXMqG
-         v8YA==
-X-Gm-Message-State: AOAM531ZhpcpNMzHoDK+FWGaTthuQZnGReUwNQAcXTau5Q51lBZvuNqM
-        kXoUWecbA2l9JTN8NyXgQ9OgBC3+t9IjmPJID54=
-X-Google-Smtp-Source: ABdhPJxowpPcXLcFxLDm35VpJuOfCSneOz5Et38MjSgxx6/pFEJofelS0ph5MC6O5zP8M7nfjwYi1I5q0m6bYvO1p2U=
-X-Received: by 2002:a17:906:50a:: with SMTP id j10mr17387368eja.113.1595784340603;
- Sun, 26 Jul 2020 10:25:40 -0700 (PDT)
+        Sun, 26 Jul 2020 13:25:53 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id D2D0220023;
+        Sun, 26 Jul 2020 19:25:50 +0200 (CEST)
+Date:   Sun, 26 Jul 2020 19:25:49 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     daniel@ffwll.ch, khilman@baylibre.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH 1/2] drm/fourcc: fix Amlogic Video Framebuffer
+ Compression macro
+Message-ID: <20200726172549.GH3275923@ravnborg.org>
+References: <20200723090551.27529-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-References: <20200724213659.273599-1-martin.botka1@gmail.com> <20200724213659.273599-5-martin.botka1@gmail.com>
-In-Reply-To: <20200724213659.273599-5-martin.botka1@gmail.com>
-From:   Martin Botka <martin.botka1@gmail.com>
-Date:   Sun, 26 Jul 2020 19:25:03 +0200
-Message-ID: <CADQ2G_GY+YH3zFUmqkZZ1sdXPSL_XB5nCgxnwD1zdfNVsJtjfA@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/6] leds: leds-qti-tri-led: Add LED driver for QTI
- TRI_LED module
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723090551.27529-1-narmstrong@baylibre.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=IpJZQVW2AAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
+        a=lB4rwjMMMp82C4b3nNAA:9 a=CjuIK1q_8ugA:10 a=IawgGOuG5U0WyFbmm1f5:22
+        a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello.
+Hi Neil.
 
-This driver has the breath feature of the driver broken as I sent a
-slightly modified version of it from when I was testing it.
-The proper version will come when i will be sending out V2 which will
-be hopefully soon as I'm little busy.
+On Thu, Jul 23, 2020 at 11:05:50AM +0200, Neil Armstrong wrote:
+> Fix the Amlogic Video Framebuffer Compression modifier macro to
+> correctly add the layout options, a pair of parenthesis was missing.
+> 
+> Fixes: d6528ec88309 ("drm/fourcc: Add modifier definitions for describing Amlogic Video Framebuffer Compression")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Looks correct just looking at the patch below.
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-Best regards
-Martin
+I assume you will apply the patch.
+
+	Sam
+
+> ---
+>  include/uapi/drm/drm_fourcc.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+> index 4bee7de5f306..82f327801267 100644
+> --- a/include/uapi/drm/drm_fourcc.h
+> +++ b/include/uapi/drm/drm_fourcc.h
+> @@ -1004,7 +1004,7 @@ drm_fourcc_canonicalize_nvidia_format_mod(__u64 modifier)
+>  #define DRM_FORMAT_MOD_AMLOGIC_FBC(__layout, __options) \
+>  	fourcc_mod_code(AMLOGIC, \
+>  			((__layout) & __fourcc_mod_amlogic_layout_mask) | \
+> -			((__options) & __fourcc_mod_amlogic_options_mask \
+> +			(((__options) & __fourcc_mod_amlogic_options_mask) \
+>  			 << __fourcc_mod_amlogic_options_shift))
+>  
+>  /* Amlogic FBC Layouts */
+> -- 
+> 2.22.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
