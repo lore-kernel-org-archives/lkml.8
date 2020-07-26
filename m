@@ -2,305 +2,783 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E73C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAFEC433E8
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C170220663
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22BE120663
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:29:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595762966;
+	bh=FcISULcENrwx81QjXOIpqrFYOUXkcvOucAljXmeWIS0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fTkNIkZhvvzEroM1807juakyIq9bfZtx6qeX8JHV7kbVR9V8XRxjVfYmXHdFxSNKd
+	 RBXWTyXnU2IpWylvjLpOWeOXcF4YGsT50evACXMJSRarmSVAltjJZlJuJKzo+ZKYRR
+	 Bca33idC23Ejo7c2Ql/62zNJqX7d36LBgBBiENqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgGZLYh (ORCPT
+        id S1726895AbgGZL3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 07:24:37 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58882 "EHLO inva021.nxp.com"
+        Sun, 26 Jul 2020 07:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgGZLYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 07:24:37 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3470A20047A;
-        Sun, 26 Jul 2020 13:24:34 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8EE97200467;
-        Sun, 26 Jul 2020 13:24:29 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AC320402D8;
-        Sun, 26 Jul 2020 13:24:23 +0200 (CEST)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: fsl-asoc-card: Remove fsl_asoc_card_set_bias_level function
-Date:   Sun, 26 Jul 2020 19:20:17 +0800
-Message-Id: <1595762417-2190-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725794AbgGZL3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 07:29:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 925DF2065C;
+        Sun, 26 Jul 2020 11:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595762963;
+        bh=FcISULcENrwx81QjXOIpqrFYOUXkcvOucAljXmeWIS0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X6KrjTtfF97R1vgiPP4OiEPSOm3pdv31vtTZ4ZAAjhUVaN6E1x28gYob73/CuL5HA
+         lEKf31CFiDDqmP/DwNe6J8+f2DYdIUrKeV+DR2VWJn4CUrBvRf8AemBPkwwOxw4UTe
+         lGPGXcx/2WFoxRiD9jKW298Yn42alfHdz9oY2+BQ=
+Date:   Sun, 26 Jul 2020 13:29:20 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     martin.botka1@gmail.com, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        zhengbin <zhengbin13@huawei.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Xiaozhe Shi <xiaozhes@codeaurora.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH 9/9] soc/qcom: Add REVID driver
+Message-ID: <20200726112920.GA1286220@kroah.com>
+References: <20200726111215.22361-1-konradybcio@gmail.com>
+ <20200726111215.22361-10-konradybcio@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726111215.22361-10-konradybcio@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With this case:
-aplay -Dhw:x 16khz.wav 24khz.wav
-There is sound distortion for 24khz.wav. The reason is that setting
-PLL of WM8962 with set_bias_level function, the bias level is not
-changed when 24khz.wav is played, then the PLL won't be reset, the
-clock is not correct, so distortion happens.
+On Sun, Jul 26, 2020 at 01:12:06PM +0200, Konrad Dybcio wrote:
+> From: Xiaozhe Shi <xiaozhes@codeaurora.org>
+> 
+> Add the REVID device driver. The REVID driver will print out the PMIC
+> revision at probe time.
 
-The resolution of this issue is to remove fsl_asoc_card_set_bias_level.
-Move PLL configuration to hw_params and hw_free.
+Why do we need this noise in the kernel log?
 
-After removing fsl_asoc_card_set_bias_level, also test WM8960 case,
-it can work.
+> --- /dev/null
+> +++ b/drivers/soc/qcom/qpnp-revid.c
+> @@ -0,0 +1,288 @@
+> +/* Copyright (c) 2013-2019, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
 
-Fixes: 708b4351f08c ("ASoC: fsl: Add Freescale Generic ASoC Sound Card with ASRC support")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl-asoc-card.c | 149 +++++++++++++++-------------------
- 1 file changed, 66 insertions(+), 83 deletions(-)
+You can drop the GPL boilerplate text and add a proper SPDX line at the
+top.
 
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 4848ba61d083..0517dbb3e908 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -73,6 +73,7 @@ struct cpu_priv {
-  * @codec_priv: CODEC private data
-  * @cpu_priv: CPU private data
-  * @card: ASoC card structure
-+ * @is_stream_in_use: flags for release resource in hw_free
-  * @sample_rate: Current sample rate
-  * @sample_format: Current sample format
-  * @asrc_rate: ASRC sample rate used by Back-Ends
-@@ -89,6 +90,7 @@ struct fsl_asoc_card_priv {
- 	struct codec_priv codec_priv;
- 	struct cpu_priv cpu_priv;
- 	struct snd_soc_card card;
-+	bool is_stream_in_use[2];
- 	u32 sample_rate;
- 	snd_pcm_format_t sample_format;
- 	u32 asrc_rate;
-@@ -151,21 +153,17 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(rtd->card);
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
-+	struct codec_priv *codec_priv = &priv->codec_priv;
- 	struct cpu_priv *cpu_priv = &priv->cpu_priv;
- 	struct device *dev = rtd->card->dev;
-+	unsigned int pll_out;
- 	int ret;
- 
- 	priv->sample_rate = params_rate(params);
- 	priv->sample_format = params_format(params);
-+	priv->is_stream_in_use[tx] = true;
- 
--	/*
--	 * If codec-dai is DAI Master and all configurations are already in the
--	 * set_bias_level(), bypass the remaining settings in hw_params().
--	 * Note: (dai_fmt & CBM_CFM) includes CBM_CFM and CBM_CFS.
--	 */
--	if ((priv->card.set_bias_level &&
--	     priv->dai_fmt & SND_SOC_DAIFMT_CBM_CFM) ||
--	    fsl_asoc_card_is_ac97(priv))
-+	if (fsl_asoc_card_is_ac97(priv))
- 		return 0;
- 
- 	/* Specific configurations of DAIs starts from here */
-@@ -185,12 +183,72 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
- 			return ret;
- 		}
- 	}
-+	/* Specific configuration for PLL */
-+	if (codec_priv->pll_id && codec_priv->fll_id) {
-+		if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
-+			pll_out = priv->sample_rate * 384;
-+		else
-+			pll_out = priv->sample_rate * 256;
-+
-+		ret = snd_soc_dai_set_pll(asoc_rtd_to_codec(rtd, 0),
-+					  codec_priv->pll_id,
-+					  codec_priv->mclk_id,
-+					  codec_priv->mclk_freq, pll_out);
-+		if (ret) {
-+			dev_err(dev, "failed to start FLL: %d\n", ret);
-+			return ret;
-+		}
-+
-+		ret = snd_soc_dai_set_sysclk(asoc_rtd_to_codec(rtd, 0),
-+					     codec_priv->fll_id,
-+					     pll_out, SND_SOC_CLOCK_IN);
-+
-+		if (ret && ret != -ENOTSUPP) {
-+			dev_err(dev, "failed to set SYSCLK: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int fsl_asoc_card_hw_free(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(rtd->card);
-+	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
-+	struct codec_priv *codec_priv = &priv->codec_priv;
-+	struct device *dev = rtd->card->dev;
-+	int ret;
-+
-+	priv->is_stream_in_use[tx] = false;
-+
-+	if (!priv->is_stream_in_use[!tx] && codec_priv->pll_id &&
-+	    codec_priv->fll_id) {
-+		/* Force freq to be 0 to avoid error message in codec */
-+		ret = snd_soc_dai_set_sysclk(asoc_rtd_to_codec(rtd, 0),
-+					     codec_priv->mclk_id,
-+					     0,
-+					     SND_SOC_CLOCK_IN);
-+		if (ret) {
-+			dev_err(dev, "failed to switch away from FLL: %d\n", ret);
-+			return ret;
-+		}
-+
-+		ret = snd_soc_dai_set_pll(asoc_rtd_to_codec(rtd, 0),
-+					  codec_priv->pll_id, 0, 0, 0);
-+		if (ret && ret != -ENOTSUPP) {
-+			dev_err(dev, "failed to stop FLL: %d\n", ret);
-+			return ret;
-+		}
-+	}
- 
- 	return 0;
- }
- 
- static const struct snd_soc_ops fsl_asoc_card_ops = {
- 	.hw_params = fsl_asoc_card_hw_params,
-+	.hw_free = fsl_asoc_card_hw_free,
- };
- 
- static int be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
-@@ -254,75 +312,6 @@ static struct snd_soc_dai_link fsl_asoc_card_dai[] = {
- 	},
- };
- 
--static int fsl_asoc_card_set_bias_level(struct snd_soc_card *card,
--					struct snd_soc_dapm_context *dapm,
--					enum snd_soc_bias_level level)
--{
--	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(card);
--	struct snd_soc_pcm_runtime *rtd;
--	struct snd_soc_dai *codec_dai;
--	struct codec_priv *codec_priv = &priv->codec_priv;
--	struct device *dev = card->dev;
--	unsigned int pll_out;
--	int ret;
--
--	rtd = snd_soc_get_pcm_runtime(card, &card->dai_link[0]);
--	codec_dai = asoc_rtd_to_codec(rtd, 0);
--	if (dapm->dev != codec_dai->dev)
--		return 0;
--
--	switch (level) {
--	case SND_SOC_BIAS_PREPARE:
--		if (dapm->bias_level != SND_SOC_BIAS_STANDBY)
--			break;
--
--		if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
--			pll_out = priv->sample_rate * 384;
--		else
--			pll_out = priv->sample_rate * 256;
--
--		ret = snd_soc_dai_set_pll(codec_dai, codec_priv->pll_id,
--					  codec_priv->mclk_id,
--					  codec_priv->mclk_freq, pll_out);
--		if (ret) {
--			dev_err(dev, "failed to start FLL: %d\n", ret);
--			return ret;
--		}
--
--		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->fll_id,
--					     pll_out, SND_SOC_CLOCK_IN);
--		if (ret && ret != -ENOTSUPP) {
--			dev_err(dev, "failed to set SYSCLK: %d\n", ret);
--			return ret;
--		}
--		break;
--
--	case SND_SOC_BIAS_STANDBY:
--		if (dapm->bias_level != SND_SOC_BIAS_PREPARE)
--			break;
--
--		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->mclk_id,
--					     codec_priv->mclk_freq,
--					     SND_SOC_CLOCK_IN);
--		if (ret && ret != -ENOTSUPP) {
--			dev_err(dev, "failed to switch away from FLL: %d\n", ret);
--			return ret;
--		}
--
--		ret = snd_soc_dai_set_pll(codec_dai, codec_priv->pll_id, 0, 0, 0);
--		if (ret) {
--			dev_err(dev, "failed to stop FLL: %d\n", ret);
--			return ret;
--		}
--		break;
--
--	default:
--		break;
--	}
--
--	return 0;
--}
--
- static int fsl_asoc_card_audmux_init(struct device_node *np,
- 				     struct fsl_asoc_card_priv *priv)
- {
-@@ -611,7 +600,6 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 	/* Diversify the card configurations */
- 	if (of_device_is_compatible(np, "fsl,imx-audio-cs42888")) {
- 		codec_dai_name = "cs42888";
--		priv->card.set_bias_level = NULL;
- 		priv->cpu_priv.sysclk_freq[TX] = priv->codec_priv.mclk_freq;
- 		priv->cpu_priv.sysclk_freq[RX] = priv->codec_priv.mclk_freq;
- 		priv->cpu_priv.sysclk_dir[TX] = SND_SOC_CLOCK_OUT;
-@@ -628,26 +616,22 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8962")) {
- 		codec_dai_name = "wm8962";
--		priv->card.set_bias_level = fsl_asoc_card_set_bias_level;
- 		priv->codec_priv.mclk_id = WM8962_SYSCLK_MCLK;
- 		priv->codec_priv.fll_id = WM8962_SYSCLK_FLL;
- 		priv->codec_priv.pll_id = WM8962_FLL;
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8960")) {
- 		codec_dai_name = "wm8960-hifi";
--		priv->card.set_bias_level = fsl_asoc_card_set_bias_level;
- 		priv->codec_priv.fll_id = WM8960_SYSCLK_AUTO;
- 		priv->codec_priv.pll_id = WM8960_SYSCLK_AUTO;
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-ac97")) {
- 		codec_dai_name = "ac97-hifi";
--		priv->card.set_bias_level = NULL;
- 		priv->dai_fmt = SND_SOC_DAIFMT_AC97;
- 		priv->card.dapm_routes = audio_map_ac97;
- 		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_ac97);
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-mqs")) {
- 		codec_dai_name = "fsl-mqs-dai";
--		priv->card.set_bias_level = NULL;
- 		priv->dai_fmt = SND_SOC_DAIFMT_LEFT_J |
- 				SND_SOC_DAIFMT_CBS_CFS |
- 				SND_SOC_DAIFMT_NB_NF;
-@@ -657,7 +641,6 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_tx);
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8524")) {
- 		codec_dai_name = "wm8524-hifi";
--		priv->card.set_bias_level = NULL;
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBS_CFS;
- 		priv->dai_link[1].dpcm_capture = 0;
- 		priv->dai_link[2].dpcm_capture = 0;
--- 
-2.27.0
+Didn't checkpatch ask for that?
 
+> +
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/spmi.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/err.h>
+> +#include <linux/qpnp/qpnp-revid.h>
+> +#include <linux/of.h>
+> +
+> +#define REVID_REVISION1	0x0
+> +#define REVID_REVISION2	0x1
+> +#define REVID_REVISION3	0x2
+> +#define REVID_REVISION4	0x3
+> +#define REVID_TYPE	0x4
+> +#define REVID_SUBTYPE	0x5
+> +#define REVID_STATUS1	0x8
+> +#define REVID_SPARE_0	0x60
+> +#define REVID_TP_REV	0xf1
+> +#define REVID_FAB_ID	0xf2
+> +
+> +#define QPNP_REVID_DEV_NAME "qcom,qpnp-revid"
+> +
+> +static const char *const pmic_names[] = {
+> +	[0] =	"Unknown PMIC",
+> +	[PM8941_SUBTYPE] = "PM8941",
+> +	[PM8841_SUBTYPE] = "PM8841",
+> +	[PM8019_SUBTYPE] = "PM8019",
+> +	[PM8226_SUBTYPE] = "PM8226",
+> +	[PM8110_SUBTYPE] = "PM8110",
+> +	[PMA8084_SUBTYPE] = "PMA8084",
+> +	[PMI8962_SUBTYPE] = "PMI8962",
+> +	[PMD9635_SUBTYPE] = "PMD9635",
+> +	[PM8994_SUBTYPE] = "PM8994",
+> +	[PMI8994_SUBTYPE] = "PMI8994",
+> +	[PM8916_SUBTYPE] = "PM8916",
+> +	[PM8004_SUBTYPE] = "PM8004",
+> +	[PM8909_SUBTYPE] = "PM8909",
+> +	[PM2433_SUBTYPE] = "PM2433",
+> +	[PMD9655_SUBTYPE] = "PMD9655",
+> +	[PM8950_SUBTYPE] = "PM8950",
+> +	[PMI8950_SUBTYPE] = "PMI8950",
+> +	[PMK8001_SUBTYPE] = "PMK8001",
+> +	[PMI8996_SUBTYPE] = "PMI8996",
+> +	[PM8998_SUBTYPE] = "PM8998",
+> +	[PMI8998_SUBTYPE] = "PMI8998",
+> +	[PM8005_SUBTYPE] = "PM8005",
+> +	[PM8937_SUBTYPE] = "PM8937",
+> +	[PM660L_SUBTYPE] = "PM660L",
+> +	[PM660_SUBTYPE] = "PM660",
+> +	[PMI632_SUBTYPE] = "PMI632",
+> +	[PMI8937_SUBTYPE] = "PMI8937",
+> +	[PM8150_SUBTYPE] = "PM8150",
+> +	[PM8150B_SUBTYPE] = "PM8150B",
+> +	[PM8150L_SUBTYPE] = "PM8150L",
+> +	[PM6150_SUBTYPE] = "PM6150",
+> +	[PM8150A_SUBTYPE] = "PM8150A",
+> +	[PME9205_SUBTYPE] = "PME9205",
+> +	[PM6125_SUBTYPE] = "PM6125",
+> +	[PM8008_SUBTYPE] = "PM8008",
+> +	[SMB1355_SUBTYPE] = "SMB1355",
+> +	[SMB1390_SUBTYPE] = "SMB1390",
+> +};
+> +
+> +struct revid_chip {
+> +	struct list_head	link;
+> +	struct device_node	*dev_node;
+> +	struct pmic_revid_data	data;
+> +};
+> +
+> +static LIST_HEAD(revid_chips);
+> +static DEFINE_MUTEX(revid_chips_lock);
+> +
+> +static const struct of_device_id qpnp_revid_match_table[] = {
+> +	{ .compatible = QPNP_REVID_DEV_NAME },
+> +	{}
+> +};
+> +
+> +static u8 qpnp_read_byte(struct regmap *regmap, u16 addr)
+> +{
+> +	int rc;
+> +	int val;
+> +
+> +	rc = regmap_read(regmap, addr, &val);
+> +	if (rc) {
+> +		pr_err("read failed rc=%d\n", rc);
+
+Drivers should always use dev_err() and friends, as you have access to a
+struct device * always.  Please fix up the driver here to use that api
+instead, no pr_* should be needed at all.
+
+> +		return 0;
+> +	}
+> +	return (u8)val;
+> +}
+> +
+> +/**
+> + * get_revid_data - Return the revision information of PMIC
+> + * @dev_node: Pointer to the revid peripheral of the PMIC for which
+> + *		revision information is seeked
+> + *
+> + * CONTEXT: Should be called in non atomic context
+> + *
+> + * RETURNS: pointer to struct pmic_revid_data filled with the information
+> + *		about the PMIC revision
+> + */
+> +struct pmic_revid_data *get_revid_data(struct device_node *dev_node)
+> +{
+> +	struct revid_chip *revid_chip;
+> +
+> +	if (!dev_node)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	mutex_lock(&revid_chips_lock);
+> +	list_for_each_entry(revid_chip, &revid_chips, link) {
+> +		if (dev_node == revid_chip->dev_node) {
+> +			mutex_unlock(&revid_chips_lock);
+> +			return &revid_chip->data;
+> +		}
+> +	}
+> +	mutex_unlock(&revid_chips_lock);
+> +	return ERR_PTR(-EINVAL);
+> +}
+> +EXPORT_SYMBOL(get_revid_data);
+
+Horrible global symbol name.  Who calls this?  This is the last patch in
+the series, so if there is no user for this, please don't export it.
+
+> +
+> +#define PM8941_PERIPHERAL_SUBTYPE	0x01
+> +#define PM8226_PERIPHERAL_SUBTYPE	0x04
+> +#define PMD9655_PERIPHERAL_SUBTYPE	0x0F
+> +#define PMI8950_PERIPHERAL_SUBTYPE	0x11
+> +#define PMI8937_PERIPHERAL_SUBTYPE	0x37
+> +static size_t build_pmic_string(char *buf, size_t n, int sid,
+> +		u8 subtype, u8 rev1, u8 rev2, u8 rev3, u8 rev4)
+> +{
+> +	size_t pos = 0;
+> +	/*
+> +	 * In early versions of PM8941 and PM8226, the major revision number
+> +	 * started incrementing from 0 (eg 0 = v1.0, 1 = v2.0).
+> +	 * Increment the major revision number here if the chip is an early
+> +	 * version of PM8941 or PM8226.
+> +	 */
+> +	if (((int)subtype == PM8941_PERIPHERAL_SUBTYPE
+> +			|| (int)subtype == PM8226_PERIPHERAL_SUBTYPE)
+> +			&& rev4 < 0x02)
+> +		rev4++;
+> +
+> +	pos += snprintf(buf + pos, n - pos, "PMIC@SID%d", sid);
+> +	if (subtype >= ARRAY_SIZE(pmic_names) || subtype == 0)
+> +		pos += snprintf(buf + pos, n - pos, ": %s (subtype: 0x%02X)",
+> +				pmic_names[0], subtype);
+> +	else
+> +		pos += snprintf(buf + pos, n - pos, ": %s",
+> +				pmic_names[subtype]);
+> +	pos += snprintf(buf + pos, n - pos, " v%d.%d", rev4, rev3);
+> +	if (rev2 || rev1)
+> +		pos += snprintf(buf + pos, n - pos, ".%d", rev2);
+> +	if (rev1)
+> +		pos += snprintf(buf + pos, n - pos, ".%d", rev1);
+> +	return pos;
+> +}
+> +
+> +#define PMIC_PERIPHERAL_TYPE		0x51
+> +#define PMIC_STRING_MAXLENGTH		80
+> +static int qpnp_revid_probe(struct platform_device *pdev)
+> +{
+> +	u8 rev1, rev2, rev3, rev4, pmic_type, pmic_subtype, pmic_status;
+> +	u8 option1, option2, option3, option4, spare0;
+> +	unsigned int base;
+> +	int rc, fab_id, tp_rev;
+> +	char pmic_string[PMIC_STRING_MAXLENGTH] = {'\0'};
+> +	struct revid_chip *revid_chip;
+> +	struct regmap *regmap;
+> +
+> +	regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!regmap) {
+> +		dev_err(&pdev->dev, "Couldn't get parent's regmap\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	rc = of_property_read_u32(pdev->dev.of_node, "reg", &base);
+> +	if (rc < 0) {
+> +		dev_err(&pdev->dev,
+> +			"Couldn't find reg in node = %s rc = %d\n",
+> +			pdev->dev.of_node->full_name, rc);
+> +		return rc;
+> +	}
+> +	pmic_type = qpnp_read_byte(regmap, base + REVID_TYPE);
+> +	if (pmic_type != PMIC_PERIPHERAL_TYPE) {
+> +		pr_err("Invalid REVID peripheral type: %02X\n", pmic_type);
+> +		return -EINVAL;
+> +	}
+> +
+> +	rev1 = qpnp_read_byte(regmap, base + REVID_REVISION1);
+> +	rev2 = qpnp_read_byte(regmap, base + REVID_REVISION2);
+> +	rev3 = qpnp_read_byte(regmap, base + REVID_REVISION3);
+> +	rev4 = qpnp_read_byte(regmap, base + REVID_REVISION4);
+> +
+> +	pmic_subtype = qpnp_read_byte(regmap, base + REVID_SUBTYPE);
+> +	if (pmic_subtype != PMD9655_PERIPHERAL_SUBTYPE)
+> +		pmic_status = qpnp_read_byte(regmap, base + REVID_STATUS1);
+> +	else
+> +		pmic_status = 0;
+> +
+> +	/* special case for PMI8937 */
+> +	if (pmic_subtype == PMI8950_PERIPHERAL_SUBTYPE) {
+> +		/* read spare register */
+> +		spare0 = qpnp_read_byte(regmap, base + REVID_SPARE_0);
+> +		if (spare0)
+> +			pmic_subtype = PMI8937_PERIPHERAL_SUBTYPE;
+> +	}
+> +
+> +	if (of_property_read_bool(pdev->dev.of_node, "qcom,fab-id-valid"))
+> +		fab_id = qpnp_read_byte(regmap, base + REVID_FAB_ID);
+> +	else
+> +		fab_id = -EINVAL;
+> +
+> +	if (of_property_read_bool(pdev->dev.of_node, "qcom,tp-rev-valid"))
+> +		tp_rev = qpnp_read_byte(regmap, base + REVID_TP_REV);
+> +	else
+> +		tp_rev = -EINVAL;
+> +
+> +	revid_chip = devm_kzalloc(&pdev->dev, sizeof(struct revid_chip),
+> +						GFP_KERNEL);
+> +	if (!revid_chip)
+> +		return -ENOMEM;
+> +
+> +	revid_chip->dev_node = pdev->dev.of_node;
+> +	revid_chip->data.rev1 = rev1;
+> +	revid_chip->data.rev2 = rev2;
+> +	revid_chip->data.rev3 = rev3;
+> +	revid_chip->data.rev4 = rev4;
+> +	revid_chip->data.pmic_subtype = pmic_subtype;
+> +	revid_chip->data.pmic_type = pmic_type;
+> +	revid_chip->data.fab_id = fab_id;
+> +	revid_chip->data.tp_rev = tp_rev;
+> +
+> +	if (pmic_subtype < ARRAY_SIZE(pmic_names))
+> +		revid_chip->data.pmic_name = pmic_names[pmic_subtype];
+> +	else
+> +		revid_chip->data.pmic_name = pmic_names[0];
+> +
+> +	mutex_lock(&revid_chips_lock);
+> +	list_add(&revid_chip->link, &revid_chips);
+> +	mutex_unlock(&revid_chips_lock);
+> +
+> +	option1 = pmic_status & 0x3;
+> +	option2 = (pmic_status >> 2) & 0x3;
+> +	option3 = (pmic_status >> 4) & 0x3;
+> +	option4 = (pmic_status >> 6) & 0x3;
+> +
+> +	build_pmic_string(pmic_string, PMIC_STRING_MAXLENGTH,
+> +			  to_spmi_device(pdev->dev.parent)->usid,
+> +			pmic_subtype, rev1, rev2, rev3, rev4);
+> +	pr_info("%s options: %d, %d, %d, %d\n",
+> +			pmic_string, option1, option2, option3, option4);
+
+Again, dev_info().
+
+But really, why?  Who uses this information?  Drivers should be quiet if
+all is working properly, no need to log anything.
+
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver qpnp_revid_driver = {
+> +	.probe	= qpnp_revid_probe,
+> +	.driver	= {
+> +		.name		= QPNP_REVID_DEV_NAME,
+> +		.owner		= THIS_MODULE,
+> +		.of_match_table	= qpnp_revid_match_table,
+> +	},
+> +};
+> +
+> +static int __init qpnp_revid_init(void)
+> +{
+> +	return platform_driver_register(&qpnp_revid_driver);
+> +}
+> +
+> +static void __exit qpnp_revid_exit(void)
+> +{
+> +	return platform_driver_unregister(&qpnp_revid_driver);
+> +}
+> +
+> +subsys_initcall(qpnp_revid_init);
+
+Why subsys_initcall() if no one uses the function in this module?
+
+Can't you just use the "normal" platform module init macros?
+
+> +module_exit(qpnp_revid_exit);
+> +
+> +MODULE_DESCRIPTION("QPNP REVID DRIVER");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:" QPNP_REVID_DEV_NAME);
+> diff --git a/include/linux/qpnp/qpnp-revid.h b/include/linux/qpnp/qpnp-revid.h
+> new file mode 100644
+> index 000000000000..0fbdd528d204
+> --- /dev/null
+> +++ b/include/linux/qpnp/qpnp-revid.h
+
+Why do you need a .h file in the include directory if only a single .c
+file needs it?  Just put that info in the .c file itself.
+
+
+> @@ -0,0 +1,369 @@
+> +/* Copyright (c) 2013-2019, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#ifndef __QPNP_REVID
+> +#define __QPNP_REVID
+> +
+> +/* Common TYPE for all PMICs */
+> +#define PMIC_TYPE		0x51
+> +
+> +/* PM8994 */
+> +#define PM8941_SUBTYPE		0x01
+> +
+> +#define PM8941_V1P0_REV1	0x00
+> +#define PM8941_V1P0_REV2	0x00
+> +#define PM8941_V1P0_REV3	0x00
+> +#define PM8941_V1P0_REV4	0x01
+> +
+> +#define PM8941_V2P0_REV1	0x00
+> +#define PM8941_V2P0_REV2	0x00
+> +#define PM8941_V2P0_REV3	0x00
+> +#define PM8941_V2P0_REV4	0x01
+> +
+> +#define PM8941_V3P0_REV1	0x00
+> +#define PM8941_V3P0_REV2	0x00
+> +#define PM8941_V3P0_REV3	0x00
+> +#define PM8941_V3P0_REV4	0x03
+> +
+> +#define PM8941_V3P1_REV1	0x00
+> +#define PM8941_V3P1_REV2	0x00
+> +#define PM8941_V3P1_REV3	0x01
+> +#define PM8941_V3P1_REV4	0x03
+> +
+> +/* PM8841 */
+> +#define PM8841_SUBTYPE		0x02
+> +
+> +/* PM8019 */
+> +#define PM8019_SUBTYPE		0x03
+> +
+> +/* PM8226 */
+> +#define PM8226_SUBTYPE		0x04
+> +
+> +#define PM8226_V2P2_REV1	0x00
+> +#define PM8226_V2P2_REV2	0x00
+> +#define PM8226_V2P2_REV3	0x02
+> +#define PM8226_V2P2_REV4	0x02
+> +
+> +#define PM8226_V2P1_REV1	0x00
+> +#define PM8226_V2P1_REV2	0x00
+> +#define PM8226_V2P1_REV3	0x01
+> +#define PM8226_V2P1_REV4	0x02
+> +
+> +#define PM8226_V2P0_REV1	0x00
+> +#define PM8226_V2P0_REV2	0x00
+> +#define PM8226_V2P0_REV3	0x00
+> +#define PM8226_V2P0_REV4	0x02
+> +
+> +#define PM8226_V1P0_REV1	0x00
+> +#define PM8226_V1P0_REV2	0x00
+> +#define PM8226_V1P0_REV3	0x00
+> +#define PM8226_V1P0_REV4	0x00
+> +
+> +/* PM8110 */
+> +#define PM8110_SUBTYPE		0x05
+> +
+> +#define PM8110_V1P0_REV1	0x00
+> +#define PM8110_V1P0_REV2	0x00
+> +#define PM8110_V1P0_REV3	0x00
+> +#define PM8110_V1P0_REV4	0x01
+> +
+> +#define PM8110_V1P1_REV1	0x00
+> +#define PM8110_V1P1_REV2	0x01
+> +#define PM8110_V1P1_REV3	0x00
+> +#define PM8110_V1P1_REV4	0x01
+> +
+> +#define PM8110_V1P3_REV1	0x00
+> +#define PM8110_V1P3_REV2	0x03
+> +#define PM8110_V1P3_REV3	0x00
+> +#define PM8110_V1P3_REV4	0x01
+> +
+> +#define PM8110_V2P0_REV1	0x00
+> +#define PM8110_V2P0_REV2	0x00
+> +#define PM8110_V2P0_REV3	0x00
+> +#define PM8110_V2P0_REV4	0x02
+> +
+> +/* PMA8084 */
+> +#define PMA8084_SUBTYPE		0x06
+> +
+> +/* PMI8962 */
+> +#define PMI8962_SUBTYPE		0x07
+> +
+> +/* PMD9635 */
+> +#define PMD9635_SUBTYPE		0x08
+> +/* PM8994 */
+> +#define PM8994_SUBTYPE		0x09
+> +
+> +/* PMI8994 */
+> +#define PMI8994_TYPE		0x51
+> +#define PMI8994_SUBTYPE		0x0A
+> +
+> +#define PMI8994_V1P0_REV1	0x00
+> +#define PMI8994_V1P0_REV2	0x00
+> +#define PMI8994_V1P0_REV3	0x00
+> +#define PMI8994_V1P0_REV4	0x01
+> +
+> +#define PMI8994_V2P0_REV1	0x00
+> +#define PMI8994_V2P0_REV2	0x00
+> +#define PMI8994_V2P0_REV3	0x00
+> +#define PMI8994_V2P0_REV4	0x02
+> +
+> +/* PM8916 */
+> +#define PM8916_SUBTYPE		0x0B
+> +
+> +#define PM8916_V1P0_REV1	0x00
+> +#define PM8916_V1P0_REV2	0x00
+> +#define PM8916_V1P0_REV3	0x00
+> +#define PM8916_V1P0_REV4	0x01
+> +
+> +#define PM8916_V1P1_REV1	0x00
+> +#define PM8916_V1P1_REV2	0x00
+> +#define PM8916_V1P1_REV3	0x01
+> +#define PM8916_V1P1_REV4	0x01
+> +
+> +#define PM8916_V2P0_REV1	0x00
+> +#define PM8916_V2P0_REV2	0x00
+> +#define PM8916_V2P0_REV3	0x00
+> +#define PM8916_V2P0_REV4	0x02
+> +
+> +/* PM8004 */
+> +#define PM8004_SUBTYPE		0x0C
+> +
+> +/* PM8909 */
+> +#define PM8909_SUBTYPE		0x0D
+> +
+> +#define PM8909_V1P0_REV1	0x00
+> +#define PM8909_V1P0_REV2	0x00
+> +#define PM8909_V1P0_REV3	0x00
+> +#define PM8909_V1P0_REV4	0x01
+> +
+> +#define PM8909_V1P1_REV1	0x00
+> +#define PM8909_V1P1_REV2	0x00
+> +#define PM8909_V1P1_REV3	0x01
+> +#define PM8909_V1P1_REV4	0x01
+> +
+> +/* PM2433 */
+> +#define PM2433_SUBTYPE		0x0E
+> +
+> +/* PMD9655 */
+> +#define PMD9655_SUBTYPE		0x0F
+> +
+> +/* PM8950 */
+> +#define PM8950_SUBTYPE		0x10
+> +#define PM8950_V1P0_REV4	0x01
+> +
+> +#define PM8950_V2P0_REV4	0x02
+> +
+> +/* PMI8950 */
+> +#define PMI8950_SUBTYPE		0x11
+> +
+> +/* PMK8001 */
+> +#define PMK8001_SUBTYPE		0x12
+> +
+> +/* PMI8996 */
+> +#define PMI8996_SUBTYPE		0x13
+> +
+> +/* PM8998 */
+> +#define PM8998_SUBTYPE	0x14
+> +
+> +/* PMI8998 */
+> +#define PMI8998_SUBTYPE	0x15
+> +
+> +/* PM660 */
+> +#define PM660L_SUBTYPE	0x1A
+> +#define PM660_SUBTYPE	0x1B
+> +
+> +/* PM8150 */
+> +#define PM8150_SUBTYPE		0x1E
+> +#define PM8150L_SUBTYPE		0x1F
+> +#define PM8150B_SUBTYPE		0x20
+> +#define PM8150A_SUBTYPE		0x27
+> +
+> +/* PM6150 SUBTYPE */
+> +#define PM6150_SUBTYPE		0x28
+> +#define PM6150L_SUBTYPE		0x1F
+> +
+> +/* PME9205 SUBTYPE */
+> +#define PME9205_SUBTYPE		0x24
+> +
+> +/* PM6125 SUBTYPE */
+> +#define PM6125_SUBTYPE		0x2D
+> +
+> +/* PMI632 */
+> +#define PMI632_SUBTYPE	0x25
+> +
+> +/* PM8008 SUBTYPE */
+> +#define PM8008_SUBTYPE	0x2C
+> +
+> +/* PMI8998 REV_ID */
+> +#define PMI8998_V1P0_REV1	0x00
+> +#define PMI8998_V1P0_REV2	0x00
+> +#define PMI8998_V1P0_REV3	0x00
+> +#define PMI8998_V1P0_REV4	0x01
+> +
+> +#define PMI8998_V1P1_REV1	0x00
+> +#define PMI8998_V1P1_REV2	0x00
+> +#define PMI8998_V1P1_REV3	0x01
+> +#define PMI8998_V1P1_REV4	0x01
+> +
+> +#define PMI8998_V2P0_REV1	0x00
+> +#define PMI8998_V2P0_REV2	0x00
+> +#define PMI8998_V2P0_REV3	0x00
+> +#define PMI8998_V2P0_REV4	0x02
+> +
+> +/* PM660 REV_ID */
+> +#define PM660_V1P0_REV1		0x00
+> +#define PM660_V1P0_REV2		0x00
+> +#define PM660_V1P0_REV3		0x00
+> +#define PM660_V1P0_REV4		0x01
+> +
+> +#define PM660_V1P1_REV1		0x00
+> +#define PM660_V1P1_REV2		0x00
+> +#define PM660_V1P1_REV3		0x01
+> +#define PM660_V1P1_REV4		0x01
+> +
+> +/* PM660L REV_ID */
+> +#define PM660L_V1P1_REV1	0x00
+> +#define PM660L_V1P1_REV2	0x00
+> +#define PM660L_V1P1_REV3	0x01
+> +#define PM660L_V1P1_REV4	0x01
+> +
+> +#define PM660L_V2P0_REV1	0x00
+> +#define PM660L_V2P0_REV2	0x00
+> +#define PM660L_V2P0_REV3	0x00
+> +#define PM660L_V2P0_REV4	0x02
+> +
+> +/* PMI632 REV_ID */
+> +#define PMI632_V1P0_REV1	0x00
+> +#define PMI632_V1P0_REV2	0x00
+> +#define PMI632_V1P0_REV3	0x00
+> +#define PMI632_V1P0_REV4	0x01
+> +
+> +/* PM8150B_REV_ID */
+> +#define PM8150B_V1P0_REV1	0x00
+> +#define PM8150B_V1P0_REV2	0x00
+> +#define PM8150B_V1P0_REV3	0x00
+> +#define PM8150B_V1P0_REV4	0x01
+> +
+> +#define PM8150B_V2P0_REV1	0x00
+> +#define PM8150B_V2P0_REV2	0x00
+> +#define PM8150B_V2P0_REV3	0x00
+> +#define PM8150B_V2P0_REV4	0x02
+> +
+> +/* PM8150L_REV_ID */
+> +#define PM8150L_V1P0_REV1	0x00
+> +#define PM8150L_V1P0_REV2	0x00
+> +#define PM8150L_V1P0_REV3	0x00
+> +#define PM8150L_V1P0_REV4	0x01
+> +
+> +#define PM8150L_V2P0_REV1	0x00
+> +#define PM8150L_V2P0_REV2	0x00
+> +#define PM8150L_V2P0_REV3	0x00
+> +#define PM8150L_V2P0_REV4	0x02
+> +
+> +#define PM8150L_V3P0_REV1	0x00
+> +#define PM8150L_V3P0_REV2	0x00
+> +#define PM8150L_V3P0_REV3	0x00
+> +#define PM8150L_V3P0_REV4	0x03
+> +
+> +/* PM8150A_REV_ID */
+> +#define PM8150A_V1P0_REV1	0x00
+> +#define PM8150A_V1P0_REV2	0x00
+> +#define PM8150A_V1P0_REV3	0x00
+> +#define PM8150A_V1P0_REV4	0x01
+> +
+> +#define PM8150A_V2P0_REV1	0x00
+> +#define PM8150A_V2P0_REV2	0x00
+> +#define PM8150A_V2P0_REV3	0x00
+> +#define PM8150A_V2P0_REV4	0x02
+> +
+> +/* PME9205_REV_ID */
+> +#define PME9205_V1P0_REV1	0x00
+> +#define PME9205_V1P0_REV2	0x00
+> +#define PME9205_V1P0_REV3	0x00
+> +#define PME9205_V1P0_REV4	0x01
+> +
+> +#define PME9205_V2P0_REV1	0x00
+> +#define PME9205_V2P0_REV2	0x00
+> +#define PME9205_V2P0_REV3	0x00
+> +#define PME9205_V2P0_REV4	0x02
+> +
+> +/* PM6150_REV_ID */
+> +#define PM6150_V1P0_REV1	0x00
+> +#define PM6150_V1P0_REV2	0x00
+> +#define PM6150_V1P0_REV3	0x00
+> +#define PM6150_V1P0_REV4	0x01
+> +
+> +#define PM6150_V1P1_REV1	0x00
+> +#define PM6150_V1P1_REV2	0x00
+> +#define PM6150_V1P1_REV3	0x01
+> +#define PM6150_V1P1_REV4	0x01
+> +
+> +#define PM6150_V2P0_REV1	0x00
+> +#define PM6150_V2P0_REV2	0x00
+> +#define PM6150_V2P0_REV3	0x00
+> +#define PM6150_V2P0_REV4	0x02
+> +
+> +/* PM6125_REV_ID */
+> +#define PM6125_V1P0_REV1	0x00
+> +#define PM6125_V1P0_REV2	0x00
+> +#define PM6125_V1P0_REV3	0x00
+> +#define PM6125_V1P0_REV4	0x01
+> +
+> +/* PMI8998 FAB_ID */
+> +#define PMI8998_FAB_ID_SMIC	0x11
+> +#define PMI8998_FAB_ID_GF	0x30
+> +
+> +/* PM660 FAB_ID */
+> +#define PM660_FAB_ID_GF		0x0
+> +#define PM660_FAB_ID_TSMC	0x2
+> +#define PM660_FAB_ID_MX		0x3
+> +
+> +/* PM8005 */
+> +#define PM8005_SUBTYPE		0x18
+> +
+> +/* PM8937 */
+> +#define PM8937_SUBTYPE		0x19
+> +
+> +/* PMI8937 */
+> +#define PMI8937_SUBTYPE		0x37
+> +
+> +/* SMB1390 */
+> +#define SMB1390_SUBTYPE		0x23
+> +
+> +/* SMB1381 */
+> +#define SMB1381_SUBTYPE		0x17
+> +
+> +/* SMB1355 */
+> +#define SMB1355_SUBTYPE		0x1C
+> +
+> +struct pmic_revid_data {
+> +	u8		rev1;
+> +	u8		rev2;
+> +	u8		rev3;
+> +	u8		rev4;
+> +	u8		pmic_type;
+> +	u8		pmic_subtype;
+> +	const char	*pmic_name;
+> +	int		fab_id;
+> +	int		tp_rev;
+
+int and not u32 or u64?
+
+But again, who uses this module?  If it's only good for a single line in
+the kernel log, that feels like a huge waste to me.
+
+thanks,
+
+greg k-h
