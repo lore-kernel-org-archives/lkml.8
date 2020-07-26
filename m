@@ -2,161 +2,93 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1239FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB7592075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0332C2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgG0Jvw convert rfc822-to-8bit (ORCPT
+        id S1726924AbgG0Jxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:51:52 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:59765 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727829AbgG0Jvv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:51:51 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-157-rSG2T3OdNGGcdmdBioAAVQ-1; Mon, 27 Jul 2020 10:51:47 +0100
-X-MC-Unique: rSG2T3OdNGGcdmdBioAAVQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 27 Jul 2020 10:51:45 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 27 Jul 2020 10:51:45 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'David Miller' <davem@davemloft.net>, "hch@lst.de" <hch@lst.de>
-CC:     "kuba@kernel.org" <kuba@kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
-Subject: RE: get rid of the address_space override in setsockopt v2
-Thread-Topic: get rid of the address_space override in setsockopt v2
-Thread-Index: AQHWYgvqDt5Xt3HFu0u82UKLVqcKxKkbLTEQ
-Date:   Mon, 27 Jul 2020 09:51:45 +0000
-Message-ID: <8ae792c27f144d4bb5cbea0c1cce4eed@AcuMS.aculab.com>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200724.154342.1433271593505001306.davem@davemloft.net>
-In-Reply-To: <20200724.154342.1433271593505001306.davem@davemloft.net>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Mon, 27 Jul 2020 05:53:39 -0400
+Received: from mga09.intel.com ([134.134.136.24]:49453 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbgG0Jxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:53:39 -0400
+IronPort-SDR: WqGVwXJ1NLsBhTDqOgLbOIxOuhDjc2YtYdZGdE6EMRpxAcpNLzpPz89FtxPNAGMzZdsDEtqwC0
+ og+SkluD7Jvw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="152240505"
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="152240505"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 02:53:39 -0700
+IronPort-SDR: zPLjLoPPCMGlnfEV1YyScGhCR59QqS54CiI/jGC6iZ93zkwfw58CmCY3TO+EcxU32hIj0C4IrZ
+ 9hG5IoLXN3lw==
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="464006917"
+Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 02:53:34 -0700
+From:   Bard Liao <yung-chuan.liao@linux.intel.com>
+To:     alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
+        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+Subject: [PATCH v2] soundwire: master: enable pm runtime
+Date:   Mon, 27 Jul 2020 05:59:45 +0800
+Message-Id: <20200726215945.3119-1-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller
-> Sent: 24 July 2020 23:44
-> 
-> From: Christoph Hellwig <hch@lst.de>
-> Date: Thu, 23 Jul 2020 08:08:42 +0200
-> 
-> > setsockopt is the last place in architecture-independ code that still
-> > uses set_fs to force the uaccess routines to operate on kernel pointers.
-> >
-> > This series adds a new sockptr_t type that can contained either a kernel
-> > or user pointer, and which has accessors that do the right thing, and
-> > then uses it for setsockopt, starting by refactoring some low-level
-> > helpers and moving them over to it before finally doing the main
-> > setsockopt method.
-> >
-> > Note that apparently the eBPF selftests do not even cover this path, so
-> > the series has been tested with a testing patch that always copies the
-> > data first and passes a kernel pointer.  This is something that works for
-> > most common sockopts (and is something that the ePBF support relies on),
-> > but unfortunately in various corner cases we either don't use the passed
-> > in length, or in one case actually copy data back from setsockopt, or in
-> > case of bpfilter straight out do not work with kernel pointers at all.
-> >
-> > Against net-next/master.
-> >
-> > Changes since v1:
-> >  - check that users don't pass in kernel addresses
-> >  - more bpfilter cleanups
-> >  - cosmetic mptcp tweak
-> 
-> Series applied to net-next, I'm build testing and will push this out when
-> that is done.
+The hierarchy of soundwire devices is platform device -> M device -> S
+device. A S device is physically attached on the platform device. So the
+platform device should be resumed when a S device is resumed. As the
+bridge of platform device and S device, we have to implement runtime pm
+on M driver. We have set runtime pm ops in M driver already, but still
+need to enable runtime pm.
 
-Hmmm... this code does:
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 
-int __sys_setsockopt(int fd, int level, int optname, char __user *user_optval,
-		int optlen)
-{
-	sockptr_t optval;
-	char *kernel_optval = NULL;
-	int err, fput_needed;
-	struct socket *sock;
+---
 
-	if (optlen < 0)
-		return -EINVAL;
+Changes in v2:
+ - Edit the commit message to explain why we need the patch. 
+---
+ drivers/soundwire/master.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-	err = init_user_sockptr(&optval, user_optval);
-	if (err)
-		return err;
-
-And the called code does:
-	if (copy_from_sockptr(&opt, optbuf, sizeof(opt)))
-		return -EFAULT;
-
-
-Which means that only the base of the user's buffer is checked
-for being in userspace.
-
-I'm sure there is code that processes options in chunks.
-This probably means it is possible to put a chunk boundary
-at the end of userspace and continue processing the very start
-of kernel memory.
-
-At best this faults on the kernel copy code and crashes the system.
-
-Maybe there wasn't any code that actually incremented the user address.
-But it is hardly robust.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/drivers/soundwire/master.c b/drivers/soundwire/master.c
+index 5f0b2189defe..3488bb824e84 100644
+--- a/drivers/soundwire/master.c
++++ b/drivers/soundwire/master.c
+@@ -154,6 +154,7 @@ int sdw_master_device_add(struct sdw_bus *bus, struct device *parent,
+ 	bus->dev = &md->dev;
+ 	bus->md = md;
+ 
++	pm_runtime_enable(&bus->md->dev);
+ device_register_err:
+ 	return ret;
+ }
+@@ -166,6 +167,7 @@ int sdw_master_device_add(struct sdw_bus *bus, struct device *parent,
+  */
+ int sdw_master_device_del(struct sdw_bus *bus)
+ {
++	pm_runtime_disable(&bus->md->dev);
+ 	device_unregister(bus->dev);
+ 
+ 	return 0;
+-- 
+2.17.1
 
