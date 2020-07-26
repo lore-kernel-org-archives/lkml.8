@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C70DC433E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1870C433E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D886E206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC271206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:53:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="UPc74rNY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bIvw+fvT"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="csu6giCg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="p0Uqd2BR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgGZCyC (ORCPT
+        id S1728313AbgGZCxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 22:54:02 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:36223 "EHLO
+        Sat, 25 Jul 2020 22:53:39 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:41487 "EHLO
         new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727861AbgGZCxi (ORCPT
+        by vger.kernel.org with ESMTP id S1727101AbgGZCxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 22:53:38 -0400
+        Sat, 25 Jul 2020 22:53:37 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 634E85804FE;
-        Sat, 25 Jul 2020 22:53:37 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id A0985580449;
+        Sat, 25 Jul 2020 22:53:36 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sat, 25 Jul 2020 22:53:37 -0400
+  by compute3.internal (MEProxy); Sat, 25 Jul 2020 22:53:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=o4vewBk05R45o
-        M+OvTaQj/HGmu35Pzpji2XDJh8Je4Y=; b=UPc74rNYonRFihpEhI/SoPPoE2OLf
-        3AOMXp57DIeOVPYCX1WlM6gRAbVqx482EFpKwuLQnkEPg1Q8sCLVh6wBtvL1IX7p
-        8CbK2M9oTbaKvPYj8ihWdZJDDtH6Hv16i3JKDz6EYQ6ZTWsPNo7UO915I2Ipasl8
-        8coU1Md4Vs4WaF8FhUbDYPCp7TjxxKD/DLzAyweVtvD6QWYnT0dBL9VG5MD5AXPk
-        rcwfDN/NphKNy7elFheXhBe8mL8dr6WXk3qxB0wMqIyFqNVbl0bkRz01QfFsipxA
-        CF4C3uKShZwtGQkkH4Z4HkmklBe47fVwZ65kg8Bn79dpop7UymuuAMH+Q==
+        :mime-version:content-transfer-encoding; s=fm3; bh=UYJXF3xSl7ipV
+        0HUn2XdFBiDjB2DIQJX8lpSmrLgaWI=; b=csu6giCgLI37nW7y5wp5bo0lnQyLz
+        /2LXD/sziBdl5MzMFK9kp3/OdjEcfoB6Mivanl5lVtODvuyN1Fm3+FqG4V1y9RFW
+        jdcC+0gsQqYuqW7WqqlUeehGwpQHCkMyfFvuxAuiwdnb6GNmOb6KLIGw+ltE0R27
+        e2i6I1T4+avr7TDGaCnhPPV798ZlnyF0qDrcRvro/uW6GTcuUwgxBVH8RJtkMSuO
+        JR+h2fbiyIg2w0o5pHEyLf5r+HvlCkFkGRj/Gd8ZFAGaqYlTa3kzrK9W+kjaQ2VN
+        /K4htkZxX7YaSIntm0sZJnA3jwcpLa8T/I7ZXjnqflY03GAHs4sbIgldg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=o4vewBk05R45oM+OvTaQj/HGmu35Pzpji2XDJh8Je4Y=; b=bIvw+fvT
-        AVF01DPo42q4U6Z1YHQipuXJnLaKpINLoBkHu9xurylnZ3lf1hMsJSgRgWi4HHQ0
-        2zUz+DdJ3kMjdePz+Roc1526vPYlW1oQbAfnT2oAJmWiIk2GXvqgkvtmK6tHEPMi
-        9CQYp5O0R/ZjStagw6nj8kqe00hKokFHHLCeZBmqeufBXXLOxgN5MZSC2cDsKS/U
-        oELJu8UepEySMo0I3Qu7TC2gcvYoZ3IN60qJKvPN01wqEn8hAvQ2GdpfeNGzZoq/
-        WZfQWHb8WWn74+bRCcDGM/RxYOtDRz7XReBNZ32oj8ZYc/+Julj0xLlgH7+hiUUF
-        jBq8+tPG5T7yvg==
-X-ME-Sender: <xms:MfAcX5MXasn16JIcM4KEI_ovjZw-Wu3Fz1zHGNQUkkmccC93jp6n4Q>
+        fm3; bh=UYJXF3xSl7ipV0HUn2XdFBiDjB2DIQJX8lpSmrLgaWI=; b=p0Uqd2BR
+        /L1EKqjGApnXl0vJon5q8YE3Ci8ORRowLJPl2M79vRKklqVyOtd9RvMLT6ZcEKvh
+        MSuSJzSH1NCZEc5LSyTTwY7ear5OdQtTT7cn/J7AHGJ0GhlKUd7yqMMavVRdyYoj
+        b5siLmaO2ehi/sI4ZLm/nUQhyN3a6/5kAfsKo5mSVLG3/kLjCW0e76jqBQLdRfP3
+        jRKfqzpUiyzIMNTT/VAyE0Ms+huZqdUiIVuDtssxVovTE1irur4nHMKi0bv5bqLj
+        CIZXxT2Bw4qZKn4wVncCkpHy4ScfgeULNQMpyA4otBbU8mb2zLZAkhYcwWKKGs0z
+        QN36aXOPmDwT2Q==
+X-ME-Sender: <xms:MPAcX7tj0HDGaitZrEgscfX36mdDi4-Lg0kxsfZT4Ctk49OxmwwMYQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheeigdeiudcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -59,13 +59,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheeigdeiudcutefuodetggdote
     jeehueeinecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiii
     gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgu
     rdhorhhg
-X-ME-Proxy: <xmx:MfAcX7831JAwFG5oi6PRXaNtG3NV3hrkzo1aMnn2oFHstkrSLtx0vw>
-    <xmx:MfAcX4Su5VHXbtv8y43oph__249XTC9PPBdcVTcQDu1JJemabgvo9w>
-    <xmx:MfAcX1tSKdhcZatclbPDREhdkeeEmOVfRZPtW2NzAsca-X7Dpvq7pA>
-    <xmx:MfAcX7svR0O5hB8tv9GJHLAH9qVg6dsKCT1o8dzmAWMLExLjYD11iQ>
+X-ME-Proxy: <xmx:MPAcX8eUrqTBJuXIioab-8NVccQlwhqM_Ry8D0bPsJdi-5VnUG89FA>
+    <xmx:MPAcX-x61KhOaOeZ5vMC1mACA2RvklxaB4DqLWR3fTECE9bmil_xOQ>
+    <xmx:MPAcX6PKWwf8zXyzLLvTEzn9hnI-jLpkZJRmZLwgvZXSQ5l6M2XbhQ>
+    <xmx:MPAcX8PeEirb3iRscPekq7tURSU5nFIyJ8YE-sYx9xbrBpNAVcJGqg>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C357C328005A;
-        Sat, 25 Jul 2020 22:53:36 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id CFB23328005A;
+        Sat, 25 Jul 2020 22:53:35 -0400 (EDT)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -76,9 +76,9 @@ To:     Mark Brown <broonie@kernel.org>,
 Cc:     Ondrej Jirman <megous@megous.com>, alsa-devel@alsa-project.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v2 4/8] ASoC: sun50i-codec-analog: Make headphone routes stereo
-Date:   Sat, 25 Jul 2020 21:53:30 -0500
-Message-Id: <20200726025334.59931-5-samuel@sholland.org>
+Subject: [PATCH v2 2/8] ASoC: sun50i-codec-analog: Gate the amplifier clock during suspend
+Date:   Sat, 25 Jul 2020 21:53:28 -0500
+Message-Id: <20200726025334.59931-3-samuel@sholland.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200726025334.59931-1-samuel@sholland.org>
 References: <20200726025334.59931-1-samuel@sholland.org>
@@ -89,63 +89,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This matches the hardware more accurately, and is necessary for
-including the (stereo) headphone mute switch in the DAPM graph.
+The clock must be running for the zero-crossing mute functionality.
+However, it must be gated for VDD-SYS to be turned off during system
+suspend. Disable it in the suspend callback, after everything has
+already been muted, to avoid pops when muting/unmuting outputs.
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- sound/soc/sunxi/sun50i-codec-analog.c | 28 +++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ sound/soc/sunxi/sun50i-codec-analog.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/sound/soc/sunxi/sun50i-codec-analog.c b/sound/soc/sunxi/sun50i-codec-analog.c
-index 17165f1ddb63..f98851067f97 100644
+index cbdb31c3b7bd..4ad262c2e59b 100644
 --- a/sound/soc/sunxi/sun50i-codec-analog.c
 +++ b/sound/soc/sunxi/sun50i-codec-analog.c
-@@ -311,9 +311,15 @@ static const struct snd_soc_dapm_widget sun50i_a64_codec_widgets[] = {
- 	 */
+@@ -438,6 +438,19 @@ static const struct snd_soc_dapm_route sun50i_a64_codec_routes[] = {
+ 	{ "EARPIECE", NULL, "Earpiece Amp" },
+ };
  
- 	SND_SOC_DAPM_REGULATOR_SUPPLY("cpvdd", 0, 0),
--	SND_SOC_DAPM_MUX("Headphone Source Playback Route",
-+	SND_SOC_DAPM_MUX("Left Headphone Source",
- 			 SND_SOC_NOPM, 0, 0, sun50i_codec_hp_src),
--	SND_SOC_DAPM_OUT_DRV("Headphone Amp", SUN50I_ADDA_HP_CTRL,
-+	SND_SOC_DAPM_MUX("Right Headphone Source",
-+			 SND_SOC_NOPM, 0, 0, sun50i_codec_hp_src),
-+	SND_SOC_DAPM_OUT_DRV("Left Headphone Amp",
-+			     SND_SOC_NOPM, 0, 0, NULL, 0),
-+	SND_SOC_DAPM_OUT_DRV("Right Headphone Amp",
-+			     SND_SOC_NOPM, 0, 0, NULL, 0),
-+	SND_SOC_DAPM_SUPPLY("Headphone Amp", SUN50I_ADDA_HP_CTRL,
- 			     SUN50I_ADDA_HP_CTRL_HPPA_EN, 0, NULL, 0),
- 	SND_SOC_DAPM_OUTPUT("HP"),
- 
-@@ -405,13 +411,19 @@ static const struct snd_soc_dapm_route sun50i_a64_codec_routes[] = {
- 	{ "Right ADC", NULL, "Right ADC Mixer" },
- 
- 	/* Headphone Routes */
--	{ "Headphone Source Playback Route", "DAC", "Left DAC" },
--	{ "Headphone Source Playback Route", "DAC", "Right DAC" },
--	{ "Headphone Source Playback Route", "Mixer", "Left Mixer" },
--	{ "Headphone Source Playback Route", "Mixer", "Right Mixer" },
--	{ "Headphone Amp", NULL, "Headphone Source Playback Route" },
-+	{ "Left Headphone Source", "DAC", "Left DAC" },
-+	{ "Left Headphone Source", "Mixer", "Left Mixer" },
-+	{ "Left Headphone Amp", NULL, "Left Headphone Source" },
-+	{ "Left Headphone Amp", NULL, "Headphone Amp" },
-+	{ "HP", NULL, "Left Headphone Amp" },
++static int sun50i_a64_codec_suspend(struct snd_soc_component *component)
++{
++	return regmap_update_bits(component->regmap, SUN50I_ADDA_HP_CTRL,
++				  BIT(SUN50I_ADDA_HP_CTRL_PA_CLK_GATE),
++				  BIT(SUN50I_ADDA_HP_CTRL_PA_CLK_GATE));
++}
 +
-+	{ "Right Headphone Source", "DAC", "Right DAC" },
-+	{ "Right Headphone Source", "Mixer", "Right Mixer" },
-+	{ "Right Headphone Amp", NULL, "Right Headphone Source" },
-+	{ "Right Headphone Amp", NULL, "Headphone Amp" },
-+	{ "HP", NULL, "Right Headphone Amp" },
++static int sun50i_a64_codec_resume(struct snd_soc_component *component)
++{
++	return regmap_update_bits(component->regmap, SUN50I_ADDA_HP_CTRL,
++				  BIT(SUN50I_ADDA_HP_CTRL_PA_CLK_GATE), 0);
++}
 +
- 	{ "Headphone Amp", NULL, "cpvdd" },
--	{ "HP", NULL, "Headphone Amp" },
+ static const struct snd_soc_component_driver sun50i_codec_analog_cmpnt_drv = {
+ 	.controls		= sun50i_a64_codec_controls,
+ 	.num_controls		= ARRAY_SIZE(sun50i_a64_codec_controls),
+@@ -445,6 +458,8 @@ static const struct snd_soc_component_driver sun50i_codec_analog_cmpnt_drv = {
+ 	.num_dapm_widgets	= ARRAY_SIZE(sun50i_a64_codec_widgets),
+ 	.dapm_routes		= sun50i_a64_codec_routes,
+ 	.num_dapm_routes	= ARRAY_SIZE(sun50i_a64_codec_routes),
++	.suspend		= sun50i_a64_codec_suspend,
++	.resume			= sun50i_a64_codec_resume,
+ };
  
- 	/* Microphone Routes */
- 	{ "Mic1 Amplifier", NULL, "MIC1"},
+ static const struct of_device_id sun50i_codec_analog_of_match[] = {
 -- 
 2.26.2
 
