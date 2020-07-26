@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0387C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32982C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD713206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04662206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:17:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C/cN/6HE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ye5o+OVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgGZAWE (ORCPT
+        id S1727951AbgGZARl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 20:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51008 "EHLO
+        Sat, 25 Jul 2020 20:17:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbgGZAWE (ORCPT
+        with ESMTP id S1726870AbgGZARl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 20:22:04 -0400
+        Sat, 25 Jul 2020 20:17:41 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DF7C08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 17:22:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1121C08C5C0
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 17:17:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
         Content-Description:In-Reply-To:References;
-        bh=xhV0Benv3VefaUhXEHmyjX8yxKTDsckJSRvSN4FMtn8=; b=C/cN/6HER1OivX+zta6x7TD14m
-        XuT67Hc8u4Bb7P/QS7M/sPkJ1hd/aOLU/x0Gqah/7BUZqh7kODjiovpjVeAzEL5HanzYV+4v2Onfq
-        qKiM0OVmf1dbWmtlGqVxbf03zG8V4iEx5axaCEAYXcRrRJgq6zVUNp9mzKr7z0DKBsh8U+MJGGIXV
-        NH7yxZMWB2eqQdOm9HcphdOkRRaClxTLE24kDJ/tFlx6uMXswjKwtBcUPtP3f8ma0LBOAE8MsRuhn
-        0dZanAnTnDWpoBFN7vmavRDC8kz633t0h4DI78fssf5EcUKsXNdOCBdPoRbK1yA6wUHrBnKJpxZxZ
-        pVnhuj0w==;
+        bh=bIzdukHQ+ATBfHLpRDrfYN1nk7nF43j1x33WTc27/H4=; b=Ye5o+OVzQqZPY09OgVKgkiYRox
+        UzF1lfxQ5ygjF+dzA0Q5eufEWU4AfBfMUITe3VkQSKMNvm51ye+yR1luQU/vKkfsIzXAKS+r+TUHk
+        TwN9NSglqWFESQrkIMfPPTLbobEmupZKolAUOWTZ2BKGY4HyLuyHFmUNvmx9MhjwUl1YuFeDjWOCC
+        GfCYViJ2PQCEHqMBiNlTwtUv79GAPuJWLIL9iGyS1MEBVGKQXdFArIN9tFFA+zjhwkMcvVt0ejnTm
+        fXpBlVTdLclXblKYHSpnHEKBSywW5TjBs2+91hHiPs3znL9C4uMTxgLy/CZcwYoMWGx8e4S86u/nh
+        hsAUmfyw==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzUQU-0002Xl-6B; Sun, 26 Jul 2020 00:22:02 +0000
+        id 1jzUMB-0002Mn-Kk; Sun, 26 Jul 2020 00:17:36 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] arm: unwind.h: fix duplicated word
-Date:   Sat, 25 Jul 2020 17:21:59 -0700
-Message-Id: <20200726002159.19846-1-rdunlap@infradead.org>
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org
+Subject: [PATCH] xen: hypercall.h: fix duplicated word
+Date:   Sat, 25 Jul 2020 17:17:31 -0700
+Message-Id: <20200726001731.19540-1-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -55,23 +55,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the repeated words "the" to "to the".
+Change the repeated word "as" to "as a".
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: xen-devel@lists.xenproject.org
 ---
- arch/arm/include/asm/unwind.h |    2 +-
+ arch/x86/include/asm/xen/hypercall.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200720.orig/arch/arm/include/asm/unwind.h
-+++ linux-next-20200720/arch/arm/include/asm/unwind.h
-@@ -10,7 +10,7 @@
+--- linux-next-20200720.orig/arch/x86/include/asm/xen/hypercall.h
++++ linux-next-20200720/arch/x86/include/asm/xen/hypercall.h
+@@ -82,7 +82,7 @@ struct xen_dm_op_buf;
+  *     - clobber the rest
+  *
+  * The result certainly isn't pretty, and it really shows up cpp's
+- * weakness as as macro language.  Sorry.  (But let's just give thanks
++ * weakness as a macro language.  Sorry.  (But let's just give thanks
+  * there aren't more than 5 arguments...)
+  */
  
- #ifndef __ASSEMBLY__
- 
--/* Unwind reason code according the the ARM EABI documents */
-+/* Unwind reason code according to the ARM EABI documents */
- enum unwind_reason_code {
- 	URC_OK = 0,			/* operation completed successfully */
- 	URC_CONTINUE_UNWIND = 8,
