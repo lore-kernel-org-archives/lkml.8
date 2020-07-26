@@ -2,145 +2,103 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA4BC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47796C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B6D7206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226D2206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:46:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQBpC9fz"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y4tMSRGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgGZLl1 (ORCPT
+        id S1726732AbgGZLqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 07:41:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGZLl0 (ORCPT
+        Sun, 26 Jul 2020 07:46:42 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11912 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgGZLqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 07:41:26 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5516CC0619D2;
-        Sun, 26 Jul 2020 04:41:26 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id a1so10066212edt.10;
-        Sun, 26 Jul 2020 04:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lseWHrFGrBMnahk5IsFpxWMdJQwHw9KSOQ+YjXuxbFA=;
-        b=aQBpC9fzSLDnNvo+7B291mUv7CYE5RDCBIF21+v6M1aGzer6EfkLoJTc2o7eM2K6MG
-         AEwWL5yYBW7duIplNuwImdTx2S1RNduHQeqEz7mgWGH8phlB4lVmG8WraFLhUQJQ98Z2
-         zUqMA7AMx1KI9m0wjq5Pggp54FnyaY97h8fptUzqQQSzxWh98jXHZHPHVbaEyQRKgrzd
-         i2cvvdyI3MRlbqk0xdTUVTqT7iJB3HtXVtuiJeb5ouEVGh1+FGE608Ek0ww5PSUYS0h2
-         CeGhysTrPHi4pC+EoRw7apKj2jD5TkDMRVMNrR+Ty5Y6JJ8bb8ZBiE0hUl/tm2l1AE7l
-         L86A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lseWHrFGrBMnahk5IsFpxWMdJQwHw9KSOQ+YjXuxbFA=;
-        b=oC/cjnLFM/fGqrB02GyoWkFBBWg0aExw8LZDsKSi3ULbkqPKPXxjHJqvnaMqPvBISU
-         1B/lHkaVfEndtxZ4mjrecYbKxXJZfglh2owRZw8uJ8qQ2KNvMdbNlddtufm+3eh07/hz
-         N4rCChVPVJtDjlCoBPgJiYX7EXfU05aIuN6bNNtcvtV+rGNfsJnbJ0ngsCb9JK3JiMzm
-         qktmu1cn+zl7lqBSiWg40e9yC4F5Nrn2jqlynFmtHHt0CqNp+dErz0YDQOOk1qJ5aSRx
-         LRhgucRfr6CN0BRI7uV+lJx0mqtCZzHclpfI73hZQGRVtY5b5ibLABg5B73jPTST5XxS
-         RAOg==
-X-Gm-Message-State: AOAM532qvym97B82eTSYLGdjP69wRaYRip9rDQJKU92sN/LtYzKJsnVx
-        8G3L5US3qwCwehNl+OG1DInssHzJLaMtUQArJSpdMYDaoMg=
-X-Google-Smtp-Source: ABdhPJwLaN8pOziusRtdh65jeRMP/q7PrsLl/HAajDABeyO6M98X1ss/F/xt4CRsnqgpobZve6SjTOQeV/4Mrj+BHWc=
-X-Received: by 2002:a05:6402:1ade:: with SMTP id ba30mr16127632edb.231.1595763685099;
- Sun, 26 Jul 2020 04:41:25 -0700 (PDT)
+        Sun, 26 Jul 2020 07:46:42 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f1d6cc80001>; Sun, 26 Jul 2020 04:45:13 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 26 Jul 2020 04:46:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 26 Jul 2020 04:46:41 -0700
+Received: from [10.24.37.103] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 26 Jul
+ 2020 11:46:29 +0000
+Subject: Re: [PATCH -next] arm64: Export __cpu_logical_map
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hulk Robot <hulkci@huawei.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Sumit Gupta <sumitg@nvidia.com>, Bibek Basu <bbasu@nvidia.com>
+References: <20200724030433.22287-1-wangkefeng.wang@huawei.com>
+ <82f750c4-d423-1ed8-a158-e75153745e07@huawei.com>
+ <20200724131059.GB6521@bogus>
+From:   Sumit Gupta <sumitg@nvidia.com>
+Message-ID: <00cf6e67-16ed-872d-2c16-0ceea6b6f514@nvidia.com>
+Date:   Sun, 26 Jul 2020 17:16:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200726111215.22361-1-konradybcio@gmail.com> <20200726111215.22361-10-konradybcio@gmail.com>
- <20200726112920.GA1286220@kroah.com>
-In-Reply-To: <20200726112920.GA1286220@kroah.com>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Sun, 26 Jul 2020 13:40:46 +0200
-Message-ID: <CAMS8qEV7jhbHqpXE2UOaXBVM5WbCThaGrcD3wiH9kf6h_K-qeA@mail.gmail.com>
-Subject: Re: [PATCH 9/9] soc/qcom: Add REVID driver
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Martin Botka <martin.botka1@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        zhengbin <zhengbin13@huawei.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Xiaozhe Shi <xiaozhes@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-usb@vger.kernel.org, linux-clk@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200724131059.GB6521@bogus>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595763913; bh=g94Wu67n5RZjhKkaJ+xeY3ndTckRMdJqobOgyGCi+/0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Y4tMSRGbI6/makO3NIdpKmdsR4VJ2wNlFQDmHtTPH3P4fRtjuJejU4CdzjAR7qowK
+         BWYXh5cZrw0NT+ejjKSTVmozZi2meJpfT8h7TC3Jdy/6En0Q+Q0Y14XHkGIOhu6QRK
+         dYzMrgldjNbRl20DLBI5URvDvwEYBZcQBWkph6MPOEr07fYgW4/jsqp3wGLzN4jPOd
+         SOJ9CXp6Z5M4mkpGbbmYLs0Vp5C9lZg/ZawqE2egxIHIzdbGi4lvX5T+hbwSDEqwP6
+         fqBeMuxi+lQrGZSP2W6UsKbLk1rqnbfTk6KMiMDkxNhhNK+mm6u/oUfDVDnXiOP29h
+         C4ipl48yTJxkQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg, thanks for your review!
+>>> ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
+>>>
+>>> ARM64 tegra194-cpufreq driver use cpu_logical_map, export
+>>> __cpu_logical_map to fix build issue.
+>>>
+> 
+> I wonder why like other instances in the drivers, the mpidr is not get
+> directly from the cpu. The cpufreq_driver->init call happens when the cpu
+> is being brought online and is executed on the required cpu IIUC.
+> 
+Yes, this occurs during hotplug case.
+But in the case of system boot, 'cpufreq_driver->init' is called later 
+during cpufreq platform driver's probe. The value of CPU in 
+'policy->cpu' can be different from the current CPU. That's why 
+read_cpuid_mpidr() can't be used.
 
->Why do we need this noise in the kernel log?
-
-I guess it could be left there as a debug print? Knowing your hardware
-revision seems like a good, but yeah, not a necessary thing.
-
->You can drop the GPL boilerplate text and add a proper SPDX line at the
->top.
-
-Seems I only did that in my other local tree.. whoops!
-
->Drivers should always use dev_err() and friends, as you have access to a
->struct device * always.  Please fix up the driver here to use that api
->instead, no pr_* should be needed at all.
-
-Will do.
-
->Horrible global symbol name.  Who calls this?
-
-Welcome to development on qcom platforms :D
-
->This is the last patch in
->the series, so if there is no user for this, please don't export it.
-
-Other downstream drivers make use of it.. need to get this up first, sorry :V
-
->Why do you need a .h file in the include directory if only a single .c
->file needs it?  Just put that info in the .c file itself.
-
-Again, other downstream drivers which some people and I intend to
-bring to upstream standards use that to access the PMIC model/hw revision.
-
->But again, who uses this module?  If it's only good for a single line in
->the kernel log, that feels like a huge waste to me.
-
-downstream-kernel-dir$ rg -l qpnp-revid.h | wc -l
-25
-
-So yeah, quite a bunch of other qcom-specific drivers.
-
-I'll try to fix these and send a v2.
-
-Regards
-Konrad
+> read_cpuid_mpidr() is inline and avoids having to export the logical_cpu_map.
+> Though we may not add physical hotplug anytime soon, less dependency
+> on this cpu_logical_map is better given that we can resolve this without
+> the need to access the map.
+> 
+> --
+> Regards,
+> Sudeep
+> 
