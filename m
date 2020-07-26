@@ -2,146 +2,133 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77892C433E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631E0C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4472065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:08:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PSBrJrva"
+	by mail.kernel.org (Postfix) with ESMTP id 3F21020738
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595801393;
+	bh=LfHWfBg1Qfp818BKW1nd9sxbwjERmwPxm12kyIqm0Ak=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PWT/Nb9nTB8C7UycDvUSr3lIVdMqt5uT4vp//4BczGAAWyxGDB0ByDDQGJMkyemf8
+	 JO6zVPa8qW3+j+D7pQNlujeFX0JSzBeruaZW5+jg1xoJHxqzfYOmAsgnvT5jw88u5r
+	 YZQmfcmf7iHQwsuKdKVbyytOn7yz6ixSo1VRMAoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgGZWIg (ORCPT
+        id S1727781AbgGZWJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 18:08:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbgGZWIf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 18:08:35 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E733C0619D2;
-        Sun, 26 Jul 2020 15:08:35 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 60DE151D;
-        Mon, 27 Jul 2020 00:08:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595801311;
-        bh=KUaPOkg636bLdNE8/asczb6N8L2ExnhjaO2k2jCo0LQ=;
+        Sun, 26 Jul 2020 18:09:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbgGZWJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 18:09:51 -0400
+Received: from earth.universe (unknown [185.213.155.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 762762065F;
+        Sun, 26 Jul 2020 22:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595801391;
+        bh=LfHWfBg1Qfp818BKW1nd9sxbwjERmwPxm12kyIqm0Ak=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PSBrJrvay92ecq4JbixGxKIabJQmc4pZJaNk3A/wXXfD3Ekkbfpt7ZT6g2Y8a0057
-         /CfKIjl0AnCKZ3jw5eSwIWM8oliHSnhewGDEZy0sr4Mjz/s6eIajbulW7/E0mI5ee2
-         /cvTxgegR9ug5m2pbBZkLTCjthrHkLQewsX4SGnw=
-Date:   Mon, 27 Jul 2020 01:08:23 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vandana BN <bnvandana@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] media/v4l2-core: Fix
- kernel-infoleak in video_put_user()
-Message-ID: <20200726220823.GI28704@pendragon.ideasonboard.com>
-References: <20200726164439.48973-1-yepeilin.cs@gmail.com>
- <20200726173044.GA14755@pendragon.ideasonboard.com>
- <20200726180752.GA49356@PWN>
+        b=1pCHgWq75TDYeOlW/SX2FohhHJ4AAL4TKHTj80iEU+lD0wfmvWm8m5Gh/sqYbB8TF
+         Gjedib6n5Ej1KUI7qoPXQRJGNIzyrBmgLdbA9xJ5oApxzt3Iqt2tMusW2GONwyAwH1
+         yOdCW4E0nnppQom5b5kGK4UUJ7EjjDrNrPVtYv0g=
+Received: by earth.universe (Postfix, from userid 1000)
+        id B16DA3C0B87; Mon, 27 Jul 2020 00:09:49 +0200 (CEST)
+Date:   Mon, 27 Jul 2020 00:09:49 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Qinglang Miao <miaoqinglang@huawei.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] power: Convert to DEFINE_SHOW_ATTRIBUTE
+Message-ID: <20200726220949.m456hoqcb5bis4ry@earth.universe>
+References: <20200716085849.11571-1-miaoqinglang@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2twpfrl4w4tppxvr"
 Content-Disposition: inline
-In-Reply-To: <20200726180752.GA49356@PWN>
+In-Reply-To: <20200716085849.11571-1-miaoqinglang@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peilin,
 
-On Sun, Jul 26, 2020 at 02:07:52PM -0400, Peilin Ye wrote:
-> On Sun, Jul 26, 2020 at 08:30:44PM +0300, Laurent Pinchart wrote:
-> > Hi Peilin,
-> > 
-> > Thank you for the patch.
-> > 
-> > On Sun, Jul 26, 2020 at 12:44:39PM -0400, Peilin Ye wrote:
-> > > video_put_user() is copying uninitialized stack memory to userspace. Fix
-> > > it by initializing `vb32` using memset().
-> > 
-> > What makes you think this will fix the issue ? When initializing a
-> > structure at declaration time, the fields that are not explicitly
-> > specified should be initialized to 0 by the compiler. See
-> > https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/strin.htm:
-> 
-> Hi Mr. Pinchart!
-> 
-> First of all, syzbot tested this patch, and it says it's "OK":
-> 
-> 	https://syzkaller.appspot.com/bug?extid=79d751604cb6f29fbf59
-> 
-> > If a structure variable is partially initialized, all the uninitialized
-> > structure members are implicitly initialized to zero no matter what the
-> > storage class of the structure variable is. See the following example:
-> > 
-> > struct one {
-> >     int a;
-> >     int b;
-> >     int c;
-> > };
-> > 
-> > void main() {
-> >     struct one z1;         // Members in z1 do not have default initial values.
-> >     static struct one z2;  // z2.a=0, z2.b=0, and z2.c=0.
-> >     struct one z3 = {1};   // z3.a=1, z3.b=0, and z3.c=0.
-> > }
-> 
-> Yes, I understand that. I can safely printk() all members of that struct
-> without triggering a KMSAN warning, which means they have been properly
-> initialized.
-> 
-> However, if I do something like:
-> 
-> 	char *p = (char *)&vb32;
-> 	int i;
-> 
-> 	for (i = 0; i < sizeof(struct vb32); i++, p++)
-> 		printk("*(p + i): %d", *(p + i));
-> 
-> This tries to print out `vb32` as "raw memory" one byte at a time, and
-> triggers a KMSAN warning somewhere in the middle (when `i` equals to 25
-> or 26).
-> 
-> According to a previous discussion with Mr. Kroah-Hartman, as well as
-> this LWN article:
-> 
-> 	"Structure holes and information leaks"
-> 	https://lwn.net/Articles/417989/
-> 
-> Initializing a struct by assigning (both partially or fully) leaves the
-> "padding" part of it uninitialized, thus potentially leads to kernel
-> information leak if the structure in question is going to be copied to
-> userspace.
-> 
-> memset() sets these "uninitialized paddings" to zero, therefore (I
-> think) should solve the problem.
+--2twpfrl4w4tppxvr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You're absolutely right. I wasn't aware the compiler wouldn't initialize
-holes in the structure. Thank you for educating me :-)
+Hi,
 
-For the patch,
+On Thu, Jul 16, 2020 at 04:58:49PM +0800, Qinglang Miao wrote:
+> From: Yongqiang Liu <liuyongqiang13@huawei.com>
+>=20
+> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+>=20
+> Signed-off-by: Yongqiang Liu <liuyongqiang13@huawei.com>
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Thanks, queued.
 
--- 
-Regards,
+-- Sebastian
 
-Laurent Pinchart
+>  drivers/power/supply/da9030_battery.c | 12 +-----------
+>  1 file changed, 1 insertion(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/da9030_battery.c b/drivers/power/supply=
+/da9030_battery.c
+> index 292ecf875..0deba48d2 100644
+> --- a/drivers/power/supply/da9030_battery.c
+> +++ b/drivers/power/supply/da9030_battery.c
+> @@ -172,17 +172,7 @@ static int bat_debug_show(struct seq_file *s, void *=
+data)
+>  	return 0;
+>  }
+> =20
+> -static int debug_open(struct inode *inode, struct file *file)
+> -{
+> -	return single_open(file, bat_debug_show, inode->i_private);
+> -}
+> -
+> -static const struct file_operations bat_debug_fops =3D {
+> -	.open		=3D debug_open,
+> -	.read_iter		=3D seq_read_iter,
+> -	.llseek		=3D seq_lseek,
+> -	.release	=3D single_release,
+> -};
+> +DEFINE_SHOW_ATTRIBUTE(bat_debug);
+> =20
+>  static struct dentry *da9030_bat_create_debugfs(struct da9030_charger *c=
+harger)
+>  {
+> --=20
+> 2.17.1
+>=20
+
+--2twpfrl4w4tppxvr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8d/ygACgkQ2O7X88g7
++pqmSA//fvwJAMXbsenKVkN26BoMn1sGqtCr6wiAveZsXonjqg6W8zMDW8AaDNJy
+RUid+1abBPkqEJ8Vvo9azVGmhHbauh+/467fY4mPyjf/Gill+FxIdap/hriiom5P
+XUKtQ9EzBroM55ktPkaH4W3lUjUTSpfuGdDc9DPKOi4Hr2VVo/pJ8PBrCm4g+MxE
+m2Ufzda9YYYzbN8Pj71k6PgYCFlUEAIuaOSPxCOrTu6hIGOyyenySooPlXtp1YbG
+Xd/o+1nHMuI+l/lKn9+ofh1xjrzz9uyOOKktPSlQhHtLG+zcfM9fHvTqpienqP3Z
+qZQ12CCjbraBkduQpJtVKlyYRDBX6/xmgpvx7qYCNk57V1dyzcwDlpOUho5dwQ9D
+Q2IzEpp6sP7R1Bj3Z03RSKtRtcl4GWumD1uKJFiZdObgIhqU8MobLE5nUYU5tdZt
+zUPTkDgxOInHxq8btmM/pWpA9OlEeqmsNffCE9k5UCaoA4kYnl56CeEBjf7fH14x
+IParuo95m1Ybi88QMu/grbXUmtHdZnGbqrSshF5zvSxaTqNupxFI+6WeEhYiRSWi
+2xOrzTe/DwuFNJ8SA1A96+v1txu8pk+JBXkwnY4NBju9+cBQJ31L8ebgTl0kpfhF
+c+a5z2qaLwCm/0/ECnVpd8xn1N20Ipgx83idM7zKQlB1qYYRr8w=
+=iYzJ
+-----END PGP SIGNATURE-----
+
+--2twpfrl4w4tppxvr--
