@@ -2,92 +2,116 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E74C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B47C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3872064B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57251206E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:58:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="JeF6aey/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5ADtGYB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgGZXze (ORCPT
+        id S1727987AbgGZX6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 19:55:34 -0400
-Received: from ozlabs.org ([203.11.71.1]:38673 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbgGZXzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 19:55:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFKZC4Qlcz9sPf;
-        Mon, 27 Jul 2020 09:55:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1595807732;
-        bh=Fr3vWGZnocWpaQCTPNmdNT8S3mTtioms9OXn3Tuj0w0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=JeF6aey/KplqXVwH5q2jc8UG7RWEutJbIidNvpEBWFC/zXRJfnyoGoMQFcCTAZ24/
-         xs7rXmhuZe4NZHjVHdqGb3EE8mso6nfwidi17u5nPLB1VXtLOfZl9iRDNPT3Q5AsGR
-         Z4xIa+mKPAgM2jfKrUjI0Pj8IClbLHLEQJS+j0HXuh6OZtOXh3sWmGSsnxjPfYtZkW
-         PMVjv3luwjfaC9NYo3EJPD4gpWNx4kSJaeYktmZ8UfU4FGfmmPpLjhggeNZL24quS1
-         ZbDqCtjnQdMPMIaj0JyLws9TFTd/ZbLv8CwmKRPDKfynX01a7eCFI8qRxYM6cDx9Wo
-         3qDKk3/nceWcA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@samba.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/9] powerpc: delete duplicated words
-In-Reply-To: <b796e912-e945-3cb1-03f8-0f38009634a4@infradead.org>
-References: <20200726162902.Horde.TCqHYaODbkzEpM-rFzDd8A2@messagerie.si.c-s.fr> <b796e912-e945-3cb1-03f8-0f38009634a4@infradead.org>
-Date:   Mon, 27 Jul 2020 09:55:31 +1000
-Message-ID: <87wo2pg7bg.fsf@mpe.ellerman.id.au>
+        Sun, 26 Jul 2020 19:58:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbgGZX6A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 19:58:00 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62FE0C0619D2;
+        Sun, 26 Jul 2020 16:58:00 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id v4so5601726ljd.0;
+        Sun, 26 Jul 2020 16:58:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OxetVxTZd90jQL+ll8MOqzxKnNYoWK4Jslvp4O484LI=;
+        b=O5ADtGYB6niebi1ReSmHcPlmxcxR1ADgc0hdTdtruo330iW83t1WGIxmnPDLuyKt7B
+         uzqm3QhDKXOXU1YKcqcpc9QfZx7XIe6waEJ6mMEa1DHhfwLp0m8NGSNtTzfwyzOGA/AV
+         oYN+kLVyoEW/CDivC6Km5DWpo/b1Hll54v4QR/7bl0PW0DyS1kteidd/lN5UaA9o4VPO
+         AKL8wEHHC/+CozrnENmpf4RKD61zva3k0ArzUQ7ojKMmT+2bdWPxGPLwI3E+va12Lamb
+         CO9sHoyYlCkn8iP7UfiuvPmN2bM5Y7vP3ToZ7nVWhOmnN5OsEYs7UGhhNWy7M+Ed8XeD
+         lXug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OxetVxTZd90jQL+ll8MOqzxKnNYoWK4Jslvp4O484LI=;
+        b=Os43iKhnYcwl+oxWC+TCBFHX+VmEwNop54YgbkPHek/XRPaFZUjlbPEeWXXcoE9rI7
+         aHXKnz5XNpKWfxUI9pB+jcFBaglTgZItPpW6angFZrwk7bl2zLaYaLjyg4caZQ505DZk
+         sOVc7L0nLisYK++0YMjIzfWvu82kzfiObO43I/u6C3zvHlHqRcueoVNENtbXucorXs56
+         Z5aX5sJNN8OcRhIQLbqCtEz3QrGQZf9NIw+qIy66lfnBvrwBZhwULCiu+PCDfyCvemSs
+         I5YNpD+GlPKtN3WmLS9vfpBgDDEwAA8+hnstp/iQZEpgZudOvoVpACPm5E/EqQjjXdIQ
+         t23g==
+X-Gm-Message-State: AOAM533lhS7y5jAtnnZHLywws5/vWUJ5qdzxTsKhwllBTBToMMrI/7Ig
+        ge8SNGJJcZxN9LuPd9vYD8IiOMSc
+X-Google-Smtp-Source: ABdhPJw03o4rEx6v88fj8MYbGoZ/n+kuRLCgiju6T387weRkXRxOaEUyvFWlOeh4ziLNdI2CtFbawA==
+X-Received: by 2002:a2e:3e17:: with SMTP id l23mr8984665lja.177.1595807878557;
+        Sun, 26 Jul 2020 16:57:58 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
+        by smtp.googlemail.com with ESMTPSA id n25sm2028504lji.28.2020.07.26.16.57.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Jul 2020 16:57:58 -0700 (PDT)
+Subject: Re: [RFC PATCH v4 05/14] i2c: tegra: Avoid tegra_i2c_init_dma() for
+ Tegra210 vi i2c
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
+ <1595548272-9809-6-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <6dec1975-5b5c-8677-5be6-e95cc0e8e34d@gmail.com>
+Date:   Mon, 27 Jul 2020 02:57:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <1595548272-9809-6-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Randy Dunlap <rdunlap@infradead.org> writes:
-> On 7/26/20 7:29 AM, Christophe Leroy wrote:
->> Randy Dunlap <rdunlap@infradead.org> a =C3=A9crit=C2=A0:
->>=20
->>> Drop duplicated words in arch/powerpc/ header files.
->>=20
->> How did you detect them ? Do you have some script for tgat, or you just =
-read all comments ?
->
-> Yes, it's a script that finds lots of false positives, so I have to check
-> each and every one of them for validity.
->
->>> Cc: Michael Ellerman <mpe@ellerman.id.au>
->>=20
->> You say you Cc Michael, but in fact you don't ... Allthough he is the po=
-werpc maintainer
->
-> Thanks for noticing that.
-> [time passes]
-> I checked all of my emails for this patch series and they say that Mike w=
-as Cc:ed
-> on all of them.
->
-> I am adding his email address back to this one.
-> Mike, did you receive this patch series?
+24.07.2020 02:51, Sowjanya Komatineni пишет:
+> VI I2C is on host1x bus so APB DMA can't be used for Tegra210 VI
+> I2C and there are no tx and rx dma channels for VI I2C.
+> 
+> So, avoid attempt of requesting DMA channels.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index 1bf3666..00d3e4d 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -421,7 +421,7 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
+>  	dma_addr_t dma_phys;
+>  	int err;
+>  
+> -	if (!i2c_dev->hw->has_apb_dma)
+> +	if (!i2c_dev->hw->has_apb_dma || i2c_dev->is_vi)
+>  		return 0;
+>  
+>  	if (!IS_ENABLED(CONFIG_TEGRA20_APB_DMA)) {
+> 
 
-Yes.
-
-There's a mailman option which drops me from being explicity on Cc,
-because I'm subscribed to the list. Otherwise I get two copies of
-everything.
-
-So as long as it goes to linuxppc-dev I should see it, regardless of
-whether I'm explicitly listed in Cc.
-
-cheers
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
