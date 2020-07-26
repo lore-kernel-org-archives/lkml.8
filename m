@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB85C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3906FC433E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAE120719
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05F202070C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t+MKrRZZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y/dPwwj0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgGZAen (ORCPT
+        id S1728125AbgGZAeh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 20:34:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52932 "EHLO
+        Sat, 25 Jul 2020 20:34:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbgGZAel (ORCPT
+        with ESMTP id S1727034AbgGZAeg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 20:34:41 -0400
+        Sat, 25 Jul 2020 20:34:36 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EFB3C08C5C0;
-        Sat, 25 Jul 2020 17:34:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38345C08C5C0;
+        Sat, 25 Jul 2020 17:34:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=nBk4Q7orQIK0jkBUUDU0U2iWDTc0Pyf+uhCmouq6Ync=; b=t+MKrRZZSDsom1JbZ3a3QgFdY+
-        BLgIrrwYyCYyLE/QDDh0AqbrwZCCaPHxLI34brPowCrMpOkGFKm1K0UWokYCwEPSD3GxdxXZ6Uw5y
-        8mU7XtahRRPW6WFyTM+utqnkSlkPpK7DMv4fnof08OzEJochB3O9QPnMu9vURw/13GFrhhD8S3MkH
-        sqOWT1/qyspkEBnG2uVqXK1A+S8c+gxNsRj6qDtwZeRVKM+neCePTYskNWMwMBVH0yGNQ7SXPneps
-        5PEheFBYiMzGG1d6AVjbqJfU4R7mo545bnkxwKHiqmELyM0S25v/gO4KJO9Ix98Nf8TwkXIrAkCnl
-        ep245+sQ==;
+        bh=st2ECFJOxFlZ5/xWIEkr9NikQ5GLxltD8J0+EBvRykA=; b=Y/dPwwj0UHALTq4fZOUOXNp4pT
+        /siNsfogCpPQ2HjwykYErn7Nc1lid/6J8tV5zfMe4Z2CDBfctucXEVh6x8ZL2YJea0PN+KXGRqt5J
+        rezR4qS9BLITqkiG0EUm5oP4f/vmNn2meSPVmzAZvBxlHHLstLG8rS1YLbx/VnWKPAtb3KmLoNcTC
+        6MjF3jcp07iiu7sqVucIzSMpn3CyINC+JKjABY/PWRDUpWIIDXUOuLzmbFkNM13aXDJTANZgiS4Hw
+        QT7XSJ3A72jYz/PqFbJgm6HVUtYuwKc6OTE25QWSPvrDKWOSfuomIJMGJBoWyjwO3/TA0CY2Ogwx3
+        Op0dZieQ==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzUch-000328-Ad; Sun, 26 Jul 2020 00:34:39 +0000
+        id 1jzUcc-000328-BN; Sun, 26 Jul 2020 00:34:34 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         linux-mips@vger.kernel.org
-Subject: [PATCH 4/6] mips: octeon: cvmx-pkoh: fix duplicated words
-Date:   Sat, 25 Jul 2020 17:34:27 -0700
-Message-Id: <20200726003429.20356-5-rdunlap@infradead.org>
+Subject: [PATCH 1/6] mips: io.h: delete duplicated word
+Date:   Sat, 25 Jul 2020 17:34:24 -0700
+Message-Id: <20200726003429.20356-2-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200726003429.20356-1-rdunlap@infradead.org>
 References: <20200726003429.20356-1-rdunlap@infradead.org>
@@ -57,44 +57,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Delete the repeated word "command".
-Delete the repeated words "returns" and convert to kernel-doc notation
-by adding a ':'.
+Delete the repeated word "on".
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: linux-mips@vger.kernel.org
 ---
- arch/mips/include/asm/octeon/cvmx-pko.h |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/mips/include/asm/io.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200720.orig/arch/mips/include/asm/octeon/cvmx-pko.h
-+++ linux-next-20200720/arch/mips/include/asm/octeon/cvmx-pko.h
-@@ -40,8 +40,7 @@
-  * generic code while CVMX_PKO_LOCK_CMD_QUEUE should be used
-  * with hand tuned fast path code.
-  *
-- * Some of other SDK differences visible to the command command
-- * queuing:
-+ * Some of other SDK differences visible to the command queuing:
-  * - PKO indexes are no longer stored in the FAU. A large
-  *   percentage of the FAU register block used to be tied up
-  *   maintaining PKO queue pointers. These are now stored in a
-@@ -413,7 +412,7 @@ static inline void cvmx_pko_send_packet_
-  * @use_locking: CVMX_PKO_LOCK_NONE, CVMX_PKO_LOCK_ATOMIC_TAG, or
-  *		 CVMX_PKO_LOCK_CMD_QUEUE
-  *
-- * Returns returns CVMX_PKO_SUCCESS on success, or error code on
-+ * Returns: CVMX_PKO_SUCCESS on success, or error code on
-  * failure of output
+--- linux-next-20200720.orig/arch/mips/include/asm/io.h
++++ linux-next-20200720/arch/mips/include/asm/io.h
+@@ -59,7 +59,7 @@
+  * which all ports are being mapped.  For sake of efficiency some code
+  * assumes that this is an address that can be loaded with a single lui
+  * instruction, so the lower 16 bits must be zero.  Should be true on
+- * on any sane architecture; generic code does not use this assumption.
++ * any sane architecture; generic code does not use this assumption.
   */
- static inline cvmx_pko_status_t cvmx_pko_send_packet_finish(
-@@ -456,7 +455,7 @@ static inline cvmx_pko_status_t cvmx_pko
-  * @use_locking: CVMX_PKO_LOCK_NONE, CVMX_PKO_LOCK_ATOMIC_TAG, or
-  *		 CVMX_PKO_LOCK_CMD_QUEUE
-  *
-- * Returns returns CVMX_PKO_SUCCESS on success, or error code on
-+ * Returns: CVMX_PKO_SUCCESS on success, or error code on
-  * failure of output
-  */
- static inline cvmx_pko_status_t cvmx_pko_send_packet_finish3(
+ extern unsigned long mips_io_port_base;
+ 
