@@ -2,107 +2,240 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B47AC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03E7C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD7120715
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B4D20658
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:53:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2m2LF0wI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s8v+a5Y0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UEMXr2oh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgGZKuo (ORCPT
+        id S1726909AbgGZKxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 06:50:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36646 "EHLO
+        Sun, 26 Jul 2020 06:53:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGZKul (ORCPT
+        with ESMTP id S1725794AbgGZKxW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 06:50:41 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8865CC0619D2;
-        Sun, 26 Jul 2020 03:50:41 -0700 (PDT)
-Date:   Sun, 26 Jul 2020 10:50:36 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595760637;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=u7o0z+KHReNHyOszAW2M4Z2lGfMlRi1Kc1LJ6E0Cd0c=;
-        b=2m2LF0wIzbLrtvReDJI+6xOFTmik0bOvSG+8gtpMkn4OoOHcDS5GBIS09GeMs02eACMGJ4
-        fgotAymhqGSGa5BrFNKDG6J5nGJo5ks/yXlWsxXiwYY/6GqwUH1YKtlzvn2aaLsqkAgWMA
-        6zDnQCWKpYAoEYln2o6dbCw7evjYpui4uwILzkiJ0D8qFmY77PttrMRDGjjvQFjb7sJUUA
-        vQGtgdTEpFh12wmA1FL9qu+a/nTWPAgjpXMCbGCvf/2igpD4x8U01g5r7WPPlN15NZJEQ5
-        qROZYtS3rRNlVp0PloOC+fllWupbC/88lWMT92DF75NuC//DFHZx69uBYG2hYA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595760637;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=u7o0z+KHReNHyOszAW2M4Z2lGfMlRi1Kc1LJ6E0Cd0c=;
-        b=s8v+a5Y0kRuwgrCwvw6VagRc4ZAHxsjGJZlQBXX5IKZ3i9qtdGH0n9kAtGxIDXyZx5y6qe
-        05FCVPVXZ64HlTDQ==
-From:   "tip-bot2 for Randy Dunlap" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86: uv: uv_hub.h: Delete duplicated word
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200726004124.20618-4-rdunlap@infradead.org>
-References: <20200726004124.20618-4-rdunlap@infradead.org>
+        Sun, 26 Jul 2020 06:53:22 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80C9C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 03:53:22 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id t11so7570665pfq.11
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 03:53:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mT3x0356kVRWVeFjxu7KR4BK4J66kBgEfHawKmKvOdY=;
+        b=UEMXr2oh28zetGxqfszujUEJM/QhQBAVaJqXfzd+OY6V5gwlCms7u+8d/LoeUQEeFy
+         GjnQGqhkF1G2S/MMOzMfUI6h/1XalxhlevR70yIlTaNBgZrcVn2b7NDeNFLZ9r27qxIf
+         mlQoR8yOvhtW5smEofqg9910I6qdpRODOeuYDrc3rJ7wBlTq3ncMadh2hYm3ZPlw9KC1
+         G36b30DEKSReeOd+jCkH4mbsEuYbnY2B0sa16TC1oBgk434bM2F5iQVLHffVg7LR8BNj
+         OMO+99vCKkIaELYnLMSfWY4bAmmAHBWHNV+U5xqynoO9lWTQUDi1F9E/rrlDfjbaDl0X
+         yhnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mT3x0356kVRWVeFjxu7KR4BK4J66kBgEfHawKmKvOdY=;
+        b=sHVcIVyr+YMod6rnomGrUrXaQL2YzoefJpsUQZlfofu9vdKmiqyz6p7AnW3C7LPhNy
+         0YvzwRcLsyZhMHhxGPz8Hz1nSHY+efxw0Zgr3KS+rMPZBX7WufnL2XpY6f56W6z6xbGj
+         JHoA2dDBo+C2bVAluXLTA6nCcEm2o1fYZ8ORTKgLQ7r+Hd1xO5YwpFjps40m37PwZLcZ
+         VuggiWZRRqn/QG9vZVmAXn1UNjmsq7cvzUoqhGDOaHNgkB2oYxCKq7ZnMCsHmtTgmhtu
+         OVgD1wQpGx3+/1KLZVga1vOciSS7pWoDaPWbVu6l0UUIknT43Ar1+axu/kYkfBkbScfC
+         bSpQ==
+X-Gm-Message-State: AOAM531vY6OuFCiZnVwRrcR8+iNMecIl0hW+U2vHiVK/DzV+nJ8ovsvS
+        ChNOUdhvKVF1lfDHNAVNNVw=
+X-Google-Smtp-Source: ABdhPJzKwvZis84Ci9mOUHaNSJHVbXXWiUs9KC8kdic9FgKmdAVksNuSk2Vyu0IlY1aRqOOjt5wz1A==
+X-Received: by 2002:a63:8949:: with SMTP id v70mr15267297pgd.256.1595760802207;
+        Sun, 26 Jul 2020 03:53:22 -0700 (PDT)
+Received: from localhost.localdomain ([122.167.86.75])
+        by smtp.googlemail.com with ESMTPSA id y22sm10642055pjp.41.2020.07.26.03.53.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 03:53:21 -0700 (PDT)
+From:   Aditya Jain <aditya.jainadityajain.jain@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     hdegoede@redhat.com, Larry.Finger@lwfinger.net,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Aditya Jain <aditya.jainadityajain.jain@gmail.com>
+Subject: [PATCH v2] staging: rtl8723bs: include: Fix coding style issues
+Date:   Sun, 26 Jul 2020 16:23:02 +0530
+Message-Id: <20200726105302.52188-1-aditya.jainadityajain.jain@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAJAoDUjVBon2iiztdER82mHgJtVS6s5XYSajbCTne0KWAzoLvg@mail.gmail.com>
+References: <CAJAoDUjVBon2iiztdER82mHgJtVS6s5XYSajbCTne0KWAzoLvg@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <159576063629.4006.9768537728578352299.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+Cleaning messy function declartions and fixing code style
+errors in hal_phy_cfg.h as reported by checkpatch.pl
 
-Commit-ID:     de0038bfaf53af0e8bc4961b7aacdcb79f43bf08
-Gitweb:        https://git.kernel.org/tip/de0038bfaf53af0e8bc4961b7aacdcb79f43bf08
-Author:        Randy Dunlap <rdunlap@infradead.org>
-AuthorDate:    Sat, 25 Jul 2020 17:41:24 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 26 Jul 2020 12:47:22 +02:00
-
-x86: uv: uv_hub.h: Delete duplicated word
-
-Delete the repeated word "the".
-
-[ mingo: While at it, also capitalize CPU properly. ]
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200726004124.20618-4-rdunlap@infradead.org
+Signed-off-by: Aditya Jain <aditya.jainadityajain.jain@gmail.com>
 ---
- arch/x86/include/asm/uv/uv_hub.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../staging/rtl8723bs/include/hal_phy_cfg.h   | 118 +++++-------------
+ 1 file changed, 33 insertions(+), 85 deletions(-)
 
-diff --git a/arch/x86/include/asm/uv/uv_hub.h b/arch/x86/include/asm/uv/uv_hub.h
-index 60ca0af..5738c36 100644
---- a/arch/x86/include/asm/uv/uv_hub.h
-+++ b/arch/x86/include/asm/uv/uv_hub.h
-@@ -682,7 +682,7 @@ static inline int uv_node_to_blade_id(int nid)
- 	return nid;
- }
+diff --git a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
+index 419ddb0733aa..2f123903279c 100644
+--- a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
++++ b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
+@@ -8,54 +8,31 @@
+ #define __INC_HAL8723BPHYCFG_H__
  
--/* Convert a cpu number to the the UV blade number */
-+/* Convert a CPU number to the UV blade number */
- static inline int uv_cpu_to_blade_id(int cpu)
- {
- 	return uv_node_to_blade_id(cpu_to_node(cpu));
+ /*--------------------------Define Parameters-------------------------------*/
+-#define LOOP_LIMIT				5
+-#define MAX_STALL_TIME			50		/* us */
++#define LOOP_LIMIT		5
++#define MAX_STALL_TIME		50	/* us */
+ #define AntennaDiversityValue	0x80	/* Adapter->bSoftwareAntennaDiversity ? 0x00:0x80) */
+ #define MAX_TXPWR_IDX_NMODE_92S	63
+-#define Reset_Cnt_Limit			3
+-
+-#define MAX_AGGR_NUM	0x07
++#define Reset_Cnt_Limit		3
+ 
++#define MAX_AGGR_NUM 0x07
+ 
+ /*--------------------------Define Parameters End-------------------------------*/
+ 
+-
+ /*------------------------------Define structure----------------------------*/
+ 
+ /*------------------------------Define structure End----------------------------*/
+ 
+ /*--------------------------Exported Function prototype---------------------*/
+-u32
+-PHY_QueryBBReg_8723B(
+-struct adapter *Adapter,
+-u32 	RegAddr,
+-u32 	BitMask
+-	);
+-
+-void
+-PHY_SetBBReg_8723B(
+-struct adapter *Adapter,
+-u32 	RegAddr,
+-u32 	BitMask,
+-u32 	Data
+-	);
+-
+-u32
+-PHY_QueryRFReg_8723B(
+-struct adapter *		Adapter,
+-u8 		eRFPath,
+-u32 			RegAddr,
+-u32 			BitMask
+-	);
+-
+-void
+-PHY_SetRFReg_8723B(
+-struct adapter *		Adapter,
+-u8 		eRFPath,
+-u32 			RegAddr,
+-u32 			BitMask,
+-u32 			Data
+-	);
++u32 PHY_QueryBBReg_8723B(struct adapter *Adapter, u32 RegAddr, u32 BitMask);
++
++void PHY_SetBBReg_8723B(struct adapter *Adapter, u32 RegAddr,
++			u32 BitMask, u32 Data);
++
++u32 PHY_QueryRFReg_8723B(struct adapter *Adapter, u8 eRFPath,
++			 u32 RegAddr, u32 BitMask);
++
++void PHY_SetRFReg_8723B(struct adapter *Adapter, u8 eRFPath,
++			u32 RegAddr, u32 BitMask, u32 Data);
+ 
+ /* MAC/BB/RF HAL config */
+ int PHY_BBConfig8723B(struct adapter *Adapter);
+@@ -64,57 +41,28 @@ int PHY_RFConfig8723B(struct adapter *Adapter);
+ 
+ s32 PHY_MACConfig8723B(struct adapter *padapter);
+ 
+-void
+-PHY_SetTxPowerIndex(
+-struct adapter *		Adapter,
+-u32 				PowerIndex,
+-u8 			RFPath,
+-u8 			Rate
+-	);
+-
+-u8
+-PHY_GetTxPowerIndex(
+-struct adapter *		padapter,
+-u8 			RFPath,
+-u8 			Rate,
+-enum CHANNEL_WIDTH		BandWidth,
+-u8 			Channel
+-	);
+-
+-void
+-PHY_GetTxPowerLevel8723B(
+-struct adapter *	Adapter,
+-	s32*			powerlevel
+-	);
+-
+-void
+-PHY_SetTxPowerLevel8723B(
+-struct adapter *	Adapter,
+-u8 	channel
+-	);
+-
+-void
+-PHY_SetBWMode8723B(
+-struct adapter *			Adapter,
+-enum CHANNEL_WIDTH			Bandwidth,	/*  20M or 40M */
+-unsigned char 			Offset		/*  Upper, Lower, or Don't care */
+-);
++void PHY_SetTxPowerIndex(struct adapter *Adapter, u32 PowerIndex,
++			 u8 RFPath, u8 Rate);
+ 
+-void
+-PHY_SwChnl8723B(/*  Call after initialization */
+-struct adapter *Adapter,
+-u8 channel
+-	);
+-
+-void
+-PHY_SetSwChnlBWMode8723B(
+-struct adapter *		Adapter,
+-u8 			channel,
+-enum CHANNEL_WIDTH		Bandwidth,
+-u8 			Offset40,
+-u8 			Offset80
++u8 PHY_GetTxPowerIndex(struct adapter *padapter, u8 RFPath, u8 Rate,
++			enum CHANNEL_WIDTH BandWidth, u8 Channel);
++
++void PHY_GetTxPowerLevel8723B(struct adapter *Adapter, s32 *powerlevel);
++
++void PHY_SetTxPowerLevel8723B(struct adapter *Adapter, u8 channel);
++
++void PHY_SetBWMode8723B(struct adapter *Adapter,
++			enum CHANNEL_WIDTH Bandwidth,	/*  20M or 40M */
++			unsigned char Offset	/*  Upper, Lower, or Don't care */
+ );
+ 
++/*  Call after initialization */
++void PHY_SwChnl8723B(struct adapter *Adapter, u8 channel);
++
++void PHY_SetSwChnlBWMode8723B(struct adapter *Adapter, u8 channel,
++				enum CHANNEL_WIDTH Bandwidth,
++				u8 Offset40, u8 Offset80);
++
+ /*--------------------------Exported Function prototype End---------------------*/
+ 
+ #endif
+-- 
+2.25.1
+
