@@ -2,71 +2,69 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC7BC433EB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 04:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ED4C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 04:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D653A204EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 04:40:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC7D2053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 04:39:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="Hq0kueyo"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="gRKxJbXv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgGZEkT (ORCPT
+        id S1725968AbgGZEj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 00:40:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34356 "EHLO
+        Sun, 26 Jul 2020 00:39:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgGZEkO (ORCPT
+        with ESMTP id S1725747AbgGZEj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 00:40:14 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA4A5C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 21:40:13 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k1so7356522pjt.5
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 21:40:13 -0700 (PDT)
+        Sun, 26 Jul 2020 00:39:57 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C735BC0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 21:39:56 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id s189so7540365pgc.13
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 21:39:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=0x0f.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=D0MdPbFwkc7fKXzhQDxoLKwNc+TslVFTHzNYvgFbJfw=;
-        b=Hq0kueyojRMANB+ONzvJX3y94df+VXRUr3vesrMvVO6RaXLyBDCJgSZgzbSYP8fVZg
-         blAixup8nOqp7jwKx82A7+ri7wOOWzg0kl9kAm9d+7LM4ggmTuqrNjT3JxjLj11FoaZ6
-         lSEqChkComE54IJuXEnoNDJ9/k68NxKfQD99w=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U0JPK7sI7sXFOZVB0qjVRqNGXUj8GQ0OLMfabN0aZ8g=;
+        b=gRKxJbXv0ehorkaBGtjLwvM4IJUqreQDjrxDdqzx5HXOhKbdgTfqYIKJ/ii538j0cw
+         nT1BgFGptxzSc5Iolm84LjSL2NYOIXwfD0XuA93CDK0QiK/YSLMZub9TNIMQ5FKOnIiN
+         UYR2ZiCj/E6XkANf1WWQyhZK/P7GMruDTKxVg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=D0MdPbFwkc7fKXzhQDxoLKwNc+TslVFTHzNYvgFbJfw=;
-        b=H8yEY2o5/Ew6iF9GOdOFwYvuCpoG7JfGRS/15osm35R473lXTwupXySyWXk7M5PmYh
-         LrJ2gztpQ9Kj4JRq2GdwyfOUtY1CKiEprmATVbxvzYiclk7zo1Kkl2qt28NvJjSVWnqm
-         P2vNxY+VJ2Ck6wo7ala3TsIR1WYfuu+VtTm/Y2mTHMNk7p6RNftcqQvhKuIaVL01jMyU
-         FL5CK7bCKLh8DxVe4XrWaz90OnvKrvjVsMmGvp8IeGivNmIcKiq5Et190cMEC1D6urdQ
-         BYGWuBpfVNpdJYCeY3T2ry9KI2WPsffY6oUxU9hZ9mO/o1Y++0XYN54tXhzo7UIscktG
-         DWlQ==
-X-Gm-Message-State: AOAM530+HQybNuKkGmUdZPoBvyWGeu58mfmDm5wdaOt9YGxl9+9b3tAK
-        FYUrmDD2dSK1g3/OwjCNO9K3eQ==
-X-Google-Smtp-Source: ABdhPJx8UUWAmsUMGBRN15yQo65JR5PFxiqCwTqU5Olv1hgE9e9qsRE+MN6SPRLZX+SrQo3lHeMvJg==
-X-Received: by 2002:a17:90a:2d83:: with SMTP id p3mr13088347pjd.124.1595738413058;
-        Sat, 25 Jul 2020 21:40:13 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=U0JPK7sI7sXFOZVB0qjVRqNGXUj8GQ0OLMfabN0aZ8g=;
+        b=eduZw6FitVhotkyXgzqJ6Fiju/VSY2rLKUcs1zSdRJJtYac/DEe6abllNEq5UeGxNh
+         Z0qHZ1GC6GGiuOtJxXy+KYgxMJTeWM9zI4JBX0DcpaJdm+ciL/Haz4m1BVZ34MM2ouot
+         V7zjjx2XQ7vTXsANU8jhrs98h1lNFgdGpHjdnDsxc8w8SJIRHH5RRf2hR0RndQP9xDrP
+         JVwzfBL2f7kvBhmOZtYq6F4SXgYaC7Q+vlOKOuiZScwUEbjpjB2P6R68CEz6tws3vSQI
+         bxJzK7wtzVwxm7D/AuXoRzWovBp9GRjDtDfp+wp25GSGtOS4+AtMNwARomqhtAWPWLJF
+         G2lw==
+X-Gm-Message-State: AOAM531LjrIjhvTjlP1HaLIttMJfzW5W8YWS6jrDFUORv/n6HIvm2a/y
+        c8KOGCDpaLPUvVv39pa5dicTLQ==
+X-Google-Smtp-Source: ABdhPJyv73YVKcV0xX7Ar4iuNYP6XaTJD5KbQTRxTHBLYr4qztA4cY9wzfCYgP2z1VRv9lIaYl2OHw==
+X-Received: by 2002:a63:20d:: with SMTP id 13mr14700543pgc.166.1595738395952;
+        Sat, 25 Jul 2020 21:39:55 -0700 (PDT)
 Received: from shiro.work (p532183-ipngn200506sizuokaden.shizuoka.ocn.ne.jp. [153.199.2.183])
-        by smtp.googlemail.com with ESMTPSA id t1sm10507372pje.55.2020.07.25.21.40.11
+        by smtp.googlemail.com with ESMTPSA id t1sm10507372pje.55.2020.07.25.21.39.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 21:40:12 -0700 (PDT)
+        Sat, 25 Jul 2020 21:39:55 -0700 (PDT)
 From:   Daniel Palmer <daniel@0x0f.com>
 List-Id: <soc.lore.kernel.org>
 To:     soc@kernel.org
 Cc:     arnd@arndb.de, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH 7/7] ARM:mstar: Add reboot support
-Date:   Sun, 26 Jul 2020 13:39:48 +0900
-Message-Id: <20200726043948.1357573-8-daniel@0x0f.com>
+Subject: [PATCH 0/7] ARM:mstar: DT filling out
+Date:   Sun, 26 Jul 2020 13:39:41 +0900
+Message-Id: <20200726043948.1357573-1-daniel@0x0f.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200726043948.1357573-1-daniel@0x0f.com>
-References: <20200726043948.1357573-1-daniel@0x0f.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,34 +72,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MStar v7 SoCs support reset by writing a magic value to a register
-in the "pmsleep" area.
+This series adds a few low hanging fruit that are purely DT changes to
+keep the ball rolling while I work on series for more complicated things
+like the interrupt controllers.
 
-This adds a node for using the syscon reboot driver to trigger a reset.
+Summary of changes:
 
-Signed-off-by: Daniel Palmer <daniel@0x0f.com>
----
- arch/arm/boot/dts/mstar-v7.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+- Adds the IMI SRAM region and sets the right size for each family
+- Adds the ARM PMU
+- Adds a syscon for a lump of registers called "pmsleep"
+- Uses the pmsleep syscon to enable reboot
 
-diff --git a/arch/arm/boot/dts/mstar-v7.dtsi b/arch/arm/boot/dts/mstar-v7.dtsi
-index c8b192569d05..7ac7e649189f 100644
---- a/arch/arm/boot/dts/mstar-v7.dtsi
-+++ b/arch/arm/boot/dts/mstar-v7.dtsi
-@@ -78,6 +78,13 @@ pmsleep: syscon@1c00 {
- 				reg = <0x1c00 0x100>;
- 			};
- 
-+			reboot {
-+				compatible = "syscon-reboot";
-+				regmap = <&pmsleep>;
-+				offset = <0xb8>;
-+				mask = <0x79>;
-+			};
-+
- 			l3bridge: l3bridge@204400 {
- 				compatible = "mstar,l3bridge";
- 				reg = <0x204400 0x200>;
+Daniel Palmer (7):
+  ARM:mstar: Add IMI SRAM region
+  ARM:mstar: Adjust IMI size of infinity
+  ARM:mstar: Adjust IMI size for mercury5
+  ARM:mstar: Adjust IMI size for infinity3
+  ARM:mstar: Add PMU
+  ARM:mstar: Add syscon node for "pmsleep" area
+  ARM:mstar: Add reboot support
+
+ arch/arm/boot/dts/infinity.dtsi  |  4 ++++
+ arch/arm/boot/dts/infinity3.dtsi |  4 ++++
+ arch/arm/boot/dts/mercury5.dtsi  |  4 ++++
+ arch/arm/boot/dts/mstar-v7.dtsi  | 26 +++++++++++++++++++++++++-
+ 4 files changed, 37 insertions(+), 1 deletion(-)
+
 -- 
 2.27.0
 
