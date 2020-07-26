@@ -2,130 +2,129 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDB9C433E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A27C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72AB52065E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:04:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595765079;
-	bh=LJxegL2P5hNKR910G8c/QDoI1uB2BfRFQ4PeiQJwStQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GeyuJmKtnW6h9EkqFpbg0Kkf0AOmzzk4DlvmC6DTSOLGLEyT5ZdoBmhEdunj8MJgR
-	 T4c2L9okfQQggRX1DRjJAZNt3nBJqOuPgLrsx/39LrYDSNwAjwqGqmAvbfNIAaKoT5
-	 QLAzsW4UfnomwRR1EIlmZLu3tzcHX7eSj9dOVF7w=
+	by mail.kernel.org (Postfix) with ESMTP id 536192065C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:11:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sP1/Yjfm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgGZMEe (ORCPT
+        id S1726669AbgGZMLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 08:04:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgGZME1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 08:04:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Sun, 26 Jul 2020 08:11:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbgGZMLr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 08:11:47 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF3AC0619D2;
+        Sun, 26 Jul 2020 05:11:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xA3Hnz+mwiXbGsGPSLX5kHfDe9+CoKBCym0WXsIlDDo=; b=sP1/Yjfm/lG5EQn9AxmxZdauaJ
+        MxUY80ZJ40JT45IWrg88x3weHFXoDis8wKOuWPpaMIKIHT08gNY7ds8XI+dxwzg/7jpjPM5iU3K2a
+        fp+AniTB/M1sw3UKSnx+aNRJC078VCBq9AdVx7ousLRNjP3pvlfP78klqSV0BgalGdz6OA1Z+sNsB
+        Pdlh4P7ZYXdDJN5EdIY3uw5oUbRhUZ2nn575NPj46hthp++5huQ5fcxEiK1rkElZeDTP+ReSLIUI/
+        0KbZrzjPc0Kv5ZJ+TYr8ZZQvtgIhBbBqfpHnOyaokMhJJixAzDdIdFV42GrzYf3XwrXS/bGClBsAG
+        nzv6UgBA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzfVD-0001ia-Rc; Sun, 26 Jul 2020 12:11:40 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40BAB2065E;
-        Sun, 26 Jul 2020 12:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595765065;
-        bh=LJxegL2P5hNKR910G8c/QDoI1uB2BfRFQ4PeiQJwStQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xy0KtmyrKY0jX8tITQlUegCxmDYNtTsgBZMQUvwmUrdMbIF0cVKjshR0MQeIGNHRj
-         u3dZWeWJc5V9C/OxmUSuefkUN6fX7aAq8RXQINPs/V1QurcwpCNTAP9KonYrK9ZOLC
-         qACyVZsJwgPmYtOqUITCkz9UKqybv0a91ujrcAaY=
-Date:   Sun, 26 Jul 2020 14:04:22 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Martin Botka <martin.botka1@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        zhengbin <zhengbin13@huawei.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Xiaozhe Shi <xiaozhes@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-usb@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH 9/9] soc/qcom: Add REVID driver
-Message-ID: <20200726120422.GA1292190@kroah.com>
-References: <20200726111215.22361-1-konradybcio@gmail.com>
- <20200726111215.22361-10-konradybcio@gmail.com>
- <20200726112920.GA1286220@kroah.com>
- <CAMS8qEV7jhbHqpXE2UOaXBVM5WbCThaGrcD3wiH9kf6h_K-qeA@mail.gmail.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 37A07301AC6;
+        Sun, 26 Jul 2020 14:11:38 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1BD78285770B1; Sun, 26 Jul 2020 14:11:38 +0200 (CEST)
+Date:   Sun, 26 Jul 2020 14:11:38 +0200
+From:   peterz@infradead.org
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 1/2] lockdep: improve current->(hard|soft)irqs_enabled
+ synchronisation with actual irq state
+Message-ID: <20200726121138.GC119549@hirez.programming.kicks-ass.net>
+References: <20200723105615.1268126-1-npiggin@gmail.com>
+ <20200725202617.GI10769@hirez.programming.kicks-ass.net>
+ <1595735694.b784cvipam.astroid@bobo.none>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMS8qEV7jhbHqpXE2UOaXBVM5WbCThaGrcD3wiH9kf6h_K-qeA@mail.gmail.com>
+In-Reply-To: <1595735694.b784cvipam.astroid@bobo.none>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 01:40:46PM +0200, Konrad Dybcio wrote:
-> >Horrible global symbol name.  Who calls this?
+On Sun, Jul 26, 2020 at 02:14:34PM +1000, Nicholas Piggin wrote:
+> Excerpts from Peter Zijlstra's message of July 26, 2020 6:26 am:
+
+> > Which is 'funny' when it interleaves like:
+> > 
+> > 	local_irq_disable();
+> > 	...
+> > 	local_irq_enable()
+> > 	  trace_hardirqs_on();
+> > 	  <NMI/>
+> > 	  raw_local_irq_enable();
+> > 
+> > Because then it will undo the trace_hardirqs_on() we just did. With the
+> > result that both tracing and lockdep will see a hardirqs-disable without
+> > a matching enable, while the hardware state is enabled.
 > 
-> Welcome to development on qcom platforms :D
+> Seems like an arch problem -- why not disable if it was enabled only?
+> I guess the local_irq tracing calls are a mess so maybe they copied 
+> those.
 
-Yeah, I have seen :(
+Because, as I wrote earlier, then we can miss updating software state.
+So your proposal has:
 
-> >This is the last patch in
-> >the series, so if there is no user for this, please don't export it.
+	raw_local_irq_disable()
+	<NMI>
+	  if (!arch_irqs_disabled(regs->flags) // false
+	    trace_hardirqs_off();
+
+	  // tracing/lockdep still think IRQs are enabled
+	  // hardware IRQ state is disabled.
+
+With the current code we have:
+
+	local_irq_enable()
+	  trace_hardirqs_on();
+	  <NMI>
+	    trace_hardirqs_off();
+	    ...
+	    if (!arch_irqs_disabled(regs->flags)) // false
+	      trace_hardirqs_on();
+	  </NMI>
+	  // and now the NMI disabled software state again
+	  // while we're about to enable the hardware state
+	  raw_local_irq_enable();
+
+> > Which is exactly the state Alexey seems to have ran into.
 > 
-> Other downstream drivers make use of it.. need to get this up first, sorry :V
+> No his was what I said, the interruptee's trace_hardirqs_on() in
+> local_irq_enable getting lost because the NMI's local_irq_disable
+> always disables, but the enable doesn't re-enable.
 
-Then use a proper name for it, with a correct prefix, and export it with
-EXPORT_SYMBOL_GPL() please.
+That's _exactly_ the case above. It doesn't re-enable because hardirqs
+are actually still disabled. You _cannot_ rely on hardirq state for
+NMIs, that'll get you wrong state.
 
-> >Why do you need a .h file in the include directory if only a single .c
-> >file needs it?  Just put that info in the .c file itself.
-> 
-> Again, other downstream drivers which some people and I intend to
-> bring to upstream standards use that to access the PMIC model/hw revision.
+> It's all just weird asymmetrical special case hacks AFAIKS, the
+> code should just be symmetric and lockdep handle it's own weirdness.
 
-But all of those defines are not needed, just the function name, right?
-
-> >But again, who uses this module?  If it's only good for a single line in
-> >the kernel log, that feels like a huge waste to me.
-> 
-> downstream-kernel-dir$ rg -l qpnp-revid.h | wc -l
-> 25
-> 
-> So yeah, quite a bunch of other qcom-specific drivers.
-> 
-> I'll try to fix these and send a v2.
-
-Hold off on this and wait until there is a real user for it, as we can
-not take api additions without a user, otherwise we will just come along
-and delete the code.
-
-Submit it as part of a series that actually uses the function, so we can
-at least see if the function makes sense to be used in that way as well,
-right now we have no clue.
-
-thanks,
-
-greg k-h
+It's for non-maskable exceptions/interrupts, because there the hardware
+and software state changes non-atomically. For maskable interrupts doing
+the software state transitions inside the disabled region makes perfect
+sense, because that keeps it atomic.
