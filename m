@@ -2,110 +2,260 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B30C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915E8C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03CF2065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:37:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6074F2065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iNadD80I"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h+6c/Wtv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgGZWhq (ORCPT
+        id S1726522AbgGZWsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 18:37:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60566 "EHLO
+        Sun, 26 Jul 2020 18:48:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbgGZWhq (ORCPT
+        with ESMTP id S1726253AbgGZWsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 18:37:46 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02071C0619D4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:37:45 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id g6so2559412ljn.11
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:37:45 -0700 (PDT)
+        Sun, 26 Jul 2020 18:48:21 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CF79C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:48:21 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id j65so4489318ybb.12
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:48:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GpwOccBGYJpOpejj8LGvoGKhI+wr9+pa+RZ9Hp5UCyA=;
-        b=iNadD80IPgOf3bhhB7SDd6GKj3H+1+4alVP+Ffn+LPUXErddmDBoOk9K83lZmBHJph
-         r+/zFAlf+vnQhl2ZkuGEmds9lsqPdmoh3QoKaSqj8uHvY5fO/+3ZDxkA7vtne677n8tA
-         gIfsloGmVAUJSfgiZsz8zHsRWudlEzztGCL/gj6XGwOkBn9HXyeI/tbgwhWXsXgf/fbe
-         BQ9bnnnPLfJgcFqpai9IledZDeG7F8q5Tuufl6yo/2T6TCn3nlqvbpPWUs4byoFDkmgu
-         v9CBsff6vo+oDfOybz+sp0EDIpxCDqrNNL5AjcJcTX7n5HqCWPRVuzRerHlBqxQVA5ow
-         m9lA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Z7rJkPFkicEqRXa8H2H+eAkbcV3x2za6M1WWwBBQe94=;
+        b=h+6c/Wtv3G/E0Q5G7yq37gVbb2jPhWO4oajjn5Uqw65uikpw4CMnwnc4W18oCatp4H
+         Q1sVmi3uLly0vXXQiwm7/m2N14lerVEpteTuHvcfGadl04JOS6EVa5i8+cYR+n+CydFr
+         1j+0acIV1gWBHroI0eR5XGoiEj0QOqo2yXwXjhCeCsUOqcXju+hO4znR9yG85/F1JWY8
+         QgakH3G9WbZVi951IkRJ0kIQMzFUoTT0xIcZEG25b/L06+4YgQWPXCWUDCV7KE6mLO+G
+         +nMHY4VMUERkvqRin3aJxZzQpVaqsDuFPXXxmPhxkycWocsmWuyaTJQ4pjZ5S0ubBGRp
+         s8UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GpwOccBGYJpOpejj8LGvoGKhI+wr9+pa+RZ9Hp5UCyA=;
-        b=pBEWcq6KfDU1VX5R3K8PvtzfBG3xcsgNjlc0ToUVnMovV1LEY+Vbe7SppVzjd4+Aq+
-         ryPD3xvxp7bjvEbrzWSoXD4uNgtmTji99GaMJahqioWsOJQimSIycS95scHYhdfWSkbK
-         xpZrnkKVLqQpVr2XlBYRgWTUX135XwCHMhrZmP+F1E5l+CAjc1PSjhx7Mtz7tu8LjJeb
-         AIXRbdR5d+iwqCw+cSPVsFxzEhE9zaECabXuji1TWpww6/m+PFHdvxu0ULa6F3XKvjzx
-         79qJKe683h2rS+9ylbSgzebxF9kPJNTZ1kiBNtCtBxIB6+bVOXRx8Vf57dqD1+V1FvPA
-         Zd2g==
-X-Gm-Message-State: AOAM530JK4DBBm3Ikx37QKLTpHw48va1ro8LK8N+viw0sU2Pq5A0bkTV
-        dyIhOLfihXZJOv3uUNYfx/onqsWaNr5N3f009aBoFkSErDU=
-X-Google-Smtp-Source: ABdhPJxmd9QUe9VTvRu3V0FXazi56yvP4h8Uxx2eBEqtTPbBeG6J64+i3U7BvSmPzjaXb02KI2iaDoGaEnBxDnrUw5E=
-X-Received: by 2002:a2e:90e:: with SMTP id 14mr1813189ljj.293.1595803064397;
- Sun, 26 Jul 2020 15:37:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200720145412.24221-1-krzk@kernel.org>
-In-Reply-To: <20200720145412.24221-1-krzk@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 27 Jul 2020 00:37:33 +0200
-Message-ID: <CACRpkdaPUbPmt9LK9qmek-zyDd9QNWTpW6QuPW9DRptFhNX1PQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: samsung: Use bank name as irqchip name
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Z7rJkPFkicEqRXa8H2H+eAkbcV3x2za6M1WWwBBQe94=;
+        b=D8Y5W2rtXLdAqo1n0XViABz33Gz1DvV2rAYd87pXxAuDf4i93N/ili+u4qYZ9JNzZk
+         wOqQ1WEnVYcEhQpIv+hSHsyA27TYDdUVEUXyiZ7ASTkuOZcyR0EhdRSnOrgMvQqaVBjK
+         wVj5+wHIFj3KwRzhswZpE1TsIN4BBsMD0Ugl/Widz1blxRAjm0My7hra6+BvxWp7OnRI
+         nBD+ZwZ+ZKdguektyB4TQ40zvNtOFK9eGHqnSk82FryrcXJlCU2+aDYo8iDkHnCPEvAx
+         XDkE7iayfcvRcDiu0t5nU7xOojK+7u7rGTRuahKTNn3fTeq7CPkv7NXC23KplmTDL22Q
+         EEhA==
+X-Gm-Message-State: AOAM532eXevfWvZ1xzvAlAZVxyMBmkAUkyQ90SOMPwW1lFshJd1gg5HG
+        CFze/ohjWvaXWvORRb5D2k511Feu8nzL
+X-Google-Smtp-Source: ABdhPJz6soGdCdpY/T8IWZ8l4ICluj41UMvB+JcGPoP1P6aJcG+ZLJe84sSr2KDFxBTFwoXGbpPB9rKOQdaA
+X-Received: by 2002:a25:c615:: with SMTP id k21mr28496351ybf.379.1595803700661;
+ Sun, 26 Jul 2020 15:48:20 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 15:48:16 -0700
+Message-Id: <20200726224816.1819557-1-brianvv@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
+Subject: [PATCH V2 net-next] fib: use indirect call wrappers in the most
+ common fib_rules_ops
+From:   Brian Vazquez <brianvv@google.com>
+To:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Brian Vazquez <brianvv@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 4:54 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+This avoids another inderect call per RX packet which save us around
+20-40 ns.
 
-> From: Marek Szyprowski <m.szyprowski@samsung.com>
->
-> Use the bank name as the irqchip name. This name is later visible in
-> /proc/interrupts, what makes it possible to easily identify each
-> GPIO interrupt.
->
-> /proc/interrupts before this patch:
-> 143:    0     exynos4210_wkup_irq_chip   7 Edge      hdmi
-> 144:    0     exynos4210_wkup_irq_chip   6 Level     wm8994
-> 145:    1     exynos4210_wkup_irq_chip   7 Edge      max77686-pmic, max77686-rtc
-> 146:    1     exynos_gpio_irq_chip   3 Edge      3-0048
->
-> /proc/interrupts after this patch:
-> 143:    0     gpx3   7 Edge      hdmi
-> 144:    0     gpx3   6 Level     wm8994
-> 145:    1     gpx0   7 Edge      max77686-pmic, max77686-rtc
-> 146:    1     gpm2   3 Edge      3-0048
->
-> Handling of the eint_wake_mask_value has been reworked, because each bank
-> has now its own exynos_irq_chip structure allocated.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->
-> Hi Linus,
->
-> I have only one patch queued for Samsung pinctrl. Can you apply it
-> directly?
+Changelog:
 
-OK patch applied!
+v1 -> v2:
+- Move declaraions to fib_rules.h to remove warnings
 
-Yours,
-Linus Walleij
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Brian Vazquez <brianvv@google.com>
+---
+ include/net/fib_rules.h | 18 ++++++++++++++++++
+ net/core/fib_rules.c    | 18 ++++++++++++++----
+ net/ipv4/fib_rules.c    | 12 ++++++++----
+ net/ipv6/fib6_rules.c   | 12 ++++++++----
+ 4 files changed, 48 insertions(+), 12 deletions(-)
+
+diff --git a/include/net/fib_rules.h b/include/net/fib_rules.h
+index a259050f84afc..4b10676c69d19 100644
+--- a/include/net/fib_rules.h
++++ b/include/net/fib_rules.h
+@@ -10,6 +10,7 @@
+ #include <net/flow.h>
+ #include <net/rtnetlink.h>
+ #include <net/fib_notifier.h>
++#include <linux/indirect_call_wrapper.h>
+ 
+ struct fib_kuid_range {
+ 	kuid_t start;
+@@ -203,4 +204,21 @@ int fib_nl_newrule(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		   struct netlink_ext_ack *extack);
+ int fib_nl_delrule(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		   struct netlink_ext_ack *extack);
++
++INDIRECT_CALLABLE_DECLARE(int fib6_rule_match(struct fib_rule *rule,
++					    struct flowi *fl, int flags));
++INDIRECT_CALLABLE_DECLARE(int fib4_rule_match(struct fib_rule *rule,
++					    struct flowi *fl, int flags));
++
++INDIRECT_CALLABLE_DECLARE(int fib6_rule_action(struct fib_rule *rule,
++			    struct flowi *flp, int flags,
++			    struct fib_lookup_arg *arg));
++INDIRECT_CALLABLE_DECLARE(int fib4_rule_action(struct fib_rule *rule,
++			    struct flowi *flp, int flags,
++			    struct fib_lookup_arg *arg));
++
++INDIRECT_CALLABLE_DECLARE(bool fib6_rule_suppress(struct fib_rule *rule,
++						struct fib_lookup_arg *arg));
++INDIRECT_CALLABLE_DECLARE(bool fib4_rule_suppress(struct fib_rule *rule,
++						struct fib_lookup_arg *arg));
+ #endif
+diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
+index bd7eba9066f8d..e7a8f87b0bb2b 100644
+--- a/net/core/fib_rules.c
++++ b/net/core/fib_rules.c
+@@ -14,6 +14,7 @@
+ #include <net/sock.h>
+ #include <net/fib_rules.h>
+ #include <net/ip_tunnels.h>
++#include <linux/indirect_call_wrapper.h>
+ 
+ static const struct fib_kuid_range fib_kuid_range_unset = {
+ 	KUIDT_INIT(0),
+@@ -267,7 +268,10 @@ static int fib_rule_match(struct fib_rule *rule, struct fib_rules_ops *ops,
+ 	    uid_gt(fl->flowi_uid, rule->uid_range.end))
+ 		goto out;
+ 
+-	ret = ops->match(rule, fl, flags);
++	ret = INDIRECT_CALL_INET(ops->match,
++				 fib6_rule_match,
++				 fib4_rule_match,
++				 rule, fl, flags);
+ out:
+ 	return (rule->flags & FIB_RULE_INVERT) ? !ret : ret;
+ }
+@@ -298,9 +302,15 @@ int fib_rules_lookup(struct fib_rules_ops *ops, struct flowi *fl,
+ 		} else if (rule->action == FR_ACT_NOP)
+ 			continue;
+ 		else
+-			err = ops->action(rule, fl, flags, arg);
+-
+-		if (!err && ops->suppress && ops->suppress(rule, arg))
++			err = INDIRECT_CALL_INET(ops->action,
++						 fib6_rule_action,
++						 fib4_rule_action,
++						 rule, fl, flags, arg);
++
++		if (!err && ops->suppress && INDIRECT_CALL_INET(ops->suppress,
++								fib6_rule_suppress,
++								fib4_rule_suppress,
++								rule, arg))
+ 			continue;
+ 
+ 		if (err != -EAGAIN) {
+diff --git a/net/ipv4/fib_rules.c b/net/ipv4/fib_rules.c
+index f99e3bac5cab2..ce54a30c2ef1e 100644
+--- a/net/ipv4/fib_rules.c
++++ b/net/ipv4/fib_rules.c
+@@ -29,6 +29,7 @@
+ #include <net/ip_fib.h>
+ #include <net/nexthop.h>
+ #include <net/fib_rules.h>
++#include <linux/indirect_call_wrapper.h>
+ 
+ struct fib4_rule {
+ 	struct fib_rule		common;
+@@ -103,8 +104,9 @@ int __fib_lookup(struct net *net, struct flowi4 *flp,
+ }
+ EXPORT_SYMBOL_GPL(__fib_lookup);
+ 
+-static int fib4_rule_action(struct fib_rule *rule, struct flowi *flp,
+-			    int flags, struct fib_lookup_arg *arg)
++INDIRECT_CALLABLE_SCOPE int fib4_rule_action(struct fib_rule *rule,
++					     struct flowi *flp, int flags,
++					     struct fib_lookup_arg *arg)
+ {
+ 	int err = -EAGAIN;
+ 	struct fib_table *tbl;
+@@ -138,7 +140,8 @@ static int fib4_rule_action(struct fib_rule *rule, struct flowi *flp,
+ 	return err;
+ }
+ 
+-static bool fib4_rule_suppress(struct fib_rule *rule, struct fib_lookup_arg *arg)
++INDIRECT_CALLABLE_SCOPE bool fib4_rule_suppress(struct fib_rule *rule,
++						struct fib_lookup_arg *arg)
+ {
+ 	struct fib_result *result = (struct fib_result *) arg->result;
+ 	struct net_device *dev = NULL;
+@@ -169,7 +172,8 @@ static bool fib4_rule_suppress(struct fib_rule *rule, struct fib_lookup_arg *arg
+ 	return true;
+ }
+ 
+-static int fib4_rule_match(struct fib_rule *rule, struct flowi *fl, int flags)
++INDIRECT_CALLABLE_SCOPE int fib4_rule_match(struct fib_rule *rule,
++					    struct flowi *fl, int flags)
+ {
+ 	struct fib4_rule *r = (struct fib4_rule *) rule;
+ 	struct flowi4 *fl4 = &fl->u.ip4;
+diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
+index 6053ef8515555..8f9a83314de7d 100644
+--- a/net/ipv6/fib6_rules.c
++++ b/net/ipv6/fib6_rules.c
+@@ -13,6 +13,7 @@
+ #include <linux/netdevice.h>
+ #include <linux/notifier.h>
+ #include <linux/export.h>
++#include <linux/indirect_call_wrapper.h>
+ 
+ #include <net/fib_rules.h>
+ #include <net/ipv6.h>
+@@ -255,8 +256,9 @@ static int __fib6_rule_action(struct fib_rule *rule, struct flowi *flp,
+ 	return err;
+ }
+ 
+-static int fib6_rule_action(struct fib_rule *rule, struct flowi *flp,
+-			    int flags, struct fib_lookup_arg *arg)
++INDIRECT_CALLABLE_SCOPE int fib6_rule_action(struct fib_rule *rule,
++					     struct flowi *flp, int flags,
++					     struct fib_lookup_arg *arg)
+ {
+ 	if (arg->lookup_ptr == fib6_table_lookup)
+ 		return fib6_rule_action_alt(rule, flp, flags, arg);
+@@ -264,7 +266,8 @@ static int fib6_rule_action(struct fib_rule *rule, struct flowi *flp,
+ 	return __fib6_rule_action(rule, flp, flags, arg);
+ }
+ 
+-static bool fib6_rule_suppress(struct fib_rule *rule, struct fib_lookup_arg *arg)
++INDIRECT_CALLABLE_SCOPE bool fib6_rule_suppress(struct fib_rule *rule,
++						struct fib_lookup_arg *arg)
+ {
+ 	struct fib6_result *res = arg->result;
+ 	struct rt6_info *rt = res->rt6;
+@@ -296,7 +299,8 @@ static bool fib6_rule_suppress(struct fib_rule *rule, struct fib_lookup_arg *arg
+ 	return true;
+ }
+ 
+-static int fib6_rule_match(struct fib_rule *rule, struct flowi *fl, int flags)
++INDIRECT_CALLABLE_SCOPE int fib6_rule_match(struct fib_rule *rule,
++					    struct flowi *fl, int flags)
+ {
+ 	struct fib6_rule *r = (struct fib6_rule *) rule;
+ 	struct flowi6 *fl6 = &fl->u.ip6;
+-- 
+2.28.0.rc0.142.g3c755180ce-goog
+
