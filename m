@@ -2,379 +2,80 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B4BFC433E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 03:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 03:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33AC62070C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 03:00:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cxOEEOm0"
+	by mail.kernel.org (Postfix) with ESMTP id 64F3B206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 03:02:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbgGZDAR (ORCPT
+        id S1728214AbgGZDCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 23:00:17 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:55811 "EHLO m43-7.mailgun.net"
+        Sat, 25 Jul 2020 23:02:35 -0400
+Received: from mga05.intel.com ([192.55.52.43]:32811 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbgGZDAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 23:00:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595732414; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=nKohIy/SPC7OYRcs9mcd6wdpP9JfELUXPRj0fLeRtmM=; b=cxOEEOm0vWr4WDtX4fTZZDj93X9i1sU/r315fsBvx/SB6f6KP/e99t9BCCqQabeGUm6qW6Ym
- wlkkGbJN8gEBcRgaiYziEqN1k7JClMczcbpBIL6mQbM7fXXP+OOXVELv0gBqB1ywEY0cPqBR
- sL5gr1mQGOlxKHXnbHSpfwqLNDo=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n20.prod.us-west-2.postgun.com with SMTP id
- 5f1cf1acca57a65d479a1131 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 26 Jul 2020 02:59:56
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 48CEBC433C6; Sun, 26 Jul 2020 02:59:56 +0000 (UTC)
-Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 50A7DC433CB;
-        Sun, 26 Jul 2020 02:59:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 50A7DC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
-From:   Tingwei Zhang <tingwei@codeaurora.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Tingwei Zhang <tingwei@codeaurora.org>, tsoni@codeaurora.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Mao Jinlong <jinlmao@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/6] tracing: add trace_export support for event trace
-Date:   Sun, 26 Jul 2020 10:59:28 +0800
-Message-Id: <20200726025931.30510-4-tingwei@codeaurora.org>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20200726025931.30510-1-tingwei@codeaurora.org>
-References: <20200726025931.30510-1-tingwei@codeaurora.org>
+        id S1726969AbgGZDCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 23:02:34 -0400
+IronPort-SDR: G2MCvPTLF7/kbgTRlz3/nJisx4QJ+xztHzl9BrvcQNF/k9x5HRC/72/8IbCkOYfqd2FwysC13Y
+ 6OOQY4J4Z0IA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9693"; a="235740689"
+X-IronPort-AV: E=Sophos;i="5.75,397,1589266800"; 
+   d="scan'208";a="235740689"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2020 20:02:34 -0700
+IronPort-SDR: K39epHAV9Oc3xNkoALTE/IuagtfEeW7mfQcJxy5ru7LFrecPbj7L/FwLD6QmKDkRT/Lz4+E5gA
+ Wvts1Va1LMHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,397,1589266800"; 
+   d="scan'208";a="311832804"
+Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Jul 2020 20:02:33 -0700
+Received: from kbuild by df0563f96c37 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jzWvo-0001GG-QK; Sun, 26 Jul 2020 03:02:32 +0000
+Date:   Sun, 26 Jul 2020 11:01:29 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/timers] BUILD SUCCESS
+ 898ec52d2ba05915aaedcdb21bff2e944c883cb8
+Message-ID: <5f1cf209.CGCgv8X97R387iq1%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only function traces can be exported to other destinations currently.
-This patch exports event trace as well. Move trace export related
-function to the beginning of file so other trace can call
-trace_process_export() to export.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/timers
+branch HEAD: 898ec52d2ba05915aaedcdb21bff2e944c883cb8  x86/xen/time: Set the X86_FEATURE_TSC_KNOWN_FREQ flag in xen_tsc_khz()
 
-Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+elapsed time: 721m
+
+configs tested: 10
+configs skipped: 70
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+i386                              allnoconfig
+x86_64                                   rhel
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
 ---
- include/linux/trace.h |   1 +
- kernel/trace/trace.c  | 259 ++++++++++++++++++++++--------------------
- 2 files changed, 135 insertions(+), 125 deletions(-)
-
-diff --git a/include/linux/trace.h b/include/linux/trace.h
-index d2fdf9be84b5..91f6f1c0f2db 100644
---- a/include/linux/trace.h
-+++ b/include/linux/trace.h
-@@ -5,6 +5,7 @@
- #ifdef CONFIG_TRACING
- 
- #define TRACE_EXPORT_FUNCTION	BIT_ULL(0)
-+#define TRACE_EXPORT_EVENT	BIT_ULL(1)
- 
- /*
-  * The trace export - an export of Ftrace output. The trace_export
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8f1e66831e9e..2f9302a8b322 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -251,6 +251,138 @@ unsigned long long ns2usecs(u64 nsec)
- 	return nsec;
- }
- 
-+static void
-+trace_process_export(struct trace_export *export,
-+	       struct ring_buffer_event *event, int flag)
-+{
-+	struct trace_entry *entry;
-+	unsigned int size = 0;
-+
-+	if (export->flags & flag) {
-+		entry = ring_buffer_event_data(event);
-+		size = ring_buffer_event_length(event);
-+		export->write(export, entry, size);
-+	}
-+}
-+
-+static DEFINE_MUTEX(ftrace_export_lock);
-+
-+static struct trace_export __rcu *ftrace_exports_list __read_mostly;
-+
-+static DEFINE_STATIC_KEY_FALSE(trace_function_exports_enabled);
-+static DEFINE_STATIC_KEY_FALSE(trace_event_exports_enabled);
-+
-+static inline void ftrace_exports_enable(struct trace_export *export)
-+{
-+	if (export->flags & TRACE_EXPORT_FUNCTION)
-+		static_branch_inc(&trace_function_exports_enabled);
-+
-+	if (export->flags & TRACE_EXPORT_EVENT)
-+		static_branch_inc(&trace_event_exports_enabled);
-+}
-+
-+static inline void ftrace_exports_disable(struct trace_export *export)
-+{
-+	if (export->flags & TRACE_EXPORT_FUNCTION)
-+		static_branch_dec(&trace_function_exports_enabled);
-+
-+	if (export->flags & TRACE_EXPORT_EVENT)
-+		static_branch_dec(&trace_event_exports_enabled);
-+}
-+
-+static void ftrace_exports(struct ring_buffer_event *event, int flag)
-+{
-+	struct trace_export *export;
-+
-+	preempt_disable_notrace();
-+
-+	export = rcu_dereference_raw_check(ftrace_exports_list);
-+	while (export) {
-+		trace_process_export(export, event, flag);
-+		export = rcu_dereference_raw_check(export->next);
-+	}
-+
-+	preempt_enable_notrace();
-+}
-+
-+static inline void
-+add_trace_export(struct trace_export **list, struct trace_export *export)
-+{
-+	rcu_assign_pointer(export->next, *list);
-+	/*
-+	 * We are entering export into the list but another
-+	 * CPU might be walking that list. We need to make sure
-+	 * the export->next pointer is valid before another CPU sees
-+	 * the export pointer included into the list.
-+	 */
-+	rcu_assign_pointer(*list, export);
-+}
-+
-+static inline int
-+rm_trace_export(struct trace_export **list, struct trace_export *export)
-+{
-+	struct trace_export **p;
-+
-+	for (p = list; *p != NULL; p = &(*p)->next)
-+		if (*p == export)
-+			break;
-+
-+	if (*p != export)
-+		return -1;
-+
-+	rcu_assign_pointer(*p, (*p)->next);
-+
-+	return 0;
-+}
-+
-+static inline void
-+add_ftrace_export(struct trace_export **list, struct trace_export *export)
-+{
-+	ftrace_exports_enable(export);
-+
-+	add_trace_export(list, export);
-+}
-+
-+static inline int
-+rm_ftrace_export(struct trace_export **list, struct trace_export *export)
-+{
-+	int ret;
-+
-+	ret = rm_trace_export(list, export);
-+	ftrace_exports_disable(export);
-+
-+	return ret;
-+}
-+
-+int register_ftrace_export(struct trace_export *export)
-+{
-+	if (WARN_ON_ONCE(!export->write))
-+		return -1;
-+
-+	mutex_lock(&ftrace_export_lock);
-+
-+	add_ftrace_export(&ftrace_exports_list, export);
-+
-+	mutex_unlock(&ftrace_export_lock);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(register_ftrace_export);
-+
-+int unregister_ftrace_export(struct trace_export *export)
-+{
-+	int ret;
-+
-+	mutex_lock(&ftrace_export_lock);
-+
-+	ret = rm_ftrace_export(&ftrace_exports_list, export);
-+
-+	mutex_unlock(&ftrace_export_lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(unregister_ftrace_export);
-+
- /* trace_flags holds trace_options default values */
- #define TRACE_DEFAULT_FLAGS						\
- 	(FUNCTION_DEFAULT_FLAGS |					\
-@@ -2702,6 +2834,8 @@ void trace_event_buffer_commit(struct trace_event_buffer *fbuffer)
- 	if (static_key_false(&tracepoint_printk_key.key))
- 		output_printk(fbuffer);
- 
-+	if (static_branch_unlikely(&trace_event_exports_enabled))
-+		ftrace_exports(fbuffer->event, TRACE_EXPORT_EVENT);
- 	event_trigger_unlock_commit_regs(fbuffer->trace_file, fbuffer->buffer,
- 				    fbuffer->event, fbuffer->entry,
- 				    fbuffer->flags, fbuffer->pc, fbuffer->regs);
-@@ -2745,131 +2879,6 @@ trace_buffer_unlock_commit_nostack(struct trace_buffer *buffer,
- 	__buffer_unlock_commit(buffer, event);
- }
- 
--static void
--trace_process_export(struct trace_export *export,
--	       struct ring_buffer_event *event, int flag)
--{
--	struct trace_entry *entry;
--	unsigned int size = 0;
--
--	if (export->flags & flag) {
--		entry = ring_buffer_event_data(event);
--		size = ring_buffer_event_length(event);
--		export->write(export, entry, size);
--	}
--}
--
--static DEFINE_MUTEX(ftrace_export_lock);
--
--static struct trace_export __rcu *ftrace_exports_list __read_mostly;
--
--static DEFINE_STATIC_KEY_FALSE(trace_function_exports_enabled);
--
--static inline void ftrace_exports_enable(struct trace_export *export)
--{
--	if (export->flags & TRACE_EXPORT_FUNCTION)
--		static_branch_inc(&trace_function_exports_enabled);
--}
--
--static inline void ftrace_exports_disable(struct trace_export *export)
--{
--	if (export->flags & TRACE_EXPORT_FUNCTION)
--		static_branch_dec(&trace_function_exports_enabled);
--}
--
--static void ftrace_exports(struct ring_buffer_event *event, int flag)
--{
--	struct trace_export *export;
--
--	preempt_disable_notrace();
--
--	export = rcu_dereference_raw_check(ftrace_exports_list);
--	while (export) {
--		trace_process_export(export, event, flag);
--		export = rcu_dereference_raw_check(export->next);
--	}
--
--	preempt_enable_notrace();
--}
--
--static inline void
--add_trace_export(struct trace_export **list, struct trace_export *export)
--{
--	rcu_assign_pointer(export->next, *list);
--	/*
--	 * We are entering export into the list but another
--	 * CPU might be walking that list. We need to make sure
--	 * the export->next pointer is valid before another CPU sees
--	 * the export pointer included into the list.
--	 */
--	rcu_assign_pointer(*list, export);
--}
--
--static inline int
--rm_trace_export(struct trace_export **list, struct trace_export *export)
--{
--	struct trace_export **p;
--
--	for (p = list; *p != NULL; p = &(*p)->next)
--		if (*p == export)
--			break;
--
--	if (*p != export)
--		return -1;
--
--	rcu_assign_pointer(*p, (*p)->next);
--
--	return 0;
--}
--
--static inline void
--add_ftrace_export(struct trace_export **list, struct trace_export *export)
--{
--	ftrace_exports_enable(export);
--
--	add_trace_export(list, export);
--}
--
--static inline int
--rm_ftrace_export(struct trace_export **list, struct trace_export *export)
--{
--	int ret;
--
--	ret = rm_trace_export(list, export);
--	ftrace_exports_disable(export);
--
--	return ret;
--}
--
--int register_ftrace_export(struct trace_export *export)
--{
--	if (WARN_ON_ONCE(!export->write))
--		return -1;
--
--	mutex_lock(&ftrace_export_lock);
--
--	add_ftrace_export(&ftrace_exports_list, export);
--
--	mutex_unlock(&ftrace_export_lock);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(register_ftrace_export);
--
--int unregister_ftrace_export(struct trace_export *export)
--{
--	int ret;
--
--	mutex_lock(&ftrace_export_lock);
--
--	ret = rm_ftrace_export(&ftrace_exports_list, export);
--
--	mutex_unlock(&ftrace_export_lock);
--
--	return ret;
--}
--EXPORT_SYMBOL_GPL(unregister_ftrace_export);
--
- void
- trace_function(struct trace_array *tr,
- 	       unsigned long ip, unsigned long parent_ip, unsigned long flags,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
