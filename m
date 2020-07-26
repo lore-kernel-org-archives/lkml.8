@@ -2,80 +2,264 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974ACC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 03:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CC9C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 03:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64F3B206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 03:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C97420674
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 03:09:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="rxaWSunm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgGZDCf (ORCPT
+        id S1728293AbgGZDJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 23:02:35 -0400
-Received: from mga05.intel.com ([192.55.52.43]:32811 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726969AbgGZDCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 23:02:34 -0400
-IronPort-SDR: G2MCvPTLF7/kbgTRlz3/nJisx4QJ+xztHzl9BrvcQNF/k9x5HRC/72/8IbCkOYfqd2FwysC13Y
- 6OOQY4J4Z0IA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9693"; a="235740689"
-X-IronPort-AV: E=Sophos;i="5.75,397,1589266800"; 
-   d="scan'208";a="235740689"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2020 20:02:34 -0700
-IronPort-SDR: K39epHAV9Oc3xNkoALTE/IuagtfEeW7mfQcJxy5ru7LFrecPbj7L/FwLD6QmKDkRT/Lz4+E5gA
- Wvts1Va1LMHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,397,1589266800"; 
-   d="scan'208";a="311832804"
-Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Jul 2020 20:02:33 -0700
-Received: from kbuild by df0563f96c37 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jzWvo-0001GG-QK; Sun, 26 Jul 2020 03:02:32 +0000
-Date:   Sun, 26 Jul 2020 11:01:29 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/timers] BUILD SUCCESS
- 898ec52d2ba05915aaedcdb21bff2e944c883cb8
-Message-ID: <5f1cf209.CGCgv8X97R387iq1%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 25 Jul 2020 23:09:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbgGZDJE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 23:09:04 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3C6BC0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 20:09:02 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id f185so2354615pfg.10
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 20:09:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=R0ZxfaIvZuIP7a1P2/lt5jKuwjtMwv891RsIp0cEjuk=;
+        b=rxaWSunmOVR9KUxor0J3CuXVy11wDPBb9COsCp2anVFsbqvhMab+tbKxQtoeV/BHj/
+         RUMsFPEGMaS9HmXQ2ah6B3fJYuQvn0HtKAQjsFpgLeIh2Ea/7anqOo9krwcref0J000f
+         P8+rquRUpYz8Z6N67wcvq993BssxinmHyUXkgqokMfekp8SZQD9WPqOs/hKzW8A33YAk
+         Jsn96CbvqDVqcN2OcxsBhLRfKwolmXHlnSVt1GY4ViZhR43HXnQbiUqlj7rkX1WLueXa
+         qd6QJWz28xwnMFulgd9qWIcU0gaV//pUm4vHpFSgPjV0+62jU6aztovmkuPbqWvjwB2w
+         8qkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=R0ZxfaIvZuIP7a1P2/lt5jKuwjtMwv891RsIp0cEjuk=;
+        b=OXDTaNQVqXObNID9HZUbqCERTlSDk4+iZBVa0IscovDnAuXF+OdkAZuvmCZbCDZ22f
+         ZfYsZOFuEkYxeMnh+ICi3aETDB+ylLjIXSG/JHiInVZEek2RtBoP3qOeGMbgxB8oDM4T
+         UOt+vtI/OgwjHUSjCpEBatNSDSfUAByP7YGXyMcTZnx8KVYt2yUnMLJxfE0IsTj+1Rr1
+         EpaT5M6tHs7s9PnqEIv7k8OtOgWFftbhRdlV8TK+U6CnXJz7K0fkSmnfnMWH2EICqESe
+         4URrCmzjFu05smClPP1OIq8dseuYUJvReuljzHZOBWLD8WmKS+OXyAQuftunZegVlG1W
+         qbyg==
+X-Gm-Message-State: AOAM531F+Fqtdu9CzJU+F97aweOUHYbAjeKMm47/wMrJ9M2oOCbfgKvx
+        T9kOurJtSuuo5KppJGIULiAfkw==
+X-Google-Smtp-Source: ABdhPJw47bQqM5H/L9zsOkyKQDH/bNbImoIEGpbxgofA+CdFbbUO8EFqxIpX41rM1ROtd/IIOGaHOQ==
+X-Received: by 2002:a62:7644:: with SMTP id r65mr1446478pfc.271.1595732942287;
+        Sat, 25 Jul 2020 20:09:02 -0700 (PDT)
+Received: from localhost ([2406:7400:73:2b8a:d1f0:826d:1814:b78e])
+        by smtp.gmail.com with ESMTPSA id n15sm10272926pjf.12.2020.07.25.20.09.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jul 2020 20:09:01 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 08:38:55 +0530
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+To:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH v2] net: ipv6: fix use-after-free Read in
+ __xfrm6_tunnel_spi_lookup
+Message-ID: <20200726030855.q6dfjekazfzl5usw@pesu.pes.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qbdxh6mq23batifp"
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/timers
-branch HEAD: 898ec52d2ba05915aaedcdb21bff2e944c883cb8  x86/xen/time: Set the X86_FEATURE_TSC_KNOWN_FREQ flag in xen_tsc_khz()
 
-elapsed time: 721m
+--qbdxh6mq23batifp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 10
-configs skipped: 70
+__xfrm_tunnel_spi_check used xfrm6_tunnel_spi_has_byspi
+which returns spi % XFRM6_TUNNEL_SPI_BYSPI_HSIZE.
+whereas xfrm6_tunnel_spi_hash_byaddr makes a call to
+ipv6_addr_hash.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+netdevsim netdevsim0 netdevsim1: set [1, 0] type 2 family 0 port 6081 - 0
+netdevsim netdevsim0 netdevsim2: set [1, 0] type 2 family 0 port 6081 - 0
+netdevsim netdevsim0 netdevsim3: set [1, 0] type 2 family 0 port 6081 - 0
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+BUG: KASAN: use-after-free in __xfrm6_tunnel_spi_lookup+0x3a9/0x3b0 net/ipv=
+6/xfrm6_tunnel.c:79
+Read of size 8 at addr ffff8880934578a8 by task syz-executor437/6811
+CPU: 0 PID: 6811 Comm: syz-executor437 Not tainted 5.8.0-rc5-next-20200715-=
+syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
+gle 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ __xfrm6_tunnel_spi_lookup+0x3a9/0x3b0 net/ipv6/xfrm6_tunnel.c:79
+ xfrm6_tunnel_spi_lookup+0x8a/0x1d0 net/ipv6/xfrm6_tunnel.c:95
+ xfrmi6_rcv_tunnel+0xb9/0x100 net/xfrm/xfrm_interface.c:824
+ tunnel6_rcv+0xef/0x2b0 net/ipv6/tunnel6.c:148
+ ip6_protocol_deliver_rcu+0x2e8/0x1670 net/ipv6/ip6_input.c:433
+ ip6_input_finish+0x7f/0x160 net/ipv6/ip6_input.c:474
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ NF_HOOK include/linux/netfilter.h:301 [inline]
+ ip6_input+0x9c/0xd0 net/ipv6/ip6_input.c:483
+ dst_input include/net/dst.h:449 [inline]
+ ip6_rcv_finish net/ipv6/ip6_input.c:76 [inline]
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ NF_HOOK include/linux/netfilter.h:301 [inline]
+ ipv6_rcv+0x28e/0x3c0 net/ipv6/ip6_input.c:307
+ __netif_receive_skb_one_core+0x114/0x180 net/core/dev.c:5287
+ __netif_receive_skb+0x27/0x1c0 net/core/dev.c:5401
+ netif_receive_skb_internal net/core/dev.c:5503 [inline]
+ netif_receive_skb+0x159/0x990 net/core/dev.c:5562
+ tun_rx_batched.isra.0+0x460/0x720 drivers/net/tun.c:1518
+ tun_get_user+0x23b2/0x35b0 drivers/net/tun.c:1972
+ tun_chr_write_iter+0xba/0x151 drivers/net/tun.c:2001
+ call_write_iter include/linux/fs.h:1879 [inline]
+ new_sync_write+0x422/0x650 fs/read_write.c:515
+ vfs_write+0x59d/0x6b0 fs/read_write.c:595
+ ksys_write+0x12d/0x250 fs/read_write.c:648
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x403d50
+Code: Bad RIP value.
+RSP: 002b:00007ffe8fe93368 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000403d50
+RDX: 000000000000005e RSI: 00000000200007c0 RDI: 00000000000000f0
+RBP: 00007ffe8fe93390 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffe8fe93380
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Allocated by task 6811:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+ __do_kmalloc mm/slab.c:3655 [inline]
+ __kmalloc+0x1a8/0x320 mm/slab.c:3664
+ kmalloc include/linux/slab.h:559 [inline]
+ kzalloc include/linux/slab.h:666 [inline]
+ tomoyo_init_log+0x1335/0x1e50 security/tomoyo/audit.c:275
+ tomoyo_supervisor+0x32f/0xeb0 security/tomoyo/common.c:2097
+ tomoyo_audit_path_number_log security/tomoyo/file.c:235 [inline]
+ tomoyo_path_number_perm+0x3ed/0x4d0 security/tomoyo/file.c:734
+ security_file_ioctl+0x50/0xb0 security/security.c:1489
+ ksys_ioctl+0x50/0x180 fs/ioctl.c:747
+ __do_sys_ioctl fs/ioctl.c:762 [inline]
+ __se_sys_ioctl fs/ioctl.c:760 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Freed by task 6811:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
+ kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
+ __cache_free mm/slab.c:3418 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3756
+ tomoyo_supervisor+0x350/0xeb0 security/tomoyo/common.c:2149
+ tomoyo_audit_path_number_log security/tomoyo/file.c:235 [inline]
+ tomoyo_path_number_perm+0x3ed/0x4d0 security/tomoyo/file.c:734
+ security_file_ioctl+0x50/0xb0 security/security.c:1489
+ ksys_ioctl+0x50/0x180 fs/ioctl.c:747
+ __do_sys_ioctl fs/ioctl.c:762 [inline]
+ __se_sys_ioctl fs/ioctl.c:760 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+The buggy address belongs to the object at ffff888093457800
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 168 bytes inside of
+ 512-byte region [ffff888093457800, ffff888093457a00)
+The buggy address belongs to the page:
+page:000000005c2b5911 refcount:1 mapcount:0 mapping:0000000000000000 index:=
+0x0 pfn:0x93457
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00028d4308 ffffea0002834c88 ffff8880aa000600
+raw: 0000000000000000 ffff888093457000 0000000100000004 0000000000000000
+page dumped because: kasan: bad access detected
+Memory state around the buggy address:
+ ffff888093457780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff888093457800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888093457880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff888093457900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888093457980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
+Reported-and-tested-by: syzbot+72ff2fa98097767b5a27@syzkaller.appspotmail.c=
+om
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: B K Karthik <bkkarthik@pesu.pes.edu>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+v1 -> v2:
+	added cast in arguement from u32 to (const xfrm_address_t *)
+	added Reported-by: kernel test robot <lkp@intel.com>
+	removed Reported-by: syzbot+72ff2fa98097767b5a27@syzkaller.appspotmail.com
+	added Reported-and-tested-by: syzbot+72ff2fa98097767b5a27@syzkaller.appspo=
+tmail.com
+
+ net/ipv6/xfrm6_tunnel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
+index 25b7ebda2fab..a0e18be2145f 100644
+--- a/net/ipv6/xfrm6_tunnel.c
++++ b/net/ipv6/xfrm6_tunnel.c
+@@ -103,10 +103,10 @@ static int __xfrm6_tunnel_spi_check(struct net *net, =
+u32 spi)
+ {
+ 	struct xfrm6_tunnel_net *xfrm6_tn =3D xfrm6_tunnel_pernet(net);
+ 	struct xfrm6_tunnel_spi *x6spi;
+-	int index =3D xfrm6_tunnel_spi_hash_byspi(spi);
++	int index =3D xfrm6_tunnel_spi_hash_byaddr((const xfrm_address_t *)spi);
+=20
+ 	hlist_for_each_entry(x6spi,
+-			     &xfrm6_tn->spi_byspi[index],
++			     &xfrm6_tn->spi_byaddr[index],
+ 			     list_byspi) {
+ 		if (x6spi->spi =3D=3D spi)
+ 			return -1;
+--=20
+2.20.1
+
+
+--qbdxh6mq23batifp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEEIF+jd5Z5uS7xKTfpQZdt+T1HgiEFAl8c88YACgkQQZdt+T1H
+giGTFQv+IbR1CT2BfRT6jfttxhaZyRrMmrPv3xx28tudyisbX4jTEvv8cXoYyibW
+g+J6N1EOV+jZo9t0jv3NtRbfAhgiXfaGtp/yWB+fMszVwuFKL4W9De8dV5Hq/sKI
+2DrYIr60GgZrxGwaslUVpB7iucqSglUMtOAz5exWLYkjVlLDUe5AqP5/PAXuYYO3
+Ly7Kjt2GwgTOChgd9v0TIIoiLyOn5Jo3EmoDFySR60ZQHc67vw/O8FnvVUAUcB0R
+IqK89+o1+YVcgfhN3apdIDFwEeD9EtN0j9V60I68J7fnQisYHWnkK3Bht/dwS+7P
+ubdKitleq28UtXydrKhBxgiJXH8dE7gIRgDom5eRF4nzF3g9Dh3RVI/sjgn2Ja6r
+0UI82Ni0PAaDm5St6FGIbR6k+ifW720++NQ/DqZUjRCe9ETsg0FqrQENKGgsZxR5
+//lZPrZPBD8lZEY+UmSUbJXdCXjLN17ocKE5MpgUwbfSkyXcD/di0eUUeQ0YARic
+W3FkGYCY
+=lcMy
+-----END PGP SIGNATURE-----
+
+--qbdxh6mq23batifp--
