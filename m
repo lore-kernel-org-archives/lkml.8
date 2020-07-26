@@ -2,96 +2,109 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC752C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBF4020759
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AE6520714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:12:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XH1cbqhw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MVyeUEfb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgGZSLc (ORCPT
+        id S1727033AbgGZSM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 14:11:32 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:42117 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725972AbgGZSLc (ORCPT
+        Sun, 26 Jul 2020 14:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbgGZSMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 14:11:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595787091; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=dkeTWaUqQPIijBo2b2trYUH4UirL83EHI+atIYwWFzE=; b=XH1cbqhw7zeavxrPibQdPDcHohoAhDxJ778jspNtqLvqznoBhaLsRIGnFivHWZ+hGQElOnWB
- kPn9W6ayjpmSTmaUhmSv/Bu7rHjIB8yh5BOSmg/qOhGWo1HI26ZRN3G9caGZkZQWlwMB9lKn
- OvRxP54+nXPsjrBiXuFnF7rmecY=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5f1dc75235f3e3d3168ebeff (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 26 Jul 2020 18:11:30
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C6F6FC43391; Sun, 26 Jul 2020 18:11:30 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 09F83C433C9;
-        Sun, 26 Jul 2020 18:11:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 09F83C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     linux-wireless@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] iwlwifi: yoyo: don't print failure if debug firmware is missing
-References: <20200625165210.14904-1-wsa@kernel.org>
-        <20200726152642.GA913@ninjato>
-Date:   Sun, 26 Jul 2020 21:11:25 +0300
-In-Reply-To: <20200726152642.GA913@ninjato> (Wolfram Sang's message of "Sun,
-        26 Jul 2020 17:26:42 +0200")
-Message-ID: <87y2n6404y.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Sun, 26 Jul 2020 14:12:25 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 600FBC0619D2;
+        Sun, 26 Jul 2020 11:12:25 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id 6so10647751qtt.0;
+        Sun, 26 Jul 2020 11:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sWvoytYgdWuVZpnsHNqepIQUSxkaD87xtrtLEKkqxWY=;
+        b=MVyeUEfbyS3VZjAkUDRUL1xOAzcfaQcd8KU7aoJ4z62BDQBGfr8iG0+ajJoqOZqJIK
+         YQRZOu53+llVUz4LPxfdqQUWLZ4umPzuU+Djvnfx4znXYIT5DI2j1IKfxzS/3z8AcSMV
+         g/kTOEIb7fqZm0t6iOpgttv1EM7rot3vi9eH2Y+dZcLgljzLwP++VjViuQ5QslcR0EnW
+         sdKyWU9FBJW8VyZZPjrOnb1cjzh6zu6GCN6fhCaFCxpVFK/x3DXLYTGGdQLcb3d7/kGA
+         B5EUJmrLgMbxDNeJJ1J5FqDy/nchpFM56Z7LLHFhRmJQuS7oBhaOW83FWcB4PvteEm5/
+         fdqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sWvoytYgdWuVZpnsHNqepIQUSxkaD87xtrtLEKkqxWY=;
+        b=YfI8RN0/upf6yFN+KqEBIUGvhZZVNqnom9VpbR2YTnuoF9q/KlOkx4QCfhPN5Pz9D1
+         /SkRHs6xbgNMGjM7G4YUIF4huPHdFXWxQGP/sBgjMgO61c4EyNOOP3mR516H8Ps5KuOJ
+         zFr2J0cneYtuIJyvxTSRMfsjy3RtBTN8c3lu9hCMAYSQFjbYmvPPfVksclXN1/bHHd+B
+         FxN+uak4ouPndnj4aLcbwIBtB+o47gGw+MidOubvJX4Rdl9oukaA0GravsrmuAuySFu3
+         a1p8CgPzlnLInAhGo5jG4POx9Cs/ACzNzteMqDms4XSDFAhoPyFj2j0M1Q7Jmfv2L287
+         b3CA==
+X-Gm-Message-State: AOAM531MMIgTfEAKshn5xvnytmTWt/1cnNRgSOCu0IDQFUPAeRjf2q7f
+        9WDH4G+b7rYNF0d8Vmhgjg==
+X-Google-Smtp-Source: ABdhPJxKGSTuzHcLZGMGS82EEnlAeefUmZtiIGxBpjEXSvwnMIf7j9zEmOsoxXFdzO5wAarhaL0o7g==
+X-Received: by 2002:ac8:6793:: with SMTP id b19mr9261706qtp.333.1595787144680;
+        Sun, 26 Jul 2020 11:12:24 -0700 (PDT)
+Received: from PWN (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
+        by smtp.gmail.com with ESMTPSA id j15sm1885535qkl.63.2020.07.26.11.12.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 11:12:24 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 14:12:22 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs@googlegroups.com,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vandana BN <bnvandana@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] media/v4l2-core: Fix
+ kernel-infoleak in video_put_user()
+Message-ID: <20200726181222.GB49356@PWN>
+References: <20200726164439.48973-1-yepeilin.cs@gmail.com>
+ <20200726173044.GA14755@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726173044.GA14755@pendragon.ideasonboard.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wolfram Sang <wsa@kernel.org> writes:
+Sorry, by this code example:
 
-> On Thu, Jun 25, 2020 at 06:52:10PM +0200, Wolfram Sang wrote:
->> Missing this firmware is not fatal, my wifi card still works. Even more,
->> I couldn't find any documentation what it is or where to get it. So, I
->> don't think the users should be notified if it is missing. If you browse
->> the net, you see the message is present is in quite some logs. Better
->> remove it.
->> 
->> Signed-off-by: Wolfram Sang <wsa@kernel.org>
->> ---
->
-> Any input on this? Or people I should add to CC?
+        char *p = (char *)&vb32;
+        int i;
 
-This was discussed on another thread:
+        for (i = 0; i < sizeof(struct vb32); i++, p++)
+                printk("*(p + i): %d", *(p + i));
 
-https://lkml.kernel.org/r/87mu3magfp.fsf@tynnyri.adurom.net
+actually I meant:
 
-Unless Intel folks object I'm planning to take this to
-wireless-drivers-next.
+        char *p = (char *)&vb32;
+        int i;
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+        for (i = 0; i < sizeof(struct vb32); i++)
+                printk("*(p + i): %d", *(p + i));
+
+But the idea is the same.
+
+Thank you,
+Peilin Ye
