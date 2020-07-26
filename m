@@ -2,130 +2,166 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C192C433EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07096C433F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ADD5206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595762057;
-	bh=yTiu3aElFugfkgQka/4eiqlgwGCOo4kpJ+dj714Rhf4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=P1Dkh1p8MM1zwU2U5y4IEv8ekql2VJ1yNGXk+x1+PzrQwtVq8GoB4G7Jt/frp2Hps
-	 mJnraws+HBQi/vDxq2lDyjaCrgg4MLLu2CxaM0FODcoVW7b+O+YhfxXY6e/59RFN5+
-	 hlyRZaKqjakEPTq35uJx6Nm1N72Ik+xMtU2O/qdo=
+	by mail.kernel.org (Postfix) with ESMTP id D99F52065C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:14:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YXAZG2TJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgGZLOP (ORCPT
+        id S1728146AbgGZLOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 07:14:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbgGZLON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 07:14:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FD912065C;
-        Sun, 26 Jul 2020 11:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595762052;
-        bh=yTiu3aElFugfkgQka/4eiqlgwGCOo4kpJ+dj714Rhf4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=me9y+wFyf81uaSMGXOSJkldHDBH5UsaVbsnDcQbxmAsRUt17OpsMmSqFINgsNhFbZ
-         LbBLkTjO1Iob5J4jAz5aPPqvgYyweEy3AqekvX1c7RCDvcVgNhY67NINBRRHjuyWTg
-         IiVbSS0vJlrBqYkSN3jQLcuUzQ7RHJYHUJ9ShNCw=
-Date:   Sun, 26 Jul 2020 13:14:10 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Char/Misc driver fixes for 5.8-rc7
-Message-ID: <20200726111410.GA1283983@kroah.com>
+        Sun, 26 Jul 2020 07:14:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727892AbgGZLOX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 07:14:23 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30EAAC0619D2;
+        Sun, 26 Jul 2020 04:14:23 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id kq25so1276561ejb.3;
+        Sun, 26 Jul 2020 04:14:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=37BF1UwxVP7CixpP1U6Ina051uTwRlG/juDBdj9kXV4=;
+        b=YXAZG2TJKcydz5dEyEcSkHS1L5TwH6/lU+Vvf6qFl3eFLWq0tk6ftDpI3RM0Y6WZZC
+         Ic0APMwNKBbIwG24yj7aEonzyJCMqIMYPKgE68dPyC5DKROwn/CtRTu2dW2YsPWaPmJR
+         ImUyqE+J+bXk4CMa/bAMkI3jNdbEWeg7tEqs2zzuFmmfUEZEYoeDkZfY87joNawLu0g/
+         fCIgQ8pUlg979SghIRlS1hF4c7jHZws+9rP221oy/7xDgSpBI3V+SmENpT16dbrcBXfn
+         AWgI7zF8WRS8Y1e02nxyrO0S32sHoBqsn6jZOBZ+AqpeVH9vhA0MqUvtRWyk6UlMYR2V
+         5PgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=37BF1UwxVP7CixpP1U6Ina051uTwRlG/juDBdj9kXV4=;
+        b=AkbtpHTh+H8y4Ya+7aAG+gdFaCr1/dnHbvm4TOChAic0gAs6rH5gvzebBYOqDufCCc
+         hfnUILW/ZndRzLa0Kg9KaapuItB1WjTDYCj60XW4FKsAfwjJRRvPAzsxSlNFdycast2z
+         l5GYmcc+3gEASRHrUTTQN+zTid10xAJvKq6gbdIkCw/K2pGThPJ7n/52b8kDJXgkHu/k
+         Q/nE6UKkmVtMQVeME+H4nfVRDOkAzcPqpd5+VYXT0YnQ6wQCwgm17+zDx3D+x6viFISb
+         dZFug7WmyyY2KxxmDR5rH41WqzV40heIEg7J5toqhtdmsQ9U+P5gUP+nEjlb85wc7gr3
+         kFQQ==
+X-Gm-Message-State: AOAM533DTVeHMtZJuU1aOQHdPnVwNeMqbJmgTTlS/RvwBORtEKnPEBwm
+        /jBaDYjBmQaPNumtKmMq2zo=
+X-Google-Smtp-Source: ABdhPJwTeEEQ2ZXZVpgawfqhB50ZrkrMpC5+cmMg9MzlJgq+tYGn96zmWoVuMYZ86Q5HRvZmLGQ2bw==
+X-Received: by 2002:a17:906:8489:: with SMTP id m9mr14318876ejx.94.1595762061902;
+        Sun, 26 Jul 2020 04:14:21 -0700 (PDT)
+Received: from localhost.localdomain (abad207.neoplus.adsl.tpnet.pl. [83.6.167.207])
+        by smtp.googlemail.com with ESMTPSA id d23sm4696253ejj.74.2020.07.26.04.14.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 04:14:21 -0700 (PDT)
+From:   Konrad Dybcio <konradybcio@gmail.com>
+To:     konradybcio@gmail.com
+Cc:     martin.botka1@gmail.com, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        zhengbin <zhengbin13@huawei.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Xiaozhe Shi <xiaozhes@codeaurora.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH 6/9] drm/msm/dsi: Add DSI configuration for SDM660
+Date:   Sun, 26 Jul 2020 13:12:03 +0200
+Message-Id: <20200726111215.22361-7-konradybcio@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200726111215.22361-1-konradybcio@gmail.com>
+References: <20200726111215.22361-1-konradybcio@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 3e543a4d30014d45b6bb5d2095554be02153cefc:
+This also applies to sdm630/636 and their SDA
+counterparts.
 
-  Merge tag 'char-misc-5.8-rc6' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc into master (2020-07-16 11:26:40 -0700)
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+---
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
+ 2 files changed, 22 insertions(+)
 
-are available in the Git repository at:
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+index 813d69deb5e8..f892f2cbe8bb 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
+@@ -149,6 +149,25 @@ static const struct msm_dsi_config msm8998_dsi_cfg = {
+ 	.num_dsi = 2,
+ };
+ 
++static const char * const dsi_sdm660_bus_clk_names[] = {
++	"iface", "bus", "core", "core_mmss",
++};
++
++static const struct msm_dsi_config sdm660_dsi_cfg = {
++	.io_offset = DSI_6G_REG_SHIFT,
++	.reg_cfg = {
++		.num = 2,
++		.regs = {
++			{"vdd", 73400, 32 },	/* 0.9 V */
++			{"vdda", 12560, 4 },	/* 1.2 V */
++		},
++	},
++	.bus_clk_names = dsi_sdm660_bus_clk_names,
++	.num_bus_clks = ARRAY_SIZE(dsi_sdm660_bus_clk_names),
++	.io_start = { 0xc994000, 0xc996000 },
++	.num_dsi = 2,
++};
++
+ static const char * const dsi_sdm845_bus_clk_names[] = {
+ 	"iface", "bus",
+ };
+@@ -240,6 +259,8 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
+ 		&msm8996_dsi_cfg, &msm_dsi_6g_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V1_4_2,
+ 		&msm8976_dsi_cfg, &msm_dsi_6g_host_ops},
++	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_1_0,
++		&sdm660_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_0,
+ 		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
+ 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+index 217e24a65178..efd469d1db45 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
++++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
+@@ -18,6 +18,7 @@
+ #define MSM_DSI_6G_VER_MINOR_V1_3_1	0x10030001
+ #define MSM_DSI_6G_VER_MINOR_V1_4_1	0x10040001
+ #define MSM_DSI_6G_VER_MINOR_V1_4_2	0x10040002
++#define MSM_DSI_6G_VER_MINOR_V2_1_0	0x20010000
+ #define MSM_DSI_6G_VER_MINOR_V2_2_0	0x20000000
+ #define MSM_DSI_6G_VER_MINOR_V2_2_1	0x20020001
+ #define MSM_DSI_6G_VER_MINOR_V2_4_1	0x20040001
+-- 
+2.27.0
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.8-rc7
-
-for you to fetch changes up to 92d232d176041db5b033dd7b7f7f2cf343f82237:
-
-  interconnect: msm8916: Fix buswidth of pcnoc_s nodes (2020-07-23 10:45:24 +0200)
-
-----------------------------------------------------------------
-Char/misc driver fixes for 5.8-rc7
-
-Here are a few small driver fixes for 5.8-rc7
-
-They include:
-	- habanalabs fixes
-	- tiny fpga driver fixes
-	- /dev/mem fixup from previous changes
-	- interconnect driver fixes
-	- binder fix
-
-All of these have been in linux-next for a while with no reported
-issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Eric Biggers (1):
-      /dev/mem: Add missing memory barriers for devmem_inode
-
-Georgi Djakov (2):
-      interconnect: Do not skip aggregation for disabled paths
-      interconnect: msm8916: Fix buswidth of pcnoc_s nodes
-
-Greg Kroah-Hartman (3):
-      Merge tag 'misc-habanalabs-fixes-2020-07-10' of git://people.freedesktop.org/~gabbayo/linux into char-misc-linus
-      Merge tag 'fpga-late-fixes-for-5.8' of git://git.kernel.org/.../mdf/linux-fpga into char-misc-linus
-      Merge tag 'misc-habanalabs-fixes-2020-07-19' of git://people.freedesktop.org/~gabbayo/linux into char-misc-linus
-
-Matthew Gerlach (1):
-      fpga: dfl: fix bug in port reset handshake
-
-Oded Gabbay (4):
-      habanalabs: block WREG_BULK packet on PDMA
-      habanalabs: set clock gating per engine
-      habanalabs: set 4s timeout for message to device CPU
-      habanalabs: prevent possible out-of-bounds array access
-
-Tetsuo Handa (1):
-      binder: Don't use mmput() from shrinker function.
-
-Xu Yilun (1):
-      fpga: dfl: pci: reduce the scope of variable 'ret'
-
- .../ABI/testing/debugfs-driver-habanalabs          |  11 +-
- drivers/android/binder_alloc.c                     |   2 +-
- drivers/char/mem.c                                 |  10 +-
- drivers/fpga/dfl-afu-main.c                        |   3 +-
- drivers/fpga/dfl-pci.c                             |   3 +-
- drivers/interconnect/core.c                        |  12 +-
- drivers/interconnect/qcom/msm8916.c                |  14 +--
- drivers/misc/habanalabs/command_submission.c       |  14 ++-
- drivers/misc/habanalabs/debugfs.c                  |  23 ++--
- drivers/misc/habanalabs/device.c                   |   2 +-
- drivers/misc/habanalabs/firmware_if.c              |  10 +-
- drivers/misc/habanalabs/gaudi/gaudi.c              | 123 ++++++++++++++-------
- drivers/misc/habanalabs/goya/goya.c                |  20 ++--
- drivers/misc/habanalabs/habanalabs.h               |  19 +++-
- drivers/misc/habanalabs/habanalabs_drv.c           |   2 +-
- drivers/misc/habanalabs/hwmon.c                    |  19 ++--
- drivers/misc/habanalabs/sysfs.c                    |  11 +-
- 17 files changed, 186 insertions(+), 112 deletions(-)
