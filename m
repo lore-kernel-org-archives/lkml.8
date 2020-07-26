@@ -2,144 +2,184 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9F1C433EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3619C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E79020759
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:36:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVo97B/a"
+	by mail.kernel.org (Postfix) with ESMTP id 9321A20714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgGZPgR (ORCPT
+        id S1726859AbgGZPel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 11:36:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbgGZPgQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 11:36:16 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5D1C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 08:36:16 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id kq25so1633104ejb.3
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 08:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=HDG9/ek9z1S16A5dtxmL+5qh96r+OR3wdAt2UD99xf8=;
-        b=AVo97B/a29T3cdG3nvRjJyvoj8+TvYxwL1F/zxvwaO6TPdrBJ32G2Su/QH8mD4pdP8
-         pA2xucxxTNYt2Y3YO3ew8gufRBE6xApEZM5JMV/fHqkcZTgoPHhfkcPEeSRojG8LikZr
-         NNqOzQEcVFEm8gMTEWvgpdi4t5O13Pfq0cZ5S7jLckrltiI2+QxqkzpLlxd4sUvHksr8
-         kF6jA3C+oTJ5HshEHpFDBvdPzxaeOMrM6lTwczN8daJtagRzw9ONBpLqTOsv9ynDlpqu
-         bUDKQn7Ofr+6yjhk+tuPU2JX00+9bDcdEZ3Cbbt+aG/MHpuVCNBB8KpSpUnlU6dNFjxj
-         MrdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=HDG9/ek9z1S16A5dtxmL+5qh96r+OR3wdAt2UD99xf8=;
-        b=hVHKBMFU/P1lMag6UdfmpEN5GPDDVochocyvLuzxE4lZCebYC+3n1Q/vDH0TmYGSRN
-         Ex+y3DjeJ9xhAaVqaVb54+OGDT3JMZtfEwF2zPKdNA2WokqrPmgRfOrIOYG/VWAhbeBl
-         Lq1sHne3nDZwfWJsqQxR1mJ99ZF0bmn7NG1EP811QmFLhXksBnoLqBYQOzsfw6hRQnPS
-         U9uK5ATpy2/lYeJqvX9W7pVtuEKeOs9SSt42ejvfXrq54OWXdaGa058/DmkhtvUr/X+d
-         R24X1/FBnT9Pt+t6B5RJN253DOMzMlePMzvZTe0ldls1vDGu67sIrM1AcMpk9e5bBOk/
-         zTwg==
-X-Gm-Message-State: AOAM532W3rCgT3HJgP5NGscsiC9mfG+BuLenycaJYo+i3vWghiJJ3Lj1
-        2BDIitYnfposmZnkI0/GHe8=
-X-Google-Smtp-Source: ABdhPJwEgeKfyyUieqmI040WhoQwsBIN3eS5wUk9qFfv04NNZuV0nFb5faTuEXAbBlauQoWYSbAA/Q==
-X-Received: by 2002:a17:906:3e4f:: with SMTP id t15mr3529388eji.368.1595777775095;
-        Sun, 26 Jul 2020 08:36:15 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:2450:10d2:194d:60d3:6c2f:f9ba:e713])
-        by smtp.gmail.com with ESMTPSA id ay5sm216386edb.2.2020.07.26.08.36.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 08:36:14 -0700 (PDT)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     SeongJae Park <sj38.park@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        SeongJae Park <sjpark@amazon.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, apw@canonical.com,
-        colin.king@canonical.com, jslaby@suse.cz, pavel@ucw.cz,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: Re: Re: Re: Re: checkpatch: support deprecated terms checking
-Date:   Sun, 26 Jul 2020 17:36:01 +0200
-Message-Id: <20200726153601.13855-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <dae471a789ee6e0bda5e641eb8e376fd03667415.camel@perches.com>
+        Sun, 26 Jul 2020 11:34:41 -0400
+Received: from mga03.intel.com ([134.134.136.65]:17603 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726065AbgGZPek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 11:34:40 -0400
+IronPort-SDR: 3JDtvrYbd/NB2XliehxKueJtDoi/xsVOwa1mKq9vuS13pWJLmh4Ho6zE4TeDncKhhB0itQbBxq
+ Ya+Svp0Lyddg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="150890955"
+X-IronPort-AV: E=Sophos;i="5.75,399,1589266800"; 
+   d="scan'208";a="150890955"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 08:34:40 -0700
+IronPort-SDR: rUbsBwb1OF0ZnNlTNb4A+AFbeSGDD2v84/a2gsxpeHuSNf5b1wETG6HQPgJe8c0Vgsbsb/kH6p
+ phQhwRJNF7Fg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,399,1589266800"; 
+   d="scan'208";a="303177494"
+Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
+  by orsmga002.jf.intel.com with ESMTP; 26 Jul 2020 08:34:37 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        Like Xu <like.xu@linux.intel.com>
+Subject: [PATCH v13 00/10] Guest Last Branch Recording Enabling (KVM part)
+Date:   Sun, 26 Jul 2020 23:32:18 +0800
+Message-Id: <20200726153229.27149-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 26 Jul 2020 07:50:54 -0700 Joe Perches <joe@perches.com> wrote:
+Hi Paolo,
 
-> On Sun, 2020-07-26 at 09:45 +0200, SeongJae Park wrote:
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
-> > @@ -721,6 +721,7 @@ sub read_word_corrections {
-> >  my %deprecated_terms_fix;
-> >  read_word_corrections($deprecated_terms_file, \%deprecated_terms_fix);
-> >  my $deprecated_terms = join("|", sort keys %deprecated_terms_fix) if keys %deprecated_terms_fix;
-> > +my %deprecated_terms_reported = map { $_ => 1 }
-> 
-> overly verbose naming and this doesn't need initialization here.
-> 
-> > @@ -2975,13 +2976,16 @@ sub process {
-> >  		    ($in_commit_log || $line =~ /^(?:\+|Subject:)/i)) {
-> >  			while ($rawline =~ /(?:^|[^a-z@])($deprecated_terms)(?:\b|$|[^a-z@])/gi) { 
-> >  				my $deprecated_term = $1;
-> > +				last if (exists($deprecated_terms_reported{$deprecated_term}));
-> 
-> next if (...) to check if multiple terms exists on the same line
+Please review this new version for the Kernel 5.9 release, and
+Sean may not review them as he said in the previous email
+https://lore.kernel.org/kvm/20200710162819.GF1749@linux.intel.com/
 
-Agreed on these comments, thanks!
+You may cherry-pick the perf patches "3cb9d5464c1c..e1ad1ac2deb8"
+from the branch "tip/perf/core" of scm/linux/kernel/git/tip/tip.git
+as PeterZ said in the previous email
+https://lore.kernel.org/kvm/20200703075646.GJ117543@hirez.programming.kicks-ass.net/
 
-> 
-> > +				$deprecated_terms_reported{$deprecated_term} = 1;
-> > +
-> 
-> But this does need to be reset to empty when checking the next file
+We may also apply the qemu-devel patch to the upstream qemu and try
+the QEMU command lines with '-cpu host' or '-cpu host,pmu=true,lbr=true'.
 
-Hmm... I though you mean reporting same term multiple times too verbose... Did
-I misunderstand your point?
+The following error will be gone forever with the patchset:
 
-> 
-> >  				my $suggested = $deprecated_terms_fix{lc($deprecated_term)};
-> >  				$suggested = ucfirst($suggested) if ($deprecated_term=~ /^[A-Z]/);
-> >  				$suggested = uc($suggested) if ($deprecated_term =~ /^[A-Z]+$/);
-> >  				my $msg_level = \&WARN;
-> >  				$msg_level = \&CHK if ($file);
-> >  				if (&{$msg_level}("DEPRECATED_TERM",
-> > -						  "Use of '$deprecated_term' is deprecated, please '$suggested', instead.\n" . $herecurr) &&
-> > +						  "Use of '$deprecated_term' is controversial - if not required by specification, perhaps '$suggested' instead.  See: scripts/deprecated_terms.txt\n" . $herecurr) &&
-> >  				    $fix) {
-> >  					$fixed[$fixlinenr] =~ s/(^|[^A-Za-z@])($deprecated_term)($|[^A-Za-z@])/$1$suggested$3/;
-> 
-> I think it simpler to avoid emitting this on existing files.
+  $ perf record -b lbr ${WORKLOAD}
+  or $ perf record --call-graph lbr ${WORKLOAD}
+  Error:
+  cycles: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
 
-Agreed, it's much simpler.  However, my concerns on excluding existing file
-checks are:
+Please check more details in each commit and feel free to test.
 
-1. Avoiding existing file checks will still not stop warning patches mentioning
-existing deprecated terms.
-2. If the term mistakenly comes in newly, it would be hard to check it later.
-3. Some future deprecations of terms might be applied to existing uses, as
-'s/fuck/hug' did.
+v12->v13 Changelog:
+- remove perf patches since they're queued in the tip/perf/core;
+- add a minor patch to refactor MSR_IA32_DEBUGCTLMSR set/get handler;
+- add a minor patch to expose vmx_set_intercept_for_msr();
+- add a minor patch to initialize perf_capabilities in the intel_pmu_init();
+- spilt the big patch to three pieces (0004-0006) for better understanding and review
+- make the LBR_FMT exposure patch as the last step to enable guest LBR;
 
-> 
-> I do not want to encourage relatively inexperienced people
-> to run checkpatch and submit inappropriate patches.
+Previous:
+https://lore.kernel.org/kvm/20200613080958.132489-1-like.xu@linux.intel.com/
 
-Me, neither.  But, I think providing more warnings and references is better for
-that.  Experienced people would be able to easily ignore the false positives.
-Simply limiting checks could allow people submitting inappropriate patches
-intorducing new uses of deprecated terms.
+---
 
+The last branch recording (LBR) is a performance monitor unit (PMU)
+feature on Intel processors that records a running trace of the most
+recent branches taken by the processor in the LBR stack. This patch
+series is going to enable this feature for plenty of KVM guests.
 
-Thanks,
-SeongJae Park
+The user space could configure whether it's enabled or not for each
+guest via MSR_IA32_PERF_CAPABILITIES msr. As a first step, a guest
+could only enable LBR feature if its cpu model is the same as the
+host since the LBR feature is still one of model specific features.
+
+If it's enabled on the guest, the guest LBR driver would accesses the
+LBR MSR (including IA32_DEBUGCTLMSR and records MSRs) as host does.
+The first guest access on the LBR related MSRs is always interceptible.
+The KVM trap would create a special LBR event (called guest LBR event)
+which enables the callstack mode and none of hardware counter is assigned.
+The host perf would enable and schedule this event as usual. 
+
+Guest's first access to a LBR registers gets trapped to KVM, which
+creates a guest LBR perf event. It's a regular LBR perf event which gets
+the LBR facility assigned from the perf subsystem. Once that succeeds,
+the LBR stack msrs are passed through to the guest for efficient accesses.
+However, if another host LBR event comes in and takes over the LBR
+facility, the LBR msrs will be made interceptible, and guest following
+accesses to the LBR msrs will be trapped and meaningless. 
+
+Because saving/restoring tens of LBR MSRs (e.g. 32 LBR stack entries) in
+VMX transition brings too excessive overhead to frequent vmx transition
+itself, the guest LBR event would help save/restore the LBR stack msrs
+during the context switching with the help of native LBR event callstack
+mechanism, including LBR_SELECT msr.
+
+If the guest no longer accesses the LBR-related MSRs within a scheduling
+time slice and the LBR enable bit is unset, vPMU would release its guest
+LBR event as a normal event of a unused vPMC and the pass-through
+state of the LBR stack msrs would be canceled.
+
+---
+
+LBR testcase:
+echo 1 > /proc/sys/kernel/watchdog
+echo 25 > /proc/sys/kernel/perf_cpu_time_max_percent
+echo 5000 > /proc/sys/kernel/perf_event_max_sample_rate
+echo 0 > /proc/sys/kernel/perf_cpu_time_max_percent
+./perf record -b ./br_instr a
+
+- Perf report on the host:
+Samples: 72K of event 'cycles', Event count (approx.): 72512
+Overhead  Command   Source Shared Object           Source Symbol                           Target Symbol                           Basic Block Cycles
+  12.12%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           1
+  11.05%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             5
+   8.81%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             4
+   5.04%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           20
+   4.92%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             6
+   4.88%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           6
+   4.58%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           5
+
+- Perf report on the guest:
+Samples: 92K of event 'cycles', Event count (approx.): 92544
+Overhead  Command   Source Shared Object  Source Symbol                                   Target Symbol                                   Basic Block Cycles
+  12.03%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   1
+  11.09%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     5
+   8.57%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     4
+   5.08%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     6
+   5.06%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   20
+   4.87%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   6
+   4.70%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   5
+
+Conclusion: the profiling results on the guest are similar to that on the host.
+
+Like Xu (10):
+  KVM: x86: Move common set/get handler of MSR_IA32_DEBUGCTLMSR to VMX
+  KVM: x86/vmx: Make vmx_set_intercept_for_msr() non-static and expose it
+  KVM: vmx/pmu: Initialize vcpu perf_capabilities once in intel_pmu_init()
+  KVM: vmx/pmu: Clear PMU_CAP_LBR_FMT when guest LBR is disabled
+  KVM: vmx/pmu: Create a guest LBR event when vcpu sets DEBUGCTLMSR_LBR
+  KVM: vmx/pmu: Pass-through LBR msrs to when the guest LBR event is ACTIVE
+  KVM: vmx/pmu: Reduce the overhead of LBR pass-through or cancellation
+  KVM: vmx/pmu: Emulate legacy freezing LBRs on virtual PMI
+  KVM: vmx/pmu: Expose LBR_FMT in the MSR_IA32_PERF_CAPABILITIES
+  KVM: vmx/pmu: Release guest LBR event via lazy release mechanism
+
+ arch/x86/kvm/pmu.c              |  12 +-
+ arch/x86/kvm/pmu.h              |   5 +
+ arch/x86/kvm/vmx/capabilities.h |  22 ++-
+ arch/x86/kvm/vmx/pmu_intel.c    | 296 +++++++++++++++++++++++++++++++-
+ arch/x86/kvm/vmx/vmx.c          |  44 ++++-
+ arch/x86/kvm/vmx/vmx.h          |  28 +++
+ arch/x86/kvm/x86.c              |  15 +-
+ 7 files changed, 395 insertions(+), 27 deletions(-)
+
+-- 
+2.21.3
+
