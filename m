@@ -2,147 +2,145 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E86B8C433FB
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA4BC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0AC820714
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6D7206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:41:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQBpC9fz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgGZLjy (ORCPT
+        id S1728178AbgGZLl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 07:39:54 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:32814
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726835AbgGZLjw (ORCPT
+        Sun, 26 Jul 2020 07:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgGZLl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 07:39:52 -0400
-X-IronPort-AV: E=Sophos;i="5.75,398,1589234400"; 
-   d="scan'208";a="355309543"
-Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES256-SHA256; 26 Jul 2020 13:39:47 +0200
-From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     kernel-janitors@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] ASoC: Intel: drop unnecessary list_empty
-Date:   Sun, 26 Jul 2020 12:58:26 +0200
-Message-Id: <1595761112-11003-2-git-send-email-Julia.Lawall@inria.fr>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1595761112-11003-1-git-send-email-Julia.Lawall@inria.fr>
-References: <1595761112-11003-1-git-send-email-Julia.Lawall@inria.fr>
+        Sun, 26 Jul 2020 07:41:26 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5516CC0619D2;
+        Sun, 26 Jul 2020 04:41:26 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id a1so10066212edt.10;
+        Sun, 26 Jul 2020 04:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lseWHrFGrBMnahk5IsFpxWMdJQwHw9KSOQ+YjXuxbFA=;
+        b=aQBpC9fzSLDnNvo+7B291mUv7CYE5RDCBIF21+v6M1aGzer6EfkLoJTc2o7eM2K6MG
+         AEwWL5yYBW7duIplNuwImdTx2S1RNduHQeqEz7mgWGH8phlB4lVmG8WraFLhUQJQ98Z2
+         zUqMA7AMx1KI9m0wjq5Pggp54FnyaY97h8fptUzqQQSzxWh98jXHZHPHVbaEyQRKgrzd
+         i2cvvdyI3MRlbqk0xdTUVTqT7iJB3HtXVtuiJeb5ouEVGh1+FGE608Ek0ww5PSUYS0h2
+         CeGhysTrPHi4pC+EoRw7apKj2jD5TkDMRVMNrR+Ty5Y6JJ8bb8ZBiE0hUl/tm2l1AE7l
+         L86A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lseWHrFGrBMnahk5IsFpxWMdJQwHw9KSOQ+YjXuxbFA=;
+        b=oC/cjnLFM/fGqrB02GyoWkFBBWg0aExw8LZDsKSi3ULbkqPKPXxjHJqvnaMqPvBISU
+         1B/lHkaVfEndtxZ4mjrecYbKxXJZfglh2owRZw8uJ8qQ2KNvMdbNlddtufm+3eh07/hz
+         N4rCChVPVJtDjlCoBPgJiYX7EXfU05aIuN6bNNtcvtV+rGNfsJnbJ0ngsCb9JK3JiMzm
+         qktmu1cn+zl7lqBSiWg40e9yC4F5Nrn2jqlynFmtHHt0CqNp+dErz0YDQOOk1qJ5aSRx
+         LRhgucRfr6CN0BRI7uV+lJx0mqtCZzHclpfI73hZQGRVtY5b5ibLABg5B73jPTST5XxS
+         RAOg==
+X-Gm-Message-State: AOAM532qvym97B82eTSYLGdjP69wRaYRip9rDQJKU92sN/LtYzKJsnVx
+        8G3L5US3qwCwehNl+OG1DInssHzJLaMtUQArJSpdMYDaoMg=
+X-Google-Smtp-Source: ABdhPJwLaN8pOziusRtdh65jeRMP/q7PrsLl/HAajDABeyO6M98X1ss/F/xt4CRsnqgpobZve6SjTOQeV/4Mrj+BHWc=
+X-Received: by 2002:a05:6402:1ade:: with SMTP id ba30mr16127632edb.231.1595763685099;
+ Sun, 26 Jul 2020 04:41:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200726111215.22361-1-konradybcio@gmail.com> <20200726111215.22361-10-konradybcio@gmail.com>
+ <20200726112920.GA1286220@kroah.com>
+In-Reply-To: <20200726112920.GA1286220@kroah.com>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Sun, 26 Jul 2020 13:40:46 +0200
+Message-ID: <CAMS8qEV7jhbHqpXE2UOaXBVM5WbCThaGrcD3wiH9kf6h_K-qeA@mail.gmail.com>
+Subject: Re: [PATCH 9/9] soc/qcom: Add REVID driver
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Martin Botka <martin.botka1@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        zhengbin <zhengbin13@huawei.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Harigovindan P <harigovi@codeaurora.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Xiaozhe Shi <xiaozhes@codeaurora.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-usb@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-list_for_each_entry_safe is able to handle an empty list.
-The only effect of avoiding the loop is not initializing the
-index variable.
-Drop list_empty tests in cases where these variables are not
-used.
+Hi Greg, thanks for your review!
 
-Note that list_for_each_entry_safe is defined in terms of
-list_first_entry, which indicates that it should not be used on an
-empty list.  But in list_for_each_entry_safe, the element obtained by
-list_first_entry is not really accessed, only the address of its
-list_head field is compared to the address of the list head, so the
-list_first_entry is safe.
+>Why do we need this noise in the kernel log?
 
-The semantic patch that makes this change is as follows (with another
-variant for the no brace case): (http://coccinelle.lip6.fr/)
+I guess it could be left there as a debug print? Knowing your hardware
+revision seems like a good, but yeah, not a necessary thing.
 
-<smpl>
-@@
-expression x,e;
-iterator name list_for_each_entry_safe;
-statement S;
-identifier i,j;
-@@
--if (!(list_empty(x))) {
-   list_for_each_entry_safe(i,j,x,...) S
-- }
- ... when != i
-     when != j
-(
-  i = e;
-|
-? j = e;
-)
-</smpl>
+>You can drop the GPL boilerplate text and add a proper SPDX line at the
+>top.
 
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+Seems I only did that in my other local tree.. whoops!
 
----
- sound/soc/intel/atom/sst/sst_loader.c  |   10 ++++------
- sound/soc/intel/skylake/skl-pcm.c      |    8 +++-----
- sound/soc/intel/skylake/skl-topology.c |    5 ++---
- 3 files changed, 9 insertions(+), 14 deletions(-)
+>Drivers should always use dev_err() and friends, as you have access to a
+>struct device * always.  Please fix up the driver here to use that api
+>instead, no pr_* should be needed at all.
 
-diff --git a/sound/soc/intel/atom/sst/sst_loader.c b/sound/soc/intel/atom/sst/sst_loader.c
-index 8ad0ca7..fc91a30 100644
---- a/sound/soc/intel/atom/sst/sst_loader.c
-+++ b/sound/soc/intel/atom/sst/sst_loader.c
-@@ -276,12 +276,10 @@ void sst_memcpy_free_resources(struct intel_sst_drv *sst_drv_ctx)
- 	struct sst_memcpy_list *listnode, *tmplistnode;
- 
- 	/* Free the list */
--	if (!list_empty(&sst_drv_ctx->memcpy_list)) {
--		list_for_each_entry_safe(listnode, tmplistnode,
--				&sst_drv_ctx->memcpy_list, memcpylist) {
--			list_del(&listnode->memcpylist);
--			kfree(listnode);
--		}
-+	list_for_each_entry_safe(listnode, tmplistnode,
-+				 &sst_drv_ctx->memcpy_list, memcpylist) {
-+		list_del(&listnode->memcpylist);
-+		kfree(listnode);
- 	}
- }
- 
-diff --git a/sound/soc/intel/skylake/skl-pcm.c b/sound/soc/intel/skylake/skl-pcm.c
-index 89dcccd..9e15b06 100644
---- a/sound/soc/intel/skylake/skl-pcm.c
-+++ b/sound/soc/intel/skylake/skl-pcm.c
-@@ -1509,11 +1509,9 @@ int skl_platform_unregister(struct device *dev)
- 	struct skl_dev *skl = bus_to_skl(bus);
- 	struct skl_module_deferred_bind *modules, *tmp;
- 
--	if (!list_empty(&skl->bind_list)) {
--		list_for_each_entry_safe(modules, tmp, &skl->bind_list, node) {
--			list_del(&modules->node);
--			kfree(modules);
--		}
-+	list_for_each_entry_safe(modules, tmp, &skl->bind_list, node) {
-+		list_del(&modules->node);
-+		kfree(modules);
- 	}
- 
- 	kfree(skl->dais);
-diff --git a/sound/soc/intel/skylake/skl-topology.c b/sound/soc/intel/skylake/skl-topology.c
-index b9aab47..b7d2d97 100644
---- a/sound/soc/intel/skylake/skl-topology.c
-+++ b/sound/soc/intel/skylake/skl-topology.c
-@@ -3773,9 +3773,8 @@ void skl_tplg_exit(struct snd_soc_component *component, struct hdac_bus *bus)
- 	struct skl_dev *skl = bus_to_skl(bus);
- 	struct skl_pipeline *ppl, *tmp;
- 
--	if (!list_empty(&skl->ppl_list))
--		list_for_each_entry_safe(ppl, tmp, &skl->ppl_list, node)
--			list_del(&ppl->node);
-+	list_for_each_entry_safe(ppl, tmp, &skl->ppl_list, node)
-+		list_del(&ppl->node);
- 
- 	/* clean up topology */
- 	snd_soc_tplg_component_remove(component, SND_SOC_TPLG_INDEX_ALL);
+Will do.
 
+>Horrible global symbol name.  Who calls this?
+
+Welcome to development on qcom platforms :D
+
+>This is the last patch in
+>the series, so if there is no user for this, please don't export it.
+
+Other downstream drivers make use of it.. need to get this up first, sorry :V
+
+>Why do you need a .h file in the include directory if only a single .c
+>file needs it?  Just put that info in the .c file itself.
+
+Again, other downstream drivers which some people and I intend to
+bring to upstream standards use that to access the PMIC model/hw revision.
+
+>But again, who uses this module?  If it's only good for a single line in
+>the kernel log, that feels like a huge waste to me.
+
+downstream-kernel-dir$ rg -l qpnp-revid.h | wc -l
+25
+
+So yeah, quite a bunch of other qcom-specific drivers.
+
+I'll try to fix these and send a v2.
+
+Regards
+Konrad
