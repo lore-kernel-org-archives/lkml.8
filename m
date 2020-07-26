@@ -2,100 +2,82 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A050BC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85ADFC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 800512065C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:04:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EiWMvIYC"
+	by mail.kernel.org (Postfix) with ESMTP id 69A20206F6
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgGZJEg (ORCPT
+        id S1726984AbgGZJGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 05:04:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgGZJEf (ORCPT
+        Sun, 26 Jul 2020 05:06:51 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:10269 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725794AbgGZJGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 05:04:35 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF266C0619D2;
-        Sun, 26 Jul 2020 02:04:34 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id k27so7751796pgm.2;
-        Sun, 26 Jul 2020 02:04:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aHrlTd85XWK3pOyfmvZVnMsTMYRkRM8sEaTNqMrlEeE=;
-        b=EiWMvIYCNZgUKEDR7GpvZnnTJeeR7ZjPdWr8N1i8AoOH7JGkF8PT+QofBwapvlO8dv
-         6hnoUmoHjdjfRXtLJJCo+pHnYu3InarkFRdO/uDqc5c98Jdq07D8sG9/JqTRsGUoZ5s8
-         2PFEIfeDDU3b0y3FTYlKwL1x0ZEV+X0SD8mWE/KWYci1QlbCTRq0BIB5TmKqt08n7Qt4
-         QBubCt8GTHUwAkN1uza4fnADPYGc1pxnPmFDjPUFgLQjbW1ZlN0p2Gqw4zFoKZAVX7Fr
-         hT4dZwdYIiHkfyNEtN4au4s1LpNUsOwQ5STEld5fyAfxxQdz8ze2Mce12kGxOJE3gQir
-         vO1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aHrlTd85XWK3pOyfmvZVnMsTMYRkRM8sEaTNqMrlEeE=;
-        b=Yf3ItFlPJoSPw0KlwbMjBFOwfzH8O5DIwkKPOImVUP06yB45umGuRx+SvuhwRxJ02X
-         KlfTIbEc/jzROu4UbCM8xjnnsQF12/azsY0OxY8fnpiBEnYMjCQmMTsDcznIGDQblUQU
-         YXgn0/eHCJhAtnnVed8tU35A02pHiKZDGEhcooU0UYfbnYHw1ZnAlxxTcHRopiOcbkIx
-         rSKbpWYiqDrgLbknRQGkejtTQoG+S+E81XOdSQb0/ELczM/CURdsrGvvLvvrg0VTtAq4
-         HKrJ93+3PZEbdXq23Zt7/yy8b7tbYSj8nqFqMtXgVTjkZgGqAaweD8L7bMjkkee44akl
-         2lGQ==
-X-Gm-Message-State: AOAM532cmVqYPg/kLeKb4M5urVi6MCASpDwyZdTzCOKDN0cLhUOemUW8
-        UUDPX9qojDOgsJv/uQe6zLLQYFZ1dAM4lXUMzGpY8axa5eY=
-X-Google-Smtp-Source: ABdhPJx44ZrFZhNwXvgVe5Vd2Tea/ss8TkWcGSr7Z4Vl0BaVUKWkQCX6jehzcWJuvlQufdTtdrXtQWmbeKdaJx7L/2A=
-X-Received: by 2002:aa7:8bcb:: with SMTP id s11mr15288366pfd.170.1595754274348;
- Sun, 26 Jul 2020 02:04:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200724213659.273599-1-martin.botka1@gmail.com> <20200724213659.273599-3-martin.botka1@gmail.com>
-In-Reply-To: <20200724213659.273599-3-martin.botka1@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 26 Jul 2020 12:04:18 +0300
-Message-ID: <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
- with u64 data length
-To:     Martin Botka <martin.botka1@gmail.com>
-Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
-        Konrad Dybcio <konradybcio@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 26 Jul 2020 05:06:50 -0400
+X-IronPort-AV: E=Sophos;i="5.75,398,1589234400"; 
+   d="scan'208";a="461332981"
+Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES256-SHA256; 26 Jul 2020 11:06:48 +0200
+From:   Julia Lawall <Julia.Lawall@inria.fr>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: SOF: imx: use resource_size
+Date:   Sun, 26 Jul 2020 10:25:33 +0200
+Message-Id: <1595751933-4952-1-git-send-email-Julia.Lawall@inria.fr>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 12:40 AM Martin Botka <martin.botka1@gmail.com> wrote:
->
-> From: Fenglin Wu <fenglinw@codeaurora.org>
->
-> Currently, PWM core driver provides interfaces for configuring PWM
-> period and duty length in nanoseconds with an integer data type, so
-> the max period can be only set to ~2.147 seconds. Add interfaces which
-> can set PWM period and duty with u64 data type to remove this
-> limitation.
+Use resource_size rather than a verbose computation on
+the end and start fields.
 
-And all divisions go mad on 32-bit CPU, right?
-Please, if you thought about it carefully, update a commit message to
-clarify that.
+The semantic patch that makes this change is as follows:
+(http://coccinelle.lip6.fr/)
 
--- 
-With Best Regards,
-Andy Shevchenko
+<smpl>
+@@ struct resource ptr; @@
+- (ptr.end - ptr.start + 1)
++ resource_size(&ptr)
+</smpl>
+
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+
+---
+ sound/soc/sof/imx/imx8m.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff -u -p a/sound/soc/sof/imx/imx8m.c b/sound/soc/sof/imx/imx8m.c
+--- a/sound/soc/sof/imx/imx8m.c
++++ b/sound/soc/sof/imx/imx8m.c
+@@ -188,8 +188,7 @@ static int imx8m_probe(struct snd_sof_de
+ 	}
+ 
+ 	sdev->bar[SOF_FW_BLK_TYPE_SRAM] = devm_ioremap_wc(sdev->dev, res.start,
+-							  res.end - res.start +
+-							  1);
++							  resource_size(&res));
+ 	if (!sdev->bar[SOF_FW_BLK_TYPE_SRAM]) {
+ 		dev_err(sdev->dev, "failed to ioremap mem 0x%x size 0x%x\n",
+ 			base, size);
+
