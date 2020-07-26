@@ -2,184 +2,168 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CC1C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 13:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 120612065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:57:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="l4ouuUm+"
+	by mail.kernel.org (Postfix) with ESMTP id 4B892206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 13:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgGZM5a (ORCPT
+        id S1726820AbgGZNJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 08:57:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbgGZM5a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 08:57:30 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD645C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 05:57:29 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id t142so5779673wmt.4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 05:57:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cj1AA+QajmRenSwYh/8g5RjvZ+1Kfi4azWkbk5rVJMY=;
-        b=l4ouuUm+RZKjkDPNsYC7yAU3y2YJaYqK7fRoN7KnpfYrRUJXIdaNeqJraLDSLj+Hsq
-         DoCjcYHNOPx4wQ8IoFKBY8oXq+gP6wlJ5S/+4ZJRUZe7F+op3/uY4m7z1/B2VnkOgD5m
-         t2uIGFEk+6v+lJhjcexw3MSjbYwv9XzgPyuSk2nG7+0gRoCIhPcpMUQxBQ0CXJeMW7Bq
-         Pj3YcVraJh5zWRzVM0CLCI1eEwZtk2hlU89S/EKMlfBzmwOSdLrkBcQe9JB7QgVZ03Q+
-         zeks5A6Odx9k1ILsGYWcElYbzhHbp57Sf/ChsiYlNzHYRcSM26Z/AA8OZ33WJhBEDIgd
-         p68A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cj1AA+QajmRenSwYh/8g5RjvZ+1Kfi4azWkbk5rVJMY=;
-        b=LpqwlB1ty8EWHY8BIX4RxdLDfhmXeWPr8R3axdftd0wIBlP1HEKadVdz5iA8mTIQNg
-         JR79f6BoJFmOMtjDGzfIaj7Drv6PBHufrHfs556wkTCKFRMVleuuMJAClTHGbe+HJKHQ
-         588sA9Jcc2OW8pETMwjZy8/oHMYoRP/WQqVp9pUtIl4EBnomRC7EAhh41OijXesL0uVe
-         ZVtwYOLzyBUtgxiJv+Lc4WbjLeuZcbc38avUlNgUtVrfZGWksOfJEw9q0mJ8VqcInsiZ
-         Gl9a/DFddsX7OTYMt4mQjZ0+gKT+FV2qmLWs7GiXU44KhSk01hWvVO5pZodD6Qarb0CA
-         eAJg==
-X-Gm-Message-State: AOAM530oqgKfQLEYrdhsXWut9U92l2uF+ukb5VenCrwhHeYyuW3ibI4W
-        w2fQ1BhJtvOT0dAq6BKrfAsA9mk7SGQ0QLoyuJ7Szg==
-X-Google-Smtp-Source: ABdhPJwiFhCYXoqV5R1BrUk4cFAFcu/0v8ywSpRptTToyE31Qt/lRbVUr0NbxhMSfFzTA3SQmpsU/BUW05YZkVeyxhw=
-X-Received: by 2002:a1c:5f41:: with SMTP id t62mr17178624wmb.134.1595768248343;
- Sun, 26 Jul 2020 05:57:28 -0700 (PDT)
+        Sun, 26 Jul 2020 09:09:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33764 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbgGZNJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 09:09:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B5076AB55;
+        Sun, 26 Jul 2020 13:09:12 +0000 (UTC)
+Subject: Re: [PATCH] lib: Replace HTTP links with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+References: <20200726112154.16510-1-grandmaster@al2klimov.de>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        changbin.du@intel.com, masahiroy@kernel.org, rdunlap@infradead.org,
+        krzk@kernel.org, andriy.shevchenko@linux.intel.com,
+        ben.dooks@codethink.co.uk, axboe@kernel.dk, tpiepho@gmail.com,
+        chenqiwu@xiaomi.com, walken@google.com, gustavo@embeddedor.com,
+        lasse.collin@tukaani.org, danielwa@cisco.com,
+        linux-kernel@vger.kernel.org
+From:   Coly Li <colyli@suse.de>
+Autocrypt: addr=colyli@suse.de; keydata=
+ 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
+Message-ID: <172e85d6-06c7-19bd-d3ab-016464374d81@suse.de>
+Date:   Sun, 26 Jul 2020 21:08:54 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200724085441.1514-1-jiangyifei@huawei.com> <20200724085441.1514-3-jiangyifei@huawei.com>
-In-Reply-To: <20200724085441.1514-3-jiangyifei@huawei.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Sun, 26 Jul 2020 18:27:16 +0530
-Message-ID: <CAAhSdy3q3tNUqSxnFy2tdmXOLJZjt4rMAZirZh88-0BXT7-X1g@mail.gmail.com>
-Subject: Re: [RFC 2/2] RISC-V: KVM: read\write kernel mmio device support
-To:     Yifei Jiang <jiangyifei@huawei.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        KVM General <kvm@vger.kernel.org>,
-        kvm-riscv@lists.infradead.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        "Zhangxiaofeng (F)" <victor.zhangxiaofeng@huawei.com>,
-        wu.wubin@huawei.com,
-        Zhanghailiang <zhang.zhanghailiang@huawei.com>,
-        "dengkai (A)" <dengkai1@huawei.com>, limingwang@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200726112154.16510-1-grandmaster@al2klimov.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 2:25 PM Yifei Jiang <jiangyifei@huawei.com> wrote:
->
-> Signed-off-by: Yifei Jiang <jiangyifei@huawei.com>
-> Signed-off-by: Mingwang Li <limingwang@huawei.com>
+On 2020/7/26 19:21, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 > ---
->  arch/riscv/kvm/vcpu_exit.c | 38 ++++++++++++++++++++++++++++++++------
->  1 file changed, 32 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-> index e97ba96cb0ae..448f11179fa8 100644
-> --- a/arch/riscv/kvm/vcpu_exit.c
-> +++ b/arch/riscv/kvm/vcpu_exit.c
-> @@ -191,6 +191,8 @@ static int virtual_inst_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
->  static int emulate_load(struct kvm_vcpu *vcpu, struct kvm_run *run,
->                         unsigned long fault_addr, unsigned long htinst)
->  {
-> +       int ret;
-> +       u8 data_buf[8];
->         unsigned long insn;
->         int shift = 0, len = 0;
->         struct kvm_cpu_trap utrap = { 0 };
-> @@ -272,19 +274,32 @@ static int emulate_load(struct kvm_vcpu *vcpu, struct kvm_run *run,
->         vcpu->arch.mmio_decode.len = len;
->         vcpu->arch.mmio_decode.return_handled = 0;
->
-> -       /* Exit to userspace for MMIO emulation */
-> -       vcpu->stat.mmio_exit_user++;
-> -       run->exit_reason = KVM_EXIT_MMIO;
-> +       ret = kvm_io_bus_read(vcpu, KVM_MMIO_BUS, fault_addr, len,
-> +                                                 data_buf);
-> +
+>  Continuing my work started at 93431e0607e5 with unmaintained stuff according to:
+>  perl scripts/get_maintainer.pl --nogit{,-fallback} --nol
+> 
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+> 
+>  If there are any URLs to be removed completely
+>  or at least not (just) HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+> 
+>  lib/Kconfig.debug        | 2 +-
+>  lib/crc64.c              | 2 +-
+>  lib/decompress_bunzip2.c | 2 +-
+>  lib/decompress_unlzma.c  | 6 +++---
+>  lib/math/rational.c      | 2 +-
+>  lib/rbtree.c             | 2 +-
+>  lib/ts_bm.c              | 2 +-
+>  lib/xxhash.c             | 2 +-
+>  lib/xz/xz_crc32.c        | 2 +-
+>  lib/xz/xz_dec_bcj.c      | 2 +-
+>  lib/xz/xz_dec_lzma2.c    | 2 +-
+>  lib/xz/xz_lzma2.h        | 2 +-
+>  lib/xz/xz_stream.h       | 2 +-
+>  13 files changed, 15 insertions(+), 15 deletions(-)
+> 
 
-Move "ret = kvm_io_bus_read()" just before "if (!ret)".
+[snipped]
 
->         run->mmio.is_write = false;
->         run->mmio.phys_addr = fault_addr;
->         run->mmio.len = len;
->
-> +       if (!ret) {
-> +               /* We handled the access successfully in the kernel. */
-> +               memcpy(run->mmio.data, data_buf, len);
-> +               vcpu->stat.mmio_exit_kernel++;
-> +               kvm_riscv_vcpu_mmio_return(vcpu, run);
-> +               return 1;
-> +       }
-> +
-> +       /* Exit to userspace for MMIO emulation */
-> +       vcpu->stat.mmio_exit_user++;
-> +       run->exit_reason = KVM_EXIT_MMIO;
-> +
->         return 0;
->  }
->
->  static int emulate_store(struct kvm_vcpu *vcpu, struct kvm_run *run,
->                          unsigned long fault_addr, unsigned long htinst)
->  {
-> +       int ret;
->         u8 data8;
->         u16 data16;
->         u32 data32;
-> @@ -378,13 +393,24 @@ static int emulate_store(struct kvm_vcpu *vcpu, struct kvm_run *run,
->                 return -ENOTSUPP;
->         };
->
-> -       /* Exit to userspace for MMIO emulation */
-> -       vcpu->stat.mmio_exit_user++;
-> -       run->exit_reason = KVM_EXIT_MMIO;
-> +       ret = kvm_io_bus_write(vcpu, KVM_MMIO_BUS, fault_addr, len,
-> +                                                  run->mmio.data);
-> +
+> diff --git a/lib/crc64.c b/lib/crc64.c
+> index f8928ce28280..47cfa054827f 100644
+> --- a/lib/crc64.c
+> +++ b/lib/crc64.c
+> @@ -4,7 +4,7 @@
+>   *
+>   * This is a basic crc64 implementation following ECMA-182 specification,
+>   * which can be found from,
+> - * http://www.ecma-international.org/publications/standards/Ecma-182.htm
+> + * https://www.ecma-international.org/publications/standards/Ecma-182.htm
+>   *
+>   * Dr. Ross N. Williams has a great document to introduce the idea of CRC
+>   * algorithm, here the CRC64 code is also inspired by the table-driven
+> diff --git a/lib/decompress_bunzip2.c b/lib/decompress_bunzip2.c
+> index 7c4932eed748..f9628f3924ce 100644
+> --- a/lib/decompress_bunzip2.c
+> +++ b/lib/decompress_bunzip2.c
+> @@ -34,7 +34,7 @@
+>  		Phone (337) 232-1234 or 1-800-738-2226
+>  		Fax   (337) 232-1297
+>  
+> -		http://www.hospiceacadiana.com/
+> +		https://www.hospiceacadiana.com/
+>  
+>  	Manuel
+>   */
+[snipped]
 
-Same as above.
+For crc64.c, Acked-by: Coly Li <colyli@suse.de>
 
-Move "ret = kvm_io_bus_write()" just before "if (!ret) {"
+Thanks.
 
->         run->mmio.is_write = true;
->         run->mmio.phys_addr = fault_addr;
->         run->mmio.len = len;
->
-> +       if (!ret) {
-> +               /* We handled the access successfully in the kernel. */
-> +               vcpu->stat.mmio_exit_kernel++;
-> +               kvm_riscv_vcpu_mmio_return(vcpu, run);
-> +               return 1;
-> +       }
-> +
-> +       /* Exit to userspace for MMIO emulation */
-> +       vcpu->stat.mmio_exit_user++;
-> +       run->exit_reason = KVM_EXIT_MMIO;
-> +
->         return 0;
->  }
->
-> --
-> 2.19.1
->
->
-
-Regards,
-Anup
+Coly Li
