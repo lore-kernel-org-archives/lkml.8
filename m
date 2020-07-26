@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE91C433E8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63A7C433E5
 	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 04:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9376E204EA
+	by mail.kernel.org (Postfix) with ESMTP id B6DF12053B
 	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 04:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="HJvnhiH8"
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="YbtqbfsY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgGZEkN (ORCPT
+        id S1726800AbgGZEkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 00:40:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34338 "EHLO
+        Sun, 26 Jul 2020 00:40:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbgGZEkJ (ORCPT
+        with ESMTP id S1726741AbgGZEkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 00:40:09 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF777C0619D2
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 21:40:08 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id k18so106641pfp.7
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 21:40:08 -0700 (PDT)
+        Sun, 26 Jul 2020 00:40:11 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46B8CC0619D2
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 21:40:11 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gc9so7359276pjb.2
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 21:40:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=0x0f.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GcYahk119/P6sJeLyBM6skc+StG+Q5VazOhFiNV7EeY=;
-        b=HJvnhiH8sqqk/TaRfJ3AAzRXE1dVXQ6bNix3sbK/Zg3QgYOjzjxheLPqiQMsHAfZAa
-         KciDaNNL2So4bj2LTI3gA/rTs1aBUnxGhrj5OAFJ2QWK6QeAqAlPhJyuNp97tW+EX3kc
-         P9Lqr6s7f9yj8feU28Z3p+I6LFKA6XQiM+WnM=
+        bh=dtjntBHs78gBBvXpncjh6tZl4Yv5U3MI9ZEGI0tw2Go=;
+        b=YbtqbfsYYx3YQB8DjT3rSPrPxS1GMWDTkWQKIsOyZErTNno+XE2gPxqmitg/p58trr
+         5XNWdXtP1M3Xe8RxoIZjrStbig8OjmCnxzPjmrwmFJhToUl23JwPvLz9/lHGMMCH32aD
+         ncBnF4wjLRKlWioazT9PJdirI/QuqIwX/qufY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GcYahk119/P6sJeLyBM6skc+StG+Q5VazOhFiNV7EeY=;
-        b=W83pb9HdAEsC2p6HSqsBvoGGDWV2yNzB7EkgOU8k1Xedp5Fc4plgf5AN1YpyLAR9Y6
-         vZCtHPJuILaTEzIszdIGyST6lmxHboEN4tki/GZqz3SDXN86ofe9U2T2+Nx/cGcXDXJG
-         RBAPFVBncQmDB4ft9Fvi567Z6FSRoulFJfgkUYu51xoZLn8kydcYTgUl/qG9sHoIJeHt
-         GFvLi4Q5UjKfLA42RoOBcMjTDNcXVmX5KCBSXRsD+uTIfaxv/te+oFsluIJuMzK8Z5dE
-         yLtA+IhTYNROBoXr45s7meIZAxqeQ4tcomu/kKOkjcYw0CgVGOOMKzSCuXatnWzx0phN
-         cqEg==
-X-Gm-Message-State: AOAM531GgZLRmxhvZ2rfoOmqnnGdfpRq5+79vRZWYetx3Pzh2tc0Vo/V
-        a7FAcj4CsuVR7b7jnSVvEn/QUA==
-X-Google-Smtp-Source: ABdhPJy6U1NdGWdP5tLM3lf6I+rTO1BkL50dyZykEF6wULxbH1YRFp23fLmt1mqHr6Pf5k7pVHyfVA==
-X-Received: by 2002:a63:2b91:: with SMTP id r139mr8722888pgr.61.1595738408450;
-        Sat, 25 Jul 2020 21:40:08 -0700 (PDT)
+        bh=dtjntBHs78gBBvXpncjh6tZl4Yv5U3MI9ZEGI0tw2Go=;
+        b=A73AFEu5YmGy1ZxOX/FmSk+IN2Ik+5eMM6cmNJ8H4guxMaEQrc6/mRoHN1tGarAPb5
+         Gl6pMFWb2tuaI6y4423Bv2fBkQR4ckcONwu4dwavN2dJW9NgxUz7bUkmpzaDq7WisUn1
+         fiNgh1TvaLKCuDk9Xa7gg1/QY3jUY0n8v+5rghaS6zvm67JyPma6/E4Jjpk6MVdf4Y+J
+         CvhJ4kdWyy/dVAolB3nGMAI6Vb2Dg21m0QSSAXRZ11cKGrDRW327XAz3o/p5cNo/VgkM
+         kk8lDyC47HdJ3P3ac5Qdg4nT8eYeb6gxussB/fgDJI1irg+FZfJNrvxRstIUqSWCtgpx
+         1S6Q==
+X-Gm-Message-State: AOAM532hoPEDgZPE9mANjS4q6flD+xnQ0Nq9sYqtJAGsACWbgxpGThVN
+        DMB7Z7+DphAujjQP0BIR6dxtrw==
+X-Google-Smtp-Source: ABdhPJyGXFfEbk1Up0QL8oQbe+ycIHVfA3VLtaxuSUcbU05RUoGvG8/6nx8ComJuhhjWwmDLxJYwBQ==
+X-Received: by 2002:a17:90a:2170:: with SMTP id a103mr5214636pje.198.1595738410839;
+        Sat, 25 Jul 2020 21:40:10 -0700 (PDT)
 Received: from shiro.work (p532183-ipngn200506sizuokaden.shizuoka.ocn.ne.jp. [153.199.2.183])
-        by smtp.googlemail.com with ESMTPSA id t1sm10507372pje.55.2020.07.25.21.40.06
+        by smtp.googlemail.com with ESMTPSA id t1sm10507372pje.55.2020.07.25.21.40.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 21:40:07 -0700 (PDT)
+        Sat, 25 Jul 2020 21:40:10 -0700 (PDT)
 From:   Daniel Palmer <daniel@0x0f.com>
 List-Id: <soc.lore.kernel.org>
 To:     soc@kernel.org
 Cc:     arnd@arndb.de, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH 5/7] ARM:mstar: Add PMU
-Date:   Sun, 26 Jul 2020 13:39:46 +0900
-Message-Id: <20200726043948.1357573-6-daniel@0x0f.com>
+Subject: [PATCH 6/7] ARM:mstar: Add syscon node for "pmsleep" area
+Date:   Sun, 26 Jul 2020 13:39:47 +0900
+Message-Id: <20200726043948.1357573-7-daniel@0x0f.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200726043948.1357573-1-daniel@0x0f.com>
 References: <20200726043948.1357573-1-daniel@0x0f.com>
@@ -74,30 +74,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds the ARM PMU to the base MStar v7 dtsi.
+MStar v7 SoCs contain a region of registers that are in the always on
+domain that the vendor code calls the "pmsleep" area.
+
+This area contains registers for a broad range of functionality and
+needs to be shared between drivers.
+
+This patch adds a syscon node for the pmsleep area so that other
+drivers can access registers in the area.
 
 Signed-off-by: Daniel Palmer <daniel@0x0f.com>
 ---
- arch/arm/boot/dts/mstar-v7.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/mstar-v7.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm/boot/dts/mstar-v7.dtsi b/arch/arm/boot/dts/mstar-v7.dtsi
-index 6bc55fdbee04..a73b1d162dfd 100644
+index a73b1d162dfd..c8b192569d05 100644
 --- a/arch/arm/boot/dts/mstar-v7.dtsi
 +++ b/arch/arm/boot/dts/mstar-v7.dtsi
-@@ -40,6 +40,12 @@ arch_timer {
- 		clock-frequency = <6000000>;
- 	};
+@@ -73,6 +73,11 @@ riu: bus@1f000000 {
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x1f000000 0x00400000>;
  
-+	pmu: pmu {
-+		compatible = "arm,cortex-a7-pmu";
-+		interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>;
-+	};
++			pmsleep: syscon@1c00 {
++				compatible = "syscon";
++				reg = <0x1c00 0x100>;
++			};
 +
- 	soc: soc {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
+ 			l3bridge: l3bridge@204400 {
+ 				compatible = "mstar,l3bridge";
+ 				reg = <0x204400 0x200>;
 -- 
 2.27.0
 
