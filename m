@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA59206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F79206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595766559;
-	bh=NWWwfaoZ6AUNEaTZmM6euvtlqvgNc4CIO0W2ZVyvmrM=;
+	s=default; t=1595766610;
+	bh=s4J6EOGEFA69R9t8lF7e6EZ5gSOJtEn0B6k80Px8dH0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=liEJc9HlhumRTTx8K7WtLrvyPPkeM9Uibuum9RbDrxi0GurU7+kOnXCOKo+tQpZKj
-	 yDwPO5ANbyVLA1AJoX/FOD18hmp/E0EMvzoyKRycrBZWD5GxIhKXeaZzjEfk+BDDy4
-	 1fM44UO4aHuxlAs96BDWDHXYwX2itjdmXCAs9gd4=
+	b=TS+psf2EguQ6mTt/xJGzB6Gu1CuFizAdcSrzkRBvv3ORIeF9f/+Pn9njjH/gXwKKJ
+	 jYT0BJWbYFbt53W6alga86xU9KNonkwxcpVc4O3jBxgU6yA/r/R1noLoRc8R/48c60
+	 7jaIJnC5oOOpbXfaV/lrA2iGB8uQ1FNzzJQhwcf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgGZM3S (ORCPT
+        id S1726993AbgGZMaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 08:29:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57588 "EHLO mail.kernel.org"
+        Sun, 26 Jul 2020 08:30:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbgGZM3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 08:29:18 -0400
+        id S1726042AbgGZMaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 08:30:08 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A218206D8;
-        Sun, 26 Jul 2020 12:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D1D3206D8;
+        Sun, 26 Jul 2020 12:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595766558;
-        bh=NWWwfaoZ6AUNEaTZmM6euvtlqvgNc4CIO0W2ZVyvmrM=;
+        s=default; t=1595766608;
+        bh=s4J6EOGEFA69R9t8lF7e6EZ5gSOJtEn0B6k80Px8dH0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kzzso9V4H+uPm2auZOqNNjYH1ZtRUbx5zXi6ikdPaC3PCdYlJTeodawkq42802Uc3
-         6c0wML4e/cf513IYFNl2oMMlWmcWuCNuSvGKhl5Fhc3lEOI4I7MePxm0v/os3lQeTT
-         F8aR8VtxgA9EEYPktPXZdB5a+7B1xjQS3bJRZVhI=
-Date:   Sun, 26 Jul 2020 13:29:14 +0100
+        b=jyE5RME0fADgdc4yS8tRY3IywkvcpbELB3NEzhIbRHVro5oBFuaaz4wbcojPz/A1C
+         JpSKmAOFm0xeYtqVc0oC889MBV7KE6P0O2NE2gpIsTQ/2Gty07NgDXfo/BRVE70ZEy
+         hn4Vt6KbtX7inaFQDa1e5g7CkNlgHHf3qicHAZHM=
+Date:   Sun, 26 Jul 2020 13:30:04 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
 Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] iio: frequency: ad9523: convert rest of driver to
- device managed functions
-Message-ID: <20200726132914.240c7788@archlinux>
-In-Reply-To: <20200722072201.64127-1-alexandru.ardelean@analog.com>
-References: <20200721112409.220536-1-alexandru.ardelean@analog.com>
-        <20200722072201.64127-1-alexandru.ardelean@analog.com>
+Subject: Re: [PATCH v2] iio: adxl372_spi: change indentation for of_table
+Message-ID: <20200726133004.7336d99c@archlinux>
+In-Reply-To: <20200722072546.65742-1-alexandru.ardelean@analog.com>
+References: <20200720134839.71124-1-alexandru.ardelean@analog.com>
+        <20200722072546.65742-1-alexandru.ardelean@analog.com>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -58,133 +57,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jul 2020 10:22:01 +0300
+On Wed, 22 Jul 2020 10:25:46 +0300
 Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-> The driver pretty much uses device managed functions. The only left-over is
-> the iio_device_register() function, which also requires an action-or-reset
-> hook to disable the regulator on the remove and error path.
+> The change is mostly stylistic. The table should be indented with tabs
+> instead of spaces.
 > 
 > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied.
-
-Thanks,
-
-Jonathan
+Applied
 
 > ---
 > 
 > Changelog v1 -> v2:
-> * removed 'probed' message at the end of probe; mostly log spam
+> * remove trailing comma at null terminator
 > 
->  drivers/iio/frequency/ad9523.c | 60 ++++++++++++----------------------
->  1 file changed, 20 insertions(+), 40 deletions(-)
+>  drivers/iio/accel/adxl372_spi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/iio/frequency/ad9523.c b/drivers/iio/frequency/ad9523.c
-> index 334e1d779d6d..bdb0bc3b12dd 100644
-> --- a/drivers/iio/frequency/ad9523.c
-> +++ b/drivers/iio/frequency/ad9523.c
-> @@ -969,6 +969,13 @@ static int ad9523_setup(struct iio_dev *indio_dev)
->  	return 0;
->  }
+> diff --git a/drivers/iio/accel/adxl372_spi.c b/drivers/iio/accel/adxl372_spi.c
+> index 3ef7e3a4804e..1f1352fee99a 100644
+> --- a/drivers/iio/accel/adxl372_spi.c
+> +++ b/drivers/iio/accel/adxl372_spi.c
+> @@ -40,8 +40,8 @@ static const struct spi_device_id adxl372_spi_id[] = {
+>  MODULE_DEVICE_TABLE(spi, adxl372_spi_id);
 >  
-> +static void ad9523_reg_disable(void *data)
-> +{
-> +	struct regulator *reg = data;
-> +
-> +	regulator_disable(reg);
-> +}
-> +
->  static int ad9523_probe(struct spi_device *spi)
->  {
->  	struct ad9523_platform_data *pdata = spi->dev.platform_data;
-> @@ -994,21 +1001,22 @@ static int ad9523_probe(struct spi_device *spi)
->  		ret = regulator_enable(st->reg);
->  		if (ret)
->  			return ret;
-> +
-> +		ret = devm_add_action_or_reset(&spi->dev, ad9523_reg_disable,
-> +					       st->reg);
-> +		if (ret)
-> +			return ret;
->  	}
->  
->  	st->pwrdown_gpio = devm_gpiod_get_optional(&spi->dev, "powerdown",
->  		GPIOD_OUT_HIGH);
-> -	if (IS_ERR(st->pwrdown_gpio)) {
-> -		ret = PTR_ERR(st->pwrdown_gpio);
-> -		goto error_disable_reg;
-> -	}
-> +	if (IS_ERR(st->pwrdown_gpio))
-> +		return PTR_ERR(st->pwrdown_gpio);
->  
->  	st->reset_gpio = devm_gpiod_get_optional(&spi->dev, "reset",
->  		GPIOD_OUT_LOW);
-> -	if (IS_ERR(st->reset_gpio)) {
-> -		ret = PTR_ERR(st->reset_gpio);
-> -		goto error_disable_reg;
-> -	}
-> +	if (IS_ERR(st->reset_gpio))
-> +		return PTR_ERR(st->reset_gpio);
->  
->  	if (st->reset_gpio) {
->  		udelay(1);
-> @@ -1017,10 +1025,8 @@ static int ad9523_probe(struct spi_device *spi)
->  
->  	st->sync_gpio = devm_gpiod_get_optional(&spi->dev, "sync",
->  		GPIOD_OUT_HIGH);
-> -	if (IS_ERR(st->sync_gpio)) {
-> -		ret = PTR_ERR(st->sync_gpio);
-> -		goto error_disable_reg;
-> -	}
-> +	if (IS_ERR(st->sync_gpio))
-> +		return PTR_ERR(st->sync_gpio);
->  
->  	spi_set_drvdata(spi, indio_dev);
->  	st->spi = spi;
-> @@ -1035,34 +1041,9 @@ static int ad9523_probe(struct spi_device *spi)
->  
->  	ret = ad9523_setup(indio_dev);
->  	if (ret < 0)
-> -		goto error_disable_reg;
-> -
-> -	ret = iio_device_register(indio_dev);
-> -	if (ret)
-> -		goto error_disable_reg;
-> -
-> -	dev_info(&spi->dev, "probed %s\n", indio_dev->name);
-> -
-> -	return 0;
-> -
-> -error_disable_reg:
-> -	if (!IS_ERR(st->reg))
-> -		regulator_disable(st->reg);
-> -
-> -	return ret;
-> -}
-> -
-> -static int ad9523_remove(struct spi_device *spi)
-> -{
-> -	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-> -	struct ad9523_state *st = iio_priv(indio_dev);
-> -
-> -	iio_device_unregister(indio_dev);
-> -
-> -	if (!IS_ERR(st->reg))
-> -		regulator_disable(st->reg);
-> +		return ret;
->  
-> -	return 0;
-> +	return devm_iio_device_register(&spi->dev, indio_dev);
->  }
->  
->  static const struct spi_device_id ad9523_id[] = {
-> @@ -1076,7 +1057,6 @@ static struct spi_driver ad9523_driver = {
->  		.name	= "ad9523",
->  	},
->  	.probe		= ad9523_probe,
-> -	.remove		= ad9523_remove,
->  	.id_table	= ad9523_id,
+>  static const struct of_device_id adxl372_of_match[] = {
+> -        { .compatible = "adi,adxl372" },
+> -        { },
+> +	{ .compatible = "adi,adxl372" },
+> +	{ }
 >  };
->  module_spi_driver(ad9523_driver);
+>  MODULE_DEVICE_TABLE(of, adxl372_of_match);
+>  
 
