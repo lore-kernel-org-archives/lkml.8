@@ -2,94 +2,132 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FECEC433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728F4C433E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32B02206E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:20:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hgywvEY7"
+	by mail.kernel.org (Postfix) with ESMTP id 4B83F2073E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:26:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595777212;
+	bh=x6KKgIk4k329j0vVx9e+kq8JD+D+KN7RjIWWZE2Ny00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LaADWUSb0P4oa6jfCDpsD0fPOqUspym6zq7ajfRYEIQ5OmWlYzmPWGF0yi41yjBx5
+	 qQY+BgfWBKZwzN0T5Q8Jlv/h6IfBU1Ir+wB+Pn8ef3VoxGBDs4Qsnc5yUg7O+Y80Oh
+	 QJmSntso/7pz57oiH7XFcLQRQhpksJ7hGjoAH9jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgGZPUW (ORCPT
+        id S1726857AbgGZP0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 11:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725982AbgGZPUV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 11:20:21 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72ADAC0619D2;
-        Sun, 26 Jul 2020 08:20:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uNW1eZ4bx44vGwfBMFPSJ/xfKPBN8zLMfK//Re7u/r8=; b=hgywvEY7znvmMpz/qJfRo27bKH
-        8KllS+Z3U+0/fzHmuJd2FBTeRViKOOXxYvHeFHUmQ+OPLlwk8cCRCUII73LNMY3iXCTsRotJQC6Bz
-        abLmbfPBHQMDJYgueFPta9U3YmgN5+euI9UuThGRSnOg+NdOTXU/QlxIBesV3n4A3nPO0K3DgIrPa
-        v9SkxBM3g7zT5QqqghYXEi9xn+CiLjUwjPuhLoG9VTk23a2MJU2+bCBd/OjqJ9i9m4bUA55xV4Rdo
-        j2u/9a4lsBmd34Y47dy2wb+oJJi8kkgUuehsf+mqg0NpBQTrg18+ipcQ8M7WGuBpsBYxfS4+vmLgh
-        WfR7QqGA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jziRi-0006pE-JN; Sun, 26 Jul 2020 15:20:14 +0000
-Date:   Sun, 26 Jul 2020 16:20:14 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Kanchan Joshi <joshi.k@samsung.com>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bcrl@kvack.org,
-        willy@infradead.org, hch@infradead.org, Damien.LeMoal@wdc.com,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, Selvakumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-Subject: Re: [PATCH v4 5/6] block: enable zone-append for iov_iter of bvec
- type
-Message-ID: <20200726152014.GD25328@infradead.org>
-References: <1595605762-17010-1-git-send-email-joshi.k@samsung.com>
- <CGME20200724155346epcas5p2cfb383fe9904a45280c6145f4c13e1b4@epcas5p2.samsung.com>
- <1595605762-17010-6-git-send-email-joshi.k@samsung.com>
+        Sun, 26 Jul 2020 11:26:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726042AbgGZP0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 11:26:50 -0400
+Received: from localhost (p5486c93f.dip0.t-ipconnect.de [84.134.201.63])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DE272065E;
+        Sun, 26 Jul 2020 15:26:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595777209;
+        bh=x6KKgIk4k329j0vVx9e+kq8JD+D+KN7RjIWWZE2Ny00=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T2brAFcJpcXJLjn40fZQeBmZYlUiFmQkfeIN+wjRnSgbe7DO6eJ9YEB9zIn3/QjKN
+         9bzR1QUQyBjTXfqv4P6QZtoKsAx0l3Z4bvfbNtGH2ZfDb0nwRIRoOzOUDJ5ZExrHC2
+         otwRsMaX+FOYDuFx7wlTi7/pUhmV0uoWGjJyHz+E=
+Date:   Sun, 26 Jul 2020 17:26:42 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     linux-wireless@vger.kernel.org
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] iwlwifi: yoyo: don't print failure if debug firmware
+ is missing
+Message-ID: <20200726152642.GA913@ninjato>
+References: <20200625165210.14904-1-wsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
 Content-Disposition: inline
-In-Reply-To: <1595605762-17010-6-git-send-email-joshi.k@samsung.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200625165210.14904-1-wsa@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 09:19:21PM +0530, Kanchan Joshi wrote:
-> zone-append with bvec iov_iter gives WARN_ON, and returns -EINVAL.
-> Add new helper to process such iov_iter and add pages in bio honoring
-> zone-append specific constraints.
-> This is used to enable zone-append with io-uring fixed-buffer.
-> 
-> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
-> Signed-off-by: Selvakumar S <selvakuma.s1@samsung.com>
-> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
-> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
+
+--EVF5PPMfhYS0aIcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jun 25, 2020 at 06:52:10PM +0200, Wolfram Sang wrote:
+> Missing this firmware is not fatal, my wifi card still works. Even more,
+> I couldn't find any documentation what it is or where to get it. So, I
+> don't think the users should be notified if it is missing. If you browse
+> the net, you see the message is present is in quite some logs. Better
+> remove it.
+>=20
+> Signed-off-by: Wolfram Sang <wsa@kernel.org>
 > ---
->  block/bio.c | 31 ++++++++++++++++++++++++++++---
->  1 file changed, 28 insertions(+), 3 deletions(-)
-> 
-> diff --git a/block/bio.c b/block/bio.c
-> index 0cecdbc..ade9da7 100644
-> --- a/block/bio.c
-> +++ b/block/bio.c
-> @@ -975,6 +975,30 @@ static int __bio_iov_bvec_add_pages(struct bio *bio, struct iov_iter *iter)
->  	iov_iter_advance(iter, size);
->  	return 0;
->  }
-> +static int __bio_iov_bvec_append_add_pages(struct bio *bio, struct iov_iter *iter)
 
-Missing empty line and too long line, please stick to 80 chars for this
-code.
+Any input on this? Or people I should add to CC?
 
-Otherwise this looks sensible.
+>=20
+> This is only build tested because I wanted to get your opinions first. I
+> couldn't find any explanation about yoyo, so I am entering unknown
+> territory here.
+>=20
+>  drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c b/drivers/n=
+et/wireless/intel/iwlwifi/iwl-dbg-tlv.c
+> index 7987a288917b..f180db2936e3 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
+> @@ -468,7 +468,7 @@ void iwl_dbg_tlv_load_bin(struct device *dev, struct =
+iwl_trans *trans)
+>  	if (!iwlwifi_mod_params.enable_ini)
+>  		return;
+> =20
+> -	res =3D request_firmware(&fw, "iwl-debug-yoyo.bin", dev);
+> +	res =3D firmware_request_nowarn(&fw, "iwl-debug-yoyo.bin", dev);
+>  	if (res)
+>  		return;
+> =20
+> --=20
+> 2.20.1
+>=20
+
+--EVF5PPMfhYS0aIcm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8doK4ACgkQFA3kzBSg
+KbY5xQ/+M6FCVy2ULUZt7NXzSWEg/BKoQ5/LiakrYE7NNwWV0NshwLe8GV6jsxmK
+sDBc2NAODNbeFgXriTA+x+XnRFnTP440eHyszqHcjKdWf0hAbc5hn8lNqu8iZqk7
+Oe2huVW2rntpe72XSDda/8RnatGJuw10F1L2WP2jkf4MOJqR9Adsmcprvt80MFT5
+VXA15vCjWQ83nAUv5IH0Lwt8ERhsHti/ffmtprQ4CaDyvmF83/onHHi6EMMlyzJT
+6CP6uA1nBaSViEaArnuXQVlBdzjoTIE5NZz1Iblv6kQhC4I1bHDzANTc6xVBNkP9
+natYdhYWVQorDZl9dFvHywoJyMSD/LQ7QMD2YDs/18NB9TGVw7wjkEleBLuwUEHe
+giUmIzJ/EA2Ys0sWFRVxgdvNq7cMZeKT8K4fseRbQxOQkJYcTXH3WRcHx08MrZq1
++Cu1OR0It/d1bcAaP+JLHVSMAxDt87AzFIx8GB7T0e9GjpBQD+fV6ArErWh7EWaC
+qMHVC1/W4zjrGj6iqHC+ZJOJEKTlaAHIt6+1FAeLv38V87ZrTPQDICIa7xynl2rF
+u6vMtCCEwnq1GvYyPRrqO1gIn+MCdMYcvDC2uLb2xaeITPyykPo0fA+QMWKhPxP8
+1OeARpFdGdXHYDGqASOWlbsxgpVSAlxEmfp0gcbuoU+qjvacNGI=
+=vWQI
+-----END PGP SIGNATURE-----
+
+--EVF5PPMfhYS0aIcm--
