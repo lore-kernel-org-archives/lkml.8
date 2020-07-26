@@ -2,173 +2,124 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD49C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B5FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBB2204EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4472F206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:54:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ToGskVFY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZYXiUPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgGZQt1 (ORCPT
+        id S1726739AbgGZQyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 12:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35450 "EHLO
+        Sun, 26 Jul 2020 12:54:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbgGZQtZ (ORCPT
+        with ESMTP id S1726042AbgGZQyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 12:49:25 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 923B3C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 09:49:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=X1byV/2k59zhLrotU/n8Df7BGQ5ePL+tKgf3hGOqOEc=; b=ToGskVFYo3frfWom1fIaWlAIig
-        msUFnXoAUSXue/wUb62KlkxQr/a+/s5K+z18Rn7XW4r55vv7aYHf1+zvWC1UL4HjIgzgEAuv0tWg6
-        3aNbMCB3EFPf+ZXFQKsGKaTZivnp3j8CZDjFGvuyVujt0Wk9wqMn5FAi0y+pB2FTPfb+VgrO5xidu
-        28IO7i+S8gyit6ZsQ+awY0+kOIJWPJ0cQeT4QnTE96CyvWyyOUBG5Zm4bqx9d9Usx/Vq3rvIS8wif
-        JjqS1qBUdRKI++ndXiMyztOHdmOn74MVWHR2SnmNXKSMmcu3gmsYqpTarcVQHD0/afCi6A88ms6xl
-        CG6evRgw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzjpg-0002ni-Jg; Sun, 26 Jul 2020 16:49:04 +0000
-Date:   Sun, 26 Jul 2020 17:49:04 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: kernel BUG at include/linux/swapops.h:LINE!
-Message-ID: <20200726164904.GG23808@casper.infradead.org>
-References: <000000000000bc4fd705a6e090e2@google.com>
- <0000000000004c38cd05aad1d13f@google.com>
- <20200720165144.93189f7825bd28e234a42cb8@linux-foundation.org>
- <20200723073744.5268-1-hdanton@sina.com>
- <20200724111311.rcjqigtjqpkenxg6@box>
+        Sun, 26 Jul 2020 12:54:40 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701F1C0619D2;
+        Sun, 26 Jul 2020 09:54:40 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o18so14676225eje.7;
+        Sun, 26 Jul 2020 09:54:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CBVgBFjkce72YAGTOc2I0NfR2QTyjZahMOR47tbfoe0=;
+        b=WZYXiUPxENKn4QSxY7fPf+iBaAhsNwecbIqIua+YO2effyaCG04XLdhlYe/ugtAfun
+         1fXbuueu1sL3HDK5Dtsz0YubABpEtjbQo7eptsxI/lBXgWB/3WVVVEEmE5w+FLXH6uKi
+         ZIeZey8Cvr8anwVeJAwUu0rt41msmaOcLhKWamXZ4XPPQloplOSyM69HBfahGiFQeaKe
+         VdrYrSXa5wP7b1gmFMJiWqd2K8TOxBosAvi2Z9c8hlyuujPC5uhKq+dgDVj4VMpUybxU
+         kiYkfmIFSDy/R08StwIylDGo6dkk0/l7B5Clr00ZfG0Jw2OpT/++z7w9JMSJTwfmA6aD
+         AyRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CBVgBFjkce72YAGTOc2I0NfR2QTyjZahMOR47tbfoe0=;
+        b=eU1/5pJJ/Y2cGdpiHfbQRzKvGY88AEUZ/0uLpQhgbFxWBcLlpToVVzyd4gjgDPeVxd
+         7Gx41iUTW7lLgsQVPmXL/HcmdNAPLbQW7EYppYSZOerdPweKGXr6okcfF2I6csVhze51
+         5UoDoSqgyPV1JTqbeU22/ARU63jFBUhBCgQIZMn/2BPKerlURuMZ/3XYLsjRhIV+7P6v
+         ai3XV70obt//9JJa1XAy7XqzGmNR4OqaGbp0Q+jqIACN054CP3pZkXB9kB44RMR/OXh6
+         522r90nCbMDte0w5xuneGgfNqQpPLvjPED69qaRfwTv4J+F+AbBaRU6wOTsxwAK1fKJX
+         XfuA==
+X-Gm-Message-State: AOAM530YLTH+/fyFXnKcMKzhVIhMtkdhb2OM9UPWb2q34x7j/zBEY1x6
+        SFz95O16mFBDcp8BySgK52NdCaoKYECdWuh8F6k=
+X-Google-Smtp-Source: ABdhPJwDnlAPaImQnrQAApbQ+w+cGsIt/2VZqafSu7Ti4+lytmzJqD4dBVNo+ZeSue4XBagNFOp/lX3pdQrzVmj/eOM=
+X-Received: by 2002:a17:906:f199:: with SMTP id gs25mr1970599ejb.161.1595782478958;
+ Sun, 26 Jul 2020 09:54:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724111311.rcjqigtjqpkenxg6@box>
+References: <20200720154047.3611092-1-jcrouse@codeaurora.org> <20200720154047.3611092-8-jcrouse@codeaurora.org>
+In-Reply-To: <20200720154047.3611092-8-jcrouse@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Sun, 26 Jul 2020 09:55:18 -0700
+Message-ID: <CAF6AEGu50KtjFHJO3Txrbjnn1xoG5WDyuU_e__RsGPXe-5Z46g@mail.gmail.com>
+Subject: Re: [PATCH v10 07/13] dt-bindings: arm-smmu: Add compatible string
+ for Adreno GPU SMMU
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 02:13:11PM +0300, Kirill A. Shutemov wrote:
-> On Thu, Jul 23, 2020 at 03:37:44PM +0800, Hillf Danton wrote:
-> > 
-> > On Tue, 21 Jul 2020 14:11:31 +0300 Kirill A. Shutemov wrote:
-> > > On Mon, Jul 20, 2020 at 04:51:44PM -0700, Andrew Morton wrote:
-> > > > On Sun, 19 Jul 2020 14:10:19 -0700 syzbot wrote:
-> > > > 
-> > > > > syzbot has found a reproducer for the following issue on:
-> > > > > 
-> > > > > HEAD commit:    4c43049f Add linux-next specific files for 20200716
-> > > > > git tree:       linux-next
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=12c56087100000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=2c76d72659687242
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=c48f34012b06c4ac67dd
-> > > > > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1344abeb100000
-> > > > > 
-> > > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > > > > Reported-by: syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com
-> > > > 
-> > > > Thanks.
-> > > > 
-> > > > __handle_mm_fault
-> > > >   ->pmd_migration_entry_wait
-> > > >     ->migration_entry_to_page
-> > > > 
-> > > > stumbled onto an unlocked page.
-> > > > 
-> > > > I don't immediately see a cause.  Perhaps Matthew's "THP prep patches",
-> > > > perhaps something else.
-> > > > 
-> > > > Is it possible to perform a bisection?
-> > > 
-> > > Maybe it's related to the new lock_page_async()?
-> > 
-> > Or is there likely the window that after copy_huge_pmd() the src pmd migrate
-> > entry is removed and the page unlocked but the dst is not?
-> 
-> No.
-> 
-> copy_huge_pmd() runs with exclusive mmap_lock on the source side and
-> destination side is not running yet.
+On Mon, Jul 20, 2020 at 8:41 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Every Qcom Adreno GPU has an embedded SMMU for its own use. These
 
-The one I'm hitting is huge related though.
+minor detail: this is true for a3xx and later but not a2xx ;-)
 
-I added this debug:
-
-+++ b/include/linux/swapops.h
-@@ -165,8 +165,9 @@ static inline struct page *device_private_entry_to_page(swp_entry_t entry)
- #ifdef CONFIG_MIGRATION
- static inline swp_entry_t make_migration_entry(struct page *page, int write)
- {
--       BUG_ON(!PageLocked(compound_head(page)));
-+       VM_BUG_ON_PAGE(!PageLocked(page), page);
- 
-+if (PageCompound(page)) printk("pfn %lx order %d\n", page_to_pfn(page), thp_order(thp_head(page)));
-        return swp_entry(write ? SWP_MIGRATION_WRITE : SWP_MIGRATION_READ,
-                        page_to_pfn(page));
- }
-@@ -194,7 +195,11 @@ static inline struct page *migration_entry_to_page(swp_entry_t entry)
-         * Any use of migration entries may only occur while the
-         * corresponding page is locked
-         */
--       BUG_ON(!PageLocked(compound_head(p)));
-+       if (!PageLocked(p)) {
-+               dump_page(p, "not locked");
-+               printk("swap entry %d.%lx\n", swp_type(entry), swp_offset(entry));
-+               BUG();
-+       }
-        return p;
- }
- 
-
-and got useful output (while running generic/086):
-
-1457 086 (20181): drop_caches: 3
-1457 page:00000000a216ae9a refcount:2 mapcount:0 mapping:000000009ba7bfed index:0x2227 pfn:0x229e7
-1457 aops:def_blk_aops ino:0
-1457 flags: 0x4000000000002030(lru|active|private)
-1457 raw: 4000000000002030 fffff5b4416b5a48 fffff5b4408a7988 ffff9e9c34848578
-1457 raw: 0000000000002227 ffff9e9bd18f0d00 00000002ffffffff 0000000000000000
-1457 page dumped because: not locked
-1457 swap entry 30.229e7
-1457 ------------[ cut here ]------------
-1457 kernel BUG at include/linux/swapops.h:201!
-1457 invalid opcode: 0000 [#1] SMP PTI
-1457 CPU: 3 PID: 646 Comm: check Kdump: loaded Tainted: G        W         5.8.0-rc6-00067-gd8b18bdf9870-dirty #355
-1457 Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-1457 RIP: 0010:__migration_entry_wait+0x109/0x110
-[...]
-
-Looking back in the trace, I see:
-
-...
-1457 pfn 229e5 order 9
-1457 pfn 229e6 order 9
-1457 pfn 229e7 order 9
-1457 pfn 229e8 order 9
-1457 pfn 229e9 order 9
-...
-
-so I would say we have a refcount problem.  I've probably made it worse by
-creating more THPs, but I don't think I'm the originator of the problem.
-
-I know very little about the migration code today.  I suspect I'm going
-to have to learn about it next week.
+> devices depend on unique features such as split pagetables,
+> different stall/halt requirements and other settings. Identify them
+> with a compatible string so that they can be identified in the
+> arm-smmu implementation specific code.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>
+>  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> index d7ceb4c34423..e52a1b146c97 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> @@ -38,6 +38,10 @@ properties:
+>                - qcom,sc7180-smmu-500
+>                - qcom,sdm845-smmu-500
+>            - const: arm,mmu-500
+> +      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
+> +        items:
+> +          - const: qcom,adreno-smmu
+> +          - const: qcom,smmu-v2
+>        - items:
+>            - const: arm,mmu-500
+>            - const: arm,smmu-v2
+> --
+> 2.25.1
+>
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
