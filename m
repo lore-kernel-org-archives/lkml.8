@@ -2,261 +2,257 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C96C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 19:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 19:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94B032065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 19:06:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595790405;
-	bh=/edHmQwJxF7VSDcLKho1dwyw+RMjRj29ommSZxGDozM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KtOW+5jlED8g97ONkUlpXJs/y+Is6pfHCnABVr6ZGkcqJUMn8yTZkWm8WhngC37Im
-	 hlLh9hNIbiKy/Zec+GepA0Q6OBvM25XVdHxRwu5KrSe1hW33yc6k17iAKaF8HjrDzt
-	 lDWj11DjtkBNEB9l7/sN6enrVgBvFW2HjjvTo1uA=
+	by mail.kernel.org (Postfix) with ESMTP id 43EA92065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 19:08:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ena7rR7P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgGZTGo (ORCPT
+        id S1726956AbgGZTIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 15:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56506 "EHLO
+        Sun, 26 Jul 2020 15:08:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgGZTGo (ORCPT
+        with ESMTP id S1726081AbgGZTIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 15:06:44 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA3F6C0619D2;
-        Sun, 26 Jul 2020 12:06:43 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ha11so737308pjb.1;
-        Sun, 26 Jul 2020 12:06:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qhvPLwCPXjMqFU2x4gEnxP4JjTqrO6GiJqIFdd+1yaY=;
-        b=W6kZST4BhAg8j6aAzIOCVIsrh6bIit/0aLvxBm75a4a194r0fukEv3cBdzfg05ZQ+4
-         j1OcMjy52PUg5c4JKaqkPD+rZEHfxs4gV6Cph35S/Vp9IoNA2IXusr5vhlQDRRl0mxxH
-         YKCMl3NIkqx2xS40Phzh9Ri23iauKkDzsvRDB1ibmTHzFYk8DSAsKUgPhvyZHYdgH/Wn
-         3XjC1g4pAaFV4Z1JIz3eqPo4YVgGSUvC64+QgKsm1wQQ10QN/4ZeA9wOMLsCuphEH+t1
-         alc2DXv1K5/JMNntu53Xw/iqRJ3pyzdoBdkk2yXAvGBAM43xCJ3H1SiEIyO0ffrlqSfR
-         KCHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=qhvPLwCPXjMqFU2x4gEnxP4JjTqrO6GiJqIFdd+1yaY=;
-        b=r4x6SI6Jv80lXDXQFIvZOBF/sBuzaCDrm92qAHIGroQ9D5bNfh2JTsZv3nCemqvGTL
-         p4HrX8h+/ZtexVITGmnxiU9m6fgYRQFV6GLQHnueVyR6dkGqDOBO0PZjKJU+vsvqmx+C
-         +vtEt41ipXsTQAdbVAs2gUobuoek+m/NXSn6f2a7Xsx8PFOSdsOC+RSoRDE7PeYKcYdH
-         coIkiApCXO3rmEHNShAtfyyfJceXTcznZ5UEtrJPsA6wHWj+3IgojayGUiOM6UDFkZhT
-         GS23DUHw8kKL29nLvH1HxhZb70Y9TbWBqt1PEOiVpW23U3vI8owEHxAxlvpfl/0dSfRl
-         ZbOg==
-X-Gm-Message-State: AOAM530XBumrW7JH2QBG7Nz3Z3yDt0nhIMZSjEoAr/hMn05CaS3FkxAV
-        D5DZAlIcuTP1gRVVPYIMwD0=
-X-Google-Smtp-Source: ABdhPJzRH4Cwo8GKdnDVU07rflKqs4ddrzgi88E3WWwZnPBfqLP6xNZSSBxRrE9jOOyxKIw1tGTGqg==
-X-Received: by 2002:a17:902:6a82:: with SMTP id n2mr16617932plk.27.1595790403131;
-        Sun, 26 Jul 2020 12:06:43 -0700 (PDT)
-Received: from google.com ([2620:15c:211:1:7220:84ff:fe09:5e58])
-        by smtp.gmail.com with ESMTPSA id o11sm12418242pfp.88.2020.07.26.12.06.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 12:06:41 -0700 (PDT)
-Date:   Sun, 26 Jul 2020 12:06:39 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH 10/14] bdi: remove BDI_CAP_SYNCHRONOUS_IO
-Message-ID: <20200726190639.GA560221@google.com>
-References: <20200726150333.305527-1-hch@lst.de>
- <20200726150333.305527-11-hch@lst.de>
+        Sun, 26 Jul 2020 15:08:16 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6395EC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 12:08:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:In-Reply-To:MIME-Version:
+        Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7DpA9fUthc/SbMVBQd+Vo2TxG0ByMuuOrjjFcJZXlH0=; b=Ena7rR7PcOu3DPBJc+pY2K4yoP
+        Dhy3lL8Eng+GWAI8BKWoa9tfGxOlSXp5h1Ue7LB1NCjdKnduRowe8lKDOu8SZcSbGJrUM+ksSd8hz
+        m0b16Om8PJnhi3QFnZ5y/XeojHCxnS7JtAJkzwCvkhMoC6UPzM2hyNB0p7UHMgoNALFeijCFYR5+c
+        GeBbMlgWg33g5wrmYo4UuvuMoVhpgE4UQWpA5L5XNiWSjV5yBNgdm38D5VGONzhH/D89aGXDvs622
+        NWbDP4s3EWfxRZp/BgI8uwRAU63ejWX6mwFJ/L9xgMHNkmHIQT3OqKnM0gQCeqQtcpxWIiLSCnlca
+        JRTWcYBw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzm0L-0001tR-1K; Sun, 26 Jul 2020 19:08:13 +0000
+Subject: Re: [PATCH 0/9] powerpc: delete duplicated words
+To:     Joe Perches <joe@perches.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@samba.org>,
+        linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+References: <20200726162902.Horde.TCqHYaODbkzEpM-rFzDd8A2@messagerie.si.c-s.fr>
+ <b796e912-e945-3cb1-03f8-0f38009634a4@infradead.org>
+ <add7c13b1ca24c8cb6f243b99d61c19287020efd.camel@perches.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <4e505c35-8428-89bb-7f9b-bc819382c3cd@infradead.org>
+Date:   Sun, 26 Jul 2020 12:08:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726150333.305527-11-hch@lst.de>
+In-Reply-To: <add7c13b1ca24c8cb6f243b99d61c19287020efd.camel@perches.com>
+Content-Type: multipart/mixed;
+ boundary="------------063DA744BA13B2CA39DCBC0B"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 05:03:29PM +0200, Christoph Hellwig wrote:
-> BDI_CAP_SYNCHRONOUS_IO is only checked in the swap code, and used to
-> decided if ->rw_page can be used on a block device.  Just check up for
-> the method instead.  The only complication is that zram needs a second
-> set of block_device_operations as it can switch between modes that
-> actually support ->rw_page and those who don't.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/block/brd.c           |  1 -
->  drivers/block/zram/zram_drv.c | 19 +++++++++++++------
->  drivers/nvdimm/btt.c          |  2 --
->  drivers/nvdimm/pmem.c         |  1 -
->  include/linux/backing-dev.h   |  9 ---------
->  mm/swapfile.c                 |  2 +-
->  6 files changed, 14 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-> index 2723a70eb85593..cc49a921339f77 100644
-> --- a/drivers/block/brd.c
-> +++ b/drivers/block/brd.c
-> @@ -403,7 +403,6 @@ static struct brd_device *brd_alloc(int i)
->  	disk->flags		= GENHD_FL_EXT_DEVT;
->  	sprintf(disk->disk_name, "ram%d", i);
->  	set_capacity(disk, rd_size * 2);
-> -	brd->brd_queue->backing_dev_info->capabilities |= BDI_CAP_SYNCHRONOUS_IO;
->  
->  	/* Tell the block layer that this is not a rotational device */
->  	blk_queue_flag_set(QUEUE_FLAG_NONROT, brd->brd_queue);
-> diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-> index 9100ac36670afc..d73ddf018fa65f 100644
-> --- a/drivers/block/zram/zram_drv.c
-> +++ b/drivers/block/zram/zram_drv.c
-> @@ -52,6 +52,9 @@ static unsigned int num_devices = 1;
->   */
->  static size_t huge_class_size;
->  
-> +static const struct block_device_operations zram_devops;
-> +static const struct block_device_operations zram_wb_devops;
-> +
->  static void zram_free_page(struct zram *zram, size_t index);
->  static int zram_bvec_read(struct zram *zram, struct bio_vec *bvec,
->  				u32 index, int offset, struct bio *bio);
-> @@ -408,8 +411,7 @@ static void reset_bdev(struct zram *zram)
->  	zram->backing_dev = NULL;
->  	zram->old_block_size = 0;
->  	zram->bdev = NULL;
-> -	zram->disk->queue->backing_dev_info->capabilities |=
-> -				BDI_CAP_SYNCHRONOUS_IO;
-> +	zram->disk->fops = &zram_devops;
->  	kvfree(zram->bitmap);
->  	zram->bitmap = NULL;
->  }
-> @@ -528,8 +530,7 @@ static ssize_t backing_dev_store(struct device *dev,
->  	 * freely but in fact, IO is going on so finally could cause
->  	 * use-after-free when the IO is really done.
->  	 */
-> -	zram->disk->queue->backing_dev_info->capabilities &=
-> -			~BDI_CAP_SYNCHRONOUS_IO;
-> +	zram->disk->fops = &zram_wb_devops;
->  	up_write(&zram->init_lock);
+This is a multi-part message in MIME format.
+--------------063DA744BA13B2CA39DCBC0B
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-For zram, regardless of BDI_CAP_SYNCHRONOUS_IO, it have used rw_page
-every time on read/write path. This one with next patch will make zram
-use bio instead of rw_page when it's declared !BDI_CAP_SYNCHRONOUS_IO,
-which introduce regression for performance.
-
-In the swap code, BDI_CAP_SYNCHRONOUS_IO is used to avoid swap cache
-when the page was private. bdev_read_page is not designed to rely on
-synchronous operation. That's why this patch breaks the old behavior.
-
->  
->  	pr_info("setup backing device %s\n", file_name);
-> @@ -1819,6 +1820,13 @@ static const struct block_device_operations zram_devops = {
->  	.owner = THIS_MODULE
->  };
->  
-> +static const struct block_device_operations zram_wb_devops = {
-> +	.open = zram_open,
-> +	.submit_bio = zram_submit_bio,
-> +	.swap_slot_free_notify = zram_slot_free_notify,
-> +	.owner = THIS_MODULE
-> +};
-> +
->  static DEVICE_ATTR_WO(compact);
->  static DEVICE_ATTR_RW(disksize);
->  static DEVICE_ATTR_RO(initstate);
-> @@ -1946,8 +1954,7 @@ static int zram_add(void)
->  	if (ZRAM_LOGICAL_BLOCK_SIZE == PAGE_SIZE)
->  		blk_queue_max_write_zeroes_sectors(zram->disk->queue, UINT_MAX);
->  
-> -	zram->disk->queue->backing_dev_info->capabilities |=
-> -			(BDI_CAP_STABLE_WRITES | BDI_CAP_SYNCHRONOUS_IO);
-> +	zram->disk->queue->backing_dev_info->capabilities |= BDI_CAP_STABLE_WRITES;
->  	device_add_disk(NULL, zram->disk, zram_disk_attr_groups);
->  
->  	strlcpy(zram->compressor, default_compressor, sizeof(zram->compressor));
-> diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-> index 412d21d8f64351..b4184dc9b41eb4 100644
-> --- a/drivers/nvdimm/btt.c
-> +++ b/drivers/nvdimm/btt.c
-> @@ -1540,8 +1540,6 @@ static int btt_blk_init(struct btt *btt)
->  	btt->btt_disk->private_data = btt;
->  	btt->btt_disk->queue = btt->btt_queue;
->  	btt->btt_disk->flags = GENHD_FL_EXT_DEVT;
-> -	btt->btt_disk->queue->backing_dev_info->capabilities |=
-> -			BDI_CAP_SYNCHRONOUS_IO;
->  
->  	blk_queue_logical_block_size(btt->btt_queue, btt->sector_size);
->  	blk_queue_max_hw_sectors(btt->btt_queue, UINT_MAX);
-> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-> index 94790e6e0e4ce1..436b83fb24ad61 100644
-> --- a/drivers/nvdimm/pmem.c
-> +++ b/drivers/nvdimm/pmem.c
-> @@ -478,7 +478,6 @@ static int pmem_attach_disk(struct device *dev,
->  	disk->queue		= q;
->  	disk->flags		= GENHD_FL_EXT_DEVT;
->  	disk->private_data	= pmem;
-> -	disk->queue->backing_dev_info->capabilities |= BDI_CAP_SYNCHRONOUS_IO;
->  	nvdimm_namespace_disk_name(ndns, disk->disk_name);
->  	set_capacity(disk, (pmem->size - pmem->pfn_pad - pmem->data_offset)
->  			/ 512);
-> diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-> index 52583b6f2ea05d..860ea33571bce5 100644
-> --- a/include/linux/backing-dev.h
-> +++ b/include/linux/backing-dev.h
-> @@ -122,9 +122,6 @@ int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_ratio);
->   * BDI_CAP_NO_WRITEBACK:   Don't write pages back
->   * BDI_CAP_NO_ACCT_WB:     Don't automatically account writeback pages
->   * BDI_CAP_STRICTLIMIT:    Keep number of dirty pages below bdi threshold.
-> - *
-> - * BDI_CAP_SYNCHRONOUS_IO: Device is so fast that asynchronous IO would be
-> - *			   inefficient.
->   */
->  #define BDI_CAP_NO_ACCT_DIRTY	0x00000001
->  #define BDI_CAP_NO_WRITEBACK	0x00000002
-> @@ -132,7 +129,6 @@ int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_ratio);
->  #define BDI_CAP_STABLE_WRITES	0x00000008
->  #define BDI_CAP_STRICTLIMIT	0x00000010
->  #define BDI_CAP_CGROUP_WRITEBACK 0x00000020
-> -#define BDI_CAP_SYNCHRONOUS_IO	0x00000040
->  
->  #define BDI_CAP_NO_ACCT_AND_WRITEBACK \
->  	(BDI_CAP_NO_WRITEBACK | BDI_CAP_NO_ACCT_DIRTY | BDI_CAP_NO_ACCT_WB)
-> @@ -174,11 +170,6 @@ static inline int wb_congested(struct bdi_writeback *wb, int cong_bits)
->  long congestion_wait(int sync, long timeout);
->  long wait_iff_congested(int sync, long timeout);
->  
-> -static inline bool bdi_cap_synchronous_io(struct backing_dev_info *bdi)
-> -{
-> -	return bdi->capabilities & BDI_CAP_SYNCHRONOUS_IO;
-> -}
-> -
->  static inline bool bdi_cap_stable_pages_required(struct backing_dev_info *bdi)
->  {
->  	return bdi->capabilities & BDI_CAP_STABLE_WRITES;
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 6c26916e95fd4a..18eac97b10e502 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -3230,7 +3230,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
->  	if (bdi_cap_stable_pages_required(inode_to_bdi(inode)))
->  		p->flags |= SWP_STABLE_WRITES;
->  
-> -	if (bdi_cap_synchronous_io(inode_to_bdi(inode)))
-> +	if (p->bdev && p->bdev->bd_disk->fops->rw_page)
->  		p->flags |= SWP_SYNCHRONOUS_IO;
->  
->  	if (p->bdev && blk_queue_nonrot(bdev_get_queue(p->bdev))) {
-> -- 
-> 2.27.0
+On 7/26/20 10:49 AM, Joe Perches wrote:
+> On Sun, 2020-07-26 at 10:23 -0700, Randy Dunlap wrote:
+>> On 7/26/20 7:29 AM, Christophe Leroy wrote:
+>>> Randy Dunlap <rdunlap@infradead.org> a écrit :
+>>>
+>>>> Drop duplicated words in arch/powerpc/ header files.
+>>>
+>>> How did you detect them ? Do you have some script for tgat, or you just read all comments ?
+>>
+>> Yes, it's a script that finds lots of false positives, so I have to check
+>> each and every one of them for validity.
 > 
+> And it's a lot of work too. (thanks Randy)
+> 
+> It could be something like:
+> 
+> $ grep-2.5.4 -nrP --include=*.[ch] '\b([A-Z]?[a-z]{2,}\b)[ \t]*(?:\n[ \t]*\*[ \t]*|)\1\b' * | \
+>   grep -vP '\b(?:struct|enum|union)\s+([A-Z]?[a-z]{2,})\s+\*?\s*\1\b' | \
+>   grep -vP '\blong\s+long\b' | \
+>   grep -vP '\b([A-Z]?[a-z]{2,})(?:\t+| {2,})\1\b'
+
+Hi Joe,
+
+(what is grep-2.5.4 ?)
+
+It looks like you tried a few iterations of this -- since it drops things
+like "long long".  There are lots of data types that are repeated & valid.
+And many struct names, like "struct kref kref", "struct completion completion",
+and "struct mutex mutex".  I handle (ignore) those manually, although that
+could be added to the Perl script.
+
+v0.1 of this script also found lots of repeated numbers and strings of
+special characters (ASCII art etc.), so now it ignores duplicated numbers
+or special characters -- since it is really looking for duplicate words.
+
+Anyway, I might as well attach it. It's no big deal.
+And if someone else wants to tackle using it, go for it.
+
+-- 
+~Randy
+
+
+--------------063DA744BA13B2CA39DCBC0B
+Content-Type: application/x-perl;
+ name="find_dup_words.pl"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="find_dup_words.pl"
+
+#! /usr/bin/perl
+# find duplicate words on one line
+# also finds repeated last word on lineN and first word of lineN+1
+#
+# For source files (vs. Docs), drop a leading " *" in case it might be
+# kernel-doc notation. This would facilitate catching repeated words
+# at the end of one line and the beginning of the next line, after the " *".
+
+# TBD: print entire offending line(s) when a repeated word is found.
+# can this use an environment variable instead of ARGV?
+
+$VERSION = "v0.2";
+
+my $infile;
+my $line;
+my $line_num;
+my $last_word;
+my $ix;
+my $last_ix;
+
+sub usage()
+{
+	print "find_dup_words <filenames>  {$VERSION}\n";
+	exit 1;
+}
+
+# test for integer number or hex number (0x0-9a-f)
+sub is_numeric($)
+{
+	$var = shift;
+
+	return 1 if ($var =~ /^[+-]?\d+$/);
+	return 1 if ($var =~ /^0x[0-9A-F]+$/i);
+	return 0;
+}
+
+sub is_special_chars($)
+{
+	$var = shift;
+
+	return 1 if ($var =~ /[^[a-zA-Z0-9 ]]*/);
+	##return 1 if ($var =~ /[[:punct:]]*/);
+	return 0;
+}
+
+
+sub report_words($$$$$)
+{
+	$file = $_[0];
+	$line = $_[1];
+	$crossline = $_[2];
+	$word1 = $_[3];
+	$word2 = $_[4];
+	$crossing = $crossline ? "/=" : "==";
+
+	print "$file:$line: '$word1' $crossing '$word2'\n";
+}
+
+sub dump_line_words($$$)
+{
+	$line = shift(@_);
+	$mx = shift(@_);
+	@wrds = @_;
+
+	print "## $line_num: #wrds=$mx: ";
+	print "@wrds\n";
+}
+
+# main:
+
+if (int(@ARGV) == 0 || $ARGV[0] eq "-h" || $ARGV[0] eq "--help") {
+	usage();
+}
+
+foreach $infile (@ARGV)
+{
+	open (INFILE, $infile) or die "cannot open '$infile'\n";
+	$line_num = 0;
+	$last_word = "";
+
+LINE:
+	while ($line = <INFILE>) {
+		$line_num++;
+		chomp $line;
+		next LINE if $line eq "";
+
+		# drop common punctuation: period, comma, qmark, semi-colon, colon
+		$line =~ tr/.,;:?//d;
+
+		@words = split(/\s+/, $line);
+
+		# For a line that begins with " * foobar() does soandso.",
+		# words[0] is "" and words[1] eq "*", so ignore both of them.
+		if ($words[0] eq "") {
+			shift @words;
+		}
+		if ($words[0] eq "*") {
+			shift @words;
+		}
+
+		next LINE if ($last_word eq "" && $words[0] eq "");
+
+		##dump_line_words($line_num, scalar @words, @words);
+		$numwords = scalar @words;
+		##print "## $line_num: #wrds=$numwords:=\n";
+		##print "@words\n";
+
+		if (lc($last_word) eq lc($words[0])) {
+			if (is_numeric($last_word) || is_special_chars($last_word)) {}
+			else {
+				report_words($infile, $line_num, 1, $last_word, $words[0]);
+			}
+		}
+
+		# note: using /m/ matches succeed on subsets,
+		# e.g., "this" matches "is". Not good.
+		# So I am using lc(word1) eq lc(word2) instead.
+
+		for ($ix = 1; $ix < scalar @words; $ix++) {
+			if (lc($words[$ix - 1]) eq lc($words[$ix])) {
+				if (is_numeric($words[$ix]) || is_special_chars($words[$ix])) {}
+				else {
+					report_words($infile, $line_num, 0,
+						$words[$ix - 1], $words[$ix]);
+				}
+			}
+			$last_ix = $ix;
+		}
+
+		$last_word = $words[$last_ix];
+	} # end one infile
+
+	close INFILE;
+	print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+
+} # end for all infiles
+
+# end find_dup_words.pl;
+
+--------------063DA744BA13B2CA39DCBC0B--
