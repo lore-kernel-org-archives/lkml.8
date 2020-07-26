@@ -2,121 +2,114 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D25C433EC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F37C433F2
 	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 20:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB4220738
+	by mail.kernel.org (Postfix) with ESMTP id 493F32073E
 	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 20:33:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Wdrlps37"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595795639;
+	bh=57lR6nltlKQe38UnuMFM0NNoIVmoUiX6gQYAVe/NhQs=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=t5KLesgh8/fI6RvvPz0DJKeKTKLHr9cNVs28SVHkr4h7kbRyeE6AGNGS5YxBZdPug
+	 2jnPw8+4YqJgw+K1s+d1enn7Jk2dC4BtTvEqPfgLBTfQN+AnE8CBxuPOERESAMs+b0
+	 RuLYS1bsuunVGszSzMIUMbkWLGKHS3Zv56oaRXyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgGZUde (ORCPT
+        id S1727957AbgGZUds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 16:33:34 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:16529 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgGZUde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 16:33:34 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BFF566vwDz4D;
-        Sun, 26 Jul 2020 22:33:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1595795611; bh=hWSgLNCRAj4HMVVvAZmSUOr1NZo4lGA3zytqEYdGgus=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wdrlps37SNaSjxBzBoDAzcV2fEu9KPPOZR8rLCrSmSSvSLUcXV2d5ILw1DaOy2cwj
-         TYOp5rb6zyroDpDPOzxib9sGpQN7iVXEyQ3NIQ+lxg0q0MWbDd+eWnoVwtThQfSjvF
-         zWLwQimdz2/KVJK8tXrdds5n0jnjRr9gpQz8XYQyRSVJQZxc/ROvKMo8Uka2lmUsUo
-         5U1ivdBb+ijMILLBDHEEsSfIlftBeK9ONg0P24zl4R8QPG/5GueKA8gZt8Jisas3Om
-         6S4TgLmaEA9uqEyvYEZoKtlcY0pMBFYwwZszzn0ymppkUPPovkFmBmOAEz5go+m3+e
-         4OOZel3UKezyA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.3 at mail
-Date:   Sun, 26 Jul 2020 22:33:28 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     Joe Perches <joe@perches.com>, SeongJae Park <sjpark@amazon.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, apw@canonical.com,
-        colin.king@canonical.com, jslaby@suse.cz, pavel@ucw.cz,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: checkpatch: support deprecated terms checking
-Message-ID: <20200726203328.GA8321@qmqm.qmqm.pl>
-References: <5f5679b4c76bf0e16064f3a45319bc35938ad96b.camel@perches.com>
- <20200726180748.29924-1-sj38.park@gmail.com>
+        Sun, 26 Jul 2020 16:33:48 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:56059 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgGZUdr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 16:33:47 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 06QKXAju002049;
+        Mon, 27 Jul 2020 05:33:11 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 06QKXAju002049
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1595795591;
+        bh=Wr805kZZMPky1w2j3QyQhPyUMy4aoK/zsMoAmfS796s=;
+        h=From:Date:Subject:To:Cc:From;
+        b=UabQlkn34032by3sf5BcqAU/opFn8I3zUUwWLjWpE7T6Tnoc/DFYLg8/UlPGtfYHz
+         lZBy70820s7oo7cA6lhAVpTajeZH2W9CyKfECW2H2LK5oY8lIsLCkDu3zWzrzd4SpZ
+         VX+J+CDmPOit8hBezPkHFRHzZ8lF/IYU3e7UM5a/eCzIQXFxAlwPD+4IYYQXijJIws
+         gdk94wchWqSH4toEDbHo9sDEpG6Jl0O7LM0RIbMFdv/nEdpk/VG4+pRQ63LpthYHyp
+         fGc2zM7cCQL5GNLvBbuaSlzV0Z5iPIkyL/uXIzowAA9p9kZEGAdLOKikeW/reP23n/
+         6e6nkoNu7JUyQ==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id y8so1008133vsq.8;
+        Sun, 26 Jul 2020 13:33:10 -0700 (PDT)
+X-Gm-Message-State: AOAM5333CUm3HXTLuBqwOgk5NvZxQXeNxDbcI7jRXSAeFqtt1rTXYZjt
+        kEGmfENp0Pcz90nlQB86OqhD4mIb9gQmoIZuemo=
+X-Google-Smtp-Source: ABdhPJwamUALWKCuRknmWAZTVVlGgycKzFamdM8xsTmrJH01BR1sv9ePRSd1WeB4Ti02AzP9F4N2jGpKSvHI6Sz7Krg=
+X-Received: by 2002:a67:6c84:: with SMTP id h126mr13976667vsc.181.1595795589584;
+ Sun, 26 Jul 2020 13:33:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200726180748.29924-1-sj38.park@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 27 Jul 2020 05:32:33 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQNYmyeB1ZWQ1t4bLZtC4+08TUNtjobwyj4-7e-7BOPAw@mail.gmail.com>
+Message-ID: <CAK7LNAQNYmyeB1ZWQ1t4bLZtC4+08TUNtjobwyj4-7e-7BOPAw@mail.gmail.com>
+Subject: [GIT PULL] Kbuild fixes for v5.8-rc7
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 08:07:48PM +0200, SeongJae Park wrote:
-> On Sun, 26 Jul 2020 09:42:06 -0700 Joe Perches <joe@perches.com> wrote:
-> 
-> > On Sun, 2020-07-26 at 17:36 +0200, SeongJae Park wrote:
-> > > On Sun, 26 Jul 2020 07:50:54 -0700 Joe Perches <joe@perches.com> wrote:
-> > []
-> > > > I do not want to encourage relatively inexperienced people
-> > > > to run checkpatch and submit inappropriate patches.
-> > > 
-> > > Me, neither.  But, I think providing more warnings and references is better for
-> > > that.
-> > 
-> > Unfortunately, the inexperienced _do_ in fact run
-> > checkpatch on files and submit inappropriate patches.
-> > 
-> > It's generally a time sink for the experienced
-> > maintainers to reply.
-> > 
-> > > Simply limiting checks could allow people submitting inappropriate patches
-> > > intorducing new uses of deprecated terms.
-> > 
-> > Tradeoffs...
-> > 
-> > I expect that patches being reviewed by maintainers
-> > are preferred over files being inappropriately changed
-> > by the inexperienced.
-> > 
-> > Those inappropriate changes should not be encouraged
-> > by tools placed in the hands of the inexperienced.
-> 
-> Right, many things are tradeoff.  Seems we arrived in the point, though we
-> still have different opinions.  To summarize the pros and cons of my patch from
-> my perspective:
-> 
-> Pros 1: Handle future terms deprecated with different reasons and coverages.
-> Pros 2: Inappropriate patches are avoided if the submitters carefully read the
-> warning messages.
-> Cons: Careless people could still bother maintainers by not carefully reading
-> the message and sending inappropriate patches.
-> 
-> To me, the pros still seems larger than the cons.  I would like to also again
-> mention that the maintainer who first reported the problem, Michal, told it's
-> ok with the explicit messaging.  Nonethelss, this is just my opinion.
-> 
-> Attaching the patch addressing your comments for the previous version.  The
-> changes from the previous version are:
-> 
->  - Make the name of reported terms not too verbose
->  - Avoid unnecessary initialization of the reported terms hash
->  - Warn multiple deprecated terms in same line
+Hi Linus,
 
-Hi,
+Please pull some more Kbuild fixes.
+Thanks.
 
-Maybe you could split the meaning of --subjective and --strict, and
-enable those checks only for --subjective? The test is really hard to do
-right: you would have to consider the context and not only mere occurrence
-of a word (heh, I even wrote 'blacklisted' here, since it really is about
-a night/danger analogy and not political/ethical one).
 
-Best Regards,
-Micha³ Miros³aw
+The following changes since commit dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258:
+
+  Linux 5.8-rc4 (2020-07-05 16:20:22 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-fixes-v5.8-3
+
+for you to fetch changes up to ca9b31f6bb9c6aa9b4e5f0792f39a97bbffb8c51:
+
+  Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang cross compilation
+(2020-07-23 11:29:07 +0900)
+
+----------------------------------------------------------------
+Kbuild fixes for v5.8 (3rd)
+
+ - do not use non-portable strsep() in a host program
+
+ - fix single target builds for external modules
+
+ - change Clang's --prefix option to make it work for the latest Clang
+
+----------------------------------------------------------------
+Fangrui Song (1):
+      Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang cross compilation
+
+H. Nikolaus Schaller (1):
+      modpost: remove use of non-standard strsep() in HOSTCC code
+
+Masahiro Yamada (1):
+      kbuild: fix single target builds for external modules
+
+ Makefile              |  4 ++--
+ scripts/mod/modpost.c | 12 ++++++++++--
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
