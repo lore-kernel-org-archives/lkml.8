@@ -2,163 +2,110 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32838206E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B74520719
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:23:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1SPzlPp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgGZJVX (ORCPT
+        id S1726769AbgGZJXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 05:21:23 -0400
-Received: from mga12.intel.com ([192.55.52.136]:2538 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbgGZJVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 05:21:22 -0400
-IronPort-SDR: rCT/aaBrPBwnTwMXAj47jUSLikRhjMIiQMkCDOkqPsldMTyYT0wMWREYqoknuxVyngwWPku1lB
- 1HrmNnPfvlWg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9693"; a="130435409"
-X-IronPort-AV: E=Sophos;i="5.75,398,1589266800"; 
-   d="scan'208";a="130435409"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 02:21:20 -0700
-IronPort-SDR: pDKcTx0HMpUjHHDZWg/Q+ojOf0aed7X6GAjANVC2k6PJcvDZJWagH3qjEGqb68hKO/S4nWus3X
- tgnh/UdtbJPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,398,1589266800"; 
-   d="scan'208";a="433544099"
-Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jul 2020 02:21:19 -0700
-Received: from kbuild by df0563f96c37 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jzcqM-0001Ms-Rr; Sun, 26 Jul 2020 09:21:18 +0000
-Date:   Sun, 26 Jul 2020 17:19:30 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:locking/urgent] BUILD SUCCESS
- a7ef9b28aa8d72a1656fa6f0a01bbd1493886317
-Message-ID: <5f1d4aa2.6IY2LrUyWQazHk0W%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sun, 26 Jul 2020 05:23:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgGZJXs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 05:23:48 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF03C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 02:23:48 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id 88so11980036wrh.3
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 02:23:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IRifPYsK+NVyPH264FNNiwkh83/Nree/BqnQLiW9d1c=;
+        b=l1SPzlPpdGPY8mrIuX5HzscI1H+iU0B77BLfrJ+HTsHQpZ1CbpuBaxo5y5BQLbagzm
+         ahNVMJV+XFViXN0810WuF+oXTSEuAjFRZhMh2tX3oEli8/sF1GKeQPjS6VaRloWiTwuG
+         y28IJVlcYcob0iUkzDfsBzo05H/rOvI53pNhD1S2chvYHphbQ4iHLuLaPyzs56xv4OLc
+         6pfF9Wcu7iZuNQsIs6oPa6CnupttvnAt/OeUwZWZ83le+KxxKXux0cyCTCSCl+fFdFiW
+         GwYoF5CJC6VfOatv4g7JgtRHpXYViK+a4HWo2sNzcTPHAfMwo01uEIaCMjb6MMXPJypI
+         QJKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IRifPYsK+NVyPH264FNNiwkh83/Nree/BqnQLiW9d1c=;
+        b=ELAj3ftmP1a+pIov3Lq6oXqTAEV28dQFzSvvLmhMQTd5HkpME3BbHhhiqMv1xuEf/d
+         GhHCdvNG6OtWkiC8N04HyfB8BhIGN7Y3aCDhfeL4fQUM7hihTUYOEx83tiOZCsP/nRxW
+         02LCH49WW44Prt7zzXwcWFkjI6j8dVWG89k6NEIGOPc6yfw+fOEWHtmDw9IOuOmTVVc3
+         t6OmYDZvp69eLLWKyj2EO1OcuZekbJ7RkP3fdyknWhGw9tvVODvELqRyUSqH45gqzCUQ
+         OMOYOzfUUr18Z+XVDEqZ/1ivhdPFEexlMluLnEvF094q8Rm0E4h0OfeoMNXMQIeyxkrN
+         s8Og==
+X-Gm-Message-State: AOAM5306VLmztkiWC3DqdPnG0sR0A/49a27ZLOYObWYz1Ex4tAWDNvix
+        va3giMIua+M+qW9X2ozSbToQ2HI6WIIIIygMvlo=
+X-Google-Smtp-Source: ABdhPJzmRnX9GtgCQQSUsd47l+Xrw14S4/+hUnnzUXCooTdht3nSiu4kVe23GlLgaRmrU8M/CgnSsMp2RdaYTRNllqs=
+X-Received: by 2002:adf:dfcf:: with SMTP id q15mr3987406wrn.345.1595755426875;
+ Sun, 26 Jul 2020 02:23:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200726080215.41501-1-aditya.jainadityajain.jain@gmail.com> <20200726082636.GA447282@kroah.com>
+In-Reply-To: <20200726082636.GA447282@kroah.com>
+From:   Aditya Jain <aditya.jainadityajain.jain@gmail.com>
+Date:   Sun, 26 Jul 2020 14:10:58 +0530
+Message-ID: <CAJAoDUjVBon2iiztdER82mHgJtVS6s5XYSajbCTne0KWAzoLvg@mail.gmail.com>
+Subject: Re: [PATCH] staging: rtl8723bs: include: Fix coding style errors
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, hdegoede@redhat.com,
+        linux-kernel@vger.kernel.org, Larry.Finger@lwfinger.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/urgent
-branch HEAD: a7ef9b28aa8d72a1656fa6f0a01bbd1493886317  locking/lockdep: Fix overflow in presentation of average lock-time
+On Sun, Jul 26, 2020 at 1:56 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Sun, Jul 26, 2020 at 01:32:15PM +0530, Aditya Jain wrote:
+> > Fixing ERROR: "foo *  bar" should be "foo *bar" in hal_phy_cfg.h
+> > as reported by checkpatch.pl
+> >
+> > Signed-off-by: Aditya Jain <aditya.jainadityajain.jain@gmail.com>
+> > ---
+> >  .../staging/rtl8723bs/include/hal_phy_cfg.h    | 18 +++++++++---------
+> >  1 file changed, 9 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
+> > index 419ddb0733aa..fd5f377bad4f 100644
+> > --- a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
+> > +++ b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
+> > @@ -42,7 +42,7 @@ u32         Data
+> >
+> >  u32
+> >  PHY_QueryRFReg_8723B(
+> > -struct adapter *             Adapter,
+> > +struct adapter               *Adapter,
+> >  u8           eRFPath,
+> >  u32                  RegAddr,
+> >  u32                  BitMask
+>
+> Ick, these are all horrid.  How about just making these all on a single
+> line like most functions have them instead of this one cleanup?
+>
+> Same for the other changes you made in this file.
+>
+> thanks,
+>
+> greg k-h
 
-elapsed time: 723m
+Agreed. I'll clean it up.
 
-configs tested: 92
-configs skipped: 1
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a003-20200726
-i386                 randconfig-a005-20200726
-i386                 randconfig-a004-20200726
-i386                 randconfig-a006-20200726
-i386                 randconfig-a002-20200726
-i386                 randconfig-a001-20200726
-x86_64               randconfig-a014-20200726
-x86_64               randconfig-a016-20200726
-x86_64               randconfig-a015-20200726
-x86_64               randconfig-a012-20200726
-x86_64               randconfig-a013-20200726
-x86_64               randconfig-a011-20200726
-i386                 randconfig-a016-20200726
-i386                 randconfig-a013-20200726
-i386                 randconfig-a012-20200726
-i386                 randconfig-a015-20200726
-i386                 randconfig-a011-20200726
-i386                 randconfig-a014-20200726
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Regards,
+Aditya Jain
