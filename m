@@ -2,104 +2,87 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208CDC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85400C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F21A0206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6202C206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:43:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hyNczvBm"
+	dkim=pass (2048-bit key) header.d=tfz-net.20150623.gappssmtp.com header.i=@tfz-net.20150623.gappssmtp.com header.b="je56arN1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgGZBiR (ORCPT
+        id S1727867AbgGZBnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 21:38:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34560 "EHLO
+        Sat, 25 Jul 2020 21:43:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbgGZBiQ (ORCPT
+        with ESMTP id S1726931AbgGZBnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 21:38:16 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58237C0619D2;
-        Sat, 25 Jul 2020 18:38:16 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b14so10577710qkn.4;
-        Sat, 25 Jul 2020 18:38:16 -0700 (PDT)
+        Sat, 25 Jul 2020 21:43:07 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD413C0619D4
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 18:43:05 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a15so11535611wrh.10
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 18:43:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=DOW/AnP+Zij8+SkDYOEysjK9QaubebMZaoB1Mg/JcqM=;
-        b=hyNczvBm2REN+4VLB/rtxKbGWpjgfYuLK3lG0BIU+llj0ISBPejdbgfDvr0vNWVbeW
-         HAvIfUwJaT0mfnJQ10tvBI89pu0TrGUT9JvdYwqmiAmce4ZC+px8JHNrhaNDhJP2KM+i
-         AcTbFFHfWV52h+deiFXvb+Vc+HXx36tNiWTtpuy6cDhsaJ4IxoanncW8Dz8bE2UZDmaR
-         07QC4MePcKSrO67IUmu7dKRMNYxcE5NjilOUb4xFdsINScTJm+ObVrZQKdS1SwEREFLk
-         7Io1kwHwX1jVvntCBzb4PzYoUi+NbmyNsDBI3zN8sEGGpVuYMoZJsjAnc+eQUwe+PUI8
-         9wIQ==
+        d=tfz-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BHHf80BOPxjmpEN+X9FwZJzbNUdhyeoda8NmLwlJNos=;
+        b=je56arN1ji3wNgrNO1MmidDJlSx6Lux7XfWuf3PUV4hadb10JQaRQCNdYHMUAlnB6M
+         FqtHQHNxXvT3khVaTcfoI/U7Al0VhkXaS7uOllkTjoM2VmF5mfMlYG8YdzaErZh13h9/
+         NCD+s+Gapfk8Iu28vvBTz/aILb3QiFfITyHQI2XDjgH4oPbO77wKTiEbSouBDW3kpSMk
+         ngfxqMVikCehPgvIIyu2gWKahON74jJKr7Aiy1aedAFVuA0GggUBvu8RTQ7e6wHMrJNM
+         rfJykDCdTwGMibOqNPFPwff/Bl0kxVbOtVhy4PUpZvMgcZL5c2HYiOx1XPEX1ZPkNH7J
+         8VfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=DOW/AnP+Zij8+SkDYOEysjK9QaubebMZaoB1Mg/JcqM=;
-        b=bK3S/Ub5iYKtLWljYinazgRK2TumzJfRLFQkuzmUOyz+YQDiiXErB/kml/OMlDZxRQ
-         74UmV/LgOYyK/vTfu/+CzJrGLYn6iHJT/FiNjqfNdDzD95NV6aj66ub1bnXv14QFVzkm
-         8TKc6eeyJVDh4CArzWx0U/lhlTOWghNVfosio6NyQ0VACgiNHViOMQ3zi0VI98/HcdPm
-         1uA4pLxkTlxJ76H9e/DC7yfYJVcBZWGmcpHMFO8fV2eDSPqNi7NVDBNF8WEGJD8djAXl
-         tRwAUr+3yFzD+fkluIPK4Y/lzByBWKnn3EDls0J3eBdsx4T/xrDYBUWKQSipvO7ACBsr
-         UzOg==
-X-Gm-Message-State: AOAM531wTKn2cvqGCBxepvkBGaIELYZn3DAYVzEr+jxVHMBZwVisVMsj
-        zN7VHQ4VSFQPRlM6Yr3h8U4=
-X-Google-Smtp-Source: ABdhPJx/vgdg/XXX9wZJr8GKXLGqeSR6LiA7Lsxfib37SnAXo1IdfhGGM5H9g0jF1kHWPAYKZsAhIg==
-X-Received: by 2002:a05:620a:4d9:: with SMTP id 25mr12992962qks.411.1595727495368;
-        Sat, 25 Jul 2020 18:38:15 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:159c:94c1:6e96:1b7e])
-        by smtp.googlemail.com with ESMTPSA id x5sm7840829qtp.76.2020.07.25.18.38.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 18:38:14 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com, Shuah Khan <shuah@kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Chris Down <chris@chrisdown.name>,
-        linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] [cgroup/testing] cg_read_strcmp: Fix null pointer dereference
-Date:   Sat, 25 Jul 2020 21:37:57 -0400
-Message-Id: <20200726013808.22242-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200725181506.20199-1-gaurav1086@gmail.com>
-References: <20200725181506.20199-1-gaurav1086@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BHHf80BOPxjmpEN+X9FwZJzbNUdhyeoda8NmLwlJNos=;
+        b=Nhibsa9E4I3DBsGMykRVYaSc4Px8R3PuxzX5tL11xYs1LJUaXrEQy4jkLrho7LoTS8
+         0dEEDXzLajFv+5pUPURdlz4jqUOfvCynMZqN5MlzGGA9lIJ82d1ymnfMi9rveJaTRaDP
+         pnZPyeum+uc1/3i70eXaKtC4PfoZhv+yXkD/H9K31w+Iq+fq6vApkOAALWLKtRpxFZLY
+         iqhlSqv2pfOE87dryFBl8zr+c7swfzN7KWJFvmh4oK4tR0W2xBVf6R+C5mKFbdbzcD3M
+         60w2HRN4mvTT/+vQZ1nQxFzSlm8lUS2TKcsVBUsREc+W6L+yNNKjsynZW8kKcUwyo1wn
+         NQqQ==
+X-Gm-Message-State: AOAM533ak4ofHSVSfMBeOvHpgClAoDjUostJ+X8nAb3A9xYWAALU7/ES
+        zXs6JuhNIEvacF9UBBvMfyUx/Lw3An+mKjl/IBR3gQ==
+X-Google-Smtp-Source: ABdhPJwNsBzS/VgkW6SIYFjvE8fsMVDeDJHOtstEfwbAGKPThU8CMfBYpi8RLzMhS3sedH0NFp/PKwC5ITo5dP8/nZI=
+X-Received: by 2002:a05:6000:141:: with SMTP id r1mr10838721wrx.69.1595727784402;
+ Sat, 25 Jul 2020 18:43:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200725004043.32326-1-kalou@tfz.net> <20200725221022.GQ2786714@ZenIV.linux.org.uk>
+In-Reply-To: <20200725221022.GQ2786714@ZenIV.linux.org.uk>
+From:   Pascal Bouchareine <kalou@tfz.net>
+Date:   Sat, 25 Jul 2020 18:42:53 -0700
+Message-ID: <CAGbU3_my8uz0XU5kJ7k20Ex-+nGwSw+0+oXJ3zyGHDw+8ft4wQ@mail.gmail.com>
+Subject: Re: [PATCH] proc,fcntl: introduce F_SET_DESCRIPTION
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        "J. Bruce Fields" <bfields@fieldses.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Haven't reproduced this issue. This PR is does a minor code cleanup. 
+On Sat, Jul 25, 2020 at 3:10 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> Have you even tried to test it?  When will it ever free those things?
 
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
----
- tools/testing/selftests/cgroup/cgroup_util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for pointing that out, I'll try to address that in the thread
 
-diff --git a/tools/testing/selftests/cgroup/cgroup_util.c b/tools/testing/selftests/cgroup/cgroup_util.c
-index 8a637ca7d73a..05853b0b8831 100644
---- a/tools/testing/selftests/cgroup/cgroup_util.c
-+++ b/tools/testing/selftests/cgroup/cgroup_util.c
-@@ -106,7 +106,7 @@ int cg_read_strcmp(const char *cgroup, const char *control,
- 
- 	/* Handle the case of comparing against empty string */
- 	if (!expected)
--		size = 32;
-+		return -1;
- 	else
- 		size = strlen(expected) + 1;
- 
--- 
-2.17.1
+I did basic tests against 5.4: set a description, concurrently set it
+from multiple child processes, read, demo with ss/netstat.
 
+However I rebased against master and have not tested the build after
+rebase, is that broken?
+Should I use a different target for tests?
+
+Thanks for your help
