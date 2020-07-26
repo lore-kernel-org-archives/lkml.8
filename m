@@ -2,431 +2,271 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F009C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2F9A2065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:04:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vegkJCLw"
+	by mail.kernel.org (Postfix) with ESMTP id 52C6A20714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:05:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595779535;
+	bh=MCXdqsQdipzM/StlOt6TA9K4cXTPdaz9Mgx6Z9sOa5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zz7ch3Dyb/Zv/c4IwZa/BjcPbxfi387y4KWzLvgAQKS2bzDVnC9okap8P2nKZI8oy
+	 BLtvFZU4W3j2eRtJcvs9Udyw1lQXOjWr++CnNiI+8wKlIE94gSDU/o+rRy3r6d//Lm
+	 dnfqzYzYUD17swb8buXrBxBJmSGDPEM+jEKZcwpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgGZQEW (ORCPT
+        id S1727945AbgGZQFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 12:04:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgGZQER (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 12:04:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4728C0619D2;
-        Sun, 26 Jul 2020 09:04:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=FQ/W/VOU9HlvnIundDr7VrZ+Qmxo6bS+hPxidfxefmk=; b=vegkJCLwSEFarRr1s2fLzdUA+X
-        bLJ01O149IT938ticOHyNtBM97Oe3+XQzCcJcWSiN4d2dHKVfKvx4Den2YVSYtz915O4EaNhJX98u
-        10jCNomj/VH3FR+u2eKQxcSpwZkyzp7nHW4gRKlkaZ4HlmN6VRo0AaSD3Yq/U/uX+7oePgkknrc9x
-        t6ioq7kXzQnkMu1sYG3bSVrswOD2wfKXCk+C9JLaPVno7uUpgev5EaISjYoDHXIYVXph0SkIXAG7Z
-        5n+klUxXKwNiky6dgfCcRy3WtmyWEFvi5tN3vcH5oWjjJu+YIomXtcNZttmKAPh4JOupTnY50Svnx
-        9RAGWQiw==;
-Received: from [2001:4bb8:18c:2acc:2375:88ff:9f84:118d] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzj8G-0000Zq-23; Sun, 26 Jul 2020 16:04:13 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     x86@kernel.org, Jan Kara <jack@suse.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org
-Subject: [PATCH 4/4] quota: simplify the quotactl compat handling
-Date:   Sun, 26 Jul 2020 18:04:01 +0200
-Message-Id: <20200726160401.311569-5-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200726160401.311569-1-hch@lst.de>
-References: <20200726160401.311569-1-hch@lst.de>
+        Sun, 26 Jul 2020 12:05:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbgGZQFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 12:05:33 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83731206D8;
+        Sun, 26 Jul 2020 16:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595779532;
+        bh=MCXdqsQdipzM/StlOt6TA9K4cXTPdaz9Mgx6Z9sOa5Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vb7YNnueD4iwugByfE7B/5y6sE2XOdYa/KxY0PrylFPtmrd5cJN0VNftl3d2LK8Nv
+         Y/gYueZBGWcs+SblUfqQgwO8njU/y2MmrXfd5HlnuoSM98e80LWJYcxtv85bmOtCxC
+         WSy6467Sk+J2ILoj/SSxbN42BGAjHqjOP5iz4CHs=
+Date:   Sun, 26 Jul 2020 09:05:32 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH 3/5] f2fs: inherit mtime of original block during GC
+Message-ID: <20200726160532.GB2233572@google.com>
+References: <20200707112128.89136-1-yuchao0@huawei.com>
+ <20200707112128.89136-4-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707112128.89136-4-yuchao0@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fold the misaligned u64 workarounds into the main quotactl flow instead
-of implementing a separate compat syscall handler.
+On 07/07, Chao Yu wrote:
+> Don't let f2fs inner GC ruins original aging degree of segment.
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+>  fs/f2fs/data.c    |  2 +-
+>  fs/f2fs/f2fs.h    |  5 +++--
+>  fs/f2fs/gc.c      |  4 ++--
+>  fs/f2fs/segment.c | 55 ++++++++++++++++++++++++++++++++++++-----------
+>  4 files changed, 49 insertions(+), 17 deletions(-)
+> 
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 44645f4f914b..7f108684de1d 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -1368,7 +1368,7 @@ static int __allocate_data_block(struct dnode_of_data *dn, int seg_type)
+>  	set_summary(&sum, dn->nid, dn->ofs_in_node, ni.version);
+>  	old_blkaddr = dn->data_blkaddr;
+>  	f2fs_allocate_data_block(sbi, NULL, old_blkaddr, &dn->data_blkaddr,
+> -					&sum, seg_type, NULL);
+> +				&sum, seg_type, NULL, false);
+>  	if (GET_SEGNO(sbi, old_blkaddr) != NULL_SEGNO)
+>  		invalidate_mapping_pages(META_MAPPING(sbi),
+>  					old_blkaddr, old_blkaddr);
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index ce4305ac42dd..dcf99f1bdfe1 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -3383,7 +3383,8 @@ void f2fs_outplace_write_data(struct dnode_of_data *dn,
+>  int f2fs_inplace_write_data(struct f2fs_io_info *fio);
+>  void f2fs_do_replace_block(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+>  			block_t old_blkaddr, block_t new_blkaddr,
+> -			bool recover_curseg, bool recover_newaddr);
+> +			bool recover_curseg, bool recover_newaddr,
+> +			bool from_gc);
+>  void f2fs_replace_block(struct f2fs_sb_info *sbi, struct dnode_of_data *dn,
+>  			block_t old_addr, block_t new_addr,
+>  			unsigned char version, bool recover_curseg,
+> @@ -3391,7 +3392,7 @@ void f2fs_replace_block(struct f2fs_sb_info *sbi, struct dnode_of_data *dn,
+>  void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+>  			block_t old_blkaddr, block_t *new_blkaddr,
+>  			struct f2fs_summary *sum, int type,
+> -			struct f2fs_io_info *fio);
+> +			struct f2fs_io_info *fio, bool from_gc);
+>  void f2fs_wait_on_page_writeback(struct page *page,
+>  			enum page_type type, bool ordered, bool locked);
+>  void f2fs_wait_on_block_writeback(struct inode *inode, block_t blkaddr);
+> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> index 755641047978..da187aec988f 100644
+> --- a/fs/f2fs/gc.c
+> +++ b/fs/f2fs/gc.c
+> @@ -877,7 +877,7 @@ static int move_data_block(struct inode *inode, block_t bidx,
+>  	}
+>  
+>  	f2fs_allocate_data_block(fio.sbi, NULL, fio.old_blkaddr, &newaddr,
+> -					&sum, CURSEG_COLD_DATA, NULL);
+> +				&sum, CURSEG_COLD_DATA, NULL, true);
+>  
+>  	fio.encrypted_page = f2fs_pagecache_get_page(META_MAPPING(fio.sbi),
+>  				newaddr, FGP_LOCK | FGP_CREAT, GFP_NOFS);
+> @@ -927,7 +927,7 @@ static int move_data_block(struct inode *inode, block_t bidx,
+>  recover_block:
+>  	if (err)
+>  		f2fs_do_replace_block(fio.sbi, &sum, newaddr, fio.old_blkaddr,
+> -								true, true);
+> +							true, true, true);
+>  up_out:
+>  	if (lfs_mode)
+>  		up_write(&fio.sbi->io_order_lock);
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 9d10285932f9..222d28c44e4f 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -2149,12 +2149,28 @@ static void __set_sit_entry_type(struct f2fs_sb_info *sbi, int type,
+>  	if (modified)
+>  		__mark_sit_entry_dirty(sbi, segno);
+>  }
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/x86/entry/syscalls/syscall_32.tbl |   2 +-
- fs/quota/Kconfig                       |   5 --
- fs/quota/Makefile                      |   1 -
- fs/quota/compat.c                      | 120 -------------------------
- fs/quota/compat.h                      |  34 +++++++
- fs/quota/quota.c                       |  73 ++++++++++++---
- include/linux/quotaops.h               |   3 -
- kernel/sys_ni.c                        |   1 -
- 8 files changed, 94 insertions(+), 145 deletions(-)
- delete mode 100644 fs/quota/compat.c
- create mode 100644 fs/quota/compat.h
+Need a new line?
 
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index d8f8a1a69ed11f..41d442d7c2db67 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -142,7 +142,7 @@
- 128	i386	init_module		sys_init_module
- 129	i386	delete_module		sys_delete_module
- 130	i386	get_kernel_syms
--131	i386	quotactl		sys_quotactl			compat_sys_quotactl32
-+131	i386	quotactl		sys_quotactl
- 132	i386	getpgid			sys_getpgid
- 133	i386	fchdir			sys_fchdir
- 134	i386	bdflush			sys_bdflush
-diff --git a/fs/quota/Kconfig b/fs/quota/Kconfig
-index 7218314ca13f00..4f5bb85099a904 100644
---- a/fs/quota/Kconfig
-+++ b/fs/quota/Kconfig
-@@ -70,8 +70,3 @@ config QFMT_V2
- config QUOTACTL
- 	bool
- 	default n
--
--config QUOTACTL_COMPAT
--	bool
--	depends on QUOTACTL && COMPAT_FOR_U64_ALIGNMENT
--	default y
-diff --git a/fs/quota/Makefile b/fs/quota/Makefile
-index f2b49d0f0287c9..9160639daffa75 100644
---- a/fs/quota/Makefile
-+++ b/fs/quota/Makefile
-@@ -4,5 +4,4 @@ obj-$(CONFIG_QFMT_V1)		+= quota_v1.o
- obj-$(CONFIG_QFMT_V2)		+= quota_v2.o
- obj-$(CONFIG_QUOTA_TREE)	+= quota_tree.o
- obj-$(CONFIG_QUOTACTL)		+= quota.o kqid.o
--obj-$(CONFIG_QUOTACTL_COMPAT)	+= compat.o
- obj-$(CONFIG_QUOTA_NETLINK_INTERFACE)	+= netlink.o
-diff --git a/fs/quota/compat.c b/fs/quota/compat.c
-deleted file mode 100644
-index c305728576193d..00000000000000
---- a/fs/quota/compat.c
-+++ /dev/null
-@@ -1,120 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--
--#include <linux/syscalls.h>
--#include <linux/compat.h>
--#include <linux/quotaops.h>
--
--/*
-- * This code works only for 32 bit quota tools over 64 bit OS (x86_64, ia64)
-- * and is necessary due to alignment problems.
-- */
--struct compat_if_dqblk {
--	compat_u64 dqb_bhardlimit;
--	compat_u64 dqb_bsoftlimit;
--	compat_u64 dqb_curspace;
--	compat_u64 dqb_ihardlimit;
--	compat_u64 dqb_isoftlimit;
--	compat_u64 dqb_curinodes;
--	compat_u64 dqb_btime;
--	compat_u64 dqb_itime;
--	compat_uint_t dqb_valid;
--};
--
--/* XFS structures */
--struct compat_fs_qfilestat {
--	compat_u64 dqb_bhardlimit;
--	compat_u64 qfs_nblks;
--	compat_uint_t qfs_nextents;
--};
--
--struct compat_fs_quota_stat {
--	__s8		qs_version;
--	__u16		qs_flags;
--	__s8		qs_pad;
--	struct compat_fs_qfilestat	qs_uquota;
--	struct compat_fs_qfilestat	qs_gquota;
--	compat_uint_t	qs_incoredqs;
--	compat_int_t	qs_btimelimit;
--	compat_int_t	qs_itimelimit;
--	compat_int_t	qs_rtbtimelimit;
--	__u16		qs_bwarnlimit;
--	__u16		qs_iwarnlimit;
--};
--
--COMPAT_SYSCALL_DEFINE4(quotactl32, unsigned int, cmd,
--		       const char __user *, special, qid_t, id,
--		       void __user *, addr)
--{
--	unsigned int cmds;
--	struct if_dqblk __user *dqblk;
--	struct compat_if_dqblk __user *compat_dqblk;
--	struct fs_quota_stat __user *fsqstat;
--	struct compat_fs_quota_stat __user *compat_fsqstat;
--	compat_uint_t data;
--	u16 xdata;
--	long ret;
--
--	cmds = cmd >> SUBCMDSHIFT;
--
--	switch (cmds) {
--	case Q_GETQUOTA:
--		dqblk = compat_alloc_user_space(sizeof(struct if_dqblk));
--		compat_dqblk = addr;
--		ret = kernel_quotactl(cmd, special, id, dqblk);
--		if (ret)
--			break;
--		if (copy_in_user(compat_dqblk, dqblk, sizeof(*compat_dqblk)) ||
--			get_user(data, &dqblk->dqb_valid) ||
--			put_user(data, &compat_dqblk->dqb_valid))
--			ret = -EFAULT;
--		break;
--	case Q_SETQUOTA:
--		dqblk = compat_alloc_user_space(sizeof(struct if_dqblk));
--		compat_dqblk = addr;
--		ret = -EFAULT;
--		if (copy_in_user(dqblk, compat_dqblk, sizeof(*compat_dqblk)) ||
--			get_user(data, &compat_dqblk->dqb_valid) ||
--			put_user(data, &dqblk->dqb_valid))
--			break;
--		ret = kernel_quotactl(cmd, special, id, dqblk);
--		break;
--	case Q_XGETQSTAT:
--		fsqstat = compat_alloc_user_space(sizeof(struct fs_quota_stat));
--		compat_fsqstat = addr;
--		ret = kernel_quotactl(cmd, special, id, fsqstat);
--		if (ret)
--			break;
--		ret = -EFAULT;
--		/* Copying qs_version, qs_flags, qs_pad */
--		if (copy_in_user(compat_fsqstat, fsqstat,
--			offsetof(struct compat_fs_quota_stat, qs_uquota)))
--			break;
--		/* Copying qs_uquota */
--		if (copy_in_user(&compat_fsqstat->qs_uquota,
--			&fsqstat->qs_uquota,
--			sizeof(compat_fsqstat->qs_uquota)) ||
--			get_user(data, &fsqstat->qs_uquota.qfs_nextents) ||
--			put_user(data, &compat_fsqstat->qs_uquota.qfs_nextents))
--			break;
--		/* Copying qs_gquota */
--		if (copy_in_user(&compat_fsqstat->qs_gquota,
--			&fsqstat->qs_gquota,
--			sizeof(compat_fsqstat->qs_gquota)) ||
--			get_user(data, &fsqstat->qs_gquota.qfs_nextents) ||
--			put_user(data, &compat_fsqstat->qs_gquota.qfs_nextents))
--			break;
--		/* Copying the rest */
--		if (copy_in_user(&compat_fsqstat->qs_incoredqs,
--			&fsqstat->qs_incoredqs,
--			sizeof(struct compat_fs_quota_stat) -
--			offsetof(struct compat_fs_quota_stat, qs_incoredqs)) ||
--			get_user(xdata, &fsqstat->qs_iwarnlimit) ||
--			put_user(xdata, &compat_fsqstat->qs_iwarnlimit))
--			break;
--		ret = 0;
--		break;
--	default:
--		ret = kernel_quotactl(cmd, special, id, addr);
--	}
--	return ret;
--}
-diff --git a/fs/quota/compat.h b/fs/quota/compat.h
-new file mode 100644
-index 00000000000000..ef7d1e12d650b3
---- /dev/null
-+++ b/fs/quota/compat.h
-@@ -0,0 +1,34 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/compat.h>
-+
-+struct compat_if_dqblk {
-+	compat_u64			dqb_bhardlimit;
-+	compat_u64			dqb_bsoftlimit;
-+	compat_u64			dqb_curspace;
-+	compat_u64			dqb_ihardlimit;
-+	compat_u64			dqb_isoftlimit;
-+	compat_u64			dqb_curinodes;
-+	compat_u64			dqb_btime;
-+	compat_u64			dqb_itime;
-+	compat_uint_t			dqb_valid;
-+};
-+
-+struct compat_fs_qfilestat {
-+	compat_u64			dqb_bhardlimit;
-+	compat_u64			qfs_nblks;
-+	compat_uint_t			qfs_nextents;
-+};
-+
-+struct compat_fs_quota_stat {
-+	__s8				qs_version;
-+	__u16				qs_flags;
-+	__s8				qs_pad;
-+	struct compat_fs_qfilestat	qs_uquota;
-+	struct compat_fs_qfilestat	qs_gquota;
-+	compat_uint_t			qs_incoredqs;
-+	compat_int_t			qs_btimelimit;
-+	compat_int_t			qs_itimelimit;
-+	compat_int_t			qs_rtbtimelimit;
-+	__u16				qs_bwarnlimit;
-+	__u16				qs_iwarnlimit;
-+};
-diff --git a/fs/quota/quota.c b/fs/quota/quota.c
-index 5444d3c4d93f37..e1e9d05a14c3e4 100644
---- a/fs/quota/quota.c
-+++ b/fs/quota/quota.c
-@@ -19,6 +19,7 @@
- #include <linux/types.h>
- #include <linux/writeback.h>
- #include <linux/nospec.h>
-+#include "compat.h"
- 
- static int check_quotactl_permission(struct super_block *sb, int type, int cmd,
- 				     qid_t id)
-@@ -211,8 +212,18 @@ static int quota_getquota(struct super_block *sb, int type, qid_t id,
- 	if (ret)
- 		return ret;
- 	copy_to_if_dqblk(&idq, &fdq);
--	if (copy_to_user(addr, &idq, sizeof(idq)))
--		return -EFAULT;
-+
-+	if (compat_need_64bit_alignment_fixup()) {
-+		struct compat_if_dqblk __user *compat_dqblk = addr;
-+
-+		if (copy_to_user(compat_dqblk, &idq, sizeof(*compat_dqblk)))
-+			return -EFAULT;
-+		if (put_user(idq.dqb_valid, &compat_dqblk->dqb_valid))
-+			return -EFAULT;
-+	} else {
-+		if (copy_to_user(addr, &idq, sizeof(idq)))
-+			return -EFAULT;
-+	}
- 	return 0;
- }
- 
-@@ -277,8 +288,16 @@ static int quota_setquota(struct super_block *sb, int type, qid_t id,
- 	struct if_dqblk idq;
- 	struct kqid qid;
- 
--	if (copy_from_user(&idq, addr, sizeof(idq)))
--		return -EFAULT;
-+	if (compat_need_64bit_alignment_fixup()) {
-+		struct compat_if_dqblk __user *compat_dqblk = addr;
-+
-+		if (copy_from_user(&idq, compat_dqblk, sizeof(*compat_dqblk)) ||
-+		    get_user(idq.dqb_valid, &compat_dqblk->dqb_valid))
-+			return -EFAULT;
-+	} else {
-+		if (copy_from_user(&idq, addr, sizeof(idq)))
-+			return -EFAULT;
-+	}
- 	if (!sb->s_qcop->set_dqblk)
- 		return -ENOSYS;
- 	qid = make_kqid(current_user_ns(), type, id);
-@@ -382,6 +401,33 @@ static int quota_getstate(struct super_block *sb, int type,
- 	return 0;
- }
- 
-+static int compat_copy_fs_qfilestat(struct compat_fs_qfilestat __user *to,
-+		struct fs_qfilestat *from)
-+{
-+	if (copy_to_user(to, from, sizeof(*to)) ||
-+	    put_user(from->qfs_nextents, &to->qfs_nextents))
-+		return -EFAULT;
-+	return 0;
-+}
-+
-+static int compat_copy_fs_quota_stat(struct compat_fs_quota_stat __user *to,
-+		struct fs_quota_stat *from)
-+{
-+	if (put_user(from->qs_version, &to->qs_version) ||
-+	    put_user(from->qs_flags, &to->qs_flags) ||
-+	    put_user(from->qs_pad, &to->qs_pad) ||
-+	    compat_copy_fs_qfilestat(&to->qs_uquota, &from->qs_uquota) ||
-+	    compat_copy_fs_qfilestat(&to->qs_gquota, &from->qs_gquota) ||
-+	    put_user(from->qs_incoredqs, &to->qs_incoredqs) ||
-+	    put_user(from->qs_btimelimit, &to->qs_btimelimit) ||
-+	    put_user(from->qs_itimelimit, &to->qs_itimelimit) ||
-+	    put_user(from->qs_rtbtimelimit, &to->qs_rtbtimelimit) ||
-+	    put_user(from->qs_bwarnlimit, &to->qs_bwarnlimit) ||
-+	    put_user(from->qs_iwarnlimit, &to->qs_iwarnlimit))
-+		return -EFAULT;
-+	return 0;
-+}
-+
- static int quota_getxstate(struct super_block *sb, int type, void __user *addr)
- {
- 	struct fs_quota_stat fqs;
-@@ -390,9 +436,14 @@ static int quota_getxstate(struct super_block *sb, int type, void __user *addr)
- 	if (!sb->s_qcop->get_state)
- 		return -ENOSYS;
- 	ret = quota_getstate(sb, type, &fqs);
--	if (!ret && copy_to_user(addr, &fqs, sizeof(fqs)))
-+	if (ret)
-+		return ret;
-+
-+	if (compat_need_64bit_alignment_fixup())
-+		return compat_copy_fs_quota_stat(addr, &fqs);
-+	if (copy_to_user(addr, &fqs, sizeof(fqs)))
- 		return -EFAULT;
--	return ret;
-+	return 0;
- }
- 
- static int quota_getstatev(struct super_block *sb, int type,
-@@ -816,8 +867,8 @@ static struct super_block *quotactl_block(const char __user *special, int cmd)
-  * calls. Maybe we need to add the process quotas etc. in the future,
-  * but we probably should use rlimits for that.
-  */
--int kernel_quotactl(unsigned int cmd, const char __user *special,
--		    qid_t id, void __user *addr)
-+SYSCALL_DEFINE4(quotactl, unsigned int, cmd, const char __user *, special,
-+		qid_t, id, void __user *, addr)
- {
- 	uint cmds, type;
- 	struct super_block *sb = NULL;
-@@ -871,9 +922,3 @@ int kernel_quotactl(unsigned int cmd, const char __user *special,
- 		path_put(pathp);
- 	return ret;
- }
--
--SYSCALL_DEFINE4(quotactl, unsigned int, cmd, const char __user *, special,
--		qid_t, id, void __user *, addr)
--{
--	return kernel_quotactl(cmd, special, id, addr);
--}
-diff --git a/include/linux/quotaops.h b/include/linux/quotaops.h
-index 9cf0cd3dc88c68..a0f6668924d3ef 100644
---- a/include/linux/quotaops.h
-+++ b/include/linux/quotaops.h
-@@ -27,9 +27,6 @@ static inline bool is_quota_modification(struct inode *inode, struct iattr *ia)
- 		(ia->ia_valid & ATTR_GID && !gid_eq(ia->ia_gid, inode->i_gid));
- }
- 
--int kernel_quotactl(unsigned int cmd, const char __user *special,
--		    qid_t id, void __user *addr);
--
- #if defined(CONFIG_QUOTA)
- 
- #define quota_error(sb, fmt, args...) \
-diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-index 3b69a560a7ac56..f01b91cc57fa00 100644
---- a/kernel/sys_ni.c
-+++ b/kernel/sys_ni.c
-@@ -370,7 +370,6 @@ COND_SYSCALL_COMPAT(fanotify_mark);
- /* x86 */
- COND_SYSCALL(vm86old);
- COND_SYSCALL(modify_ldt);
--COND_SYSCALL_COMPAT(quotactl32);
- COND_SYSCALL(vm86);
- COND_SYSCALL(kexec_file_load);
- 
--- 
-2.27.0
-
+> +static inline unsigned long long get_segment_mtime(struct f2fs_sb_info *sbi,
+> +								block_t blkaddr)
+> +{
+> +	unsigned int segno = GET_SEGNO(sbi, blkaddr);
+> +
+> +	if (segno == NULL_SEGNO)
+> +		return 0;
+> +	return get_seg_entry(sbi, segno)->mtime;
+> +}
+>  
+> -static void update_segment_mtime(struct f2fs_sb_info *sbi, block_t blkaddr)
+> +static void update_segment_mtime(struct f2fs_sb_info *sbi, block_t blkaddr,
+> +						unsigned long long old_mtime)
+>  {
+> +	struct seg_entry *se;
+>  	unsigned int segno = GET_SEGNO(sbi, blkaddr);
+> -	struct seg_entry *se = get_seg_entry(sbi, segno);
+> -	unsigned long long mtime = get_mtime(sbi, false);
+> +	unsigned long long ctime = get_mtime(sbi, false);
+> +	unsigned long long mtime = old_mtime ? old_mtime : ctime;
+> +
+> +	if (segno == NULL_SEGNO)
+> +		return;
+> +
+> +	se = get_seg_entry(sbi, segno);
+>  
+>  	if (!se->mtime)
+>  		se->mtime = mtime;
+> @@ -2162,8 +2178,8 @@ static void update_segment_mtime(struct f2fs_sb_info *sbi, block_t blkaddr)
+>  		se->mtime = div_u64(se->mtime * se->valid_blocks + mtime,
+>  						se->valid_blocks + 1);
+>  
+> -	if (mtime > SIT_I(sbi)->max_mtime)
+> -		SIT_I(sbi)->max_mtime = mtime;
+> +	if (ctime > SIT_I(sbi)->max_mtime)
+> +		SIT_I(sbi)->max_mtime = ctime;
+>  }
+>  
+>  static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
+> @@ -2185,8 +2201,6 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
+>  	f2fs_bug_on(sbi, (new_vblocks >> (sizeof(unsigned short) << 3) ||
+>  				(new_vblocks > sbi->blocks_per_seg)));
+>  
+> -	update_segment_mtime(sbi, blkaddr);
+> -
+>  	se->valid_blocks = new_vblocks;
+>  
+>  	/* Update valid block bitmap */
+> @@ -2280,6 +2294,7 @@ void f2fs_invalidate_blocks(struct f2fs_sb_info *sbi, block_t addr)
+>  	/* add it into sit main buffer */
+>  	down_write(&sit_i->sentry_lock);
+>  
+> +	update_segment_mtime(sbi, addr, 0);
+>  	update_sit_entry(sbi, addr, -1);
+>  
+>  	/* add it into dirty seglist */
+> @@ -3188,10 +3203,11 @@ static int __get_segment_type(struct f2fs_io_info *fio)
+>  void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+>  		block_t old_blkaddr, block_t *new_blkaddr,
+>  		struct f2fs_summary *sum, int type,
+> -		struct f2fs_io_info *fio)
+> +		struct f2fs_io_info *fio, bool from_gc)
+>  {
+>  	struct sit_info *sit_i = SIT_I(sbi);
+>  	struct curseg_info *curseg = CURSEG_I(sbi, type);
+> +	unsigned long long old_mtime;
+>  
+>  	down_read(&SM_I(sbi)->curseg_lock);
+>  
+> @@ -3213,6 +3229,14 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+>  
+>  	stat_inc_block_count(sbi, curseg);
+>  
+> +	if (from_gc) {
+> +		old_mtime = get_segment_mtime(sbi, old_blkaddr);
+> +	} else {
+> +		update_segment_mtime(sbi, old_blkaddr, 0);
+> +		old_mtime = 0;
+> +	}
+> +	update_segment_mtime(sbi, *new_blkaddr, old_mtime);
+> +
+>  	/*
+>  	 * SIT information should be updated before segment allocation,
+>  	 * since SSR needs latest valid block information.
+> @@ -3289,7 +3313,8 @@ static void do_write_page(struct f2fs_summary *sum, struct f2fs_io_info *fio)
+>  		down_read(&fio->sbi->io_order_lock);
+>  reallocate:
+>  	f2fs_allocate_data_block(fio->sbi, fio->page, fio->old_blkaddr,
+> -			&fio->new_blkaddr, sum, type, fio);
+> +			&fio->new_blkaddr, sum, type, fio,
+> +			is_cold_data(fio->page));
+>  	if (GET_SEGNO(fio->sbi, fio->old_blkaddr) != NULL_SEGNO)
+>  		invalidate_mapping_pages(META_MAPPING(fio->sbi),
+>  					fio->old_blkaddr, fio->old_blkaddr);
+> @@ -3405,7 +3430,8 @@ static inline int __f2fs_get_curseg(struct f2fs_sb_info *sbi,
+>  
+>  void f2fs_do_replace_block(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+>  				block_t old_blkaddr, block_t new_blkaddr,
+> -				bool recover_curseg, bool recover_newaddr)
+> +				bool recover_curseg, bool recover_newaddr,
+> +				bool from_gc)
+>  {
+>  	struct sit_info *sit_i = SIT_I(sbi);
+>  	struct curseg_info *curseg;
+> @@ -3456,11 +3482,16 @@ void f2fs_do_replace_block(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+>  	curseg->next_blkoff = GET_BLKOFF_FROM_SEG0(sbi, new_blkaddr);
+>  	__add_sum_entry(sbi, type, sum);
+>  
+> -	if (!recover_curseg || recover_newaddr)
+> +	if (!recover_curseg || recover_newaddr) {
+> +		if (!from_gc)
+> +			update_segment_mtime(sbi, new_blkaddr, 0);
+>  		update_sit_entry(sbi, new_blkaddr, 1);
+> +	}
+>  	if (GET_SEGNO(sbi, old_blkaddr) != NULL_SEGNO) {
+>  		invalidate_mapping_pages(META_MAPPING(sbi),
+>  					old_blkaddr, old_blkaddr);
+> +		if (!from_gc)
+> +			update_segment_mtime(sbi, old_blkaddr, 0);
+>  		update_sit_entry(sbi, old_blkaddr, -1);
+>  	}
+>  
+> @@ -3492,7 +3523,7 @@ void f2fs_replace_block(struct f2fs_sb_info *sbi, struct dnode_of_data *dn,
+>  	set_summary(&sum, dn->nid, dn->ofs_in_node, version);
+>  
+>  	f2fs_do_replace_block(sbi, &sum, old_addr, new_addr,
+> -					recover_curseg, recover_newaddr);
+> +					recover_curseg, recover_newaddr, false);
+>  
+>  	f2fs_update_data_blkaddr(dn, new_addr);
+>  }
+> -- 
+> 2.26.2
