@@ -2,132 +2,104 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728F4C433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B83F2073E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:26:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595777212;
-	bh=x6KKgIk4k329j0vVx9e+kq8JD+D+KN7RjIWWZE2Ny00=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LaADWUSb0P4oa6jfCDpsD0fPOqUspym6zq7ajfRYEIQ5OmWlYzmPWGF0yi41yjBx5
-	 qQY+BgfWBKZwzN0T5Q8Jlv/h6IfBU1Ir+wB+Pn8ef3VoxGBDs4Qsnc5yUg7O+Y80Oh
-	 QJmSntso/7pz57oiH7XFcLQRQhpksJ7hGjoAH9jU=
+	by mail.kernel.org (Postfix) with ESMTP id CECC32065E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:24:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P9RXW33o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgGZP0v (ORCPT
+        id S1726780AbgGZPYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 11:26:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbgGZP0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 11:26:50 -0400
-Received: from localhost (p5486c93f.dip0.t-ipconnect.de [84.134.201.63])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DE272065E;
-        Sun, 26 Jul 2020 15:26:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595777209;
-        bh=x6KKgIk4k329j0vVx9e+kq8JD+D+KN7RjIWWZE2Ny00=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T2brAFcJpcXJLjn40fZQeBmZYlUiFmQkfeIN+wjRnSgbe7DO6eJ9YEB9zIn3/QjKN
-         9bzR1QUQyBjTXfqv4P6QZtoKsAx0l3Z4bvfbNtGH2ZfDb0nwRIRoOzOUDJ5ZExrHC2
-         otwRsMaX+FOYDuFx7wlTi7/pUhmV0uoWGjJyHz+E=
-Date:   Sun, 26 Jul 2020 17:26:42 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     linux-wireless@vger.kernel.org
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] iwlwifi: yoyo: don't print failure if debug firmware
- is missing
-Message-ID: <20200726152642.GA913@ninjato>
-References: <20200625165210.14904-1-wsa@kernel.org>
+        Sun, 26 Jul 2020 11:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725949AbgGZPYQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 11:24:16 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3DDEC0619D2;
+        Sun, 26 Jul 2020 08:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5Z5eIAaFGWLcRkprXsSQSz/ZXR6YtVszbfA9Sx2DBkI=; b=P9RXW33o4c7/2dMj2/ZrliJYVH
+        e7c+NkQFOX6OIGXB8xTc7v5uOpS7Z40n2xtlBe0tqIkRw9nb4vGKxMTMe8aWSLu2KoXQvIl7TS+YB
+        NgkYZ30Man3k/hfFOIripyBF69nyLjO9OzSgH/SkZhYqUgTJYlap/xidu41OQtQiI67pODAcgbI/F
+        /Iw0QcuXPvPhi20xhTTC5OVZdPHIvQrzxY+kb/Ij+XXiOzSg9Tri2S+NifrSesHe6s+lDJfepzWHj
+        KGIEhGzmV3mWfDQQZovPzugaiASv24o/MepucA5rCbhMREvkBmeYge89777+wz+G9Owz4isUC564D
+        y3b2DL1Q==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jziVY-0006x0-Rb; Sun, 26 Jul 2020 15:24:12 +0000
+Date:   Sun, 26 Jul 2020 16:24:12 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Matthew Wilcox <willy@infradead.org>, darrick.wong@oracle.com,
+        hch@infradead.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        khlebnikov@yandex-team.ru
+Subject: Re: WARN_ON_ONCE(1) in iomap_dio_actor()
+Message-ID: <20200726152412.GA26614@infradead.org>
+References: <20200619211750.GA1027@lca.pw>
+ <20200620001747.GC8681@bombadil.infradead.org>
+ <20200724182431.GA4871@lca.pw>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200625165210.14904-1-wsa@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200724182431.GA4871@lca.pw>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 24, 2020 at 02:24:32PM -0400, Qian Cai wrote:
+> On Fri, Jun 19, 2020 at 05:17:47PM -0700, Matthew Wilcox wrote:
+> > On Fri, Jun 19, 2020 at 05:17:50PM -0400, Qian Cai wrote:
+> > > Running a syscall fuzzer by a normal user could trigger this,
+> > > 
+> > > [55649.329999][T515839] WARNING: CPU: 6 PID: 515839 at fs/iomap/direct-io.c:391 iomap_dio_actor+0x29c/0x420
+> > ...
+> > > 371 static loff_t
+> > > 372 iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
+> > > 373                 void *data, struct iomap *iomap, struct iomap *srcmap)
+> > > 374 {
+> > > 375         struct iomap_dio *dio = data;
+> > > 376
+> > > 377         switch (iomap->type) {
+> > > 378         case IOMAP_HOLE:
+> > > 379                 if (WARN_ON_ONCE(dio->flags & IOMAP_DIO_WRITE))
+> > > 380                         return -EIO;
+> > > 381                 return iomap_dio_hole_actor(length, dio);
+> > > 382         case IOMAP_UNWRITTEN:
+> > > 383                 if (!(dio->flags & IOMAP_DIO_WRITE))
+> > > 384                         return iomap_dio_hole_actor(length, dio);
+> > > 385                 return iomap_dio_bio_actor(inode, pos, length, dio, iomap);
+> > > 386         case IOMAP_MAPPED:
+> > > 387                 return iomap_dio_bio_actor(inode, pos, length, dio, iomap);
+> > > 388         case IOMAP_INLINE:
+> > > 389                 return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
+> > > 390         default:
+> > > 391                 WARN_ON_ONCE(1);
+> > > 392                 return -EIO;
+> > > 393         }
+> > > 394 }
+> > > 
+> > > Could that be iomap->type == IOMAP_DELALLOC ? Looking throught the logs,
+> > > it contains a few pread64() calls until this happens,
+> > 
+> > It _shouldn't_ be able to happen.  XFS writes back ranges which exist
+> > in the page cache upon seeing an O_DIRECT I/O.  So it's not supposed to
+> > be possible for there to be an extent which is waiting for the contents
+> > of the page cache to be written back.
+> 
+> Okay, it is IOMAP_DELALLOC. We have,
 
---EVF5PPMfhYS0aIcm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jun 25, 2020 at 06:52:10PM +0200, Wolfram Sang wrote:
-> Missing this firmware is not fatal, my wifi card still works. Even more,
-> I couldn't find any documentation what it is or where to get it. So, I
-> don't think the users should be notified if it is missing. If you browse
-> the net, you see the message is present is in quite some logs. Better
-> remove it.
->=20
-> Signed-off-by: Wolfram Sang <wsa@kernel.org>
-> ---
-
-Any input on this? Or people I should add to CC?
-
->=20
-> This is only build tested because I wanted to get your opinions first. I
-> couldn't find any explanation about yoyo, so I am entering unknown
-> territory here.
->=20
->  drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c b/drivers/n=
-et/wireless/intel/iwlwifi/iwl-dbg-tlv.c
-> index 7987a288917b..f180db2936e3 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
-> @@ -468,7 +468,7 @@ void iwl_dbg_tlv_load_bin(struct device *dev, struct =
-iwl_trans *trans)
->  	if (!iwlwifi_mod_params.enable_ini)
->  		return;
-> =20
-> -	res =3D request_firmware(&fw, "iwl-debug-yoyo.bin", dev);
-> +	res =3D firmware_request_nowarn(&fw, "iwl-debug-yoyo.bin", dev);
->  	if (res)
->  		return;
-> =20
-> --=20
-> 2.20.1
->=20
-
---EVF5PPMfhYS0aIcm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8doK4ACgkQFA3kzBSg
-KbY5xQ/+M6FCVy2ULUZt7NXzSWEg/BKoQ5/LiakrYE7NNwWV0NshwLe8GV6jsxmK
-sDBc2NAODNbeFgXriTA+x+XnRFnTP440eHyszqHcjKdWf0hAbc5hn8lNqu8iZqk7
-Oe2huVW2rntpe72XSDda/8RnatGJuw10F1L2WP2jkf4MOJqR9Adsmcprvt80MFT5
-VXA15vCjWQ83nAUv5IH0Lwt8ERhsHti/ffmtprQ4CaDyvmF83/onHHi6EMMlyzJT
-6CP6uA1nBaSViEaArnuXQVlBdzjoTIE5NZz1Iblv6kQhC4I1bHDzANTc6xVBNkP9
-natYdhYWVQorDZl9dFvHywoJyMSD/LQ7QMD2YDs/18NB9TGVw7wjkEleBLuwUEHe
-giUmIzJ/EA2Ys0sWFRVxgdvNq7cMZeKT8K4fseRbQxOQkJYcTXH3WRcHx08MrZq1
-+Cu1OR0It/d1bcAaP+JLHVSMAxDt87AzFIx8GB7T0e9GjpBQD+fV6ArErWh7EWaC
-qMHVC1/W4zjrGj6iqHC+ZJOJEKTlaAHIt6+1FAeLv38V87ZrTPQDICIa7xynl2rF
-u6vMtCCEwnq1GvYyPRrqO1gIn+MCdMYcvDC2uLb2xaeITPyykPo0fA+QMWKhPxP8
-1OeARpFdGdXHYDGqASOWlbsxgpVSAlxEmfp0gcbuoU+qjvacNGI=
-=vWQI
------END PGP SIGNATURE-----
-
---EVF5PPMfhYS0aIcm--
+Can you share the fuzzer?  If we end up with delalloc space here we
+probably need to fix a bug in the cache invalidation code.
