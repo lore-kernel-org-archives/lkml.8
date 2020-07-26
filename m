@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A686BC433EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29317C433F1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE242070C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0812F2070C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:26:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="HNNcySqo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PXMxsghq"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="lHVvSAw1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o561a/MA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgGZB0K (ORCPT
+        id S1728114AbgGZB0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 21:26:10 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:54085 "EHLO
+        Sat, 25 Jul 2020 21:26:03 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:57999 "EHLO
         new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727982AbgGZB0E (ORCPT
+        by vger.kernel.org with ESMTP id S1726870AbgGZB0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 21:26:04 -0400
+        Sat, 25 Jul 2020 21:26:01 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id E9F6F580165;
-        Sat, 25 Jul 2020 21:26:02 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 7384A58014B;
+        Sat, 25 Jul 2020 21:26:00 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Sat, 25 Jul 2020 21:26:02 -0400
+  by compute3.internal (MEProxy); Sat, 25 Jul 2020 21:26:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=aG4Uj5m5qoBSO
-        tcKgLA116HFz/3E9K0FEPpd2GWuX5c=; b=HNNcySqomav8Gad97WESHlVZSKUH5
-        J6xf3jMAMw0jDRxd800cI9Ci6Yf06uUmy0lmHu/ofcOw6huOTIjVrwP/jE2XNGEM
-        5smIcmsJsYGU6VKLGM/+bvsbzqeGo+ygpuMW4MFSPCoHgaUS8MEOZ40gL+FJCcOb
-        PT21KHcEMSPD1sRdURGEgMcFcxXSGRnoElV/SPfwCHDKo8ddlO3jXB1MZwbgYAgS
-        4AdU9pKK1nVMcpQmUMNEJ4A3cvUhcuReh2rpwZ6rXj02AQ2w0gb7HeQE7XLV6dyo
-        rg3ntI5X7xlspQEijMxtdD7HZWh3CdZtHAPl7wMx2t0wiEapMKy3syoYQ==
+        :mime-version:content-transfer-encoding; s=fm3; bh=Bc+s0nLaRpZIx
+        yCBvQ4oj1VwkiAzKp+9hlsJuhGXWAM=; b=lHVvSAw1ZVEQfJMC1pDEJsvgNHUQC
+        ToktL4COHMq/yhL+CXinpvhwck8N7ckpGHJoXgZAYW4+ZX+EACJHnGOZDE8N8dCu
+        V8saNvMyvYjMsdCHLAorj2rKQZ6lU5hxsQvRIgt6DiBKLjfsOhwo+V+yqwdHNadP
+        WFv9UrMrcwDiLgoJWK0pztN8TeivUK2wQQjrf2gNSZKnYF+IHvv3+tMRkfEV8WKF
+        Ppx5V9wNX1el4R++U4QFa5GXmQ8gkl5cQ/qZygVTSTVayfQdakT39q5wuzGNilf7
+        H/4Ex92+OvtrRIbnFNpL3HquZRt+rWhmwGr5dpUQYWDM4rDQp1mFnTyEA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=aG4Uj5m5qoBSOtcKgLA116HFz/3E9K0FEPpd2GWuX5c=; b=PXMxsghq
-        wmAvc3bCz0iOTsco3wDTShP8wOkTFKQU83g48j+JYOMh49AgOHQA63Uy4j28fIus
-        mKxxHV2KZUS0q0BhvX0Y44EBMl7jkDMG9ZqfULpQyGcefq/EN4uHYyVqD+q4IXtF
-        zNp4VFQOIAh26oCF4ZHQnlG9sE1Lxi9rmpbt41f/nSUTPB3ugCAWpRAmxeeHlGAx
-        kRKh6xZmfgTsimkvL1jR5om1BDB3sNud6ReyGv/3t9Y+sXccJzBywDN+6ua1lTYS
-        guEKo6LfmRAaNjiEU/U/4jp6Y/2/Wm3VE98soGpqYAeq5uj5YSI/9dChPT+D5f5e
-        Hz3CJhFkP7V0Fg==
-X-ME-Sender: <xms:qtscXwDj3heq8KJeWrIdc2-OBJe0QY_58RRsQ5uAk5ODc5tp5csUIg>
+        fm3; bh=Bc+s0nLaRpZIxyCBvQ4oj1VwkiAzKp+9hlsJuhGXWAM=; b=o561a/MA
+        JTGnE42PW2YjZgncOVPhgWjXBBRDNPrA1jPhpaM+PahPWgglJvDF8F1CZCGB0dBK
+        B3VEEGZzmjJG6rYW/P5T83fOTqnzHQyIGLXZ3OrDjxNSVnwHL7ygazZoUItBOQ1k
+        zG391ZxWp0MGbFe0GvD7xgrJfI+6lEVEQHTuY+XhuXsTz8PxXFmIS793bMxuQJ0Y
+        jko94yEe56rowUcECducoVe4KeTWeScfvlYLMK5rBaPqDBd2bRL5vyPx41IfuJ+O
+        nmmvyBFtoRTQUx2q4UmTZUgf9pi61eW5er3hI3vPttPso+/6e4ug939s0UsCbHE+
+        WavsLeGyMD87Mg==
+X-ME-Sender: <xms:p9scX6QxgGqbunpekQBTatw5eZIHwmitByMoW1-uhaDl3BLMN2SwMA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheeigdegfecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -59,13 +59,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheeigdegfecutefuodetggdote
     jeehueeinecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiii
     gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgu
     rdhorhhg
-X-ME-Proxy: <xmx:qtscXyjDzvUlTqZp74XNSHQh44oFKul6XQ_gWRn9k3A_qkPKo-KfzQ>
-    <xmx:qtscXzlgn_yjvfDHjztDuk3Gna2bOEDJ9YwFQyqc_1NHvUuDkjxCeQ>
-    <xmx:qtscX2yavicdEX7r8if3XtYtiAVQEzpfl_Z2pRuGr16D4wUytrU9sQ>
-    <xmx:qtscX1YYqchZ7Lnn6EVo7sRi01wxYKlTDXfe-iYq3uLagLIalgcVrg>
+X-ME-Proxy: <xmx:p9scX_yWVMgMMUn_Fe5R6YbGcjJxFfzI3QqyQmYquCbxdsu4ZzJp4w>
+    <xmx:p9scX30JW_vZ9B0qbbut9WlqEOlb4LVRFTx1vV4k3CBjW7pex6Xj2w>
+    <xmx:p9scX2DEaDqJW1M2axr7KmV1Y0446X32Nealw3SmpcZfnqyGYJk8Cg>
+    <xmx:qNscX2pC0afVfIF804Gnm4lhCY4u0ZoXlGf6inmLtdE4lEpeZeWThA>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2641A3060067;
-        Sat, 25 Jul 2020 21:26:02 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id BFEF8306005F;
+        Sat, 25 Jul 2020 21:25:58 -0400 (EDT)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -79,9 +79,9 @@ Cc:     Ondrej Jirman <megous@megous.com>,
         alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 6/7] arm64: dts: allwinner: a64: Update codec widget names
-Date:   Sat, 25 Jul 2020 20:25:56 -0500
-Message-Id: <20200726012557.38282-7-samuel@sholland.org>
+Subject: [PATCH 1/7] ASoC: dt-bindings: Add a new compatible for the A64 codec
+Date:   Sat, 25 Jul 2020 20:25:51 -0500
+Message-Id: <20200726012557.38282-2-samuel@sholland.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200726012557.38282-1-samuel@sholland.org>
 References: <20200726012557.38282-1-samuel@sholland.org>
@@ -92,206 +92,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sun8i-codec driver introduced a new set of DAPM widgets that more
-accurately describe the hardware topology. Update the various device
-trees to use the new widget names.
+The audio codecs in the A33 and A64 are both integrated variants of the
+X-Powers AC100 codec. However, there are some differences between them
+that merit having a separate compatible:
+ - The A64 has a second DRC block, not present in the AC100 or A33.
+ - The A33 has some extra muxing options for AIF1/2/3 in the
+   AIF3_SGP_CTRL register, which are not present in the AC100 or A64.
+ - The A33 is missing registers providing jack detection functionality.
+ - The A33 is claimed to invert LRCK, but this is not seen on A64.
+
+Since the driver will continue to work on the A64 using the A33
+compatible, albeit without jack detection functionality and with
+possibly inverted channels, as it does now, allow the A33 compatible
+to be used as a fallback.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 8 ++++----
- arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 8 ++++----
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts       | 8 ++++----
- arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts     | 8 ++++----
- arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi   | 8 ++++----
- arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts      | 8 ++++----
- .../boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts    | 8 ++++----
- arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts      | 8 ++++----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi             | 8 ++++----
- 9 files changed, 36 insertions(+), 36 deletions(-)
+ .../bindings/sound/allwinner,sun8i-a33-codec.yaml           | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 883f217efb81..3ea5182ca489 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -331,10 +331,10 @@ &sound {
- 				    "Microphone", "Microphone Jack",
- 				    "Microphone", "Onboard Microphone";
- 	simple-audio-card,routing =
--			"Left DAC", "AIF1 Slot 0 Left",
--			"Right DAC", "AIF1 Slot 0 Right",
--			"AIF1 Slot 0 Left ADC", "Left ADC",
--			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"Left DAC", "DACL",
-+			"Right DAC", "DACR",
-+			"ADCL", "Left ADC",
-+			"ADCR", "Right ADC",
- 			"Headphone Jack", "HP",
- 			"MIC2", "Microphone Jack",
- 			"Onboard Microphone", "MBIAS",
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index fde9c7a99b17..d894ec5fa8a1 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -330,10 +330,10 @@ &sound {
- 				    "Microphone", "Microphone Jack",
- 				    "Microphone", "Onboard Microphone";
- 	simple-audio-card,routing =
--			"Left DAC", "AIF1 Slot 0 Left",
--			"Right DAC", "AIF1 Slot 0 Right",
--			"AIF1 Slot 0 Left ADC", "Left ADC",
--			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"Left DAC", "DACL",
-+			"Right DAC", "DACR",
-+			"ADCL", "Left ADC",
-+			"ADCR", "Right ADC",
- 			"Headphone Jack", "HP",
- 			"MIC2", "Microphone Jack",
- 			"Onboard Microphone", "MBIAS",
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index 2165f238af13..329cf276561e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -261,11 +261,11 @@ &sound {
- 	simple-audio-card,widgets = "Microphone", "Microphone Jack",
- 				    "Headphone", "Headphone Jack";
- 	simple-audio-card,routing =
--			"Left DAC", "AIF1 Slot 0 Left",
--			"Right DAC", "AIF1 Slot 0 Right",
-+			"Left DAC", "DACL",
-+			"Right DAC", "DACR",
- 			"Headphone Jack", "HP",
--			"AIF1 Slot 0 Left ADC", "Left ADC",
--			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"ADCL", "Left ADC",
-+			"ADCR", "Right ADC",
- 			"MIC2", "Microphone Jack";
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index 64b1c54f87c0..896f34fd9fc3 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -374,15 +374,15 @@ &sound {
- 				    "Headphone", "Headphone Jack",
- 				    "Speaker", "Internal Speaker";
- 	simple-audio-card,routing =
--			"Left DAC", "AIF1 Slot 0 Left",
--			"Right DAC", "AIF1 Slot 0 Right",
-+			"Left DAC", "DACL",
-+			"Right DAC", "DACR",
- 			"Speaker Amp INL", "LINEOUT",
- 			"Speaker Amp INR", "LINEOUT",
- 			"Internal Speaker", "Speaker Amp OUTL",
- 			"Internal Speaker", "Speaker Amp OUTR",
- 			"Headphone Jack", "HP",
--			"AIF1 Slot 0 Left ADC", "Left ADC",
--			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"ADCL", "Left ADC",
-+			"ADCR", "Right ADC",
- 			"Internal Microphone Left", "MBIAS",
- 			"MIC1", "Internal Microphone Left",
- 			"Internal Microphone Right", "HBIAS",
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-index cefda145c3c9..93b091313323 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -342,10 +342,10 @@ &sound {
- 			"Internal Speaker", "Speaker Amp OUTR",
- 			"Speaker Amp INL", "LINEOUT",
- 			"Speaker Amp INR", "LINEOUT",
--			"Left DAC", "AIF1 Slot 0 Left",
--			"Right DAC", "AIF1 Slot 0 Right",
--			"AIF1 Slot 0 Left ADC", "Left ADC",
--			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"Left DAC", "DACL",
-+			"Right DAC", "DACR",
-+			"ADCL", "Left ADC",
-+			"ADCR", "Right ADC",
- 			"Internal Microphone", "MBIAS",
- 			"MIC1", "Internal Microphone",
- 			"Headset Microphone", "HBIAS",
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts
-index dc4ab6b434f9..3ab0f0347bc9 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts
-@@ -421,15 +421,15 @@ &sound {
- 				    "Headphone", "Headphone Jack",
- 				    "Speaker", "Internal Speaker";
- 	simple-audio-card,routing =
--			"Left DAC", "AIF1 Slot 0 Left",
--			"Right DAC", "AIF1 Slot 0 Right",
-+			"Left DAC", "DACL",
-+			"Right DAC", "DACR",
- 			"Speaker Amp INL", "LINEOUT",
- 			"Speaker Amp INR", "LINEOUT",
- 			"Internal Speaker", "Speaker Amp OUTL",
- 			"Internal Speaker", "Speaker Amp OUTR",
- 			"Headphone Jack", "HP",
--			"AIF1 Slot 0 Left ADC", "Left ADC",
--			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"ADCL", "Left ADC",
-+			"ADCR", "Right ADC",
- 			"Internal Microphone Left", "MBIAS",
- 			"MIC1", "Internal Microphone Left",
- 			"Internal Microphone Right", "HBIAS",
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 2f6ea9f3f6a2..9ebb9e07fae3 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -159,11 +159,11 @@ &sound {
- 	simple-audio-card,widgets = "Microphone", "Microphone Jack",
- 				    "Headphone", "Headphone Jack";
- 	simple-audio-card,routing =
--			"Left DAC", "AIF1 Slot 0 Left",
--			"Right DAC", "AIF1 Slot 0 Right",
-+			"Left DAC", "DACL",
-+			"Right DAC", "DACR",
- 			"Headphone Jack", "HP",
--			"AIF1 Slot 0 Left ADC", "Left ADC",
--			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"ADCL", "Left ADC",
-+			"ADCR", "Right ADC",
- 			"MIC2", "Microphone Jack";
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index f5df5f705b72..a1864a89fb89 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -340,10 +340,10 @@ &sound {
- 				    "Microphone", "Internal Microphone",
- 				    "Speaker", "Internal Speaker";
- 	simple-audio-card,routing =
--			"Left DAC", "AIF1 Slot 0 Left",
--			"Right DAC", "AIF1 Slot 0 Right",
--			"AIF1 Slot 0 Left ADC", "Left ADC",
--			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"Left DAC", "DACL",
-+			"Right DAC", "DACR",
-+			"ADCL", "Left ADC",
-+			"ADCR", "Right ADC",
- 			"Headphone Jack", "HP",
- 			"Speaker Amp INL", "LINEOUT",
- 			"Speaker Amp INR", "LINEOUT",
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 8dfbcd144072..73ae7656e0f3 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -139,10 +139,10 @@ sound: sound {
- 		simple-audio-card,mclk-fs = <128>;
- 		simple-audio-card,aux-devs = <&codec_analog>;
- 		simple-audio-card,routing =
--				"Left DAC", "AIF1 Slot 0 Left",
--				"Right DAC", "AIF1 Slot 0 Right",
--				"AIF1 Slot 0 Left ADC", "Left ADC",
--				"AIF1 Slot 0 Right ADC", "Right ADC";
-+				"Left DAC", "DACL",
-+				"Right DAC", "DACR",
-+				"ADCL", "Left ADC",
-+				"ADCR", "Right ADC";
- 		status = "disabled";
+diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
+index 55d28268d2f4..67405e6d8168 100644
+--- a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
++++ b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
+@@ -15,7 +15,11 @@ properties:
+     const: 0
  
- 		cpudai: simple-audio-card,cpu {
+   compatible:
+-    const: allwinner,sun8i-a33-codec
++    oneOf:
++      - items:
++          - const: allwinner,sun50i-a64-codec
++          - const: allwinner,sun8i-a33-codec
++      - const: allwinner,sun8i-a33-codec
+ 
+   reg:
+     maxItems: 1
 -- 
 2.26.2
 
