@@ -2,101 +2,119 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E961C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96336C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40E6D2065C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E342070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:12:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595761943;
+	bh=93Eu6iILE8VmwYVNjEyASrY6lLnr9U0g8lfkvO52+zc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=UCKHFThZYuvgEiritjbrl+ZWKDFFj3YZbrfYI117LLz4hcZNbiB4EZL8ywVJkmWz3
+	 fWKRCUV6uqQOVX4hFnsEk8TY+X8MvGfZsDnMM9OHRJkGH5TzPKi5G2dK6VD6Yzkl/T
+	 n19by65dLKZ4eeACD5iqAGL5szFxAInMqWWEzrpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgGZLLn (ORCPT
+        id S1727932AbgGZLMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 07:11:43 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:45766 "EHLO smtp.al2klimov.de"
+        Sun, 26 Jul 2020 07:12:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgGZLLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 07:11:42 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id B239C6F648;
-        Sun, 26 Jul 2020 11:11:37 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     torvalds@linux-foundation.org, masahiroy@kernel.org,
-        mhiramat@kernel.org, rostedt@goodmis.org, jeyu@kernel.org,
-        will@kernel.org, krzk@kernel.org, patrick.bellasi@arm.com,
-        dhowells@redhat.com, ebiederm@xmission.com, hannes@cmpxchg.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] init/Kconfig: Replace HTTP links with HTTPS ones
-Date:   Sun, 26 Jul 2020 13:11:31 +0200
-Message-Id: <20200726111131.16414-1-grandmaster@al2klimov.de>
+        id S1725972AbgGZLMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 07:12:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E87F1206D8;
+        Sun, 26 Jul 2020 11:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595761939;
+        bh=93Eu6iILE8VmwYVNjEyASrY6lLnr9U0g8lfkvO52+zc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HdBkWGOrvROIwUucIDrucDBvgpFoVZ3z/1i0IU/5GGj3nPch/AuRruw17G6L+yEhv
+         69ijoXEHEJAepjxKxfVB+VrrD+a3iOotcY/cIC6aPHFJbVXmam8ld22QXaOB899PSa
+         ZElnweHjS0bXzv9FEA9YYA9mM3sIkgw86GUOH/zE=
+Date:   Sun, 26 Jul 2020 13:12:17 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [GIT PULL] TTY/Serial driver fixes for 5.8-rc7
+Message-ID: <20200726111217.GA1283587@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+The following changes since commit ba47d845d715a010f7b51f6f89bae32845e6acb7:
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5 with unmaintained stuff according to:
- perl scripts/get_maintainer.pl --nogit{,-fallback} --nol
+  Linux 5.8-rc6 (2020-07-19 15:41:18 -0700)
 
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
+are available in the Git repository at:
 
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.8-rc7
 
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
+for you to fetch changes up to 5fdbe136ae19ab751daaa4d08d9a42f3e30d17f9:
 
- If you apply the patch, please let me know.
+  serial: exar: Fix GPIO configuration for Sealevel cards based on XR17V35X (2020-07-24 10:58:14 +0200)
 
+----------------------------------------------------------------
+TTY/Serial/fbcon fixes for 5.8-rc7
 
- init/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Here are some small tty and serial and fbcon fixes for 5.8-rc7 to
+resolve some reported issues.
 
-diff --git a/init/Kconfig b/init/Kconfig
-index 0498af567f70..bf72068f3b6a 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -332,12 +332,12 @@ config SYSVIPC
- 	  exchange information. It is generally considered to be a good thing,
- 	  and some programs won't run unless you say Y here. In particular, if
- 	  you want to run the DOS emulator dosemu under Linux (read the
--	  DOSEMU-HOWTO, available from <http://www.tldp.org/docs.html#howto>),
-+	  DOSEMU-HOWTO, available from <https://www.tldp.org/docs.html#howto>),
- 	  you'll need to say Y here.
- 
- 	  You can find documentation about IPC with "info ipc" and also in
- 	  section 6.4 of the Linux Programmer's Guide, available from
--	  <http://www.tldp.org/guides.html>.
-+	  <https://www.tldp.org/guides.html>.
- 
- config SYSVIPC_SYSCTL
- 	bool
-@@ -519,7 +519,7 @@ config BSD_PROCESS_ACCT_V3
- 	  process and its parent. Note that this file format is incompatible
- 	  with previous v0/v1/v2 file formats, so you will need updated tools
- 	  for processing it. A preliminary version of these tools is available
--	  at <http://www.gnu.org/software/acct/>.
-+	  at <https://www.gnu.org/software/acct/>.
- 
- config TASKSTATS
- 	bool "Export task/process statistics through netlink"
--- 
-2.27.0
+The fbcon fix is in here as it was simpler to take it this way (and it
+was acked by the maintainer) as it was related to the vt console fix as
+well, both of which resolve syzbot-found issues in the console handling
+code.
 
+The other serial driver fixes are for small issues reported in the -rc
+releases.
+
+All of these have been in linux-next with no reported issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Helmut Grohne (1):
+      tty: xilinx_uartps: Really fix id assignment
+
+Johan Hovold (2):
+      serial: tegra: fix CREAD handling for PIO
+      serial: tegra: drop bogus NULL tty-port checks
+
+Matthew Howell (1):
+      serial: exar: Fix GPIO configuration for Sealevel cards based on XR17V35X
+
+Serge Semin (1):
+      serial: 8250_mtk: Fix high-speed baud rates clamping
+
+Tetsuo Handa (2):
+      vt: Reject zero-sized screen buffer size.
+      fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
+
+Yang Yingliang (1):
+      serial: 8250: fix null-ptr-deref in serial8250_start_tx()
+
+ drivers/tty/serial/8250/8250_core.c  |  2 +-
+ drivers/tty/serial/8250/8250_exar.c  | 12 +++++++++++-
+ drivers/tty/serial/8250/8250_mtk.c   | 18 ++++++++++++++++++
+ drivers/tty/serial/serial-tegra.c    | 16 +++++++---------
+ drivers/tty/serial/xilinx_uartps.c   |  8 ++++++--
+ drivers/tty/vt/vt.c                  | 29 ++++++++++++++++++-----------
+ drivers/video/fbdev/core/bitblit.c   |  4 ++--
+ drivers/video/fbdev/core/fbcon_ccw.c |  4 ++--
+ drivers/video/fbdev/core/fbcon_cw.c  |  4 ++--
+ drivers/video/fbdev/core/fbcon_ud.c  |  4 ++--
+ 10 files changed, 69 insertions(+), 32 deletions(-)
