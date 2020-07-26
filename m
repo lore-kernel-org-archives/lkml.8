@@ -2,143 +2,110 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA47C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E6DC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6881A207DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B899204EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tOmSm+RR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKU5MvfQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgGZQpv (ORCPT
+        id S1726781AbgGZQoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 12:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34908 "EHLO
+        Sun, 26 Jul 2020 12:44:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbgGZQpu (ORCPT
+        with ESMTP id S1726117AbgGZQoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 12:45:50 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D5C0C0619D2;
-        Sun, 26 Jul 2020 09:45:50 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id h7so13184690qkk.7;
-        Sun, 26 Jul 2020 09:45:50 -0700 (PDT)
+        Sun, 26 Jul 2020 12:44:11 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EB1BC0619D2;
+        Sun, 26 Jul 2020 09:44:11 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id h1so10574490otq.12;
+        Sun, 26 Jul 2020 09:44:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VstsWsuszeDs/Ba17q7YPVCn+c+6MrMb7LlHyKqYOXU=;
-        b=tOmSm+RRcV6MQ8x7hTydZPK9FsbIxOHIMPBtiC5PsGUyevVexWsoXt5QeFLCHdyqAa
-         CisSERxERrTF9vIkoJ7rt583HLP5bU9VvyZqY335YRenqyQBcwYeBVSciysqGw1ZtLSm
-         LD4lSxp2/CZt3VQO85MEacHh9J6atqvmOxdeC4ec9xxqKUCelp3y0TnvbXz1s0gq5cGi
-         G7ZUcrWSLy7vB4/UHiab58qksdZar/FzBv3DuzcAGfJshQ4J2ZW4NaC8hrK4QAkviq4Z
-         kpxdA/01Htz6SBXTHq2ioDeUtqrwsCrzwn3jwIxk+IGjDBXzrgRBN6tXheX0xxkpPDcM
-         DgQA==
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=WG+IiSADj4bC8adDl2auSWlEfulYkcaFltfgstRWQ5Y=;
+        b=FKU5MvfQ5K1ZlsKoTdFXi482971xJ8n8FjvZVjcIhM6gB+/8mytUpIch25b/fAE+oJ
+         udwQB3URwVq3O+46c9le9KD3NUXxKDLTit/DxfbO5DCussKq3Rp2ulxLZMLMZ7MM9w1W
+         J2G6OucCGO9Z5Mz5i8sHF4KGg/5Zg7/H336MHN9zbf026cUwuHv/aeOUgdwowd6+EC2F
+         L+oOFGqYePeG3mJKcV2TDTTeatw03f+XqepZ8erGEtsmP4Hi1zIhWCuakDx16NJ8l4Bb
+         0wMpBePLihDxP76vQHVuqtsdn48MVegp/CzteTtME9N0LSYx1Dm5NTr3iAFIhtok+CCJ
+         g7Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VstsWsuszeDs/Ba17q7YPVCn+c+6MrMb7LlHyKqYOXU=;
-        b=NIJkJGtsoVaOnZJHseY9k5WYYIXiZtopCim8FtTq/LZnn1rjUO34WBlZQR7MIkMeMd
-         +RbXASHhVFU1WwGpx4hmexMeoHCUmRdGcVlqlMbpUMH3Z/SE3PYcu2YWy7SyHVv3Lvnv
-         qak8RYMoKOk2Il08fzsgDnJFSHt4W+5dqLO1HLnGrxjePtolhbh+0CHHa2jgKq/2lapV
-         XkcoYlWCCJWuu4D5YxonMOaTsG/llYtpQo9tRUlNRQvNN9LjiBFGSyW+4BlAu6pLklFk
-         x/5z0qbZWcU+O2gWQ3gdz194brXNJ4r8VZAw0AYmtgFf6N+TEHEEb6ztRK6Set1v4xq8
-         B/Hw==
-X-Gm-Message-State: AOAM533Z8KNpAsKa0W/TNcXog8hx+2wt9A0Qi+2neHyCAJwjacLaZx6W
-        xyV+P7n0phHrvidnGuSzKg==
-X-Google-Smtp-Source: ABdhPJzNfFJ9to/VAePZ22kYRFlaHIRlTx1GFxnaCQeilL7udWxDuxSik1Ew75mPm4QkJJBld+xQFg==
-X-Received: by 2002:ae9:ee06:: with SMTP id i6mr18927939qkg.132.1595781949854;
-        Sun, 26 Jul 2020 09:45:49 -0700 (PDT)
-Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id j16sm11644233qke.87.2020.07.26.09.45.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 09:45:49 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vandana BN <bnvandana@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH] media/v4l2-core: Fix kernel-infoleak in video_put_user()
-Date:   Sun, 26 Jul 2020 12:44:39 -0400
-Message-Id: <20200726164439.48973-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=WG+IiSADj4bC8adDl2auSWlEfulYkcaFltfgstRWQ5Y=;
+        b=lgpxYpj8f2qRbqio/xpNZ/vhwFAGb+k3MuKzU2C3QgX7ArJQxehyOWNthv4XnD+6ML
+         N3KcazJXPvLdUGgYjta9FS+9d2HCqr4YmM3cS/TwqF2PbIKlLfpDDMg1VCqvuQapTaCU
+         KM3JraiAdUpYgmFFL/qcKD8n6d1psozD9FVB5GbA9fVRQ7Nqvb5y/gSu35CHEDxLOef+
+         YrmZfasJhX5xsab4jwpDis5+J96eVa7GGBjSn60DRn9wM+F+y3q2BxsCsBSDxMhxp8IO
+         dFGPBzyvidEorGKohmhEVLq8Fu+PxzY74BF5M2e1+35+orY8O6bjtw4NKalrJ5kqxdad
+         aH6Q==
+X-Gm-Message-State: AOAM533naQe+22lOKgVkjN9lCCqc0sP3okB3fSZxxUWHCxXiBSHqgI0q
+        9iYZAKBpGea01JrK/SF24fcURYX+6smk3dWtl0vZwZOLycM=
+X-Google-Smtp-Source: ABdhPJyyQVOCA2uLL/WHvGjv3VXAVUW2/bbulIVmhdj1GCluVtTMRr6LbYDKzvWjzI2hxvnEIa+zfcmP5xChsXib1nk=
+X-Received: by 2002:a9d:2c29:: with SMTP id f38mr5654679otb.234.1595781850542;
+ Sun, 26 Jul 2020 09:44:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Jan Ziak <0xe2.0x9a.0x9b@gmail.com>
+Date:   Sun, 26 Jul 2020 18:43:34 +0200
+Message-ID: <CAODFU0ogKh6iz_F9fOYwqChfWZ+VJXoBebzzMHiOtdTK_jXqqg@mail.gmail.com>
+Subject: Re: Kernel compression benchmarks
+To:     alex_y_xu@yahoo.ca
+Cc:     Kernel-team@fb.com, clm@fb.com, gregkh@linuxfoundation.org,
+        keescook@chromium.org, kilobyte@angband.pl,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, nickrterrell@gmail.com, nolange79@gmail.com,
+        oss@malat.biz, patrick@stwcx.xyz, patrickw3@fb.com, rmikey@fb.com,
+        sedat.dilek@gmail.com, terrelln@fb.com, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-video_put_user() is copying uninitialized stack memory to userspace. Fix
-it by initializing `vb32` using memset().
+Hello
 
-Reported-and-tested-by: syzbot+79d751604cb6f29fbf59@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=79d751604cb6f29fbf59
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
- drivers/media/v4l2-core/v4l2-ioctl.c | 32 +++++++++++++++-------------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+I looked at the SVG graphs and it appears that the formula used wasn't
+T_load+T_decompress, but was just T_decompress.
 
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index a556880f225a..08909f58dc80 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -3210,21 +3210,23 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
- 	case VIDIOC_DQBUF_TIME32:
- 	case VIDIOC_PREPARE_BUF_TIME32: {
- 		struct v4l2_buffer *vb = parg;
--		struct v4l2_buffer_time32 vb32 = {
--			.index		= vb->index,
--			.type		= vb->type,
--			.bytesused	= vb->bytesused,
--			.flags		= vb->flags,
--			.field		= vb->field,
--			.timestamp.tv_sec	= vb->timestamp.tv_sec,
--			.timestamp.tv_usec	= vb->timestamp.tv_usec,
--			.timecode	= vb->timecode,
--			.sequence	= vb->sequence,
--			.memory		= vb->memory,
--			.m.userptr	= vb->m.userptr,
--			.length		= vb->length,
--			.request_fd	= vb->request_fd,
--		};
-+		struct v4l2_buffer_time32 vb32;
-+
-+		memset(&vb32, 0, sizeof(vb32));
-+
-+		vb32.index	= vb->index;
-+		vb32.type	= vb->type;
-+		vb32.bytesused	= vb->bytesused;
-+		vb32.flags	= vb->flags;
-+		vb32.field	= vb->field;
-+		vb32.timestamp.tv_sec	= vb->timestamp.tv_sec;
-+		vb32.timestamp.tv_usec	= vb->timestamp.tv_usec;
-+		vb32.timecode	= vb->timecode;
-+		vb32.sequence	= vb->sequence;
-+		vb32.memory	= vb->memory;
-+		vb32.m.userptr	= vb->m.userptr;
-+		vb32.length	= vb->length;
-+		vb32.request_fd	= vb->request_fd;
- 
- 		if (copy_to_user(arg, &vb32, sizeof(vb32)))
- 			return -EFAULT;
--- 
-2.25.1
+Without considering the time it takes to load the compressed data from
+a storage device, the SVG graphs are only half-done and might be
+deceiving.
 
+There are 3 kinds of typical device speeds nowadays, the sequential
+read speed of a large non-fragmented compressed file is one of the
+following:
+
+100 MB/s: rotational disks and USB flash drives
+500 MB/s: SATA SSD
+2 GB/s: NVMe SSD
+
+The read speeds of USB flash devices vary a lot, but in case of recent
+high-speed USB flash drives it falls into the 100 MB/s category of
+rotational disks. Taking USB flash read speed into consideration is
+important for deciding which compression to use when creating the ISO
+image of a Linux distribution.
+
+In summary: Instead of the 1 kernel-decomp.svg file, there should be 3
+kernel-read-decomp.svg files. Similarly in the case of the
+initramfs-decomp.svg file.
+
+As a rule of thumb, if the kernel and initramfs are stored on a NVMe
+SSD then simply select the fastest decompressor without considering
+the compression ratio - or avoid using any compression at all in which
+case T_decompress will be zero.
+
+The formula T_load+T_decompress assumes that loading and decompression
+aren't executing in parallel. If they are, the formula should be
+max(T_load, T_decompress).
+
+Sincerely
+Jan
