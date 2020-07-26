@@ -2,133 +2,179 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF01C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D2FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B21EF20738
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595802612;
-	bh=MJP0Jf9hKksltsWYsFTa3DOF0LkQ5HhAhLZwYMhd2Ew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F8r89pq5aC3BlNTFxPgwlTLDW/0s7+NKaQpulgFBVwsSMRFPZwAW2fvLK6VS+FUje
-	 viH7vtDQxN9TQp3U6i3THb9wQOmkrHQPLOts1xQIijdRGELCvsIVT1nG28LS4ORTN7
-	 dYAfpYDJHy/lwk2b037ctGXrZJax9mySAKA9Gyxs=
+	by mail.kernel.org (Postfix) with ESMTP id 96E84206E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:28:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTjrlCc1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgGZWaL (ORCPT
+        id S1726983AbgGZW21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 18:30:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbgGZWaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 18:30:11 -0400
-Received: from earth.universe (unknown [185.213.155.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 665A9206E3;
-        Sun, 26 Jul 2020 22:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595802610;
-        bh=MJP0Jf9hKksltsWYsFTa3DOF0LkQ5HhAhLZwYMhd2Ew=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NUKhHbAQ1l1sYpoRtEdqCmcjDjOLcwObwRPkskL4+SalwjYP2/NDkPgNtlsMkLxGL
-         ImabpjOa1IvxrOIzB7cfMYybTJ8o8vpGEwpERgbGJSRj4HPZHG2P32AuASKM8vbLX3
-         0ylM4f4HUGLh8TWcSWrMo+4GeUCqOt4cvLaarUUs=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 767B63C0B87; Mon, 27 Jul 2020 00:30:08 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 00:30:08 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] power: fix duplicated words in bq2415x_charger.h
-Message-ID: <20200726223008.jlhcjrzwdjvmwavn@earth.universe>
-References: <74a380ee-d0a7-a58b-5740-6f1049d05d76@infradead.org>
- <20200716083116.oqio4clyotjqy5vw@pali>
+        Sun, 26 Jul 2020 18:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726253AbgGZW21 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 18:28:27 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D776CC0619D2;
+        Sun, 26 Jul 2020 15:28:26 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id s16so10904902qtn.7;
+        Sun, 26 Jul 2020 15:28:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HNVE8+pAZSpeQxmP3tSg/BQyhP/rZ6/36SGQbiLTu10=;
+        b=DTjrlCc1aaT47CyiCirs8x37QjuaaCyUvqYQxlAI4joQjoihgH45exIk7sFyfMNL5K
+         Pw2+ArAw3sF1/iA8mfH0ZZcpeCLgvYtRgj1Qg5iy/kV9z58HvEEOwG6SK9/FKBc2UY0a
+         IZid2Hl7q5oWdIRLcPYOVRDgjK+D/nAxozO0ZY4wpOb5HADvXU+4IcJEf1YkBVYjJhcu
+         P+jYmCPpS3j62awxakOMD0egTjkVlMGObcj4JVgLuj/ON1JUThB3k4j0X2CsKALrdGxx
+         usgwDcdVclIno51K0gUmkd6ExGj2ixZeE+Q3Z7o0XrCMpvLPgFlw4i0yHuOFIZXCp8Zg
+         V8lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HNVE8+pAZSpeQxmP3tSg/BQyhP/rZ6/36SGQbiLTu10=;
+        b=ljOzeJ+zqeLvkS5s+E6OBfwa9SLx/g40yYOxKdqsDVbEY1lMmd11bhgb+sRtRTfGWQ
+         4iL4YElIeM/fqrVOUuMBWGRyTGTnLSTlgsb0/S5CddN9Io9oYH4Z71MHvorobb6PZ19K
+         9JkLaBji9j0kZp9m8tv1XogXcVW9kBsj5qHp3d0Ik0HaSssGXp0MLFEyqAmEqg5oJM+j
+         DNK1uCrv6w1rxsPovn6Q691H4wEjg9vEx35eXZJdf/Rpup2Rq6Rvn59QNCQxFlzAb7pg
+         XgX+u5xsswchin5GvHz6PRefrtPcZqk4jyfRMuBApHANVv/przRg6nXortstXbSLTOcR
+         L9Pg==
+X-Gm-Message-State: AOAM530gHlZl7W/OIH8I/BeYsu+eG76kZTFhI7CRGhteVWzgJbC3AD4f
+        ntSTdkhsV+9EkDgEZwINzQ==
+X-Google-Smtp-Source: ABdhPJxDmohnMKBdybckNP/0ftXHuIYM6ruvF1XPpe7KtytStFqJzmZc2OAjVU394YJU+GUM5f4Epg==
+X-Received: by 2002:ac8:794f:: with SMTP id r15mr10880075qtt.383.1595802506053;
+        Sun, 26 Jul 2020 15:28:26 -0700 (PDT)
+Received: from localhost.localdomain ([209.94.141.207])
+        by smtp.gmail.com with ESMTPSA id h16sm15592243qkg.8.2020.07.26.15.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 15:28:25 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs@googlegroups.com,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vandana BN <bnvandana@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix kernel-infoleak in video_put_user()
+Date:   Sun, 26 Jul 2020 18:27:03 -0400
+Message-Id: <20200726222703.102701-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200726220557.102300-1-yepeilin.cs@gmail.com>
+References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7tns4w7sqgcvdmy6"
-Content-Disposition: inline
-In-Reply-To: <20200716083116.oqio4clyotjqy5vw@pali>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+video_put_user() is copying uninitialized stack memory to userspace due
+to the compiler not initializing holes in the structures declared on the
+stack. Fix it by initializing `ev32` and `vb32` using memset().
 
---7tns4w7sqgcvdmy6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reported-and-tested-by: syzbot+79d751604cb6f29fbf59@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=79d751604cb6f29fbf59
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+Change in v3:
+    - Improve the commit description. (Suggested by Laurent Pinchart
+      <laurent.pinchart@ideasonboard.com>)
 
-Hi,
+Change in v2:
+    - Do the same thing for `case VIDIOC_DQEVENT_TIME32`.
 
-On Thu, Jul 16, 2020 at 10:31:16AM +0200, Pali Roh=E1r wrote:
-> On Wednesday 15 July 2020 18:30:01 Randy Dunlap wrote:
-> > From: Randy Dunlap <rdunlap@infradead.org>
-> >=20
-> > Drop the doubled word "for".
-> > Change "It it" to "If it".
-> >=20
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Pali Roh=E1r <pali@kernel.org>
-> > Cc: Sebastian Reichel <sre@kernel.org>
-> > Cc: linux-pm@vger.kernel.org
->=20
-> Thanks!
->=20
-> Acked-by: Pali Roh=E1r <pali@kernel.org>
+ drivers/media/v4l2-core/v4l2-ioctl.c | 50 +++++++++++++++-------------
+ 1 file changed, 27 insertions(+), 23 deletions(-)
 
-Thanks, queued.
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index a556880f225a..e3a25ea913ac 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -3189,14 +3189,16 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
+ #ifdef CONFIG_COMPAT_32BIT_TIME
+ 	case VIDIOC_DQEVENT_TIME32: {
+ 		struct v4l2_event *ev = parg;
+-		struct v4l2_event_time32 ev32 = {
+-			.type		= ev->type,
+-			.pending	= ev->pending,
+-			.sequence	= ev->sequence,
+-			.timestamp.tv_sec  = ev->timestamp.tv_sec,
+-			.timestamp.tv_nsec = ev->timestamp.tv_nsec,
+-			.id		= ev->id,
+-		};
++		struct v4l2_event_time32 ev32;
++
++		memset(&ev32, 0, sizeof(ev32));
++
++		ev32.type	= ev->type;
++		ev32.pending	= ev->pending;
++		ev32.sequence	= ev->sequence;
++		ev32.timestamp.tv_sec	= ev->timestamp.tv_sec;
++		ev32.timestamp.tv_nsec	= ev->timestamp.tv_nsec;
++		ev32.id		= ev->id;
+ 
+ 		memcpy(&ev32.u, &ev->u, sizeof(ev->u));
+ 		memcpy(&ev32.reserved, &ev->reserved, sizeof(ev->reserved));
+@@ -3210,21 +3212,23 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
+ 	case VIDIOC_DQBUF_TIME32:
+ 	case VIDIOC_PREPARE_BUF_TIME32: {
+ 		struct v4l2_buffer *vb = parg;
+-		struct v4l2_buffer_time32 vb32 = {
+-			.index		= vb->index,
+-			.type		= vb->type,
+-			.bytesused	= vb->bytesused,
+-			.flags		= vb->flags,
+-			.field		= vb->field,
+-			.timestamp.tv_sec	= vb->timestamp.tv_sec,
+-			.timestamp.tv_usec	= vb->timestamp.tv_usec,
+-			.timecode	= vb->timecode,
+-			.sequence	= vb->sequence,
+-			.memory		= vb->memory,
+-			.m.userptr	= vb->m.userptr,
+-			.length		= vb->length,
+-			.request_fd	= vb->request_fd,
+-		};
++		struct v4l2_buffer_time32 vb32;
++
++		memset(&vb32, 0, sizeof(vb32));
++
++		vb32.index	= vb->index;
++		vb32.type	= vb->type;
++		vb32.bytesused	= vb->bytesused;
++		vb32.flags	= vb->flags;
++		vb32.field	= vb->field;
++		vb32.timestamp.tv_sec	= vb->timestamp.tv_sec;
++		vb32.timestamp.tv_usec	= vb->timestamp.tv_usec;
++		vb32.timecode	= vb->timecode;
++		vb32.sequence	= vb->sequence;
++		vb32.memory	= vb->memory;
++		vb32.m.userptr	= vb->m.userptr;
++		vb32.length	= vb->length;
++		vb32.request_fd	= vb->request_fd;
+ 
+ 		if (copy_to_user(arg, &vb32, sizeof(vb32)))
+ 			return -EFAULT;
+-- 
+2.25.1
 
--- Sebastian
-
->=20
-> > ---
-> >  include/linux/power/bq2415x_charger.h |    4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > --- linux-next-20200714.orig/include/linux/power/bq2415x_charger.h
-> > +++ linux-next-20200714/include/linux/power/bq2415x_charger.h
-> > @@ -14,8 +14,8 @@
-> >   * value is -1 then default chip value (specified in datasheet) will be
-> >   * used.
-> >   *
-> > - * Value resistor_sense is needed for for configuring charge and
-> > - * termination current. It it is less or equal to zero, configuring ch=
-arge
-> > + * Value resistor_sense is needed for configuring charge and
-> > + * termination current. If it is less or equal to zero, configuring ch=
-arge
-> >   * and termination current will not be possible.
-> >   *
-> >   * For automode support is needed to provide name of power supply devi=
-ce
-> >=20
-
---7tns4w7sqgcvdmy6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8eA+0ACgkQ2O7X88g7
-+po1RhAAqMX5YDJYQMKcmCeYaCmwru0utzJjSfR1H6rSekotf+pkWpw84FB3VwqR
-mfLYbZZAQM7pazJAOAEKinHFkoO21dWBpiPJCC0Mje+SYHMSn/Dgjc9X9o+Z6E4S
-FjLxRCTz6JfRhPpu9o2xB3UfGWiDdEHgHY/oEIftmni7P7b9JH4+mrvg6//9OTXk
-ALY3lywv59kkgbzg7trkX2VM5maAQ4p/0GiUo/jKaWq5WCZDPB96Qu7MEHpWgzS0
-J6F8knhs5WRF57l42W5LJNTukv0JFj8ZIghAFjgT0Q/5+PhB/GudBmDC68xoT0CC
-nCLEUH/ordyXdTM2HZ2gHXkLwEvytuFjCrh5WToiW5Mu4AXzi1CshQNNfQzMUdos
-jUVsaBmGvWVd8xxjH7otDW5VR9u/K5UIkrRIroGBYS/ItsK3rPeBc7NPzsJboizd
-bwQ1YaQv3dS7SWloJGKyUF28ojpl5MQ4BKROTpaiSlsvhYFmah/kXp5yWWC0dpP2
-XnZp6Jd1bGy+qMpdiuL3Q9MOZgi1P0DpkTHcPLtJuGszcoqozNUmx1BaZ+KHjhJN
-AIT8cPEwrvOFl+dVHOVErEd8OsbYopWuA7Yqud7jK6+TWZejzSwkTmCBuDyEVHcR
-ZHo4Upnq4e0ZtLdCeLWHHb4l/kcAeTpazex2vWL6lMCM5eK7NMA=
-=e06k
------END PGP SIGNATURE-----
-
---7tns4w7sqgcvdmy6--
