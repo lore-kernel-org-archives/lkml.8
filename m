@@ -2,119 +2,176 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BFFC433F2
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7439EC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75437206F6
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxCzSbbh"
+	by mail.kernel.org (Postfix) with ESMTP id 5704920714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgGZJTg (ORCPT
+        id S1727910AbgGZJTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 05:19:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgGZJTf (ORCPT
+        Sun, 26 Jul 2020 05:19:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54760 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726100AbgGZJTw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 05:19:35 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2155C0619D2;
-        Sun, 26 Jul 2020 02:19:35 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k1so7581196pjt.5;
-        Sun, 26 Jul 2020 02:19:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=f9+BvbidqIi5KrJv6F/Ng/Bay2ACaZFPGHdyYHb/krg=;
-        b=LxCzSbbhmTC7r7Yg+gaBst0fpjkUq0dgLVZ68belm0Z+s8un8G453ez3fZ3vmXs7/h
-         VvKHWK6NGkfkokn8fZExmyoBhxLqKDUCZU4DVFze76b3BIPTcR7mu/3CHG0W0c89o6M2
-         7mKMuOC+21T8F8O+msyqmhDGLz4e9dgLSv6VZr35wUwxdT11TxDMJUTQCq08KOR2Gh/Y
-         R6NFvKKtmLVHj9lfDLGL1Sp9X8iBBcVwBWnu3R4gR2v1uCtE0lFinBm3jq94I5A52URI
-         Vs7vLdjLeOqUkA8uueJI7rsc4bJumsAT0QTJv6s9St14BnrS3t5g1xnqtNk1es9FJ9H7
-         nHng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=f9+BvbidqIi5KrJv6F/Ng/Bay2ACaZFPGHdyYHb/krg=;
-        b=LvccNpquWSjDsUl3TAe5jyAeZkPLGeXrC5fSgzEkIl8kj4fEuosNwbrM34MK7Lw/+U
-         kz2qTqmHSmE/eYUoS4ZwMRnh4x8wYKgfbCo1rmRuo2P5iOQSkMBBzj5cAStWdvSeOg3S
-         O7vfQqDa2+t+Yk3y5OKcK1tnvlvwQOrLAzDjzu2uk7omZ94NTXLcwmAkwvxpXLWL6DOF
-         uX5WvThPl3TOtbIdter2HlD+abCTT7s8Gj/gToQYfjnbGuhio9Lm+aFhpyypi3qGsZrk
-         yuMoHTVvcqW1A6dgJm6PgYBtvbaLP3ZGj9zLiFHpsu31xuDxyCs9VyNj2kTxrGJWBTGg
-         hR0g==
-X-Gm-Message-State: AOAM532O0wMSH7U2G0meOPKx1yL7iwBon+xdYsdFgH8Kc6JD90+cA6q1
-        OACFu2Wy4EeOt+n2p9q1YkjJPmoRukI=
-X-Google-Smtp-Source: ABdhPJxy11NqBk/e8Hj1jFN5T5gBzagjV3YGhBg3rpJSER2xbx8LIGV57G8g8/jlJq37UHsa7My9qQ==
-X-Received: by 2002:a17:90a:c085:: with SMTP id o5mr13873286pjs.196.1595755174934;
-        Sun, 26 Jul 2020 02:19:34 -0700 (PDT)
-Received: from [192.168.0.109] ([1.186.115.27])
-        by smtp.gmail.com with ESMTPSA id h7sm11738689pfq.15.2020.07.26.02.19.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Jul 2020 02:19:34 -0700 (PDT)
-Subject: Re: [PATCH v3 1/4] staging: media: atomisp: fix style of block
- comments
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-References: <20200726062541.11304-1-bharadwaj.rohit8@gmail.com>
- <20200726090512.20574-1-bharadwaj.rohit8@gmail.com>
- <20200726091209.GA451376@kroah.com>
-From:   Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
-Message-ID: <9fb53713-e58c-17d9-1553-80d80e4b3863@gmail.com>
-Date:   Sun, 26 Jul 2020 14:49:30 +0530
+        Sun, 26 Jul 2020 05:19:52 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06Q92YOF039705;
+        Sun, 26 Jul 2020 05:19:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32h2bfmsdy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Jul 2020 05:19:42 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06Q92kC3040103;
+        Sun, 26 Jul 2020 05:19:42 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32h2bfmsds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Jul 2020 05:19:42 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06Q9JZpn018291;
+        Sun, 26 Jul 2020 09:19:41 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma04wdc.us.ibm.com with ESMTP id 32gcpqrwr2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Jul 2020 09:19:41 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06Q9Jfc047841742
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 26 Jul 2020 09:19:41 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0003E28058;
+        Sun, 26 Jul 2020 09:19:40 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9BE682805E;
+        Sun, 26 Jul 2020 09:19:36 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.34.120])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sun, 26 Jul 2020 09:19:36 +0000 (GMT)
+Subject: Re: [PATCH 13/19] perf metric: Add cache_miss_cycles to metric parse
+ test
+To:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+References: <20200719181320.785305-1-jolsa@kernel.org>
+ <20200719181320.785305-14-jolsa@kernel.org>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <d5fc8fdc-35ee-7e01-eb6b-bfdfce177910@linux.ibm.com>
+Date:   Sun, 26 Jul 2020 14:49:35 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200726091209.GA451376@kroah.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200719181320.785305-14-jolsa@kernel.org>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-26_02:2020-07-24,2020-07-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 spamscore=0 impostorscore=0
+ mlxscore=0 phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007260064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/07/20 2:42 pm, Greg KH wrote:
-> On Sun, Jul 26, 2020 at 02:35:10PM +0530, Rohit K Bharadwaj wrote:
->> this patch fixes the coding style of block comments.
->>
->> Signed-off-by: Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
->> ---
->> v3: change patch subject prefix
->> v2: split patch into sequence of patches 
->> v1: fix all coding style issues in single patch
->>
->>  .../media/atomisp/pci/sh_css_firmware.c       | 28 +++++++++++++------
->>  1 file changed, 19 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/staging/media/atomisp/pci/sh_css_firmware.c b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
->> index d4ab15b6d1ac..2907aead98b7 100644
->> --- a/drivers/staging/media/atomisp/pci/sh_css_firmware.c
->> +++ b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
->> @@ -51,9 +51,12 @@ struct fw_param {
->>  
->>  static struct firmware_header *firmware_header;
->>  
->> -/* The string STR is a place holder
->> +/*
->> + * The string STR is a place holder
->>   * which will be replaced with the actual RELEASE_VERSION
->> - * during package generation. Please do not modify  */
->> + * during package generation. Please do not modify
->> + */
->> +
+
+
+On 7/19/20 11:43 PM, Jiri Olsa wrote:
+> Adding test that compute metric with other metrics in it.
 > 
-> Why the blank line?
+>   cache_miss_cycles = metric:dcache_miss_cpi + metric:icache_miss_cycles
 > 
-Sir, I thought that it would improve the readability of the code and would help easily distinguish comments from the variable declaration part, and also since there was a blank line between the start of comment and the static struct firmware_header variable, I thought of putting a blank line after the comment end as well to maintain symmetry. 
+> Acked-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+
+Reviewed-By : Kajol Jain<kjain@linux.ibm.com>
+
+Thanks,
+Kajol Jain
+> ---
+>  tools/perf/tests/parse-metric.c | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+> index 8c48251425e1..28f33893338b 100644
+> --- a/tools/perf/tests/parse-metric.c
+> +++ b/tools/perf/tests/parse-metric.c
+> @@ -11,6 +11,8 @@
+>  #include "debug.h"
+>  #include "expr.h"
+>  #include "stat.h"
+> +#include <perf/cpumap.h>
+> +#include <perf/evlist.h>
+>  
+>  static struct pmu_event pme_test[] = {
+>  {
+> @@ -22,6 +24,18 @@ static struct pmu_event pme_test[] = {
+>  			  "( 1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk ) )))",
+>  	.metric_name	= "Frontend_Bound_SMT",
+>  },
+> +{
+> +	.metric_expr	= "l1d\\-loads\\-misses / inst_retired.any",
+> +	.metric_name	= "dcache_miss_cpi",
+> +},
+> +{
+> +	.metric_expr	= "l1i\\-loads\\-misses / inst_retired.any",
+> +	.metric_name	= "icache_miss_cycles",
+> +},
+> +{
+> +	.metric_expr	= "(dcache_miss_cpi + icache_miss_cycles)",
+> +	.metric_name	= "cache_miss_cycles",
+> +},
+>  };
+>  
+>  static struct pmu_events_map map = {
+> @@ -162,9 +176,28 @@ static int test_frontend(void)
+>  	return 0;
+>  }
+>  
+> +static int test_cache_miss_cycles(void)
+> +{
+> +	double ratio;
+> +	struct value vals[] = {
+> +		{ .event = "l1d-loads-misses",  .val = 300 },
+> +		{ .event = "l1i-loads-misses",  .val = 200 },
+> +		{ .event = "inst_retired.any",  .val = 400 },
+> +		{ 0 },
+> +	};
+> +
+> +	TEST_ASSERT_VAL("failed to compute metric",
+> +			compute_metric("cache_miss_cycles", vals, &ratio) == 0);
+> +
+> +	TEST_ASSERT_VAL("cache_miss_cycles failed, wrong ratio",
+> +			ratio == 1.25);
+> +	return 0;
+> +}
+> +
+>  int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unused)
+>  {
+>  	TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
+>  	TEST_ASSERT_VAL("frontend failed", test_frontend() == 0);
+> +	TEST_ASSERT_VAL("cache_miss_cycles failed", test_cache_miss_cycles() == 0);
+>  	return 0;
+>  }
+> 
