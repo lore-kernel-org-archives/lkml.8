@@ -2,366 +2,239 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A902DC433E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE89FC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E76220714
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90B7020738
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:03:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgGZIDD (ORCPT
+        id S1727080AbgGZIDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 04:03:03 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:53873 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgGZIDD (ORCPT
+        Sun, 26 Jul 2020 04:03:21 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:44335 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727057AbgGZIDV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 04:03:03 -0400
-Received: from localhost.localdomain (unknown [180.110.142.179])
-        (Authenticated sender: fly@kernel.page)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 76B41100004;
-        Sun, 26 Jul 2020 08:02:48 +0000 (UTC)
-From:   Pengfei Li <fly@kernel.page>
-To:     akpm@linux-foundation.org
-Cc:     bmt@zurich.ibm.com, dledford@redhat.com, willy@infradead.org,
-        vbabka@suse.cz, kirill.shutemov@linux.intel.com, jgg@ziepe.ca,
-        alex.williamson@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Pengfei Li <fly@kernel.page>
-Subject: [PATCH 1/2] mm: make mm->locked_vm an atomic64 counter
-Date:   Sun, 26 Jul 2020 16:02:23 +0800
-Message-Id: <20200726080224.205470-1-fly@kernel.page>
-X-Mailer: git-send-email 2.26.2
+        Sun, 26 Jul 2020 04:03:21 -0400
+Received: by mail-il1-f198.google.com with SMTP id y82so1774528ilk.11
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 01:03:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Vzx3Ae9/OKZUIVyhcdjCsJEgykS+XJVRo/HJWYwNn0c=;
+        b=O4wa4txLEufdBRF6WU+TB8zZ6nVt+XAOWIBq8y0LUAUl9c7JHYn1023+3T6IrWj6gb
+         tAxMKwSV//gaX8LaAwd6uhbHkAPj1sYQW4J9UdKdbBeq3Lf0nYQxiOSATr//i8mAm0cr
+         715d97lQJWlnKjnXLZDw77eOPIGIyd766ei9MHpLqdgKlq3QtIdlhWbUseFu0uDA4eEf
+         kJ6puEra03z6+BwTtQnTt4CSy8pW23w5VhaPcG71BQey/T1aBBH0UYqCBU8bSNHiByHf
+         ZejS/37xrnRYf8iJhr60vo24d3fNkaFk2IPlQSJvnkFGB1/K2VZtOtorsg5NfzYW+i34
+         Hgiw==
+X-Gm-Message-State: AOAM5328ZLQ4V2EY0JR1XI7jRSU4N53covrQZPHxbWctSqYZvSs+m42o
+        2SWjN0fecoPJPe/GzKh8tHTQ7buK0VN4OPtqen+T24pSemwt
+X-Google-Smtp-Source: ABdhPJyi8O3bSeVgBhBiyzTHOQA1womaP/ydKSMkLJjl+ttianezluYJSQqmHth5i5DlsaLO3419bG8a8D9MWQRiwBL+x360ICcc
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:2411:: with SMTP id z17mr19637232jat.50.1595750599648;
+ Sun, 26 Jul 2020 01:03:19 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 01:03:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a46a7505ab53a387@google.com>
+Subject: BUG: unable to handle kernel NULL pointer dereference in do_syscall_32_irqs_on
+From:   syzbot <syzbot+0e3a50ab9ac2fdf9ffc6@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        luto@kernel.org, mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like commit 70f8a3ca68d3 ("mm: make mm->pinned_vm an atomic64 counter").
+Hello,
 
-By making mm->locked_vm an atomic64 counter, we can safely modify it
-without holding mmap_lock.
+syzbot found the following issue on:
 
-The reason for using atomic64 instead of atomic_long is to keep the same
-as mm->pinned_vm, and there is no need to worry about overflow.
+HEAD commit:    23ee3e4e Merge tag 'pci-v5.8-fixes-2' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14a4c7d8900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f87a5e4232fdb267
+dashboard link: https://syzkaller.appspot.com/bug?extid=0e3a50ab9ac2fdf9ffc6
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=168fe3a0900000
 
-Signed-off-by: Pengfei Li <fly@kernel.page>
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+0e3a50ab9ac2fdf9ffc6@syzkaller.appspotmail.com
+
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD 94d49067 P4D 94d49067 PUD a1c93067 PMD 0 
+Oops: 0002 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 6854 Comm: syz-executor.3 Not tainted 5.8.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:do_syscall_32_irqs_on+0x3f/0x60 arch/x86/entry/common.c:428
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900017b7f28 EFLAGS: 00010296
+RAX: 0000000000000000 RBX: ffffc900017b7f58 RCX: 1ffff920002f6fd2
+RDX: ffff888098bb4240 RSI: ffffffff81c214b2 RDI: 0000000000000005
+RBP: ffffc900017b7f58 R08: 0000000000000001 R09: ffff888098bb4b08
+R10: 00000000ffffff8c R11: 0000000000000000 R12: 0000000000000001
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0063) knlGS:000000000a292900
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000a1b88000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __do_fast_syscall_32 arch/x86/entry/common.c:475 [inline]
+ do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:503
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD 94d49067 P4D 94d49067 PUD a1c93067 PMD 0 
+Oops: 0002 [#2] PREEMPT SMP KASAN
+CPU: 0 PID: 6854 Comm: syz-executor.3 Not tainted 5.8.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:in_gate_area_no_mm+0x0/0x6a arch/x86/entry/vsyscall/vsyscall_64.c:343
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900017b7440 EFLAGS: 00010093
+RAX: 0000000000000000 RBX: ffffc900017b74e0 RCX: ffffffff816a62f0
+RDX: ffff888098bb4240 RSI: ffffffff816a631b RDI: 00000000f7f83569
+RBP: 00000000f7f83569 R08: ffffc900017b75f0 R09: ffffffff8c8d7109
+R10: 00000000f7f83569 R11: 0000000000000000 R12: ffffc900017b75f0
+R13: 0000000000000001 R14: 00000000f7f83569 R15: ffffc900017b7500
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0063) knlGS:000000000a292900
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000a1b88000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ is_kernel include/linux/kallsyms.h:44 [inline]
+ is_ksym_addr include/linux/kallsyms.h:50 [inline]
+ kallsyms_lookup+0xc3/0x2e0 kernel/kallsyms.c:290
+ __sprint_symbol+0x9c/0x1c0 kernel/kallsyms.c:363
+ symbol_string+0x14c/0x370 lib/vsprintf.c:969
+ pointer+0x185/0x970 lib/vsprintf.c:2226
+ vsnprintf+0x5b2/0x14f0 lib/vsprintf.c:2624
+ vscnprintf+0x29/0x80 lib/vsprintf.c:2723
+ vprintk_store+0x44/0x4a0 kernel/printk/printk.c:1942
+ vprintk_emit+0x139/0x770 kernel/printk/printk.c:2003
+ vprintk_func+0x8f/0x1a6 kernel/printk/printk_safe.c:393
+ printk+0xba/0xed kernel/printk/printk.c:2070
+ show_ip+0x22/0x30 arch/x86/kernel/dumpstack.c:124
+ show_iret_regs+0x10/0x32 arch/x86/kernel/dumpstack.c:131
+ __show_regs+0x18/0x50 arch/x86/kernel/process_64.c:72
+ show_trace_log_lvl+0x255/0x2b4 arch/x86/kernel/dumpstack.c:274
+ show_regs arch/x86/kernel/dumpstack.c:447 [inline]
+ __die_body arch/x86/kernel/dumpstack.c:393 [inline]
+ __die+0x51/0x90 arch/x86/kernel/dumpstack.c:407
+ no_context+0x56b/0x9f0 arch/x86/mm/fault.c:695
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_user_addr_fault+0x8ce/0xd00 arch/x86/mm/fault.c:1258
+ handle_page_fault arch/x86/mm/fault.c:1365 [inline]
+ exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:542
+RIP: 0010:do_syscall_32_irqs_on+0x3f/0x60 arch/x86/entry/common.c:428
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900017b7f28 EFLAGS: 00010296
+RAX: 0000000000000000 RBX: ffffc900017b7f58 RCX: 1ffff920002f6fd2
+RDX: ffff888098bb4240 RSI: ffffffff81c214b2 RDI: 0000000000000005
+RBP: ffffc900017b7f58 R08: 0000000000000001 R09: ffff888098bb4b08
+R10: 00000000ffffff8c R11: 0000000000000000 R12: 0000000000000001
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ __do_fast_syscall_32 arch/x86/entry/common.c:475 [inline]
+ do_fast_syscall_32+0x7f/0x120 arch/x86/entry/common.c:503
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD 94d49067 P4D 94d49067 PUD a1c93067 PMD 0 
+Oops: 0002 [#3] PREEMPT SMP KASAN
+CPU: 0 PID: 6854 Comm: syz-executor.3 Not tainted 5.8.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:in_gate_area_no_mm+0x0/0x6a arch/x86/entry/vsyscall/vsyscall_64.c:343
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900017b6930 EFLAGS: 00010093
+RAX: 0000000000000000 RBX: ffffc900017b69d0 RCX: ffffffff816a62f0
+RDX: ffff888098bb4240 RSI: ffffffff816a631b RDI: 00000000f7f83569
+RBP: 00000000f7f83569 R08: ffffc900017b6ae0 R09: ffff8880ae623dcd
+R10: 00000000f7f83569 R11: 0000000000000001 R12: ffffc900017b6ae0
+R13: 0000000000000001 R14: 00000000f7f83569 R15: ffffc900017b69f0
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0063) knlGS:000000000a292900
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 00000000a1b88000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ is_kernel include/linux/kallsyms.h:44 [inline]
+ is_ksym_addr include/linux/kallsyms.h:50 [inline]
+ kallsyms_lookup+0xc3/0x2e0 kernel/kallsyms.c:290
+ __sprint_symbol+0x9c/0x1c0 kernel/kallsyms.c:363
+ symbol_string+0x14c/0x370 lib/vsprintf.c:969
+ pointer+0x185/0x970 lib/vsprintf.c:2226
+ vsnprintf+0x5b2/0x14f0 lib/vsprintf.c:2624
+ vscnprintf+0x29/0x80 lib/vsprintf.c:2723
+ printk_safe_log_store+0xf5/0x250 kernel/printk/printk_safe.c:94
+ vprintk_safe kernel/printk/printk_safe.c:347 [inline]
+ vprintk_func+0xef/0x1a6 kernel/printk/printk_safe.c:390
+ printk+0xba/0xed kernel/printk/printk.c:2070
+ show_ip+0x22/0x30 arch/x86/kernel/dumpstack.c:124
+ show_iret_regs+0x10/0x32 arch/x86/kernel/dumpstack.c:131
+ __show_regs+0x18/0x50 arch/x86/kernel/process_64.c:72
+ show_trace_log_lvl+0x255/0x2b4 arch/x86/kernel/dumpstack.c:274
+ show_regs arch/x86/kernel/dumpstack.c:447 [inline]
+ __die_body arch/x86/kernel/dumpstack.c:393 [inline]
+ __die+0x51/0x90 arch/x86/kernel/dumpstack.c:407
+ no_context+0x56b/0x9f0 arch/x86/mm/fault.c:695
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_user_addr_fault+0x783/0xd00 arch/x86/mm/fault.c:1171
+ handle_page_fault arch/x86/mm/fault.c:1365 [inline]
+ exc_page_fault+0xab/0x170 arch/x86/mm/fault.c:1418
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:542
+RIP: 0010:in_gate_area_no_mm+0x0/0x6a arch/x86/entry/vsyscall/vsyscall_64.c:343
+Code: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+RSP: 0018:ffffc900017b7440 EFLAGS: 00010093
+RAX: 0000000000000000 RBX: ffffc900017b74e0 RCX: ffffffff816a62f0
+RDX: ffff888098bb4240 RSI: ffffffff816a631b RDI: 00000000f7f83569
+RBP: 00000000f7f83569 R08: ffffc900017b75f0 R09: ffffffff8c8d7109
+R10: 00000000f7f83569 R11: 0000000000000000 R12: ffffc900017b75f0
+R13: 0000000000000001 R14: 00000000f7f83569 R15: ffffc900017b7500
+ is_kernel include/linux/kallsyms.h:44 [inline]
+ is_ksym_addr include/linux/kallsyms.h:50 [inline]
+ kallsyms_lookup+0xc3/0x2e0 kernel/kallsyms.c:290
+ __sprint_symbol+0x9c/0x1c0 kernel/kallsyms.c:363
+ symbol_string+0x14c/0x370 lib/vsprintf.c:969
+ pointer+0x185/0x970 lib/vsprintf.c:2226
+ vsnprintf+0x5b2/0x14f0 lib/vsprintf.c:2624
+ vscnprintf+0x29/0x80 lib/vsprintf.c:2723
+ vprintk_store+0x44/0x4a0 kernel/printk/printk.c:1942
+ vprintk_emit+0x139/0x770 kernel/printk/printk.c:2003
+ vprintk_func+0x8f/0x1a6 kernel/printk/printk_safe.c:393
+ printk+0xba/0xed kernel/printk/printk.c:2070
+ show_ip+0x22/0x30 arch/x86/kernel/dumpstack.c:124
+ show_iret_regs+0x10/0x32 arch/x86/kernel/dumpstack.c:131
+ __show_regs+0x18/0x50 arch/x86/kernel/process_64.c:72
+ show_trace_log_lvl+0x255/0x2b4 arch/x86/kernel/dumpstack.c:274
+ show_regs arch/x86/kernel/dumpstack.c:447 [inline]
+ __die_body arch/x86/kernel/dumpstack.c:393 [inline]
+ __die+0x51/0x90 arch/x86/kernel/dumpstack.c:407
+ no_context+0x56b/0x9f0 arch/x86/mm/fault.c:695
+ __bad_area_nosemaphore+0xa9/0x480 arch/x86/mm/fault.c:789
+ do_user_addr_fault+0x8ce/0xd00 arch/x86/mm/fault.c:1258
+Lost 45 message(s)!
+
+
 ---
- drivers/infiniband/sw/siw/siw_verbs.c | 12 +++++++-----
- drivers/vfio/vfio_iommu_type1.c       |  6 ++++--
- fs/io_uring.c                         |  4 ++--
- fs/proc/task_mmu.c                    |  2 +-
- include/linux/mm_types.h              |  4 ++--
- kernel/fork.c                         |  2 +-
- mm/debug.c                            |  5 +++--
- mm/mlock.c                            |  4 ++--
- mm/mmap.c                             | 18 +++++++++---------
- mm/mremap.c                           |  6 +++---
- mm/util.c                             |  6 +++---
- 11 files changed, 37 insertions(+), 32 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
-index adafa1b8bebe..bf78d7988442 100644
---- a/drivers/infiniband/sw/siw/siw_verbs.c
-+++ b/drivers/infiniband/sw/siw/siw_verbs.c
-@@ -1293,14 +1293,16 @@ struct ib_mr *siw_reg_user_mr(struct ib_pd *pd, u64 start, u64 len,
- 		goto err_out;
- 	}
- 	if (mem_limit != RLIM_INFINITY) {
--		unsigned long num_pages =
--			(PAGE_ALIGN(len + (start & ~PAGE_MASK))) >> PAGE_SHIFT;
-+		unsigned long num_pages, locked_pages;
-+
-+		num_pages = (PAGE_ALIGN(len + (start & ~PAGE_MASK)))
-+				>> PAGE_SHIFT;
-+		locked_pages = atomic64_read(&current->mm->locked_vm);
- 		mem_limit >>= PAGE_SHIFT;
- 
--		if (num_pages > mem_limit - current->mm->locked_vm) {
-+		if (num_pages > mem_limit - locked_pages) {
- 			siw_dbg_pd(pd, "pages req %lu, max %lu, lock %lu\n",
--				   num_pages, mem_limit,
--				   current->mm->locked_vm);
-+				   num_pages, mem_limit, locked_pages);
- 			rv = -ENOMEM;
- 			goto err_out;
- 		}
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 9d41105bfd01..78013be07fe7 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -509,7 +509,8 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
- 	 * pages are already counted against the user.
- 	 */
- 	if (!rsvd && !vfio_find_vpfn(dma, iova)) {
--		if (!dma->lock_cap && current->mm->locked_vm + 1 > limit) {
-+		if (!dma->lock_cap &&
-+		    atomic64_read(&current->mm->locked_vm) + 1 > limit) {
- 			put_pfn(*pfn_base, dma->prot);
- 			pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n", __func__,
- 					limit << PAGE_SHIFT);
-@@ -536,7 +537,8 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
- 
- 		if (!rsvd && !vfio_find_vpfn(dma, iova)) {
- 			if (!dma->lock_cap &&
--			    current->mm->locked_vm + lock_acct + 1 > limit) {
-+			    atomic64_read(&current->mm->locked_vm) +
-+			    lock_acct + 1 > limit) {
- 				put_pfn(pfn, dma->prot);
- 				pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
- 					__func__, limit << PAGE_SHIFT);
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 7cf2f295fba7..f1241c6314e6 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7371,7 +7371,7 @@ static void io_unaccount_mem(struct io_ring_ctx *ctx, unsigned long nr_pages,
- 
- 	if (ctx->sqo_mm) {
- 		if (acct == ACCT_LOCKED)
--			ctx->sqo_mm->locked_vm -= nr_pages;
-+			atomic64_sub(nr_pages, &ctx->sqo_mm->locked_vm);
- 		else if (acct == ACCT_PINNED)
- 			atomic64_sub(nr_pages, &ctx->sqo_mm->pinned_vm);
- 	}
-@@ -7390,7 +7390,7 @@ static int io_account_mem(struct io_ring_ctx *ctx, unsigned long nr_pages,
- 
- 	if (ctx->sqo_mm) {
- 		if (acct == ACCT_LOCKED)
--			ctx->sqo_mm->locked_vm += nr_pages;
-+			atomic64_add(nr_pages, &ctx->sqo_mm->locked_vm);
- 		else if (acct == ACCT_PINNED)
- 			atomic64_add(nr_pages, &ctx->sqo_mm->pinned_vm);
- 	}
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index df2f0f05f5ba..2af56e68766e 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -58,7 +58,7 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
- 	swap = get_mm_counter(mm, MM_SWAPENTS);
- 	SEQ_PUT_DEC("VmPeak:\t", hiwater_vm);
- 	SEQ_PUT_DEC(" kB\nVmSize:\t", total_vm);
--	SEQ_PUT_DEC(" kB\nVmLck:\t", mm->locked_vm);
-+	SEQ_PUT_DEC(" kB\nVmLck:\t", atomic64_read(&mm->locked_vm));
- 	SEQ_PUT_DEC(" kB\nVmPin:\t", atomic64_read(&mm->pinned_vm));
- 	SEQ_PUT_DEC(" kB\nVmHWM:\t", hiwater_rss);
- 	SEQ_PUT_DEC(" kB\nVmRSS:\t", total_rss);
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 496c3ff97cce..3f0ad38c534d 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -457,8 +457,8 @@ struct mm_struct {
- 		unsigned long hiwater_vm;  /* High-water virtual memory usage */
- 
- 		unsigned long total_vm;	   /* Total pages mapped */
--		unsigned long locked_vm;   /* Pages that have PG_mlocked set */
--		atomic64_t    pinned_vm;   /* Refcount permanently increased */
-+		atomic64_t locked_vm;	   /* Pages that have PG_mlocked set */
-+		atomic64_t pinned_vm;	   /* Refcount permanently increased */
- 		unsigned long data_vm;	   /* VM_WRITE & ~VM_SHARED & ~VM_STACK */
- 		unsigned long exec_vm;	   /* VM_EXEC & ~VM_WRITE & ~VM_STACK */
- 		unsigned long stack_vm;	   /* VM_STACK */
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 45cdf724a2d4..8ed0d0574621 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1009,7 +1009,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
- 	mm->core_state = NULL;
- 	mm_pgtables_bytes_init(mm);
- 	mm->map_count = 0;
--	mm->locked_vm = 0;
-+	atomic64_set(&mm->locked_vm, 0);
- 	atomic64_set(&mm->pinned_vm, 0);
- 	memset(&mm->rss_stat, 0, sizeof(mm->rss_stat));
- 	spin_lock_init(&mm->page_table_lock);
-diff --git a/mm/debug.c b/mm/debug.c
-index 8f569db9a514..c27fff1e3ca8 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -218,7 +218,7 @@ void dump_mm(const struct mm_struct *mm)
- #endif
- 		"mmap_base %lu mmap_legacy_base %lu highest_vm_end %lu\n"
- 		"pgd %px mm_users %d mm_count %d pgtables_bytes %lu map_count %d\n"
--		"hiwater_rss %lx hiwater_vm %lx total_vm %lx locked_vm %lx\n"
-+		"hiwater_rss %lx hiwater_vm %lx total_vm %lx locked_vm %llx\n"
- 		"pinned_vm %llx data_vm %lx exec_vm %lx stack_vm %lx\n"
- 		"start_code %lx end_code %lx start_data %lx end_data %lx\n"
- 		"start_brk %lx brk %lx start_stack %lx\n"
-@@ -249,7 +249,8 @@ void dump_mm(const struct mm_struct *mm)
- 		atomic_read(&mm->mm_count),
- 		mm_pgtables_bytes(mm),
- 		mm->map_count,
--		mm->hiwater_rss, mm->hiwater_vm, mm->total_vm, mm->locked_vm,
-+		mm->hiwater_rss, mm->hiwater_vm, mm->total_vm,
-+		(u64)atomic64_read(&mm->locked_vm),
- 		(u64)atomic64_read(&mm->pinned_vm),
- 		mm->data_vm, mm->exec_vm, mm->stack_vm,
- 		mm->start_code, mm->end_code, mm->start_data, mm->end_data,
-diff --git a/mm/mlock.c b/mm/mlock.c
-index 93ca2bf30b4f..ec8c563ce233 100644
---- a/mm/mlock.c
-+++ b/mm/mlock.c
-@@ -561,7 +561,7 @@ static int mlock_fixup(struct vm_area_struct *vma, struct vm_area_struct **prev,
- 		nr_pages = -nr_pages;
- 	else if (old_flags & VM_LOCKED)
- 		nr_pages = 0;
--	mm->locked_vm += nr_pages;
-+	atomic64_add(nr_pages, &mm->locked_vm);
- 
- 	/*
- 	 * vm_flags is protected by the mmap_lock held in write mode.
-@@ -688,7 +688,7 @@ static __must_check int do_mlock(unsigned long start, size_t len, vm_flags_t fla
- 	if (mmap_write_lock_killable(current->mm))
- 		return -EINTR;
- 
--	locked += current->mm->locked_vm;
-+	locked += atomic64_read(&current->mm->locked_vm);
- 	if ((locked > lock_limit) && (!capable(CAP_IPC_LOCK))) {
- 		/*
- 		 * It is possible that the regions requested intersect with
-diff --git a/mm/mmap.c b/mm/mmap.c
-index c65bd5a7f80b..17bd229f820b 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1319,7 +1319,7 @@ static inline int mlock_future_check(struct mm_struct *mm,
- 	/*  mlock MCL_FUTURE? */
- 	if (flags & VM_LOCKED) {
- 		locked = len >> PAGE_SHIFT;
--		locked += mm->locked_vm;
-+		locked += atomic64_read(&mm->locked_vm);
- 		lock_limit = rlimit(RLIMIT_MEMLOCK);
- 		lock_limit >>= PAGE_SHIFT;
- 		if (locked > lock_limit && !capable(CAP_IPC_LOCK))
-@@ -1812,7 +1812,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
- 					vma == get_gate_vma(current->mm))
- 			vma->vm_flags &= VM_LOCKED_CLEAR_MASK;
- 		else
--			mm->locked_vm += (len >> PAGE_SHIFT);
-+			atomic64_add(len >> PAGE_SHIFT, &mm->locked_vm);
- 	}
- 
- 	if (file)
-@@ -2323,7 +2323,7 @@ static int acct_stack_growth(struct vm_area_struct *vma,
- 	if (vma->vm_flags & VM_LOCKED) {
- 		unsigned long locked;
- 		unsigned long limit;
--		locked = mm->locked_vm + grow;
-+		locked = atomic64_read(&mm->locked_vm) + grow;
- 		limit = rlimit(RLIMIT_MEMLOCK);
- 		limit >>= PAGE_SHIFT;
- 		if (locked > limit && !capable(CAP_IPC_LOCK))
-@@ -2416,7 +2416,7 @@ int expand_upwards(struct vm_area_struct *vma, unsigned long address)
- 				 */
- 				spin_lock(&mm->page_table_lock);
- 				if (vma->vm_flags & VM_LOCKED)
--					mm->locked_vm += grow;
-+					atomic64_add(grow, &mm->locked_vm);
- 				vm_stat_account(mm, vma->vm_flags, grow);
- 				anon_vma_interval_tree_pre_update_vma(vma);
- 				vma->vm_end = address;
-@@ -2496,7 +2496,7 @@ int expand_downwards(struct vm_area_struct *vma,
- 				 */
- 				spin_lock(&mm->page_table_lock);
- 				if (vma->vm_flags & VM_LOCKED)
--					mm->locked_vm += grow;
-+					atomic64_add(grow, &mm->locked_vm);
- 				vm_stat_account(mm, vma->vm_flags, grow);
- 				anon_vma_interval_tree_pre_update_vma(vma);
- 				vma->vm_start = address;
-@@ -2839,11 +2839,11 @@ int __do_munmap(struct mm_struct *mm, unsigned long start, size_t len,
- 	/*
- 	 * unlock any mlock()ed ranges before detaching vmas
- 	 */
--	if (mm->locked_vm) {
-+	if (atomic64_read(&mm->locked_vm)) {
- 		struct vm_area_struct *tmp = vma;
- 		while (tmp && tmp->vm_start < end) {
- 			if (tmp->vm_flags & VM_LOCKED) {
--				mm->locked_vm -= vma_pages(tmp);
-+				atomic64_sub(vma_pages(tmp), &mm->locked_vm);
- 				munlock_vma_pages_all(tmp);
- 			}
- 
-@@ -3083,7 +3083,7 @@ static int do_brk_flags(unsigned long addr, unsigned long len, unsigned long fla
- 	mm->total_vm += len >> PAGE_SHIFT;
- 	mm->data_vm += len >> PAGE_SHIFT;
- 	if (flags & VM_LOCKED)
--		mm->locked_vm += (len >> PAGE_SHIFT);
-+		atomic64_add(len >> PAGE_SHIFT, &mm->locked_vm);
- 	vma->vm_flags |= VM_SOFTDIRTY;
- 	return 0;
- }
-@@ -3155,7 +3155,7 @@ void exit_mmap(struct mm_struct *mm)
- 		mmap_write_unlock(mm);
- 	}
- 
--	if (mm->locked_vm) {
-+	if (atomic64_read(&mm->locked_vm)) {
- 		vma = mm->mmap;
- 		while (vma) {
- 			if (vma->vm_flags & VM_LOCKED)
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 138abbae4f75..451a5a77f82a 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -455,7 +455,7 @@ static unsigned long move_vma(struct vm_area_struct *vma,
- 	}
- 
- 	if (vm_flags & VM_LOCKED) {
--		mm->locked_vm += new_len >> PAGE_SHIFT;
-+		atomic64_add(new_len >> PAGE_SHIFT, &mm->locked_vm);
- 		*locked = true;
- 	}
- out:
-@@ -520,7 +520,7 @@ static struct vm_area_struct *vma_to_resize(unsigned long addr,
- 
- 	if (vma->vm_flags & VM_LOCKED) {
- 		unsigned long locked, lock_limit;
--		locked = mm->locked_vm << PAGE_SHIFT;
-+		locked = atomic64_read(&mm->locked_vm) << PAGE_SHIFT;
- 		lock_limit = rlimit(RLIMIT_MEMLOCK);
- 		locked += new_len - old_len;
- 		if (locked > lock_limit && !capable(CAP_IPC_LOCK))
-@@ -765,7 +765,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
- 
- 			vm_stat_account(mm, vma->vm_flags, pages);
- 			if (vma->vm_flags & VM_LOCKED) {
--				mm->locked_vm += pages;
-+				atomic64_add(pages, &mm->locked_vm);
- 				locked = true;
- 				new_addr = addr;
- 			}
-diff --git a/mm/util.c b/mm/util.c
-index 8d6280c05238..473add0dc275 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -439,7 +439,7 @@ int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
- 
- 	mmap_assert_write_locked(mm);
- 
--	locked_vm = mm->locked_vm;
-+	locked_vm = atomic64_read(&mm->locked_vm);
- 	if (inc) {
- 		if (!bypass_rlim) {
- 			limit = task_rlimit(task, RLIMIT_MEMLOCK) >> PAGE_SHIFT;
-@@ -447,10 +447,10 @@ int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
- 				ret = -ENOMEM;
- 		}
- 		if (!ret)
--			mm->locked_vm = locked_vm + pages;
-+			atomic64_add(pages, &mm->locked_vm);
- 	} else {
- 		WARN_ON_ONCE(pages > locked_vm);
--		mm->locked_vm = locked_vm - pages;
-+		atomic64_sub(pages, &mm->locked_vm);
- 	}
- 
- 	pr_debug("%s: [%d] caller %ps %c%lu %lu/%lu%s\n", __func__, task->pid,
--- 
-2.26.2
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
