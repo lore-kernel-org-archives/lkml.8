@@ -2,89 +2,88 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FB3C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D058EC433E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66E3D20715
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE025206E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:28:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BfsIjy2z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UXRpPhP9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgGZW0G (ORCPT
+        id S1727777AbgGZW2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 18:26:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58792 "EHLO
+        Sun, 26 Jul 2020 18:28:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgGZW0G (ORCPT
+        with ESMTP id S1726522AbgGZW2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 18:26:06 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17418C0619D4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:26:06 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id d2so2322264lfj.1
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:26:05 -0700 (PDT)
+        Sun, 26 Jul 2020 18:28:38 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89014C0619D4
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:28:37 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id v4so5489505ljd.0
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:28:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qMFMrM2UwSVWXy6CzJpp3io1MmpiGTCiXGuEse1Q9zo=;
-        b=BfsIjy2zGgd6JnwqvTKSwHZBBtZ+lhWEsYSPZ4mGodMqU6Ea5iZQnEZsjJkxO7VNsT
-         3Lrqq13lymcjKcT95LEBq14pZymVhPOnNLGOF77kfsAZzqNkeQdcQyxoN16mBCOrIAYB
-         tbfZQIA0d1cy123E9dY00rGnQlGrX61jJsuv7fHa905DBhyqvbQya3xQ7e7N9eANFnwg
-         7dKVxYXoOwlkFRarrC3Zdh37wX/09fsJR7vtRd65kFaBVwzJvA75gLgrnvqaNX4ycldA
-         0Kc9H8WziL7+SQU6GJNApsN3YjKsgREEjIfE1ciLzYTd2s+Q7ZfHk4Wy70vfSjgYjJiG
-         5vQw==
+        bh=FqpPADHoD6/sFwAG6/8ngJdpFR3zvYVirGl0PSjjtnM=;
+        b=UXRpPhP97xX9+CyYF4MJxoc7cM9pLDOOovxeg4qoPWq1Mq9PWWRy/MYtHH66qlAuy1
+         xxPvw4xK4+nHah/la8DBT1qEmDyVxoO5WBOanlrVgKGtMv9B66LRUHIk5WTOAkMNQLkv
+         of7BbM+1jQYlJLK2FeA90UTFIomdO5vr6vcY4Aumw8KsDeVWwI8K5bDeLi7qoE6Ua2Dk
+         1qUeEMuHLg8PpxExiywWCua30nmJCspKO4ckeuMqCAFkOYSClfo18mKEPR8RD0CPGmRn
+         WtGRiJac1PDBzm5xr4mTyG9xOXAQ9lLm/aZR8nasYv6r42lKJw3BHWJHosIdk8u0wG69
+         Pwcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qMFMrM2UwSVWXy6CzJpp3io1MmpiGTCiXGuEse1Q9zo=;
-        b=LQtRyY0QzRfJ240/vEJTpuK5DCp7xFxzgkw4xJHEVG5eGyxiWvATq1gy3Qu3mbFt7L
-         xYCVX4gMu/GTisCNixmHVrwtYvkjDagD87AG4PFy9pJlom6XGVQHuWC+sgdNMGZBDfOJ
-         dBWyRzxer2Mno/tvieBRAXZTDj6IBMoWGIy5BZnZSHuyj0UR/8uP6bRJxJhDw1Wr30vo
-         QdI2zeZ84qIdnQXMhbmNP9XG8UvCjcqHQKx8PwdyXz3xawi2Uju6cmr8WRy8Aqf3bBe2
-         mhcPPbloluksWEhE1VGupcddeDXaVOJXV96D1UthMABLk1M0Yae4PtCfesy8scUlhvy4
-         LUjQ==
-X-Gm-Message-State: AOAM533/IstbVCtd0m6zpor0zUNo+QowJ995BOlSW0P5gDRsRT2F4eLj
-        GVz85H3+UTPytdDnsXzgRgwPvp84KX14Aym1dfKDNQ==
-X-Google-Smtp-Source: ABdhPJwW5NbSc6KuKvHaWtPma+94F1kxGGQAtBYJKM8GoaQ7ghPK5SJlPMpC6VPSg2BlMNOZ6SLAqFrNFYtNzsmLZfU=
-X-Received: by 2002:ac2:5e26:: with SMTP id o6mr3044416lfg.194.1595802364522;
- Sun, 26 Jul 2020 15:26:04 -0700 (PDT)
+        bh=FqpPADHoD6/sFwAG6/8ngJdpFR3zvYVirGl0PSjjtnM=;
+        b=XWYTZTBTjbeGhcCuK+fW1SEOPN8MAlUHUgRhuYnwi9+oBhg391P/iMLm8lqFsAFICW
+         3QpSR3AsxeJsRqxYtRjy4CXn3g8lRSh/AtH21iEq3acLdM1AOZyDAEi53WYwyIqIKVOu
+         IA8PpONAaLJ4ZFgDthBrZ2puj/L2h0DFJBR7Lqp7oAgr/RZQalQ5VP8YGd/zk6rNbrUx
+         MIA2BLUZjJDvn3QzXPP+sS+B2fcnI3LjW8tSa921WUgyR0jS3HhaDIYZO5J/Ml4yZLmI
+         xQ+xOkcZOIRFdSUTZ2gy8zo956mpdrnp0S8PjNLejiJA28L6JxBoWOYbfYuIMAF8JSIG
+         uZPA==
+X-Gm-Message-State: AOAM533F/+T42fMKKukhPm4gpykiTDSZ//0v2ENCF2noqNksdJ8VkFDl
+        oBeI0Z1Agh0cPS6JQ6KcFaa/A0/KK4YGCf9YC3AnRQ==
+X-Google-Smtp-Source: ABdhPJwRZsGa5mQh/euDMWVs6sXQB/+SBOXYPsqutuy+zDm8oazUfD+J8m9j1i1CcecaoorrBWNLRohjADArNpCXym8=
+X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr9463017ljc.286.1595802515951;
+ Sun, 26 Jul 2020 15:28:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200725041955.9985-1-warthog618@gmail.com> <20200725041955.9985-4-warthog618@gmail.com>
-In-Reply-To: <20200725041955.9985-4-warthog618@gmail.com>
+References: <20200725232337.27581-1-michael@walle.cc>
+In-Reply-To: <20200725232337.27581-1-michael@walle.cc>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 27 Jul 2020 00:25:53 +0200
-Message-ID: <CACRpkdZymmO9ku5OmCO74eiX3Y3jq_1g5De9Tx4hg3Lyrdt6bQ@mail.gmail.com>
-Subject: Re: [PATCH v2 03/18] gpiolib: make cdev a build option
-To:     Kent Gibson <warthog618@gmail.com>
+Date:   Mon, 27 Jul 2020 00:28:25 +0200
+Message-ID: <CACRpkdbs2Thch4KiBNvSp+92wDKHrCkXKvhn7FKUH5WgbgS3Qg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: regmap: fix type clash
+To:     Michael Walle <michael@walle.cc>
 Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kernel test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 6:21 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Sun, Jul 26, 2020 at 1:23 AM Michael Walle <michael@walle.cc> wrote:
 
-> +config GPIO_CDEV
-> +       bool "/dev/gpiochipN (character device interface)"
-> +       default y
+> GPIO_REGMAP_ADDR_ZERO() cast to unsigned long but the actual config
+> parameters are unsigned int. We use unsigned int here because that is
+> the type which is used by the underlying regmap.
+>
+> Fixes: ebe363197e52 ("gpio: add a reusable generic gpio_chip using regmap")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-I don't want to make it too easy to do this, as I see it as a standard
-kernel feature.
-
-Can we add:
-
-depends on EXPERT
-
-as with other standard kernel features?
+Patch applied, thanks!
 
 Yours,
 Linus Walleij
