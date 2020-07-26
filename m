@@ -2,112 +2,74 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3171DC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7B8C433E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D502206E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA4C20715
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595749394;
+	bh=4rKZH64Zbiy83+h01nqKrcL6n0VVrtwg4ZMe+QZwIRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VB4nXyYWfS7w1N14Owz+v6L+x34x5Y/kU24BkPOOVz69T4NrhUiYbr0yCCF8t1I/+
+	 PusI1q4NOlvrAIX20ZSU2TmYgRoDwyNsUJ5IVbuC0a5wwUNU24DrjuzqW4Y19UAyoq
+	 HMJpkeUSXeZgqOjOUszHbWhWht6X2UaILhfrX9xQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgGZH3J (ORCPT
+        id S1726857AbgGZHnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 03:29:09 -0400
-Received: from smtprelay0068.hostedemail.com ([216.40.44.68]:37286 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725829AbgGZH3J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 03:29:09 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 1274718029210;
-        Sun, 26 Jul 2020 07:29:08 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: anger99_0c069d326f56
-X-Filterd-Recvd-Size: 3826
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 26 Jul 2020 07:29:06 +0000 (UTC)
-Message-ID: <beabe887ee1b761781f5d980a96f2c28b088c56b.camel@perches.com>
-Subject: Re: Re: Re: checkpatch: support deprecated terms checking
-From:   Joe Perches <joe@perches.com>
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     =?UTF-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        SeongJae Park <sjpark@amazon.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, apw@canonical.com,
-        colin.king@canonical.com, jslaby@suse.cz, pavel@ucw.cz,
-        SeongJae Park <sjpark@amazon.de>
-Date:   Sun, 26 Jul 2020 00:29:05 -0700
-In-Reply-To: <20200726071825.22532-1-sj38.park@gmail.com>
-References: <20200726071825.22532-1-sj38.park@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Sun, 26 Jul 2020 03:43:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbgGZHnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 03:43:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76B1E2065F;
+        Sun, 26 Jul 2020 07:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595749389;
+        bh=4rKZH64Zbiy83+h01nqKrcL6n0VVrtwg4ZMe+QZwIRo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HY0hQztRqLg6G8Q0yBnmMqG005o1z+P1Yc2ak3vJ4d51ZZboJIrkjsNc3e3yjGEC/
+         QpD3EzKSp8Ok5LWLMxylIjGQaYkKLB0NVOxQfBkipq4ujre5F/pUD7W7BYzy4lkHcd
+         uJlYa8c52/5k4hjHAGC4y16hYKzoM7k+OXYG2YEY=
+Date:   Sun, 26 Jul 2020 09:43:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH 04/21] devtmpfs: refactor devtmpfsd()
+Message-ID: <20200726074306.GA444745@kroah.com>
+References: <20200726071356.287160-1-hch@lst.de>
+ <20200726071356.287160-5-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726071356.287160-5-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-07-26 at 09:18 +0200, SeongJae Park wrote:
-> On Sat, 25 Jul 2020 21:27:07 -0700 Joe Perches <joe@perches.com> wrote:
+On Sun, Jul 26, 2020 at 09:13:39AM +0200, Christoph Hellwig wrote:
+> Split the main worker loop into a separate function.  This allows
+> devtmpfsd itself and devtmpfsd_setup to be marked __init, which will
+> allows us to call __init routines for the setup work.
 > 
-> > On Sun, 2020-07-26 at 01:35 +0200, SeongJae Park wrote:
-> > > On Sat, 25 Jul 2020 10:29:23 -0700 Joe Perches <joe@perches.com> wrote:
-> > > 
-> > > > On Sat, 2020-07-25 at 15:02 +0200, Michał Mirosław wrote:
-> > > > > Hello,
-> > > > > 
-> > > > > I see that this patch went into next and is already inciting people to
-> > > > > do wrong things [1]. Can you please fix it to require '--subjective'
-> > > > > switch or otherwise mark it clearly as suggestion-only?
-> > > > > 
-> > > > > The coding-style as in Linus' master says about *NEW* uses of the words
-> > > > > listed (those introductions I expect to be actually rare) and not about
-> > > > > existing use in the code or industry. Making a noise about all uses
-> > > > > found surely will generate a lot more irrelevant patches.
-> > > > > 
-> > > > > [1] https://www.spinics.net/lists/linux-tegra/msg51849.html
-> > > > 
-> > > > And if not reverted, perhaps do not check existing files
-> > > > at all but only check patches and change the message to
-> > > > show only suggestions not from a specification.
-> > > 
-> > > Agreed for this case.  However, excluding existing file check doesn't fully
-> > > avoid this problem.  Also, more terms having different deprecation rules might
-> > > be added in future.  How about allowing file check but show reference in the
-> > > suggestion message as below?
-> > 
-> > The general problem is that drivers/staging, net/ and drivers/net
-> > all have --strict on by default.
-> > 
-> > Emitting these deprecated terms messages with -f --file uses for
-> > files in those directories isn't a great idea.
-> 
-> Thank you for kindly explaining your concenrs in detail.  However, I think it's
-> ok to do this check even without '--strict' for files if we explicitly says
-> it's suggestion only, as Michal said.  My patch does so.
-> 
-> > > diff --git a/scripts/deprecated_terms.txt b/scripts/deprecated_terms.txt
-> > []
-> > > @@ -3,8 +3,10 @@
-> > >  # The format of each line is:
-> > >  # deprecated||suggested
-> > >  #
-> > > +# If special rules are applied on the terms, please comment those.
-> > 
-> > Disagree.  Comments about these existing uses aren't helpful.
-> 
-> Sorry, I don't understand your point here.  Why do you think it's not helpful?
-> If 'checkpatch' finds the deprecated terms, it will ask people to read this
-> file, which explains special rules for each of the deprecations if exists.  The
-> rule is, in the case of 'slave', 'applies to new uses only'.  Therefore, people
-> could stop sending the noisy unnecessary patches to the maintainers.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/base/devtmpfs.c | 47 +++++++++++++++++++++++------------------
+>  1 file changed, 26 insertions(+), 21 deletions(-)
 
-Because it will describe this for _every_ instance
-of any deprecated word in the file.
+Nice cleanup, thanks for doing this:
 
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
