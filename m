@@ -2,52 +2,55 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C07C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5EAB206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA75206D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:33:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OO7G/5rW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rHFPPFpl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgGZAcN (ORCPT
+        id S1728093AbgGZAcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 20:32:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52542 "EHLO
+        Sat, 25 Jul 2020 20:32:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbgGZAcN (ORCPT
+        with ESMTP id S1727034AbgGZAcQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 20:32:13 -0400
+        Sat, 25 Jul 2020 20:32:16 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9F5C08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 17:32:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA409C08C5C0
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 17:32:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=MRHoNhAB78rRr+PlqvNw9kGcdwElzzTQP+lMqZg9ftc=; b=OO7G/5rWgEaz1Ib+COcbPnvqd5
-        rMblT/U7RrZ5pk0GMWCXNasUf13SxGpqVvzWsQHzIsntLze3UyQdk4bDVNlObDq1F3I/XDC8alF4T
-        0VUxdNFDdtsQoGIysVt0w6tBpRAIczvq9owknu6uVMRv265TL7uFemG93xCm+65YWXHVG8YLKVg83
-        P3L61KMbryuxoyX42rNqll/kjORse/6RObs0vhqiEZ60WplPqERyU4CtMi8FdUHI7AVYqRjpJsoEw
-        NnKNQ2VeN7acC5HBS+3ovS3pV6w8Vvc+VMWAcA+HPRG33imjaSPHf3dsYOnBJm/lt2fQFwhzs3UAy
-        iYVTUMAQ==;
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=zhDcsNqUMabcRuZU3bhe0JOSSR6QtC38rAzzmtYzVAE=; b=rHFPPFpl8GZg7oXEnBjRJro+q7
+        bGDaoxdj2xMlGiOKlDcwG5hyWSrgYOf75XImi9z1sNnWZ9XYOTpahCnQJwpoEcUMovlA+7cqBKlpA
+        fl8HcKwC6ATUlS1hQKLeD/Z4hJ4un5nrr9qjs2R9LHZk2bxuJh43gRVIQRq4zd+V2IH7b9cAngKvP
+        0jskRRcZwY4bT0zZskZiQiudg4z/Alo6Zcj3tcvoxwkfyk86ZjWVOOYFZKdi7qOnDrp5507/OhzwX
+        ZTTjVBcd3pcwAMTHgIHb7X8yQqRgKhA+SQwiPt1MhvGILAkMyPY7xvWmAWJgJXOHj3y6l1+X8/ZxS
+        SLS0Ud9g==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzUaI-0002x2-BW; Sun, 26 Jul 2020 00:32:10 +0000
+        id 1jzUaM-0002x2-0x; Sun, 26 Jul 2020 00:32:14 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 0/3] arm64: delete duplicated words
-Date:   Sat, 25 Jul 2020 17:32:04 -0700
-Message-Id: <20200726003207.20253-1-rdunlap@infradead.org>
+Subject: [PATCH 2/3] arm64: ptrace.h: delete duplicated word
+Date:   Sat, 25 Jul 2020 17:32:06 -0700
+Message-Id: <20200726003207.20253-3-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200726003207.20253-1-rdunlap@infradead.org>
+References: <20200726003207.20253-1-rdunlap@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,13 +58,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Delete duplicated words in arch/arm64/ header files.
+Drop the repeated word "the".
 
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will@kernel.org>
 Cc: linux-arm-kernel@lists.infradead.org
+---
+ arch/arm64/include/asm/ptrace.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/arm64/include/asm/pgtable-hwdef.h   |    4 ++--
- arch/arm64/include/asm/ptrace.h          |    2 +-
- arch/arm64/include/uapi/asm/sigcontext.h |    2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+--- linux-next-20200720.orig/arch/arm64/include/asm/ptrace.h
++++ linux-next-20200720/arch/arm64/include/asm/ptrace.h
+@@ -27,7 +27,7 @@
+  *
+  * Some code sections either automatically switch back to PSR.I or explicitly
+  * require to not use priority masking. If bit GIC_PRIO_PSR_I_SET is included
+- * in the  the priority mask, it indicates that PSR.I should be set and
++ * in the priority mask, it indicates that PSR.I should be set and
+  * interrupt disabling temporarily does not rely on IRQ priorities.
+  */
+ #define GIC_PRIO_IRQON			0xe0
