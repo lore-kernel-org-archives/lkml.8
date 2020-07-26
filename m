@@ -2,110 +2,88 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C6AC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 588B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C004206F6
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358BD206F6
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:26:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595752002;
+	bh=+uk7MIIMPHgiZ/Vvk6Ik8YDGvxAcPrqQ5e2EgEoj2w4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gd7z/NA2TeNntGDsPaW63U07F1qzD8lXbqWPEKhWIJr8Uxm425KW7RlVJDSZMJzJG
+	 IYFHkCX6su5YfCci9hHfEjt6mlOE6eBdpcS0ZLethLrNJvxsKuLYTnXVglqB5UVy1N
+	 4fcGa+1CHQ8HoY6807zmVGc3+5iq1D+ezLb6BXUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgGZIZX (ORCPT
+        id S1726858AbgGZI0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 04:25:23 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37932 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGZIZX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 04:25:23 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9C0B61C0BD9; Sun, 26 Jul 2020 10:25:20 +0200 (CEST)
-Date:   Sun, 26 Jul 2020 10:25:20 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv8 0/6] n_gsm serdev support and GNSS driver for droid4
-Message-ID: <20200726082520.GA16953@amd>
-References: <20200512214713.40501-1-tony@atomide.com>
- <20200528083918.GB10358@localhost>
+        Sun, 26 Jul 2020 04:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbgGZI0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 04:26:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F29E206F6;
+        Sun, 26 Jul 2020 08:26:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595751998;
+        bh=+uk7MIIMPHgiZ/Vvk6Ik8YDGvxAcPrqQ5e2EgEoj2w4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DlkvWHEm2ut0XyRhMxCTFTHz9gNwFUG/DlNUO5f5kYbij/7FmUpn5WRyl5HM7Ecb1
+         EVUbSCbn6cweIcTxCAqhvV3d2Ba6DM5HJkdUM4Hdj7rDE+q77gpqQlPzh5FhJ2WtZr
+         n90JshAE4sA1aPKtXYBr9qnwLR6YaQS3kt2GBW+k=
+Date:   Sun, 26 Jul 2020 10:26:36 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Aditya Jain <aditya.jainadityajain.jain@gmail.com>
+Cc:     devel@driverdev.osuosl.org, hdegoede@redhat.com,
+        linux-kernel@vger.kernel.org, Larry.Finger@lwfinger.net
+Subject: Re: [PATCH] staging: rtl8723bs: include: Fix coding style errors
+Message-ID: <20200726082636.GA447282@kroah.com>
+References: <20200726080215.41501-1-aditya.jainadityajain.jain@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528083918.GB10358@localhost>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200726080215.41501-1-aditya.jainadityajain.jain@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 26, 2020 at 01:32:15PM +0530, Aditya Jain wrote:
+> Fixing ERROR: "foo *	bar" should be "foo *bar" in hal_phy_cfg.h
+> as reported by checkpatch.pl
+> 
+> Signed-off-by: Aditya Jain <aditya.jainadityajain.jain@gmail.com>
+> ---
+>  .../staging/rtl8723bs/include/hal_phy_cfg.h    | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
+> index 419ddb0733aa..fd5f377bad4f 100644
+> --- a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
+> +++ b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
+> @@ -42,7 +42,7 @@ u32 	Data
+>  
+>  u32
+>  PHY_QueryRFReg_8723B(
+> -struct adapter *		Adapter,
+> +struct adapter 		*Adapter,
+>  u8 		eRFPath,
+>  u32 			RegAddr,
+>  u32 			BitMask
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ick, these are all horrid.  How about just making these all on a single
+line like most functions have them instead of this one cleanup?
 
-Hi!
+Same for the other changes you made in this file.
 
-> > Here's the updated set of these patches fixed up for Johan's and
-> > Pavel's earlier comments.
-> >=20
-> > This series does the following:
-> >=20
-> > 1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
-> >=20
-> > 2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
-> >    TTY ports configured in devicetree with help of n_gsm.c
-> >=20
-> > 3. Allows the use of standard Linux device drivers for dedicated
-> >    TS 27.010 channels for devices like GNSS and ALSA found on some
-> >    modems for example
->=20
-> Unfortunately that does not seem to be the case just yet. Your gnss
-> driver is still aware that it's using n_gsm for the transport and calls
-> into the "parent" serdev-ngsm driver instead of using the serdev
-> interface (e.g. as if this was still and MFD driver).
->=20
-> If you model this right, the GNSS driver should work equally well
-> regardless of whether you use the serial interface (with n_gsm) or USB
-> (e.g. cdc-acm or usb-serial).
+thanks,
 
-We are not going to see that protocol anywhere else, so why is that
-a good goal?
-
-Anyway, Tony, is there newer version of this patchset? It would be
-good to get something in...
-
-Can I help somehow?
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8dPe8ACgkQMOfwapXb+vJfFQCfa75UABs8B8Futdqki8nIW6pf
-Aj8Anj1t2iSHSeGyQcNSPGbm3jcIOJch
-=vk0S
------END PGP SIGNATURE-----
-
---LZvS9be/3tNcYl/X--
+greg k-h
