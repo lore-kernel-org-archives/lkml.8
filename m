@@ -2,223 +2,146 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA68CC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C38C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8ADC20578
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C3420714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:30:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="J/V3fRTO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgGZR2z (ORCPT
+        id S1726980AbgGZRaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 13:28:55 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:59246 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgGZR2z (ORCPT
+        Sun, 26 Jul 2020 13:30:55 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47918 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbgGZRaz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 13:28:55 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 76B1420024;
-        Sun, 26 Jul 2020 19:28:50 +0200 (CEST)
-Date:   Sun, 26 Jul 2020 19:28:48 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Swapnil Jakhade <sjakhade@cadence.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch,
-        Laurent.pinchart@ideasonboard.com, robh+dt@kernel.org,
-        a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mparab@cadence.com, yamonkar@cadence.com, praneeth@ti.com,
-        nsekhar@ti.com, jsarha@ti.com, tomi.valkeinen@ti.com
-Subject: Re: [PATCH v7 1/3] dt-bindings: drm/bridge: Document Cadence MHDP
- bridge bindings
-Message-ID: <20200726172848.GI3275923@ravnborg.org>
-References: <1595403640-12816-1-git-send-email-sjakhade@cadence.com>
- <1595403640-12816-2-git-send-email-sjakhade@cadence.com>
+        Sun, 26 Jul 2020 13:30:55 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6AFC9304;
+        Sun, 26 Jul 2020 19:30:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1595784652;
+        bh=UdBOdl3zi/qG8vkxOz0jQ4rKn6Xodg91lx+efNqwElY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=J/V3fRTO7HzhURiH6YBF1+ryMV1bVsyzMJ/yr/LDzwQt8mkyIqOIOIkmkNBhiVu+w
+         v8ngpJxW6rFXsCmpghPtyUeYGt6zUEsNzlQxefX38gYQOrSCR+gWcFe298cnmgIJKb
+         Gcu1qf9iNVEjObczqVrP099+3n8lpZChOJdhsRm4=
+Date:   Sun, 26 Jul 2020 20:30:44 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Peilin Ye <yepeilin.cs@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs@googlegroups.com,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Vandana BN <bnvandana@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] media/v4l2-core: Fix
+ kernel-infoleak in video_put_user()
+Message-ID: <20200726173044.GA14755@pendragon.ideasonboard.com>
+References: <20200726164439.48973-1-yepeilin.cs@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1595403640-12816-2-git-send-email-sjakhade@cadence.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=Br2UW1UjAAAA:8 a=VwQbUJbxAAAA:8 a=P1BnusSwAAAA:8
-        a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8 a=mR2CUQfSIlaI1iu9EAcA:9
-        a=9YCI5GxjMFfZpiDd:21 a=72FgsJ9k7mFNgR8O:21 a=CjuIK1q_8ugA:10
-        a=WmXOPjafLNExVIMTj843:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=D0XLA9XvdZm18NrgonBM:22 a=sptkURWiP4Gy88Gu7hUp:22
-        a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200726164439.48973-1-yepeilin.cs@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Swapnil.
+Hi Peilin,
 
-On Wed, Jul 22, 2020 at 09:40:38AM +0200, Swapnil Jakhade wrote:
-> From: Yuti Amonkar <yamonkar@cadence.com>
-> 
-> Document the bindings used for the Cadence MHDP DPI/DP bridge in
-> yaml format.
-> 
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Thank you for the patch.
+
+On Sun, Jul 26, 2020 at 12:44:39PM -0400, Peilin Ye wrote:
+> video_put_user() is copying uninitialized stack memory to userspace. Fix
+> it by initializing `vb32` using memset().
+
+What makes you think this will fix the issue ? When initializing a
+structure at declaration time, the fields that are not explicitly
+specified should be initialized to 0 by the compiler. See
+https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/strin.htm:
+
+If a structure variable is partially initialized, all the uninitialized
+structure members are implicitly initialized to zero no matter what the
+storage class of the structure variable is. See the following example:
+
+struct one {
+    int a;
+    int b;
+    int c;
+};
+
+void main() {
+    struct one z1;         // Members in z1 do not have default initial values.
+    static struct one z2;  // z2.a=0, z2.b=0, and z2.c=0.
+    struct one z3 = {1};   // z3.a=1, z3.b=0, and z3.c=0.
+}
+
+> Reported-and-tested-by: syzbot+79d751604cb6f29fbf59@syzkaller.appspotmail.com
+> Link: https://syzkaller.appspot.com/bug?extid=79d751604cb6f29fbf59
+> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 > ---
->  .../bindings/display/bridge/cdns,mhdp.yaml    | 127 ++++++++++++++++++
->  1 file changed, 127 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+>  drivers/media/v4l2-core/v4l2-ioctl.c | 32 +++++++++++++++-------------
+>  1 file changed, 17 insertions(+), 15 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> new file mode 100644
-> index 000000000000..cdf5760d4ec5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> @@ -0,0 +1,127 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index a556880f225a..08909f58dc80 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -3210,21 +3210,23 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
+>  	case VIDIOC_DQBUF_TIME32:
+>  	case VIDIOC_PREPARE_BUF_TIME32: {
+>  		struct v4l2_buffer *vb = parg;
+> -		struct v4l2_buffer_time32 vb32 = {
+> -			.index		= vb->index,
+> -			.type		= vb->type,
+> -			.bytesused	= vb->bytesused,
+> -			.flags		= vb->flags,
+> -			.field		= vb->field,
+> -			.timestamp.tv_sec	= vb->timestamp.tv_sec,
+> -			.timestamp.tv_usec	= vb->timestamp.tv_usec,
+> -			.timecode	= vb->timecode,
+> -			.sequence	= vb->sequence,
+> -			.memory		= vb->memory,
+> -			.m.userptr	= vb->m.userptr,
+> -			.length		= vb->length,
+> -			.request_fd	= vb->request_fd,
+> -		};
+> +		struct v4l2_buffer_time32 vb32;
 > +
-> +title: Cadence MHDP bridge
+> +		memset(&vb32, 0, sizeof(vb32));
 > +
-> +maintainers:
-> +  - Swapnil Jakhade <sjakhade@cadence.com>
-> +  - Yuti Amonkar <yamonkar@cadence.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - cdns,mhdp8546
-> +      - ti,j721e-mhdp8546
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description:
-> +          Register block of mhdptx apb registers up to PHY mapped area (AUX_CONFIG_P).
-> +          The AUX and PMA registers are not part of this range, they are instead
-> +          included in the associated PHY.
-> +      - description:
-> +          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
-> +
-> +  reg-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: mhdptx
-> +      - const: j721e-intg
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description:
-> +      DP bridge clock, used by the IP to know how to translate a number of
-> +      clock cycles into a time (which is used to comply with DP standard timings
-> +      and delays).
-> +
-> +  phys:
-> +    description:
-> +      phandle to the DisplayPort PHY.
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      Ports as described in Documentation/devicetree/bindings/graph.txt.
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        description:
-> +          Input port representing the DP bridge input.
-> +
-> +      port@1:
-> +        type: object
-> +        description:
-> +          Output port representing the DP bridge output.
-> +
-> +    required:
-> +      - port@0
-> +      - port@1
-> +      - '#address-cells'
-> +      - '#size-cells'
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: ti,j721e-mhdp8546
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 2
-> +        reg-names:
-> +          minItems: 2
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - reg
-> +  - reg-names
-> +  - phys
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    mhdp: dp-bridge@f0fb000000 {
-> +        compatible = "cdns,mhdp8546";
-> +        reg = <0xf0 0xfb000000 0x0 0x1000000>;
-> +        reg-names = "mhdptx";
-> +        clocks = <&mhdp_clock>;
-> +        phys = <&dp_phy>;
-> +
-> +        ports {
+> +		vb32.index	= vb->index;
+> +		vb32.type	= vb->type;
+> +		vb32.bytesused	= vb->bytesused;
+> +		vb32.flags	= vb->flags;
+> +		vb32.field	= vb->field;
+> +		vb32.timestamp.tv_sec	= vb->timestamp.tv_sec;
+> +		vb32.timestamp.tv_usec	= vb->timestamp.tv_usec;
+> +		vb32.timecode	= vb->timecode;
+> +		vb32.sequence	= vb->sequence;
+> +		vb32.memory	= vb->memory;
+> +		vb32.m.userptr	= vb->m.userptr;
+> +		vb32.length	= vb->length;
+> +		vb32.request_fd	= vb->request_fd;
+>  
+>  		if (copy_to_user(arg, &vb32, sizeof(vb32)))
+>  			return -EFAULT;
 
-Please be consistent in indent.
-We do not aling below '{'.
-Keep using 4 spaces for indent for the full example.
+-- 
+Regards,
 
-	Sam
-
-> +              #address-cells = <1>;
-> +              #size-cells = <0>;
-> +
-> +              port@0 {
-> +                     reg = <0>;
-> +                     dp_bridge_input: endpoint {
-> +                        remote-endpoint = <&xxx_dpi_output>;
-> +                     };
-> +              };
-> +
-> +              port@1 {
-> +                     reg = <1>;
-> +                     dp_bridge_output: endpoint {
-> +                        remote-endpoint = <&xxx_dp_connector_input>;
-> +                     };
-> +              };
-> +        };
-> +    };
-> +...
-> -- 
-> 2.26.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Laurent Pinchart
