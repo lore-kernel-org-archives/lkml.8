@@ -2,278 +2,305 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E73C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E78F20663
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C170220663
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgGZLWI (ORCPT
+        id S1726906AbgGZLYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 07:22:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGZLWH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 07:22:07 -0400
-Received: from smtp.al2klimov.de (smtp.al2klimov.de [IPv6:2a01:4f8:c0c:1465::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59748C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 04:22:07 -0700 (PDT)
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id E74BC6F633;
-        Sun, 26 Jul 2020 11:22:00 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        changbin.du@intel.com, masahiroy@kernel.org, rdunlap@infradead.org,
-        krzk@kernel.org, andriy.shevchenko@linux.intel.com,
-        ben.dooks@codethink.co.uk, colyli@suse.de, axboe@kernel.dk,
-        tpiepho@gmail.com, chenqiwu@xiaomi.com, walken@google.com,
-        gustavo@embeddedor.com, lasse.collin@tukaani.org,
-        danielwa@cisco.com, linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] lib: Replace HTTP links with HTTPS ones
-Date:   Sun, 26 Jul 2020 13:21:54 +0200
-Message-Id: <20200726112154.16510-1-grandmaster@al2klimov.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+        Sun, 26 Jul 2020 07:24:37 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58882 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgGZLYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 07:24:37 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3470A20047A;
+        Sun, 26 Jul 2020 13:24:34 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8EE97200467;
+        Sun, 26 Jul 2020 13:24:29 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AC320402D8;
+        Sun, 26 Jul 2020 13:24:23 +0200 (CEST)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: fsl-asoc-card: Remove fsl_asoc_card_set_bias_level function
+Date:   Sun, 26 Jul 2020 19:20:17 +0800
+Message-Id: <1595762417-2190-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+With this case:
+aplay -Dhw:x 16khz.wav 24khz.wav
+There is sound distortion for 24khz.wav. The reason is that setting
+PLL of WM8962 with set_bias_level function, the bias level is not
+changed when 24khz.wav is played, then the PLL won't be reset, the
+clock is not correct, so distortion happens.
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+The resolution of this issue is to remove fsl_asoc_card_set_bias_level.
+Move PLL configuration to hw_params and hw_free.
+
+After removing fsl_asoc_card_set_bias_level, also test WM8960 case,
+it can work.
+
+Fixes: 708b4351f08c ("ASoC: fsl: Add Freescale Generic ASoC Sound Card with ASRC support")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
- Continuing my work started at 93431e0607e5 with unmaintained stuff according to:
- perl scripts/get_maintainer.pl --nogit{,-fallback} --nol
+ sound/soc/fsl/fsl-asoc-card.c | 149 +++++++++++++++-------------------
+ 1 file changed, 66 insertions(+), 83 deletions(-)
 
- See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
- (Actually letting a shell for loop submit all this stuff for me.)
-
- If there are any URLs to be removed completely
- or at least not (just) HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also: https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See: https://lkml.org/lkml/2020/6/26/837
-
- If you apply the patch, please let me know.
-
-
- lib/Kconfig.debug        | 2 +-
- lib/crc64.c              | 2 +-
- lib/decompress_bunzip2.c | 2 +-
- lib/decompress_unlzma.c  | 6 +++---
- lib/math/rational.c      | 2 +-
- lib/rbtree.c             | 2 +-
- lib/ts_bm.c              | 2 +-
- lib/xxhash.c             | 2 +-
- lib/xz/xz_crc32.c        | 2 +-
- lib/xz/xz_dec_bcj.c      | 2 +-
- lib/xz/xz_dec_lzma2.c    | 2 +-
- lib/xz/xz_lzma2.h        | 2 +-
- lib/xz/xz_stream.h       | 2 +-
- 13 files changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 9ad9210d70a1..4d891008a9c6 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2164,7 +2164,7 @@ config LIST_KUNIT_TEST
- 	  and associated macros.
+diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
+index 4848ba61d083..0517dbb3e908 100644
+--- a/sound/soc/fsl/fsl-asoc-card.c
++++ b/sound/soc/fsl/fsl-asoc-card.c
+@@ -73,6 +73,7 @@ struct cpu_priv {
+  * @codec_priv: CODEC private data
+  * @cpu_priv: CPU private data
+  * @card: ASoC card structure
++ * @is_stream_in_use: flags for release resource in hw_free
+  * @sample_rate: Current sample rate
+  * @sample_format: Current sample format
+  * @asrc_rate: ASRC sample rate used by Back-Ends
+@@ -89,6 +90,7 @@ struct fsl_asoc_card_priv {
+ 	struct codec_priv codec_priv;
+ 	struct cpu_priv cpu_priv;
+ 	struct snd_soc_card card;
++	bool is_stream_in_use[2];
+ 	u32 sample_rate;
+ 	snd_pcm_format_t sample_format;
+ 	u32 asrc_rate;
+@@ -151,21 +153,17 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+ 	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(rtd->card);
+ 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
++	struct codec_priv *codec_priv = &priv->codec_priv;
+ 	struct cpu_priv *cpu_priv = &priv->cpu_priv;
+ 	struct device *dev = rtd->card->dev;
++	unsigned int pll_out;
+ 	int ret;
  
- 	  KUnit tests run during boot and output the results to the debug log
--	  in TAP format (http://testanything.org/). Only useful for kernel devs
-+	  in TAP format (https://testanything.org/). Only useful for kernel devs
- 	  running the KUnit test harness, and not intended for inclusion into a
- 	  production build.
+ 	priv->sample_rate = params_rate(params);
+ 	priv->sample_format = params_format(params);
++	priv->is_stream_in_use[tx] = true;
  
-diff --git a/lib/crc64.c b/lib/crc64.c
-index f8928ce28280..47cfa054827f 100644
---- a/lib/crc64.c
-+++ b/lib/crc64.c
-@@ -4,7 +4,7 @@
-  *
-  * This is a basic crc64 implementation following ECMA-182 specification,
-  * which can be found from,
-- * http://www.ecma-international.org/publications/standards/Ecma-182.htm
-+ * https://www.ecma-international.org/publications/standards/Ecma-182.htm
-  *
-  * Dr. Ross N. Williams has a great document to introduce the idea of CRC
-  * algorithm, here the CRC64 code is also inspired by the table-driven
-diff --git a/lib/decompress_bunzip2.c b/lib/decompress_bunzip2.c
-index 7c4932eed748..f9628f3924ce 100644
---- a/lib/decompress_bunzip2.c
-+++ b/lib/decompress_bunzip2.c
-@@ -34,7 +34,7 @@
- 		Phone (337) 232-1234 or 1-800-738-2226
- 		Fax   (337) 232-1297
+-	/*
+-	 * If codec-dai is DAI Master and all configurations are already in the
+-	 * set_bias_level(), bypass the remaining settings in hw_params().
+-	 * Note: (dai_fmt & CBM_CFM) includes CBM_CFM and CBM_CFS.
+-	 */
+-	if ((priv->card.set_bias_level &&
+-	     priv->dai_fmt & SND_SOC_DAIFMT_CBM_CFM) ||
+-	    fsl_asoc_card_is_ac97(priv))
++	if (fsl_asoc_card_is_ac97(priv))
+ 		return 0;
  
--		http://www.hospiceacadiana.com/
-+		https://www.hospiceacadiana.com/
+ 	/* Specific configurations of DAIs starts from here */
+@@ -185,12 +183,72 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
+ 			return ret;
+ 		}
+ 	}
++	/* Specific configuration for PLL */
++	if (codec_priv->pll_id && codec_priv->fll_id) {
++		if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
++			pll_out = priv->sample_rate * 384;
++		else
++			pll_out = priv->sample_rate * 256;
++
++		ret = snd_soc_dai_set_pll(asoc_rtd_to_codec(rtd, 0),
++					  codec_priv->pll_id,
++					  codec_priv->mclk_id,
++					  codec_priv->mclk_freq, pll_out);
++		if (ret) {
++			dev_err(dev, "failed to start FLL: %d\n", ret);
++			return ret;
++		}
++
++		ret = snd_soc_dai_set_sysclk(asoc_rtd_to_codec(rtd, 0),
++					     codec_priv->fll_id,
++					     pll_out, SND_SOC_CLOCK_IN);
++
++		if (ret && ret != -ENOTSUPP) {
++			dev_err(dev, "failed to set SYSCLK: %d\n", ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static int fsl_asoc_card_hw_free(struct snd_pcm_substream *substream)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(rtd->card);
++	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
++	struct codec_priv *codec_priv = &priv->codec_priv;
++	struct device *dev = rtd->card->dev;
++	int ret;
++
++	priv->is_stream_in_use[tx] = false;
++
++	if (!priv->is_stream_in_use[!tx] && codec_priv->pll_id &&
++	    codec_priv->fll_id) {
++		/* Force freq to be 0 to avoid error message in codec */
++		ret = snd_soc_dai_set_sysclk(asoc_rtd_to_codec(rtd, 0),
++					     codec_priv->mclk_id,
++					     0,
++					     SND_SOC_CLOCK_IN);
++		if (ret) {
++			dev_err(dev, "failed to switch away from FLL: %d\n", ret);
++			return ret;
++		}
++
++		ret = snd_soc_dai_set_pll(asoc_rtd_to_codec(rtd, 0),
++					  codec_priv->pll_id, 0, 0, 0);
++		if (ret && ret != -ENOTSUPP) {
++			dev_err(dev, "failed to stop FLL: %d\n", ret);
++			return ret;
++		}
++	}
  
- 	Manuel
-  */
-diff --git a/lib/decompress_unlzma.c b/lib/decompress_unlzma.c
-index ed7a1fd819f2..1cf409ef8d04 100644
---- a/lib/decompress_unlzma.c
-+++ b/lib/decompress_unlzma.c
-@@ -8,7 +8,7 @@
-  *implementation for lzma.
-  *Copyright (C) 2006  Aurelien Jacobs < aurel@gnuage.org >
-  *
-- *Based on LzmaDecode.c from the LZMA SDK 4.22 (http://www.7-zip.org/)
-+ *Based on LzmaDecode.c from the LZMA SDK 4.22 (https://www.7-zip.org/)
-  *Copyright (C) 1999-2005  Igor Pavlov
-  *
-  *Copyrights of the parts, see headers below.
-@@ -56,7 +56,7 @@ static long long INIT read_int(unsigned char *ptr, int size)
- /* Small range coder implementation for lzma.
-  *Copyright (C) 2006  Aurelien Jacobs < aurel@gnuage.org >
-  *
-- *Based on LzmaDecode.c from the LZMA SDK 4.22 (http://www.7-zip.org/)
-+ *Based on LzmaDecode.c from the LZMA SDK 4.22 (https://www.7-zip.org/)
-  *Copyright (c) 1999-2005  Igor Pavlov
-  */
+ 	return 0;
+ }
  
-@@ -213,7 +213,7 @@ rc_bit_tree_decode(struct rc *rc, uint16_t *p, int num_levels, int *symbol)
-  * Small lzma deflate implementation.
-  * Copyright (C) 2006  Aurelien Jacobs < aurel@gnuage.org >
-  *
-- * Based on LzmaDecode.c from the LZMA SDK 4.22 (http://www.7-zip.org/)
-+ * Based on LzmaDecode.c from the LZMA SDK 4.22 (https://www.7-zip.org/)
-  * Copyright (C) 1999-2005  Igor Pavlov
-  */
+ static const struct snd_soc_ops fsl_asoc_card_ops = {
+ 	.hw_params = fsl_asoc_card_hw_params,
++	.hw_free = fsl_asoc_card_hw_free,
+ };
  
-diff --git a/lib/math/rational.c b/lib/math/rational.c
-index 31fb27db2deb..df75c8809693 100644
---- a/lib/math/rational.c
-+++ b/lib/math/rational.c
-@@ -27,7 +27,7 @@
-  * with the fractional part size described in given_denominator.
-  *
-  * for theoretical background, see:
-- * http://en.wikipedia.org/wiki/Continued_fraction
-+ * https://en.wikipedia.org/wiki/Continued_fraction
-  */
+ static int be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
+@@ -254,75 +312,6 @@ static struct snd_soc_dai_link fsl_asoc_card_dai[] = {
+ 	},
+ };
  
- void rational_best_approximation(
-diff --git a/lib/rbtree.c b/lib/rbtree.c
-index 8545872e61db..c4ac5c2421f2 100644
---- a/lib/rbtree.c
-+++ b/lib/rbtree.c
-@@ -13,7 +13,7 @@
- #include <linux/export.h>
- 
- /*
-- * red-black trees properties:  http://en.wikipedia.org/wiki/Rbtree
-+ * red-black trees properties:  https://en.wikipedia.org/wiki/Rbtree
-  *
-  *  1) A node is either red or black
-  *  2) The root is black
-diff --git a/lib/ts_bm.c b/lib/ts_bm.c
-index 277cb4417ac2..4cf250031f0f 100644
---- a/lib/ts_bm.c
-+++ b/lib/ts_bm.c
-@@ -11,7 +11,7 @@
-  *   [1] A Fast String Searching Algorithm, R.S. Boyer and Moore.
-  *       Communications of the Association for Computing Machinery, 
-  *       20(10), 1977, pp. 762-772.
-- *       http://www.cs.utexas.edu/users/moore/publications/fstrpos.pdf
-+ *       https://www.cs.utexas.edu/users/moore/publications/fstrpos.pdf
-  *
-  *   [2] Handbook of Exact String Matching Algorithms, Thierry Lecroq, 2004
-  *       http://www-igm.univ-mlv.fr/~lecroq/string/string.pdf
-diff --git a/lib/xxhash.c b/lib/xxhash.c
-index aa61e2a3802f..d5bb9ff10607 100644
---- a/lib/xxhash.c
-+++ b/lib/xxhash.c
-@@ -34,7 +34,7 @@
-  * ("BSD").
-  *
-  * You can contact the author at:
-- * - xxHash homepage: http://cyan4973.github.io/xxHash/
-+ * - xxHash homepage: https://cyan4973.github.io/xxHash/
-  * - xxHash source repository: https://github.com/Cyan4973/xxHash
-  */
- 
-diff --git a/lib/xz/xz_crc32.c b/lib/xz/xz_crc32.c
-index 912aae5fa09e..88a2c35e1b59 100644
---- a/lib/xz/xz_crc32.c
-+++ b/lib/xz/xz_crc32.c
-@@ -2,7 +2,7 @@
-  * CRC32 using the polynomial from IEEE-802.3
-  *
-  * Authors: Lasse Collin <lasse.collin@tukaani.org>
-- *          Igor Pavlov <http://7-zip.org/>
-+ *          Igor Pavlov <https://7-zip.org/>
-  *
-  * This file has been put into the public domain.
-  * You can do whatever you want with this file.
-diff --git a/lib/xz/xz_dec_bcj.c b/lib/xz/xz_dec_bcj.c
-index a768e6d28bbb..72ddac6ef2ec 100644
---- a/lib/xz/xz_dec_bcj.c
-+++ b/lib/xz/xz_dec_bcj.c
-@@ -2,7 +2,7 @@
-  * Branch/Call/Jump (BCJ) filter decoders
-  *
-  * Authors: Lasse Collin <lasse.collin@tukaani.org>
-- *          Igor Pavlov <http://7-zip.org/>
-+ *          Igor Pavlov <https://7-zip.org/>
-  *
-  * This file has been put into the public domain.
-  * You can do whatever you want with this file.
-diff --git a/lib/xz/xz_dec_lzma2.c b/lib/xz/xz_dec_lzma2.c
-index 156f26fdc4c9..9f336bc07ed6 100644
---- a/lib/xz/xz_dec_lzma2.c
-+++ b/lib/xz/xz_dec_lzma2.c
-@@ -2,7 +2,7 @@
-  * LZMA2 decoder
-  *
-  * Authors: Lasse Collin <lasse.collin@tukaani.org>
-- *          Igor Pavlov <http://7-zip.org/>
-+ *          Igor Pavlov <https://7-zip.org/>
-  *
-  * This file has been put into the public domain.
-  * You can do whatever you want with this file.
-diff --git a/lib/xz/xz_lzma2.h b/lib/xz/xz_lzma2.h
-index 071d67bee9f5..92d852d4f87a 100644
---- a/lib/xz/xz_lzma2.h
-+++ b/lib/xz/xz_lzma2.h
-@@ -2,7 +2,7 @@
-  * LZMA2 definitions
-  *
-  * Authors: Lasse Collin <lasse.collin@tukaani.org>
-- *          Igor Pavlov <http://7-zip.org/>
-+ *          Igor Pavlov <https://7-zip.org/>
-  *
-  * This file has been put into the public domain.
-  * You can do whatever you want with this file.
-diff --git a/lib/xz/xz_stream.h b/lib/xz/xz_stream.h
-index 66cb5a7055ec..430bb3a0d195 100644
---- a/lib/xz/xz_stream.h
-+++ b/lib/xz/xz_stream.h
-@@ -19,7 +19,7 @@
- 
- /*
-  * See the .xz file format specification at
-- * http://tukaani.org/xz/xz-file-format.txt
-+ * https://tukaani.org/xz/xz-file-format.txt
-  * to understand the container format.
-  */
- 
+-static int fsl_asoc_card_set_bias_level(struct snd_soc_card *card,
+-					struct snd_soc_dapm_context *dapm,
+-					enum snd_soc_bias_level level)
+-{
+-	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(card);
+-	struct snd_soc_pcm_runtime *rtd;
+-	struct snd_soc_dai *codec_dai;
+-	struct codec_priv *codec_priv = &priv->codec_priv;
+-	struct device *dev = card->dev;
+-	unsigned int pll_out;
+-	int ret;
+-
+-	rtd = snd_soc_get_pcm_runtime(card, &card->dai_link[0]);
+-	codec_dai = asoc_rtd_to_codec(rtd, 0);
+-	if (dapm->dev != codec_dai->dev)
+-		return 0;
+-
+-	switch (level) {
+-	case SND_SOC_BIAS_PREPARE:
+-		if (dapm->bias_level != SND_SOC_BIAS_STANDBY)
+-			break;
+-
+-		if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
+-			pll_out = priv->sample_rate * 384;
+-		else
+-			pll_out = priv->sample_rate * 256;
+-
+-		ret = snd_soc_dai_set_pll(codec_dai, codec_priv->pll_id,
+-					  codec_priv->mclk_id,
+-					  codec_priv->mclk_freq, pll_out);
+-		if (ret) {
+-			dev_err(dev, "failed to start FLL: %d\n", ret);
+-			return ret;
+-		}
+-
+-		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->fll_id,
+-					     pll_out, SND_SOC_CLOCK_IN);
+-		if (ret && ret != -ENOTSUPP) {
+-			dev_err(dev, "failed to set SYSCLK: %d\n", ret);
+-			return ret;
+-		}
+-		break;
+-
+-	case SND_SOC_BIAS_STANDBY:
+-		if (dapm->bias_level != SND_SOC_BIAS_PREPARE)
+-			break;
+-
+-		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->mclk_id,
+-					     codec_priv->mclk_freq,
+-					     SND_SOC_CLOCK_IN);
+-		if (ret && ret != -ENOTSUPP) {
+-			dev_err(dev, "failed to switch away from FLL: %d\n", ret);
+-			return ret;
+-		}
+-
+-		ret = snd_soc_dai_set_pll(codec_dai, codec_priv->pll_id, 0, 0, 0);
+-		if (ret) {
+-			dev_err(dev, "failed to stop FLL: %d\n", ret);
+-			return ret;
+-		}
+-		break;
+-
+-	default:
+-		break;
+-	}
+-
+-	return 0;
+-}
+-
+ static int fsl_asoc_card_audmux_init(struct device_node *np,
+ 				     struct fsl_asoc_card_priv *priv)
+ {
+@@ -611,7 +600,6 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+ 	/* Diversify the card configurations */
+ 	if (of_device_is_compatible(np, "fsl,imx-audio-cs42888")) {
+ 		codec_dai_name = "cs42888";
+-		priv->card.set_bias_level = NULL;
+ 		priv->cpu_priv.sysclk_freq[TX] = priv->codec_priv.mclk_freq;
+ 		priv->cpu_priv.sysclk_freq[RX] = priv->codec_priv.mclk_freq;
+ 		priv->cpu_priv.sysclk_dir[TX] = SND_SOC_CLOCK_OUT;
+@@ -628,26 +616,22 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+ 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
+ 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8962")) {
+ 		codec_dai_name = "wm8962";
+-		priv->card.set_bias_level = fsl_asoc_card_set_bias_level;
+ 		priv->codec_priv.mclk_id = WM8962_SYSCLK_MCLK;
+ 		priv->codec_priv.fll_id = WM8962_SYSCLK_FLL;
+ 		priv->codec_priv.pll_id = WM8962_FLL;
+ 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
+ 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8960")) {
+ 		codec_dai_name = "wm8960-hifi";
+-		priv->card.set_bias_level = fsl_asoc_card_set_bias_level;
+ 		priv->codec_priv.fll_id = WM8960_SYSCLK_AUTO;
+ 		priv->codec_priv.pll_id = WM8960_SYSCLK_AUTO;
+ 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
+ 	} else if (of_device_is_compatible(np, "fsl,imx-audio-ac97")) {
+ 		codec_dai_name = "ac97-hifi";
+-		priv->card.set_bias_level = NULL;
+ 		priv->dai_fmt = SND_SOC_DAIFMT_AC97;
+ 		priv->card.dapm_routes = audio_map_ac97;
+ 		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_ac97);
+ 	} else if (of_device_is_compatible(np, "fsl,imx-audio-mqs")) {
+ 		codec_dai_name = "fsl-mqs-dai";
+-		priv->card.set_bias_level = NULL;
+ 		priv->dai_fmt = SND_SOC_DAIFMT_LEFT_J |
+ 				SND_SOC_DAIFMT_CBS_CFS |
+ 				SND_SOC_DAIFMT_NB_NF;
+@@ -657,7 +641,6 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+ 		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_tx);
+ 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8524")) {
+ 		codec_dai_name = "wm8524-hifi";
+-		priv->card.set_bias_level = NULL;
+ 		priv->dai_fmt |= SND_SOC_DAIFMT_CBS_CFS;
+ 		priv->dai_link[1].dpcm_capture = 0;
+ 		priv->dai_link[2].dpcm_capture = 0;
 -- 
 2.27.0
 
