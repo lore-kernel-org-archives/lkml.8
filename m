@@ -2,220 +2,354 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D6EC433E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E6DC433E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E47B1206F6
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4EDB206F6
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgGZJSx (ORCPT
+        id S1727844AbgGZJTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 05:18:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41938 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727801AbgGZJSw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 05:18:52 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06Q92ZgE039735;
-        Sun, 26 Jul 2020 05:17:44 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32h2bfmrnk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 05:17:44 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06Q93JCe040850;
-        Sun, 26 Jul 2020 05:17:43 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32h2bfmrn8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 05:17:43 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06Q9FbYn015012;
-        Sun, 26 Jul 2020 09:17:43 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma04wdc.us.ibm.com with ESMTP id 32gcpqrwem-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 09:17:43 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06Q9HgAV50201024
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 26 Jul 2020 09:17:42 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C6DD628058;
-        Sun, 26 Jul 2020 09:17:42 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5AB6F2805A;
-        Sun, 26 Jul 2020 09:17:38 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.34.120])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sun, 26 Jul 2020 09:17:38 +0000 (GMT)
-Subject: Re: [PATCH 05/19] perf metric: Add macros for iterating map events
-To:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-References: <20200719181320.785305-1-jolsa@kernel.org>
- <20200719181320.785305-6-jolsa@kernel.org>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <68188ed3-80a7-cf03-bfdd-6bee7ded09ca@linux.ibm.com>
-Date:   Sun, 26 Jul 2020 14:47:37 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 26 Jul 2020 05:19:02 -0400
+Received: from mga03.intel.com ([134.134.136.65]:33213 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727817AbgGZJTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 05:19:01 -0400
+IronPort-SDR: Iv2VaoVkLV6UjxmMvI+Uy2P/GBNd1pdhGa1f+AqVFkxY/R7sDvYU1xTgnCS/9hiub7icRPdW6A
+ CHS7CKaWNrRA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9693"; a="150868924"
+X-IronPort-AV: E=Sophos;i="5.75,398,1589266800"; 
+   d="scan'208";a="150868924"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 02:18:52 -0700
+IronPort-SDR: Z4TYiw1c1o2TkE6KU2miscl1K06z4FRIEze0ktepLtTtHycAhZLVflE5nFRzH/2p5eIocc0wqI
+ rQOKnub5oSlA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,398,1589266800"; 
+   d="scan'208";a="327727628"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 26 Jul 2020 02:18:47 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jzcnt-0045sX-QV; Sun, 26 Jul 2020 12:18:45 +0300
+Date:   Sun, 26 Jul 2020 12:18:45 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 08/13] hwmon: add support for the sl28cpld hardware
+ monitoring controller
+Message-ID: <20200726091845.GL3703480@smile.fi.intel.com>
+References: <20200725231834.25642-1-michael@walle.cc>
+ <20200725231834.25642-9-michael@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <20200719181320.785305-6-jolsa@kernel.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-26_02:2020-07-24,2020-07-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 spamscore=0 impostorscore=0
- mlxscore=0 phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007260064
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200725231834.25642-9-michael@walle.cc>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 26, 2020 at 01:18:29AM +0200, Michael Walle wrote:
+> Add support for the hardware monitoring controller of the sl28cpld board
+> management controller. This driver is part of a multi-function device.
 
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 7/19/20 11:43 PM, Jiri Olsa wrote:
-> Adding following macros to iterate events and metric:
->   map_for_each_event(__pe, __idx, __map)
->     - iterates over all pmu_events_map events
->   map_for_each_metric(__pe, __idx, __map, __metric)
->     - iterates over all metrics that match __metric argument
-> 
-> and use it in metricgroup__add_metric function. Macros
-> will be be used from other places in following changes.
-> 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-
-Reviewed-By : Kajol Jain<kjain@linux.ibm.com>
-
-Thanks,
-Kajol Jain
-
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> Acked-by: Guenter Roeck <linux@roeck-us.net>
 > ---
->  tools/perf/util/metricgroup.c | 77 ++++++++++++++++++-----------------
->  1 file changed, 40 insertions(+), 37 deletions(-)
+> Changes since v5:
+>  - none
 > 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index df0356ec120d..b37008fc253c 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -614,6 +614,17 @@ static int __metricgroup__add_metric(struct list_head *group_list,
->  	return 0;
->  }
->  
-> +#define map_for_each_event(__pe, __idx, __map)				\
-> +	for (__idx = 0, __pe = &__map->table[__idx];			\
-> +	     __pe->name || __pe->metric_group || __pe->metric_name;	\
-> +	     __pe = &__map->table[++__idx])
+> Changes since v4:
+>  - update copyright year
+>  - remove #include <linux/of_device.h>, suggested by Andy.
+>  - use PTR_ERR_OR_ZERO(), suggested by Andy.
+>  - remove the platform device table
+>  - don't use KBUID_MODNAME
+> 
+> Changes since v3:
+>  - see cover letter
+> 
+>  Documentation/hwmon/index.rst    |   1 +
+>  Documentation/hwmon/sl28cpld.rst |  36 ++++++++
+>  drivers/hwmon/Kconfig            |  10 +++
+>  drivers/hwmon/Makefile           |   1 +
+>  drivers/hwmon/sl28cpld-hwmon.c   | 142 +++++++++++++++++++++++++++++++
+>  5 files changed, 190 insertions(+)
+>  create mode 100644 Documentation/hwmon/sl28cpld.rst
+>  create mode 100644 drivers/hwmon/sl28cpld-hwmon.c
+> 
+> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
+> index 750d3a975d82..d90c43c82936 100644
+> --- a/Documentation/hwmon/index.rst
+> +++ b/Documentation/hwmon/index.rst
+> @@ -154,6 +154,7 @@ Hardware Monitoring Kernel Drivers
+>     sht3x
+>     shtc1
+>     sis5595
+> +   sl28cpld
+>     smm665
+>     smsc47b397
+>     smsc47m192
+> diff --git a/Documentation/hwmon/sl28cpld.rst b/Documentation/hwmon/sl28cpld.rst
+> new file mode 100644
+> index 000000000000..7ed65f78250c
+> --- /dev/null
+> +++ b/Documentation/hwmon/sl28cpld.rst
+> @@ -0,0 +1,36 @@
+> +.. SPDX-License-Identifier: GPL-2.0-only
 > +
-> +#define map_for_each_metric(__pe, __idx, __map, __metric)		\
-> +	map_for_each_event(__pe, __idx, __map)				\
-> +		if (__pe->metric_expr &&				\
-> +		    (match_metric(__pe->metric_group, __metric) ||	\
-> +		     match_metric(__pe->metric_name, __metric)))
+> +Kernel driver sl28cpld
+> +======================
 > +
->  static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->  				   struct strbuf *events,
->  				   struct list_head *group_list,
-> @@ -624,49 +635,41 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->  	int i, ret;
->  	bool has_match = false;
->  
-> -	for (i = 0; ; i++) {
-> -		pe = &map->table[i];
-> -
-> -		if (!pe->name && !pe->metric_group && !pe->metric_name) {
-> -			/* End of pmu events. */
-> -			if (!has_match)
-> -				return -EINVAL;
-> -			break;
-> -		}
-> -		if (!pe->metric_expr)
-> -			continue;
-> -		if (match_metric(pe->metric_group, metric) ||
-> -		    match_metric(pe->metric_name, metric)) {
-> -			has_match = true;
-> -			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
-> -
-> -			if (!strstr(pe->metric_expr, "?")) {
-> -				ret = __metricgroup__add_metric(group_list,
-> -								pe,
-> -								metric_no_group,
-> -								1);
-> -				if (ret)
-> -					return ret;
-> -			} else {
-> -				int j, count;
-> +	map_for_each_metric(pe, i, map, metric) {
-> +		pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
-> +		has_match = true;
+> +Supported chips:
 > +
-> +		if (!strstr(pe->metric_expr, "?")) {
-> +			ret = __metricgroup__add_metric(group_list,
-> +							pe,
-> +							metric_no_group,
-> +							1);
-> +			if (ret)
-> +				return ret;
-> +		} else {
-> +			int j, count;
->  
-> -				count = arch_get_runtimeparam();
-> +			count = arch_get_runtimeparam();
->  
-> -				/* This loop is added to create multiple
-> -				 * events depend on count value and add
-> -				 * those events to group_list.
-> -				 */
-> +			/* This loop is added to create multiple
-> +			 * events depend on count value and add
-> +			 * those events to group_list.
-> +			 */
->  
-> -				for (j = 0; j < count; j++) {
-> -					ret = __metricgroup__add_metric(
-> -						group_list, pe,
-> -						metric_no_group, j);
-> -					if (ret)
-> -						return ret;
-> -				}
-> +			for (j = 0; j < count; j++) {
-> +				ret = __metricgroup__add_metric(
-> +					group_list, pe,
-> +					metric_no_group, j);
-> +				if (ret)
-> +					return ret;
->  			}
->  		}
->  	}
+> +   * Kontron sl28cpld
 > +
-> +	/* End of pmu events. */
-> +	if (!has_match)
+> +     Prefix: 'sl28cpld'
+> +
+> +     Datasheet: not available
+> +
+> +Authors: Michael Walle <michael@walle.cc>
+> +
+> +Description
+> +-----------
+> +
+> +The sl28cpld is a board management controller which also exposes a hardware
+> +monitoring controller. At the moment this controller supports a single fan
+> +supervisor. In the future there might be other flavours and additional
+> +hardware monitoring might be supported.
+> +
+> +The fan supervisor has a 7 bit counter register and a counter period of 1
+> +second. If the 7 bit counter overflows, the supervisor will automatically
+> +switch to x8 mode to support a wider input range at the loss of
+> +granularity.
+> +
+> +Sysfs entries
+> +-------------
+> +
+> +The following attributes are supported.
+> +
+> +======================= ========================================================
+> +fan1_input		Fan RPM. Assuming 2 pulses per revolution.
+> +======================= ========================================================
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 8dc28b26916e..a02829ec7386 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1479,6 +1479,16 @@ config SENSORS_RASPBERRYPI_HWMON
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called raspberrypi-hwmon.
+>  
+> +config SENSORS_SL28CPLD
+> +	tristate "Kontron sl28cpld hardware monitoring driver"
+> +	select MFD_SIMPLE_MFD_I2C
+> +	help
+> +	  If you say yes here you get support for the fan supervisor of the
+> +	  sl28cpld board management controller.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called sl28cpld-hwmon.
+> +
+>  config SENSORS_SHT15
+>  	tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
+>  	depends on GPIOLIB || COMPILE_TEST
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index a8f4b35b136b..dee8511f9348 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -159,6 +159,7 @@ obj-$(CONFIG_SENSORS_S3C)	+= s3c-hwmon.o
+>  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
+>  obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
+>  obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
+> +obj-$(CONFIG_SENSORS_SL28CPLD)	+= sl28cpld-hwmon.o
+>  obj-$(CONFIG_SENSORS_SHT15)	+= sht15.o
+>  obj-$(CONFIG_SENSORS_SHT21)	+= sht21.o
+>  obj-$(CONFIG_SENSORS_SHT3x)	+= sht3x.o
+> diff --git a/drivers/hwmon/sl28cpld-hwmon.c b/drivers/hwmon/sl28cpld-hwmon.c
+> new file mode 100644
+> index 000000000000..e48f58ec5b9c
+> --- /dev/null
+> +++ b/drivers/hwmon/sl28cpld-hwmon.c
+> @@ -0,0 +1,142 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * sl28cpld hardware monitoring driver
+> + *
+> + * Copyright 2020 Kontron Europe GmbH
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/regmap.h>
+> +
+> +#define FAN_INPUT		0x00
+> +#define   FAN_SCALE_X8		BIT(7)
+> +#define   FAN_VALUE_MASK	GENMASK(6, 0)
+> +
+> +struct sl28cpld_hwmon {
+> +	struct regmap *regmap;
+> +	u32 offset;
+> +};
+> +
+> +static umode_t sl28cpld_hwmon_is_visible(const void *data,
+> +					 enum hwmon_sensor_types type,
+> +					 u32 attr, int channel)
+> +{
+> +	return 0444;
+> +}
+> +
+> +static int sl28cpld_hwmon_read(struct device *dev,
+> +			       enum hwmon_sensor_types type, u32 attr,
+> +			       int channel, long *input)
+> +{
+> +	struct sl28cpld_hwmon *hwmon = dev_get_drvdata(dev);
+> +	unsigned int value;
+> +	int ret;
+> +
+> +	switch (attr) {
+> +	case hwmon_fan_input:
+> +		ret = regmap_read(hwmon->regmap, hwmon->offset + FAN_INPUT,
+> +				  &value);
+> +		if (ret)
+> +			return ret;
+> +		/*
+> +		 * The register has a 7 bit value and 1 bit which indicates the
+> +		 * scale. If the MSB is set, then the lower 7 bit has to be
+> +		 * multiplied by 8, to get the correct reading.
+> +		 */
+> +		if (value & FAN_SCALE_X8)
+> +			value = FIELD_GET(FAN_VALUE_MASK, value) << 3;
+> +
+> +		/*
+> +		 * The counter period is 1000ms and the sysfs specification
+> +		 * says we should asssume 2 pulses per revolution.
+> +		 */
+> +		value *= 60 / 2;
+> +
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	*input = value;
+> +	return 0;
+> +}
+> +
+> +static const u32 sl28cpld_hwmon_fan_config[] = {
+> +	HWMON_F_INPUT,
+> +	0
+> +};
+> +
+> +static const struct hwmon_channel_info sl28cpld_hwmon_fan = {
+> +	.type = hwmon_fan,
+> +	.config = sl28cpld_hwmon_fan_config,
+> +};
+> +
+> +static const struct hwmon_channel_info *sl28cpld_hwmon_info[] = {
+> +	&sl28cpld_hwmon_fan,
+> +	NULL
+> +};
+> +
+> +static const struct hwmon_ops sl28cpld_hwmon_ops = {
+> +	.is_visible = sl28cpld_hwmon_is_visible,
+> +	.read = sl28cpld_hwmon_read,
+> +};
+> +
+> +static const struct hwmon_chip_info sl28cpld_hwmon_chip_info = {
+> +	.ops = &sl28cpld_hwmon_ops,
+> +	.info = sl28cpld_hwmon_info,
+> +};
+> +
+> +static int sl28cpld_hwmon_probe(struct platform_device *pdev)
+> +{
+> +	struct sl28cpld_hwmon *hwmon;
+> +	struct device *hwmon_dev;
+> +	int ret;
+> +
+> +	if (!pdev->dev.parent)
+> +		return -ENODEV;
+> +
+> +	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
+> +	if (!hwmon)
+> +		return -ENOMEM;
+> +
+> +	hwmon->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!hwmon->regmap)
+> +		return -ENODEV;
+> +
+> +	ret = device_property_read_u32(&pdev->dev, "reg", &hwmon->offset);
+> +	if (ret)
 > +		return -EINVAL;
 > +
->  	list_for_each_entry(eg, group_list, nd) {
->  		if (events->len > 0)
->  			strbuf_addf(events, ",");
+> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
+> +				"sl28cpld_hwmon", hwmon,
+> +				&sl28cpld_hwmon_chip_info, NULL);
+> +	if (IS_ERR(hwmon_dev))
+> +		dev_err(&pdev->dev, "failed to register as hwmon device");
+> +
+> +	return PTR_ERR_OR_ZERO(hwmon_dev);
+> +}
+> +
+> +static const struct of_device_id sl28cpld_hwmon_of_match[] = {
+> +	{ .compatible = "kontron,sl28cpld-fan" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, sl28cpld_hwmon_of_match);
+> +
+> +static struct platform_driver sl28cpld_hwmon_driver = {
+> +	.probe = sl28cpld_hwmon_probe,
+> +	.driver = {
+> +		.name = "sl28cpld-fan",
+> +		.of_match_table = sl28cpld_hwmon_of_match,
+> +	},
+> +};
+> +module_platform_driver(sl28cpld_hwmon_driver);
+> +
+> +MODULE_DESCRIPTION("sl28cpld Hardware Monitoring Driver");
+> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.20.1
 > 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
