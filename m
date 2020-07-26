@@ -2,94 +2,122 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BEBC433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE1CC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 706102065C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F5F2065C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="boRNySGG"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="FKbfc6K6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgGZI6h (ORCPT
+        id S1727080AbgGZI7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 04:58:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47622 "EHLO
+        Sun, 26 Jul 2020 04:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGZI6h (ORCPT
+        with ESMTP id S1725794AbgGZI7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 04:58:37 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ECCBC0619D2;
-        Sun, 26 Jul 2020 01:58:36 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id m16so6599685pls.5;
-        Sun, 26 Jul 2020 01:58:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E1yGJnuNpD4do6FBG5mJhUC2P0QZnCXgqJQvqFc7BYo=;
-        b=boRNySGGJxBWJtX6SQlUK/nW6EuoNyYorWR+XRHUVvjzoi5RZ4qTUEUL/j0OAfTD01
-         8uytWTN5ntgW32dfW93cE2A7YnZlTFkzK4bZOwwtDgpjSe/hB6j4kHgvwUJUAD7YA0F/
-         gYnaRCUxQi+OiCr1i42eu4C8R3Fjqk9cLqIEfWxg37Gq6VQS1zWu7d1/IyMObeQRs4BY
-         /N751t7kH7YTyEKqidIW6vBwXSaMrq/pfTNSHxHf/FR2XupdtBiEfnjkpcP4F0giG/1Z
-         aoTVV0jNK6SAJ9HMncQ2e0kxB+lPJ84tVeEBM6PWbrDjbddFzpDo20a8wisiStSmvyaV
-         BPww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E1yGJnuNpD4do6FBG5mJhUC2P0QZnCXgqJQvqFc7BYo=;
-        b=ZEjl/HW+SkR6AleejNLzFkrnJTw9RNCZ6Nc3XM0eILdROM9hQ+avAYkowXyOozTAWn
-         dUh7al4A2GALoO6z1jIpVXbbJ1/cXH+IYuaWI6JpO02FIHwWb9ZBGtSQ5G3tKh7zDZFc
-         tv2qkXFtKdId7IngLF3Dqs4w9dvQcZu1oGze8eA8tu317alfhyzbX06UiKD43GBu+syJ
-         6P/40YFLE4t8um6m+68tvuNsSHcysHJvQdvzvBHkbnVIoURBGBW6jVss7nrde9g3qlhN
-         E+QPdaXfqRGIMNJ6RixxfkBxsVJyRFTjtfyscH+W2p5SmoqSRxhbJPDbkWkaeU0Jz+yB
-         LMVg==
-X-Gm-Message-State: AOAM530iokC9uUk9Te0RgS1Qb/+UeOLuSCQJuQfsTEB2Xh1D0wxQXRxO
-        Bd+hC1/WBxkCH2Fdbe6pTzZRXlXza8CzOIgMeuI=
-X-Google-Smtp-Source: ABdhPJxC26t1TVcy2BCqXWYJOp1U0PTQPyZFkQTpOeUL9TGGQ4UfvPWOI+Hk4O0dYoLWVYDKACgPpCZivTvThQPKa4k=
-X-Received: by 2002:a17:90b:3547:: with SMTP id lt7mr13187611pjb.181.1595753916026;
- Sun, 26 Jul 2020 01:58:36 -0700 (PDT)
+        Sun, 26 Jul 2020 04:59:40 -0400
+Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBB42C0619D2;
+        Sun, 26 Jul 2020 01:59:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=raj459k/Ry/Z+q4J3+wwOawrxeEM4ca9YQ65wIbZMWs=; b=FKbfc6K6S9rPTM7UPjdjDgKVrJ
+        D6LJr3AeYr+fySva3u+UezV1ZolLU9QoWVjTWtrqB9m8Om85RsK9/tw4GWtEYW2aZVuPG5591iaug
+        gDl1ZwVYreM3J+YKXrfnYpCg8omSIgKLA8ckqzMZ3RLvAZ/smIX6TUdYXZMMN2dBLAeo=;
+Received: from p5b206d80.dip0.t-ipconnect.de ([91.32.109.128] helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1jzcVF-0001wr-0T; Sun, 26 Jul 2020 10:59:29 +0200
+Subject: Re: [RFC 0/7] Add support to process rx packets in thread
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Rakesh Pillai <pillair@codeaurora.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
+        "dianders@chromium.org" <dianders@chromium.org>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Ding Zhao Nan <oshack@hotmail.com>,
+        "evgreen@chromium.org" <evgreen@chromium.org>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvalo@codeaurora.org" <kvalo@codeaurora.org>
+References: <1595351666-28193-1-git-send-email-pillair@codeaurora.org>
+ <20200721172514.GT1339445@lunn.ch> <20200725081633.7432-1-hdanton@sina.com>
+ <20200726012244.15264-1-hdanton@sina.com>
+ <20200726083239.5060-1-hdanton@sina.com>
+From:   Felix Fietkau <nbd@nbd.name>
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <805e66e3-3090-61d2-1fda-50421eb99e3d@nbd.name>
+Date:   Sun, 26 Jul 2020 10:59:27 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200726050713.9461-1-gaurav1086@gmail.com>
-In-Reply-To: <20200726050713.9461-1-gaurav1086@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 26 Jul 2020 11:58:20 +0300
-Message-ID: <CAHp75Vf0F+vtgg_NB0dL5Ck9m4_7fEHyH84mWrhTOXrEoL5SGA@mail.gmail.com>
-Subject: Re: [PATCH] [video/fbdev] fb_flashcursor: Remove redundant null check
-To:     Gaurav Singh <gaurav1086@gmail.com>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Qiujun Huang <hqjagain@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Peter Rosin <peda@axentia.se>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "open list:FRAMEBUFFER LAYER" <dri-devel@lists.freedesktop.org>,
-        "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200726083239.5060-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 8:17 AM Gaurav Singh <gaurav1086@gmail.com> wrote:
->
-> ops cannot be NULL as its being accessed later without
+On 2020-07-26 10:32, Hillf Danton wrote:
+> 
+> On Sun, 26 Jul 2020 10:10:15 +0200 Felix Fietkau wrote:
+>> On 2020-07-26 03:22, Hillf Danton wrote:
+>> > 
+>> > Feel free to do that. Is it likely for me to select a Cc?
+>> > 
+>> Shall I use Signed-off-by: Hillf Danton <hdanton@sina.com>?
+> 
+> s/Signed-off-by/Cc/
+> 
+>> What Cc do you want me to add?
+> 
+> I prefer Cc over other tags.
+Ah, okay. I was planning on adding you as the author of the patch, since
+you did most of the work on it. If you want to be attributed as author
+(or in Co-developed-by), I'd need your Signed-off-by.
 
-it's
+If you don't want that, I can submit it under my name and leave you in
+as Cc only.
 
-> checks. Remove the redundant NULL check.
-
-Commit message doesn't clarify why your fix is the correct one.
-Maybe it's the other way around, missed check in the rest of the code there?
-
--- 
-With Best Regards,
-Andy Shevchenko
+- Felix
