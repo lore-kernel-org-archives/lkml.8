@@ -2,86 +2,61 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AFAC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD8CC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9AC2206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6682C20700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="WNTqREg2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SuQ5Ms0U"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TtfaEDEn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgGZCxl (ORCPT
+        id S1728076AbgGZC7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 22:53:41 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:49405 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727101AbgGZCxk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 22:53:40 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 50F0458050B;
-        Sat, 25 Jul 2020 22:53:39 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sat, 25 Jul 2020 22:53:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=mJuPaeFZ/TtUC
-        wF3A6FAm7Kyf5fli2VKl5DI4MtgM7E=; b=WNTqREg2V1HmtJOPrziyiFG10Nzyr
-        IH/X0U81dmphQGcSn4/JwMdSTqferhALQlOr+H5Yu7zyRiI+2hrtsvQs13ZAd00E
-        pqSSnQ9jhpneaahWSa3bapwe/OEYDetDKy0RMxR4QQQOl6L/v/wwZf/QQ4Lz406K
-        XUYZNDl83RpiDKTasC77vgzerLXtiIk6Y2ifMFtURIgvhcNsrE6RfLqusr7I/3oH
-        EJyMO4cxAfRK7F8MAhz6TaicQyLVgjU2FrDaTArkE8XyLAfcKmhLmsn0NzK0yIGL
-        m9HZsnSjGBrXv2onSu41wZermPlFrKWxKlm2RgG4YN+qGwjioxT+kom0w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=mJuPaeFZ/TtUCwF3A6FAm7Kyf5fli2VKl5DI4MtgM7E=; b=SuQ5Ms0U
-        i9ozBbJUnIazU6JZ/2zoCAvoYyiJhDTg6bgWd2ugh0fWw3RsgU1TsaDRDkt0UICw
-        PCGQ3nONZKPD4XhCG6qnpR6cL09LG9B2AuFGouzVZ9rHHe1S09BNouXNWpFkV27y
-        LpY4KFIXssStn5bVvKXAcYYPWFhy7EtRgKKmsksZaFwXbo7kXG8agS+uoNqB1Z0i
-        Ja98j2k5dr9azwgi8Hiq2I2mFUsSlk6EuNDimRGNelmPypBlWH+VXTa/PiZ+7HsQ
-        VZLZLa54IxDeLio3L9tu7bgcRE8Zvx7pJmNSgdBf7l1XAlcBpCKkgLlwlP8vfI6Y
-        iDIsBqweyXDuWg==
-X-ME-Sender: <xms:M_AcX7TNm4SmwFX-l60DrJIIQ03UC7muRrmsLB-Ckqvvn7O2QbM8uQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheeigdeiudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
-    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrf
-    grthhtvghrnhepudfhjeefvdfhgfefheetgffhieeigfefhefgvddvveefgeejheejvdfg
-    jeehueeinecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgu
-    rdhorhhg
-X-ME-Proxy: <xmx:M_AcX8xpDHMvdqSCfdlLtf5tzXmvXmZ_Cifq5xn4W5qCsQohHlHf9w>
-    <xmx:M_AcXw2sxoolvxZmJcpu_W4XHsWtDq2IhuHJQSTaP2_jI1VEm1hrtw>
-    <xmx:M_AcX7BbCryvX-sM5ZZc2Ev4xRoCTraFxTWNYT29qKQDBNOKFmgL_Q>
-    <xmx:M_AcXwj_07HdimxH3-lEYAPYrc5qQC9oFnap59VWldwT7ln-EqXfTA>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AF3A3328005A;
-        Sat, 25 Jul 2020 22:53:38 -0400 (EDT)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     Ondrej Jirman <megous@megous.com>, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v2 8/8] ASoC: sun50i-codec-analog: Enable DAPM for earpiece switch
-Date:   Sat, 25 Jul 2020 21:53:34 -0500
-Message-Id: <20200726025334.59931-9-samuel@sholland.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200726025334.59931-1-samuel@sholland.org>
-References: <20200726025334.59931-1-samuel@sholland.org>
+        Sat, 25 Jul 2020 22:59:48 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:36786 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727101AbgGZC7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 25 Jul 2020 22:59:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595732387; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=YJlWfawbaRsS8Sy0QV32pRFsqzlt1zIfjkcHj6ND5zI=; b=TtfaEDEnRdwPRjLkFAYZTQGFVVliYAvdyj8bQgIt5lq6E1BYEc8L5EhlGJK+0Yrb4+cS5+jK
+ 3yywqPKXigPbGkSNfNXDRFR6Ly9Ot51lRRrzlFVIyEnUdxkhf/XV8L+2jVSIetBb99ra0qzi
+ fCAkh1EekF8Hrj2GOFEr8VgqYmI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f1cf1a27ab15087ebec2b95 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 26 Jul 2020 02:59:46
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 13848C433CB; Sun, 26 Jul 2020 02:59:46 +0000 (UTC)
+Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tingwei)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BC677C433C9;
+        Sun, 26 Jul 2020 02:59:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BC677C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
+From:   Tingwei Zhang <tingwei@codeaurora.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Tingwei Zhang <tingwei@codeaurora.org>, tsoni@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mao Jinlong <jinlmao@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/6] tracing: export event trace and trace_marker
+Date:   Sun, 26 Jul 2020 10:59:25 +0800
+Message-Id: <20200726025931.30510-1-tingwei@codeaurora.org>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -89,73 +64,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By including the earpiece mute switch in the DAPM graph, both the
-earpiece amplifier and the Mixer/DAC inputs can be powered off when
-the earpiece is muted.
+Ftrace has ability to export trace packets to other destionation. Currently,
+only function trace can be exported. This series extends the support to
+event trace and trace_maker. STM is one possible destination to export ftrace.
+Use seperate channel for each CPU to avoid mixing up packets from different
+CPUs together.
 
-While the widget is really just a simple switch, it is represented
-as a "mixer with named controls" to avoid including the widget name
-in the kcontrol name. Otherwise, it is not possible to give the widget
-an accurate, descriptive name without changing the kcontrol name
-seen by userspace (which should be stable).
+Change from v1:
+All changes are suggested by Steven Rostedt.
+User seperate flag to control function trace, event trace and trace mark.
+Allocate channels according to num_possible_cpu() dynamically.
+Move ftrace_exports routines up so all ftrace can use them.
 
-The mute switch is between the source selection and the amplifier,
-as per the diagram in the SoC manual.
+Tingwei Zhang (6):
+  stm class: ftrace: change dependency to TRACING
+  tracing: add flag to control different traces
+  tracing: add trace_export support for event trace
+  tracing: add trace_export support for trace_marker
+  stm class: ftrace: enable supported trace export flag
+  stm class: ftrace: use different channel accroding to CPU
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
- sound/soc/sunxi/sun50i-codec-analog.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/hwtracing/stm/Kconfig  |   2 +-
+ drivers/hwtracing/stm/ftrace.c |   6 +-
+ include/linux/trace.h          |   7 +
+ kernel/trace/trace.c           | 270 ++++++++++++++++++---------------
+ 4 files changed, 158 insertions(+), 127 deletions(-)
 
-diff --git a/sound/soc/sunxi/sun50i-codec-analog.c b/sound/soc/sunxi/sun50i-codec-analog.c
-index 84bb76cad74f..a41e25ad0aaf 100644
---- a/sound/soc/sunxi/sun50i-codec-analog.c
-+++ b/sound/soc/sunxi/sun50i-codec-analog.c
-@@ -232,11 +232,6 @@ static const struct snd_kcontrol_new sun50i_a64_codec_controls[] = {
- 		       SUN50I_ADDA_EARPIECE_CTRL1,
- 		       SUN50I_ADDA_EARPIECE_CTRL1_ESP_VOL, 0x1f, 0,
- 		       sun50i_codec_earpiece_vol_scale),
--
--	SOC_SINGLE("Earpiece Playback Switch",
--		   SUN50I_ADDA_EARPIECE_CTRL1,
--		   SUN50I_ADDA_EARPIECE_CTRL1_ESPPA_MUTE, 1, 0),
--
- };
- 
- static const char * const sun50i_codec_hp_src_enum_text[] = {
-@@ -295,6 +290,12 @@ static const struct snd_kcontrol_new sun50i_codec_earpiece_src[] = {
- 		      sun50i_codec_earpiece_src_enum),
- };
- 
-+static const struct snd_kcontrol_new sun50i_codec_earpiece_switch[] = {
-+	SOC_DAPM_SINGLE("Earpiece Playback Switch",
-+			SUN50I_ADDA_EARPIECE_CTRL1,
-+			SUN50I_ADDA_EARPIECE_CTRL1_ESPPA_MUTE, 1, 0),
-+};
-+
- static const struct snd_soc_dapm_widget sun50i_a64_codec_widgets[] = {
- 	/* DAC */
- 	SND_SOC_DAPM_DAC("Left DAC", NULL, SUN50I_ADDA_MIX_DAC_CTRL,
-@@ -341,6 +342,9 @@ static const struct snd_soc_dapm_widget sun50i_a64_codec_widgets[] = {
- 
- 	SND_SOC_DAPM_MUX("Earpiece Source Playback Route",
- 			 SND_SOC_NOPM, 0, 0, sun50i_codec_earpiece_src),
-+	SOC_MIXER_NAMED_CTL_ARRAY("Earpiece Switch",
-+				  SND_SOC_NOPM, 0, 0,
-+				  sun50i_codec_earpiece_switch),
- 	SND_SOC_DAPM_OUT_DRV("Earpiece Amp", SUN50I_ADDA_EARPIECE_CTRL1,
- 			     SUN50I_ADDA_EARPIECE_CTRL1_ESPPA_EN, 0, NULL, 0),
- 	SND_SOC_DAPM_OUTPUT("EARPIECE"),
-@@ -462,7 +466,8 @@ static const struct snd_soc_dapm_route sun50i_a64_codec_routes[] = {
- 	{ "Earpiece Source Playback Route", "DACR", "Right DAC" },
- 	{ "Earpiece Source Playback Route", "Left Mixer", "Left Mixer" },
- 	{ "Earpiece Source Playback Route", "Right Mixer", "Right Mixer" },
--	{ "Earpiece Amp", NULL, "Earpiece Source Playback Route" },
-+	{ "Earpiece Switch", "Earpiece Playback Switch", "Earpiece Source Playback Route" },
-+	{ "Earpiece Amp", NULL, "Earpiece Switch" },
- 	{ "EARPIECE", NULL, "Earpiece Amp" },
- };
- 
 -- 
-2.26.2
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
