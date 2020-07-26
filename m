@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29317C433F1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1181CC433ED
 	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0812F2070C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2BD206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 01:26:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="lHVvSAw1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o561a/MA"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="TpRjCvli";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o7dfIRQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgGZB0D (ORCPT
+        id S1728170AbgGZB0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 25 Jul 2020 21:26:03 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:57999 "EHLO
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:53081 "EHLO
         new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726870AbgGZB0B (ORCPT
+        by vger.kernel.org with ESMTP id S1727013AbgGZB0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 21:26:01 -0400
+        Sat, 25 Jul 2020 21:26:02 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 7384A58014B;
+        by mailnew.nyi.internal (Postfix) with ESMTP id D362658015F;
         Sat, 25 Jul 2020 21:26:00 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
   by compute3.internal (MEProxy); Sat, 25 Jul 2020 21:26:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=Bc+s0nLaRpZIx
-        yCBvQ4oj1VwkiAzKp+9hlsJuhGXWAM=; b=lHVvSAw1ZVEQfJMC1pDEJsvgNHUQC
-        ToktL4COHMq/yhL+CXinpvhwck8N7ckpGHJoXgZAYW4+ZX+EACJHnGOZDE8N8dCu
-        V8saNvMyvYjMsdCHLAorj2rKQZ6lU5hxsQvRIgt6DiBKLjfsOhwo+V+yqwdHNadP
-        WFv9UrMrcwDiLgoJWK0pztN8TeivUK2wQQjrf2gNSZKnYF+IHvv3+tMRkfEV8WKF
-        Ppx5V9wNX1el4R++U4QFa5GXmQ8gkl5cQ/qZygVTSTVayfQdakT39q5wuzGNilf7
-        H/4Ex92+OvtrRIbnFNpL3HquZRt+rWhmwGr5dpUQYWDM4rDQp1mFnTyEA==
+        :mime-version:content-transfer-encoding; s=fm3; bh=gSnOotan3Mg6t
+        HwoG/CYRCC0umOjvwli6asaDlT/n70=; b=TpRjCvlist/PVLSxjSy+81brTc8pP
+        sg3I7eIVGbBHDsgGXUCTZDqAlsFCNv4vngP0jwLTN019NEDXwo3dPWUR1fQ9IK+o
+        ymcYlyTv/iw3nVaFx7NhMUCFqKcxAw0/CzKU7IV4PewJ9iyQo1hyFTCuSmDFDWrF
+        A3YLrtCEN/297KwB0ynTev6+SMkDvhB8pucWAFKnyTvBvEabN8kQwVut2plgR/9j
+        wbU/17hSJ0jTv98achQ5DjVDdnleDIZe4SoYx1FPYGRSadPv3HubWgSQvG3ea6Gm
+        Yt1zkV3uBdgi6+DQq73RKrmxV7akajuzM1xX2Fk9PIUNglXI4VRdnDTrw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=Bc+s0nLaRpZIxyCBvQ4oj1VwkiAzKp+9hlsJuhGXWAM=; b=o561a/MA
-        JTGnE42PW2YjZgncOVPhgWjXBBRDNPrA1jPhpaM+PahPWgglJvDF8F1CZCGB0dBK
-        B3VEEGZzmjJG6rYW/P5T83fOTqnzHQyIGLXZ3OrDjxNSVnwHL7ygazZoUItBOQ1k
-        zG391ZxWp0MGbFe0GvD7xgrJfI+6lEVEQHTuY+XhuXsTz8PxXFmIS793bMxuQJ0Y
-        jko94yEe56rowUcECducoVe4KeTWeScfvlYLMK5rBaPqDBd2bRL5vyPx41IfuJ+O
-        nmmvyBFtoRTQUx2q4UmTZUgf9pi61eW5er3hI3vPttPso+/6e4ug939s0UsCbHE+
-        WavsLeGyMD87Mg==
-X-ME-Sender: <xms:p9scX6QxgGqbunpekQBTatw5eZIHwmitByMoW1-uhaDl3BLMN2SwMA>
+        fm3; bh=gSnOotan3Mg6tHwoG/CYRCC0umOjvwli6asaDlT/n70=; b=o7dfIRQp
+        u8vKykFQlz7ln0Y1PNLSOPMzRBr4szk/m1y8Z++7ojssOMc4FUeoFDOTW5qlSqyt
+        IWYpumqlwNX92lUJK75jPLDzPFXkeVFYJP2+1WmZJ8rreX8TMcTl3KHDrED1qkmi
+        gvWMcxyF36Y6YPG2TYklDaxwsDa2iiCP5t+rsKLJKYn0rYX5sE/yIipMRqk4XM91
+        xfQXvViJaY7kmMCl9ZPD8U5xZqlbtrGRV3jOIs5Y4C4FHxskBGUykMCzuwTk7FGn
+        qB1iLpRApUYWtanP3lDo6+KShrRhZMyrGxMIz7VlDw32/4SH4y4GFgbTwTBdmk2H
+        X/UpHDHZ5MsbcA==
+X-ME-Sender: <xms:qNscX8Lfq9K3NwYbTUuA7ZNAnLG60Koq-vNBX5c0XTQrYznKN5vviQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheeigdegfecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -59,13 +59,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheeigdegfecutefuodetggdote
     jeehueeinecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiii
     gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgu
     rdhorhhg
-X-ME-Proxy: <xmx:p9scX_yWVMgMMUn_Fe5R6YbGcjJxFfzI3QqyQmYquCbxdsu4ZzJp4w>
-    <xmx:p9scX30JW_vZ9B0qbbut9WlqEOlb4LVRFTx1vV4k3CBjW7pex6Xj2w>
-    <xmx:p9scX2DEaDqJW1M2axr7KmV1Y0446X32Nealw3SmpcZfnqyGYJk8Cg>
-    <xmx:qNscX2pC0afVfIF804Gnm4lhCY4u0ZoXlGf6inmLtdE4lEpeZeWThA>
+X-ME-Proxy: <xmx:qNscX8KtBOlNaKLWzHIWKEY2DUd5cqZHk0sDPMdiDk_mPoG0K1P3vQ>
+    <xmx:qNscX8ufUs0kGI_sthDKn65juHJmJ0N1hsp4LzsRZtVB3jA56nDNVw>
+    <xmx:qNscX5bXxUVwe_EfpABwUeNHX4YcFTpa4fr7Eq1bh9sxz2uUu9GiDQ>
+    <xmx:qNscXxDVb3rKkV6ku7rgf5J8RpA7eIoTUnSRoTw9cmK9uncA78FBfA>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BFEF8306005F;
-        Sat, 25 Jul 2020 21:25:58 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 17B4F30600A3;
+        Sat, 25 Jul 2020 21:26:00 -0400 (EDT)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -79,9 +79,9 @@ Cc:     Ondrej Jirman <megous@megous.com>,
         alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 1/7] ASoC: dt-bindings: Add a new compatible for the A64 codec
-Date:   Sat, 25 Jul 2020 20:25:51 -0500
-Message-Id: <20200726012557.38282-2-samuel@sholland.org>
+Subject: [PATCH 3/7] ASoC: sun8i-codec: Add missing mixer routes
+Date:   Sat, 25 Jul 2020 20:25:53 -0500
+Message-Id: <20200726012557.38282-4-samuel@sholland.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200726012557.38282-1-samuel@sholland.org>
 References: <20200726012557.38282-1-samuel@sholland.org>
@@ -92,42 +92,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The audio codecs in the A33 and A64 are both integrated variants of the
-X-Powers AC100 codec. However, there are some differences between them
-that merit having a separate compatible:
- - The A64 has a second DRC block, not present in the AC100 or A33.
- - The A33 has some extra muxing options for AIF1/2/3 in the
-   AIF3_SGP_CTRL register, which are not present in the AC100 or A64.
- - The A33 is missing registers providing jack detection functionality.
- - The A33 is claimed to invert LRCK, but this is not seen on A64.
+The sun8i-codec driver provides ALSA controls for enabling/disabling
+each of the inputs to the AIF1 Slot 0 and DAC mixers. For two of these
+inputs (ADC->DAC and AIF1 DA0->AIF1 AD0), the audio source is
+implemented, so the mixer inputs can be used.
 
-Since the driver will continue to work on the A64 using the A33
-compatible, albeit without jack detection functionality and with
-possibly inverted channels, as it does now, allow the A33 compatible
-to be used as a fallback.
+However, because the DAPM routes are missing, these mixer inputs only
+work when both the source and the mixer happen to be part of other
+active audio paths. Adding the appropriate routes makes these ALSA
+controls function all of the time.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- .../bindings/sound/allwinner,sun8i-a33-codec.yaml           | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/soc/sunxi/sun8i-codec.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
-index 55d28268d2f4..67405e6d8168 100644
---- a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
-+++ b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a33-codec.yaml
-@@ -15,7 +15,11 @@ properties:
-     const: 0
+diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
+index ffeac150c086..a75be9e82d22 100644
+--- a/sound/soc/sunxi/sun8i-codec.c
++++ b/sound/soc/sunxi/sun8i-codec.c
+@@ -490,14 +490,20 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
  
-   compatible:
--    const: allwinner,sun8i-a33-codec
-+    oneOf:
-+      - items:
-+          - const: allwinner,sun50i-a64-codec
-+          - const: allwinner,sun8i-a33-codec
-+      - const: allwinner,sun8i-a33-codec
+ 	/* DAC Mixer Routes */
+ 	{ "Left Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch", "AIF1 DA0L" },
++	{ "Left Digital DAC Mixer", "ADC Digital DAC Playback Switch", "ADCL" },
++
+ 	{ "Right Digital DAC Mixer", "AIF1 Slot 0 Digital DAC Playback Switch", "AIF1 DA0R" },
++	{ "Right Digital DAC Mixer", "ADC Digital DAC Playback Switch", "ADCR" },
  
-   reg:
-     maxItems: 1
+ 	/* ADC Routes */
+ 	{ "AIF1 AD0L", NULL, "Left Digital ADC Mixer" },
+ 	{ "AIF1 AD0R", NULL, "Right Digital ADC Mixer" },
+ 
+ 	/* ADC Mixer Routes */
++	{ "Left Digital ADC Mixer", "AIF1 Slot 0 Digital ADC Capture Switch", "AIF1 DA0L" },
+ 	{ "Left Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch", "ADCL" },
++
++	{ "Right Digital ADC Mixer", "AIF1 Slot 0 Digital ADC Capture Switch", "AIF1 DA0R" },
+ 	{ "Right Digital ADC Mixer", "AIF1 Data Digital ADC Capture Switch", "ADCR" },
+ };
+ 
 -- 
 2.26.2
 
