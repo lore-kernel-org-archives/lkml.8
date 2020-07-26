@@ -7,31 +7,34 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE04C433F1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9E7C433ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3422070A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE06A2070A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 11:40:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgGZLkK (ORCPT
+        id S1728105AbgGZLkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 07:40:10 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:32827
+        Sun, 26 Jul 2020 07:40:03 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:32833
         "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727996AbgGZLj4 (ORCPT
+        by vger.kernel.org with ESMTP id S1728014AbgGZLj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 07:39:56 -0400
+        Sun, 26 Jul 2020 07:39:57 -0400
 X-IronPort-AV: E=Sophos;i="5.75,398,1589234400"; 
-   d="scan'208";a="355309548"
+   d="scan'208";a="355309549"
 Received: from palace.rsr.lip6.fr (HELO palace.lip6.fr) ([132.227.105.202])
   by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES256-SHA256; 26 Jul 2020 13:39:48 +0200
 From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     kernel-janitors@vger.kernel.org, linux-media@vger.kernel.org,
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     kernel-janitors@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 6/7] [media] tm6000: drop unnecessary list_empty
-Date:   Sun, 26 Jul 2020 12:58:31 +0200
-Message-Id: <1595761112-11003-7-git-send-email-Julia.Lawall@inria.fr>
+Subject: [PATCH 7/7] ath: drop unnecessary list_empty
+Date:   Sun, 26 Jul 2020 12:58:32 +0200
+Message-Id: <1595761112-11003-8-git-send-email-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1595761112-11003-1-git-send-email-Julia.Lawall@inria.fr>
 References: <1595761112-11003-1-git-send-email-Julia.Lawall@inria.fr>
@@ -40,32 +43,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-list_for_each_entry is able to handle an empty list.
+list_for_each_entry{_safe} is able to handle an empty list.
 The only effect of avoiding the loop is not initializing the
 index variable.
 Drop list_empty tests in cases where these variables are not
 used.
 
-Note that list_for_each_entry is defined in terms of list_first_entry,
-which indicates that it should not be used on an empty list.  But in
-list_for_each_entry, the element obtained by list_first_entry is not
-really accessed, only the address of its list_head field is compared
-to the address of the list head, so the list_first_entry is safe.
+Note that list_for_each_entry{_safe} is defined in terms of
+list_first_entry, which indicates that it should not be used on an
+empty list.  But in list_for_each_entry{_safe}, the element obtained
+by list_first_entry is not really accessed, only the address of its
+list_head field is compared to the address of the list head, so the
+list_first_entry is safe.
 
-The semantic patch that makes this change is as follows:
-(http://coccinelle.lip6.fr/)
+The semantic patch that makes this change for the list_for_each_entry
+case is as follows: (http://coccinelle.lip6.fr/)
 
 <smpl>
 @@
 expression x,e;
-iterator name list_for_each_entry;
 statement S;
 identifier i;
 @@
 
--if (!(list_empty(x))) {
+-if (!(list_empty(x)))
    list_for_each_entry(i,x,...) S
-- }
  ... when != i
 ? i = e
 </smpl>
@@ -73,56 +75,45 @@ identifier i;
 Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
 ---
- drivers/media/usb/tm6000/tm6000-core.c |   24 +++++++++---------------
- 1 file changed, 9 insertions(+), 15 deletions(-)
+ drivers/net/wireless/ath/dfs_pattern_detector.c |   15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/media/usb/tm6000/tm6000-core.c b/drivers/media/usb/tm6000/tm6000-core.c
-index 2c72370..5c8cbc5 100644
---- a/drivers/media/usb/tm6000/tm6000-core.c
-+++ b/drivers/media/usb/tm6000/tm6000-core.c
-@@ -853,11 +853,9 @@ int tm6000_call_fillbuf(struct tm6000_core *dev, enum tm6000_ops_type type,
+diff --git a/drivers/net/wireless/ath/dfs_pattern_detector.c b/drivers/net/wireless/ath/dfs_pattern_detector.c
+index a274eb0..0813473 100644
+--- a/drivers/net/wireless/ath/dfs_pattern_detector.c
++++ b/drivers/net/wireless/ath/dfs_pattern_detector.c
+@@ -253,17 +253,15 @@ static void channel_detector_exit(struct dfs_pattern_detector *dpd,
+ static void dpd_reset(struct dfs_pattern_detector *dpd)
+ {
+ 	struct channel_detector *cd;
+-	if (!list_empty(&dpd->channel_detectors))
+-		list_for_each_entry(cd, &dpd->channel_detectors, head)
+-			channel_detector_reset(dpd, cd);
++	list_for_each_entry(cd, &dpd->channel_detectors, head)
++		channel_detector_reset(dpd, cd);
  
- 	/* FIXME: tm6000_extension_devlist_lock should be a spinlock */
- 
--	if (!list_empty(&tm6000_extension_devlist)) {
--		list_for_each_entry(ops, &tm6000_extension_devlist, next) {
--			if (ops->fillbuf && ops->type == type)
--				ops->fillbuf(dev, buf, size);
--		}
-+	list_for_each_entry(ops, &tm6000_extension_devlist, next) {
-+		if (ops->fillbuf && ops->type == type)
-+			ops->fillbuf(dev, buf, size);
- 	}
- 
- 	return 0;
-@@ -898,11 +896,9 @@ void tm6000_init_extension(struct tm6000_core *dev)
- 	struct tm6000_ops *ops = NULL;
- 
- 	mutex_lock(&tm6000_devlist_mutex);
--	if (!list_empty(&tm6000_extension_devlist)) {
--		list_for_each_entry(ops, &tm6000_extension_devlist, next) {
--			if (ops->init)
--				ops->init(dev);
--		}
-+	list_for_each_entry(ops, &tm6000_extension_devlist, next) {
-+		if (ops->init)
-+			ops->init(dev);
- 	}
- 	mutex_unlock(&tm6000_devlist_mutex);
  }
-@@ -912,11 +908,9 @@ void tm6000_close_extension(struct tm6000_core *dev)
- 	struct tm6000_ops *ops = NULL;
- 
- 	mutex_lock(&tm6000_devlist_mutex);
--	if (!list_empty(&tm6000_extension_devlist)) {
--		list_for_each_entry(ops, &tm6000_extension_devlist, next) {
--			if (ops->fini)
--				ops->fini(dev);
--		}
-+	list_for_each_entry(ops, &tm6000_extension_devlist, next) {
-+		if (ops->fini)
-+			ops->fini(dev);
- 	}
- 	mutex_unlock(&tm6000_devlist_mutex);
+ static void dpd_exit(struct dfs_pattern_detector *dpd)
+ {
+ 	struct channel_detector *cd, *cd0;
+-	if (!list_empty(&dpd->channel_detectors))
+-		list_for_each_entry_safe(cd, cd0, &dpd->channel_detectors, head)
+-			channel_detector_exit(dpd, cd);
++	list_for_each_entry_safe(cd, cd0, &dpd->channel_detectors, head)
++		channel_detector_exit(dpd, cd);
+ 	kfree(dpd);
  }
+ 
+@@ -331,9 +329,8 @@ static bool dpd_set_domain(struct dfs_pattern_detector *dpd,
+ 		return false;
+ 
+ 	/* delete all channel detectors for previous DFS domain */
+-	if (!list_empty(&dpd->channel_detectors))
+-		list_for_each_entry_safe(cd, cd0, &dpd->channel_detectors, head)
+-			channel_detector_exit(dpd, cd);
++	list_for_each_entry_safe(cd, cd0, &dpd->channel_detectors, head)
++		channel_detector_exit(dpd, cd);
+ 	dpd->radar_spec = rt->radar_types;
+ 	dpd->num_radar_types = rt->num_radar_types;
+ 
 
