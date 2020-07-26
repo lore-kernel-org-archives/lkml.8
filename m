@@ -2,76 +2,52 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA5EC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38012206F6
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D07D206F6
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:11:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="anGHIYnc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cZ5x/4zl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgGZJKH (ORCPT
+        id S1727075AbgGZJLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 05:10:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49396 "EHLO
+        Sun, 26 Jul 2020 05:11:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgGZJKG (ORCPT
+        with ESMTP id S1725810AbgGZJLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 05:10:06 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C10DC0619D2;
-        Sun, 26 Jul 2020 02:10:06 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id g67so7750285pgc.8;
-        Sun, 26 Jul 2020 02:10:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=W55/l1JBEazK4N5hQv70nA809fQUH8diXh6vKYJ/So8=;
-        b=anGHIYncjeMTl4zshsSV/aAmEBzakA5HLMWpVf2oOP/cmPmoqVO0+JVevzweTTS/Do
-         ZTp4H0waL/0qoY25GGhzAyn0SJAn104Npl3GeicS62ieinMin6WD7yH/bv7ezEoHmyMn
-         6AkNUjwL1WQ/J6paZXKNGb2QxKUcKfX0Y9C81r0eLi7whVlr5YMXUDEUM6AaHtjKxbC6
-         qrc9pP3NW2SR4iitA3wWa27Jf75naxGs6LhezEKLMq3hyGQSMd6cuZB5VmOAAGA93B0d
-         Mc9ehRp3QsiZKNnhUlt8iZ8t5kmMVMzcHMnnqlczKQ/rmdUx4btc/HHJ/JAm+ZjVazqV
-         kQ8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=W55/l1JBEazK4N5hQv70nA809fQUH8diXh6vKYJ/So8=;
-        b=QhZzgWKou0YiaUutcxM3gRtsG8bp9hFLTQ38zKUDadR/o7eCpvFreZPURiLj+4tl7C
-         jv2DT1RCsYcrEvxn/hTPG9X2tYKHztwxkl4PuGOu06c50jb5xSqX36qGUVGJVNzgE/pe
-         fF6XdKbZj3RXpWCJbivNl4wa4qiuUTQa/Dwc6pTCqIlVTmZ2VPdyuMjAjp7qQBNL5mLY
-         d57d+KzDxh66+dHMwXyuOBzT1ZXaPpcOE1pq9BmaoSwQaW3UUVLV1QQFfeyxrf5k2Sqh
-         A2NHtw9PJRMrYIg8kTSyt+4mdzNRYXnuKzG9/VO0QC6LOyII/MDSvmjJmdpDu8FillS6
-         prxQ==
-X-Gm-Message-State: AOAM533TKpdXEbIFuHOKrfr9I76BlhF94m14z8VLor6PhTaylqHGBekM
-        J6U4CnhvWKWhD9E24LDJbf2pO/Nw0nA=
-X-Google-Smtp-Source: ABdhPJxj/1I02FNE8PkSlNSXn49RGOhicLXpFgHxSXLoygrAG4eCmZ92+eOL5yERkeNqP/Ch7pjPUA==
-X-Received: by 2002:a63:a06b:: with SMTP id u43mr15118867pgn.294.1595754605977;
-        Sun, 26 Jul 2020 02:10:05 -0700 (PDT)
-Received: from localhost.localdomain ([1.186.115.27])
-        by smtp.gmail.com with ESMTPSA id a129sm1608215pfd.165.2020.07.26.02.10.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 02:10:05 -0700 (PDT)
-From:   Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
-To:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
-Subject: [PATCH v3 2/4] staging: media: atomisp: fix style of open brace
-Date:   Sun, 26 Jul 2020 14:35:12 +0530
-Message-Id: <20200726090512.20574-2-bharadwaj.rohit8@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200726062541.11304-1-bharadwaj.rohit8@gmail.com>
-References: <20200726062541.11304-1-bharadwaj.rohit8@gmail.com>
+        Sun, 26 Jul 2020 05:11:05 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFAD1C0619D2;
+        Sun, 26 Jul 2020 02:11:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=sEtihcpcEBRDfrflBBXQKHWbhX05b4az17G9xIFJB1o=; b=cZ5x/4zlRzZa6KKK0NHhQWP4Kb
+        Ud26d7W4jWmin2U+u9Igf6eEO624I6b31eV5DBTUrieE30uvbSDBLulBapx+0vKB8liBlkO/y+/D6
+        +zQWIrvnjuBAbx3/kZ6Nks+XOqxslayz7Zh8KqNxHFIJlgQ6ded0WbBMar4sneR/d2LFW8dMJC3WZ
+        H5/0pMV4w75EBknMO8raJZmFnxri9LRlch/2LysVE5u56LPS8JKSvhzoUffo1KofrqwJKswFk5hgB
+        ASXD+z4eu1wfSZXLxsNMrNWAu3e4o+IS63c6S3mig/gm5Y7t33URbYr2foXLSfN165dmIKBQl+q3u
+        /c6ZduyA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzcgQ-0007y1-BV; Sun, 26 Jul 2020 09:11:02 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Brian Foster <bfoster@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] iomap: Ensure iop->uptodate matches PageUptodate
+Date:   Sun, 26 Jul 2020 10:10:52 +0100
+Message-Id: <20200726091052.30576-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,108 +55,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this patch fixes style of open brace after functions and if statements
+If the filesystem has block size < page size and we end up calling
+iomap_page_create() in iomap_page_mkwrite_actor(), the uptodate bits
+would be zero, which causes us to skip writeback of blocks which are
+!uptodate in iomap_writepage_map().  This can lead to user data loss.
 
-Signed-off-by: Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
+Found using generic/127 with the THP patches.  I don't think this can be
+reproduced on mainline using that test (the THP code causes iomap_pages
+to be discarded more frequently), but inspection shows it can happen
+with an appropriate series of operations.
+
+Fixes: 9dc55f1389f9 ("iomap: add support for sub-pagesize buffered I/O without buffer heads")
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
-v3: change patch subject prefix
-v2: split patch into sequence of patches 
-v1: fix all coding style issues in single patch
+ fs/iomap/buffered-io.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
- .../media/atomisp/pci/sh_css_firmware.c       | 29 +++++++++----------
- 1 file changed, 14 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/staging/media/atomisp/pci/sh_css_firmware.c b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-index 2907aead98b7..988785ab6c95 100644
---- a/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-+++ b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
-@@ -81,7 +81,8 @@ char *sh_css_get_fw_version(void)
- /* Setup sp/sp1 binary */
- static int
- setup_binary(struct ia_css_fw_info *fw, const char *fw_data,
--	     struct ia_css_fw_info *sh_css_fw, unsigned int binary_id) {
-+	     struct ia_css_fw_info *sh_css_fw, unsigned int binary_id)
-+{
- 	const char *blob_data;
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index a2b3b5455219..f0c5027bf33f 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -53,7 +53,10 @@ iomap_page_create(struct inode *inode, struct page *page)
+ 	atomic_set(&iop->read_count, 0);
+ 	atomic_set(&iop->write_count, 0);
+ 	spin_lock_init(&iop->uptodate_lock);
+-	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
++	if (PageUptodate(page))
++		bitmap_fill(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
++	else
++		bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
  
- 	if ((!fw) || (!fw_data))
-@@ -105,7 +106,8 @@ setup_binary(struct ia_css_fw_info *fw, const char *fw_data,
- int
- sh_css_load_blob_info(const char *fw, const struct ia_css_fw_info *bi,
- 		      struct ia_css_blob_descr *bd,
--		      unsigned int index) {
-+		      unsigned int index)
-+{
- 	const char *name;
- 	const unsigned char *blob;
+ 	/*
+ 	 * migrate_page_move_mapping() assumes that pages with private data have
+@@ -72,6 +75,8 @@ iomap_page_release(struct page *page)
+ 		return;
+ 	WARN_ON_ONCE(atomic_read(&iop->read_count));
+ 	WARN_ON_ONCE(atomic_read(&iop->write_count));
++	WARN_ON_ONCE(bitmap_full(iop->uptodate, PAGE_SIZE / SECTOR_SIZE) !=
++			PageUptodate(page));
+ 	kfree(iop);
+ }
  
-@@ -119,8 +121,9 @@ sh_css_load_blob_info(const char *fw, const struct ia_css_fw_info *bi,
- 	blob = (const unsigned char *)fw + bi->blob.offset;
- 
- 	/* sanity check */
--	if (bi->blob.size != bi->blob.text_size + bi->blob.icache_size + bi->blob.data_size + bi->blob.padding_size)
--	{
-+	if (bi->blob.size !=
-+		bi->blob.text_size + bi->blob.icache_size +
-+		bi->blob.data_size + bi->blob.padding_size) {
- 		/* sanity check, note the padding bytes added for section to DDR alignment */
- 		return -EINVAL;
- 	}
-@@ -131,21 +134,18 @@ sh_css_load_blob_info(const char *fw, const struct ia_css_fw_info *bi,
- 	bd->blob = blob;
- 	bd->header = *bi;
- 
--	if (bi->type == ia_css_isp_firmware || bi->type == ia_css_sp_firmware)
--	{
-+	if (bi->type == ia_css_isp_firmware || bi->type == ia_css_sp_firmware) {
- 		char *namebuffer;
- 
- 		namebuffer = kstrdup(name, GFP_KERNEL);
- 		if (!namebuffer)
- 			return -ENOMEM;
- 		bd->name = fw_minibuffer[index].name = namebuffer;
--	} else
--	{
-+	} else {
- 		bd->name = name;
- 	}
- 
--	if (bi->type == ia_css_isp_firmware)
--	{
-+	if (bi->type == ia_css_isp_firmware) {
- 		size_t paramstruct_size = sizeof(struct ia_css_memory_offsets);
- 		size_t configstruct_size = sizeof(struct ia_css_config_memory_offsets);
- 		size_t statestruct_size = sizeof(struct ia_css_state_memory_offsets);
-@@ -226,7 +226,8 @@ static const char * const fw_acc_type_name[] = {
- 
- int
- sh_css_load_firmware(struct device *dev, const char *fw_data,
--		     unsigned int fw_size) {
-+		     unsigned int fw_size)
-+{
- 	unsigned int i;
- 	struct ia_css_fw_info *binaries;
- 	struct sh_css_fw_bi_file_h *file_header;
-@@ -260,8 +261,7 @@ sh_css_load_firmware(struct device *dev, const char *fw_data,
- 
- 	sh_css_num_binaries = file_header->binary_nr;
- 	/* Only allocate memory for ISP blob info */
--	if (sh_css_num_binaries > NUM_OF_SPS)
--	{
-+	if (sh_css_num_binaries > NUM_OF_SPS) {
- 		sh_css_blob_info = kmalloc(
- 		    (sh_css_num_binaries - NUM_OF_SPS) *
- 		    sizeof(*sh_css_blob_info), GFP_KERNEL);
-@@ -276,8 +276,7 @@ sh_css_load_firmware(struct device *dev, const char *fw_data,
- 	if (!fw_minibuffer)
- 		return -ENOMEM;
- 
--	for (i = 0; i < sh_css_num_binaries; i++)
--	{
-+	for (i = 0; i < sh_css_num_binaries; i++) {
- 		struct ia_css_fw_info *bi = &binaries[i];
- 		/*
- 		 * note: the var below is made static as it is quite large;
 -- 
-2.25.1
+2.27.0
 
