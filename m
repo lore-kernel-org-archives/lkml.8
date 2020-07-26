@@ -2,91 +2,111 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18743C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 21:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C855DC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E99BA206D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 21:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4AD3204EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:01:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="L8GXh/8G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fv/jVEkq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgGZV5X (ORCPT
+        id S1726858AbgGZWBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 17:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54352 "EHLO
+        Sun, 26 Jul 2020 18:01:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbgGZV5X (ORCPT
+        with ESMTP id S1726253AbgGZWBF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 17:57:23 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E15E6C0619D2;
-        Sun, 26 Jul 2020 14:57:22 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFGxr4WmDz9sR4;
-        Mon, 27 Jul 2020 07:57:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595800640;
-        bh=w68z9elGHIX9P0R9RdUtZpCt3tNk3gp5u1a//7njPx0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=L8GXh/8GQYLzBv5BYw78aBJTG7U7ftm9tIdeAC31yQ1mKqJRMf6w6gjY8ebc3/S/1
-         IyzmQKjqHh6eGNJ9mhJmSI2tDFPAmhLDmbeA32Ydehsmms7ag0DTrFjW4ITbHgzy2N
-         Bi1hoGdNR/07vHI9F+60BDTwcuCs2lfgv6yq0Y6GV7nvzIJC+iCxw1xF+jXhih40JQ
-         S3HoNbxXIKbiVcjxFLfgJnLhBYqWM0O7ADKOw/yx0AhPWybnMMF9FtC9xw5kxgx2RW
-         ZBo0pM5mCnmyEzTGejVOKFTDVA2IUTBnTUhr8uKaVXd+NZLgrrwRxM4k/2VIp2oDMM
-         Ga5xLZPYkVkEg==
-Date:   Mon, 27 Jul 2020 07:57:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the xfs tree
-Message-ID: <20200727075719.627a3efd@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/znC0=KRqyGnD4u/8uyqbHhf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Sun, 26 Jul 2020 18:01:05 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084FCC0619D2;
+        Sun, 26 Jul 2020 15:01:05 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id s26so8006226pfm.4;
+        Sun, 26 Jul 2020 15:01:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=IH0/M9cS+3g6rCHfpAc3E+ozfsl0ujXw3IEZMoSmSuc=;
+        b=fv/jVEkqGug6NcQ26s5BuYgfJXu+99POQrTnOfq7QLG6YYH0CR6uNsSo3l4Fu/d3UW
+         HDxgYovtHTZ46Bi1UPELjqKA8KJRmpG7xgQSde+QFzae8yw3QfdPY+Bo+pUD+QfSptVO
+         pl96OVY0UiTQeoCecQa80CtzNmEo+Me9eCQFpvzbGqKUii+qLcSW/sAFuQqDvyNV5Itc
+         3hAjPD0NcYoX/DqrO/vx33EKHA33cMBGlw+wZ6sgJRRnHsnyMYzhjQwgIKt3Utyi6LpF
+         8GtmGDdWxjuse30s/KZou2XFRQ/OPGb3Vo3WVmG8oxPx4fplBllkEaDdq9OLuN3D6hhU
+         VAgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=IH0/M9cS+3g6rCHfpAc3E+ozfsl0ujXw3IEZMoSmSuc=;
+        b=kCmbdjHFO3XEqrTM9vLVlm2Q23LhyJF1VtM07HThKqUtMgwwWoFXz1JDwCDs/4JawV
+         fejK0P22k1M90COZw6yJU5q1i6SnD79flQVcDw+fW9BVTeW6TpL56kA57T8iaLZ9AQzK
+         RaelwQiMRRvNpdBsAHoCfaKQK/7R7uQZ6VA8l34DVy4m99dWZ48suo/JR1xFpxV68wTm
+         ka9luWchYTKuDA81sMgpr+MuapDNGA1q1DDYEpRy4BcenEyvLnz+xb71dBx82BZxEaGA
+         IB5OnqZkmQl03YknZNXGrmAugz9i6QxNGyI8weuKurYSky67x8wIuwoZZy2CGnc7sCEE
+         BQGw==
+X-Gm-Message-State: AOAM531M+7lI/p6CfFvPSfvCo/UmGq0iAIJNXw+vd2s2E7A2EhkK6Qqu
+        6vb9vcJSRqoBdAJ9IlGsw8Y=
+X-Google-Smtp-Source: ABdhPJxK+KLnxE1VXpQBalut239v/Xr/XnBEZtTrYOvBZFFDLBJsO1U5ZU73IJb3vmKjVwSkWOfZ/g==
+X-Received: by 2002:a65:6786:: with SMTP id e6mr16518480pgr.395.1595800863683;
+        Sun, 26 Jul 2020 15:01:03 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 7sm12171373pgw.85.2020.07.26.15.01.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 26 Jul 2020 15:01:02 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: [PATCH v3 0/6] platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
+Date:   Sun, 26 Jul 2020 15:00:55 -0700
+Message-Id: <20200726220101.29059-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/znC0=KRqyGnD4u/8uyqbHhf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The EC reports a variety of error codes. Most of those, with the exception
+of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
+error code gets lost. In cros_ec_cmd_xfer_status(), convert all EC errors
+to Linux error codes to report a more meaningful error to the caller to aid
+debugging.
 
-Hi all,
+To prepare for this change, handle error codes other than -EPROTO for all
+callers of cros_ec_cmd_xfer_status(). Specifically, no longer assume that
+-EPROTO reflects an error from the EC and all other error codes reflect a
+transfer error.
 
-Commit
+v2: Add patches 1/4 to 3/4 to handle callers of cros_ec_cmd_xfer_status()
+v3: Add patches 4/6 and 5/6 to handle additional callers of
+	cros_ec_cmd_xfer_status()
+    Use -ENOPROTOOPT for EC_RES_INVALID_VERSION
+    Implement function to convert error codes
 
-  ea52eff66dcd ("xfs: preserve inode versioning across remounts")
+----------------------------------------------------------------
+Guenter Roeck (6):
+      iio: cros_ec: Accept -EOPNOTSUPP as 'not supported' error code
+      cros_ec_lightbar: Accept more error codes from cros_ec_cmd_xfer_status
+      platform/chrome: cros_ec_sysfs: Report range of error codes from EC
+      pwm: cros-ec: Accept more error codes from cros_ec_cmd_xfer_status
+      platform/input: cros_ec: Replace -ENOTSUPP with -ENOPROTOOPT
+      platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
 
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/znC0=KRqyGnD4u/8uyqbHhf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8d/D8ACgkQAVBC80lX
-0Gwivwf8CykkuOiZjzkLPiHZubcnQZvD1GtaYVY8zAgReKO3S2QuX0eNkupoBMa/
-WEaZI271C1natetPsIg6OC7/TIuR2yWFP1dX/2zn4Ax4Swn5IEIjWQaPA6AvTucq
-EEaqLynqwEOYlT32NAl7BxvGwRatwVpuiiEGjiq5VcDAYx7vVTQTIzwgUGETzI3u
-oHvde8C3DuB0t6C8+y5ahUYIkzWAgZ8BB+a6TwbIRC66PDxPOIfODvJTD+hAna2c
-w3GnW1lGwBwXsT/98GTKn+5hQGCPHtIZXST2ggIJ1hTYLNKQYaAS5lR3rML/GjGM
-awsRhDDMdhVT5kxm4xhSFEODfKJ6TA==
-=NiM6
------END PGP SIGNATURE-----
-
---Sig_/znC0=KRqyGnD4u/8uyqbHhf--
+ .../iio/common/cros_ec_sensors/cros_ec_sensors.c   |  2 +-
+ drivers/input/keyboard/cros_ec_keyb.c              |  2 +-
+ drivers/platform/chrome/cros_ec_lightbar.c         | 10 ++---
+ drivers/platform/chrome/cros_ec_proto.c            | 52 +++++++++++++++++-----
+ drivers/platform/chrome/cros_ec_sysfs.c            | 24 ++++------
+ drivers/pwm/pwm-cros-ec.c                          | 21 ++++++---
+ 6 files changed, 71 insertions(+), 40 deletions(-)
