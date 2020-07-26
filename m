@@ -2,260 +2,134 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E74C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6074F2065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483E82053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:52:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h+6c/Wtv"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="JkDdmLMl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbgGZWsW (ORCPT
+        id S1727894AbgGZWwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 18:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33944 "EHLO
+        Sun, 26 Jul 2020 18:52:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgGZWsV (ORCPT
+        with ESMTP id S1726253AbgGZWwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 18:48:21 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CF79C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:48:21 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id j65so4489318ybb.12
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:48:21 -0700 (PDT)
+        Sun, 26 Jul 2020 18:52:04 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96DB6C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:52:04 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id y11so3676930qvl.4
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:52:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Z7rJkPFkicEqRXa8H2H+eAkbcV3x2za6M1WWwBBQe94=;
-        b=h+6c/Wtv3G/E0Q5G7yq37gVbb2jPhWO4oajjn5Uqw65uikpw4CMnwnc4W18oCatp4H
-         Q1sVmi3uLly0vXXQiwm7/m2N14lerVEpteTuHvcfGadl04JOS6EVa5i8+cYR+n+CydFr
-         1j+0acIV1gWBHroI0eR5XGoiEj0QOqo2yXwXjhCeCsUOqcXju+hO4znR9yG85/F1JWY8
-         QgakH3G9WbZVi951IkRJ0kIQMzFUoTT0xIcZEG25b/L06+4YgQWPXCWUDCV7KE6mLO+G
-         +nMHY4VMUERkvqRin3aJxZzQpVaqsDuFPXXxmPhxkycWocsmWuyaTJQ4pjZ5S0ubBGRp
-         s8UA==
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8qxqp4Cra7c8Q17ZGNold8rkyaZiozPWBwMAyhGj2zo=;
+        b=JkDdmLMlOOUeQhUCCC15e+gkl4e2eabFhCb9ynbxSm34RgDUqt6M37JmbF9hvf/noi
+         fiFoU3kOcsHOhNWXL74Ui2bXI3vyGhKCRSw9Msvo+e4uuTvycKoym9Lrcs1SiiWKhQcb
+         cuL/ajKCgjMdxo28TW2jfxoifsW/74Pnvjv5+gT1hggLnSYYtgEzIFjz6VNEMMGgp4jx
+         u+YJcX54ih5WlXdreWOiBX7ylgibmQ6QnmdGd2fqoIBXQYAmx6gVcqaa915e3Vsmhp3x
+         LMRhA8A+HoUvA5BsBW/hxJ5UB2PRENXf9ouMF1/xOHDoV/wQpvueF2EdJg23BOyuqG2l
+         Wt7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Z7rJkPFkicEqRXa8H2H+eAkbcV3x2za6M1WWwBBQe94=;
-        b=D8Y5W2rtXLdAqo1n0XViABz33Gz1DvV2rAYd87pXxAuDf4i93N/ili+u4qYZ9JNzZk
-         wOqQ1WEnVYcEhQpIv+hSHsyA27TYDdUVEUXyiZ7ASTkuOZcyR0EhdRSnOrgMvQqaVBjK
-         wVj5+wHIFj3KwRzhswZpE1TsIN4BBsMD0Ugl/Widz1blxRAjm0My7hra6+BvxWp7OnRI
-         nBD+ZwZ+ZKdguektyB4TQ40zvNtOFK9eGHqnSk82FryrcXJlCU2+aDYo8iDkHnCPEvAx
-         XDkE7iayfcvRcDiu0t5nU7xOojK+7u7rGTRuahKTNn3fTeq7CPkv7NXC23KplmTDL22Q
-         EEhA==
-X-Gm-Message-State: AOAM532eXevfWvZ1xzvAlAZVxyMBmkAUkyQ90SOMPwW1lFshJd1gg5HG
-        CFze/ohjWvaXWvORRb5D2k511Feu8nzL
-X-Google-Smtp-Source: ABdhPJz6soGdCdpY/T8IWZ8l4ICluj41UMvB+JcGPoP1P6aJcG+ZLJe84sSr2KDFxBTFwoXGbpPB9rKOQdaA
-X-Received: by 2002:a25:c615:: with SMTP id k21mr28496351ybf.379.1595803700661;
- Sun, 26 Jul 2020 15:48:20 -0700 (PDT)
-Date:   Sun, 26 Jul 2020 15:48:16 -0700
-Message-Id: <20200726224816.1819557-1-brianvv@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH V2 net-next] fib: use indirect call wrappers in the most
- common fib_rules_ops
-From:   Brian Vazquez <brianvv@google.com>
-To:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8qxqp4Cra7c8Q17ZGNold8rkyaZiozPWBwMAyhGj2zo=;
+        b=a89y8jEbF0UIp97+YlKhQ2LHLH1qi9OcdGDrIVJA87ZW2KIeOeBX6GyhlwErU6N4bR
+         71ZZGOYbfVA94AqJa9Jrg1bI1Xs2nFYO9rZNCLTVX7g3IIEZXbvhHfdIcljT4We6jOue
+         8a3ndyc5byglLjLWEzTyhxy12rkp7HsCS+E3pLy3donwe/6Uq5dPwCl1TqBIzzh01WHT
+         tHMSw4HjGRbwnFA7BdnOVzwLxGGZqlYnbDwV6RuFaLTB+cKk8D+co4Ze7gp9Kb4X0rDz
+         /qo7uKyr51B6rRX0tDGqrdV8P2pO/o6e3YYGeKsMU+HXQJ1vf7t9lCc2Peqd7pkSfCT/
+         +b4w==
+X-Gm-Message-State: AOAM532OAwI2HQCIzw3vQJg0DuZZouN2p74XnH76+z9KUs9XKnhsHGrR
+        8mSNgFBScyCTRlnXuMz8++Kg0A==
+X-Google-Smtp-Source: ABdhPJxtX6CIU9klIDmZxKuPl98KVTqY07BMK/VxQByZcrYhNr3TrR1gvudNaJwU7iLZffa5iyqWPA==
+X-Received: by 2002:a05:6214:11f3:: with SMTP id e19mr9636442qvu.220.1595803923650;
+        Sun, 26 Jul 2020 15:52:03 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id p17sm2043556qtn.15.2020.07.26.15.52.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 15:52:02 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 18:51:54 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Matthew Wilcox <willy@infradead.org>, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, khlebnikov@yandex-team.ru
+Subject: Re: WARN_ON_ONCE(1) in iomap_dio_actor()
+Message-ID: <20200726225154.GA929@lca.pw>
+References: <20200619211750.GA1027@lca.pw>
+ <20200620001747.GC8681@bombadil.infradead.org>
+ <20200724182431.GA4871@lca.pw>
+ <20200726152412.GA26614@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726152412.GA26614@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This avoids another inderect call per RX packet which save us around
-20-40 ns.
+On Sun, Jul 26, 2020 at 04:24:12PM +0100, Christoph Hellwig wrote:
+> On Fri, Jul 24, 2020 at 02:24:32PM -0400, Qian Cai wrote:
+> > On Fri, Jun 19, 2020 at 05:17:47PM -0700, Matthew Wilcox wrote:
+> > > On Fri, Jun 19, 2020 at 05:17:50PM -0400, Qian Cai wrote:
+> > > > Running a syscall fuzzer by a normal user could trigger this,
+> > > > 
+> > > > [55649.329999][T515839] WARNING: CPU: 6 PID: 515839 at fs/iomap/direct-io.c:391 iomap_dio_actor+0x29c/0x420
+> > > ...
+> > > > 371 static loff_t
+> > > > 372 iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
+> > > > 373                 void *data, struct iomap *iomap, struct iomap *srcmap)
+> > > > 374 {
+> > > > 375         struct iomap_dio *dio = data;
+> > > > 376
+> > > > 377         switch (iomap->type) {
+> > > > 378         case IOMAP_HOLE:
+> > > > 379                 if (WARN_ON_ONCE(dio->flags & IOMAP_DIO_WRITE))
+> > > > 380                         return -EIO;
+> > > > 381                 return iomap_dio_hole_actor(length, dio);
+> > > > 382         case IOMAP_UNWRITTEN:
+> > > > 383                 if (!(dio->flags & IOMAP_DIO_WRITE))
+> > > > 384                         return iomap_dio_hole_actor(length, dio);
+> > > > 385                 return iomap_dio_bio_actor(inode, pos, length, dio, iomap);
+> > > > 386         case IOMAP_MAPPED:
+> > > > 387                 return iomap_dio_bio_actor(inode, pos, length, dio, iomap);
+> > > > 388         case IOMAP_INLINE:
+> > > > 389                 return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
+> > > > 390         default:
+> > > > 391                 WARN_ON_ONCE(1);
+> > > > 392                 return -EIO;
+> > > > 393         }
+> > > > 394 }
+> > > > 
+> > > > Could that be iomap->type == IOMAP_DELALLOC ? Looking throught the logs,
+> > > > it contains a few pread64() calls until this happens,
+> > > 
+> > > It _shouldn't_ be able to happen.  XFS writes back ranges which exist
+> > > in the page cache upon seeing an O_DIRECT I/O.  So it's not supposed to
+> > > be possible for there to be an extent which is waiting for the contents
+> > > of the page cache to be written back.
+> > 
+> > Okay, it is IOMAP_DELALLOC. We have,
+> 
+> Can you share the fuzzer?  If we end up with delalloc space here we
+> probably need to fix a bug in the cache invalidation code.
 
-Changelog:
+This is just a wrapper of the trinity fuzzer.
 
-v1 -> v2:
-- Move declaraions to fib_rules.h to remove warnings
+# git clone https://gitlab.com/cailca/linux-mm
+# cd linux-mm; make
+# ./random -x 0-100 -f
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Brian Vazquez <brianvv@google.com>
----
- include/net/fib_rules.h | 18 ++++++++++++++++++
- net/core/fib_rules.c    | 18 ++++++++++++++----
- net/ipv4/fib_rules.c    | 12 ++++++++----
- net/ipv6/fib6_rules.c   | 12 ++++++++----
- 4 files changed, 48 insertions(+), 12 deletions(-)
-
-diff --git a/include/net/fib_rules.h b/include/net/fib_rules.h
-index a259050f84afc..4b10676c69d19 100644
---- a/include/net/fib_rules.h
-+++ b/include/net/fib_rules.h
-@@ -10,6 +10,7 @@
- #include <net/flow.h>
- #include <net/rtnetlink.h>
- #include <net/fib_notifier.h>
-+#include <linux/indirect_call_wrapper.h>
- 
- struct fib_kuid_range {
- 	kuid_t start;
-@@ -203,4 +204,21 @@ int fib_nl_newrule(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		   struct netlink_ext_ack *extack);
- int fib_nl_delrule(struct sk_buff *skb, struct nlmsghdr *nlh,
- 		   struct netlink_ext_ack *extack);
-+
-+INDIRECT_CALLABLE_DECLARE(int fib6_rule_match(struct fib_rule *rule,
-+					    struct flowi *fl, int flags));
-+INDIRECT_CALLABLE_DECLARE(int fib4_rule_match(struct fib_rule *rule,
-+					    struct flowi *fl, int flags));
-+
-+INDIRECT_CALLABLE_DECLARE(int fib6_rule_action(struct fib_rule *rule,
-+			    struct flowi *flp, int flags,
-+			    struct fib_lookup_arg *arg));
-+INDIRECT_CALLABLE_DECLARE(int fib4_rule_action(struct fib_rule *rule,
-+			    struct flowi *flp, int flags,
-+			    struct fib_lookup_arg *arg));
-+
-+INDIRECT_CALLABLE_DECLARE(bool fib6_rule_suppress(struct fib_rule *rule,
-+						struct fib_lookup_arg *arg));
-+INDIRECT_CALLABLE_DECLARE(bool fib4_rule_suppress(struct fib_rule *rule,
-+						struct fib_lookup_arg *arg));
- #endif
-diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
-index bd7eba9066f8d..e7a8f87b0bb2b 100644
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -14,6 +14,7 @@
- #include <net/sock.h>
- #include <net/fib_rules.h>
- #include <net/ip_tunnels.h>
-+#include <linux/indirect_call_wrapper.h>
- 
- static const struct fib_kuid_range fib_kuid_range_unset = {
- 	KUIDT_INIT(0),
-@@ -267,7 +268,10 @@ static int fib_rule_match(struct fib_rule *rule, struct fib_rules_ops *ops,
- 	    uid_gt(fl->flowi_uid, rule->uid_range.end))
- 		goto out;
- 
--	ret = ops->match(rule, fl, flags);
-+	ret = INDIRECT_CALL_INET(ops->match,
-+				 fib6_rule_match,
-+				 fib4_rule_match,
-+				 rule, fl, flags);
- out:
- 	return (rule->flags & FIB_RULE_INVERT) ? !ret : ret;
- }
-@@ -298,9 +302,15 @@ int fib_rules_lookup(struct fib_rules_ops *ops, struct flowi *fl,
- 		} else if (rule->action == FR_ACT_NOP)
- 			continue;
- 		else
--			err = ops->action(rule, fl, flags, arg);
--
--		if (!err && ops->suppress && ops->suppress(rule, arg))
-+			err = INDIRECT_CALL_INET(ops->action,
-+						 fib6_rule_action,
-+						 fib4_rule_action,
-+						 rule, fl, flags, arg);
-+
-+		if (!err && ops->suppress && INDIRECT_CALL_INET(ops->suppress,
-+								fib6_rule_suppress,
-+								fib4_rule_suppress,
-+								rule, arg))
- 			continue;
- 
- 		if (err != -EAGAIN) {
-diff --git a/net/ipv4/fib_rules.c b/net/ipv4/fib_rules.c
-index f99e3bac5cab2..ce54a30c2ef1e 100644
---- a/net/ipv4/fib_rules.c
-+++ b/net/ipv4/fib_rules.c
-@@ -29,6 +29,7 @@
- #include <net/ip_fib.h>
- #include <net/nexthop.h>
- #include <net/fib_rules.h>
-+#include <linux/indirect_call_wrapper.h>
- 
- struct fib4_rule {
- 	struct fib_rule		common;
-@@ -103,8 +104,9 @@ int __fib_lookup(struct net *net, struct flowi4 *flp,
- }
- EXPORT_SYMBOL_GPL(__fib_lookup);
- 
--static int fib4_rule_action(struct fib_rule *rule, struct flowi *flp,
--			    int flags, struct fib_lookup_arg *arg)
-+INDIRECT_CALLABLE_SCOPE int fib4_rule_action(struct fib_rule *rule,
-+					     struct flowi *flp, int flags,
-+					     struct fib_lookup_arg *arg)
- {
- 	int err = -EAGAIN;
- 	struct fib_table *tbl;
-@@ -138,7 +140,8 @@ static int fib4_rule_action(struct fib_rule *rule, struct flowi *flp,
- 	return err;
- }
- 
--static bool fib4_rule_suppress(struct fib_rule *rule, struct fib_lookup_arg *arg)
-+INDIRECT_CALLABLE_SCOPE bool fib4_rule_suppress(struct fib_rule *rule,
-+						struct fib_lookup_arg *arg)
- {
- 	struct fib_result *result = (struct fib_result *) arg->result;
- 	struct net_device *dev = NULL;
-@@ -169,7 +172,8 @@ static bool fib4_rule_suppress(struct fib_rule *rule, struct fib_lookup_arg *arg
- 	return true;
- }
- 
--static int fib4_rule_match(struct fib_rule *rule, struct flowi *fl, int flags)
-+INDIRECT_CALLABLE_SCOPE int fib4_rule_match(struct fib_rule *rule,
-+					    struct flowi *fl, int flags)
- {
- 	struct fib4_rule *r = (struct fib4_rule *) rule;
- 	struct flowi4 *fl4 = &fl->u.ip4;
-diff --git a/net/ipv6/fib6_rules.c b/net/ipv6/fib6_rules.c
-index 6053ef8515555..8f9a83314de7d 100644
---- a/net/ipv6/fib6_rules.c
-+++ b/net/ipv6/fib6_rules.c
-@@ -13,6 +13,7 @@
- #include <linux/netdevice.h>
- #include <linux/notifier.h>
- #include <linux/export.h>
-+#include <linux/indirect_call_wrapper.h>
- 
- #include <net/fib_rules.h>
- #include <net/ipv6.h>
-@@ -255,8 +256,9 @@ static int __fib6_rule_action(struct fib_rule *rule, struct flowi *flp,
- 	return err;
- }
- 
--static int fib6_rule_action(struct fib_rule *rule, struct flowi *flp,
--			    int flags, struct fib_lookup_arg *arg)
-+INDIRECT_CALLABLE_SCOPE int fib6_rule_action(struct fib_rule *rule,
-+					     struct flowi *flp, int flags,
-+					     struct fib_lookup_arg *arg)
- {
- 	if (arg->lookup_ptr == fib6_table_lookup)
- 		return fib6_rule_action_alt(rule, flp, flags, arg);
-@@ -264,7 +266,8 @@ static int fib6_rule_action(struct fib_rule *rule, struct flowi *flp,
- 	return __fib6_rule_action(rule, flp, flags, arg);
- }
- 
--static bool fib6_rule_suppress(struct fib_rule *rule, struct fib_lookup_arg *arg)
-+INDIRECT_CALLABLE_SCOPE bool fib6_rule_suppress(struct fib_rule *rule,
-+						struct fib_lookup_arg *arg)
- {
- 	struct fib6_result *res = arg->result;
- 	struct rt6_info *rt = res->rt6;
-@@ -296,7 +299,8 @@ static bool fib6_rule_suppress(struct fib_rule *rule, struct fib_lookup_arg *arg
- 	return true;
- }
- 
--static int fib6_rule_match(struct fib_rule *rule, struct flowi *fl, int flags)
-+INDIRECT_CALLABLE_SCOPE int fib6_rule_match(struct fib_rule *rule,
-+					    struct flowi *fl, int flags)
- {
- 	struct fib6_rule *r = (struct fib6_rule *) rule;
- 	struct flowi6 *fl6 = &fl->u.ip6;
--- 
-2.28.0.rc0.142.g3c755180ce-goog
-
+https://gitlab.com/cailca/linux-mm/-/blob/master/random.c#L1383
