@@ -2,78 +2,83 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDA6C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB0DC433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD7320658
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB03120700
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:53:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/Y4CcDR"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="DGdIlHZp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E1Yezqie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgGZC2o (ORCPT
+        id S1728344AbgGZCxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 22:28:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727013AbgGZC2n (ORCPT
+        Sat, 25 Jul 2020 22:53:40 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:41557 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727789AbgGZCxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 22:28:43 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B476BC0619D2;
-        Sat, 25 Jul 2020 19:28:43 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id e13so12333400qkg.5;
-        Sat, 25 Jul 2020 19:28:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4RfkvlMt2rThYkklpBMRg3zwGuy1XZ+sZK1Hvc1Zws8=;
-        b=K/Y4CcDRyCp8X8+LBwvI77yMPhDNYMu5OIkLphXaFjLvLFUoaLUZ7Um2xZ384bUFJr
-         9kWU+QsNe+XFzYY4NGXk+b5XYpAjxwVplrp0ZnCq4gH4RAghgzoiOyAjUYCAxHMB1gGQ
-         M3TdfUxgrOEEX1m9zqMWhWeo83I0rANSgTZD3qWKbRE6GJQoe5bqFeh1tIBq4S/L37iC
-         e10A2X/xcfoWI8gDoXPtUzOli4jnil7PkoohG4YcE1Mrz+HlTNzsiBUcI9bxOxgjEM49
-         kQ3v4NxRxKwgC/UYEHZBUwzgayUuaaunIPUHOgkOZlmp0VXsaTqU02EDLtXJOsenTIuB
-         kq2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4RfkvlMt2rThYkklpBMRg3zwGuy1XZ+sZK1Hvc1Zws8=;
-        b=hfysgWyFyIO9icNrac+QavWoqDXc0bpBXVBEWsEbUHlMSDz3nvw4TKVi4Hz//Zsn5l
-         +cJVRhWASFN/wytNxJD5b6kokB0MX7tHb/HjG/54n9uM3hMquG32Szaa1/dNLgMLC/om
-         j04vDraLFLJDBlRxrSq9S8PBVy6SgttWR7SVrwRxlve2gdQMvRS81Ez2I4l+eessRiWW
-         3ymw0BjQFWEL7tv1PGri8rBVZQK/JfARUrsbtVZvVM070RSCtHF9zDa+GOSx+SQH+uj5
-         tocUcKKQQ3ak5+zMUcVeVqYOvJD1Gt/10Ygzkf+cTCdY6RuGazdy2YGqKTqST9NQZaSH
-         Or5Q==
-X-Gm-Message-State: AOAM531J4+FKzkn9uxKfhdZ3ZlQFKIQN56YKcARalCtUWD5h8IZ/q1RX
-        Cy+t86FOXGzXZFVxfinF6A==
-X-Google-Smtp-Source: ABdhPJwzZVg3MNUXqS+wa+k0VLYtFF6fVCt3zo5divFq0l52ko+Cw1GX/Gak4/JDH4PGLtaCJ1J7aQ==
-X-Received: by 2002:a05:620a:5f7:: with SMTP id z23mr1413433qkg.206.1595730522804;
-        Sat, 25 Jul 2020 19:28:42 -0700 (PDT)
-Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id z197sm13512785qkb.66.2020.07.25.19.28.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 19:28:42 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH v2] infiniband: Prevent uninit-value in ucma_accept()
-Date:   Sat, 25 Jul 2020 22:27:16 -0400
-Message-Id: <20200726022716.635727-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200725220203.624557-1-yepeilin.cs@gmail.com>
-References: <20200725220203.624557-1-yepeilin.cs@gmail.com>
+        Sat, 25 Jul 2020 22:53:37 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 9EEB5580428;
+        Sat, 25 Jul 2020 22:53:36 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sat, 25 Jul 2020 22:53:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm3; bh=f1ggifv2qgcXmIBc8IkyaYFUQ+
+        xQAPJcNHBoK/4x6GQ=; b=DGdIlHZpufK70xhAOzazoy2zcD96Q3GW5iGSyLA4mg
+        NFIZl/uP6yodeDrgnVkEW8rimFZge9u856d5XIyxLvhuZh4OCkIf2SxvZykIPi/w
+        31Muif3RoSMwTsILd5qnShu4Y3j2nIpDV/zKpFaQCjA5XRu/ez7JuSq84LWDJogF
+        o1QhPbDIE19YC4Y1DjhsxDienwb43Ism1EpzY7Qi4SRBRfgzZOtFmKV/iinIfKAy
+        1wCJhhtvCZ7leirG/38EhoECR2B75lfkjbRE2VS/VNAiQ+f4U5gGfhNcncTNTFdm
+        NCGkEJjsuIJzhs4P39xc9jIwNMap5g0gaAr+QB5CZ2Nw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=f1ggifv2qgcXmIBc8
+        IkyaYFUQ+xQAPJcNHBoK/4x6GQ=; b=E1YezqiewiNurCuxe5NhRkz14JBoQjxru
+        v0E8BSeC+mJMKiJOIf8elkAs8AXRY19DUgZyOF97IvSdbaWcUgSd7fYfmJ9UkODE
+        HUaWahd2PmTL94RFeh8i0uit5ZHI05MGxAkuSZ18BTmkgjL6loekrq2gq9F18Vca
+        uTmy7kjRubVRoeSU2tG2fNUBqYnvaE4Ff7pNFFChcxkn/W2cWb/bNzdNUgGhix9T
+        PCZ10XMysxpd1CfDISyRA8UQi7woCcYLo69fLHHUR1UkDj6WWgaZduFoU0VBnFPv
+        6M5oEHDucDUOvvkAb3Ev4yK+LO5OxwyuWtUkSnozVf9wPBR+Bs0Xg==
+X-ME-Sender: <xms:L_AcX1qaQZloYaNCIOK-q2UERnpBfBLjXfH0R411WxV1NSZK4NlAvw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheeigdeiudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
+    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrfgrth
+    htvghrnhepieetkefhheduudfgledtudefjeejfeegveehkeeufffhhfejkeehiefftdev
+    tdevnecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdho
+    rhhg
+X-ME-Proxy: <xmx:L_AcX3qwidCk6rwxszrRXQ23DURSYgn33SmLoB8rkgwiHvfRLSajXw>
+    <xmx:L_AcXyMYBvMfQrVDX5rJExI_B4kvD8pvNgqveAHlLx2APOFyFv_6oQ>
+    <xmx:L_AcXw4lb9LYcdvIS1AmFmRDnyTSDC0d-bYoD74ZNCXuFYfozK_EKA>
+    <xmx:MPAcXzZNCLDDdndCY6f5kxqmnuepiAmrPEqRd-_-FJEKtfwyF_0eVw>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D5A2D3280063;
+        Sat, 25 Jul 2020 22:53:34 -0400 (EDT)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     Ondrej Jirman <megous@megous.com>, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Samuel Holland <samuel@sholland.org>
+Subject: [PATCH v2 0/8] ASoC: sun50i-codec-analog: Cleanup and power management
+Date:   Sat, 25 Jul 2020 21:53:26 -0500
+Message-Id: <20200726025334.59931-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,33 +86,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ucma_accept() is reading uninitialized memory when `in_len` is
-less than `offsetof(struct rdma_ucm_accept, ece)`. Fix it.
+This series performs some minor cleanup on the driver for the analog
+codec in the Allwinner A64, and hooks up the existing mute switches to
+DAPM widgets, in order to provide improved power management.
 
-Reported-and-tested-by: syzbot+086ab5ca9eafd2379aa6@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?id=0bce3bb68cb383fce92f78444e3ef77c764b60ad
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
-Change in v2:
-    - syzbot has reported this bug as "KMSAN: uninit-value in xa_load".
-      Add "Reported-and-tested-by:" and "Link:" tags for it.
+Changes since v1:
+  - Collected Acked-by/Reviewed-by tags
+  - Used SOC_MIXER_NAMED_CTL_ARRAY to avoid naming a widget "Earpiece"
 
- drivers/infiniband/core/ucma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Samuel Holland (8):
+  ASoC: sun50i-codec-analog: Fix duplicate use of ADC enable bits
+  ASoC: sun50i-codec-analog: Gate the amplifier clock during suspend
+  ASoC: sun50i-codec-analog: Group and sort mixer routes
+  ASoC: sun50i-codec-analog: Make headphone routes stereo
+  ASoC: sun50i-codec-analog: Enable DAPM for headphone switch
+  ASoC: sun50i-codec-analog: Make line out routes stereo
+  ASoC: sun50i-codec-analog: Enable DAPM for line out switch
+  ASoC: sun50i-codec-analog: Enable DAPM for earpiece switch
 
-diff --git a/drivers/infiniband/core/ucma.c b/drivers/infiniband/core/ucma.c
-index a591fdccdce0..842d297903c0 100644
---- a/drivers/infiniband/core/ucma.c
-+++ b/drivers/infiniband/core/ucma.c
-@@ -1134,7 +1134,7 @@ static ssize_t ucma_listen(struct ucma_file *file, const char __user *inbuf,
- static ssize_t ucma_accept(struct ucma_file *file, const char __user *inbuf,
- 			   int in_len, int out_len)
- {
--	struct rdma_ucm_accept cmd;
-+	struct rdma_ucm_accept cmd = {};
- 	struct rdma_conn_param conn_param;
- 	struct rdma_ucm_ece ece = {};
- 	struct ucma_context *ctx;
+ sound/soc/sunxi/sun50i-codec-analog.c | 176 ++++++++++++++++----------
+ 1 file changed, 111 insertions(+), 65 deletions(-)
+
 -- 
-2.25.1
+2.26.2
 
