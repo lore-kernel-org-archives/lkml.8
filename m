@@ -2,119 +2,75 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914E3C433E4
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB2002070B
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C35120658
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:11:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rfAVBDii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgGZHLR (ORCPT
+        id S1726852AbgGZHLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 03:11:17 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:45299 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgGZHLR (ORCPT
+        Sun, 26 Jul 2020 03:11:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgGZHLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 03:11:17 -0400
-Received: by mail-io1-f72.google.com with SMTP id p17so6094325iod.12
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 00:11:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=xtU03ziR/C9DlJTxyNgvjYJApoaZs/RVr9nkAXL+JKo=;
-        b=nmvMEsuW0NcrNCGO1Dsq4Qz4MFj4l1E2r8SBekQ8ed8ZwyaVpOEAZE7Uv7G6VjjBGX
-         Pk7afbiSlYH+vixp05PrtZzfLaVCEuQXnmj/67/NUfNRHeJnZcntaWlhnsAHm3Wxj9Lz
-         jV3flAIGGlDV2+Rbhem1Gr4LVpLqBIItXOlLEMMM4qJGs2E+ZDzxInDLRvA/vHm7hoZc
-         80VNCfEW4eIx2QxCT+T6XcE90fIlg+bDgWr9bfVJk2IoGKXEeFj7jm/agdjlW3atdXaZ
-         LVPKIbn0xzz/aUSuw+jLngO+2xud9WYA8eRzgCo1jyotQCdSbty8tkaG0+SZQq6OJTJE
-         9vmA==
-X-Gm-Message-State: AOAM532zOdoSUMToTryb8SsNcbla57Rr7NFfwJAwuoWZ7aA880m8D49x
-        euU1cdqYLG2FoEdAAqxdU1lL+XH5ZItcS/c57q5hR29WZ+eq
-X-Google-Smtp-Source: ABdhPJwz0R3E1qanhG+RXAe2jt6zaQDwLfY3WpxZgmZQD/YOe6n3eXDKwbwFvdEM8Ek1OYBgXMVFj4XTobD/kXQgo0lQWApvFGOm
+        Sun, 26 Jul 2020 03:11:35 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB917C0619D2;
+        Sun, 26 Jul 2020 00:11:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=pw0rH8PZFrh8zTY8f/e+9jq1eWJ4CWGY/Ca+PBCOU7M=; b=rfAVBDiieeMPvUj8omY43mEDIw
+        0d9MebIoAviXkbqBHteWezmwnNTUIG6NFYrIqzHYJG7PYmOfbf5bOomWIfPq3VeuvYoqRUOs1eFTd
+        h8HuPL017QiCIKQs9k1Y8mVYf/kMRrU6QU9VR9OrAl+QnU6LiH9B++wYho13BzswEEbeHhsTzEgzh
+        v6wzlg/bPh9hmIO6WYAwv0Yi1KqwO6PX5ZQbKYALiC7VUw/NXX0hPeBiRnyxJAEptjoGOKi8KGE0D
+        Sz5rxOD9+pAvsYzxZ9m8C3nvQERKWOfVoDg/b6s02OgxY5wXrd9PY7WDHWgtt/lsBSBCR6a7pfxr/
+        DCQM9/KQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzaom-0002Ka-JP; Sun, 26 Jul 2020 07:11:32 +0000
+Date:   Sun, 26 Jul 2020 08:11:32 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2 04/20] unify generic instances of
+ csum_partial_copy_nocheck()
+Message-ID: <20200726071132.GA8862@infradead.org>
+References: <20200724012512.GK2786714@ZenIV.linux.org.uk>
+ <20200724012546.302155-1-viro@ZenIV.linux.org.uk>
+ <20200724012546.302155-4-viro@ZenIV.linux.org.uk>
+ <20200724064117.GA10522@infradead.org>
+ <20200724121918.GL2786714@ZenIV.linux.org.uk>
+ <20200724122337.GA23095@infradead.org>
+ <20200724123040.GM2786714@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9d11:: with SMTP id j17mr8115835ioj.140.1595747476117;
- Sun, 26 Jul 2020 00:11:16 -0700 (PDT)
-Date:   Sun, 26 Jul 2020 00:11:16 -0700
-In-Reply-To: <000000000000debe1c05a9c39c93@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000771e6805ab52e911@google.com>
-Subject: Re: WARNING in ipvlan_l3s_unregister
-From:   syzbot <syzbot+bb3d7a24f705078b1286@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724123040.GM2786714@ZenIV.linux.org.uk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+On Fri, Jul 24, 2020 at 01:30:40PM +0100, Al Viro wrote:
+> > Sorry, I meant csum_and_copy_from_nocheck, just as in this patch.
+> > 
+> > Merging your branch into the net-next tree thus will conflict in
+> > the nios2 and asm-geneeric/checksum.h as well as lib/checksum.c.
+> 
+> Noted, but that asm-generic/checksum.h conflict will be "massage
+> in net-next/outright removal in this branch"; the same goes for
+> lib/checksum.c and nios2.  It's c6x that is unpleasant in that respect...
 
-HEAD commit:    23ee3e4e Merge tag 'pci-v5.8-fixes-2' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17a1e4c4900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f3bc31881f1ae8a7
-dashboard link: https://syzkaller.appspot.com/bug?extid=bb3d7a24f705078b1286
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=151a0317100000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+bb3d7a24f705078b1286@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 7576 at drivers/net/ipvlan/ipvlan_l3s.c:148 ipvlan_unregister_nf_hook drivers/net/ipvlan/ipvlan_l3s.c:148 [inline]
-WARNING: CPU: 0 PID: 7576 at drivers/net/ipvlan/ipvlan_l3s.c:148 ipvlan_l3s_unregister+0x145/0x1d0 drivers/net/ipvlan/ipvlan_l3s.c:221
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 7576 Comm: syz-executor.0 Not tainted 5.8.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:231
- __warn+0x227/0x250 kernel/panic.c:600
- report_bug+0x1b1/0x2e0 lib/bug.c:198
- handle_bug+0x42/0x80 arch/x86/kernel/traps.c:235
- exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:255
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:540
-RIP: 0010:ipvlan_unregister_nf_hook drivers/net/ipvlan/ipvlan_l3s.c:148 [inline]
-RIP: 0010:ipvlan_l3s_unregister+0x145/0x1d0 drivers/net/ipvlan/ipvlan_l3s.c:221
-Code: 48 c1 e8 03 42 80 3c 20 00 74 08 4c 89 f7 e8 12 59 dc fc 49 c7 06 00 00 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 e8 0b 4a 9d fc <0f> 0b eb c8 e8 02 4a 9d fc c6 05 4b e5 b1 04 01 48 c7 c7 ec f3 09
-RSP: 0018:ffffc9000268f308 EFLAGS: 00010293
-RAX: ffffffff84d747f5 RBX: 1ffff110137b3c38 RCX: ffff8880a7732400
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff84d7477e R09: fffffbfff131a7ee
-R10: fffffbfff131a7ee R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff88809bd9e1c0 R14: ffff8880914ae000 R15: ffff888097498040
- ipvlan_set_port_mode+0x33e/0x420 drivers/net/ipvlan/ipvlan_main.c:37
- ipvlan_link_new+0x733/0xab0 drivers/net/ipvlan/ipvlan_main.c:611
- __rtnl_newlink net/core/rtnetlink.c:3339 [inline]
- rtnl_newlink+0x143e/0x1bf0 net/core/rtnetlink.c:3397
- rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5460
- netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- ____sys_sendmsg+0x519/0x800 net/socket.c:2352
- ___sys_sendmsg net/socket.c:2406 [inline]
- __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c369
-Code: Bad RIP value.
-RSP: 002b:00007fff12787788 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 000000000002b740 RCX: 000000000045c369
-RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000005
-RBP: 000000000078bf40 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000790730
-R13: 0000000000000000 R14: 0000000000000add R15: 000000000078bf0c
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
+What about just rebasing your branch on the net-next tree?
