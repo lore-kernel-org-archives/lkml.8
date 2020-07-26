@@ -2,145 +2,120 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F722C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84203C433E3
 	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A01E206E3
+	by mail.kernel.org (Postfix) with ESMTP id 6883E206E3
 	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595787919;
+	bh=X0SsSOPPqzDtDa3Lf0g5uMtwodCKBTDzAaWYJ2uyP8A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ItdFXhxJL29u/O+e5J4wFcJ170bZ25OaM20BpKfORdwr/piPjrBDBq9T6gRlxT7Xv
+	 TL6X9YqZ1pFqFaJbBvkUW+KkTqfnoIc1unbSrxq1BwJTn9LRyXU/KfZb4XMOyWdPFh
+	 obYemruTnZjnfUowDLwWoLi4/ZZF6Lnj7urRs1d0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgGZSYR (ORCPT
+        id S1727085AbgGZSZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 14:24:17 -0400
-Received: from mga04.intel.com ([192.55.52.120]:17124 "EHLO mga04.intel.com"
+        Sun, 26 Jul 2020 14:25:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgGZSYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 14:24:17 -0400
-IronPort-SDR: rKZE246vXCJZMInjWOKkiIwMLnDXkvW6C6EBssDAyePlrBE0sV+akFNd6uKOTD7YerqZlfk48G
- J/AXRE7Jui3w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="148394351"
-X-IronPort-AV: E=Sophos;i="5.75,399,1589266800"; 
-   d="scan'208";a="148394351"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 11:24:17 -0700
-IronPort-SDR: A+iSBx8AElp9F9PiZTxRaGvxzhD6h//pS+e/LeztyQvjqO8+ldU+Oyyq4hQufz2PyGlh2dno6d
- uDDLbor8vUqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,399,1589266800"; 
-   d="scan'208";a="433646380"
-Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 26 Jul 2020 11:24:15 -0700
-Received: from kbuild by df0563f96c37 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1jzlJm-0001ZT-II; Sun, 26 Jul 2020 18:24:14 +0000
-Date:   Mon, 27 Jul 2020 02:22:50 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- c86409b6f860e3da36b14dac6058c722d2cecfd4
-Message-ID: <5f1dc9fa.OHVZOPOs0yGBoMuD%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725972AbgGZSY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 14:24:59 -0400
+Received: from localhost (p5486c93f.dip0.t-ipconnect.de [84.134.201.63])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A35892065F;
+        Sun, 26 Jul 2020 18:24:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595787899;
+        bh=X0SsSOPPqzDtDa3Lf0g5uMtwodCKBTDzAaWYJ2uyP8A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=reBlES1WaGLzbye+naXlGRq1uc2tWBe1Fwz0X4EXX7pTlwpzlDmbcy2ZTA7wYaGnG
+         CwIGIz1pof9w0QC9+SFkADwZaj3E5b5eQZauZ2DMDtMJMK1J7Ej2vY/7nbR22I4GD+
+         tTRWy15wVrnB1nVzKV8btwPjClhNsuZVSovAOLhU=
+Date:   Sun, 26 Jul 2020 20:24:53 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] iwlwifi: yoyo: don't print failure if debug firmware
+ is missing
+Message-ID: <20200726182453.GA1996@kunai>
+References: <20200625165210.14904-1-wsa@kernel.org>
+ <20200726152642.GA913@ninjato>
+ <87y2n6404y.fsf@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
+Content-Disposition: inline
+In-Reply-To: <87y2n6404y.fsf@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: c86409b6f860e3da36b14dac6058c722d2cecfd4  rcu: Move rcu_cpu_started per-CPU variable to rcu_data
 
-elapsed time: 940m
+--uAKRQypu60I7Lcqm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 74
-configs skipped: 1
+On Sun, Jul 26, 2020 at 09:11:25PM +0300, Kalle Valo wrote:
+> Wolfram Sang <wsa@kernel.org> writes:
+>=20
+> > On Thu, Jun 25, 2020 at 06:52:10PM +0200, Wolfram Sang wrote:
+> >> Missing this firmware is not fatal, my wifi card still works. Even mor=
+e,
+> >> I couldn't find any documentation what it is or where to get it. So, I
+> >> don't think the users should be notified if it is missing. If you brow=
+se
+> >> the net, you see the message is present is in quite some logs. Better
+> >> remove it.
+> >>=20
+> >> Signed-off-by: Wolfram Sang <wsa@kernel.org>
+> >> ---
+> >
+> > Any input on this? Or people I should add to CC?
+>=20
+> This was discussed on another thread:
+>=20
+> https://lkml.kernel.org/r/87mu3magfp.fsf@tynnyri.adurom.net
+>=20
+> Unless Intel folks object I'm planning to take this to
+> wireless-drivers-next.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Cool, thanks for the heads up!
 
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                              allnoconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-x86_64                                   rhel
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+--uAKRQypu60I7Lcqm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8dynEACgkQFA3kzBSg
+KbbLOA//cLtqhtfmDrzHrVvUxjU5Qa1RytBPogje3wfKQ0xIJ0UnI7IXDP04Lj7h
+PhkvasA/m1WlvYy2/xnsuK/ThR1I9eCdoDOkv1oUnO9fQpJ7JvHxGSdRXSPzrCbQ
+2UFwRleBH0uDm0aPn25HmI/O88CWaZiEEPugqCf6uGcUkfY66Z34u4045EJzOU3q
+pkOHD51oHfuQAx+D4MUmUG8lxd5EK69lxHgr4aFMHbM0Kp3bcLR6zDNT0h1aS3U8
+afRiOnPm3Vo11VZDadWu7NIsKoiWHpxKd7toNuvPZvpMkTETC6fmfHEP9mQYd7sA
+aG8af/SD1rQGkgx81N/tjnwtVD8KEZ7dmz/nNsCyiJgpHUfoB1NamCWTNsMDBXGr
+jKCB3kmf8IT3A/gn00+QpQ8G5XciGISHHZ/z2u8WHQzdPU2JYTdpETr91buFGXFz
+qw4G7s/Wlb0LFS8vJTjN5CSJGNoMylV9ISVnluX/IISECAyeaWds3nd301wC9nwH
+RZ1QENemFBFWuT7XI6+pKEPq1cwgdIJRGb/fHy3hvr+8ETkEPFQp4Yba7ydpiQgv
+0KgKk2j5bLKCEMXCamoSViwVNv+zXyLzeEDBUDj733Soc1IeW/7LNlDJ97tt1S7W
+6KdO4s1UEEXSdunmEOyAIbifTkDB52WVlAwKsTHZkhdcLwCKXJs=
+=4VPO
+-----END PGP SIGNATURE-----
+
+--uAKRQypu60I7Lcqm--
