@@ -3,111 +3,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114C8C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AA8C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E06222065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A3820715
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 22:22:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lx4HT5NI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xgKdjra2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgGZWRD (ORCPT
+        id S1726877AbgGZWWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 18:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57406 "EHLO
+        Sun, 26 Jul 2020 18:22:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgGZWRD (ORCPT
+        with ESMTP id S1726674AbgGZWWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 18:17:03 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F8AC0619D2;
-        Sun, 26 Jul 2020 15:17:01 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 2so9575324qkf.10;
-        Sun, 26 Jul 2020 15:17:01 -0700 (PDT)
+        Sun, 26 Jul 2020 18:22:43 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FC43C0619D5
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:22:41 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c3so782635lfb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 15:22:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6Po5jgD/fTz0bRHehR/lWSrKrlH1nrDPT2JvC+xllTY=;
-        b=Lx4HT5NID57037yokxvkZPUjrE/D90unh+sBukejVAmsIq7RoqYVpY0WwIokIWNyMw
-         CQxqKXt8a4bfHf3Sx5qfEvXWUidDR1hAN3RT2jx+5BK4Agb93fzf3HGT9NhxX3zNcIsb
-         e+PGMYXqBMEitk7OqxzkbvwEspBjp9c05jbSuOOt9+XREApVDHwwMt4+TNRDK3b+UyWj
-         qZ/TQRhsB7llNg+QjqyyNGS3fjrf4IY0J+X1f8TAYSV1vuOI9osOMOZIL+v4x0VDaARz
-         akj+B+PvQRRLUURVw5eArC8o7cPVk1CJua7U8tib/CcpGvK5GajxewWWzRv3CY3WlwB0
-         1fXQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=THzlRqgN0rjUHiAQzqk5KhSMHf6FYVohjt3FnajZbYY=;
+        b=xgKdjra2/4+RInKaf0aGHk5SxaDW9Tyrest156u/U0OFV+DJgAsYR4dystOdKs+D66
+         4IeXMJLIvhADs010gssRPGW+q6hQ8Ln16U3pPkXi1PrYG2FtHJnQyCOl3/4z0g9dLvqC
+         jP+ipH4/XH6XZZ8JsPUTuq1F2QPsTJrxV2H8PnY0Jfz+IoIjQBXTXN2RxGcS6xQdRcJ5
+         0Yo6IPFgd6rjGcKpElh3zHPDRD+oFv7x0O1qOJxJUFFcKAko6crufHjGJA9yQORcwJE6
+         x2T5dBdzV+KjCTdXpouvhOxpwpeBG9+oHbycLFuC8ZHfzjbUSgARedRYyqGUhzzlU1DG
+         yYpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6Po5jgD/fTz0bRHehR/lWSrKrlH1nrDPT2JvC+xllTY=;
-        b=cgHwD1UZOW6F0tdg3ckW4qqrDboH3z0uE7VIsqLj6UA9/PTNiU2IcgzbFRbGsmAmDI
-         MeVDip84fDMhSYBs2419dcIR3fOAYDDU04g3Huvx7Xu2qubEqVG3U+MnXE9j7ufmjmBs
-         sueHo8u9Snc3OOAcZ2tp0ttgF+R0x3kw8NLnNkVAJmrhcZ0zHV7XGl2R3aciOdj25iY0
-         IAZXxJajDMqspkitghuv3XbN+N2nXGlS7ubwlnPeAIeM6W+ve4IW46bVxcKMDRcP5B5E
-         5/YNBYCtI95ZCRUGzcWrjDIWJgxmpfEoOM2fzXYI1wEgnyeT8gEN/akBPahQfU/X/hE8
-         ecsQ==
-X-Gm-Message-State: AOAM530unnVIitFPYTnsMxyb2fCNDJI5R0YfWZdRoOCQaW3V52Ve1pxa
-        sXv8pz8tJkSp/mOVFpK7eg==
-X-Google-Smtp-Source: ABdhPJycW1/dNpTwFlADTGfxlc4/sQ6jWQQLjQA4Qrfjhby3OJXoi3cgIp6aV4mU43x6Zeo2pFglXw==
-X-Received: by 2002:a37:4cd4:: with SMTP id z203mr20156401qka.399.1595801821047;
-        Sun, 26 Jul 2020 15:17:01 -0700 (PDT)
-Received: from PWN ([209.94.141.207])
-        by smtp.gmail.com with ESMTPSA id i65sm1780394qkf.126.2020.07.26.15.16.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 15:17:00 -0700 (PDT)
-Date:   Sun, 26 Jul 2020 18:16:58 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vandana BN <bnvandana@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] media/v4l2-core: Fix
- kernel-infoleak in video_put_user()
-Message-ID: <20200726221658.GB102357@PWN>
-References: <20200726164439.48973-1-yepeilin.cs@gmail.com>
- <20200726220557.102300-1-yepeilin.cs@gmail.com>
- <20200726221056.GJ28704@pendragon.ideasonboard.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=THzlRqgN0rjUHiAQzqk5KhSMHf6FYVohjt3FnajZbYY=;
+        b=qDwpyUfHHU2pJEsYXq9oe4olSS0Ja2XP08TjiPZvLRFcY0a6Hb7Zdv9ERvVeg/C0nj
+         UDrKKawgN8Vm2yCHVTFQakphyuBfsUv3xnXq9RnVhJFpgQSE1rNAAPB+baWO2sHtfCUW
+         9hO1RloqMJc72epd4WcpCXMU0wWxCP8B90qenc88weVD7Jdh+KKyCNbBwe5AXV1JSP6n
+         zQrr2NQeNvSfDc1Da/FNqLQr4fhKgzpp0kow7+Quo35nFlmq/2Pf1aFuNVwH/jZoG/sH
+         OGFom+NVgHTTXZji4zWciyxJJvzS0SHxtZchksbtae8CZ6Ogq+fO5IIYkLF3OBlRtI45
+         KXZg==
+X-Gm-Message-State: AOAM533dH36HdIqc+lXlgbmvruIdoK/PCexAo08EwkDOP0YZGzQZM+yD
+        8HliLTUc9jh5awzOwaPE6wEKcmAIHROW2VasBRbvCQ==
+X-Google-Smtp-Source: ABdhPJxBOcrrdKBlfifvmb9beDuuI3k1zaBpTO89UwsFWSHiX+VtagPfGhMO2OwGzI0vOxcg+ZKMsrUmtwlzVcChOzk=
+X-Received: by 2002:a05:6512:3139:: with SMTP id p25mr3156807lfd.47.1595802159850;
+ Sun, 26 Jul 2020 15:22:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726221056.GJ28704@pendragon.ideasonboard.com>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com> <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+In-Reply-To: <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 27 Jul 2020 00:22:28 +0200
+Message-ID: <CACRpkdZarVTeBbSqZ-N6iGC4fj2-tdtfxuuxJO=YvO29-uHAuA@mail.gmail.com>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 01:10:56AM +0300, Laurent Pinchart wrote:
-> Hi Peilin,
-> 
-> Thank you for the patch.
-> 
-> On Sun, Jul 26, 2020 at 06:05:57PM -0400, Peilin Ye wrote:
-> > video_put_user() is copying uninitialized stack memory to userspace. Fix
-> > it by initializing `ev32` and `vb32` using memset().
-> 
-> How about mentioning that this is caused by the compiler not
-> initializing the holes ? Maybe something along the lines of
-> 
-> video_put_user() is copying uninitialized stack memory to userspace due
-> to the compiler not initializing holes in the structures declared on the
-> stack. Fix it by initializing the structures using memset().
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+On Sat, Jul 25, 2020 at 1:03 AM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
 
-I see, that makes sense. I will send a v3.
+> According to the DW APB GPIO databook it can be configured to provide either a
+> combined IRQ line or multiple interrupt signals for each GPIO. It's up to
+> the platform which of those signals are connected to an embedded IRQ
+> controller. So I guess theoretically the array values can be sparse.
+>
+> Anyway now I see it's rather problematic. I didn't forget about the sparse IRQs
+> array case. I just thought it would work out-of-box. Before getting your comment
+> and digging deeper into the IRQ subsystem I had thought that it wasn't a problem
+> passing invalid IRQ numbers to the irq_set_chained_handler_and_data() especially
+> seeing zero IRQ number was supposed to be considered as invalid. That method shall
+> just ignore the invalid IRQs since the method irq_to_desc() calling radix_tree_lookup()
+> will fail to find a descriptor with invalid IRQ value and return NULL. So after
+> getting a NULL irq_desc the method irq_set_chained_handler_and_data() would
+> have stopped setting the handler. But turns out it may work only for
+> CONFIG_SPARSE_IRQ. If that config isn't enabled, then a very first IRQ
+> descriptor will be returned for zero IRQ number. That descriptor will be
+> initialized with the passed parent_handler callback, which isn't what we want.
 
-Thank you,
-Peilin Ye
+Ouch but different beahviour on the outside of the irqchip API depending
+on whether IRQs are sparse or not on some particular system seems to
+be a problem with irqchip reallty, if we wanna get to the bottom of things.
+(paging Marc)
+
+> So in order to fix the problem we could follow either of the next paths:
+> 1) Just make sure the passed IRQs array is not sparse for instance by remapping
+>    it to be linear.
+> 2) Move "if (gc->irq.parents[i]) irq_set_chained_handler_and_data()" statement to the
+>    gpiochip_add_irqchip() method.
+>
+> What to you think? Linus?
+
+What about (3) fixing irqchip?
+
+Else (2), making the code inside gpiolib be careful and skip over
+invalid IRQs.
+
+Yours,
+Linus Walleij
