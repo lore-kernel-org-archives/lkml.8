@@ -2,90 +2,53 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8414C433E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A069920578
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EEBD20578
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgGZRZx (ORCPT
+        id S1726878AbgGZRVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 13:25:53 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:58994 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgGZRZx (ORCPT
+        Sun, 26 Jul 2020 13:21:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40372 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbgGZRVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 13:25:53 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id D2D0220023;
-        Sun, 26 Jul 2020 19:25:50 +0200 (CEST)
-Date:   Sun, 26 Jul 2020 19:25:49 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     daniel@ffwll.ch, khilman@baylibre.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH 1/2] drm/fourcc: fix Amlogic Video Framebuffer
- Compression macro
-Message-ID: <20200726172549.GH3275923@ravnborg.org>
-References: <20200723090551.27529-1-narmstrong@baylibre.com>
+        Sun, 26 Jul 2020 13:21:38 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C626C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 10:21:38 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzkKj-0037Ru-Pn; Sun, 26 Jul 2020 17:21:09 +0000
+Date:   Sun, 26 Jul 2020 18:21:09 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     zhouchuangao <chuangaozhou@gmail.com>
+Cc:     linux@dominikbrodowski.net, pc@cjr.nz, axboe@kernel.dk,
+        dhowells@redhat.com, linux-kernel@vger.kernel.org,
+        zhouchuangao <zhouchuangao@xiaomi.com>
+Subject: Re: [PATCH] init/do_mounts: fix a coding style error
+Message-ID: <20200726172109.GV2786714@ZenIV.linux.org.uk>
+References: <1594710178-27825-1-git-send-email-zhouchuangao@xiaomi.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200723090551.27529-1-narmstrong@baylibre.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=IpJZQVW2AAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
-        a=lB4rwjMMMp82C4b3nNAA:9 a=CjuIK1q_8ugA:10 a=IawgGOuG5U0WyFbmm1f5:22
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <1594710178-27825-1-git-send-email-zhouchuangao@xiaomi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil.
+On Tue, Jul 14, 2020 at 03:02:58PM +0800, zhouchuangao wrote:
+> Fix code style errors reported by scripts/checkpatch.pl.
 
-On Thu, Jul 23, 2020 at 11:05:50AM +0200, Neil Armstrong wrote:
-> Fix the Amlogic Video Framebuffer Compression modifier macro to
-> correctly add the layout options, a pair of parenthesis was missing.
-> 
-> Fixes: d6528ec88309 ("drm/fourcc: Add modifier definitions for describing Amlogic Video Framebuffer Compression")
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Looks correct just looking at the patch below.
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+NAKed-because: excessive deference to checkpatch.pl
 
-I assume you will apply the patch.
-
-	Sam
-
-> ---
->  include/uapi/drm/drm_fourcc.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
-> index 4bee7de5f306..82f327801267 100644
-> --- a/include/uapi/drm/drm_fourcc.h
-> +++ b/include/uapi/drm/drm_fourcc.h
-> @@ -1004,7 +1004,7 @@ drm_fourcc_canonicalize_nvidia_format_mod(__u64 modifier)
->  #define DRM_FORMAT_MOD_AMLOGIC_FBC(__layout, __options) \
->  	fourcc_mod_code(AMLOGIC, \
->  			((__layout) & __fourcc_mod_amlogic_layout_mask) | \
-> -			((__options) & __fourcc_mod_amlogic_options_mask \
-> +			(((__options) & __fourcc_mod_amlogic_options_mask) \
->  			 << __fourcc_mod_amlogic_options_shift))
->  
->  /* Amlogic FBC Layouts */
-> -- 
-> 2.22.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+It's not a holy oracle than needs to be appeased, no questions
+asked.  Reference to it is absolutely insufficient reason for
+_anything_ - in effect your commit message could've been
+"just because" for all the information it contains.
