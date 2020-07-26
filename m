@@ -2,147 +2,133 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47C8C433E5
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CA2C433ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88CB9206E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:53:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pbtdxeg5"
+	by mail.kernel.org (Postfix) with ESMTP id 86E7A206E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgGZXxV (ORCPT
+        id S1727994AbgGZXxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 19:53:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbgGZXxU (ORCPT
+        Sun, 26 Jul 2020 19:53:40 -0400
+Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:58787 "EHLO
+        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726522AbgGZXxk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 19:53:20 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B324AC0619D2;
-        Sun, 26 Jul 2020 16:53:19 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h19so15246804ljg.13;
-        Sun, 26 Jul 2020 16:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Xya1crPAvabm4ZnUZh/8AvcD2qUs7vG1wb2IuEfvQCc=;
-        b=Pbtdxeg5nz2BWNdsnEvrYqqurgj2O+aFvF8ETVVCw9tUI9XpjhbDo05ZYrz9rTpc4L
-         F0EZvQQ34PpHp1bCBZXkbeNvM4C9XloU2Lpc8DmaC2aiRKgfNu0gqeBnyew/CbJvzxpt
-         w2LBkI4BDIXZJKNXRgiK78ZCXAc4BPWcMu6XGRTswcbC7q/m6mqks4i5XJXvGpzFmF55
-         y7/5Z7EOjgUG4k20cUYoFTX4dWdrmtmA1ziBYZlrust4/VyeNsg1GMW0EgCdiKBufB0o
-         4ikzPsIyqPDZiEF84ks5jtNgTKCTSAu2b7r8VhjQrAS0hTOjBBMrUANuTdfjGA5Pk79x
-         8I3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Xya1crPAvabm4ZnUZh/8AvcD2qUs7vG1wb2IuEfvQCc=;
-        b=t2scnLK2NLTeZysyrtuc03Adr1fYvUfkMuP7lZGis0hW5pbWKBKOaxD4xkos5E7Vh2
-         w3h0ZUoB1NjUUZCHZgWaCqoRCiR4D/OPzF8sLsngQRtMSx6GJIoy0rxbY4z8Lg2LZjnT
-         TVhb6fqO6pGZkDcBf/ZnqBOb9Vmw3F/lNguKTRSMrHk86+bfVzAlLlZiDHd8THkGCkT1
-         sFxswTrrQuln/LpwHvl8iIn3jQggz9cOCkhWVuMKyu0BHbhmxC5LORBHLX8FAnTmi1LI
-         XAP0lRyP6A0gneYsUXy+CGho4Z9n/JJEay5/3ShdA7eV/YEulX7/J8knxeT033RXVu22
-         Wc9Q==
-X-Gm-Message-State: AOAM533j18xncDw172Q+XPxr4Hlr70y/rk+cgT7H34KDbbzj2uCqhhrv
-        52tkv2anLmjQs8qNc2Q/73+Nziy6
-X-Google-Smtp-Source: ABdhPJzEwcvldZabMAs9qaKuQfiVMBGqe9DUiUIEgRaLv+HGXrW+ng2xIau22W6osHLhoFBeausVyw==
-X-Received: by 2002:a2e:3202:: with SMTP id y2mr9336796ljy.465.1595807597842;
-        Sun, 26 Jul 2020 16:53:17 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
-        by smtp.googlemail.com with ESMTPSA id b9sm2631760lfi.88.2020.07.26.16.53.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Jul 2020 16:53:17 -0700 (PDT)
-Subject: Re: [RFC PATCH v4 04/14] i2c: tegra: Fix runtime resume to re-init VI
- I2C
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
-        helen.koike@collabora.com
-Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-References: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
- <1595548272-9809-5-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d427f421-3c20-2aa3-b719-638be6aeca1d@gmail.com>
-Date:   Mon, 27 Jul 2020 02:53:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 26 Jul 2020 19:53:40 -0400
+Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
+        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id B4C1ED7B18E;
+        Mon, 27 Jul 2020 09:53:36 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jzqSV-0001Lq-3k; Mon, 27 Jul 2020 09:53:35 +1000
+Date:   Mon, 27 Jul 2020 09:53:35 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Brian Foster <bfoster@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iomap: Ensure iop->uptodate matches PageUptodate
+Message-ID: <20200726235335.GU2005@dread.disaster.area>
+References: <20200726091052.30576-1-willy@infradead.org>
+ <20200726230657.GT2005@dread.disaster.area>
+ <20200726232022.GH23808@casper.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <1595548272-9809-5-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726232022.GH23808@casper.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0
+        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
+        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8
+        a=GbM89rAVvsayrku5YkoA:9 a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.07.2020 02:51, Sowjanya Komatineni пишет:
-> VI I2C is on host1x bus and is part of VE power domain.
+On Mon, Jul 27, 2020 at 12:20:22AM +0100, Matthew Wilcox wrote:
+> On Mon, Jul 27, 2020 at 09:06:57AM +1000, Dave Chinner wrote:
+> > On Sun, Jul 26, 2020 at 10:10:52AM +0100, Matthew Wilcox (Oracle) wrote:
+> > > If the filesystem has block size < page size and we end up calling
+> > > iomap_page_create() in iomap_page_mkwrite_actor(), the uptodate bits
+> > > would be zero, which causes us to skip writeback of blocks which are
+> > > !uptodate in iomap_writepage_map().  This can lead to user data loss.
+> > 
+> > I'm still unclear on what condition gets us to
+> > iomap_page_mkwrite_actor() without already having initialised the
+> > page correctly. i.e. via a read() or write() call, or the read fault
+> > prior to ->page_mkwrite() which would have marked the page uptodate
+> > - that operation should have called iomap_page_create() and
+> > iomap_set_range_uptodate() on the page....
+> > 
+> > i.e. you've described the symptom, but not the cause of the issue
+> > you are addressing.
 > 
-> During suspend/resume VE power domain goes through power off/on.
-> 
-> So, controller reset followed by i2c re-initialization is required
-> after the domain power up.
-> 
-> This patch fixes it.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index 7b93c45..1bf3666 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -293,6 +293,8 @@ struct tegra_i2c_dev {
->  	bool is_curr_atomic_xfer;
->  };
->  
-> +static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit);
-> +
->  static void dvc_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
->  		       unsigned long reg)
->  {
-> @@ -675,8 +677,22 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
->  		goto disable_slow_clk;
->  	}
->  
-> +	/*
-> +	 * VI I2C device is attached to VE power domain which goes through
-> +	 * power ON/OFF during PM runtime resume/suspend. So, controller
-> +	 * should go through reset and need to re-initialize after power
-> +	 * domain ON.
-> +	 */
-> +	if (i2c_dev->is_vi) {
-> +		ret = tegra_i2c_init(i2c_dev, true);
-> +		if (ret)
-> +			goto disable_div_clk;
-> +	}
-> +
->  	return 0;
->  
-> +disable_div_clk:
-> +	clk_disable(i2c_dev->div_clk);
->  disable_slow_clk:
->  	clk_disable(i2c_dev->slow_clk);
->  disable_fast_clk:
-> 
+> I don't know exactly what condition gets us there either.  It must be
+> possible, or there wouldn't be a call to iomap_page_create() but rather
+> one to to_iomap_page() like the one in iomap_finish_page_writeback().
 
-This look okay, but isn't RPM usage a bit too expensive for VI? Maybe
-RPM autodelay needs to be set for the I2C driver?
+Yes, I understand the code accepts it can happen; what I dislike is
+code that asserts subtle behaviour can happen, then doesn't describe
+that exactly why/how that condition can occur. And then, because we
+don't know exactly how something happens, we add work arounds to
+hide issues we can't reason through fully. That's .... suboptimal.
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Christoph might know off the top of his head how we get into this
+state. Once we work it out, then we need to add comments...
 
+> > > reproduced on mainline using that test (the THP code causes iomap_pages
+> > > to be discarded more frequently), but inspection shows it can happen
+> > > with an appropriate series of operations.
+> > 
+> > That sequence of operations would be? 
+> > 
+> > > Fixes: 9dc55f1389f9 ("iomap: add support for sub-pagesize buffered I/O without buffer heads")
+> > > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > > ---
+> > >  fs/iomap/buffered-io.c | 7 ++++++-
+> > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> > > index a2b3b5455219..f0c5027bf33f 100644
+> > > --- a/fs/iomap/buffered-io.c
+> > > +++ b/fs/iomap/buffered-io.c
+> > > @@ -53,7 +53,10 @@ iomap_page_create(struct inode *inode, struct page *page)
+> > >  	atomic_set(&iop->read_count, 0);
+> > >  	atomic_set(&iop->write_count, 0);
+> > >  	spin_lock_init(&iop->uptodate_lock);
+> > > -	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
+> > > +	if (PageUptodate(page))
+> > > +		bitmap_fill(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
+> > > +	else
+> > > +		bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
+> > 
+> > I suspect this bitmap_fill call belongs in the iomap_page_mkwrite()
+> > code as is the only code that can call iomap_page_create() with an
+> > uptodate page. Then iomap_page_create() could just use kzalloc() and
+> > drop the atomic_set() and bitmap_zero() calls altogether,
+> 
+> Way ahead of you
+> http://git.infradead.org/users/willy/pagecache.git/commitdiff/5a1de6fc4f815797caa4a2f37c208c67afd7c20b
+
+*nod*
+
+I would suggest breaking that out as a separate cleanup patch and
+not hide is in a patch that contains both THP modifications and bug
+fixes. It stands alone as a valid cleanup.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
