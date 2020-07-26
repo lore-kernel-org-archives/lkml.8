@@ -2,95 +2,92 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D2BC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 06:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 06:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8EE206E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 06:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595745981;
-	bh=YnJ5nUz3ldqzpxZJINBMhHvr1Qjj2bXg6xaQet/rkv0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SvLV44vjjIsnHR28oCnfPuTPJfQwFCp6rCrjfIFJk59zu2ntw+l43IpWHWMvEdIzv
-	 TfhjygJZKpxxs32emE2BQ7200dmbxjZP+6Yw2Ovfifi2FG1GjRqZFcdTJ6wJEAlVqy
-	 QSD994MzwKolhkKRSY6AtRLgM8Q1YUO+0GHQgdJg=
+	by mail.kernel.org (Postfix) with ESMTP id 8F29F206E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 06:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbgGZGqU (ORCPT
+        id S1726176AbgGZGmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 02:46:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55850 "EHLO mail.kernel.org"
+        Sun, 26 Jul 2020 02:42:35 -0400
+Received: from cmta19.telus.net ([209.171.16.92]:59288 "EHLO cmta19.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgGZGqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 02:46:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEF0B206E3;
-        Sun, 26 Jul 2020 06:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595745979;
-        bh=YnJ5nUz3ldqzpxZJINBMhHvr1Qjj2bXg6xaQet/rkv0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hGpqhUk+W43DFwMHDzWMYt4zpy5HWocDU2g2oRa+lgngsC4JHeT3enBp8Vnv+YzfU
-         6+ZyrTaC0w2adew2hA24/12g6XiYL5aWiITPRwmdnYUSNOlHphb6XYAPJZz5o05rN1
-         SpmbCBICgdlGn50PQb4rb6CZqXSag/NbosDBIV18=
-Date:   Sun, 26 Jul 2020 08:46:15 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
-Cc:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] staging: media: atomisp: fix code style issues
-Message-ID: <20200726064615.GA415554@kroah.com>
-References: <20200726062541.11304-1-bharadwaj.rohit8@gmail.com>
+        id S1725789AbgGZGmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 02:42:35 -0400
+Received: from montezuma.home ([154.5.226.127])
+        by cmsmtp with SMTP
+        id zaMhjwCJppULuzaMjj4Iu0; Sun, 26 Jul 2020 00:42:33 -0600
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=T9TysMCQ c=1 sm=1 tr=0
+ a=f8b3WT/FcTuUJCJtQO1udw==:117 a=f8b3WT/FcTuUJCJtQO1udw==:17
+ a=9cW_t1CCXrUA:10 a=kj9zAlcOel0A:10 a=7_-JGBSJ5swynKZTmz8A:9
+ a=3HOybB5aJD7W6W9j:21 a=-JwimHSkgOrMrb_B:21 a=CjuIK1q_8ugA:10
+Date:   Sat, 25 Jul 2020 23:42:31 -0700 (PDT)
+From:   Zwane Mwaikambo <zwane@yosper.io>
+cc:     Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Fix USB Type C hub crash in
+ typec_altmode_update_active
+In-Reply-To: <alpine.DEB.2.21.2007252222310.11533@montezuma.home>
+Message-ID: <alpine.DEB.2.21.2007252334190.11533@montezuma.home>
+References: <alpine.DEB.2.21.2007252222310.11533@montezuma.home>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726062541.11304-1-bharadwaj.rohit8@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+X-CMAE-Envelope: MS4wfCTEhY991b1GxSJFaejtxOhKQKGpY8hPFZEAbmE/rOtpgxKs7NGvYrq4ms5Qkk50Nn7nBWyx/DdZJLV0NiGYCzlM1jRULIExrC2WPnkL1ETI/+sg7vDk
+ 7oBkd9/NAG8zmug2HE9VW8yOoahkD90qCPFV+i/5dafSz/0HiA8wz0g9wxusdTLzY2zLdI/rqAUvHQ==
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 11:55:42AM +0530, Rohit K Bharadwaj wrote:
-> this patch fixes the warnings and errors generated after running checkpatch.pl on pci/sh_css_firmware.c
+On Sat, 25 Jul 2020, Zwane Mwaikambo wrote:
+
+> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
+> index d0c63afaf..30d0857e4 100644
+> --- a/drivers/usb/typec/ucsi/ucsi.c
+> +++ b/drivers/usb/typec/ucsi/ucsi.c
+> @@ -218,9 +218,12 @@ void ucsi_altmode_update_active(struct ucsi_connector *con)
+>  	if (cur < UCSI_MAX_ALTMODES)
+>  		altmode = typec_altmode_get_partner(con->port_altmode[cur]);
+>  
+> -	for (i = 0; con->partner_altmode[i]; i++)
+> -		typec_altmode_update_active(con->partner_altmode[i],
+> -					    con->partner_altmode[i] == altmode);
+> +	for (i = 0; i < UCSI_MAX_ALTMODES; i++) {
+> +        if (con->partner_altmode[i]) {
+> +		    typec_altmode_update_active(con->partner_altmode[i],
+> +			                            con->partner_altmode[i] == altmode);
+> +        }
+> +    }
+>  }
+>  
+>  static u8 ucsi_altmode_next_mode(struct typec_altmode **alt, u16 svid)
 > 
-> Signed-off-by: Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
-> ---
->  .../media/atomisp/pci/sh_css_firmware.c       | 62 +++++++++++--------
->  1 file changed, 36 insertions(+), 26 deletions(-)
 
-Hi,
+Previous patch had whitespace issues and i cleaned it up for coding style 
+reasons, patch is against 5.8.0-rc6
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- Your patch did many different things all at once, making it difficult
-  to review.  All Linux kernel patches need to only do one thing at a
-  time.  If you need to do multiple things (such as clean up all coding
-  style issues in a file/driver), do it in a sequence of patches, each
-  one doing only one thing.  This will make it easier to review the
-  patches to ensure that they are correct, and to help alleviate any
-  merge issues that larger patches can cause.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
+index d0c63afaf..30e811fde 100644
+--- a/drivers/usb/typec/ucsi/ucsi.c
++++ b/drivers/usb/typec/ucsi/ucsi.c
+@@ -218,9 +218,10 @@ void ucsi_altmode_update_active(struct ucsi_connector *con)
+ 	if (cur < UCSI_MAX_ALTMODES)
+ 		altmode = typec_altmode_get_partner(con->port_altmode[cur]);
+ 
+-	for (i = 0; con->partner_altmode[i]; i++)
+-		typec_altmode_update_active(con->partner_altmode[i],
+-					    con->partner_altmode[i] == altmode);
++	for (i = 0; i < UCSI_MAX_ALTMODES; i++)
++		if (con->partner_altmode[i])
++			typec_altmode_update_active(con->partner_altmode[i],
++										con->partner_altmode[i] == altmode);
+ }
+ 
+ static u8 ucsi_altmode_next_mode(struct typec_altmode **alt, u16 svid)
