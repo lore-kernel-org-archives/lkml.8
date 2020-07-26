@@ -2,208 +2,112 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D100AC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDA6C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9765206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD7320658
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 02:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tfz-net.20150623.gappssmtp.com header.i=@tfz-net.20150623.gappssmtp.com header.b="KWW7XRvn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/Y4CcDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgGZCL4 (ORCPT
+        id S1728184AbgGZC2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 22:11:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39756 "EHLO
+        Sat, 25 Jul 2020 22:28:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728076AbgGZCL4 (ORCPT
+        with ESMTP id S1727013AbgGZC2n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 22:11:56 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C18C4C08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 19:11:55 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a5so1575396wrm.6
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 19:11:55 -0700 (PDT)
+        Sat, 25 Jul 2020 22:28:43 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B476BC0619D2;
+        Sat, 25 Jul 2020 19:28:43 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id e13so12333400qkg.5;
+        Sat, 25 Jul 2020 19:28:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tfz-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2BY5Poqr2fA3RRuOzlPlb22Tg24jxGxBQVUUxrbzh/M=;
-        b=KWW7XRvnNCgZsnxgTX9/6O5WphsFCiJ5rLsriaFFCjo0w89hIZa98KECDv1RbTuJsB
-         OwKi4lc2CXeYWMG/TPbEpfad9Wc9R2wKh3+FpYWffG0Vj2ymqxzWsqtD2oe6xw1lPfPU
-         wY0u30YQLtGsFu3Ld/o0DcVKmZaLrdeMWiG2h4ItCsaC8aTXj/vbt6L39CVpNkLxuo2i
-         l2AI4Ddif5Z4Nm3HM5K6pJUACvOMOX3lTuVi4NvMtjLOr5UYjtUy+fiRH2e1+hykOBxi
-         H5RKk/F7BWjL+NkminG2g9cQeJ10xBI5HZ/CuDaCqKhKGTNVfotpQNpwHjMKXkne3blx
-         N9HQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4RfkvlMt2rThYkklpBMRg3zwGuy1XZ+sZK1Hvc1Zws8=;
+        b=K/Y4CcDRyCp8X8+LBwvI77yMPhDNYMu5OIkLphXaFjLvLFUoaLUZ7Um2xZ384bUFJr
+         9kWU+QsNe+XFzYY4NGXk+b5XYpAjxwVplrp0ZnCq4gH4RAghgzoiOyAjUYCAxHMB1gGQ
+         M3TdfUxgrOEEX1m9zqMWhWeo83I0rANSgTZD3qWKbRE6GJQoe5bqFeh1tIBq4S/L37iC
+         e10A2X/xcfoWI8gDoXPtUzOli4jnil7PkoohG4YcE1Mrz+HlTNzsiBUcI9bxOxgjEM49
+         kQ3v4NxRxKwgC/UYEHZBUwzgayUuaaunIPUHOgkOZlmp0VXsaTqU02EDLtXJOsenTIuB
+         kq2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2BY5Poqr2fA3RRuOzlPlb22Tg24jxGxBQVUUxrbzh/M=;
-        b=pcbtkRaN6ikvyrxMe7YSTk8YeN3+vq2EYL8y8HlZKff+q1xz1kNgcg2vgbuz2N5TnA
-         iTbIVROyJz4X0tQIuTsaYGAXnmheZcV1bte0ghcGmRQf9Q/lgRqKkoc6O8tcfa0uNIqB
-         b3txQMimhIjScD264+cjNqT56PAoAQsgehrqfovAakbh2UR21hU8A+JKDfrmNe8PyGj6
-         PmuxHchcgEBPTtKqb1sRQtkX31VoAWwsR3i7jl9MVfHLmmWJ2dT4vySJKpX3FrzUYCvG
-         ILSaqaffwckeiVzURGc2OZsTIoqExwhz8O/ds+1ZF04g3c1HJ6w9FscIb2B/HVkXDuoX
-         Ihgw==
-X-Gm-Message-State: AOAM532wz2+sw771L93GyAx7gIUNKVhMtwVbi0uMe8QP4E8X898xSlEE
-        3mNpw4si8e9l3qKWNHjWl+dp5VwLa8nfz0QkmOxlz4OkzGw=
-X-Google-Smtp-Source: ABdhPJzYjq53hix8vYV6O/NEWrQvf44oV97N5I8qZhQjdzG/xJ+YJAaus2rch7JC6PFRpE1E4F7UxrZeV8/91/vPRjk=
-X-Received: by 2002:a05:6000:141:: with SMTP id r1mr10897990wrx.69.1595729514257;
- Sat, 25 Jul 2020 19:11:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=4RfkvlMt2rThYkklpBMRg3zwGuy1XZ+sZK1Hvc1Zws8=;
+        b=hfysgWyFyIO9icNrac+QavWoqDXc0bpBXVBEWsEbUHlMSDz3nvw4TKVi4Hz//Zsn5l
+         +cJVRhWASFN/wytNxJD5b6kokB0MX7tHb/HjG/54n9uM3hMquG32Szaa1/dNLgMLC/om
+         j04vDraLFLJDBlRxrSq9S8PBVy6SgttWR7SVrwRxlve2gdQMvRS81Ez2I4l+eessRiWW
+         3ymw0BjQFWEL7tv1PGri8rBVZQK/JfARUrsbtVZvVM070RSCtHF9zDa+GOSx+SQH+uj5
+         tocUcKKQQ3ak5+zMUcVeVqYOvJD1Gt/10Ygzkf+cTCdY6RuGazdy2YGqKTqST9NQZaSH
+         Or5Q==
+X-Gm-Message-State: AOAM531J4+FKzkn9uxKfhdZ3ZlQFKIQN56YKcARalCtUWD5h8IZ/q1RX
+        Cy+t86FOXGzXZFVxfinF6A==
+X-Google-Smtp-Source: ABdhPJwzZVg3MNUXqS+wa+k0VLYtFF6fVCt3zo5divFq0l52ko+Cw1GX/Gak4/JDH4PGLtaCJ1J7aQ==
+X-Received: by 2002:a05:620a:5f7:: with SMTP id z23mr1413433qkg.206.1595730522804;
+        Sat, 25 Jul 2020 19:28:42 -0700 (PDT)
+Received: from localhost.localdomain (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
+        by smtp.gmail.com with ESMTPSA id z197sm13512785qkb.66.2020.07.25.19.28.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jul 2020 19:28:42 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs@googlegroups.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH v2] infiniband: Prevent uninit-value in ucma_accept()
+Date:   Sat, 25 Jul 2020 22:27:16 -0400
+Message-Id: <20200726022716.635727-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200725220203.624557-1-yepeilin.cs@gmail.com>
+References: <20200725220203.624557-1-yepeilin.cs@gmail.com>
 MIME-Version: 1.0
-References: <20200725045921.2723-1-kalou@tfz.net> <20200725051547.3718-1-kalou@tfz.net>
-In-Reply-To: <20200725051547.3718-1-kalou@tfz.net>
-From:   Pascal Bouchareine <kalou@tfz.net>
-Date:   Sat, 25 Jul 2020 19:11:43 -0700
-Message-ID: <CAGbU3_nNeeZn8Sk28t_fqOEjBi81JXp67L7-2E+9J=8LHtcE7Q@mail.gmail.com>
-Subject: Re: [PATCH v3] This command attaches a description to a file
- descriptor for troubleshooting purposes. The free string is displayed in the
- process fdinfo file for that fd /proc/pid/fdinfo/fd.
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        "J. Bruce Fields" <bfields@fieldses.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry about all the noise, please disregard this one.
+ucma_accept() is reading uninitialized memory when `in_len` is
+less than `offsetof(struct rdma_ucm_accept, ece)`. Fix it.
 
+Reported-and-tested-by: syzbot+086ab5ca9eafd2379aa6@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?id=0bce3bb68cb383fce92f78444e3ef77c764b60ad
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+Change in v2:
+    - syzbot has reported this bug as "KMSAN: uninit-value in xa_load".
+      Add "Reported-and-tested-by:" and "Link:" tags for it.
 
-On Sat, Jul 25, 2020 at 7:04 PM Pascal Bouchareine <kalou@tfz.net> wrote:
->
-> One intended usage is to allow processes to self-document sockets
-> for netstat and friends to report
->
-> Signed-off-by: Pascal Bouchareine <kalou@tfz.net>
-> ---
->  Documentation/filesystems/proc.rst |  3 +++
->  fs/fcntl.c                         | 19 +++++++++++++++++++
->  fs/file_table.c                    |  2 ++
->  fs/proc/fd.c                       |  5 +++++
->  include/linux/fs.h                 |  3 +++
->  include/uapi/linux/fcntl.h         |  5 +++++
->  6 files changed, 37 insertions(+)
->
-> diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
-> index 996f3cfe7030..ae8045650836 100644
-> --- a/Documentation/filesystems/proc.rst
-> +++ b/Documentation/filesystems/proc.rst
-> @@ -1918,6 +1918,9 @@ A typical output is::
->         flags:  0100002
->         mnt_id: 19
->
-> +An optional 'desc' is set if the process documented its usage of
-> +the file via the fcntl command F_SET_DESCRIPTION.
-> +
->  All locks associated with a file descriptor are shown in its fdinfo too::
->
->      lock:       1: FLOCK  ADVISORY  WRITE 359 00:13:11691 0 EOF
-> diff --git a/fs/fcntl.c b/fs/fcntl.c
-> index 2e4c0fa2074b..c1ef724a906e 100644
-> --- a/fs/fcntl.c
-> +++ b/fs/fcntl.c
-> @@ -319,6 +319,22 @@ static long fcntl_rw_hint(struct file *file, unsigned int cmd,
->         }
->  }
->
-> +static long fcntl_set_description(struct file *file, char __user *desc)
-> +{
-> +       char *d;
-> +
-> +       d = strndup_user(desc, MAX_FILE_DESC_SIZE);
-> +       if (IS_ERR(d))
-> +               return PTR_ERR(d);
-> +
-> +       spin_lock(&file->f_lock);
-> +       kfree(file->f_description);
-> +       file->f_description = d;
-> +       spin_unlock(&file->f_lock);
-> +
-> +       return 0;
-> +}
-> +
->  static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
->                 struct file *filp)
->  {
-> @@ -426,6 +442,9 @@ static long do_fcntl(int fd, unsigned int cmd, unsigned long arg,
->         case F_SET_FILE_RW_HINT:
->                 err = fcntl_rw_hint(filp, cmd, arg);
->                 break;
-> +       case F_SET_DESCRIPTION:
-> +               err = fcntl_set_description(filp, argp);
-> +               break;
->         default:
->                 break;
->         }
-> diff --git a/fs/file_table.c b/fs/file_table.c
-> index 656647f9575a..6673a48d2ea1 100644
-> --- a/fs/file_table.c
-> +++ b/fs/file_table.c
-> @@ -272,6 +272,8 @@ static void __fput(struct file *file)
->         eventpoll_release(file);
->         locks_remove_file(file);
->
-> +       kfree(file->f_description);
-> +
->         ima_file_free(file);
->         if (unlikely(file->f_flags & FASYNC)) {
->                 if (file->f_op->fasync)
-> diff --git a/fs/proc/fd.c b/fs/proc/fd.c
-> index 81882a13212d..60b3ff971b2b 100644
-> --- a/fs/proc/fd.c
-> +++ b/fs/proc/fd.c
-> @@ -57,6 +57,11 @@ static int seq_show(struct seq_file *m, void *v)
->                    (long long)file->f_pos, f_flags,
->                    real_mount(file->f_path.mnt)->mnt_id);
->
-> +       spin_lock(&file->f_lock);
-> +       if (file->f_description)
-> +               seq_printf(m, "desc:\t%s\n", file->f_description);
-> +       spin_unlock(&file->f_lock);
-> +
->         show_fd_locks(m, file, files);
->         if (seq_has_overflowed(m))
->                 goto out;
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index f5abba86107d..09717bfa4e3b 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -980,6 +980,9 @@ struct file {
->         struct address_space    *f_mapping;
->         errseq_t                f_wb_err;
->         errseq_t                f_sb_err; /* for syncfs */
-> +
-> +#define MAX_FILE_DESC_SIZE 256
-> +       char                    *f_description;
->  } __randomize_layout
->    __attribute__((aligned(4))); /* lest something weird decides that 2 is OK */
->
-> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-> index 2f86b2ad6d7e..f86ff6dc45c7 100644
-> --- a/include/uapi/linux/fcntl.h
-> +++ b/include/uapi/linux/fcntl.h
-> @@ -55,6 +55,11 @@
->  #define F_GET_FILE_RW_HINT     (F_LINUX_SPECIFIC_BASE + 13)
->  #define F_SET_FILE_RW_HINT     (F_LINUX_SPECIFIC_BASE + 14)
->
-> +/*
-> + * Set file description
-> + */
-> +#define F_SET_DESCRIPTION      (F_LINUX_SPECIFIC_BASE + 15)
-> +
->  /*
->   * Valid hint values for F_{GET,SET}_RW_HINT. 0 is "not set", or can be
->   * used to clear any hints previously set.
-> --
-> 2.25.1
->
+ drivers/infiniband/core/ucma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/infiniband/core/ucma.c b/drivers/infiniband/core/ucma.c
+index a591fdccdce0..842d297903c0 100644
+--- a/drivers/infiniband/core/ucma.c
++++ b/drivers/infiniband/core/ucma.c
+@@ -1134,7 +1134,7 @@ static ssize_t ucma_listen(struct ucma_file *file, const char __user *inbuf,
+ static ssize_t ucma_accept(struct ucma_file *file, const char __user *inbuf,
+ 			   int in_len, int out_len)
+ {
+-	struct rdma_ucm_accept cmd;
++	struct rdma_ucm_accept cmd = {};
+ 	struct rdma_conn_param conn_param;
+ 	struct rdma_ucm_ece ece = {};
+ 	struct ucma_context *ctx;
+-- 
+2.25.1
+
