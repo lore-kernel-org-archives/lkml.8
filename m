@@ -2,158 +2,114 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A60C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8525C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 665AE2065C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C443820714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:15:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7TMauH/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CmLMxf6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgGZSH5 (ORCPT
+        id S1726738AbgGZSPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 14:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47452 "EHLO
+        Sun, 26 Jul 2020 14:15:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgGZSH4 (ORCPT
+        with ESMTP id S1726072AbgGZSPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 14:07:56 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A07FBC0619D2;
-        Sun, 26 Jul 2020 11:07:56 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id d27so10605346qtg.4;
-        Sun, 26 Jul 2020 11:07:56 -0700 (PDT)
+        Sun, 26 Jul 2020 14:15:47 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85DF8C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 11:15:47 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 9so12117720wmj.5
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 11:15:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7QCobyC2ItfhaGKp9vOhyilsu/vFD41abiIi+idKUH4=;
-        b=V7TMauH/w1Ana1kFtHdtvCoOzYrzEicGu1Y7VQh+OX3RqgbbGWUHjJE7KhUY4Jb5Iw
-         a+65Vhwltu8vpzbWEN+I1yK0lPn056HV170KEzcbegvE9RjLoU5sXY3fndO2Wq8woeiZ
-         +JuaBGuqq2/3Pz1ecRT4b3Kt3CbVKzYTXJFMlqCo2kDilOfdc1p0Hw32zWJp1ejySpyx
-         fghCDWp2SwfsXbHL90T0OIVSErQLREljP415kl50bQoX8vrP6Zw5PC1Hhljc4O+X5ljY
-         RrRyICT32tUlTSPRMLM4JnP/vJjSFg4o+naE6YvGC1A1YRiIvdMV/6TjgVSl41hPQI9h
-         2fkQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PiMm1yyj8Q6tWrjven5zlrS3Z6213SZfjWTHd4vlUEs=;
+        b=CmLMxf6kuw6cGyk+BN9PWV10v+ZIuKboIGE4KjhBEWxLqJBNXjSI3lzOYhcEDLn2+I
+         5gBkC+WleShAEybkvXkPE+M34ocghl9dpoyI9grS8J+/xnGSTfAtfg2o4j57uXxRaxzq
+         sz7efvYjguxQiemKygzsreiedWNkvEyW5uJACcZUCa8CK8Dj3CDRW3wlAIMyyFPUUfzu
+         shOycahC9xmGXJRnp7SeVGmlgKLE89yQxsyDJZsu42FUwE/1XIS4DsgohQbGTCWx1OC5
+         yICgBnq0Q8arxcc5D4LXLSESoE6dzHIe2k+ZStnawTRkp9X9KX0DPtmENs6o27Sp0tLp
+         VZeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7QCobyC2ItfhaGKp9vOhyilsu/vFD41abiIi+idKUH4=;
-        b=KMM70pb5zVN7DN13WSM4PMaH3froLO3ONR5T1At4TCiUQQXWba1Fd+ERtPtOeLBqEW
-         7yZM74rQWvKvIPaXaLKEj6HOEOMXzb/AN37ZpP6ODxcdxQmQPU6Gywptk0V4BT6N/qI2
-         0v3WF3x1EmvlRIGt8PgJDS0OVt5oWKCn9cqJbSjtUmFosu0WNUdk/WyZD3tajhs7r8nI
-         4qSu4XX4OeiBGo9fJVI81zNxSpBDIXyuEzg+SJwRQfVPUpu1UaCjPOF7PeVwX4DP63FU
-         A9JI4Efzg3Glz/nUEOnmbJzQicWjmPl0zR3dxYd7Vep3dUI9RTYGkDPIjcVULKW/THq9
-         n4AQ==
-X-Gm-Message-State: AOAM530FQHgaiqrQuJfcL3sU2Cup2biLLirOqb0g/YRfsRQsei4zBrkC
-        /QPPTVX9jj3apu3myoOuYQ==
-X-Google-Smtp-Source: ABdhPJzlzTapl0f9uK6uWdZz8aGCLIpRNKb6qZDpaJ4z35xH941T2u8rGNiKrd05M+B8qqVCtQAnhw==
-X-Received: by 2002:ac8:47c8:: with SMTP id d8mr17743991qtr.32.1595786875627;
-        Sun, 26 Jul 2020 11:07:55 -0700 (PDT)
-Received: from PWN (c-76-119-149-155.hsd1.ma.comcast.net. [76.119.149.155])
-        by smtp.gmail.com with ESMTPSA id s5sm15852823qke.120.2020.07.26.11.07.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 11:07:55 -0700 (PDT)
-Date:   Sun, 26 Jul 2020 14:07:52 -0400
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Vandana BN <bnvandana@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] media/v4l2-core: Fix
- kernel-infoleak in video_put_user()
-Message-ID: <20200726180752.GA49356@PWN>
-References: <20200726164439.48973-1-yepeilin.cs@gmail.com>
- <20200726173044.GA14755@pendragon.ideasonboard.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PiMm1yyj8Q6tWrjven5zlrS3Z6213SZfjWTHd4vlUEs=;
+        b=RKNdD5D6c++WFLZk0q7EKrdJTxwrQKwc0Lv/rax5T0VA5eFWNiCPKS30Uftc2XaetN
+         pYieuETCtP61UQ8XoYeudEEXVurU0xmK8DIDjxxYVQ4WtK8Bd1K3DHF6BEhHdVyR4GwQ
+         HKy9zyYX4f7xFjRfK4Q3SKVZ2gbmADzQ4qeoTLrKF+ovXs23WlxNDMxS018+7MKnqsOA
+         kLEYPgfxY5DgLMniGsVvr+uf4gCgGBnbQlfJ8bAx/L3ag0JjqS3whVFSYWJKGGqsz9Z3
+         603ricEe669MGzzh1TTmXJSmjzpk2B/IpG1L2qnBYRimmimy2qp845GR7Cr+3zdDBJ9f
+         Iu7Q==
+X-Gm-Message-State: AOAM533jqXK1Lw6JFB37LZAxK3wLcj6ExMhv9An5vJ43D6/T6yX0ojpK
+        aRHeMRlIOjvuG3Td38bliqLDWAHSzpOWl8gyrBI=
+X-Google-Smtp-Source: ABdhPJwkNpZuNMVrZC51FWF7gZY8qO0E3BYnZEcsXKTs5g22I6lRW5H9rVnp97x89RgJscB5uaGUnmkuzahbN7KpyRY=
+X-Received: by 2002:a1c:3b02:: with SMTP id i2mr16770291wma.24.1595787346092;
+ Sun, 26 Jul 2020 11:15:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726173044.GA14755@pendragon.ideasonboard.com>
+References: <20200726141831.2662-1-aditya.jainadityajain.jain@gmail.com>
+ <20200726142013.2891-1-aditya.jainadityajain.jain@gmail.com>
+ <20200726142013.2891-3-aditya.jainadityajain.jain@gmail.com>
+ <20200726150244.GD452766@kroah.com> <1177f80aa848a294f65e305729304b76d1e5ee98.camel@perches.com>
+In-Reply-To: <1177f80aa848a294f65e305729304b76d1e5ee98.camel@perches.com>
+From:   Aditya Jain <aditya.jainadityajain.jain@gmail.com>
+Date:   Sun, 26 Jul 2020 23:45:34 +0530
+Message-ID: <CAJAoDUjRZTxcOJGs2wqPPYyVCYJJTs1NWtmD0+yMXLttgCCQyA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] staging: rtl8723bs: include: Further clean up
+ function declarations
+To:     Joe Perches <joe@perches.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
+        hdegoede@redhat.com, linux-kernel@vger.kernel.org,
+        Larry.Finger@lwfinger.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 08:30:44PM +0300, Laurent Pinchart wrote:
-> Hi Peilin,
-> 
-> Thank you for the patch.
-> 
-> On Sun, Jul 26, 2020 at 12:44:39PM -0400, Peilin Ye wrote:
-> > video_put_user() is copying uninitialized stack memory to userspace. Fix
-> > it by initializing `vb32` using memset().
-> 
-> What makes you think this will fix the issue ? When initializing a
-> structure at declaration time, the fields that are not explicitly
-> specified should be initialized to 0 by the compiler. See
-> https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/strin.htm:
+On Sun, Jul 26, 2020 at 10:45 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Sun, 2020-07-26 at 17:02 +0200, Greg KH wrote:
+> > On Sun, Jul 26, 2020 at 07:50:12PM +0530, Aditya Jain wrote:
+> > > Cleaning up messy multiline function declarations in hal_phy_cfg.h
+> []
+> > > diff --git a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
+> []
+Ok, I'll merge this patch with the previous one. Had separated the two
+to make the diffs smaller thinking they'll
+be easier to review. But yeah, I get the point.
+> > > -void
+> > > -PHY_SetSwChnlBWMode8723B(
+> > > -struct adapter *Adapter,
+> > > -u8                         channel,
+> > > -enum CHANNEL_WIDTH         Bandwidth,
+> > > -u8                         Offset40,
+> > > -u8                         Offset80
+> > > +void PHY_SetBWMode8723B(struct adapter *Adapter,
+> > > +                   enum CHANNEL_WIDTH Bandwidth,   /*  20M or 40M */
+> > > +                   unsigned char Offset    /*  Upper, Lower, or Don't care */
+> >
+> > Those comments should go at the top of the function declaration, in
+> > kernel doc format.
+>
+> Not every external function needs kernel-doc.
+>
+> This is a realtek staging driver that likely it will never be
+> moved out of staging.
+>
+>
+Should I just remove the comments then? Sorry, but I'm a newbie, and
+not really sure what the function is or supposed to do.
+I can try looking it up if kernel-doc is required here.
 
-Hi Mr. Pinchart!
-
-First of all, syzbot tested this patch, and it says it's "OK":
-
-	https://syzkaller.appspot.com/bug?extid=79d751604cb6f29fbf59
-
-> If a structure variable is partially initialized, all the uninitialized
-> structure members are implicitly initialized to zero no matter what the
-> storage class of the structure variable is. See the following example:
-> 
-> struct one {
->     int a;
->     int b;
->     int c;
-> };
-> 
-> void main() {
->     struct one z1;         // Members in z1 do not have default initial values.
->     static struct one z2;  // z2.a=0, z2.b=0, and z2.c=0.
->     struct one z3 = {1};   // z3.a=1, z3.b=0, and z3.c=0.
-> }
-
-Yes, I understand that. I can safely printk() all members of that struct
-without triggering a KMSAN warning, which means they have been properly
-initialized.
-
-However, if I do something like:
-
-	char *p = (char *)&vb32;
-	int i;
-
-	for (i = 0; i < sizeof(struct vb32); i++, p++)
-		printk("*(p + i): %d", *(p + i));
-
-This tries to print out `vb32` as "raw memory" one byte at a time, and
-triggers a KMSAN warning somewhere in the middle (when `i` equals to 25
-or 26).
-
-According to a previous discussion with Mr. Kroah-Hartman, as well as
-this LWN article:
-
-	"Structure holes and information leaks"
-	https://lwn.net/Articles/417989/
-
-Initializing a struct by assigning (both partially or fully) leaves the
-"padding" part of it uninitialized, thus potentially leads to kernel
-information leak if the structure in question is going to be copied to
-userspace.
-
-memset() sets these "uninitialized paddings" to zero, therefore (I
-think) should solve the problem.
-
-Thank you!
-Peilin Ye
-
+Regards,
+Aditya Jain
