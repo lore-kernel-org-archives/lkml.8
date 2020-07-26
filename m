@@ -2,122 +2,188 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D2FC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 699B3C433ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 939402073E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:06:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="bPgAF82U"
+	by mail.kernel.org (Postfix) with ESMTP id 3EE7120714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:06:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595779595;
+	bh=jOlSd937RAl4IikqYHXqep9iyrxRMosx470QDWX0F5o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uBl6e+VeuAZC6gzIHkhDOlwOxOeN5SIIo3AXr5cA9iwxeYCGHEoOM9EwP9n0/Dk2H
+	 Cvlja5enCuwAp5S+rG7y8v91g91qL7nVfWNzmn9H3RciudT/Oen1R4PsNZAnm9PSdp
+	 XWgFC1c+ayKq8F3dCoWbL7X5CGuRfW7Nb9pnQIns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgGZQGZ (ORCPT
+        id S1727971AbgGZQGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 12:06:25 -0400
-Received: from crapouillou.net ([89.234.176.41]:47986 "EHLO crapouillou.net"
+        Sun, 26 Jul 2020 12:06:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726117AbgGZQGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 12:06:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1595779582; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=d/PZVTcv9XrEDcYY/++e3Teye8k7bnbbZV/Cr5UVzy8=;
-        b=bPgAF82UdLVnLdfUjsPgthYqEap5z1iDg/vjuXj6N456wugpclWOY0YZ3kzPZue4Tn1Ayk
-        OStaiEu+djv0OyQZJr1RkXKj3UvE3XnStlDxd2UXiCAoVGLt22b2BSJUbdYOwxfJgq/EEO
-        RXFikV31lzuZFk8CbOgd4cBd2fs2aK4=
-Date:   Sun, 26 Jul 2020 18:06:13 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: ingenic: Limit MTD_NAND_JZ4780 to
- architecture only
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-kernel@vger.kernel.org,
-        linux-mtd <linux-mtd@lists.infradead.org>
-Message-Id: <DE33EQ.XSK1UTONAHU61@crapouillou.net>
-In-Reply-To: <CAK8P3a0HDu15u5dREd6gk_e9D6mrZ9JqT0DJs9AeC9C2602nAw@mail.gmail.com>
-References: <20200724145401.2566-1-krzk@kernel.org>
-        <20200724145401.2566-3-krzk@kernel.org>
-        <PWBZDQ.D1XCW6N2YMRA@crapouillou.net>
-        <CAJKOXPc2w0QHQDEwqoeg9Nm361MszM4LRaCoJD2En-fPgPp+4Q@mail.gmail.com>
-        <IBDZDQ.K28R5FAI0BXI2@crapouillou.net> <20200724155436.GA7460@kozik-lap>
-        <K5Y0EQ.WYAK00ADM46F3@crapouillou.net>
-        <CAK8P3a0HDu15u5dREd6gk_e9D6mrZ9JqT0DJs9AeC9C2602nAw@mail.gmail.com>
+        id S1726117AbgGZQGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 12:06:33 -0400
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF0002078E
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 16:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595779592;
+        bh=jOlSd937RAl4IikqYHXqep9iyrxRMosx470QDWX0F5o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HMnGZGZ8zFPNbKdaNkL5nkkSM8jRMIAHhiqCpnnztcLsnfOizEu4MyxHX3/PY48kQ
+         OKSriRyt3KRRiQEY7MQd/UvJ5SEe1uW/4kpCx6/OlGtmxNSrIN7a+JuuZitRc8QarT
+         57nOy9ojB0zNJZSlav9+3RAnApxBHr7GhgYpBqNU=
+Received: by mail-ot1-f53.google.com with SMTP id n24so10540623otr.13
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 09:06:32 -0700 (PDT)
+X-Gm-Message-State: AOAM5326FiEvrjQMz//MgdiLTLU2VJnZgMnF0yXYXAnxx/faujWBxxF4
+        562fyR84P5h9Yg9m3upyk38drFU5xogW7ieXPqE=
+X-Google-Smtp-Source: ABdhPJyLC8hHAzofnQu2h1FVAUiDveA5YPbaDCm/F/ft2ehbXBb05JTdDqOZFfW7sdjm1unxLObM5+FL1usYgX7CE+k=
+X-Received: by 2002:a05:6830:1094:: with SMTP id y20mr5572348oto.90.1595779591988;
+ Sun, 26 Jul 2020 09:06:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20200724050553.1724168-1-jarkko.sakkinen@linux.intel.com>
+ <20200724050553.1724168-6-jarkko.sakkinen@linux.intel.com>
+ <20200724092746.GD517988@gmail.com> <20200725031648.GG17052@linux.intel.com> <20200726081408.GB2927915@kernel.org>
+In-Reply-To: <20200726081408.GB2927915@kernel.org>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sun, 26 Jul 2020 19:06:20 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXHDK5RSbTu3SG1AzbLRJD_FsdAmCnjmf31P=Db6J0ktww@mail.gmail.com>
+Message-ID: <CAMj1kXHDK5RSbTu3SG1AzbLRJD_FsdAmCnjmf31P=Db6J0ktww@mail.gmail.com>
+Subject: Re: [PATCH v5 5/6] kprobes: Use text_alloc() and text_free()
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jessica Yu <jeyu@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 26 Jul 2020 at 11:14, Mike Rapoport <rppt@kernel.org> wrote:
+>
+> On Sat, Jul 25, 2020 at 06:16:48AM +0300, Jarkko Sakkinen wrote:
+> > On Fri, Jul 24, 2020 at 11:27:46AM +0200, Ingo Molnar wrote:
+> > >
+> > > * Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+> > >
+> > > > Use text_alloc() and text_free() instead of module_alloc() and
+> > > > module_memfree() when an arch provides them.
+> > > >
+> > > > Cc: linux-mm@kvack.org
+> > > > Cc: Andi Kleen <ak@linux.intel.com>
+> > > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > > ---
+> > > >  kernel/kprobes.c | 9 +++++++++
+> > > >  1 file changed, 9 insertions(+)
+> > > >
+> > > > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > > > index 4e46d96d4e16..611fcda9f6bf 100644
+> > > > --- a/kernel/kprobes.c
+> > > > +++ b/kernel/kprobes.c
+> > > > @@ -40,6 +40,7 @@
+> > > >  #include <asm/cacheflush.h>
+> > > >  #include <asm/errno.h>
+> > > >  #include <linux/uaccess.h>
+> > > > +#include <linux/vmalloc.h>
+> > > >
+> > > >  #define KPROBE_HASH_BITS 6
+> > > >  #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
+> > > > @@ -111,12 +112,20 @@ enum kprobe_slot_state {
+> > > >
+> > > >  void __weak *alloc_insn_page(void)
+> > > >  {
+> > > > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
+> > > > + return text_alloc(PAGE_SIZE);
+> > > > +#else
+> > > >   return module_alloc(PAGE_SIZE);
+> > > > +#endif
+> > > >  }
+> > > >
+> > > >  void __weak free_insn_page(void *page)
+> > > >  {
+> > > > +#ifdef CONFIG_ARCH_HAS_TEXT_ALLOC
+> > > > + text_free(page);
+> > > > +#else
+> > > >   module_memfree(page);
+> > > > +#endif
+> > > >  }
+> > >
+> > > I've read the observations in the other threads, but this #ifdef
+> > > jungle is silly, it's a de-facto open coded text_alloc() with a
+> > > module_alloc() fallback...
+> >
+> > In the previous version I had:
+> >
+> >   https://lore.kernel.org/lkml/20200717030422.679972-4-jarkko.sakkinen@linux.intel.com/
+> >
+> > and I had just calls to text_alloc() and text_free() in corresponding
+> > snippet to the above.
+> >
+> > I got this feedback from Mike:
+> >
+> >   https://lore.kernel.org/lkml/20200718162359.GA2919062@kernel.org/
+> >
+> > I'm not still sure that I fully understand this feedback as I don't see
+> > any inherent and obvious difference to the v4. In that version fallbacks
+> > are to module_alloc() and module_memfree() and text_alloc() and
+> > text_memfree() can be overridden by arch.
+>
+> Let me try to elaborate.
+>
+> There are several subsystems that need to allocate memory for executable
+> text. As it happens, they use module_alloc() with some abilities for
+> architectures to override this behaviour.
+>
+> For many architectures, it would be enough to rename modules_alloc() to
+> text_alloc(), make it built-in and this way allow removing dependency on
+> MODULES.
+>
+> Yet, some architectures have different restrictions for code allocation
+> for different subsystems so it would make sense to have more than one
+> variant of text_alloc() and a single config option ARCH_HAS_TEXT_ALLOC
+> won't be sufficient.
+>
+> I liked Mark's suggestion to have text_alloc_<something>() and proposed
+> a way to introduce text_alloc_kprobes() along with
+> HAVE_KPROBES_TEXT_ALLOC to enable arch overrides of this function.
+>
+> The major difference between your v4 and my suggestion is that I'm not
+> trying to impose a single ARCH_HAS_TEXT_ALLOC as an alternative to
+> MODULES but rather to use per subsystem config option, e.g.
+> HAVE_KPROBES_TEXT_ALLOC.
+>
+> Another thing, which might be worth doing regardless of the outcome of
+> this discussion is to rename alloc_insn_pages() to text_alloc_kprobes()
+> because the former is way too generic and does not emphasize that the
+> instruction page is actually used by kprobes only.
+>
 
+Masami or Peter should correct me if I am wrong, but it seems to me
+that the way kprobes uses these pages does not require them to be in
+relative branching range of the core kernel on any architecture, given
+that they are populated with individual instruction opcodes that are
+executed in single step mode, and relative branches are emulated (when
+needed)
 
-Le sam. 25 juil. 2020 =E0 20:30, Arnd Bergmann <arnd@arndb.de> a =E9crit :
-> On Sat, Jul 25, 2020 at 2:17 PM Paul Cercueil <paul@crapouillou.net>=20
-> wrote:
->>  Le ven. 24 juil. 2020 =E0 17:54, Krzysztof Kozlowski=20
->> <krzk@kernel.org> a
->>  =E9crit :
->>  > On Fri, Jul 24, 2020 at 05:50:06PM +0200, Paul Cercueil wrote:
->>  >>  Le ven. 24 juil. 2020 =E0 17:33, Krzysztof Kozlowski
->>  >> <krzk@kernel.org> a =E9crit:
->>  >>  > On Fri, 24 Jul 2020 at 17:19, Paul Cercueil=20
->> <paul@crapouillou.net>
->>  >>  > wrote:
->>  >>
->>  >>  On MIPS, the SoC selection is a Kconfig "choice", so you can=20
->> only
->>  >> support
->>  >>  one SoC family, unfortunately.
->>  >
->>  > Let's say someone selected then some other architecture
->>  > (MIPS_ALCHEMY).
->>  > They could select this MTD driver.
->>  >
->>  > Does it mean they would be able to run it on Ingenic hardware?
->>=20
->>  In *theory* yes, as long as the Kconfig options that MACH_INGENIC
->>  selects are enabled, the kernel should boot and work on Ingenic=20
->> SoCs.
->=20
-> Right now, this won't work yet, because there are platform specific
-> functions that are implemented by each of the platforms in arch/mips,
-> e.g. arch/mips/generic/init.c and arch/mips/jz4740/setup.c.
->=20
-> A lot of the newer platforms are part of arch/mips/generic
-> (CONFIG_MIPS_GENERIC), which roughly corresponds to
-> CONFIG_ARCH_MULTIPLATFORM on in arch/arm/.
-> Similarly, there are header files in arch/mips/include/asm/mach-*/
-> that conflict and you need to have the right one.
->=20
-> To have more than one platform enabled, each one needs to
-> have all of that platform code converted to fit into the
-> MIPS_GENERIC framework. This can be a lot of work, but
-> I suppose the ingenic platform would be a candidate for
-> which this makes sense, as long as new SoCs of that family
-> still come out.
-
-It should be much less work now that the vast majority of=20
-arch/mips/jz4740 is gone. The code left is pretty much generic. I can=20
-have a look to convert it to the MIPS_GENERIC framework.
-
-Although the code there is scary. Have a look at=20
-arch/mips/include/asm/{machine,mips_machine}.h, you'll see what I mean.
-
-Anyway, I think we're way past the scope of this patch, so for this one:
-Acked-by: Paul Cercueil <paul@crapouillou.net>
-
-Cheers,
--Paul
-
-
+So for kprobes in particular, we should be able to come up with a
+generic sequence that does not involve module_alloc(), and therefore
+removes the kprobes dependency on module support entirely (with the
+exception of power which maps the vmalloc space nx when module support
+is disabled). Renaming alloc_insn_page() to something more descriptive
+makes sense imo, but is a separate issue.
