@@ -2,105 +2,106 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF36C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 05:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED53C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 05:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66116204EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 05:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C408C204EA
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 05:29:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6tMLNPm"
+	dkim=pass (1024-bit key) header.d=fudan.edu.cn header.i=@fudan.edu.cn header.b="TL3US7AT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726176AbgGZFU5 (ORCPT
+        id S1726100AbgGZF2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 01:20:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbgGZFU5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 01:20:57 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7E2DC0619D2;
-        Sat, 25 Jul 2020 22:20:56 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id t6so1108589qvw.1;
-        Sat, 25 Jul 2020 22:20:56 -0700 (PDT)
+        Sun, 26 Jul 2020 01:28:08 -0400
+Received: from mail.fudan.edu.cn ([202.120.224.10]:59497 "EHLO fudan.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725747AbgGZF2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 01:28:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=10G3Z7zc2hpC9xFkXBhwCWtTHJ66WyVHYUrUeWXwqKc=;
-        b=M6tMLNPmHDwRPfUV/IcFUmlGGdPnUDIJGtLFqruOJH7NnHWLTk1cw4HxXlnFBwh4K1
-         g/yT+XHVjAcliIlb83NW843FatIudzqZ5kOFuTdbe6jF3auvR+aYkC6qPoliSDXoaxyk
-         Y1DS0Mg1uPEVk5hJae6iSEWZyLH7GbB9YsO+zYldksunAUV8viyeTbjp3ZtqyCn0r2FY
-         BZpHH5axCbqggTHuvzQQAYi1mC9PQ2SDVJOU4eVT8WSQbDoeqVnaVe7jC2kUBgkfLCj+
-         /o5Z+OmSCmovhr/qByM3tPIiWDoMKEvhivDScza+wYRgayCxMscK5i4bAN/F5O+KjAT7
-         zwqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=10G3Z7zc2hpC9xFkXBhwCWtTHJ66WyVHYUrUeWXwqKc=;
-        b=U7kLkIi+Y+XnW8xYfDWEurlN9ckpafeJ63jaop2xqWK4W1KZHJyOIPKQdL8SF6yyg8
-         nhRzWbpYNBBKO0egNJv22bHoWsDLAxX0bq99RcgUlZb6UMMZ+Qt8YI/JqthUGKuxWiYN
-         F87qEAimHHOKJmohm95z397EueoK1O2hegvMduJPKGmrnAWEKDEMNfkQpbpePBR10AeC
-         CJpKHjQ5Kfs1TPsESU2tMTE4GdkyZbl7oGSDUqOpVBUiMIy9nUkWZWtwfHwAkZYBqONB
-         ip3Z6R8lTEbXYzzReOskWbrJwZhgq1nZQcQv7oN3i5PNFUM+dSSvSAv8W2xfkFvMYsBg
-         F47w==
-X-Gm-Message-State: AOAM530y6daCu8hvsR/uq050GxCiS5pQQJwgy+hasI1d2ghYsLVABvqj
-        SkxIAOEvyQh3UMqEqyH2aDg=
-X-Google-Smtp-Source: ABdhPJwNOivgw43Vn9IA5nLTrZOB3NaVskEB1shd7sPm43WXFeLNIjFckNZ1t5DJKuOlDAzRNs9P1g==
-X-Received: by 2002:a0c:ffc6:: with SMTP id h6mr12098268qvv.251.1595740856028;
-        Sat, 25 Jul 2020 22:20:56 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:159c:94c1:6e96:1b7e])
-        by smtp.googlemail.com with ESMTPSA id t65sm13364129qkf.119.2020.07.25.22.20.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 22:20:55 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@intel.com>,
-        dri-devel@lists.freedesktop.org (open list:FRAMEBUFFER LAYER),
-        linux-fbdev@vger.kernel.org (open list:FRAMEBUFFER LAYER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] [video/fbdev] mbxfb_remove: fix null pointer dereference
-Date:   Sun, 26 Jul 2020 01:20:45 -0400
-Message-Id: <20200726052047.9856-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        d=fudan.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
+        Message-ID:MIME-Version:Content-Type:Content-Disposition; bh=i7I
+        WTuXbIMWv0hCwBne9xxyRCcOriPNlgAzJOpZpCEo=; b=TL3US7ATed3gM8HMymo
+        xL69dRRmyExiSXlTpMboHW1+GtUzi8iJxS6vBBf6Z9gWz6mxd8C7opbnqYCnXq3U
+        wt5e7mPPGgCLrtfzs7xMmi4c8o6jnFhsIVIEp8iqJmQ6jGQ5BSgBE7Lvgzn1vZ0b
+        L0pxyiEGCOe8KvNFqkGt0Tk8=
+Received: from xin-virtual-machine (unknown [114.252.69.253])
+        by app1 (Coremail) with SMTP id XAUFCgAnL_9kFB1fypU4Ag--.34557S3;
+        Sun, 26 Jul 2020 13:28:04 +0800 (CST)
+Date:   Sun, 26 Jul 2020 13:28:04 +0800
+From:   Xin Xiong <xiongx18@fudan.edu.cn>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, yuanxzhang@fudan.edu.cn,
+        Xin Xiong <xiongx18@fudan.edu.cn>
+Subject: [PATCH] tty: fix pid refcount leak in tty_signal_session_leader
+Message-ID: <20200726052804.GA51199@xin-virtual-machine>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-CM-TRANSID: XAUFCgAnL_9kFB1fypU4Ag--.34557S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF4fCry8tryfXFy5Zr4xJFb_yoW8Xw45pa
+        15J3yjyF98GF4UGrnrJ34FgFWFga4ftF97Gryqy34UAwsxAFyfKFy3Ka4jvF1qyrs5Zr1r
+        uFW2vw13AF43ZFJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v
+        4I1lc2xSY4AK67AK6r4rMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
+        8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
+        xVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
+        8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2
+        jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
+        ZFpf9x0JUJb18UUUUU=
+X-CM-SenderInfo: arytiiqsuqiimz6i3vldqovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function mbxfb_debugfs_remove() accesses fbi->par without NULL check,
-hence do the NULL check in the caller mbxfb_remove().
+In the loop, every time when p->signal->leader is true, the function
+tty_signal_session_leader() will invoke get_pid() and return a
+reference of tty->pgrp with increased refcount to the local variable
+tty_pgrp or return NULL if it fails. After finishing the loop, the
+function invokes put_pid() for only once, decreasing the refcount that
+tty_pgrp keeps.
 
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+Refcount leaks may occur when the scenario that p->signal->leader is
+true happens more than once. In this assumption, if the above scenario
+happens n times in the loop, the function forgets to decrease the
+refcount for n-1 times, which causes refcount leaks.
+
+Fix the issue by decreasing the current refcount of the local variable
+tty_pgrp before assigning new objects to it.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Xin Xiong <xiongx18@fudan.edu.cn>
 ---
- drivers/video/fbdev/mbx/mbxfb.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/tty/tty_jobctrl.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/video/fbdev/mbx/mbxfb.c b/drivers/video/fbdev/mbx/mbxfb.c
-index 6dc287c819cb..515c0cda1994 100644
---- a/drivers/video/fbdev/mbx/mbxfb.c
-+++ b/drivers/video/fbdev/mbx/mbxfb.c
-@@ -1012,11 +1012,10 @@ static int mbxfb_remove(struct platform_device *dev)
- 
- 	write_reg_dly(SYSRST_RST, SYSRST);
- 
--	mbxfb_debugfs_remove(fbi);
--
- 	if (fbi) {
- 		struct mbxfb_info *mfbi = fbi->par;
- 
-+		mbxfb_debugfs_remove(fbi);
- 		unregister_framebuffer(fbi);
- 		if (mfbi) {
- 			if (mfbi->platform_remove)
+diff --git a/drivers/tty/tty_jobctrl.c b/drivers/tty/tty_jobctrl.c
+index f8ed50a16848..9e6bf693ade1 100644
+--- a/drivers/tty/tty_jobctrl.c
++++ b/drivers/tty/tty_jobctrl.c
+@@ -212,6 +212,8 @@ int tty_signal_session_leader(struct tty_struct *tty, int exit_session)
+ 			__group_send_sig_info(SIGCONT, SEND_SIG_PRIV, p);
+ 			put_pid(p->signal->tty_old_pgrp);  /* A noop */
+ 			spin_lock(&tty->ctrl_lock);
++			if (tty_pgrp)
++				put_pid(tty_pgrp);
+ 			tty_pgrp = get_pid(tty->pgrp);
+ 			if (tty->pgrp)
+ 				p->signal->tty_old_pgrp = get_pid(tty->pgrp);
 -- 
-2.17.1
+2.25.1
 
