@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B89D8C433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:50:51 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97BB120714
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B47AC433E3
 	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:50:49 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.kernel.org (Postfix) with ESMTP id 7AD7120715
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:50:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y9ZXo8Xk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f2Moh6DJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2m2LF0wI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s8v+a5Y0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgGZKuo (ORCPT
+        id S1727896AbgGZKuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 26 Jul 2020 06:50:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36648 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgGZKul (ORCPT
+        with ESMTP id S1725794AbgGZKul (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 26 Jul 2020 06:50:41 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9250CC0619D4;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8865CC0619D2;
         Sun, 26 Jul 2020 03:50:41 -0700 (PDT)
 Date:   Sun, 26 Jul 2020 10:50:36 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
@@ -35,12 +35,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zrlK7UBr/R0xhEz/C7qxzeQOeIf5VixvkcPH/ZfTl34=;
-        b=y9ZXo8XkN8mJ59ACFWeWBppk333YZYbE3ozSSpZUsgw2coPMmhql0uDZPIdG5QqBxFgl79
-        Bv+IldvxA5XCFdvaNb6nOYq3EnwFsVQssoVwkXVjg1yZdz3/0Zp/U5j8D3w1GJAuBkjbtp
-        RjgGX38N5Elud7NeF2RmzilZ+EAtengAbqItt0bkTbo87kIPvmKC7r5d8yIAKVx6g83Q4T
-        lt8Fl17C1M1mEEgzF417BDX0SiPZ1pn0FuB9jY7dp7eGjV2/VePgQWN7o6h1jEPFEuolMZ
-        0q3gW/bO8ZmigaR2ePR8qUauxwaV7I2jsq8+HtLEv2NINoPWstdDU3vSj8Bp0Q==
+        bh=u7o0z+KHReNHyOszAW2M4Z2lGfMlRi1Kc1LJ6E0Cd0c=;
+        b=2m2LF0wIzbLrtvReDJI+6xOFTmik0bOvSG+8gtpMkn4OoOHcDS5GBIS09GeMs02eACMGJ4
+        fgotAymhqGSGa5BrFNKDG6J5nGJo5ks/yXlWsxXiwYY/6GqwUH1YKtlzvn2aaLsqkAgWMA
+        6zDnQCWKpYAoEYln2o6dbCw7evjYpui4uwILzkiJ0D8qFmY77PttrMRDGjjvQFjb7sJUUA
+        vQGtgdTEpFh12wmA1FL9qu+a/nTWPAgjpXMCbGCvf/2igpD4x8U01g5r7WPPlN15NZJEQ5
+        qROZYtS3rRNlVp0PloOC+fllWupbC/88lWMT92DF75NuC//DFHZx69uBYG2hYA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1595760637;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -48,20 +48,20 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zrlK7UBr/R0xhEz/C7qxzeQOeIf5VixvkcPH/ZfTl34=;
-        b=f2Moh6DJQ+A989waBvPKzcF5PR9CsaSIcEMOWD+e7+ITMqYUHx75qLTM9Qyn/KOuyXZOuj
-        WfLcvSZm/TS1HhDQ==
+        bh=u7o0z+KHReNHyOszAW2M4Z2lGfMlRi1Kc1LJ6E0Cd0c=;
+        b=s8v+a5Y0kRuwgrCwvw6VagRc4ZAHxsjGJZlQBXX5IKZ3i9qtdGH0n9kAtGxIDXyZx5y6qe
+        05FCVPVXZ64HlTDQ==
 From:   "tip-bot2 for Randy Dunlap" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86: cmpxchg_32.h: Delete duplicated word
+Subject: [tip: x86/cleanups] x86: uv: uv_hub.h: Delete duplicated word
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200726004124.20618-3-rdunlap@infradead.org>
-References: <20200726004124.20618-3-rdunlap@infradead.org>
+In-Reply-To: <20200726004124.20618-4-rdunlap@infradead.org>
+References: <20200726004124.20618-4-rdunlap@infradead.org>
 MIME-Version: 1.0
-Message-ID: <159576063699.4006.15255903262427036343.tip-bot2@tip-bot2>
+Message-ID: <159576063629.4006.9768537728578352299.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -73,34 +73,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/cleanups branch of tip:
 
-Commit-ID:     8b9fd48eb73ec854c2877735e96c91127cc78a1d
-Gitweb:        https://git.kernel.org/tip/8b9fd48eb73ec854c2877735e96c91127cc78a1d
+Commit-ID:     de0038bfaf53af0e8bc4961b7aacdcb79f43bf08
+Gitweb:        https://git.kernel.org/tip/de0038bfaf53af0e8bc4961b7aacdcb79f43bf08
 Author:        Randy Dunlap <rdunlap@infradead.org>
-AuthorDate:    Sat, 25 Jul 2020 17:41:23 -07:00
+AuthorDate:    Sat, 25 Jul 2020 17:41:24 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Sun, 26 Jul 2020 12:47:22 +02:00
 
-x86: cmpxchg_32.h: Delete duplicated word
+x86: uv: uv_hub.h: Delete duplicated word
 
-Delete the repeated word "you".
+Delete the repeated word "the".
+
+[ mingo: While at it, also capitalize CPU properly. ]
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200726004124.20618-3-rdunlap@infradead.org
+Link: https://lore.kernel.org/r/20200726004124.20618-4-rdunlap@infradead.org
 ---
- arch/x86/include/asm/cmpxchg_32.h | 2 +-
+ arch/x86/include/asm/uv/uv_hub.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
-index 1a2eafc..0a7fe03 100644
---- a/arch/x86/include/asm/cmpxchg_32.h
-+++ b/arch/x86/include/asm/cmpxchg_32.h
-@@ -3,7 +3,7 @@
- #define _ASM_X86_CMPXCHG_32_H
+diff --git a/arch/x86/include/asm/uv/uv_hub.h b/arch/x86/include/asm/uv/uv_hub.h
+index 60ca0af..5738c36 100644
+--- a/arch/x86/include/asm/uv/uv_hub.h
++++ b/arch/x86/include/asm/uv/uv_hub.h
+@@ -682,7 +682,7 @@ static inline int uv_node_to_blade_id(int nid)
+ 	return nid;
+ }
  
- /*
-- * Note: if you use set64_bit(), __cmpxchg64(), or their variants, you
-+ * Note: if you use set64_bit(), __cmpxchg64(), or their variants,
-  *       you need to test for the feature in boot_cpu_data.
-  */
- 
+-/* Convert a cpu number to the the UV blade number */
++/* Convert a CPU number to the UV blade number */
+ static inline int uv_cpu_to_blade_id(int cpu)
+ {
+ 	return uv_node_to_blade_id(cpu_to_node(cpu));
