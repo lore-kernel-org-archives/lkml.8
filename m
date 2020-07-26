@@ -2,171 +2,119 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CE6C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BFFC433F2
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 617D720719
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75437206F6
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxCzSbbh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgGZJT3 (ORCPT
+        id S1727906AbgGZJTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 05:19:29 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17036 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726100AbgGZJT2 (ORCPT
+        Sun, 26 Jul 2020 05:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgGZJTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 05:19:28 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06Q8Xeo3065018;
-        Sun, 26 Jul 2020 05:19:25 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32gh8knj11-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 05:19:25 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06Q906Ll160553;
-        Sun, 26 Jul 2020 05:19:24 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32gh8knj0r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 05:19:24 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06Q9FaIX015001;
-        Sun, 26 Jul 2020 09:19:23 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma04wdc.us.ibm.com with ESMTP id 32gcpqrwpt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 09:19:23 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06Q9JM8B52822402
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 26 Jul 2020 09:19:22 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B3C212805E;
-        Sun, 26 Jul 2020 09:19:22 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2092F28058;
-        Sun, 26 Jul 2020 09:19:18 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.34.120])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sun, 26 Jul 2020 09:19:17 +0000 (GMT)
-Subject: Re: [PATCH 12/19] perf metric: Add events for the current list
-To:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-References: <20200719181320.785305-1-jolsa@kernel.org>
- <20200719181320.785305-13-jolsa@kernel.org>
- <CAP-5=fXsspq4xBehRZOBrFAEHAnE1tPnH9FybooiCcTxynh6wg@mail.gmail.com>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <95f982ef-87ac-40f1-dc7e-79929017beeb@linux.ibm.com>
-Date:   Sun, 26 Jul 2020 14:49:16 +0530
+        Sun, 26 Jul 2020 05:19:35 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2155C0619D2;
+        Sun, 26 Jul 2020 02:19:35 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id k1so7581196pjt.5;
+        Sun, 26 Jul 2020 02:19:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=f9+BvbidqIi5KrJv6F/Ng/Bay2ACaZFPGHdyYHb/krg=;
+        b=LxCzSbbhmTC7r7Yg+gaBst0fpjkUq0dgLVZ68belm0Z+s8un8G453ez3fZ3vmXs7/h
+         VvKHWK6NGkfkokn8fZExmyoBhxLqKDUCZU4DVFze76b3BIPTcR7mu/3CHG0W0c89o6M2
+         7mKMuOC+21T8F8O+msyqmhDGLz4e9dgLSv6VZr35wUwxdT11TxDMJUTQCq08KOR2Gh/Y
+         R6NFvKKtmLVHj9lfDLGL1Sp9X8iBBcVwBWnu3R4gR2v1uCtE0lFinBm3jq94I5A52URI
+         Vs7vLdjLeOqUkA8uueJI7rsc4bJumsAT0QTJv6s9St14BnrS3t5g1xnqtNk1es9FJ9H7
+         nHng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=f9+BvbidqIi5KrJv6F/Ng/Bay2ACaZFPGHdyYHb/krg=;
+        b=LvccNpquWSjDsUl3TAe5jyAeZkPLGeXrC5fSgzEkIl8kj4fEuosNwbrM34MK7Lw/+U
+         kz2qTqmHSmE/eYUoS4ZwMRnh4x8wYKgfbCo1rmRuo2P5iOQSkMBBzj5cAStWdvSeOg3S
+         O7vfQqDa2+t+Yk3y5OKcK1tnvlvwQOrLAzDjzu2uk7omZ94NTXLcwmAkwvxpXLWL6DOF
+         uX5WvThPl3TOtbIdter2HlD+abCTT7s8Gj/gToQYfjnbGuhio9Lm+aFhpyypi3qGsZrk
+         yuMoHTVvcqW1A6dgJm6PgYBtvbaLP3ZGj9zLiFHpsu31xuDxyCs9VyNj2kTxrGJWBTGg
+         hR0g==
+X-Gm-Message-State: AOAM532O0wMSH7U2G0meOPKx1yL7iwBon+xdYsdFgH8Kc6JD90+cA6q1
+        OACFu2Wy4EeOt+n2p9q1YkjJPmoRukI=
+X-Google-Smtp-Source: ABdhPJxy11NqBk/e8Hj1jFN5T5gBzagjV3YGhBg3rpJSER2xbx8LIGV57G8g8/jlJq37UHsa7My9qQ==
+X-Received: by 2002:a17:90a:c085:: with SMTP id o5mr13873286pjs.196.1595755174934;
+        Sun, 26 Jul 2020 02:19:34 -0700 (PDT)
+Received: from [192.168.0.109] ([1.186.115.27])
+        by smtp.gmail.com with ESMTPSA id h7sm11738689pfq.15.2020.07.26.02.19.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Jul 2020 02:19:34 -0700 (PDT)
+Subject: Re: [PATCH v3 1/4] staging: media: atomisp: fix style of block
+ comments
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+References: <20200726062541.11304-1-bharadwaj.rohit8@gmail.com>
+ <20200726090512.20574-1-bharadwaj.rohit8@gmail.com>
+ <20200726091209.GA451376@kroah.com>
+From:   Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
+Message-ID: <9fb53713-e58c-17d9-1553-80d80e4b3863@gmail.com>
+Date:   Sun, 26 Jul 2020 14:49:30 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fXsspq4xBehRZOBrFAEHAnE1tPnH9FybooiCcTxynh6wg@mail.gmail.com>
+In-Reply-To: <20200726091209.GA451376@kroah.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-26_02:2020-07-24,2020-07-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 bulkscore=0 impostorscore=0 lowpriorityscore=0
- mlxlogscore=999 suspectscore=0 clxscore=1015 phishscore=0 adultscore=0
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007260064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 7/20/20 4:04 AM, Ian Rogers wrote:
-> On Sun, Jul 19, 2020 at 11:14 AM Jiri Olsa <jolsa@kernel.org> wrote:
+On 26/07/20 2:42 pm, Greg KH wrote:
+> On Sun, Jul 26, 2020 at 02:35:10PM +0530, Rohit K Bharadwaj wrote:
+>> this patch fixes the coding style of block comments.
 >>
->> There's no need to iterate the whole list of groups,
->> when adding new events. The currently created groups
->> are the ones we want to add.
->>
->> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
-> 
-
-Reviewed-By : Kajol Jain<kjain@linux.ibm.com>
-
-Thanks,
-Kajol Jain
-> Thanks,
-> Ian
-> 
+>> Signed-off-by: Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
 >> ---
->>  tools/perf/util/metricgroup.c | 9 ++++++---
->>  1 file changed, 6 insertions(+), 3 deletions(-)
+>> v3: change patch subject prefix
+>> v2: split patch into sequence of patches 
+>> v1: fix all coding style issues in single patch
 >>
->> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
->> index bb5757b9419d..332414d93f7a 100644
->> --- a/tools/perf/util/metricgroup.c
->> +++ b/tools/perf/util/metricgroup.c
->> @@ -813,6 +813,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->>  {
->>         struct pmu_event *pe;
->>         struct egroup *eg;
->> +       LIST_HEAD(list);
->>         int i, ret;
->>         bool has_match = false;
+>>  .../media/atomisp/pci/sh_css_firmware.c       | 28 +++++++++++++------
+>>  1 file changed, 19 insertions(+), 9 deletions(-)
 >>
->> @@ -820,7 +821,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->>                 has_match = true;
->>                 eg = NULL;
->>
->> -               ret = add_metric(group_list, pe, metric_no_group, &eg);
->> +               ret = add_metric(&list, pe, metric_no_group, &eg);
->>                 if (ret)
->>                         return ret;
->>
->> @@ -829,7 +830,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->>                  * included in the expression.
->>                  */
->>                 ret = resolve_metric(eg, metric_no_group,
->> -                                    group_list, map);
->> +                                    &list, map);
->>                 if (ret)
->>                         return ret;
->>         }
->> @@ -838,7 +839,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->>         if (!has_match)
->>                 return -EINVAL;
->>
->> -       list_for_each_entry(eg, group_list, nd) {
->> +       list_for_each_entry(eg, &list, nd) {
->>                 if (events->len > 0)
->>                         strbuf_addf(events, ",");
->>
->> @@ -850,6 +851,8 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
->>                                                            &eg->pctx);
->>                 }
->>         }
+>> diff --git a/drivers/staging/media/atomisp/pci/sh_css_firmware.c b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+>> index d4ab15b6d1ac..2907aead98b7 100644
+>> --- a/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+>> +++ b/drivers/staging/media/atomisp/pci/sh_css_firmware.c
+>> @@ -51,9 +51,12 @@ struct fw_param {
+>>  
+>>  static struct firmware_header *firmware_header;
+>>  
+>> -/* The string STR is a place holder
+>> +/*
+>> + * The string STR is a place holder
+>>   * which will be replaced with the actual RELEASE_VERSION
+>> - * during package generation. Please do not modify  */
+>> + * during package generation. Please do not modify
+>> + */
 >> +
->> +       list_splice(&list, group_list);
->>         return 0;
->>  }
->>
->> --
->> 2.25.4
->>
+> 
+> Why the blank line?
+> 
+Sir, I thought that it would improve the readability of the code and would help easily distinguish comments from the variable declaration part, and also since there was a blank line between the start of comment and the static struct firmware_header variable, I thought of putting a blank line after the comment end as well to maintain symmetry. 
