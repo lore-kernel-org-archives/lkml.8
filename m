@@ -2,111 +2,152 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3B9C433EA
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 738F32065E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:35:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="3MJ7whwP"
+	by mail.kernel.org (Postfix) with ESMTP id BC58E2078E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 12:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595767293;
+	bh=/R1WA6MYU7yIXIWgG6Dp0pWFqZroIqUxlvdzRdL25LE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RHbaBaDklYiHNJskx0q3Jm6c3NUoRCoEia0I4rUHv8HwYmtSA2hODHhZnM1a9vaUN
+	 3V6Jdlx0ijnd8fdJZ9N+bbtEC/TIhNyOzunzPIMbye+syOstXuLfd+13PyUF9bTYnR
+	 hTu3cC7Tapypj6AowHePQN2+iZV4V6O2mGELiCaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgGZMfd (ORCPT
+        id S1726990AbgGZMl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 08:35:33 -0400
-Received: from www.zeus03.de ([194.117.254.33]:40022 "EHLO mail.zeus03.de"
+        Sun, 26 Jul 2020 08:41:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbgGZMf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 08:35:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=hAn/LE/O5d3kxI+zRKnrNTOzPNdu
-        g55BS3PlBbqbkJU=; b=3MJ7whwPdGP07MOckxZuQXNLp9AS5PydqOUWUjnhNGs0
-        /ygHQgdVM2x4IK/MtT1F3yEwT1ut9AYnVGGr9FqADjhd+oPIpAvZr+BNTWUX27L4
-        F6X/cRcF8BiDuVy6q1EvbMDmKS5Tk/FLrY9aLvfbfUvL9xR/BgY+7WIXIm+KyS0=
-Received: (qmail 40443 invoked from network); 26 Jul 2020 14:35:24 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 26 Jul 2020 14:35:24 +0200
-X-UD-Smtp-Session: l3s3148p1@wgOmcFer/o8gAwDPXy27AOM4pzPBFrIA
-Date:   Sun, 26 Jul 2020 14:35:23 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 12/20] dt-bindings: i2c: renesas,iic: Document r8a774e1
- support
-Message-ID: <20200726123523.GD2484@ninjato>
-References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594811350-14066-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S1726704AbgGZMl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 08:41:28 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53ECE20789;
+        Sun, 26 Jul 2020 12:41:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595767287;
+        bh=/R1WA6MYU7yIXIWgG6Dp0pWFqZroIqUxlvdzRdL25LE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sXJN+kzWJlXZYaMiBtsToUBO5j6Ay5bXBTsfPZonS8ToEUofRFzr+t/0+A21dKKb9
+         pgVFBfjzC/OBUIm0EENjxSRdAIiFzNVHsktfgBHijXvcZ/iSCIOIc1YsxjZPHPgLgM
+         K4iH5kB5SLynpFkKK77vi5TmhUgRb2koVW4Uc7Wk=
+Date:   Sun, 26 Jul 2020 13:41:23 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Peter Rosin <peda@axentia.se>, od@zcrc.me,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] iio: afe: rescale: Implement write_raw
+Message-ID: <20200726134123.456bf3ad@archlinux>
+In-Reply-To: <7CJSDQ.D8SUUUMJPNE02@crapouillou.net>
+References: <20200210225438.112660-1-paul@crapouillou.net>
+        <20200210225438.112660-2-paul@crapouillou.net>
+        <20200215183249.2100b6e9@archlinux>
+        <7CJSDQ.D8SUUUMJPNE02@crapouillou.net>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="YToU2i3Vx8H2dn7O"
-Content-Disposition: inline
-In-Reply-To: <1594811350-14066-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 21 Jul 2020 01:16:55 +0200
+Paul Cercueil <paul@crapouillou.net> wrote:
 
---YToU2i3Vx8H2dn7O
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jul 15, 2020 at 12:09:02PM +0100, Lad Prabhakar wrote:
-> Document IIC controller for RZ/G2H (R8A774E1) SoC, which is compatible
-> with R-Car Gen3 SoC family.
+> Hi Jonathan,
 >=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renes=
-as.com>
+> Le sam. 15 f=C3=A9vr. 2020 =C3=A0 18:32, Jonathan Cameron <jic23@kernel.o=
+rg> a=20
+> =C3=A9crit :
+> > On Mon, 10 Feb 2020 19:54:38 -0300
+> > Paul Cercueil <paul@crapouillou.net> wrote:
+> >  =20
+> >>  Implement write_raw by converting the value if writing the scale, or
+> >>  just calling the managed channel driver's write_raw otherwise.
+> >>=20
+> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> >>  ---
+> >>   drivers/iio/afe/iio-rescale.c | 22 ++++++++++++++++++++++
+> >>   1 file changed, 22 insertions(+)
+> >>=20
+> >>  diff --git a/drivers/iio/afe/iio-rescale.c=20
+> >> b/drivers/iio/afe/iio-rescale.c
+> >>  index 95802d9ee25e..a48f6af9316d 100644
+> >>  --- a/drivers/iio/afe/iio-rescale.c
+> >>  +++ b/drivers/iio/afe/iio-rescale.c
+> >>  @@ -35,6 +35,27 @@ struct rescale {
+> >>   	int *scale_data;
+> >>   };
+> >>=20
+> >>  +static int rescale_write_raw(struct iio_dev *indio_dev,
+> >>  +			     struct iio_chan_spec const *chan,
+> >>  +			     int val, int val2, long mask)
+> >>  +{
+> >>  +	struct rescale *rescale =3D iio_priv(indio_dev);
+> >>  +	unsigned long long tmp;
+> >>  +
+> >>  +	switch (mask) {
+> >>  +	case IIO_CHAN_INFO_SCALE:
+> >>  +		tmp =3D val * 1000000000LL;
+> >>  +		do_div(tmp, rescale->numerator);
+> >>  +		tmp *=3D rescale->denominator;
+> >>  +		do_div(tmp, 1000000000LL);
+> >>  +		return iio_write_channel_attribute(rescale->source, tmp, 0,
+> >>  +						   IIO_CHAN_INFO_SCALE); =20
+> >=20
+> > Why is val2 always 0?  Won't that only work if the backend device
+> > has integer scales? =20
+>=20
+> Sorry, somehow I didn't see your answer.
+>=20
+> Indeed, this will only work if the backend device has integer scales,=20
+> but what should I do? Just pass 'val2' instead of 0? Will the value be=20
+> correct if I only apply the scale ratio to 'val'?
 
-Applied to for-next, thanks!
+I think you'll need to include it through the calculation. Given you
+premultiply by 1000000000LL it should be easy enough to do.
+Then for the final do_div you can easily work out the val2 part.
+
+I'm not sure we currently have an inkern interface to get the type
+of the channel attribute value though.  You may need to add one.
+
+Jonathan
 
 
---YToU2i3Vx8H2dn7O
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+>=20
+> Cheers,
+> -Paul
+>=20
+>=20
+> >>  +	default:
+> >>  +		return iio_write_channel_attribute(rescale->source,
+> >>  +						   val, val2, mask);
+> >>  +	}
+> >>  +}
+> >>  +
+> >>   static int rescale_convert(struct rescale *rescale, int type,
+> >>   			   const int val, const int val2,
+> >>   			   int *val_out, int *val2_out)
+> >>  @@ -110,6 +131,7 @@ static int rescale_read_avail(struct iio_dev=20
+> >> *indio_dev,
+> >>   }
+> >>=20
+> >>   static const struct iio_info rescale_info =3D {
+> >>  +	.write_raw =3D rescale_write_raw,
+> >>   	.read_raw =3D rescale_read_raw,
+> >>   	.read_avail =3D rescale_read_avail,
+> >>   }; =20
+> >  =20
+>=20
+>=20
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8deIsACgkQFA3kzBSg
-KbZtUQ/+JiFdXGopN/62fLmk1CxZX8mBIzoyojCZ2h3EScRmzR7ZPXc+JBB2nDdj
-LW1Rnv2JMK+Grggia9/QsY4fPQHIyclI36TdZjYSqN6pf1CNCj1edHRwG3UmH5NX
-wDE/uaHhcDuluDGRxx4yeRugfTrIu2uPVaLEmLnWxeQLNPQetBGOYkhqrQ1Nq124
-DlNu+O274kobkRLex7AgtEDKQifMt5+xxWddrfpuitktDS2GuOQameQlVxLP0KJ9
-WLZMlv1Axh9jF9J/Zj+i1q3c1HAk/I5coZ5GLE0v5tjm38/lzo2ysi8lJbW7qyJK
-g9z/XvhRfD3FVm9+0Pejmf9/gmhzV7xHJQgELNOXrUvLs5v4ZeqPJxjGIF3ioSZb
-cURJ14zLCLzDya8omSqxlw9A+efai0pmWCqf0TA7U43USV1fXt2w6FbevI+rpqZG
-xuo/XSRsXgKSXZpGHUzf/YmYVNTNXZ9220lFmBgBoM3716H+SXlSlXjW42n40J3q
-KxhmVu+kCjATOz67YUjGeHM03FDh2u2/qkPFgO5fQOSBqinaub81RYUbZEBlGggu
-+mr8XVxUe/GsIFHuevSwmRpSTyoSc1SCyt4W3OkyCEh1xsJWKnrbqeJhdjruqXZY
-HtmnMFsLCgIunvtHSMu7nQCJDI4Q7s9f+oxVxO1Wtx+RNrir5Yc=
-=YVyw
------END PGP SIGNATURE-----
-
---YToU2i3Vx8H2dn7O--
