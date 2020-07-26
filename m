@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCDFC433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76AE4206E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB8520714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgGZJVD (ORCPT
+        id S1727787AbgGZJVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 05:21:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6430 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725810AbgGZJVC (ORCPT
+        Sun, 26 Jul 2020 05:21:18 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61688 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725810AbgGZJVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 05:21:02 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06Q94X0s114406;
-        Sun, 26 Jul 2020 05:20:51 -0400
+        Sun, 26 Jul 2020 05:21:18 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06Q8XVbP137364;
+        Sun, 26 Jul 2020 05:21:06 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32h1yfcxgy-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32ggmepaqj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 05:20:51 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06Q9KoDe144444;
-        Sun, 26 Jul 2020 05:20:50 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32h1yfcxgp-1
+        Sun, 26 Jul 2020 05:21:06 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06Q9L5Wp032888;
+        Sun, 26 Jul 2020 05:21:05 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32ggmepaq6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 05:20:50 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06Q9JCLU020645;
-        Sun, 26 Jul 2020 09:20:49 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 32gcy2k1v7-1
+        Sun, 26 Jul 2020 05:21:05 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06Q9JigR026789;
+        Sun, 26 Jul 2020 09:21:05 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma05wdc.us.ibm.com with ESMTP id 32gcy90up6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 09:20:49 +0000
+        Sun, 26 Jul 2020 09:21:05 +0000
 Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06Q9Knaj48955760
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06Q9L4v755312732
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 26 Jul 2020 09:20:49 GMT
+        Sun, 26 Jul 2020 09:21:04 GMT
 Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2D8AF28059;
-        Sun, 26 Jul 2020 09:20:49 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D09642805A;
+        Sun, 26 Jul 2020 09:21:04 +0000 (GMT)
 Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 58EBA28058;
-        Sun, 26 Jul 2020 09:20:45 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 31C5028058;
+        Sun, 26 Jul 2020 09:21:00 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.199.34.120])
         by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sun, 26 Jul 2020 09:20:45 +0000 (GMT)
-Subject: Re: [PATCH 17/19] perf metric: Add metric group test
-To:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Sun, 26 Jul 2020 09:20:59 +0000 (GMT)
+Subject: Re: [PATCH 18/19] perf metric: Rename struct egroup to metric
+To:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         lkml <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -69,26 +70,25 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         "Paul A. Clarke" <pc@us.ibm.com>,
         Stephane Eranian <eranian@google.com>
 References: <20200719181320.785305-1-jolsa@kernel.org>
- <20200719181320.785305-18-jolsa@kernel.org>
- <CAP-5=fWmm5pvH-hwkaAKV=__7Ocbc-4Qj8OCJWz_xi4pc65A=Q@mail.gmail.com>
+ <20200719181320.785305-19-jolsa@kernel.org>
 From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <58b40fd1-570c-cbeb-50f7-b793b3eaf26e@linux.ibm.com>
-Date:   Sun, 26 Jul 2020 14:50:44 +0530
+Message-ID: <9e82392e-5511-9746-c916-0d4714027d60@linux.ibm.com>
+Date:   Sun, 26 Jul 2020 14:50:58 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fWmm5pvH-hwkaAKV=__7Ocbc-4Qj8OCJWz_xi4pc65A=Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200719181320.785305-19-jolsa@kernel.org>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-26_02:2020-07-24,2020-07-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- spamscore=0 suspectscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007260064
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 impostorscore=0 spamscore=0 clxscore=1015 phishscore=0
+ mlxlogscore=999 priorityscore=1501 adultscore=0 bulkscore=0 suspectscore=2
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007260064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -96,129 +96,415 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 7/20/20 4:11 AM, Ian Rogers wrote:
-> On Sun, Jul 19, 2020 at 11:14 AM Jiri Olsa <jolsa@kernel.org> wrote:
->>
->> Adding test for metric group plus compute_metric_group
->> function to get metrics values within the group.
->>
->> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+On 7/19/20 11:43 PM, Jiri Olsa wrote:
+> Renaming struct egroup to metric, because it seems
+> to make more sense. Plus renaming all the variables
+> that hold egroup to appropriate names.
 > 
 > Acked-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
 
 Reviewed-By : Kajol Jain<kjain@linux.ibm.com>
 
 Thanks,
 Kajol Jain
-
+>  tools/perf/util/metricgroup.c | 142 +++++++++++++++++-----------------
+>  1 file changed, 71 insertions(+), 71 deletions(-)
 > 
-> Thanks,
-> Ian
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 2a45ee94fd61..9d5fff36042d 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -115,7 +115,7 @@ struct metric_ref_node {
+>  	struct list_head list;
+>  };
+>  
+> -struct egroup {
+> +struct metric {
+>  	struct list_head nd;
+>  	struct expr_parse_ctx pctx;
+>  	const char *metric_name;
+> @@ -262,7 +262,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+>  	struct metric_expr *expr;
+>  	int i = 0;
+>  	int ret = 0;
+> -	struct egroup *eg;
+> +	struct metric *m;
+>  	struct evsel *evsel, *tmp;
+>  	unsigned long *evlist_used;
+>  
+> @@ -270,23 +270,23 @@ static int metricgroup__setup_events(struct list_head *groups,
+>  	if (!evlist_used)
+>  		return -ENOMEM;
+>  
+> -	list_for_each_entry (eg, groups, nd) {
+> +	list_for_each_entry (m, groups, nd) {
+>  		struct evsel **metric_events;
+>  		struct metric_ref *metric_refs = NULL;
+>  
+>  		metric_events = calloc(sizeof(void *),
+> -				hashmap__size(&eg->pctx.ids) + 1);
+> +				hashmap__size(&m->pctx.ids) + 1);
+>  		if (!metric_events) {
+>  			ret = -ENOMEM;
+>  			break;
+>  		}
+> -		evsel = find_evsel_group(perf_evlist, &eg->pctx,
+> +		evsel = find_evsel_group(perf_evlist, &m->pctx,
+>  					 metric_no_merge,
+> -					 eg->has_constraint, metric_events,
+> +					 m->has_constraint, metric_events,
+>  					 evlist_used);
+>  		if (!evsel) {
+>  			pr_debug("Cannot resolve %s: %s\n",
+> -					eg->metric_name, eg->metric_expr);
+> +					m->metric_name, m->metric_expr);
+>  			free(metric_events);
+>  			continue;
+>  		}
+> @@ -309,10 +309,10 @@ static int metricgroup__setup_events(struct list_head *groups,
+>  		 * Collect and store collected nested expressions
+>  		 * for metric processing.
+>  		 */
+> -		if (eg->metric_refs_cnt) {
+> +		if (m->metric_refs_cnt) {
+>  			struct metric_ref_node *ref;
+>  
+> -			metric_refs = zalloc(sizeof(struct metric_ref) * (eg->metric_refs_cnt + 1));
+> +			metric_refs = zalloc(sizeof(struct metric_ref) * (m->metric_refs_cnt + 1));
+>  			if (!metric_refs) {
+>  				ret = -ENOMEM;
+>  				free(metric_events);
+> @@ -320,7 +320,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+>  			}
+>  
+>  			i = 0;
+> -			list_for_each_entry(ref, &eg->metric_refs, list) {
+> +			list_for_each_entry(ref, &m->metric_refs, list) {
+>  				/*
+>  				 * Intentionally passing just const char pointers,
+>  				 * originally from 'struct pmu_event' object.
+> @@ -334,11 +334,11 @@ static int metricgroup__setup_events(struct list_head *groups,
+>  		};
+>  
+>  		expr->metric_refs = metric_refs;
+> -		expr->metric_expr = eg->metric_expr;
+> -		expr->metric_name = eg->metric_name;
+> -		expr->metric_unit = eg->metric_unit;
+> +		expr->metric_expr = m->metric_expr;
+> +		expr->metric_name = m->metric_name;
+> +		expr->metric_unit = m->metric_unit;
+>  		expr->metric_events = metric_events;
+> -		expr->runtime = eg->runtime;
+> +		expr->runtime = m->runtime;
+>  		list_add(&expr->nd, &me->head);
+>  	}
+>  
+> @@ -643,41 +643,41 @@ static int __add_metric(struct list_head *group_list,
+>  			struct pmu_event *pe,
+>  			bool metric_no_group,
+>  			int runtime,
+> -			struct egroup **egp,
+> +			struct metric **mp,
+>  			struct expr_id *parent,
+>  		        struct expr_ids *ids)
+>  {
+>  	struct metric_ref_node *ref;
+> -	struct egroup *eg;
+> +	struct metric *m;
+>  
+> -	if (*egp == NULL) {
+> +	if (*mp == NULL) {
+>  		/*
+>  		 * We got in here for the parent group,
+>  		 * allocate it and put it on the list.
+>  		 */
+> -		eg = zalloc(sizeof(*eg));
+> -		if (!eg)
+> +		m = zalloc(sizeof(*m));
+> +		if (!m)
+>  			return -ENOMEM;
+>  
+> -		expr__ctx_init(&eg->pctx);
+> -		eg->metric_name = pe->metric_name;
+> -		eg->metric_expr = pe->metric_expr;
+> -		eg->metric_unit = pe->unit;
+> -		eg->runtime = runtime;
+> -		eg->has_constraint = metric_no_group || metricgroup__has_constraint(pe);
+> -		INIT_LIST_HEAD(&eg->metric_refs);
+> -		eg->metric_refs_cnt = 0;
+> -		*egp = eg;
+> +		expr__ctx_init(&m->pctx);
+> +		m->metric_name = pe->metric_name;
+> +		m->metric_expr = pe->metric_expr;
+> +		m->metric_unit = pe->unit;
+> +		m->runtime = runtime;
+> +		m->has_constraint = metric_no_group || metricgroup__has_constraint(pe);
+> +		INIT_LIST_HEAD(&m->metric_refs);
+> +		m->metric_refs_cnt = 0;
+> +		*mp = m;
+>  
+>  		parent = expr_ids__alloc(ids);
+>  		if (!parent) {
+> -			free(eg);
+> +			free(m);
+>  			return -EINVAL;
+>  		}
+>  
+>  		parent->id = strdup(pe->metric_name);
+>  		if (!parent->id) {
+> -			free(eg);
+> +			free(m);
+>  			return -ENOMEM;
+>  		}
+>  	} else {
+> @@ -686,7 +686,7 @@ static int __add_metric(struct list_head *group_list,
+>  		 * recursive metricgroup__add_metric call, add
+>  		 * it to the parent group.
+>  		 */
+> -		eg = *egp;
+> +		m = *mp;
+>  
+>  		ref = malloc(sizeof(*ref));
+>  		if (!ref)
+> @@ -701,21 +701,21 @@ static int __add_metric(struct list_head *group_list,
+>  		ref->metric_name = pe->metric_name;
+>  		ref->metric_expr = pe->metric_expr;
+>  
+> -		list_add(&ref->list, &eg->metric_refs);
+> -		eg->metric_refs_cnt++;
+> +		list_add(&ref->list, &m->metric_refs);
+> +		m->metric_refs_cnt++;
+>  	}
+>  
+>  	/* Force all found IDs in metric to have us as parent ID. */
+>  	WARN_ON_ONCE(!parent);
+> -	eg->pctx.parent = parent;
+> +	m->pctx.parent = parent;
+>  
+>  	/*
+>  	 * For both the parent and referenced metrics, we parse
+>  	 * all the metric's IDs and add it to the parent context.
+>  	 */
+> -	if (expr__find_other(pe->metric_expr, NULL, &eg->pctx, runtime) < 0) {
+> -		expr__ctx_clear(&eg->pctx);
+> -		free(eg);
+> +	if (expr__find_other(pe->metric_expr, NULL, &m->pctx, runtime) < 0) {
+> +		expr__ctx_clear(&m->pctx);
+> +		free(m);
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -723,23 +723,23 @@ static int __add_metric(struct list_head *group_list,
+>  	 * We add new group only in the 'parent' call,
+>  	 * so bail out for referenced metric case.
+>  	 */
+> -	if (eg->metric_refs_cnt)
+> +	if (m->metric_refs_cnt)
+>  		return 0;
+>  
+>  	if (list_empty(group_list))
+> -		list_add(&eg->nd, group_list);
+> +		list_add(&m->nd, group_list);
+>  	else {
+>  		struct list_head *pos;
+>  
+>  		/* Place the largest groups at the front. */
+>  		list_for_each_prev(pos, group_list) {
+> -			struct egroup *old = list_entry(pos, struct egroup, nd);
+> +			struct metric *old = list_entry(pos, struct metric, nd);
+>  
+> -			if (hashmap__size(&eg->pctx.ids) <=
+> +			if (hashmap__size(&m->pctx.ids) <=
+>  			    hashmap__size(&old->pctx.ids))
+>  				break;
+>  		}
+> -		list_add(&eg->nd, pos);
+> +		list_add(&m->nd, pos);
+>  	}
+>  
+>  	return 0;
+> @@ -769,7 +769,7 @@ static struct pmu_event *find_metric(const char *metric, struct pmu_events_map *
+>  	return NULL;
+>  }
+>  
+> -static int recursion_check(struct egroup *eg, const char *id, struct expr_id **parent,
+> +static int recursion_check(struct metric *m, const char *id, struct expr_id **parent,
+>  			   struct expr_ids *ids)
+>  {
+>  	struct expr_id_data *data;
+> @@ -782,7 +782,7 @@ static int recursion_check(struct egroup *eg, const char *id, struct expr_id **p
+>  	 * if we already processed 'id', if we did, it's recursion
+>  	 * and we fail.
+>  	 */
+> -	ret = expr__get_id(&eg->pctx, id, &data);
+> +	ret = expr__get_id(&m->pctx, id, &data);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -816,11 +816,11 @@ static int recursion_check(struct egroup *eg, const char *id, struct expr_id **p
+>  static int add_metric(struct list_head *group_list,
+>  		      struct pmu_event *pe,
+>  		      bool metric_no_group,
+> -		      struct egroup **egp,
+> +		      struct metric **mp,
+>  		      struct expr_id *parent,
+>  		      struct expr_ids *ids);
+>  
+> -static int resolve_metric(struct egroup *eg,
+> +static int resolve_metric(struct metric *m,
+>  			  bool metric_no_group,
+>  			  struct list_head *group_list,
+>  			  struct pmu_events_map *map,
+> @@ -837,7 +837,7 @@ static int resolve_metric(struct egroup *eg,
+>  	 */
+>  	do {
+>  		all = true;
+> -		hashmap__for_each_entry((&eg->pctx.ids), cur, bkt) {
+> +		hashmap__for_each_entry((&m->pctx.ids), cur, bkt) {
+>  			struct expr_id *parent;
+>  			struct pmu_event *pe;
+>  
+> @@ -845,16 +845,16 @@ static int resolve_metric(struct egroup *eg,
+>  			if (!pe)
+>  				continue;
+>  
+> -			ret = recursion_check(eg, cur->key, &parent, ids);
+> +			ret = recursion_check(m, cur->key, &parent, ids);
+>  			if (ret)
+>  				return ret;
+>  
+>  			all = false;
+>  			/* The metric key itself needs to go out.. */
+> -			expr__del_id(&eg->pctx, cur->key);
+> +			expr__del_id(&m->pctx, cur->key);
+>  
+>  			/* ... and it gets resolved to the parent context. */
+> -			ret = add_metric(group_list, pe, metric_no_group, &eg, parent, ids);
+> +			ret = add_metric(group_list, pe, metric_no_group, &m, parent, ids);
+>  			if (ret)
+>  				return ret;
+>  
+> @@ -872,7 +872,7 @@ static int resolve_metric(struct egroup *eg,
+>  static int add_metric(struct list_head *group_list,
+>  		      struct pmu_event *pe,
+>  		      bool metric_no_group,
+> -		      struct egroup **egp,
+> +		      struct metric **m,
+>  		      struct expr_id *parent,
+>  		      struct expr_ids *ids)
+>  {
+> @@ -881,7 +881,7 @@ static int add_metric(struct list_head *group_list,
+>  	pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+>  
+>  	if (!strstr(pe->metric_expr, "?")) {
+> -		ret = __add_metric(group_list, pe, metric_no_group, 1, egp, parent, ids);
+> +		ret = __add_metric(group_list, pe, metric_no_group, 1, m, parent, ids);
+>  	} else {
+>  		int j, count;
+>  
+> @@ -893,7 +893,7 @@ static int add_metric(struct list_head *group_list,
+>  		 */
+>  
+>  		for (j = 0; j < count && !ret; j++) {
+> -			ret = __add_metric(group_list, pe, metric_no_group, j, egp, parent, ids);
+> +			ret = __add_metric(group_list, pe, metric_no_group, j, m, parent, ids);
+>  		}
+>  	}
+>  
+> @@ -908,16 +908,16 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+>  {
+>  	struct expr_ids ids = { 0 };
+>  	struct pmu_event *pe;
+> -	struct egroup *eg;
+> +	struct metric *m;
+>  	LIST_HEAD(list);
+>  	int i, ret;
+>  	bool has_match = false;
+>  
+>  	map_for_each_metric(pe, i, map, metric) {
+>  		has_match = true;
+> -		eg = NULL;
+> +		m = NULL;
+>  
+> -		ret = add_metric(&list, pe, metric_no_group, &eg, NULL, &ids);
+> +		ret = add_metric(&list, pe, metric_no_group, &m, NULL, &ids);
+>  		if (ret)
+>  			return ret;
+>  
+> @@ -925,7 +925,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+>  		 * Process any possible referenced metrics
+>  		 * included in the expression.
+>  		 */
+> -		ret = resolve_metric(eg, metric_no_group,
+> +		ret = resolve_metric(m, metric_no_group,
+>  				     &list, map, &ids);
+>  		if (ret)
+>  			return ret;
+> @@ -935,16 +935,16 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+>  	if (!has_match)
+>  		return -EINVAL;
+>  
+> -	list_for_each_entry(eg, &list, nd) {
+> +	list_for_each_entry(m, &list, nd) {
+>  		if (events->len > 0)
+>  			strbuf_addf(events, ",");
+>  
+> -		if (eg->has_constraint) {
+> +		if (m->has_constraint) {
+>  			metricgroup__add_metric_non_group(events,
+> -							  &eg->pctx);
+> +							  &m->pctx);
+>  		} else {
+>  			metricgroup__add_metric_weak_group(events,
+> -							   &eg->pctx);
+> +							   &m->pctx);
+>  		}
+>  	}
+>  
+> @@ -986,25 +986,25 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
+>  	return ret;
+>  }
+>  
+> -static void egroup__free_refs(struct egroup *egroup)
+> +static void metric__free_refs(struct metric *metric)
+>  {
+>  	struct metric_ref_node *ref, *tmp;
+>  
+> -	list_for_each_entry_safe(ref, tmp, &egroup->metric_refs, list) {
+> +	list_for_each_entry_safe(ref, tmp, &metric->metric_refs, list) {
+>  		list_del(&ref->list);
+>  		free(ref);
+>  	}
+>  }
+>  
+> -static void metricgroup__free_egroups(struct list_head *group_list)
+> +static void metricgroup__free_metrics(struct list_head *group_list)
+>  {
+> -	struct egroup *eg, *egtmp;
+> +	struct metric *m, *tmp;
+>  
+> -	list_for_each_entry_safe (eg, egtmp, group_list, nd) {
+> -		egroup__free_refs(eg);
+> -		expr__ctx_clear(&eg->pctx);
+> -		list_del_init(&eg->nd);
+> -		free(eg);
+> +	list_for_each_entry_safe (m, tmp, group_list, nd) {
+> +		metric__free_refs(m);
+> +		expr__ctx_clear(&m->pctx);
+> +		list_del_init(&m->nd);
+> +		free(m);
+>  	}
+>  }
+>  
+> @@ -1037,7 +1037,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+>  	ret = metricgroup__setup_events(&group_list, metric_no_merge,
+>  					perf_evlist, metric_events);
+>  out:
+> -	metricgroup__free_egroups(&group_list);
+> +	metricgroup__free_metrics(&group_list);
+>  	return ret;
+>  }
+>  
 > 
->> ---
->>  tools/perf/tests/parse-metric.c | 48 +++++++++++++++++++++++++++++++--
->>  1 file changed, 46 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
->> index 5ac32f80f8ea..f2ba5b2c5557 100644
->> --- a/tools/perf/tests/parse-metric.c
->> +++ b/tools/perf/tests/parse-metric.c
->> @@ -18,6 +18,7 @@ static struct pmu_event pme_test[] = {
->>  {
->>         .metric_expr    = "inst_retired.any / cpu_clk_unhalted.thread",
->>         .metric_name    = "IPC",
->> +       .metric_group   = "group1",
->>  },
->>  {
->>         .metric_expr    = "idq_uops_not_delivered.core / (4 * (( ( cpu_clk_unhalted.thread / 2 ) * "
->> @@ -35,6 +36,7 @@ static struct pmu_event pme_test[] = {
->>  {
->>         .metric_expr    = "(dcache_miss_cpi + icache_miss_cycles)",
->>         .metric_name    = "cache_miss_cycles",
->> +       .metric_group   = "group1",
->>  },
->>  {
->>         .metric_expr    = "l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit",
->> @@ -127,7 +129,9 @@ static double compute_single(struct rblist *metric_events, struct evlist *evlist
->>         return 0.;
->>  }
->>
->> -static int compute_metric(const char *name, struct value *vals, double *ratio)
->> +static int __compute_metric(const char *name, struct value *vals,
->> +                           const char *name1, double *ratio1,
->> +                           const char *name2, double *ratio2)
->>  {
->>         struct rblist metric_events = {
->>                 .nr_entries = 0,
->> @@ -166,7 +170,10 @@ static int compute_metric(const char *name, struct value *vals, double *ratio)
->>         load_runtime_stat(&st, evlist, vals);
->>
->>         /* And execute the metric */
->> -       *ratio = compute_single(&metric_events, evlist, &st, name);
->> +       if (name1 && ratio1)
->> +               *ratio1 = compute_single(&metric_events, evlist, &st, name1);
->> +       if (name2 && ratio2)
->> +               *ratio2 = compute_single(&metric_events, evlist, &st, name2);
->>
->>         /* ... clenup. */
->>         metricgroup__rblist_exit(&metric_events);
->> @@ -177,6 +184,18 @@ static int compute_metric(const char *name, struct value *vals, double *ratio)
->>         return 0;
->>  }
->>
->> +static int compute_metric(const char *name, struct value *vals, double *ratio)
->> +{
->> +       return __compute_metric(name, vals, name, ratio, NULL, NULL);
->> +}
->> +
->> +static int compute_metric_group(const char *name, struct value *vals,
->> +                               const char *name1, double *ratio1,
->> +                               const char *name2, double *ratio2)
->> +{
->> +       return __compute_metric(name, vals, name1, ratio1, name2, ratio2);
->> +}
->> +
->>  static int test_ipc(void)
->>  {
->>         double ratio;
->> @@ -297,6 +316,30 @@ static int test_recursion_fail(void)
->>         return 0;
->>  }
->>
->> +static int test_metric_group(void)
->> +{
->> +       double ratio1, ratio2;
->> +       struct value vals[] = {
->> +               { .event = "cpu_clk_unhalted.thread", .val = 200 },
->> +               { .event = "l1d-loads-misses",        .val = 300 },
->> +               { .event = "l1i-loads-misses",        .val = 200 },
->> +               { .event = "inst_retired.any",        .val = 400 },
->> +               { 0 },
->> +       };
->> +
->> +       TEST_ASSERT_VAL("failed to find recursion",
->> +                       compute_metric_group("group1", vals,
->> +                                            "IPC", &ratio1,
->> +                                            "cache_miss_cycles", &ratio2) == 0);
->> +
->> +       TEST_ASSERT_VAL("group IPC failed, wrong ratio",
->> +                       ratio1 == 2.0);
->> +
->> +       TEST_ASSERT_VAL("group cache_miss_cycles failed, wrong ratio",
->> +                       ratio2 == 1.25);
->> +       return 0;
->> +}
->> +
->>  int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unused)
->>  {
->>         TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
->> @@ -304,5 +347,6 @@ int test__parse_metric(struct test *test __maybe_unused, int subtest __maybe_unu
->>         TEST_ASSERT_VAL("cache_miss_cycles failed", test_cache_miss_cycles() == 0);
->>         TEST_ASSERT_VAL("DCache_L2 failed", test_dcache_l2() == 0);
->>         TEST_ASSERT_VAL("recursion fail failed", test_recursion_fail() == 0);
->> +       TEST_ASSERT_VAL("test metric group", test_metric_group() == 0);
->>         return 0;
->>  }
->> --
->> 2.25.4
->>
