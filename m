@@ -6,63 +6,61 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD98DC433E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BA7C433ED
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF7A020656
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C01D820656
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595786720;
-	bh=y9iEoSIpXIcSYGuTUeiq/f6Ov/PWdLhenKRXegZvtTo=;
+	s=default; t=1595786727;
+	bh=Y265sKMgoJxMfgoTE1x6RYCX18wyvYp9+QGQu5ljVjE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=rl8rkba1kNn11bl9n700CVDjleN8Uky+txuorkUV/dQ8fB3+ioQAzSpRlevpy1PuG
-	 M/nFfdqBfYBJLfmF0ZsG4P8t2UxRe1DiwjqW+HrsEJprK9QP0e4kYTDTnMZrYRfyLm
-	 jgK+rasPBKAt19zMTNsLJzapqBD7IHMa3vF70A8Q=
+	b=wGdKbD9P8Ip+0olZgOcNGs1AEssHmuOVVuaeeY7qUVdPCpn4r2McCpbZ6f5esqbsc
+	 H2MthlIOAPrZVrRDkDlUriAhWtudgpk84MN+s+UeZuEAm0N2obL1dewVdBG8p6oO5W
+	 gxMu6UU3Dazs1fbtEQemy6iY0331Jf3l5fXipeC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgGZSFU (ORCPT
+        id S1727823AbgGZSF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 14:05:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50078 "EHLO mail.kernel.org"
+        Sun, 26 Jul 2020 14:05:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgGZSFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 14:05:06 -0400
-Subject: Re: [GIT PULL] Staging driver fixes for 5.8-rc7
+        id S1726760AbgGZSFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 14:05:05 -0400
+Subject: Re: [GIT PULL] USB driver fixes for 5.8-rc7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1595786705;
-        bh=y9iEoSIpXIcSYGuTUeiq/f6Ov/PWdLhenKRXegZvtTo=;
+        bh=Y265sKMgoJxMfgoTE1x6RYCX18wyvYp9+QGQu5ljVjE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=eKn5lhRV3aU99flVE/DVKU2LPgZzY4DnEFxEwqyU6w9G3Xngu0F4MLTM5Xse1J8J0
-         ZFbReXRke25b3xO2eIkLhdGxYIzzS7CPqJTUn3SA59w7S3Mynzwmm1fy5M491p01nL
-         6igd3ul6t0fiCpqWPN51Vbov+xgUsNN8Vawby7Iw=
+        b=qFSq8t7yktd+YHMXVioglLN5K8lsqENUMfVHlxVzk8adTN5hCpP/wiG8HOkD9uwBW
+         9RU0iaCeU/pCucDMipcuHoXt2pa/aC4NKK0DApmHusjPP1fM9cDM7eF6soza0lFjOW
+         0OLhJYk9aMlmC+23MlISvKpF1qoXtcGZSiioFlo8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200726111246.GA1283734@kroah.com>
-References: <20200726111246.GA1283734@kroah.com>
+In-Reply-To: <20200726111143.GA1283454@kroah.com>
+References: <20200726111143.GA1283454@kroah.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200726111246.GA1283734@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
- tags/staging-5.8-rc7
-X-PR-Tracked-Commit-Id: faaff9765664009c1c7c65551d32e9ed3b1dda8f
+X-PR-Tracked-Message-Id: <20200726111143.GA1283454@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.8-rc7
+X-PR-Tracked-Commit-Id: 0b987032f8b58ef51cc8a042f46cc0cf1f277172
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f208a76fcb5700a0c5104e5888679acc31d1ce41
-Message-Id: <159578670573.6689.13908897203143238236.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 17f50e28a858e4bab808733339995133390aae54
+Message-Id: <159578670510.6689.6960568851748598718.pr-tracker-bot@kernel.org>
 Date:   Sun, 26 Jul 2020 18:05:05 +0000
 To:     Greg KH <gregkh@linuxfoundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        devel@linuxdriverproject.org, linux-kernel@vger.kernel.org
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 26 Jul 2020 13:12:46 +0200:
+The pull request you sent on Sun, 26 Jul 2020 13:11:43 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git tags/staging-5.8-rc7
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.8-rc7
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f208a76fcb5700a0c5104e5888679acc31d1ce41
+https://git.kernel.org/torvalds/c/17f50e28a858e4bab808733339995133390aae54
 
 Thank you!
 
