@@ -2,296 +2,109 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54965C433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F90C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8002065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5CE22065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 17:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgGZRui (ORCPT
+        id S1726682AbgGZRzh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 13:50:38 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:32938 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgGZRuh (ORCPT
+        Sun, 26 Jul 2020 13:55:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20994 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725972AbgGZRzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 13:50:37 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 7061420023;
-        Sun, 26 Jul 2020 19:50:32 +0200 (CEST)
-Date:   Sun, 26 Jul 2020 19:50:31 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Swapnil Jakhade <sjakhade@cadence.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch,
-        Laurent.pinchart@ideasonboard.com, robh+dt@kernel.org,
-        a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mparab@cadence.com, yamonkar@cadence.com, praneeth@ti.com,
-        nsekhar@ti.com, jsarha@ti.com, tomi.valkeinen@ti.com
-Subject: Re: [PATCH v7 3/3] drm: bridge: cdns-mhdp: Add j721e wrapper
-Message-ID: <20200726175031.GK3275923@ravnborg.org>
-References: <1595403640-12816-1-git-send-email-sjakhade@cadence.com>
- <1595403640-12816-4-git-send-email-sjakhade@cadence.com>
+        Sun, 26 Jul 2020 13:55:37 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06QHW1vb026308;
+        Sun, 26 Jul 2020 13:55:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32ggtj5dnt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Jul 2020 13:55:15 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06QHj41E081141;
+        Sun, 26 Jul 2020 13:55:15 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32ggtj5dna-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Jul 2020 13:55:15 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06QHqG6N008728;
+        Sun, 26 Jul 2020 17:55:12 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06fra.de.ibm.com with ESMTP id 32gcye8u9g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Jul 2020 17:55:12 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06QHtAR563438964
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 26 Jul 2020 17:55:10 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4D21F42041;
+        Sun, 26 Jul 2020 17:55:10 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DCAA64203F;
+        Sun, 26 Jul 2020 17:55:09 +0000 (GMT)
+Received: from localhost (unknown [9.102.1.200])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 26 Jul 2020 17:55:09 +0000 (GMT)
+Date:   Sun, 26 Jul 2020 23:25:07 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: [PATCH] MAINTAINERS: adjust kprobes.rst entry to new location
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
+        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>
+References: <20200726055843.10783-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20200726055843.10783-1-lukas.bulwahn@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595403640-12816-4-git-send-email-sjakhade@cadence.com>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=sozttTNsAAAA:8 a=Br2UW1UjAAAA:8 a=P1BnusSwAAAA:8
-        a=e5mUnYsNAAAA:8 a=eEAO8_bJDlSYck1gigMA:9 a=CjuIK1q_8ugA:10
-        a=aeg5Gbbo78KNqacMgKqU:22 a=WmXOPjafLNExVIMTj843:22
-        a=D0XLA9XvdZm18NrgonBM:22 a=Vxmtnl_E_bksehYqCbjh:22
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
+Message-Id: <1595786005.wgos31p5yh.naveen@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-26_09:2020-07-24,2020-07-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ adultscore=0 clxscore=1011 suspectscore=0 mlxlogscore=960
+ lowpriorityscore=0 bulkscore=0 phishscore=0 spamscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007260130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Swapnil
-
-Small nits in the following.
-
-	Sam
-
-On Wed, Jul 22, 2020 at 09:40:40AM +0200, Swapnil Jakhade wrote:
-> Add j721e wrapper for mhdp, which sets up the clock and data muxes.
+Lukas Bulwahn wrote:
+> Commit 2165b82fde82 ("docs: Move kprobes.rst from staging/ to trace/")
+> moved kprobes.rst, but missed to adjust the MAINTAINERS entry.
 > 
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
-> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
+> 
+>   warning: no file matches    F:    Documentation/staging/kprobes.rst
+> 
+> Adjust the entry to the new file location.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 > ---
->  drivers/gpu/drm/bridge/Kconfig           | 13 ++++
->  drivers/gpu/drm/bridge/Makefile          |  5 ++
->  drivers/gpu/drm/bridge/cdns-mhdp-core.c  | 15 +++++
->  drivers/gpu/drm/bridge/cdns-mhdp-core.h  |  1 +
->  drivers/gpu/drm/bridge/cdns-mhdp-j721e.c | 75 ++++++++++++++++++++++++
->  drivers/gpu/drm/bridge/cdns-mhdp-j721e.h | 19 ++++++
->  6 files changed, 128 insertions(+)
->  create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
->  create mode 100644 drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
+> Naveen, Masami-san, please ack.
+> Jonathan, please pick this minor non-urgent patch into docs-next.
 > 
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 6a4c324302a8..8c1738653b7e 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -38,6 +38,19 @@ config DRM_CDNS_MHDP
->  	  It takes a DPI stream as input and outputs it encoded
->  	  in DP format.
->  
-> +if DRM_CDNS_MHDP
-> +
-> +config DRM_CDNS_MHDP_J721E
-> +	depends on ARCH_K3_J721E_SOC
-> +	bool "J721E Cadence DPI/DP wrapper support"
-> +	default y
-> +	help
-> +	  Support J721E Cadence DPI/DP wrapper. This is a wrapper
-> +	  which adds support for J721E related platform ops. It
-> +	  initializes the J721e Display Port and sets up the
-> +	  clock and data muxes.
-> +endif
-> +
->  config DRM_CHRONTEL_CH7033
->  	tristate "Chrontel CH7033 Video Encoder"
->  	depends on OF
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index 0080a9f80f29..f81d606e9598 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -2,6 +2,11 @@
->  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
->  obj-$(CONFIG_DRM_CDNS_MHDP) += cdns-mhdp.o
->  cdns-mhdp-objs := cdns-mhdp-core.o
-> +
-> +ifeq ($(CONFIG_DRM_CDNS_MHDP_J721E),y)
-> +	cdns-mhdp-objs += cdns-mhdp-j721e.o
-> +endif
+> applies cleanly on next-20200724
 
-Use the idiomatic:
-cdns-mhdp-$(CONFIG_DRM_CDNS_MHDP_J721E) += cdns-mhdp-j721e.o
+Ah, sorry. Hadn't noticed this change from Mauro.
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
+Thanks!
+- Naveen
 
-> +
->  obj-$(CONFIG_DRM_CHRONTEL_CH7033) += chrontel-ch7033.o
->  obj-$(CONFIG_DRM_DISPLAY_CONNECTOR) += display-connector.o
->  obj-$(CONFIG_DRM_LVDS_CODEC) += lvds-codec.o
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.c b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
-> index b16c5503cef1..eeb33c54334f 100644
-> --- a/drivers/gpu/drm/bridge/cdns-mhdp-core.c
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.c
-> @@ -38,6 +38,8 @@
->  
->  #include "cdns-mhdp-core.h"
->  
-> +#include "cdns-mhdp-j721e.h"
-> +
->  static DECLARE_WAIT_QUEUE_HEAD(fw_load_wq);
->  
->  static int cdns_mhdp_mailbox_read(struct cdns_mhdp_device *mhdp)
-> @@ -1691,6 +1693,16 @@ static int cdns_mhdp_attach(struct drm_bridge *bridge,
->  
->  	conn->display_info.bus_flags = DRM_BUS_FLAG_DE_HIGH;
->  
-> +	if (of_device_is_compatible(mhdp->dev->of_node, "ti,j721e-mhdp8546"))
-> +	/*
-> +	 * DP is internal to J7 SoC and we need to use DRIVE_POSEDGE
-> +	 * in the display controller. This is achieved for the time being
-> +	 * by defining SAMPLE_NEGEDGE here.
-> +	 */
-> +		conn->display_info.bus_flags |=
-> +					DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
-> +					DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE;
-> +
->  	ret = drm_connector_attach_encoder(conn, bridge->encoder);
->  	if (ret) {
->  		dev_err(mhdp->dev, "failed to attach connector to encoder\n");
-> @@ -2470,6 +2482,9 @@ static int cdns_mhdp_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id mhdp_ids[] = {
->  	{ .compatible = "cdns,mhdp8546", },
-> +#ifdef CONFIG_DRM_CDNS_MHDP_J721E
-> +	{ .compatible = "ti,j721e-mhdp8546", .data = &mhdp_ti_j721e_ops },
-> +#endif
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, mhdp_ids);
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-core.h b/drivers/gpu/drm/bridge/cdns-mhdp-core.h
-> index d1bfcdef4249..4e176698caca 100644
-> --- a/drivers/gpu/drm/bridge/cdns-mhdp-core.h
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-core.h
-> @@ -343,6 +343,7 @@ struct cdns_mhdp_bridge_state {
->  
->  struct cdns_mhdp_device {
->  	void __iomem *regs;
-> +	void __iomem *j721e_regs;
->  
->  	struct device *dev;
->  	struct clk *clk;
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
-> new file mode 100644
-> index 000000000000..7555c217c9a0
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.c
-> @@ -0,0 +1,75 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * TI j721e Cadence MHDP DP wrapper
-> + *
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> + * Author: Jyri Sarha <jsarha@ti.com
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "cdns-mhdp-j721e.h"
-> +
-> +#define	REVISION			0x00
-> +#define	DPTX_IPCFG			0x04
-> +#define	ECC_MEM_CFG			0x08
-> +#define	DPTX_DSC_CFG			0x0c
-> +#define	DPTX_SRC_CFG			0x10
-> +#define	DPTX_VIF_SECURE_MODE_CFG	0x14
-> +#define	DPTX_VIF_CONN_STATUS		0x18
-> +#define	PHY_CLK_STATUS			0x1c
-> +
-> +#define DPTX_SRC_AIF_EN			BIT(16)
-> +#define DPTX_SRC_VIF_3_IN30B		BIT(11)
-> +#define DPTX_SRC_VIF_2_IN30B		BIT(10)
-> +#define DPTX_SRC_VIF_1_IN30B		BIT(9)
-> +#define DPTX_SRC_VIF_0_IN30B		BIT(8)
-> +#define DPTX_SRC_VIF_3_SEL_DPI5		BIT(7)
-> +#define DPTX_SRC_VIF_3_SEL_DPI3		0
-> +#define DPTX_SRC_VIF_2_SEL_DPI4		BIT(6)
-> +#define DPTX_SRC_VIF_2_SEL_DPI2		0
-> +#define DPTX_SRC_VIF_1_SEL_DPI3		BIT(5)
-> +#define DPTX_SRC_VIF_1_SEL_DPI1		0
-> +#define DPTX_SRC_VIF_0_SEL_DPI2		BIT(4)
-> +#define DPTX_SRC_VIF_0_SEL_DPI0		0
-> +#define DPTX_SRC_VIF_3_EN		BIT(3)
-> +#define DPTX_SRC_VIF_2_EN		BIT(2)
-> +#define DPTX_SRC_VIF_1_EN		BIT(1)
-> +#define DPTX_SRC_VIF_0_EN		BIT(0)
-> +
-> +/* TODO turn DPTX_IPCFG fw_mem_clk_en at pm_runtime_suspend. */
-> +
-> +static int cdns_mhdp_j721e_init(struct cdns_mhdp_device *mhdp)
-> +{
-> +	struct platform_device *pdev = to_platform_device(mhdp->dev);
-> +
-> +	mhdp->j721e_regs = devm_platform_ioremap_resource(pdev, 1);
-> +	if (IS_ERR(mhdp->j721e_regs))
-> +		return PTR_ERR(mhdp->j721e_regs);
-
-Use PTR_ERR_OR_ZERO() like this:
-
-	return PTR_ERR_OR_ZERO(mhdp->j721e_regs);
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void cdns_mhdp_j721e_enable(struct cdns_mhdp_device *mhdp)
-> +{
-> +	/*
-> +	 * Eneble VIF_0 and select DPI2 as its input. DSS0 DPI0 is connected
-> +	 * to eDP DPI2. This is the only supported SST configuration on
-> +	 * J721E.
-> +	 */
-> +	writel(DPTX_SRC_VIF_0_EN | DPTX_SRC_VIF_0_SEL_DPI2,
-> +	       mhdp->j721e_regs + DPTX_SRC_CFG);
-> +}
-> +
-> +static void cdns_mhdp_j721e_disable(struct cdns_mhdp_device *mhdp)
-> +{
-> +	/* Put everything to defaults  */
-> +	writel(0, mhdp->j721e_regs + DPTX_DSC_CFG);
-> +}
-> +
-> +const struct mhdp_platform_ops mhdp_ti_j721e_ops = {
-> +	.init = cdns_mhdp_j721e_init,
-> +	.enable = cdns_mhdp_j721e_enable,
-> +	.disable = cdns_mhdp_j721e_disable,
-> +};
-> diff --git a/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
-> new file mode 100644
-> index 000000000000..f1ff07b82d32
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/cdns-mhdp-j721e.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * TI j721e Cadence MHDP DP wrapper
-> + *
-> + * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-> + * Author: Jyri Sarha <jsarha@ti.com
-> + */
-> +
-> +#ifndef CDNS_MHDP_J721E_H
-> +#define CDNS_MHDP_J721E_H
-> +
-> +#include <linux/platform_device.h>
-> +#include "cdns-mhdp-core.h"
-> +
-> +struct mhdp_platform_ops;
-> +
-> +extern const struct mhdp_platform_ops mhdp_ti_j721e_ops;
-> +
-> +#endif /* !CDNS_MHDP_J721E_H */
-> -- 
-> 2.26.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
