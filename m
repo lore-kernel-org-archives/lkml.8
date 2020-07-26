@@ -2,83 +2,120 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F011C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 03:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E553EC433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 03:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A36E2074A
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 03:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C972064C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 03:24:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bmBgUKrL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2ub80at"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgGZDVS (ORCPT
+        id S1728358AbgGZDYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 23:21:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50418 "EHLO
+        Sat, 25 Jul 2020 23:24:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgGZDVR (ORCPT
+        with ESMTP id S1727861AbgGZDYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 23:21:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB8B5C0619D2;
-        Sat, 25 Jul 2020 20:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=oD4RRVTwdwm6r9ZTVdQiSLX7wGVogU7fmP+ZEhZCGfk=; b=bmBgUKrL49yzcCpiSOC6OXsbru
-        0P3wi+tM/Bs2kyqiLW5zvezBytWqTYnuFZHSS4hRVaQ3Zm2M6FxUvf4IT8d4CDICaXy7XNi0NFEX0
-        iNVa1Z60RCJ7kEbqxUEoSnwvq09zFP9RMiqjzbYPOjpOjLW9CL36jsKbVlBxVbrSwhw/wa41bfCKw
-        g/KSyzgwplQtHBA6TSqeltTctEuTgmG/ztAGsq4ddrmpV+ERy+4RQaGyKd5HQvMXnv6BR5f571nZp
-        mm4AHDECHtVw156/cE1N2SvNStqVhsHrAxQha+34uWpQUR+UCEj0kWP8veXiy8UMe9u38hFDnZ5Mb
-        qBhZf4+w==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzXDv-0001Tx-Hw; Sun, 26 Jul 2020 03:21:16 +0000
-Date:   Sun, 26 Jul 2020 04:21:15 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     syzbot <syzbot+6324a37c93030377021f@syzkaller.appspotmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: WARNING in delete_node (2)
-Message-ID: <20200726032115.GE23808@casper.infradead.org>
-References: <00000000000051a79d05ab471440@google.com>
+        Sat, 25 Jul 2020 23:24:15 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CFF8C0619D2;
+        Sat, 25 Jul 2020 20:24:15 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id m22so7499316pgv.9;
+        Sat, 25 Jul 2020 20:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ylSob1TfxL3wF+3P8pCCtn06XFXpIg3kaDnuq9sg5J0=;
+        b=k2ub80atQf46SM7/tv2X1i5R3DEErzZ+5J1pDTbRGubw1XCD+DnyiF9iIQqEHYVUCv
+         o6BXq3bJUYrDP8iWyGNNQfvmmbMwld0HjMotsunHMVizTYd4sX9q/NTu+VVP2yTcBuPX
+         2nI1eFpeTO7OdNrmJxv2W12JACp81Ndt750FcTHN9O4WvxjfpLgqCaePgrav+atoy6Wy
+         JsQXlKDPCQNkEG/r/rFWPezY+ly+1v/7RCq82xsKSuhkhMa2zBkgEhZo9oGLnhBkWPTR
+         kiV/TK0NMmJu8zSUnd8CpW4LV0doxlicwCC7SSbtlhgAxlU5O9CtoluaCz4g8X4RQjGW
+         s0hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ylSob1TfxL3wF+3P8pCCtn06XFXpIg3kaDnuq9sg5J0=;
+        b=LSmuvgAN5tfQ6MlMmPhvEQ7gTVxGNvkRXqwXyVKdYvNbi4eV0HWF3+XVeaFdHa3sAf
+         CyzUy64iVkaPr4a2rztfTSQSeKXTZCSmrT3NoliMaYAI3k3sze7xzGE2U7yZLPLKboba
+         KtMOqBYeEzCavyXEWirQ2HKX6eQgeUAM71/Lz7FpTbUt57JZXZ7fbQRUGTEvRltkjyPM
+         FYztJtBFlG7esrLJoXaP4VRdOCCWXcI9+RYnI1nHak10VD5pV4zWvpIuEp7MLv8pN2hU
+         FydAdwtI21xXJIu4EKgFAihQrySCDQKMCtNe7iPlsfmBOvSgjFN8sSIIaXwWnYeZfX0V
+         Nn0w==
+X-Gm-Message-State: AOAM533FFNvp4viEQGvvhrKa2OklnxacQVk6tH640Gz336Q48oIFJyoB
+        9q25vE/ABro/r8G4RZ8LPJQ=
+X-Google-Smtp-Source: ABdhPJysDocBa2t+oK0J0mwTR7+EBG8WGAOvXaR/dVfcTe8Oh0Yqf99qil8drFBSKSCjWZb8TMkKnQ==
+X-Received: by 2002:aa7:871a:: with SMTP id b26mr14868460pfo.294.1595733854896;
+        Sat, 25 Jul 2020 20:24:14 -0700 (PDT)
+Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
+        by smtp.gmail.com with ESMTPSA id x10sm9771159pgp.47.2020.07.25.20.24.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Jul 2020 20:24:14 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 11:24:08 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 05/18] gpiolib: cdev: support GPIO_GET_LINE_IOCTL and
+ GPIOLINE_GET_VALUES_IOCTL
+Message-ID: <20200726032408.GA78235@sol>
+References: <20200725041955.9985-1-warthog618@gmail.com>
+ <20200725041955.9985-6-warthog618@gmail.com>
+ <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
+ <20200726011244.GA6587@sol>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00000000000051a79d05ab471440@google.com>
+In-Reply-To: <20200726011244.GA6587@sol>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 10:04:15AM -0700, syzbot wrote:
-> ------------[ cut here ]------------
-> WARNING: CPU: 1 PID: 17410 at lib/radix-tree.c:571 delete_node+0x1e7/0x8a0 lib/radix-tree.c:571
+On Sun, Jul 26, 2020 at 09:12:44AM +0800, Kent Gibson wrote:
+> On Sat, Jul 25, 2020 at 11:51:54PM +0300, Andy Shevchenko wrote:
+> > On Sat, Jul 25, 2020 at 7:24 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > >
 
-Umm.  Interesting.  That's
-                WARN_ON_ONCE(!list_empty(&node->private_list));
-That list_head is only used by the page cache, and this node is part of
-the radix tree of mounts.  So it should have been initialised to empty
-and remained empty the entire time it was in use.  It'd be interesting
-to get the object file that syzbot ran (at least lib/radix-tree.o) so I
-could see from the register dump below what was in node->private_list.
-The 'Code' snippet below is, alas, not very interesting because it's
-the ud2 instruction, which gcc has correctly shuffled off to the end of
-the function.
+[ snip ]
+> > 
+> > > +static bool padding_not_zeroed(__u32 *padding, int pad_size)
+> > > +{
+> > > +       int i, sum = 0;
+> > > +
+> > > +       for (i = 0; i < pad_size; i++)
+> > > +               sum |= padding[i];
+> > > +
+> > > +       return sum;
+> > > +}
+> > 
+> > Reimplementation of memchr_inv() ?
+> > 
+> 
+> I was hoping to find an existing function, surely checking a region is
+> zeroed is a common thing, right?, so this was a place holder as much
+> as anything.  Not sure memchr_inv fits the bill, but I'll give it a
+> try...
+> 
 
-Or it's a random scribble, or it's bad ram.
+I gave it a try.  It is a good fit functionally, but in my build it
+results in a larger object by ~104 bytes.  I assume that is because 
+padding_not_zeroed is being inlined, and otherwise optimized, while
+memchr_inv calls aren't.
 
-> RIP: 0010:delete_node+0x1e7/0x8a0 lib/radix-tree.c:571
-> Code: e2 48 c7 43 48 00 00 00 00 48 c1 ea 03 42 80 3c 2a 00 0f 85 bb 05 00 00 48 8b 55 18 49 39 d4 0f 84 8b 03 00 00 e8 e9 6c c3 fd <0f> 0b 48 c7 c6 d0 a6 b0 83 4c 89 e7 e8 b8 d7 b0 fd 4d 85 f6 0f 85
-> RSP: 0018:ffffc900078afd08 EFLAGS: 00010246
-> RAX: 0000000000040000 RBX: ffffffff89d2df00 RCX: ffffc90013fcd000
-> RDX: 0000000000040000 RSI: ffffffff83b0d377 RDI: ffff8880a9c90842
-> RBP: ffff88808a91ab40 R08: 0000000000000000 R09: ffff8880a9c90a6f
-> R10: 0000000000000000 R11: 0000000000000000 R12: ffff88808a91ab58
-> R13: dffffc0000000000 R14: ffff8880a9c90840 R15: 000000000000000a
->  __radix_tree_delete+0x190/0x370 lib/radix-tree.c:1378
->  radix_tree_delete_item+0xe7/0x230 lib/radix-tree.c:1429
->  mnt_free_id fs/namespace.c:131 [inline]
+As such I'm inclined to leave it as is - unless there are other
+objections.
+
+Cheers,
+Kent.
+
