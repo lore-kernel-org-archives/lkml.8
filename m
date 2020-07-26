@@ -2,91 +2,68 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A181AC433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7355C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 712832065C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:00:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cDJ6nW6K"
+	by mail.kernel.org (Postfix) with ESMTP id AB19D20715
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgGZJAy (ORCPT
+        id S1727091AbgGZJBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 05:00:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGZJAy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 05:00:54 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F6CC0619D2;
-        Sun, 26 Jul 2020 02:00:53 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u185so7515548pfu.1;
-        Sun, 26 Jul 2020 02:00:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mlBhtj6mj7rzh73CGqPbaedBqXAiRs4Xc3u8F8OgDvM=;
-        b=cDJ6nW6KkxctO85wMzE88+C988ifH29e1rhCCwzz7kstStSjsmycqBQVOaFBBCpo0Q
-         yElh4SlW8tKaHiKeEt8AhtYucLQUXQDkYZyY5sNjslVM4XbSaBvjzorcvis58TSPcOeQ
-         hC72TPZUo2ZArEQ8UxqgD+x0UBLsF9dc3046xKtrxM0eAEYN0gfh9bQb7fN9y3PUHijr
-         lJ2wmIt5Z77mu0W8+Yye+U5kmuQXlNx2cpWEOiV9VbDjwwiB+Qe9KWbr9gMj6O97sdtk
-         oRZpH46jG3z87kqYu0CL5WIry32P6bN2ryCUYZgS5VvODC86VyQIUGX1s31LW8FJpXfA
-         4Jqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mlBhtj6mj7rzh73CGqPbaedBqXAiRs4Xc3u8F8OgDvM=;
-        b=rzYwMSw3y6rr7gmEvg6kk5e0mbKfRPfeejCCe4WnjJ8EuaYA55j3gSyDolvUiZ3Eh2
-         +vAGpYnvW5XBn2FfMkDGUMgAOLfNedU0w3qmcgDSl+uvheq9LP5E1N4iz1NTsQumgveQ
-         uXk4DYZRPN9Jy/TSo95Aw+xpQMyxqvOs0f1P0aTucqhy/oZvp0r6gB/rA3nnjwv4QdxY
-         yc93C0rouljFjaXK7kX52RaYA3fL7O9TYm3gYyy+YqTBxKzovE04qk+nP73gk28iharM
-         X0Nyn1qhxkf32c6Ozbd8AZpmVwrOUvKpBQdmOFNyZ5QiKpTtcIO85DT1Aqa168TS9E35
-         qiAA==
-X-Gm-Message-State: AOAM532TBUo1V/MBGYPLoTzBlUiKw7WQOW+MkvkQKqCB4+ioq1YdMVlp
-        tX7I6xyDnJ/cqgau6zWpQNdkvr+/0HEGxvJ9e0c=
-X-Google-Smtp-Source: ABdhPJzULnqz0fnaSJj9PJcaLQmORbUoT0kT60oObYuQPvv6MHdXLYTHgkOy+hcZym4uhmRbHXjwaptbpPmkpPFS/0w=
-X-Received: by 2002:a62:7b4e:: with SMTP id w75mr2631394pfc.130.1595754053508;
- Sun, 26 Jul 2020 02:00:53 -0700 (PDT)
+        Sun, 26 Jul 2020 05:01:43 -0400
+Received: from smtp.hosts.co.uk ([85.233.160.19]:11925 "EHLO smtp.hosts.co.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbgGZJBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 05:01:43 -0400
+Received: from host86-157-100-178.range86-157.btcentralplus.com ([86.157.100.178] helo=[192.168.1.64])
+        by smtp.hosts.co.uk with esmtpa (Exim)
+        (envelope-from <antlists@youngman.org.uk>)
+        id 1jzcXM-000AVu-50; Sun, 26 Jul 2020 10:01:40 +0100
+Subject: Re: [PATCH 09/14] bdi: remove BDI_CAP_CGROUP_WRITEBACK
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+References: <20200722062552.212200-1-hch@lst.de>
+ <20200722062552.212200-10-hch@lst.de>
+ <SN4PR0401MB35988BC2003CCDFC7CE8258F9B790@SN4PR0401MB3598.namprd04.prod.outlook.com>
+Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Minchan Kim <minchan@kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>
+From:   Wols Lists <antlists@youngman.org.uk>
+Message-ID: <5F1D4671.5060708@youngman.org.uk>
+Date:   Sun, 26 Jul 2020 10:01:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.7.0
 MIME-Version: 1.0
-References: <20200726031154.1012044-1-shorne@gmail.com>
-In-Reply-To: <20200726031154.1012044-1-shorne@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 26 Jul 2020 12:00:37 +0300
-Message-ID: <CAHp75VciC+gqkCZ9voNKHU3hrtiOVzeWBu9_YEagpCGdTME2yg@mail.gmail.com>
-Subject: Re: [PATCH] io: Fix return type of _inb and _inl
-To:     Stafford Horne <shorne@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <SN4PR0401MB35988BC2003CCDFC7CE8258F9B790@SN4PR0401MB3598.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 6:14 AM Stafford Horne <shorne@gmail.com> wrote:
->
-> The return type of functions _inb, _inw and _inl are all u16 which looks
-> wrong.  This patch makes them u8, u16 and u32 respectively.
->
-> The original commit text for these does not indicate that these should
-> be all forced to u16.
+On 22/07/20 08:45, Johannes Thumshirn wrote:
+> On 22/07/2020 08:27, Christoph Hellwig wrote:
+>> it is know to support cgroup writeback, or the bdi comes from the block
+> knwon  ~^
+> 
+Whoops - "known"
 
-Is it in alight with all architectures? that support this interface natively?
-
-(Return value is arch-dependent AFAIU, so it might actually return
-16-bit for byte read, but I agree that this is weird for 32-bit value.
-I think you have elaborate more in the commit message)
-
--- 
-With Best Regards,
-Andy Shevchenko
+> Apart from that,
+> Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> 
+Cheers,
+Wol
