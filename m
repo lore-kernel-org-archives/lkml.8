@@ -2,117 +2,115 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A969DC433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29652C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB5F2065C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F082065E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 10:03:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tpdTiDHF"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="QEZLnA8N";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MnOjouk6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgGZJ5D (ORCPT
+        id S1726857AbgGZKDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 05:57:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgGZJ5C (ORCPT
+        Sun, 26 Jul 2020 06:03:34 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:44421 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725794AbgGZKDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 05:57:02 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88754C0619D2;
-        Sun, 26 Jul 2020 02:57:02 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id p1so6647723pls.4;
-        Sun, 26 Jul 2020 02:57:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bEioRYPAU2RstGlAFkLfimzj4h56/cP3ARZGSjW0G+c=;
-        b=tpdTiDHFIiZFLuKluIaRVXv06TsoqDVgPwWzaH0QECxEo4oSyVEq1VC0tviqxot+Iw
-         cJ6C/bEoWGEN9rDc1Gf7/6xDdUxiWmRhqDIv3t76STpvog04kGjY5KU4TVYansjogzTm
-         5PCyq3FdG4f0EQzIfPv4+PnspWSQnnLzpUOzEEeZ3xW3b3opihQLJKNHz4USvyPArOsU
-         X8FJZmz/PdQM7ieLTuYNyYZnenAYowmXRwZpnYeABoqj/v2Yv+myAOgwf3FSS3YfI+JT
-         SGBwV9zMsC2k3cwYk9LcE2tKUCYEEf5Y4akzhfa3BJmtbAsZQr1ud55k4w+Td+nwmx5m
-         TzJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bEioRYPAU2RstGlAFkLfimzj4h56/cP3ARZGSjW0G+c=;
-        b=VjfRNHGqEyqhksX/zKscQvOy8UJuMXPeubprlQgepjgZQOBV1JRN5bLnzMs6VqCDlV
-         +TZNkFwPFrN0DSlAYCfMVWG1eeVSIDS+ZNGc/Y/Odaf/2K5PEYjm5C3qzxGgX9B3oJmw
-         u8SLTfvkn5b/wDAapNx5g3n2UuD1J7qBCkf/IxDtAnI829L0qlz1Bu8W6msX9tYMLY0m
-         u/UFrUhj5AYkioRTCF8EjGq4zGzf8+RXT/SxK2yiRlhzHu1nkcbW1a5qy1BApBT39i4a
-         eBCuGm2jp49LOnXm0RZzLY+RsvSY2A/cbcU6M/kqW1XrEsDm+2a9B3VolLFuE9W0iJFL
-         aIHA==
-X-Gm-Message-State: AOAM531GYRZRM3lwjPjLdfp/ZMp16ysL7KIfbkJXDtXUZ+QbhVqjpJWJ
-        FbuO1HWlgAOPRPvJClALQibxkFmER6M=
-X-Google-Smtp-Source: ABdhPJwKh0EIayObse8Qy8n0W1VwaAasvfCJ0LRmd2NS2jKpgG0P1TwE7UAjWyjG34tYjDtaeptBmQ==
-X-Received: by 2002:a17:902:82cb:: with SMTP id u11mr14742514plz.207.1595757421604;
-        Sun, 26 Jul 2020 02:57:01 -0700 (PDT)
-Received: from [192.168.0.109] ([1.186.115.27])
-        by smtp.gmail.com with ESMTPSA id k12sm1101356pjp.38.2020.07.26.02.56.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Jul 2020 02:57:00 -0700 (PDT)
-Subject: Re: [PATCH v3 2/4] staging: media: atomisp: fix style of open brace
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-References: <20200726062541.11304-1-bharadwaj.rohit8@gmail.com>
- <20200726090512.20574-2-bharadwaj.rohit8@gmail.com>
- <20200726114224.1825a769@coco.lan>
-From:   Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
-Message-ID: <33c496d9-227e-995e-3b43-3a64bc5163b5@gmail.com>
-Date:   Sun, 26 Jul 2020 15:26:56 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 26 Jul 2020 06:03:34 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.west.internal (Postfix) with ESMTP id 5B3EB421;
+        Sun, 26 Jul 2020 06:03:32 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Sun, 26 Jul 2020 06:03:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=ikh5EhlXdXfOdkGPnk+YSAzZanx
+        ICZj0juCCIW7pJDQ=; b=QEZLnA8NZc2dqPwo1bSHWUW8hwRo67Tnpjq39Cua5jt
+        iIKRbIrsGMZfnKC50AVNL2OZGeqcFFZE8Flz1Qe6U0CDO8tL4pwJbID/728eV9/B
+        zS+imhVJcVA1f9rMNkngBWSorYe/UfHdUK7HmO3sesKc7IOHUC1eS8oWNa9mDZoi
+        Pyx9ywCGqfrSr4SHeGqFm7522K29UNOfma5oAU+t0g6u+vY9XFEOdrv/wd5mMhhs
+        IAvOC/EQXzx4UmetiIJE7AIC1NkCZwrysy4Bmz7WJHkk3aiXZhtsrbsH7zAkqQ5Q
+        Ult/jMCWzF+OV5RHG1AyyUH20laEpd8A+QdXfEpD78w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ikh5Eh
+        lXdXfOdkGPnk+YSAzZanxICZj0juCCIW7pJDQ=; b=MnOjouk60pWPOqNAH2Wurv
+        zCkmFsmyHmVzfJLDi0wTLP8nL5Es6sV7JuggK4ztrZ6/emPax49BTsN6qJ4KJdB6
+        QwTmLdge/1buiytAhiWE6i9QV8A/FFf3DfHg5SBmHtBS3L2SEjH+u6zvfVnrbPD1
+        rQ0KsKU/gi1rYOha6HLFlODeUYb5+ocUDzsZ7Pm2RrpEskLIrETeMGs2qIKkwG5w
+        PHmkKa4Cb270lbEZ37KPjOzjTBgnyHZSfu/r3QBMxUU0carwqMeKPEYe/Y4q9FMD
+        wrSOzBJpTPIOYph+qYlPO8DLq2XolBFdIqoz6b8FicD/Dt9Lxh16u8BB+iEt+mYg
+        ==
+X-ME-Sender: <xms:8lQdXx1zfIQBxubA83d1KJk6-VloNMhvJfhxtyZM9IzZfnDf-T5QTg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrheejgddvfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecuogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepteelgfelff
+    evlefhheegffdtleefhfetudeutdelfedvheeuhfekgeduudeuhedunecuffhomhgrihhn
+    pegrphhpshhpohhtrdgtohhmpdhkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrke
+    elrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
+    mhepghhrvghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:8lQdX4EtG8V4LuQQmUQY46Q8PI4a-aeA_IodyG5ag2BHGP9CFTvQZw>
+    <xmx:8lQdXx6ewB8dboQh_l8XNl_EMq4-4RgYHMjmyk9cCYVcMKGsNo1F6g>
+    <xmx:8lQdX-2ynZ_tMiEndJv2CmRwZKV8cVfxRdrnOrWBg7j_fdgapKHl8A>
+    <xmx:81QdX3-7xnEovtqHl3qb-VztHfe4D2q-Dmx_d2ah36cbgEab2DAuU3DXqIc>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DA2D6328005A;
+        Sun, 26 Jul 2020 06:03:29 -0400 (EDT)
+Date:   Sun, 26 Jul 2020 12:03:28 +0200
+From:   Greg KH <greg@kroah.com>
+To:     syzbot <syzbot+a7ebdb01bb2cc165cab6@syzkaller.appspotmail.com>
+Cc:     Markus.Elfring@web.de, UNGLinuxDriver@microchip.com,
+        davem@davemloft.net, dingxiang@cmss.chinamobile.com,
+        hdanton@sina.com, kuba@kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, steve.glendinning@shawell.net,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in __smsc95xx_mdio_read
+Message-ID: <20200726100328.GA1273266@kroah.com>
+References: <000000000000a376c105a8313901@google.com>
+ <00000000000083581705ab553aab@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200726114224.1825a769@coco.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000083581705ab553aab@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/07/20 3:12 pm, Mauro Carvalho Chehab wrote:
-> Em Sun, 26 Jul 2020 14:35:12 +0530
-> Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com> escreveu:
+On Sun, Jul 26, 2020 at 02:57:05AM -0700, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
 > 
->> this patch fixes style of open brace after functions and if statements
->>
->> Signed-off-by: Rohit K Bharadwaj <bharadwaj.rohit8@gmail.com>
+> commit 7e23ab72e73bc601b4cf2983382691d9f165c8d1
+> Author: Ding Xiang <dingxiang@cmss.chinamobile.com>
+> Date:   Mon Mar 30 07:56:26 2020 +0000
 > 
->> @@ -119,8 +121,9 @@ sh_css_load_blob_info(const char *fw, const struct ia_css_fw_info *bi,
->>  	blob = (const unsigned char *)fw + bi->blob.offset;
->>  
->>  	/* sanity check */
->> -	if (bi->blob.size != bi->blob.text_size + bi->blob.icache_size + bi->blob.data_size + bi->blob.padding_size)
->> -	{
->> +	if (bi->blob.size !=
->> +		bi->blob.text_size + bi->blob.icache_size +
->> +		bi->blob.data_size + bi->blob.padding_size) {
+>     pinctrl: nomadik:remove unneeded variable
 > 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13cfe3a0900000
+> start commit:   7ae77150 Merge tag 'powerpc-5.8-1' of git://git.kernel.org..
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d195fe572fb15312
+> dashboard link: https://syzkaller.appspot.com/bug?extid=a7ebdb01bb2cc165cab6
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17046c66100000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140a8a3e100000
 > 
-> Please adjust the alignments here. I'm pretty sure checkpatch --strict
-> will end complaining with the above, as the first line ends with "=".
-> 
-> I would, instead, code it as:
-> 
-> 	if (bi->blob.size != bi->blob.text_size + bi->blob.icache_size +
-> 			     bi->blob.data_size + bi->blob.padding_size) {
-> 
-> 
-> Thanks,
-> Mauro
-> 
-sure sir, do I have to make a v4 of the patch and send all the patches in this series again or should I just send this one particular patch again?
+> If the result looks correct, please mark the issue as fixed by replying with:
+
+I think the bisection logic needs to be worked on a bit better, as how
+can this patch resolve the reported problem?
+
+thanks,
+
+greg k-h
