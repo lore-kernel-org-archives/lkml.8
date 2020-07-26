@@ -2,141 +2,104 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F02C433E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D44F206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595780157;
-	bh=YSqcHrNmE1AbjO75gijvWV6Joe60SeEGA/uoClNmbIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m3uOqbkDtsBRCp1b0JejdS0cnElLHuG5BpyA5xCb2U+lAPrKCHMobBhnybc+x/8qA
-	 XP2Uq53R2expck+MT1VR0ecDUgNVL21fDCSld12B3hLq4+4t+oZ2q/wOwbaXxhHKzF
-	 wRaftSa3lUcrH5xfPOEKvukkaDtm9A3O/Pijy8yw=
+	by mail.kernel.org (Postfix) with ESMTP id 63FB5206D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 16:18:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HhrGLMh4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JJTCDxRD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgGZQPw convert rfc822-to-8bit (ORCPT
+        id S1726988AbgGZQSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 12:15:52 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:33240 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgGZQPw (ORCPT
+        Sun, 26 Jul 2020 12:18:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49730 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgGZQSb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 12:15:52 -0400
-Received: by mail-ej1-f67.google.com with SMTP id g11so2869268ejr.0
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 09:15:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=LHCX779xDCziv9cINGPr791+zRjJyZ0k/sQQBFyJUkU=;
-        b=G8nB0iX+lJo0Vr/MpaE9Cwo3v7bcGamQ6LtTq5XliKv/mP+L/VM3Lbf+bJu9m2cO4w
-         Pvukah5lgoB6UkDBJdRu7lYKsrabCBO0+UxwNS/9pWUcCNIt63EhNRvIjxXSsDPGCFWn
-         s4W0BiRMeAPlF2ZyPrC9SvYopYTm4u9ukrG8pQio8p3+h4ou8Kwxp7i10Ol5Q8lIXSJM
-         Yqfh2GkqfgOtMVbOokzq37RhUhRu89YXzbj/tScv1sfc5qrn9iR58VHINrp8HBlRZYYv
-         GZ/cYSjBmYHE201Q1yhs6NzEvqdxr/9yqjP9STOg0vtw5v5l9wcNuGEBuNPUqeKh53XZ
-         KbBg==
-X-Gm-Message-State: AOAM530FfAaFp1IuIYj46SZt7cV35MOiqMxhy+Ct1PJg97njFWpp8ypL
-        Lk9J0MXasJS7kmqzqHzJzWU=
-X-Google-Smtp-Source: ABdhPJxnTcSNTUSMfMTn0La6YPwuFCw4PQ75kCsUb7roUhlRYj3yttARKH7FOWYbz6r5ML3+mFGUoQ==
-X-Received: by 2002:a17:906:970a:: with SMTP id k10mr2114160ejx.189.1595780148915;
-        Sun, 26 Jul 2020 09:15:48 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id i5sm5055198ejg.121.2020.07.26.09.15.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 26 Jul 2020 09:15:47 -0700 (PDT)
-Date:   Sun, 26 Jul 2020 18:15:45 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-kernel@vger.kernel.org,
-        linux-mtd <linux-mtd@lists.infradead.org>
-Subject: Re: [PATCH v3 2/2] mtd: rawnand: ingenic: Limit MTD_NAND_JZ4780 to
- architecture only
-Message-ID: <20200726161545.GA6058@kozik-lap>
-References: <20200724145401.2566-1-krzk@kernel.org>
- <20200724145401.2566-3-krzk@kernel.org>
- <PWBZDQ.D1XCW6N2YMRA@crapouillou.net>
- <CAJKOXPc2w0QHQDEwqoeg9Nm361MszM4LRaCoJD2En-fPgPp+4Q@mail.gmail.com>
- <IBDZDQ.K28R5FAI0BXI2@crapouillou.net>
- <20200724155436.GA7460@kozik-lap>
- <K5Y0EQ.WYAK00ADM46F3@crapouillou.net>
- <CAK8P3a0HDu15u5dREd6gk_e9D6mrZ9JqT0DJs9AeC9C2602nAw@mail.gmail.com>
- <20200726160616.GA2662@kozik-lap>
- <RO33EQ.546WD84D5N7K2@crapouillou.net>
+        Sun, 26 Jul 2020 12:18:31 -0400
+Date:   Sun, 26 Jul 2020 16:18:28 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595780309;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=3YYkjEvHjiHC/Ar2ExSh+apOQlT3lexx+oztxhhe5u4=;
+        b=HhrGLMh4k5TPKDQqha+N9Eenz9c+jaIjtRr9NMOPCXYX88u8sk5TwJLOk0OzYaRh8ewVph
+        fuSJJEO0P3V3xB2Nf/Y6eNbrMYLA69z4HDFFSDpddFDtX36FzHOUJhJdFIxHoCH4IHNXji
+        CtCXRn9mdjaDAkCVlKq7+G6BYz9tnby5rWVJhIyh9V6dOVKekS+PP4jPsPYdE0XJ6hn5wQ
+        th6WkfPDbHveLItPD2DApgi3BoPJXEn5OIRKNafOCouNSrG5twlSOhebVINmAwG8bQJc6y
+        jKiu3dsjeksUjgG8uGO6tPLVZndSbEWd7Ax34skNiDQBlBSNoA5CGNFyyyZysA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595780309;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=3YYkjEvHjiHC/Ar2ExSh+apOQlT3lexx+oztxhhe5u4=;
+        b=JJTCDxRDmxf5RIDJ15X6jBZV0oykix3vBmwPeGjrb8r3uTiad9dWfrjiUkAo+NzXdebNy2
+        q3YOEySczfqYmMBA==
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/entry] entry: Correct __secure_computing() stub
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <RO33EQ.546WD84D5N7K2@crapouillou.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Message-ID: <159578030831.4006.6596919231002837614.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 06:12:27PM +0200, Paul Cercueil wrote:
-> 
-> 
-> Le dim. 26 juil. 2020 à 18:06, Krzysztof Kozlowski <krzk@kernel.org> a écrit
-> :
-> > On Sat, Jul 25, 2020 at 08:30:56PM +0200, Arnd Bergmann wrote:
-> > >  On Sat, Jul 25, 2020 at 2:17 PM Paul Cercueil
-> > > <paul@crapouillou.net> wrote:
-> > >  > Le ven. 24 juil. 2020 à 17:54, Krzysztof Kozlowski
-> > > <krzk@kernel.org> a
-> > >  > écrit :
-> > >  > > On Fri, Jul 24, 2020 at 05:50:06PM +0200, Paul Cercueil wrote:
-> > >  > >>  Le ven. 24 juil. 2020 à 17:33, Krzysztof Kozlowski
-> > >  > >> <krzk@kernel.org> a écrit:
-> > >  > >>  > On Fri, 24 Jul 2020 at 17:19, Paul Cercueil
-> > > <paul@crapouillou.net>
-> > >  > >>  > wrote:
-> > >  > >>
-> > >  > >>  On MIPS, the SoC selection is a Kconfig "choice", so you can
-> > > only
-> > >  > >> support
-> > >  > >>  one SoC family, unfortunately.
-> > >  > >
-> > >  > > Let's say someone selected then some other architecture
-> > >  > > (MIPS_ALCHEMY).
-> > >  > > They could select this MTD driver.
-> > >  > >
-> > >  > > Does it mean they would be able to run it on Ingenic hardware?
-> > >  >
-> > >  > In *theory* yes, as long as the Kconfig options that MACH_INGENIC
-> > >  > selects are enabled, the kernel should boot and work on Ingenic
-> > > SoCs.
-> > > 
-> > >  Right now, this won't work yet, because there are platform specific
-> > >  functions that are implemented by each of the platforms in
-> > > arch/mips,
-> > >  e.g. arch/mips/generic/init.c and arch/mips/jz4740/setup.c.
-> > 
-> > I would say even more - no DTS would be provided for such configuration.
-> > All Ingenic DTSes are included only with MACH_INGENIC.  You cannot build
-> > a kernel working on Ingenic without MACH_INGENIC. Even in theory.
-> 
-> But the devicetree doesn't have to be built-in.
->
+The following commit has been merged into the core/entry branch of tip:
 
-OK, that's true. Anyway, I don't have strong opinion on any of this. I
-just followed Arnd's hint.
+Commit-ID:     543f5898d805e7e58bc5eadc20ed0a468368e7fd
+Gitweb:        https://git.kernel.org/tip/543f5898d805e7e58bc5eadc20ed0a468368e7fd
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Sun, 26 Jul 2020 18:14:43 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sun, 26 Jul 2020 18:17:26 +02:00
 
-For the memory driver (and MTD NAND as well) which one you prefer:
-1. https://lore.kernel.org/lkml/20200724074038.5597-6-krzk@kernel.org/
-2. depends on MACH_INGENIC || MIPS_GENERIC || COMPILE_TEST
+entry: Correct __secure_computing() stub
 
-?
+The original version of that used secure_computing() which has no
+arguments. Review requested to switch to __secure_computing() which has
+one. The function name was correct, but no argument added and of course
+compiling without SECCOMP was deemed overrated.
 
-Best regards,
-Krzysztof
+Add the missing function argument.
+
+Fixes: 6823ecabf030 ("seccomp: Provide stub for __secure_computing()")
+Reported-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ include/linux/seccomp.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
+index 03d28c3..3bcc214 100644
+--- a/include/linux/seccomp.h
++++ b/include/linux/seccomp.h
+@@ -58,9 +58,10 @@ static inline int seccomp_mode(struct seccomp *s)
+ 
+ struct seccomp { };
+ struct seccomp_filter { };
++struct seccomp_data;
+ 
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+-static inline int secure_computing(void) { return 0; }
++static inline int secure_computing(const struct seccomp_data *sd) { return 0; }
+ static inline int __secure_computing(void) { return 0; }
+ #else
+ static inline void secure_computing_strict(int this_syscall) { return; }
