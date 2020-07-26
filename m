@@ -2,108 +2,103 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA73C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 602892073E
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4CEA2073E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:13:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="cbxFefq0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgGZXHG (ORCPT
+        id S1726987AbgGZXNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 19:07:06 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:51683 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726736AbgGZXHG (ORCPT
+        Sun, 26 Jul 2020 19:13:15 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:48502 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbgGZXNP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 19:07:06 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 09240D7B909;
-        Mon, 27 Jul 2020 09:06:58 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jzpjN-00019K-6P; Mon, 27 Jul 2020 09:06:57 +1000
-Date:   Mon, 27 Jul 2020 09:06:57 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Brian Foster <bfoster@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iomap: Ensure iop->uptodate matches PageUptodate
-Message-ID: <20200726230657.GT2005@dread.disaster.area>
-References: <20200726091052.30576-1-willy@infradead.org>
+        Sun, 26 Jul 2020 19:13:15 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 58CAB891B0;
+        Mon, 27 Jul 2020 11:13:09 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1595805189;
+        bh=Wp+Zo0Glxzh1xirvrVu2neQRYBub3jLZKClW8M+YdYk=;
+        h=From:To:Cc:Subject:Date;
+        b=cbxFefq0E94SuYeBWloFTwntCR5et+YQWZVleBnC4XjjzXW2M46PD6ixqlC+P42Bi
+         LcsGx75vdW/bUHzEZyGd8O/tAY8DozXjv7Z6pdm0pAgiS6w4hHSsolb+W38N4GbwZ6
+         JrTOo9mFrceKWfVSH5IyUVrO96SgswgGSPfDGrlAypXrwzHvF5yVMc9Lv7B05qqKPd
+         MUKEmtbbWxGi5BvqR1qpoU+2wqD5l4EaSe5Awp627sx8+8AN2acHpY0d3SESM5emUX
+         PmLR4fTsSGJOc5ge/uqsopyJqjxI9jKfZDJDVBk+WAbkbWvGoCY5vhp2sngHmL8/SA
+         jLdiaVedixxUg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f1e0e060000>; Mon, 27 Jul 2020 11:13:10 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id F3CCE13EEA1;
+        Mon, 27 Jul 2020 11:13:08 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 1D592280079; Mon, 27 Jul 2020 11:13:09 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux@roeck-us.net
+Cc:     linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2] rtc: ds1307: provide an indication that the watchdog has fired
+Date:   Mon, 27 Jul 2020 11:13:06 +1200
+Message-Id: <20200726231306.734-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726091052.30576-1-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QKgWuTDL c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8
-        a=C9J5acI_qPl6WTQw8mkA:9 a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 10:10:52AM +0100, Matthew Wilcox (Oracle) wrote:
-> If the filesystem has block size < page size and we end up calling
-> iomap_page_create() in iomap_page_mkwrite_actor(), the uptodate bits
-> would be zero, which causes us to skip writeback of blocks which are
-> !uptodate in iomap_writepage_map().  This can lead to user data loss.
+There's not much feedback when the ds1388 watchdog fires. Generally it
+yanks on the reset line and the board reboots. Capture the fact that the
+watchdog has fired in the past so that userspace can retrieve it via
+WDIOC_GETBOOTSTATUS. This should help distinguish a watchdog triggered
+reset from a power interruption.
 
-I'm still unclear on what condition gets us to
-iomap_page_mkwrite_actor() without already having initialised the
-page correctly. i.e. via a read() or write() call, or the read fault
-prior to ->page_mkwrite() which would have marked the page uptodate
-- that operation should have called iomap_page_create() and
-iomap_set_range_uptodate() on the page....
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+Changes in v2:
+- Set bootstatus to WDIOF_CARDRESET and let userspace decide what to do w=
+ith
+  the information.
 
-i.e. you've described the symptom, but not the cause of the issue
-you are addressing.
+ drivers/rtc/rtc-ds1307.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> Found using generic/127 with the THP patches.  I don't think this can be
-> reproduced on mainline using that test (the THP code causes iomap_pages
-> to be discarded more frequently), but inspection shows it can happen
-> with an appropriate series of operations.
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index 49702942bb08..209736db510d 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -868,6 +868,14 @@ static int ds1388_wdt_start(struct watchdog_device *=
+wdt_dev)
+ 	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
+ 	u8 regs[2];
+ 	int ret;
++	int val;
++
++	ret =3D regmap_read(ds1307->regmap, DS1388_REG_FLAG, &val);
++	if (ret)
++		return ret;
++
++	if (val & DS1388_BIT_WF)
++		wdt_dev->bootstatus =3D WDIOF_CARDRESET;
+=20
+ 	ret =3D regmap_update_bits(ds1307->regmap, DS1388_REG_FLAG,
+ 				 DS1388_BIT_WF, 0);
+--=20
+2.27.0
 
-That sequence of operations would be? 
-
-> Fixes: 9dc55f1389f9 ("iomap: add support for sub-pagesize buffered I/O without buffer heads")
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  fs/iomap/buffered-io.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index a2b3b5455219..f0c5027bf33f 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -53,7 +53,10 @@ iomap_page_create(struct inode *inode, struct page *page)
->  	atomic_set(&iop->read_count, 0);
->  	atomic_set(&iop->write_count, 0);
->  	spin_lock_init(&iop->uptodate_lock);
-> -	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
-> +	if (PageUptodate(page))
-> +		bitmap_fill(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
-> +	else
-> +		bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
-
-I suspect this bitmap_fill call belongs in the iomap_page_mkwrite()
-code as is the only code that can call iomap_page_create() with an
-uptodate page. Then iomap_page_create() could just use kzalloc() and
-drop the atomic_set() and bitmap_zero() calls altogether,
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
