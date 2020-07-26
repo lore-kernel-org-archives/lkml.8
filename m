@@ -2,354 +2,324 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E6DC433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB8BC433EC
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4EDB206F6
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB96420738
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 09:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgGZJTC (ORCPT
+        id S1727855AbgGZJTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 05:19:02 -0400
-Received: from mga03.intel.com ([134.134.136.65]:33213 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbgGZJTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 05:19:01 -0400
-IronPort-SDR: Iv2VaoVkLV6UjxmMvI+Uy2P/GBNd1pdhGa1f+AqVFkxY/R7sDvYU1xTgnCS/9hiub7icRPdW6A
- CHS7CKaWNrRA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9693"; a="150868924"
-X-IronPort-AV: E=Sophos;i="5.75,398,1589266800"; 
-   d="scan'208";a="150868924"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 02:18:52 -0700
-IronPort-SDR: Z4TYiw1c1o2TkE6KU2miscl1K06z4FRIEze0ktepLtTtHycAhZLVflE5nFRzH/2p5eIocc0wqI
- rQOKnub5oSlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,398,1589266800"; 
-   d="scan'208";a="327727628"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 Jul 2020 02:18:47 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jzcnt-0045sX-QV; Sun, 26 Jul 2020 12:18:45 +0300
-Date:   Sun, 26 Jul 2020 12:18:45 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 08/13] hwmon: add support for the sl28cpld hardware
- monitoring controller
-Message-ID: <20200726091845.GL3703480@smile.fi.intel.com>
-References: <20200725231834.25642-1-michael@walle.cc>
- <20200725231834.25642-9-michael@walle.cc>
+        Sun, 26 Jul 2020 05:19:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63626 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726769AbgGZJTL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 05:19:11 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06Q92fWb056883;
+        Sun, 26 Jul 2020 05:18:59 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32gh92d9s4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Jul 2020 05:18:59 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06Q9DRcP074785;
+        Sun, 26 Jul 2020 05:18:59 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32gh92d9rs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Jul 2020 05:18:59 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06Q9FEBl028608;
+        Sun, 26 Jul 2020 09:18:57 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma03wdc.us.ibm.com with ESMTP id 32gcy50tjv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Jul 2020 09:18:57 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06Q9Ivo546399830
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 26 Jul 2020 09:18:57 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4070628059;
+        Sun, 26 Jul 2020 09:18:57 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF82628058;
+        Sun, 26 Jul 2020 09:18:52 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.34.120])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sun, 26 Jul 2020 09:18:52 +0000 (GMT)
+Subject: Re: [PATCH 10/19] perf metric: Add referenced metrics to hash data
+To:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>
+References: <20200719181320.785305-1-jolsa@kernel.org>
+ <20200719181320.785305-11-jolsa@kernel.org>
+ <CAP-5=fVQ8Bu=YroJZH-uKmhKYoiK4VqbEnDjVw8f+7dA0+6y1g@mail.gmail.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <53d650e3-6d8e-07c3-667f-83e14f57825e@linux.ibm.com>
+Date:   Sun, 26 Jul 2020 14:48:51 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200725231834.25642-9-michael@walle.cc>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAP-5=fVQ8Bu=YroJZH-uKmhKYoiK4VqbEnDjVw8f+7dA0+6y1g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-26_02:2020-07-24,2020-07-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 impostorscore=0 mlxscore=0 suspectscore=2 lowpriorityscore=0
+ malwarescore=0 spamscore=0 bulkscore=0 priorityscore=1501 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007260064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 01:18:29AM +0200, Michael Walle wrote:
-> Add support for the hardware monitoring controller of the sl28cpld board
-> management controller. This driver is part of a multi-function device.
-
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> Changes since v5:
->  - none
-> 
-> Changes since v4:
->  - update copyright year
->  - remove #include <linux/of_device.h>, suggested by Andy.
->  - use PTR_ERR_OR_ZERO(), suggested by Andy.
->  - remove the platform device table
->  - don't use KBUID_MODNAME
-> 
-> Changes since v3:
->  - see cover letter
-> 
->  Documentation/hwmon/index.rst    |   1 +
->  Documentation/hwmon/sl28cpld.rst |  36 ++++++++
->  drivers/hwmon/Kconfig            |  10 +++
->  drivers/hwmon/Makefile           |   1 +
->  drivers/hwmon/sl28cpld-hwmon.c   | 142 +++++++++++++++++++++++++++++++
->  5 files changed, 190 insertions(+)
->  create mode 100644 Documentation/hwmon/sl28cpld.rst
->  create mode 100644 drivers/hwmon/sl28cpld-hwmon.c
-> 
-> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-> index 750d3a975d82..d90c43c82936 100644
-> --- a/Documentation/hwmon/index.rst
-> +++ b/Documentation/hwmon/index.rst
-> @@ -154,6 +154,7 @@ Hardware Monitoring Kernel Drivers
->     sht3x
->     shtc1
->     sis5595
-> +   sl28cpld
->     smm665
->     smsc47b397
->     smsc47m192
-> diff --git a/Documentation/hwmon/sl28cpld.rst b/Documentation/hwmon/sl28cpld.rst
-> new file mode 100644
-> index 000000000000..7ed65f78250c
-> --- /dev/null
-> +++ b/Documentation/hwmon/sl28cpld.rst
-> @@ -0,0 +1,36 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
-> +
-> +Kernel driver sl28cpld
-> +======================
-> +
-> +Supported chips:
-> +
-> +   * Kontron sl28cpld
-> +
-> +     Prefix: 'sl28cpld'
-> +
-> +     Datasheet: not available
-> +
-> +Authors: Michael Walle <michael@walle.cc>
-> +
-> +Description
-> +-----------
-> +
-> +The sl28cpld is a board management controller which also exposes a hardware
-> +monitoring controller. At the moment this controller supports a single fan
-> +supervisor. In the future there might be other flavours and additional
-> +hardware monitoring might be supported.
-> +
-> +The fan supervisor has a 7 bit counter register and a counter period of 1
-> +second. If the 7 bit counter overflows, the supervisor will automatically
-> +switch to x8 mode to support a wider input range at the loss of
-> +granularity.
-> +
-> +Sysfs entries
-> +-------------
-> +
-> +The following attributes are supported.
-> +
-> +======================= ========================================================
-> +fan1_input		Fan RPM. Assuming 2 pulses per revolution.
-> +======================= ========================================================
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 8dc28b26916e..a02829ec7386 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1479,6 +1479,16 @@ config SENSORS_RASPBERRYPI_HWMON
->  	  This driver can also be built as a module. If so, the module
->  	  will be called raspberrypi-hwmon.
->  
-> +config SENSORS_SL28CPLD
-> +	tristate "Kontron sl28cpld hardware monitoring driver"
-> +	select MFD_SIMPLE_MFD_I2C
-> +	help
-> +	  If you say yes here you get support for the fan supervisor of the
-> +	  sl28cpld board management controller.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called sl28cpld-hwmon.
-> +
->  config SENSORS_SHT15
->  	tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
->  	depends on GPIOLIB || COMPILE_TEST
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index a8f4b35b136b..dee8511f9348 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -159,6 +159,7 @@ obj-$(CONFIG_SENSORS_S3C)	+= s3c-hwmon.o
->  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
->  obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
->  obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
-> +obj-$(CONFIG_SENSORS_SL28CPLD)	+= sl28cpld-hwmon.o
->  obj-$(CONFIG_SENSORS_SHT15)	+= sht15.o
->  obj-$(CONFIG_SENSORS_SHT21)	+= sht21.o
->  obj-$(CONFIG_SENSORS_SHT3x)	+= sht3x.o
-> diff --git a/drivers/hwmon/sl28cpld-hwmon.c b/drivers/hwmon/sl28cpld-hwmon.c
-> new file mode 100644
-> index 000000000000..e48f58ec5b9c
-> --- /dev/null
-> +++ b/drivers/hwmon/sl28cpld-hwmon.c
-> @@ -0,0 +1,142 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * sl28cpld hardware monitoring driver
-> + *
-> + * Copyright 2020 Kontron Europe GmbH
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/regmap.h>
-> +
-> +#define FAN_INPUT		0x00
-> +#define   FAN_SCALE_X8		BIT(7)
-> +#define   FAN_VALUE_MASK	GENMASK(6, 0)
-> +
-> +struct sl28cpld_hwmon {
-> +	struct regmap *regmap;
-> +	u32 offset;
-> +};
-> +
-> +static umode_t sl28cpld_hwmon_is_visible(const void *data,
-> +					 enum hwmon_sensor_types type,
-> +					 u32 attr, int channel)
-> +{
-> +	return 0444;
-> +}
-> +
-> +static int sl28cpld_hwmon_read(struct device *dev,
-> +			       enum hwmon_sensor_types type, u32 attr,
-> +			       int channel, long *input)
-> +{
-> +	struct sl28cpld_hwmon *hwmon = dev_get_drvdata(dev);
-> +	unsigned int value;
-> +	int ret;
-> +
-> +	switch (attr) {
-> +	case hwmon_fan_input:
-> +		ret = regmap_read(hwmon->regmap, hwmon->offset + FAN_INPUT,
-> +				  &value);
-> +		if (ret)
-> +			return ret;
-> +		/*
-> +		 * The register has a 7 bit value and 1 bit which indicates the
-> +		 * scale. If the MSB is set, then the lower 7 bit has to be
-> +		 * multiplied by 8, to get the correct reading.
-> +		 */
-> +		if (value & FAN_SCALE_X8)
-> +			value = FIELD_GET(FAN_VALUE_MASK, value) << 3;
-> +
-> +		/*
-> +		 * The counter period is 1000ms and the sysfs specification
-> +		 * says we should asssume 2 pulses per revolution.
-> +		 */
-> +		value *= 60 / 2;
-> +
-> +		break;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	*input = value;
-> +	return 0;
-> +}
-> +
-> +static const u32 sl28cpld_hwmon_fan_config[] = {
-> +	HWMON_F_INPUT,
-> +	0
-> +};
-> +
-> +static const struct hwmon_channel_info sl28cpld_hwmon_fan = {
-> +	.type = hwmon_fan,
-> +	.config = sl28cpld_hwmon_fan_config,
-> +};
-> +
-> +static const struct hwmon_channel_info *sl28cpld_hwmon_info[] = {
-> +	&sl28cpld_hwmon_fan,
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_ops sl28cpld_hwmon_ops = {
-> +	.is_visible = sl28cpld_hwmon_is_visible,
-> +	.read = sl28cpld_hwmon_read,
-> +};
-> +
-> +static const struct hwmon_chip_info sl28cpld_hwmon_chip_info = {
-> +	.ops = &sl28cpld_hwmon_ops,
-> +	.info = sl28cpld_hwmon_info,
-> +};
-> +
-> +static int sl28cpld_hwmon_probe(struct platform_device *pdev)
-> +{
-> +	struct sl28cpld_hwmon *hwmon;
-> +	struct device *hwmon_dev;
-> +	int ret;
-> +
-> +	if (!pdev->dev.parent)
-> +		return -ENODEV;
-> +
-> +	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
-> +	if (!hwmon)
-> +		return -ENOMEM;
-> +
-> +	hwmon->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!hwmon->regmap)
-> +		return -ENODEV;
-> +
-> +	ret = device_property_read_u32(&pdev->dev, "reg", &hwmon->offset);
-> +	if (ret)
-> +		return -EINVAL;
-> +
-> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
-> +				"sl28cpld_hwmon", hwmon,
-> +				&sl28cpld_hwmon_chip_info, NULL);
-> +	if (IS_ERR(hwmon_dev))
-> +		dev_err(&pdev->dev, "failed to register as hwmon device");
-> +
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +}
-> +
-> +static const struct of_device_id sl28cpld_hwmon_of_match[] = {
-> +	{ .compatible = "kontron,sl28cpld-fan" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, sl28cpld_hwmon_of_match);
-> +
-> +static struct platform_driver sl28cpld_hwmon_driver = {
-> +	.probe = sl28cpld_hwmon_probe,
-> +	.driver = {
-> +		.name = "sl28cpld-fan",
-> +		.of_match_table = sl28cpld_hwmon_of_match,
-> +	},
-> +};
-> +module_platform_driver(sl28cpld_hwmon_driver);
-> +
-> +MODULE_DESCRIPTION("sl28cpld Hardware Monitoring Driver");
-> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.20.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
 
 
+On 7/20/20 4:02 AM, Ian Rogers wrote:
+> On Sun, Jul 19, 2020 at 11:14 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>>
+>> Adding referenced metrics to the parsing context so they
+>> can be resolved during the metric processing.
+>>
+>> Adding expr__add_ref function to store referenced metrics
+>> into parse context.
+>>
+>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
+
+Reviewed-By : Kajol Jain<kjain@linux.ibm.com>
+
+Thanks,
+Kajol Jain
+> 
+> Thanks,
+> Ian
+> 
+>> ---
+>>  tools/perf/util/expr.c        | 54 +++++++++++++++++++++++++++++++++++
+>>  tools/perf/util/expr.h        | 13 ++++++++-
+>>  tools/perf/util/stat-shadow.c | 20 +++++++++----
+>>  3 files changed, 80 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+>> index f726211f49d4..d3997c2b4a90 100644
+>> --- a/tools/perf/util/expr.c
+>> +++ b/tools/perf/util/expr.c
+>> @@ -4,10 +4,14 @@
+>>  #include <errno.h>
+>>  #include <stdlib.h>
+>>  #include <string.h>
+>> +#include "metricgroup.h"
+>> +#include "debug.h"
+>>  #include "expr.h"
+>>  #include "expr-bison.h"
+>>  #include "expr-flex.h"
+>>  #include <linux/kernel.h>
+>> +#include <linux/zalloc.h>
+>> +#include <ctype.h>
+>>
+>>  #ifdef PARSER_DEBUG
+>>  extern int expr_debug;
+>> @@ -63,6 +67,7 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
+>>         if (!data_ptr)
+>>                 return -ENOMEM;
+>>         data_ptr->val = val;
+>> +       data_ptr->is_ref = false;
+>>
+>>         ret = hashmap__set(&ctx->ids, id, data_ptr,
+>>                            (const void **)&old_key, (void **)&old_data);
+>> @@ -73,6 +78,55 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
+>>         return ret;
+>>  }
+>>
+>> +int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
+>> +{
+>> +       struct expr_id_data *data_ptr = NULL, *old_data = NULL;
+>> +       char *old_key = NULL;
+>> +       char *name, *p;
+>> +       int ret;
+>> +
+>> +       data_ptr = zalloc(sizeof(*data_ptr));
+>> +       if (!data_ptr)
+>> +               return -ENOMEM;
+>> +
+>> +       name = strdup(ref->metric_name);
+>> +       if (!name) {
+>> +               free(data_ptr);
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       /*
+>> +        * The jevents tool converts all metric expressions
+>> +        * to lowercase, including metric references, hence
+>> +        * we need to add lowercase name for metric, so it's
+>> +        * properly found.
+>> +        */
+>> +       for (p = name; *p; p++)
+>> +               *p = tolower(*p);
+>> +
+>> +       /*
+>> +        * Intentionally passing just const char pointers,
+>> +        * originally from 'struct pmu_event' object.
+>> +        * We don't need to change them, so there's no
+>> +        * need to create our own copy.
+>> +        */
+>> +       data_ptr->ref.metric_name = ref->metric_name;
+>> +       data_ptr->ref.metric_expr = ref->metric_expr;
+>> +       data_ptr->is_ref = true;
+>> +
+>> +       ret = hashmap__set(&ctx->ids, name, data_ptr,
+>> +                          (const void **)&old_key, (void **)&old_data);
+>> +       if (ret)
+>> +               free(data_ptr);
+>> +
+>> +       pr_debug2("adding ref metric %s: %s\n",
+>> +                 ref->metric_name, ref->metric_expr);
+>> +
+>> +       free(old_key);
+>> +       free(old_data);
+>> +       return ret;
+>> +}
+>> +
+>>  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+>>                  struct expr_id_data **data)
+>>  {
+>> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+>> index 2462abd0ac65..81d04ff7f857 100644
+>> --- a/tools/perf/util/expr.h
+>> +++ b/tools/perf/util/expr.h
+>> @@ -11,12 +11,22 @@
+>>  #include "util/hashmap.h"
+>>  //#endif
+>>
+>> +struct metric_ref;
+>> +
+>>  struct expr_parse_ctx {
+>>         struct hashmap ids;
+>>  };
+>>
+>>  struct expr_id_data {
+>> -       double  val;
+>> +       union {
+>> +               double val;
+>> +               struct {
+>> +                       const char *metric_name;
+>> +                       const char *metric_expr;
+>> +               } ref;
+>> +       };
+>> +
+>> +       bool is_ref;
+>>  };
+>>
+>>  struct expr_scanner_ctx {
+>> @@ -29,6 +39,7 @@ void expr__ctx_clear(struct expr_parse_ctx *ctx);
+>>  void expr__del_id(struct expr_parse_ctx *ctx, const char *id);
+>>  int expr__add_id(struct expr_parse_ctx *ctx, const char *id);
+>>  int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val);
+>> +int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref);
+>>  int expr__get_id(struct expr_parse_ctx *ctx, const char *id,
+>>                  struct expr_id_data **data);
+>>  int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
+>> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+>> index fc9ac4b4218e..e1ba6c1b916a 100644
+>> --- a/tools/perf/util/stat-shadow.c
+>> +++ b/tools/perf/util/stat-shadow.c
+>> @@ -731,13 +731,14 @@ static void print_smi_cost(struct perf_stat_config *config,
+>>  }
+>>
+>>  static int prepare_metric(struct evsel **metric_events,
+>> +                         struct metric_ref *metric_refs,
+>>                           struct expr_parse_ctx *pctx,
+>>                           int cpu,
+>>                           struct runtime_stat *st)
+>>  {
+>>         double scale;
+>>         char *n, *pn;
+>> -       int i;
+>> +       int i, j, ret;
+>>
+>>         expr__ctx_init(pctx);
+>>         for (i = 0; metric_events[i]; i++) {
+>> @@ -778,12 +779,19 @@ static int prepare_metric(struct evsel **metric_events,
+>>                         expr__add_id_val(pctx, n, avg_stats(stats)*scale);
+>>         }
+>>
+>> +       for (j = 0; metric_refs && metric_refs[j].metric_name; j++) {
+>> +               ret = expr__add_ref(pctx, &metric_refs[j]);
+>> +               if (ret)
+>> +                       return ret;
+>> +       }
+>> +
+>>         return i;
+>>  }
+>>
+>>  static void generic_metric(struct perf_stat_config *config,
+>>                            const char *metric_expr,
+>>                            struct evsel **metric_events,
+>> +                          struct metric_ref *metric_refs,
+>>                            char *name,
+>>                            const char *metric_name,
+>>                            const char *metric_unit,
+>> @@ -798,7 +806,7 @@ static void generic_metric(struct perf_stat_config *config,
+>>         int i;
+>>         void *ctxp = out->ctx;
+>>
+>> -       i = prepare_metric(metric_events, &pctx, cpu, st);
+>> +       i = prepare_metric(metric_events, metric_refs, &pctx, cpu, st);
+>>         if (i < 0)
+>>                 return;
+>>
+>> @@ -847,7 +855,7 @@ double test_generic_metric(struct metric_expr *mexp, int cpu, struct runtime_sta
+>>         struct expr_parse_ctx pctx;
+>>         double ratio;
+>>
+>> -       if (prepare_metric(mexp->metric_events, &pctx, cpu, st) < 0)
+>> +       if (prepare_metric(mexp->metric_events, mexp->metric_refs, &pctx, cpu, st) < 0)
+>>                 return 0.;
+>>
+>>         if (expr__parse(&ratio, &pctx, mexp->metric_expr, 1))
+>> @@ -1064,8 +1072,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>>                 else
+>>                         print_metric(config, ctxp, NULL, NULL, name, 0);
+>>         } else if (evsel->metric_expr) {
+>> -               generic_metric(config, evsel->metric_expr, evsel->metric_events, evsel->name,
+>> -                               evsel->metric_name, NULL, 1, cpu, out, st);
+>> +               generic_metric(config, evsel->metric_expr, evsel->metric_events, NULL,
+>> +                               evsel->name, evsel->metric_name, NULL, 1, cpu, out, st);
+>>         } else if (runtime_stat_n(st, STAT_NSECS, 0, cpu) != 0) {
+>>                 char unit = 'M';
+>>                 char unit_buf[10];
+>> @@ -1093,7 +1101,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>>                         if (num++ > 0)
+>>                                 out->new_line(config, ctxp);
+>>                         generic_metric(config, mexp->metric_expr, mexp->metric_events,
+>> -                                       evsel->name, mexp->metric_name,
+>> +                                       mexp->metric_refs, evsel->name, mexp->metric_name,
+>>                                         mexp->metric_unit, mexp->runtime, cpu, out, st);
+>>                 }
+>>         }
+>> --
+>> 2.25.4
+>>
