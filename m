@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA73C433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0969BC433E5
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7B6720700
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74D32076A
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 00:41:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nuvfYqmn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e5ATe/YT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgGZAle (ORCPT
+        id S1728338AbgGZAlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 25 Jul 2020 20:41:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54036 "EHLO
+        Sat, 25 Jul 2020 20:41:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727869AbgGZAld (ORCPT
+        with ESMTP id S1727869AbgGZAlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 25 Jul 2020 20:41:33 -0400
+        Sat, 25 Jul 2020 20:41:36 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD52BC08C5C0
-        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 17:41:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAAC5C08C5C0
+        for <linux-kernel@vger.kernel.org>; Sat, 25 Jul 2020 17:41:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=0/SqncWLEFRMIbCAA8NWW0A+JcXwyV45WcjL1+/uDeQ=; b=nuvfYqmnYUmWtcNGTLX+wGOPic
-        O4LRyGlMWuU5Ebu6vdNgpom/4JJ0z6e7yYXzPqEqiVELZfFpEHcZom+P0HwI7MAYKEL5N0+0M2U8I
-        QJN8M3AbmiMUtFE5VWGIxBNKidyX1ZQg11kQgY3uNgDIDYlu2rXm+iDHdi5l86x2q+OcaFdIcs6zk
-        /+gmtQIIBbrIxp4CxdaCPQQVdB6An7MYJOA11MeouECf8yzIIPg5foHfujTI1mymcw0tfLnE7BFL/
-        kDkzRMh+4vQVuIdCh2KnGcIysdHGZVzzqgl0/eWUJ12wQaOCX9/vNBTRC/1WpWu5896PBkgunFX37
-        R8xsMeWw==;
+        bh=NskkC63wGl/kN9wReZdhYmbVfJGf4FDZPsLLAcFhAss=; b=e5ATe/YT5tTXOYhqe8GF0Mqidz
+        pGeU1L3WTllwY3petKHI1TZHCdYxkrQvEPOyuNMQycb6sxjsrZsBDp8drMasS3ZdHOFGnDDm7aBWE
+        9QcWvm9SoSqUAfRZJWq16+eUaYpKeSp0uO2Xf0JFvKw6TWR585j8D9tpyoJECYqB7uG0DApp/hCbC
+        ma5OoeiPZig4QfhR/+Y8w8ZuKd+sVkk6YBIb13h4gXQGqBnGmfnPjmEVINKsG5FHO8JG+MjjmvvN4
+        PQ5jmY/u24nAjc1vTaI3OBBOnGZdm4u/FAZAm54n0y2GLhybMD4Lgd6Amt5pX93UtNSXnABrbhc6J
+        NdGGBaTA==;
 Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzUjL-0003QZ-UF; Sun, 26 Jul 2020 00:41:32 +0000
+        id 1jzUjN-0003QZ-SR; Sun, 26 Jul 2020 00:41:34 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         x86@kernel.org
-Subject: [PATCH 2/3] x86: cmpxchg_32.h: delete duplicated word
-Date:   Sat, 25 Jul 2020 17:41:23 -0700
-Message-Id: <20200726004124.20618-3-rdunlap@infradead.org>
+Subject: [PATCH 3/3] x86: uv: uv_hub.h: delete duplicated word
+Date:   Sat, 25 Jul 2020 17:41:24 -0700
+Message-Id: <20200726004124.20618-4-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200726004124.20618-1-rdunlap@infradead.org>
 References: <20200726004124.20618-1-rdunlap@infradead.org>
@@ -58,7 +58,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Delete the repeated word "you".
+Delete the repeated word "the".
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -66,17 +66,17 @@ Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: x86@kernel.org
 ---
- arch/x86/include/asm/cmpxchg_32.h |    2 +-
+ arch/x86/include/asm/uv/uv_hub.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- linux-next-20200720.orig/arch/x86/include/asm/cmpxchg_32.h
-+++ linux-next-20200720/arch/x86/include/asm/cmpxchg_32.h
-@@ -3,7 +3,7 @@
- #define _ASM_X86_CMPXCHG_32_H
+--- linux-next-20200720.orig/arch/x86/include/asm/uv/uv_hub.h
++++ linux-next-20200720/arch/x86/include/asm/uv/uv_hub.h
+@@ -682,7 +682,7 @@ static inline int uv_node_to_blade_id(in
+ 	return nid;
+ }
  
- /*
-- * Note: if you use set64_bit(), __cmpxchg64(), or their variants, you
-+ * Note: if you use set64_bit(), __cmpxchg64(), or their variants,
-  *       you need to test for the feature in boot_cpu_data.
-  */
- 
+-/* Convert a cpu number to the the UV blade number */
++/* Convert a cpu number to the UV blade number */
+ static inline int uv_cpu_to_blade_id(int cpu)
+ {
+ 	return uv_node_to_blade_id(cpu_to_node(cpu));
