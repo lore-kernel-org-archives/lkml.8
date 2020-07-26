@@ -2,161 +2,93 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB83BC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4288720714
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BADB72065C
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 08:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKOZq2jv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WWJqL44l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgGZICr (ORCPT
+        id S1726918AbgGZIK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 04:02:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39076 "EHLO
+        Sun, 26 Jul 2020 04:10:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgGZICq (ORCPT
+        with ESMTP id S1725810AbgGZIK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 04:02:46 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F930C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 01:02:46 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id f7so1671346pln.13
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 01:02:46 -0700 (PDT)
+        Sun, 26 Jul 2020 04:10:26 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97BFCC0619D2;
+        Sun, 26 Jul 2020 01:10:26 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x72so7461531pfc.6;
+        Sun, 26 Jul 2020 01:10:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dYKrfpkuYtuN4Vp3wBicq+wnj7FGd9Dpk+b0emDqktc=;
-        b=GKOZq2jvqXpFVrX7fzgIYcV5k+gMS4l2jCKOJkM1TBvU9XYh2sZTr9497nDA6VkdDy
-         lPB8S+gttfKfwT/puQwBkmRB5SFr+Jr+juE61S8BqG4b9LkYd29DZCcuUWgYiLD0wSJA
-         p6IUdl9E2C8lNrSlEe3038dUFQEq7PlikztdfWq52T61dgTvEhvWxQNQWn02y4JF13PD
-         Pzsc8OsqELZezRT0MqhzjsU3L+j6N3KfTxSAxY1AwumNEmgQjEmSPIqAfcuEvqnYKe2T
-         54Z9j9NHpGfX/6hBRdamyjg2frMEXrILFIWRz5578d+w64z5GPq+nmnVMdaB4h1BMSAn
-         kXTw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8Ci0GEGWDXBHNdaM2N8ArkTe5Ogg7XLroxwBro1NOoU=;
+        b=WWJqL44lCJHN7Hil5pug7eNJDWFrIyqg09cDu5uq2oGwZlPuFwDTojXDF0Wzvdz1F7
+         Y335stE9p6nFTUiyTV4xtzEgw4W8DhyaDJe5MkC2kTl9WzQbvG8gQ+4HShlMkcpDNo0j
+         bz3bL7ynrzCN2iq5RzA3P/Hq1V3nRFrbfYbvgp7vJg5tKtoJzm6DN+E4eosNkSyHktAC
+         p5IBgibIIDINLG3op0+KCCTk0Wty6D0XgagFZ4vtB2lmfQpAeE3zFtdOno2jAZUyo7t4
+         jIAVxgNNvHFyZx71llaa7cLVdb0FxOOGZSc2jB3EymnXT5jR9CxubIng0asx4qn2H3um
+         6iNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dYKrfpkuYtuN4Vp3wBicq+wnj7FGd9Dpk+b0emDqktc=;
-        b=GhFVj2qt1Jykx1xYxeLWU6biMWWDmAWCrSx48W9aUZrnUMH86tm08neNUGQuqvPwSu
-         VLf0SFDA3ZdIz/tIxpY8pXLRRXkcPvKrXWLPomtk1iGr+KBJCBV6mjqp3RYcoN04/GwP
-         bm3lWjnA0WgQUyr487rR3ThGYE/djb3FExbRuIFBz8jE2QhJY+c3QwZLkzZu0NBiH5nN
-         p/M/z8dB1Fg5sskc9wSy67fM0NlIW7+dbYbp1p958bWFETbsQMmZ7DbwhnLxVttrmt4H
-         V5zQ0Da2iJ62Z9hZPPK9cQ+HmxIyHwQzphSPSresXE6cbxmo4ARh51g7gmJ2g0x6qNDz
-         d55A==
-X-Gm-Message-State: AOAM531cdCXBmQ/OnkvT9zr+q0BKkMVm69fD7kBhNOWJghh5QM3ztXoR
-        lgJDyPHqOpzpfU1DXkdce2o=
-X-Google-Smtp-Source: ABdhPJxgk0aUpcj/s5echwyaxidiIDyMu+dypbH26R8zqWRkTfkjjahVJiitm2CYLcXq2KK0nbFzsw==
-X-Received: by 2002:a17:902:bb82:: with SMTP id m2mr14567125pls.61.1595750566008;
-        Sun, 26 Jul 2020 01:02:46 -0700 (PDT)
-Received: from localhost.localdomain ([122.167.86.75])
-        by smtp.googlemail.com with ESMTPSA id b18sm10638648pju.10.2020.07.26.01.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 01:02:45 -0700 (PDT)
-From:   Aditya Jain <aditya.jainadityajain.jain@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     hdegoede@redhat.com, Larry.Finger@lwfinger.net,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Aditya Jain <aditya.jainadityajain.jain@gmail.com>
-Subject: [PATCH] staging: rtl8723bs: include: Fix coding style errors
-Date:   Sun, 26 Jul 2020 13:32:15 +0530
-Message-Id: <20200726080215.41501-1-aditya.jainadityajain.jain@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8Ci0GEGWDXBHNdaM2N8ArkTe5Ogg7XLroxwBro1NOoU=;
+        b=cspuVskybD2XQb4Dv81EitJnBSBm0b+W3CsdjR4tnsWXYuniQT5g2QxSvwJ64nglRq
+         B+yOO7HB/XVl1DlhOdpPyiaho5JSiXLP28p9IeavcIkGJaFwtZoYZI8UgEREfvbDR32k
+         5EH3+Ca8Q+vDNKPt1pKNqXj+m1m9KIw2sg26C05z+1buR302CEhsa69RLgA7HldJt0/B
+         Kq2smA9OhUWROM2oOUf03JhivOqUyZs9E1/lD1FX7ejlkNBd+RBSB+7xr1YRPcxXR1GE
+         DXCr9iX41pbG1nyFMNnrmKj/cAEVYSJEjyHT6pv7jlOxj5izvpTsyvzHCAqFIjHQgK5Y
+         jBCQ==
+X-Gm-Message-State: AOAM531sjkWLeWTjaBYbo8ezzjfZAnwl1qx5I4lGyUrdr55oBSqDNCpq
+        5aC+k9341LZX6qtkmMAcPpxbsYs2Da6f+T1H8WI=
+X-Google-Smtp-Source: ABdhPJwtZc58lG+WVXr5/XYKGSgbqukfPLNzFC4b7SM8NrubD1g++pU9d8oQ0Dxqxpzn5yYuIbjdHehj3ZF6+oszWkk=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr15385245pgi.203.1595751026076;
+ Sun, 26 Jul 2020 01:10:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
+In-Reply-To: <20200724183954.1.I2e29ae25368ba8a72a9e44121cfbc36ead8ecc6b@changeid>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 26 Jul 2020 11:10:10 +0300
+Message-ID: <CAHp75Vdh=GymXnzA4NaMJVsNqb=7qqq52+U5hCif4H2shDQ4uQ@mail.gmail.com>
+Subject: Re: [PATCH] iio: sx9310: Fixes dropped on initial commit
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixing ERROR: "foo *	bar" should be "foo *bar" in hal_phy_cfg.h
-as reported by checkpatch.pl
+On Sat, Jul 25, 2020 at 3:41 AM Daniel Campello <campello@chromium.org> wrote:
+>
+> This patch brings back fixes on v9 of initial patch that got dropped
+> when v8 was taken instead.
+>   - Updated Copyright
+>   - Updated macro definitions
+>   - Simplified return condition checks
+>   - Removed ACPI and of table macros
 
-Signed-off-by: Aditya Jain <aditya.jainadityajain.jain@gmail.com>
----
- .../staging/rtl8723bs/include/hal_phy_cfg.h    | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Please, split to a series of patches.
+I see at least ~4-5 by the changes below.
 
-diff --git a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
-index 419ddb0733aa..fd5f377bad4f 100644
---- a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
-+++ b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
-@@ -42,7 +42,7 @@ u32 	Data
- 
- u32
- PHY_QueryRFReg_8723B(
--struct adapter *		Adapter,
-+struct adapter 		*Adapter,
- u8 		eRFPath,
- u32 			RegAddr,
- u32 			BitMask
-@@ -50,7 +50,7 @@ u32 			BitMask
- 
- void
- PHY_SetRFReg_8723B(
--struct adapter *		Adapter,
-+struct adapter 		*Adapter,
- u8 		eRFPath,
- u32 			RegAddr,
- u32 			BitMask,
-@@ -66,7 +66,7 @@ s32 PHY_MACConfig8723B(struct adapter *padapter);
- 
- void
- PHY_SetTxPowerIndex(
--struct adapter *		Adapter,
-+struct adapter 			*Adapter,
- u32 				PowerIndex,
- u8 			RFPath,
- u8 			Rate
-@@ -74,7 +74,7 @@ u8 			Rate
- 
- u8
- PHY_GetTxPowerIndex(
--struct adapter *		padapter,
-+struct adapter 			*padapter,
- u8 			RFPath,
- u8 			Rate,
- enum CHANNEL_WIDTH		BandWidth,
-@@ -83,19 +83,19 @@ u8 			Channel
- 
- void
- PHY_GetTxPowerLevel8723B(
--struct adapter *	Adapter,
--	s32*			powerlevel
-+struct adapter 			*Adapter,
-+	s32			*powerlevel
- 	);
- 
- void
- PHY_SetTxPowerLevel8723B(
--struct adapter *	Adapter,
-+struct adapter 		*Adapter,
- u8 	channel
- 	);
- 
- void
- PHY_SetBWMode8723B(
--struct adapter *			Adapter,
-+struct adapter 				*Adapter,
- enum CHANNEL_WIDTH			Bandwidth,	/*  20M or 40M */
- unsigned char 			Offset		/*  Upper, Lower, or Don't care */
- );
-@@ -108,7 +108,7 @@ u8 channel
- 
- void
- PHY_SetSwChnlBWMode8723B(
--struct adapter *		Adapter,
-+struct adapter 		*Adapter,
- u8 			channel,
- enum CHANNEL_WIDTH		Bandwidth,
- u8 			Offset40,
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
