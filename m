@@ -2,123 +2,261 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5602C433E0
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 19:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C96C433E0
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 19:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7951206D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 19:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B032065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 19:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595790405;
+	bh=/edHmQwJxF7VSDcLKho1dwyw+RMjRj29ommSZxGDozM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KtOW+5jlED8g97ONkUlpXJs/y+Is6pfHCnABVr6ZGkcqJUMn8yTZkWm8WhngC37Im
+	 hlLh9hNIbiKy/Zec+GepA0Q6OBvM25XVdHxRwu5KrSe1hW33yc6k17iAKaF8HjrDzt
+	 lDWj11DjtkBNEB9l7/sN6enrVgBvFW2HjjvTo1uA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgGZTEV (ORCPT
+        id S1726911AbgGZTGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 15:04:21 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:46585 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgGZTEU (ORCPT
+        Sun, 26 Jul 2020 15:06:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgGZTGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 15:04:20 -0400
-Received: by mail-il1-f198.google.com with SMTP id o4so9900653ilo.13
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 12:04:20 -0700 (PDT)
+        Sun, 26 Jul 2020 15:06:44 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA3F6C0619D2;
+        Sun, 26 Jul 2020 12:06:43 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ha11so737308pjb.1;
+        Sun, 26 Jul 2020 12:06:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qhvPLwCPXjMqFU2x4gEnxP4JjTqrO6GiJqIFdd+1yaY=;
+        b=W6kZST4BhAg8j6aAzIOCVIsrh6bIit/0aLvxBm75a4a194r0fukEv3cBdzfg05ZQ+4
+         j1OcMjy52PUg5c4JKaqkPD+rZEHfxs4gV6Cph35S/Vp9IoNA2IXusr5vhlQDRRl0mxxH
+         YKCMl3NIkqx2xS40Phzh9Ri23iauKkDzsvRDB1ibmTHzFYk8DSAsKUgPhvyZHYdgH/Wn
+         3XjC1g4pAaFV4Z1JIz3eqPo4YVgGSUvC64+QgKsm1wQQ10QN/4ZeA9wOMLsCuphEH+t1
+         alc2DXv1K5/JMNntu53Xw/iqRJ3pyzdoBdkk2yXAvGBAM43xCJ3H1SiEIyO0ffrlqSfR
+         KCHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=HEwees8XhvhaflJvsRUeTPvTEcUS/Bl/bP4ozLUGjQU=;
-        b=JBpz1YngMtEfXamVSBsU+Tj23DmmU5JbO7d7hr6KUyPoF+rSpY4k2IWvJBxs92sOZO
-         6ByMlBDU4TzPmkv/HSmy1CGfkE+6iKoC1gRoVsHCH/SGOxVfpH84og2wCeCI2lOYeaqu
-         wm71BX2It0LQVaawEwddYgwvOc7R5SoxaoKaZ0n5koQX+H7Td99tp/wOaVoUehuu7k5+
-         /WScNy20pJxjDSe27cr6A8PnweRhGThjmXjF8yZGCeMEgJVM2F0YNU/w2ckZObR7BqL7
-         d8GwgTdCAaLibuNKAw05GglF55CtMrc8KSmGC6rkxr1SllUrBPqGYRsT6BrDzfhZwM4/
-         T20w==
-X-Gm-Message-State: AOAM533g85sWzaTZ34bHcjOQ0LxYzMWYohJrt/ilO9dP32ZME+pg4NwH
-        cdgTgHSG3dDSrJTxawk9QAp4+o6ut6uAwZGxoDhwmIF3vkE0
-X-Google-Smtp-Source: ABdhPJwSvBey4OTUTkxXaQGVsEi8AKNl4SrPBIb1jlQbKsxUERRw8I0GrZ5Lt4u9xEkU0ZqZncZNrEZby/yIsvsnGsvcjGun2oCv
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=qhvPLwCPXjMqFU2x4gEnxP4JjTqrO6GiJqIFdd+1yaY=;
+        b=r4x6SI6Jv80lXDXQFIvZOBF/sBuzaCDrm92qAHIGroQ9D5bNfh2JTsZv3nCemqvGTL
+         p4HrX8h+/ZtexVITGmnxiU9m6fgYRQFV6GLQHnueVyR6dkGqDOBO0PZjKJU+vsvqmx+C
+         +vtEt41ipXsTQAdbVAs2gUobuoek+m/NXSn6f2a7Xsx8PFOSdsOC+RSoRDE7PeYKcYdH
+         coIkiApCXO3rmEHNShAtfyyfJceXTcznZ5UEtrJPsA6wHWj+3IgojayGUiOM6UDFkZhT
+         GS23DUHw8kKL29nLvH1HxhZb70Y9TbWBqt1PEOiVpW23U3vI8owEHxAxlvpfl/0dSfRl
+         ZbOg==
+X-Gm-Message-State: AOAM530XBumrW7JH2QBG7Nz3Z3yDt0nhIMZSjEoAr/hMn05CaS3FkxAV
+        D5DZAlIcuTP1gRVVPYIMwD0=
+X-Google-Smtp-Source: ABdhPJzRH4Cwo8GKdnDVU07rflKqs4ddrzgi88E3WWwZnPBfqLP6xNZSSBxRrE9jOOyxKIw1tGTGqg==
+X-Received: by 2002:a17:902:6a82:: with SMTP id n2mr16617932plk.27.1595790403131;
+        Sun, 26 Jul 2020 12:06:43 -0700 (PDT)
+Received: from google.com ([2620:15c:211:1:7220:84ff:fe09:5e58])
+        by smtp.gmail.com with ESMTPSA id o11sm12418242pfp.88.2020.07.26.12.06.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 12:06:41 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 12:06:39 -0700
+From:   Minchan Kim <minchan@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH 10/14] bdi: remove BDI_CAP_SYNCHRONOUS_IO
+Message-ID: <20200726190639.GA560221@google.com>
+References: <20200726150333.305527-1-hch@lst.de>
+ <20200726150333.305527-11-hch@lst.de>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8a04:: with SMTP id w4mr11255446iod.15.1595790259993;
- Sun, 26 Jul 2020 12:04:19 -0700 (PDT)
-Date:   Sun, 26 Jul 2020 12:04:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009540e405ab5cdfcf@google.com>
-Subject: upstream boot error: BUG: soft lockup in smp_call_function
-From:   syzbot <syzbot+b33acc95084b5829b7c6@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        luto@kernel.org, mingo@redhat.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726150333.305527-11-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sun, Jul 26, 2020 at 05:03:29PM +0200, Christoph Hellwig wrote:
+> BDI_CAP_SYNCHRONOUS_IO is only checked in the swap code, and used to
+> decided if ->rw_page can be used on a block device.  Just check up for
+> the method instead.  The only complication is that zram needs a second
+> set of block_device_operations as it can switch between modes that
+> actually support ->rw_page and those who don't.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/block/brd.c           |  1 -
+>  drivers/block/zram/zram_drv.c | 19 +++++++++++++------
+>  drivers/nvdimm/btt.c          |  2 --
+>  drivers/nvdimm/pmem.c         |  1 -
+>  include/linux/backing-dev.h   |  9 ---------
+>  mm/swapfile.c                 |  2 +-
+>  6 files changed, 14 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+> index 2723a70eb85593..cc49a921339f77 100644
+> --- a/drivers/block/brd.c
+> +++ b/drivers/block/brd.c
+> @@ -403,7 +403,6 @@ static struct brd_device *brd_alloc(int i)
+>  	disk->flags		= GENHD_FL_EXT_DEVT;
+>  	sprintf(disk->disk_name, "ram%d", i);
+>  	set_capacity(disk, rd_size * 2);
+> -	brd->brd_queue->backing_dev_info->capabilities |= BDI_CAP_SYNCHRONOUS_IO;
+>  
+>  	/* Tell the block layer that this is not a rotational device */
+>  	blk_queue_flag_set(QUEUE_FLAG_NONROT, brd->brd_queue);
+> diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+> index 9100ac36670afc..d73ddf018fa65f 100644
+> --- a/drivers/block/zram/zram_drv.c
+> +++ b/drivers/block/zram/zram_drv.c
+> @@ -52,6 +52,9 @@ static unsigned int num_devices = 1;
+>   */
+>  static size_t huge_class_size;
+>  
+> +static const struct block_device_operations zram_devops;
+> +static const struct block_device_operations zram_wb_devops;
+> +
+>  static void zram_free_page(struct zram *zram, size_t index);
+>  static int zram_bvec_read(struct zram *zram, struct bio_vec *bvec,
+>  				u32 index, int offset, struct bio *bio);
+> @@ -408,8 +411,7 @@ static void reset_bdev(struct zram *zram)
+>  	zram->backing_dev = NULL;
+>  	zram->old_block_size = 0;
+>  	zram->bdev = NULL;
+> -	zram->disk->queue->backing_dev_info->capabilities |=
+> -				BDI_CAP_SYNCHRONOUS_IO;
+> +	zram->disk->fops = &zram_devops;
+>  	kvfree(zram->bitmap);
+>  	zram->bitmap = NULL;
+>  }
+> @@ -528,8 +530,7 @@ static ssize_t backing_dev_store(struct device *dev,
+>  	 * freely but in fact, IO is going on so finally could cause
+>  	 * use-after-free when the IO is really done.
+>  	 */
+> -	zram->disk->queue->backing_dev_info->capabilities &=
+> -			~BDI_CAP_SYNCHRONOUS_IO;
+> +	zram->disk->fops = &zram_wb_devops;
+>  	up_write(&zram->init_lock);
 
-syzbot found the following issue on:
+For zram, regardless of BDI_CAP_SYNCHRONOUS_IO, it have used rw_page
+every time on read/write path. This one with next patch will make zram
+use bio instead of rw_page when it's declared !BDI_CAP_SYNCHRONOUS_IO,
+which introduce regression for performance.
 
-HEAD commit:    8c26c87b Merge tag 'sound-5.8-rc7' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15069c64900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=455d284425bae0bd
-dashboard link: https://syzkaller.appspot.com/bug?extid=b33acc95084b5829b7c6
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+In the swap code, BDI_CAP_SYNCHRONOUS_IO is used to avoid swap cache
+when the page was private. bdev_read_page is not designed to rely on
+synchronous operation. That's why this patch breaks the old behavior.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b33acc95084b5829b7c6@syzkaller.appspotmail.com
-
-random: fast init done
-watchdog: BUG: soft lockup - CPU#2 stuck for 22s! [kworker/2:2:1225]
-Modules linked in:
-irq event stamp: 1613250
-hardirqs last  enabled at (1613249): [<ffffffff88000c42>] asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:585
-hardirqs last disabled at (1613250): [<ffffffff87e592ed>] idtentry_enter_cond_rcu+0x1d/0x50 arch/x86/entry/common.c:649
-softirqs last  enabled at (1609304): [<ffffffff88200748>] __do_softirq+0x748/0xa60 kernel/softirq.c:319
-softirqs last disabled at (1609289): [<ffffffff88000f0f>] asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
-CPU: 2 PID: 1225 Comm: kworker/2:2 Not tainted 5.8.0-rc6-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Workqueue: events drm_fb_helper_dirty_work
-RIP: 0010:csd_lock_wait kernel/smp.c:108 [inline]
-RIP: 0010:smp_call_function_many_cond+0x7c4/0x990 kernel/smp.c:555
-Code: 0a 00 85 ed 74 4d 48 b8 00 00 00 00 00 fc ff df 4d 89 f4 4c 89 f5 49 c1 ec 03 83 e5 07 49 01 c4 83 c5 03 e8 7e f3 0a 00 f3 90 <41> 0f b6 04 24 40 38 c5 7c 08 84 c0 0f 85 a2 00 00 00 8b 43 08 31
-RSP: 0018:ffffc90004257990 EFLAGS: 00000293
-RAX: 0000000000000000 RBX: ffffe8ffade098e0 RCX: ffffffff8168c938
-RDX: ffff888027918000 RSI: ffffffff8168c912 RDI: 0000000000000005
-RBP: 0000000000000003 R08: 0000000000000000 R09: ffffffff8aaed233
-R10: 0000000000000000 R11: 0000000000000000 R12: fffff91ff5bc131d
-R13: 0000000000000000 R14: ffffe8ffade098e8 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff88802d000000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8bf43cc9de CR3: 0000000009a79000 CR4: 0000000000340ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- smp_call_function_many kernel/smp.c:577 [inline]
- smp_call_function kernel/smp.c:599 [inline]
- on_each_cpu+0x4a/0x240 kernel/smp.c:699
- __purge_vmap_area_lazy+0x11e/0x1f20 mm/vmalloc.c:1367
- try_purge_vmap_area_lazy mm/vmalloc.c:1404 [inline]
- free_vmap_area_noflush+0x2bc/0x370 mm/vmalloc.c:1440
- free_unmap_vmap_area mm/vmalloc.c:1453 [inline]
- remove_vm_area+0x1ca/0x230 mm/vmalloc.c:2204
- vm_remove_mappings mm/vmalloc.c:2231 [inline]
- __vunmap+0x348/0xac0 mm/vmalloc.c:2293
- vunmap+0x50/0x60 mm/vmalloc.c:2398
- drm_gem_shmem_vunmap_locked drivers/gpu/drm/drm_gem_shmem_helper.c:323 [inline]
- drm_gem_shmem_vunmap+0x174/0x1c0 drivers/gpu/drm/drm_gem_shmem_helper.c:340
- drm_gem_vunmap+0x81/0x130 drivers/gpu/drm/drm_gem.c:1277
- drm_client_buffer_vunmap+0x51/0xa0 drivers/gpu/drm/drm_client.c:340
- drm_fb_helper_dirty_work+0x599/0x730 drivers/gpu/drm/drm_fb_helper.c:438
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>  
+>  	pr_info("setup backing device %s\n", file_name);
+> @@ -1819,6 +1820,13 @@ static const struct block_device_operations zram_devops = {
+>  	.owner = THIS_MODULE
+>  };
+>  
+> +static const struct block_device_operations zram_wb_devops = {
+> +	.open = zram_open,
+> +	.submit_bio = zram_submit_bio,
+> +	.swap_slot_free_notify = zram_slot_free_notify,
+> +	.owner = THIS_MODULE
+> +};
+> +
+>  static DEVICE_ATTR_WO(compact);
+>  static DEVICE_ATTR_RW(disksize);
+>  static DEVICE_ATTR_RO(initstate);
+> @@ -1946,8 +1954,7 @@ static int zram_add(void)
+>  	if (ZRAM_LOGICAL_BLOCK_SIZE == PAGE_SIZE)
+>  		blk_queue_max_write_zeroes_sectors(zram->disk->queue, UINT_MAX);
+>  
+> -	zram->disk->queue->backing_dev_info->capabilities |=
+> -			(BDI_CAP_STABLE_WRITES | BDI_CAP_SYNCHRONOUS_IO);
+> +	zram->disk->queue->backing_dev_info->capabilities |= BDI_CAP_STABLE_WRITES;
+>  	device_add_disk(NULL, zram->disk, zram_disk_attr_groups);
+>  
+>  	strlcpy(zram->compressor, default_compressor, sizeof(zram->compressor));
+> diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+> index 412d21d8f64351..b4184dc9b41eb4 100644
+> --- a/drivers/nvdimm/btt.c
+> +++ b/drivers/nvdimm/btt.c
+> @@ -1540,8 +1540,6 @@ static int btt_blk_init(struct btt *btt)
+>  	btt->btt_disk->private_data = btt;
+>  	btt->btt_disk->queue = btt->btt_queue;
+>  	btt->btt_disk->flags = GENHD_FL_EXT_DEVT;
+> -	btt->btt_disk->queue->backing_dev_info->capabilities |=
+> -			BDI_CAP_SYNCHRONOUS_IO;
+>  
+>  	blk_queue_logical_block_size(btt->btt_queue, btt->sector_size);
+>  	blk_queue_max_hw_sectors(btt->btt_queue, UINT_MAX);
+> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+> index 94790e6e0e4ce1..436b83fb24ad61 100644
+> --- a/drivers/nvdimm/pmem.c
+> +++ b/drivers/nvdimm/pmem.c
+> @@ -478,7 +478,6 @@ static int pmem_attach_disk(struct device *dev,
+>  	disk->queue		= q;
+>  	disk->flags		= GENHD_FL_EXT_DEVT;
+>  	disk->private_data	= pmem;
+> -	disk->queue->backing_dev_info->capabilities |= BDI_CAP_SYNCHRONOUS_IO;
+>  	nvdimm_namespace_disk_name(ndns, disk->disk_name);
+>  	set_capacity(disk, (pmem->size - pmem->pfn_pad - pmem->data_offset)
+>  			/ 512);
+> diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
+> index 52583b6f2ea05d..860ea33571bce5 100644
+> --- a/include/linux/backing-dev.h
+> +++ b/include/linux/backing-dev.h
+> @@ -122,9 +122,6 @@ int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_ratio);
+>   * BDI_CAP_NO_WRITEBACK:   Don't write pages back
+>   * BDI_CAP_NO_ACCT_WB:     Don't automatically account writeback pages
+>   * BDI_CAP_STRICTLIMIT:    Keep number of dirty pages below bdi threshold.
+> - *
+> - * BDI_CAP_SYNCHRONOUS_IO: Device is so fast that asynchronous IO would be
+> - *			   inefficient.
+>   */
+>  #define BDI_CAP_NO_ACCT_DIRTY	0x00000001
+>  #define BDI_CAP_NO_WRITEBACK	0x00000002
+> @@ -132,7 +129,6 @@ int bdi_set_max_ratio(struct backing_dev_info *bdi, unsigned int max_ratio);
+>  #define BDI_CAP_STABLE_WRITES	0x00000008
+>  #define BDI_CAP_STRICTLIMIT	0x00000010
+>  #define BDI_CAP_CGROUP_WRITEBACK 0x00000020
+> -#define BDI_CAP_SYNCHRONOUS_IO	0x00000040
+>  
+>  #define BDI_CAP_NO_ACCT_AND_WRITEBACK \
+>  	(BDI_CAP_NO_WRITEBACK | BDI_CAP_NO_ACCT_DIRTY | BDI_CAP_NO_ACCT_WB)
+> @@ -174,11 +170,6 @@ static inline int wb_congested(struct bdi_writeback *wb, int cong_bits)
+>  long congestion_wait(int sync, long timeout);
+>  long wait_iff_congested(int sync, long timeout);
+>  
+> -static inline bool bdi_cap_synchronous_io(struct backing_dev_info *bdi)
+> -{
+> -	return bdi->capabilities & BDI_CAP_SYNCHRONOUS_IO;
+> -}
+> -
+>  static inline bool bdi_cap_stable_pages_required(struct backing_dev_info *bdi)
+>  {
+>  	return bdi->capabilities & BDI_CAP_STABLE_WRITES;
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 6c26916e95fd4a..18eac97b10e502 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -3230,7 +3230,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+>  	if (bdi_cap_stable_pages_required(inode_to_bdi(inode)))
+>  		p->flags |= SWP_STABLE_WRITES;
+>  
+> -	if (bdi_cap_synchronous_io(inode_to_bdi(inode)))
+> +	if (p->bdev && p->bdev->bd_disk->fops->rw_page)
+>  		p->flags |= SWP_SYNCHRONOUS_IO;
+>  
+>  	if (p->bdev && blk_queue_nonrot(bdev_get_queue(p->bdev))) {
+> -- 
+> 2.27.0
+> 
