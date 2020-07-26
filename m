@@ -6,68 +6,71 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B293C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41B3C433EB
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78EB72065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7C62065F
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:18:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UahsiBU7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="STtIccUJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgGZPPH (ORCPT
+        id S1726845AbgGZPS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 11:15:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49092 "EHLO
+        Sun, 26 Jul 2020 11:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgGZPPG (ORCPT
+        with ESMTP id S1725982AbgGZPSZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 11:15:06 -0400
+        Sun, 26 Jul 2020 11:18:25 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97317C0619D2;
-        Sun, 26 Jul 2020 08:15:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB69BC0619D2;
+        Sun, 26 Jul 2020 08:18:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Ev1VURu58iCEGwGbY/Qyy/++BloxrBTIN1o2rMikomM=; b=UahsiBU7A6+9mo/fhhXeXL2qD3
-        TpiwmeEApj/aVfbo+YJfzwvcDEor563+JOoSvBV9gV+wz7MQP7YM54XfrAloA/1xc9FL6MHkOQ9tX
-        BwS+3LThvFdg/eKn1ycY9kZoNFFrHWKO6zm46gqDm7aJpkVEeNGKCjofB34Sr86Sv0noi0Id5gtMW
-        GeRtR4Wxu7qYP+aOx8Rtqcagi37vAizrZWTrOwTlw+4/PRtZUTTLFjegagAFJm/Aa4Xoj1WIKGNXl
-        ZVLocjCeMJejFwju0nnL8F+kVBLvJALZ1rjnN5oSmgqI5wp97EN5kNUEzfprzjl9Z26jCR81dl8AU
-        JFCXqLDw==;
+        bh=khbJGT4iiSr5u+iKgwn7bl9+62UCe+CYOlUWfazTxPM=; b=STtIccUJbrGHRgBJdhNTayz1Ld
+        ljv3MsUoYDsnK8KLZQFsoDnj6ZI7DzwasiQPTfoO9qzR6ViwsCgKrP566P9Ckq3JaJteeiknLstel
+        N2djokW45aiJ75/ZtjAF3dBac/ckrf+MdlBZ/LWWMr9ft3tndvJG5LkG+ITi/fX06N4UlOX/EY1SM
+        l7HYYllyigDLLipFkUIQ48f46/OE08cV4ze3kiWNXcoq6fRZDQj1y1mwx0v5Ya7veVhxM2GxFUWST
+        OHl1fbiMjdeZNkplTIn2JWt+leI8Ry1ze0Ee7N0H28GXr1EeFAp2blNGoopSuWuStZoZMvmML0VP7
+        nj/IZIEA==;
 Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jziMi-0006XA-1t; Sun, 26 Jul 2020 15:15:04 +0000
-Date:   Sun, 26 Jul 2020 16:15:04 +0100
+        id 1jziPr-0006f6-2o; Sun, 26 Jul 2020 15:18:19 +0000
+Date:   Sun, 26 Jul 2020 16:18:19 +0100
 From:   Christoph Hellwig <hch@infradead.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Brian Foster <bfoster@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iomap: Ensure iop->uptodate matches PageUptodate
-Message-ID: <20200726151504.GA24553@infradead.org>
-References: <20200726091052.30576-1-willy@infradead.org>
+To:     Kanchan Joshi <joshi.k@samsung.com>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, bcrl@kvack.org,
+        willy@infradead.org, hch@infradead.org, Damien.LeMoal@wdc.com,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, SelvaKumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Subject: Re: [PATCH v4 2/6] fs: change ki_complete interface to support 64bit
+ ret2
+Message-ID: <20200726151819.GB25328@infradead.org>
+References: <1595605762-17010-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200724155324epcas5p18e1d3b4402d1e4a8eca87d0b56a3fa9b@epcas5p1.samsung.com>
+ <1595605762-17010-3-git-send-email-joshi.k@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200726091052.30576-1-willy@infradead.org>
+In-Reply-To: <1595605762-17010-3-git-send-email-joshi.k@samsung.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 10:10:52AM +0100, Matthew Wilcox (Oracle) wrote:
-> If the filesystem has block size < page size and we end up calling
-> iomap_page_create() in iomap_page_mkwrite_actor(), the uptodate bits
-> would be zero, which causes us to skip writeback of blocks which are
-> !uptodate in iomap_writepage_map().  This can lead to user data loss.
+On Fri, Jul 24, 2020 at 09:19:18PM +0530, Kanchan Joshi wrote:
+> From: SelvaKumar S <selvakuma.s1@samsung.com>
 > 
-> Found using generic/127 with the THP patches.  I don't think this can be
-> reproduced on mainline using that test (the THP code causes iomap_pages
-> to be discarded more frequently), but inspection shows it can happen
-> with an appropriate series of operations.
+> kiocb->ki_complete(...,long ret2) - change ret2 to long long.
+> This becomes handy to return 64bit written-offset with appending write.
+> Change callers using ki_complete prototype.
 
-Looks good,
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+There is no need for this at all.  By the time ki_complete is called
+ki_pos contains the new offset, and you just have to subtract res from
+that.
