@@ -2,138 +2,100 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF44C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F426C433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F10BB2065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:02:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595775771;
-	bh=f3y4+0LTpamybnhtv3IjlJLojrpbCyRtRcCbDJsbJck=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZyLx/kN6VL2CgcrGrOHY37lWZcSioYOa8BsaK8rdSdwOkq/uuyOUBlTEVO7punDb2
-	 F6/lXhVqow441o4QXxxASSeD+UScvhz6nOUAJDGiHkQHG1H4OV2oFLCETuNnqwExsU
-	 3NNQUN2xTaPDieoVEeo3um6HBwoKZ9NQRLhe6PLs=
+	by mail.kernel.org (Postfix) with ESMTP id 34F362073E
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 15:03:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nzfTTc0U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgGZPCt (ORCPT
+        id S1726782AbgGZPDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 11:02:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgGZPCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 11:02:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00B0E2065F;
-        Sun, 26 Jul 2020 15:02:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595775767;
-        bh=f3y4+0LTpamybnhtv3IjlJLojrpbCyRtRcCbDJsbJck=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FoDzpgFXVa63BwD6myxZjyYjnSp819WnkLpTTmaFPnG9qXuOfZcqlIbbkmIU378l2
-         mnpQTke+lH6n2C5eIPSjBhuk5z2TFLZLaWQxo1p2XQUQ66k5fx8CdMEh7S5cvHr/3d
-         WSI5KB9gzuFXzoEy7PtKfTJzGRxI7UI9K5OW2krg=
-Date:   Sun, 26 Jul 2020 17:02:44 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Aditya Jain <aditya.jainadityajain.jain@gmail.com>
-Cc:     devel@driverdev.osuosl.org, hdegoede@redhat.com,
-        linux-kernel@vger.kernel.org, Larry.Finger@lwfinger.net
-Subject: Re: [PATCH v3 3/4] staging: rtl8723bs: include: Further clean up
- function declarations
-Message-ID: <20200726150244.GD452766@kroah.com>
-References: <20200726141831.2662-1-aditya.jainadityajain.jain@gmail.com>
- <20200726142013.2891-1-aditya.jainadityajain.jain@gmail.com>
- <20200726142013.2891-3-aditya.jainadityajain.jain@gmail.com>
+        Sun, 26 Jul 2020 11:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgGZPDt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 11:03:49 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABB8C0619D2;
+        Sun, 26 Jul 2020 08:03:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=7sLr773opB4TCq8qFsHUwDVwSWroJwloCS8BnU42JTo=; b=nzfTTc0USVN6e4AgohXkVVBtnB
+        ao8yENWY5PaMchxhF88PqoEDZtsOvvDBfsVqL5hxXs1TfPKZsT0QKdC04koNuyIqUVWff6t7WpMsO
+        6ROQmy7Z3SuqIBiB5MY/GlauBE2dCXtfkRYHkWeVcikSjYbCzVU2/9edWtltJgwhQPO8y9ky/Xq/n
+        Dq60znZ4ygSsHIMpgg0I35t1JLX8qrL50CEXCilpvkDH9ZQuY5bE4HRktCNPrXIuHlRbKpJ2f0ipn
+        dC9zHgaHUxCnVaVQ4ZdLhkeU0PuMsURYlqj8BSpk8D6OEOUCXOpRijEYlhL5KzDLJWB3Oi9DhpYgb
+        NRdWrmvQ==;
+Received: from [2001:4bb8:18c:2acc:2375:88ff:9f84:118d] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jziBe-0005fc-UA; Sun, 26 Jul 2020 15:03:39 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Song Liu <song@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Minchan Kim <minchan@kernel.org>,
+        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org
+Subject: [PATCH 02/14] drbd: remove dead code in device_to_statistics
+Date:   Sun, 26 Jul 2020 17:03:21 +0200
+Message-Id: <20200726150333.305527-3-hch@lst.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200726150333.305527-1-hch@lst.de>
+References: <20200726150333.305527-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726142013.2891-3-aditya.jainadityajain.jain@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 07:50:12PM +0530, Aditya Jain wrote:
-> Cleaning up messy multiline function declarations in hal_phy_cfg.h
-> 
-> This patch is a continuation of patch "Clean up function declarations"
+Ever since the switch to blk-mq, a lower device not used for VM
+writeback will not be marked congested, so the check will never
+trigger.
 
-This should be merged with that patch, no reason to make it separate.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/block/drbd/drbd_nl.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-> 
-> Signed-off-by: Aditya Jain <aditya.jainadityajain.jain@gmail.com>
-> ---
->  .../staging/rtl8723bs/include/hal_phy_cfg.h   | 56 ++++++-------------
->  1 file changed, 16 insertions(+), 40 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
-> index 3cec06e9f359..2b059c9c7851 100644
-> --- a/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
-> +++ b/drivers/staging/rtl8723bs/include/hal_phy_cfg.h
-> @@ -46,49 +46,25 @@ s32 PHY_MACConfig8723B(struct adapter *padapter);
->  void PHY_SetTxPowerIndex(struct adapter *Adapter, u32 PowerIndex,
->  			 u8 RFPath, u8 Rate);
->  
-> -u8
-> -PHY_GetTxPowerIndex(
-> -struct adapter *padapter,
-> -u8 			RFPath,
-> -u8 			Rate,
-> -enum CHANNEL_WIDTH		BandWidth,
-> -u8 			Channel
-> -	);
-> -
-> -void
-> -PHY_GetTxPowerLevel8723B(
-> -struct adapter *Adapter,
-> -	s32 *powerlevel
-> -	);
-> -
-> -void
-> -PHY_SetTxPowerLevel8723B(
-> -struct adapter *Adapter,
-> -u8 	channel
-> -	);
-> -
-> -void
-> -PHY_SetBWMode8723B(
-> -struct adapter *Adapter,
-> -enum CHANNEL_WIDTH			Bandwidth,	/*  20M or 40M */
-> -unsigned char 			Offset		/*  Upper, Lower, or Don't care */
-> -);
-> +u8 PHY_GetTxPowerIndex(struct adapter *padapter, u8 RFPath, u8 Rate,
-> +			enum CHANNEL_WIDTH BandWidth, u8 Channel);
-> +
-> +void PHY_GetTxPowerLevel8723B(struct adapter *Adapter, s32 *powerlevel);
-> +
-> +void PHY_SetTxPowerLevel8723B(struct adapter *Adapter, u8 channel);
->  
-> -void
-> -PHY_SwChnl8723B(/*  Call after initialization */
-> -struct adapter *Adapter,
-> -u8 channel
-> -	);
-> -
-> -void
-> -PHY_SetSwChnlBWMode8723B(
-> -struct adapter *Adapter,
-> -u8 			channel,
-> -enum CHANNEL_WIDTH		Bandwidth,
-> -u8 			Offset40,
-> -u8 			Offset80
-> +void PHY_SetBWMode8723B(struct adapter *Adapter,
-> +			enum CHANNEL_WIDTH Bandwidth,	/*  20M or 40M */
-> +			unsigned char Offset	/*  Upper, Lower, or Don't care */
+diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
+index d0d9a549b58388..650372ee2c7822 100644
+--- a/drivers/block/drbd/drbd_nl.c
++++ b/drivers/block/drbd/drbd_nl.c
+@@ -3370,7 +3370,6 @@ static void device_to_statistics(struct device_statistics *s,
+ 	if (get_ldev(device)) {
+ 		struct drbd_md *md = &device->ldev->md;
+ 		u64 *history_uuids = (u64 *)s->history_uuids;
+-		struct request_queue *q;
+ 		int n;
+ 
+ 		spin_lock_irq(&md->uuid_lock);
+@@ -3384,11 +3383,6 @@ static void device_to_statistics(struct device_statistics *s,
+ 		spin_unlock_irq(&md->uuid_lock);
+ 
+ 		s->dev_disk_flags = md->flags;
+-		q = bdev_get_queue(device->ldev->backing_bdev);
+-		s->dev_lower_blocked =
+-			bdi_congested(q->backing_dev_info,
+-				      (1 << WB_async_congested) |
+-				      (1 << WB_sync_congested));
+ 		put_ldev(device);
+ 	}
+ 	s->dev_size = drbd_get_capacity(device->this_bdev);
+-- 
+2.27.0
 
-Those comments should go at the top of the function declaration, in
-kernel doc format.
-
-thanks
-
-greg k-h
