@@ -2,97 +2,141 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B01C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1A8720738
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:15:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V0fMxFu/"
+	by mail.kernel.org (Postfix) with ESMTP id C4A6020714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 07:17:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595747847;
+	bh=aEkIV5Yc1/XFjZwqDPVoFSYk2JX22XKln/kgJ0przBA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dXsehR9PrHXlhepl4kTA4jCK9ft5JBsbTwZo/INNRF3JP0ZNFDolxJrmWtj47EPR7
+	 capbOAFv53xXZ0r8QpwqyM1wo5tItcIroj26jLtRxZIDhmlZd9mlcOJqTcQcR4TKJj
+	 hZgPPhLHGgx8utiBXmnExF8dR4k+rE1+i4num4No=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgGZHPj (ORCPT
+        id S1726884AbgGZHR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 03:15:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbgGZHOL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 03:14:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D604C0619D2;
-        Sun, 26 Jul 2020 00:14:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=wH1km2ojPC19iQ5ljU6mKThZqRhQ0p6SNiSca9bvcb4=; b=V0fMxFu/0VNxrPNwteA7uYcULW
-        cCHPuDsdTokcNv0XCQjqoNxI0g9r1xe/LDruU/3YARx+BDs+uFffuCPADxWpms+TTYuJlOycbuKCk
-        7+UPYFA3htZUyt/JA79OXkQ4FsGb33SZ3n3mu/PSQWnfRFocGlmjqsmX+n4qAEisxTufK/OIB1ytM
-        aIOtDh8uS7PxfAeXeEYcSaOvz+k+oTVOW/vdATXqEoJgbIrrDPgjJIilTBwnbyT0vz28Jp9BfwGOI
-        bCRgVdQQSyqM1zsqEPPYVB7FRlv5qPpr2CjwC+kQcLGtMTiyN/SQ/5R/BJivGd0XX/P/7DPRhyAlo
-        TiqesjPQ==;
-Received: from [2001:4bb8:18c:2acc:5ff1:d0b0:8643:670e] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzarI-0002P0-0A; Sun, 26 Jul 2020 07:14:08 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org
-Subject: [PATCH 05/21] init: initialize ramdisk_execute_command at compile time
-Date:   Sun, 26 Jul 2020 09:13:40 +0200
-Message-Id: <20200726071356.287160-6-hch@lst.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200726071356.287160-1-hch@lst.de>
-References: <20200726071356.287160-1-hch@lst.de>
+        Sun, 26 Jul 2020 03:17:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbgGZHR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 03:17:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E267320658;
+        Sun, 26 Jul 2020 07:17:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595747845;
+        bh=aEkIV5Yc1/XFjZwqDPVoFSYk2JX22XKln/kgJ0przBA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IUJ1TV40nHKMyOC0OjL/UzjKvO8R56vep5x+d05V4vytQAonEDwHXoaNDLJPOFfG2
+         vFxyrEjHETtPrY0b/7+aH5sygMOK/DGlQZ4w+Lo4VUAHjYGTBzPGVwwuepck67Bno0
+         xKm/tPegTBb7NZeFvuOuKanotC/P5eoJfPZAjnbI=
+Date:   Sun, 26 Jul 2020 09:17:23 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] Module argument to control whether intel-spi-pci
+ attempts to turn the SPI flash chip writeable
+Message-ID: <20200726071723.GB441916@kroah.com>
+References: <20200724212853.11601-1-daniel.gutson@eclypsium.com>
+ <20200725055649.GA1047853@kroah.com>
+ <CAFmMkTE_dT9+WJYyb19uQ_HmgJWZSARBy6PveheQJk++NuGbkQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <CAFmMkTE_dT9+WJYyb19uQ_HmgJWZSARBy6PveheQJk++NuGbkQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set ramdisk_execute_command to "/init" at compile time.  The command
-line can still override it, but this saves a few instructions and
-removes a NULL check.
+On Sat, Jul 25, 2020 at 02:20:03PM -0300, Daniel Gutson wrote:
+> El sáb., 25 jul. 2020 2:56 a. m., Greg Kroah-Hartman <
+> gregkh@linuxfoundation.org> escribió:
+> 
+> > On Fri, Jul 24, 2020 at 06:28:53PM -0300, Daniel Gutson wrote:
+> > > Currently, intel-spi has a module argument that controls whether the
+> > driver
+> > > attempts to turn the SPI flash chip writeable. The default value
+> > > is FALSE (don't try to make it writeable).
+> > > However, this flag applies only for a number of devices, coming from the
+> > > platform driver, whereas the devices detected through the PCI driver
+> > > (intel-spi-pci) are not subject to this check since the configuration
+> > > takes place in intel-spi-pci which doesn't have an argument.
+> > >
+> > > That's why I propose this patch to add such argument to intel-spi-pci,
+> > > so the user can control whether the driver tries to make the chip
+> > > writeable or not, being the default FALSE as is the argument of
+> > > intel-spi.
+> > >
+> > > Signed-off-by: Daniel Gutson <daniel.gutson@eclypsium.com>
+> > > ---
+> > >  drivers/mtd/spi-nor/controllers/intel-spi-pci.c | 16 +++++++++++-----
+> > >  1 file changed, 11 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
+> > b/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
+> > > index 81329f680bec..77e57450f166 100644
+> > > --- a/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
+> > > +++ b/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
+> > > @@ -24,6 +24,10 @@ static const struct intel_spi_boardinfo cnl_info = {
+> > >       .type = INTEL_SPI_CNL,
+> > >  };
+> > >
+> > > +static bool writeable;
+> > > +module_param(writeable, bool, 0);
+> > > +MODULE_PARM_DESC(writeable, "Enable write access to SPI flash chip
+> > (default=0)");
+> >
+> > Ick, this isn't the 1990's, please do not add new module parameters,
+> > they are a major pain to work with and only work on a global basis, not
+> > on a per-device basis.
+> >
+> > No user will remember how to use this, as it isn't documented anywhere
+> > either.  Can you make this a sysfs attribute or something, or better
+> > yet, make it "just work" depending on the device type?
+> >
+> 
+> 1) I just did the same that intel-spi.c does.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- init/main.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+No need to copy bad examples :)
 
-diff --git a/init/main.c b/init/main.c
-index db0621dfbb0468..c2c9143db96795 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -154,7 +154,7 @@ static bool initargs_found;
- #endif
- 
- static char *execute_command;
--static char *ramdisk_execute_command;
-+static char *ramdisk_execute_command = "/init";
- 
- /*
-  * Used to generate warnings if static_key manipulation functions are used
-@@ -1514,10 +1514,6 @@ static noinline void __init kernel_init_freeable(void)
- 	 * check if there is an early userspace init.  If yes, let it do all
- 	 * the work
- 	 */
--
--	if (!ramdisk_execute_command)
--		ramdisk_execute_command = "/init";
--
- 	if (ksys_access((const char __user *)
- 			ramdisk_execute_command, 0) != 0) {
- 		ramdisk_execute_command = NULL;
--- 
-2.27.0
+> You need to understand that there's a set of DIDs coming from the
+> lpc_ich (and then the platform) driver, and another set from
+> intel-spi-pci. The first set is subject to the check, the second
+> doesn't. So there is no "just work" as I understand it.
 
+I have no idea what "DID" is here, sorry.
+
+But why do you want to write it?
+
+> 2) this is an initialization argument, I could make it always NOT attempt
+> to make the chip writable, and a system attribute to turn it writable
+> post-initialization but the behavior is not the same. In any ways, as I
+> mentioned before, some DIDs will be covered by the existing argument of
+> intel-spi and other DIDs by this sysfs attribute, becoming IMHO
+> inconsistent from the user POV.
+
+What sysfs attribute?  This is a module parameter :(
+
+totally confused,
+
+greg k-h
