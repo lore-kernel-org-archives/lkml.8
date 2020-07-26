@@ -2,132 +2,131 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDFEC433E4
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876A7C433E1
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4766D206E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:26:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595805988;
-	bh=0VlfzMzEoDv3JMuejseGbjOabYqqKKALYkgoIy5Lu5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vz/6VJ7reKPfpVL1KphKgzYg3jPmqm/3a+KRyGCEt2/jSWDQiQT+bbtW5xTVmSrfC
-	 h9nDmW74kA7QUw/RwPPZgjnIKo7FQrbWhelMXkxvzkN8jBTd7z6rDmH6ImzZy04UoE
-	 ZboPqrxrbNIhPvAVkt4s10XqiIDB/oTsxo8Za+wQ=
+	by mail.kernel.org (Postfix) with ESMTP id 64AB6206E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 23:30:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUH7Lahw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgGZX01 (ORCPT
+        id S1727956AbgGZXaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 19:26:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbgGZX01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 19:26:27 -0400
-Received: from earth.universe (unknown [185.213.155.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3636B206E3;
-        Sun, 26 Jul 2020 23:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595805986;
-        bh=0VlfzMzEoDv3JMuejseGbjOabYqqKKALYkgoIy5Lu5U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fzodRvKKjQypa87M1xak9FCCUPyCdpuTekk2w2dT4DvuZNLLdTNFgx/TjOh4o37To
-         pGnz76Y/VGOb5de2oWk+qjxS6leyDmojtU50PqpwWWnVor5dYpNk6j2ZR5J67I4NsO
-         kSE3nmEWrvDdM5/SkhPxmo5TtgoZ6KU7vj9X8l7M=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 68B3D3C0B87; Mon, 27 Jul 2020 01:26:24 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 01:26:24 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Cc:     pali@kernel.org, robh@kernel.org, afd@ti.com, dmurphy@ti.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sspatil@android.com
-Subject: Re: [PATCH v17 0/4] Add JEITA properties and introduce the bq2515x
- charger
-Message-ID: <20200726232624.wmrcvjznbrxibc5n@earth.universe>
-References: <20200720204400.7351-1-r-rivera-matos@ti.com>
+        Sun, 26 Jul 2020 19:30:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbgGZXaJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 19:30:09 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082ABC0619D2;
+        Sun, 26 Jul 2020 16:30:08 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t6so2296565ljk.9;
+        Sun, 26 Jul 2020 16:30:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PAu1KY0p6PHiyFmlvXCLwKle62tn9il6DTEVsfWR1Ao=;
+        b=dUH7LahwQFmnVVH3XTbmrGcYfoe4XYGECuxezQr8GlgoUfwLvczCoAE+T9YLD4lrRd
+         nX7Qr0c7hc+CJDRQNkOF0YgiuNz9R5ZMc75CHJ+3/T2904Z9ErCkKzqH0wX12r1GIf+p
+         +RW3qEiscxNAw9tFjjgMp404PNOynQoweZZC4Qn696swubbbT8Xpr8BgYewZ/dy2GYJ4
+         RYsVPrGvXNvCLVsjnUINXiEQ6LrZufmjnnOWIU1WCGHrgTf5x9JepT3ZGu/C5cb2D2iU
+         +tQ7bRI5Bl/I/wL7cHOf9kzrxrreAcHfHAKSkGZadjzlRfEQBqB0uNhmM0XjxCroSgWf
+         1F7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PAu1KY0p6PHiyFmlvXCLwKle62tn9il6DTEVsfWR1Ao=;
+        b=oaLgE6NUvp3XXITN/dTE1fIYVJUqFhXtwMCQf9cgh6w1VR2XH84N41uDQ7kLxucWSi
+         AhrACj6GUiT1EeaCa7aV9J+hLFk/F9ljB2sAAuRiZABDV0a7plXelll6JE0Xs5BgeYIN
+         ekkt5SdkDEVo3VcTc6IkNNwZLEkY4m0M6R6oa/ETGc5fbzlcZOOXGjxDZexuEiaHpTmi
+         IaoZRsQ+r8PFH8prDXB29cI2Gb8K7Xu1FfLzVdWIJsW/xJKMbQa+yazFMX04MhuY+u5a
+         OLVtxgICfSowzWk+1LQGWP2iVZD749GRDY9dgpnZvUFH77yVHSN7hodvPCCsAUd2pqV9
+         GXfw==
+X-Gm-Message-State: AOAM532leFWlPHsA5BlXXw7uG7xng3v3Sd42hKXWKwTTGdH+FvYNRZN4
+        wZTnT4HidGNdFuX71Fl6M4SPZp6g
+X-Google-Smtp-Source: ABdhPJzNNxD84bO09GwYYRcLJmxDb9/vLPRaUQddSIL1G8k8RUQGPO7xemuu+O5l0GACd2kADXL1rw==
+X-Received: by 2002:a2e:8702:: with SMTP id m2mr3621248lji.183.1595806206140;
+        Sun, 26 Jul 2020 16:30:06 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-76-12-16.pppoe.mtu-net.ru. [91.76.12.16])
+        by smtp.googlemail.com with ESMTPSA id c22sm106679ljk.128.2020.07.26.16.30.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Jul 2020 16:30:05 -0700 (PDT)
+Subject: Re: [RFC PATCH v4 01/14] i2c: tegra: Don't mark VI I2C as IRQ safe
+ runtime PM
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, robh+dt@kernel.org,
+        helen.koike@collabora.com
+Cc:     sboyd@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+References: <1595548272-9809-1-git-send-email-skomatineni@nvidia.com>
+ <1595548272-9809-2-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <56aedefa-fb5d-2251-da71-5cdf0e357576@gmail.com>
+Date:   Mon, 27 Jul 2020 02:30:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="maykluao2dom5sag"
-Content-Disposition: inline
-In-Reply-To: <20200720204400.7351-1-r-rivera-matos@ti.com>
+In-Reply-To: <1595548272-9809-2-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+24.07.2020 02:50, Sowjanya Komatineni пишет:
+> Tegra VI I2C is part of VE power domain and typically used for
+> camera usecases.
+> 
+> VE power domain is not always on and is non-IRQ safe. So, IRQ safe
+> device cannot be attached to a non-IRQ safe domain as it prevents
+> powering off the PM domain and generic power domain driver will warn.
+> 
+> Current driver marks all I2C devices as IRQ safe and VI I2C device
+> does not require IRQ safe as it will not be used for atomic transfers.
+> 
+> This patch has fix to make VI I2C as non-IRQ safe.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index 1577296..3be1018 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -1750,7 +1750,15 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+>  		goto unprepare_slow_clk;
+>  	}
+>  
+> -	pm_runtime_irq_safe(&pdev->dev);
+> +	/*
+> +	 * VI I2C is in VE power domain which is not always on and not
+> +	 * an IRQ safe. So, IRQ safe device can't be attached to a non-IRQ
+> +	 * safe domain as it prevents powering off the PM domain.
+> +	 * Also, VI I2C device don't need to use runtime IRQ safe as it will
+> +	 * not be used for atomic transfers.
+> +	 */
+> +	if (!i2c_dev->is_vi)
+> +		pm_runtime_irq_safe(&pdev->dev);
+>  	pm_runtime_enable(&pdev->dev);
+>  	if (!pm_runtime_enabled(&pdev->dev)) {
+>  		ret = tegra_i2c_runtime_resume(&pdev->dev);
+> 
 
---maykluao2dom5sag
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Jul 20, 2020 at 03:43:56PM -0500, Ricardo Rivera-Matos wrote:
-> Hello,
->=20
-> This patchset adds additional health properties to the power_supply heade=
-r.
-> These additional properties are taken from the JEITA specification. This
-> patchset also introduces the bq2515x family of charging ICs.
->=20
-> Dan Murphy (2):
->   power_supply: Add additional health properties to the header
->   dt-bindings: power: Convert battery.txt to battery.yaml
->=20
-> Ricardo Rivera-Matos (2):
->   dt-bindings: power: Add the bindings for the bq2515x family of
->     chargers.
->   power: supply: bq25150 introduce the bq25150
-
-I merged patches 1,3,4 (the bq2515x ones). The patch converting
-battery.txt to battery.yaml is not ok in its current form.
-
--- Sebastian
-
->  Documentation/ABI/testing/sysfs-class-power   |    3 +-
->  .../bindings/power/supply/battery.txt         |   86 +-
->  .../bindings/power/supply/battery.yaml        |  157 +++
->  .../bindings/power/supply/bq2515x.yaml        |   93 ++
->  drivers/power/supply/Kconfig                  |   13 +
->  drivers/power/supply/Makefile                 |    1 +
->  drivers/power/supply/bq2515x_charger.c        | 1169 +++++++++++++++++
->  drivers/power/supply/power_supply_sysfs.c     |    3 +
->  include/linux/power_supply.h                  |    3 +
->  9 files changed, 1442 insertions(+), 86 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/batter=
-y.yaml
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515=
-x.yaml
->  create mode 100644 drivers/power/supply/bq2515x_charger.c
->=20
-> --=20
-> 2.27.0
->=20
-
---maykluao2dom5sag
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8eESAACgkQ2O7X88g7
-+prAwA/8Cq8HvmjsJjY0MKETTACC3nSAazOZGwZwdPEumJ6O+isQp3SxHnLhrFFe
-0lqP++duLGG2raQJzHDqNpu4plw71hY3aNWEE5V2u3zQ18PJMzvC8zB/Loqt7Ni7
-1TORkY670e39/EgaSJR+ZVzzk1OBqqvcUQaakcieOw80wvKRfNjs8vh3spb4TmRX
-JgetZZUOBUWqara7UbEnHkMMf7B/lABP8tiakP+8+mVYicEaiUmqAzUprY1Av2T6
-vxV8g91orMOjqAyH/oK9Z90gFUbjjyauS2lFxLGnFS3sO70O4NyDfFLekiKHmvxS
-uEeLvr63QcbWlUw7/BvCypIRi8MJ965hENLTsMQ74BAHC31WbFOLoNuSnb3NtO8Z
-rKnx6k76M6+Hm7X+GFLFzKo4Q/94SL8bxxfOK5PrDy5Xi+OB/PzfAE4kTomDhO5N
-BKmWUpcl+zIlJ09Ejez4w0wndVrvaHNcc4CAoxwTEthw/yRqrkCJop61HKUPjL62
-A5E2HLtQRdR3u4ypLN4yXUkAYdaKFYCnm+Xh8X4C3Zh6n4nTCcFE4e39o3wu8OdL
-KJZcK4gOqt5FxXSCMHV5L63f3GGIPaAbZLhtdF35T6e+0MM/2odbMpu5bbG1Tjox
-wJLKtVQljzmocuZjVBzGEfpS0rwHWH4x+vbW/Yx4dNDJzbsqZm0=
-=zotz
------END PGP SIGNATURE-----
-
---maykluao2dom5sag--
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
