@@ -2,218 +2,156 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B0DC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDCBC433E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D33C2065F
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41BE1206E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 18:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOqK9Udg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eQkOKLSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgGZSdd (ORCPT
+        id S1727780AbgGZSgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 14:33:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgGZSdc (ORCPT
+        Sun, 26 Jul 2020 14:36:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48439 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726072AbgGZSgI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 14:33:32 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68676C0619D2;
-        Sun, 26 Jul 2020 11:33:32 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id b18so6057455ilo.12;
-        Sun, 26 Jul 2020 11:33:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JjG7ZoYlTIlU86cx3B03lhQ3nQqrfFEpaGS9K3Q6ArU=;
-        b=XOqK9Udgi1RcHDYkb5Lc5J6ccoEOeVxHwmqMaf45E7oWVRi5K8qH6Va0CW+Lyu/jqt
-         NdhHW8EazqYMHTAmMGLmhepPswk6BYHr9KddZxu04t8KUGL21QIjxpfIvDMwllsh2E1w
-         p3gSTe1ziK+8TrbxaSOI6Tpbpv0seHofvm5fQp2a5HOb3JBEFMaIVPiaVkOp8zuwFnKv
-         Ax0+SMKLOgoqu7BTO4FSIqf5RrXZQmQknb/MgvznUBiP0TT03vA1Vax80/ZoXJQDqBkn
-         cko3oER9r0pEb7MIQLvs1enJGOadJrcGuSff8ozVx2KcYFc+1cHEqs9fipLtf1AOcKyk
-         WnCA==
+        Sun, 26 Jul 2020 14:36:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595788565;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CCd534kbcEa29GKpOVkxv14/VG61uCp+SScamUpw60w=;
+        b=eQkOKLSp4/HmH/mQc9lqo93C6Tj34Dx8bTHiCBPvI+tlRyNDScWTCCQvY7eV0r2qOesvQ/
+        sfHkumiGrnAaWbH/bHtX+XzV2riFPFCGlxnv2HPXpUKPqRZ0Bxa0/gryedsGE/X4mOj+gJ
+        CyiiSt616lnTnNrrXMsjKE9MJIP0Ldk=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-86-cfygYChVPMOk_SkIQ234zQ-1; Sun, 26 Jul 2020 14:36:00 -0400
+X-MC-Unique: cfygYChVPMOk_SkIQ234zQ-1
+Received: by mail-lf1-f69.google.com with SMTP id c204so3634588lfg.16
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 11:36:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JjG7ZoYlTIlU86cx3B03lhQ3nQqrfFEpaGS9K3Q6ArU=;
-        b=oBgGBF2N7wwoJMyX4o0BKOLyMpqhJO7mOdAJJOHwkQZjKlcsrNRYERhI9loex+58A/
-         /3d59SkHSc8LQcLXArHXoaECYMVCHaPDhGEMpVUdfr61saKY7M/fMO2bSRp7nZgItxL0
-         573tEhJxT+/LCtpqvypDB8TVoIDCGo9t9BVYcgqxXUZz9AyZqEo7zvUTWxrG3b1QtcDa
-         ei/7gs/FNaKKHFH409MFb5QHPCDmZki/deundsGBJe9aMdwtqwum+ifSYzekawfNUKNk
-         otyEV18PmjHoUBAdcfuqFYHZRXbyebhsnifLlJCoismhQEaxdnAKCtrb5KoG4CoOhtIj
-         TcNA==
-X-Gm-Message-State: AOAM530WOAh5BFuupX3/nX4Dw/8oNPHiDqvr8nZY6XVMneyH7kT1F8O2
-        8HO+GBi8VmvF8PavkqPV56SB4gYmqdgqz3wxNzyfwbU=
-X-Google-Smtp-Source: ABdhPJwZ78Ret661pOnPu9acx4lFJWN7fHXGU3s9HQMQj393fTZdEDKU8RoNSZ9LLsSXDFF1IYwqF1nS72wDxWMYEqg=
-X-Received: by 2002:a92:b112:: with SMTP id t18mr11662345ilh.172.1595788411185;
- Sun, 26 Jul 2020 11:33:31 -0700 (PDT)
+        bh=CCd534kbcEa29GKpOVkxv14/VG61uCp+SScamUpw60w=;
+        b=OWGhmWDmX/idLH9XcU5Ut5RG+RNj9GN5LoCyZLP3lBe34BX39mB2SdUPbKzG3cTuco
+         RV0W6G4dXTYMpQtKxvhxXMKmFgWUCu4842GNcAUA6I2qe6leGoYGmzBUMjswcyL5rE03
+         03cns1SdbYvcPdN71qoi6VUU24byRf8cE6BlF3/NX/9We67p3Co69aBsMxIeSBn63Bvn
+         yPAybrCXOdru0IVKouMinpJGlGoX9fHkrIDvoFbd8blRo9E+z/fpLGjLCi3lTUU8yjJy
+         rpr88rL/qepwVxmfKoRe+03s2xEsuoTGDEpAHONG133Vb+vzGD+06C0vvBmQOYFYHESI
+         R45w==
+X-Gm-Message-State: AOAM533FXFJWRrPJYGSh7TjMYUXB6nactMsDEJByxxo9UTBmDQy9YhYG
+        0eNEE/XcB1jKEG49sqNZTzcuXzaMGmMaCAt/FA6z7WSi72G08kbjrtNP+SvFoaBmd9UnM2Uei+e
+        Rka/hdf7ZCU/T828HDTYNel2HysyOcCLhD+MeMsc2
+X-Received: by 2002:a2e:9b92:: with SMTP id z18mr9314060lji.364.1595788559259;
+        Sun, 26 Jul 2020 11:35:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz1lHoPJwvL5EM6n1PDeRsl+1rX1UoAqAxy4vd1au5G+5bbJterCXOdiLnTTIPwJ6s0wGjsAu/UhtjZxJXB7f8=
+X-Received: by 2002:a2e:9b92:: with SMTP id z18mr9314053lji.364.1595788559035;
+ Sun, 26 Jul 2020 11:35:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200722220520.051234096@linutronix.de> <159562150262.4006.11750463088671474026.tip-bot2@tip-bot2>
-In-Reply-To: <159562150262.4006.11750463088671474026.tip-bot2@tip-bot2>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Sun, 26 Jul 2020 14:33:20 -0400
-Message-ID: <CAMzpN2ipn3tK7hg4njCG-svtbYSP_nmzr0mWHZCrkaJFYMuXWw@mail.gmail.com>
-Subject: Re: [tip: x86/entry] x86/entry: Consolidate 32/64 bit syscall entry
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     linux-tip-commits@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>
+References: <20200722001513.298315-1-jusual@redhat.com> <87d04nq40h.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87d04nq40h.fsf@vitty.brq.redhat.com>
+From:   Julia Suvorova <jusual@redhat.com>
+Date:   Sun, 26 Jul 2020 20:35:47 +0200
+Message-ID: <CAMDeoFX0oF3TSfzY8Yifd+9hBhdpKL40t8KFseBj2TsQYRYS8w@mail.gmail.com>
+Subject: Re: [PATCH] x86/PCI: Use MMCONFIG by default for KVM guests
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 4:14 PM tip-bot2 for Thomas Gleixner
-<tip-bot2@linutronix.de> wrote:
+On Wed, Jul 22, 2020 at 11:43 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
 >
-> The following commit has been merged into the x86/entry branch of tip:
+> Julia Suvorova <jusual@redhat.com> writes:
 >
-> Commit-ID:     0b085e68f4072024ecaa3889aeeaab5f6c8eba5c
-> Gitweb:        https://git.kernel.org/tip/0b085e68f4072024ecaa3889aeeaab5f6c8eba5c
-> Author:        Thomas Gleixner <tglx@linutronix.de>
-> AuthorDate:    Thu, 23 Jul 2020 00:00:01 +02:00
-> Committer:     Thomas Gleixner <tglx@linutronix.de>
-> CommitterDate: Fri, 24 Jul 2020 15:04:58 +02:00
+> > Scanning for PCI devices at boot takes a long time for KVM guests. It
+> > can be reduced if KVM will handle all configuration space accesses for
+> > non-existent devices without going to userspace [1]. But for this to
+> > work, all accesses must go through MMCONFIG.
+> > This change allows to use pci_mmcfg as raw_pci_ops for 64-bit KVM
+> > guests making MMCONFIG the default access method.
+> >
+> > [1] https://lkml.org/lkml/2020/5/14/936
+> >
+> > Signed-off-by: Julia Suvorova <jusual@redhat.com>
+> > ---
+> >  arch/x86/pci/direct.c      | 5 +++++
+> >  arch/x86/pci/mmconfig_64.c | 3 +++
+> >  2 files changed, 8 insertions(+)
+> >
+> > diff --git a/arch/x86/pci/direct.c b/arch/x86/pci/direct.c
+> > index a51074c55982..8ff6b65d8f48 100644
+> > --- a/arch/x86/pci/direct.c
+> > +++ b/arch/x86/pci/direct.c
+> > @@ -6,6 +6,7 @@
+> >  #include <linux/pci.h>
+> >  #include <linux/init.h>
+> >  #include <linux/dmi.h>
+> > +#include <linux/kvm_para.h>
+> >  #include <asm/pci_x86.h>
+> >
+> >  /*
+> > @@ -264,6 +265,10 @@ void __init pci_direct_init(int type)
+> >  {
+> >       if (type == 0)
+> >               return;
+> > +
+> > +     if (raw_pci_ext_ops && kvm_para_available())
+> > +             return;
+> > +
+> >       printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
+> >                type);
+> >       if (type == 1) {
+> > diff --git a/arch/x86/pci/mmconfig_64.c b/arch/x86/pci/mmconfig_64.c
+> > index 0c7b6e66c644..9eb772821766 100644
+> > --- a/arch/x86/pci/mmconfig_64.c
+> > +++ b/arch/x86/pci/mmconfig_64.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/init.h>
+> >  #include <linux/acpi.h>
+> >  #include <linux/bitmap.h>
+> > +#include <linux/kvm_para.h>
+> >  #include <linux/rcupdate.h>
+> >  #include <asm/e820/api.h>
+> >  #include <asm/pci_x86.h>
+> > @@ -122,6 +123,8 @@ int __init pci_mmcfg_arch_init(void)
+> >               }
+> >
+> >       raw_pci_ext_ops = &pci_mmcfg;
+> > +     if (kvm_para_available())
+> > +             raw_pci_ops = &pci_mmcfg;
+> >
+> >       return 1;
+> >  }
 >
-> x86/entry: Consolidate 32/64 bit syscall entry
->
-> 64bit and 32bit entry code have the same open coded syscall entry handling
-> after the bitwidth specific bits.
->
-> Move it to a helper function and share the code.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Link: https://lkml.kernel.org/r/20200722220520.051234096@linutronix.de
->
->
-> ---
->  arch/x86/entry/common.c | 93 +++++++++++++++++-----------------------
->  1 file changed, 41 insertions(+), 52 deletions(-)
->
-> diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-> index ab6cb86..68d5c86 100644
-> --- a/arch/x86/entry/common.c
-> +++ b/arch/x86/entry/common.c
-> @@ -366,8 +366,7 @@ __visible noinstr void syscall_return_slowpath(struct pt_regs *regs)
->         exit_to_user_mode();
->  }
->
-> -#ifdef CONFIG_X86_64
-> -__visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
-> +static noinstr long syscall_enter(struct pt_regs *regs, unsigned long nr)
->  {
->         struct thread_info *ti;
->
-> @@ -379,6 +378,16 @@ __visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
->         if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY)
->                 nr = syscall_trace_enter(regs);
->
-> +       instrumentation_end();
-> +       return nr;
-> +}
-> +
-> +#ifdef CONFIG_X86_64
-> +__visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
-> +{
-> +       nr = syscall_enter(regs, nr);
-> +
-> +       instrumentation_begin();
->         if (likely(nr < NR_syscalls)) {
->                 nr = array_index_nospec(nr, NR_syscalls);
->                 regs->ax = sys_call_table[nr](regs);
-> @@ -390,64 +399,53 @@ __visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
->                 regs->ax = x32_sys_call_table[nr](regs);
->  #endif
->         }
-> -       __syscall_return_slowpath(regs);
-> -
->         instrumentation_end();
-> -       exit_to_user_mode();
-> +       syscall_return_slowpath(regs);
->  }
->  #endif
->
->  #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
-> +static __always_inline unsigned int syscall_32_enter(struct pt_regs *regs)
-> +{
-> +       if (IS_ENABLED(CONFIG_IA32_EMULATION))
-> +               current_thread_info()->status |= TS_COMPAT;
-> +       /*
-> +        * Subtlety here: if ptrace pokes something larger than 2^32-1 into
-> +        * orig_ax, the unsigned int return value truncates it.  This may
-> +        * or may not be necessary, but it matches the old asm behavior.
-> +        */
-> +       return syscall_enter(regs, (unsigned int)regs->orig_ax);
-> +}
-> +
->  /*
-> - * Does a 32-bit syscall.  Called with IRQs on in CONTEXT_KERNEL.  Does
-> - * all entry and exit work and returns with IRQs off.  This function is
-> - * extremely hot in workloads that use it, and it's usually called from
-> - * do_fast_syscall_32, so forcibly inline it to improve performance.
-> + * Invoke a 32-bit syscall.  Called with IRQs on in CONTEXT_KERNEL.
->   */
-> -static void do_syscall_32_irqs_on(struct pt_regs *regs)
-> +static __always_inline void do_syscall_32_irqs_on(struct pt_regs *regs,
-> +                                                 unsigned int nr)
->  {
-> -       struct thread_info *ti = current_thread_info();
-> -       unsigned int nr = (unsigned int)regs->orig_ax;
-> -
-> -#ifdef CONFIG_IA32_EMULATION
-> -       ti->status |= TS_COMPAT;
-> -#endif
-> -
-> -       if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY) {
-> -               /*
-> -                * Subtlety here: if ptrace pokes something larger than
-> -                * 2^32-1 into orig_ax, this truncates it.  This may or
-> -                * may not be necessary, but it matches the old asm
-> -                * behavior.
-> -                */
-> -               nr = syscall_trace_enter(regs);
-> -       }
-> -
->         if (likely(nr < IA32_NR_syscalls)) {
-> +               instrumentation_begin();
->                 nr = array_index_nospec(nr, IA32_NR_syscalls);
->                 regs->ax = ia32_sys_call_table[nr](regs);
-> +               instrumentation_end();
->         }
-> -
-> -       __syscall_return_slowpath(regs);
->  }
->
->  /* Handles int $0x80 */
->  __visible noinstr void do_int80_syscall_32(struct pt_regs *regs)
->  {
-> -       enter_from_user_mode(regs);
-> -       instrumentation_begin();
-> +       unsigned int nr = syscall_32_enter(regs);
->
-> -       local_irq_enable();
-> -       do_syscall_32_irqs_on(regs);
-> -
-> -       instrumentation_end();
-> -       exit_to_user_mode();
-> +       do_syscall_32_irqs_on(regs, nr);
-> +       syscall_return_slowpath(regs);
->  }
->
-> -static bool __do_fast_syscall_32(struct pt_regs *regs)
-> +static noinstr bool __do_fast_syscall_32(struct pt_regs *regs)
+> This implies mmconfig access method is always functional (when present)
+> for all KVM guests, regardless of hypervisor version/which KVM userspace
+> is is use/... In case the assumption is true the patch looks good (to
+> me) but in case it isn't or if we think that more control over this
+> is needed we may want to introduce a PV feature bit for KVM.
 
-Can __do_fast_syscall_32() be merged back into do_fast_syscall_32()
-now that both are marked noinstr?
+Ok, I'll introduce a feature bit and turn it on in QEMU.
 
---
-Brian Gerst
+> Also, I'm thinking about moving this to arch/x86/kernel/kvm.c: we can
+> override x86_init.pci.arch_init and reassign raw_pci_ops after doing
+> pci_arch_init().
+
+This might be a good idea.
+
+Best regards, Julia Suvorova.
+
