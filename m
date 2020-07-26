@@ -2,131 +2,108 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 13:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 13:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C850206E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 13:34:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F2JXAsYG"
+	by mail.kernel.org (Postfix) with ESMTP id 4F18820714
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 13:35:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595770556;
+	bh=jCCV8VYmRNQqNG2Se8e8SaJMyZBek/JWVtyEKyzac8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=joYBmU3S6m6XeXyjdx0ZHaXi2W9in7Ui0+Z+KkeLYDvqacIgy5RMFxLX3auqCvmk0
+	 mZKGrJx7ClO+gBKUjb4m0G8G67VWkDxmdH3tXgFp+4sXUHg0sMXNQSi04qnCkQllx4
+	 0RoHvKAavaIpVi37FXC5iG0Tg5nRyH7iJtkyImXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgGZNew (ORCPT
+        id S1727840AbgGZNfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 09:34:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726042AbgGZNew (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 09:34:52 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 141E0C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 06:34:52 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id 95so10386955otw.10
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 06:34:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e8GYXiEv1VAJE5ju24W+SW1RqnGVVigc1mueXD+1VnI=;
-        b=F2JXAsYGGtp08i9I6dJEi0Zgff2MdZtmpjw5ylNgbv0RHj2o9jg3fv9QUiFcTtZ++v
-         yrxYC9Y7FQfa9uc6MI+c/IW2jrIY1wFEKbwyGtxaJ5CBNMrtgKownrhvakfoGvyGkwDa
-         NbroDDw2tpNNO1yZddNcxIFXsMfg4HUFRm7mI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e8GYXiEv1VAJE5ju24W+SW1RqnGVVigc1mueXD+1VnI=;
-        b=hxyfe47moXATJelXF1IXSaDPeLBKTaxcmLxkPl6ENIUn2j8nkeczSC3vKDIVls6jZS
-         oDAAhEgTDyK7M3oEvPCnOW9drBOcojcrSOHgIAVx87IWuSYzPpTomVMh3Ah+jzulxH/e
-         c3TlNfblR2FR/DLU6to0nBws5dInns+HR2OUCQSV8VJPBi0Lbim5rtbjYUdDGoNJhtBu
-         ssGWLsSyq3GSKJW6zaOkWlHkBDpnnVdJdlF7lzyV3gJNzdBBuHrR5acJqDfHvKp7vWgp
-         H/7Lf7DaEiQJvsGt1APIP5sSwt9r3EkU81MuPyjgU2QZ+PAsYQn0yD5vOuOPxsCnpKBO
-         Qh9A==
-X-Gm-Message-State: AOAM530ksWssxqOsNog0vWCuDsrD+u3cRIFj63CgXmINPPSgjwEN/kSz
-        1TDYNQOyV6PwfTpAMYdTdR9+ZSpjlIY=
-X-Google-Smtp-Source: ABdhPJx+0QIqggLqwm5Vyra5XxNgwgUjEt92ie+U69sDujW5lQg15DgAojygiTvkEEFFB21+zLTNhQ==
-X-Received: by 2002:a9d:7f8d:: with SMTP id t13mr16790123otp.67.1595770490011;
-        Sun, 26 Jul 2020 06:34:50 -0700 (PDT)
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com. [209.85.161.41])
-        by smtp.gmail.com with ESMTPSA id d10sm1571839oia.18.2020.07.26.06.34.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Jul 2020 06:34:47 -0700 (PDT)
-Received: by mail-oo1-f41.google.com with SMTP id n21so1787621ooj.5
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 06:34:46 -0700 (PDT)
-X-Received: by 2002:a05:6820:1015:: with SMTP id v21mr16808381oor.50.1595770486325;
- Sun, 26 Jul 2020 06:34:46 -0700 (PDT)
+        Sun, 26 Jul 2020 09:35:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726042AbgGZNfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 09:35:55 -0400
+Received: from localhost (p5486c93f.dip0.t-ipconnect.de [84.134.201.63])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB5132065F;
+        Sun, 26 Jul 2020 13:35:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595770554;
+        bh=jCCV8VYmRNQqNG2Se8e8SaJMyZBek/JWVtyEKyzac8k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LH68B0WJmnEaWbSDySqWttA4aypHw/aroEDcF5ZyW4HmwzuIHR99ugDY8963RLMxQ
+         Y7P0Rtg5N1eOaRONHKGXrqe2f37KzqbDfvSb77jK68iWRKMVeRVkOfc8gVfYho1omX
+         2gtnFBXQw72CRawIIPFNCzchjV6UMEx51g12JSVM=
+Date:   Sun, 26 Jul 2020 15:35:51 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     pierre-yves.mordret@st.com, alexandre.torgue@st.com,
+        linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH v2 1/2] i2c: smbus: add core function handling SMBus
+ host-notify
+Message-ID: <20200726133551.GC16169@ninjato>
+References: <1593776168-17867-1-git-send-email-alain.volmat@st.com>
+ <1593776168-17867-2-git-send-email-alain.volmat@st.com>
+ <20200725202733.GA946@kunai>
 MIME-Version: 1.0
-References: <20200715202233.185680-1-ezequiel@collabora.com>
- <20200715202233.185680-10-ezequiel@collabora.com> <CAPBb6MWG5aXuc7ExiaKvgtLL0o=HDYKFa4D4-v8hfvyGiNFBdA@mail.gmail.com>
-In-Reply-To: <CAPBb6MWG5aXuc7ExiaKvgtLL0o=HDYKFa4D4-v8hfvyGiNFBdA@mail.gmail.com>
-From:   Alexandre Courbot <acourbot@chromium.org>
-Date:   Sun, 26 Jul 2020 22:34:32 +0900
-X-Gmail-Original-Message-ID: <CAPBb6MUz6q7GALpnB2caWkWdrE4D7rKC=BdhnD-0b91RQNJQ+g@mail.gmail.com>
-Message-ID: <CAPBb6MUz6q7GALpnB2caWkWdrE4D7rKC=BdhnD-0b91RQNJQ+g@mail.gmail.com>
-Subject: Re: [PATCH 09/10] media: hantro: Don't require unneeded H264_SLICE_PARAMS
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="DSayHWYpDlRfCAAQ"
+Content-Disposition: inline
+In-Reply-To: <20200725202733.GA946@kunai>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 11:45 PM Alexandre Courbot
-<acourbot@chromium.org> wrote:
->
-> On Thu, Jul 16, 2020 at 5:23 AM Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> >
-> > Now that slice invariant parameters have been moved,
-> > the driver no longer needs this control, so drop it.
-> >
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> >  drivers/staging/media/hantro/hantro_drv.c  | 5 -----
-> >  drivers/staging/media/hantro/hantro_h264.c | 5 -----
-> >  drivers/staging/media/hantro/hantro_hw.h   | 2 --
-> >  3 files changed, 12 deletions(-)
-> >
-> > diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
-> > index 34797507f214..3cd00cc0a364 100644
-> > --- a/drivers/staging/media/hantro/hantro_drv.c
-> > +++ b/drivers/staging/media/hantro/hantro_drv.c
-> > @@ -306,11 +306,6 @@ static const struct hantro_ctrl controls[] = {
-> >                 .cfg = {
-> >                         .id = V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS,
-> >                 },
-> > -       }, {
-> > -               .codec = HANTRO_H264_DECODER,
-> > -               .cfg = {
-> > -                       .id = V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS,
-> > -               },
->
-> Isn't this going to make the driver reject (as opposed to just ignore)
-> this control altogether? Also, even though the control is not required
-> anymore, don't we want to check that it is provided in order to ensure
-> user-space follows the spec (granted, this would be better done in a
-> common framework shared by all drivers).
 
-I kind of forgot about the previous discussion about frame-based vs
-slice-based decoders, and since Hantro is frame-based this makes my
-point above moot. Please ignore.
+--DSayHWYpDlRfCAAQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> I'd also suggest this patch (and the following one) to be merged into
-> the previous one as they are just removing fields that have become
-> unneeded because of it.
+
+> > +void i2c_free_slave_host_notify_device(struct i2c_client *client)
+> > +{
+> > +	i2c_slave_unregister(client);
+> > +	kfree(client->dev.platform_data);
+> > +	i2c_unregister_device(client);
+> > +}
+> > +EXPORT_SYMBOL_GPL(i2c_free_slave_host_notify_device);
+>=20
+> Sidenote: With my recent series "i2c: slave: improve sanity checks when
+> un-/registering" this code became NULL-safe (and IS_ERR safe, too).
+
+Stupid me, it is not NULL safe. The functions are. But, we deregister
+'client' on our own. It probably makes sense to add some sanity checking
+of the parameters of the exported functions.
+
+
+--DSayHWYpDlRfCAAQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8dhrMACgkQFA3kzBSg
+KbbyGxAAqCXGbq/i0jvy+gmv+JJk5HTVXYtglHm52P7iDw0zolpXRm0OEmF4+yRt
+4MmbRDeEeQLeR2TvtaziN1q+LNQ2CObxbbVoyjcgNuc9pyo/zoM4No2JNnFqKWUt
+k5gl0nzVKXIlmJy2zb0EJT/xoyX+rae4hamgve7t3TvdQC3DS+sFJcReM9AmmMtN
+XHdPkrSbwHUhEUfDzmKw63CJZ46ExLmM03Ev08nkxW6YDkpZJeLMmloL54e8aVz7
+KEYKO24PUZ4/fzgtvHK7H1baBmALgIn4sR2R6UqgIDE0BDGKP9a6XXUz2S+ZDuja
+vmJXZYwwKMgNPjFN5vFku1vxLUQRTNnQGy3cjX0PYW9AVMFcqLt7AOR7qHzNCZv7
+t0MFewm19NOJMztPP+iLDPVOTACbuinF9NK4DptHwiBlEF2CIRYmBifJyLFjERW1
+Q/S6T1k7u9EQ7ya9Rc6J8j9qk3GU9q6xU6DJtGlMGM94MvqNwdOrhzN9ysrJso7U
+tvfiv2lw0yDkQysl1QgtR68xpI2PLBZwahv5t+11M/7A14bd4LAWr+6kZ7Oc8G08
+GeCpGIu1Ja1rMV/zPptp4IrxC1BA5GyVYaX6n01B59mK5GZMorzASUv18thLWNtq
+k64ubcie8Ka+C6YNvNPe9hs3egA3En5BHIXrZJidbM11PhZjY34=
+=AW42
+-----END PGP SIGNATURE-----
+
+--DSayHWYpDlRfCAAQ--
