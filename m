@@ -2,112 +2,184 @@ Return-Path: <SRS0=7zi/=BF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C032C433E8
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 04:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82535C433DF
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 04:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F11292076C
-	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 04:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57BF820674
+	for <linux-kernel@archiver.kernel.org>; Sun, 26 Jul 2020 04:14:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mds+cXhH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7W5Lhxz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgGZEP5 (ORCPT
+        id S1725937AbgGZEOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 00:15:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58812 "EHLO
+        Sun, 26 Jul 2020 00:14:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbgGZEPy (ORCPT
+        with ESMTP id S1725298AbgGZEOl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 00:15:54 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67BD3C0619D2;
-        Sat, 25 Jul 2020 21:15:54 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id a9so7335400pjd.3;
-        Sat, 25 Jul 2020 21:15:54 -0700 (PDT)
+        Sun, 26 Jul 2020 00:14:41 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D454C0619D2;
+        Sat, 25 Jul 2020 21:14:41 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id z5so7542744pgb.6;
+        Sat, 25 Jul 2020 21:14:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4WYzTUUdMZgoaXQcj1WqQmcltrZ3z5zlJgG5BDAvVq0=;
-        b=Mds+cXhHNoz5AXlWOYXU3s73JA7XvAoKNrtZ0EoUYw/9juGs858oarelVHf6MWejx/
-         K9qwRNU48Io3CpDFBwMxYkMly/guogRkDhKc5l4Cfga+EVXIORgOW2e12NUAcOcdZKr6
-         oK52z8X0jkbOo/87p2Q5o9O+QLCnpKDmL+Avmq9S07uECG3Kh6MTBpGsxOZlNaFT1Wcm
-         EJSyRBFw2X/6m3tRl0UnAJOcRaT3+hed9IcREYVk5eKDgZjYcsT7x7BN9f2MLYFpfix/
-         PA82QHvi9dKmU48qqAmpIedC24aGdFnWkx/FnvfnLjgVb4TxRXGoe+N3HJpIIfJr3Vcy
-         kE5w==
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=NaFK/HvQAlrC7LDIbLRf6mGY+l5iAmDEfcE+qmb5VDg=;
+        b=M7W5LhxzJcXQLxq1nYyKrilWrWy1XNfMjBlV9bXpDzPhVA6K5rMDIE1V2mPVeyUTws
+         y5cq75EQ9HH4TMLotEbpZmUWfMYZ+ynFAcWyATiwnazm1YrbFwYZmQWD3VUauqCT6vOf
+         DjAvJzy5aMN3iHQNZbgFW1G1/6V3eUDzuROebY92ON5x0+uYdnyVJCW1bMMsW3SYgJB+
+         z7K/gk7EJ1LEoCEcnXV+ARKglSstcyiuXByG14F40ckoC95yfJ56fjQSry4jgJA1O1mC
+         o4ggqUqm37AnpRVrFkB0nSW1oXBMQRt4aqxaPsNd1i5bWIA7UYycVn9EFt08odvk3b57
+         BCkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=4WYzTUUdMZgoaXQcj1WqQmcltrZ3z5zlJgG5BDAvVq0=;
-        b=CQGXSaFWZXDKL9shWKH2aJ0QQ3xjSUTTd6elt3lAZ40pGFJRKcqqQcDKmTVqc2CRN9
-         n0XM/k0vB7pJ37YowTgAvP0kmahesETFSSW2OqVO2odok/cFTRjIhoQHAY4Qj495JYzU
-         me6y2Uw1DRe5DJ+AW5HJoe+1vkseAHNY/ECta9Hw2LjdrV5sI+zrw2sIJR5qdsOo7G2f
-         zXIWGwrd9vbSQWJ4QLnbsbtDlr/WGGIv6ujQTkiosFYryFCSjVEyCVlkgFaeWRJXqnLR
-         1bKavAt3llRNCIeVp96JkKXlVV8zIcR7eBpCycJqC7WAQoP+1+7sCefZ872WtXVx9V5e
-         Wjrw==
-X-Gm-Message-State: AOAM53084VzbBvpedeXI+i2J0u9eoRTKDK7AbSytwZ1a+6HWIo2V7Moo
-        fmbEnuSe3HOqiVaRtsmrCK0=
-X-Google-Smtp-Source: ABdhPJysTVPd/ymZRoYHMSRlnRVchHuwkNi4184gSgJMYsFYwQOSJsmMh6BDWtCwUSoGz2ypa3V9tg==
-X-Received: by 2002:a17:90a:648d:: with SMTP id h13mr11662239pjj.44.1595736954007;
-        Sat, 25 Jul 2020 21:15:54 -0700 (PDT)
-Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id d16sm10725568pfo.156.2020.07.25.21.15.52
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=NaFK/HvQAlrC7LDIbLRf6mGY+l5iAmDEfcE+qmb5VDg=;
+        b=F1YYEf+h5rbOy1yIsm/3zjlVVLrJMIITH9V4V8OdkMbowKaCMZN7/XFLO1vx1ZwqaK
+         leXrPOxW2olCJMe1/g98sMNGIaZ/3I4z0YN3e5InVbo2d4KfoSWWM04mN7XMrhb6g01W
+         dEdHJ2mDXtDXgX3LwkP8YS5zeEkCPxcswhgxpEnz4HBXI3P8ho+U9a4CPowAsqsUUfFq
+         tYGcfppsTtfSs2WdyG36D9tdR/75wyqIXEuO6L+3rMB9nsN4XKepym1ejqozApjTgZUG
+         t1hWXqgOfIPRAdVziuW3RJmX5qijt7m1x26LQs8jPrndzkIjAPPUUDuUwGA3ezAIFbFk
+         UhfQ==
+X-Gm-Message-State: AOAM531Iu8Ida+IMH377JwTan5SCQ7VAeEK+Uercx75z2RWIts5Q710+
+        N9ISLT86Jl/jjkgJk4846rc=
+X-Google-Smtp-Source: ABdhPJwQi5Jco6i9POh2NO1VNAXMvnHLFEAztqlB9K276iQFTK0wWDev7lSFOpmxXGPSbh5vtd07lQ==
+X-Received: by 2002:a63:5d54:: with SMTP id o20mr14356921pgm.253.1595736880937;
+        Sat, 25 Jul 2020 21:14:40 -0700 (PDT)
+Received: from localhost (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id v11sm11846251pfc.108.2020.07.25.21.14.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Jul 2020 21:15:53 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-mips@linux-mips.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org (open list:BROADCOM BCM47XX MIPS
-        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] MIPS: BCM47xx: Include bcm47xx_sprom.h
-Date:   Sat, 25 Jul 2020 21:15:21 -0700
-Message-Id: <20200726041521.5398-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200726041521.5398-1-f.fainelli@gmail.com>
-References: <20200726041521.5398-1-f.fainelli@gmail.com>
+        Sat, 25 Jul 2020 21:14:40 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 14:14:34 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH 1/2] lockdep: improve current->(hard|soft)irqs_enabled
+ synchronisation with actual irq state
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+References: <20200723105615.1268126-1-npiggin@gmail.com>
+        <20200725202617.GI10769@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200725202617.GI10769@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Message-Id: <1595735694.b784cvipam.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that bcm47xx_sprom.h contains a prototype for bcm47xx_fill_sprom,
-include that header file directly from bcm47xx.h.
+Excerpts from Peter Zijlstra's message of July 26, 2020 6:26 am:
+> On Thu, Jul 23, 2020 at 08:56:14PM +1000, Nicholas Piggin wrote:
+>> diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/as=
+m/hw_irq.h
+>> index 3a0db7b0b46e..35060be09073 100644
+>> --- a/arch/powerpc/include/asm/hw_irq.h
+>> +++ b/arch/powerpc/include/asm/hw_irq.h
+>> @@ -200,17 +200,14 @@ static inline bool arch_irqs_disabled(void)
+>>  #define powerpc_local_irq_pmu_save(flags)			\
+>>  	 do {							\
+>>  		raw_local_irq_pmu_save(flags);			\
+>> -		trace_hardirqs_off();				\
+>> +		if (!raw_irqs_disabled_flags(flags))		\
+>> +			trace_hardirqs_off();			\
+>>  	} while(0)
+>=20
+> So one problem with the above is something like this:
+>=20
+> 	raw_local_irq_save();
+> 	<NMI>
+> 	  powerpc_local_irq_pmu_save();
+>=20
+> that would now no longer call into tracing/lockdep at all. As a
+> consequence, lockdep and tracing would show the NMI ran with IRQs
+> enabled, which is exceptionally weird..
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/mips/include/asm/mach-bcm47xx/bcm47xx.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+powerpc perf NMIs will trace_hardirqs_off() if they were enabled,
+and trace_hardirqs_on() at exit in that case too.
 
-diff --git a/arch/mips/include/asm/mach-bcm47xx/bcm47xx.h b/arch/mips/include/asm/mach-bcm47xx/bcm47xx.h
-index d7f1ef246d5c..93817bfb7fb2 100644
---- a/arch/mips/include/asm/mach-bcm47xx/bcm47xx.h
-+++ b/arch/mips/include/asm/mach-bcm47xx/bcm47xx.h
-@@ -10,6 +10,7 @@
- #include <linux/bcma/bcma.h>
- #include <linux/bcma/bcma_soc.h>
- #include <linux/bcm47xx_nvram.h>
-+#include <linux/bcm47xx_sprom.h>
- 
- enum bcm47xx_bus_type {
- #ifdef CONFIG_BCM47XX_SSB
-@@ -32,9 +33,6 @@ union bcm47xx_bus {
- extern union bcm47xx_bus bcm47xx_bus;
- extern enum bcm47xx_bus_type bcm47xx_bus_type;
- 
--void bcm47xx_fill_sprom(struct ssb_sprom *sprom, const char *prefix,
--			bool fallback);
--
- void bcm47xx_set_system_type(u16 chip_id);
- 
- #endif /* __ASM_BCM47XX_H */
--- 
-2.17.1
+Machine check and system reset (like x86's "nmi") don't, but that's
+deliberate to avoid any tracing in those cases which often causes
+more problems than it's worth (and we have flags to prevent ftrace,
+etc too for those cases).
 
+> Similar problem with:
+>=20
+> 	raw_local_irq_disable();
+> 	local_irq_save()
+>=20
+> Now, most architectures today seem to do what x86 also did:
+>=20
+> 	<NMI>
+> 	  trace_hardirqs_off()
+> 	  ...
+> 	  if (irqs_unmasked(regs))
+> 	    trace_hardirqs_on()
+> 	</NMI>
+>=20
+> Which is 'funny' when it interleaves like:
+>=20
+> 	local_irq_disable();
+> 	...
+> 	local_irq_enable()
+> 	  trace_hardirqs_on();
+> 	  <NMI/>
+> 	  raw_local_irq_enable();
+>=20
+> Because then it will undo the trace_hardirqs_on() we just did. With the
+> result that both tracing and lockdep will see a hardirqs-disable without
+> a matching enable, while the hardware state is enabled.
+
+Seems like an arch problem -- why not disable if it was enabled only?
+I guess the local_irq tracing calls are a mess so maybe they copied=20
+those.
+
+> Which is exactly the state Alexey seems to have ran into.
+
+No his was what I said, the interruptee's trace_hardirqs_on() in
+local_irq_enable getting lost because the NMI's local_irq_disable
+always disables, but the enable doesn't re-enable.
+
+It's all just weird asymmetrical special case hacks AFAIKS, the
+code should just be symmetric and lockdep handle it's own weirdness.
+
+>=20
+> Now, x86, and at least arm64 call nmi_enter() before
+> trace_hardirqs_off(), but AFAICT Power never did that, and that's part
+> of the problem. nmi_enter() does lockdep_off() and that _used_ to also
+> kill IRQ tracking.
+
+Power does do nmi_enter -- __perf_event_interrupt()
+
+        nmi =3D perf_intr_is_nmi(regs);
+        if (nmi)
+                nmi_enter();
+        else
+                irq_enter();
+
+Thanks,
+Nick
+
+> Now, my patch changed that, it makes IRQ tracking not respect
+> lockdep_off(). And that exposed x86 (and everybody else :/) to the same
+> problem you have.
+>=20
+> And this is why I made x86 look at software state in NMIs. Because then
+> it all works out. For bonus points, trace_hardirqs_*() also has some
+> do-it-once logic for tracing.
+>=20
+>=20
+>=20
+> Anyway, it's Saturday evening, time for a beer. I'll stare at this more
+> later.
+>=20
