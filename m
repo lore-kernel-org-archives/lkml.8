@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64539C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302FAC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF39207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8C2207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860137;
-	bh=/r7CpAbdOGh79gtbW0/Th7l8+bvwG0+jXqRwWEGze1g=;
+	s=default; t=1595860139;
+	bh=/EPXNNpRbRs1wsCdJFgsArdWLV8XF3Yj+xCF+ejtOM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ovqt6IxhIhjGHHyvXHRhIivXmjJAEv3eVEBYVYxBSe+QL67EbTu21b8djd3LHJ4St
-	 mMfwdvOUnGgNqAxbv2PXAgqWMnoaOwfcHwyBCUZP3b9zZLh2ckIPyDKeiC1+oWjaPf
-	 9r9ndvdCK/Fs9ShPybwzww7cg029z//wm02SSeYg=
+	b=Qn19jdjLz34JvejuvtwThD3Y1r0g4FNTBZ3uxrdHRIsmoYWSQZ3/Q7gU7oHp/KzGJ
+	 bGiHp4XbpTzOen3JjXH23r2LblFieS/9bkGqQJCfI+m/d6CgDb4MJ9Wk6ptdx7bWrg
+	 FNoQoHIsg3EmkvTdBrp673AtaApRTW000kB5/IXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732196AbgG0OYC (ORCPT
+        id S1732180AbgG0OX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:24:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53376 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:23:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731505AbgG0OYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:24:00 -0400
+        id S1732165AbgG0OXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:23:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 464832083E;
-        Mon, 27 Jul 2020 14:23:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95BC22083E;
+        Mon, 27 Jul 2020 14:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859839;
-        bh=/r7CpAbdOGh79gtbW0/Th7l8+bvwG0+jXqRwWEGze1g=;
+        s=default; t=1595859832;
+        bh=/EPXNNpRbRs1wsCdJFgsArdWLV8XF3Yj+xCF+ejtOM0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OX4FxisvemN5XOKTiH/s0A/hlJZ9hxVu/JLVk/V5JTkbu7lDL/JBRdfGYyBVgnf2j
-         jgxZjHg+Poh7862qamRlG166jhlIMm4xzuz8crPKu7plQQ1JPgkLtWxi5iqa2A++Am
-         ZpsYWenvGe1XiP22N+IXPBRbCmDAdrFEjQZ2Tu4M=
+        b=jpDOT/tL1zQW/FS2dZPtaUHQzKCKvVu4jxoUiJcfou9uiE7Z+8vL3xuadDtVY8ABM
+         fKV8EJa+PYFzAPmJDJTp8OLLrFV5oGpiYi8wz9Cx92nCERjoJjVX4LXrIFleNdzGe0
+         8kSu+oOaG4dWCaGqBRauoLr33+rBo8MdbkcLG35E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Xiao <Jack.Xiao@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 126/179] drm/amdgpu: fix preemption unit test
-Date:   Mon, 27 Jul 2020 16:05:01 +0200
-Message-Id: <20200727134938.786732517@linuxfoundation.org>
+Subject: [PATCH 5.7 082/179] netdevsim: fix unbalaced locking in nsim_create()
+Date:   Mon, 27 Jul 2020 16:04:17 +0200
+Message-Id: <20200727134936.676225376@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,68 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Xiao <Jack.Xiao@amd.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit d845a2051b6b673fab4229b920ea04c7c4352b51 ]
+[ Upstream commit 2c9d8e01f0c6017317eee7638496173d4a64e6bc ]
 
-Remove signaled jobs from job list and ensure the
-job was indeed preempted.
+In the nsim_create(), rtnl_lock() is called before nsim_bpf_init().
+If nsim_bpf_init() is failed, rtnl_unlock() should be called,
+but it isn't called.
+So, unbalanced locking would occur.
 
-Signed-off-by: Jack Xiao <Jack.Xiao@amd.com>
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: e05b2d141fef ("netdevsim: move netdev creation/destruction to dev probe")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/net/netdevsim/netdev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-index c0f9a651dc067..92b18c4760e55 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-@@ -1156,27 +1156,37 @@ static void amdgpu_ib_preempt_job_recovery(struct drm_gpu_scheduler *sched)
- static void amdgpu_ib_preempt_mark_partial_job(struct amdgpu_ring *ring)
- {
- 	struct amdgpu_job *job;
--	struct drm_sched_job *s_job;
-+	struct drm_sched_job *s_job, *tmp;
- 	uint32_t preempt_seq;
- 	struct dma_fence *fence, **ptr;
- 	struct amdgpu_fence_driver *drv = &ring->fence_drv;
- 	struct drm_gpu_scheduler *sched = &ring->sched;
-+	bool preempted = true;
+diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
+index 2908e0a0d6e19..23950e7a0f81e 100644
+--- a/drivers/net/netdevsim/netdev.c
++++ b/drivers/net/netdevsim/netdev.c
+@@ -302,7 +302,7 @@ nsim_create(struct nsim_dev *nsim_dev, struct nsim_dev_port *nsim_dev_port)
+ 	rtnl_lock();
+ 	err = nsim_bpf_init(ns);
+ 	if (err)
+-		goto err_free_netdev;
++		goto err_rtnl_unlock;
  
- 	if (ring->funcs->type != AMDGPU_RING_TYPE_GFX)
- 		return;
+ 	nsim_ipsec_init(ns);
  
- 	preempt_seq = le32_to_cpu(*(drv->cpu_addr + 2));
--	if (preempt_seq <= atomic_read(&drv->last_seq))
--		return;
-+	if (preempt_seq <= atomic_read(&drv->last_seq)) {
-+		preempted = false;
-+		goto no_preempt;
-+	}
- 
- 	preempt_seq &= drv->num_fences_mask;
- 	ptr = &drv->fences[preempt_seq];
- 	fence = rcu_dereference_protected(*ptr, 1);
- 
-+no_preempt:
- 	spin_lock(&sched->job_list_lock);
--	list_for_each_entry(s_job, &sched->ring_mirror_list, node) {
-+	list_for_each_entry_safe(s_job, tmp, &sched->ring_mirror_list, node) {
-+		if (dma_fence_is_signaled(&s_job->s_fence->finished)) {
-+			/* remove job from ring_mirror_list */
-+			list_del_init(&s_job->node);
-+			sched->ops->free_job(s_job);
-+			continue;
-+		}
- 		job = to_amdgpu_job(s_job);
--		if (job->fence == fence)
-+		if (preempted && job->fence == fence)
- 			/* mark the job as preempted */
- 			job->preemption_status |= AMDGPU_IB_PREEMPTED;
- 	}
+@@ -316,8 +316,8 @@ nsim_create(struct nsim_dev *nsim_dev, struct nsim_dev_port *nsim_dev_port)
+ err_ipsec_teardown:
+ 	nsim_ipsec_teardown(ns);
+ 	nsim_bpf_uninit(ns);
++err_rtnl_unlock:
+ 	rtnl_unlock();
+-err_free_netdev:
+ 	free_netdev(dev);
+ 	return ERR_PTR(err);
+ }
 -- 
 2.25.1
 
