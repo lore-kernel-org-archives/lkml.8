@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5661C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2B2C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4E872070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D2962075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859667;
-	bh=cToFvjwH/rD41ff8mryTBGVqToQbljdz/cOulN4Cwqg=;
+	s=default; t=1595859671;
+	bh=XQDfGytVTpKeb+agTuSXemU8hW+k5+3VzA9zL6czwig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PDIl3+sM977o3LP8JPq9UAw8QjQ8ScUHHdUXUaQPX+ISYWNP11eMf0WKN83NbkEU4
-	 lOUVZwXg9ZPTPBU2sYx+NX3pAwbY4oue+5dd/md1yLQkgY/wHW9vwM2g/d2U2Kdyfi
-	 DB29DLTzm+PWDPLuFRJ3QNaG9Czo8JEgqSFKof4Q=
+	b=BhgIkh2uvh5bNvmSoSijb9IWEgl1i1KFlWMh/EyY1lgKPvr0U6Cay/lnTcAt86EhN
+	 03wXPAbNe4gV2/eJ/XUe1oQGKbXzXUxgQmv4JH/MZLHD0Gtm673c9XGekg8fxXTEZ2
+	 BGg+eNMH0wnuqMbhAvhAiAL9aNcfVpE4ZpplMjRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731668AbgG0OVF (ORCPT
+        id S1730838AbgG0OVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:21:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49514 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:21:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731638AbgG0OVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:21:02 -0400
+        id S1731638AbgG0OVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:21:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B0D22070A;
-        Mon, 27 Jul 2020 14:21:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F6C22070A;
+        Mon, 27 Jul 2020 14:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859661;
-        bh=cToFvjwH/rD41ff8mryTBGVqToQbljdz/cOulN4Cwqg=;
+        s=default; t=1595859666;
+        bh=XQDfGytVTpKeb+agTuSXemU8hW+k5+3VzA9zL6czwig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E9FKyTht/FGSgtTrsLXtm3lY2lildYuHaQvGvNjy0PyCe5KCQjT9CB9zie9OYgTgw
-         gBZbAdoStJm96+yXEjlBYabLXaXj1phFFU34t75HdJDSm0w9knHU33aWpdvXBuUw35
-         t2t39AJ8gABHeAZXDJiPAgIjlD+6zCIduSlMZprA=
+        b=PKupiYhceYfqkN7aiWz7u4BtA9LJj1hp5mUgv9FBn9/JviRa0NAkUogzGLBWwSP74
+         yxk7CE8stMMqaInIo3A1sgl4P4ZJ+6DhKGa1LGaOGD9MFzB02ruAVozM6MBRV7KP3W
+         1FM9Epa/2SVdacz92E2jw3ihdMMo9xTI4JpqLofg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Steve Schremmer <steve.schremmer@netapp.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Liu Jian <liujian56@huawei.com>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 016/179] scsi: dh: Add Fujitsu device to devinfo and dh lists
-Date:   Mon, 27 Jul 2020 16:03:11 +0200
-Message-Id: <20200727134933.464050722@linuxfoundation.org>
+Subject: [PATCH 5.7 059/179] ieee802154: fix one possible memleak in adf7242_probe
+Date:   Mon, 27 Jul 2020 16:03:54 +0200
+Message-Id: <20200727134935.545552337@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,44 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Schremmer <steve.schremmer@netapp.com>
+From: Liu Jian <liujian56@huawei.com>
 
-[ Upstream commit e094fd346021b820f37188aaa6b502c7490ab5b5 ]
+[ Upstream commit 66673f96f0f968b991dc38be06102246919c663c ]
 
-Add FUJITSU ETERNUS_AHB
+When probe fail, we should destroy the workqueue.
 
-Link: https://lore.kernel.org/r/DM6PR06MB5276CCA765336BD312C4282E8C660@DM6PR06MB5276.namprd06.prod.outlook.com
-Signed-off-by: Steve Schremmer <steve.schremmer@netapp.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 2795e8c25161 ("net: ieee802154: fix a potential NULL pointer dereference")
+Signed-off-by: Liu Jian <liujian56@huawei.com>
+Acked-by: Michael Hennerich <michael.hennerich@analog.com>
+Link: https://lore.kernel.org/r/20200717090121.2143-1-liujian56@huawei.com
+Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_devinfo.c | 1 +
- drivers/scsi/scsi_dh.c      | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/net/ieee802154/adf7242.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
-index eed31021e7885..ba84244c1b4f6 100644
---- a/drivers/scsi/scsi_devinfo.c
-+++ b/drivers/scsi/scsi_devinfo.c
-@@ -239,6 +239,7 @@ static struct {
- 	{"LSI", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
- 	{"ENGENIO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
- 	{"LENOVO", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
-+	{"FUJITSU", "Universal Xport", "*", BLIST_NO_ULD_ATTACH},
- 	{"SanDisk", "Cruzer Blade", NULL, BLIST_TRY_VPD_PAGES |
- 		BLIST_INQUIRY_36},
- 	{"SMSC", "USB 2 HS-CF", NULL, BLIST_SPARSELUN | BLIST_INQUIRY_36},
-diff --git a/drivers/scsi/scsi_dh.c b/drivers/scsi/scsi_dh.c
-index 42f0550d6b11f..6f41e4b5a2b85 100644
---- a/drivers/scsi/scsi_dh.c
-+++ b/drivers/scsi/scsi_dh.c
-@@ -63,6 +63,7 @@ static const struct scsi_dh_blist scsi_dh_blist[] = {
- 	{"LSI", "INF-01-00",		"rdac", },
- 	{"ENGENIO", "INF-01-00",	"rdac", },
- 	{"LENOVO", "DE_Series",		"rdac", },
-+	{"FUJITSU", "ETERNUS_AHB",	"rdac", },
- 	{NULL, NULL,			NULL },
- };
+diff --git a/drivers/net/ieee802154/adf7242.c b/drivers/net/ieee802154/adf7242.c
+index 5a37514e42347..8dbccec6ac866 100644
+--- a/drivers/net/ieee802154/adf7242.c
++++ b/drivers/net/ieee802154/adf7242.c
+@@ -1262,7 +1262,7 @@ static int adf7242_probe(struct spi_device *spi)
+ 					     WQ_MEM_RECLAIM);
+ 	if (unlikely(!lp->wqueue)) {
+ 		ret = -ENOMEM;
+-		goto err_hw_init;
++		goto err_alloc_wq;
+ 	}
+ 
+ 	ret = adf7242_hw_init(lp);
+@@ -1294,6 +1294,8 @@ static int adf7242_probe(struct spi_device *spi)
+ 	return ret;
+ 
+ err_hw_init:
++	destroy_workqueue(lp->wqueue);
++err_alloc_wq:
+ 	mutex_destroy(&lp->bmux);
+ 	ieee802154_free_hw(lp->hw);
  
 -- 
 2.25.1
