@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37541C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F29C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 122C9208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF10D2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892230;
-	bh=x7YoQtupH7CiYhIjtuOqqsTxqZZSxlDcl4I1Z5TtKrI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=WkRd17yXz3v2SgR/K8Dd07T6+MjuY4D/7ucCQK0LDMV8GJpd1mj8+BsapfUb1BW+o
-	 9UpWn5kIs497LKqXXDn3Yd2xD0fpfrlJ4U/pKfzeLwGIY91Kulmp2vr111j4A//gwW
-	 GhuWxaiFbgr+PNCzOItFAIKOydwe7kvh8oxyebRA=
+	s=default; t=1595892248;
+	bh=cRKjqNxHua9T76fRL5VIQta7CPlRoJFYlQ27sbGlFXw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TZhALGA75L8ekexKZ2whuxhXaK6oz1vEpYnHPh1xkh7e93KqwMEF4pMn5Z1KWS8Ep
+	 x1SxiASDDtzQoZlnOmZsXZ0ncXKeqdJaGpEMdHEeOemFhmPVtcc07rfZb+S/okB0dY
+	 lBhU0yQnGlCev+ONT5fhUps9PdzlARMmQue+p87o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgG0XXs (ORCPT
+        id S1728067AbgG0XYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:23:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34600 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:24:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgG0XXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:23:48 -0400
+        id S1728037AbgG0XYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:24:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C907220786;
-        Mon, 27 Jul 2020 23:23:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3976C20A8B;
+        Mon, 27 Jul 2020 23:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892227;
-        bh=x7YoQtupH7CiYhIjtuOqqsTxqZZSxlDcl4I1Z5TtKrI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Q433sx5jaX7YtQhjB71uXxNSpyaSrya38qdWSyQ5ByJw3awzIE5X0s/Oc638rkU87
-         av6JGC54Rs09q3BXtfTmB0Vm73CTzfEbkJ5E20QDUNH5+Nfh2d2G/nLtyGO3N2K6yh
-         vF1lmvphvkKD2s7y9vHO0T4CApPGQMuEB7uUjSaI=
+        s=default; t=1595892244;
+        bh=cRKjqNxHua9T76fRL5VIQta7CPlRoJFYlQ27sbGlFXw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=B/aEPEoCIu2xfbzSY55MnYSkUDH1mE2vnv8NXaIbU1bBaHIJSpI7WOHbWHP4ifXWU
+         w8YJ+PpeyHyzmEXmibnv0t1NzV6uZm5Eh5LnLjYZl+lAiieZPNfgVHmzqvwMmBF/HK
+         N1nYkQ6raYmrSDPN8JeYUca4I4InRVDi7NdhjFGI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 01/25] mt76: mt7615: fix lmac queue debugsfs entry
-Date:   Mon, 27 Jul 2020 19:23:21 -0400
-Message-Id: <20200727232345.717432-1-sashal@kernel.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 13/25] net: ethernet: ravb: exit if re-initialization fails in tx timeout
+Date:   Mon, 27 Jul 2020 19:23:33 -0400
+Message-Id: <20200727232345.717432-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200727232345.717432-1-sashal@kernel.org>
+References: <20200727232345.717432-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,52 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit d941f47caa386931c3b598ad1b43d5ddd65869aa ]
+[ Upstream commit 015c5d5e6aa3523c758a70eb87b291cece2dbbb4 ]
 
-acs and wmm index are swapped in mt7615_queues_acq respect to the hw
-design
+According to the report of [1], this driver is possible to cause
+the following error in ravb_tx_timeout_work().
 
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+ravb e6800000.ethernet ethernet: failed to switch device to config mode
+
+This error means that the hardware could not change the state
+from "Operation" to "Configuration" while some tx and/or rx queue
+are operating. After that, ravb_config() in ravb_dmac_init() will fail,
+and then any descriptors will be not allocaled anymore so that NULL
+pointer dereference happens after that on ravb_start_xmit().
+
+To fix the issue, the ravb_tx_timeout_work() should check
+the return values of ravb_stop_dma() and ravb_dmac_init().
+If ravb_stop_dma() fails, ravb_tx_timeout_work() re-enables TX and RX
+and just exits. If ravb_dmac_init() fails, just exits.
+
+[1]
+https://lore.kernel.org/linux-renesas-soc/20200518045452.2390-1-dirk.behme@de.bosch.com/
+
+Reported-by: Dirk Behme <dirk.behme@de.bosch.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/renesas/ravb_main.c | 26 ++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c b/drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c
-index b4d0795154e3d..a2afd1a3c51ba 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c
-@@ -206,10 +206,11 @@ mt7615_queues_acq(struct seq_file *s, void *data)
- 	int i;
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 067ad25553b92..ab335f7dab828 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1444,6 +1444,7 @@ static void ravb_tx_timeout_work(struct work_struct *work)
+ 	struct ravb_private *priv = container_of(work, struct ravb_private,
+ 						 work);
+ 	struct net_device *ndev = priv->ndev;
++	int error;
  
- 	for (i = 0; i < 16; i++) {
--		int j, acs = i / 4, index = i % 4;
-+		int j, wmm_idx = i % MT7615_MAX_WMM_SETS;
-+		int acs = i / MT7615_MAX_WMM_SETS;
- 		u32 ctrl, val, qlen = 0;
+ 	netif_tx_stop_all_queues(ndev);
  
--		val = mt76_rr(dev, MT_PLE_AC_QEMPTY(acs, index));
-+		val = mt76_rr(dev, MT_PLE_AC_QEMPTY(acs, wmm_idx));
- 		ctrl = BIT(31) | BIT(15) | (acs << 8);
+@@ -1452,15 +1453,36 @@ static void ravb_tx_timeout_work(struct work_struct *work)
+ 		ravb_ptp_stop(ndev);
  
- 		for (j = 0; j < 32; j++) {
-@@ -217,11 +218,11 @@ mt7615_queues_acq(struct seq_file *s, void *data)
- 				continue;
+ 	/* Wait for DMA stopping */
+-	ravb_stop_dma(ndev);
++	if (ravb_stop_dma(ndev)) {
++		/* If ravb_stop_dma() fails, the hardware is still operating
++		 * for TX and/or RX. So, this should not call the following
++		 * functions because ravb_dmac_init() is possible to fail too.
++		 * Also, this should not retry ravb_stop_dma() again and again
++		 * here because it's possible to wait forever. So, this just
++		 * re-enables the TX and RX and skip the following
++		 * re-initialization procedure.
++		 */
++		ravb_rcv_snd_enable(ndev);
++		goto out;
++	}
  
- 			mt76_wr(dev, MT_PLE_FL_Q0_CTRL,
--				ctrl | (j + (index << 5)));
-+				ctrl | (j + (wmm_idx << 5)));
- 			qlen += mt76_get_field(dev, MT_PLE_FL_Q3_CTRL,
- 					       GENMASK(11, 0));
- 		}
--		seq_printf(s, "AC%d%d: queued=%d\n", acs, index, qlen);
-+		seq_printf(s, "AC%d%d: queued=%d\n", wmm_idx, acs, qlen);
- 	}
+ 	ravb_ring_free(ndev, RAVB_BE);
+ 	ravb_ring_free(ndev, RAVB_NC);
  
- 	return 0;
+ 	/* Device init */
+-	ravb_dmac_init(ndev);
++	error = ravb_dmac_init(ndev);
++	if (error) {
++		/* If ravb_dmac_init() fails, descriptors are freed. So, this
++		 * should return here to avoid re-enabling the TX and RX in
++		 * ravb_emac_init().
++		 */
++		netdev_err(ndev, "%s: ravb_dmac_init() failed, error %d\n",
++			   __func__, error);
++		return;
++	}
+ 	ravb_emac_init(ndev);
+ 
++out:
+ 	/* Initialise PTP Clock driver */
+ 	if (priv->chip_id == RCAR_GEN2)
+ 		ravb_ptp_init(ndev, priv->pdev);
 -- 
 2.25.1
 
