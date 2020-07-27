@@ -2,79 +2,76 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46ECFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB85CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1477720809
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595887952;
-	bh=0yrOceQ4ThJg8bvXzYV7sUock5Bm6u65FacsCAg9Sto=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=K5M+Kq/+9vahI++dvOf0nFhx34qSz2QJanIgvKR1Yqu767Li/35qszC+IGw34ae9M
-	 59IAgxuW7eNFGg8vfZs+mwVmUsJ+nivnI5FddtMy6v5skCK4CJHKgvhTCL1poBMF/n
-	 Zxs7GzTX31s8QDzVkE3AtYjxPSyB7Yd1bjHNVNbs=
+	by mail.kernel.org (Postfix) with ESMTP id 8975720809
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:15:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgG0WMb (ORCPT
+        id S1726799AbgG0WPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 18:12:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35274 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 18:15:51 -0400
+Received: from ms.lwn.net ([45.79.88.28]:57908 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgG0WMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 18:12:30 -0400
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726140AbgG0WPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 18:15:51 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AEC22083E;
-        Mon, 27 Jul 2020 22:12:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595887950;
-        bh=0yrOceQ4ThJg8bvXzYV7sUock5Bm6u65FacsCAg9Sto=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EYVaR9hjuc3lX6dAyBEoFmST/hApD6sOnGavFziizdPggYn88O578HLq5Tl+i0VxF
-         wcNkZlmjkgHf9n0Sg48UdPM9LsnSYJYH51ogOqvXM237UqeDxQBAkkOtH82INZHajR
-         UMntsU7dNIfTTk+G7XlmV9qkRFEyd4182URWz2oU=
-Received: by mail-lj1-f179.google.com with SMTP id f5so18949735ljj.10;
-        Mon, 27 Jul 2020 15:12:30 -0700 (PDT)
-X-Gm-Message-State: AOAM533rpdO2l1+t2dZxpnj/Gevol1C1Anfq+eyLb3EjveKpwzJby3v5
-        wS7EIvebjbJNoLQJQ8Se31TpcyR+7DzIZKv73zw=
-X-Google-Smtp-Source: ABdhPJyD8OEPzS+nHFNLJuhfUifHEzJvxGfY5o1OtZDdVVTYydgko05HFP8M++HOJsk7/OrNBLV1/TfyjmPfRyqTSAU=
-X-Received: by 2002:a2e:7c14:: with SMTP id x20mr11171357ljc.41.1595887948418;
- Mon, 27 Jul 2020 15:12:28 -0700 (PDT)
+        by ms.lwn.net (Postfix) with ESMTPSA id AE0DF2E7;
+        Mon, 27 Jul 2020 22:15:50 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 16:15:49 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     kernel-janitors@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: filesystems: vfs: correct sync_mode flag names
+Message-ID: <20200727161549.1d3e31a0@lwn.net>
+In-Reply-To: <1595791341-13209-1-git-send-email-Julia.Lawall@inria.fr>
+References: <1595791341-13209-1-git-send-email-Julia.Lawall@inria.fr>
+Organization: LWN.net
 MIME-Version: 1.0
-References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-3-guro@fb.com>
-In-Reply-To: <20200727184506.2279656-3-guro@fb.com>
-From:   Song Liu <song@kernel.org>
-Date:   Mon, 27 Jul 2020 15:12:17 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7OAhRMvS0wcDFCPqGO=UiN2k3vRCvPr3gH6QyJgY-MgQ@mail.gmail.com>
-Message-ID: <CAPhsuW7OAhRMvS0wcDFCPqGO=UiN2k3vRCvPr3gH6QyJgY-MgQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 02/35] bpf: memcg-based memory accounting for
- bpf maps
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:23 PM Roman Gushchin <guro@fb.com> wrote:
->
-> This patch enables memcg-based memory accounting for memory allocated
-> by __bpf_map_area_alloc(), which is used by most map types for
-> large allocations.
->
-> Following patches in the series will refine the accounting for
-> some map types.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+On Sun, 26 Jul 2020 21:22:21 +0200
+Julia Lawall <Julia.Lawall@inria.fr> wrote:
 
-Acked-by: Song Liu <songliubraving@fb.com>
+> Change the nonexistent flag names WBC_SYNC_ALL and WBC_SYNC_NONE to
+> WB_SYNC_ALL and WB_SYNC_NONE, respectively, as used in the code with
+> wbc->sync_mode.
+> 
+> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+> 
+> ---
+>  Documentation/filesystems/vfs.rst |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+> index da4b735..57e9b51 100644
+> --- a/Documentation/filesystems/vfs.rst
+> +++ b/Documentation/filesystems/vfs.rst
+> @@ -766,9 +766,9 @@ cache in your filesystem.  The following members are defined:
+>  
+>  ``writepages``
+>  	called by the VM to write out pages associated with the
+> -	address_space object.  If wbc->sync_mode is WBC_SYNC_ALL, then
+> +	address_space object.  If wbc->sync_mode is WB_SYNC_ALL, then
+>  	the writeback_control will specify a range of pages that must be
+> -	written out.  If it is WBC_SYNC_NONE, then a nr_to_write is
+> +	written out.  If it is WB_SYNC_NONE, then a nr_to_write is
+>  	given and that many pages should be written if possible.  If no
+>  	->writepages is given, then mpage_writepages is used instead.  
+>  	This will choose pages from the address space that are tagged as
+
+Applied, thanks.
+
+jon
