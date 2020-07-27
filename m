@@ -2,141 +2,101 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4371FC433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755E7C433FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2032420719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860799;
-	bh=x1s/2p+KvPZkzbfRIAgGC9u8uVmW31LjrBx0xw9o7uI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1CZZ96z1Sc9GkGaGak5HVUkmutyPLGH3xpgvcSG5dM3d7jTSJJa/Vt74RUiRsFGFd
-	 tFOOaSYhWE9OPv5Yfy2x7BZEnrpoEZ3YLklM6uy2DwXAsbXZF41ue619bABEqoL7og
-	 aVivFMtuD1SRbyE7ZM2tZt6YH1yhthM8BbR1dfKM=
+	by mail.kernel.org (Postfix) with ESMTP id 5563D2083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lz5Tn0sm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733019AbgG0Oj5 (ORCPT
+        id S1731717AbgG0OkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:39:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729642AbgG0OJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:09:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0C762073E;
-        Mon, 27 Jul 2020 14:09:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858966;
-        bh=x1s/2p+KvPZkzbfRIAgGC9u8uVmW31LjrBx0xw9o7uI=;
+        Mon, 27 Jul 2020 10:40:05 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:53218 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728947AbgG0OJU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:09:20 -0400
+Received: from sequoia.work.tihix.com (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 1D0C420B490C;
+        Mon, 27 Jul 2020 07:09:19 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1D0C420B490C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595858959;
+        bh=TojaKA1D2bkgSvEtbI6kYJOINajUXiJCFMf+z5sO/JQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9Ah6VaGMms3SbGnvnaoZ8XzOkKx7OutuDx91XWuJ0Nkr8Wt2yCA54LisnSN0dzUA
-         cnFdVS083p7GTn5OmbSVWbyfzMcmh6NRc1P2OLxuuSFq8ELYLmBlHwFLlcw8XaCC30
-         U5PNtrMl3afmQRWarZ+G6rEqUc3ZmM1JIJEojdc8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 4.19 15/86] SUNRPC reverting d03727b248d0 ("NFSv4 fix CLOSE not waiting for direct IO compeletion")
-Date:   Mon, 27 Jul 2020 16:03:49 +0200
-Message-Id: <20200727134915.109074546@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
-References: <20200727134914.312934924@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=lz5Tn0sm1IzQZ1ivUGl55HsNtgLm9JrFalLP6KB8PaOGy/cMdp//VBy2HXc3Kvj8e
+         513MuEEb5DlQ32PSGav+mjEkH0LFKHp7NdtnSxjQ9/s+EIlXcGDy8kLQc9eJiAMn/t
+         Hyu2V1PUciKf3kn07uOQVVZsHW09V9z4pxJ8H+uo=
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH 2/2] ima: Fail rule parsing when asymmetric key measurement isn't supportable
+Date:   Mon, 27 Jul 2020 09:08:31 -0500
+Message-Id: <20200727140831.64251-3-tyhicks@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200727140831.64251-1-tyhicks@linux.microsoft.com>
+References: <20200727140831.64251-1-tyhicks@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+Measuring keys is currently only supported for asymmetric keys. In the
+future, this might change.
 
-commit 65caafd0d2145d1dd02072c4ced540624daeab40 upstream.
+For now, the "func=KEY_CHECK" and "keyrings=" options are only
+appropriate when CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is enabled. Make
+this clear at policy load so that IMA policy authors don't assume that
+these policy language constructs are supported.
 
-Reverting commit d03727b248d0 "NFSv4 fix CLOSE not waiting for
-direct IO compeletion". This patch made it so that fput() by calling
-inode_dio_done() in nfs_file_release() would wait uninterruptably
-for any outstanding directIO to the file (but that wait on IO should
-be killable).
-
-The problem the patch was also trying to address was REMOVE returning
-ERR_ACCESS because the file is still opened, is supposed to be resolved
-by server returning ERR_FILE_OPEN and not ERR_ACCESS.
-
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 2b60c0ecedf8 ("IMA: Read keyrings= option from the IMA policy")
+Fixes: 5808611cccb2 ("IMA: Add KEY_CHECK func to measure keys")
+Suggested-by: Nayna Jain <nayna@linux.ibm.com>
+Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
 ---
- fs/nfs/direct.c |   13 ++++---------
- fs/nfs/file.c   |    1 -
- 2 files changed, 4 insertions(+), 10 deletions(-)
+ security/integrity/ima/ima_policy.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -396,6 +396,8 @@ static void nfs_direct_complete(struct n
- {
- 	struct inode *inode = dreq->inode;
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index c328cfa0fc49..05f012fd3dca 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -1233,7 +1233,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 				entry->func = POLICY_CHECK;
+ 			else if (strcmp(args[0].from, "KEXEC_CMDLINE") == 0)
+ 				entry->func = KEXEC_CMDLINE;
+-			else if (strcmp(args[0].from, "KEY_CHECK") == 0)
++			else if (IS_ENABLED(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) &&
++				 strcmp(args[0].from, "KEY_CHECK") == 0)
+ 				entry->func = KEY_CHECK;
+ 			else
+ 				result = -EINVAL;
+@@ -1290,7 +1291,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 		case Opt_keyrings:
+ 			ima_log_string(ab, "keyrings", args[0].from);
  
-+	inode_dio_end(inode);
-+
- 	if (dreq->iocb) {
- 		long res = (long) dreq->error;
- 		if (dreq->count != 0) {
-@@ -407,10 +409,7 @@ static void nfs_direct_complete(struct n
- 
- 	complete(&dreq->completion);
- 
--	igrab(inode);
- 	nfs_direct_req_release(dreq);
--	inode_dio_end(inode);
--	iput(inode);
- }
- 
- static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
-@@ -540,10 +539,8 @@ static ssize_t nfs_direct_read_schedule_
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		igrab(inode);
--		nfs_direct_req_release(dreq);
- 		inode_dio_end(inode);
--		iput(inode);
-+		nfs_direct_req_release(dreq);
- 		return result < 0 ? result : -EIO;
- 	}
- 
-@@ -960,10 +957,8 @@ static ssize_t nfs_direct_write_schedule
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		igrab(inode);
--		nfs_direct_req_release(dreq);
- 		inode_dio_end(inode);
--		iput(inode);
-+		nfs_direct_req_release(dreq);
- 		return result < 0 ? result : -EIO;
- 	}
- 
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -82,7 +82,6 @@ nfs_file_release(struct inode *inode, st
- 	dprintk("NFS: release(%pD2)\n", filp);
- 
- 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
--	inode_dio_wait(inode);
- 	nfs_file_clear_open_context(filp);
- 	return 0;
- }
-
+-			if (entry->keyrings) {
++			if (!IS_ENABLED(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) ||
++			    entry->keyrings) {
+ 				result = -EINVAL;
+ 				break;
+ 			}
+-- 
+2.25.1
 
