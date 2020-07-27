@@ -2,278 +2,153 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB018C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F46C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 949D0206D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9C7206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DhUKGdN9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oFOGwTQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgG0NRU (ORCPT
+        id S1728591AbgG0NRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgG0NRU (ORCPT
+        Mon, 27 Jul 2020 09:17:07 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:36498 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727120AbgG0NRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:17:20 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25761C061794;
-        Mon, 27 Jul 2020 06:17:20 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id b9so7977187plx.6;
-        Mon, 27 Jul 2020 06:17:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5M1ztqlAmxsfJxB6TYJ36mBz6BebKaVLzv7BqF77ask=;
-        b=DhUKGdN9GVxPl/HxJBHias4O/OdYHRowok0FHtqa3zT9v4UZkPcobizy2rRTmDK7iT
-         J1j9Y1QQTya37khlE5r6QbrW+gQOAjgYgEboqVUHnA2thT3jvMbei8bCcJYzECoChx1k
-         2UaBvnnYKiMmT3CqpT0fYpmQQqcpy82WAhfcwTPPWJAYeK6p7rG2S/k+33amqJjAXiPf
-         hFeORVrQF6iIGqf3tzlO8tFFCFe4aN3acVxKJv1/aKzIqCv4YnGkOXmA0hsv0MQvR0PM
-         cTpUPjEUclGB6v0wYW/jNL9EZRnubd/8kZv8l25zikID3j6NgqxIan4BXQIuDGFe4GAj
-         MO0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5M1ztqlAmxsfJxB6TYJ36mBz6BebKaVLzv7BqF77ask=;
-        b=Y5D/z2PC214pFZ4zR3EnaEdwgjqhuqqub24tvR/EAMrPCgcXHyrVZxL4yCT3t5SZmC
-         D6xqt3ywTr1m2R9befGSSc7EyvXlIJv0SshNxGRPO6p6lyeiyN0CM6LRuMA/Qwawce8y
-         CTFymhPVSfo8wBZPDklVdLAch3WXosdCvO/vfSUt3JPzL+Ur0fLJ783Zc7PfLcvQ/Orf
-         ZvOSPyQjHAzGFu5eqtyFAo9CkxXs0mzOoMFAo0hKOWfgEMltPYLnEmxO3NGtHCPOYfXq
-         J5ZoocHsUr61WxzQX43uQVpwXoluLUwM3sXJB8nBLaXmFjvdrOEa687wvPs7cEBDy3qh
-         mOsw==
-X-Gm-Message-State: AOAM531PDK57Py3nSTIICCoB2dVCToWvn8opzVDAiDr16NbeuJhtWE15
-        4nxiHZ9kpeNJyrLqaG233yxtTMXwhiFB8D7JfwA=
-X-Google-Smtp-Source: ABdhPJyHNARron829QMmf5qROI7BZijxKNcznaVBBQ3zn6C8gxNMcMqsLkWO1LKvEMqBFLSMwxeMwSak6T1Q4G9ODII=
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr16478818pjp.228.1595855839567;
- Mon, 27 Jul 2020 06:17:19 -0700 (PDT)
+        Mon, 27 Jul 2020 09:17:04 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RD6ulU071929;
+        Mon, 27 Jul 2020 13:16:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=f0tYF1Lyo1O+rXlsLaTIUXOTNe5xa73rA7qmFjlVp0A=;
+ b=oFOGwTQxPC173fC1DK090kUF5pNI5jAfbtAQqQpea9b2D5KpIZOljmzt2wx05XvTtxCr
+ g8umNtuDMbZV2mji+0hWtvhXOg9TbI49T2js6YdR8cBLXy/ATKagGmnjXD5OzjQ+kUOG
+ +BHWW9FeUfPnilypy51M8WPPIut03u8+EFs1RfmwhtYpveoicpkgzzLi6HvFbnLXnh9T
+ GCwus5EXpF9HeQql/glssT+fHDwg+2cD0PEDJEz2h0VKb2/XCbBpeaUcjpxNvk0YkTmb
+ fTfAK64N2E+hviFHnHYzb2vnWK+htgvLZcxFiIlM1bauKlYc8d6kajBczbBnIR9bzx6T Iw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 32hu1j1ehn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jul 2020 13:16:26 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RD9Hrm063932;
+        Mon, 27 Jul 2020 13:16:26 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 32hu5qpa5n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 13:16:26 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06RDGHxF009068;
+        Mon, 27 Jul 2020 13:16:18 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Jul 2020 06:16:17 -0700
+Date:   Mon, 27 Jul 2020 16:16:08 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vandana BN <bnvandana@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
+ kernel-infoleak in video_put_user()
+Message-ID: <20200727131608.GD1913@kadam>
+References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
+ <20200726222703.102701-1-yepeilin.cs@gmail.com>
+ <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200727122242.32337-1-vadym.kochan@plvision.eu> <20200727122242.32337-5-vadym.kochan@plvision.eu>
-In-Reply-To: <20200727122242.32337-5-vadym.kochan@plvision.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Jul 2020 16:17:04 +0300
-Message-ID: <CAHp75Ve6YtrAW60FfT8QYsb6B3ZQuS7dZdz7dD9zB9b1=cpfog@mail.gmail.com>
-Subject: Re: [net-next v4 4/6] net: marvell: prestera: Add ethtool interface support
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mickey Rachamim <mickeyr@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270096
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 3:23 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
->
-> The ethtool API provides support for the configuration of the following
-> features: speed and duplex, auto-negotiation, MDI-x, forward error
-> correction, port media type. The API also provides information about the
-> port status, hardware and software statistic. The following limitation
-> exists:
->
->     - port media type should be configured before speed setting
->     - ethtool -m option is not supported
->     - ethtool -p option is not supported
->     - ethtool -r option is supported for RJ45 port only
->     - the following combination of parameters is not supported:
->
->           ethtool -s sw1pX port XX autoneg on
->
->     - forward error correction feature is supported only on SFP ports, 10G
->       speed
->
->     - auto-negotiation and MDI-x features are not supported on
->       Copper-to-Fiber SFP module
+On Mon, Jul 27, 2020 at 09:25:16AM +0200, Arnd Bergmann wrote:
+> On Mon, Jul 27, 2020 at 12:28 AM Peilin Ye <yepeilin.cs@gmail.com> wrote:
+> >
+> > video_put_user() is copying uninitialized stack memory to userspace due
+> > to the compiler not initializing holes in the structures declared on the
+> > stack. Fix it by initializing `ev32` and `vb32` using memset().
+> >
+> > Reported-and-tested-by: syzbot+79d751604cb6f29fbf59@syzkaller.appspotmail.com
+> > Link: https://syzkaller.appspot.com/bug?extid=79d751604cb6f29fbf59
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> 
+> Thanks a lot for addressing this! I now see that I actually created a similar
+> bugfix for it back in January, but for some reason that got stuck in my
+> backlog and I never wrote a proper description for it or sent it out to the
+> list, sorry about that. I would hope we could find a way to have either
+> the compiler or sparse warn if we copy uninitialized data to user space,
+> but we now don't even check for that within the kernel any more.
 
-...
+Here are my latest warnings on linux-next from Friday.
 
-> +       if (new_mode < PRESTERA_LINK_MODE_MAX)
-> +               err = prestera_hw_port_link_mode_set(port, new_mode);
-> +       else
-> +               err = -EINVAL;
-> +
-> +       if (!err) {
-> +               port->caps.type = type;
-> +               port->autoneg = false;
-> +       }
-> +
-> +       return err;
+block/scsi_ioctl.c:707 scsi_put_cdrom_generic_arg() warn: check that 'cgc32' doesn't leak information (struct has a hole after 'data_direction')
+drivers/input/misc/uinput.c:743 uinput_ff_upload_to_user() warn: check that 'ff_up_compat' doesn't leak information (struct has a hole after 'replay')
+drivers/input/misc/uinput.c:958 uinput_ioctl_handler() warn: check that 'ff_up' doesn't leak information (struct has a hole after 'replay')
+drivers/firewire/core-cdev.c:463 ioctl_get_info() warn: check that 'bus_reset' doesn't leak information (struct has a hole after 'generation')
+drivers/scsi/megaraid/megaraid_mm.c:824 kioc_to_mimd() warn: check that 'cinfo.base' doesn't leak information
+drivers/gpio/gpiolib-cdev.c:473 lineevent_read() warn: check that 'ge' doesn't leak information (struct has a hole after 'id')
+drivers/gpu/drm/i915/i915_query.c:136 query_engine_info() warn: check that 'query.num_engines' doesn't leak information
+drivers/gpu/drm/drm_bufs.c:1357 copy_one_buf() warn: check that 'v' doesn't leak information (struct has a hole after 'flags')
+drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c:785 amdgpu_info_ioctl() warn: check that 'dev_info' doesn't leak information (struct has a hole after 'pa_sc_tile_steering_override')
+drivers/block/floppy.c:3132 raw_cmd_copyout() warn: check that 'cmd' doesn't leak information (struct has a hole after 'flags')
+drivers/char/hpet.c:675 hpet_ioctl() warn: check that 'info' doesn't leak information (struct has a hole after 'hi_timer')
+drivers/media/v4l2-core/v4l2-ioctl.c:3204 video_put_user() warn: check that 'ev32' doesn't leak information (struct has a hole after 'type')
+drivers/media/v4l2-core/v4l2-ioctl.c:3229 video_put_user() warn: check that 'vb32' doesn't leak information (struct has a hole after 'memory')
+drivers/net/wan/sbni.c:1320 sbni_ioctl() warn: check that 'flags' doesn't leak information (struct has a hole after 'rxl')
+drivers/infiniband/hw/qedr/verbs.c:1816 qedr_create_user_qp() warn: check that 'uresp' doesn't leak information (struct has a hole after 'sq_icid')
+drivers/infiniband/hw/cxgb4/provider.c:107 c4iw_alloc_ucontext() warn: check that 'uresp.reserved' doesn't leak information
+drivers/tty/vt/vt_ioctl.c:1218 vt_compat_ioctl() warn: check that 'op' doesn't leak information (struct has a hole after 'charcount')
+net/smc/smc_diag.c:181 __smc_diag_dump() warn: check that 'dinfo' doesn't leak information (struct has a hole after 'linkid')
+net/sched/act_ife.c:638 tcf_ife_dump() warn: check that 'opt' doesn't leak information (struct has a hole after 'flags')
+net/sched/act_skbmod.c:232 tcf_skbmod_dump() warn: check that 'opt' doesn't leak information (struct has a hole after 'bindcnt')
+net/sched/act_connmark.c:187 tcf_connmark_dump() warn: check that 'opt' doesn't leak information (struct has a hole after 'zone')
+net/openvswitch/conntrack.c:311 ovs_ct_put_key() warn: check that 'orig' doesn't leak information (struct has a hole after 'ipv4_proto')
+net/openvswitch/conntrack.c:322 ovs_ct_put_key() warn: check that 'orig' doesn't leak information (struct has a hole after 'ipv6_proto')
+net/rds/recv.c:492 rds_notify_queue_get() warn: check that 'cmsg' doesn't leak information (struct has a hole after 'status')
+net/xdp/xsk.c:870 xsk_getsockopt() warn: check that 'stats.rx_ring_full' doesn't leak information
+kernel/signal.c:3524 __do_sys_rt_sigtimedwait() warn: check that 'info' doesn't leak information (struct has a hole after 'si_code')
+kernel/signal.c:3524 __do_sys_rt_sigtimedwait() warn: check that 'info' doesn't leak information (struct has a hole after 'si_code')
+kernel/signal.c:3556 __do_sys_rt_sigtimedwait_time32() warn: check that 'info' doesn't leak information (struct has a hole after 'si_code')
+kernel/signal.c:3556 __do_sys_rt_sigtimedwait_time32() warn: check that 'info' doesn't leak information (struct has a hole after 'si_code')
+kernel/signal.c:4055 __do_sys_sigaltstack() warn: check that 'old' doesn't leak information (struct has a hole after 'ss_flags')
+kernel/signal.c:4055 __do_sys_sigaltstack() warn: check that 'old' doesn't leak information (struct has a hole after 'ss_flags')
+kernel/ptrace.c:998 ptrace_get_syscall_info() warn: check that 'info' doesn't leak information (struct has a hole after 'op')
 
-Again
-
-  if (new_mode >= ...)
-    return -EINVAL;
-
-  err = ...
-  if (err)
-    return err;
-
-  ...
-  return 0;
-
-...
-
-> +       ecmd->base.speed = !err ? speed : SPEED_UNKNOWN;
-
-Why not positive conditional?
-
-...
-
-> +       if (!prestera_hw_port_duplex_get(port, &duplex)) {
-
-Ditto.
-
-...
-
-> +static int
-> +prestera_ethtool_set_link_ksettings(struct net_device *dev,
-> +                                   const struct ethtool_link_ksettings *ecmd)
-> +{
-> +       struct prestera_port *port = netdev_priv(dev);
-
-> +       u64 adver_modes = 0;
-> +       u8 adver_fec = 0;
-
-Redundant assignments?
-
-> +       int err;
-> +
-> +       err = prestera_port_type_set(ecmd, port);
-> +       if (err)
-> +               return err;
-> +
-> +       if (port->caps.transceiver == PRESTERA_PORT_TCVR_COPPER) {
-> +               err = prestera_port_mdix_set(ecmd, port);
-> +               if (err)
-> +                       return err;
-> +       }
-> +
-> +       prestera_modes_from_eth(ecmd->link_modes.advertising, &adver_modes,
-> +                               &adver_fec, port->caps.type);
-
-> +       return 0;
-> +}
-
-...
-
-> +       struct prestera_msg_port_attr_req req = {
-> +               .attr = PRESTERA_CMD_PORT_ATTR_REMOTE_CAPABILITY,
-> +               .port = port->hw_id,
-> +               .dev = port->dev_id
-
-+ comma
-
-> +       };
-
-...
-
-> +       struct prestera_msg_port_attr_req req = {
-> +               .attr = PRESTERA_CMD_PORT_ATTR_REMOTE_FC,
-> +               .port = port->hw_id,
-> +               .dev = port->dev_id
-
-Ditto.
-
-> +       };
-
-...
-
-> +       switch (resp.param.fc) {
-> +       case PRESTERA_FC_SYMMETRIC:
-> +               *pause = true;
-> +               *asym_pause = false;
-> +               break;
-> +       case PRESTERA_FC_ASYMMETRIC:
-> +               *pause = false;
-> +               *asym_pause = true;
-> +               break;
-> +       case PRESTERA_FC_SYMM_ASYMM:
-> +               *pause = true;
-> +               *asym_pause = true;
-> +               break;
-> +       default:
-> +               *pause = false;
-> +               *asym_pause = false;
-> +       }
-> +
-> +       return err;
-
-return 0;
-
-...
-
-> +int prestera_hw_port_type_get(const struct prestera_port *port, u8 *type)
-> +{
-
-> +       struct prestera_msg_port_attr_req req = {
-> +               .attr = PRESTERA_CMD_PORT_ATTR_TYPE,
-> +               .port = port->hw_id,
-> +               .dev = port->dev_id
-> +       };
-
-> +       return err;
-
-Same comments as above.
-And seems more code needs the same.
-
-> +}
-
-...
-
-> +static u8 prestera_hw_mdix_to_eth(u8 mode)
-> +{
-> +       switch (mode) {
-> +       case PRESTERA_PORT_TP_MDI:
-> +               return ETH_TP_MDI;
-> +       case PRESTERA_PORT_TP_MDIX:
-> +               return ETH_TP_MDI_X;
-> +       case PRESTERA_PORT_TP_AUTO:
-> +               return ETH_TP_MDI_AUTO;
-> +       }
-> +
-> +       return ETH_TP_MDI_INVALID;
-
-Use the default case.
-
-> +}
-> +
-> +static u8 prestera_hw_mdix_from_eth(u8 mode)
-> +{
-> +       switch (mode) {
-> +       case ETH_TP_MDI:
-> +               return PRESTERA_PORT_TP_MDI;
-> +       case ETH_TP_MDI_X:
-> +               return PRESTERA_PORT_TP_MDIX;
-> +       case ETH_TP_MDI_AUTO:
-> +               return PRESTERA_PORT_TP_AUTO;
-> +       }
-> +
-> +       return PRESTERA_PORT_TP_NA;
-
-Ditto.
-
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+regards,
+dan carpenter
