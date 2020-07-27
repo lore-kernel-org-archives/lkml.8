@@ -2,114 +2,78 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE07BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F5DC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A215420658
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AFF020658
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:25:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="a1ck6GHo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgG0DUU (ORCPT
+        id S1726967AbgG0DZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 23:20:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61542 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726044AbgG0DUT (ORCPT
+        Sun, 26 Jul 2020 23:25:52 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:23218 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726701AbgG0DZw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 23:20:19 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R349AK153107;
-        Sun, 26 Jul 2020 23:20:17 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32ggmf6pd4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 23:20:17 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R37Wlp163593;
-        Sun, 26 Jul 2020 23:20:16 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32ggmf6pcd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 23:20:16 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R3F4Kl012129;
-        Mon, 27 Jul 2020 03:20:15 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4hqwa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 03:20:14 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R3KC1x31654082
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 03:20:12 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C054A42042;
-        Mon, 27 Jul 2020 03:20:12 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CDE084204B;
-        Mon, 27 Jul 2020 03:20:11 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.33.112])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jul 2020 03:20:11 +0000 (GMT)
-Subject: Re: ext4: delete the invalid BUGON in ext4_mb_load_buddy_gfp()
-To:     brookxu <brookxu.cn@gmail.com>, tytso@mit.edu,
-        adilger.kernel@dilger.ca
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <ad68e8a2-5ec3-5beb-537f-f3e53f55367a@gmail.com>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Mon, 27 Jul 2020 08:50:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Sun, 26 Jul 2020 23:25:52 -0400
+X-UUID: ed7933e00dc847e383996d2f93d14690-20200727
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=eSopwLpH/77DG0bJJS5cJFVvSCyQIzU5BBA1AxHDxlA=;
+        b=a1ck6GHoJ6jLtLN3ma2OO38vM0av3wzNJHxpBikaAeOyA/qOmNOzDx4PAej1Xk4CRugb+ZheHT7dHCR9HkW6dcz9uX9Dg3C91BvzCW6Sa0PPNRhkGa++xQvBYcgSAv3WBnM68S+8g5KtzPMkR05ms1pNbhudAZD3U6ej1sfGOUc=;
+X-UUID: ed7933e00dc847e383996d2f93d14690-20200727
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 297905851; Mon, 27 Jul 2020 11:25:50 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 27 Jul 2020 11:25:47 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 27 Jul 2020 11:25:47 +0800
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sami Tolvanen <samitolvanen@google.com>
+CC:     Neal Liu <neal.liu@mediatek.com>, <linux-acpi@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
+Subject: [PATCH v3] cpuidle: Fix CFI failure
+Date:   Mon, 27 Jul 2020 11:25:45 +0800
+Message-ID: <1595820346-4361-1-git-send-email-neal.liu@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-In-Reply-To: <ad68e8a2-5ec3-5beb-537f-f3e53f55367a@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-Message-Id: <20200727032011.CDE084204B@d06av24.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_02:2020-07-24,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 clxscore=1015 phishscore=0
- mlxlogscore=903 priorityscore=1501 adultscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270016
+Content-Type: text/plain
+X-TM-SNTS-SMTP: D08AD23496ADA7D400167910677C0DCFFBB567C0F76E1255568C6D18DA940D892000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Y2hhbmdlcyBzaW5jZSB2MjoNCi0gYWRkIG1vcmUgY29tbWVudHMgb24gZW50ZXJfczJpZGxlIHRv
+IGV4cGxhaW4gd2h5IGl0IGlzIG5lY2Vzc2FyeSB0byByZXR1cm4NCiAgaW50IGV2ZW4gaWYgaXRz
+IHJldHVybiB2YWx1ZSBpcyBuZXZlciB1c2VkLg0KDQpjaGFuZ2VzIHNpbmNlIHYxOg0KLSBhZGQg
+bW9yZSBkZXNjcmlwdGlvbiBpbiBjb21taXQgbWVzc2FnZS4NCg0KKioqIEJMVVJCIEhFUkUgKioq
+DQoNCk5lYWwgTGl1ICgxKToNCiAgY3B1aWRsZTogY2hhbmdlIGVudGVyX3MyaWRsZSgpIHByb3Rv
+dHlwZQ0KDQogZHJpdmVycy9hY3BpL3Byb2Nlc3Nvcl9pZGxlLmMgICB8IDYgKysrKy0tDQogZHJp
+dmVycy9jcHVpZGxlL2NwdWlkbGUtdGVncmEuYyB8IDggKysrKystLS0NCiBkcml2ZXJzL2lkbGUv
+aW50ZWxfaWRsZS5jICAgICAgIHwgNiArKysrLS0NCiBpbmNsdWRlL2xpbnV4L2NwdWlkbGUuaCAg
+ICAgICAgIHwgOSArKysrKystLS0NCiA0IGZpbGVzIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyks
+IDEwIGRlbGV0aW9ucygtKQ0KDQotLSANCjIuMTguMA0K
 
-
-On 7/27/20 7:24 AM, brookxu wrote:
-> Delete the invalid BUGON in ext4_mb_load_buddy_gfp(), the previous
-> code has already judged whether page is NULL.
-> 
-> Signed-off-by: Chunguang Xu <brookxu@tencent.com>
-
-Thanks for the patch. LGTM. Feel free to add.
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-
-> ---
->   fs/ext4/mballoc.c | 3 ---
->   1 file changed, 3 deletions(-)
-> 
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index 28a139f..9b1c3ad 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -1279,9 +1279,6 @@ int ext4_mb_init_group(struct super_block *sb, ext4_group_t group, gfp_t gfp)
->       e4b->bd_buddy_page = page;
->       e4b->bd_buddy = page_address(page) + (poff * sb->s_blocksize);
->   
-> -    BUG_ON(e4b->bd_bitmap_page == NULL);
-> -    BUG_ON(e4b->bd_buddy_page == NULL);
-> -
->       return 0;
->   
->   err:
-> 
