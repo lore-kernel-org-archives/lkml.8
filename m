@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDF2C43457
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAEFC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FCC52173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5EE20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859726;
-	bh=mosuk51w2WKwugCfuBZtqjV/aSmnJy/uMF70i0hQ1Y4=;
+	s=default; t=1595859733;
+	bh=gyQdnrPqdFImMtpb8jo3c1WTMauHr62tKoWb/8+nMWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pQBUM+N8I7so1lMWkM5/C9y/96JdLUACq8Z6sqKgiCDbeXRrTmPNg/tWRQSmkOP+G
-	 i6xUYt+Qmuy4da0cUr97W9UuLJ4hQ7tnsTILG4HGsTS/6zeAKZLDhgVHd4zCVlzaKI
-	 4c8KrGzdR5xCaxNzJry+AGz/JIJdJlQJSu8actmU=
+	b=lWvtXXMzdKzDK/z2KPWT9FWEo/eHEuavjz2p8uwdpOWwbX8YysjZjj9mJb22MGi0W
+	 cVvIUWn9+UsTd3VJLl0eAKvAs8X7hpa86j+VgYv0EC67UN4Px8XN3U0mIMJPSS9iBc
+	 K1hkDE2ksULx16nRzRLHyCEvje1l4dN/Pz2pPHpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731830AbgG0OWE (ORCPT
+        id S1731848AbgG0OWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:22:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50842 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:22:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731825AbgG0OWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:22:02 -0400
+        id S1731296AbgG0OWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:22:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82D1F2070B;
-        Mon, 27 Jul 2020 14:22:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 029182173E;
+        Mon, 27 Jul 2020 14:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859722;
-        bh=mosuk51w2WKwugCfuBZtqjV/aSmnJy/uMF70i0hQ1Y4=;
+        s=default; t=1595859727;
+        bh=gyQdnrPqdFImMtpb8jo3c1WTMauHr62tKoWb/8+nMWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Toa3N6hgyARDwKiOvTe49dzkbuW+n7koDcC0gmlZSYabJ/+FvX4ANnALQ3lLyyjzn
-         Y4jicqToG8GyO7eXJaelsrXymy+ccPZOmpS6y/ABcnAYpLicC27In+82tNxWBpZ85J
-         6AmpxZPUdJXaN+pP2KeCz1QB491S/Zjo+eV964y0=
+        b=cjKy1Way9fgeXeKnJRuyWef+5e3i04mg4T4fVe5dcDuAgAKYgp8VhdHSXGjklk2pL
+         dTbXs1/Ms7MxL71sPLZHYLrhlCNCHsr/26YcGjrnY4Q4ROGkXKbij1Lf8byxX+Wo5I
+         NKwqGi0GLCHC7LKYUXJtoMI04ViUGz4sQ5Itc7wI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, George Kennedy <george.kennedy@oracle.com>,
-        syzbot+4cd84f527bf4a10fc9c1@syzkaller.appspotmail.com,
-        Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
+        Huazhong tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 052/179] ax88172a: fix ax88172a_unbind() failures
-Date:   Mon, 27 Jul 2020 16:03:47 +0200
-Message-Id: <20200727134935.202883308@linuxfoundation.org>
+Subject: [PATCH 5.7 080/179] net: hns3: fix return value error when query MAC link status fail
+Date:   Mon, 27 Jul 2020 16:04:15 +0200
+Message-Id: <20200727134936.580410663@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,34 +61,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Kennedy <george.kennedy@oracle.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-[ Upstream commit c28d9a285668c799eeae2f7f93e929a6028a4d6d ]
+[ Upstream commit fac24df7b9a6d9363abdff0e351ade041dd16daa ]
 
-If ax88172a_unbind() fails, make sure that the return code is
-less than zero so that cleanup is done properly and avoid UAF.
+Currently, PF queries the MAC link status per second by calling
+function hclge_get_mac_link_status(). It return the error code
+when failed to send cmdq command to firmware. It's incorrect,
+because this return value is used as the MAC link status, which
+0 means link down, and none-zero means link up. So fixes it.
 
-Fixes: a9a51bd727d1 ("ax88172a: fix information leak on short answers")
-Signed-off-by: George Kennedy <george.kennedy@oracle.com>
-Reported-by: syzbot+4cd84f527bf4a10fc9c1@syzkaller.appspotmail.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 46a3df9f9718 ("net: hns3: Add HNS3 Acceleration Engine & Compatibility Layer Support")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Huazhong tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/ax88172a.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../hisilicon/hns3/hns3pf/hclge_main.c        | 49 +++++++++----------
+ .../hisilicon/hns3/hns3pf/hclge_main.h        |  3 ++
+ 2 files changed, 25 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/net/usb/ax88172a.c b/drivers/net/usb/ax88172a.c
-index 4e514f5d7c6c7..fd3a04d98dc14 100644
---- a/drivers/net/usb/ax88172a.c
-+++ b/drivers/net/usb/ax88172a.c
-@@ -187,6 +187,7 @@ static int ax88172a_bind(struct usbnet *dev, struct usb_interface *intf)
- 	ret = asix_read_cmd(dev, AX_CMD_READ_NODE_ID, 0, 0, ETH_ALEN, buf, 0);
- 	if (ret < ETH_ALEN) {
- 		netdev_err(dev->net, "Failed to read MAC address: %d\n", ret);
-+		ret = -EIO;
- 		goto free;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 4de268a879582..b66b93f320b42 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -2680,11 +2680,10 @@ void hclge_task_schedule(struct hclge_dev *hdev, unsigned long delay_time)
+ 				    delay_time);
+ }
+ 
+-static int hclge_get_mac_link_status(struct hclge_dev *hdev)
++static int hclge_get_mac_link_status(struct hclge_dev *hdev, int *link_status)
+ {
+ 	struct hclge_link_status_cmd *req;
+ 	struct hclge_desc desc;
+-	int link_status;
+ 	int ret;
+ 
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_QUERY_LINK_STATUS, true);
+@@ -2696,33 +2695,25 @@ static int hclge_get_mac_link_status(struct hclge_dev *hdev)
  	}
- 	memcpy(dev->net->dev_addr, buf, ETH_ALEN);
+ 
+ 	req = (struct hclge_link_status_cmd *)desc.data;
+-	link_status = req->status & HCLGE_LINK_STATUS_UP_M;
++	*link_status = (req->status & HCLGE_LINK_STATUS_UP_M) > 0 ?
++		HCLGE_LINK_STATUS_UP : HCLGE_LINK_STATUS_DOWN;
+ 
+-	return !!link_status;
++	return 0;
+ }
+ 
+-static int hclge_get_mac_phy_link(struct hclge_dev *hdev)
++static int hclge_get_mac_phy_link(struct hclge_dev *hdev, int *link_status)
+ {
+-	unsigned int mac_state;
+-	int link_stat;
++	struct phy_device *phydev = hdev->hw.mac.phydev;
++
++	*link_status = HCLGE_LINK_STATUS_DOWN;
+ 
+ 	if (test_bit(HCLGE_STATE_DOWN, &hdev->state))
+ 		return 0;
+ 
+-	mac_state = hclge_get_mac_link_status(hdev);
+-
+-	if (hdev->hw.mac.phydev) {
+-		if (hdev->hw.mac.phydev->state == PHY_RUNNING)
+-			link_stat = mac_state &
+-				hdev->hw.mac.phydev->link;
+-		else
+-			link_stat = 0;
+-
+-	} else {
+-		link_stat = mac_state;
+-	}
++	if (phydev && (phydev->state != PHY_RUNNING || !phydev->link))
++		return 0;
+ 
+-	return !!link_stat;
++	return hclge_get_mac_link_status(hdev, link_status);
+ }
+ 
+ static void hclge_update_link_status(struct hclge_dev *hdev)
+@@ -2732,6 +2723,7 @@ static void hclge_update_link_status(struct hclge_dev *hdev)
+ 	struct hnae3_handle *rhandle;
+ 	struct hnae3_handle *handle;
+ 	int state;
++	int ret;
+ 	int i;
+ 
+ 	if (!client)
+@@ -2740,7 +2732,12 @@ static void hclge_update_link_status(struct hclge_dev *hdev)
+ 	if (test_and_set_bit(HCLGE_STATE_LINK_UPDATING, &hdev->state))
+ 		return;
+ 
+-	state = hclge_get_mac_phy_link(hdev);
++	ret = hclge_get_mac_phy_link(hdev, &state);
++	if (ret) {
++		clear_bit(HCLGE_STATE_LINK_UPDATING, &hdev->state);
++		return;
++	}
++
+ 	if (state != hdev->hw.mac.link) {
+ 		for (i = 0; i < hdev->num_vmdq_vport + 1; i++) {
+ 			handle = &hdev->vport[i].nic;
+@@ -6435,14 +6432,15 @@ static int hclge_mac_link_status_wait(struct hclge_dev *hdev, int link_ret)
+ {
+ #define HCLGE_MAC_LINK_STATUS_NUM  100
+ 
++	int link_status;
+ 	int i = 0;
+ 	int ret;
+ 
+ 	do {
+-		ret = hclge_get_mac_link_status(hdev);
+-		if (ret < 0)
++		ret = hclge_get_mac_link_status(hdev, &link_status);
++		if (ret)
+ 			return ret;
+-		else if (ret == link_ret)
++		if (link_status == link_ret)
+ 			return 0;
+ 
+ 		msleep(HCLGE_LINK_STATUS_MS);
+@@ -6453,9 +6451,6 @@ static int hclge_mac_link_status_wait(struct hclge_dev *hdev, int link_ret)
+ static int hclge_mac_phy_link_status_wait(struct hclge_dev *hdev, bool en,
+ 					  bool is_phy)
+ {
+-#define HCLGE_LINK_STATUS_DOWN 0
+-#define HCLGE_LINK_STATUS_UP   1
+-
+ 	int link_ret;
+ 
+ 	link_ret = en ? HCLGE_LINK_STATUS_UP : HCLGE_LINK_STATUS_DOWN;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 71df23d5f1b4d..8784168f8f6f7 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -316,6 +316,9 @@ enum hclge_link_fail_code {
+ 	HCLGE_LF_XSFP_ABSENT,
+ };
+ 
++#define HCLGE_LINK_STATUS_DOWN 0
++#define HCLGE_LINK_STATUS_UP   1
++
+ #define HCLGE_PG_NUM		4
+ #define HCLGE_SCH_MODE_SP	0
+ #define HCLGE_SCH_MODE_DWRR	1
 -- 
 2.25.1
 
