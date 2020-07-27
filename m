@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEC0C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91260C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD5521775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D0C720838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859075;
-	bh=/n45QYFcbxAEw47FM3WmH2IEHFCAqBv9oDcfilT76/M=;
+	s=default; t=1595859078;
+	bh=7/bT1ObWFc0vmB+DUQCMp5JYvmyrsUL+aA9T/8le4Dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hGANpxgnc13Z4xFhdQt50VY/LpwNFGmG11bC73eEzQNPIW/gveR5EzR4qkFpytNB+
-	 oUsms+4Cg4qs0U4KoMXR3ONeIDUTykr8H8W3M0u70OnLHPP8fXtARZotOTSXXxroDC
-	 ELnLD9C3oR1tFMIGgA9roEmda6l1+gLUeIaM+kMg=
+	b=e9DiP60Z6zg1W9751rRh0Qg2th4PyapuGQ5hDUDvpxlJngdW3M640ZXRN8VuEPuZy
+	 g8Z4qpqBesyY+ystSaBSYKEz6wpFdC+yrB0O/G8ZONhvpuoBukejLi4Psdm+VJUJLt
+	 vu0eQpskv3FbKlJn4XlijOL8ngv1G3F4RIF42t6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbgG0OLN (ORCPT
+        id S1729999AbgG0OLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:11:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34624 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:11:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729299AbgG0OLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:11:11 -0400
+        id S1729993AbgG0OLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:11:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D88C2173E;
-        Mon, 27 Jul 2020 14:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83C07208E4;
+        Mon, 27 Jul 2020 14:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859071;
-        bh=/n45QYFcbxAEw47FM3WmH2IEHFCAqBv9oDcfilT76/M=;
+        s=default; t=1595859074;
+        bh=7/bT1ObWFc0vmB+DUQCMp5JYvmyrsUL+aA9T/8le4Dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lLPa6eMvEHOe6SDHO9VlLcYzPq6z2tVadmbOhnkieoEyV9yYbmnsXlUZ/uCLg1Pq5
-         OJgzBPByXlc19bLjQMnilO9BPPYpjVJ/BeRMvql0pJu7Kf1yEMbfsxitSr7NKo5OQ4
-         Zc4Oty02nPvCU1M7GpU3ebFVIq1BSQ64lFhpitn8=
+        b=Eqif9O2KLQKysbk2esvvEg+B9udQBYOB+xl2dnuoYrng6BiJ27Us6y5Di5FXdOGD7
+         13ijE9ZA1CCu7vc/XUoNWUxlHyM7WoIwZ3LYOoQe+bg7uYSzQHV9fnaC4gj/zZSJyP
+         9JOSjQDQQgKh88d8Kd/XPQhKEsjOYqZcBkcQ/5ts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Chu Lin <linchuyuan@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 55/86] usb: gadget: udc: gr_udc: fix memleak on error handling path in gr_ep_init()
-Date:   Mon, 27 Jul 2020 16:04:29 +0200
-Message-Id: <20200727134917.173467637@linuxfoundation.org>
+Subject: [PATCH 4.19 56/86] hwmon: (adm1275) Make sure we are reading enough data for different chips
+Date:   Mon, 27 Jul 2020 16:04:30 +0200
+Message-Id: <20200727134917.225251026@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -60,41 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Chu Lin <linchuyuan@google.com>
 
-[ Upstream commit c8f8529e2c4141afa2ebb487ad48e8a6ec3e8c99 ]
+[ Upstream commit 6d1d41c075a1a54ba03370e268171fec20e06563 ]
 
-gr_ep_init() does not assign the allocated request anywhere if allocation
-of memory for the buffer fails. This is a memory leak fixed by the given
-patch.
+Issue:
+When PEC is enabled, binding adm1272 to the adm1275 would
+fail due to PEC error. See below:
+adm1275: probe of xxxx failed with error -74
 
-Found by Linux Driver Verification project (linuxtesting.org).
+Diagnosis:
+Per the datasheet of adm1272, adm1278, adm1293 and amd1294,
+PMON_CONFIG (0xd4) is 16bits wide. On the other hand,
+PMON_CONFIG (0xd4) for adm1275 is 8bits wide. The driver should not
+assume everything is 8bits wide and read only 8bits from it.
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Solution:
+If it is adm1272, adm1278, adm1293 and adm1294, use i2c_read_word.
+Else, use i2c_read_byte
+
+Testing:
+Binding adm1272 to the driver.
+The change is only tested on adm1272.
+
+Signed-off-by: Chu Lin <linchuyuan@google.com>
+Link: https://lore.kernel.org/r/20200709040612.3977094-1-linchuyuan@google.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/gr_udc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/hwmon/pmbus/adm1275.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
-index e50108f9a374e..e0b2fb33ed0d8 100644
---- a/drivers/usb/gadget/udc/gr_udc.c
-+++ b/drivers/usb/gadget/udc/gr_udc.c
-@@ -1980,9 +1980,12 @@ static int gr_ep_init(struct gr_udc *dev, int num, int is_in, u32 maxplimit)
+diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
+index 13600fa79e7f3..a19cf9052fc6d 100644
+--- a/drivers/hwmon/pmbus/adm1275.c
++++ b/drivers/hwmon/pmbus/adm1275.c
+@@ -364,6 +364,7 @@ MODULE_DEVICE_TABLE(i2c, adm1275_id);
+ static int adm1275_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
++	s32 (*config_read_fn)(const struct i2c_client *client, u8 reg);
+ 	u8 block_buffer[I2C_SMBUS_BLOCK_MAX + 1];
+ 	int config, device_config;
+ 	int ret;
+@@ -408,11 +409,16 @@ static int adm1275_probe(struct i2c_client *client,
+ 			   "Device mismatch: Configured %s, detected %s\n",
+ 			   id->name, mid->name);
  
- 	if (num == 0) {
- 		_req = gr_alloc_request(&ep->ep, GFP_ATOMIC);
-+		if (!_req)
-+			return -ENOMEM;
-+
- 		buf = devm_kzalloc(dev->dev, PAGE_SIZE, GFP_DMA | GFP_ATOMIC);
--		if (!_req || !buf) {
--			/* possible _req freed by gr_probe via gr_remove */
-+		if (!buf) {
-+			gr_free_request(&ep->ep, _req);
- 			return -ENOMEM;
- 		}
+-	config = i2c_smbus_read_byte_data(client, ADM1275_PMON_CONFIG);
++	if (mid->driver_data == adm1272 || mid->driver_data == adm1278 ||
++	    mid->driver_data == adm1293 || mid->driver_data == adm1294)
++		config_read_fn = i2c_smbus_read_word_data;
++	else
++		config_read_fn = i2c_smbus_read_byte_data;
++	config = config_read_fn(client, ADM1275_PMON_CONFIG);
+ 	if (config < 0)
+ 		return config;
+ 
+-	device_config = i2c_smbus_read_byte_data(client, ADM1275_DEVICE_CONFIG);
++	device_config = config_read_fn(client, ADM1275_DEVICE_CONFIG);
+ 	if (device_config < 0)
+ 		return device_config;
  
 -- 
 2.25.1
