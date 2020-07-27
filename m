@@ -2,94 +2,114 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F20C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE07BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A142F20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:24:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GhiZxUwr"
+	by mail.kernel.org (Postfix) with ESMTP id A215420658
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgG0DYd (ORCPT
+        id S1726862AbgG0DUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 23:24:33 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40401 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbgG0DYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 23:24:33 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFQCL6Lx4z9sPB;
-        Mon, 27 Jul 2020 13:24:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595820271;
-        bh=IfBRA6eVpcHJNAolxx2wP0Kl+Bk8woNPiXAVx2Spiss=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GhiZxUwrNcfLYCccmWTarHNB24q9vVGsdR9zWrd44uVlPUnQzKzAMBt+cU5KlrWdy
-         uyp6+nyFmuPqi/W2myMoYHPZnO0FyeYp+plGUfFk8pcUdfpBTjsMZf0zQx2l71QRsl
-         UZt3GinFN94VBckgC4mxOH6gamBgyWcshTn662+4jn8lsKWfjLA3ne4Ca31x0uWK/f
-         RVzwZQlYY33UkZv3PstbhQMXYHz0d5IHMfZv3P4tPRQTEIT5d6OPdUwiGNoE12395+
-         mq9NLD4qBvIHv3f84Z/EcjaGuz/7LTVQtumP/yf3XauECL+btulACvHFF+PL10gfxE
-         DBKtt1dqgOQdg==
-Date:   Mon, 27 Jul 2020 13:24:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the devfreq tree
-Message-ID: <20200727132428.2763f57b@canb.auug.org.au>
+        Sun, 26 Jul 2020 23:20:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61542 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726044AbgG0DUT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 23:20:19 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R349AK153107;
+        Sun, 26 Jul 2020 23:20:17 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32ggmf6pd4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Jul 2020 23:20:17 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R37Wlp163593;
+        Sun, 26 Jul 2020 23:20:16 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32ggmf6pcd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Jul 2020 23:20:16 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R3F4Kl012129;
+        Mon, 27 Jul 2020 03:20:15 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4hqwa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 03:20:14 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R3KC1x31654082
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 03:20:12 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C054A42042;
+        Mon, 27 Jul 2020 03:20:12 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CDE084204B;
+        Mon, 27 Jul 2020 03:20:11 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.33.112])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jul 2020 03:20:11 +0000 (GMT)
+Subject: Re: ext4: delete the invalid BUGON in ext4_mb_load_buddy_gfp()
+To:     brookxu <brookxu.cn@gmail.com>, tytso@mit.edu,
+        adilger.kernel@dilger.ca
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <ad68e8a2-5ec3-5beb-537f-f3e53f55367a@gmail.com>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Mon, 27 Jul 2020 08:50:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/J8q3D4iwceZKDr7Y4ZEUwtl";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <ad68e8a2-5ec3-5beb-537f-f3e53f55367a@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+Message-Id: <20200727032011.CDE084204B@d06av24.portsmouth.uk.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_02:2020-07-24,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 impostorscore=0 spamscore=0 clxscore=1015 phishscore=0
+ mlxlogscore=903 priorityscore=1501 adultscore=0 bulkscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/J8q3D4iwceZKDr7Y4ZEUwtl
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-In commit
+On 7/27/20 7:24 AM, brookxu wrote:
+> Delete the invalid BUGON in ext4_mb_load_buddy_gfp(), the previous
+> code has already judged whether page is NULL.
+> 
+> Signed-off-by: Chunguang Xu <brookxu@tencent.com>
 
-  332c5b522b7c ("PM / devfrq: Fix indentaion of devfreq_summary debugfs nod=
-e")
+Thanks for the patch. LGTM. Feel free to add.
+Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
 
-Fixes tag
-
-  Fixes: commit 66d0e797bf09 ("Revert "PM / devfreq: Modify the device name=
- as devfreq(X) for sysfs"")
-
-has these problem(s):
-
-  - leading word 'commit' unexpected
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/J8q3D4iwceZKDr7Y4ZEUwtl
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8eSOwACgkQAVBC80lX
-0Gy3rgf/W4KKU6ZgDddibwcN/kNPBKAq1JV3dAWeIongnd+HYZvME0+lSJ1WqPhm
-hlOOLufYNQd15KGAo8YWtvoee4yt0EBq7lAvUSAq+l7mGlb98rUiiXmUs/DfMnAs
-WT3I1h56FpLn+GCvy7fvJvR+jdktV968RsWe6kyM3eZ0y+u8BxZgbqPkFZwwyElZ
-Rhs6u8ef76kctSaDgJ8wLV9gOY0dFZ2UAKm6qFi0FHi28Zx6wx/BSqTAIt6ikF+3
-iBLNGxMX87PDs/UgaY7+t4/0yvhUXQU9Pnm6MS55HmJaYI54fU8fgMzoZ4dHsZgS
-5uCSNvNgeWOK228DaFv28Tu0hHQbRg==
-=xLOt
------END PGP SIGNATURE-----
-
---Sig_/J8q3D4iwceZKDr7Y4ZEUwtl--
+> ---
+>   fs/ext4/mballoc.c | 3 ---
+>   1 file changed, 3 deletions(-)
+> 
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index 28a139f..9b1c3ad 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -1279,9 +1279,6 @@ int ext4_mb_init_group(struct super_block *sb, ext4_group_t group, gfp_t gfp)
+>       e4b->bd_buddy_page = page;
+>       e4b->bd_buddy = page_address(page) + (poff * sb->s_blocksize);
+>   
+> -    BUG_ON(e4b->bd_bitmap_page == NULL);
+> -    BUG_ON(e4b->bd_buddy_page == NULL);
+> -
+>       return 0;
+>   
+>   err:
+> 
