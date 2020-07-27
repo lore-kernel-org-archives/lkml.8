@@ -2,130 +2,156 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C54A5C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C42320714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F73820714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oSkkXWJi"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="Int6NshK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgG0FlQ (ORCPT
+        id S1726495AbgG0Fk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:41:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgG0FlP (ORCPT
+        Mon, 27 Jul 2020 01:40:57 -0400
+Received: from mail4.protonmail.ch ([185.70.40.27]:15455 "EHLO
+        mail4.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbgG0Fk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:41:15 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA37C0619D2;
-        Sun, 26 Jul 2020 22:41:15 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFTF208nPz9sRN;
-        Mon, 27 Jul 2020 15:41:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595828471;
-        bh=s4p3erzGFevm01Gdj7aMpRRftqxYAvNyjMZiFMfJ3MY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=oSkkXWJivqVG3Rg0QPOY79tJtAhWjTAEVgO/ikQSuS0mHpCYzAxQ/zrVz/CCGLsy5
-         DGhnYD6VEsVyvV0dRSzV8Ng+o8aY9ImWLdRU5gQcjonRXPqnZZDIUl5ONZ6VThXJMw
-         ixwV+Ov76H9QjPGS2fi6/8d6vMA+Z080hZ2MFAExBS4HxO5LwSl8im6+XaSkDLbaqF
-         e5WxRhS69MGDpCWTDTCMn4EQQPFOcTQhUlpaTbx3FEjBr3Y63dwPHJn/GcIA98nntf
-         JBsHRzTtMWJNvHExcsw49gnAkr0ENqgyqQkxKBcUWVV25dtldxzNYbuY2G1ygcXDQ5
-         P3UxhwCzchq6A==
-Date:   Mon, 27 Jul 2020 15:41:09 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bernard Zhao <bernard@vivo.com>
-Subject: linux-next: manual merge of the tip tree with the drm-msm tree
-Message-ID: <20200727154109.0db13631@canb.auug.org.au>
+        Mon, 27 Jul 2020 01:40:56 -0400
+Date:   Mon, 27 Jul 2020 05:40:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1595828452;
+        bh=f9E9zZQz6TG7mCxptgTH09Y9wak5F4Jj1SYOm0YNufQ=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=Int6NshKrx1Ffc8MyTRH9fefJnr1kVBjUJWpHQdx46ak6d8wSiiMTanKhTGRZnX7G
+         frVWJoGPVO3m258gffeEbskhsffc4E24gz305kTL0piiDDhEGxr0j3saXzoLRJMP+O
+         XwztT1DUGAXlX41dPvlHcn9M6Rt8Al/vqzodxUaw=
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+From:   Mazin Rezk <mnrzk@protonmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Harry Wentland <Harry.Wentland@amd.com>,
+        Mazin Rezk <mnrzk@protonmail.com>,
+        "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>,
+        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
+        Kees Cook <keescook@chromium.org>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Duncan <1i5t5.duncan@cox.net>,
+        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>,
+        "regressions@leemhuis.info" <regressions@leemhuis.info>,
+        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>
+Reply-To: Mazin Rezk <mnrzk@protonmail.com>
+Subject: [PATCH] drm/amd/display: Clear dm_state for fast updates
+Message-ID: <M0lxN5AUlPvzBKULfIBe5BZRwfQGXeMQCdWItYcQ-9P79y32WzExYK2Y0DwyNVtyGelqbvV07_lFk1oeT4cApbT-P_oH0bnxQbMmFsJv_xg=@protonmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pIyWRT1psHhoFprNsVI=MQ_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/pIyWRT1psHhoFprNsVI=MQ_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patch fixes a race condition that causes a use-after-free during
+amdgpu_dm_atomic_commit_tail. This can occur when 2 non-blocking commits
+are requested and the second one finishes before the first. Essentially,
+this bug occurs when the following sequence of events happens:
 
-Hi all,
+1. Non-blocking commit #1 is requested w/ a new dm_state #1 and is
+deferred to the workqueue.
 
-Today's linux-next merge of the tip tree got a conflict in:
+2. Non-blocking commit #2 is requested w/ a new dm_state #2 and is
+deferred to the workqueue.
 
-  drivers/gpu/drm/msm/msm_drv.c
+3. Commit #2 starts before commit #1, dm_state #1 is used in the
+commit_tail and commit #2 completes, freeing dm_state #1.
 
-between commit:
+4. Commit #1 starts after commit #2 completes, uses the freed dm_state
+1 and dereferences a freelist pointer while setting the context.
 
-  00be2abf1413 ("drm/msm: use kthread_create_worker instead of kthread_run")
+Since this bug has only been spotted with fast commits, this patch fixes
+the bug by clearing the dm_state instead of using the old dc_state for
+fast updates. In addition, since dm_state is only used for its dc_state
+and amdgpu_dm_atomic_commit_tail will retain the dc_state if none is found,
+removing the dm_state should not have any consequences in fast updates.
 
-from the drm-msm tree and commits:
+This use-after-free bug has existed for a while now, but only caused a
+noticeable issue starting from 5.7-rc1 due to 3202fa62f ("slub: relocate
+freelist pointer to middle of object") moving the freelist pointer from
+dm_state->base (which was unused) to dm_state->context (which is
+dereferenced).
 
-  64419ca67622 ("sched,msm: Convert to sched_set_fifo*()")
-  8b700983de82 ("sched: Remove sched_set_*() return value")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D207383
+Fixes: bd200d190f45 ("drm/amd/display: Don't replace the dc_state for fast =
+updates")
+Reported-by: Duncan <1i5t5.duncan@cox.net>
+Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+---
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 36 ++++++++++++++-----
+ 1 file changed, 27 insertions(+), 9 deletions(-)
 
-from the tip tree.
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gp=
+u/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 86ffa0c2880f..710edc70e37e 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -8717,20 +8717,38 @@ static int amdgpu_dm_atomic_check(struct drm_device=
+ *dev,
+ =09=09 * the same resource. If we have a new DC context as part of
+ =09=09 * the DM atomic state from validation we need to free it and
+ =09=09 * retain the existing one instead.
++=09=09 *
++=09=09 * Furthermore, since the DM atomic state only contains the DC
++=09=09 * context and can safely be annulled, we can free the state
++=09=09 * and clear the associated private object now to free
++=09=09 * some memory and avoid a possible use-after-free later.
+ =09=09 */
+-=09=09struct dm_atomic_state *new_dm_state, *old_dm_state;
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+-=09=09new_dm_state =3D dm_atomic_get_new_state(state);
+-=09=09old_dm_state =3D dm_atomic_get_old_state(state);
++=09=09for (i =3D 0; i < state->num_private_objs; i++) {
++=09=09=09struct drm_private_obj *obj =3D state->private_objs[i].ptr;
 
---=20
-Cheers,
-Stephen Rothwell
+-=09=09if (new_dm_state && old_dm_state) {
+-=09=09=09if (new_dm_state->context)
+-=09=09=09=09dc_release_state(new_dm_state->context);
++=09=09=09if (obj->funcs =3D=3D adev->dm.atomic_obj.funcs) {
++=09=09=09=09int j =3D state->num_private_objs-1;
 
-diff --cc drivers/gpu/drm/msm/msm_drv.c
-index 36d98d4116ca,556cca38487c..000000000000
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@@ -524,11 -508,8 +517,7 @@@ static int msm_drm_init(struct device *
-  			goto err_msm_uninit;
-  		}
- =20
-- 		ret =3D sched_setscheduler(priv->event_thread[i].worker->task,
-- 					 SCHED_FIFO, &param);
-- 		if (ret)
-- 			dev_warn(dev, "event_thread set priority failed:%d\n",
-- 				 ret);
- -		sched_set_fifo(priv->event_thread[i].thread);
-++		sched_set_fifo(priv->event_thread[i].worker->task);
-  	}
- =20
-  	ret =3D drm_vblank_init(ddev, priv->num_crtcs);
+-=09=09=09new_dm_state->context =3D old_dm_state->context;
++=09=09=09=09dm_atomic_destroy_state(obj,
++=09=09=09=09=09=09state->private_objs[i].state);
++
++=09=09=09=09/* If i is not at the end of the array then the
++=09=09=09=09 * last element needs to be moved to where i was
++=09=09=09=09 * before the array can safely be truncated.
++=09=09=09=09 */
++=09=09=09=09if (i !=3D j)
++=09=09=09=09=09state->private_objs[i] =3D
++=09=09=09=09=09=09state->private_objs[j];
 
---Sig_/pIyWRT1psHhoFprNsVI=MQ_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+-=09=09=09if (old_dm_state->context)
+-=09=09=09=09dc_retain_state(old_dm_state->context);
++=09=09=09=09state->private_objs[j].ptr =3D NULL;
++=09=09=09=09state->private_objs[j].state =3D NULL;
++=09=09=09=09state->private_objs[j].old_state =3D NULL;
++=09=09=09=09state->private_objs[j].new_state =3D NULL;
++
++=09=09=09=09state->num_private_objs =3D j;
++=09=09=09=09break;
++=09=09=09}
+ =09=09}
+ =09}
 
------BEGIN PGP SIGNATURE-----
+--
+2.27.0
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8eaPUACgkQAVBC80lX
-0GxG1Qf/esI5cOOANlGu1MdPbJ6BzrS7aBgGyj7tJciBlJxb9g4A0iKKQbYX1SZX
-J3atlskoxzhWK0jxrpTzHUyYtM20nHkFeQYbCmZosXCBFg1NBLaddy90BV1mOgrG
-k/pWR++R3Xlpx6yTnBYXeHVvzn532xIRCfvV9GMO9qnm8VpumPiHYzqCa+24jKT7
-pjDA2rrj0y4ICcw1p8kKuSm2x8S7pWzP1oOc7JiZl76a03Ivm8/JOa9aXdMSirzh
-W3LCOrHKnZZ5wuEry98ONXflhRTUdsQFpZUyTxACamzrYkqcEjPNyi7YWAnyDWc2
-Pobn5swG3fhuxsOciogQZBIdi8Iatg==
-=qIEa
------END PGP SIGNATURE-----
-
---Sig_/pIyWRT1psHhoFprNsVI=MQ_--
