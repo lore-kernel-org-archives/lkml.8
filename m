@@ -2,129 +2,130 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AC7C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB6920729
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D8320729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:24:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730581AbgG0RXi (ORCPT
+        id S1730670AbgG0RY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:23:38 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:59756 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgG0RXg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:23:36 -0400
-Received: from 89-64-87-33.dynamic.chello.pl (89.64.87.33) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 52252b58e7e4f51e; Mon, 27 Jul 2020 19:23:33 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Francisco Jerez <currojerez@riseup.net>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Doug Smythies <dsmythies@telus.net>
-Subject: Re: [PATCH] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-Date:   Mon, 27 Jul 2020 19:23:32 +0200
-Message-ID: <1712943.Luj0Z5seXe@kreacher>
-In-Reply-To: <87h7u0h34t.fsf@riseup.net>
-References: <3955470.QvD6XneCf3@kreacher> <babeff29a60d3fadb5515eaf57f7bb42a1c9c792.camel@linux.intel.com> <87h7u0h34t.fsf@riseup.net>
+        Mon, 27 Jul 2020 13:24:28 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2541 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730611AbgG0RY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 13:24:27 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id A785D395796E4E15A9F2;
+        Mon, 27 Jul 2020 18:24:26 +0100 (IST)
+Received: from localhost (10.227.96.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Jul
+ 2020 18:24:26 +0100
+Date:   Mon, 27 Jul 2020 18:24:25 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Darius Berghe <darius.berghe@analog.com>
+CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jic23@kernel.org>,
+        <robh@kernel.org>, "Mike Looijmans" <mike.looijmans@topic.nl>
+Subject: Re: [PATCH v3 3/3] ltc2471 driver yaml
+Message-ID: <20200727182425.00001db9@huawei.com>
+In-Reply-To: <20200727135834.84093-4-darius.berghe@analog.com>
+References: <20200727135834.84093-1-darius.berghe@analog.com>
+        <20200727135834.84093-4-darius.berghe@analog.com>
+Organization: Huawei tech. R&D (UK)  Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.227.96.57]
+X-ClientProxiedBy: lhreml719-chm.china.huawei.com (10.201.108.70) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday, July 22, 2020 1:14:42 AM CEST Francisco Jerez wrote:
+On Mon, 27 Jul 2020 16:58:34 +0300
+Darius Berghe <darius.berghe@analog.com> wrote:
+
+> Add dt binding documentation for ltc2471 driver. This covers all supported
+> devices.
 > 
-> --==-=-=
-> Content-Type: multipart/mixed; boundary="=-=-="
+> Signed-off-by: Darius Berghe <darius.berghe@analog.com>
+
++CC Mike given the doc lists him as maintainer.
+
+> ---
+>  .../bindings/iio/adc/adi,ltc2471.yaml         | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
 > 
-> --=-=-=
-> Content-Type: text/plain; charset=utf-8
-> Content-Disposition: inline
-> Content-Transfer-Encoding: quoted-printable
-> 
-> Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> writes:
-> 
-> > On Mon, 2020-07-20 at 16:20 -0700, Francisco Jerez wrote:
-> >> "Rafael J. Wysocki" <rafael@kernel.org> writes:
-> >>=20
-> >> > On Fri, Jul 17, 2020 at 2:21 AM Francisco Jerez <
-> >> > currojerez@riseup.net> wrote:
-> >> > > "Rafael J. Wysocki" <rafael@kernel.org> writes:
-> >> > >=20
-> > {...]
-> >
-> >> > Overall, so far, I'm seeing a claim that the CPU subsystem can be
-> >> > made
-> >> > use less energy and do as much work as before (which is what
-> >> > improving
-> >> > the energy-efficiency means in general) if the maximum frequency of
-> >> > CPUs is limited in a clever way.
-> >> >=20
-> >> > I'm failing to see what that clever way is, though.
-> >> Hopefully the clarifications above help some.
-> >
-> > To simplify:
-> >
-> > Suppose I called a function numpy.multiply() to multiply two big arrays
-> > and thread is a pegged to a CPU. Let's say it is causing CPU to
-> > finish the job in 10ms and it is using a P-State of 0x20. But the same
-> > job could have been done in 10ms even if it was using P-state of 0x16.
-> > So we are not energy efficient. To really know where is the bottle neck
-> > there are numbers of perf counters, may be cache was the issue, we
-> > could rather raise the uncore frequency a little. A simple APRF,MPERF
-> > counters are not enough.=20
-> 
-> Yes, that's right, APERF and MPERF aren't sufficient to identify every
-> kind of possible bottleneck, some visibility of the utilization of other
-> subsystems is necessary in addition -- Like e.g the instrumentation
-> introduced in my series to detect a GPU bottleneck.  A bottleneck
-> condition in an IO device can be communicated to CPUFREQ
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
+> new file mode 100644
+> index 000000000000..d5b35a1fa651
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2020 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ltc2471.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices LTC2471 16-bit I2C Sigma-Delta ADC
+> +
+> +maintainers:
+> +  - Mike Looijmans <mike.looijmans@topic.nl>
+> +
+> +description: |
+> +  Analog Devices LTC2461 (single-ended) and LTC2463 (differential) 16-bit
+> +  I2C Sigma-Delta ADC with 60sps output rate.
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/24613fa.pdf
+> +
+> +  Analog Devices LTC2471 (single-ended) and LTC2473 (differential) 16-bit
+> +  I2C Sigma-Delta ADC with selectable 208/833sps output rate.
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/24713fb.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ltc2461
+> +      - adi,ltc2463
+> +      - adi,ltc2471
+> +      - adi,ltc2473
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  avcc-supply:
+> +    description:
+> +      Phandle to the Avcc power supply (2.7V - 5.5V)
 
-It generally is not sufficient to communicate it to cpufreq.  It needs to be
-communicated to the CPU scheduler.
+additionalProperties: false
 
-> by adjusting a
-> PM QoS latency request (link [2] in my previous reply) that effectively
-> gives the governor permission to rearrange CPU work arbitrarily within
-> the specified time frame (which should be of the order of the natural
-> latency of the IO device -- e.g. at least the rendering time of a frame
-> for a GPU) in order to minimize energy usage.
+should be fine here I think...
+I keep forgetting this one myself.
 
-OK, we need to talk more about this.
-
-> > or we characterize the workload at different P-states and set limits.
-> > I think this is not you want to say for energy efficiency with your
-> > changes.=20
-> >
-> > The way you are trying to improve "performance" is by caller (device
-> > driver) to say how important my job at hand. Here device driver suppose
-> > offload this calculations to some GPU and can wait up to 10 ms, you
-> > want to tell CPU to be slow. But the p-state driver at a movement
-> > observes that there is a chance of overshoot of latency, it will
-> > immediately ask for higher P-state. So you want P-state limits based on
-> > the latency requirements of the caller. Since caller has more knowledge
-> > of latency requirement, this allows other devices sharing the power
-> > budget to get more or less power, and improve overall energy efficiency
-> > as the combined performance of system is improved.
-> > Is this correct?
-> 
-> Yes, pretty much.
-
-OK
-
-
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +      adc@14 {
+> +        compatible = "adi,ltc2461";
+> +        reg = <0x14>;
+> +      };
+> +    };
+> +
 
