@@ -2,64 +2,64 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD51C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F38BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 856E820715
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2EA20759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727871AbgG0Cx1 (ORCPT
+        id S1727923AbgG0CzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 22:53:27 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:57006 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727050AbgG0Cx1 (ORCPT
+        Sun, 26 Jul 2020 22:55:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgG0CzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 22:53:27 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R791e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U3rv6BO_1595818403;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U3rv6BO_1595818403)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 27 Jul 2020 10:53:23 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     tianjia.zhang@linux.alibaba.com
-Subject: [PATCH] tpm: Fix the description error of the help information in Kconfig
-Date:   Mon, 27 Jul 2020 10:53:23 +0800
-Message-Id: <20200727025323.26712-1-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 26 Jul 2020 22:55:09 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A78C0619D2;
+        Sun, 26 Jul 2020 19:55:09 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jztIB-003NQO-S9; Mon, 27 Jul 2020 02:55:07 +0000
+Date:   Mon, 27 Jul 2020 03:55:07 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Song Liu <song@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 17/23] initramfs: switch initramfs unpacking to struct
+ file based APIs
+Message-ID: <20200727025507.GC795125@ZenIV.linux.org.uk>
+References: <20200714190427.4332-1-hch@lst.de>
+ <20200714190427.4332-18-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714190427.4332-18-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Obviously, the TPM version number in the help message is wrong, which
-will cause confusion. This patch fixes it.
+On Tue, Jul 14, 2020 at 09:04:21PM +0200, Christoph Hellwig wrote:
 
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
----
- drivers/char/tpm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> -		ssize_t rv = ksys_write(fd, p, count);
+> +		ssize_t rv = kernel_write(file, p, count, &file->f_pos);
 
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index 58b4c573d176..8eedb3e704f3 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -62,7 +62,7 @@ config TCG_TIS_SPI
- 	help
- 	  If you have a TPM security chip which is connected to a regular,
- 	  non-tcg SPI master (i.e. most embedded platforms) that is compliant with the
--	  TCG TIS 1.3 TPM specification (TPM1.2) or the TCG PTP FIFO
-+	  TCG TIS 1.3 TPM specification (TPM1.3) or the TCG PTP FIFO
- 	  specification (TPM2.0) say Yes and it will be accessible from
- 	  within Linux. To compile this driver as a module, choose  M here;
- 	  the module will be called tpm_tis_spi.
--- 
-2.17.1
+No.  Sure, that'll work for ramfs with nobody else playing with those.
+However, this is the wrong way to do such things; do *NOT* pass the
+address of file->f_pos to anything.  The few places that still do that
+are wrong.
 
+As a general rule, ->read() and ->write() instances should never be
+given &file->f_pos.  Address of a local variable - sure, no problem.
+Copy it back into ->f_pos when they are done?  Also fine.  But not
+this,
+
+Keep that offset in a variable (static in file, argument of xwrite(),
+whatever).
