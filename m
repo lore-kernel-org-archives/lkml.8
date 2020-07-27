@@ -2,115 +2,98 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EBAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E901E2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D4862074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:04:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fRWep9/e"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SBIehMvt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rP0xkzei"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgG0QDw (ORCPT
+        id S1728925AbgG0QEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:03:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29640 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727116AbgG0QDw (ORCPT
+        Mon, 27 Jul 2020 12:04:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726662AbgG0QEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:03:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595865830;
+        Mon, 27 Jul 2020 12:04:55 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A64C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 09:04:55 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595865893;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=PzdX7wVbIx8ObG6INsApXS+qCsher40rhMpcw3UMWXc=;
-        b=fRWep9/eDzx7Ww6z4zN62m+rTnXBNTYCOg7UuWVuOsuPf17ojus0npnfFNslirEqNBp0GD
-        DhxnNcqh91EVD4gIY0ZAV6TvzGjcDazOfwHY04iqlTfr5Sai/0tcf0mS75P2YPjXMjF7BH
-        12Xh1PcEEYssn4/Mk/n9R2d6eyic8TA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-130-xNh-l0k5P1acssznhjs_Xg-1; Mon, 27 Jul 2020 12:03:48 -0400
-X-MC-Unique: xNh-l0k5P1acssznhjs_Xg-1
-Received: by mail-wr1-f69.google.com with SMTP id h4so4107705wrh.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 09:03:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=PzdX7wVbIx8ObG6INsApXS+qCsher40rhMpcw3UMWXc=;
-        b=WKrmNfNY7dq9ev+VdDCi/PN5EjQXTIOg/gkgDssVOH7nLwSy0Yhq59o6wTj6ZuxSw0
-         dEqGaB/PzQWX0XRB6d3MNCQFVIcviYXNyHyI4+g6W/0HbC8X15Mo6o30ZJ1fHRkxWmNe
-         MDZ+ZVLR/rthVRHwyXRMzQ0M1TlfrAKl3KKTyAztxMHwXkTwdQFtNj+HDSKP5nNRxcRt
-         IZKgBPvu0Y1FuF6f+WnajthnulDPXHjVb3Wl8GfD+i7vakQeQxVYellWKQ/U56NkESZu
-         4OSNdf3lDywk93vg+B1zKwEOZsAGuIrizTy37D8W0Q793ZkXEhruLRUlcsXpk7vmsKmr
-         xfvA==
-X-Gm-Message-State: AOAM5324rijOkNKAcGdUYsED1nS8/xvu62d6+fSy9RM7uqKdSvtmqZEr
-        J1cKl2hyMKJC7m7j7qjC2YQ5W7jaJbiiZTbU+Nf2OVMrVHABzczwjpNivD81km+4G5ouXnonUiP
-        SWmQ+iNdCJdmhYfut8aXE7ErI
-X-Received: by 2002:adf:b1cf:: with SMTP id r15mr22476416wra.118.1595865827382;
-        Mon, 27 Jul 2020 09:03:47 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz7Ef1D9xDtsNFK+f9eP9IKT0MLwb1s7S8Er/1M1xlErxN9gFMzZ7/LwGj3k9MKPcujJZ0e8g==
-X-Received: by 2002:adf:b1cf:: with SMTP id r15mr22476396wra.118.1595865827149;
-        Mon, 27 Jul 2020 09:03:47 -0700 (PDT)
-Received: from redhat.com ([192.117.173.58])
-        by smtp.gmail.com with ESMTPSA id z63sm111712wmb.2.2020.07.27.09.03.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 09:03:46 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 12:03:43 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Liang Li <liang.z.li@intel.com>,
-        Wei Wang <wei.w.wang@intel.com>,
-        virtualization@lists.linux-foundation.org,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: [PATCH] virtio_balloon: fix up endian-ness for free cmd id
-Message-ID: <20200727160310.102494-1-mst@redhat.com>
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=D0LY3rc/JxTz4zHSXGZjMTZLTeOUukogWFIR25veM+k=;
+        b=SBIehMvtfAwbSKeCm+n8tRHdnaazd/n7jEEZDRrYY6VKSJllK9b2k494Zfec0XaOJuJ0ig
+        BRNPxohzuT/frswDwSNCwWDLiefWiu0PhmtOxsdjGp+yisy24XtQwj/6ty+8kl0FKivvO2
+        efqHN/gyRi65pADwWcMgQosK/zV3eeNbs+MY/iBMwlzZr4PHwbw5LWFOiRBg/TgdruJhTF
+        Ze72ZSHWBs2NujWVlhVV9ICGRl1jnnfQNcUUW4NZwWU3g18eUD4SKjoRuwFEBlwVPIEsHz
+        kMbOkFUswhAlQH6Lcj0SOVIfcTetC7S0uickKLT8RqJVX0fIn4X4EZg0V/HuwQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595865893;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=D0LY3rc/JxTz4zHSXGZjMTZLTeOUukogWFIR25veM+k=;
+        b=rP0xkzei41oXXiogTgxGm787+Z1oHVKjgef7GyLhs/nx3rbZ5c9LI0Y1KyFyuA7tbM4UUM
+        UvYHk8O2YtXJRgBQ==
+To:     Ingo Molnar <mingo@kernel.org>,
+        Muchun Song <songmuchun@bytedance.com>
+Cc:     peterz@infradead.org, bigeasy@linutronix.de, namit@vmware.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] smp: Fix a potential usage of stale nr_cpus
+In-Reply-To: <20200727114303.GA57241@gmail.com>
+References: <20200721034239.72013-1-songmuchun@bytedance.com> <20200727114303.GA57241@gmail.com>
+Date:   Mon, 27 Jul 2020 18:04:53 +0200
+Message-ID: <87mu3laqqi.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-free cmd id is read using virtio endian, spec says all fields
-in balloon are LE. Fix it up.
+Ingo Molnar <mingo@kernel.org> writes:
+>> -	get_option(&str, &nr_cpus);
+>> +	if (get_option(&str, &nr_cpus) != 1)
+>> +		return -EINVAL;
+>> +
+>>  	if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
+>>  		nr_cpu_ids = nr_cpus;
+>> +	else
+>> +		return -EINVAL;
+>
+> Exactly what does 'not valid' mean, and why doesn't get_option() 
+> return -EINVAL in that case?
 
-Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- drivers/virtio/virtio_balloon.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+What's unclear about invalid? If you specify nr_cpus=-1 or
+nr_cpus=2000000 the its obviously invalid.
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 774deb65a9bb..798ec304fe3e 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -578,10 +578,14 @@ static int init_vqs(struct virtio_balloon *vb)
- static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
- {
- 	if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
--			       &vb->config_read_bitmap))
-+			       &vb->config_read_bitmap)) {
- 		virtio_cread(vb->vdev, struct virtio_balloon_config,
- 			     free_page_hint_cmd_id,
- 			     &vb->cmd_id_received_cache);
-+		/* Legacy balloon config space is LE, unlike all other devices. */
-+		if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
-+			vb->cmd_id_received_cache = le32_to_cpu((__force __le32)vb->cmd_id_received_cache);
-+	}
- 
- 	return vb->cmd_id_received_cache;
- }
--- 
-MST
+How should get_option() know that this is invalid? get_option() is a
+number parser and does not know about any restrictions on the parsed
+value obviously.
+
+get_option() returns string parsing information:
+
+       0 -> not integer found
+       1 -> integer found, no trailing comma or hyphen
+       2 -> integer found and trailing comma
+       3 -> integer found and traling hyphen (range parsing)
+
+And that's what is checked in if (get_option() != 1), i.e. anything else
+than a plain integer is invalid for this command line option.
+
+Thanks,
+
+        tglx
+
 
