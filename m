@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C639CC433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE36C43446
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A63A22078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B5E2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859180;
-	bh=a6m3CaFs3ZpZE6yhHIWFLQwpvXISeqScorYP/Ei9aqk=;
+	s=default; t=1595859182;
+	bh=sDEnlAlhFB/QP2r2vRPVPqWMEAb7Ot7M+9SnlkSmfxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YTig/1fsr5ADq3c14C5IIYJ7GMa9TJXxgP8eyYk+uscE+CGdKiu9DBHDzqlFDLKl7
-	 YJeOcEY+r62c4pJv9tZZurYrSsyb0PcqVcJF+d4cZ7nKGhAHyC3Oja2Cxu0XPfJGTd
-	 CsRrBm9XjkHFPnLQpA7EXsNosZD24kNDp/J13PSY=
+	b=ZvNLJcXZ22k/Dr9GNNMlxb2/HSgrZt9CoDBOhxgLrzV1fDteuHgQ+oAlMLsSi5w5a
+	 IM/X76ydaJcX+EjACuyppdtUsXvmaXf4i+We+JpM9wWWSyJBb+A5fY9PRUGy4nn3pq
+	 oSQuVJTiFbFtHul3NnjP70ohl2wwqx5tdVHaPed0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbgG0OM6 (ORCPT
+        id S1730296AbgG0ONB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:12:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37310 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:13:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730262AbgG0OMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:12:48 -0400
+        id S1730273AbgG0OMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:12:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 531962078E;
-        Mon, 27 Jul 2020 14:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FECF2078E;
+        Mon, 27 Jul 2020 14:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859167;
-        bh=a6m3CaFs3ZpZE6yhHIWFLQwpvXISeqScorYP/Ei9aqk=;
+        s=default; t=1595859173;
+        bh=sDEnlAlhFB/QP2r2vRPVPqWMEAb7Ot7M+9SnlkSmfxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=18d3VvfFDRBqaNjFSQ6BOGGjvFsfs0eO+ebLgfy94e5vnzqZ3W2TtXupTdklJsJOx
-         O+ccyB2Rv0QCQBkybLag0vqgHfD6WVZ34xgF15MQVMZStK2rXLNw79b+cIsilPz/jR
-         e3gZN0OItV5Zc+znw8FwwgbH1X+laZY2LZr3t7Jg=
+        b=KRTIRep8fhX9FnMTOzu2CcTq4bh/uxtm9H39l1ZnsR8lukAKGTBdQhFoxBTNBurJA
+         Dd+jQqOU5BY7zRGXHU+7WHWkhsnDVF29ehS60B7YcVAybpDfxwQ1ISBpc4JdjVd51T
+         pq4XfnbylbOUifHCvqc5LqFACtGSJT8Tx4njJ5K0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 4.19 62/86] usb: xhci-mtk: fix the failure of bandwidth allocation
-Date:   Mon, 27 Jul 2020 16:04:36 +0200
-Message-Id: <20200727134917.538468116@linuxfoundation.org>
+        stable@vger.kernel.org, Mark ODonovan <shiftee@posteo.net>,
+        Roman Mamedov <rm@romanrm.net>,
+        =?UTF-8?q?Viktor=20J=C3=A4gersk=C3=BCpper?= 
+        <viktor_jaegerskuepper@freenet.de>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 86/86] ath9k: Fix regression with Atheros 9271
+Date:   Mon, 27 Jul 2020 16:05:00 +0200
+Message-Id: <20200727134918.713749319@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -58,37 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+From: Mark O'Donovan <shiftee@posteo.net>
 
-commit 5ce1a24dd98c00a57a8fa13660648abf7e08e3ef upstream.
+commit 92f53e2fda8bb9a559ad61d57bfb397ce67ed0ab upstream.
 
-The wMaxPacketSize field of endpoint descriptor may be zero
-as default value in alternate interface, and they are not
-actually selected when start stream, so skip them when try to
-allocate bandwidth.
+This fix allows ath9k_htc modules to connect to WLAN once again.
 
-Cc: stable <stable@vger.kernel.org>
-Fixes: 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Link: https://lore.kernel.org/r/1594360672-2076-1-git-send-email-chunfeng.yun@mediatek.com
+Fixes: 2bbcaaee1fcb ("ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208251
+Signed-off-by: Mark O'Donovan <shiftee@posteo.net>
+Reported-by: Roman Mamedov <rm@romanrm.net>
+Tested-by: Viktor Jägersküpper <viktor_jaegerskuepper@freenet.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200711043324.8079-1-shiftee@posteo.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-mtk-sch.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/ath/ath9k/hif_usb.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci-mtk-sch.c
-+++ b/drivers/usb/host/xhci-mtk-sch.c
-@@ -275,6 +275,10 @@ static bool need_bw_sch(struct usb_host_
- 	if (is_fs_or_ls(speed) && !has_tt)
- 		return false;
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.c
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
+@@ -733,11 +733,13 @@ static void ath9k_hif_usb_reg_in_cb(stru
+ 			return;
+ 		}
  
-+	/* skip endpoint with zero maxpkt */
-+	if (usb_endpoint_maxp(&ep->desc) == 0)
-+		return false;
++		rx_buf->skb = nskb;
 +
- 	return true;
- }
+ 		usb_fill_int_urb(urb, hif_dev->udev,
+ 				 usb_rcvintpipe(hif_dev->udev,
+ 						 USB_REG_IN_PIPE),
+ 				 nskb->data, MAX_REG_IN_BUF_SIZE,
+-				 ath9k_hif_usb_reg_in_cb, nskb, 1);
++				 ath9k_hif_usb_reg_in_cb, rx_buf, 1);
+ 	}
  
+ resubmit:
 
 
