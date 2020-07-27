@@ -2,172 +2,130 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34730C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54A5C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1399420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C42320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:41:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oSkkXWJi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgG0Fkq (ORCPT
+        id S1726781AbgG0FlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:40:46 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:60923 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726140AbgG0Fkq (ORCPT
+        Mon, 27 Jul 2020 01:41:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgG0FlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:40:46 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R861e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U3tiQ2q_1595828439;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U3tiQ2q_1595828439)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 27 Jul 2020 13:40:40 +0800
-Subject: Re: [PATCH v17 00/21] per memcg lru lock
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
-        kirill@shutemov.name, alexander.duyck@gmail.com,
-        rong.a.chen@intel.com
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
-Message-ID: <49d4f3bf-ccce-3c97-3a4c-f5cefe2d623a@linux.alibaba.com>
-Date:   Mon, 27 Jul 2020 13:40:31 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Mon, 27 Jul 2020 01:41:15 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BA37C0619D2;
+        Sun, 26 Jul 2020 22:41:15 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFTF208nPz9sRN;
+        Mon, 27 Jul 2020 15:41:09 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595828471;
+        bh=s4p3erzGFevm01Gdj7aMpRRftqxYAvNyjMZiFMfJ3MY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=oSkkXWJivqVG3Rg0QPOY79tJtAhWjTAEVgO/ikQSuS0mHpCYzAxQ/zrVz/CCGLsy5
+         DGhnYD6VEsVyvV0dRSzV8Ng+o8aY9ImWLdRU5gQcjonRXPqnZZDIUl5ONZ6VThXJMw
+         ixwV+Ov76H9QjPGS2fi6/8d6vMA+Z080hZ2MFAExBS4HxO5LwSl8im6+XaSkDLbaqF
+         e5WxRhS69MGDpCWTDTCMn4EQQPFOcTQhUlpaTbx3FEjBr3Y63dwPHJn/GcIA98nntf
+         JBsHRzTtMWJNvHExcsw49gnAkr0ENqgyqQkxKBcUWVV25dtldxzNYbuY2G1ygcXDQ5
+         P3UxhwCzchq6A==
+Date:   Mon, 27 Jul 2020 15:41:09 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bernard Zhao <bernard@vivo.com>
+Subject: linux-next: manual merge of the tip tree with the drm-msm tree
+Message-ID: <20200727154109.0db13631@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/pIyWRT1psHhoFprNsVI=MQ_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/pIyWRT1psHhoFprNsVI=MQ_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
+Today's linux-next merge of the tip tree got a conflict in:
 
+  drivers/gpu/drm/msm/msm_drv.c
 
+between commit:
 
+  00be2abf1413 ("drm/msm: use kthread_create_worker instead of kthread_run")
 
-A standard for new page isolation steps like the following:
-1, get_page(); #pin the page avoid be free
-2, TestClearPageLRU(); #serialize other isolation, also memcg change
-3, spin_lock on lru_lock; #serialize lru list access
-The step 2 could be optimzed/replaced in scenarios which page is unlikely
-be accessed by others.
+from the drm-msm tree and commits:
 
+  64419ca67622 ("sched,msm: Convert to sched_set_fifo*()")
+  8b700983de82 ("sched: Remove sched_set_*() return value")
 
+from the tip tree.
 
-在 2020/7/25 下午8:59, Alex Shi 写道:
-> The new version which bases on v5.8-rc6. It includes Hugh Dickins fix in 
-> mm/swap.c and mm/mlock.c fix which Alexander Duyck pointed out, then
-> removes 'mm/mlock: reorder isolation sequence during munlock' 
-> 
-> Hi Johanness & Hugh & Alexander & Willy,
-> 
-> Could you like to give a reviewed by since you address much of issue and
-> give lots of suggestions! Many thanks!
-> 
-> Current lru_lock is one for each of node, pgdat->lru_lock, that guard for
-> lru lists, but now we had moved the lru lists into memcg for long time. Still
-> using per node lru_lock is clearly unscalable, pages on each of memcgs have
-> to compete each others for a whole lru_lock. This patchset try to use per
-> lruvec/memcg lru_lock to repleace per node lru lock to guard lru lists, make
-> it scalable for memcgs and get performance gain.
-> 
-> Currently lru_lock still guards both lru list and page's lru bit, that's ok.
-> but if we want to use specific lruvec lock on the page, we need to pin down
-> the page's lruvec/memcg during locking. Just taking lruvec lock first may be
-> undermined by the page's memcg charge/migration. To fix this problem, we could
-> take out the page's lru bit clear and use it as pin down action to block the
-> memcg changes. That's the reason for new atomic func TestClearPageLRU.
-> So now isolating a page need both actions: TestClearPageLRU and hold the
-> lru_lock.
-> 
-> The typical usage of this is isolate_migratepages_block() in compaction.c
-> we have to take lru bit before lru lock, that serialized the page isolation
-> in memcg page charge/migration which will change page's lruvec and new 
-> lru_lock in it.
-> 
-> The above solution suggested by Johannes Weiner, and based on his new memcg 
-> charge path, then have this patchset. (Hugh Dickins tested and contributed much
-> code from compaction fix to general code polish, thanks a lot!).
-> 
-> The patchset includes 3 parts:
-> 1, some code cleanup and minimum optimization as a preparation.
-> 2, use TestCleanPageLRU as page isolation's precondition
-> 3, replace per node lru_lock with per memcg per node lru_lock
-> 
-> Following Daniel Jordan's suggestion, I have run 208 'dd' with on 104
-> containers on a 2s * 26cores * HT box with a modefied case:
-> https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
-> With this patchset, the readtwice performance increased about 80%
-> in concurrent containers.
-> 
-> Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought this
-> idea 8 years ago, and others who give comments as well: Daniel Jordan, 
-> Mel Gorman, Shakeel Butt, Matthew Wilcox etc.
-> 
-> Thanks for Testing support from Intel 0day and Rong Chen, Fengguang Wu,
-> and Yun Wang. Hugh Dickins also shared his kbuild-swap case. Thanks!
-> 
-> 
-> Alex Shi (19):
->   mm/vmscan: remove unnecessary lruvec adding
->   mm/page_idle: no unlikely double check for idle page counting
->   mm/compaction: correct the comments of compact_defer_shift
->   mm/compaction: rename compact_deferred as compact_should_defer
->   mm/thp: move lru_add_page_tail func to huge_memory.c
->   mm/thp: clean up lru_add_page_tail
->   mm/thp: remove code path which never got into
->   mm/thp: narrow lru locking
->   mm/memcg: add debug checking in lock_page_memcg
->   mm/swap: fold vm event PGROTATED into pagevec_move_tail_fn
->   mm/lru: move lru_lock holding in func lru_note_cost_page
->   mm/lru: move lock into lru_note_cost
->   mm/lru: introduce TestClearPageLRU
->   mm/compaction: do page isolation first in compaction
->   mm/thp: add tail pages into lru anyway in split_huge_page()
->   mm/swap: serialize memcg changes in pagevec_lru_move_fn
->   mm/lru: replace pgdat lru_lock with lruvec lock
->   mm/lru: introduce the relock_page_lruvec function
->   mm/pgdat: remove pgdat lru_lock
-> 
-> Hugh Dickins (2):
->   mm/vmscan: use relock for move_pages_to_lru
->   mm/lru: revise the comments of lru_lock
-> 
->  Documentation/admin-guide/cgroup-v1/memcg_test.rst |  15 +-
->  Documentation/admin-guide/cgroup-v1/memory.rst     |  21 +--
->  Documentation/trace/events-kmem.rst                |   2 +-
->  Documentation/vm/unevictable-lru.rst               |  22 +--
->  include/linux/compaction.h                         |   4 +-
->  include/linux/memcontrol.h                         |  98 ++++++++++
->  include/linux/mm_types.h                           |   2 +-
->  include/linux/mmzone.h                             |   6 +-
->  include/linux/page-flags.h                         |   1 +
->  include/linux/swap.h                               |   4 +-
->  include/trace/events/compaction.h                  |   2 +-
->  mm/compaction.c                                    | 113 ++++++++----
->  mm/filemap.c                                       |   4 +-
->  mm/huge_memory.c                                   |  48 +++--
->  mm/memcontrol.c                                    |  71 ++++++-
->  mm/memory.c                                        |   3 -
->  mm/mlock.c                                         |  43 +++--
->  mm/mmzone.c                                        |   1 +
->  mm/page_alloc.c                                    |   1 -
->  mm/page_idle.c                                     |   8 -
->  mm/rmap.c                                          |   4 +-
->  mm/swap.c                                          | 203 ++++++++-------------
->  mm/swap_state.c                                    |   2 -
->  mm/vmscan.c                                        | 174 ++++++++++--------
->  mm/workingset.c                                    |   2 -
->  25 files changed, 510 insertions(+), 344 deletions(-)
-> 
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/msm/msm_drv.c
+index 36d98d4116ca,556cca38487c..000000000000
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@@ -524,11 -508,8 +517,7 @@@ static int msm_drm_init(struct device *
+  			goto err_msm_uninit;
+  		}
+ =20
+- 		ret =3D sched_setscheduler(priv->event_thread[i].worker->task,
+- 					 SCHED_FIFO, &param);
+- 		if (ret)
+- 			dev_warn(dev, "event_thread set priority failed:%d\n",
+- 				 ret);
+ -		sched_set_fifo(priv->event_thread[i].thread);
+++		sched_set_fifo(priv->event_thread[i].worker->task);
+  	}
+ =20
+  	ret =3D drm_vblank_init(ddev, priv->num_crtcs);
+
+--Sig_/pIyWRT1psHhoFprNsVI=MQ_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8eaPUACgkQAVBC80lX
+0GxG1Qf/esI5cOOANlGu1MdPbJ6BzrS7aBgGyj7tJciBlJxb9g4A0iKKQbYX1SZX
+J3atlskoxzhWK0jxrpTzHUyYtM20nHkFeQYbCmZosXCBFg1NBLaddy90BV1mOgrG
+k/pWR++R3Xlpx6yTnBYXeHVvzn532xIRCfvV9GMO9qnm8VpumPiHYzqCa+24jKT7
+pjDA2rrj0y4ICcw1p8kKuSm2x8S7pWzP1oOc7JiZl76a03Ivm8/JOa9aXdMSirzh
+W3LCOrHKnZZ5wuEry98ONXflhRTUdsQFpZUyTxACamzrYkqcEjPNyi7YWAnyDWc2
+Pobn5swG3fhuxsOciogQZBIdi8Iatg==
+=qIEa
+-----END PGP SIGNATURE-----
+
+--Sig_/pIyWRT1psHhoFprNsVI=MQ_--
