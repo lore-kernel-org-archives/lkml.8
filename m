@@ -2,99 +2,199 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98044C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF84EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2C020663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9624E20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:09:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kaYEU75S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgG0MJK (ORCPT
+        id S1728128AbgG0MJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:09:10 -0400
-Received: from mga11.intel.com ([192.55.52.93]:57475 "EHLO mga11.intel.com"
+        Mon, 27 Jul 2020 08:09:48 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:50964 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbgG0MJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:09:09 -0400
-IronPort-SDR: 2K7LhbcBJHcjX3jq1KhUL4KanAZEDFKE04d+qHNeLyuyVBfv1F/FtUu7YJre7nxvss/5K5vw06
- rRK+z6XdlJbw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="148877489"
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="148877489"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 05:09:09 -0700
-IronPort-SDR: vG9ARVnVR0G3e8Hw4iGLpIChAYRf4SBYy2FFldqF9756jK6syneLqufm1YK5PdpvQ7AR+8p7vP
- zdNK+Bc8vKww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="329659230"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 27 Jul 2020 05:09:08 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k01wK-004Gsx-8X; Mon, 27 Jul 2020 15:09:08 +0300
-Date:   Mon, 27 Jul 2020 15:09:08 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Xu Wang <vulab@iscas.ac.cn>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] intel_soc_pmic_mrfld: simplify the return expression of
- intel_scu_ipc_dev_iowrite8()
-Message-ID: <20200727120908.GR3703480@smile.fi.intel.com>
-References: <20200727030407.8820-1-vulab@iscas.ac.cn>
+        id S1726620AbgG0MJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:09:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595851786; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
+ Subject: Sender; bh=N+OxDCRHWtMXnNN00q7isorslYGD8DlcIAQ4ZVsCYVs=; b=kaYEU75SNFrNUxW3zDSdGym1UPdpoHy+Plf83OF3IGWceg+pUz91AZ7pFgoU6d4iRBqTvj/0
+ MSWrjboCNefYpiDZr0Zp+aP6sHovdCj0E59KmhpFMmkTfdiDiBrUh8B6ibdntoO0AUOZ8if3
+ IYIAWbEGacp5JvkWl9OLtIQuUZI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5f1ec3bac7e7bf09e0188358 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 12:08:26
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 426CDC43391; Mon, 27 Jul 2020 12:08:26 +0000 (UTC)
+Received: from [192.168.1.12] (unknown [61.1.231.32])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8B373C433C9;
+        Mon, 27 Jul 2020 12:08:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8B373C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
+ power-domains for venus
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Taniya Das <tdas@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+ <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
+ <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
+ <94581989-e069-55e5-6b70-919185eda33e@linaro.org>
+ <e0c03ce2-136c-2c5c-6f36-bb0c69a82e2d@codeaurora.org>
+Message-ID: <5a8af2da-cc3f-005d-47e6-b36be1104d6a@codeaurora.org>
+Date:   Mon, 27 Jul 2020 17:38:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727030407.8820-1-vulab@iscas.ac.cn>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <e0c03ce2-136c-2c5c-6f36-bb0c69a82e2d@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 03:04:07AM +0000, Xu Wang wrote:
-> Simplify the return expression.
 
-I understand your intention, but I would rather leave as is.
-It's a bit more helpful in the original form in case to add some debugging.
-It also keep it symmetrical with read() counterpart.
-
-That said, I'm not objecting the change if Lee finds it good enough.
-
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-> ---
->  drivers/mfd/intel_soc_pmic_mrfld.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
+On 7/27/2020 11:23 AM, Rajendra Nayak wrote:
 > 
-> diff --git a/drivers/mfd/intel_soc_pmic_mrfld.c b/drivers/mfd/intel_soc_pmic_mrfld.c
-> index bd94c989d232..71da861e8c27 100644
-> --- a/drivers/mfd/intel_soc_pmic_mrfld.c
-> +++ b/drivers/mfd/intel_soc_pmic_mrfld.c
-> @@ -91,13 +91,8 @@ static int bcove_ipc_byte_reg_write(void *context, unsigned int reg,
->  {
->  	struct intel_soc_pmic *pmic = context;
->  	u8 ipc_in = val;
-> -	int ret;
->  
-> -	ret = intel_scu_ipc_dev_iowrite8(pmic->scu, reg, ipc_in);
-> -	if (ret)
-> -		return ret;
-> -
-> -	return 0;
-> +	return intel_scu_ipc_dev_iowrite8(pmic->scu, reg, ipc_in);
->  }
->  
->  static const struct regmap_config bcove_regmap_config = {
-> -- 
-> 2.17.1
+> 
+> On 7/24/2020 7:39 PM, Stanimir Varbanov wrote:
+>> Hi,
+>>
+>> On 7/23/20 9:06 PM, Stanimir Varbanov wrote:
+>>> Hi Rajendra,
+>>>
+>>> After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
+>>> below messages on db845:
+>>>
+>>> qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
+>>> current OPP for freq 533000097 (-34)
+>>>
+>>> ^^^ This one is new.
+>>>
+>>> qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
+>>>
+>>> ^^^ and this message is annoying, can we make it pr_debug in rpmh?
+>>>
+>>> On 7/23/20 2:26 PM, Rajendra Nayak wrote:
+>>>> Add the OPP tables in order to be able to vote on the performance state of
+>>>> a power-domain.
+>>>>
+>>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>>> ---
+>>>>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 40 ++++++++++++++++++++++++++++++++++--
+>>>>   1 file changed, 38 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>>> index e506793..5ca2265 100644
+>>>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>>> @@ -3631,8 +3631,10 @@
+>>>>               interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+>>>>               power-domains = <&videocc VENUS_GDSC>,
+>>>>                       <&videocc VCODEC0_GDSC>,
+>>>> -                    <&videocc VCODEC1_GDSC>;
+>>>> -            power-domain-names = "venus", "vcodec0", "vcodec1";
+>>>> +                    <&videocc VCODEC1_GDSC>,
+>>>> +                    <&rpmhpd SDM845_CX>;
+>>>> +            power-domain-names = "venus", "vcodec0", "vcodec1", "cx";
+>>>> +            operating-points-v2 = <&venus_opp_table>;
+>>>>               clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+>>>>                    <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+>>>>                    <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+>>>> @@ -3654,6 +3656,40 @@
+>>>>               video-core1 {
+>>>>                   compatible = "venus-encoder";
+>>>>               };
+>>>> +
+>>>> +            venus_opp_table: venus-opp-table {
+>>>> +                compatible = "operating-points-v2";
+>>>> +
+>>>> +                opp-100000000 {
+>>>> +                    opp-hz = /bits/ 64 <100000000>;
+>>>> +                    required-opps = <&rpmhpd_opp_min_svs>;
+>>>> +                };
+>>>> +
+>>>> +                opp-200000000 {
+>>>> +                    opp-hz = /bits/ 64 <200000000>;
+>>>> +                    required-opps = <&rpmhpd_opp_low_svs>;
+>>>> +                };
+>>>> +
+>>>> +                opp-320000000 {
+>>>> +                    opp-hz = /bits/ 64 <320000000>;
+>>>> +                    required-opps = <&rpmhpd_opp_svs>;
+>>>> +                };
+>>>> +
+>>>> +                opp-380000000 {
+>>>> +                    opp-hz = /bits/ 64 <380000000>;
+>>>> +                    required-opps = <&rpmhpd_opp_svs_l1>;
+>>>> +                };
+>>>> +
+>>>> +                opp-444000000 {
+>>>> +                    opp-hz = /bits/ 64 <444000000>;
+>>>> +                    required-opps = <&rpmhpd_opp_nom>;
+>>>> +                };
+>>>> +
+>>>> +                opp-533000000 {
+>>>> +                    opp-hz = /bits/ 64 <533000000>;
+>>
+>> Actually it comes from videocc, where ftbl_video_cc_venus_clk_src
+>> defines 533000000 but the real calculated freq is 533000097.
+> 
+> I still don't quite understand why the videocc driver returns this
+> frequency despite this not being in the freq table.
+
+Ok, so I see the same issue on sc7180 also. clk_round_rate() does seem to
+return whats in the freq table, but clk_set_rate() goes ahead and sets it
+to 533000097. Subsequently when we try to set a different OPP, it fails to
+find the 'current' OPP entry for 533000097. This sounds like an issue with the OPP
+framework? Should we not fall back to the highest OPP as the current OPP?
+
+Stephen/Viresh, any thoughts?
+
+> I would expect a clk_round_rate() when called with 533000097 to return
+> a 533000000.
+> 
+> Taniya, Do you know why?
+> 
+>>
+>> If I change to opp-hz = /bits/ 64 <533000097> the error disappear.
+>>
+>> I guess we have to revisit m/n and/or pre-divider for this freq when the
+>> source pll is P_VIDEO_PLL0_OUT_MAIN PLL?
+>>
+>>>> +                    required-opps = <&rpmhpd_opp_turbo>;
+>>>> +                };
+>>>> +            };
+>>>>           };
+>>>>           videocc: clock-controller@ab00000 {
+>>>>
+>>>
+>>
 > 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
