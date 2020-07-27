@@ -2,83 +2,73 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2369C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0123BC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7590A2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595874101;
-	bh=NWO/04JWWRC7ZzrXV8897g0mpaDNfuGed08m6svQ79I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Pfd5sKFGflkBg+UlwLQ9r+oqCtFhQkXfPXJ/sVFMkELF+E0J+ts9m46zSFkaPgKlK
-	 /7MOjSfPeFbQNoJAPvH42QEyOOl4yW19xPeOLd8LJIzfSyLFkie/IRXQRFyqILv8fk
-	 0KqVfGMY7aZnAIweCv9plXubsst1ECdFRIejT8mQ=
+	by mail.kernel.org (Postfix) with ESMTP id DC8EB2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:22:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgG0SVk (ORCPT
+        id S1730569AbgG0SWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:21:40 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38345 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729489AbgG0SVk (ORCPT
+        Mon, 27 Jul 2020 14:22:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729357AbgG0SWY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 14:21:40 -0400
-Received: by mail-il1-f193.google.com with SMTP id s21so13923234ilk.5;
-        Mon, 27 Jul 2020 11:21:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PxKFsPdFzHY3vM6sHu99sZ/6dGU9yRgpHVILpUOOBXE=;
-        b=P/2DmQ+k9xSMEM52EUHzYgBugJ+eh8Zd1X1lll2v9tSS1rMCLmQYfWZMkFCHSMBnHc
-         v1kU12hfMeuNcplTvCQ34IA5sMZA9Z2kQQrIPMm6Y+JdRjHYipXy3/J8tc2BjDV88FXO
-         jgevkKfuOtjheFXBmEDjrqd3oCEHMO0nfcbPjgqSIuk1WlDBanoBHH1xgv5bs4nnS/tD
-         ZyivrwqmXMBDYYQGTxsnqorZb21ZBQuY8OILYHOvWX5ndlHBF2X9Bs00MIo12KFou9hq
-         UBiBScDkTBl/rkTt4NUI5fty/11cri7qQ8d0mi6NMLHqW6UdvvaBLzpJXiEQc95zFw4o
-         VXPg==
-X-Gm-Message-State: AOAM530BxeOExtU1mMQLgTNDmYEe1mfyDQr+UTgYhcdwMegfejZhu6MQ
-        lq9ovjPGB/9zvawAIeO0ww==
-X-Google-Smtp-Source: ABdhPJxOaozbqAIHrqpvdZ6Efnkm8Dt1ns0gHMaSVZ9NIrVeq92jjANSz5RVi9ll/rDXILrJRfZRwA==
-X-Received: by 2002:a92:99d9:: with SMTP id t86mr3943448ilk.221.1595874099569;
-        Mon, 27 Jul 2020 11:21:39 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id q1sm911551ioh.0.2020.07.27.11.21.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 11:21:38 -0700 (PDT)
-Received: (nullmailer pid 651936 invoked by uid 1000);
-        Mon, 27 Jul 2020 18:21:36 -0000
-Date:   Mon, 27 Jul 2020 12:21:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     alexandru.tachici@analog.com
-Cc:     devicetree@vger.kernel.org, jic23@kernel.org, robh+dt@kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 9/9] dt-bindings: hwmon: Add bindings for ADM1266
-Message-ID: <20200727182136.GA651885@bogus>
-References: <20200727161814.14076-1-alexandru.tachici@analog.com>
- <20200727161814.14076-10-alexandru.tachici@analog.com>
+        Mon, 27 Jul 2020 14:22:24 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49762C061794;
+        Mon, 27 Jul 2020 11:22:24 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k07lU-003oWt-7u; Mon, 27 Jul 2020 18:22:20 +0000
+Date:   Mon, 27 Jul 2020 19:22:20 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Nick Bowler <nbowler@draconx.ca>
+Subject: [PATCH net] fix a braino in cmsghdr_from_user_compat_to_kern()
+Message-ID: <20200727182220.GI794331@ZenIV.linux.org.uk>
+References: <20200723155101.pnezpo574ot4qkzx@atlas.draconx.ca>
+ <20200727160554.GG794331@ZenIV.linux.org.uk>
+ <20200727161319.GH794331@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200727161814.14076-10-alexandru.tachici@analog.com>
+In-Reply-To: <20200727161319.GH794331@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 19:18:14 +0300, alexandru.tachici@analog.com wrote:
-> From: Alexandru Tachici <alexandru.tachici@analog.com>
-> 
-> Add bindings for the Analog Devices ADM1266 sequencer.
-> 
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-> ---
->  .../bindings/hwmon/adi,adm1266.yaml           | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-> 
+	commit 547ce4cfb34c ("switch cmsghdr_from_user_compat_to_kern() to
+copy_from_user()") missed one of the places where ucmlen should've been
+replaced with cmsg.cmsg_len, now that we are fetching the entire struct
+rather than doing it field-by-field.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+	As the result, compat sendmsg() with several different-sized cmsg
+attached started to fail with EINVAL.  Trivial to fix, fortunately.
+
+Reported-by: Nick Bowler <nbowler@draconx.ca>
+Tested-by: Nick Bowler <nbowler@draconx.ca>
+Fixes: 547ce4cfb34c ("switch cmsghdr_from_user_compat_to_kern() to copy_from_user()")
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+diff --git a/net/compat.c b/net/compat.c
+index 5e3041a2c37d..434838bef5f8 100644
+--- a/net/compat.c
++++ b/net/compat.c
+@@ -202,7 +202,7 @@ int cmsghdr_from_user_compat_to_kern(struct msghdr *kmsg, struct sock *sk,
+ 
+ 		/* Advance. */
+ 		kcmsg = (struct cmsghdr *)((char *)kcmsg + tmp);
+-		ucmsg = cmsg_compat_nxthdr(kmsg, ucmsg, ucmlen);
++		ucmsg = cmsg_compat_nxthdr(kmsg, ucmsg, cmsg.cmsg_len);
+ 	}
+ 
+ 	/*
