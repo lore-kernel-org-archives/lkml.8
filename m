@@ -2,53 +2,50 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE69C433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96413C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 822E920719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A0820719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860875;
-	bh=PGRiRoVTRfv+QPQFffdOaLAOyu+ZjllG5kH32WIlkgc=;
+	s=default; t=1595860881;
+	bh=9tz4CidWw9o+Gpp59fBPlYhlBDzhpP4SJWGqTHQVUNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G+D3N6nY1kSOQ7uB8h/zcnjvZKovZK8RJ2Y7R0NsDHbCuw4xl2jEQAn5QbrFa2gt8
-	 jbAlrftLxxHJDCcWIAIr/qsBcpov/VpRj/+7vh86oXSj4DD2b768go15QcueIEjKBI
-	 Qx95EMLGcfZKOTiSDsY13SWACIF+R7Ds0YuGCHyY=
+	b=miQ31tlvmdwBVCpi1iPMzZKZt2w+EsU7xWWvq9cevMiFm8CpGAj8DYUjpakLMG9vv
+	 ZR+wY8GrCa7eZmO2o73XpVCBn9BVekwbmGsnEdfz/6JN9lHKQkJ9x9oFWD/jgEhk6G
+	 2eyJsKX3MNvQphhGfD62VLQfZiUbP996i3I0pUIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgG0OIa (ORCPT
+        id S1733057AbgG0OlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:08:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57834 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:41:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729406AbgG0OIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:08:24 -0400
+        id S1729383AbgG0OIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:08:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DE0D207FC;
-        Mon, 27 Jul 2020 14:08:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68F732073E;
+        Mon, 27 Jul 2020 14:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858903;
-        bh=PGRiRoVTRfv+QPQFffdOaLAOyu+ZjllG5kH32WIlkgc=;
+        s=default; t=1595858898;
+        bh=9tz4CidWw9o+Gpp59fBPlYhlBDzhpP4SJWGqTHQVUNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XjtmYs3Wpc/95k56Fcw1ih6JCt/jSVl/KvDT+3GcqqyWgN4jhicVaTpxunYw3xfGt
-         5t9P4hpWIsMd8bu+9TExC7Xib0cmYRgv/bm+R5Gza0rUpZGNnGrHcOYB13fPHCVtt+
-         uLIJXiOXiy69H7q8MNFqs/OAzFncsA2C0A4dL3qE=
+        b=ljIRkimzwk67YG3CyIMmP8juzqB5Jayr4c2dJiQ3C1U9MRQl9INcpxGgeFx4LK/e5
+         NO6iUVQspgDg4F4pne/sMKfzYgzDqvARTQtEsKEY3WlINVO83PAHbadOJ900hbwcTG
+         +Zxl6MmPrfPslOZE3v3YVI8sAGoRa7nHzHtMMb5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Jian <liujian56@huawei.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 28/64] mlxsw: destroy workqueue when trap_register in mlxsw_emad_init
-Date:   Mon, 27 Jul 2020 16:04:07 +0200
-Message-Id: <20200727134912.546393647@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.14 53/64] staging: comedi: addi_apci_1500: check INSN_CONFIG_DIGITAL_TRIG shift
+Date:   Mon, 27 Jul 2020 16:04:32 +0200
+Message-Id: <20200727134913.795271919@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -61,45 +58,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Jian <liujian56@huawei.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-[ Upstream commit 5dbaeb87f2b309936be0aeae00cbc9e7f20ab296 ]
+commit fc846e9db67c7e808d77bf9e2ef3d49e3820ce5d upstream.
 
-When mlxsw_core_trap_register fails in mlxsw_emad_init,
-destroy_workqueue() shouled be called to destroy mlxsw_core->emad_wq.
+The `INSN_CONFIG` comedi instruction with sub-instruction code
+`INSN_CONFIG_DIGITAL_TRIG` includes a base channel in `data[3]`. This is
+used as a right shift amount for other bitmask values without being
+checked.  Shift amounts greater than or equal to 32 will result in
+undefined behavior.  Add code to deal with this, adjusting the checks
+for invalid channels so that enabled channel bits that would have been
+lost by shifting are also checked for validity.  Only channels 0 to 15
+are valid.
 
-Fixes: d965465b60ba ("mlxsw: core: Fix possible deadlock")
-Signed-off-by: Liu Jian <liujian56@huawei.com>
-Reviewed-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: a8c66b684efaf ("staging: comedi: addi_apci_1500: rewrite the subdevice support functions")
+Cc: <stable@vger.kernel.org> #4.0+: ef75e14a6c93: staging: comedi: verify array index is correct before using it
+Cc: <stable@vger.kernel.org> #4.0+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20200717145257.112660-5-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/mellanox/mlxsw/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/comedi/drivers/addi_apci_1500.c |   24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
-index fad26046e1595..96f9f267d16d4 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/core.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
-@@ -619,7 +619,7 @@ static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
- 	err = mlxsw_core_trap_register(mlxsw_core, &mlxsw_emad_rx_listener,
- 				       mlxsw_core);
- 	if (err)
--		return err;
-+		goto err_trap_register;
+--- a/drivers/staging/comedi/drivers/addi_apci_1500.c
++++ b/drivers/staging/comedi/drivers/addi_apci_1500.c
+@@ -461,13 +461,14 @@ static int apci1500_di_cfg_trig(struct c
+ 	struct apci1500_private *devpriv = dev->private;
+ 	unsigned int trig = data[1];
+ 	unsigned int shift = data[3];
+-	unsigned int hi_mask = data[4] << shift;
+-	unsigned int lo_mask = data[5] << shift;
+-	unsigned int chan_mask = hi_mask | lo_mask;
+-	unsigned int old_mask = (1 << shift) - 1;
++	unsigned int hi_mask;
++	unsigned int lo_mask;
++	unsigned int chan_mask;
++	unsigned int old_mask;
+ 	unsigned int pm;
+ 	unsigned int pt;
+ 	unsigned int pp;
++	unsigned int invalid_chan;
  
- 	err = mlxsw_core->driver->basic_trap_groups_set(mlxsw_core);
- 	if (err)
-@@ -631,6 +631,7 @@ static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
- err_emad_trap_set:
- 	mlxsw_core_trap_unregister(mlxsw_core, &mlxsw_emad_rx_listener,
- 				   mlxsw_core);
-+err_trap_register:
- 	destroy_workqueue(mlxsw_core->emad_wq);
- 	return err;
- }
--- 
-2.25.1
-
+ 	if (trig > 1) {
+ 		dev_dbg(dev->class_dev,
+@@ -475,7 +476,20 @@ static int apci1500_di_cfg_trig(struct c
+ 		return -EINVAL;
+ 	}
+ 
+-	if (chan_mask > 0xffff) {
++	if (shift <= 16) {
++		hi_mask = data[4] << shift;
++		lo_mask = data[5] << shift;
++		old_mask = (1U << shift) - 1;
++		invalid_chan = (data[4] | data[5]) >> (16 - shift);
++	} else {
++		hi_mask = 0;
++		lo_mask = 0;
++		old_mask = 0xffff;
++		invalid_chan = data[4] | data[5];
++	}
++	chan_mask = hi_mask | lo_mask;
++
++	if (invalid_chan) {
+ 		dev_dbg(dev->class_dev, "invalid digital trigger channel\n");
+ 		return -EINVAL;
+ 	}
 
 
