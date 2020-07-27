@@ -2,53 +2,53 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E7CC43446
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC3DC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5C9B22CA0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A2F22B45
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859903;
-	bh=9IPoUjIl9rYUQoHwrqTKJT7UCqyqqU4r75Elw+Qpxr8=;
+	s=default; t=1595859908;
+	bh=o0bUSa9r+WlA838mzYXVW27gR8YIWsM5ux2NTn9EUyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PWUZUV0UgFWprJX30vxNDu5jgYPO7UWwEn70+R5PXbn8EZpNFW++qTRfi2sPN0wXR
-	 vHWoHTKO44zvnbzLu6cBcpUTwHFnxpM4qttyI1RPftutbbU83jOKlmQt3njy7bxsb/
-	 Ipyi5U7CzzG7ApgeCOPqDM7ijbEORRdy2toMxvD4=
+	b=WozEoRYdyCwxB2wPCVbMZarlN9/j6r3IyfxKT3MTakU1fMhDmejTvW4K6IEdf3h3U
+	 u68AY22zd1vbbYzs8ndkmr2/fPC/+AlLhWXofL5FeC5M+3HdhrDh56FwqFou9RHgrq
+	 xtRDgUO1bBei4LH+F7bl+Oq66CwHkYXSMcnBKffg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732357AbgG0OZC (ORCPT
+        id S1731038AbgG0OZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:25:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54642 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:25:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732337AbgG0OYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:24:55 -0400
+        id S1731766AbgG0OZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:25:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6936F208E4;
-        Mon, 27 Jul 2020 14:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 406E0208E4;
+        Mon, 27 Jul 2020 14:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859894;
-        bh=9IPoUjIl9rYUQoHwrqTKJT7UCqyqqU4r75Elw+Qpxr8=;
+        s=default; t=1595859902;
+        bh=o0bUSa9r+WlA838mzYXVW27gR8YIWsM5ux2NTn9EUyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=veIWri0MyObFTt9IfVdo6PFq2pwYN89p2y4plQ2RMTI9d7MDdwBNvAuMkTeLY5IwS
-         6lFzvt2xLMbHodjU5PQhZwvONa2HyWRWk7PdH7ws1ltYHXoOJkz2csnKmqetx44TR8
-         hjmfE4QoJOfUWIbJmmHupo2bVn5xwza2nxVOVdug=
+        b=MIbseOZwME5GsAa3aZxt3bEDHeoafEFJo863GzobiC/YgUOzsOFsnG57GN5ZH9+4k
+         sE5x4v8eJBeDztrG+eOZf3+flEFtg+g12XyFGzffeqMWSNze5oBBQRWsvoedN1fzkh
+         TFvfdToZQ4whhDCmlx1CI8CDKeZRAODebiVNo4rI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Jan Kiszka <jan.kiszka@web.de>,
-        Helmut Grohne <helmut.grohne@intenta.de>
-Subject: [PATCH 5.7 145/179] tty: xilinx_uartps: Really fix id assignment
-Date:   Mon, 27 Jul 2020 16:05:20 +0200
-Message-Id: <20200727134939.735741726@linuxfoundation.org>
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 120/179] usb: dwc3: pci: add support for the Intel Jasper Lake
+Date:   Mon, 27 Jul 2020 16:04:55 +0200
+Message-Id: <20200727134938.497772289@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,87 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helmut Grohne <helmut.grohne@intenta.de>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit 22a82fa7d6c3e16d56a036b1fa697a39b954adf0 upstream.
+[ Upstream commit e25d1e8532c3d84f075deca1580a7d61e0f43ce6 ]
 
-The problems started with the revert (18cc7ac8a28e28). The
-cdns_uart_console.index is statically assigned -1. When the port is
-registered, Linux assigns consecutive numbers to it. It turned out that
-when using ttyPS1 as console, the index is not updated as we are reusing
-the same cdns_uart_console instance for multiple ports. When registering
-ttyPS0, it gets updated from -1 to 0, but when registering ttyPS1, it
-already is 0 and not updated.
+This patch adds the necessary PCI ID for Intel Jasper Lake
+devices.
 
-That led to 2ae11c46d5fdc4. It assigns the index prior to registering
-the uart_driver once. Unfortunately, that ended up breaking the
-situation where the probe order does not match the id order. When using
-the same device tree for both uboot and linux, it is important that the
-serial0 alias points to the console. So some boards reverse those
-aliases. This was reported by Jan Kiszka. The proposed fix was reverting
-the index assignment and going back to the previous iteration.
-
-However such a reversed assignement (serial0 -> uart1, serial1 -> uart0)
-was already partially broken by the revert (18cc7ac8a28e28). While the
-ttyPS device works, the kmsg connection is already broken and kernel
-messages go missing. Reverting the id assignment does not fix this.
-
->From the xilinx_uartps driver pov (after reverting the refactoring
-commits), there can be only one console. This manifests in static
-variables console_pprt and cdns_uart_console. These variables are not
-properly linked and can go out of sync. The cdns_uart_console.index is
-important for uart_add_one_port. We call that function for each port -
-one of which hopefully is the console. If it isn't, the CON_ENABLED flag
-is not set and console_port is cleared. The next cdns_uart_probe call
-then tries to register the next port using that same cdns_uart_console.
-
-It is important that console_port and cdns_uart_console (and its index
-in particular) stay in sync. The index assignment implemented by
-Shubhrajyoti Datta is correct in principle. It just may have to happen a
-second time if the first cdns_uart_probe call didn't encounter the
-console device. And we shouldn't change the index once the console uart
-is registered.
-
-Reported-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Reported-by: Jan Kiszka <jan.kiszka@web.de>
-Link: https://lore.kernel.org/linux-serial/f4092727-d8f5-5f91-2c9f-76643aace993@siemens.com/
-Fixes: 18cc7ac8a28e28 ("Revert "serial: uartps: Register own uart console and driver structures"")
-Fixes: 2ae11c46d5fdc4 ("tty: xilinx_uartps: Fix missing id assignment to the console")
-Fixes: 76ed2e10579671 ("Revert "tty: xilinx_uartps: Fix missing id assignment to the console"")
-Signed-off-by: Helmut Grohne <helmut.grohne@intenta.de>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200713073227.GA3805@laureti-dev
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/xilinx_uartps.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/usb/dwc3/dwc3-pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -1574,8 +1574,10 @@ static int cdns_uart_probe(struct platfo
- 	 * If register_console() don't assign value, then console_port pointer
- 	 * is cleanup.
- 	 */
--	if (!console_port)
-+	if (!console_port) {
-+		cdns_uart_console.index = id;
- 		console_port = port;
-+	}
- #endif
+diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
+index 47b7e83d90626..139474c3e77b1 100644
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -39,6 +39,7 @@
+ #define PCI_DEVICE_ID_INTEL_EHLLP		0x4b7e
+ #define PCI_DEVICE_ID_INTEL_TGPLP		0xa0ee
+ #define PCI_DEVICE_ID_INTEL_TGPH		0x43ee
++#define PCI_DEVICE_ID_INTEL_JSP			0x4dee
  
- 	rc = uart_add_one_port(&cdns_uart_uart_driver, port);
-@@ -1588,8 +1590,10 @@ static int cdns_uart_probe(struct platfo
- #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
- 	/* This is not port which is used for console that's why clean it up */
- 	if (console_port == port &&
--	    !(cdns_uart_uart_driver.cons->flags & CON_ENABLED))
-+	    !(cdns_uart_uart_driver.cons->flags & CON_ENABLED)) {
- 		console_port = NULL;
-+		cdns_uart_console.index = -1;
-+	}
- #endif
+ #define PCI_INTEL_BXT_DSM_GUID		"732b85d5-b7a7-4a1b-9ba0-4bbd00ffd511"
+ #define PCI_INTEL_BXT_FUNC_PMU_PWR	4
+@@ -362,6 +363,9 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
+ 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_TGPH),
+ 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
  
- 	cdns_uart_data->cts_override = of_property_read_bool(pdev->dev.of_node,
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_JSP),
++	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
++
+ 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_NL_USB),
+ 	  (kernel_ulong_t) &dwc3_pci_amd_properties, },
+ 	{  }	/* Terminating Entry */
+-- 
+2.25.1
+
 
 
