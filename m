@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32689C433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DDBC43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFC5720A8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D2E22B40
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:52:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K2pitubU"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="R7RkXQfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgG0UwV (ORCPT
+        id S1728044AbgG0UwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:52:21 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14266 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727948AbgG0UwA (ORCPT
+        Mon, 27 Jul 2020 16:52:25 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9087 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727098AbgG0Uv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:52:00 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f1f3e150002>; Mon, 27 Jul 2020 13:50:29 -0700
+        Mon, 27 Jul 2020 16:51:58 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f1f3e610000>; Mon, 27 Jul 2020 13:51:45 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 27 Jul 2020 13:51:59 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 27 Jul 2020 13:51:58 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 27 Jul 2020 13:51:59 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jul
- 2020 20:51:59 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 27 Jul 2020 20:51:59 +0000
+        by hqpgpgate101.nvidia.com on Mon, 27 Jul 2020 13:51:58 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jul
+ 2020 20:51:58 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 27 Jul 2020 20:51:58 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.236]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f1f3e6e0003>; Mon, 27 Jul 2020 13:51:59 -0700
+        id <B5f1f3e6d0003>; Mon, 27 Jul 2020 13:51:58 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -47,9 +47,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v5 14/14] media: tegra-video: Compute settle times based on the clock rate
-Date:   Mon, 27 Jul 2020 13:57:32 -0700
-Message-ID: <1595883452-17343-15-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v5 12/14] gpu: host1x: mipi: Keep MIPI clock enabled till calibration is done
+Date:   Mon, 27 Jul 2020 13:57:30 -0700
+Message-ID: <1595883452-17343-13-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
 References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
@@ -57,213 +57,132 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595883029; bh=ZqpZbfMBW4DJ712RgT6AiLK7WaZJiAo2GcX6ds4jTsE=;
+        t=1595883105; bh=qXeZws+JBgq3aj5FVst/JW0XHKo0Of2Z2367pT18YMQ=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=K2pitubUFhRAVU+92u9zZpG7XD4FlffcBJDs+xGzmdO409bdesXFEvUg0LnUGJ/5f
-         okhdmg9b80VN9KmLwf4B9iFhH130ZI5I+G+9xAeogF4rf+H6pTAgtNPVMfPPHxlQse
-         Ol4f+VbImcBUYRlTaeE9ccfRSmtwvlUCqiLJI5aW9/AJDbVJA6XSJZOHRoQaRLeHP/
-         kS3W1hN9txoCICERGnXYB1nrZ7Y9CqW/O7/G64qaRLeg7uLBhYfpBoa3UOpzWLK8oG
-         mNj5NJ5gokE5JUlWnD4OY49xBuKuO/0dKFs5Fy8jFizbfcuXQ6Qn7yw+g0iXLyplfA
-         l9n+oKEzwiolA==
+        b=R7RkXQfYj2HhiSkxQ8yY3KZVj5jOcSzDPNpcPURmX7Uc6ilMRIFOcD739tNAuB6Xh
+         688Mb1YwARi439UE8u5/Jvtl7D+C0XnGHU67Qq82htzjwNX542QTvQZ07JXBjd2QYz
+         /1gYEPspAKiUnRnDBqK+ABCMekbh1H+qqueiTNeIjReJHpz5CoKFpodSNqs4FKyXBU
+         lVWQb9m85BVMjp5UJ4K4LAo61d5XGsAd3APcKU0OFivO8XfwkxjO75ln8/yMOOiAn7
+         VbM7WSQ302gYr1NSSMenpf1ZkYSEX12MQqg2//Ey8DcVemMbzUfw2gj0s2JATlAuC8
+         16kPhHJXLMs7A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Settle time determines the number of cil clock cyles to wait after
-LP00 when moving from LP to HS.
+With the split of MIPI calibration into tegra_mipi_calibrate() and
+tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
+is done.
 
-This patch computes T-CLK-SETTLE and T-HS-SETTLE times based on cil
-clock rate and pixel rate from the sensor and programs them during
-streaming.
+So, this patch skips disabling MIPI clock after triggering start of
+calibration and disables it only after waiting for done status from
+the calibration logic.
 
-T-CLK-SETTLE time is the interval during which receiver will ignore
-any HS transitions on clock lane starting from the beginning of
-T-CLK-PREPARE.
+This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibration()
+and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
+with their usage.
 
-T-HS-SETTLE time is the interval during which recevier will ignore
-any HS transitions on data lane starting from the beginning of
-T-HS-PREPARE.
+As MIPI clock is left enabled and in case of any failures with CSI input
+streaming tegra_mipi_finish_calibration() will not get invoked.
+So added new API tegra_mipi_cancel_calibration() which disables MIPI clock
+and consumer drivers can call this in such cases.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/staging/media/tegra-video/TODO       |  1 -
- drivers/staging/media/tegra-video/csi.c      | 55 ++++++++++++++++++++++++++++
- drivers/staging/media/tegra-video/csi.h      |  5 +++
- drivers/staging/media/tegra-video/tegra210.c | 17 ++++++++-
- 4 files changed, 75 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/tegra/dsi.c |  4 ++--
+ drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
+ include/linux/host1x.h      |  5 +++--
+ 3 files changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/staging/media/tegra-video/TODO b/drivers/staging/media/tegra-video/TODO
-index 98d3c7d..c821081 100644
---- a/drivers/staging/media/tegra-video/TODO
-+++ b/drivers/staging/media/tegra-video/TODO
-@@ -1,5 +1,4 @@
- TODO list
--* Add MIPI clock Settle time computation based on the data rate.
- * Add support for Ganged mode.
- * Add RAW10 packed video format support to Tegra210 video formats.
- * Add support for suspend and resume.
-diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/media/tegra-video/csi.c
-index 752ebe8..5bcd58e 100644
---- a/drivers/staging/media/tegra-video/csi.c
-+++ b/drivers/staging/media/tegra-video/csi.c
-@@ -19,6 +19,8 @@
- #include "csi.h"
- #include "video.h"
+diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+index 3820e8d..a7864e9 100644
+--- a/drivers/gpu/drm/tegra/dsi.c
++++ b/drivers/gpu/drm/tegra/dsi.c
+@@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_dsi *dsi)
+ 		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+ 	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
  
-+#define MHZ			1000000
-+
- static inline struct tegra_csi *
- host1x_client_to_csi(struct host1x_client *client)
- {
-@@ -235,6 +237,59 @@ static int tegra_csi_g_frame_interval(struct v4l2_subdev *subdev,
- 	return 0;
+-	err = tegra_mipi_calibrate(dsi->mipi);
++	err = tegra_mipi_start_calibration(dsi->mipi);
+ 	if (err < 0)
+ 		return err;
+ 
+-	return tegra_mipi_wait(dsi->mipi);
++	return tegra_mipi_finish_calibration(dsi->mipi);
  }
  
-+static unsigned int csi_get_pixel_rate(struct tegra_csi_channel *csi_chan)
+ static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned long bclk,
+diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+index e606464..b15ab6e 100644
+--- a/drivers/gpu/host1x/mipi.c
++++ b/drivers/gpu/host1x/mipi.c
+@@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device *dev)
+ }
+ EXPORT_SYMBOL(tegra_mipi_disable);
+ 
+-int tegra_mipi_wait(struct tegra_mipi_device *device)
++void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
 +{
-+	struct tegra_vi_channel *chan;
-+	struct v4l2_subdev *src_subdev;
-+	struct v4l2_ctrl *ctrl;
-+
-+	chan = v4l2_get_subdev_hostdata(&csi_chan->subdev);
-+	src_subdev = tegra_channel_get_remote_source_subdev(chan);
-+	ctrl = v4l2_ctrl_find(src_subdev->ctrl_handler, V4L2_CID_PIXEL_RATE);
-+	if (ctrl)
-+		return v4l2_ctrl_g_ctrl_int64(ctrl);
-+
-+	return 0;
++	clk_disable(device->mipi->clk);
 +}
++EXPORT_SYMBOL(tegra_mipi_cancel_calibration);
 +
-+void tegra_csi_calc_settle_time(struct tegra_csi_channel *csi_chan,
-+				u8 *clk_settle_time,
-+				u8 *ths_settle_time)
-+{
-+	struct tegra_csi *csi = csi_chan->csi;
-+	unsigned int cil_clk_mhz;
-+	unsigned int pix_clk_mhz;
-+	int clk_idx = (csi_chan->csi_port_num >> 1) + 1;
-+
-+	cil_clk_mhz = clk_get_rate(csi->clks[clk_idx].clk) / MHZ;
-+	pix_clk_mhz = csi_get_pixel_rate(csi_chan) / MHZ;
-+
-+	/*
-+	 * CLK Settle time is the interval during which HS receiver should
-+	 * ignore any clock lane HS transitions, starting from the beginning
-+	 * of T-CLK-PREPARE.
-+	 * Per DPHY specification, T-CLK-SETTLE should be between 95ns ~ 300ns
-+	 *
-+	 * 95ns < (clk-settle-programmed + 7) * lp clk period < 300ns
-+	 * midpoint = 197.5 ns
-+	 */
-+	*clk_settle_time = ((95 + 300) * cil_clk_mhz - 14000) / 2000;
-+
-+	/*
-+	 * THS Settle time is the interval during which HS receiver should
-+	 * ignore any data lane HS transitions, starting from the beginning
-+	 * of THS-PREPARE.
-+	 *
-+	 * Per DPHY specification, T-HS-SETTLE should be between 85ns + 6UI
-+	 * and 145ns+10UI.
-+	 * 85ns + 6UI < (Ths-settle-prog + 5) * lp_clk_period < 145ns + 10UI
-+	 * midpoint = 115ns + 8UI
-+	 */
-+	if (pix_clk_mhz)
-+		*ths_settle_time = (115 * cil_clk_mhz + 8000 * cil_clk_mhz
-+				   / (2 * pix_clk_mhz) - 5000) / 1000;
-+}
-+
- static int tegra_csi_s_stream(struct v4l2_subdev *subdev, int enable)
++int tegra_mipi_finish_calibration(struct tegra_mipi_device *device)
  {
- 	struct tegra_vi_channel *chan = v4l2_get_subdev_hostdata(subdev);
-diff --git a/drivers/staging/media/tegra-video/csi.h b/drivers/staging/media/tegra-video/csi.h
-index 0d50fc3..c65ff73 100644
---- a/drivers/staging/media/tegra-video/csi.h
-+++ b/drivers/staging/media/tegra-video/csi.h
-@@ -51,6 +51,7 @@ struct tegra_csi;
-  * @h_blank: horizontal blanking for TPG active format
-  * @v_blank: vertical blanking for TPG active format
-  * @mipi: mipi device for corresponding csi channel pads
-+ * @pixel_rate: active pixel rate from the sensor on this channel
-  */
- struct tegra_csi_channel {
- 	struct list_head list;
-@@ -67,6 +68,7 @@ struct tegra_csi_channel {
- 	unsigned int h_blank;
- 	unsigned int v_blank;
- 	struct tegra_mipi_device *mipi;
-+	unsigned int pixel_rate;
- };
+ 	struct tegra_mipi *mipi = device->mipi;
+ 	void __iomem *status_reg = mipi->regs + (MIPI_CAL_STATUS << 2);
+ 	u32 value;
+ 	int err;
  
- /**
-@@ -147,4 +149,7 @@ extern const struct tegra_csi_soc tegra210_csi_soc;
- #endif
+-	err = clk_enable(device->mipi->clk);
+-	if (err < 0)
+-		return err;
+-
+ 	mutex_lock(&device->mipi->lock);
  
- void tegra_csi_error_recover(struct v4l2_subdev *subdev);
-+void tegra_csi_calc_settle_time(struct tegra_csi_channel *csi_chan,
-+				u8 *clk_settle_time,
-+				u8 *ths_settle_time);
- #endif
-diff --git a/drivers/staging/media/tegra-video/tegra210.c b/drivers/staging/media/tegra-video/tegra210.c
-index 253bf33..ac066c0 100644
---- a/drivers/staging/media/tegra-video/tegra210.c
-+++ b/drivers/staging/media/tegra-video/tegra210.c
-@@ -7,6 +7,7 @@
-  * This source file contains Tegra210 supported video formats,
-  * VI and CSI SoC specific data, operations and registers accessors.
-  */
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/clk/tegra.h>
- #include <linux/delay.h>
-@@ -98,6 +99,8 @@
- #define   BRICK_CLOCK_B_4X				(0x2 << 16)
- #define TEGRA_CSI_CIL_PAD_CONFIG1                       0x004
- #define TEGRA_CSI_CIL_PHY_CONTROL                       0x008
-+#define   CLK_SETTLE_MASK				GENMASK(13, 8)
-+#define   THS_SETTLE_MASK				GENMASK(5, 0)
- #define TEGRA_CSI_CIL_INTERRUPT_MASK                    0x00c
- #define TEGRA_CSI_CIL_STATUS                            0x010
- #define TEGRA_CSI_CILX_STATUS                           0x014
-@@ -770,8 +773,14 @@ static int tegra210_csi_start_streaming(struct tegra_csi_channel *csi_chan)
+ 	err = readl_relaxed_poll_timeout(status_reg, value,
+@@ -315,9 +317,9 @@ int tegra_mipi_wait(struct tegra_mipi_device *device)
+ 
+ 	return err;
+ }
+-EXPORT_SYMBOL(tegra_mipi_wait);
++EXPORT_SYMBOL(tegra_mipi_finish_calibration);
+ 
+-int tegra_mipi_calibrate(struct tegra_mipi_device *device)
++int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
  {
- 	struct tegra_csi *csi = csi_chan->csi;
- 	unsigned int portno = csi_chan->csi_port_num;
-+	u8 clk_settle_time = 0;
-+	u8 ths_settle_time = 10;
- 	u32 val;
+ 	const struct tegra_mipi_soc *soc = device->mipi->soc;
+ 	unsigned int i;
+@@ -382,11 +384,10 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *device)
+ 	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
  
-+	if (!csi_chan->pg_mode)
-+		tegra_csi_calc_settle_time(csi_chan, &clk_settle_time,
-+					   &ths_settle_time);
-+
- 	csi_write(csi, portno, TEGRA_CSI_CLKEN_OVERRIDE, 0);
+ 	mutex_unlock(&device->mipi->lock);
+-	clk_disable(device->mipi->clk);
  
- 	/* clean up status */
-@@ -782,7 +791,9 @@ static int tegra210_csi_start_streaming(struct tegra_csi_channel *csi_chan)
+ 	return 0;
+ }
+-EXPORT_SYMBOL(tegra_mipi_calibrate);
++EXPORT_SYMBOL(tegra_mipi_start_calibration);
  
- 	/* CIL PHY registers setup */
- 	cil_write(csi, portno, TEGRA_CSI_CIL_PAD_CONFIG0, 0x0);
--	cil_write(csi, portno, TEGRA_CSI_CIL_PHY_CONTROL, 0xa);
-+	cil_write(csi, portno, TEGRA_CSI_CIL_PHY_CONTROL,
-+		  FIELD_PREP(CLK_SETTLE_MASK, clk_settle_time) |
-+		  FIELD_PREP(THS_SETTLE_MASK, ths_settle_time));
+ static const struct tegra_mipi_pad tegra114_mipi_pads[] = {
+ 	{ .data = MIPI_CAL_CONFIG_CSIA },
+diff --git a/include/linux/host1x.h b/include/linux/host1x.h
+index 20c885d..b490dda 100644
+--- a/include/linux/host1x.h
++++ b/include/linux/host1x.h
+@@ -333,7 +333,8 @@ struct tegra_mipi_device *tegra_mipi_request(struct device *device,
+ void tegra_mipi_free(struct tegra_mipi_device *device);
+ int tegra_mipi_enable(struct tegra_mipi_device *device);
+ int tegra_mipi_disable(struct tegra_mipi_device *device);
+-int tegra_mipi_calibrate(struct tegra_mipi_device *device);
+-int tegra_mipi_wait(struct tegra_mipi_device *device);
++int tegra_mipi_start_calibration(struct tegra_mipi_device *device);
++int tegra_mipi_finish_calibration(struct tegra_mipi_device *device);
++void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device);
  
- 	/*
- 	 * The CSI unit provides for connection of up to six cameras in
-@@ -801,7 +812,9 @@ static int tegra210_csi_start_streaming(struct tegra_csi_channel *csi_chan)
- 			  BRICK_CLOCK_A_4X);
- 		cil_write(csi, portno + 1, TEGRA_CSI_CIL_PAD_CONFIG0, 0x0);
- 		cil_write(csi, portno + 1, TEGRA_CSI_CIL_INTERRUPT_MASK, 0x0);
--		cil_write(csi, portno + 1, TEGRA_CSI_CIL_PHY_CONTROL, 0xa);
-+		cil_write(csi, portno + 1, TEGRA_CSI_CIL_PHY_CONTROL,
-+			  FIELD_PREP(CLK_SETTLE_MASK, clk_settle_time) |
-+			  FIELD_PREP(THS_SETTLE_MASK, ths_settle_time));
- 		csi_write(csi, portno, TEGRA_CSI_PHY_CIL_COMMAND,
- 			  CSI_A_PHY_CIL_ENABLE | CSI_B_PHY_CIL_ENABLE);
- 	} else {
+ #endif
 -- 
 2.7.4
 
