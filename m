@@ -2,152 +2,128 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD3CC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03999C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33791206D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4611206D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Q1oTugg2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ms3HKQCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgG0DZz (ORCPT
+        id S1726839AbgG0D3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 23:25:55 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:34566 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726817AbgG0DZy (ORCPT
+        Sun, 26 Jul 2020 23:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgG0D3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 23:25:54 -0400
-X-UUID: b5aec717104440f5817f9b1245681e01-20200727
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ts2TbemboXTjPLm3syKaYD/dvm0+IAdQpXqli+IsEmE=;
-        b=Q1oTugg20XjTN70cWrd9vhCDy6XdAgHFPySEZJiOVK058MKVnbRiFXQp+634LJBUdbzvy41lhfYSWLfQBGfbjF6W7N0r0JBq4BFf8hlto9iShD2aYxTPC4J1G2TTQKMpd94UHfI7yYv47nBBSbLPRWX0ia0VVSlz+8y/xNMTn48=;
-X-UUID: b5aec717104440f5817f9b1245681e01-20200727
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1411802195; Mon, 27 Jul 2020 11:25:49 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 27 Jul 2020 11:25:47 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 27 Jul 2020 11:25:47 +0800
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sami Tolvanen <samitolvanen@google.com>
-CC:     Neal Liu <neal.liu@mediatek.com>, <linux-acpi@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>
-Subject: [PATCH v3] cpuidle: change enter_s2idle() prototype
-Date:   Mon, 27 Jul 2020 11:25:46 +0800
-Message-ID: <1595820346-4361-2-git-send-email-neal.liu@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1595820346-4361-1-git-send-email-neal.liu@mediatek.com>
-References: <1595820346-4361-1-git-send-email-neal.liu@mediatek.com>
+        Sun, 26 Jul 2020 23:29:23 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 898CDC0619D2;
+        Sun, 26 Jul 2020 20:29:23 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id l84so634324oig.10;
+        Sun, 26 Jul 2020 20:29:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6yKlaBSWRYtFbLh+hPRBH7MDAZ6KKac4QvWCCFjrjmc=;
+        b=ms3HKQCxFeS2AOUxLb5rlSA4Cr3sUD6ZWFpPB4bwt5e+bRRQBpUss2l3sKiJxk2IYl
+         UdVZoZKqqY3b24VA6Pa9x3G1QgCy5f8wWV6CpeQq+C7odFoVVLZzSuXo2o3pJg4EYts2
+         TWx3NWJjygf5JpIbqptGnJm/+V7cxABWdUgcgrtH/+aI6YyPr4hR7ZzsREveSyjAQSrd
+         DqntnFktk+NhjxkPl9tygrM3b3LdxgY7pGznp5a/eKh8SmZeol71I98mooapptjeWdV9
+         bt/3V1huVjdXsuOkYUPmsdXK+lr1vQMymEGmBZKorcAtKL5ujtDw5KIzYX+tOcSwf85I
+         UFHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6yKlaBSWRYtFbLh+hPRBH7MDAZ6KKac4QvWCCFjrjmc=;
+        b=c5/CeXpB3tYeBHPR88zzgn4PcrzMwVdcfgUsfffLGnL+POvgmLkEaBqT5IepDsfqyC
+         y+1XRd6dz8plJGMqMY68uDRRScaIb+nw7L0CEP3qgRLEfaRIyeQ2b7O+ZiwE4dFdRgfV
+         v2VsUPCeC1LH71jMjIIpqLHzpZPTVdJSskcid30Pnu7FzweIJ+GWuCIWF284G5VrpQ5Z
+         nNHLB4EL5lpQDy14Zzj3VHGAeXhSUqGQwIerbnq1p1wnn1mPv7+p9BgIA4h+u0Hj33Af
+         1M0Y+OqsSPRgfsRQRkC+I4VS2I+Yr4N/BvSzG7jH8cONOHajwRMPL1R0Pdm09PkYrijM
+         n+eQ==
+X-Gm-Message-State: AOAM532LiNOxzd1qRTOUyN+hHYWd+KGdJzVnClyk6hFeuyaxSbVu/7Zr
+        E4YB4cz7kcB5qJxbZtLKdGV8b0JWhCarhagmgC0=
+X-Google-Smtp-Source: ABdhPJzJ3wSTSW4ZLU71+niW7giMZBPHMjGyJwxm4g/gZGOgRtzL13Brf02QTyo2kiGRjtYSaEM7M8DV+3oM+v4bOUk=
+X-Received: by 2002:aca:5842:: with SMTP id m63mr17024204oib.5.1595820562707;
+ Sun, 26 Jul 2020 20:29:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1595323468-4380-1-git-send-email-wanpengli@tencent.com>
+ <1595323468-4380-2-git-send-email-wanpengli@tencent.com> <87lfjdp2dd.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87lfjdp2dd.fsf@vitty.brq.redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 27 Jul 2020 11:29:11 +0800
+Message-ID: <CANRm+Cw5CqBvC+a9FbJmCjckOQdcsN+UiEYOvJfkexjp2wy0Og@mail.gmail.com>
+Subject: Re: [PATCH 2/2] KVM: LAPIC: Set the TDCR settable bits
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q29udHJvbCBGbG93IEludGVncml0eShDRkkpIGlzIGEgc2VjdXJpdHkgbWVjaGFuaXNtIHRoYXQg
-ZGlzYWxsb3dzDQpjaGFuZ2VzIHRvIHRoZSBvcmlnaW5hbCBjb250cm9sIGZsb3cgZ3JhcGggb2Yg
-YSBjb21waWxlZCBiaW5hcnksDQptYWtpbmcgaXQgc2lnbmlmaWNhbnRseSBoYXJkZXIgdG8gcGVy
-Zm9ybSBzdWNoIGF0dGFja3MuDQoNCmluaXRfc3RhdGVfbm9kZSgpIGFzc2lnbiBzYW1lIGZ1bmN0
-aW9uIGNhbGxiYWNrIHRvIGRpZmZlcmVudA0KZnVuY3Rpb24gcG9pbnRlciBkZWNsYXJhdGlvbnMu
-DQoNCnN0YXRpYyBpbnQgaW5pdF9zdGF0ZV9ub2RlKHN0cnVjdCBjcHVpZGxlX3N0YXRlICppZGxl
-X3N0YXRlLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uc3Qgc3RydWN0IG9mX2Rldmlj
-ZV9pZCAqbWF0Y2hlcywNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkZXZpY2Vf
-bm9kZSAqc3RhdGVfbm9kZSkgeyAuLi4NCiAgICAgICAgaWRsZV9zdGF0ZS0+ZW50ZXIgPSBtYXRj
-aF9pZC0+ZGF0YTsgLi4uDQogICAgICAgIGlkbGVfc3RhdGUtPmVudGVyX3MyaWRsZSA9IG1hdGNo
-X2lkLT5kYXRhOyB9DQoNCkZ1bmN0aW9uIGRlY2xhcmF0aW9uczoNCg0Kc3RydWN0IGNwdWlkbGVf
-c3RhdGUgeyAuLi4NCiAgICAgICAgaW50ICgqZW50ZXIpIChzdHJ1Y3QgY3B1aWRsZV9kZXZpY2Ug
-KmRldiwNCiAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgY3B1aWRsZV9kcml2ZXIgKmRydiwN
-CiAgICAgICAgICAgICAgICAgICAgICBpbnQgaW5kZXgpOw0KDQogICAgICAgIHZvaWQgKCplbnRl
-cl9zMmlkbGUpIChzdHJ1Y3QgY3B1aWRsZV9kZXZpY2UgKmRldiwNCiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHN0cnVjdCBjcHVpZGxlX2RyaXZlciAqZHJ2LA0KICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgaW50IGluZGV4KTsgfTsNCg0KSW4gdGhpcyBjYXNlLCBlaXRoZXIgZW50
-ZXIoKSBvciBlbnRlcl9zMmlkbGUoKSB3b3VsZCBjYXVzZSBDRkkgY2hlY2sNCmZhaWxlZCBzaW5j
-ZSB0aGV5IHVzZSBzYW1lIGNhbGxlZS4NCg0KQWxpZ24gZnVuY3Rpb24gcHJvdG90eXBlIG9mIGVu
-dGVyKCkgc2luY2UgaXQgbmVlZHMgcmV0dXJuIHZhbHVlIGZvcg0Kc29tZSB1c2UgY2FzZXMuIFRo
-ZSByZXR1cm4gdmFsdWUgb2YgZW50ZXJfczJpZGxlKCkgaXMgbm8NCm5lZWQgY3VycmVudGx5Lg0K
-DQpTaWduZWQtb2ZmLWJ5OiBOZWFsIExpdSA8bmVhbC5saXVAbWVkaWF0ZWsuY29tPg0KUmV2aWV3
-ZWQtYnk6IFNhbWkgVG9sdmFuZW4gPHNhbWl0b2x2YW5lbkBnb29nbGUuY29tPg0KLS0tDQogZHJp
-dmVycy9hY3BpL3Byb2Nlc3Nvcl9pZGxlLmMgICB8ICAgIDYgKysrKy0tDQogZHJpdmVycy9jcHVp
-ZGxlL2NwdWlkbGUtdGVncmEuYyB8ICAgIDggKysrKystLS0NCiBkcml2ZXJzL2lkbGUvaW50ZWxf
-aWRsZS5jICAgICAgIHwgICAgNiArKysrLS0NCiBpbmNsdWRlL2xpbnV4L2NwdWlkbGUuaCAgICAg
-ICAgIHwgICAgOSArKysrKystLS0NCiA0IGZpbGVzIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyks
-IDEwIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL3Byb2Nlc3Nvcl9p
-ZGxlLmMgYi9kcml2ZXJzL2FjcGkvcHJvY2Vzc29yX2lkbGUuYw0KaW5kZXggNzU1MzRjNS4uNmZm
-YjZjOSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvYWNwaS9wcm9jZXNzb3JfaWRsZS5jDQorKysgYi9k
-cml2ZXJzL2FjcGkvcHJvY2Vzc29yX2lkbGUuYw0KQEAgLTY1NSw4ICs2NTUsOCBAQCBzdGF0aWMg
-aW50IGFjcGlfaWRsZV9lbnRlcihzdHJ1Y3QgY3B1aWRsZV9kZXZpY2UgKmRldiwNCiAJcmV0dXJu
-IGluZGV4Ow0KIH0NCiANCi1zdGF0aWMgdm9pZCBhY3BpX2lkbGVfZW50ZXJfczJpZGxlKHN0cnVj
-dCBjcHVpZGxlX2RldmljZSAqZGV2LA0KLQkJCQkgICBzdHJ1Y3QgY3B1aWRsZV9kcml2ZXIgKmRy
-diwgaW50IGluZGV4KQ0KK3N0YXRpYyBpbnQgYWNwaV9pZGxlX2VudGVyX3MyaWRsZShzdHJ1Y3Qg
-Y3B1aWRsZV9kZXZpY2UgKmRldiwNCisJCQkJICBzdHJ1Y3QgY3B1aWRsZV9kcml2ZXIgKmRydiwg
-aW50IGluZGV4KQ0KIHsNCiAJc3RydWN0IGFjcGlfcHJvY2Vzc29yX2N4ICpjeCA9IHBlcl9jcHUo
-YWNwaV9jc3RhdGVbaW5kZXhdLCBkZXYtPmNwdSk7DQogDQpAQCAtNjc0LDYgKzY3NCw4IEBAIHN0
-YXRpYyB2b2lkIGFjcGlfaWRsZV9lbnRlcl9zMmlkbGUoc3RydWN0IGNwdWlkbGVfZGV2aWNlICpk
-ZXYsDQogCQl9DQogCX0NCiAJYWNwaV9pZGxlX2RvX2VudHJ5KGN4KTsNCisNCisJcmV0dXJuIDA7
-DQogfQ0KIA0KIHN0YXRpYyBpbnQgYWNwaV9wcm9jZXNzb3Jfc2V0dXBfY3B1aWRsZV9jeChzdHJ1
-Y3QgYWNwaV9wcm9jZXNzb3IgKnByLA0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3B1aWRsZS9jcHVp
-ZGxlLXRlZ3JhLmMgYi9kcml2ZXJzL2NwdWlkbGUvY3B1aWRsZS10ZWdyYS5jDQppbmRleCAxNTAw
-NDU4Li5hMTJmYjE0IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9jcHVpZGxlL2NwdWlkbGUtdGVncmEu
-Yw0KKysrIGIvZHJpdmVycy9jcHVpZGxlL2NwdWlkbGUtdGVncmEuYw0KQEAgLTI1MywxMSArMjUz
-LDEzIEBAIHN0YXRpYyBpbnQgdGVncmFfY3B1aWRsZV9lbnRlcihzdHJ1Y3QgY3B1aWRsZV9kZXZp
-Y2UgKmRldiwNCiAJcmV0dXJuIGVyciA/IC0xIDogaW5kZXg7DQogfQ0KIA0KLXN0YXRpYyB2b2lk
-IHRlZ3JhMTE0X2VudGVyX3MyaWRsZShzdHJ1Y3QgY3B1aWRsZV9kZXZpY2UgKmRldiwNCi0JCQkJ
-ICBzdHJ1Y3QgY3B1aWRsZV9kcml2ZXIgKmRydiwNCi0JCQkJICBpbnQgaW5kZXgpDQorc3RhdGlj
-IGludCB0ZWdyYTExNF9lbnRlcl9zMmlkbGUoc3RydWN0IGNwdWlkbGVfZGV2aWNlICpkZXYsDQor
-CQkJCSBzdHJ1Y3QgY3B1aWRsZV9kcml2ZXIgKmRydiwNCisJCQkJIGludCBpbmRleCkNCiB7DQog
-CXRlZ3JhX2NwdWlkbGVfZW50ZXIoZGV2LCBkcnYsIGluZGV4KTsNCisNCisJcmV0dXJuIDA7DQog
-fQ0KIA0KIC8qDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9pZGxlL2ludGVsX2lkbGUuYyBiL2RyaXZl
-cnMvaWRsZS9pbnRlbF9pZGxlLmMNCmluZGV4IGY0NDk1ODQuLmIxNzhkYTMgMTAwNjQ0DQotLS0g
-YS9kcml2ZXJzL2lkbGUvaW50ZWxfaWRsZS5jDQorKysgYi9kcml2ZXJzL2lkbGUvaW50ZWxfaWRs
-ZS5jDQpAQCAtMTc1LDEzICsxNzUsMTUgQEAgc3RhdGljIF9fY3B1aWRsZSBpbnQgaW50ZWxfaWRs
-ZShzdHJ1Y3QgY3B1aWRsZV9kZXZpY2UgKmRldiwNCiAgKiBJbnZva2VkIGFzIGEgc3VzcGVuZC10
-by1pZGxlIGNhbGxiYWNrIHJvdXRpbmUgd2l0aCBmcm96ZW4gdXNlciBzcGFjZSwgZnJvemVuDQog
-ICogc2NoZWR1bGVyIHRpY2sgYW5kIHN1c3BlbmRlZCBzY2hlZHVsZXIgY2xvY2sgb24gdGhlIHRh
-cmdldCBDUFUuDQogICovDQotc3RhdGljIF9fY3B1aWRsZSB2b2lkIGludGVsX2lkbGVfczJpZGxl
-KHN0cnVjdCBjcHVpZGxlX2RldmljZSAqZGV2LA0KLQkJCQkJc3RydWN0IGNwdWlkbGVfZHJpdmVy
-ICpkcnYsIGludCBpbmRleCkNCitzdGF0aWMgX19jcHVpZGxlIGludCBpbnRlbF9pZGxlX3MyaWRs
-ZShzdHJ1Y3QgY3B1aWRsZV9kZXZpY2UgKmRldiwNCisJCQkJICAgICAgIHN0cnVjdCBjcHVpZGxl
-X2RyaXZlciAqZHJ2LCBpbnQgaW5kZXgpDQogew0KIAl1bnNpZ25lZCBsb25nIGVheCA9IGZsZzJN
-V0FJVChkcnYtPnN0YXRlc1tpbmRleF0uZmxhZ3MpOw0KIAl1bnNpZ25lZCBsb25nIGVjeCA9IDE7
-IC8qIGJyZWFrIG9uIGludGVycnVwdCBmbGFnICovDQogDQogCW13YWl0X2lkbGVfd2l0aF9oaW50
-cyhlYXgsIGVjeCk7DQorDQorCXJldHVybiAwOw0KIH0NCiANCiAvKg0KZGlmZiAtLWdpdCBhL2lu
-Y2x1ZGUvbGludXgvY3B1aWRsZS5oIGIvaW5jbHVkZS9saW51eC9jcHVpZGxlLmgNCmluZGV4IGVj
-MmVmNjMuLmI2NTkwOWEgMTAwNjQ0DQotLS0gYS9pbmNsdWRlL2xpbnV4L2NwdWlkbGUuaA0KKysr
-IGIvaW5jbHVkZS9saW51eC9jcHVpZGxlLmgNCkBAIC02NSwxMCArNjUsMTMgQEAgc3RydWN0IGNw
-dWlkbGVfc3RhdGUgew0KIAkgKiBDUFVzIGV4ZWN1dGUgLT5lbnRlcl9zMmlkbGUgd2l0aCB0aGUg
-bG9jYWwgdGljayBvciBlbnRpcmUgdGltZWtlZXBpbmcNCiAJICogc3VzcGVuZGVkLCBzbyBpdCBt
-dXN0IG5vdCByZS1lbmFibGUgaW50ZXJydXB0cyBhdCBhbnkgcG9pbnQgKGV2ZW4NCiAJICogdGVt
-cG9yYXJpbHkpIG9yIGF0dGVtcHQgdG8gY2hhbmdlIHN0YXRlcyBvZiBjbG9jayBldmVudCBkZXZp
-Y2VzLg0KKwkgKg0KKwkgKiBUaGlzIGNhbGxiYWNrIG1heSBwb2ludCB0byB0aGUgc2FtZSBmdW5j
-dGlvbiBhcyAtPmVudGVyIGlmIGFsbCBvZg0KKwkgKiB0aGUgYWJvdmUgcmVxdWlyZW1lbnRzIGFy
-ZSBtZXQgYnkgaXQuDQogCSAqLw0KLQl2b2lkICgqZW50ZXJfczJpZGxlKSAoc3RydWN0IGNwdWlk
-bGVfZGV2aWNlICpkZXYsDQotCQkJICAgICAgc3RydWN0IGNwdWlkbGVfZHJpdmVyICpkcnYsDQot
-CQkJICAgICAgaW50IGluZGV4KTsNCisJaW50ICgqZW50ZXJfczJpZGxlKShzdHJ1Y3QgY3B1aWRs
-ZV9kZXZpY2UgKmRldiwNCisJCQkgICAgc3RydWN0IGNwdWlkbGVfZHJpdmVyICpkcnYsDQorCQkJ
-ICAgIGludCBpbmRleCk7DQogfTsNCiANCiAvKiBJZGxlIFN0YXRlIEZsYWdzICovDQotLSANCjEu
-Ny45LjUNCg==
+On Tue, 21 Jul 2020 at 18:51, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Wanpeng Li <kernellwp@gmail.com> writes:
+>
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Only bits 0, 1, and 3 are settable, others are reserved for APIC_TDCR.
+> > Let's record the settable value in the virtual apic page.
+> >
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/lapic.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > index 4ce2ddd..8f7a14d 100644
+> > --- a/arch/x86/kvm/lapic.c
+> > +++ b/arch/x86/kvm/lapic.c
+> > @@ -2068,7 +2068,7 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
+> >       case APIC_TDCR: {
+> >               uint32_t old_divisor = apic->divide_count;
+> >
+> > -             kvm_lapic_set_reg(apic, APIC_TDCR, val);
+> > +             kvm_lapic_set_reg(apic, APIC_TDCR, val & 0xb);
+> >               update_divide_count(apic);
+> >               if (apic->divide_count != old_divisor &&
+> >                               apic->lapic_timer.period) {
+>
+> AFAIU bit 2 should be 0 and other upper bits are reserved. Checking on
+> bare hardware,
+>
+> # wrmsr 0x83e 0xb
+> # rdmsr 0x83e
+> b
+> # wrmsr 0x83e 0xc
+> wrmsr: CPU 0 cannot set MSR 0x0000083e to 0x000000000000000c
+> # rdmsr 0x83e
+> b
+>
+> Shouldn't we fail the write in case (val & ~0xb) ?
 
+Sorry for the late response since I just come back from vacation. I
+can remove the "others are reserved" in patch description for the next
+version. It is a little different between Intel and AMD, Intel's bit 2
+is 0 and AMD is reserved. On bare-metal, Intel will refuse to set
+APIC_TDCR once bits except 0, 1, 3 are setting, however, AMD will
+accept bits 0, 1, 3 and ignore other bits setting as patch does.
+Before the patch, we can get back anything what we set to the
+APIC_TDCR, this patch improves it.
+
+    Wanpeng
