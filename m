@@ -2,250 +2,109 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D01C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A4AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1623C20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD8420738
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgG0TfZ (ORCPT
+        id S1728419AbgG0TiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:35:25 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:15634 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727887AbgG0TfY (ORCPT
+        Mon, 27 Jul 2020 15:38:17 -0400
+Received: from shells.gnugeneration.com ([66.240.222.126]:43836 "EHLO
+        shells.gnugeneration.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgG0TiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:35:24 -0400
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 27 Jul 2020 12:35:23 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 27 Jul 2020 12:35:23 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 02FCC18FA; Mon, 27 Jul 2020 12:35:22 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v1 1/2] thermal: qcom-spmi-temp-alarm: add support for GEN2 rev 1 PMIC peripherals
-Date:   Mon, 27 Jul 2020 12:35:18 -0700
-Message-Id: <f22bb151d836f924b09cf80ffd6e58eb286be5d6.1595878198.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 27 Jul 2020 15:38:17 -0400
+Received: by shells.gnugeneration.com (Postfix, from userid 1000)
+        id D7F071A40175; Mon, 27 Jul 2020 12:38:16 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 12:38:16 -0700
+From:   Vito Caputo <vcaputo@pengaru.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, Dave Chinner <david@fromorbit.com>
+Subject: Re: [QUESTION] Sharing a `struct page` across multiple `struct
+ address_space` instances
+Message-ID: <20200727193816.cialb45mbf6okkba@shells.gnugeneration.com>
+References: <20200725002221.dszdahfhqrbz43cz@shells.gnugeneration.com>
+ <20200725031158.GD23808@casper.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200725031158.GD23808@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Collins <collinsd@codeaurora.org>
+On Sat, Jul 25, 2020 at 04:11:58AM +0100, Matthew Wilcox wrote:
+> On Fri, Jul 24, 2020 at 05:22:21PM -0700, Vito Caputo wrote:
+> > Prior to looking at the code, conceptually I was envisioning the pages
+> > in the reflink source inode's address_space would simply get their
+> > refcounts bumped as they were added to the dest inode's address_space,
+> > with some CoW flag set to prevent writes.
+> > 
+> > But there seems to be a fundamental assumption that a `struct page`
+> > would only belong to a single `struct address_space` at a time, as it
+> > has single `mapping` and `index` members for reverse mapping the page
+> > to its address_space.
+> > 
+> > Am I completely lost here or does it really look like a rather
+> > invasive modification to support this feature?
+> > 
+> > I have vague memories of Dave Chinner mentioning work towards sharing
+> > pages across address spaces in the interests of getting reflink copies
+> > more competitive with overlayfs in terms of page cache utilization.
+> 
+> It's invasive.  Dave and I have chatted about this in the past.  I've done
+> no work towards it (... a little busy right now with THPs in the page
+> cache ...) but I have a design in mind.
+> 
+> The fundamental idea is to use the DAX support to refer to pages which
+> actually belong to a separate address space.  DAX entries are effectively
+> PFN entries.  So there would be a clear distinction between "I looked
+> up a page which actually belongs to this address space" and "I looked
+> up a page which is shared with a different address space".  My thinking
+> has been that if files A and B are reflinked, both A and B would see
+> DAX entries in their respective page caches.  The page would belong to
+> a third address space which might be the block device's address space,
+> or maybe there would be an address space per shared fragment (since
+> files can share fragments that are at different offsets from each other).
+> 
+> There are a lot of details to get right around this approach.
+> Importantly, there _shouldn't_ be a refcount from each of file A and
+> B on the page.  Instead the refcount from files A and B should be on
+> the fragment.  When the fragment's refcount goes to zero, we know there
+> are no more references to the fragment and all its pages can be freed.
+> 
+> That means that if we reflink B to C, we don't have to walk every page
+> in the file and increase its refcount again.
+> 
+> So, are you prepared to do a lot of work, or were you thinking this
+> would be a quick hack?  Because I'm willing to advise on a big project,
+> but if you're thinking this will be quick, and don't have time for a
+> big project, it's probably time to stop here.
+> 
 
-Add support for TEMP_ALARM GEN2 PMIC peripherals with digital
-major revision 1.  This revision utilizes a different temperature
-threshold mapping than earlier revisions.
+Thanks for the thoughtful response.  For the time being I'll just poke
+at the code and familiarize myself with how DAX works.  If it gets to
+where I'm effectively spending full-time on it anyways and feeling
+determined to run it to ground, I'll reach out.
 
-Signed-off-by: David Collins <collinsd@codeaurora.org>
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
----
-Apologies for resending - My earlier two submissions were directed to the wrong
-reviewer audience and list.
+> ---
+> 
+> Something that did occur to me while writing this is that if you just want
+> read-only duplicates of files to work, you could make inode->i_mapping
+> point to a different address_space instead of &inode->i_data.  There's
+> probabyl a quick hack solution there.
 
- drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 91 +++++++++++++++++++----------
- 1 file changed, 61 insertions(+), 30 deletions(-)
+I wonder if it's worth implementing something like this to at least
+get reflink enabled with file-granular CoW on tmpfs, then iterate from
+there to make things more granular.
 
-diff --git a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
-index bf7bae4..05a9601 100644
---- a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
-+++ b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
-@@ -17,6 +17,7 @@
- 
- #include "../thermal_core.h"
- 
-+#define QPNP_TM_REG_DIG_MAJOR		0x01
- #define QPNP_TM_REG_TYPE		0x04
- #define QPNP_TM_REG_SUBTYPE		0x05
- #define QPNP_TM_REG_STATUS		0x08
-@@ -38,26 +39,30 @@
- 
- #define ALARM_CTRL_FORCE_ENABLE		BIT(7)
- 
--/*
-- * Trip point values based on threshold control
-- * 0 = {105 C, 125 C, 145 C}
-- * 1 = {110 C, 130 C, 150 C}
-- * 2 = {115 C, 135 C, 155 C}
-- * 3 = {120 C, 140 C, 160 C}
--*/
--#define TEMP_STAGE_STEP			20000	/* Stage step: 20.000 C */
--#define TEMP_STAGE_HYSTERESIS		2000
-+#define THRESH_COUNT			4
-+#define STAGE_COUNT			3
-+
-+/* Over-temperature trip point values in mC */
-+static const long temp_map_gen1[THRESH_COUNT][STAGE_COUNT] = {
-+	{105000, 125000, 145000},
-+	{110000, 130000, 150000},
-+	{115000, 135000, 155000},
-+	{120000, 140000, 160000},
-+};
-+
-+static const long temp_map_gen2_v1[THRESH_COUNT][STAGE_COUNT] = {
-+	{ 90000, 110000, 140000},
-+	{ 95000, 115000, 145000},
-+	{100000, 120000, 150000},
-+	{105000, 125000, 155000},
-+};
- 
--#define TEMP_THRESH_MIN			105000	/* Threshold Min: 105 C */
--#define TEMP_THRESH_STEP		5000	/* Threshold step: 5 C */
-+#define TEMP_THRESH_STEP		5000 /* Threshold step: 5 C */
- 
- #define THRESH_MIN			0
- #define THRESH_MAX			3
- 
--/* Stage 2 Threshold Min: 125 C */
--#define STAGE2_THRESHOLD_MIN		125000
--/* Stage 2 Threshold Max: 140 C */
--#define STAGE2_THRESHOLD_MAX		140000
-+#define TEMP_STAGE_HYSTERESIS		2000
- 
- /* Temperature in Milli Celsius reported during stage 0 if no ADC is present */
- #define DEFAULT_TEMP			37000
-@@ -77,6 +82,7 @@ struct qpnp_tm_chip {
- 	bool				initialized;
- 
- 	struct iio_channel		*adc;
-+	const long			(*temp_map)[THRESH_COUNT][STAGE_COUNT];
- };
- 
- /* This array maps from GEN2 alarm state to GEN1 alarm stage */
-@@ -101,6 +107,23 @@ static int qpnp_tm_write(struct qpnp_tm_chip *chip, u16 addr, u8 data)
- }
- 
- /**
-+ * qpnp_tm_decode_temp() - return temperature in mC corresponding to the
-+ *		specified over-temperature stage
-+ * @chip:		Pointer to the qpnp_tm chip
-+ * @stage:		Over-temperature stage
-+ *
-+ * Return: temperature in mC
-+ */
-+static long qpnp_tm_decode_temp(struct qpnp_tm_chip *chip, unsigned int stage)
-+{
-+	if (!chip->temp_map || chip->thresh >= THRESH_COUNT || stage == 0
-+	    || stage > STAGE_COUNT)
-+		return 0;
-+
-+	return (*chip->temp_map)[chip->thresh][stage - 1];
-+}
-+
-+/**
-  * qpnp_tm_get_temp_stage() - return over-temperature stage
-  * @chip:		Pointer to the qpnp_tm chip
-  *
-@@ -149,14 +172,12 @@ static int qpnp_tm_update_temp_no_adc(struct qpnp_tm_chip *chip)
- 
- 	if (stage_new > stage_old) {
- 		/* increasing stage, use lower bound */
--		chip->temp = (stage_new - 1) * TEMP_STAGE_STEP +
--			     chip->thresh * TEMP_THRESH_STEP +
--			     TEMP_STAGE_HYSTERESIS + TEMP_THRESH_MIN;
-+		chip->temp = qpnp_tm_decode_temp(chip, stage_new)
-+				+ TEMP_STAGE_HYSTERESIS;
- 	} else if (stage_new < stage_old) {
- 		/* decreasing stage, use upper bound */
--		chip->temp = stage_new * TEMP_STAGE_STEP +
--			     chip->thresh * TEMP_THRESH_STEP -
--			     TEMP_STAGE_HYSTERESIS + TEMP_THRESH_MIN;
-+		chip->temp = qpnp_tm_decode_temp(chip, stage_new + 1)
-+				- TEMP_STAGE_HYSTERESIS;
- 	}
- 
- 	chip->stage = stage;
-@@ -199,26 +220,28 @@ static int qpnp_tm_get_temp(void *data, int *temp)
- static int qpnp_tm_update_critical_trip_temp(struct qpnp_tm_chip *chip,
- 					     int temp)
- {
--	u8 reg;
-+	long stage2_threshold_min = (*chip->temp_map)[THRESH_MIN][1];
-+	long stage2_threshold_max = (*chip->temp_map)[THRESH_MAX][1];
- 	bool disable_s2_shutdown = false;
-+	u8 reg;
- 
- 	WARN_ON(!mutex_is_locked(&chip->lock));
- 
- 	/*
- 	 * Default: S2 and S3 shutdown enabled, thresholds at
--	 * 105C/125C/145C, monitoring at 25Hz
-+	 * lowest threshold set, monitoring at 25Hz
- 	 */
- 	reg = SHUTDOWN_CTRL1_RATE_25HZ;
- 
- 	if (temp == THERMAL_TEMP_INVALID ||
--	    temp < STAGE2_THRESHOLD_MIN) {
-+	    temp < stage2_threshold_min) {
- 		chip->thresh = THRESH_MIN;
- 		goto skip;
- 	}
- 
--	if (temp <= STAGE2_THRESHOLD_MAX) {
-+	if (temp <= stage2_threshold_max) {
- 		chip->thresh = THRESH_MAX -
--			((STAGE2_THRESHOLD_MAX - temp) /
-+			((stage2_threshold_max - temp) /
- 			 TEMP_THRESH_STEP);
- 		disable_s2_shutdown = true;
- 	} else {
-@@ -326,9 +349,7 @@ static int qpnp_tm_init(struct qpnp_tm_chip *chip)
- 		? chip->stage : alarm_state_map[chip->stage];
- 
- 	if (stage)
--		chip->temp = chip->thresh * TEMP_THRESH_STEP +
--			     (stage - 1) * TEMP_STAGE_STEP +
--			     TEMP_THRESH_MIN;
-+		chip->temp = qpnp_tm_decode_temp(chip, stage);
- 
- 	crit_temp = qpnp_tm_get_critical_trip_temp(chip);
- 	ret = qpnp_tm_update_critical_trip_temp(chip, crit_temp);
-@@ -350,7 +371,7 @@ static int qpnp_tm_probe(struct platform_device *pdev)
- {
- 	struct qpnp_tm_chip *chip;
- 	struct device_node *node;
--	u8 type, subtype;
-+	u8 type, subtype, dig_major;
- 	u32 res;
- 	int ret, irq;
- 
-@@ -400,6 +421,12 @@ static int qpnp_tm_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	ret = qpnp_tm_read(chip, QPNP_TM_REG_DIG_MAJOR, &dig_major);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "could not read dig_major\n");
-+		return ret;
-+	}
-+
- 	if (type != QPNP_TM_TYPE || (subtype != QPNP_TM_SUBTYPE_GEN1
- 				     && subtype != QPNP_TM_SUBTYPE_GEN2)) {
- 		dev_err(&pdev->dev, "invalid type 0x%02x or subtype 0x%02x\n",
-@@ -408,6 +435,10 @@ static int qpnp_tm_probe(struct platform_device *pdev)
- 	}
- 
- 	chip->subtype = subtype;
-+	if (subtype == QPNP_TM_SUBTYPE_GEN2 && dig_major >= 1)
-+		chip->temp_map = &temp_map_gen2_v1;
-+	else
-+		chip->temp_map = &temp_map_gen1;
- 
- 	/*
- 	 * Register the sensor before initializing the hardware to be able to
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Regards,
+Vito Caputo
