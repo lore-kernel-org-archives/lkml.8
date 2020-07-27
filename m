@@ -2,170 +2,124 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F893C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C92AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F32992074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E006B206D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:06:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I0bRcMk/"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rQjooD/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgG0NFz (ORCPT
+        id S1728633AbgG0NGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:05:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53042 "EHLO
+        Mon, 27 Jul 2020 09:06:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbgG0NFw (ORCPT
+        with ESMTP id S1728393AbgG0NGl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:05:52 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 672A6C061794;
-        Mon, 27 Jul 2020 06:05:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6BXkCKJfKaUl8bQBAmIf85h3Rs77fRZ0wJrKpqF8M6w=; b=I0bRcMk/W+M6vYFtdpE4z48P3z
-        9PQoyy0wIeKKX1DrGvpc2Zz/0bJHmMqM5mKZenZPvHzKp8fAnC1z9b1X0DLIEg6mWXp94X21Bhr3V
-        x+sOtr2gCVzXhM6UNaMHTnzdvUEwDhE+hlxcCdJ7XnoDVvC2qaqmuQGDHiQt9SdiMfsZfnmS7pc9e
-        nuyxVqWMecoCLSP+NITU2fcB8d2ZOOKO5hPonjh81bN5o7zHBzVhOA/3frACdTom2G8+I6P90RRlt
-        zFs4jkwT1hEgAYyd4Nl7XAG34yWz1jvoeuXXJ7BfS1tveWZdhdYzCe5eficAocOLHnvRpGa2CP2oB
-        3PJXdHlg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k02p0-0000QN-Tf; Mon, 27 Jul 2020 13:05:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 88225304B6D;
-        Mon, 27 Jul 2020 15:05:36 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6B06829DBC0A0; Mon, 27 Jul 2020 15:05:36 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 15:05:36 +0200
-From:   peterz@infradead.org
-To:     hpa@zytor.com
-Cc:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Cathy Zhang <cathy.zhang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-edac@vger.kernel.org
-Subject: Re: [PATCH 4/4] x86/cpu: Use SERIALIZE in sync_core() when available
-Message-ID: <20200727130536.GM119549@hirez.programming.kicks-ass.net>
-References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
- <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
- <D51F2DC3-3C56-44E6-A1F2-434E7D27133C@zytor.com>
- <20200727083619.GF119549@hirez.programming.kicks-ass.net>
- <49251CFA-8AC3-462D-A60F-0337593BE9CD@zytor.com>
+        Mon, 27 Jul 2020 09:06:41 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAA11C061794;
+        Mon, 27 Jul 2020 06:06:40 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFg730fB3z9sRN;
+        Mon, 27 Jul 2020 23:06:39 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595855199;
+        bh=sqoizSNL6gMISXSp6h102DAmnraM6MkbiSHOUbMRpts=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rQjooD/woyMFZFCDfVkYqOatLe1Bq2RCrTSUMSrRegTxJnoRIYM8b+K10PanLA0Od
+         rTHtYdGEIxVsakYPxR05GOPqh0BgZ//w7gX+SH6+xzjzRlFVWCUZv5Bn0bKYpO6Clv
+         0rL0QAvJ6SYA1cmwBmUYv7IgmzehMxkmV/mke98KehppchnLtBymi9CNEXmIW5F00A
+         1hc00yOQ8nqz/2KIEoqJXD9p0OQ/eaSudzbzwAZVEH5volUF8cDboJji/Za+DsituY
+         J2ywMgWgdXb9mqDPLCFYR5gLxs9cZgGHs1gUyva6KB8JgmWcSPIpMDbEXKuQZuKfx3
+         1Tw7JM4BYWVAw==
+Date:   Mon, 27 Jul 2020 23:06:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>
+Subject: Re: Include krzk/linux-mem-ctrl (for drivers/memory) in next
+Message-ID: <20200727230638.5089517a@canb.auug.org.au>
+In-Reply-To: <20200727082938.GA25420@kozik-lap>
+References: <20200727082938.GA25420@kozik-lap>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <49251CFA-8AC3-462D-A60F-0337593BE9CD@zytor.com>
+Content-Type: multipart/signed; boundary="Sig_/mI663HG724QXY_snrANMVwy";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 05:49:28AM -0700, hpa@zytor.com wrote:
-> On July 27, 2020 1:36:19 AM PDT, peterz@infradead.org wrote:
-> >On Sun, Jul 26, 2020 at 10:55:15PM -0700, hpa@zytor.com wrote:
-> >> For a really overenginered solution, but which might perform
-> >> unnecessary poorly on existing hardware:
-> >> 
-> >> asm volatile("1: .byte 0xf, 0x1, 0xe8; 2:"
-> >>                         _ASM_EXTABLE(1b,2b));
-> >
-> >Ha! cute, you take an #UD ?
-> >
-> >We could optimize the #UD exception handler for this I suppose, but
-> >that makes it an even worse hack. The simple alternative() seems like
-> >a much simpler approach.
-> 
-> If this is in any way performance critical, then no :) 
+--Sig_/mI663HG724QXY_snrANMVwy
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, I'm not sure.. the 'funny' thing is that typically call
-sync_core() from an IPI anyway. And the synchronous broadcast IPI is by
-far the most expensive part of that.
+Hi Krzysztof,
 
-Something like this...
+On Mon, 27 Jul 2020 10:29:38 +0200 Krzysztof Kozlowski <krzk@kernel.org> wr=
+ote:
+>
+> Please include in linux-next a new tree for drivers/memory:
+> URL: https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-mem-ctrl.=
+git
+>=20
+> branches:
+> 1. for-next
+>    into next,
+> 2. fixes
+>    into pending fixes (for current cycle),
+>=20
+> The tree will have patches later send via pull-request to arm-soc (Arnd,
+> Olof).
 
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 20e07feb4064..528e049ee1d9 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -989,12 +989,13 @@ void *text_poke_kgdb(void *addr, const void *opcode, size_t len)
- 
- static void do_sync_core(void *info)
- {
--	sync_core();
-+	/* IRET implies sync_core() */
- }
- 
- void text_poke_sync(void)
- {
- 	on_each_cpu(do_sync_core, NULL, 1);
-+	sync_core();
- }
- 
- struct text_poke_loc {
+I added the for-next branch today, I will add the fixes branch tomorrow.
 
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
 
-> Taking the #UD
-> has the cute property that we end up IRET on the way back, so we don't
-> even need a fix-up path.
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
 
-I got that, what I had in mind was making sure #UD avoids the overhead
-of doing exception entry/exit by adding an early exit.
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
 
-Something like so:
+--=20
+Cheers,
+Stephen Rothwell=20
+sfr@canb.auug.org.au
 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 8493f55e1167..a3f41d645944 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -96,6 +96,16 @@ __always_inline int is_valid_bugaddr(unsigned long addr)
- 	return *(unsigned short *)addr == INSN_UD2;
- }
- 
-+__always_inline int handle_serialize(struct pt_regs *regs)
-+{
-+	const char serialize[3] = { 0x0f, 0xe8, 0x02 };
-+
-+	if (regs->ip < TASK_SIZE_MAX)
-+		return 0;
-+
-+	return !memcmp((const void *)regs->ip, serialize, 3);
-+}
-+
- static nokprobe_inline int
- do_trap_no_signal(struct task_struct *tsk, int trapnr, const char *str,
- 		  struct pt_regs *regs,	long error_code)
-@@ -252,8 +262,13 @@ DEFINE_IDTENTRY_RAW(exc_invalid_op)
- 	 * handle it before exception entry to avoid recursive WARN
- 	 * in case exception entry is the one triggering WARNs.
- 	 */
--	if (!user_mode(regs) && handle_bug(regs))
--		return;
-+	if (!user_mode(regs)) {
-+		if (handle_bug(regs))
-+			return;
-+
-+		if (handle_serialize(regs))
-+			return;
-+	}
- 
- 	state = idtentry_enter(regs);
- 	instrumentation_begin();
+--Sig_/mI663HG724QXY_snrANMVwy
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8e0V4ACgkQAVBC80lX
+0GyS0Af/SNG83OcqcO/g2ABW0cyfodlxHAh01SWmJJ4NGP2vumyCQaG3Afh9PyR8
+Ug0CXQczOj473JKdxEm5NLkVIfEOiTk/Bo5z9iiGJlxzwH3jl/iljWZutTHD0ADJ
+x1do94OoYWLman56NFgIXR3m0edLvsp8lEKjM1fV80elR1mP7IBAh/QrQuaopVXy
+bnyNJEGiW9y2uDjpC0uQMMBOmviv8Dj9wUHjJjNvAc6UwVRHvKu+jcAfrbQitPvl
+c329EHn/lJQk8wK/ccEMMQJynsKpRHZAEtno9lFSgVPcwlA6dXZDYE0N+7gPhtLB
+WGktLQIIOGhiFN8jZN5Hgd4fLRpnuQ==
+=WowF
+-----END PGP SIGNATURE-----
+
+--Sig_/mI663HG724QXY_snrANMVwy--
