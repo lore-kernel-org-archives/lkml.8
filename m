@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA8BC433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7CBC43459
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A17721D95
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B286C2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859790;
-	bh=e9V3lPrkqDvI9PpIFRoLbKwiPOAE5nFcLwbfsSfpGZ0=;
+	s=default; t=1595859791;
+	bh=aDH47WXYmEoiCKBRtSqqp2kH1h4RsMqOn8BGWaxOkZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1l5Rl59Ih8hWBAO6wHmyHkuCcyNVAiy5WKxIqfbGIMbhUlYunpvVfDnB8Vu3rwj9+
-	 5clh/19pMHpsByFFvQ4w2rIHW8Zfqfh571kjjmGjHI3w9n+hudQXccPdST1RAj0pd4
-	 XszLlAvbgABmkJza+ompC2PgzRvhJoniFtMoWeqw=
+	b=Ssng6mNcb2b+7NG2ZCkCs35+9bStt22+u5IChCo+smkRAfqqZ/ZX+SPPFmP1MMHJx
+	 E9GtZyXCdMKbYImsdnA4bVyjU+HWtP1hBO8LTZlTWVSrH+fvhxKgAvCTXKmQKSEC6A
+	 A+S3ge3ECSxAuHEwzsejO/mCFtkDSL8n5KblnjPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgG0OXI (ORCPT
+        id S1732026AbgG0OXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:23:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52140 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:23:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732004AbgG0OXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:23:03 -0400
+        id S1732017AbgG0OXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:23:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6194D2070A;
-        Mon, 27 Jul 2020 14:23:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C83D2083E;
+        Mon, 27 Jul 2020 14:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859782;
-        bh=e9V3lPrkqDvI9PpIFRoLbKwiPOAE5nFcLwbfsSfpGZ0=;
+        s=default; t=1595859787;
+        bh=aDH47WXYmEoiCKBRtSqqp2kH1h4RsMqOn8BGWaxOkZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i9QdEFmXUUaCw6pViwV10r5Ua79rEAQW1nyOgAxHxOfUxcuNImnNa2s4tC+f5g/kt
-         Lxo3JqQwB8vKfsicL7N5Z4fYAToo6BpZkXB9A64NjIOtzJqdKbCUUgMTWigaQsrN5C
-         dA+rZzofdLT+Bk0heXmYXbr1LSebAIzErqI+XpCs=
+        b=nUaw1nwYw3n2a3ulRmqA4OUjo68FhNUbVrc5DKW9czYGySCfpUVnEwma5dLFI1ALL
+         jjj64rDu9D0fk3VdmUkwkYWqo36HWbNtSslX2xt4pF0Xx0tWZPZT+QOQOgGz0GBvcX
+         hrcYBKyTJj4Gyrmr/Bra3tQ+lgybcfkdRyCQKBFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        stable@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 103/179] dmaengine: ti: k3-udma: Fix the running channel handling in alloc_chan_resources
-Date:   Mon, 27 Jul 2020 16:04:38 +0200
-Message-Id: <20200727134937.668966561@linuxfoundation.org>
+Subject: [PATCH 5.7 105/179] dmaengine: ti: k3-udma: add missing put_device() call in of_xudma_dev_get()
+Date:   Mon, 27 Jul 2020 16:04:40 +0200
+Message-Id: <20200727134937.766221623@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -59,36 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Yu Kuai <yukuai3@huawei.com>
 
-[ Upstream commit b5b0180c2f767e90b4a6a885a0a2abaab6e3d48d ]
+[ Upstream commit 1438cde8fe9cb709b569f5829c4c892c0f3f15b3 ]
 
-In the unlikely case when the channel is running (RT enabled) during
-alloc_chan_resources then we should use udma_reset_chan() and not
-udma_stop() as the later is trying to initiate a teardown on the channel,
-which is not valid at this point.
+if of_find_device_by_node() succeed and platform_get_drvdata() failed,
+of_xudma_dev_get() will return without put_device(), which will leak
+the memory.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20200527070612.636-3-peter.ujfalusi@ti.com
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Link: https://lore.kernel.org/r/20200618130110.582543-1-yukuai3@huawei.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ti/k3-udma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/ti/k3-udma-private.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 35f54a1af29d8..b777f1924968f 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -1868,7 +1868,7 @@ static int udma_alloc_chan_resources(struct dma_chan *chan)
+diff --git a/drivers/dma/ti/k3-udma-private.c b/drivers/dma/ti/k3-udma-private.c
+index 0b8f3dd6b1463..77e8e67d995b3 100644
+--- a/drivers/dma/ti/k3-udma-private.c
++++ b/drivers/dma/ti/k3-udma-private.c
+@@ -42,6 +42,7 @@ struct udma_dev *of_xudma_dev_get(struct device_node *np, const char *property)
+ 	ud = platform_get_drvdata(pdev);
+ 	if (!ud) {
+ 		pr_debug("UDMA has not been probed\n");
++		put_device(&pdev->dev);
+ 		return ERR_PTR(-EPROBE_DEFER);
+ 	}
  
- 	if (udma_is_chan_running(uc)) {
- 		dev_warn(ud->dev, "chan%d: is running!\n", uc->id);
--		udma_stop(uc);
-+		udma_reset_chan(uc, false);
- 		if (udma_is_chan_running(uc)) {
- 			dev_err(ud->dev, "chan%d: won't stop!\n", uc->id);
- 			goto err_res_free;
 -- 
 2.25.1
 
