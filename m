@@ -2,133 +2,113 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B53C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0629BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3732073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E312070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727886AbgG0H6F (ORCPT
+        id S1726717AbgG0IFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:58:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64998 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726183AbgG0H6E (ORCPT
+        Mon, 27 Jul 2020 04:05:08 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:56915 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbgG0IFI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:58:04 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R7WqhT005813;
-        Mon, 27 Jul 2020 03:56:39 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32hsqej5qh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 03:56:39 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R7XGkv007225;
-        Mon, 27 Jul 2020 03:56:39 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32hsqej5q2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 03:56:39 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R7uSE7020648;
-        Mon, 27 Jul 2020 07:56:37 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 32gcqghxw1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 07:56:37 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R7uZ8H49479858
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 07:56:35 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36A60AE04D;
-        Mon, 27 Jul 2020 07:56:35 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A7C0DAE045;
-        Mon, 27 Jul 2020 07:56:32 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.199.36.96])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jul 2020 07:56:32 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: [PATCH 5/7] powerpc/smp: Limit cpus traversed to within a node.
-Date:   Mon, 27 Jul 2020 13:25:30 +0530
-Message-Id: <20200727075532.30058-6-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200727075532.30058-1-srikar@linux.vnet.ibm.com>
-References: <20200727075532.30058-1-srikar@linux.vnet.ibm.com>
+        Mon, 27 Jul 2020 04:05:08 -0400
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MyKU6-1kj0fe0Ly0-00ykYi; Mon, 27 Jul 2020 10:05:06 +0200
+Received: by mail-qt1-f182.google.com with SMTP id a32so11555223qtb.5;
+        Mon, 27 Jul 2020 01:05:05 -0700 (PDT)
+X-Gm-Message-State: AOAM533+FovHUCRXEqbpIWNVTVuRsVPhfKBGs0i4bG36nqwacykKFLHF
+        SRiuqGmy6zPl0DvqoRii+CHIrd7wjKSeNArFhdg=
+X-Google-Smtp-Source: ABdhPJwW7HBaQWs6CLgdTCVeXISCQaOIP+c3oTGIB10miF9DI5sJgMP6LjEsu2iAh52r0pKzuWEqUzrxFdj9FZB5XY0=
+X-Received: by 2002:ac8:688e:: with SMTP id m14mr13917515qtq.7.1595837104846;
+ Mon, 27 Jul 2020 01:05:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_04:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=999 adultscore=0 clxscore=1015 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270053
+References: <20200726031154.1012044-1-shorne@gmail.com> <CAHp75VciC+gqkCZ9voNKHU3hrtiOVzeWBu9_YEagpCGdTME2yg@mail.gmail.com>
+ <20200726125325.GC80756@lianli.shorne-pla.net>
+In-Reply-To: <20200726125325.GC80756@lianli.shorne-pla.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 27 Jul 2020 10:04:49 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0-wPsVi-fXPW4Dghn30cumrzvLujp7usio50EHmCHM=g@mail.gmail.com>
+Message-ID: <CAK8P3a0-wPsVi-fXPW4Dghn30cumrzvLujp7usio50EHmCHM=g@mail.gmail.com>
+Subject: Re: [PATCH] io: Fix return type of _inb and _inl
+To:     Stafford Horne <shorne@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:PdHhCj7oiiqrJXYdq0ITMJFDMx5Lrek/Fal+pyeSGA1J+haBUJC
+ fDbOujYyH+EZNKI1WWBaleyt/wQ/jlHsAmWzCXAatX2Bd307q0vrnIxNsMWhwmsWX59z6HV
+ aJ8JFYATc+xNNcAyVgcLVgagzUfS1UBZw7tZ/gNgbeCAimoNwWWoUIW90X0ZgyouFl82yBM
+ X88EohCnbhX5lHYyYFK0w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dzVgJ0ItLgY=:3gVwWM0cahYnhz2ri1t6Qo
+ zGSRiNeXw+Fvjv/TA8VXud7ceY6UX+E3lZ26yBnvvKpkDDuY9jS0/VIhyYrheVP8iOaRjPUCb
+ j19fymZojz5UYqMS2aafBSC0rjKywyFWD8GBV4zoqxavYlXnXg+gKX3blrd+ioaP8FHP/ZbP6
+ 2JYWv3bUvKieUvexS6Ws7AkVhtHuaolnBBabl2O/lI1YPzayomPkPX0EUyyGpV/fJfE19UDVS
+ KbMd1zEx7K6QiMOO524MUI41JseveSq8JtGyH6PI7wJb9eiYY+q6vxTte25Bv9J5p81QMUTkn
+ 5muNN3v+/0Ms+6w+a3IOB2St/TQfAuox60q6H8cAQb2LixRGIjOCdKwcZra2hhmYhkINvdkyk
+ FRT+OUQiXnujHoguSjaMiKcpa9hZPwIhGYwMFWUAcPklHX+RWEdLVUh4V6320BM/AKJ5WXXky
+ GmNOkCG3jqRllL+uV4dwHRoNk2qCzmR78WqBs03WQ/cONwd2fwx0ZXyoj2eLfgaXtVO1LYMqp
+ 9/4KafOuzE+uePi+xlZP8d9kiu7ZqZKGd80FZ+tINm2DvX/EBTjmGPjq4Ki6oxOnzgAQJIuGe
+ DUEJLuejGHlhdsfcbT5pRkLh0tS11rfV40NLPZ2tee0btKu0RETYw1kCk/AljcAb50M964md2
+ O92w1pR0xAdLYj0mZ7JM2EbJwq1/PZ0sn1Fa6vqFcQhURl2bmYUWg8wHLPC8kZQeO2jMvWX90
+ dQgAi3ttGzgPazcudjqz2HZ4JpN9flzBTuUsjIsJba/4z5i21GqJAykh3PdEyfc1bPXHcnpz4
+ 7HiI7mMfdFVZaDuG4iknsh+jBhLYP07M2k0cfRMkCLUujmGI2Heyhahb6cc5KPDkgIsgfBZn/
+ h/lQRD7kjkh+r/9JJF5jfso1UWgAqbXaMDsJ/FQXbjkOkjR9rvCjJYcqCV5jXy0ly/F4zAgbA
+ wsZ6pRv0a3aCHscg0yAcFkmvY7PHIQ6VQs/74pPgdLFR+9Osq52YW
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the arch specific topology cpumasks are within a node/die.
-However when setting these per cpu cpumasks, system traverses through
-all the online cpus. This is redundant.
+On Sun, Jul 26, 2020 at 2:53 PM Stafford Horne <shorne@gmail.com> wrote:
+>
+> On Sun, Jul 26, 2020 at 12:00:37PM +0300, Andy Shevchenko wrote:
+> > On Sun, Jul 26, 2020 at 6:14 AM Stafford Horne <shorne@gmail.com> wrote:
+> > >
+> > > The return type of functions _inb, _inw and _inl are all u16 which looks
+> > > wrong.  This patch makes them u8, u16 and u32 respectively.
+> > >
+> > > The original commit text for these does not indicate that these should
+> > > be all forced to u16.
+> >
+> > Is it in alight with all architectures? that support this interface natively?
+> >
+> > (Return value is arch-dependent AFAIU, so it might actually return
+> > 16-bit for byte read, but I agree that this is weird for 32-bit value.
+> > I think you have elaborate more in the commit message)
+>
+> Well, this is the generic io code,  at least these api's appear to not be different
+> for each architecture.  The output read by the architecture dependant code i.e.
+> __raw_readb() below is getting is placed into a u8.  So I think the output of
+> the function will be u8.
+>
+> static inline u8 _inb(unsigned long addr)
+> {
+>         u8 val;
+>
+>         __io_pbr();
+>         val = __raw_readb(PCI_IOBASE + addr);
+>         __io_par(val);
+>         return val;
+> }
+>
+> I can expand the commit text, but I would like to get some comments from the
+> original author to confirm if this is an issue.
 
-Reduce the traversal to only cpus that are online in the node to which
-the cpu belongs to.
+I think your original version is fine, this was clearly just a typo and I've
+applied your fix now and will forward it to Linus in the next few days,
+giving John the chance to add his Ack or further comments.
 
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Oliver O'Halloran <oohall@gmail.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
- arch/powerpc/kernel/smp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks a lot for spotting it and sending a fix.
 
-diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index cde157483abf..9b03aad0beac 100644
---- a/arch/powerpc/kernel/smp.c
-+++ b/arch/powerpc/kernel/smp.c
-@@ -1232,7 +1232,7 @@ static bool update_mask_by_l2(int cpu, struct cpumask *(*mask_fn)(int))
- 		return false;
- 
- 	cpumask_set_cpu(cpu, mask_fn(cpu));
--	for_each_cpu(i, cpu_online_mask) {
-+	for_each_cpu_and(i, cpu_online_mask, cpu_cpu_mask(cpu)) {
- 		/*
- 		 * when updating the marks the current CPU has not been marked
- 		 * online, but we need to update the cache masks
--- 
-2.17.1
-
+      Arnd
