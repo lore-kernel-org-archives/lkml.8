@@ -2,147 +2,127 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF686C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F509C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD0DD2074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:28:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DxmNZ/hV"
+	by mail.kernel.org (Postfix) with ESMTP id 8973D20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgG0M2o (ORCPT
+        id S1728141AbgG0Mbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:28:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgG0M2o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:28:44 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22EE1C061794;
-        Mon, 27 Jul 2020 05:28:43 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id y11so4356580qvl.4;
-        Mon, 27 Jul 2020 05:28:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3FUvNO9QMUZaqN3Ipima2yOyS4OGa1w1vhSOjtrsS1U=;
-        b=DxmNZ/hV1l3c8QXSHzQXkUZb/Z9d8DjaC5EUiIhS2y9OI2/ktcJGAK2KAqBVxQt4p6
-         81KhwXm/Vu44aYbx6GkGtJjuqeiXR4AzEQWVeT75oFfLLvGlZUs8JM6AEcghDwd5p9CD
-         Zj6MV27gDND0M/j8NLRLnzqLg/bTFdEhaB5kEuXWNBHGa73VPjlsKmUhRROCc0oRoFOk
-         ecd4ynSApNINne2CB958m1OApG6aN01iRL2k/o4w/ZU5zBxI7PqVvQw9LCWReT7a/3dU
-         86CHsj1nqyNFNRkrIhhuWyyGl5W3/2/v/rOOr5QpBj+sz17OdrBMeG4hBeg3k5DvbhhZ
-         NS2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3FUvNO9QMUZaqN3Ipima2yOyS4OGa1w1vhSOjtrsS1U=;
-        b=Bs1jmqmrLkWi+8+44NCHip1SnRG8xsDhA9xGnG5OkbXRJofHdqr8S3EJCGffxOh/Qv
-         TnRC69FYj5lV4sVA38AfmTsijsABavjDdOubDzq6eDiF5JiyjfNi7Y5fyjyouSK+n5OR
-         kC7wuJE/3jowB5V33EUmgj2mbQyn9XmKfZfx9oVIM8AsxN7yuvL7i8kwIJr9Pb68hg8t
-         J+Fd0MHVTC0a7cVr4p9Uz3MDjcaYW51LQTyn1pkJd7VXrGEYr9H05TARTPNZSJniVVIL
-         eS1K4OIEKuNkvX6NRs3yDhMx1z3/MZ/FkgtL38U8iTMEwsrqGJ/pW5OWd+orJJMeDZOo
-         OMVg==
-X-Gm-Message-State: AOAM530NEQpPKzxETWo7zI5pLBay1MyS5L5CHaPog5SxOsYUnP711W1U
-        wBkloSJV545wMIIlZadKdW59f3yoAUE=
-X-Google-Smtp-Source: ABdhPJwsgPOCQNSWkS+36B2kABD5Q2ICEbCWIF6UhfzJQDJA1Mn7bb1dc8mUMJFkAgUkEk4CClKRDg==
-X-Received: by 2002:a0c:fe91:: with SMTP id d17mr10227579qvs.156.1595852922163;
-        Mon, 27 Jul 2020 05:28:42 -0700 (PDT)
-Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id s5sm19024320qke.120.2020.07.27.05.28.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 05:28:41 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 08:28:25 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] counter: microchip-tcb-capture: check the correct
- variable
-Message-ID: <20200727122825.GA5614@shinobu>
-References: <20200727112316.GG389488@mwanda>
+        Mon, 27 Jul 2020 08:31:35 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2536 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727078AbgG0Mbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:31:35 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 064B5A8BB5A575217348;
+        Mon, 27 Jul 2020 13:31:34 +0100 (IST)
+Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
+ 2020 13:31:33 +0100
+Date:   Mon, 27 Jul 2020 13:30:10 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
+        <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [RFC PATCH 2/9] PCI: Extend Root Port Driver to support RCEC
+Message-ID: <20200727133010.00003de8@Huawei.com>
+In-Reply-To: <20200724172223.145608-3-sean.v.kelley@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+        <20200724172223.145608-3-sean.v.kelley@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
-Content-Disposition: inline
-In-Reply-To: <20200727112316.GG389488@mwanda>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.121.176]
+X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 24 Jul 2020 10:22:16 -0700
+Sean V Kelley <sean.v.kelley@intel.com> wrote:
 
---IJpNTDwzlM2Ie8A6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> 
+> If a Root Complex Integrated Endpoint (RCiEP) is implemented, errors may
+> optionally be sent to a corresponding Root Complex Event Collector (RCEC).
+> Each RCiEP must be associated with no more than one RCEC. Interface errors
+> are reported to the OS by RCECs.
+> 
+> For an RCEC (technically not a Bridge), error messages "received" from
+> associated RCiEPs must be enabled for "transmission" in order to cause a
+> System Error via the Root Control register or (when the Advanced Error
+> Reporting Capability is present) reporting via the Root Error Command
+> register and logging in the Root Error Status register and Error Source
+> Identification register.
+> 
+> Given the commonality with Root Ports and the need to also support AER
+> and PME services for RCECs, extend the Root Port driver to support RCEC
+> devices through the addition of the RCEC Class ID to the driver
+> structure.
+> 
+Hi.
 
-On Mon, Jul 27, 2020 at 02:23:16PM +0300, Dan Carpenter wrote:
-> This should be testing "regmap" instead of "priv->regmap".  The
-> "priv->regmap" variable is always zero so it's not an error pointer.
->=20
-> Fixes: 106b104137fd ("counter: Add microchip TCB capture counter")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+I'm surprised it ended up this simple :) Seems we are a bit lucky that
+the existing code is rather flexible on what is there and what isn't
+and that there is never any reason to directly touch the various
+type1 specific registers (given as I read the spec, an RCEC uses a
+type0 config space header unlike the ports).
 
-Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+Given you mention PME, it's probably worth noting (I think) you aren't
+actually enabling the service yet as there is a check in that path on whether we
+have a root port or not.
+https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/pci/pcie/portdrv_core.c#L241
 
+Thanks,
+
+Jonathan
+
+
+> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
 > ---
-> The commit 106b104137fd ("counter: Add microchip TCB capture counter")
-> doesn't use the correct patch prefix.  This is a common mistake for the
-> the first commit which adds the driver.  There is no kernel wide
-> standard for patch prefixes so it's difficult for people sending fixes
-> to know the correct prefix should be.
->=20
->  drivers/counter/microchip-tcb-capture.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/mi=
-crochip-tcb-capture.c
-> index f7b7743ddb94..b7b252c5addf 100644
-> --- a/drivers/counter/microchip-tcb-capture.c
-> +++ b/drivers/counter/microchip-tcb-capture.c
-> @@ -320,8 +320,8 @@ static int mchp_tc_probe(struct platform_device *pdev)
->  	}
-> =20
->  	regmap =3D syscon_node_to_regmap(np->parent);
-> -	if (IS_ERR(priv->regmap))
-> -		return PTR_ERR(priv->regmap);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> =20
->  	/* max. channels number is 2 when in QDEC mode */
->  	priv->num_channels =3D of_property_count_u32_elems(np, "reg");
-> --=20
-> 2.27.0
->=20
+>  drivers/pci/pcie/portdrv_pci.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+> index 3acf151ae015..d5b109499b10 100644
+> --- a/drivers/pci/pcie/portdrv_pci.c
+> +++ b/drivers/pci/pcie/portdrv_pci.c
+> @@ -106,7 +106,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+>  	if (!pci_is_pcie(dev) ||
+>  	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
+>  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM) &&
+> -	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
+> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM) &&
+> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
+>  		return -ENODEV;
+>  
+>  	status = pcie_port_device_register(dev);
+> @@ -195,6 +196,8 @@ static const struct pci_device_id port_pci_ids[] = {
+>  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x00), ~0) },
+>  	/* subtractive decode PCI-to-PCI bridge, class type is 060401h */
+>  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x01), ~0) },
+> +	/* handle any Root Complex Event Collector */
+> +	{ PCI_DEVICE_CLASS(((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00), ~0) },
+>  	{ },
+>  };
+>  
 
---IJpNTDwzlM2Ie8A6
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl8eyEoACgkQhvpINdm7
-VJK0WA/+NeMk3F3w6l1WBuWUgdRiZ7HzmFUqDleCv9qgVbPynOPQH7yYrf3TcsBd
-8KoRrfJLXGRwlzZr1B9kGGbQF4C9lve8Zt3yzq4nlZkvt0IoKgfIUza0L/1thbmC
-cN7YXZQMshUEQd+aMQ2jn0efwxTyN3dPfV97u8nGeiA6ZIdaH8R1c+myrgN/CgXF
-+cOiATSqcTr8Zb+1baIaxlI0vIH80/P8Aid47nhe5hzJMUb3ZBuoUTVdZz9f3mXf
-Ljx1PlUIr90YtPuQ6x88K/7jGtN3iJg3Y7xl9vkulvJm2ABYGQUaJVjasG+8e5vb
-Z2+8eyV6MaL9Hd94yXudmljFdoxF0ecqrc8qJstnD+A9h45+jB3CqLw7HrEYziUn
-UMRQefVumrlSxUENNBbW5iHdBZXzsxkNXXJYJbPCE/TEc0Dj4glogqqFsLjOjLw7
-zsWSbqmG5Oa8pVFUiRespqL+DIgGDrOMhQ6NJVITLJmI0pkNbPHGSDXBtrVgoT3v
-mPjzP5DihRxhLMR0jvX0Zz7M8fhB7G++tBb/RgBG0vfbGBiGgp1e0EB58WbHAuXp
-+Ldvsb9HcRftlyHOFygBfrFCRzmAq3V/fPvZOWhqYD2mZDJpG4DbtmC0dc0eKFJ/
-oO6tL9pL92d0qikvfC52qBJwEVYmbvFi9HRB+DDegisA/c5YskY=
-=sSZ0
------END PGP SIGNATURE-----
-
---IJpNTDwzlM2Ie8A6--
