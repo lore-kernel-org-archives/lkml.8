@@ -2,82 +2,148 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD00EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DF5C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B42C7206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B4382072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:50:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgG0Jq6 (ORCPT
+        id S1726932AbgG0JuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:46:58 -0400
-Received: from mga03.intel.com ([134.134.136.65]:51087 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgG0Jq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:46:58 -0400
-IronPort-SDR: zLuQcfHG7dxlJUe+oWNgXVNope4meG/EleZ3y0ZC6qeHY4KJp0ZwIeYT3n5Zce3o93G5/vrFxI
- aOVlqh5AtZRQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="150965124"
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="150965124"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 02:46:57 -0700
-IronPort-SDR: fRkHLPfUUkyR6dt2pbNxODGrXRQRuiCwYTLin+oxchTEZo79pQIzCEwlReQ5yptAW4owmsGbcy
- fFLzmTULJNJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="312154320"
-Received: from pg-nxl3.altera.com ([10.142.129.93])
-  by fmsmga004.fm.intel.com with ESMTP; 27 Jul 2020 02:46:54 -0700
-From:   "Ooi, Joyce" <joyce.ooi@intel.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>
-Subject: [PATCH] MAINTAINERS: Replace Thor Thayer as Altera Triple Speed Ethernet maintainer
-Date:   Mon, 27 Jul 2020 17:46:41 +0800
-Message-Id: <20200727094641.174870-1-joyce.ooi@intel.com>
-X-Mailer: git-send-email 2.13.0
+        Mon, 27 Jul 2020 05:50:14 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:55601 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgG0JuN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:50:13 -0400
+X-Originating-IP: 90.66.108.79
+Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id DAB87E0011;
+        Mon, 27 Jul 2020 09:50:09 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 11:50:09 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/10] Adding support for Microchip Sparx5 SoC
+Message-ID: <20200727095009.GK4073@piout.net>
+References: <20200727084211.6632-1-lars.povlsen@microchip.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727084211.6632-1-lars.povlsen@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joyce Ooi <joyce.ooi@intel.com>
+Hi Lars,
 
-This patch is to replace Thor Thayer as Altera Triple Speed Ethernet
-maintainer as he is moving to a different role.
+As Arnd stated, he already applied the patches so you have to send an
+incremental patch to fix the clock driver.
 
-Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 27/07/2020 10:42:01+0200, Lars Povlsen wrote:
+> This patch series adds support for Microchip Sparx5 SoC, the CPU
+> system of a advanced, TSN capable gigabit switch. The CPU is an armv8
+> x 2 CPU core (A53).
+> 
+> Although this is an ARM core, it shares some peripherals with the
+> Microsemi Ocelot MIPS SoC.
+> 
+> NB: This version *only* updates the drivers/clk/clk-sparx5.c driver
+> 
+> Changes in v4:
+> - Updates to the clock driver per Stephen Boyd <sboyd@kernel.org>
+>  - Remove unused include of of_address.h
+>  - Remove unused member in s5_hw_clk struct
+>  - Changed type (to unsigned long) for freq in s5_pll_conf struct
+>  - Use .parent_data instead of looking up parent name
+>  - Use devm_of_clk_add_hw_provider
+>  - Some minor comsmetics
+> 
+> Changes in v3:
+> - a "gpio-restart" node has been added to the pcb134/pcb135 DT files.
+> - pinctrl-ocelot.c: ENOTSUPP replaced by EOPNOTSUPP. Fixed non-static
+>   ocelot_pinconf_set(), Fixed ocelot_hw_get_value() not returning proper
+>   read value.
+> - Rebased on v5.8-rc1
+> 
+> Changes in v2:
+> - Misc fixes to bindings/arm/microchip,sparx5.yaml
+> - Changed clock driver to platform driver, using bitfields, recalc
+>   properly implented, using proper clock parent.
+> - arch/arm64/boot/dts/microchip/sparx5.dtsi:
+>  - Added pmu and psci node, using PSCI
+>  - Updates to GICv3 register spaces (GICV/GICH)
+>  - Updated timer interrupt specifiers
+> - pinctrl: ocelot: Fixed symbol clashes from powerpc
+> 
+> Lars Povlsen (10):
+>   dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
+>   arm64: sparx5: Add support for Microchip 2xA53 SoC
+>   arm64: dts: sparx5: Add basic cpu support
+>   arm64: dts: sparx5: Add pinctrl support
+>   pinctrl: ocelot: Add Sparx5 SoC support
+>   dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
+>   dt-bindings: clock: sparx5: Add bindings include file
+>   clk: sparx5: Add Sparx5 SoC DPLL clock driver
+>   arm64: dts: sparx5: Add Sparx5 SoC DPLL clock
+>   arm64: dts: sparx5: Add i2c devices, i2c muxes
+> 
+>  .../bindings/arm/microchip,sparx5.yaml        |  65 +++
+>  .../bindings/clock/microchip,sparx5-dpll.yaml |  52 +++
+>  .../devicetree/bindings/mfd/syscon.yaml       |   1 +
+>  MAINTAINERS                                   |   9 +
+>  arch/arm64/Kconfig.platforms                  |  14 +
+>  arch/arm64/boot/dts/Makefile                  |   1 +
+>  arch/arm64/boot/dts/microchip/Makefile        |   4 +
+>  arch/arm64/boot/dts/microchip/sparx5.dtsi     | 213 +++++++++
+>  .../boot/dts/microchip/sparx5_pcb125.dts      |  21 +
+>  .../boot/dts/microchip/sparx5_pcb134.dts      |  17 +
+>  .../dts/microchip/sparx5_pcb134_board.dtsi    | 252 ++++++++++
+>  .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  17 +
+>  .../boot/dts/microchip/sparx5_pcb135.dts      |  17 +
+>  .../dts/microchip/sparx5_pcb135_board.dtsi    |  92 ++++
+>  .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  17 +
+>  .../boot/dts/microchip/sparx5_pcb_common.dtsi |  19 +
+>  drivers/clk/Makefile                          |   1 +
+>  drivers/clk/clk-sparx5.c                      | 295 ++++++++++++
+>  drivers/pinctrl/pinctrl-ocelot.c              | 430 +++++++++++++++++-
+>  include/dt-bindings/clock/microchip,sparx5.h  |  23 +
+>  20 files changed, 1559 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+>  create mode 100644 arch/arm64/boot/dts/microchip/Makefile
+>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5.dtsi
+>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
+>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
+>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
+>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
+>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
+>  create mode 100644 drivers/clk/clk-sparx5.c
+>  create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
+> 
+> --
+> 2.27.0
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e64cdde81851..9e6789e1d168 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -782,7 +782,7 @@ F:	include/dt-bindings/reset/altr,rst-mgr-a10sr.h
- F:	include/linux/mfd/altera-a10sr.h
- 
- ALTERA TRIPLE SPEED ETHERNET DRIVER
--M:	Thor Thayer <thor.thayer@linux.intel.com>
-+M:	Joyce Ooi <joyce.ooi@intel.com>
- L:	netdev@vger.kernel.org
- S:	Maintained
- F:	drivers/net/ethernet/altera/
 -- 
-2.13.0
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
