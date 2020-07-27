@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 026DAC4345A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D54EC43635
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C27CF208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE455208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892518;
-	bh=2lk5uht8HIRYz3UwO/2cD6dc8jKUN8zbECfiXqIVzu0=;
+	s=default; t=1595892524;
+	bh=gPzvdbozJ0ICpL+L9dDFWMeYQ9kM7Eph6uJlVPy/Fe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pbmeuZBFIjMmmskXU6trZG0nfh7GfSpXtTC1cMCMgxB6ojnfCMdWOOkBe+SPWs+AG
-	 khEKzVk4TdWPtK1uTT/OvyTnU6xJc62SPMdHgVHekN0J9NQ0gy6nT8EdJ0TxthZ3Lj
-	 zY5wE9LwU6E87MyRnmSbR5zTz4E+9j1MXG8gx53g=
+	b=zGgUCyjc5s4oVb+gok5PMsux18JAYfsJKM2o49fTfrafkRMDo6reUYMC8DU23+8dh
+	 ZwTpnzwkt/YS2RLCKmBZo8RI8La6QiGanFEHtEhYUGFe3LXBfaB+pEqY2LXNyLjVzq
+	 JBGm9N7cwyeaYYRSIlkzaohXR9aIUQwEKC1/SUe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbgG0X2h (ORCPT
+        id S1728228AbgG0XY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:28:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728246AbgG0XY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Jul 2020 19:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728148AbgG0XYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:24:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6E9520A8B;
-        Mon, 27 Jul 2020 23:24:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 872B820786;
+        Mon, 27 Jul 2020 23:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892268;
-        bh=2lk5uht8HIRYz3UwO/2cD6dc8jKUN8zbECfiXqIVzu0=;
+        s=default; t=1595892258;
+        bh=gPzvdbozJ0ICpL+L9dDFWMeYQ9kM7Eph6uJlVPy/Fe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z2Zm8IfxpIsXo3OES3cAGbyXFwnjllJxsnbBTHVVz7EPLK4Ni+izj1l7kDgq43fTE
-         y0G+V5bTHddWUYQvewUSCpr40XYJntrpyvWJyRjg+b5henTuqp00V2J3UgQ1vqX8GH
-         lVnyz/ECCOKRRUvrmY1wBHC9UMPcO1qQYQr8xxG0=
+        b=U+A29UBS1enfeCQIULUiNGLYaQvHcj5Dd6IFDPiGBXevD7Iq4lyAZUpF/73c8pj1j
+         fDRRBCqDSJS5nQD7UYxazZA687Vz90GIhZg2RVC2DklqXL0t+QIs796ZJOzXv8kpmz
+         Sle1wJmO3EQtPq/7OIOy8RUksOXzMEiOaR+mpZqo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+Cc:     Xie He <xie.he.0141@gmail.com>, Eric Dumazet <edumazet@google.com>,
+        Martin Schiller <ms@dev.tdt.de>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-nfc@lists.01.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 06/17] nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
-Date:   Mon, 27 Jul 2020 19:24:09 -0400
-Message-Id: <20200727232420.717684-6-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 24/25] drivers/net/wan: lapb: Corrected the usage of skb_cow
+Date:   Mon, 27 Jul 2020 19:23:44 -0400
+Message-Id: <20200727232345.717432-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200727232420.717684-1-sashal@kernel.org>
-References: <20200727232420.717684-1-sashal@kernel.org>
+In-Reply-To: <20200727232345.717432-1-sashal@kernel.org>
+References: <20200727232345.717432-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,32 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Xie He <xie.he.0141@gmail.com>
 
-[ Upstream commit 1e8fd3a97f2d83a7197876ceb4f37b4c2b00a0f3 ]
+[ Upstream commit 8754e1379e7089516a449821f88e1fe1ebbae5e1 ]
 
-The implementation of s3fwrn5_recv_frame() is supposed to consume skb on
-all execution paths. Release skb before returning -ENODEV.
+This patch fixed 2 issues with the usage of skb_cow in LAPB drivers
+"lapbether" and "hdlc_x25":
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+1) After skb_cow fails, kfree_skb should be called to drop a reference
+to the skb. But in both drivers, kfree_skb is not called.
+
+2) skb_cow should be called before skb_push so that is can ensure the
+safety of skb_push. But in "lapbether", it is incorrectly called after
+skb_push.
+
+More details about these 2 issues:
+
+1) The behavior of calling kfree_skb on failure is also the behavior of
+netif_rx, which is called by this function with "return netif_rx(skb);".
+So this function should follow this behavior, too.
+
+2) In "lapbether", skb_cow is called after skb_push. This results in 2
+logical issues:
+   a) skb_push is not protected by skb_cow;
+   b) An extra headroom of 1 byte is ensured after skb_push. This extra
+      headroom has no use in this function. It also has no use in the
+      upper-layer function that this function passes the skb to
+      (x25_lapb_receive_frame in net/x25/x25_dev.c).
+So logically skb_cow should instead be called before skb_push.
+
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/s3fwrn5/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wan/hdlc_x25.c  | 4 +++-
+ drivers/net/wan/lapbether.c | 8 +++++---
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nfc/s3fwrn5/core.c b/drivers/nfc/s3fwrn5/core.c
-index 91d4d5b28a7d9..ba6c486d64659 100644
---- a/drivers/nfc/s3fwrn5/core.c
-+++ b/drivers/nfc/s3fwrn5/core.c
-@@ -198,6 +198,7 @@ int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
- 	case S3FWRN5_MODE_FW:
- 		return s3fwrn5_fw_recv_frame(ndev, skb);
- 	default:
+diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
+index c84536b03aa84..f70336bb6f524 100644
+--- a/drivers/net/wan/hdlc_x25.c
++++ b/drivers/net/wan/hdlc_x25.c
+@@ -71,8 +71,10 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	unsigned char *ptr;
+ 
+-	if (skb_cow(skb, 1))
++	if (skb_cow(skb, 1)) {
 +		kfree_skb(skb);
- 		return -ENODEV;
- 	}
- }
+ 		return NET_RX_DROP;
++	}
+ 
+ 	skb_push(skb, 1);
+ 	skb_reset_network_header(skb);
+diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+index e30d91a38cfb6..b73b347ed731d 100644
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -128,10 +128,12 @@ static int lapbeth_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	unsigned char *ptr;
+ 
+-	skb_push(skb, 1);
+-
+-	if (skb_cow(skb, 1))
++	if (skb_cow(skb, 1)) {
++		kfree_skb(skb);
+ 		return NET_RX_DROP;
++	}
++
++	skb_push(skb, 1);
+ 
+ 	ptr  = skb->data;
+ 	*ptr = X25_IFACE_DATA;
 -- 
 2.25.1
 
