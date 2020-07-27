@@ -2,84 +2,126 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8798CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F028220714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595838585;
-	bh=icpCwJah55Kd+7kHVnrgTv+9RxYsXq/pFCJNlmMpxno=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=aTtw+w0EZh9hjm8YGZn56Uh2L43elIuzhwtPvYq/gA2n97kSghuoIDTdDqFXrEixC
-	 Rd0JwzwmQ/re64pT8s3j7mV35uB7wg3vTcCuu+rjqiBf+3/ZN7SrrR3yLIeZnc7g+h
-	 KKACMQJikZhdzpTfsC0upCKyAc/oT6Wi0ljBw0bI=
+	by mail.kernel.org (Postfix) with ESMTP id 6652E20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbgG0I3o (ORCPT
+        id S1726719AbgG0IaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:29:44 -0400
-Received: from mail-ej1-f52.google.com ([209.85.218.52]:33787 "EHLO
-        mail-ej1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgG0I3n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:29:43 -0400
-Received: by mail-ej1-f52.google.com with SMTP id g11so4394917ejr.0;
-        Mon, 27 Jul 2020 01:29:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=nCH15011ULLgua14hO6k9+Wy0yqjOncFU6eW8oYQbYg=;
-        b=Oc2Akq1nHstNB/PlJzNEyNkiY2SNDS/taKe5NiddO9QJFFFwc9Iw1roV81U8VSf9qi
-         AcOOYkbQLx8Vk124cLbA2nERuLH6fxMBXMsZxrdvQB3KktWfHAvAGyXZ8xijB0RAsX3Q
-         baaBPffw9OGarvmRc3qnWsPZ1+4xtJBoUEkUZJ31t2kRctbV8fREDsXOH7NdGCZmPVdH
-         BD/Q/FKhZL9mLwKElmuX1TWkeMH95+tECyuc/fw4oDgi4nC2XXGitOGq/RDxfZNwCxdc
-         orxPmFjl4SsKnRL9H03tDzB2+5Qq0EoXZ5fh6Cfs4c7TFrTaPsIr8HRVqiFjqciULmXc
-         kZBQ==
-X-Gm-Message-State: AOAM5316aKaNrdpurGBEuVf+x77JqX/pBJgQE7jh2Y3P6oLza7ESYYWe
-        qrqzP5gYbGcELpbJ5hmumVxWLOKFTvI=
-X-Google-Smtp-Source: ABdhPJz2CUV9C4KJyv+GvWrIA9OTOeJRCHY20K4L2aBZWq8Y1JyOs5XvBWrbylBvvLcVpxPH7xa6aw==
-X-Received: by 2002:a17:906:4f82:: with SMTP id o2mr20642996eju.424.1595838581802;
-        Mon, 27 Jul 2020 01:29:41 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.213])
-        by smtp.googlemail.com with ESMTPSA id k25sm638841edj.84.2020.07.27.01.29.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 Jul 2020 01:29:40 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 10:29:38 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>
-Subject: Include krzk/linux-mem-ctrl (for drivers/memory) in next
-Message-ID: <20200727082938.GA25420@kozik-lap>
+        Mon, 27 Jul 2020 04:30:24 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2525 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726139AbgG0IaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 04:30:23 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 1001EE1A7B0462DD1BCC;
+        Mon, 27 Jul 2020 09:30:22 +0100 (IST)
+Received: from [127.0.0.1] (10.210.169.250) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Jul
+ 2020 09:30:21 +0100
+Subject: Re: [PATCH] io: Fix return type of _inb and _inl
+To:     Arnd Bergmann <arnd@arndb.de>, Stafford Horne <shorne@gmail.com>
+CC:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>
+References: <20200726031154.1012044-1-shorne@gmail.com>
+ <CAHp75VciC+gqkCZ9voNKHU3hrtiOVzeWBu9_YEagpCGdTME2yg@mail.gmail.com>
+ <20200726125325.GC80756@lianli.shorne-pla.net>
+ <CAK8P3a0-wPsVi-fXPW4Dghn30cumrzvLujp7usio50EHmCHM=g@mail.gmail.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <a55f21a7-aff9-09a9-2fcd-c9ef76728116@huawei.com>
+Date:   Mon, 27 Jul 2020 09:28:25 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAK8P3a0-wPsVi-fXPW4Dghn30cumrzvLujp7usio50EHmCHM=g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.169.250]
+X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 27/07/2020 09:04, Arnd Bergmann wrote:> On Sun, Jul 26, 2020 at 2:53 
+PM Stafford Horne <shorne@gmail.com> wrote:
+>>
+>> On Sun, Jul 26, 2020 at 12:00:37PM +0300, Andy Shevchenko wrote:
+>>> On Sun, Jul 26, 2020 at 6:14 AM Stafford Horne <shorne@gmail.com> wrote:
+>>>>
+>>>> The return type of functions _inb, _inw and _inl are all u16 which looks
+>>>> wrong.  This patch makes them u8, u16 and u32 respectively.
+>>>>
+>>>> The original commit text for these does not indicate that these should
+>>>> be all forced to u16.
+>>>
+>>> Is it in alight with all architectures? that support this interface natively?
+>>>
+>>> (Return value is arch-dependent AFAIU, so it might actually return
+>>> 16-bit for byte read, but I agree that this is weird for 32-bit value.
+>>> I think you have elaborate more in the commit message)
+>>
+>> Well, this is the generic io code,  at least these api's appear to not be different
+>> for each architecture.  The output read by the architecture dependant code i.e.
+>> __raw_readb() below is getting is placed into a u8.  So I think the output of
+>> the function will be u8.
+>>
+>> static inline u8 _inb(unsigned long addr)
+>> {
+>>          u8 val;
+>>
+>>          __io_pbr();
+>>          val = __raw_readb(PCI_IOBASE + addr);
+>>          __io_par(val);
+>>          return val;
+>> }
+>>
+>> I can expand the commit text, but I would like to get some comments from the
+>> original author to confirm if this is an issue.
+> 
+> I think your original version is fine, this was clearly just a typo and I've
+> applied your fix now and will forward it to Linus in the next few days,
+> giving John the chance to add his Ack or further comments.
+> 
+> Thanks a lot for spotting it and sending a fix.
 
-Please include in linux-next a new tree for drivers/memory:
-URL: https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-mem-ctrl.git
+Thanks Arnd.
 
-branches:
-1. for-next
-   into next,
-2. fixes
-   into pending fixes (for current cycle),
+Yeah, these looks like copy+paste errors on my part:
 
-The tree will have patches later send via pull-request to arm-soc (Arnd,
-Olof).
+Reviewed-by: John Garry <john.garry@huawei.com>
 
-Best regards,
-Krzysztof
+I'll give this patch a spin, but not expecting any differences (since 
+original seems ok).
+
+Note that kbuild robot also reported this:
+https://lore.kernel.org/lkml/202007140549.J7X9BVPT%25lkp@intel.com/
+
+Extract:
+
+include/asm-generic/io.h:521:22: sparse: sparse: incorrect type in 
+argument 1 (different base types) @@     expected unsigned int 
+[usertype] value @@     got restricted __le32 [usertype] @@
+    include/asm-generic/io.h:521:22: sparse:     expected unsigned int 
+[usertype] value
+    include/asm-generic/io.h:521:22: sparse:     got restricted __le32 
+[usertype]
+
+But they look like issues which were in the existing code. I tried to 
+recreate to verify any change, but trying to manually upgrade glibc 
+busted my machine :(
+
+Thanks,
+John
