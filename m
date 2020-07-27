@@ -2,80 +2,117 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BC5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7731AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3A0120775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B48A206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbgG0PgI (ORCPT
+        id S1730884AbgG0PlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:36:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57320 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727784AbgG0PgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:36:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 13D2DADBB;
-        Mon, 27 Jul 2020 15:36:17 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 5B096DA701; Mon, 27 Jul 2020 17:35:38 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 17:35:38 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     kernel test robot <lkp@intel.com>
-Cc:     David Sterba <dsterba@suse.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: fs/btrfs/tests/../ctree.h:2166:8: warning: type qualifiers
- ignored on function return type
-Message-ID: <20200727153538.GP3703@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, kernel test robot <lkp@intel.com>,
-        David Sterba <dsterba@suse.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org
-References: <202007272305.7v7EMn6N%lkp@intel.com>
+        Mon, 27 Jul 2020 11:41:11 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34315 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730527AbgG0PlI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 11:41:08 -0400
+X-Originating-IP: 90.66.108.79
+Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id CA78DFF81B;
+        Mon, 27 Jul 2020 15:41:04 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 17:41:04 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Rob Herring <robh@kernel.org>, miguelborgesdefreitas@gmail.com,
+        a.zummo@towertech.it, baruch@tkos.co.il, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+Message-ID: <20200727154104.GE239143@piout.net>
+References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-1-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
+ <20200723174905.GA596242@bogus>
+ <20200723195755.GV3428@piout.net>
+ <20200727094553.GH1551@shell.armlinux.org.uk>
+ <20200727144938.GC239143@piout.net>
+ <20200727152439.GK1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202007272305.7v7EMn6N%lkp@intel.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20200727152439.GK1551@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:02:07PM +0800, kernel test robot wrote:
-> Hi David,
+On 27/07/2020 16:24:39+0100, Russell King - ARM Linux admin wrote:
+> On Mon, Jul 27, 2020 at 04:49:38PM +0200, Alexandre Belloni wrote:
+> > On 27/07/2020 10:45:53+0100, Russell King - ARM Linux admin wrote:
+> > > > This is but this shouldn't be a DT property as it has to be changed
+> > > > dynamically. I'm working on an ioctl interface to change this
+> > > > configuration.
+> > > 
+> > > Why does it need to be changed dynamically?  If the hardware components
+> > > are not fitted to allow the RTC to be safely used without DSM, then
+> > > why should userspace be able to disable DSM?
+> > 
+> > For RTCs with a standby mode, you want to be able to return to standby
+> > mode.
+> > 
+> > That would happen for example after factory flashing in that common use
+> > case:
+> >  - the board is manufactured
+> >  - Vbackup is installed, the RTC switches to standby mode
+> >  - the board is then booted to flash a system, Vprimary is now present,
+> >    the RTC switches to DSM.
+> > 
+> > At this point, if the board is simply shut down, the RTC will start
+> > draining Vbackup before leaving the factory. Instead, we want to be able
+> > to return to standby mode until the final user switches the product on
+> > for the first time.
 > 
-> FYI, the error/warning still remains.
+> I don't think you're understanding what's going on with this proposed
+> patch.  The cubox-i does work today, and the RTC does survive most
+> power-downs. There are situations where it doesn't.
 > 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   92ed301919932f777713b9172e525674157e983d
-> commit: f7cea56c0fff95bd5a6cd21b9fa299f66193b604 btrfs: sysfs: export supported checksums
-> date:   8 months ago
-> config: h8300-randconfig-r021-20200727 (attached as .config)
-> compiler: h8300-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout f7cea56c0fff95bd5a6cd21b9fa299f66193b604
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=h8300 
+> So, let's take your process above.
 > 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
+> - the board is manufactured
+> - Vbackup is installed, the RTC switches to standby mode
+> - the board is then booted to flash a system, Vprimary is now present
+> - the board is powered down.  the RTC _might_ switch over to battery
+>   if it notices the power failure in time, or it might not.  A random
+>   sample of units leaving the factory have the RTC in standby mode.
+>   Others are draining the battery.
 > 
-> All warnings (new ones prefixed by >>):
+> I'm not saying what you propose isn't a good idea.  I'm questioning
+> why we should expose this in the generic kernel on platforms where
+> it's likely to end up with the RTC being corrupted.
 > 
->    In file included from fs/btrfs/tests/extent-map-tests.c:8:
-> >> fs/btrfs/tests/../ctree.h:2166:8: warning: type qualifiers ignored on function return type [-Wignored-qualifiers]
->     2166 | size_t __const btrfs_get_num_csums(void);
->          |        ^~~~~~~
 
-Ah right, the attribute is supposed to be __attribute_const__, thanks
-for the report.
+Note that I didn't say we should expose settings that are not working
+but it is a different discussion. I was explaining why we need to be
+able to change it dynamically.
+
+> Now, I question your idea that units should leave the factory without
+> the RTC being programmed.  We know that lovely systemd goes utterly
+> bonkers if the system time is beyond INT_MAX.  If the RTC leaves
+> standby mode containing a date which we translate beyond INT_MAX,
+> systemd will refuse to boot the system, and the user will have no
+> way to set the correct time.  The user returns the device to the
+> supplier as faulty...
+
+This is doesn't happen since v4.17.
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
