@@ -2,317 +2,190 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9689C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8377AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3F320786
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A6520792
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FRD/breX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iP+7r2dt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbgG0VJn (ORCPT
+        id S1726760AbgG0VKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 17:09:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44432 "EHLO
+        Mon, 27 Jul 2020 17:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgG0VJm (ORCPT
+        with ESMTP id S1726140AbgG0VKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:09:42 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41C7C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:09:42 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id o72so7801762ota.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:09:42 -0700 (PDT)
+        Mon, 27 Jul 2020 17:10:22 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45611C061794;
+        Mon, 27 Jul 2020 14:10:22 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id i80so9772396lfi.13;
+        Mon, 27 Jul 2020 14:10:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sVrhOI0oWt1hiMCtMZYhDjKeUZIuI1k5sXWV4N3yEl8=;
-        b=FRD/breXAwpWD8QDqcmN3tYazNngjpp3utCTQSmN4Z8W9aeKDSGA0A+6ME9KRj/oII
-         kCjodM4aI0IPh0o3g5lhRH47NVUUO7sNHUONXUbrLPZSMZZMgwiF7JBhk6z0YwDqjoQ7
-         d6Wbh//FFKXQGN9KvmYEjzczKp9Se/KXLp6iM=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gCi4uQupGH9wlbYDIIaXDuhHkIJkqnW5jRCmhH4yzys=;
+        b=iP+7r2dt0mrERD07SdS+TGzP3SyiL1AoMitm778mxLBgJZrySPoHh14xUJfzeLz3EW
+         daetsozIsLIZLGcVVraW3Pmc5VAuA2+odgfJLWBYul6shRJ9hh0Qgp/svRTItr1aTWTe
+         RxWRKJCIdxzKFXV/QM9dPDBoGbmKArmISv250T5rYezYh69L6dIp0+NntO7tF00HJwr2
+         R1KkIYCfuDYF3NKEpywJJuDXrFTbw83C9pNgaChmhw5v05WuAFe1eTxpXzAkoMG+dPLP
+         DsRsoV7FL6PuFxs1I+S81exnBP7IBPH+DBS7qPlw8yaNONrobm9F0AqURFY18yLGtnSC
+         k0lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sVrhOI0oWt1hiMCtMZYhDjKeUZIuI1k5sXWV4N3yEl8=;
-        b=EHffydNSGkSWKMrMgrj1jRYoncDlHmMflme63NT3lkV0fCqLviip2aHf42sad9xu4U
-         8oG+qay3SSxmGDdLp7MgSV7JzoeONNdgJCAEngaJqig4eczK7VRMAwuDtU3zWtXU/VnC
-         i6EjbG9H+bFsmcSKKku065pSgtyhQJyTHn1jTTXMGMvwK0cV0x4t0Bh9Pcwd42K40Baf
-         2wBoSeCSNt97FEE0+GJTFAqwOydLUy1jP2BENRsTwIUERy2BZusfJtZYz+EIRaIND1im
-         ln0WH3sWv0+P0++Bdrr+UvTxzgKD48T3UQfkcM0Pup4bZnoTGuYS6yBhgt9enjVYB4qT
-         M3Bw==
-X-Gm-Message-State: AOAM531OJHkxs+161adJaS8BE1kAI7h7Gfq9QTi42NkkYaeTAn5STMeh
-        LJVjatfFVA1vkbpSMfywrt1LrM/847gihqYoo+uR0A==
-X-Google-Smtp-Source: ABdhPJz6HArexn/UOG7ZWlFLAh+o2coTB14vkM72eseTd4rWdhJcqfmDRX4ifEC9KTBIXB8KozQxeWmvvcpWfzHUma8=
-X-Received: by 2002:a05:6830:1e71:: with SMTP id m17mr8548782otr.188.1595884182094;
- Mon, 27 Jul 2020 14:09:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gCi4uQupGH9wlbYDIIaXDuhHkIJkqnW5jRCmhH4yzys=;
+        b=njxqLsWRPkpAbi7HqUA+39SJw/UM+zx0VFlLuQmO2qfQJgVAR24z07NOzpdl0QhhN9
+         alvBrpWCBwjmzoEO2B43x/HHlNOzR9LyWdaRTryyP7T+rkN0LBt+6zVYbW9TfvyEVor7
+         8QXeoPKj1sKSnow6hQTXZElda3DoaqUT/oE6QRIBiLpnjt8iYYrTVWf6rwcybLM63gha
+         YDvnGpNQFnQPdNg4I4ThDRVWzYV67GtKeSPSRXa6r5oGfB5cuaPKE2bF+ExvSHqAvIqn
+         zD0nbxZHVRQIjZDAXq75wtAuxRUmv3KY12yh+HnLsliE38EZt8NJ21MJr4e1KtP7WozL
+         uYEQ==
+X-Gm-Message-State: AOAM532jd9m04i0YoTwEKoIINIlMyAM7BjYLQD1mf4E2vzLD/9fiyREg
+        98M0r6INbzg20mkH5iUc3w4icDii850=
+X-Google-Smtp-Source: ABdhPJwJkrQ26iT00/yNlcmK6rwCV8JlV2VJHQdUO53NwZI5VUUccB9yeYw2y0rV9rMYW2G9Uff4ag==
+X-Received: by 2002:a05:6512:10ca:: with SMTP id k10mr12911706lfg.177.1595884220130;
+        Mon, 27 Jul 2020 14:10:20 -0700 (PDT)
+Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id s1sm3266078lfi.76.2020.07.27.14.10.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 14:10:19 -0700 (PDT)
+From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, "Paul E . McKenney" <paulmck@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: [PATCH v2 1/1] rcu/tree: Drop the lock before entering to page allocator
+Date:   Mon, 27 Jul 2020 23:10:12 +0200
+Message-Id: <20200727211012.30948-1-urezki@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <M0lxN5AUlPvzBKULfIBe5BZRwfQGXeMQCdWItYcQ-9P79y32WzExYK2Y0DwyNVtyGelqbvV07_lFk1oeT4cApbT-P_oH0bnxQbMmFsJv_xg=@protonmail.com>
- <ba078fb0-0dbc-df06-cfe9-f9537883f82a@amd.com> <e2f55480-c24f-6c85-08d3-21131a22d0bf@amd.com>
- <3b7e3e50-2ff7-eff3-2ffc-abaa4b36ce7f@amd.com> <CAKMK7uHCu02P4tvhF4LQbtYeNciU61ONC9EZRmQ-0wEGFPzZgg@mail.gmail.com>
-In-Reply-To: <CAKMK7uHCu02P4tvhF4LQbtYeNciU61ONC9EZRmQ-0wEGFPzZgg@mail.gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Mon, 27 Jul 2020 23:09:30 +0200
-Message-ID: <CAKMK7uHo9YDOFtz4HCp2OowD1m2ZSmg-MCrG45-wVMyonsZrXA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Clear dm_state for fast updates
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>,
-        Mazin Rezk <mnrzk@protonmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
-        Duncan <1i5t5.duncan@cox.net>, Kees Cook <keescook@chromium.org>,
-        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
-        "regressions@leemhuis.info" <regressions@leemhuis.info>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 10:29 PM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Mon, Jul 27, 2020 at 9:28 PM Christian K=C3=B6nig
-> <christian.koenig@amd.com> wrote:
-> >
-> > Am 27.07.20 um 16:05 schrieb Kazlauskas, Nicholas:
-> > > On 2020-07-27 9:39 a.m., Christian K=C3=B6nig wrote:
-> > >> Am 27.07.20 um 07:40 schrieb Mazin Rezk:
-> > >>> This patch fixes a race condition that causes a use-after-free duri=
-ng
-> > >>> amdgpu_dm_atomic_commit_tail. This can occur when 2 non-blocking
-> > >>> commits
-> > >>> are requested and the second one finishes before the first.
-> > >>> Essentially,
-> > >>> this bug occurs when the following sequence of events happens:
-> > >>>
-> > >>> 1. Non-blocking commit #1 is requested w/ a new dm_state #1 and is
-> > >>> deferred to the workqueue.
-> > >>>
-> > >>> 2. Non-blocking commit #2 is requested w/ a new dm_state #2 and is
-> > >>> deferred to the workqueue.
-> > >>>
-> > >>> 3. Commit #2 starts before commit #1, dm_state #1 is used in the
-> > >>> commit_tail and commit #2 completes, freeing dm_state #1.
-> > >>>
-> > >>> 4. Commit #1 starts after commit #2 completes, uses the freed dm_st=
-ate
-> > >>> 1 and dereferences a freelist pointer while setting the context.
-> > >>
-> > >> Well I only have a one mile high view on this, but why don't you let
-> > >> the work items execute in order?
-> > >>
-> > >> That would be better anyway cause this way we don't trigger a cache
-> > >> line ping pong between CPUs.
-> > >>
-> > >> Christian.
-> > >
-> > > We use the DRM helpers for managing drm_atomic_commit_state and those
-> > > helpers internally push non-blocking commit work into the system
-> > > unbound work queue.
-> >
-> > Mhm, well if you send those helper atomic commits in the order A,B and
-> > they execute it in the order B,A I would call that a bug :)
->
-> The way it works is it pushes all commits into unbound work queue, but
-> then forces serialization as needed. We do _not_ want e.g. updates on
-> different CRTC to be serialized, that would result in lots of judder.
-> And hw is funny enough that there's all kinds of dependencies.
->
-> The way you force synchronization is by adding other CRTC state
-> objects. So if DC is busted and can only handle a single update per
-> work item, then I guess you always need all CRTC states and everything
-> will be run in order. But that also totally kills modern multi-screen
-> compositors. Xorg isn't modern, just in case that's not clear :-)
->
-> Lucking at the code it seems like you indeed have only a single dm
-> state, so yeah global sync is what you'll need as immediate fix, and
-> then maybe fix up DM to not be quite so silly ... or at least only do
-> the dm state stuff when really needed.
+If the kernel is built with CONFIG_PROVE_RAW_LOCK_NESTING
+option, the lockedp will complain about violation of the
+nesting rules:
 
-Just looked a bit more at this struct dc_state, and that looks a lot
-like an atomic side-wagon. I don't think that works as a private
-state, this should probably be embedded into a subclass of
-drm_atomic_state.
+<snip>
+[   28.060389] =============================
+[   28.060389] [ BUG: Invalid wait context ]
+[   28.060389] 5.8.0-rc3-rcu #211 Tainted: G            E
+[   28.060389] -----------------------------
+[   28.060390] vmalloc_test/0/523 is trying to lock:
+[   28.060390] ffff96df7ffe0228 (&zone->lock){-.-.}-{3:3}, at: get_page_from_freelist+0xcf0/0x16d0
+[   28.060391] other info that might help us debug this:
+[   28.060391] context-{5:5}
+[   28.060392] 2 locks held by vmalloc_test/0/523:
+[   28.060392]  #0: ffffffffc06750d0 (prepare_for_test_rwsem){++++}-{4:4}, at: test_func+0x76/0x240 [test_vmalloc]
+[   28.060393]  #1: ffff96df5fa1d390 (krc.lock){..-.}-{2:2}, at: kvfree_call_rcu+0x5c/0x230
+[   28.060395] stack backtrace:
+[   28.060395] CPU: 0 PID: 523 Comm: vmalloc_test/0 Tainted: G            E     5.8.0-rc3-rcu #211
+[   28.060395] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+[   28.060396] Call Trace:
+[   28.060397]  dump_stack+0x96/0xd0
+[   28.060397]  __lock_acquire.cold.65+0x166/0x2d7
+[   28.060398]  ? find_held_lock+0x2d/0x90
+[   28.060399]  lock_acquire+0xad/0x370
+[   28.060400]  ? get_page_from_freelist+0xcf0/0x16d0
+[   28.060401]  ? mark_held_locks+0x48/0x70
+[   28.060402]  _raw_spin_lock+0x25/0x30
+[   28.060403]  ? get_page_from_freelist+0xcf0/0x16d0
+[   28.060404]  get_page_from_freelist+0xcf0/0x16d0
+[   28.060405]  ? __lock_acquire+0x3ee/0x1b90
+[   28.060407]  __alloc_pages_nodemask+0x16a/0x3a0
+[   28.060408]  __get_free_pages+0xd/0x30
+[   28.060409]  kvfree_call_rcu+0x18a/0x230
+<snip>
 
-And probably a lot of these pointers moved to other places I think, or
-I'm not entirely clear on what exactly this stuff is needed for ...
+Internally the kfree_rcu() uses raw_spinlock_t whereas the
+page allocator internally deals with spinlock_t to access
+to its zones.
 
-dc_state is also refcounted, which is definitely rather funny for a
-state structure.
+In order to prevent such vialation that is in question we
+can drop the internal raw_spinlock_t before entering to
+the page allocaor.
 
-Feels like this entire thing (how the overall dc state machinery is
-glued into atomic) isn't quite thought thru just yet :-/
--Daniel
+Short changelog (v1 -> v2):
+    - rework the commit message;
+    - rework the patch making it smaller;
+    - add more comments.
 
-> We could also sprinkle the drm_crtc_commit structure around a bit
-> (it's the glue that provides the synchronization across commits), but
-> since your dm state is global just grabbing all crtc states
-> unconditionally as part of that is probably best.
->
-> > > While we could duplicate a copy of that code with nothing but the
-> > > workqueue changed that isn't something I'd really like to maintain
-> > > going forward.
-> >
-> > I'm not talking about duplicating the code, I'm talking about fixing th=
-e
-> > helpers. I don't know that code well, but from the outside it sounds
-> > like a bug there.
-> >
-> > And executing work items in the order they are submitted is trivial.
-> >
-> > Had anybody pinged Daniel or other people familiar with the helper code
-> > about it?
->
-> Yeah something is wrong here, and the fix looks horrible :-)
->
-> Aside, I've also seen some recent discussion flare up about
-> drm_atomic_state_get/put used to paper over some other use-after-free,
-> but this time related to interrupt handlers. Maybe a few rules about
-> that:
-> - dont
-> - especially not when it's interrupt handlers, because you can't call
-> drm_atomic_state_put from interrupt handlers.
->
-> Instead have an spin_lock_irq to protect the shared date with your
-> interrupt handler, and _copy_ the date over. This is e.g. what
-> drm_crtc_arm_vblank_event does.
->
-> Cheers, Daniel
->
-> >
-> > Regards,
-> > Christian.
-> >
-> > >
-> > > Regards,
-> > > Nicholas Kazlauskas
-> > >
-> > >>
-> > >>>
-> > >>> Since this bug has only been spotted with fast commits, this patch
-> > >>> fixes
-> > >>> the bug by clearing the dm_state instead of using the old dc_state =
-for
-> > >>> fast updates. In addition, since dm_state is only used for its dc_s=
-tate
-> > >>> and amdgpu_dm_atomic_commit_tail will retain the dc_state if none i=
-s
-> > >>> found,
-> > >>> removing the dm_state should not have any consequences in fast upda=
-tes.
-> > >>>
-> > >>> This use-after-free bug has existed for a while now, but only cause=
-d a
-> > >>> noticeable issue starting from 5.7-rc1 due to 3202fa62f ("slub:
-> > >>> relocate
-> > >>> freelist pointer to middle of object") moving the freelist pointer =
-from
-> > >>> dm_state->base (which was unused) to dm_state->context (which is
-> > >>> dereferenced).
-> > >>>
-> > >>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D207383
-> > >>> Fixes: bd200d190f45 ("drm/amd/display: Don't replace the dc_state
-> > >>> for fast updates")
-> > >>> Reported-by: Duncan <1i5t5.duncan@cox.net>
-> > >>> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
-> > >>> ---
-> > >>>   .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 36
-> > >>> ++++++++++++++-----
-> > >>>   1 file changed, 27 insertions(+), 9 deletions(-)
-> > >>>
-> > >>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > >>> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > >>> index 86ffa0c2880f..710edc70e37e 100644
-> > >>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > >>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > >>> @@ -8717,20 +8717,38 @@ static int amdgpu_dm_atomic_check(struct
-> > >>> drm_device *dev,
-> > >>>            * the same resource. If we have a new DC context as part=
- of
-> > >>>            * the DM atomic state from validation we need to free it=
- and
-> > >>>            * retain the existing one instead.
-> > >>> +         *
-> > >>> +         * Furthermore, since the DM atomic state only contains th=
-e DC
-> > >>> +         * context and can safely be annulled, we can free the sta=
-te
-> > >>> +         * and clear the associated private object now to free
-> > >>> +         * some memory and avoid a possible use-after-free later.
-> > >>>            */
-> > >>> -        struct dm_atomic_state *new_dm_state, *old_dm_state;
-> > >>>
-> > >>> -        new_dm_state =3D dm_atomic_get_new_state(state);
-> > >>> -        old_dm_state =3D dm_atomic_get_old_state(state);
-> > >>> +        for (i =3D 0; i < state->num_private_objs; i++) {
-> > >>> +            struct drm_private_obj *obj =3D state->private_objs[i]=
-.ptr;
-> > >>>
-> > >>> -        if (new_dm_state && old_dm_state) {
-> > >>> -            if (new_dm_state->context)
-> > >>> -                dc_release_state(new_dm_state->context);
-> > >>> +            if (obj->funcs =3D=3D adev->dm.atomic_obj.funcs) {
-> > >>> +                int j =3D state->num_private_objs-1;
-> > >>>
-> > >>> -            new_dm_state->context =3D old_dm_state->context;
-> > >>> +                dm_atomic_destroy_state(obj,
-> > >>> +                        state->private_objs[i].state);
-> > >>> +
-> > >>> +                /* If i is not at the end of the array then the
-> > >>> +                 * last element needs to be moved to where i was
-> > >>> +                 * before the array can safely be truncated.
-> > >>> +                 */
-> > >>> +                if (i !=3D j)
-> > >>> +                    state->private_objs[i] =3D
-> > >>> +                        state->private_objs[j];
-> > >>>
-> > >>> -            if (old_dm_state->context)
-> > >>> -                dc_retain_state(old_dm_state->context);
-> > >>> +                state->private_objs[j].ptr =3D NULL;
-> > >>> +                state->private_objs[j].state =3D NULL;
-> > >>> +                state->private_objs[j].old_state =3D NULL;
-> > >>> +                state->private_objs[j].new_state =3D NULL;
-> > >>> +
-> > >>> +                state->num_private_objs =3D j;
-> > >>> +                break;
-> > >>> +            }
-> > >>>           }
-> > >>>       }
-> > >>>
-> > >>> --
-> > >>> 2.27.0
-> > >>>
-> > >>
-> > >
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->
->
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+---
+ kernel/rcu/tree.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 21c2fa5bd8c3..2de112404121 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3287,6 +3287,8 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+ 		return false;
+ 
+ 	lockdep_assert_held(&krcp->lock);
++	lockdep_assert_irqs_disabled();
++
+ 	idx = !!is_vmalloc_addr(ptr);
+ 
+ 	/* Check if a new block is required. */
+@@ -3306,6 +3308,29 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+ 			if (IS_ENABLED(CONFIG_PREEMPT_RT))
+ 				return false;
+ 
++			/*
++			 * If built with CONFIG_PROVE_RAW_LOCK_NESTING option,
++			 * the lockedp will complain about violation of the
++			 * nesting rules. It does the raw_spinlock vs. spinlock
++			 * nesting checks.
++			 *
++			 * That is why we drop the raw lock. Please note IRQs are
++			 * still disabled it guarantees that the "current" stays
++			 * on the same CPU later on when the raw lock is taken
++			 * back.
++			 *
++			 * It is important because if the page allocator is invoked
++			 * in fully preemptible context, it can be that we get a page
++			 * but end up on another CPU. That another CPU might not need
++			 * a page because of having some extra spots in its internal
++			 * array for pointer collecting. Staying on same CPU eliminates
++			 * described issue.
++			 *
++			 * Dropping the lock also reduces the critical section by
++			 * the time taken by the page allocator to obtain a page.
++			 */
++			raw_spin_unlock(&krcp->lock);
++
+ 			/*
+ 			 * NOTE: For one argument of kvfree_rcu() we can
+ 			 * drop the lock and get the page in sleepable
+@@ -3315,6 +3340,8 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
+ 			 */
+ 			bnode = (struct kvfree_rcu_bulk_data *)
+ 				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
++
++			raw_spin_lock(&krcp->lock);
+ 		}
+ 
+ 		/* Switch to emergency path. */
+-- 
+2.20.1
 
-
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
