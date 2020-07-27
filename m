@@ -2,118 +2,124 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34334C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE602C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10D372075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2EF2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595849910;
-	bh=uLbTYAh07fv8JZO0YyeUya+9u16JNdr7tPp1pQ4gqYo=;
+	s=default; t=1595850190;
+	bh=KhPxVdrXN8wLnAx0MqDssY9fDUsiTaVpHEdtykstJgM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LTZB6B6R9Fu6QHyHi8tlPwoFQjWmGRjgWcD6GjfMLa+Qxqk8BUTg3gdOaZiuNgrBl
-	 xVlr6CPCGjRjHT7LfjoHeE2+/dIIHz9Bvk4QWTKmRq56uP1jbWCM5Inkn9L/N5FRwS
-	 Dpxp7CWIr5AinBXxQdd2hyeeDJMRXm9ceQGvlVZU=
+	b=Ynk6AnJFGzLeWGTtmxPUbltdK+ROYiah/kMuHeaGpOqS7FLRLkIlDvIYbgVjC2BxV
+	 wKVoaqKGqW2Qr333XoHjGqPxs7V3hUiT80I0qsotsibq04ANC5MnuTD3CXADiuIfPL
+	 sSe0Pow4qdsvNOVM5JjYpNf58iTJXzncvaQP7zZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgG0Li3 (ORCPT
+        id S1727078AbgG0LnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:38:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727037AbgG0Li2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:38:28 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6C832072E;
-        Mon, 27 Jul 2020 11:38:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595849908;
-        bh=uLbTYAh07fv8JZO0YyeUya+9u16JNdr7tPp1pQ4gqYo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zO7gFLOA17LlgroJllXmWm8YcqAdeP4NTG7mB9v4pP075cnGKv9titYleXePQiaVX
-         J07HCyoLe7QeSH+D5suzf/uXPdQ2C3NMCIvMQrAaxR6HJ5ZPDGdBoOMgsRbYRd36lB
-         AEEtX/k8I1IBrkr3UiqDsvAOjov2r23gFZO83WJw=
-Date:   Mon, 27 Jul 2020 12:38:21 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Jianyong Wu <Jianyong.Wu@arm.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        Wei Chen <Wei.Chen@arm.com>, nd <nd@arm.com>
-Subject: Re: [PATCH v13 2/9] arm/arm64: KVM: Advertise KVM UID to guests via
- SMCCC
-Message-ID: <20200727113821.GB20437@willie-the-truck>
-References: <20200619130120.40556-1-jianyong.wu@arm.com>
- <20200619130120.40556-3-jianyong.wu@arm.com>
- <HE1PR0802MB255577943C260898A6C686ABF4720@HE1PR0802MB2555.eurprd08.prod.outlook.com>
+        Mon, 27 Jul 2020 07:43:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40268 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgG0LnI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:43:08 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E583C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 04:43:07 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id i26so8576363edv.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 04:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=npsW02qfGd4D5Pq9wgHcEBxBe/85HbrjVblV94aw6Go=;
+        b=Wdsz9cvlvfFPZWTZRmq4crM4Vi2tSSHPhOy9Vwqu535Xzvabkb3H6TEIuRRs2j4Yg+
+         WNE5bCe5sXeTzkIuaNOU+WLnkWojzQUmR8XVwQuncjmHEvKNQMp1WfdgytbIxuD4XEr+
+         TWs/gp+tFzAm/gxN7j+H8iK7SByvebNFrJF57oMnGIz2wnTc7o4lQ2h+8iinEWkIOcTs
+         r5twNj6VHDr4JaLl+osmnFMUT6aON0Srtt49JsRT0m3afEsaRNIvGBPFkxtlZodM4Rn2
+         hq6K6dHlHgkBvk6ygcXC6dpGdX8Ke1p3movKlD1b+owlYP/frOLUS9aWB/IQ6gxIs6lE
+         vbpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=npsW02qfGd4D5Pq9wgHcEBxBe/85HbrjVblV94aw6Go=;
+        b=kuz5cIqWHWtypvSWgs/b/T9c+W+UJ2Oy6WGoz2Z8sGeVun9yx2a10Z+AJONzDigWl3
+         JSWe+3XYKenRhHiCConUqXkK8eyVsvlzdwR2Cf1euz2+rYZz7lI/N2b1KQFZbPskR9U8
+         JCgQIReHVbur4EnN1BVut3gOlrXz/IKzKqfDAM2kT2szitL9qqxfNh++hObEF053eW/m
+         hQ1U9G23dEWRqpbDizwk2+jKw9P8Je1UGbpN7w3fDW1tj3AyAOKjNXtO43h0Zy0lJtPb
+         ltcEfhrBr2d71qYnQIgj++5IoLMJ5G3K6eXYbrnFPAAsOS6sLxDKkhTAJ80RmnGCTpWb
+         M5wg==
+X-Gm-Message-State: AOAM530akmlwXsnsEWkDIbxtC/yqe/ZeSQUpNDWS53chwfaN1FSC79O0
+        VWDbksNu0OZn+HExFZpQYrw=
+X-Google-Smtp-Source: ABdhPJxqsaRnbuSFkpkmHFcKxmLBK9brfFzN3IGPkGGgziIBKCSDwOfmr2YL2WCfjX5i2xTGiksKBw==
+X-Received: by 2002:aa7:c45a:: with SMTP id n26mr1709689edr.45.1595850186068;
+        Mon, 27 Jul 2020 04:43:06 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id qn10sm3794945ejb.39.2020.07.27.04.43.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 04:43:05 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 13:43:03 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     peterz@infradead.org, tglx@linutronix.de, bigeasy@linutronix.de,
+        namit@vmware.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] smp: Fix a potential usage of stale nr_cpus
+Message-ID: <20200727114303.GA57241@gmail.com>
+References: <20200721034239.72013-1-songmuchun@bytedance.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <HE1PR0802MB255577943C260898A6C686ABF4720@HE1PR0802MB2555.eurprd08.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200721034239.72013-1-songmuchun@bytedance.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 03:45:37AM +0000, Jianyong Wu wrote:
-> > From: Will Deacon <will@kernel.org>
-> > 
-> > We can advertise ourselves to guests as KVM and provide a basic features
-> > bitmap for discoverability of future hypervisor services.
-> > 
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > Signed-off-by: Will Deacon <will@kernel.org>
-> > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> > ---
-> >  arch/arm64/kvm/hypercalls.c | 29 +++++++++++++++++++----------
-> >  1 file changed, 19 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kvm/hypercalls.c b/arch/arm64/kvm/hypercalls.c
-> > index 550dfa3e53cd..db6dce3d0e23 100644
-> > --- a/arch/arm64/kvm/hypercalls.c
-> > +++ b/arch/arm64/kvm/hypercalls.c
-> > @@ -12,13 +12,13 @@
-> >  int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)  {
-> >  	u32 func_id = smccc_get_function(vcpu);
-> > -	long val = SMCCC_RET_NOT_SUPPORTED;
-> > +	u32 val[4] = {SMCCC_RET_NOT_SUPPORTED};
+
+* Muchun Song <songmuchun@bytedance.com> wrote:
+
+> When the cmdline of "nr_cpus" is not valid, the @nr_cpu_ids is assigned
+> a stale value. The nr_cpus is only valid when get_option() return 1. So
+> check the return value to prevent this.
 > 
-> There is a risk as this u32 value will return here and a u64 value will be
-> obtained in guest. For example, The val[0] is initialized as -1 of
-> 0xffffffff and the guest get 0xffffffff then it will be compared with -1
-> of 0xffffffffffffffff Also this problem exists for the transfer of address
-> in u64 type. So the following assignment to "val" should be split into two
-> u32 value and assign to val[0] and val[1] respectively.
-> WDYT?
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> ---
+> changelog in v3:
+>  1) Return -EINVAL when the parameter is bogus. 
+> 
+> changelog in v2:
+>  1) Rework the commit log.
+>  2) Rework the return value check.
+> 
+>  kernel/smp.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/smp.c b/kernel/smp.c
+> index a5a66fc28f4e..0dacfcfcf00b 100644
+> --- a/kernel/smp.c
+> +++ b/kernel/smp.c
+> @@ -772,9 +772,13 @@ static int __init nrcpus(char *str)
+>  {
+>  	int nr_cpus;
+>  
+> -	get_option(&str, &nr_cpus);
+> +	if (get_option(&str, &nr_cpus) != 1)
+> +		return -EINVAL;
+> +
+>  	if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
+>  		nr_cpu_ids = nr_cpus;
+> +	else
+> +		return -EINVAL;
 
-Yes, I think you're right that this is a bug, but isn't the solution just
-to make that an array of 'long'?
+Exactly what does 'not valid' mean, and why doesn't get_option() 
+return -EINVAL in that case?
 
-	long val [4];
+Thanks,
 
-That will sign-extend the negative error codes as required, while leaving
-the explicitly unsigned UID constants alone.
-
-Will
+	Ingo
