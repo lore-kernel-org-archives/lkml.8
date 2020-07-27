@@ -2,213 +2,78 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D73C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F377C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41E802083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:40:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="L8JykQug"
+	by mail.kernel.org (Postfix) with ESMTP id 4B3472070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:40:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgG0NkG (ORCPT
+        id S1729163AbgG0NkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:40:06 -0400
-Received: from mail-bn8nam12on2045.outbound.protection.outlook.com ([40.107.237.45]:59409
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        Mon, 27 Jul 2020 09:40:19 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:8922 "EHLO zju.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729133AbgG0Njv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:39:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gL6MYc37Y7rTxODU9D0HQkwbXkQpccaQZU955AQRJAOUmrwOQdAuJavvV2StECPx8gE+UyP5DhFBmzo56MZaA70oL2/mFaRIFswiiTYYGSdxR1W8QdV0kdWzr3F7slXYjY/hsk5+xzxb4FhxlJcbJD+lkWR2Z9kKLoh6hk7C5ZN7cjfmLrGw7tG8BQNA4ly34sU6YMsBpCb7l2vfBmUQBXbuBaCzsBQihpBjrNsNaleLJcJrxRnh1prbkm7SKTR5hjrh1LvSbDiY95RproS0wL1imCoeZl+JhPNilJxuHBGy6YnT1BZX9Azqf235BaVAAHewuZ73dW+9Kyz2VmYZeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=51K/yy6E4H9tRje5PTimdsjradOXcjxWoAkp/JdSlTI=;
- b=VlSPLV66FCxm9ru8FBc4xD+H7oLt1EJHmKjG3cYeXtYkTrCiz11obHh6vQqIM5I5vkqDrhrzXr8DLzg4AtWd14XuqFUCC8ZrFCevTsO53IR6GVGFXeS1Tzdp94ldg5Wxatced0q/PmCWqI405k70W7g7vaneOW/GTgJ6rdW37aAafx0kf/v58NYuEuh2nDDxuKMG0aSwSd197ItkX+6hpsgbmZIVb7eaPrmIOfylJuO2MOWDpvydAVoIxCK7A6WmRmOO3kGU6bcp7YTBz96cN9/AalJis0g7SF3itPUcpSqxP/+Baxsj4DxTy0rRbdBvxB53fY/W290frjvT3isKlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=51K/yy6E4H9tRje5PTimdsjradOXcjxWoAkp/JdSlTI=;
- b=L8JykQug4izzxwtXmi/pt/dO3JgLisusjCEm3urkNiNkl00d1xqxJu/72oc/hpcdJprCbMhTmd3E1KjZtnA5WVQBFlXVyUSllV7rcCpt7YYmXOsP8CN42WxspmLkS4SWCXZ5DgeRd1qIGk1xNwfBafWGBVSYLRowYSEgRBHtDKM=
-Authentication-Results: molgen.mpg.de; dkim=none (message not signed)
- header.d=none;molgen.mpg.de; dmarc=none action=none header.from=amd.com;
-Received: from MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
- by MN2PR12MB4302.namprd12.prod.outlook.com (2603:10b6:208:1de::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Mon, 27 Jul
- 2020 13:39:47 +0000
-Received: from MN2PR12MB3775.namprd12.prod.outlook.com
- ([fe80::a16e:8812:b4c0:918d]) by MN2PR12MB3775.namprd12.prod.outlook.com
- ([fe80::a16e:8812:b4c0:918d%6]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
- 13:39:47 +0000
-Subject: Re: [PATCH] drm/amd/display: Clear dm_state for fast updates
-To:     Mazin Rezk <mnrzk@protonmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>,
-        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Duncan <1i5t5.duncan@cox.net>,
-        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>,
-        "regressions@leemhuis.info" <regressions@leemhuis.info>,
-        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>
-References: <M0lxN5AUlPvzBKULfIBe5BZRwfQGXeMQCdWItYcQ-9P79y32WzExYK2Y0DwyNVtyGelqbvV07_lFk1oeT4cApbT-P_oH0bnxQbMmFsJv_xg=@protonmail.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <ba078fb0-0dbc-df06-cfe9-f9537883f82a@amd.com>
-Date:   Mon, 27 Jul 2020 15:39:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <M0lxN5AUlPvzBKULfIBe5BZRwfQGXeMQCdWItYcQ-9P79y32WzExYK2Y0DwyNVtyGelqbvV07_lFk1oeT4cApbT-P_oH0bnxQbMmFsJv_xg=@protonmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: AM0PR03CA0069.eurprd03.prod.outlook.com (2603:10a6:208::46)
- To MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
+        id S1728109AbgG0NkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 09:40:18 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Mon, 27 Jul 2020 21:39:57
+ +0800 (GMT+08:00)
+X-Originating-IP: [210.32.144.186]
+Date:   Mon, 27 Jul 2020 21:39:57 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Larry Finger" <Larry.Finger@lwfinger.net>
+Cc:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, kjlu@umn.edu,
+        "Shreeya Patel" <shreeya.patel23498@gmail.com>,
+        "Julia Lawall" <julia.lawall@inria.fr>,
+        "Michael Straube" <straube.linux@gmail.com>,
+        "Stefano Brivio" <sbrivio@redhat.com>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] Staging: rtl8188eu: rtw_mlme: Fix uninitialized
+ variable authmode
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <66d9502e-682f-6ccd-ef90-138feee0c2ae@lwfinger.net>
+References: <20200724122957.30411-1-dinghao.liu@zju.edu.cn>
+ <20200724132836.GC316746@kroah.com>
+ <66d9502e-682f-6ccd-ef90-138feee0c2ae@lwfinger.net>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM0PR03CA0069.eurprd03.prod.outlook.com (2603:10a6:208::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Mon, 27 Jul 2020 13:39:45 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d6addd46-628f-47f8-1223-08d832328734
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4302:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB4302074372299FC05E878CAA83720@MN2PR12MB4302.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EQTkAolNRDTlbFSea5hc4MgFUG80N44/YE2z/6X2aOXwtJQXUBSzh4k3b13tDMv8ViFKZBPRce5fpgkBLaDMkoemF9uWg/oQW2TloUt7LYCAxbLuRzI7tMIKnBZG7EoXmTbwjCqJ5etEEitFg8mZDdHq8euyeOs5dg6m0j1v8OYAZtysJbtpILrD9o936aZabYR8e/on+Kh4C+ChuoOvk4zWhGJOG2xvmpzhJtidtWz+y2kU9gvQ8ZljfxRdJfdFvZPv2dAt8mXTr1RhLlbNkgVIqODZg26E7DWjg32wFMu8qwX5+ibfXQUPVjTrur9eqdTpw7KvSUUedUnse4+cwXc9C4eBt3pOCqx70yae8cyDrLU78Zg5+Ej2jwYUhxcqu2UqqoyHRRhwe2OuNUT2zbf5VgZwJIDHbOc7TL52Ct1+LK6zBcryrSNa+ed4o20YkhAgAFaB8dkZVboY2t/i4g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3775.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(396003)(346002)(39860400002)(316002)(8676002)(478600001)(2616005)(66946007)(4326008)(45080400002)(6486002)(66556008)(66476007)(2906002)(6666004)(186003)(31686004)(5660300002)(16526019)(86362001)(36756003)(15650500001)(54906003)(83380400001)(7416002)(8936002)(31696002)(110136005)(52116002)(966005)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: kPjR53l4gMo3J/zkps+ASxCmJtnyOG5BJjVE/9T4ShHLe3m8uajFIJUERDM3bI6DP2ZiT1nB3SVQc5vpmZaBLk6GCYfTVe6g9Wd78WEqbGtGAK/5Uyoitk4WrUP63rAJ9VIfsqcaizk6ZfwP5j1s4CNWSG5Wsl202p+jiKob0S7QvjuQt7UcJCbx2BMDkKYFeIlVgcPDHfwINaNdzPOzP87T0tQSzgRjcwtSKfYV71LkcIupx1F8y0PCD7KTrM0TP+cliRsX7Tu1k70a32aJfiUZ3eQEJNDQ01aQgOdAcHRYg7U2f4QvMidtfc2Z/8bkYE4tWO//fvIgbnL6EzjMoKWV7q4s+TqXF8gmdxW07DHuxvDshnaCoJjt3isvOOD29VOwroonw5xmENR7/C/mTHXskECGRNj53lQzY52s0Cfx/iSvFw0oHf4MjVdWz9Msk9dIpWZ3MTe9FpF+l7XRSk96VpoNpo6FDon/QQEUfxx9N69/j4cMQ9vIyCopzj+Y45FiklXXWIO02cy1/1ivNP1+dFwcilVgnFnXMPj0Lyau+2lW+PE8mWFU3gGG+iBB
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6addd46-628f-47f8-1223-08d832328734
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3775.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 13:39:47.2934
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: voH7p2/jP26h8/UY+wt1T35sdubb/oZbjyg98Ha+2ljvD+8gYSs+YRoEikocZ9w2
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4302
+Message-ID: <1721a94f.13572.173908057cb.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgBn6Pwt2R5fMeheAA--.11594W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAggHBlZdtPRcawAesp
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbGCS07vEb7Iv0x
+        C_Ar1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6ry8MIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
+        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
+        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
+        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0I7IYx2IY67AK
+        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
+        0EY4v20xvaj40_WFyUJVCq3wCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvE
+        x4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 27.07.20 um 07:40 schrieb Mazin Rezk:
-> This patch fixes a race condition that causes a use-after-free during
-> amdgpu_dm_atomic_commit_tail. This can occur when 2 non-blocking commits
-> are requested and the second one finishes before the first. Essentially,
-> this bug occurs when the following sequence of events happens:
->
-> 1. Non-blocking commit #1 is requested w/ a new dm_state #1 and is
-> deferred to the workqueue.
->
-> 2. Non-blocking commit #2 is requested w/ a new dm_state #2 and is
-> deferred to the workqueue.
->
-> 3. Commit #2 starts before commit #1, dm_state #1 is used in the
-> commit_tail and commit #2 completes, freeing dm_state #1.
->
-> 4. Commit #1 starts after commit #2 completes, uses the freed dm_state
-> 1 and dereferences a freelist pointer while setting the context.
-
-Well I only have a one mile high view on this, but why don't you let the 
-work items execute in order?
-
-That would be better anyway cause this way we don't trigger a cache line 
-ping pong between CPUs.
-
-Christian.
-
->
-> Since this bug has only been spotted with fast commits, this patch fixes
-> the bug by clearing the dm_state instead of using the old dc_state for
-> fast updates. In addition, since dm_state is only used for its dc_state
-> and amdgpu_dm_atomic_commit_tail will retain the dc_state if none is found,
-> removing the dm_state should not have any consequences in fast updates.
->
-> This use-after-free bug has existed for a while now, but only caused a
-> noticeable issue starting from 5.7-rc1 due to 3202fa62f ("slub: relocate
-> freelist pointer to middle of object") moving the freelist pointer from
-> dm_state->base (which was unused) to dm_state->context (which is
-> dereferenced).
->
-> Bugzilla: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D207383&amp;data=02%7C01%7Cchristian.koenig%40amd.com%7C16d6d6d4a02241deb94e08d831efa1bb%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637314252605493548&amp;sdata=JuaMFSMTjAVQBBpbXIf2RWj%2BLcx19ki25XLXbr1C6RA%3D&amp;reserved=0
-> Fixes: bd200d190f45 ("drm/amd/display: Don't replace the dc_state for fast updates")
-> Reported-by: Duncan <1i5t5.duncan@cox.net>
-> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
-> ---
->   .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 36 ++++++++++++++-----
->   1 file changed, 27 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index 86ffa0c2880f..710edc70e37e 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -8717,20 +8717,38 @@ static int amdgpu_dm_atomic_check(struct drm_device *dev,
->   		 * the same resource. If we have a new DC context as part of
->   		 * the DM atomic state from validation we need to free it and
->   		 * retain the existing one instead.
-> +		 *
-> +		 * Furthermore, since the DM atomic state only contains the DC
-> +		 * context and can safely be annulled, we can free the state
-> +		 * and clear the associated private object now to free
-> +		 * some memory and avoid a possible use-after-free later.
->   		 */
-> -		struct dm_atomic_state *new_dm_state, *old_dm_state;
->
-> -		new_dm_state = dm_atomic_get_new_state(state);
-> -		old_dm_state = dm_atomic_get_old_state(state);
-> +		for (i = 0; i < state->num_private_objs; i++) {
-> +			struct drm_private_obj *obj = state->private_objs[i].ptr;
->
-> -		if (new_dm_state && old_dm_state) {
-> -			if (new_dm_state->context)
-> -				dc_release_state(new_dm_state->context);
-> +			if (obj->funcs == adev->dm.atomic_obj.funcs) {
-> +				int j = state->num_private_objs-1;
->
-> -			new_dm_state->context = old_dm_state->context;
-> +				dm_atomic_destroy_state(obj,
-> +						state->private_objs[i].state);
-> +
-> +				/* If i is not at the end of the array then the
-> +				 * last element needs to be moved to where i was
-> +				 * before the array can safely be truncated.
-> +				 */
-> +				if (i != j)
-> +					state->private_objs[i] =
-> +						state->private_objs[j];
->
-> -			if (old_dm_state->context)
-> -				dc_retain_state(old_dm_state->context);
-> +				state->private_objs[j].ptr = NULL;
-> +				state->private_objs[j].state = NULL;
-> +				state->private_objs[j].old_state = NULL;
-> +				state->private_objs[j].new_state = NULL;
-> +
-> +				state->num_private_objs = j;
-> +				break;
-> +			}
->   		}
->   	}
->
-> --
-> 2.27.0
->
-
+PiAKPiBZZXMsIGluIHRoaXMgcm91dGluZSwgaXQgd291bGQgYmUgcG9zc2libGUgZm9yIGF1dGht
+b2RlIHRvIG5vdCBiZSBzZXQ7IGhvd2V2ZXIsIAo+IGxhdGVyIGNvZGUgb25seSBjb21wYXJlcyBp
+dCB0byBlaXRoZXIgX1dQQV9JRV9JRF8gb3IgX1dQQTJfSUVfSURfLiBJdCBpcyBuZXZlciAKPiB1
+c2VkIGluIGEgd2F5IHRoYXQgYW4gdW5zZXQgdmFsdWUgY291bGQgbWFrZSB0aGUgcHJvZ3JhbSBm
+bG93IGJlIGRpZmZlcmVudCBieSAKPiBhcmJpdHJhcmlseSBzZXR0aW5nIHRoZSB2YWx1ZSB0byB6
+ZXJvLiBUaHVzIHlvdXIgc3RhdGVtZW50ICJUaGVuIGF1dGhtb2RlIG1heSAKPiBjb250YWluIGEg
+Z2FyYmFnZSB2YWx1ZSBhbmQgaW5mbHVlbmNlIHRoZSBleGVjdXRpb24gZmxvdyBvZiB0aGlzIGZ1
+bmN0aW9uLiIgaXMgCj4gZmFsc2UuCj4gCgpJdCdzIGNsZWFyIHRvIG1lLiBUaGFuayB5b3UgZm9y
+IHlvdXIgYWR2aWNlLgoKUmVnYXJkcywKRGluZ2hhbwo=
