@@ -2,118 +2,95 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31A5C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE89C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8287020809
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:02:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bRfFtHzX"
+	by mail.kernel.org (Postfix) with ESMTP id 30B1B20729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:02:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595883738;
+	bh=SKloWjMdbUWcoMaZtP+WOV8qA3BcFcPEsEZO0ThMqMg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IXcv1i68/0916eToO5aOCA1ZpsvQBz5XU/dVcuwmZCH65hUcCmwO2JajunejVsw78
+	 NFDIV1GR4GFWGQRWeO9Sor55gjvMNqK8z0YZNNtLwIMI3c83pIqyzxPYz7GOmUpod6
+	 GF2k+vm43dqfS6O2HnHPdHEF8B5l29/6E3r2EroI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgG0VCJ (ORCPT
+        id S1726901AbgG0VCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 17:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbgG0VCI (ORCPT
+        Mon, 27 Jul 2020 17:02:17 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:44385 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgG0VCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:02:08 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 838FFC0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:02:08 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m8so2907352pfh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:02:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CnrNkbaFG+mo4svSlEoBObsg4w60j22J8+PYU+PPvCU=;
-        b=bRfFtHzX1zVRP2KIqcniBiHeMDlhjIOU9Yqml+WYD/0qj/30U1iKTD6aLjfxsmvsIh
-         2DI827NOO8fp17l913ZXVV/i4xiHpwS3PnCguZtL1TWXK73R0bTtoAt0vUlmWNNQN0JA
-         cevBggN1G9RolPdsvBl48M4oForqiVBJIFebodZDCHDhTWfzDtoT51+gOExhaipG578n
-         Yy8QciRsWunDIqNKU2kIvh8RnsmKMFECTgK04U1Rl941Ysg4/Y82s7KH5j3lWGfMTB01
-         5gsGBcJiRJVrXH99DyqKbmTPqenXApD/dl6iOvozpT5JMOvz6kImIUjVDJVyFy/0Q9QY
-         CuwA==
+        Mon, 27 Jul 2020 17:02:16 -0400
+Received: by mail-il1-f196.google.com with SMTP id j9so10949975ilc.11;
+        Mon, 27 Jul 2020 14:02:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=CnrNkbaFG+mo4svSlEoBObsg4w60j22J8+PYU+PPvCU=;
-        b=ZQuUziiSsxuoVZetVHLtxjyVo/VpUg8qumZde7Gk8jukkzSAY5LDd2ZEjw/RLXLJFj
-         N7cEBfn9KI5HqV4LP8Q6+yc6at2PCI5uU5/Vz3ltxHmsNrd1KXevMT2Xt0BSZWt61f+o
-         UYWvG65maNwTgHj39p1ufbCQpxO+yfQ43QDCJjwfLMGF9zaIZEoqXEKGIJHnU8E1hE4E
-         Rt2XIO83XuF600fHMyLKLYSYbhC80kOPG5mFT5AKO8iNZNvIraE0GOSXj/O6i7NvQTIP
-         i6paPdeK5h+oLOiodExao04Axezi6ayQo/KGNlqh2Mzxcn5X0rrB6YtD51Mq/QdSypAZ
-         i//g==
-X-Gm-Message-State: AOAM530+kHTaY4I8MgwZoQyZMdyEEFpqgYplv/6Kw5dDwTd8FU6rDrFb
-        9mpE8tN1H2Fak500RAtiUldYIQ==
-X-Google-Smtp-Source: ABdhPJwwmvQE1grbXpKyCQ9I9VejZ9WeQ4E0X7yonbSngdxc3zyray6+GR0huEYUc7zxd8h2CwTOFw==
-X-Received: by 2002:a62:fcca:: with SMTP id e193mr22259656pfh.307.1595883727948;
-        Mon, 27 Jul 2020 14:02:07 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b24sm14930840pgn.8.2020.07.27.14.02.06
+        bh=2uE9MbnZjSGJIApeYv2nTioz4BYTAMleHDWe7FX3HTU=;
+        b=s/JMrkI3IszOd/y+OhwZylBYqa3DdDkwFsRgGZm5QjPD7y9DqmuJZCvz1gvi4dJFFM
+         CiQqWavYACKIXbNJ+kTR649QzjCtXeoRYJanZc6Ld+gXYeAhIbz+dhcIVHrt3fWBcSEt
+         GYp+GnmlHUuAp5Gx0Vt/8xL50kpr4LMOd7mqqJby3IPaDz6kz9fQFQZ91Hcv0ukHo6mu
+         3IA9/0QhqryfV2y/ClLOZYSB4YnxiSjmzWY7VU9PggpXoKZ68VgycNapbSU5tMMLnO2i
+         Q9PEUimz6irJjv94tY0fJZUMAdB3NI+f/H/Nyz3onL72Xktn3DZ9BhcEobPnckZURWWm
+         qBhg==
+X-Gm-Message-State: AOAM53311UwYiPORALJDV7CM8T0iyR74ZuJs3uCBOMLTVfBD7ZRet8+l
+        Ow1x3QPalFY4RaROFHVU2w==
+X-Google-Smtp-Source: ABdhPJwDRgceruN5TK389OkZGIbB3Miq0TQVJkiQSnuO2dIxFe5+mwy3r3L+V2DxoSKynzGjXgU1sg==
+X-Received: by 2002:a05:6e02:682:: with SMTP id o2mr17828542ils.188.1595883734272;
+        Mon, 27 Jul 2020 14:02:14 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id u6sm1549202ilk.13.2020.07.27.14.02.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 14:02:07 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 13:58:34 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        mike.leach@linaro.org, Jonathan Marek <jonathan@marek.ca>
-Subject: Re: [PATCH 2/4] arm64: dts: qcom: sc7180: Add iommus property to ETR
-Message-ID: <20200727205834.GA202429@builder.lan>
-References: <cover.1591708204.git.saiprakash.ranjan@codeaurora.org>
- <2312c9a10e7251d69e31e4f51c0f1d70e6f2f2f5.1591708204.git.saiprakash.ranjan@codeaurora.org>
- <20200621072213.GG128451@builder.lan>
- <f40621b2b01f836a8a97686707599dd0@codeaurora.org>
- <e270acd3f7db076c043f1b982b1efea0@codeaurora.org>
+        Mon, 27 Jul 2020 14:02:13 -0700 (PDT)
+Received: (nullmailer pid 865775 invoked by uid 1000);
+        Mon, 27 Jul 2020 21:02:11 -0000
+Date:   Mon, 27 Jul 2020 15:02:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: display: panel: Add bindings for
+ Tianma nt36672a panel
+Message-ID: <20200727210211.GA865728@bogus>
+References: <20200727074348.26116-1-sumit.semwal@linaro.org>
+ <20200727074348.26116-2-sumit.semwal@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e270acd3f7db076c043f1b982b1efea0@codeaurora.org>
+In-Reply-To: <20200727074348.26116-2-sumit.semwal@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 23 Jun 23:56 PDT 2020, Sai Prakash Ranjan wrote:
-
-> Hi Bjorn,
+On Mon, 27 Jul 2020 13:13:47 +0530, Sumit Semwal wrote:
+> The nt36672a panel from Tianma is a FHD+ panel with a resolution of
+> 1080x2246 and 6.18 inches size. It is found in some of the Poco F1
+> phones.
 > 
-> On 2020-06-21 13:39, Sai Prakash Ranjan wrote:
-> > Hi Bjorn,
-> > 
-> > On 2020-06-21 12:52, Bjorn Andersson wrote:
-> > > On Tue 09 Jun 06:30 PDT 2020, Sai Prakash Ranjan wrote:
-> > > 
-> > > > Define iommus property for Coresight ETR component in
-> > > > SC7180 SoC with the SID and mask to enable SMMU
-> > > > translation for this master.
-> > > > 
-> > > 
-> > > We don't have &apps_smmu in linux-next, as we've yet to figure out how
-> > > to disable the boot splash or support the stream mapping handover.
-> > > 
-> > > So I'm not able to apply this.
-> > > 
-> > 
-> > This is for SC7180 which has apps_smmu not SM8150.
-> > 
+> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
 > 
-> Please let me know if this needs further explanation.
+> ---
+> v2: remove ports node, making port@0 directly under panel@0 node.
+> v3: updated to replace port@0 to just 'port'.
+> ---
+>  .../display/panel/tianma,nt36672a.yaml        | 95 +++++++++++++++++++
+>  1 file changed, 95 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/tianma,nt36672a.yaml
 > 
 
-I must have commented on the wrong patch, sorry about that. The SM8150
-patch in this series does not compile due to the lack of &apps_smmu.
-
-I've picked the other 3 patches.
-
-Thanks,
-Bjorn
+Reviewed-by: Rob Herring <robh@kernel.org>
