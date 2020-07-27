@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A851BC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D035BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8515D20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB10E20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860339;
-	bh=GAFcz6VMhCl4x1qHq3sS9k3Cf5CjbBVOHTbT3FSCZ9s=;
+	s=default; t=1595860343;
+	bh=Yl21JdGd0aDIm44jfQ3dqKB33jyFSYMfu+vyS93JraU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hptMCtzdbDMl1ntZEeqD4rcT8kUo6Uh7KEDjhWTF6/IgwqnPAPP+M3rjZJ12Le/WJ
-	 Zs2Mf7I8rkbKYMg6518cuNloucpF/R73EVdFIiUa9uDcQhmpgT7iDztsN4y4DQmAT5
-	 V3voQLL1dNmAKz3LFlxh2Y8VoPYhLumBcJ4FNG0c=
+	b=SDoYjnFDPHv92SXCHNbjaBUjeLDJo9NBsvZHNo8q2xwIzNKubDt1ly3UvXidRZ8Qo
+	 dUu7DlyJNfoqWkhWibeAb1aVVrQTA454swj3aeEabgxmsUhrAQzgHSus45+xLvK2nH
+	 +GKbLZ/Ba5AmAx9bVLmC3vHQporigSFm2Wzwpx6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732846AbgG0OcS (ORCPT
+        id S1729673AbgG0OcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:32:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47058 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:32:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730406AbgG0OTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:19:13 -0400
+        id S1730149AbgG0OT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:19:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03AD020775;
-        Mon, 27 Jul 2020 14:19:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D7CE20775;
+        Mon, 27 Jul 2020 14:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859552;
-        bh=GAFcz6VMhCl4x1qHq3sS9k3Cf5CjbBVOHTbT3FSCZ9s=;
+        s=default; t=1595859566;
+        bh=Yl21JdGd0aDIm44jfQ3dqKB33jyFSYMfu+vyS93JraU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qifkfn3AjvJ1KHOMBhHG8nrWhBDVYb01Rqa2hc9BQ3QpsItHvjN0hbxJAbFEz64+r
-         gewkA4Yos29Bjb5th47buwpdqd+phDFBl2gieVwL5JSJCh1jrk7iNZldFRZcmeRH9t
-         9KiyOS9esKLlIaaBB8ipfzJe1hwEtNR734ulXUJY=
+        b=LRlkP8ezZVxrIJ45OgP5b+ezmW64lXxU8QFTkwgcrJOMN/SV6XIDBj4/4rHegOOYF
+         5AhBpX/TZwCJSmvXYkfm8uRGmPMcKdN7eEM+r6F65XiYYU9imPsdDnJf8uqlIF/KvI
+         0NfLjNiczfg+KaXLx6vuwwKexDPDQ9Z3ka5UQMf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        stable@vger.kernel.org, James Bottomley <jejb@linux.ibm.com>,
+        Tom Rix <trix@redhat.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 015/179] scsi: mpt3sas: Fix error returns in BRM_status_show
-Date:   Mon, 27 Jul 2020 16:03:10 +0200
-Message-Id: <20200727134933.416219782@linuxfoundation.org>
+Subject: [PATCH 5.7 007/179] scsi: scsi_transport_spi: Fix function pointer check
+Date:   Mon, 27 Jul 2020 16:03:02 +0200
+Message-Id: <20200727134933.028715007@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -62,78 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+From: Tom Rix <trix@redhat.com>
 
-[ Upstream commit 0fd181456aa0826057adbfb6c79c40f4083cfd75 ]
+[ Upstream commit 5aee52c44d9170591df65fafa1cd408acc1225ce ]
 
-BRM_status_show() has several error branches, but none of them record the
-error in the error return.
+clang static analysis flags several null function pointer problems.
 
-Also while at it remove the manual mutex_unlock() of the pci_access_mutex
-in case of an ongoing pci error recovery or host removal and jump to the
-cleanup label instead.
+drivers/scsi/scsi_transport_spi.c:374:1: warning: Called function pointer is null (null dereference) [core.CallAndMessage]
+spi_transport_max_attr(offset, "%d\n");
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Note: We can safely jump to out from here as io_unit_pg3 is initialized to
-NULL and if it hasn't been allocated, kfree() skips the NULL pointer.
+Reviewing the store_spi_store_max macro
 
-[mkp: compilation warning]
+	if (i->f->set_##field)
+		return -EINVAL;
 
-Link: https://lore.kernel.org/r/20200701131454.5255-1-johannes.thumshirn@wdc.com
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Acked-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+should be
+
+	if (!i->f->set_##field)
+		return -EINVAL;
+
+Link: https://lore.kernel.org/r/20200627133242.21618-1-trix@redhat.com
+Reviewed-by: James Bottomley <jejb@linux.ibm.com>
+Signed-off-by: Tom Rix <trix@redhat.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_ctl.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/scsi/scsi_transport_spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-index e94e72de2fc68..983e568ff2317 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-@@ -3149,15 +3149,14 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	}
- 	/* pci_access_mutex lock acquired by sysfs show path */
- 	mutex_lock(&ioc->pci_access_mutex);
--	if (ioc->pci_error_recovery || ioc->remove_host) {
--		mutex_unlock(&ioc->pci_access_mutex);
--		return 0;
--	}
-+	if (ioc->pci_error_recovery || ioc->remove_host)
-+		goto out;
- 
- 	/* allocate upto GPIOVal 36 entries */
- 	sz = offsetof(Mpi2IOUnitPage3_t, GPIOVal) + (sizeof(u16) * 36);
- 	io_unit_pg3 = kzalloc(sz, GFP_KERNEL);
- 	if (!io_unit_pg3) {
-+		rc = -ENOMEM;
- 		ioc_err(ioc, "%s: failed allocating memory for iounit_pg3: (%d) bytes\n",
- 			__func__, sz);
- 		goto out;
-@@ -3167,6 +3166,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	    0) {
- 		ioc_err(ioc, "%s: failed reading iounit_pg3\n",
- 			__func__);
-+		rc = -EINVAL;
- 		goto out;
- 	}
- 
-@@ -3174,12 +3174,14 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	if (ioc_status != MPI2_IOCSTATUS_SUCCESS) {
- 		ioc_err(ioc, "%s: iounit_pg3 failed with ioc_status(0x%04x)\n",
- 			__func__, ioc_status);
-+		rc = -EINVAL;
- 		goto out;
- 	}
- 
- 	if (io_unit_pg3->GPIOCount < 25) {
- 		ioc_err(ioc, "%s: iounit_pg3->GPIOCount less than 25 entries, detected (%d) entries\n",
- 			__func__, io_unit_pg3->GPIOCount);
-+		rc = -EINVAL;
- 		goto out;
- 	}
- 
+diff --git a/drivers/scsi/scsi_transport_spi.c b/drivers/scsi/scsi_transport_spi.c
+index f8661062ef954..f3d5b1bbd5aa7 100644
+--- a/drivers/scsi/scsi_transport_spi.c
++++ b/drivers/scsi/scsi_transport_spi.c
+@@ -339,7 +339,7 @@ store_spi_transport_##field(struct device *dev, 			\
+ 	struct spi_transport_attrs *tp					\
+ 		= (struct spi_transport_attrs *)&starget->starget_data;	\
+ 									\
+-	if (i->f->set_##field)						\
++	if (!i->f->set_##field)						\
+ 		return -EINVAL;						\
+ 	val = simple_strtoul(buf, NULL, 0);				\
+ 	if (val > tp->max_##field)					\
 -- 
 2.25.1
 
