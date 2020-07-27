@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBC1C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8132BC433F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD29E21883
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60AD120825
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859552;
-	bh=xcrpIaEkoPUsd8OFq8kMPPwfycoPJMTNfuLybQPtcDA=;
+	s=default; t=1595859559;
+	bh=ePzMsZXUTslGkSsNhaVZcjTY3pwqZrmfziQBGeiOnbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BLrwNyomn36IrP+QUwAfYJZoc/y4N+GR9NB4EQQIRySfSidoxKCEH1opDrpVqu64n
-	 MXzETV/gW5fc++Ntv8891OHOc1LSE1P7Y8MMmbTr4GU7Rh9jkdm8klBxtNSe79slAY
-	 clWuVqwFWktey+yoKO/7BiRhQ4BrohkPKi43BSWk=
+	b=GKPSv6JCpfNDc9Cj7TeP/bkEB6EtOWZUzyS8Z50ARIi0ysmaTvLmlZmIZ+/wfbyjD
+	 sZnMUF/IrLMBvMPDv6Sf8NqFsrNVxmNYwnowYXHcHxbAfGzPXRPAgBv9tW/ZFm6MRp
+	 YUAmtJ8U4dEwKjWORBEeTNj8+7HyDrHeyAMCo8jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731354AbgG0OTL (ORCPT
+        id S1731370AbgG0OTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:19:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46972 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:19:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730751AbgG0OTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:19:07 -0400
+        id S1730769AbgG0OTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:19:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A97420825;
-        Mon, 27 Jul 2020 14:19:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5577D2083E;
+        Mon, 27 Jul 2020 14:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859547;
-        bh=xcrpIaEkoPUsd8OFq8kMPPwfycoPJMTNfuLybQPtcDA=;
+        s=default; t=1595859554;
+        bh=ePzMsZXUTslGkSsNhaVZcjTY3pwqZrmfziQBGeiOnbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JETeXUVMP0MZU1zxFphAqqozXwU0UyZtQ4Z1uHsbGrAhRmfJyxqw+tM9GCqmcsO3M
-         lkAMFYfgdRNHKMHgppEsyRAWQZyr/CqL6UZdMML9ypliFByN7S6kU5xBcH5+4yU09d
-         +BZ26jKbFYbPWvparuHabbfdp/u7hZR8j7DhuiSs=
+        b=UhydlO4sndCCvLScZd4JVgQHr74Hf6MV2zcDGcH2gp8KEyLq0Wqry55KndBaZfQg/
+         zVkbyUZa5ozgpFgQQAo1XCQXj11rlUocIdHhbLnZHqhxj1tl7RXaq0CiMIKfUpnAHu
+         uURULHHYgZINZKwumtDc3qZWbzpy7goztn8LFt7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 013/179] net: sky2: initialize return of gm_phy_read
-Date:   Mon, 27 Jul 2020 16:03:08 +0200
-Message-Id: <20200727134933.318704149@linuxfoundation.org>
+Subject: [PATCH 5.7 002/179] gpio: arizona: handle pm_runtime_get_sync failure case
+Date:   Mon, 27 Jul 2020 16:02:57 +0200
+Message-Id: <20200727134932.788426020@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,48 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 28b18e4eb515af7c6661c3995c6e3c34412c2874 ]
+[ Upstream commit e6f390a834b56583e6fc0949822644ce92fbb107 ]
 
-clang static analysis flags this garbage return
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-drivers/net/ethernet/marvell/sky2.c:208:2: warning: Undefined or garbage value returned to caller [core.uninitialized.UndefReturn]
-        return v;
-        ^~~~~~~~
-
-static inline u16 gm_phy_read( ...
-{
-	u16 v;
-	__gm_phy_read(hw, port, reg, &v);
-	return v;
-}
-
-__gm_phy_read can return without setting v.
-
-So handle similar to skge.c's gm_phy_read, initialize v.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200605025207.65719-1-navid.emamdoost@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/sky2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-arizona.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
-index 241f007169797..fe54764caea9c 100644
---- a/drivers/net/ethernet/marvell/sky2.c
-+++ b/drivers/net/ethernet/marvell/sky2.c
-@@ -203,7 +203,7 @@ io_error:
- 
- static inline u16 gm_phy_read(struct sky2_hw *hw, unsigned port, u16 reg)
- {
--	u16 v;
-+	u16 v = 0;
- 	__gm_phy_read(hw, port, reg, &v);
- 	return v;
- }
+diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
+index 5640efe5e7504..7520a13b4c7ca 100644
+--- a/drivers/gpio/gpio-arizona.c
++++ b/drivers/gpio/gpio-arizona.c
+@@ -106,6 +106,7 @@ static int arizona_gpio_direction_out(struct gpio_chip *chip,
+ 		ret = pm_runtime_get_sync(chip->parent);
+ 		if (ret < 0) {
+ 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
++			pm_runtime_put(chip->parent);
+ 			return ret;
+ 		}
+ 	}
 -- 
 2.25.1
 
