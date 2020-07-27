@@ -2,105 +2,117 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB2CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7052CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 661982073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4350B2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oX9WXK5+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbgG0PcD (ORCPT
+        id S1730511AbgG0PeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:32:03 -0400
-Received: from mga11.intel.com ([192.55.52.93]:15774 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730297AbgG0PcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:32:01 -0400
-IronPort-SDR: tomI0JPQYUp/QQPRHN+mO/EodWUNzb4kHjRt0j8JmhCEeqNwMbYxX9anVyIEMZhTycrttQDIa/
- L3pmrit+tSFg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="148915978"
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="148915978"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 08:32:01 -0700
-IronPort-SDR: N9v2zia3/Nh5wPi/k4sgQ299PY/D0/PAYHd5js99/HLd3x2F3G9xVpxpuOil8Eb7h2XndIHwf7
- YrBmjrbjwadw==
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="464099696"
-Received: from pdewan-mobl1.amr.corp.intel.com (HELO [10.255.228.220]) ([10.255.228.220])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 08:32:00 -0700
-Subject: Re: [PATCH 3/6] ASoC: amd: SND_SOC_RT5682_I2C does not build rt5682
-To:     Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-Cc:     "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        Alexander.Deucher@amd.com, Akshu Agrawal <akshu.agrawal@amd.com>
-References: <20200727145840.25142-1-Vishnuvardhanrao.Ravulapati@amd.com>
- <20200727145840.25142-3-Vishnuvardhanrao.Ravulapati@amd.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <c467e2ee-727d-4bf5-8ceb-90c784245a43@linux.intel.com>
-Date:   Mon, 27 Jul 2020 10:31:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 27 Jul 2020 11:34:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727784AbgG0PeA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 11:34:00 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E999C061794;
+        Mon, 27 Jul 2020 08:34:00 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k71so9617485pje.0;
+        Mon, 27 Jul 2020 08:34:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pcY0A56aPSXRoinZe6gcqtnoZNboGx9+nJBDiq4Vbx4=;
+        b=oX9WXK5+2EvvTcwgfnjjqmWJEGAJFSDR+6Y+PALc3mZWl6t1xf36+ZokY1jfxLY7Qx
+         vTu998n7s3xDkI9n/LSZS0dMqffhKSJKb0hFh7pcle5RV5Std2H1RZ0r4v04vaJrnhzu
+         BRE3xUNHmeKVI2lsgqw+dSq9Rsmm3SHV+jCO3Kya+2LiTdlGvTzXMwtFZmNIgY420cJ3
+         e3W1GcEpIkCg0b79rAC+Ylq0CRIBh/T6VaY5/tg2M4JsO55k3cZKtH4euSXLnN6zoNOB
+         zG5Xhio5Ex4GeOLHwdwafmRKUSc4Ef25ch/lHKy5opAkEtNpwmCoowZSMZkkc/9Da2W5
+         cG2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pcY0A56aPSXRoinZe6gcqtnoZNboGx9+nJBDiq4Vbx4=;
+        b=jEz4G8DnIuFgy+X+sdCt3j7ThdhloA1yBGB/BNXvSXGsi4WA1xSxlK4J2qz870pXc2
+         jbw8XllfRDeTXpGLIxVt+jyJGQ2ou3B9q8Vx46dUuK8YBAWEKlIAltieK/WCXpeapIt5
+         BYMmq/3HSnQM04AlRsRcrPOD4u65D1icwmQPMs1rSkVdbftbQrNhyA0cvNvz21hcnZNm
+         PpWl/Af29FTbtmos0ddC1514Ld7n3wzbvWvistdqOwTMV6tIjVIH18MOtVr5Agwqd4Kt
+         UhSgYEh59Vzy/P/KcXpSg7JWgOXCufR5Ak1znH5ETgpwXXACbXC5PNxOwmbmgYfLYryF
+         Oqjw==
+X-Gm-Message-State: AOAM531HyZZUfuPuXn4slX2uC92CkJdXI51RkFTLP7HpaQtE9pT9TRaq
+        LY/cNyg7Ad0sKQSpLIsMS53cj/9+1PZHc0HNDtU=
+X-Google-Smtp-Source: ABdhPJwFOUmxIDqsOSd+NVchInvYpDQG+Iuwpt2fmGBMHos1KdESwfZEZIwNlqyS+wub10WN3LvGw7Njhl8UDVddk08=
+X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr17086062pjp.228.1595864040131;
+ Mon, 27 Jul 2020 08:34:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200727145840.25142-3-Vishnuvardhanrao.Ravulapati@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200727122242.32337-1-vadym.kochan@plvision.eu>
+ <20200727122242.32337-3-vadym.kochan@plvision.eu> <CAHp75VeWGUB8izyHptfsXXv4GbsDu6_4rr9EaRR9wooXywaP+g@mail.gmail.com>
+ <20200727141152.GM2216@nanopsycho>
+In-Reply-To: <20200727141152.GM2216@nanopsycho>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Jul 2020 18:33:45 +0300
+Message-ID: <CAHp75Vemcp1y3S09PVTQoyB10goZfhb1HYmeMxqiReQdQJ3JBw@mail.gmail.com>
+Subject: Re: [net-next v4 2/6] net: marvell: prestera: Add PCI interface support
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     Vadym Kochan <vadym.kochan@plvision.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 27, 2020 at 5:11 PM Jiri Pirko <jiri@resnulli.us> wrote:
+> Mon, Jul 27, 2020 at 03:29:17PM CEST, andy.shevchenko@gmail.com wrote:
+> >On Mon, Jul 27, 2020 at 3:23 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
 
+...
 
-On 7/27/20 9:58 AM, Ravulapati Vishnu vardhan rao wrote:
-> changing SND_SOC_RT5682_I2C to SND_SOC_RT5682 because,
-> This flag which was previously set as SND_SOC_RT5682
-> used to build rt5682 codec driver but by changing into
-> SND_SOC_RT5682_I2C is preventing to build rt5682 codec
-> driver and machine driver fails to probe.So Reverting the changes.
+> >> +err_prestera_dev_register:
+> >> +       free_irq(pci_irq_vector(pdev, 0), fw);
+> >> +err_request_irq:
+> >> +       pci_free_irq_vectors(pdev);
+> >> +err_irq_alloc:
+> >> +       destroy_workqueue(fw->wq);
+> >> +err_wq_alloc:
+> >> +       prestera_fw_uninit(fw);
+> >
+> >> +err_prestera_fw_init:
+> >> +err_pci_dev_alloc:
+> >> +err_dma_mask:
+> >
+> >All three are useless.
+>
+> This is okay. It is symmetrical with init. err_what_you_init. It is all
+> over the place.
 
-The split between I2C and SoundWire means you have to choose the I2C or 
-SDW mode. Selecting the common part looks very strange.
+We use multi-point return and these are inconsistent with the
+approach. They simple LOCs without value.
 
-see Intel machine drviers:
-
-Kconfig:	select SND_SOC_RT5682_I2C
-Kconfig:	select SND_SOC_RT5682_I2C
-Kconfig:	select SND_SOC_RT5682_I2C
-Kconfig:	select SND_SOC_RT5682_SDW
-
-> 
-> Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
-> ---
->   sound/soc/amd/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/amd/Kconfig b/sound/soc/amd/Kconfig
-> index e37cf72f2bab..77ffdb41bee5 100644
-> --- a/sound/soc/amd/Kconfig
-> +++ b/sound/soc/amd/Kconfig
-> @@ -29,7 +29,7 @@ config SND_SOC_AMD_ACP3x
->   
->   config SND_SOC_AMD_RV_RT5682_MACH
->   	tristate "AMD RV support for RT5682"
-> -	select SND_SOC_RT5682_I2C
-> +	select SND_SOC_RT5682
->   	select SND_SOC_MAX98357A
->   	select SND_SOC_CROS_EC_CODEC
->   	select I2C_CROS_EC_TUNNEL
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
