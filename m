@@ -2,133 +2,83 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3027620719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3152C21775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:39:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="DOX3CgbU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R2HhROG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgG0Kge (ORCPT
+        id S1727930AbgG0KjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:36:34 -0400
-Received: from mail-eopbgr20058.outbound.protection.outlook.com ([40.107.2.58]:39177
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726278AbgG0Kgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:36:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M86VAcjmDw8QAPI1vbwqb9z5Yz+VqvarDtrDyph+c0kKZXq0zrDZlU13WODUwYHwfZWsauMjoECR2U92t8uwIDCGEePMzkvuEmrd84SzoSAAhg45yre9j4ZDIIdiJ8SxmG2p5guG7+yGqfqkoi9G1RPqrzHX+OcTFMQI3MXPb9DHrQkLCLKK50XWn3MRdD8OvuyFn7prBzPVyvO8hY3VeoGLz+ipShZ2pwdiRedMXUQ6G/MiFz1SEUsGyX6LJdjatL2NoCGQbfrNOz0S6zR5mAxe2kUMqyQxiqzYoWs70wPnWCljbDaEl+PcwcRr68YE+C+u5L+1f3F+0t40ytkTrg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W/9j9OIn46sqVZubqOzQXVN6U2IwSvSDp/eaRMQqY44=;
- b=g2J9eomQsBiJzlgpLrQsRvUzMpQqk6kSUKZc9Ug182JrfTieEzzS1MgkwZXKsCEEQNkHHiIS8DniR3esldByN0w/37CvVHaMKlswO9of2y/x/8w7zcQ0ZJvRhvbbM8EBniinRLYrJAHKeHFWgqjPPGaIk34nlO0nVWEvMOiq5tIEi/AKek8ecsFf3TN3hzwKA9nBplVksKwwGBEQNjPa8h9ZWXZmCENeSR7k/iv49wKYShoXXRhtZq/QLREPKjImDRaLZmC9SlrtPXeVBtFlRhVszSA2Q+MIA78WxbLBg+aOwYQmS8qj294Xeoz6QR4cIxNlYN7q/3i5gMyBNd/bvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W/9j9OIn46sqVZubqOzQXVN6U2IwSvSDp/eaRMQqY44=;
- b=DOX3CgbUIBEM8IZtnrXd04xtgVd692DFbTkr8o+tE+PoI/CWXRUaNDdzZDmFmaIuOKyOU4Juz4srCdcuE2MGUy+YLo+0wBWik4chr+MaQetk5phV8Gc66zmmvyX2ED8HuRtTtPZMuRNSA0pDVDWNzqmNk35WFCXBgZ0pSXsCzag=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (2603:10a6:208:c0::32)
- by AM0PR05MB5746.eurprd05.prod.outlook.com (2603:10a6:208:111::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Mon, 27 Jul
- 2020 10:36:29 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::eccf:72b3:bacb:f09d]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::eccf:72b3:bacb:f09d%5]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
- 10:36:29 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Li Heng <liheng40@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
-        "dledford@redhat.com" <dledford@redhat.com>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] RDMA/core: fix return error value to negative
-Thread-Topic: [PATCH] RDMA/core: fix return error value to negative
-Thread-Index: AQHWYi8CMNZFniXLvUG1VkRM5rCJo6kbPgdQ
-Date:   Mon, 27 Jul 2020 10:36:29 +0000
-Message-ID: <AM0PR05MB4866C7A9773DD28AB8ED7708D1720@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <1595645787-20375-1-git-send-email-liheng40@huawei.com>
-In-Reply-To: <1595645787-20375-1-git-send-email-liheng40@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=none action=none header.from=mellanox.com;
-x-originating-ip: [106.51.108.81]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2a9fbb55-466d-476c-7eac-08d83218ec59
-x-ms-traffictypediagnostic: AM0PR05MB5746:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB574615A03458DD0AEDA0DF35D1720@AM0PR05MB5746.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:576;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: voh31uIVt3iXxpynFbNo3seL6HIfn2q7d+5gmmGZ7Xkrvxx2DLZtLDmwABV1APg4NsCgDGQaNRhJLXzGnQJyP8Brer9JMp+J70f5qzNiXem+z8smTs6RSDWR8kUNW1C5QwKILUnEwTeSrb2bMwvQeLwwY+CcupTsaTU0w5N2A5gFiXyRsaR+EW9ryqUukA8PEMtKSLP9MDapGu/wPn4RW+JQ92Pdc1YLYzMnTqdS71Cn4zyGu9c3pyilcDjEQ+EXkzGDdmPLYS+54BTbDsqbmaFEwVSin4404rWBM6/VnIUmCGZzuokrX6hRGiGDqsumHIee65WDBIwwQEz6fhCDMQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR05MB4866.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(396003)(366004)(39860400002)(346002)(55236004)(83380400001)(6506007)(7696005)(55016002)(86362001)(71200400001)(66476007)(33656002)(66446008)(8676002)(66556008)(64756008)(8936002)(66946007)(5660300002)(478600001)(26005)(54906003)(52536014)(4326008)(76116006)(4744005)(2906002)(186003)(316002)(110136005)(9686003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: V4Zd/8wvwq+0vNsu62FHWtof5VEI4g6g2PIRWLG01dzxSSh5dZBrg+79KutqdA0ZAaJuzyawcK5u3g0K12gDZ4adg4y1l2wV1DKeqwwY92CUd0BKuCC73Yg1PAy+nSDh174zWH3ANsdH5Ok8SfT634CzVZMAAn/pOrU9KbEbOf2ww2TpmDXHHV9heix2BEB0Sralq5uHcdCbRGejxZESSSXn81TpJfwcvF0NDn0cFUhqgLOBZPBSLxoNIhdbkQEVS3vDsGWVVvP0p1f674GRyMCaG+0wl/lYAoFQ1cBNdmdrrWikf7eheo7MX8pOEyB0SHztIkgead+R8jkp0D4ZWb2ufwYoJCnRjMSEEgnXkuhG6DqjYm6PYfuY2VaYKgroCVRT89pIED4N3Yby2k9xEMYLBZh34K/nlgsvpYt/L4nqJQpdLDF53ea501igWiabfcWW2xxEWgcP2eF9lIXtOWXocuPeWMQZY6lDWPsjTUZrJyfL5W+wckgF7Y8t6ApW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 27 Jul 2020 06:39:07 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59265 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726278AbgG0KjE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 06:39:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595846343;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hHFJs8v+rI15sw6J/OEqL9oG0+eYh7TwaCszZjvpuHQ=;
+        b=R2HhROG0DQXgV6EcTKFyE+2U0ogE+AnslLGBTejbSfdua/tinVWwkx/LEV1EQMzZ5UmRkM
+        I45ww8710s9+GFdbEdWcEJU7fUzFGV9P63OUFujX1vu/edd/qGyxzsSr65jYYLeU+Nd3ai
+        kI0T43yrOBL+Aq5SwZxmiFSpI+EnFtk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-Fyijr3LuN-mblrO0ABHLEg-1; Mon, 27 Jul 2020 06:38:59 -0400
+X-MC-Unique: Fyijr3LuN-mblrO0ABHLEg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A99979EC0;
+        Mon, 27 Jul 2020 10:38:58 +0000 (UTC)
+Received: from ovpn-114-41.ams2.redhat.com (ovpn-114-41.ams2.redhat.com [10.36.114.41])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4589D712D1;
+        Mon, 27 Jul 2020 10:38:56 +0000 (UTC)
+Message-ID: <f188e293df1271cb54c1c072aac6dbcfc232a811.camel@redhat.com>
+Subject: Re: [PATCH net] mptcp: fix joined subflows with unblocking sk
+From:   Paolo Abeni <pabeni@redhat.com>
+To:     Matthieu Baerts <matthieu.baerts@tessares.net>,
+        netdev@vger.kernel.org
+Cc:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, mptcp@lists.01.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 27 Jul 2020 12:38:55 +0200
+In-Reply-To: <20200727102433.3422117-1-matthieu.baerts@tessares.net>
+References: <20200727102433.3422117-1-matthieu.baerts@tessares.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR05MB4866.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a9fbb55-466d-476c-7eac-08d83218ec59
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jul 2020 10:36:29.7907
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DeGFq3Cn9s0EOp/BaK/7WvokySN17QvgbiTkiX6+AH8TphDe1hkRJp1WKNzP1fEs6THXAoz2fZPTkAGuC9X16Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5746
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: linux-rdma-owner@vger.kernel.org <linux-rdma-owner@vger.kernel.org>
-> On Behalf Of Li Heng
-> Sent: Saturday, July 25, 2020 8:26 AM
->=20
-> Fixes: 8d9ec9addd6c (IB/core: Add a sgid_attr pointer to struct rdma_ah_a=
-ttr)
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Li Heng <liheng40@huawei.com>
-> ---
->  drivers/infiniband/core/verbs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/infiniband/core/verbs.c b/drivers/infiniband/core/ve=
-rbs.c
-> index 53d6505c..f369f0a 100644
-> --- a/drivers/infiniband/core/verbs.c
-> +++ b/drivers/infiniband/core/verbs.c
-> @@ -1712,7 +1712,7 @@ static int _ib_modify_qp(struct ib_qp *qp, struct
-> ib_qp_attr *attr,
->  		if (!(rdma_protocol_ib(qp->device,
->  				       attr->alt_ah_attr.port_num) &&
->  		      rdma_protocol_ib(qp->device, port))) {
-> -			ret =3D EINVAL;
-> +			ret =3D -EINVAL;
->  			goto out;
->  		}
->  	}
-> --
-> 2.7.4
+On Mon, 2020-07-27 at 12:24 +0200, Matthieu Baerts wrote:
+> Unblocking sockets used for outgoing connections were not containing
+> inet info about the initial connection due to a typo there: the value of
+> "err" variable is negative in the kernelspace.
+> 
+> This fixes the creation of additional subflows where the remote port has
+> to be reused if the other host didn't announce another one. This also
+> fixes inet_diag showing blank info about MPTCP sockets from unblocking
+> sockets doing a connect().
+> 
+> Fixes: 41be81a8d3d0 ("mptcp: fix unblocking connect()")
+> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
 
-With below corrected fixes tag,
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 
-Fixes: 7a5c938b9ed0 ("IB/core: Check for rdma_protocol_ib only after valida=
-ting port_num")
-Reviewed-by: Parav Pandit <parav@mellanox.com>
