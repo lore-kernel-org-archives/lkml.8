@@ -2,94 +2,87 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6126C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECA3C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95DAC2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:56:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858205;
-	bh=cBvIlk8E7YyVn2XdywDqzcNs5DbT2ue8zeBexCna5m4=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=pk0BLY6Y0ezlnklSL3PsC3TYZnUzyl35e8ZuA74IV9cTn+RMeFSFerjNz83fFm2dP
-	 h8l87VHbFdCvpP9gBFarIML5Zv+SAUUVjJ+W9i16gSCj6PK1HESfn/HKk95K6PM1uC
-	 hA9kZvsbitx+si+ptHjJh4AfZyY2tzBm9o+t8Xa4=
+	by mail.kernel.org (Postfix) with ESMTP id E00AE2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:56:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbgG0N4o (ORCPT
+        id S1728794AbgG0N45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:56:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbgG0N4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:56:44 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3544C2070A;
-        Mon, 27 Jul 2020 13:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858203;
-        bh=cBvIlk8E7YyVn2XdywDqzcNs5DbT2ue8zeBexCna5m4=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Y+bJfa4adDdnpO8PDjy2Ft7KiIPYz4+ozECo+qj/uza0GXPzxqwIb/3xciGRxp4zx
-         p+9j8yuQHkzD1fVfLLtRFp+MnIi3axDHCmQwgRpDkLm7ac3wGCbPD28ZjoXAX+Rugh
-         bgzJjnAELOI/fQ2jXRbgtV3QPnPomJXCKi0HDsf4=
-Date:   Mon, 27 Jul 2020 14:56:26 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-In-Reply-To: <20200724195600.11798-1-akshu.agrawal@amd.com>
-References: <20200724195600.11798-1-akshu.agrawal@amd.com>
-Subject: Re: [PATCH] ASoC: AMD: Restore PME_EN state at Power On
-Message-Id: <159585818664.22279.12791067726810170753.b4-ty@kernel.org>
+        Mon, 27 Jul 2020 09:56:57 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:29616 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726817AbgG0N44 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 09:56:56 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RDpqD3009690;
+        Mon, 27 Jul 2020 09:56:55 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32ghn5ej4h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 09:56:55 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 06RDurj9008185
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 27 Jul 2020 09:56:54 -0400
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 27 Jul
+ 2020 06:56:52 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 27 Jul 2020 06:56:52 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06RDunPH001316;
+        Mon, 27 Jul 2020 09:56:50 -0400
+From:   Darius Berghe <darius.berghe@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <jic23@kernel.org>, <robh@kernel.org>
+Subject: iio:adc:ltc2371: add support for ltc2361/ltc2363
+Date:   Mon, 27 Jul 2020 16:58:31 +0300
+Message-ID: <20200727135834.84093-1-darius.berghe@analog.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_08:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1011 lowpriorityscore=0 bulkscore=0 mlxscore=0 mlxlogscore=749
+ adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Jul 2020 01:25:52 +0530, Akshu Agrawal wrote:
-> PME_EN state needs to restored to the value set by fmw.
-> For the devices which are not using I2S wake event which gets
-> enabled by PME_EN bit, keeping PME_EN enabled burns considerable amount
-> of power as it blocks low power state.
-> For the devices using I2S wake event, PME_EN gets enabled in fmw and the
-> state should be maintained after ACP Power On.
+Changelog v2->v3:
+No changes, adding dt maillist to CC.
 
-Applied to
+Changelog v1->v2:
+- document power supply in yaml
+- reorder enums in alphabetical order
+- add missing include
+- drop the of_match_ptr protection
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Darius Berghe (3):
+  ltc2471: add of_match_table for existing devices
+  ltc2471: ltc2461/ltc2463 compatible strings
+  ltc2471 driver yaml
 
-Thanks!
+ .../bindings/iio/adc/adi,ltc2471.yaml         | 49 +++++++++++++++++++
+ drivers/iio/adc/ltc2471.c                     | 25 ++++++++--
+ 2 files changed, 70 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
 
-[1/1] ASoC: AMD: Restore PME_EN state at Power On
-      commit: 1255296cf0233780b7b9af90f374983fbcdef7bb
+-- 
+2.27.0
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
