@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BF5C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE075C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10323208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98CA72083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860411;
-	bh=Ihkx5dTBMs9BcYuToHaI9Iudges7F1UDZ1GlfxFZTU4=;
+	s=default; t=1595860413;
+	bh=JGHlMZQJ1xpEdottcTaPnLzS+nCY083XoLYz11gR/Lw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rEJMLNH4ZhHaVNUyVcJ5ZYcIFp6HjfaoV9oMBpRZdGV6sw+GPJlMCHGQgSYzdi86O
-	 TpvrGqMte60XowiURU/2yUKHt0MKiJpn7DH9MtlxMkkC54QNoB6pUXaRscfXllN5B9
-	 l1DE25+4MtzD3zi+wJrEdCln2n2z7nxy1dk5FpXU=
+	b=ECm+Jov419rT2IHyx24WqAbs2qgPKvpmTGo62KVol05I9DRRc6DXJMv75+t7ZJwtM
+	 HF1SQZqODiO0Msd2ETvwTGB7UJw/uZL8zPh97f0pCVYKVZ07PLRaBpUzUHjs0wDoji
+	 YXbv/fxp7mpuC7TxEDTPK9W09+ieJ+9bkd7e45jE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731070AbgG0Oda (ORCPT
+        id S1729480AbgG0ORh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:33:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45016 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:17:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731090AbgG0ORj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:17:39 -0400
+        id S1731043AbgG0ORZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:17:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 326FB2070A;
-        Mon, 27 Jul 2020 14:17:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 378CA208E4;
+        Mon, 27 Jul 2020 14:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859458;
-        bh=Ihkx5dTBMs9BcYuToHaI9Iudges7F1UDZ1GlfxFZTU4=;
+        s=default; t=1595859444;
+        bh=JGHlMZQJ1xpEdottcTaPnLzS+nCY083XoLYz11gR/Lw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1Qo6UP8/Thjec4JcUhqYsqhIDIhZfFmUljGdLJ+ktMdsvHbcV6oNo1qD23Hk28SI
-         UdFZCbF+hJAZcJ48fkS9npwCIelxh83/LzPjyBxzvMMR0voiMpL14zWHzgzwOywtZ7
-         3tIPNrXvyzcjNUFkm8dksfq0bup/J+PIlh75PnLU=
+        b=vmSS2aW9bB0Sf8K0KCS30OzZl7GoimfulFq+UtjGtg+DkQrDZuceqD0nEf2LgiOSj
+         5JU+qmnxvhoakIcMkI7XVeOrtWvdUHbWMi/XOUxlxHxxIomEqvv+e4j66MK4jRpZVF
+         04nOzltpaetqnk5YfU9Eu2tqeNLrqXZknwLu0ZUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Winkler <danielwinkler@google.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Claire Chang <tientzu@chromium.org>
-Subject: [PATCH 5.4 117/138] serial: 8250_mtk: Fix high-speed baud rates clamping
-Date:   Mon, 27 Jul 2020 16:05:12 +0200
-Message-Id: <20200727134931.299698224@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 5.4 111/138] staging: comedi: addi_apci_1032: check INSN_CONFIG_DIGITAL_TRIG shift
+Date:   Mon, 27 Jul 2020 16:05:06 +0200
+Message-Id: <20200727134931.014045740@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,94 +58,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 551e553f0d4ab623e2a6f424ab5834f9c7b5229c upstream.
+commit 0bd0db42a030b75c20028c7ba6e327b9cb554116 upstream.
 
-Commit 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250
-port") fixed limits of a baud rate setting for a generic 8250 port.
-In other words since that commit the baud rate has been permitted to be
-within [uartclk / 16 / UART_DIV_MAX; uartclk / 16], which is absolutely
-normal for a standard 8250 UART port. But there are custom 8250 ports,
-which provide extended baud rate limits. In particular the Mediatek 8250
-port can work with baud rates up to "uartclk" speed.
+The `INSN_CONFIG` comedi instruction with sub-instruction code
+`INSN_CONFIG_DIGITAL_TRIG` includes a base channel in `data[3]`. This is
+used as a right shift amount for other bitmask values without being
+checked.  Shift amounts greater than or equal to 32 will result in
+undefined behavior.  Add code to deal with this.
 
-Normally that and any other peculiarity is supposed to be handled in a
-custom set_termios() callback implemented in the vendor-specific
-8250-port glue-driver. Currently that is how it's done for the most of
-the vendor-specific 8250 ports, but for some reason for Mediatek a
-solution has been spread out to both the glue-driver and to the generic
-8250-port code. Due to that a bug has been introduced, which permitted the
-extended baud rate limit for all even for standard 8250-ports. The bug
-has been fixed by the commit 7b668c064ec3 ("serial: 8250: Fix max baud
-limit in generic 8250 port") by narrowing the baud rates limit back down to
-the normal bounds. Unfortunately by doing so we also broke the
-Mediatek-specific extended bauds feature.
-
-A fix of the problem described above is twofold. First since we can't get
-back the extended baud rate limits feature to the generic set_termios()
-function and that method supports only a standard baud rates range, the
-requested baud rate must be locally stored before calling it and then
-restored back to the new termios structure after the generic set_termios()
-finished its magic business. By doing so we still use the
-serial8250_do_set_termios() method to set the LCR/MCR/FCR/etc. registers,
-while the extended baud rate setting procedure will be performed later in
-the custom Mediatek-specific set_termios() callback. Second since a true
-baud rate is now fully calculated in the custom set_termios() method we
-need to locally update the port timeout by calling the
-uart_update_timeout() function. After the fixes described above are
-implemented in the 8250_mtk.c driver, the Mediatek 8250-port should
-get back to normally working with extended baud rates.
-
-Link: https://lore.kernel.org/linux-serial/20200701211337.3027448-1-danielwinkler@google.com
-
-Fixes: 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250 port")
-Reported-by: Daniel Winkler <danielwinkler@google.com>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: stable <stable@vger.kernel.org>
-Tested-by: Claire Chang <tientzu@chromium.org>
-Link: https://lore.kernel.org/r/20200714124113.20918-1-Sergey.Semin@baikalelectronics.ru
+Fixes: 33cdce6293dcc ("staging: comedi: addi_apci_1032: conform to new INSN_CONFIG_DIGITAL_TRIG")
+Cc: <stable@vger.kernel.org> #3.8+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20200717145257.112660-3-abbotti@mev.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_mtk.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/staging/comedi/drivers/addi_apci_1032.c |   20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
---- a/drivers/tty/serial/8250/8250_mtk.c
-+++ b/drivers/tty/serial/8250/8250_mtk.c
-@@ -305,8 +305,21 @@ mtk8250_set_termios(struct uart_port *po
- 	}
- #endif
+--- a/drivers/staging/comedi/drivers/addi_apci_1032.c
++++ b/drivers/staging/comedi/drivers/addi_apci_1032.c
+@@ -106,14 +106,22 @@ static int apci1032_cos_insn_config(stru
+ 				    unsigned int *data)
+ {
+ 	struct apci1032_private *devpriv = dev->private;
+-	unsigned int shift, oldmask;
++	unsigned int shift, oldmask, himask, lomask;
  
-+	/*
-+	 * Store the requested baud rate before calling the generic 8250
-+	 * set_termios method. Standard 8250 port expects bauds to be
-+	 * no higher than (uartclk / 16) so the baud will be clamped if it
-+	 * gets out of that bound. Mediatek 8250 port supports speed
-+	 * higher than that, therefore we'll get original baud rate back
-+	 * after calling the generic set_termios method and recalculate
-+	 * the speed later in this method.
-+	 */
-+	baud = tty_termios_baud_rate(termios);
-+
- 	serial8250_do_set_termios(port, termios, old);
- 
-+	tty_termios_encode_baud_rate(termios, baud, baud);
-+
- 	/*
- 	 * Mediatek UARTs use an extra highspeed register (MTK_UART_HIGHS)
- 	 *
-@@ -338,6 +351,11 @@ mtk8250_set_termios(struct uart_port *po
- 	 */
- 	spin_lock_irqsave(&port->lock, flags);
- 
-+	/*
-+	 * Update the per-port timeout.
-+	 */
-+	uart_update_timeout(port, termios->c_cflag, baud);
-+
- 	/* set DLAB we have cval saved in up->lcr from the call to the core */
- 	serial_port_out(port, UART_LCR, up->lcr | UART_LCR_DLAB);
- 	serial_dl_write(up, quot);
+ 	switch (data[0]) {
+ 	case INSN_CONFIG_DIGITAL_TRIG:
+ 		if (data[1] != 0)
+ 			return -EINVAL;
+ 		shift = data[3];
+-		oldmask = (1U << shift) - 1;
++		if (shift < 32) {
++			oldmask = (1U << shift) - 1;
++			himask = data[4] << shift;
++			lomask = data[5] << shift;
++		} else {
++			oldmask = 0xffffffffu;
++			himask = 0;
++			lomask = 0;
++		}
+ 		switch (data[2]) {
+ 		case COMEDI_DIGITAL_TRIG_DISABLE:
+ 			devpriv->ctrl = 0;
+@@ -136,8 +144,8 @@ static int apci1032_cos_insn_config(stru
+ 				devpriv->mode2 &= oldmask;
+ 			}
+ 			/* configure specified channels */
+-			devpriv->mode1 |= data[4] << shift;
+-			devpriv->mode2 |= data[5] << shift;
++			devpriv->mode1 |= himask;
++			devpriv->mode2 |= lomask;
+ 			break;
+ 		case COMEDI_DIGITAL_TRIG_ENABLE_LEVELS:
+ 			if (devpriv->ctrl != (APCI1032_CTRL_INT_ENA |
+@@ -154,8 +162,8 @@ static int apci1032_cos_insn_config(stru
+ 				devpriv->mode2 &= oldmask;
+ 			}
+ 			/* configure specified channels */
+-			devpriv->mode1 |= data[4] << shift;
+-			devpriv->mode2 |= data[5] << shift;
++			devpriv->mode1 |= himask;
++			devpriv->mode2 |= lomask;
+ 			break;
+ 		default:
+ 			return -EINVAL;
 
 
