@@ -2,98 +2,130 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0058BC433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD29EC43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D039C207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860460;
-	bh=QlJkFwDJkzmfzhz04rreCmj24sWmHkSIJ4GeGx6smRU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uiix7T2dSGkUsjDH0rRnT0iyg4T+wbDgXSXKcEyIgHjJM+J5gVEtPrKfHlbpgdBSE
-	 /8bOLc8ry+iw7AojwmxilDhkYomsbhlcOWdNSrAdIYhLMXzHffAxmkgMwiRY3PVbwB
-	 6Kgde1zPCHg1TQ54qHT9zycVg5mKN33sc6fn+hx0=
+	by mail.kernel.org (Postfix) with ESMTP id AA715207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hn668tMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731304AbgG0OeT (ORCPT
+        id S1730821AbgG0OQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729980AbgG0OQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:16:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEC9720825;
-        Mon, 27 Jul 2020 14:16:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859391;
-        bh=QlJkFwDJkzmfzhz04rreCmj24sWmHkSIJ4GeGx6smRU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=djrcseHsQWl1Vww7Zd+0Fbc8Wjp9efaB8Havfdz6Vzx18hW350n2Ua8ghI72GRsfb
-         wp3KAyHiOipMDH9pMJ2LXgRBfAJ2j/y10xprDdxm9QPp9QgKHWmW23QoiSxvyGp2o3
-         sGBS2bq/m2ln8mAWpo4JJCljsUoZCgqGaASK8Wr4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 089/138] usb: cdns3: trace: fix some endian issues
-Date:   Mon, 27 Jul 2020 16:04:44 +0200
-Message-Id: <20200727134929.815775010@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
-References: <20200727134925.228313570@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 27 Jul 2020 10:16:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730808AbgG0OQJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:16:09 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50D0EC0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:16:09 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id x5so13756876wmi.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=OfeIQ7fuyXMNX3+/WRYrDZ4OiAswU9YSpAGq0MJR3Qk=;
+        b=Hn668tMsYylryOuBEj9y8mjBaum1BR6RWwK0ku3JWX59ZQxBLDwOmMgBAWCVcE5Z5b
+         2c2kjrPGs/8IJv9fOZU6LTFL4823pdOCMHScobKcGB26/UvcwGxObmVQ+nfSYok3UVXV
+         y8jZntEGdDqBkfACeuCFPpviPI1bF4y/WyHmV64TdjpUWYcx/vlwfaEo93Q7N19ALPuf
+         dgxdM4C4v0gg99rHSeRt7zP0s+HePYSo+MBAgAcGaFshIYFkq6VtQN5LKuUuY+F7rHOv
+         KZsvs2TP7WvjrxFzkPBs4rtVc8MNiIke1P073VcVxPYEWd1vNSH6mYgIlLs/YdC5xo03
+         9vhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=OfeIQ7fuyXMNX3+/WRYrDZ4OiAswU9YSpAGq0MJR3Qk=;
+        b=k8EvcQXOQOBUXa8Gf0cyL51Q+BaKsY0WIRhkshjV3yHp4t/BI8DO871pfIM83hVhJN
+         hILr6xUDRM0dGS29lL4YyTKWhFOV4TkpAadDZOKF2NiHfkLmlxSBdBJC6XDWFpKknMZC
+         6z2X7Do929y4vAL5uEqS4nCZWA8NeQa69IX4xDqhUzsO25QTKLJvCs5cfdq4wpu6d2bs
+         gVzwFygXajcDPuNYencrI1ODrFGL5ByT7Qi5xTrTsbnsmsg/4nUrZGR6kteUxtJBERKB
+         X5Xknn+9mzzTefWy31c3AaJ8NFlIFN9BJzEJCEM1GmAOjCqU22J/mUqw8K5EpF1xxVgv
+         0lKA==
+X-Gm-Message-State: AOAM532Yd59S4cEYzMRnVGwdJFmdlsdH7IfXd8icF5dYoGfA5fZCWHaL
+        NSUlrFz6krLpg+zMMesEKjFflw==
+X-Google-Smtp-Source: ABdhPJwXT7IGhG6i2ax6YMsMfOUVYdF5VVpy+kpRsWP14/nCVLIlyPmNmTdhme4qI9qNmQgKjAM1MA==
+X-Received: by 2002:a1c:a7d1:: with SMTP id q200mr2832327wme.131.1595859368016;
+        Mon, 27 Jul 2020 07:16:08 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id 32sm12369292wrn.86.2020.07.27.07.16.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 07:16:07 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 15:16:05 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     robh+dt@kernel.org, tony@atomide.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH] mfd: Replace HTTP links with HTTPS ones
+Message-ID: <20200727141605.GW1850026@dell>
+References: <20200722184711.GI3533@dell>
+ <20200722192454.69591-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200722192454.69591-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+On Wed, 22 Jul 2020, Alexander A. Klimov wrote:
 
-[ Upstream commit 65b7cf48c211ece5e2560a334eb9608e48775a8f ]
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Documentation/devicetree/bindings/mfd/twl-family.txt | 2 +-
+>  drivers/mfd/hi6421-pmic-core.c                       | 2 +-
+>  drivers/mfd/lp873x.c                                 | 2 +-
+>  drivers/mfd/lp87565.c                                | 2 +-
+>  drivers/mfd/omap-usb-host.c                          | 2 +-
+>  drivers/mfd/omap-usb-tll.c                           | 2 +-
+>  drivers/mfd/smsc-ece1099.c                           | 2 +-
+>  drivers/mfd/ti_am335x_tscadc.c                       | 2 +-
+>  drivers/mfd/tps65086.c                               | 2 +-
+>  drivers/mfd/tps65217.c                               | 2 +-
+>  drivers/mfd/tps65218.c                               | 2 +-
+>  drivers/mfd/tps65912-core.c                          | 2 +-
+>  drivers/mfd/tps65912-i2c.c                           | 2 +-
+>  drivers/mfd/tps65912-spi.c                           | 2 +-
+>  include/linux/mfd/hi6421-pmic.h                      | 2 +-
+>  include/linux/mfd/lp873x.h                           | 2 +-
+>  include/linux/mfd/lp87565.h                          | 2 +-
+>  include/linux/mfd/ti_am335x_tscadc.h                 | 2 +-
+>  include/linux/mfd/tps65086.h                         | 2 +-
+>  include/linux/mfd/tps65217.h                         | 2 +-
+>  include/linux/mfd/tps65218.h                         | 2 +-
+>  include/linux/mfd/tps65912.h                         | 2 +-
+>  22 files changed, 22 insertions(+), 22 deletions(-)
 
-It is found by sparse.
+Applied, thanks.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/cdns3/trace.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/usb/cdns3/trace.h b/drivers/usb/cdns3/trace.h
-index 7cc8bebaa07da..f8482456116e8 100644
---- a/drivers/usb/cdns3/trace.h
-+++ b/drivers/usb/cdns3/trace.h
-@@ -333,9 +333,9 @@ DECLARE_EVENT_CLASS(cdns3_log_trb,
- 	TP_fast_assign(
- 		__assign_str(name, priv_ep->name);
- 		__entry->trb = trb;
--		__entry->buffer = trb->buffer;
--		__entry->length = trb->length;
--		__entry->control = trb->control;
-+		__entry->buffer = le32_to_cpu(trb->buffer);
-+		__entry->length = le32_to_cpu(trb->length);
-+		__entry->control = le32_to_cpu(trb->control);
- 		__entry->type = usb_endpoint_type(priv_ep->endpoint.desc);
- 	),
- 	TP_printk("%s: trb %p, dma buf: 0x%08x, size: %ld, burst: %d ctrl: 0x%08x (%s%s%s%s%s%s%s)",
 -- 
-2.25.1
-
-
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
