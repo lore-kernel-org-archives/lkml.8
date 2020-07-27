@@ -2,137 +2,131 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDA5C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E674420809
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E30D2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:30:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Flsp2quf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgG0V3g (ORCPT
+        id S1726846AbgG0Vaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 17:29:36 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:51224 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbgG0V3g (ORCPT
+        Mon, 27 Jul 2020 17:30:39 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23918 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726183AbgG0Vaj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:29:36 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id F3A221C0BE9; Mon, 27 Jul 2020 23:29:33 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 23:29:33 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Derek Basehore <dbasehore@chromium.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 54/86] Input: elan_i2c - only increment wakeup count
- on touch
-Message-ID: <20200727212933.pkt6kgescdz7akht@duo.ucw.cz>
-References: <20200727134914.312934924@linuxfoundation.org>
- <20200727134917.124943291@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="sjrw5opmsnu3k25n"
-Content-Disposition: inline
-In-Reply-To: <20200727134917.124943291@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
+        Mon, 27 Jul 2020 17:30:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595885438;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=xRQavoTxy6WU9VHdh3GgKlMshVx0eklnqw7rYScM/Kk=;
+        b=Flsp2qufDNZifSDdKbYse81JUJj3yik7u9hOeQvq2khpcpOuBX6y7FFogN7nM1qvt9ud5k
+        tD+wHb7Q6E4zs3503nkCjrFnZgAU9OJNujV41NS/cICPYt83OCMgJsy+gnaTnp7STssDBp
+        nO7oNjWLH059ndByNnzKmYCINyVPTHM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-TgKhn0k2MF-dUgH99Yy8Qw-1; Mon, 27 Jul 2020 17:30:34 -0400
+X-MC-Unique: TgKhn0k2MF-dUgH99Yy8Qw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B71B1932490;
+        Mon, 27 Jul 2020 21:30:33 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CFBAC10013C4;
+        Mon, 27 Jul 2020 21:30:25 +0000 (UTC)
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>
+Cc:     Paul Moore <paul@paul-moore.com>, eparis@parisplace.org,
+        Richard Guy Briggs <rgb@redhat.com>
+Subject: [PATCH V3fix ghak120] audit: initialize context values in case of mandatory events
+Date:   Mon, 27 Jul 2020 17:29:59 -0400
+Message-Id: <e3e9c9da9115fd233c5a7895dbb4a698a365b1b0.1595884394.git.rgb@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Issue ghak120 enabled syscall records to accompany required records when
+no rules are present to trigger the storage of syscall context.  A
+reported issue showed that the cwd was not always initialized.  That
+issue was already resolved, but a review of all other records that could
+be triggered at the time of a syscall record revealed other potential
+values that could be missing or misleading.  Initialize them.
 
---sjrw5opmsnu3k25n
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The fds array is reset to -1 after the first syscall to indicate it
+isn't valid any more, but was never set to -1 when the context was
+allocated to indicate it wasn't yet valid.
 
-Hi!
+The audit_inode* functions can be called without going through
+getname_flags() or getname_kernel() that sets audit_names and cwd, so
+set the cwd if it has not already been done so due to audit_names being
+valid.
 
-> From: Derek Basehore <dbasehore@chromium.org>
->=20
-> [ Upstream commit 966334dfc472bdfa67bed864842943b19755d192 ]
->=20
-> This moves the wakeup increment for elan devices to the touch report.
-> This prevents the drivers from incorrectly reporting a wakeup when the
-> resume callback resets then device, which causes an interrupt to
-> occur.
+The LSM dump_common_audit_data() LSM_AUDIT_DATA_NET:AF_UNIX case was
+missed with the ghak96 patch, so add that case here.
 
-Contrary to the changelog, this does not move anything... unlike
-mainline, it simply adds two pm_wakeup_events.
+Please see issue https://github.com/linux-audit/audit-kernel/issues/120
+Please see issue https://github.com/linux-audit/audit-kernel/issues/96
+Passes audit-testsuite.
 
-It may still be correct, but maybe someone wants to double-check?
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+---
+ kernel/auditsc.c     | 3 +++
+ security/lsm_audit.c | 1 +
+ 2 files changed, 4 insertions(+)
 
-Best regards,
-								Pavel
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index 6884b50069d1..2f97618e6a34 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -929,6 +929,7 @@ static inline struct audit_context *audit_alloc_context(enum audit_state state)
+ 	context->prio = state == AUDIT_RECORD_CONTEXT ? ~0ULL : 0;
+ 	INIT_LIST_HEAD(&context->killed_trees);
+ 	INIT_LIST_HEAD(&context->names_list);
++	context->fds[0] = -1;
+ 	return context;
+ }
+ 
+@@ -2076,6 +2077,7 @@ void __audit_inode(struct filename *name, const struct dentry *dentry,
+ 	}
+ 	handle_path(dentry);
+ 	audit_copy_inode(n, dentry, inode, flags & AUDIT_INODE_NOEVAL);
++	_audit_getcwd(context);
+ }
+ 
+ void __audit_file(const struct file *file)
+@@ -2194,6 +2196,7 @@ void __audit_inode_child(struct inode *parent,
+ 		audit_copy_inode(found_child, dentry, inode, 0);
+ 	else
+ 		found_child->ino = AUDIT_INO_UNSET;
++	_audit_getcwd(context);
+ }
+ EXPORT_SYMBOL_GPL(__audit_inode_child);
+ 
+diff --git a/security/lsm_audit.c b/security/lsm_audit.c
+index 53d0d183db8f..e93077612246 100644
+--- a/security/lsm_audit.c
++++ b/security/lsm_audit.c
+@@ -369,6 +369,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
+ 					audit_log_untrustedstring(ab, p);
+ 				else
+ 					audit_log_n_hex(ab, p, len);
++				audit_getcwd();
+ 				break;
+ 			}
+ 		}
+-- 
+1.8.3.1
 
-> diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/el=
-an_i2c_core.c
-> index ae012639ae1d5..82afaca2e1a67 100644
-> --- a/drivers/input/mouse/elan_i2c_core.c
-> +++ b/drivers/input/mouse/elan_i2c_core.c
-> @@ -917,6 +917,8 @@ static void elan_report_absolute(struct elan_tp_data =
-*data, u8 *packet)
->  	u8 hover_info =3D packet[ETP_HOVER_INFO_OFFSET];
->  	bool contact_valid, hover_event;
-> =20
-> +	pm_wakeup_event(&data->client->dev, 0);
-> +
->  	hover_event =3D hover_info & 0x40;
->  	for (i =3D 0; i < ETP_MAX_FINGERS; i++) {
->  		contact_valid =3D tp_info & (1U << (3 + i));
-> @@ -939,6 +941,8 @@ static void elan_report_trackpoint(struct elan_tp_dat=
-a *data, u8 *report)
->  	u8 *packet =3D &report[ETP_REPORT_ID_OFFSET + 1];
->  	int x, y;
-> =20
-> +	pm_wakeup_event(&data->client->dev, 0);
-> +
->  	if (!data->tp_input) {
->  		dev_warn_once(&data->client->dev,
->  			      "received a trackpoint report while no trackpoint device has be=
-en created. Please report upstream.\n");
-> @@ -963,7 +967,6 @@ static void elan_report_trackpoint(struct elan_tp_dat=
-a *data, u8 *report)
->  static irqreturn_t elan_isr(int irq, void *dev_id)
->  {
->  	struct elan_tp_data *data =3D dev_id;
-> -	struct device *dev =3D &data->client->dev;
->  	int error;
->  	u8 report[ETP_MAX_REPORT_LEN];
-> =20
-> @@ -989,7 +992,7 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
->  		elan_report_trackpoint(data, report);
->  		break;
->  	default:
-> -		dev_err(dev, "invalid report id data (%x)\n",
-> +		dev_err(&data->client->dev, "invalid report id data (%x)\n",
->  			report[ETP_REPORT_ID_OFFSET]);
->  	}
-> =20
-> --=20
-> 2.25.1
->=20
->=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---sjrw5opmsnu3k25n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXx9HPQAKCRAw5/Bqldv6
-8iuzAJ0XldBBMXFv0WWs2RcAMn9zTd6MGACeMBDRVpMq/vYK0oviAcNO18vzlxM=
-=sxsT
------END PGP SIGNATURE-----
-
---sjrw5opmsnu3k25n--
