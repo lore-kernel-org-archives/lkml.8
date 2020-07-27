@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E948FC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F07CC433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8E372083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62D420838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858867;
-	bh=957oKhyzfJEsn2BNVCIWxTyGK7q0im7wFaa03N9dAic=;
+	s=default; t=1595858872;
+	bh=HE1tTQZPf/uXLBnCJG+o1pp+WMQMH2wEqncDBLCC6p8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g75dU1BFZ/vGkOU208nb5i/TLnaktsr+dkMktRxti+qAbKozKEPXYLjRknfHlptvF
-	 Re1tqsvjIgogR1pKBHYtCP1ycJ9lJacHFI7E7m6ar3LX3F7209a302mi5gXLwUOMt+
-	 ZwiOxhwkOZOTvI75jItLbjjXWvycIritWz2/3rI4=
+	b=pa5+yo1b9ZuwUDgcS+XgrZpGyEzzQC2AB3JoR6kJRX3jv77mZiCwEkrMJIzQJdnO2
+	 JB4Q/5fD3BcD0xzHr3URIX3bFc7FN/9besmq79K5VAgwqwtaBda2YFqocJmODjNKLl
+	 nHAPq+B57ZGmbxv4hdmx4S1+Ht/0CT/ZKS+ISEyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbgG0OHq (ORCPT
+        id S1729312AbgG0OHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:07:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56598 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:07:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729281AbgG0OHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:07:40 -0400
+        id S1729298AbgG0OHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:07:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2DD42078E;
-        Mon, 27 Jul 2020 14:07:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83CDB2078E;
+        Mon, 27 Jul 2020 14:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858860;
-        bh=957oKhyzfJEsn2BNVCIWxTyGK7q0im7wFaa03N9dAic=;
+        s=default; t=1595858865;
+        bh=HE1tTQZPf/uXLBnCJG+o1pp+WMQMH2wEqncDBLCC6p8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OplE0zDswr8P2VBeTMKglzRspW3v0rCF7k2v1y4gBFqn0v7l9DMknBmWPAAlTFF6f
-         o+uctx10kDR4e7K8d9GX2x+AceKufviWKHEeBCU5A2MDkXHvr7n3ozjPnzHx9vdRIZ
-         mrKjD+ZeZ1Ned2Ooh5vYVc/FIHe4ml4FWekmMCtw=
+        b=hqiczZIQao+lCmAyFWvsIkDtSgcltn9HTTzj90D/qIfBqvY3qaPVdGX0Z9SgRjK6W
+         fNv8IUqL28gfNBG5ZQPG7IJx1e5Qm6ekBaf0yI6fKUvakyHDzzligN256jzc/4Lydx
+         gurxhhURDCRe+DKh7ddpQsAgavRYWQG8/GCP//KE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 39/64] regmap: dev_get_regmap_match(): fix string comparison
-Date:   Mon, 27 Jul 2020 16:04:18 +0200
-Message-Id: <20200727134913.105979980@linuxfoundation.org>
+        stable@vger.kernel.org, Leonid Ravich <Leonid.Ravich@emc.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 41/64] dmaengine: ioat setting ioat timeout as module parameter
+Date:   Mon, 27 Jul 2020 16:04:20 +0200
+Message-Id: <20200727134913.214594051@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -60,41 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-[ Upstream commit e84861fec32dee8a2e62bbaa52cded6b05a2a456 ]
+[ Upstream commit 87730ccbddcb48478b1b88e88b14e73424130764 ]
 
-This function is used by dev_get_regmap() to retrieve a regmap for the
-specified device. If the device has more than one regmap, the name parameter
-can be used to specify one.
+DMA transaction time to completion is a function of PCI bandwidth,
+transaction size and a queue depth.  So hard coded value for timeouts
+might be wrong for some scenarios.
 
-The code here uses a pointer comparison to check for equal strings. This
-however will probably always fail, as the regmap->name is allocated via
-kstrdup_const() from the regmap's config->name.
-
-Fix this by using strcmp() instead.
-
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Link: https://lore.kernel.org/r/20200703103315.267996-1-mkl@pengutronix.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/20200701184816.29138-1-leonid.ravich@dell.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/regmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/ioat/dma.c | 12 ++++++++++++
+ drivers/dma/ioat/dma.h |  2 --
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index 013d0a2b3ba0a..4e0cc40ad9ceb 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -1242,7 +1242,7 @@ static int dev_get_regmap_match(struct device *dev, void *res, void *data)
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index e3899ae429e0f..4c2b41beaf638 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -38,6 +38,18 @@
  
- 	/* If the user didn't specify a name match any */
- 	if (data)
--		return (*r)->name == data;
-+		return !strcmp((*r)->name, data);
- 	else
- 		return 1;
- }
+ #include "../dmaengine.h"
+ 
++int completion_timeout = 200;
++module_param(completion_timeout, int, 0644);
++MODULE_PARM_DESC(completion_timeout,
++		"set ioat completion timeout [msec] (default 200 [msec])");
++int idle_timeout = 2000;
++module_param(idle_timeout, int, 0644);
++MODULE_PARM_DESC(idle_timeout,
++		"set ioat idel timeout [msec] (default 2000 [msec])");
++
++#define IDLE_TIMEOUT msecs_to_jiffies(idle_timeout)
++#define COMPLETION_TIMEOUT msecs_to_jiffies(completion_timeout)
++
+ static char *chanerr_str[] = {
+ 	"DMA Transfer Source Address Error",
+ 	"DMA Transfer Destination Address Error",
+diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+index 56200eefcf5ee..01f9299572303 100644
+--- a/drivers/dma/ioat/dma.h
++++ b/drivers/dma/ioat/dma.h
+@@ -111,8 +111,6 @@ struct ioatdma_chan {
+ 	#define IOAT_RUN 5
+ 	#define IOAT_CHAN_ACTIVE 6
+ 	struct timer_list timer;
+-	#define COMPLETION_TIMEOUT msecs_to_jiffies(100)
+-	#define IDLE_TIMEOUT msecs_to_jiffies(2000)
+ 	#define RESET_DELAY msecs_to_jiffies(100)
+ 	struct ioatdma_device *ioat_dma;
+ 	dma_addr_t completion_dma;
 -- 
 2.25.1
 
