@@ -2,139 +2,167 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C60CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0174C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21A5E20792
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7593F2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:40:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFIlcTtp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ndaW31Ky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbgG0Ueu (ORCPT
+        id S1726269AbgG0UkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38946 "EHLO
+        Mon, 27 Jul 2020 16:40:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728383AbgG0Uet (ORCPT
+        with ESMTP id S1726091AbgG0UkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:34:49 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D56C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:34:49 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id g11so6638083ejr.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:34:49 -0700 (PDT)
+        Mon, 27 Jul 2020 16:40:06 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52C38C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:40:06 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id 2so12500840qkf.10
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:40:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=YkkYId0qfscEeVLanlp+9fO+1FJwDeA+iuhChUKUNzw=;
-        b=TFIlcTtpMEaEdu6Obq566fed0LcNw+s440FAiZQNexu+CUbPGjDfb6nfXkHqleRqLN
-         tFOWBKFUPOfYQfMhOzBu1gwFG3/lFKYYHAtzejaA3o80NVCQQBpWunZMbprtdV95VAQA
-         7oKbk07ix9uEjSfcBHu33BiBYrp3JewmWGPWZFc9dIxvibmjsf6sfVqun4jW2E0wdQRJ
-         6N/qH4NmO8N0JLZ/mlcOFUe3MiIrJ42nBaluJFCeseAgOhsthgqyN6YGACf7IyPgTRYe
-         vIln5m6LNeabOu9Cqhn4yO+CltTQS9EN1HRs5zy5Iu+rdho1AvMPfbPTMtwTQg1AHDG5
-         necQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H5mkeIUP0mOEiGviUE7WNaFeT77sNuynQLFroF00uM0=;
+        b=ndaW31KyuJq5CflqHCgledXt6cwUJPQJEHmUkVLZn5LzMK9Qmep+K2g/zpXAWQMQho
+         pEwa9PyhAWywue6kD87lrQWp9cktZBi6ogYvfB5tPT1QwXsdM1S5TdLFXhOQtWkg0nZ/
+         85+0VKQvI36D+k7UVliYasEXiaX/wFunjRN3P7ALI05hRyOKSoH5oovDiK+3e5fKUNk7
+         j5/PHcj70JYX2+Ard2EYT0IXuR6Yj1IYHsbFAj7CI5t+C0ZSIjkUXwNRUxq+Z21p3dmm
+         YbvqHtAl9zFh+2ch1NBB8sQgaeCFujs+677S5bnLzmux6uVkzfPfX2rqMwoOV6yo5EFc
+         wSyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=YkkYId0qfscEeVLanlp+9fO+1FJwDeA+iuhChUKUNzw=;
-        b=Cvk15LzChc916kNkOgQQk5SqUeiLXR0uec3ErzQPMu2xhFNS5pFLQySwnjJPE86vSm
-         ImBKmJNc1qlOQRW2TkEm2Am3NUU4zd92CVj0bi7dzhmrCZNrhYm8+cJojUOX8tL5xOOm
-         oW0E9on5wAVC32BVBALlcYLpZ9PEckzPlKEXNxghtBHxznRME9Gf/alX7CFS9DMfENhY
-         4L+/Y9WiF/O8LjSYzoxLtr3QrQsDN0ZN1BwhCLIT7xCw4bACo59BpU7lc6y/36jrutFX
-         EYSO2oQaBSZW9WTbIq5bvSAyOtOOtrYIJRHqXYVj+QsRVi8m3GOY7UjCIAQt7tb8LlTw
-         5uuw==
-X-Gm-Message-State: AOAM531U6SEs/WEr+Sfrqq4WR/i4m2V6+2itONYaVwWGe3sdpS1jCiLN
-        3J2h5qtjL+ot2QRK86gmzMU=
-X-Google-Smtp-Source: ABdhPJylqd2aCo4OdWacO1NzkdhKrkGlngvsgTCA2pPxab/QetyviXICeIv/c4d1XODXuH8f7xOATw==
-X-Received: by 2002:a17:906:60d0:: with SMTP id f16mr22112045ejk.17.1595882087821;
-        Mon, 27 Jul 2020 13:34:47 -0700 (PDT)
-Received: from felia ([2001:16b8:2daf:f700:54de:db5:3d20:437c])
-        by smtp.gmail.com with ESMTPSA id q6sm7758159ejn.30.2020.07.27.13.34.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 13:34:47 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Mon, 27 Jul 2020 22:34:37 +0200 (CEST)
-X-X-Sender: lukas@felia
-To:     Nachiket Naganure <nachiketun8@gmail.com>
-cc:     Joe Perches <joe@perches.com>, apw@canonical.com,
-        lukas.bulwahn@gmail.com, skhan@linuxfoundation.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] checkpatch: disable commit log length check warning for
- signature tag
-In-Reply-To: <20200727071159.GA595854@endurance>
-Message-ID: <alpine.DEB.2.21.2007272229280.15655@felia>
-References: <20200727055458.559558-1-nachiketun8@gmail.com> <66bbaec73d8f69541535db5390c0f12b304c0467.camel@perches.com> <20200727071159.GA595854@endurance>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H5mkeIUP0mOEiGviUE7WNaFeT77sNuynQLFroF00uM0=;
+        b=H3nKldRN9KnhgVI7RmdDqoIXm7oWN7nLKBMd+kUzyhTzVG+tx5eP9Ye84HbcptH5Sq
+         qFKygw6UExVOJ+Mtxk9BCq3Q0DyITCtc7BotixGFWTMgFg5AAyMNnOI8wuvAgKKughFH
+         4d2GW2Ql+DsqYyFMXnTiPigDMUR5fH0lcOC7vdyyRi2JHuvy2J3+hzyADPDls6RtT3ng
+         yVe4PIqqXjJQ6xQsbd1UJp5+PYtdDfGZC72ZoNLo0PA4adwVqY/3rjNK7QV80wDfdkRh
+         +2LrNN9LjdOpZGpt1cLs3Fh3BojUb5nlH7Uuv3ACrIu//27rht2LuD0kDRelAxcszWPo
+         4Dww==
+X-Gm-Message-State: AOAM532lttf1z1YHPmYY/x32mmoFF4DQ8Mbxfy49yzMfK5osz0MZBxot
+        Prncag1KlPXaITD0TbYe9YT6df1pQqJJhOuby/mQmvBfV8p6Pg==
+X-Google-Smtp-Source: ABdhPJyCDq02r0UswNpJp+FxF2hE3dfe281amCGBoaEXOi/lXtIkBn4jVTKVTXz6GfkFkjZhXH8EL7FDiQijATDf730=
+X-Received: by 2002:a05:620a:21d2:: with SMTP id h18mr6352807qka.407.1595882405152;
+ Mon, 27 Jul 2020 13:40:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <000000000000862c0305ab6fc661@google.com>
+In-Reply-To: <000000000000862c0305ab6fc661@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 27 Jul 2020 22:39:53 +0200
+Message-ID: <CACT4Y+Z=j1fo-24HtkhJLpq9azXP7bXNMtr9Uz=FCrFx42qnqg@mail.gmail.com>
+Subject: Re: WARNING: ODEBUG bug in delete_node
+To:     syzbot <syzbot+062ee7c41cfd844a3a9a@syzkaller.appspotmail.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 27, 2020 at 7:37 PM syzbot
+<syzbot+062ee7c41cfd844a3a9a@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    e9a523ff Add linux-next specific files for 20200727
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17ad9108900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=2cbc23e6202df3d0
+> dashboard link: https://syzkaller.appspot.com/bug?extid=062ee7c41cfd844a3a9a
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+>
+> Unfortunately, I don't have any reproducer for this issue yet.
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+062ee7c41cfd844a3a9a@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> ODEBUG: activate active (active state 1) object type: rcu_head hint: 0x0
+> WARNING: CPU: 1 PID: 16220 at lib/debugobjects.c:485 debug_print_object+0x160/0x250 lib/debugobjects.c:485
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 16220 Comm: syz-executor.0 Not tainted 5.8.0-rc7-next-20200727-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  panic+0x2e3/0x75c kernel/panic.c:231
+>  __warn.cold+0x20/0x45 kernel/panic.c:600
+>  report_bug+0x1bd/0x210 lib/bug.c:198
+>  handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+>  exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+>  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:545
+> RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:485
+> Code: dd a0 12 94 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48 8b 14 dd a0 12 94 88 48 c7 c7 00 08 94 88 e8 e2 87 a6 fd <0f> 0b 83 05 13 a1 1a 07 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
+> RSP: 0018:ffffc900065e7958 EFLAGS: 00010282
+> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+> RDX: ffff8880a1a18280 RSI: ffffffff815d93b7 RDI: fffff52000cbcf1d
+> RBP: 0000000000000001 R08: 0000000000000001 R09: ffff8880ae7318a7
+> R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff89c52a00
+> R13: 0000000000000000 R14: 1ffff92000cbcf36 R15: ffffffff89c52a00
+>  debug_object_activate+0x2da/0x3e0 lib/debugobjects.c:652
+>  debug_object_activate+0x337/0x3e0 lib/debugobjects.c:682
+>  debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
+>  __call_rcu kernel/rcu/tree.c:2869 [inline]
+>  call_rcu+0x2c/0x7e0 kernel/rcu/tree.c:2957
+>  radix_tree_node_free lib/radix-tree.c:309 [inline]
+>  delete_node+0xe5/0x8a0 lib/radix-tree.c:572
 
++Matthew, I am not sure if this adds any actionable info, but FWIW
+this looks related to the "WARNING in delete_node (2)" issue you
+looked at few day ago:
+https://lore.kernel.org/lkml/20200726032115.GE23808@casper.infradead.org/
 
-On Mon, 27 Jul 2020, Nachiket Naganure wrote:
-
-> On Sun, Jul 26, 2020 at 11:14:42PM -0700, Joe Perches wrote:
-> > On Mon, 2020-07-27 at 11:24 +0530, Nachiket Naganure wrote:
-> > > Disable commit log length check in case of signature tag. If the commit
-> > > log line has valid signature tags such as "Reported-and-tested-by" with
-> > > more than 75 characters, suppress the long length warning.
-> > > 
-> > > For instance in commit ac854131d984 ("USB: core: Fix misleading driver bug
-> > > report"), the corresponding patch contains a "Reported by" tag line which
-> > > exceeds 75 chars. And there is no valid way to shorten the length.
-> > > 
-> > > Signed-off-by: Nachiket Naganure <nachiketun8@gmail.com>
-> > > ---
-> > >  scripts/checkpatch.pl | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > > index 197436b20288..46237e9e0550 100755
-> > > --- a/scripts/checkpatch.pl
-> > > +++ b/scripts/checkpatch.pl
-> > > @@ -2806,6 +2806,8 @@ sub process {
-> > >  					# filename then :
-> > >  		      $line =~ /^\s*(?:Fixes:|Link:)/i ||
-> > >  					# A Fixes: or Link: line
-> > > +		      $line =~ /$signature_tags/ ||
-> > > +					# Check for signature_tags
-> > >  		      $commit_log_possible_stack_dump)) {
-> > >  			WARN("COMMIT_LOG_LONG_LINE",
-> > >  			     "Possible unwrapped commit description (prefer a maximum 75 chars per line)\n" . $herecurr);
-> > 
-> > OK, but the test should be:
-> > 
-> > 		      $line =~ /^\s*$signature_tags/ ||
-> > 
-> > so the line has to start with a signature and
-> > it won't match on signature tags in the middle
-> > of other content on the same line.
-> > 
-> > 
-> But the suggested won't work in case of merged signatures.
-> Such as "Reported-and-tested-by: user@email.com"
-> 
-
-But Joe's remark is valid; we do not want to match on signature tags in 
-the middle. These cases are probably mentioning signature tags as part of 
-a sentence or some explanation.
-
-Nachiket, think about a proper solution for this issue.
-
-The evaluation data from running checkpatch.pl on previous commits will 
-provide you some guidance on which heuristics might work and which not.
-
-Lukas
+>  __radix_tree_delete+0x190/0x370 lib/radix-tree.c:1378
+>  radix_tree_delete_item+0xe7/0x230 lib/radix-tree.c:1429
+>  mnt_free_id fs/namespace.c:131 [inline]
+>  cleanup_mnt+0x3db/0x500 fs/namespace.c:1140
+>  task_work_run+0xdd/0x190 kernel/task_work.c:135
+>  exit_task_work include/linux/task_work.h:25 [inline]
+>  do_exit+0xb7d/0x29f0 kernel/exit.c:806
+>  do_group_exit+0x125/0x310 kernel/exit.c:903
+>  __do_sys_exit_group kernel/exit.c:914 [inline]
+>  __se_sys_exit_group kernel/exit.c:912 [inline]
+>  __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:912
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x45c369
+> Code: Bad RIP value.
+> RSP: 002b:00007fff0e2003e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+> RAX: ffffffffffffffda RBX: 0000000000000016 RCX: 000000000045c369
+> RDX: 0000000000415e00 RSI: 0000000000ca85f0 RDI: 0000000000000043
+> RBP: 00000000004d0de8 R08: 000000000000000c R09: 0000000000000000
+> R10: 00000000023fc940 R11: 0000000000000246 R12: 0000000000000003
+> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000744ca0
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000862c0305ab6fc661%40google.com.
