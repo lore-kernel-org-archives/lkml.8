@@ -2,189 +2,150 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F49C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1F5C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC7FB206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:37:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860667;
-	bh=d3kN0P0WxtjeXEhXznWA8anAD4sSuMBBhzj7YQAx3ys=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iQBb5MzGojIrv9JMM+t0jFRYkQrbdRFshksaV9qoCRS0yijvZaPnHFpxYMZqUBAhU
-	 iC4WgZLay3GbK7W9hmhJdi+HUx0gJTfcI+Yb82WQG7CLPmI3cNxvgSZqGmktctzUXq
-	 b580XcsH7Mh6VCo2Fu4zmd4r6UcFe/R62jjUHAo8=
+	by mail.kernel.org (Postfix) with ESMTP id 5588E206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="Thx0NMVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbgG0OML (ORCPT
+        id S1732530AbgG0Oh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:12:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730135AbgG0OMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:12:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C03BA20838;
-        Mon, 27 Jul 2020 14:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859127;
-        bh=d3kN0P0WxtjeXEhXznWA8anAD4sSuMBBhzj7YQAx3ys=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AECSfT1tG48vXpTAYTH3hB4JAPGJOGQiy6jmgtWXx/387pBygB6B7EhSBfch65kcr
-         j73kyIb6m9EZ4+nP/R2yJuz8ypRash0uP6G8z+K3H1LHMiQaZLnaNUx38xeY1xpXKu
-         v4SSlP7iUg85kZMYKU4RGG7/JVnHdj4zyuBT81ws=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 76/86] mm: memcg/slab: fix memory leak at non-root kmem_cache destroy
-Date:   Mon, 27 Jul 2020 16:04:50 +0200
-Message-Id: <20200727134918.205538211@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
-References: <20200727134914.312934924@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 27 Jul 2020 10:37:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730093AbgG0OLz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:11:55 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A10CC0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:11:54 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f18so15065384wrs.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:11:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4JgRbp7y5AMyhvqG5bScPLnAhL+Dr6FW3JEWyK7fnPk=;
+        b=Thx0NMVZq3esv/QXucfWm4kQBU20kaxbTvp2huJ8YMSgaOyNpOu2HcIk+4W8IY3A8f
+         HjtYp6mAAec55vmuLzIiSogxlGoEU2880uywG1sqaBwr/n1omJywwQw0DKjB060HOv49
+         4lWKCNp+doOf1wBGb/+2Ts1l+JExa32v9Wgo0Ndj4HWfA/O6qn5ZCoMu+i8V7sKNq6uv
+         cm7mwcqZs7QeMkTXYOmIEjL9AEbmeFfQ+v+C0rhByRRxf4nRuZ7K/NKS0EuxDM7Y/Yuz
+         pocwriw+mhSodfDj+M8fa0/rKQ5CI4r36WwUoUc6qFkMVxBjkCfGIS9etNNNYwOx1xQP
+         3YQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4JgRbp7y5AMyhvqG5bScPLnAhL+Dr6FW3JEWyK7fnPk=;
+        b=PYcIo0R+e5NplTQqz/jPN/QOhAv0mTjh5mnolb64qOo4rryCndhbCXMKoEwfSB1DMO
+         aH0ZHd7Z7evz4CoLdgkw0TG7xuxnb0Md7goVjdgVKqZPwphuCuGnOkiDxSyyFZScNRbo
+         ZDOx9XrCP7DZXTm2LG25rR4tEd4Jd+uyabibEP/sbeONY6HDFBuPgJue5sJA/KshrZ2o
+         ugZUMbYCo8Sy44Y4Hfidf/exNn3PPEyj7GOwiCnofbdxU8K0Hai0TTPzwfyvEAsKvYcB
+         eM469vM/SpC+S0LOcOMYUeKIqjNkPUsZKLrc7ToK7r+omKh3UEri9x9bDE/cB0vle88e
+         z9kw==
+X-Gm-Message-State: AOAM531BRrPg+K/ehVVmyl4L0TkkQvV5NV0kyWwM0PMLR2a7VTyfyLv1
+        o/Ok6Z37Yhze3sRDNktfLmO/tQ==
+X-Google-Smtp-Source: ABdhPJyCLUfbgdOKuyocs1RKy2bsV8tZ+7kkol6NIXVdzCIujtkOmUZ3a4Hrt1NRLIASlK55CYUfXg==
+X-Received: by 2002:adf:ee8e:: with SMTP id b14mr9197042wro.213.1595859113354;
+        Mon, 27 Jul 2020 07:11:53 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id p6sm13014534wmg.0.2020.07.27.07.11.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 07:11:52 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 16:11:52 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Vadym Kochan <vadym.kochan@plvision.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [net-next v4 2/6] net: marvell: prestera: Add PCI interface
+ support
+Message-ID: <20200727141152.GM2216@nanopsycho>
+References: <20200727122242.32337-1-vadym.kochan@plvision.eu>
+ <20200727122242.32337-3-vadym.kochan@plvision.eu>
+ <CAHp75VeWGUB8izyHptfsXXv4GbsDu6_4rr9EaRR9wooXywaP+g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeWGUB8izyHptfsXXv4GbsDu6_4rr9EaRR9wooXywaP+g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Muchun Song <songmuchun@bytedance.com>
+Mon, Jul 27, 2020 at 03:29:17PM CEST, andy.shevchenko@gmail.com wrote:
+>On Mon, Jul 27, 2020 at 3:23 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
 
-commit d38a2b7a9c939e6d7329ab92b96559ccebf7b135 upstream.
+[...]
 
-If the kmem_cache refcount is greater than one, we should not mark the
-root kmem_cache as dying.  If we mark the root kmem_cache dying
-incorrectly, the non-root kmem_cache can never be destroyed.  It
-resulted in memory leak when memcg was destroyed.  We can use the
-following steps to reproduce.
+>
+>> +       pci_set_drvdata(pdev, fw);
+>> +
+>> +       err = prestera_fw_init(fw);
+>> +       if (err)
+>> +               goto err_prestera_fw_init;
+>> +
+>> +       dev_info(fw->dev.dev, "Switch FW is ready\n");
+>> +
+>> +       fw->wq = alloc_workqueue("prestera_fw_wq", WQ_HIGHPRI, 1);
+>> +       if (!fw->wq)
+>> +               goto err_wq_alloc;
+>> +
+>> +       INIT_WORK(&fw->evt_work, prestera_fw_evt_work_fn);
+>> +
+>> +       err = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSI);
+>> +       if (err < 0) {
+>> +               pci_err(pdev, "MSI IRQ init failed\n");
+>> +               goto err_irq_alloc;
+>> +       }
+>> +
+>> +       err = request_irq(pci_irq_vector(pdev, 0), prestera_pci_irq_handler,
+>> +                         0, driver_name, fw);
+>> +       if (err) {
+>> +               pci_err(pdev, "fail to request IRQ\n");
+>> +               goto err_request_irq;
+>> +       }
+>> +
+>> +       err = prestera_device_register(&fw->dev);
+>> +       if (err)
+>> +               goto err_prestera_dev_register;
+>> +
+>> +       return 0;
+>> +
+>> +err_prestera_dev_register:
+>> +       free_irq(pci_irq_vector(pdev, 0), fw);
+>> +err_request_irq:
+>> +       pci_free_irq_vectors(pdev);
+>> +err_irq_alloc:
+>> +       destroy_workqueue(fw->wq);
+>> +err_wq_alloc:
+>> +       prestera_fw_uninit(fw);
+>
+>> +err_prestera_fw_init:
+>> +err_pci_dev_alloc:
+>> +err_dma_mask:
+>
+>All three are useless.
 
-  1) Use kmem_cache_create() to create a new kmem_cache named A.
-  2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
-     so the refcount of B is just increased.
-  3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
-     decrease the B's refcount but mark the B as dying.
-  4) Create a new memory cgroup and alloc memory from the kmem_cache
-     B. It leads to create a non-root kmem_cache for allocating memory.
-  5) When destroy the memory cgroup created in the step 4), the
-     non-root kmem_cache can never be destroyed.
+This is okay. It is symmetrical with init. err_what_you_init. It is all
+over the place.
 
-If we repeat steps 4) and 5), this will cause a lot of memory leak.  So
-only when refcount reach zero, we mark the root kmem_cache as dying.
-
-Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Acked-by: Roman Gushchin <guro@fb.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200716165103.83462-1-songmuchun@bytedance.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/slab_common.c |   35 ++++++++++++++++++++++++++++-------
- 1 file changed, 28 insertions(+), 7 deletions(-)
-
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -310,6 +310,14 @@ int slab_unmergeable(struct kmem_cache *
- 	if (s->refcount < 0)
- 		return 1;
- 
-+#ifdef CONFIG_MEMCG_KMEM
-+	/*
-+	 * Skip the dying kmem_cache.
-+	 */
-+	if (s->memcg_params.dying)
-+		return 1;
-+#endif
-+
- 	return 0;
- }
- 
-@@ -832,12 +840,15 @@ static int shutdown_memcg_caches(struct
- 	return 0;
- }
- 
--static void flush_memcg_workqueue(struct kmem_cache *s)
-+static void memcg_set_kmem_cache_dying(struct kmem_cache *s)
- {
- 	mutex_lock(&slab_mutex);
- 	s->memcg_params.dying = true;
- 	mutex_unlock(&slab_mutex);
-+}
- 
-+static void flush_memcg_workqueue(struct kmem_cache *s)
-+{
- 	/*
- 	 * SLUB deactivates the kmem_caches through call_rcu_sched. Make
- 	 * sure all registered rcu callbacks have been invoked.
-@@ -858,10 +869,6 @@ static inline int shutdown_memcg_caches(
- {
- 	return 0;
- }
--
--static inline void flush_memcg_workqueue(struct kmem_cache *s)
--{
--}
- #endif /* CONFIG_MEMCG_KMEM */
- 
- void slab_kmem_cache_release(struct kmem_cache *s)
-@@ -879,8 +886,6 @@ void kmem_cache_destroy(struct kmem_cach
- 	if (unlikely(!s))
- 		return;
- 
--	flush_memcg_workqueue(s);
--
- 	get_online_cpus();
- 	get_online_mems();
- 
-@@ -890,6 +895,22 @@ void kmem_cache_destroy(struct kmem_cach
- 	if (s->refcount)
- 		goto out_unlock;
- 
-+#ifdef CONFIG_MEMCG_KMEM
-+	memcg_set_kmem_cache_dying(s);
-+
-+	mutex_unlock(&slab_mutex);
-+
-+	put_online_mems();
-+	put_online_cpus();
-+
-+	flush_memcg_workqueue(s);
-+
-+	get_online_cpus();
-+	get_online_mems();
-+
-+	mutex_lock(&slab_mutex);
-+#endif
-+
- 	err = shutdown_memcg_caches(s);
- 	if (!err)
- 		err = shutdown_cache(s);
-
-
+[...]
