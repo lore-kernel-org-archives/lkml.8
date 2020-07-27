@@ -2,116 +2,144 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3461AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F096C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0531E206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:46:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="useCPffe"
+	by mail.kernel.org (Postfix) with ESMTP id 77D7B20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731009AbgG0Pqo (ORCPT
+        id S1731052AbgG0Pq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:46:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729040AbgG0Pqn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:46:43 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50869C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:46:43 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id b14so13943468qkn.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eq6Q8ztU/SV0qKLD6bpCFHf5g7ycq71mi8wbaYyCfwM=;
-        b=useCPfferacyo/0JUXOwYUSEUXb19osX2BOfpi1ycjVc26Azr4WGsIO+HRRWYTQr30
-         ySYFahM0ujDCbR+y3GgsggUMD87PZjJagx6VbBz9Vl6sire8+gHrnPbKMCOGyTfujuv2
-         RcQgoQWn38hlsB6hYzRNKe3yQfu11PHLhztVBbtLsP5nvUSCSOqDLKfV7HJR0So428Kx
-         vzVnQEAK+vY+ePlywy2k6mxRztpQxEbhVd9c0M/oK7EzxRiqm7cmvka0Mkb1byNec6lO
-         7NMb6BRwQs5LTdbinevBq0SBoK/XHbKto6yTn1+SYs+JjMMutAWY2c6AnDIYoCHLbLmS
-         bzeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eq6Q8ztU/SV0qKLD6bpCFHf5g7ycq71mi8wbaYyCfwM=;
-        b=ZqcBuHy3xFiMgS2nvtazsxCLNTAKh05VRThExKM3lCT23ZZu1F5MksvMRw01+0vuB6
-         sY7wGvRK8lB4ugjB/GeSwgXoqFCAfSqFmhYqsfsegYv6lIyRtlZH75YjB6AZo8bscYzi
-         jbHywXU5zIzIJwTiTxit6q5ltWegtT8WFZ3pfUwvJCayTQdm/1mfLudd8TTWVCgxvIsq
-         E9LEdgZbqkG5N55CES42rMSdLblSQeTYPox8VqCK+w7d78yWFmX+YAvAzogdWmFu72Jn
-         bUanS4qlmFokynBzrtBI8VjEw0SVNVILT9+sfb74lJmtTCriGo+K/rOwYgFFF4N2dCrd
-         B47w==
-X-Gm-Message-State: AOAM530xFzQtbDCersWaJpvEI/AEBCf2lFRVWkKpjVY5e/gdRLQ9jyTC
-        JJ5mpWhbCvjZs8BrtzwZFOri51dcTA==
-X-Google-Smtp-Source: ABdhPJwVxJVQnSQkMP5WrsFM11nJ6OZHIQPk6i8j75Z7FhEUMKNos2zkeaTqm2s/ehlmTd+a3DiD4A==
-X-Received: by 2002:a05:620a:1089:: with SMTP id g9mr23428430qkk.252.1595864802583;
-        Mon, 27 Jul 2020 08:46:42 -0700 (PDT)
-Received: from localhost.localdomain ([209.94.141.207])
-        by smtp.gmail.com with ESMTPSA id w18sm14390947qtn.3.2020.07.27.08.46.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 08:46:42 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH v2] firewire: Prevent kernel-infoleak in ioctl_get_info()
-Date:   Mon, 27 Jul 2020 11:45:21 -0400
-Message-Id: <20200727154521.315774-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200727151537.315023-1-yepeilin.cs@gmail.com>
-References: <20200727151537.315023-1-yepeilin.cs@gmail.com>
+        Mon, 27 Jul 2020 11:46:56 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33366 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728015AbgG0Pqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 11:46:55 -0400
+IronPort-SDR: ijYCwLN+uF2fKAdRqy7GWUg2qeY5F000UrK8mmx8U1fCSoVbRwpuVJgTrLLBtM3Vj4+7nnJzIl
+ E2wKSb/PJTpg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="130593839"
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="130593839"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 08:46:55 -0700
+IronPort-SDR: ih74wHAEYTgG09ISPxHpa0sZYUGRI/PD0HgCEATM0+pBVOUSwgyikQi0/0Q2DOSW/3f5JerjGz
+ ZIhxFi+nRlFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="273290556"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Jul 2020 08:46:54 -0700
+Date:   Mon, 27 Jul 2020 08:46:54 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: nVMX: properly pad struct kvm_vmx_nested_state_hdr
+Message-ID: <20200727154654.GA8675@linux.intel.com>
+References: <20200713082824.1728868-1-vkuznets@redhat.com>
+ <20200713151750.GA29901@linux.intel.com>
+ <878sfntnoz.fsf@vitty.brq.redhat.com>
+ <85fd54ff-01f5-0f1f-1bb7-922c740a37c1@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85fd54ff-01f5-0f1f-1bb7-922c740a37c1@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ioctl_get_info() is copying uninitialized stack memory to userspace due to
-the compiler not initializing holes in statically allocated structures.
-Fix it by initializing `event` using memset() in fill_bus_reset_event().
+On Mon, Jul 27, 2020 at 01:43:34PM +0200, Paolo Bonzini wrote:
+> On 13/07/20 17:54, Vitaly Kuznetsov wrote:
+> > Which means that userspace built for the old kernel will potentially send in
+> > garbage for the new 'flags' field due to it being uninitialized stack data,
+> > even with the layout after this patch.
+> 
+> It might as well send it now if the code didn't attempt to zero the
+> struct before filling it in (this is another good reason to use a
+> "flags" field to say what's been filled in).
 
-Cc: stable@vger.kernel.org
-Fixes: 344bbc4de14e ("firewire: Generalize get_config_rom to get_info.")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
-Change in v2:
-    - Add an appropriate `Fixes` tag. (Suggested by Arnd Bergmann
-      <arnd@arndb.de>)
+The issue is that flags itself could hold garbage.
 
- drivers/firewire/core-cdev.c | 2 ++
- 1 file changed, 2 insertions(+)
+https://lkml.kernel.org/r/20200713151750.GA29901@linux.intel.com
 
-diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
-index fb6c651214f3..2341d762df5b 100644
---- a/drivers/firewire/core-cdev.c
-+++ b/drivers/firewire/core-cdev.c
-@@ -340,6 +340,8 @@ static void fill_bus_reset_event(struct fw_cdev_event_bus_reset *event,
- {
- 	struct fw_card *card = client->device->card;
- 
-+	memset(event, 0, sizeof(*event));
-+
- 	spin_lock_irq(&card->lock);
- 
- 	event->closure	     = client->bus_reset_closure;
--- 
-2.25.1
+>  I don't think special
+> casing padding is particularly useful; C11 for example requires
+> designated initializers to fill padding with zero bits[1] and even
+> before it's always been considered good behavior to use memset.
+> 
+> Paolo
+> 
+> [1]  It says: "If an object that has static or thread storage duration
+> is not initialized explicitly, then [...] any padding is initialized to
+> zero bits" 
 
+static and per-thread storage is unlikely to be relevant, 
+
+> and even for non-static objects, "If there are fewer
+> initializers in a brace-enclosed list than there are elements or members
+> of an aggregate [...] the remainder of the aggregate shall be
+> initialized implicitly the same as objects that have static storage
+> duration".
+
+That's specifically talking about members, not usused/padded space, e.g.
+smm.flags (in the hold struct) must be zeroed with this, but it doesn't
+say anything about initializing padding.
+
+  struct kvm_vmx_nested_state_hdr hdr = {
+      .vmxon_pa = root,
+      .vmcs12_pa = vmcs12,
+  };
+
+QEMU won't see issues because it zero allocates the entire nested state.
+
+All the above being said, after looking at the whole picture I think padding
+the header is a moot point.  The header is padded out to 120 bytes[*] when
+including in the full nested state, and KVM only ever consumes the header in
+the context of the full nested state.  I.e. if there's garbage at offset 6,
+odds are there's going to be garbage at offset 18, so internally padding the
+header does nothing.
+
+KVM should be checking that the unused bytes of (sizeof(pad) - sizeof(vmx/svm))
+is zero if we want to expand into the padding in the future.  Right now we're
+relying on userspace to zero allocate the struct without enforcing it.
+
+[*] Amusing side note, the comment in the header is wrong.  It states "pad
+    the header to 128 bytes", but only pads it to 120 bytes, because union.
+
+/* for KVM_CAP_NESTED_STATE */
+struct kvm_nested_state {
+	__u16 flags;
+	__u16 format;
+	__u32 size;
+
+	union {
+		struct kvm_vmx_nested_state_hdr vmx;
+		struct kvm_svm_nested_state_hdr svm;
+
+		/* Pad the header to 128 bytes.  */
+		__u8 pad[120];
+	} hdr;
+
+	/*
+	 * Define data region as 0 bytes to preserve backwards-compatability
+	 * to old definition of kvm_nested_state in order to avoid changing
+	 * KVM_{GET,PUT}_NESTED_STATE ioctl values.
+	 */
+	union {
+		struct kvm_vmx_nested_state_data vmx[0];
+		struct kvm_svm_nested_state_data svm[0];
+	} data;
+};
+
+
+Odds are no real VMM will have issue given the dynamic size of struct
+kvm_nested_state, but 
