@@ -2,117 +2,104 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2030C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52764C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A75B220729
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2109120714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595873633;
-	bh=kvImriEl97CKx+QwIwT+Ke7mzrxrahDLf7tku3va3nw=;
+	s=default; t=1595873640;
+	bh=Q2hirUvTbqyfdO2c1l+7H880rPTzv7pbDxberVjFwIc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RbCtEVZjaKscdyNCOOX65gOzMDAsBhWfQXwDvejgR3RjpelKyirs30WCBofKGHCth
-	 +xzHOS3oYjAzV0feGbQ5eNj6QswwPIlkr0HzLENiqptgQD0G9CIjOeiRYrt7/IVBUl
-	 HBRpX+Z/9YGz7lcI2fOQAZ6KNis/to1xA+5kU8ro=
+	b=iVX64UtNLKyt2Yh78Ex5mAk3FrqBKxWWDFJjk5/CZkQL0ks3LW1p6T3WWURAt85oU
+	 bAoG7HrdZt7S9+zj4w+4kRE0L6M1kaYBlWwHdpasshzrMcyb+l7AXpxkt+LRiRa92J
+	 acQEL1TfJA/xg/nGTRjpgfm1EtKTVzlcOldbKFlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730719AbgG0SNw (ORCPT
+        id S1731222AbgG0SN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:13:52 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:36087 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728312AbgG0SNw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 14:13:52 -0400
-Received: by mail-il1-f194.google.com with SMTP id z3so3673526ilh.3;
-        Mon, 27 Jul 2020 11:13:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FezFginUTy2nglTrBQrbccgUu3m/rgDlVyShBQFXbuM=;
-        b=HfzXlKqcU5oWxENTYnB2cM0h/mDjkeheLT5qiOyyLv0UV5kzbx2wyw/Q/0Pi8tb9BH
-         kjtl+RIFEHVJ6J473PunNXxQuk5hJvoijHnyXsYcTiRhr9W69qb+pN0WevFXd1PJuq6V
-         0KDZ8FLpiogNRXDNAY8AYntD3xi9hrIRsMWYLAyKWoatfteE3Yk1br9Q3FzyOu1o5fJV
-         66bQRlQHriOvMkFigq+rRZCP3neNgaPK1GVBrmRF4/z+B3WQiuZoJn+w9QgPysMCeyv4
-         FwyQrf3FI4zEo16Lrif2i3rq99zOnvMBm0XNIODx6qaq8Owb6fP/Ea8GRgbboBTq1KLd
-         ZBRw==
-X-Gm-Message-State: AOAM530IK2lFEHVwffUu3GpyutQswwfdKRFlE05ez9GIWqkoBPpNScL1
-        zpWkQOxWx2W6JPrpYWHDtQ==
-X-Google-Smtp-Source: ABdhPJxcTZ1wWiZQBj6GSHPIlQHm9ClLpwRYBVSWGAnLwaItX6R/lSkREMbAFXVOnxUjPhxCOFMv7g==
-X-Received: by 2002:a05:6e02:8e4:: with SMTP id n4mr16683067ilt.96.1595873631429;
-        Mon, 27 Jul 2020 11:13:51 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c67sm9202464iof.16.2020.07.27.11.13.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 11:13:50 -0700 (PDT)
-Received: (nullmailer pid 638435 invoked by uid 1000);
-        Mon, 27 Jul 2020 18:13:46 -0000
-Date:   Mon, 27 Jul 2020 12:13:46 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     martin.botka1@gmail.com, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        zhengbin <zhengbin13@huawei.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Xiaozhe Shi <xiaozhes@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH 9/9] soc/qcom: Add REVID driver
-Message-ID: <20200727181346.GA634850@bogus>
-References: <20200726111215.22361-1-konradybcio@gmail.com>
- <20200726111215.22361-10-konradybcio@gmail.com>
+        Mon, 27 Jul 2020 14:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729331AbgG0SN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 14:13:57 -0400
+Received: from localhost (p5486cd33.dip0.t-ipconnect.de [84.134.205.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C393420729;
+        Mon, 27 Jul 2020 18:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595873636;
+        bh=Q2hirUvTbqyfdO2c1l+7H880rPTzv7pbDxberVjFwIc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=olV0ZxqQEG2kZvaUeWb5NsPGbpFi2AqRm9s0tIi4IzUNmfXOzgZ+tE+SJxoDoF1xw
+         uboHZVJA/qMbGjEIeV9LUajNShavUnShLeEwPNpBkX58VyGhBUsBS712UqYlcRHIyg
+         aYdycbxnyStzSzPuaMCEJy/Hc7HIQoyIzTaCwUQY=
+Date:   Mon, 27 Jul 2020 20:13:46 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
+Message-ID: <20200727181346.GA1034@ninjato>
+References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
+ <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
+ <20200722104128.GK1030@ninjato>
+ <5048cf44-e2c2-ee31-a9fb-b823f16c2c7d@broadcom.com>
+ <20200725101815.GA1519@ninjato>
+ <4cf12c92-889d-ffbf-f8de-c1e08cfb8ce9@broadcom.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
 Content-Disposition: inline
-In-Reply-To: <20200726111215.22361-10-konradybcio@gmail.com>
+In-Reply-To: <4cf12c92-889d-ffbf-f8de-c1e08cfb8ce9@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 01:12:06PM +0200, Konrad Dybcio wrote:
-> From: Xiaozhe Shi <xiaozhes@codeaurora.org>
-> 
-> Add the REVID device driver. The REVID driver will print out the PMIC
-> revision at probe time.
-> 
-> Signed-off-by: Xiaozhe Shi <xiaozhes@codeaurora.org>
-> [konradybcio@gmail.com: Fast-forward the driver from kernel 4.14 to 5.8,
-> convert binding to yaml]
-> Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> ---
->  .../bindings/soc/qcom/qcom,qpnp-revid.yaml    |  38 ++
 
-Bindings should be a separate patch. checkpatch.pl will tell you this.
+--+QahgC5+KEYLbs62
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->  drivers/soc/qcom/Kconfig                      |   9 +
->  drivers/soc/qcom/Makefile                     |   1 +
->  drivers/soc/qcom/qpnp-revid.c                 | 288 ++++++++++++++
->  include/linux/qpnp/qpnp-revid.h               | 369 ++++++++++++++++++
->  5 files changed, 705 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,qpnp-revid.yaml
->  create mode 100644 drivers/soc/qcom/qpnp-revid.c
->  create mode 100644 include/linux/qpnp/qpnp-revid.h
+
+> Can you confirm that even if we have irq pending at the i2c IP core
+> level, as long as we execute Step 2. below (to disable/mask all slave
+> interrupts), after 'enable_irq' is called, we still will not receive any
+> further i2c slave interrupt?
+
+This is HW dependant. From my tests with Renesas HW, this is not the
+case. But the actual error case was impossible to trigger for me, so
+far. I might try again later. But even in the worst case, I would only
+get a "spurious interrupt" and not an NULL-ptr OOPS.
+
+
+--+QahgC5+KEYLbs62
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8fGVYACgkQFA3kzBSg
+KbaeZg/5Af3JYZ9tfZW77dzuVDhoNeDfy0/+iOauTNIu4ZJZl1qmDBWe2fc1oOpn
+fM9uz6JPqiCEGxSQk+ZeP0LKVfPz0m7xcSMaJNqT4TFlddekGNeHKlEm0q0UkxoG
+fQk9LXvzLfoJ9H4QyDOWrkhoj9+nYPWjPpsDtsEljupsxYIUfGpN79BwKf17KGZb
+J3XQQ4uDk/czM2/Z8PEoDHwpclpmP7N+URj59NabB9dltkwHjlhevXYFNxUsQUIR
+N8eYNcyFlmBzHO3xDblLILwerOO7M/3a9X5LhqbSrf1m439cOm1lW9fSxZ7l0gSh
+6tab7IHmpqpPQfxCx7cfbNRN5JEjNNVWhbOHV/JX8jyczWNs1F4pdnYfzAraWUB8
+5k670lPK4bcxy1uYNyB6uOwq7lCdrKjYoXeeJa3qUTZHFtMPhD8XWwlbLwU0PSi2
+8y+Q+8a3wzJYLfbzTOsKdp5Yew0sgIr+R1IQvpsmt7X6+nuYrqQeAWHzd2ROzvdr
+3wjx4prwVdKwsgefXMiPnUvQrpuNnq9uwcsWq3j+MVzZ0H9p0dZiW/LqujoomHmB
+Ilc0clpTLqiYRBf9ZXy45VOPvYabUEfRVFFPRmIVJZ+oJ5t5IBR3jgqIb4ZdJtFt
+qBmaY42V85rGyxOQSHHF05gCg/Is3MkAW59fokfzikWwn3vY/Cg=
+=fGCe
+-----END PGP SIGNATURE-----
+
+--+QahgC5+KEYLbs62--
