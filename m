@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB376C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0DFC433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA61920825
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9151220825
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859395;
-	bh=8howY8j9fNGGWqKTj9zlyAhmGqYzekyWtWpnYVgsxus=;
+	s=default; t=1595859402;
+	bh=oGUrR/3CifRJrhJzUDoT4zDQtGxfmbqA1TZdgk9HqjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vn+xWpNk/K03ZleSFtHK21xEyUO8dVfX0B1GhKXeo36KkA2lYeJQ5dYlqFHFcB/CN
-	 GIe8wvm3dM+hIAIkbbFCp6enK9OAYa5kDy1AIEH6bGcWK0mPUFCZeZw+ISAdsmLQLp
-	 2413mw2aIGRUBstjsleUfKTsYoRHW9IJS3VtQpiM=
+	b=rvYF4m1w9j1wmRyrZnCqMcU9ZsYmLe1G8bUs4T+DEx2ShUfShwdFRGCAzgU4UaswG
+	 XWWvy6RVBl4A74PAPApmBqXB84/JsBnoN+Wc1Q2K5142zMVldfDxbWoi9TYzkcQ+ib
+	 d9CN8vqt/BKK1H2C1X1aE5YNbokyYhgFFXCKWIIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbgG0OQe (ORCPT
+        id S1730913AbgG0OQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:16:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43460 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:16:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730863AbgG0OQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:16:30 -0400
+        id S1730320AbgG0OQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:16:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A31E322B48;
-        Mon, 27 Jul 2020 14:16:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B87F20825;
+        Mon, 27 Jul 2020 14:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859389;
-        bh=8howY8j9fNGGWqKTj9zlyAhmGqYzekyWtWpnYVgsxus=;
+        s=default; t=1595859396;
+        bh=oGUrR/3CifRJrhJzUDoT4zDQtGxfmbqA1TZdgk9HqjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oJafu3rUwNb6atFr0HuD/m6o5YaeUVDVXqUmJyOjTfaafo/XQL2Mh5Od5oCfNcQq0
-         nRbgIVnNQ8Xl86/qBtVS0hyRz0a2kI2Crm8BJE2QYmrMVT81rK0scqOwD1juldnOEo
-         6Khf5pYP10YEidU5hEXHWgdoDDd4ZcHkuzu/bfyo=
+        b=2ePP3CXmBhiiQacLmFC8LVMrsWRfwxsqHwoZSkVAGM7zI3ctYHtrY9cnLEOHFKW0F
+         BVCSqeiN/kd/APF0oxDWzF0+2a02nSee/7zUdVQ+5VxFhbcZRrXMBsOVMgxIeHEDvf
+         lE/7tMfbiFGDGK6ASorOgkjyogkm0LKanUjXov34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Jack Xiao <Jack.Xiao@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 088/138] usb: cdns3: ep0: fix some endian issues
-Date:   Mon, 27 Jul 2020 16:04:43 +0200
-Message-Id: <20200727134929.765493367@linuxfoundation.org>
+Subject: [PATCH 5.4 091/138] drm/amdgpu/gfx10: fix race condition for kiq
+Date:   Mon, 27 Jul 2020 16:04:46 +0200
+Message-Id: <20200727134929.915011392@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -61,97 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Jack Xiao <Jack.Xiao@amd.com>
 
-[ Upstream commit 9f81d45c79271def8a9b90447b04b9c6323291f9 ]
+[ Upstream commit 7d65a577bb58d4f27a3398a4c0cb0b00ab7d0511 ]
 
-It is found by sparse.
+During preemption test for gfx10, it uses kiq to trigger
+gfx preemption, which would result in race condition
+with flushing TLB for kiq.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Jack Xiao <Jack.Xiao@amd.com>
+Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/cdns3/ep0.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
-index da4c5eb03d7ee..666cebd9c5f29 100644
---- a/drivers/usb/cdns3/ep0.c
-+++ b/drivers/usb/cdns3/ep0.c
-@@ -37,18 +37,18 @@ static void cdns3_ep0_run_transfer(struct cdns3_device *priv_dev,
- 	struct cdns3_usb_regs __iomem *regs = priv_dev->regs;
- 	struct cdns3_endpoint *priv_ep = priv_dev->eps[0];
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+index 6f118292e40fb..64d96eb0a2337 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+@@ -4683,12 +4683,17 @@ static int gfx_v10_0_ring_preempt_ib(struct amdgpu_ring *ring)
+ 	struct amdgpu_device *adev = ring->adev;
+ 	struct amdgpu_kiq *kiq = &adev->gfx.kiq;
+ 	struct amdgpu_ring *kiq_ring = &kiq->ring;
++	unsigned long flags;
  
--	priv_ep->trb_pool[0].buffer = TRB_BUFFER(dma_addr);
--	priv_ep->trb_pool[0].length = TRB_LEN(length);
-+	priv_ep->trb_pool[0].buffer = cpu_to_le32(TRB_BUFFER(dma_addr));
-+	priv_ep->trb_pool[0].length = cpu_to_le32(TRB_LEN(length));
- 
- 	if (zlp) {
--		priv_ep->trb_pool[0].control = TRB_CYCLE | TRB_TYPE(TRB_NORMAL);
--		priv_ep->trb_pool[1].buffer = TRB_BUFFER(dma_addr);
--		priv_ep->trb_pool[1].length = TRB_LEN(0);
--		priv_ep->trb_pool[1].control = TRB_CYCLE | TRB_IOC |
--		    TRB_TYPE(TRB_NORMAL);
-+		priv_ep->trb_pool[0].control = cpu_to_le32(TRB_CYCLE | TRB_TYPE(TRB_NORMAL));
-+		priv_ep->trb_pool[1].buffer = cpu_to_le32(TRB_BUFFER(dma_addr));
-+		priv_ep->trb_pool[1].length = cpu_to_le32(TRB_LEN(0));
-+		priv_ep->trb_pool[1].control = cpu_to_le32(TRB_CYCLE | TRB_IOC |
-+		    TRB_TYPE(TRB_NORMAL));
- 	} else {
--		priv_ep->trb_pool[0].control = TRB_CYCLE | TRB_IOC |
--		    TRB_TYPE(TRB_NORMAL);
-+		priv_ep->trb_pool[0].control = cpu_to_le32(TRB_CYCLE | TRB_IOC |
-+		    TRB_TYPE(TRB_NORMAL));
- 		priv_ep->trb_pool[1].control = 0;
- 	}
- 
-@@ -264,11 +264,11 @@ static int cdns3_req_ep0_get_status(struct cdns3_device *priv_dev,
- 	case USB_RECIP_INTERFACE:
- 		return cdns3_ep0_delegate_req(priv_dev, ctrl);
- 	case USB_RECIP_ENDPOINT:
--		index = cdns3_ep_addr_to_index(ctrl->wIndex);
-+		index = cdns3_ep_addr_to_index(le16_to_cpu(ctrl->wIndex));
- 		priv_ep = priv_dev->eps[index];
- 
- 		/* check if endpoint is stalled or stall is pending */
--		cdns3_select_ep(priv_dev, ctrl->wIndex);
-+		cdns3_select_ep(priv_dev, le16_to_cpu(ctrl->wIndex));
- 		if (EP_STS_STALL(readl(&priv_dev->regs->ep_sts)) ||
- 		    (priv_ep->flags & EP_STALL_PENDING))
- 			usb_status =  BIT(USB_ENDPOINT_HALT);
-@@ -388,10 +388,10 @@ static int cdns3_ep0_feature_handle_endpoint(struct cdns3_device *priv_dev,
- 	if (!(ctrl->wIndex & ~USB_DIR_IN))
- 		return 0;
- 
--	index = cdns3_ep_addr_to_index(ctrl->wIndex);
-+	index = cdns3_ep_addr_to_index(le16_to_cpu(ctrl->wIndex));
- 	priv_ep = priv_dev->eps[index];
- 
--	cdns3_select_ep(priv_dev, ctrl->wIndex);
-+	cdns3_select_ep(priv_dev, le16_to_cpu(ctrl->wIndex));
- 
- 	if (set)
- 		__cdns3_gadget_ep_set_halt(priv_ep);
-@@ -452,7 +452,7 @@ static int cdns3_req_ep0_set_sel(struct cdns3_device *priv_dev,
- 	if (priv_dev->gadget.state < USB_STATE_ADDRESS)
+ 	if (!kiq->pmf || !kiq->pmf->kiq_unmap_queues)
  		return -EINVAL;
  
--	if (ctrl_req->wLength != 6) {
-+	if (le16_to_cpu(ctrl_req->wLength) != 6) {
- 		dev_err(priv_dev->dev, "Set SEL should be 6 bytes, got %d\n",
- 			ctrl_req->wLength);
- 		return -EINVAL;
-@@ -476,7 +476,7 @@ static int cdns3_req_ep0_set_isoch_delay(struct cdns3_device *priv_dev,
- 	if (ctrl_req->wIndex || ctrl_req->wLength)
- 		return -EINVAL;
+-	if (amdgpu_ring_alloc(kiq_ring, kiq->pmf->unmap_queues_size))
++	spin_lock_irqsave(&kiq->ring_lock, flags);
++
++	if (amdgpu_ring_alloc(kiq_ring, kiq->pmf->unmap_queues_size)) {
++		spin_unlock_irqrestore(&kiq->ring_lock, flags);
+ 		return -ENOMEM;
++	}
  
--	priv_dev->isoch_delay = ctrl_req->wValue;
-+	priv_dev->isoch_delay = le16_to_cpu(ctrl_req->wValue);
+ 	/* assert preemption condition */
+ 	amdgpu_ring_set_preempt_cond_exec(ring, false);
+@@ -4699,6 +4704,8 @@ static int gfx_v10_0_ring_preempt_ib(struct amdgpu_ring *ring)
+ 				   ++ring->trail_seq);
+ 	amdgpu_ring_commit(kiq_ring);
  
- 	return 0;
- }
++	spin_unlock_irqrestore(&kiq->ring_lock, flags);
++
+ 	/* poll the trailing fence */
+ 	for (i = 0; i < adev->usec_timeout; i++) {
+ 		if (ring->trail_seq ==
 -- 
 2.25.1
 
