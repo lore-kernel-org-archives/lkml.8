@@ -2,203 +2,125 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E84FC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C44DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57256206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858553;
-	bh=w9/M8wZSBgtmevXcbf3Dwx3L57Rd5tG6sXBObrQkJoM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EhNyz1XGeC7rmkfivxMRj/c0TtdtsEFYRFWagWHJUBXk2Rajm22cM/X1dCjfgb+aT
-	 hqqrOGlhnYD8qGGln61mT5Y3O9vg04UFefOK1PU4TRHaYpBwafgIz3QFVD9M179aUA
-	 RRoVskiL6jpfXs0fcjVjA/E3b/dMqL43IjdPpw3o=
+	by mail.kernel.org (Postfix) with ESMTP id 20BD42070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:03:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GRtFKgLT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgG0OCc (ORCPT
+        id S1728358AbgG0ODG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:02:32 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35720 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgG0OCa (ORCPT
+        Mon, 27 Jul 2020 10:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgG0ODG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:02:30 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k4so14414251oik.2;
-        Mon, 27 Jul 2020 07:02:29 -0700 (PDT)
+        Mon, 27 Jul 2020 10:03:06 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA62C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:03:06 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r12so14972754wrj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:03:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=WCEKn5HIi3V8G0rZbufJIlt299Gd3FsBGNnqE5NUYlM=;
+        b=GRtFKgLTNf5V163dHCAuyVNJp3fkYfiToHPg5XpQwDb3xpSF9j9hRzf5H5xvjmyb7Z
+         ZJW4AMQyj9iKpH2AGJP7caGraDn1nCap13ZHQyUd2HeSjWiVchiJxnetatMVjEbiKNfj
+         nu/wXJm7iHFGfvfC6I3ZRT9J0HtU6j2hh0iRvO1rGEok7eMtMbMmw7S4TlUPR1PDcoYB
+         Df4WC8Z4wxpuccr/BDGu0Db2NfYtPFrIhsWQogYrVUB17mcISCO64bm0+qBVUCM7Xt0L
+         apewBUHPKBWqWG2FcN4lgr3uYwbl0uURGqdsaym27oRp6Su4GFVDn9v9Ufh2cIxNRyfc
+         S+ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mRY3UX2NBXS9aSshDQuKlv62KiLkLKBPXBEuh/ff5bQ=;
-        b=VZSmWFSCFyGTLM566ozWQhgVUteuGMUYaoXa9BG44LFRqw1G5DrZBZNJ62ADFNOGb8
-         iFkvT+SOwbwhZrPvbhPFAWvvBdX7lb5Mn0hUXE/v+4jyiMfh2tzRuQMKd6UQsSV/9jnw
-         +G+HKy93qhzOFhdrv7BI1MhGfvVBiU3qlkWc0FE74hrA7MLuX1WUCWdWsGJ1WALS8NM2
-         VNTmu7I6K6IjnlYfMHLlebau8zeEvmDuPxf0bysUUCDlaEMJstnCEpQV2KEo7p0J1UBM
-         7PDz86fG561/8xGuB8yHbCadYlJmGENpvaCogo2+TJTEAN5so005tHFoFvleQi1r67QU
-         H3hw==
-X-Gm-Message-State: AOAM532vU3HiT73XGhfXmUdNw41TTbcshn4WfuvjI16YclzPNC9t5zFS
-        SSiNHLmKrzygkoNmuQiMFucu6yPjl1697WEV+bU=
-X-Google-Smtp-Source: ABdhPJwVRDYwbcsm/QOnkqd5RoiNowF+0IcXiCPMz8Ihy8I8/y2G9R4k8waaFkVE53P3g1YaEJL9s8CrE7Grwj7SSFc=
-X-Received: by 2002:aca:4a89:: with SMTP id x131mr19034751oia.103.1595858549233;
- Mon, 27 Jul 2020 07:02:29 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=WCEKn5HIi3V8G0rZbufJIlt299Gd3FsBGNnqE5NUYlM=;
+        b=cx9qrQEbarTIdcXiSt0kTUjlXBPtNIMZ/NgucVVUmksYmmLXQHE8TNRUHuOgyljBrA
+         j4YIjHSUOWDMiDBw1XdsQTjFXQXhfpBfuVh/4pOrqSXOMJXwdA28Wsbw8hNiS0u+xk73
+         8daMU8v++DZbMUxYkiWGxocb4UG0IV4ewDF7AzuhUrHZJEsyGmtzyJrWlR0HAl2Vidbl
+         hUgMg4gNq++ygbvW+h6a5K4mHl6fv99WXTBR1A+jmEz7wivSfSYq/he3IgDQQWF8oX6A
+         VgsZfRuyTx92QGoq7MCY/iQYlRAU/VlSGyQ5AKTCXEMsubO7Dzjy15TM0DEowQG+oy4h
+         tENw==
+X-Gm-Message-State: AOAM530MgJG83bUPcgE3FBT7mJ+oMnKJSb0dGnLKPwrSh/mSFJds1wN5
+        iI3riIQZorRrbyDMakGq6c9wspzliGvIog==
+X-Google-Smtp-Source: ABdhPJzxLpXkhwE1OMKy+4MjjkzkiKp+YP0RqS6jZMLOZL4pIgyCAWp98SRFYS5R4F+T2ltxBxl6Aw==
+X-Received: by 2002:adf:d84f:: with SMTP id k15mr19669192wrl.176.1595858584978;
+        Mon, 27 Jul 2020 07:03:04 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id q2sm8815749wro.8.2020.07.27.07.03.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 07:03:04 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 15:03:02 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] mfd: dln2: Run event handler loop under spinlock
+Message-ID: <20200727140302.GU1850026@dell>
+References: <20200723130246.21190-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20200722093732.14297-1-ionela.voinescu@arm.com> <20200722093732.14297-5-ionela.voinescu@arm.com>
-In-Reply-To: <20200722093732.14297-5-ionela.voinescu@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 27 Jul 2020 16:02:18 +0200
-Message-ID: <CAJZ5v0jvvEvxs2dwsGd1kerTT3pJTJj6fVg0ndtdeUhiq+K_UQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] cpufreq: report whether cpufreq supports Frequency
- Invariance (FI)
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200723130246.21190-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:38 AM Ionela Voinescu
-<ionela.voinescu@arm.com> wrote:
->
-> Now that the update of the FI scale factor is done in cpufreq core for
-> selected functions - target(), target_index() and fast_switch(),
-> we can provide feedback to the task scheduler and architecture code
-> on whether cpufreq supports FI.
->
-> For this purpose, provide error and debug messages, together with an
-> external function to expose whether the cpufreq drivers support FI, by
-> using a static key.
->
-> The logic behind the enablement of cpufreq-based invariance is as
-> follows:
->  - cpufreq-based invariance is disabled by default
->  - cpufreq-based invariance is enabled if any of the callbacks
->    above is implemented while the unsupported setpolicy() is not
->  - if enabled, cpufreq-based invariance will be disabled during the
->    call of the default arch_set_freq_scale() function which does
->    not set a scale factor.
->
-> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+On Thu, 23 Jul 2020, Andy Shevchenko wrote:
+
+> The event handler loop must be run with interrupts disabled.
+> Otherwise we will have a warning:
+> 
+> [ 1970.785649] irq 31 handler lineevent_irq_handler+0x0/0x20 enabled interrupts
+> [ 1970.792739] WARNING: CPU: 0 PID: 0 at kernel/irq/handle.c:159 __handle_irq_event_percpu+0x162/0x170
+> [ 1970.860732] RIP: 0010:__handle_irq_event_percpu+0x162/0x170
+> ...
+> [ 1970.946994] Call Trace:
+> [ 1970.949446]  <IRQ>
+> [ 1970.951471]  handle_irq_event_percpu+0x2c/0x80
+> [ 1970.955921]  handle_irq_event+0x23/0x43
+> [ 1970.959766]  handle_simple_irq+0x57/0x70
+> [ 1970.963695]  generic_handle_irq+0x42/0x50
+> [ 1970.967717]  dln2_rx+0xc1/0x210 [dln2]
+> [ 1970.971479]  ? usb_hcd_unmap_urb_for_dma+0xa6/0x1c0
+> [ 1970.976362]  __usb_hcd_giveback_urb+0x77/0xe0
+> [ 1970.980727]  usb_giveback_urb_bh+0x8e/0xe0
+> [ 1970.984837]  tasklet_action_common.isra.0+0x4a/0xe0
+> ...
+> 
+> Recently xHCI driver switched to tasklets in the commit 36dc01657b49
+> ("usb: host: xhci: Support running urb giveback in tasklet context").
+> 
+> The handle_irq_event_* functions are expected to be called with interrupts
+> disabled and they rightfully complain here because we run in tasklet context
+> with interrupts enabled.
+> 
+> Use a event spinlock to protect event handler from being interrupted.
+> 
+> Note, that there are only two users of this GPIO and ADC drivers and both of
+> them are using generic_handle_irq() which makes above happen.
+> 
+> Fixes: 338a12814297 ("mfd: Add support for Diolan DLN-2 devices")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/cpufreq/cpufreq.c | 28 ++++++++++++++++++++++++++++
->  include/linux/cpufreq.h   |  5 +++++
->  2 files changed, 33 insertions(+)
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 3497c1cd6818..1d0b046fe8e9 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -61,6 +61,9 @@ static struct cpufreq_driver *cpufreq_driver;
->  static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
->  static DEFINE_RWLOCK(cpufreq_driver_lock);
->
-> +/* Mark support for the scheduler's frequency invariance engine */
-> +static DEFINE_STATIC_KEY_FALSE(cpufreq_set_freq_scale);
-> +
->  /* Flag to suspend/resume CPUFreq governors */
->  static bool cpufreq_suspended;
->
-> @@ -69,6 +72,25 @@ static inline bool has_target(void)
->         return cpufreq_driver->target_index || cpufreq_driver->target;
->  }
->
-> +static inline
-> +void enable_cpufreq_freq_invariance(struct cpufreq_driver *driver)
-> +{
-> +       if ((driver->target || driver->target_index || driver->fast_switch) &&
-> +           !driver->setpolicy) {
-> +
-> +               static_branch_enable_cpuslocked(&cpufreq_set_freq_scale);
-> +               pr_debug("%s: Driver %s can provide frequency invariance.",
-> +                        __func__, driver->name);
-> +       } else
-> +               pr_err("%s: Driver %s cannot provide frequency invariance.",
-> +               __func__, driver->name);
+>  drivers/mfd/dln2.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-This doesn't follow the kernel coding style (the braces around the
-pr_err() statement are missing).
+Applied, thanks.
 
-Besides, IMO on architectures where arch_set_freq_scale() is empty,
-this should be empty as well.
-
-> +}
-> +
-> +bool cpufreq_sets_freq_scale(void)
-> +{
-> +       return static_branch_likely(&cpufreq_set_freq_scale);
-> +}
-> +
->  /* internal prototypes */
->  static unsigned int __cpufreq_get(struct cpufreq_policy *policy);
->  static int cpufreq_init_governor(struct cpufreq_policy *policy);
-> @@ -159,6 +181,9 @@ EXPORT_SYMBOL_GPL(get_cpu_idle_time);
->  __weak void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
->                 unsigned long max_freq)
->  {
-> +       if (cpufreq_sets_freq_scale())
-> +               static_branch_disable_cpuslocked(&cpufreq_set_freq_scale);
-> +
->  }
->  EXPORT_SYMBOL_GPL(arch_set_freq_scale);
->
-> @@ -2722,6 +2747,8 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
->         cpufreq_driver = driver_data;
->         write_unlock_irqrestore(&cpufreq_driver_lock, flags);
->
-> +       enable_cpufreq_freq_invariance(cpufreq_driver);
-> +
->         if (driver_data->setpolicy)
->                 driver_data->flags |= CPUFREQ_CONST_LOOPS;
->
-> @@ -2791,6 +2818,7 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver)
->         cpus_read_lock();
->         subsys_interface_unregister(&cpufreq_interface);
->         remove_boost_sysfs_file();
-> +       static_branch_disable_cpuslocked(&cpufreq_set_freq_scale);
->         cpuhp_remove_state_nocalls_cpuslocked(hp_online);
->
->         write_lock_irqsave(&cpufreq_driver_lock, flags);
-> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-> index e62b022cb07e..f81215ad76f1 100644
-> --- a/include/linux/cpufreq.h
-> +++ b/include/linux/cpufreq.h
-> @@ -217,6 +217,7 @@ void refresh_frequency_limits(struct cpufreq_policy *policy);
->  void cpufreq_update_policy(unsigned int cpu);
->  void cpufreq_update_limits(unsigned int cpu);
->  bool have_governor_per_policy(void);
-> +bool cpufreq_sets_freq_scale(void);
->  struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy);
->  void cpufreq_enable_fast_switch(struct cpufreq_policy *policy);
->  void cpufreq_disable_fast_switch(struct cpufreq_policy *policy);
-> @@ -237,6 +238,10 @@ static inline unsigned int cpufreq_get_hw_max_freq(unsigned int cpu)
->  {
->         return 0;
->  }
-> +static inline bool cpufreq_sets_freq_scale(void)
-> +{
-> +       return false;
-> +}
->  static inline void disable_cpufreq(void) { }
->  #endif
->
-> --
-> 2.17.1
->
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
