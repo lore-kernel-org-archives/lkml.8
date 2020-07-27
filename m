@@ -2,181 +2,376 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C77C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB49820714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBEF220714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:36:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="tVkPu1ds"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OiTflPpg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgG0MgD (ORCPT
+        id S1728423AbgG0MgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:36:03 -0400
-Received: from mail-eopbgr70100.outbound.protection.outlook.com ([40.107.7.100]:31104
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727120AbgG0MgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:36:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F9RvsqoyWpCW5N1LN7QSlGRJpi3zVaH1wnGMXw6iIpFTlyAb5cdcyj31ihLVTOcx5vZ1glSU3MZ0YSYLPHRAheZC4jx5xfH6PfKUKHJKX6zHkxb54Xk6BGa6TfSibZBYVcdU5/S9Fkb2k6D7YSuPDpKJlfo9m7z5Z7gKqL7grxyIs6GN4M63RGttJfWOibhaNqgSEeAGnHFWOrNKE23FYwnnAcszEipCptq7JKHjmG7M5QF48RjDNfQ+pF+KDjzcJxAsf8bV/skNfjxFMwR9mgUKawGzJGJRK3iFjw+xOo38Dp81vDbflPvxkPk+pleU7oHDO+CBbRiS1yV9gTksHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uj87WIcpyEkT6WXf7bC9bT/pIOVTM3t6RBpAjosxdjE=;
- b=UxjGhVJ/rWABS2Tvf5UevogcYFUOURD7xeeEfqgE6Gad8cOF3dM+vkQUlb3HYPB30ZB02fOdAsoQwrxVXxOEBjprh9i+Y9koNw1Xh6kL5Ti3AG30wbgDO0GtNrOV9wfi1UlwzySAVxkpMG1AQePgaAqtmiNH5m+0h2JEYSNbF8baPxdly8wPuMZ2/VTFxhy8IXcS3Mugris34pIfQyFpO5pvoUH8yhErh4mcGmiJa3ma7Y/CMcb/TJaVn5hDJNee2CxGyNqnT5dSi04tuO1elygqM/lVIkB/zXlzeMrAdblmsCy2lziRj1WNsFdgWHxoY0EQlPHFGsd9ZXCd+652UA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uj87WIcpyEkT6WXf7bC9bT/pIOVTM3t6RBpAjosxdjE=;
- b=tVkPu1dsv+gYyt1WkcEyFOw1F0CYvY3ue07dlFNYjsGvKk3igi2Rbu96d1gtZ4naBbI+bPOS2VH8+w1OHJSjOmOkXYYKzgVN/iwIqTuOUAFhs+Eb0Cz14lRUVfsR5ahvH8vUP/03oR1rk/KSLpJ4q4FxdctiTpLiJFAPWj55qEc=
-Authentication-Results: resnulli.us; dkim=none (message not signed)
- header.d=none;resnulli.us; dmarc=none action=none header.from=plvision.eu;
-Received: from DB6P190MB0534.EURP190.PROD.OUTLOOK.COM (2603:10a6:6:33::15) by
- DB6P190MB0469.EURP190.PROD.OUTLOOK.COM (2603:10a6:6:33::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3216.26; Mon, 27 Jul 2020 12:35:57 +0000
-Received: from DB6P190MB0534.EURP190.PROD.OUTLOOK.COM
- ([fe80::2c35:1eb3:3877:3c1d]) by DB6P190MB0534.EURP190.PROD.OUTLOOK.COM
- ([fe80::2c35:1eb3:3877:3c1d%7]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
- 12:35:57 +0000
-Date:   Mon, 27 Jul 2020 15:35:53 +0300
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mickey Rachamim <mickeyr@marvell.com>
-Subject: Re: [net-next v4 2/6] net: marvell: prestera: Add PCI interface
- support
-Message-ID: <20200727123553.GC21360@plvision.eu>
-References: <20200727122242.32337-1-vadym.kochan@plvision.eu>
- <20200727122242.32337-3-vadym.kochan@plvision.eu>
- <20200727123205.GJ2216@nanopsycho>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727123205.GJ2216@nanopsycho>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: AM6P194CA0095.EURP194.PROD.OUTLOOK.COM
- (2603:10a6:209:8f::36) To DB6P190MB0534.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:6:33::15)
+        Mon, 27 Jul 2020 08:36:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgG0MgO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:36:14 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511F0C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:36:14 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id qc22so2096137ejb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:36:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x6caQUjexH2eAZHZxrKkjTMYYhIZR/WDASSA74m2eu8=;
+        b=OiTflPpgY9Jcs6ZW5WSJtCWGR0RVMVivQ+3rv3KjYXDSrf7/bj4/gK1jpYSbwmnYwd
+         P8D31958M+sfgH5XdZH6hxKdHaQsYF85GF8k0mVNgaQQ8Dt5OSWFcDOTNdt1ZbMX+Fq/
+         Q3iZ1i7kISG1s1rTbnvt9RVkTjGw9Vxb8p8qU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x6caQUjexH2eAZHZxrKkjTMYYhIZR/WDASSA74m2eu8=;
+        b=XeGfrxTxfUNwm+OyvXPIzNC7C87JIiHAFgHoFMXf80K35lczz1u8bDmkx4K5ntAGIy
+         rLhw9MkmOUJIeqCKbXsbtU4xAAe13qzlYWctga1XC23zJQx6OoJLMjFHcOTAV/HA5AE/
+         fr6WYyn8RH0cDIlOX0oBLvr3QTjiNqspXFMiybhua87LiSq24YXeRWn+VxR1zstaDf7V
+         2D2uyRrHBuYeva1ZJGFL10nXBMEYZBO3gCXjIK4jH+DMXt9QiDrV5b03GvgHhrN/R5LI
+         lmmEiW2zIxMWy/InxCwBRG2LF07gcn+pwCvu8gzyXuEydfdx+JLflKnvUxc/dHOEFR92
+         SaAQ==
+X-Gm-Message-State: AOAM531aN9eKZwYefqut3V8hCcJ62uuQBAnxW8voCDXv03Rxg3sI2YAe
+        46Fdp56yZDkP/9J/VYWBzvOd5apS3BOlgQ==
+X-Google-Smtp-Source: ABdhPJzfC4spVkEAzGI8haRCIbokYp2PAxth6qV7Lpk+mAqU8hZGUi4ccM7KwZxm2wSd6wL2akVOIQ==
+X-Received: by 2002:a17:906:8608:: with SMTP id o8mr19685591ejx.156.1595853372628;
+        Mon, 27 Jul 2020 05:36:12 -0700 (PDT)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
+        by smtp.gmail.com with ESMTPSA id a1sm6992127ejk.125.2020.07.27.05.36.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 05:36:11 -0700 (PDT)
+Received: by mail-wr1-f48.google.com with SMTP id r4so11749955wrx.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:36:10 -0700 (PDT)
+X-Received: by 2002:adf:ec45:: with SMTP id w5mr20525305wrn.415.1595853370267;
+ Mon, 27 Jul 2020 05:36:10 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from plvision.eu (217.20.186.93) by AM6P194CA0095.EURP194.PROD.OUTLOOK.COM (2603:10a6:209:8f::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Mon, 27 Jul 2020 12:35:55 +0000
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f87b3411-ccd8-4f91-3f55-08d832299c66
-X-MS-TrafficTypeDiagnostic: DB6P190MB0469:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6P190MB0469D70128FE1F7AA239F9D295720@DB6P190MB0469.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lUcqy5UfvMSPZJFETJ3iXysJ2tul1MxrkzZuuRkI5IkIKCMbqhiwGS3imu9U61eODwlKWOMrHvR+oLW4GLjP5dgkF0u4sQSfi7QCmJ6DTTEQCiJiGW9xJnIRKreuWfc0kDMZEz5BIloXCPG1Yid2FpPZfWlaY3BKtY0uCsOpqYD/JN3tyNoWSSq/8Y9tQfVbCJDrlBJfBxcJgA4F4nnQG3U9l0iOII7DhsgXvc8yzFjKLuGf5uHLmRLIXKYKiG2lCXLdVxbFIfayw/oyI69gMmuNxsbS+NnsJyQDvoW1zdbA7C1gmQHvuDVPGWgEUXHL
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6P190MB0534.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39830400003)(396003)(346002)(376002)(366004)(66946007)(36756003)(8936002)(66476007)(2906002)(66556008)(956004)(55016002)(83380400001)(2616005)(7416002)(44832011)(4326008)(8886007)(8676002)(86362001)(316002)(186003)(33656002)(26005)(7696005)(16526019)(54906003)(5660300002)(508600001)(6916009)(1076003)(52116002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: /flGuBDFNER0/cCp/MlpclE7RqCj4XeKLVJrrC3Kz2fbp8PNYB+cDr8Jcn76m9vB++fJOCiMEEWuEMPqUar/D4jD1xlp9AYGyMWviA64TQ4k6HxGS4g6ZJ6AMOhyJWqrkVHkQ/cn9iA8gzzbHWAbxlf0V+plV/jAACeHlvbNGmhzo4lO4/+ekIMpx2MakEO6//sr8sP0RjMBjbT61whJig//yzivz0tFceKVGHre+yvR4C1bpJlpZJlKTu8UUxdhlfFU+dbSgThuAAOZQaN1Y43UQMU0FEn199T396uctAFi3JCf+YPvelMi45wNYY28jytiDSQ3MhJWYhfXRuVM2ZG9zJI8oiQgVtzc8iSPBYieP/yjpOJSHlmJjyQnCakqFk0Ybf8uWCKxXOgDbf9HaZElEo+5Y/rJvzYMGkqPiac9pHyQZ6Kz1PuAoZ6GC/bqr+APY/+ze4RuWjZat6HJ8skkT5ONxMCUY2CZ17wbr5k=
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: f87b3411-ccd8-4f91-3f55-08d832299c66
-X-MS-Exchange-CrossTenant-AuthSource: DB6P190MB0534.EURP190.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 12:35:57.3378
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KfcMEQuF0j4hsEwRjXjolXt8I5539ATMf5fzKbstsRbzFvNBwMvx2JGe0T0/HwcF79zvPdL31qFIr+RMcm2L1GxedcQvXk3chXGqH78J44I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6P190MB0469
+References: <20200717115435.2632623-1-helen.koike@collabora.com>
+ <20200717115435.2632623-3-helen.koike@collabora.com> <5665bbd4-75e2-ec73-ba24-54e5981eb4ac@linaro.org>
+ <e4d4c88b-2724-76c0-fff2-2404d5073ae4@collabora.com> <0fd9e21d-4317-dbed-c035-9c1523e0195b@linaro.org>
+ <15067dff-c802-d6f0-a2f8-817fb487b30d@collabora.com> <b11b0887-ce9e-63ab-9f74-7ad3dbda922b@linaro.org>
+In-Reply-To: <b11b0887-ce9e-63ab-9f74-7ad3dbda922b@linaro.org>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Mon, 27 Jul 2020 14:35:58 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5BJcTmyt5Ae5N8ZqvVZAN_Ta+j71FTG_C=R9sT_aHJdbw@mail.gmail.com>
+Message-ID: <CAAFQd5BJcTmyt5Ae5N8ZqvVZAN_Ta+j71FTG_C=R9sT_aHJdbw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/6] media: v4l2: Add extended buffer operations
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Hirokazu Honda <hiroh@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Brian Starkey <Brian.Starkey@arm.com>, kernel@collabora.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        frkoenig@chromium.org, Maxime Jourdan <mjourdan@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+Hi Stanimir,
 
-On Mon, Jul 27, 2020 at 02:32:05PM +0200, Jiri Pirko wrote:
-> Mon, Jul 27, 2020 at 02:22:38PM CEST, vadym.kochan@plvision.eu wrote:
-> >Add PCI interface driver for Prestera Switch ASICs family devices, which
-> >provides:
+On Fri, Jul 24, 2020 at 3:17 PM Stanimir Varbanov
+<stanimir.varbanov@linaro.org> wrote:
+>
+>
+>
+> On 7/21/20 5:40 PM, Helen Koike wrote:
 > >
-> >    - Firmware loading mechanism
-> >    - Requests & events handling to/from the firmware
-> >    - Access to the firmware on the bus level
 > >
-> >The firmware has to be loaded each time the device is reset. The driver
-> >is loading it from:
+> > On 7/21/20 11:30 AM, Stanimir Varbanov wrote:
+> >> Hi Helen,
+> >>
+> >> On 7/21/20 4:54 PM, Helen Koike wrote:
+> >>> Hi,
+> >>>
+> >>> On 7/21/20 8:26 AM, Stanimir Varbanov wrote:
+> >>>>
+> >>>>
+> >>>> On 7/17/20 2:54 PM, Helen Koike wrote:
+> >>>>> From: Hans Verkuil <hans.verkuil@cisco.com>
+> >>>>>
+> >>>>> Those extended buffer ops have several purpose:
+> >>>>> 1/ Fix y2038 issues by converting the timestamp into an u64 counting
+> >>>>>    the number of ns elapsed since 1970
+> >>>>> 2/ Unify single/multiplanar handling
+> >>>>> 3/ Add a new start offset field to each v4l2 plane buffer info struct
+> >>>>>    to support the case where a single buffer object is storing all
+> >>>>>    planes data, each one being placed at a different offset
+> >>>>>
+> >>>>> New hooks are created in v4l2_ioctl_ops so that drivers can start using
+> >>>>> these new objects.
+> >>>>>
+> >>>>> The core takes care of converting new ioctls requests to old ones
+> >>>>> if the driver does not support the new hooks, and vice versa.
+> >>>>>
+> >>>>> Note that the timecode field is gone, since there doesn't seem to be
+> >>>>> in-kernel users. We can be added back in the reserved area if needed or
+> >>>>> use the Request API to collect more metadata information from the
+> >>>>> frame.
+> >>>>>
+> >>>>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+> >>>>> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> >>>>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> >>>>> ---
+> >>>>> Changes in v4:
+> >>>>> - Use v4l2_ext_pix_format directly in the ioctl, drop v4l2_ext_format,
+> >>>>> making V4L2_BUF_TYPE_VIDEO_[OUTPUT,CAPTURE] the only valid types.
+> >>>>> - Drop VIDIOC_EXT_EXPBUF, since the only difference from VIDIOC_EXPBUF
+> >>>>> was that with VIDIOC_EXT_EXPBUF we could export multiple planes at once.
+> >>>>> I think we can add this later, so I removed it from this RFC to simplify it.
+> >>>>> - Remove num_planes field from struct v4l2_ext_buffer
+> >>>>> - Add flags field to struct v4l2_ext_create_buffers
+> >>>>> - Reformulate struct v4l2_ext_plane
+> >>>>> - Fix some bugs caught by v4l2-compliance
+> >>>>> - Rebased on top of media/master (post 5.8-rc1)
+> >>>>>
+> >>>>> Changes in v3:
+> >>>>> - Rebased on top of media/master (post 5.4-rc1)
+> >>>>>
+> >>>>> Changes in v2:
+> >>>>> - Add reserved space to v4l2_ext_buffer so that new fields can be added
+> >>>>>   later on
+> >>>>> ---
+> >>>>>  drivers/media/v4l2-core/v4l2-dev.c   |  29 ++-
+> >>>>>  drivers/media/v4l2-core/v4l2-ioctl.c | 349 +++++++++++++++++++++++++--
+> >>>>>  include/media/v4l2-ioctl.h           |  26 ++
+> >>>>>  include/uapi/linux/videodev2.h       |  89 +++++++
+> >>>>>  4 files changed, 471 insertions(+), 22 deletions(-)
+> >>>>>
+> >>>>
+> >>>> <cut>
+> >>>>
+> >>>>> +/**
+> >>>>> + * struct v4l2_ext_plane - extended plane buffer info
+> >>>>> + * @buffer_length:       size of the entire buffer in bytes, should fit
+> >>>>> + *                       @offset + @plane_length
+> >>>>> + * @plane_length:        size of the plane in bytes.
+> >>>>> + * @userptr:             when memory is V4L2_MEMORY_USERPTR, a userspace pointer pointing
+> >>>>> + *                       to this plane.
+> >>>>> + * @dmabuf_fd:           when memory is V4L2_MEMORY_DMABUF, a userspace file descriptor
+> >>>>> + *                       associated with this plane.
+> >>>>> + * @offset:              offset in the memory buffer where the plane starts. If
+> >>>>> + *                       V4L2_MEMORY_MMAP is used, then it can be a "cookie" that
+> >>>>> + *                       should be passed to mmap() called on the video node.
+> >>>>> + * @reserved:            extra space reserved for future fields, must be set to 0.
+> >>>>> + *
+> >>>>> + *
+> >>>>> + * Buffers consist of one or more planes, e.g. an YCbCr buffer with two planes
+> >>>>> + * can have one plane for Y, and another for interleaved CbCr components.
+> >>>>> + * Each plane can reside in a separate memory buffer, or even in
+> >>>>> + * a completely separate memory node (e.g. in embedded devices).
+> >>>>> + */
+> >>>>> +struct v4l2_ext_plane {
+> >>>>> + __u32 buffer_length;
+> >>>>> + __u32 plane_length;
+> >>>>> + union {
+> >>>>> +         __u64 userptr;
+> >>>>> +         __s32 dmabuf_fd;
+> >>>>> + } m;
+> >>>>> + __u32 offset;
+> >>>>> + __u32 reserved[4];
+> >>>>> +};
+> >>>>> +
+> >>>>>  /**
+> >>>>>   * struct v4l2_buffer - video buffer info
+> >>>>>   * @index:       id number of the buffer
+> >>>>> @@ -1055,6 +1086,36 @@ struct v4l2_buffer {
+> >>>>>   };
+> >>>>>  };
+> >>>>>
+> >>>>> +/**
+> >>>>> + * struct v4l2_ext_buffer - extended video buffer info
+> >>>>> + * @index:       id number of the buffer
+> >>>>> + * @type:        V4L2_BUF_TYPE_VIDEO_CAPTURE or V4L2_BUF_TYPE_VIDEO_OUTPUT
+> >>>>> + * @flags:       buffer informational flags
+> >>>>> + * @field:       enum v4l2_field; field order of the image in the buffer
+> >>>>> + * @timestamp:   frame timestamp
+> >>>>> + * @sequence:    sequence count of this frame
+> >>>>> + * @memory:      enum v4l2_memory; the method, in which the actual video data is
+> >>>>> + *               passed
+> >>>>> + * @planes:      per-plane buffer information
+> >>>>> + * @request_fd:  fd of the request that this buffer should use
+> >>>>> + * @reserved:    extra space reserved for future fields, must be set to 0
+> >>>>> + *
+> >>>>> + * Contains data exchanged by application and driver using one of the Streaming
+> >>>>> + * I/O methods.
+> >>>>> + */
+> >>>>> +struct v4l2_ext_buffer {
+> >>>>> + __u32 index;
+> >>>>> + __u32 type;
+> >>>>> + __u32 flags;
+> >>>>> + __u32 field;
+> >>>>> + __u64 timestamp;
+> >>>>> + __u32 sequence;
+> >>>>> + __u32 memory;
+> >>>>> + __u32 request_fd;
+> >>>>
+> >>>> This should be __s32, at least for consistency with dmabuf_fd?
+> >>>
+> >>> I see that in struct v4l2_buffer, we have __s32, I don't mind changing it
+> >>> to keep the consistency, I just don't see where this value can be a negative
+> >>> number.
+> >>
+> >> here
+> >> https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/media/common/videobuf2/videobuf2-v4l2.c#L134
 > >
-> >    /lib/firmware/marvell/prestera_fw-v{MAJOR}.{MINOR}.img
+> > I saw that -1 is used to signal an invalid value, but I was just wondering when request_fd = 0 is valid.
+>
+> The request_fd is valid system wide file descriptor and request_fd = 0
+> is STDIN_FILENO thus IMO it is valid as far as we call it file descriptor.
+>
 > >
-> >The full firmware image version is located within the internal header
-> >and consists of 3 numbers - MAJOR.MINOR.PATCH. Additionally, driver has
-> >hard-coded minimum supported firmware version which it can work with:
-> >
-> >    MAJOR - reflects the support on ABI level between driver and loaded
-> >            firmware, this number should be the same for driver and loaded
-> >            firmware.
-> >
-> >    MINOR - this is the minimum supported version between driver and the
-> >            firmware.
-> >
-> >    PATCH - indicates only fixes, firmware ABI is not changed.
-> >
-> >Firmware image file name contains only MAJOR and MINOR numbers to make
-> >driver be compatible with any PATCH version.
-> >
-> >Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
-> >Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
-> >Acked-by: Jiri Pirko <jiri@mellanox.com>
-> 
-> You have to remove the tag if you change the patch from last tagged
-> version...
-> 
-OK, sorry, makes sense, should I re-spin with v5 or wait when the status
-is changed to 'Changes Requested' in the patchwork ?
+> >>
+> >>>
+> >>>>
+> >>>>> + struct v4l2_ext_plane planes[VIDEO_MAX_PLANES];
+> >>>>> + __u32 reserved[4];
+> >>>>
+> >>>> I think we have to reserve more words here for future extensions.
+> >>>>
+> >>>> I'd like also to propose to add here __s32 metadata_fd. The idea behind
+> >>>> this is to have a way to pass per-frame metadata dmabuf buffers for
+> >>>> synchronous type of metadata where the metadata is coming at the same
+> >>>> time with data buffers. What would be the format of the metadata buffer
+> >>>> is TBD.
+> >>>>
+> >>>> One option for metadata buffer format could be:
+> >>>>
+> >>>> header {
+> >>>>    num_ctrls
+> >>>>    array_of_ctrls [0..N]
+> >>>>            ctrl_id
+> >>>>            ctrl_size
+> >>>>            ctrl_offset
+> >>>> }
+> >>>>
+> >>>> data {
+> >>>>    cid0    //offset of cid0 in dmabuf buffer
+> >>>>    cid1
+> >>>>    cidN
+> >>>> }
+> >>>
+> >>> Would it be better if, instead of adding a medatata_fd inside struct v4l2_ext_buffer,
+> >>> we create a new ioctl that gets this structs for the controls and sync them using the
+> >>> Request API ?
+>
+> New ioctl means new syscall. There are use-cases where encoding
+> framerate is 480 fps (and more in near future, for example 960fps) this
+> means 480 more syscalls per second. I don't think this is optimal and
+> scalable solution at all.
+>
 
-> 
-> >---
-> >PATCH v4:
-> >    1) Get rid of "packed" attribute for the fw image header, it is
-> >       already aligned.
+Do you happen to have some data to confirm that it's indeed a problem?
+
+Best regards,
+Tomasz
+
+> >>
+> >> no, this solution has performance drawbacks when the metadata is big,
+> >> think of 64K.
 > >
-> >    2) Cleanup not needed initialization of variables which are used in
-> >       readl_poll_timeout() helpers.
+> > Why? You could still use a dmabuf in this new ioctl, no?
 > >
-> >    3) Replace #define's of prestera_{fw,ldr}_{read,write} to static funcs.
 > >
-> >    4) Use pcim_ helpers for resource allocation
+> > Regards,
+> > Helen
 > >
-> >    5) Use devm_zalloc() for struct prestera_fw instance allocation.
-> >
-> >    6) Use module_pci_driver(prestera_pci_driver) instead of module_{init,exit}.
-> >
-> >    7) Use _MS prefix for timeout #define's.
-> >
-> >    8) Use snprintf for firmware image path generation instead of using
-> >       macrosses.
-> >
-> >    9) Use memcpy_xxxio helpers for IO memory copying.
-> >
-> >   10) By default use same build type ('m' or 'y') for
-> >       CONFIG_PRESTERA_PCI which is used by CONFIG_PRESTERA.
-> >
-> 
-> [...]
+> >>
+> >>>
+> >>> I'd like to avoid too much metadata in the buffer object.
+> >>>
+> >>> Regards,
+> >>> Helen
+> >>>
+> >>>>
+> >>>> This will make easy to get concrete ctrl id without a need to parse the
+> >>>> whole metadata buffer. Also using dmabuf we don't need to copy data
+> >>>> between userspace <-> kernelspace (just cache syncs through
+> >>>> begin/end_cpu_access).
+> >>>>
+> >>>> The open question is who will validate the metadata buffer when it comes
+> >>>> from userspace. The obvious answer is v4l2-core but looking into DRM
+> >>>> subsytem they give more freedom to the drivers, and just provide generic
+> >>>> helpers which are not mandatory.
+> >>>>
+> >>>> I guess this will be a voice in the wilderness but I wanted to know your
+> >>>> opinion.
+> >>>>
+> >>>>> +};
+> >>>>> +
+> >>>>>  #ifndef __KERNEL__
+> >>>>>  /**
+> >>>>>   * v4l2_timeval_to_ns - Convert timeval to nanoseconds
+> >>>>> @@ -2520,6 +2581,29 @@ struct v4l2_create_buffers {
+> >>>>>   __u32                   reserved[6];
+> >>>>>  };
+> >>>>>
+> >>>>> +/**
+> >>>>> + * struct v4l2_ext_create_buffers - VIDIOC_EXT_CREATE_BUFS argument
+> >>>>> + * @index:       on return, index of the first created buffer
+> >>>>> + * @count:       entry: number of requested buffers,
+> >>>>> + *               return: number of created buffers
+> >>>>> + * @memory:      enum v4l2_memory; buffer memory type
+> >>>>> + * @capabilities: capabilities of this buffer type.
+> >>>>> + * @format:      frame format, for which buffers are requested
+> >>>>> + * @flags:       additional buffer management attributes (ignored unless the
+> >>>>> + *               queue has V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS capability
+> >>>>> + *               and configured for MMAP streaming I/O).
+> >>>>> + * @reserved:    extra space reserved for future fields, must be set to 0
+> >>>>> + */
+> >>>>> +struct v4l2_ext_create_buffers {
+> >>>>> + __u32                           index;
+> >>>>> + __u32                           count;
+> >>>>> + __u32                           memory;
+> >>>>> + struct v4l2_ext_pix_format      format;
+> >>>>> + __u32                           capabilities;
+> >>>>> + __u32                           flags;
+> >>>>> + __u32 reserved[4];
+> >>>>> +};
+> >>>>> +
+> >>>>>  /*
+> >>>>>   *       I O C T L   C O D E S   F O R   V I D E O   D E V I C E S
+> >>>>>   *
+> >>>>> @@ -2623,6 +2707,11 @@ struct v4l2_create_buffers {
+> >>>>>  #define VIDIOC_G_EXT_PIX_FMT     _IOWR('V', 104, struct v4l2_ext_pix_format)
+> >>>>>  #define VIDIOC_S_EXT_PIX_FMT     _IOWR('V', 105, struct v4l2_ext_pix_format)
+> >>>>>  #define VIDIOC_TRY_EXT_PIX_FMT   _IOWR('V', 106, struct v4l2_ext_pix_format)
+> >>>>> +#define VIDIOC_EXT_CREATE_BUFS   _IOWR('V', 107, struct v4l2_ext_create_buffers)
+> >>>>> +#define VIDIOC_EXT_QUERYBUF      _IOWR('V', 108, struct v4l2_ext_buffer)
+> >>>>> +#define VIDIOC_EXT_QBUF          _IOWR('V', 109, struct v4l2_ext_buffer)
+> >>>>> +#define VIDIOC_EXT_DQBUF _IOWR('V', 110, struct v4l2_ext_buffer)
+> >>>>> +#define VIDIOC_EXT_PREPARE_BUF   _IOWR('V', 111, struct v4l2_ext_buffer)
+> >>>>>
+> >>>>>  /* Reminder: when adding new ioctls please add support for them to
+> >>>>>     drivers/media/v4l2-core/v4l2-compat-ioctl32.c as well! */
+> >>>>>
+> >>>>
+> >>
+>
+> --
+> regards,
+> Stan
