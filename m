@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5329AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46938C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3053E2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2619C20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859326;
-	bh=sZJADNEv5yYJ4d0fShCRIvioPpF6lHr/82zsUvW411o=;
+	s=default; t=1595859332;
+	bh=JvqmCjpfFxHkGSS4o1rUiFiNGvL2wl2mA3JOg82VGYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iSDTPhSdz6XSbSffCgEVReY1m/0obNAIPSRSODfFpzfX22H5Kczf222eshHbDMM0R
-	 SmL5toOye6RFcS++kTIgHoX+PjyGQU/vkdieKxfEDBJBWA7A+Vw7gvnmdbYJRmszpK
-	 gqsRrVlAI629SQ9d5iv2PXRLgQbBV0t/21tTg9wo=
+	b=ucld3eesXdfXEAem+hv9SwRSF30AFgv6HKtVaV7Z7DvsNR42OmA8uk1ZZ7HIoM8fk
+	 zoXQVqMr6kxqFRd3gi3Hv0aO4t6Z4Gqb1pxc81CqfLJATTsy06Rx96yMx5CQRBk38x
+	 Ve/0LgeT4w+EaLV7Ph8kkR2CmvA2jFrBdUOwi/9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730703AbgG0OPY (ORCPT
+        id S1730710AbgG0OP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:15:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41574 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:15:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730682AbgG0OPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:15:18 -0400
+        id S1730697AbgG0OPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:15:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48FF420663;
-        Mon, 27 Jul 2020 14:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C80E2075A;
+        Mon, 27 Jul 2020 14:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859317;
-        bh=sZJADNEv5yYJ4d0fShCRIvioPpF6lHr/82zsUvW411o=;
+        s=default; t=1595859323;
+        bh=JvqmCjpfFxHkGSS4o1rUiFiNGvL2wl2mA3JOg82VGYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o7fNtseREti7SwBR6hy1ugzYdbvAr1inyeU+RCFIJedmOsQvkp7EjTDYmFCi0I1oz
-         yszLuAQmjI0oazS/6tj38ENHZSllm7dc4v7XXz+TlVgv6qf1MFdmkYQNzow7uwWnjh
-         7piRlC+PK89KWR3etMWyfriOLQcham5qSTHlYhtg=
+        b=IKj3NKRIMcqzgxaJ9/J+dkcM7kUj8byExh5qnO/UKsthhtz5YRJ0qrVtvBjoA7kqk
+         49G978fGZp/wSdM2KfrB+Td7m7FVB210VtsPIV9p0nAYs1tLwFaR7mfQvbhwwsqFgd
+         H8sHg/2GZOKO2rFRmp18u+RoMRq8ltm/0xtiEkdw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Patrick Volkerding <volkerdi@gmail.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 061/138] Revert "PCI/PM: Assume ports without DLL Link Active train links in 100 ms"
-Date:   Mon, 27 Jul 2020 16:04:16 +0200
-Message-Id: <20200727134928.461807301@linuxfoundation.org>
+Subject: [PATCH 5.4 063/138] enetc: Remove the mdio bus on PF probe bailout
+Date:   Mon, 27 Jul 2020 16:04:18 +0200
+Message-Id: <20200727134928.557474581@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -61,98 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-[ Upstream commit d08c30d7a0d1826f771f16cde32bd86e48401791 ]
+[ Upstream commit 26cb7085c8984e5b71d65c374a135134ed8cabb3 ]
 
-This reverts commit ec411e02b7a2e785a4ed9ed283207cd14f48699d.
+For ENETC ports that register an external MDIO bus,
+the bus doesn't get removed on the error bailout path
+of enetc_pf_probe().
 
-Patrick reported that this commit broke hybrid graphics on a ThinkPad X1
-Extreme 2nd with Intel UHD Graphics 630 and NVIDIA GeForce GTX 1650 Mobile:
+This issue became much more visible after recent:
+commit 07095c025ac2 ("net: enetc: Use DT protocol information to set up the ports")
+Before this commit, one could make probing fail on the error
+path only by having register_netdev() fail, which is unlikely.
+But after this commit, because it moved the enetc_of_phy_get()
+call up in the probing sequence, now we can trigger an mdiobus_free()
+bug just by forcing enetc_alloc_msix() to return error, i.e. with the
+'pci=nomsi' kernel bootarg (since ENETC relies on MSI support to work),
+as the calltrace below shows:
 
-  nouveau 0000:01:00.0: fifo: PBDMA0: 01000000 [] ch 0 [00ff992000 DRM] subc 0 mthd 0008 data 00000000
+kernel BUG at /home/eiz/work/enetc/net/drivers/net/phy/mdio_bus.c:648!
+Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+[...]
+Hardware name: LS1028A RDB Board (DT)
+pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--)
+pc : mdiobus_free+0x50/0x58
+lr : devm_mdiobus_free+0x14/0x20
+[...]
+Call trace:
+ mdiobus_free+0x50/0x58
+ devm_mdiobus_free+0x14/0x20
+ release_nodes+0x138/0x228
+ devres_release_all+0x38/0x60
+ really_probe+0x1c8/0x368
+ driver_probe_device+0x5c/0xc0
+ device_driver_attach+0x74/0x80
+ __driver_attach+0x8c/0xd8
+ bus_for_each_dev+0x7c/0xd8
+ driver_attach+0x24/0x30
+ bus_add_driver+0x154/0x200
+ driver_register+0x64/0x120
+ __pci_register_driver+0x44/0x50
+ enetc_pf_driver_init+0x24/0x30
+ do_one_initcall+0x60/0x1c0
+ kernel_init_freeable+0x1fc/0x274
+ kernel_init+0x14/0x110
+ ret_from_fork+0x10/0x34
 
-Karol reported that this commit broke Nouveau firmware loading on a Lenovo
-P1G2 with Intel UHD Graphics 630 and NVIDIA TU117GLM [Quadro T1000 Mobile]:
-
-  nouveau 0000:01:00.0: acr: AHESASC binary failed
-
-In both cases, reverting ec411e02b7a2 solved the problem.  Unfortunately,
-this revert will reintroduce the "Thunderbolt bridges take long time to
-resume from D3cold" problem:
-https://bugzilla.kernel.org/show_bug.cgi?id=206837
-
-Link: https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
-Link: https://lore.kernel.org/r/CACO55tsAEa5GXw5oeJPG=mcn+qxNvspXreJYWDJGZBy5v82JDA@mail.gmail.com
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=208597
-Reported-by: Patrick Volkerding <volkerdi@gmail.com>
-Reported-by: Karol Herbst <kherbst@redhat.com>
-Fixes: ec411e02b7a2 ("PCI/PM: Assume ports without DLL Link Active train links in 100 ms")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: ebfcb23d62ab ("enetc: Add ENETC PF level external MDIO support")
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 30 +++++++++---------------------
- 1 file changed, 9 insertions(+), 21 deletions(-)
+ drivers/net/ethernet/freescale/enetc/enetc_pf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 08f7b1ed8c62e..b1b2c8ddbc927 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -4610,8 +4610,7 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
-  * pcie_wait_for_link_delay - Wait until link is active or inactive
-  * @pdev: Bridge device
-  * @active: waiting for active or inactive?
-- * @delay: Delay to wait after link has become active (in ms). Specify %0
-- *	   for no delay.
-+ * @delay: Delay to wait after link has become active (in ms)
-  *
-  * Use this to wait till link becomes active or inactive.
-  */
-@@ -4652,7 +4651,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
- 		msleep(10);
- 		timeout -= 10;
- 	}
--	if (active && ret && delay)
-+	if (active && ret)
- 		msleep(delay);
- 	else if (ret != active)
- 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
-@@ -4773,28 +4772,17 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
- 	if (!pcie_downstream_port(dev))
- 		return;
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+index b73421c3e25b1..74847aa644f12 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
+@@ -885,6 +885,7 @@ static int enetc_pf_probe(struct pci_dev *pdev,
+ 	return 0;
  
--	/*
--	 * Per PCIe r5.0, sec 6.6.1, for downstream ports that support
--	 * speeds > 5 GT/s, we must wait for link training to complete
--	 * before the mandatory delay.
--	 *
--	 * We can only tell when link training completes via DLL Link
--	 * Active, which is required for downstream ports that support
--	 * speeds > 5 GT/s (sec 7.5.3.6).  Unfortunately some common
--	 * devices do not implement Link Active reporting even when it's
--	 * required, so we'll check for that directly instead of checking
--	 * the supported link speed.  We assume devices without Link Active
--	 * reporting can train in 100 ms regardless of speed.
--	 */
--	if (dev->link_active_reporting) {
--		pci_dbg(dev, "waiting for link to train\n");
--		if (!pcie_wait_for_link_delay(dev, true, 0)) {
-+	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-+		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
-+		msleep(delay);
-+	} else {
-+		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-+			delay);
-+		if (!pcie_wait_for_link_delay(dev, true, delay)) {
- 			/* Did not train, no need to wait any further */
- 			return;
- 		}
- 	}
--	pci_dbg(child, "waiting %d ms to become accessible\n", delay);
--	msleep(delay);
- 
- 	if (!pci_device_is_present(child)) {
- 		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
+ err_reg_netdev:
++	enetc_mdio_remove(pf);
+ 	enetc_of_put_phy(priv);
+ 	enetc_free_msix(priv);
+ err_alloc_msix:
 -- 
 2.25.1
 
