@@ -2,204 +2,110 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088A9C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC89C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB4752075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23842075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:24:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhEUeIQw"
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="aK37klo/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgG0KYA (ORCPT
+        id S1728000AbgG0KYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:24:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56314 "EHLO
+        Mon, 27 Jul 2020 06:24:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgG0KX7 (ORCPT
+        with ESMTP id S1726268AbgG0KYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:23:59 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF8B6C061794;
-        Mon, 27 Jul 2020 03:23:59 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id lw1so1061886pjb.1;
-        Mon, 27 Jul 2020 03:23:59 -0700 (PDT)
+        Mon, 27 Jul 2020 06:24:40 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5255C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 03:24:39 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id i26so8413896edv.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 03:24:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZAJGKAnga8wUpgRoEi+tan8Djz516wktbKcW6mwyua8=;
-        b=dhEUeIQw+3R4YXV12HUzPFXyzG8dBLIVThgI+T020YJw5GYKkIcQqV4JDX604Yfeii
-         Wx5WwhV3rYUOz9E3FyvYVL1KCuCJ8EUxTYPfToYrUAmKh40P/V1niKtPsDwtJspf0Jar
-         L813Dza1IGBUbxuUQiPvRub5sFclmP/orXtWqQHmdxztu59/cWrNqvm8i0QkLYXPerKm
-         Y9iuVPZtvdgPiypRfmr1KScp8x9F4zsxu2w5PY73Bn7F7LHwZHbAhPF0E7TZYVeESAvW
-         WMXVJMEVc27RRHZRV+4WiP6CZLyoJebsb1AVAv2Qzfe6vaRZ5d9EktUoteIt8usPmsh2
-         t8Tw==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ew/mvZaAa0MKQUJkHMxg0jxr2TRBwbh2Nmfpyl37I+I=;
+        b=aK37klo/FRI+TgL6WW4qP8UtbBGyDnsRZUlfEJUAD/Zhb4ZYwL87atfbrsCS7sqOHB
+         0mt9no0Ql7VZNC65lXXoAxUSUOZX4WIt+lhlzqWAjTZRpsdh1c+ZaD44a2+sG96s/doS
+         QlKDuTFYIFOCDAgNZVaDF+5s3yBUUHDiIe5+jHKVuzs+OtHqq624tCaqInOIJ1neLFQi
+         ACSQXNV7Xds9AVa9HI57xesgyYgY0EwLC02F44WnWY34gVLu0o4t9va9ejWDe3Yn6TMb
+         ljKhcFx/NNkNkK1dwvMV0lpdJmuqfPihEAfTYO5v79EVFbhd0QoJAvGnfJXEz8BkLFXW
+         HCcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZAJGKAnga8wUpgRoEi+tan8Djz516wktbKcW6mwyua8=;
-        b=r9k1iILusgDWFOE2ICoph67hNyJE3P42qzf94Wv6zDbm79mBVJvjfbp36V3jOvWjdk
-         0hKsS/tBlocdVSnJwqq0VkbB3Ugx7ASgyFY5ke3M7aZWSlkrzB06VNSo+fxZbfH6U3j4
-         LFzFEKynAR59OwDkyGYP9T+WunB5PUPZ71+TkiSYExJUBwtD7tduIhE5S7t+wVNZ/DwI
-         fWc7f7oM3/VhdlTnIje3oIFB/sB2by1a+vhR8JlgQDfrQd/VSP/japwtwNl0gN0hgo7w
-         KXQhk2vE/hqfvhDvNgDQJlTyBVqoqSpO2TAz95HPavwocQ4Bv9ykxGPSKQ36Ni4S635y
-         rP/A==
-X-Gm-Message-State: AOAM531qIzyQlMbppIl1g+O9VTqxT8RWw6jK1xQH6ElNjnNBVPnQ/kX6
-        GNVGSbjqp4UbBUeqN7cPEJKFS3rh16HvZBpicLujlRkf
-X-Google-Smtp-Source: ABdhPJzH5cBHaWc793+UJPfg3Pf+4+gPEASjJ7Pi4ebUrJ8ymiJ0sAYKFnLBWG/8i+tmrgphKhSIvyHPPcXsch+sPMQ=
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr15795672pjp.228.1595845439142;
- Mon, 27 Jul 2020 03:23:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ew/mvZaAa0MKQUJkHMxg0jxr2TRBwbh2Nmfpyl37I+I=;
+        b=hO5PMHvUGO7zdpGJ026pI7Bqte4lztxskIUpX+zA2Jl1d4Ue/cKVUrBliXvaRvEZ3i
+         vbB07QzVRpYpNvDFVnL7kjPtFEjxdoVs5TL5FsB/sx9u9jllxrRxMEmS8xB9Dq6Fm06q
+         ZTBIyh6zWPSutzA0Hc3FKjhAoob0IUvWFYjsab4qTdF0s4XDHjG6OwJUxTKwW2paJk3y
+         44rAYWc/DoiVP3rjk6HTyTUBItT7nslK7CFG7BA+BMKNufQK7A8b3Kp1OBwkvfkaWAw7
+         mN2dMeX2yPvxqJHhfwk+tUjnP/bcinUdTME3P9OSznqDqRMh6qWZxy6kb2LmLqqglJQo
+         eceg==
+X-Gm-Message-State: AOAM532dOp7WbtKybyFXGcNEqYcTR5R2aRQb0YiROuMNKHskQ1qJpe73
+        L4GqLnPxPzpAHbM5cli7fcdvdA==
+X-Google-Smtp-Source: ABdhPJwACpz1Dt3WO295Cwmim5Oa3IRv/WSdlVIoUiactVYTBc/WgFp7/aZtBQlfVR+IHaJzlZulYQ==
+X-Received: by 2002:aa7:cdd2:: with SMTP id h18mr13654178edw.387.1595845477601;
+        Mon, 27 Jul 2020 03:24:37 -0700 (PDT)
+Received: from tsr-vdi-mbaerts.nix.tessares.net (static.23.216.130.94.clients.your-server.de. [94.130.216.23])
+        by smtp.gmail.com with ESMTPSA id i9sm1498756ejb.48.2020.07.27.03.24.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 03:24:37 -0700 (PDT)
+From:   Matthieu Baerts <matthieu.baerts@tessares.net>
+To:     netdev@vger.kernel.org
+Cc:     Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, mptcp@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net] mptcp: fix joined subflows with unblocking sk
+Date:   Mon, 27 Jul 2020 12:24:33 +0200
+Message-Id: <20200727102433.3422117-1-matthieu.baerts@tessares.net>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200714062323.19990-1-david.e.box@linux.intel.com> <20200717190620.29821-1-david.e.box@linux.intel.com>
-In-Reply-To: <20200717190620.29821-1-david.e.box@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Jul 2020 13:23:44 +0300
-Message-ID: <CAHp75VftSf8pzSAYMjcKg-MSiy0T4xG=wiKpgY20_ZKOO0Tq0w@mail.gmail.com>
-Subject: Re: [PATCH V4 0/3] Intel Platform Monitoring Technology
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 17, 2020 at 10:05 PM David E. Box
-<david.e.box@linux.intel.com> wrote:
->
-> Intel Platform Monitoring Technology (PMT) is an architecture for
-> enumerating and accessing hardware monitoring capabilities on a device.
-> With customers increasingly asking for hardware telemetry, engineers not
-> only have to figure out how to measure and collect data, but also how to
-> deliver it and make it discoverable. The latter may be through some device
-> specific method requiring device specific tools to collect the data. This
-> in turn requires customers to manage a suite of different tools in order to
-> collect the differing assortment of monitoring data on their systems.  Even
-> when such information can be provided in kernel drivers, they may require
-> constant maintenance to update register mappings as they change with
-> firmware updates and new versions of hardware. PMT provides a solution for
-> discovering and reading telemetry from a device through a hardware agnostic
-> framework that allows for updates to systems without requiring patches to
-> the kernel or software tools.
->
-> PMT defines several capabilities to support collecting monitoring data from
-> hardware. All are discoverable as separate instances of the PCIE Designated
-> Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
-> field uniquely identifies the capability. Each DVSEC also provides a BAR
-> offset to a header that defines capability-specific attributes, including
-> GUID, feature type, offset and length, as well as configuration settings
-> where applicable. The GUID uniquely identifies the register space of any
-> monitor data exposed by the capability. The GUID is associated with an XML
-> file from the vendor that describes the mapping of the register space along
-> with properties of the monitor data. This allows vendors to perform
-> firmware updates that can change the mapping (e.g. add new metrics) without
-> requiring any changes to drivers or software tools. The new mapping is
-> confirmed by an updated GUID, read from the hardware, which software uses
-> with a new XML.
->
-> The current capabilities defined by PMT are Telemetry, Watcher, and
-> Crashlog.  The Telemetry capability provides access to a continuous block
-> of read only data. The Watcher capability provides access to hardware
-> sampling and tracing features. Crashlog provides access to device crash
-> dumps.  While there is some relationship between capabilities (Watcher can
-> be configured to sample from the Telemetry data set) each exists as stand
-> alone features with no dependency on any other. The design therefore splits
-> them into individual, capability specific drivers. MFD is used to create
-> platform devices for each capability so that they may be managed by their
-> own driver. The PMT architecture is (for the most part) agnostic to the
-> type of device it can collect from. Devices nodes are consequently generic
-> in naming, e.g. /dev/telem<n> and /dev/smplr<n>. Each capability driver
-> creates a class to manage the list of devices supporting it.  Software can
-> determine which devices support a PMT feature by searching through each
-> device node entry in the sysfs class folder. It can additionally determine
-> if a particular device supports a PMT feature by checking for a PMT class
-> folder in the device folder.
->
-> This patch set provides support for the PMT framework, along with support
-> for Telemetry on Tiger Lake.
->
+Unblocking sockets used for outgoing connections were not containing
+inet info about the initial connection due to a typo there: the value of
+"err" variable is negative in the kernelspace.
 
-I assume this goes thru MFD tree.
+This fixes the creation of additional subflows where the remote port has
+to be reused if the other host didn't announce another one. This also
+fixes inet_diag showing blank info about MPTCP sockets from unblocking
+sockets doing a connect().
 
-> Changes from V3:
->         - Write out full acronym for DVSEC in PCI patch commit message and
->           add 'Designated' to comments
->         - remove unused variable caught by kernel test robot <lkp@intel.com>
->         - Add required Co-developed-by signoffs, noted by Andy
->         - Allow access using new CAP_PERFMON capability as suggested by
->           Alexey Bundankov
->         - Fix spacing in Kconfig, noted by Randy
->         - Other style changes and fixups suggested by Andy
->
-> Changes from V2:
->         - In order to handle certain HW bugs from the telemetry capability
->           driver, create a single platform device per capability instead of
->           a device per entry. Add the entry data as device resources and
->           let the capability driver manage them as a set allowing for
->           cleaner HW bug resolution.
->         - Handle discovery table offset bug in intel_pmt.c
->         - Handle overlapping regions in intel_pmt_telemetry.c
->         - Add description of sysfs class to testing ABI.
->         - Don't check size and count until confirming support for the PMT
->           capability to avoid bailing out when we need to skip it.
->         - Remove unneeded header file. Move code to the intel_pmt.c, the
->           only place where it's needed.
->         - Remove now unused platform data.
->         - Add missing header files types.h, bits.h.
->         - Rename file name and build options from telem to telemetry.
->         - Code cleanup suggested by Andy S.
->         - x86 mailing list added.
->
-> Changes from V1:
->         - In the telemetry driver, set the device in device_create() to
->           the parent PCI device (the monitoring device) for clear
->           association in sysfs. Was set before to the platform device
->           created by the PCI parent.
->         - Move telem struct into driver and delete unneeded header file.
->         - Start telem device numbering from 0 instead of 1. 1 was used
->           due to anticipated changes, no longer needed.
->         - Use helper macros suggested by Andy S.
->         - Rename class to pmt_telemetry, spelling out full name
->         - Move monitor device name defines to common header
->         - Coding style, spelling, and Makefile/MAINTAINERS ordering fixes
->
-> David E. Box (3):
->   PCI: Add defines for Designated Vendor-Specific Extended Capability
->   mfd: Intel Platform Monitoring Technology support
->   platform/x86: Intel PMT Telemetry capability driver
->
->  .../ABI/testing/sysfs-class-pmt_telemetry     |  46 ++
->  MAINTAINERS                                   |   6 +
->  drivers/mfd/Kconfig                           |  10 +
->  drivers/mfd/Makefile                          |   1 +
->  drivers/mfd/intel_pmt.c                       | 215 +++++++++
->  drivers/platform/x86/Kconfig                  |  10 +
->  drivers/platform/x86/Makefile                 |   1 +
->  drivers/platform/x86/intel_pmt_telemetry.c    | 448 ++++++++++++++++++
->  include/uapi/linux/pci_regs.h                 |   5 +
->  9 files changed, 742 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-pmt_telemetry
->  create mode 100644 drivers/mfd/intel_pmt.c
->  create mode 100644 drivers/platform/x86/intel_pmt_telemetry.c
->
-> --
-> 2.20.1
->
+Fixes: 41be81a8d3d0 ("mptcp: fix unblocking connect()")
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+---
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3980fbb6f31e..c0abe738e7d3 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1833,7 +1833,7 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
+ 	/* on successful connect, the msk state will be moved to established by
+ 	 * subflow_finish_connect()
+ 	 */
+-	if (!err || err == EINPROGRESS)
++	if (!err || err == -EINPROGRESS)
+ 		mptcp_copy_inaddrs(sock->sk, ssock->sk);
+ 	else
+ 		inet_sk_state_store(sock->sk, inet_sk_state_load(ssock->sk));
 -- 
-With Best Regards,
-Andy Shevchenko
+2.27.0
+
