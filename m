@@ -2,190 +2,481 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8377AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26571C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59A6520792
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF8C20792
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:10:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iP+7r2dt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vG80/saN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgG0VKZ (ORCPT
+        id S1726826AbgG0VKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 17:10:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgG0VKW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:10:22 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45611C061794;
-        Mon, 27 Jul 2020 14:10:22 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id i80so9772396lfi.13;
-        Mon, 27 Jul 2020 14:10:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gCi4uQupGH9wlbYDIIaXDuhHkIJkqnW5jRCmhH4yzys=;
-        b=iP+7r2dt0mrERD07SdS+TGzP3SyiL1AoMitm778mxLBgJZrySPoHh14xUJfzeLz3EW
-         daetsozIsLIZLGcVVraW3Pmc5VAuA2+odgfJLWBYul6shRJ9hh0Qgp/svRTItr1aTWTe
-         RxWRKJCIdxzKFXV/QM9dPDBoGbmKArmISv250T5rYezYh69L6dIp0+NntO7tF00HJwr2
-         R1KkIYCfuDYF3NKEpywJJuDXrFTbw83C9pNgaChmhw5v05WuAFe1eTxpXzAkoMG+dPLP
-         DsRsoV7FL6PuFxs1I+S81exnBP7IBPH+DBS7qPlw8yaNONrobm9F0AqURFY18yLGtnSC
-         k0lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gCi4uQupGH9wlbYDIIaXDuhHkIJkqnW5jRCmhH4yzys=;
-        b=njxqLsWRPkpAbi7HqUA+39SJw/UM+zx0VFlLuQmO2qfQJgVAR24z07NOzpdl0QhhN9
-         alvBrpWCBwjmzoEO2B43x/HHlNOzR9LyWdaRTryyP7T+rkN0LBt+6zVYbW9TfvyEVor7
-         8QXeoPKj1sKSnow6hQTXZElda3DoaqUT/oE6QRIBiLpnjt8iYYrTVWf6rwcybLM63gha
-         YDvnGpNQFnQPdNg4I4ThDRVWzYV67GtKeSPSRXa6r5oGfB5cuaPKE2bF+ExvSHqAvIqn
-         zD0nbxZHVRQIjZDAXq75wtAuxRUmv3KY12yh+HnLsliE38EZt8NJ21MJr4e1KtP7WozL
-         uYEQ==
-X-Gm-Message-State: AOAM532jd9m04i0YoTwEKoIINIlMyAM7BjYLQD1mf4E2vzLD/9fiyREg
-        98M0r6INbzg20mkH5iUc3w4icDii850=
-X-Google-Smtp-Source: ABdhPJwJkrQ26iT00/yNlcmK6rwCV8JlV2VJHQdUO53NwZI5VUUccB9yeYw2y0rV9rMYW2G9Uff4ag==
-X-Received: by 2002:a05:6512:10ca:: with SMTP id k10mr12911706lfg.177.1595884220130;
-        Mon, 27 Jul 2020 14:10:20 -0700 (PDT)
-Received: from pc638.lan (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id s1sm3266078lfi.76.2020.07.27.14.10.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 14:10:19 -0700 (PDT)
-From:   "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, "Paul E . McKenney" <paulmck@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: [PATCH v2 1/1] rcu/tree: Drop the lock before entering to page allocator
-Date:   Mon, 27 Jul 2020 23:10:12 +0200
-Message-Id: <20200727211012.30948-1-urezki@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 27 Jul 2020 17:10:50 -0400
+Received: from crapouillou.net ([89.234.176.41]:34038 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726140AbgG0VKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 17:10:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1595884246; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ibbcLRFYEgPnpCrphWR8XefoNyDdgUA3SsRIyBPw0sk=;
+        b=vG80/saNxe7RbQ4n9kOrudyT3as6nUBJKZqkLrVI1Cg6EJihUgPVNcQMfo4rDTZ+y2wLkB
+        V9iid1aHwaVBMeVpis/PXLy0/e768UIgbPZkj6XiEUKxfGtaKwUT12VwqR+0K7rTaG+g92
+        R0YfOeOU/4nSYQCgFpqQUMY22Loz/QQ=
+Date:   Mon, 27 Jul 2020 23:10:30 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 3/6] drm/bridge: Add SPI DBI host driver
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Noralf =?iso-8859-1?q?Tr=F8nnes?= <noralf@tronnes.org>,
+        od@zcrc.me, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <I5C5EQ.EDR7T5UF0W67@crapouillou.net>
+In-Reply-To: <20200727203158.GA1016751@ravnborg.org>
+References: <20200727164613.19744-1-paul@crapouillou.net>
+        <20200727164613.19744-4-paul@crapouillou.net>
+        <20200727203158.GA1016751@ravnborg.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the kernel is built with CONFIG_PROVE_RAW_LOCK_NESTING
-option, the lockedp will complain about violation of the
-nesting rules:
+Hi Sam,
 
-<snip>
-[   28.060389] =============================
-[   28.060389] [ BUG: Invalid wait context ]
-[   28.060389] 5.8.0-rc3-rcu #211 Tainted: G            E
-[   28.060389] -----------------------------
-[   28.060390] vmalloc_test/0/523 is trying to lock:
-[   28.060390] ffff96df7ffe0228 (&zone->lock){-.-.}-{3:3}, at: get_page_from_freelist+0xcf0/0x16d0
-[   28.060391] other info that might help us debug this:
-[   28.060391] context-{5:5}
-[   28.060392] 2 locks held by vmalloc_test/0/523:
-[   28.060392]  #0: ffffffffc06750d0 (prepare_for_test_rwsem){++++}-{4:4}, at: test_func+0x76/0x240 [test_vmalloc]
-[   28.060393]  #1: ffff96df5fa1d390 (krc.lock){..-.}-{2:2}, at: kvfree_call_rcu+0x5c/0x230
-[   28.060395] stack backtrace:
-[   28.060395] CPU: 0 PID: 523 Comm: vmalloc_test/0 Tainted: G            E     5.8.0-rc3-rcu #211
-[   28.060395] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-[   28.060396] Call Trace:
-[   28.060397]  dump_stack+0x96/0xd0
-[   28.060397]  __lock_acquire.cold.65+0x166/0x2d7
-[   28.060398]  ? find_held_lock+0x2d/0x90
-[   28.060399]  lock_acquire+0xad/0x370
-[   28.060400]  ? get_page_from_freelist+0xcf0/0x16d0
-[   28.060401]  ? mark_held_locks+0x48/0x70
-[   28.060402]  _raw_spin_lock+0x25/0x30
-[   28.060403]  ? get_page_from_freelist+0xcf0/0x16d0
-[   28.060404]  get_page_from_freelist+0xcf0/0x16d0
-[   28.060405]  ? __lock_acquire+0x3ee/0x1b90
-[   28.060407]  __alloc_pages_nodemask+0x16a/0x3a0
-[   28.060408]  __get_free_pages+0xd/0x30
-[   28.060409]  kvfree_call_rcu+0x18a/0x230
-<snip>
+Le lun. 27 juil. 2020 =E0 22:31, Sam Ravnborg <sam@ravnborg.org> a=20
+=E9crit :
+> Hi Paul.
+>=20
+> On Mon, Jul 27, 2020 at 06:46:10PM +0200, Paul Cercueil wrote:
+>>  This driver will register a DBI host driver for panels connected=20
+>> over
+>>  SPI.
+> So this is actually a MIPI DBI host driver.
+>=20
+> I personally would love to have added mipi_ in the names - to make it
+> all more explicit.
+> But maybe that just because I get confused on all the acronyms.
 
-Internally the kfree_rcu() uses raw_spinlock_t whereas the
-page allocator internally deals with spinlock_t to access
-to its zones.
+I can rename the driver and move it out of drm/bridge/, no problem.
 
-In order to prevent such vialation that is in question we
-can drop the internal raw_spinlock_t before entering to
-the page allocaor.
+> Some details in the following. Will try to find some more time so I=20
+> can
+> grasp the full picture. The following was just my low-level notes for
+> now.
+>=20
+> 	Sam
+>>=20
+>>  DBI types c1 and c3 are supported. C1 is a SPI protocol with 9 bits=20
+>> per
+>>  word, with the data/command information in the 9th (MSB) bit. C3 is=20
+>> a
+>>  SPI protocol with 8 bits per word, with the data/command information
+>>  carried by a separate GPIO.
+>=20
+> We did not have any define to distingush between DBI_C1 and DBI_c3:
+> +/* MIPI bus types */
+> +#define MIPI_DEVICE_TYPE_DSI           BIT(0)
+> +#define MIPI_DEVICE_TYPE_DBI_SPI_MODE1 BIT(1)
+> +#define MIPI_DEVICE_TYPE_DBI_SPI_MODE2 BIT(2)
+> +#define MIPI_DEVICE_TYPE_DBI_SPI_MODE3 BIT(3)
+> +#define MIPI_DEVICE_TYPE_DBI_M6800     BIT(4)
+> +#define MIPI_DEVICE_TYPE_DBI_I8080     BIT(5)
+>=20
+> Is this on purpose?
 
-Short changelog (v1 -> v2):
-    - rework the commit message;
-    - rework the patch making it smaller;
-    - add more comments.
+I understand the confusion. Here SPI_MODE1/3 actually mean SPI_C1/3. I=20
+will rename them.
 
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- kernel/rcu/tree.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+> I had assumed the host should tell what it supports and the device=20
+> should
+> tell what it wanted.
+> So if the host did not support DBI_C3 and device wants it - then we
+> could give up early.
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 21c2fa5bd8c3..2de112404121 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3287,6 +3287,8 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
- 		return false;
- 
- 	lockdep_assert_held(&krcp->lock);
-+	lockdep_assert_irqs_disabled();
-+
- 	idx = !!is_vmalloc_addr(ptr);
- 
- 	/* Check if a new block is required. */
-@@ -3306,6 +3308,29 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
- 			if (IS_ENABLED(CONFIG_PREEMPT_RT))
- 				return false;
- 
-+			/*
-+			 * If built with CONFIG_PROVE_RAW_LOCK_NESTING option,
-+			 * the lockedp will complain about violation of the
-+			 * nesting rules. It does the raw_spinlock vs. spinlock
-+			 * nesting checks.
-+			 *
-+			 * That is why we drop the raw lock. Please note IRQs are
-+			 * still disabled it guarantees that the "current" stays
-+			 * on the same CPU later on when the raw lock is taken
-+			 * back.
-+			 *
-+			 * It is important because if the page allocator is invoked
-+			 * in fully preemptible context, it can be that we get a page
-+			 * but end up on another CPU. That another CPU might not need
-+			 * a page because of having some extra spots in its internal
-+			 * array for pointer collecting. Staying on same CPU eliminates
-+			 * described issue.
-+			 *
-+			 * Dropping the lock also reduces the critical section by
-+			 * the time taken by the page allocator to obtain a page.
-+			 */
-+			raw_spin_unlock(&krcp->lock);
-+
- 			/*
- 			 * NOTE: For one argument of kvfree_rcu() we can
- 			 * drop the lock and get the page in sleepable
-@@ -3315,6 +3340,8 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
- 			 */
- 			bnode = (struct kvfree_rcu_bulk_data *)
- 				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-+
-+			raw_spin_lock(&krcp->lock);
- 		}
- 
- 		/* Switch to emergency path. */
--- 
-2.20.1
+Well that's exactly what's done here - just with badly named macros :)
+
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>   drivers/gpu/drm/bridge/Kconfig   |   8 +
+>>   drivers/gpu/drm/bridge/Makefile  |   1 +
+>>   drivers/gpu/drm/bridge/dbi-spi.c | 261=20
+>> +++++++++++++++++++++++++++++++
+> This is no bridge driver - so does not belong in the bridge
+> directory.
+> gpu/drm/drm_mipi_dbi_spi.c?
+>=20
+>>   3 files changed, 270 insertions(+)
+>>   create mode 100644 drivers/gpu/drm/bridge/dbi-spi.c
+>>=20
+>>  diff --git a/drivers/gpu/drm/bridge/Kconfig=20
+>> b/drivers/gpu/drm/bridge/Kconfig
+>>  index c7f0dacfb57a..ed38366847c1 100644
+>>  --- a/drivers/gpu/drm/bridge/Kconfig
+>>  +++ b/drivers/gpu/drm/bridge/Kconfig
+>>  @@ -219,6 +219,14 @@ config DRM_TI_TPD12S015
+>>   	  Texas Instruments TPD12S015 HDMI level shifter and ESD=20
+>> protection
+>>   	  driver.
+>>=20
+>>  +config DRM_MIPI_DBI_SPI
+>>  +	tristate "SPI host support for MIPI DBI"
+>>  +	depends on OF && SPI
+>>  +	select DRM_MIPI_DSI
+>>  +	select DRM_MIPI_DBI
+>>  +	help
+>>  +	  Driver to support DBI over SPI.
+>>  +
+>>   source "drivers/gpu/drm/bridge/analogix/Kconfig"
+>>=20
+>>   source "drivers/gpu/drm/bridge/adv7511/Kconfig"
+>>  diff --git a/drivers/gpu/drm/bridge/Makefile=20
+>> b/drivers/gpu/drm/bridge/Makefile
+>>  index 7d7c123a95e4..c2c522c2774f 100644
+>>  --- a/drivers/gpu/drm/bridge/Makefile
+>>  +++ b/drivers/gpu/drm/bridge/Makefile
+>>  @@ -20,6 +20,7 @@ obj-$(CONFIG_DRM_I2C_ADV7511) +=3D adv7511/
+>>   obj-$(CONFIG_DRM_TI_SN65DSI86) +=3D ti-sn65dsi86.o
+>>   obj-$(CONFIG_DRM_TI_TFP410) +=3D ti-tfp410.o
+>>   obj-$(CONFIG_DRM_TI_TPD12S015) +=3D ti-tpd12s015.o
+>>  +obj-$(CONFIG_DRM_MIPI_DBI_SPI) +=3D dbi-spi.o
+> mipi_dbi_spi.o would be nice...
+>=20
+>>   obj-$(CONFIG_DRM_NWL_MIPI_DSI) +=3D nwl-dsi.o
+>>=20
+>>   obj-y +=3D analogix/
+>>  diff --git a/drivers/gpu/drm/bridge/dbi-spi.c=20
+>> b/drivers/gpu/drm/bridge/dbi-spi.c
+>>  new file mode 100644
+>>  index 000000000000..1060b8f95fba
+>>  --- /dev/null
+>>  +++ b/drivers/gpu/drm/bridge/dbi-spi.c
+>>  @@ -0,0 +1,261 @@
+>>  +// SPDX-License-Identifier: GPL-2.0-or-later
+>>  +/*
+>>  + * MIPI Display Bus Interface (DBI) SPI support
+>>  + *
+>>  + * Copyright 2016 Noralf Tr=F8nnes
+>>  + * Copyright 2020 Paul Cercueil <paul@crapouillou.net>
+>>  + */
+>>  +
+>>  +#include <linux/gpio/consumer.h>
+>>  +#include <linux/module.h>
+>>  +#include <linux/spi/spi.h>
+>>  +
+>>  +#include <drm/drm_mipi_dbi.h>
+>>  +#include <drm/drm_mipi_dsi.h>
+>>  +
+>>  +#include <video/mipi_display.h>
+>>  +
+>>  +struct dbi_spi {
+>>  +	struct mipi_dsi_host host;
+> It is very confusing that the mipi_dbi_spi driver uses a dsi_host.
+> It clashes in my head - and then reviewing it not easy.
+
+ From now on read all "mipi_dsi_*" as a MIPI DSI/DBI API. Renaming the=20
+API means a treewide patchset that touches many many files...
+
+>=20
+>>  +	struct mipi_dsi_host_ops host_ops;
+> const?
+>>  +
+>>  +	struct spi_device *spi;
+>>  +	struct gpio_desc *dc;
+>>  +	struct mutex cmdlock;
+>>  +
+>>  +	unsigned int current_bus_type;
+>>  +
+>>  +	/**
+>>  +	 * @tx_buf9: Buffer used for Option 1 9-bit conversion
+>>  +	 */
+>>  +	void *tx_buf9;
+>>  +
+>>  +	/**
+>>  +	 * @tx_buf9_len: Size of tx_buf9.
+>>  +	 */
+>>  +	size_t tx_buf9_len;
+>>  +};
+>>  +
+>>  +static inline struct dbi_spi *host_to_dbi_spi(struct mipi_dsi_host=20
+>> *host)
+>>  +{
+>>  +	return container_of(host, struct dbi_spi, host);
+>>  +}
+>>  +
+>>  +static ssize_t dbi_spi1_transfer(struct mipi_dsi_host *host,
+>>  +				 const struct mipi_dsi_msg *msg)
+>>  +{
+>>  +	struct dbi_spi *dbi =3D host_to_dbi_spi(host);
+>>  +	struct spi_device *spi =3D dbi->spi;
+>>  +	struct spi_transfer tr =3D {
+>>  +		.bits_per_word =3D 9,
+>>  +	};
+>>  +	const u8 *src8 =3D msg->tx_buf;
+>>  +	struct spi_message m;
+>>  +	size_t max_chunk, chunk;
+>>  +	size_t len =3D msg->tx_len;
+>>  +	bool cmd_byte =3D true;
+>>  +	unsigned int i;
+>>  +	u16 *dst16;
+>>  +	int ret;
+>>  +
+>>  +	tr.speed_hz =3D mipi_dbi_spi_cmd_max_speed(spi, len);
+>>  +	dst16 =3D dbi->tx_buf9;
+>>  +
+>>  +	max_chunk =3D min(dbi->tx_buf9_len / 2, len);
+> Hmm, this looks not right. We limit the max_chunk to 8K here.
+> We learned the other day that we count in bytes.
+> OR did I miss something?
+
+We want to extend 8-bit values into 16-bit values, and we have a=20
+X-bytes output buffer for that, so the maximum input buffer size we can=20
+use is (X/2).
+
+This code is the original algorithm in drm_mipi_dbi.c, I didn't change=20
+anything here (safe for the fix that was merged a couple of days ago to=20
+drm-misc-fixes).
+
+>=20
+>>  +
+>>  +	spi_message_init_with_transfers(&m, &tr, 1);
+>>  +	tr.tx_buf =3D dst16;
+>>  +
+>>  +	while (len) {
+>>  +		chunk =3D min(len, max_chunk);
+>>  +
+>>  +		for (i =3D 0; i < chunk; i++) {
+>>  +			dst16[i] =3D *src8++;
+>>  +
+>>  +			/* Bit 9: 0 means command, 1 means data */
+>>  +			if (!cmd_byte)
+>>  +				dst16[i] |=3D BIT(9);
+>>  +
+>>  +			cmd_byte =3D false;
+>>  +		}
+>>  +
+>>  +		tr.len =3D chunk * 2;
+>>  +		len -=3D chunk;
+>>  +
+>>  +		ret =3D spi_sync(spi, &m);
+>>  +		if (ret)
+>>  +			return ret;
+>>  +	}
+>>  +
+>>  +	return 0;
+>>  +}
+>>  +
+>>  +static ssize_t dbi_spi3_transfer(struct mipi_dsi_host *host,
+>>  +				 const struct mipi_dsi_msg *msg)
+>>  +{
+>>  +	struct dbi_spi *dbi =3D host_to_dbi_spi(host);
+>>  +	struct spi_device *spi =3D dbi->spi;
+>>  +	const u8 *buf =3D msg->tx_buf;
+>>  +	unsigned int bpw =3D 8;
+>>  +	u32 speed_hz;
+>>  +	ssize_t ret;
+>>  +
+>>  +	/* for now we only support sending messages, not receiving */
+>>  +	if (msg->rx_len)
+>>  +		return -EINVAL;
+>>  +
+>>  +	gpiod_set_value_cansleep(dbi->dc, 0);
+>>  +
+>>  +	speed_hz =3D mipi_dbi_spi_cmd_max_speed(spi, 1);
+>>  +	ret =3D mipi_dbi_spi_transfer(spi, speed_hz, 8, buf, 1);
+>>  +	if (ret || msg->tx_len =3D=3D 1)
+>>  +		return ret;
+>>  +
+>>  +	if (buf[0] =3D=3D MIPI_DCS_WRITE_MEMORY_START)
+>>  +		bpw =3D 16;
+>>  +
+>>  +	gpiod_set_value_cansleep(dbi->dc, 1);
+>>  +	speed_hz =3D mipi_dbi_spi_cmd_max_speed(spi, msg->tx_len - 1);
+>>  +
+>>  +	ret =3D mipi_dbi_spi_transfer(spi, speed_hz, bpw,
+>>  +				    &buf[1], msg->tx_len - 1);
+>>  +	if (ret)
+>>  +		return ret;
+>>  +
+>>  +	return msg->tx_len;
+>>  +}
+>>  +
+>>  +static ssize_t dbi_spi_transfer(struct mipi_dsi_host *host,
+>>  +				const struct mipi_dsi_msg *msg)
+>>  +{
+>>  +	struct dbi_spi *dbi =3D host_to_dbi_spi(host);
+>>  +
+>>  +	switch (dbi->current_bus_type) {
+>>  +	case MIPI_DEVICE_TYPE_DBI_SPI_MODE1:
+>>  +		return dbi_spi1_transfer(host, msg);
+>>  +	case MIPI_DEVICE_TYPE_DBI_SPI_MODE3:
+>>  +		return dbi_spi3_transfer(host, msg);
+>>  +	default:
+>>  +		dev_err(&dbi->spi->dev, "Unknown transfer type\n");
+>>  +		return -EINVAL;
+>>  +	}
+>>  +}
+>>  +
+>>  +static int dbi_spi_attach(struct mipi_dsi_host *host,
+>>  +			  struct mipi_dsi_device *dsi)
+>>  +{
+>>  +	struct dbi_spi *dbi =3D host_to_dbi_spi(host);
+>>  +
+>>  +	dbi->current_bus_type =3D dsi->bus_type;
+>>  +
+>>  +	if (dbi->current_bus_type =3D=3D MIPI_DEVICE_TYPE_DBI_SPI_MODE1) {
+>>  +		dbi->tx_buf9_len =3D SZ_16K;
+>>  +
+>>  +		dbi->tx_buf9 =3D kmalloc(dbi->tx_buf9_len, GFP_KERNEL);
+>>  +		if (!dbi->tx_buf9)
+>>  +			return -ENOMEM;
+>>  +	}
+>>  +
+>>  +	return 0;
+>>  +}
+>>  +
+>>  +static int dbi_spi_detach(struct mipi_dsi_host *host,
+>>  +			  struct mipi_dsi_device *dsi)
+>>  +{
+>>  +	struct dbi_spi *dbi =3D host_to_dbi_spi(host);
+>>  +
+>>  +	kfree(dbi->tx_buf9);
+>>  +	dbi->tx_buf9_len =3D 0;
+>>  +
+>>  +	return 0; /* Nothing to do */
+>>  +}
+>>  +
+>>  +static void dbi_spi_host_unregister(void *d)
+>>  +{
+>>  +	mipi_dsi_host_unregister(d);
+>>  +}
+>>  +
+>>  +static int dbi_spi_probe(struct spi_device *spi)
+>>  +{
+>>  +	struct device *dev =3D &spi->dev;
+>>  +	struct mipi_dsi_device_info info =3D { };
+>>  +	struct mipi_dsi_device *dsi;
+>>  +	struct dbi_spi *dbi;
+>>  +	int ret;
+>>  +
+>>  +	dbi =3D devm_kzalloc(dev, sizeof(*dbi), GFP_KERNEL);
+>>  +	if (!dbi)
+>>  +		return -ENOMEM;
+>>  +
+>>  +	dbi->host.dev =3D dev;
+>>  +	dbi->host.ops =3D &dbi->host_ops;
+>>  +	dbi->spi =3D spi;
+>>  +	spi_set_drvdata(spi, dbi);
+>>  +
+>>  +	dbi->dc =3D devm_gpiod_get_optional(dev, "dc", GPIOD_OUT_LOW);
+>>  +	if (IS_ERR(dbi->dc)) {
+>>  +		dev_err(dev, "Failed to get gpio 'dc'\n");
+>>  +		return PTR_ERR(dbi->dc);
+>>  +	}
+>>  +
+>>  +	if (spi_is_bpw_supported(spi, 9))
+>>  +		dbi->host.bus_types |=3D MIPI_DEVICE_TYPE_DBI_SPI_MODE1;
+>>  +	if (dbi->dc)
+>>  +		dbi->host.bus_types |=3D MIPI_DEVICE_TYPE_DBI_SPI_MODE3;
+>>  +
+>>  +	if (!dbi->host.bus_types) {
+>>  +		dev_err(dev, "Neither Type1 nor Type3 are supported\n");
+>>  +		return -EINVAL;
+>>  +	}
+>>  +
+>>  +	dbi->host_ops.transfer =3D dbi_spi_transfer;
+>>  +	dbi->host_ops.attach =3D dbi_spi_attach;
+>>  +	dbi->host_ops.detach =3D dbi_spi_detach;
+>>  +
+>>  +	mutex_init(&dbi->cmdlock);
+>>  +
+>>  +	ret =3D mipi_dsi_host_register(&dbi->host);
+>>  +	if (ret) {
+>>  +		dev_err(dev, "Unable to register DSI host\n");
+>>  +		return ret;
+>>  +	}
+>>  +
+>>  +	ret =3D devm_add_action_or_reset(dev, dbi_spi_host_unregister,=20
+>> &dbi->host);
+>>  +	if (ret)
+>>  +		return ret;
+>>  +
+>>  +	/*
+>>  +	 * Register our own node as a MIPI DSI device.
+>>  +	 * This ensures that the panel driver will be probed.
+>>  +	 */
+>>  +	info.channel =3D 0;
+>>  +	info.node =3D of_node_get(dev->of_node);
+>>  +
+>>  +	dsi =3D mipi_dsi_device_register_full(&dbi->host, &info);
+>>  +	if (IS_ERR(dsi)) {
+>>  +		dev_err(dev, "Failed to add DSI device\n");
+>>  +		return PTR_ERR(dsi);
+>>  +	}
+>>  +
+>>  +	return 0;
+>>  +}
+>>  +
+>>  +static const struct of_device_id dbi_spi_of_match[] =3D {
+>>  +	{ .compatible =3D "adafruit,yx240qv29" },
+>>  +	{ .compatible =3D "leadtek,ltk035c5444t-spi" },
+>>  +	{ }
+> Would it be better with a fall-back compatible like:
+> mipi,dbi-spi.
+> So the nodes must includes this compatible to be registered with
+> this driver?
+
+Ideally, it would be perfect, but unfortunately we cannot do that.
+
+If a node has the following:
+compatible =3D "adafruit,yx240qv29", "mipi-dbi-spi";
+
+Then Linux will probe only with the first compatible string since it=20
+has a driver for it. It will use the fallback string only if no driver=20
+matches the first string.
+
+-Paul
+
+>=20
+>>  +};
+>>  +MODULE_DEVICE_TABLE(of, dbi_spi_of_match);
+>>  +
+>>  +static struct spi_driver dbi_spi_driver =3D {
+>>  +	.driver =3D {
+>>  +		.name =3D "dbi-spi",
+>>  +		.of_match_table =3D dbi_spi_of_match,
+>>  +	},
+>>  +	.probe =3D dbi_spi_probe,
+>>  +};
+>>  +module_spi_driver(dbi_spi_driver);
+>>  +
+>>  +MODULE_DESCRIPTION("DBI SPI bus driver");
+>>  +MODULE_AUTHOR("Paul Cercueil <paul@crapouillou.net>");
+>>  +MODULE_LICENSE("GPL");
+>>  --
+>>  2.27.0
+
 
