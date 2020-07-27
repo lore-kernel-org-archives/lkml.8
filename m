@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBCEC43459
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA75C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5953C20729
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C29E20829
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:52:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cxy90JDM"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I5YHLPDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgG0Uv5 (ORCPT
+        id S1728104AbgG0Uwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:51:57 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9051 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727098AbgG0Uvw (ORCPT
+        Mon, 27 Jul 2020 16:52:49 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16193 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727858AbgG0Uvz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:51:52 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f1f3e5a0000>; Mon, 27 Jul 2020 13:51:38 -0700
+        Mon, 27 Jul 2020 16:51:55 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f1f3e3e0000>; Mon, 27 Jul 2020 13:51:10 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 27 Jul 2020 13:51:51 -0700
+  Mon, 27 Jul 2020 13:51:54 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 27 Jul 2020 13:51:51 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+        by hqpgpgate101.nvidia.com on Mon, 27 Jul 2020 13:51:54 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jul
- 2020 20:51:51 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 27 Jul 2020 20:51:51 +0000
+ 2020 20:51:54 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 27 Jul 2020 20:51:54 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.236]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f1f3e660004>; Mon, 27 Jul 2020 13:51:51 -0700
+        id <B5f1f3e690005>; Mon, 27 Jul 2020 13:51:54 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -47,9 +47,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v5 02/14] i2c: tegra: Remove NULL pointer check before clk_enable/disable/prepare/unprepare
-Date:   Mon, 27 Jul 2020 13:57:20 -0700
-Message-ID: <1595883452-17343-3-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v5 06/14] media: tegra-video: Fix channel format alignment
+Date:   Mon, 27 Jul 2020 13:57:24 -0700
+Message-ID: <1595883452-17343-7-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
 References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
@@ -57,143 +57,67 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595883098; bh=jD0igf8U1bTJzOqQcNuwvqEC25xsAMW3RMlh+sdfw58=;
+        t=1595883070; bh=8GJbUvoTqNXQhoilqMQO06MgCPv5IgO6eahUeR7/0ig=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=cxy90JDMzfwqNZeqwmmIPrlt5oxjkV0qpeGd4v8E+F8v+x+kaOf0DYFjiRoeOMYZI
-         mcx4YmylJzMSqMX2L/5Nmk9QOrqsByq/OzPbLF+dV2rAEg/AN1IaXwFBrTYQL1ogqk
-         qNmrOlK6/juirbEznj7sFMXuzvYs3a49EWuN0eXgPKdsvjeAwo4no4b1aytdH5qu9/
-         HdnQ1hnDCWRe1BTlbbE4nXhslJYguMSS44JEzmjv6sMVRf9btC6Fm1QaNRzMIpRqHj
-         g5tk/I97ZjZqf9L4HfL8yrHQm1RrbBXebY1a+m4iTkshodKiqDj8yiiGx41cR1xl27
-         Pq6dBqDfSajAw==
+        b=I5YHLPDx8zo3LY1iGFi+lsO7PN80Kne66p5USHsAt5pkt3f5FO8RAoEkPjDUS1QQX
+         gMQqZfQENPh2SkDt8i62wrtA27SWiDT0z+soOt82kezRRMxYZToB8QMm5IOUCWA29N
+         hgJ8zV/OeCqDa5dXs6AtVlxL7aHcHWLsbm8YA3T09Ocu+ML2gljedksdL6fkpK07U8
+         cDC6qdOB9N2vQP1ClvWBLatov/10TkJ3IWnFMosqJjuYg6bgjBdW3xfie/syhyXH+k
+         gWzF2WnBri9JoWR18AlOOw1e5h66dhzxn3b+8XpfiOFyRmBldHHPWX90ZfbjKbOD0g
+         608kYLCLIevcw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clk_enable, clk_disable, clk_prepare, and clk_unprepare APIs have
-implementation for checking clk pointer not NULL and clock consumers
-can safely call these APIs without NULL pointer check.
+Pixel format width is mistakenly aligned to surface align bytes
+and altering width to aligned value may force sensor mode change
+other than the requested one and also cause mismatch in width
+programmed between sensor and vi which can lead to capture errors.
 
-So, this patch cleans up Tegra i2c driver to remove explicit checks
-before these APIs.
+This patch removes width alignment and clamps width as per Tegra
+minimum and maximum limits.
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 64 +++++++++++++++---------------------------
- 1 file changed, 23 insertions(+), 41 deletions(-)
+ drivers/staging/media/tegra-video/vi.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 3be1018..c91307b9 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -655,21 +655,17 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
- 	if (ret)
- 		return ret;
+diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
+index 1b5e660..d621ebc 100644
+--- a/drivers/staging/media/tegra-video/vi.c
++++ b/drivers/staging/media/tegra-video/vi.c
+@@ -359,25 +359,15 @@ static void tegra_channel_fmt_align(struct tegra_vi_channel *chan,
+ 				    struct v4l2_pix_format *pix,
+ 				    unsigned int bpp)
+ {
+-	unsigned int align;
+-	unsigned int min_width;
+-	unsigned int max_width;
+-	unsigned int width;
+ 	unsigned int min_bpl;
+ 	unsigned int max_bpl;
+ 	unsigned int bpl;
  
--	if (!i2c_dev->hw->has_single_clk_source) {
--		ret = clk_enable(i2c_dev->fast_clk);
--		if (ret < 0) {
--			dev_err(i2c_dev->dev,
--				"Enabling fast clk failed, err %d\n", ret);
--			return ret;
--		}
-+	ret = clk_enable(i2c_dev->fast_clk);
-+	if (ret < 0) {
-+		dev_err(i2c_dev->dev,
-+			"Enabling fast clk failed, err %d\n", ret);
-+		return ret;
- 	}
- 
--	if (i2c_dev->slow_clk) {
--		ret = clk_enable(i2c_dev->slow_clk);
--		if (ret < 0) {
--			dev_err(dev, "failed to enable slow clock: %d\n", ret);
--			return ret;
--		}
-+	ret = clk_enable(i2c_dev->slow_clk);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable slow clock: %d\n", ret);
-+		return ret;
- 	}
- 
- 	ret = clk_enable(i2c_dev->div_clk);
-@@ -688,12 +684,8 @@ static int __maybe_unused tegra_i2c_runtime_suspend(struct device *dev)
- 	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
- 
- 	clk_disable(i2c_dev->div_clk);
+ 	/*
+-	 * The transfer alignment requirements are expressed in bytes. Compute
+-	 * minimum and maximum values, clamp the requested width and convert
+-	 * it back to pixels. Use bytesperline to adjust the width.
++	 * The transfer alignment requirements are expressed in bytes.
++	 * Clamp the requested width and height to the limits.
+ 	 */
+-	align = lcm(SURFACE_ALIGN_BYTES, bpp);
+-	min_width = roundup(TEGRA_MIN_WIDTH, align);
+-	max_width = rounddown(TEGRA_MAX_WIDTH, align);
+-	width = roundup(pix->width * bpp, align);
 -
--	if (i2c_dev->slow_clk)
--		clk_disable(i2c_dev->slow_clk);
--
--	if (!i2c_dev->hw->has_single_clk_source)
--		clk_disable(i2c_dev->fast_clk);
-+	clk_disable(i2c_dev->slow_clk);
-+	clk_disable(i2c_dev->fast_clk);
+-	pix->width = clamp(width, min_width, max_width) / bpp;
++	pix->width = clamp(pix->width, TEGRA_MIN_WIDTH, TEGRA_MAX_WIDTH);
+ 	pix->height = clamp(pix->height, TEGRA_MIN_HEIGHT, TEGRA_MAX_HEIGHT);
  
- 	return pinctrl_pm_select_idle_state(i2c_dev->dev);
- }
-@@ -1716,20 +1708,16 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, i2c_dev);
- 
--	if (!i2c_dev->hw->has_single_clk_source) {
--		ret = clk_prepare(i2c_dev->fast_clk);
--		if (ret < 0) {
--			dev_err(i2c_dev->dev, "Clock prepare failed %d\n", ret);
--			return ret;
--		}
-+	ret = clk_prepare(i2c_dev->fast_clk);
-+	if (ret < 0) {
-+		dev_err(i2c_dev->dev, "Clock prepare failed %d\n", ret);
-+		return ret;
- 	}
- 
--	if (i2c_dev->slow_clk) {
--		ret = clk_prepare(i2c_dev->slow_clk);
--		if (ret < 0) {
--			dev_err(dev, "failed to prepare slow clock: %d\n", ret);
--			goto unprepare_fast_clk;
--		}
-+	ret = clk_prepare(i2c_dev->slow_clk);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to prepare slow clock: %d\n", ret);
-+		goto unprepare_fast_clk;
- 	}
- 
- 	if (i2c_dev->bus_clk_rate > I2C_MAX_FAST_MODE_FREQ &&
-@@ -1843,12 +1831,10 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	clk_unprepare(i2c_dev->div_clk);
- 
- unprepare_slow_clk:
--	if (i2c_dev->is_vi)
--		clk_unprepare(i2c_dev->slow_clk);
-+	clk_unprepare(i2c_dev->slow_clk);
- 
- unprepare_fast_clk:
--	if (!i2c_dev->hw->has_single_clk_source)
--		clk_unprepare(i2c_dev->fast_clk);
-+	clk_unprepare(i2c_dev->fast_clk);
- 
- 	return ret;
- }
-@@ -1867,12 +1853,8 @@ static int tegra_i2c_remove(struct platform_device *pdev)
- 		tegra_i2c_runtime_suspend(&pdev->dev);
- 
- 	clk_unprepare(i2c_dev->div_clk);
--
--	if (i2c_dev->slow_clk)
--		clk_unprepare(i2c_dev->slow_clk);
--
--	if (!i2c_dev->hw->has_single_clk_source)
--		clk_unprepare(i2c_dev->fast_clk);
-+	clk_unprepare(i2c_dev->slow_clk);
-+	clk_unprepare(i2c_dev->fast_clk);
- 
- 	tegra_i2c_release_dma(i2c_dev);
- 	return 0;
+ 	/* Clamp the requested bytes per line value. If the maximum bytes per
 -- 
 2.7.4
 
