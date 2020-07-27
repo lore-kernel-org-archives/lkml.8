@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B846C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9317C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24F7720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD8C20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860028;
-	bh=rsysRZZOdVKdTr6CAY2OxYHr1vauaBkReOWOAzxKB34=;
+	s=default; t=1595860033;
+	bh=+ugu/tNF/pHt3udlHuscPoyBo9goacPReY2N/k7oBBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZBHVE9RMVHdcg4oF+FCAEqya0iq0HtQE00DLnzQAMe39qkb6hV5ZbcapyxzbNXOHw
-	 snoWxdTAKkEcFuBjWzj9Br1Gqq8qhWks7krMJkPQzXMdpyvJMO7caY3vhqL9WaEv0y
-	 1FIpFRXtYMNq6aKgwyPAeK1cjvijf27e7wNfwtSU=
+	b=pWuYUqIrohH7DoHMReupXkrj0XwApUHZO9jWyo6dJi8vE0GiE9KV24955Vu9p8xtQ
+	 Z/6z3TSQN9kICO/kg2jyV5nFJo6Ps0VEBAFKdIwQoh9YFOgKv6Hoy9FhO+kulDKWUy
+	 +Rd9SHrJq8K7N5hvbBHMhHyL1VsCO7g1ZI7/sM2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732678AbgG0O1H (ORCPT
+        id S1732682AbgG0O1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:27:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56574 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:27:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732581AbgG0O0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:26:20 -0400
+        id S1730001AbgG0O0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:26:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEC1420663;
-        Mon, 27 Jul 2020 14:26:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9030220663;
+        Mon, 27 Jul 2020 14:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859980;
-        bh=rsysRZZOdVKdTr6CAY2OxYHr1vauaBkReOWOAzxKB34=;
+        s=default; t=1595859973;
+        bh=+ugu/tNF/pHt3udlHuscPoyBo9goacPReY2N/k7oBBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vYdK2XfThsmn5oWTlvPW+Q9DseljcYsy05hx6vBPyIpSIGMEr5WalXFF9JirDF4tC
-         GT+g6dBYxk7kE8egEBHLAG/mW7kgQqfb7R+0emfKPiw5JIoWSP/CuWwD2IV3tsiD5o
-         HVKsio1jCYYrTB/ZdcRc8c/Z2Mvmk5ltECSRCV0g=
+        b=uOv4vbJ11pKZJurAZErnHuFeSAARQOPkld4piEe+QJpqrqY8cPEJWb/yO5eGNwshU
+         sS2BEbCjnV9BIV2iPz9JT78cW43tt1KkzJVIdhChwU4MIZlrSVtLKl5HHOAMgXhhUd
+         5BviJcEnwN56dyJTgCkhbDF76+iEbYxpyV48zFhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>
-Subject: [PATCH 5.7 152/179] serial: 8250: fix null-ptr-deref in serial8250_start_tx()
-Date:   Mon, 27 Jul 2020 16:05:27 +0200
-Message-Id: <20200727134940.075968472@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Curtis Malainey <curtis@malainey.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.7 176/179] ASoC: Intel: bdw-rt5677: fix non BE conversion
+Date:   Mon, 27 Jul 2020 16:05:51 +0200
+Message-Id: <20200727134941.229904990@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -58,90 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-commit f4c23a140d80ef5e6d3d1f8f57007649014b60fa upstream.
+commit fffebe8a8339c7e56db4126653a3bc0c0c5592cf upstream.
 
-I got null-ptr-deref in serial8250_start_tx():
+When SOF is used, the normal links are converted into DPCM ones. This
+generates an error
 
-[   78.114630] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[   78.123778] Mem abort info:
-[   78.126560]   ESR = 0x86000007
-[   78.129603]   EC = 0x21: IABT (current EL), IL = 32 bits
-[   78.134891]   SET = 0, FnV = 0
-[   78.137933]   EA = 0, S1PTW = 0
-[   78.141064] user pgtable: 64k pages, 48-bit VAs, pgdp=00000027d41a8600
-[   78.147562] [0000000000000000] pgd=00000027893f0003, p4d=00000027893f0003, pud=00000027893f0003, pmd=00000027c9a20003, pte=0000000000000000
-[   78.160029] Internal error: Oops: 86000007 [#1] SMP
-[   78.164886] Modules linked in: sunrpc vfat fat aes_ce_blk crypto_simd cryptd aes_ce_cipher crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce ses enclosure sg sbsa_gwdt ipmi_ssif spi_dw_mmio sch_fq_codel vhost_net tun vhost vhost_iotlb tap ip_tables ext4 mbcache jbd2 ahci hisi_sas_v3_hw libahci hisi_sas_main libsas hns3 scsi_transport_sas hclge libata megaraid_sas ipmi_si hnae3 ipmi_devintf ipmi_msghandler br_netfilter bridge stp llc nvme nvme_core xt_sctp sctp libcrc32c dm_mod nbd
-[   78.207383] CPU: 11 PID: 23258 Comm: null-ptr Not tainted 5.8.0-rc6+ #48
-[   78.214056] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B210.01 03/12/2020
-[   78.222888] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
-[   78.228435] pc : 0x0
-[   78.230618] lr : serial8250_start_tx+0x160/0x260
-[   78.235215] sp : ffff800062eefb80
-[   78.238517] x29: ffff800062eefb80 x28: 0000000000000fff
-[   78.243807] x27: ffff800062eefd80 x26: ffff202fd83b3000
-[   78.249098] x25: ffff800062eefd80 x24: ffff202fd83b3000
-[   78.254388] x23: ffff002fc5e50be8 x22: 0000000000000002
-[   78.259679] x21: 0000000000000001 x20: 0000000000000000
-[   78.264969] x19: ffffa688827eecc8 x18: 0000000000000000
-[   78.270259] x17: 0000000000000000 x16: 0000000000000000
-[   78.275550] x15: ffffa68881bc67a8 x14: 00000000000002e6
-[   78.280841] x13: ffffa68881bc67a8 x12: 000000000000c539
-[   78.286131] x11: d37a6f4de9bd37a7 x10: ffffa68881cccff0
-[   78.291421] x9 : ffffa68881bc6000 x8 : ffffa688819daa88
-[   78.296711] x7 : ffffa688822a0f20 x6 : ffffa688819e0000
-[   78.302002] x5 : ffff800062eef9d0 x4 : ffffa68881e707a8
-[   78.307292] x3 : 0000000000000000 x2 : 0000000000000002
-[   78.312582] x1 : 0000000000000001 x0 : ffffa688827eecc8
-[   78.317873] Call trace:
-[   78.320312]  0x0
-[   78.322147]  __uart_start.isra.9+0x64/0x78
-[   78.326229]  uart_start+0xb8/0x1c8
-[   78.329620]  uart_flush_chars+0x24/0x30
-[   78.333442]  n_tty_receive_buf_common+0x7b0/0xc30
-[   78.338128]  n_tty_receive_buf+0x44/0x2c8
-[   78.342122]  tty_ioctl+0x348/0x11f8
-[   78.345599]  ksys_ioctl+0xd8/0xf8
-[   78.348903]  __arm64_sys_ioctl+0x2c/0xc8
-[   78.352812]  el0_svc_common.constprop.2+0x88/0x1b0
-[   78.357583]  do_el0_svc+0x44/0xd0
-[   78.360887]  el0_sync_handler+0x14c/0x1d0
-[   78.364880]  el0_sync+0x140/0x180
-[   78.368185] Code: bad PC value
+[ 58.276668] bdw-rt5677 bdw-rt5677: CPU DAI spi-RT5677AA:00 for rtd
+Wake on Voice does not support playback
+[ 58.276676] bdw-rt5677 bdw-rt5677: ASoC: can't create pcm Wake on
+Voice :-22
 
-SERIAL_PORT_DFNS is not defined on each arch, if it's not defined,
-serial8250_set_defaults() won't be called in serial8250_isa_init_ports(),
-so the p->serial_in pointer won't be initialized, and it leads a null-ptr-deref.
-Fix this problem by calling serial8250_set_defaults() after init uart port.
+Fix by forcing the capture direction.
 
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200721143852.4058352-1-yangyingliang@huawei.com
+Fixes: b73287f0b0745 ('ASoC: soc-pcm: dpcm: fix playback/capture checks')
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Reviewed-by: Curtis Malainey <curtis@malainey.com>
+Link: https://lore.kernel.org/r/20200707210439.115300-3-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/intel/boards/bdw-rt5677.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -524,6 +524,7 @@ static void __init serial8250_isa_init_p
- 		 */
- 		up->mcr_mask = ~ALPHA_KLUDGE_MCR;
- 		up->mcr_force = ALPHA_KLUDGE_MCR;
-+		serial8250_set_defaults(up);
- 	}
- 
- 	/* chain base port ops to support Remote Supervisor Adapter */
-@@ -547,7 +548,6 @@ static void __init serial8250_isa_init_p
- 		port->membase  = old_serial_port[i].iomem_base;
- 		port->iotype   = old_serial_port[i].io_type;
- 		port->regshift = old_serial_port[i].iomem_reg_shift;
--		serial8250_set_defaults(up);
- 
- 		port->irqflags |= irqflag;
- 		if (serial8250_isa_config != NULL)
+--- a/sound/soc/intel/boards/bdw-rt5677.c
++++ b/sound/soc/intel/boards/bdw-rt5677.c
+@@ -328,6 +328,7 @@ static struct snd_soc_dai_link bdw_rt567
+ 	{
+ 		.name = "Codec DSP",
+ 		.stream_name = "Wake on Voice",
++		.capture_only = 1,
+ 		.ops = &bdw_rt5677_dsp_ops,
+ 		SND_SOC_DAILINK_REG(dsp),
+ 	},
 
 
