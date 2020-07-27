@@ -8,64 +8,67 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16129C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3023CC433E4
 	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E350D20773
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA3820792
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rshZLHgY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DbGLGj6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbgG0EI1 (ORCPT
+        id S1726228AbgG0EI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 00:08:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
+        Mon, 27 Jul 2020 00:08:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgG0EIZ (ORCPT
+        with ESMTP id S1726139AbgG0EI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 00:08:25 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9FF7C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 21:08:25 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ha11so1162566pjb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 21:08:25 -0700 (PDT)
+        Mon, 27 Jul 2020 00:08:26 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C13AEC0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 21:08:26 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t6so7324957plo.3
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 21:08:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tarpEr+y8dvf5YqqJhNCEMeOnj/wqkO4uosi6NOPsXg=;
-        b=rshZLHgYTPzlmsZXSvPSsEIrxd5T489BxOj61781QgMqSkYUPT4A4/kAhvnmqcgogY
-         /JksjEVS06HNdYfaO1hXnCAT1RvYj2zAkqVru5c2iJJPw/UYGQgO9FyB0wdtTcKkqezE
-         wXDZOdQU1C2VlMfEdu81AqVEaGwgOYimnckE0mRArsHSPzd7ZNedFyx4wM9jGLScgC7P
-         E6QcVggCqZ4E+bhpXmLfktROTO7YvWpVoFT8h02IPPl5AcFVGdRrZzNVTS17wc4Zm+yh
-         aucElyh/WIhywiJWaHw3oG5x2YVgqkHFjp0itMHmgNbsQuF7p3kp2RuuIrppOmg9A02h
-         DgDw==
+        bh=HYT2Ny6spUa2d7WV446ZRztHW5dEHODP+nX8cO1zDks=;
+        b=DbGLGj6l0HNYMZayqWr91tqOpFYAG6FSJZULt2ClFy36VPmCsTrmBcyDw5gMg9RLuZ
+         g2vnd9mZuTVzMT+jTqZyuG2WCeT3xjQXqCDLRLGKXW8TTVJ2WpuidmBQv46eKqiCFZiu
+         nDc+cPCv8TWKtPUhhDBgDUwfiGNkPvQgWHRia/mIt7frj526dzEKDCzAedYZWwcePqOV
+         pbr2ZHvUdig23ul4bLuruBFRcAfI3V30/J6RbJXsUO+1thS5oowqD3b7Hh+TZurA9veP
+         78qt59s+p+py8QZ07gpnePUy0/Qq5sN+5/ZsTmEhIhZGiMUHZQKJ1si/k5fe67dQO/gw
+         CKiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tarpEr+y8dvf5YqqJhNCEMeOnj/wqkO4uosi6NOPsXg=;
-        b=FSm6wX/X6OEYQ90t+n3DiExsGSGQB0kEJgZ6qGXO6a9J6KOxDxrD6oGCBsCWRXRo4l
-         j5Dtza95j/gNbn0NmNX6P6VxQm39HrfiGbXkgTrv3abVbq7NjCasmWET15XJnWdwooRy
-         2MmUz8PeGDD/mGCdQCs1MsxITsd9OCuJmYJJE4AoM0laPOxcQHTBzCVO0KC6d8gF8XeU
-         D/73rri6oXJgnY+t37hxzWfWUmN6+SGFB5/n+o2JHVtdl88G7eBvSIc0dcDXTm79f5RR
-         qi9hebItuBgilrhrgq3/zuGojTmV+/izIv+iO9+6UmcF/sYuNuR7K5AKBLwojysTjqo1
-         hBYg==
-X-Gm-Message-State: AOAM531U/C7/TqWsOKFZqF4vVv6gOJlZ+9YTFdyy02dgIkPnIUhhDpo0
-        npxckIpYN5SqZg6VxhKxWxCw+Tj9OdjuPw==
-X-Google-Smtp-Source: ABdhPJx22dIbQOJlX/lm/yfMB1qi9la3wa+EpGz5z5H1wq7NEGPPdDA5VM7qqDSfPOBzu591GV+6Ew==
-X-Received: by 2002:a17:90b:2056:: with SMTP id ji22mr15966274pjb.61.1595822905151;
-        Sun, 26 Jul 2020 21:08:25 -0700 (PDT)
+        bh=HYT2Ny6spUa2d7WV446ZRztHW5dEHODP+nX8cO1zDks=;
+        b=uFnewsGuHIRlzsIkoKmeH24bQ/K0pwGrWjeWXZhgzkR+kjU4hXFTfB19b/+KNKtgw8
+         Hea69982wgKhpSnQb360eA5QiD8neilFxbETsljaMVDoqxETkuJWjoW00viju9NFo8Zl
+         dB9GTyLnZGmFEGugBNTlKnF+PZa8BGaRuB/g8Ge8lm0zq6jKhBIACEVTROukHx98TRBK
+         eGunSo5Jf9b0X/0kusNnQWZ/qGm8zMj73jV7i6Kh8SmI2wClyxQ3fSi+PARUDFLG1RHz
+         UnC1ZBnqhws77juBb9eE4iij6106rgBxCATAG00U+mK+PbBrUW6hLFhDqb540ZfRsKDR
+         C8Mg==
+X-Gm-Message-State: AOAM532vpjUi7VusMr5Alpr+kWpm76Zs61mFKlKrw4Vd4UJmXwENn30Q
+        QiOQ05x6L8ghaWBeW/DLdcdDIMt4Eak+7g==
+X-Google-Smtp-Source: ABdhPJyRrQq27lPR1bCdVC+pgIgpPTcMqVHsrJ/2eSSPzZiFhrxv77DHWGZ4KTShHloN7kSeAGYg6A==
+X-Received: by 2002:a17:90a:6c97:: with SMTP id y23mr17042568pjj.28.1595822906118;
+        Sun, 26 Jul 2020 21:08:26 -0700 (PDT)
 Received: from glados.lan ([2601:647:4c01:6541:fa16:54ff:fed1:1bd6])
-        by smtp.gmail.com with ESMTPSA id e129sm6542501pfe.94.2020.07.26.21.08.24
+        by smtp.gmail.com with ESMTPSA id e129sm6542501pfe.94.2020.07.26.21.08.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 21:08:24 -0700 (PDT)
+        Sun, 26 Jul 2020 21:08:25 -0700 (PDT)
 From:   Thomas Hebb <tommyhebb@gmail.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Thomas Hebb <tommyhebb@gmail.com>
-Subject: [PATCH 2/3] tools lib api: Get rid of useless conditional assignments
-Date:   Sun, 26 Jul 2020 21:08:15 -0700
-Message-Id: <2bd8fdf9c54d336f5c47383b545c79e64c794c0a.1595822871.git.tommyhebb@gmail.com>
+Cc:     Thomas Hebb <tommyhebb@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        James Clark <James.Clark@arm.com>
+Subject: [PATCH 3/3] libsubcmd: Get rid of useless conditional assignments
+Date:   Sun, 26 Jul 2020 21:08:16 -0700
+Message-Id: <1f8ccfa329a210e2d58608b62c7f731de9fa60c2.1595822871.git.tommyhebb@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <0a6e69d1736b0fa231a648f50b0cce5d8a6734ef.1595822871.git.tommyhebb@gmail.com>
 References: <0a6e69d1736b0fa231a648f50b0cce5d8a6734ef.1595822871.git.tommyhebb@gmail.com>
@@ -101,24 +104,24 @@ because it's also set by Makefile.include.
 Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
 ---
 
- tools/lib/api/Makefile | 4 ----
+ tools/lib/subcmd/Makefile | 4 ----
  1 file changed, 4 deletions(-)
 
-diff --git a/tools/lib/api/Makefile b/tools/lib/api/Makefile
-index a13e9c7f1fc5..5f2e3f8acbd0 100644
---- a/tools/lib/api/Makefile
-+++ b/tools/lib/api/Makefile
+diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+index 1c777a72bb39..5f2058a6a1ce 100644
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
 @@ -9,10 +9,6 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
  #$(info Determined 'srctree' to be $(srctree))
  endif
  
 -CC ?= $(CROSS_COMPILE)gcc
--AR ?= $(CROSS_COMPILE)ar
 -LD ?= $(CROSS_COMPILE)ld
+-AR ?= $(CROSS_COMPILE)ar
 -
- MAKEFLAGS += --no-print-directory
+ RM = rm -f
  
- LIBFILE = $(OUTPUT)libapi.a
+ MAKEFLAGS += --no-print-directory
 -- 
 2.27.0
 
