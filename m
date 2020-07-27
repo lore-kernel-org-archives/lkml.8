@@ -2,121 +2,107 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494C8C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8598BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2459A2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583512072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NcBw8XlU"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RAuGFAnf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgG0Hph (ORCPT
+        id S1726968AbgG0Hqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:45:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51015 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726973AbgG0Hpg (ORCPT
+        Mon, 27 Jul 2020 03:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgG0Hqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:45:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595835934;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oMBVeCMrmTVhEtBWGjsG1unFoTQ5DrgjjzDJ6NMzZfs=;
-        b=NcBw8XlUZ5Cm435c7oC2aPpbyvaDE5705DciVpP6XPz/UkpRwmBOen3ixcP1zz4k0TRwmI
-        xpV2STdRyYnaAZQSK8RlqogxwxxWcLhTMhok4TgcCHHng5QBynPI5npJca8dYfKNfnsSNR
-        TNxKEZUTTRdkkhvoh/81Y6fpIAeWm9o=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-401-HmlHrQImNCenUNgGRXj3oA-1; Mon, 27 Jul 2020 03:45:33 -0400
-X-MC-Unique: HmlHrQImNCenUNgGRXj3oA-1
-Received: by mail-ed1-f69.google.com with SMTP id v11so1992785edr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:45:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oMBVeCMrmTVhEtBWGjsG1unFoTQ5DrgjjzDJ6NMzZfs=;
-        b=UZHWqJ1Hja4lH7XaNoEkAdFQ0qALm2ZeWrv5E4Aw6DyL/WfvPckc3EVvfs2efQm2yH
-         8K0mnLUFtMOo78b7Qa7Z7USJDOlgAwTuu9+wJvBugX6OMzZErIAHeV2Uz6X7cV2lq1Dh
-         kQ547u2b6juiOURkE1gs+dythFZSysGQzuteUdWy6C8Mw5gW46+y7y/9VdsSPARsTJtV
-         Xn3zJWl07H53wVVxvkGf3yTEcI3rYM2yvgd//gEivv1ll7RcC1o/Q+Zo9+ydQcZYshcj
-         1j9mifLQlrEerIZl4S/cTwGIry+rWkfXeZUZnkE7Q6sgDg0Ah5Cuq8+1OlKsM6GyMR5x
-         MkQA==
-X-Gm-Message-State: AOAM533p6dCQKZ77KkNfBALqlZaJRBXzj1RsfNswKO34OeVzc+K+WfYa
-        vmRHZ0z5c6Pk9CVdNo1yaTqKBQzaFl+tU9ojxfkWbzFVxBdBUse0UIUENH5aMyQN9UB4Hyn6lAL
-        pStJWHfKBbC0ikBHG3TV4EH/g
-X-Received: by 2002:a17:906:b294:: with SMTP id q20mr2115098ejz.223.1595835931531;
-        Mon, 27 Jul 2020 00:45:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxfnpzm5w2mw/jNUlDtxiqUY/d9iJ0u0qln5b8dW/aH3LeubhQN1b6Sy5Yno4zk+7u2dQ26dw==
-X-Received: by 2002:a17:906:b294:: with SMTP id q20mr2115093ejz.223.1595835931381;
-        Mon, 27 Jul 2020 00:45:31 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id r25sm5659889edy.93.2020.07.27.00.45.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 00:45:30 -0700 (PDT)
-Subject: Re: [PATCH 0/3] Add 3 new keycodes and use them for 3 new hotkeys on
- new Lenovo Thinkpads
-To:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-input@vger.kernel.org,
-        Marco Trevisan <marco.trevisan@canonical.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Christian Kellner <ckellner@redhat.com>,
-        Benjamin Berg <bberg@redhat.com>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200717114155.56222-1-hdegoede@redhat.com>
- <20200719225649.GA4341@khazad-dum.debian.net>
- <20200722054144.GQ1665100@dtor-ws>
- <20200727005049.GA10254@khazad-dum.debian.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f67ede61-c9d4-6abc-9b59-a5b2b615d1b6@redhat.com>
-Date:   Mon, 27 Jul 2020 09:45:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 27 Jul 2020 03:46:36 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8836C0619D2;
+        Mon, 27 Jul 2020 00:46:35 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFX1j6rDvz9sRW;
+        Mon, 27 Jul 2020 17:46:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595835994;
+        bh=OyFK23EEAzKzQf8PiO3NBnsNkfMdybSgGGu1JgJ4NWE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RAuGFAnf6krRksT41li3gRxXRTiuPu0MdwaHQ7RpvldBJXfXDt89hmaZ/bVSWCyli
+         XJCF2NuA9kJ4SRLId6K9O7fojQlpe9Cu1Vktey2U0ooEGxK/dxSIq50eFJyLO+eEY9
+         uRCw1Fh3zSdO1KadJtCWUiZEJZwfVx3xcG0jPqARX8F5WvatFip5dKO6BrImUO7z0M
+         7OP8UsB+tbOb0/C8dDeynxU3ElKtgA2CEamAUYAmOE2vFuNRJ9OG4pTmZUh1dgTcAv
+         g2Tbe8Nu9rKjX/UDz5XqZZ8f9ltuvoD9Oxaf9aDL3L4XsMqOamPsZl9rGx86ysONuv
+         E1+Mo7lrXtq3w==
+Date:   Mon, 27 Jul 2020 17:46:33 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Ofir Bitton <obitton@habana.ai>
+Subject: linux-next: manual merge of the char-misc tree with Linus' tree
+Message-ID: <20200727174633.40fd8f15@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200727005049.GA10254@khazad-dum.debian.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/wdV_+DImcfZsl3kIUSXr888";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/wdV_+DImcfZsl3kIUSXr888
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 7/27/20 2:50 AM, Henrique de Moraes Holschuh wrote:
-> On Tue, 21 Jul 2020, Dmitry Torokhov wrote:
->> On Sun, Jul 19, 2020 at 07:56:49PM -0300, Henrique de Moraes Holschuh wrote:
->>> On Fri, 17 Jul 2020, Hans de Goede wrote:
->>>> This is a simple patch-series adding support for 3 new hotkeys found
->>>> on various new Lenovo Thinkpad models.
->>>
->>> For all three patches, pending an ack for the new keycodes by the input
->>> maintainers:
->>>
->>> Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
->>
->> Do you want me to merge all 3 through input tree?
-> 
-> Hans, Daren, Andy, what do you prefer?
+Hi all,
 
-Taking all this upstream through Dmitry's input tree is fine with
-me, but this really is up to Andy and/or Daren.
+Today's linux-next merge of the char-misc tree got a conflict in:
 
-Regards,
+  drivers/misc/habanalabs/common/command_submission.c
 
-Hans
+between commit:
 
+  cea7a0449ea3 ("habanalabs: prevent possible out-of-bounds array access")
+
+from Linus' tree and commit:
+
+  3abc99bb7dcb ("habanalabs: configure maximum queues per asic")
+
+from the char-misc tree.
+
+I fixed it up (I used parts of each that no longer conflict) and can
+carry the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/wdV_+DImcfZsl3kIUSXr888
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ehlkACgkQAVBC80lX
+0GwHhggAoLfNPpYh1aF/JvXmGyiZAh4m8WZPbfS2e/1vK3rs4hJgphpBo8ZdnH9I
+nZtAVTfORhcGQTfXPPGI8eVGFIi7+0U5D5Bum+u1v4iwCJIteFaY1bp/+KkIuFq/
+t0WR55wrIY2w1P+kBgh1ggo0kgC2QDFzOCBCAuKwKuJXvBGGWx2iHTGeMZ70Njau
+VHuoHw71s/JjNnW8iATxUaY6BGS+UgZQMj8RgBGPxVoshwcZHXmZTVxXARauEszS
+QA4kowzlH/O8RkkVQqIgimtOcjGTQC/WMr1iVPw95arEE5ZMJsFg7UcTCYod0P3m
+U/6JoPDSf0D8hUmVrTZfoPuW93xpeQ==
+=m/Q7
+-----END PGP SIGNATURE-----
+
+--Sig_/wdV_+DImcfZsl3kIUSXr888--
