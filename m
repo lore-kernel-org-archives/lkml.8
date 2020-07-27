@@ -2,93 +2,134 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBA7C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 529AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D04720729
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:57:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rMPv1MwJ"
+	by mail.kernel.org (Postfix) with ESMTP id 3076D20729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595894275;
+	bh=64Tf54q0Uk02BH0nMofvaNqTN8uJcrlbmqOWvVtow2E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nEgmVedkFGpKQacG3M1O7t5DwEl4vYmaFpk4EU8ttqhv1ecWv+VaUWkKqQNvc55g1
+	 EiFMesMw+fjBXmCHwkFPPXLRTsn3ValR+1nHMbF8G+/ggV0bjsay2DqMuds9tAnr2l
+	 edvc4EpnrYWUlP0+XzuQ0+RjJMm6fFd6RL4M8bKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgG0X5a (ORCPT
+        id S1727026AbgG0X5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:57:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgG0X53 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:57:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A129DC061794;
-        Mon, 27 Jul 2020 16:57:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=DrmwEKrz7BHtbJJmQ7m3w5SwKnKl4Ez0pS0H/xr6id8=; b=rMPv1MwJu9ht8NCJpDf6ui19Q+
-        v3Tjt4LnnWAjFWdwkvAshvKB7QcgNcECeHYZ5x/RWGCAUlanNkRqvy4G5aA8KiNNNmmcz6w2kV1Ei
-        6WPmEvawzNUnS3fzlUjX8GPpesRkmGLnBaxvOM0v72yQp5Qb3RHlhwIgIvvO8W2bpd1DmtbYjqNDN
-        wD6VPHd3ZIM1OxafCWQvtihOHa8uhCAp/sjkxV/6BqhsVx1C616Qz+wNElxtTcqvGmoRSZjqMFZom
-        y/8cRWNbETqqzzn54cDwOU7FHIA1zFlQ15e7h0HgUWS8evq4uFOEoO+sqhyqacze4rsg0nUqHbDk1
-        WZGXSGDQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0Czd-0001yi-26; Mon, 27 Jul 2020 23:57:17 +0000
-To:     LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Milo Kim <milo.kim@ti.com>,
-        Mathias Nyman <mathias.nyman@nokia.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] leds: fix LEDS_LP55XX_COMMON dependency and build
- errors
-Message-ID: <dba79c02-b7f1-dd75-b364-93d90538cc5e@infradead.org>
-Date:   Mon, 27 Jul 2020 16:57:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 27 Jul 2020 19:57:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgG0X5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:57:53 -0400
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6243920729;
+        Mon, 27 Jul 2020 23:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595894272;
+        bh=64Tf54q0Uk02BH0nMofvaNqTN8uJcrlbmqOWvVtow2E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pXoMNgSF7CMf+LddKHhsVXTxUuMmkr96dFKcgR9rt8n/h+A2kDUOG9o/otfjcpPq3
+         zOgdtBNurRKkZI79+Boo2o8OfiV2K16KrqH17JAIKd6W0mBZH7k2mZriFO6+fPW7J9
+         ShR1jmcYvp9//qymmHw2DMAy/4d09sw/1c38qVLg=
+Received: by mail-lf1-f54.google.com with SMTP id h8so9964129lfp.9;
+        Mon, 27 Jul 2020 16:57:52 -0700 (PDT)
+X-Gm-Message-State: AOAM532MKHRMQ1CncgbBg+u5V5JWGUrHi1vZVT09CEIUMteAksh6hmDB
+        GX7JFBMrwl1NqWlwC0VgW1FaIMrweqJL8vaXk/M=
+X-Google-Smtp-Source: ABdhPJyGR/xZdAITU/xoHU5WfqoJmUVbS0VWXHUARaTHDzVk/CdAOv2HkBEljuEFHMlbnkcaIW6ftZvGIWh2vBK3QAA=
+X-Received: by 2002:a19:c501:: with SMTP id w1mr12147381lfe.172.1595894270760;
+ Mon, 27 Jul 2020 16:57:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-11-guro@fb.com>
+In-Reply-To: <20200727184506.2279656-11-guro@fb.com>
+From:   Song Liu <song@kernel.org>
+Date:   Mon, 27 Jul 2020 16:57:39 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6kEhrYKkGKrPH5+xT_8CutfFicC3SKFcLDg-rLODVM5A@mail.gmail.com>
+Message-ID: <CAPhsuW6kEhrYKkGKrPH5+xT_8CutfFicC3SKFcLDg-rLODVM5A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 10/35] bpf: memcg-based memory accounting for
+ socket storage maps
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Mon, Jul 27, 2020 at 12:28 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> Account memory used by the socket storage.
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Make LEDS_LP55XX_COMMON depend on I2C to fix build errors:
+Acked-by: Song Liu <songliubraving@fb.com>
 
-leds-lp55xx-common.c:(.text+0x9d): undefined reference to `i2c_smbus_read_byte_data'
-leds-lp55xx-common.c:(.text+0x8fc): undefined reference to `i2c_smbus_write_byte_data'
-
-These errors happened when I2C=m and LEDS_LP55XX_COMMON=y, so
-prevent that from being possible.
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Murphy <dmurphy@ti.com>
-Cc: linux-leds@vger.kernel.org
-Cc: Milo Kim <milo.kim@ti.com>
-Cc: Mathias Nyman <mathias.nyman@nokia.com>
----
- drivers/leds/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
-
---- linux-next-20200727.orig/drivers/leds/Kconfig
-+++ linux-next-20200727/drivers/leds/Kconfig
-@@ -399,6 +399,7 @@ config LEDS_LP55XX_COMMON
- 	tristate "Common Driver for TI/National LP5521/5523/55231/5562/8501"
- 	depends on LEDS_CLASS_MULTICOLOR || !LEDS_CLASS_MULTICOLOR
- 	depends on OF
-+	depends on I2C
- 	select FW_LOADER
- 	select FW_LOADER_USER_HELPER
- 	help
-
+> ---
+>  net/core/bpf_sk_storage.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+>
+> diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
+> index eafcd15e7dfd..fbcd03cd00d3 100644
+> --- a/net/core/bpf_sk_storage.c
+> +++ b/net/core/bpf_sk_storage.c
+> @@ -130,7 +130,8 @@ static struct bpf_sk_storage_elem *selem_alloc(struct bpf_sk_storage_map *smap,
+>         if (charge_omem && omem_charge(sk, smap->elem_size))
+>                 return NULL;
+>
+> -       selem = kzalloc(smap->elem_size, GFP_ATOMIC | __GFP_NOWARN);
+> +       selem = kzalloc(smap->elem_size,
+> +                       GFP_ATOMIC | __GFP_NOWARN | __GFP_ACCOUNT);
+>         if (selem) {
+>                 if (value)
+>                         memcpy(SDATA(selem)->data, value, smap->map.value_size);
+> @@ -337,7 +338,8 @@ static int sk_storage_alloc(struct sock *sk,
+>         if (err)
+>                 return err;
+>
+> -       sk_storage = kzalloc(sizeof(*sk_storage), GFP_ATOMIC | __GFP_NOWARN);
+> +       sk_storage = kzalloc(sizeof(*sk_storage),
+> +                            GFP_ATOMIC | __GFP_NOWARN | __GFP_ACCOUNT);
+>         if (!sk_storage) {
+>                 err = -ENOMEM;
+>                 goto uncharge;
+> @@ -677,7 +679,7 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
+>         u64 cost;
+>         int ret;
+>
+> -       smap = kzalloc(sizeof(*smap), GFP_USER | __GFP_NOWARN);
+> +       smap = kzalloc(sizeof(*smap), GFP_USER | __GFP_NOWARN | __GFP_ACCOUNT);
+>         if (!smap)
+>                 return ERR_PTR(-ENOMEM);
+>         bpf_map_init_from_attr(&smap->map, attr);
+> @@ -695,7 +697,7 @@ static struct bpf_map *bpf_sk_storage_map_alloc(union bpf_attr *attr)
+>         }
+>
+>         smap->buckets = kvcalloc(sizeof(*smap->buckets), nbuckets,
+> -                                GFP_USER | __GFP_NOWARN);
+> +                                GFP_USER | __GFP_NOWARN | __GFP_ACCOUNT);
+>         if (!smap->buckets) {
+>                 bpf_map_charge_finish(&smap->map.memory);
+>                 kfree(smap);
+> @@ -1024,7 +1026,7 @@ bpf_sk_storage_diag_alloc(const struct nlattr *nla_stgs)
+>         }
+>
+>         diag = kzalloc(sizeof(*diag) + sizeof(diag->maps[0]) * nr_maps,
+> -                      GFP_KERNEL);
+> +                      GFP_KERNEL | __GFP_ACCOUNT);
+>         if (!diag)
+>                 return ERR_PTR(-ENOMEM);
+>
+> --
+> 2.26.2
+>
