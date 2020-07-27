@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F767C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070FBC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7142120FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E115720759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgG0Fc6 (ORCPT
+        id S1726994AbgG0FdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:32:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19105 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726006AbgG0Fc4 (ORCPT
+        Mon, 27 Jul 2020 01:33:13 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48740 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726006AbgG0FdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:32:56 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5VnZB134437;
-        Mon, 27 Jul 2020 01:32:44 -0400
+        Mon, 27 Jul 2020 01:33:11 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5WMY9001227;
+        Mon, 27 Jul 2020 01:32:53 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32hrp8g7eb-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrnkg9vp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:32:44 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R5Wi2x140094;
-        Mon, 27 Jul 2020 01:32:44 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32hrp8g7dt-1
+        Mon, 27 Jul 2020 01:32:53 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R5WNZ4001471;
+        Mon, 27 Jul 2020 01:32:53 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrnkg9v7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:32:43 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R5VEDF026280;
-        Mon, 27 Jul 2020 05:32:41 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4hts4-1
+        Mon, 27 Jul 2020 01:32:53 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R5U179014035;
+        Mon, 27 Jul 2020 05:32:51 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 32gcpx1ujs-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 05:32:41 +0000
+        Mon, 27 Jul 2020 05:32:51 +0000
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R5Wd3025428026
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R5Wn8430867836
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 05:32:39 GMT
+        Mon, 27 Jul 2020 05:32:49 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1AAB54C04E;
-        Mon, 27 Jul 2020 05:32:39 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 233A34C058;
+        Mon, 27 Jul 2020 05:32:49 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1FD414C044;
-        Mon, 27 Jul 2020 05:32:36 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 11BDC4C050;
+        Mon, 27 Jul 2020 05:32:46 +0000 (GMT)
 Received: from srikart450.in.ibm.com (unknown [9.85.97.241])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jul 2020 05:32:35 +0000 (GMT)
+        Mon, 27 Jul 2020 05:32:45 +0000 (GMT)
 From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 To:     Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
@@ -70,9 +70,9 @@ Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Jordan Niethe <jniethe5@gmail.com>
-Subject: [PATCH v4 01/10] powerpc/smp: Fix a warning under !NEED_MULTIPLE_NODES
-Date:   Mon, 27 Jul 2020 11:02:21 +0530
-Message-Id: <20200727053230.19753-2-srikar@linux.vnet.ibm.com>
+Subject: [PATCH v4 04/10] powerpc/smp: Move topology fixups into  a new function
+Date:   Mon, 27 Jul 2020 11:02:24 +0530
+Message-Id: <20200727053230.19753-5-srikar@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200727053230.19753-1-srikar@linux.vnet.ibm.com>
 References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com>
@@ -81,18 +81,18 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-27_03:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- adultscore=0 clxscore=1015 impostorscore=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 spamscore=0 priorityscore=1501 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007270037
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1015 impostorscore=0 phishscore=0
+ mlxscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a build warning in a non CONFIG_NEED_MULTIPLE_NODES
-"error: _numa_cpu_lookup_table_ undeclared"
+Move topology fixup based on the platform attributes into its own
+function which is called just before set_sched_topology.
 
 Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Cc: LKML <linux-kernel@vger.kernel.org>
@@ -111,32 +111,47 @@ Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 ---
 Changelog v2 -> v3:
-	Removed node caching part. Rewrote the Commit msg (Michael Ellerman)
-	Renamed to powerpc/smp: Fix a warning under !NEED_MULTIPLE_NODES
+	Rewrote changelog (Gautham)
+	Renamed to powerpc/smp: Move topology fixups into  a new function
 
- arch/powerpc/kernel/smp.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/kernel/smp.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
 diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index 73199470c265..edf94ca64eea 100644
+index a685915e5941..da27f6909be1 100644
 --- a/arch/powerpc/kernel/smp.c
 +++ b/arch/powerpc/kernel/smp.c
-@@ -860,6 +860,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 					GFP_KERNEL, cpu_to_node(cpu));
- 		zalloc_cpumask_var_node(&per_cpu(cpu_core_map, cpu),
- 					GFP_KERNEL, cpu_to_node(cpu));
-+#ifdef CONFIG_NEED_MULTIPLE_NODES
- 		/*
- 		 * numa_node_id() works after this.
- 		 */
-@@ -868,6 +869,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 			set_cpu_numa_mem(cpu,
- 				local_memory_node(numa_cpu_lookup_table[cpu]));
- 		}
-+#endif
- 	}
+@@ -1368,6 +1368,16 @@ int setup_profiling_timer(unsigned int multiplier)
+ 	return 0;
+ }
  
- 	/* Init the cpumasks so the boot CPU is related to itself */
++static void fixup_topology(void)
++{
++#ifdef CONFIG_SCHED_SMT
++	if (has_big_cores) {
++		pr_info("Big cores detected but using small core scheduling\n");
++		powerpc_topology[0].mask = smallcore_smt_mask;
++	}
++#endif
++}
++
+ void __init smp_cpus_done(unsigned int max_cpus)
+ {
+ 	/*
+@@ -1381,12 +1391,7 @@ void __init smp_cpus_done(unsigned int max_cpus)
+ 
+ 	dump_numa_cpu_topology();
+ 
+-#ifdef CONFIG_SCHED_SMT
+-	if (has_big_cores) {
+-		pr_info("Big cores detected but using small core scheduling\n");
+-		powerpc_topology[0].mask = smallcore_smt_mask;
+-	}
+-#endif
++	fixup_topology();
+ 	set_sched_topology(powerpc_topology);
+ }
+ 
 -- 
 2.17.1
 
