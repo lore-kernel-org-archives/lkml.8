@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A98C4345B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B411C433FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B43092083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B6520719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860879;
-	bh=Mq71PoAFIqvTbSxc3PBWoFGgJMVoqwJEQTwERqubN2Q=;
+	s=default; t=1595860888;
+	bh=5MbtI0ihvkEoxI9SWcTbrLH2vIzaHkcSMuxKD1ckyRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2RhY46K6GbxdEBRFA9P1UDSIIX+AIpv+cuIqKKBudeVSGsm9HH0P/jFSn6Rvwrldo
-	 8cZNBUAx0j/WwOrTF9dAx5OckSu2BLun2rXZBjS6JPlZg7F9zAvhXsCfKz6R7B0hig
-	 E17M4AI5+vT8iaD3pthULJKQKYyNqETuvmac4SHI=
+	b=ixwX9Xe11H29/dpsjeTsRLoEdKf9WklSPeB5e2WBsVGWfZEoXv9TeEWrz7lN12tgd
+	 nx6SNdJ2aKYoYboRRz5xVpPH/8dLx9m2deUK0VNSHt5iYUd+NnwoXRiy1FOVKO7AkN
+	 BphTKPBviPxPLmk9nthZAK43Rsj1bPzusmccTkas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbgG0OlR (ORCPT
+        id S1733065AbgG0Ol0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:41:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57954 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:41:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729414AbgG0OI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:08:29 -0400
+        id S1729381AbgG0OIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:08:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6396820838;
-        Mon, 27 Jul 2020 14:08:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6002B207FC;
+        Mon, 27 Jul 2020 14:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858908;
-        bh=Mq71PoAFIqvTbSxc3PBWoFGgJMVoqwJEQTwERqubN2Q=;
+        s=default; t=1595858890;
+        bh=5MbtI0ihvkEoxI9SWcTbrLH2vIzaHkcSMuxKD1ckyRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOAY0P/WtVfqSM0owaA0Qy8Azg4bpzuAvA50FC/Rm0HE7JDRIQx6wFfgRiHmSeM+g
-         dcoySZLE6o1VVlyixLN255gQfq1hX7nw3maPw6y7Mdr+45DjTGKv6VgKMfkm1T7jAx
-         k+ZBrMVu9vSDXhT7Dw+z9IfCvRhvxt1ZJhovpbfw=
+        b=YmZP/EKn3PzoGsbB87wEGPWQosBa+Xc73ra7S4f6L3iLHZTMwMjnMD6HcLDyDfCBH
+         yRtjA1GUVbEPt8y56xzAqzvP40coTyq/nyeigg39RBpfq/ME6q4XVPSrwfERSlSb7d
+         IHL5qcirUaDVOw+J8jCCPuUvz1BLHirNShSul58E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Winkler <danielwinkler@google.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Claire Chang <tientzu@chromium.org>
-Subject: [PATCH 4.14 56/64] serial: 8250_mtk: Fix high-speed baud rates clamping
-Date:   Mon, 27 Jul 2020 16:04:35 +0200
-Message-Id: <20200727134913.956456483@linuxfoundation.org>
+        stable@vger.kernel.org, Rustam Kovhaev <rkovhaev@gmail.com>,
+        syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 50/64] staging: wlan-ng: properly check endpoint types
+Date:   Mon, 27 Jul 2020 16:04:29 +0200
+Message-Id: <20200727134913.648225386@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -60,94 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+From: Rustam Kovhaev <rkovhaev@gmail.com>
 
-commit 551e553f0d4ab623e2a6f424ab5834f9c7b5229c upstream.
+commit faaff9765664009c1c7c65551d32e9ed3b1dda8f upstream.
 
-Commit 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250
-port") fixed limits of a baud rate setting for a generic 8250 port.
-In other words since that commit the baud rate has been permitted to be
-within [uartclk / 16 / UART_DIV_MAX; uartclk / 16], which is absolutely
-normal for a standard 8250 UART port. But there are custom 8250 ports,
-which provide extended baud rate limits. In particular the Mediatek 8250
-port can work with baud rates up to "uartclk" speed.
+As syzkaller detected, wlan-ng driver does not do sanity check of
+endpoints in prism2sta_probe_usb(), add check for xfer direction and type
 
-Normally that and any other peculiarity is supposed to be handled in a
-custom set_termios() callback implemented in the vendor-specific
-8250-port glue-driver. Currently that is how it's done for the most of
-the vendor-specific 8250 ports, but for some reason for Mediatek a
-solution has been spread out to both the glue-driver and to the generic
-8250-port code. Due to that a bug has been introduced, which permitted the
-extended baud rate limit for all even for standard 8250-ports. The bug
-has been fixed by the commit 7b668c064ec3 ("serial: 8250: Fix max baud
-limit in generic 8250 port") by narrowing the baud rates limit back down to
-the normal bounds. Unfortunately by doing so we also broke the
-Mediatek-specific extended bauds feature.
-
-A fix of the problem described above is twofold. First since we can't get
-back the extended baud rate limits feature to the generic set_termios()
-function and that method supports only a standard baud rates range, the
-requested baud rate must be locally stored before calling it and then
-restored back to the new termios structure after the generic set_termios()
-finished its magic business. By doing so we still use the
-serial8250_do_set_termios() method to set the LCR/MCR/FCR/etc. registers,
-while the extended baud rate setting procedure will be performed later in
-the custom Mediatek-specific set_termios() callback. Second since a true
-baud rate is now fully calculated in the custom set_termios() method we
-need to locally update the port timeout by calling the
-uart_update_timeout() function. After the fixes described above are
-implemented in the 8250_mtk.c driver, the Mediatek 8250-port should
-get back to normally working with extended baud rates.
-
-Link: https://lore.kernel.org/linux-serial/20200701211337.3027448-1-danielwinkler@google.com
-
-Fixes: 7b668c064ec3 ("serial: 8250: Fix max baud limit in generic 8250 port")
-Reported-by: Daniel Winkler <danielwinkler@google.com>
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reported-and-tested-by: syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=c2a1fa67c02faa0de723
+Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
 Cc: stable <stable@vger.kernel.org>
-Tested-by: Claire Chang <tientzu@chromium.org>
-Link: https://lore.kernel.org/r/20200714124113.20918-1-Sergey.Semin@baikalelectronics.ru
+Link: https://lore.kernel.org/r/20200722161052.999754-1-rkovhaev@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_mtk.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/staging/wlan-ng/prism2usb.c |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/8250/8250_mtk.c
-+++ b/drivers/tty/serial/8250/8250_mtk.c
-@@ -45,8 +45,21 @@ mtk8250_set_termios(struct uart_port *po
- 	unsigned long flags;
- 	unsigned int baud, quot;
+--- a/drivers/staging/wlan-ng/prism2usb.c
++++ b/drivers/staging/wlan-ng/prism2usb.c
+@@ -61,11 +61,25 @@ static int prism2sta_probe_usb(struct us
+ 			       const struct usb_device_id *id)
+ {
+ 	struct usb_device *dev;
+-
++	const struct usb_endpoint_descriptor *epd;
++	const struct usb_host_interface *iface_desc = interface->cur_altsetting;
+ 	struct wlandevice *wlandev = NULL;
+ 	struct hfa384x *hw = NULL;
+ 	int result = 0;
  
-+	/*
-+	 * Store the requested baud rate before calling the generic 8250
-+	 * set_termios method. Standard 8250 port expects bauds to be
-+	 * no higher than (uartclk / 16) so the baud will be clamped if it
-+	 * gets out of that bound. Mediatek 8250 port supports speed
-+	 * higher than that, therefore we'll get original baud rate back
-+	 * after calling the generic set_termios method and recalculate
-+	 * the speed later in this method.
-+	 */
-+	baud = tty_termios_baud_rate(termios);
++	if (iface_desc->desc.bNumEndpoints != 2) {
++		result = -ENODEV;
++		goto failed;
++	}
 +
- 	serial8250_do_set_termios(port, termios, old);
- 
-+	tty_termios_encode_baud_rate(termios, baud, baud);
++	result = -EINVAL;
++	epd = &iface_desc->endpoint[1].desc;
++	if (!usb_endpoint_is_bulk_in(epd))
++		goto failed;
++	epd = &iface_desc->endpoint[2].desc;
++	if (!usb_endpoint_is_bulk_out(epd))
++		goto failed;
 +
- 	/*
- 	 * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
- 	 *
-@@ -85,6 +98,11 @@ mtk8250_set_termios(struct uart_port *po
- 	 */
- 	spin_lock_irqsave(&port->lock, flags);
- 
-+	/*
-+	 * Update the per-port timeout.
-+	 */
-+	uart_update_timeout(port, termios->c_cflag, baud);
-+
- 	/* set DLAB we have cval saved in up->lcr from the call to the core */
- 	serial_port_out(port, UART_LCR, up->lcr | UART_LCR_DLAB);
- 	serial_dl_write(up, quot);
+ 	dev = interface_to_usbdev(interface);
+ 	wlandev = create_wlan();
+ 	if (!wlandev) {
 
 
