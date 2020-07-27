@@ -2,113 +2,211 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0629BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DDEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7E312070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6997520656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:05:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uUWm7YbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgG0IFI (ORCPT
+        id S1727014AbgG0IFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:05:08 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:56915 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbgG0IFI (ORCPT
+        Mon, 27 Jul 2020 04:05:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbgG0IFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:05:08 -0400
-Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MyKU6-1kj0fe0Ly0-00ykYi; Mon, 27 Jul 2020 10:05:06 +0200
-Received: by mail-qt1-f182.google.com with SMTP id a32so11555223qtb.5;
-        Mon, 27 Jul 2020 01:05:05 -0700 (PDT)
-X-Gm-Message-State: AOAM533+FovHUCRXEqbpIWNVTVuRsVPhfKBGs0i4bG36nqwacykKFLHF
-        SRiuqGmy6zPl0DvqoRii+CHIrd7wjKSeNArFhdg=
-X-Google-Smtp-Source: ABdhPJwW7HBaQWs6CLgdTCVeXISCQaOIP+c3oTGIB10miF9DI5sJgMP6LjEsu2iAh52r0pKzuWEqUzrxFdj9FZB5XY0=
-X-Received: by 2002:ac8:688e:: with SMTP id m14mr13917515qtq.7.1595837104846;
- Mon, 27 Jul 2020 01:05:04 -0700 (PDT)
+        Mon, 27 Jul 2020 04:05:17 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0186AC0619D4;
+        Mon, 27 Jul 2020 01:05:16 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id s189so8993230pgc.13;
+        Mon, 27 Jul 2020 01:05:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TckLjYCl3ZHc6WH0Io4YM2xM1w1BSOcuwRjb/jFrFu8=;
+        b=uUWm7YbSw6kSCPGkd8zYVj+tz3Y1WzLm7iabNsBf/f2jAcIGUUNu7jRiuVcSkPhj/l
+         SooQNg8jE9i5joPt4qRv+e3L+RRSyiGamh/sUTVNiy/05HBYP/Wgx9Fm0a1GwWDynYMl
+         8RGIU2tkbNyxdehhTUld+0jdT5QyZE0LvhqF6uep1hkvFzzyRMpbNkpxI3dT1IL4qnv8
+         Ib44lOp7++Wvpp3lIkmBF4X4jzIL030AOi+vbqUqjzwIhPzjFui5toN+UUUSvPkd52Y6
+         xe0IKNw3GMH8mgcuaEEzCdvgmz6J+Do5eqCRqxTyrAT1cWkrW7eRXcLkMmxnNEmzlOg5
+         l8cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TckLjYCl3ZHc6WH0Io4YM2xM1w1BSOcuwRjb/jFrFu8=;
+        b=LrjZpqjEj6zW5Eoxan1rM+gfp4IFyv6XZGOTYzYd1bV95tZSwqoTImZrTQibxod/M6
+         +3TI9EJnUlUDoN63OzfhsAdinbWvb1UkMtXQ9XwkjYSFrJxOrsIA1WlvktJfH/Cq/WV/
+         IBax6ya1K5r8lam4T1mObEOQxatdQKhTf/U+0Wpai1T0x/oSdz4sSzAi6U++v4picD94
+         D6W0IhW+AKV+vIQvSEE97/4ufjdx5OJINquNDn2K2jzUcgty9E62u5y1epYo8yWToQ7Y
+         I9gmKZ4reho6zElXD9g8iD8Qe6TsyKEGqoRfmVXJ7sHVcFad9BIyFWFTo34XVmBMo8gW
+         /7Ag==
+X-Gm-Message-State: AOAM530eymGheVtfswNZs7/7OIqfKMdbJYZlelr6+Tv/PDifWq2Hgmjt
+        NcZ0hXlHJD+3rXTilDMtooCMeB+FdAYOodC+OBI=
+X-Google-Smtp-Source: ABdhPJwpD4Hp9GuBJVn1Vz04MUZ8WhRdu7W6lR0HY/v6uz+H/BjgC39W/xDhP1bCbkviZBuXvp4z0I5lBYEyr18C1fs=
+X-Received: by 2002:a63:ce41:: with SMTP id r1mr19216079pgi.203.1595837115244;
+ Mon, 27 Jul 2020 01:05:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200726031154.1012044-1-shorne@gmail.com> <CAHp75VciC+gqkCZ9voNKHU3hrtiOVzeWBu9_YEagpCGdTME2yg@mail.gmail.com>
- <20200726125325.GC80756@lianli.shorne-pla.net>
-In-Reply-To: <20200726125325.GC80756@lianli.shorne-pla.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 10:04:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0-wPsVi-fXPW4Dghn30cumrzvLujp7usio50EHmCHM=g@mail.gmail.com>
-Message-ID: <CAK8P3a0-wPsVi-fXPW4Dghn30cumrzvLujp7usio50EHmCHM=g@mail.gmail.com>
-Subject: Re: [PATCH] io: Fix return type of _inb and _inl
-To:     Stafford Horne <shorne@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>
+References: <20200725150651.17029-1-vadym.kochan@plvision.eu>
+ <20200725150651.17029-3-vadym.kochan@plvision.eu> <CAHp75VeLS+-QkHuee8oPP4TDQoQPGFHSVpzi0e4m3Xhy2K+d1g@mail.gmail.com>
+ <20200726225545.GA11300@plvision.eu>
+In-Reply-To: <20200726225545.GA11300@plvision.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Jul 2020 11:04:56 +0300
+Message-ID: <CAHp75Vea6eWUqvXAKtu5Qv3Q0Oo=mxD+zf+zogZdcYOFtRe17g@mail.gmail.com>
+Subject: Re: [net-next v3 2/6] net: marvell: prestera: Add PCI interface support
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:PdHhCj7oiiqrJXYdq0ITMJFDMx5Lrek/Fal+pyeSGA1J+haBUJC
- fDbOujYyH+EZNKI1WWBaleyt/wQ/jlHsAmWzCXAatX2Bd307q0vrnIxNsMWhwmsWX59z6HV
- aJ8JFYATc+xNNcAyVgcLVgagzUfS1UBZw7tZ/gNgbeCAimoNwWWoUIW90X0ZgyouFl82yBM
- X88EohCnbhX5lHYyYFK0w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dzVgJ0ItLgY=:3gVwWM0cahYnhz2ri1t6Qo
- zGSRiNeXw+Fvjv/TA8VXud7ceY6UX+E3lZ26yBnvvKpkDDuY9jS0/VIhyYrheVP8iOaRjPUCb
- j19fymZojz5UYqMS2aafBSC0rjKywyFWD8GBV4zoqxavYlXnXg+gKX3blrd+ioaP8FHP/ZbP6
- 2JYWv3bUvKieUvexS6Ws7AkVhtHuaolnBBabl2O/lI1YPzayomPkPX0EUyyGpV/fJfE19UDVS
- KbMd1zEx7K6QiMOO524MUI41JseveSq8JtGyH6PI7wJb9eiYY+q6vxTte25Bv9J5p81QMUTkn
- 5muNN3v+/0Ms+6w+a3IOB2St/TQfAuox60q6H8cAQb2LixRGIjOCdKwcZra2hhmYhkINvdkyk
- FRT+OUQiXnujHoguSjaMiKcpa9hZPwIhGYwMFWUAcPklHX+RWEdLVUh4V6320BM/AKJ5WXXky
- GmNOkCG3jqRllL+uV4dwHRoNk2qCzmR78WqBs03WQ/cONwd2fwx0ZXyoj2eLfgaXtVO1LYMqp
- 9/4KafOuzE+uePi+xlZP8d9kiu7ZqZKGd80FZ+tINm2DvX/EBTjmGPjq4Ki6oxOnzgAQJIuGe
- DUEJLuejGHlhdsfcbT5pRkLh0tS11rfV40NLPZ2tee0btKu0RETYw1kCk/AljcAb50M964md2
- O92w1pR0xAdLYj0mZ7JM2EbJwq1/PZ0sn1Fa6vqFcQhURl2bmYUWg8wHLPC8kZQeO2jMvWX90
- dQgAi3ttGzgPazcudjqz2HZ4JpN9flzBTuUsjIsJba/4z5i21GqJAykh3PdEyfc1bPXHcnpz4
- 7HiI7mMfdFVZaDuG4iknsh+jBhLYP07M2k0cfRMkCLUujmGI2Heyhahb6cc5KPDkgIsgfBZn/
- h/lQRD7kjkh+r/9JJF5jfso1UWgAqbXaMDsJ/FQXbjkOkjR9rvCjJYcqCV5jXy0ly/F4zAgbA
- wsZ6pRv0a3aCHscg0yAcFkmvY7PHIQ6VQs/74pPgdLFR+9Osq52YW
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 2:53 PM Stafford Horne <shorne@gmail.com> wrote:
->
-> On Sun, Jul 26, 2020 at 12:00:37PM +0300, Andy Shevchenko wrote:
-> > On Sun, Jul 26, 2020 at 6:14 AM Stafford Horne <shorne@gmail.com> wrote:
-> > >
-> > > The return type of functions _inb, _inw and _inl are all u16 which looks
-> > > wrong.  This patch makes them u8, u16 and u32 respectively.
-> > >
-> > > The original commit text for these does not indicate that these should
-> > > be all forced to u16.
+On Mon, Jul 27, 2020 at 1:55 AM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+> On Sun, Jul 26, 2020 at 01:32:19PM +0300, Andy Shevchenko wrote:
+> > On Sat, Jul 25, 2020 at 6:10 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+
+...
+
+For the non-commented I assume you are agree with. Correct?
+
+...
+
+> > > +config PRESTERA_PCI
+> > > +       tristate "PCI interface driver for Marvell Prestera Switch ASICs family"
+> > > +       depends on PCI && HAS_IOMEM && PRESTERA
 > >
-> > Is it in alight with all architectures? that support this interface natively?
+> > > +       default m
 > >
-> > (Return value is arch-dependent AFAIU, so it might actually return
-> > 16-bit for byte read, but I agree that this is weird for 32-bit value.
-> > I think you have elaborate more in the commit message)
+> > Even if I have CONFIG_PRESTERA=y, why as a user I must have this as a module?
+> > If it's a crucial feature, shouldn't it be rather
+> >   default CONFIG_PRESTERA
+> > ?
 >
-> Well, this is the generic io code,  at least these api's appear to not be different
-> for each architecture.  The output read by the architecture dependant code i.e.
-> __raw_readb() below is getting is placed into a u8.  So I think the output of
-> the function will be u8.
->
-> static inline u8 _inb(unsigned long addr)
-> {
->         u8 val;
->
->         __io_pbr();
->         val = __raw_readb(PCI_IOBASE + addr);
->         __io_par(val);
->         return val;
-> }
->
-> I can expand the commit text, but I would like to get some comments from the
-> original author to confirm if this is an issue.
+> The firmware image should be located on rootfs, and in case the rootfs
+> should be mounted later the pci driver can't pick this up when
+> statically compiled so I left it as 'm' by default.
 
-I think your original version is fine, this was clearly just a typo and I've
-applied your fix now and will forward it to Linus in the next few days,
-giving John the chance to add his Ack or further comments.
+We have for a long time to catch firmware blobs from initrd (initramfs).
+default m is very unusual.
 
-Thanks a lot for spotting it and sending a fix.
+...
 
-      Arnd
+> > > +#define PRESTERA_FW_PATH \
+> > > +       "mrvl/prestera/mvsw_prestera_fw-v" \
+> > > +       __stringify(PRESTERA_SUPP_FW_MAJ_VER) \
+> > > +       "." __stringify(PRESTERA_SUPP_FW_MIN_VER) ".img"
+> >
+> > Wouldn't it be better to see this in the C code?
+>
+> I have no strong opinion on this, but looks like macro is enough for
+> this statically defined versioning.
+
+The problem is that you have to bounce your editor to C code then to
+macro then to another macro...
+(in case you are looking for the code responsible for that)
+In many drivers I saw either it's one static line (without those
+__stringify(), etc) or done in C code dynamically near to
+request_firmware() call.
+
+Maybe you may replace __stringify by explicit characters / strings and
+comment how the name was constructed?
+
+#define FW_NAME "patch/to/it/fileX.Y.img"
+
+...
+
+> > > +static void prestera_pci_copy_to(u8 __iomem *dst, u8 *src, size_t len)
+> > > +{
+> > > +       u32 __iomem *dst32 = (u32 __iomem *)dst;
+> > > +       u32 *src32 = (u32 *)src;
+> > > +       int i;
+> > > +
+> > > +       for (i = 0; i < (len / 4); dst32++, src32++, i++)
+> > > +               writel_relaxed(*src32, dst32);
+> > > +}
+> > > +
+> > > +static void prestera_pci_copy_from(u8 *dst, u8 __iomem *src, size_t len)
+> > > +{
+> > > +       u32 __iomem *src32 = (u32 __iomem *)src;
+> > > +       u32 *dst32 = (u32 *)dst;
+> > > +       int i;
+> > > +
+> > > +       for (i = 0; i < (len / 4); dst32++, src32++, i++)
+> > > +               *dst32 = readl_relaxed(src32);
+> > > +}
+> >
+> > NIH of memcpy_fromio() / memcpy_toio() ?
+> >
+> I am not sure if there will be no issue with < 4 bytes transactions over
+> PCI bus. I need to check it.
+
+I didn't get it. You always do 4 byte chunks, so, supply aligned
+length to memcpy and you will have the same.
+
+...
+
+> > > +static int prestera_fw_rev_check(struct prestera_fw *fw)
+> > > +{
+> > > +       struct prestera_fw_rev *rev = &fw->dev.fw_rev;
+> > > +       u16 maj_supp = PRESTERA_SUPP_FW_MAJ_VER;
+> > > +       u16 min_supp = PRESTERA_SUPP_FW_MIN_VER;
+> > > +
+> >
+> > > +       if (rev->maj == maj_supp && rev->min >= min_supp)
+> > > +               return 0;
+> >
+> > Why not traditional pattern
+> >
+> > if (err) {
+> >  ...
+> > }
+>
+> At least for me it looks simpler when to check which version is
+> correct.
+
+OK.
+
+> > ...
+> > return 0;
+> >
+> > ?
+> >
+> > > +       dev_err(fw->dev.dev, "Driver supports FW version only '%u.%u.x'",
+> > > +               PRESTERA_SUPP_FW_MAJ_VER, PRESTERA_SUPP_FW_MIN_VER);
+> > > +
+> > > +       return -EINVAL;
+> > > +}
+
+...
+
+> Thanks Andy for the comments, especially for pcim_ helpers.
+
+You are welcome!
+
+-- 
+With Best Regards,
+Andy Shevchenko
