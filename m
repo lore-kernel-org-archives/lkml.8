@@ -2,158 +2,82 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D587C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB7AC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53B8220838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D13B20809
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595883626;
+	bh=sO/IjFAokq/HE1A/fNgK14oSwdbVqrh3AzX3YWDvsE0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lQeg5U5j8qcz9PY4oeU28M6HbdAvZcwQd99EXqvqXxWebDLYSxEq4H1q/Roe0v/+V
+	 7SAc5i59S69YMAHXzmeUFJYdFXINw4V5u0s0L8rilLXZeZi6HIP0i1PwCABkfpddom
+	 W42IrHmdN6eGtfy2xL1A3GJtk4jY4iV11gwRYvaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgG0U7M (ORCPT
+        id S1726719AbgG0VAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:59:12 -0400
-Received: from mga09.intel.com ([134.134.136.24]:50925 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgG0U7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:59:11 -0400
-IronPort-SDR: McrCKUqe+uaAfMZEA7ugCeCtRsJYkFtgka8tdgvu1ynZ1o5URYJ9qMHrNU2w488P8YStwujOuV
- KcNuayNZvAmA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="152368198"
-X-IronPort-AV: E=Sophos;i="5.75,403,1589266800"; 
-   d="scan'208";a="152368198"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 13:59:10 -0700
-IronPort-SDR: F6x4TaH2xUbkqcHOlkYVCRLa84X160LomB+gQPSLrqqclZ5rkG41zSJgbumVGi5uDGCsUe7wk1
- 4OgHP9BbFWkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,403,1589266800"; 
-   d="scan'208";a="320157680"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga008.jf.intel.com with ESMTP; 27 Jul 2020 13:59:10 -0700
-Date:   Mon, 27 Jul 2020 13:59:09 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across
- exceptions
-Message-ID: <20200727205909.GP844235@iweiny-DESK2.sc.intel.com>
-References: <20200717072056.73134-1-ira.weiny@intel.com>
- <20200717072056.73134-18-ira.weiny@intel.com>
- <87r1t2vwi7.fsf@nanos.tec.linutronix.de>
- <20200723220435.GI844235@iweiny-DESK2.sc.intel.com>
- <87mu3pvly7.fsf@nanos.tec.linutronix.de>
- <874kpwtxlh.fsf@nanos.tec.linutronix.de>
+        Mon, 27 Jul 2020 17:00:25 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35442 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgG0VAY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 17:00:24 -0400
+Received: by mail-io1-f67.google.com with SMTP id s189so11242115iod.2;
+        Mon, 27 Jul 2020 14:00:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q/xx8a2iBuQvh2CskhteFtxckcB5mAiI21DtCGwJE70=;
+        b=Y4psj9wFS3ltulrmDJJHywaoK4jMgznO/Iaev1h4M0uyoB1MekaVngemaZByLW3GGl
+         PU6rX1w+G0zTvJkhg+HzYBebn/3/Z47cPqYKjI5HHkhb6CrnKh0q9CmLWbilXMxweHBM
+         V4Ef+L/BqH/3BoFlSODG1Cn6+2e/67wzRChMbdgeLdVBvL1Rv081RXzArMoBXT+XJF2w
+         cBCvmL+B5b6giLGYszVohLQUapvJ7vvmDHNb+EkNQ/eflH4poo+TtQaBdoiQCNcyvPNe
+         TVZG5+zT3EFKc4fV3fKwjLE0tMaia9O6vCxRzYpu+I7Ivx4jmEfv91KdZMCFCehGaIrY
+         LgOQ==
+X-Gm-Message-State: AOAM533esOeJe87r45N+h+YItC0AwJgNmYTj6h3/kaUoAzQ+wQZH6lOd
+        I2g58fKFjWIKgOLYgHW9XA==
+X-Google-Smtp-Source: ABdhPJzdCLTZ2NA/wRoY6sUwazpy2vMTI1rQNQTsNfv0kTp2JW8MZpYqzkgO5mWrLnkse06fqotpVQ==
+X-Received: by 2002:a02:bb05:: with SMTP id y5mr19148048jan.98.1595883623966;
+        Mon, 27 Jul 2020 14:00:23 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id q5sm8914029ilm.73.2020.07.27.14.00.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 14:00:23 -0700 (PDT)
+Received: (nullmailer pid 863116 invoked by uid 1000);
+        Mon, 27 Jul 2020 21:00:21 -0000
+Date:   Mon, 27 Jul 2020 15:00:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org, perex@perex.cz,
+        lgirdwood@gmail.com, devicetree@vger.kernel.org, tiwai@suse.com,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: tas2562: Convert the tas2562 binding
+ to yaml
+Message-ID: <20200727210021.GA863046@bogus>
+References: <20200723160838.9738-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <874kpwtxlh.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20200723160838.9738-1-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 11:24:58PM +0200, Thomas Gleixner wrote:
-> Ira,
+On Thu, 23 Jul 2020 11:08:37 -0500, Dan Murphy wrote:
+> Convert the TAS2562 text file to yaml format.
 > 
-> Thomas Gleixner <tglx@linutronix.de> writes:
-> > Ira Weiny <ira.weiny@intel.com> writes:
-> >> On Thu, Jul 23, 2020 at 09:53:20PM +0200, Thomas Gleixner wrote:
-> >> I think, after fixing my code (see below), using idtentry_state could still
-> >> work.  If the per-cpu cache and the MSR is updated in idtentry_exit() that
-> >> should carry the state to the new cpu, correct?
-> >
-> > I'm way too tired to think about that now. Will have a look tomorrow
-> > with brain awake.
-> 
-> Not that I'm way more awake now, but at least I have the feeling that my
-> brain is not completely useless.
-> 
-> Let me summarize what I understood:
-> 
->   1) A per CPU cache which shadows the current state of the MSR, i.e. the
->      current valid key. You use that to avoid costly MSR writes if the
->      key does not change.
-
-Yes
-
-> 
->   2) On idtentry you store the key on entry in idtentry_state, clear it
->      in the MSR and shadow state if necessary and restore it on exit.
-
-Yes, but I've subsequently found a bug here but yea that was the intention.
-:-D
-
-I also maintain the ref count of the number of nested calls to kmap to ensure
-that kmap_atomic() is nestable during an exception independent of the number
-of nested calls of the interrupted thread.
-
->   3) On context switch out you save the per CPU cache value in the task
->      and on context switch in you restore it from there.
-
-yes
-
-> 
-> Yes, that works (see below for #2) and sorry for my confusion yesterday
-> about storing this in task state.
-
-No problem.
-
-> 
-> #2 requires to handle the exceptions which do not go through
-> idtentry_enter/exit() seperately, but that's a manageable amount. It's
-> the ones which use IDTENTRY_RAW or a variant of it.
-> 
-> #BP, #MC, #NMI, #DB, #DF need extra local storage as all the kernel
-> entries for those use nmi_enter()/exit(). So you just can create
-> wrappers around those. Somehting like this
-> 
-> static __always_inline idtentry_state_t idtentry_nmi_enter(void)
-> {
->      	idtentry_state_t state = {};
-> 
->         nmi_enter();
->         instrumentation_begin();
->         state.key = save_and_clear_key();
->         instrumentation_end();
-> }
-> 
-> static __always_inline void idtentry_nmi_exit(idtentry_state_t state)
-> {
->         instrumentation_begin();
->         restore_key(state.key);
->         instrumentation_end();
->         nmi_exit();
-> }
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../devicetree/bindings/sound/tas2562.yaml    | 69 +++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/tas2562.yaml
 > 
 
-Thanks!
-
-> #UD and #PF are using the raw entry variant as well but still invoke
-> idtentry_enter()/exit(). #PF does not need any work. #UD handles
-> WARN/BUG without going through idtentry_enter() first, but I don't think
-> that's an issue unless a not 0 key would prevent writing to the console
-> device. You surely can figure that out.
-> 
-> Hope that helps.
-
-Yes it does thank you.  I'm also trying to simplify the API per Peters
-comments while refactoring this.
-
-Ira
-
+Reviewed-by: Rob Herring <robh@kernel.org>
