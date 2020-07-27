@@ -2,123 +2,99 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA605C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98044C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8D3C20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:06:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fqfb2dQM"
+	by mail.kernel.org (Postfix) with ESMTP id 6B2C020663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgG0MG4 (ORCPT
+        id S1728045AbgG0MJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:06:56 -0400
-Received: from ozlabs.org ([203.11.71.1]:35395 "EHLO ozlabs.org"
+        Mon, 27 Jul 2020 08:09:10 -0400
+Received: from mga11.intel.com ([192.55.52.93]:57475 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbgG0MGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:06:55 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFdp55Ty9z9sPf;
-        Mon, 27 Jul 2020 22:06:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595851614;
-        bh=6x2B4jt9+T+gEuV521o9lcOuHxfXIf5goQ2QNuOkOkc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fqfb2dQMmjYjez4RgFIcH9r5DmoALebBJTX3LoxHFx9kw6ZOdl+nQ6xx9KlSJJMlt
-         WNyP0DUtum0iWous/v2zHOZKO0GgsO4TmIKJuFtUL+8KqJ6iFEbUJOZZsNsDdqB1qe
-         upjvN7LWGMypeiehCoLOivFYNJGFV/jucdtOCJ9n+60suWtVn/mJ0miZvmT7Mk8Ac3
-         UT8sDc347jXt0GHdc0WSVG2mDK35MinJNpl0xE83lloWQoBp6y1G6EniehgxQlL5wd
-         diAJkwJCXznUXMoKgrPEy814JxXNHZJIt3laGkuhuaB8qMo8K++eTuPH7ni3QqHqjD
-         CAY+EJaMCfc7Q==
-Date:   Mon, 27 Jul 2020 22:06:52 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the vfs tree
-Message-ID: <20200727220652.2a1ec36b@canb.auug.org.au>
+        id S1726620AbgG0MJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:09:09 -0400
+IronPort-SDR: 2K7LhbcBJHcjX3jq1KhUL4KanAZEDFKE04d+qHNeLyuyVBfv1F/FtUu7YJre7nxvss/5K5vw06
+ rRK+z6XdlJbw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="148877489"
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="148877489"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 05:09:09 -0700
+IronPort-SDR: vG9ARVnVR0G3e8Hw4iGLpIChAYRf4SBYy2FFldqF9756jK6syneLqufm1YK5PdpvQ7AR+8p7vP
+ zdNK+Bc8vKww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="329659230"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 27 Jul 2020 05:09:08 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k01wK-004Gsx-8X; Mon, 27 Jul 2020 15:09:08 +0300
+Date:   Mon, 27 Jul 2020 15:09:08 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Xu Wang <vulab@iscas.ac.cn>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] intel_soc_pmic_mrfld: simplify the return expression of
+ intel_scu_ipc_dev_iowrite8()
+Message-ID: <20200727120908.GR3703480@smile.fi.intel.com>
+References: <20200727030407.8820-1-vulab@iscas.ac.cn>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/EOMCACGCRreFYMV6f=gabN+";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727030407.8820-1-vulab@iscas.ac.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EOMCACGCRreFYMV6f=gabN+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jul 27, 2020 at 03:04:07AM +0000, Xu Wang wrote:
+> Simplify the return expression.
 
-Hi all,
+I understand your intention, but I would rather leave as is.
+It's a bit more helpful in the original form in case to add some debugging.
+It also keep it symmetrical with read() counterpart.
 
-After merging the vfs tree, today's linux-next build (sparc defconfig)
-failed like this:
+That said, I'm not objecting the change if Lee finds it good enough.
 
-arch/sparc/kernel/ptrace_32.c: In function 'setregs_set':
-arch/sparc/kernel/ptrace_32.c:271:2: error: 'ret' undeclared (first use in =
-this function); did you mean 'net'?
-  ret =3D user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-  ^~~
-  net
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> ---
+>  drivers/mfd/intel_soc_pmic_mrfld.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/drivers/mfd/intel_soc_pmic_mrfld.c b/drivers/mfd/intel_soc_pmic_mrfld.c
+> index bd94c989d232..71da861e8c27 100644
+> --- a/drivers/mfd/intel_soc_pmic_mrfld.c
+> +++ b/drivers/mfd/intel_soc_pmic_mrfld.c
+> @@ -91,13 +91,8 @@ static int bcove_ipc_byte_reg_write(void *context, unsigned int reg,
+>  {
+>  	struct intel_soc_pmic *pmic = context;
+>  	u8 ipc_in = val;
+> -	int ret;
+>  
+> -	ret = intel_scu_ipc_dev_iowrite8(pmic->scu, reg, ipc_in);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return 0;
+> +	return intel_scu_ipc_dev_iowrite8(pmic->scu, reg, ipc_in);
+>  }
+>  
+>  static const struct regmap_config bcove_regmap_config = {
+> -- 
+> 2.17.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Caused by commit
-
-  cf921bf15c62 ("sparc32: get rid of odd callers of copy_regset_from_user()=
-")
-
-I added this patch for today.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 27 Jul 2020 21:59:23 +1000
-Subject: [PATCH] sparc32: declare ret
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- arch/sparc/kernel/ptrace_32.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/sparc/kernel/ptrace_32.c b/arch/sparc/kernel/ptrace_32.c
-index caeb99cbc1fa..f2c581d36d6c 100644
---- a/arch/sparc/kernel/ptrace_32.c
-+++ b/arch/sparc/kernel/ptrace_32.c
-@@ -264,6 +264,7 @@ static int setregs_set(struct task_struct *target,
- {
- 	struct pt_regs *regs =3D target->thread.kregs;
- 	u32 v[4];
-+	int ret;
-=20
- 	if (target =3D=3D current)
- 		flush_user_windows();
---=20
-2.27.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/EOMCACGCRreFYMV6f=gabN+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ew1wACgkQAVBC80lX
-0GxHgAgAnYo0PB6RAKchA2URp3527vamRm4VIk1XsoBGuYes0dtgNetcaHbuID+i
-YnkS/4bVe9owMEfzLSJOvmyVIW5Oh934xyn5TECbblHSPKlNzl3rRNMQFumEGZzR
-D7JAMTBAe28s7xlAhfP+72vpnIPxPoEvL2dfsx8/yAB+tqSGkzySRrF2I2alxH9J
-XCovivn4nC6i5W+ENTcwOqUPMAvjJbrCK2wFNCBAC6BHgMylsKHooKfUYrbzNd0D
-uzZQAD163rg3bIXzK+KlWtS6PmwLQRxXz5EKBBM7tqRLYtEhTqECfBdWwBxQDvS9
-xbS+Kpm0OlGjH+rOfBCjYBLhbCeOZA==
-=FM29
------END PGP SIGNATURE-----
-
---Sig_/EOMCACGCRreFYMV6f=gabN+--
