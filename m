@@ -2,186 +2,340 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C207C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA83C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28DF92072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FAF20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:47:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YTxflTDq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RDWesScZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EAmZMQal"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbgG0MqX (ORCPT
+        id S1728562AbgG0Mrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:46:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728128AbgG0MqV (ORCPT
+        Mon, 27 Jul 2020 08:47:55 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6334 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728383AbgG0Mrz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:46:21 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A15C0619D2;
-        Mon, 27 Jul 2020 05:46:21 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 12:46:16 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595853977;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ncbRjmcaca/NWD1XtdMB7q/SnurjyzrtHTNxgnMGAbk=;
-        b=YTxflTDqcrq4BxFLn4XV6Agotgeu5W6BSEaN5uKOcrUgGzcpEpZZ21gLmOOk8aJ7IqoX36
-        b5W1NJRAzasy6+F0OUAg10kC1z3w0RsrOKHMNNfb0E3rsq0ldfijNqxt+RUt4Ik4C5N3BM
-        PM0Qho7BCmMFVYIVHBECMdL9zrkWF9qszoHooWUNA659ULFSNMlDE/G7J0XsDf0Bmg3kUH
-        jQ9qfKk1nBqjTybXls+405ANjgbBOG216SvowPivYa4ky3YPa4lmC/URr6zCjxp4feGrTF
-        O26HKuaN9k3ZcXC+2nv+ibAVLytUCPb1zvWzd+W/N+hEvjcnATE4uSuB90gfhg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595853977;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ncbRjmcaca/NWD1XtdMB7q/SnurjyzrtHTNxgnMGAbk=;
-        b=RDWesScZTLi6kLlkNxA+qRHNqwxGPQDlOkN0OiE9sj1karnicEiRvKP3jaCqFMNY/foUEM
-        witIAYiCmC1muBBw==
-From:   "tip-bot2 for Ricardo Neri" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu: Refactor sync_core() for readability
-Cc:     Tony Luck <tony.luck@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200727043132.15082-4-ricardo.neri-calderon@linux.intel.com>
-References: <20200727043132.15082-4-ricardo.neri-calderon@linux.intel.com>
+        Mon, 27 Jul 2020 08:47:55 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f1ecced0000>; Mon, 27 Jul 2020 05:47:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 27 Jul 2020 05:47:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 27 Jul 2020 05:47:54 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jul
+ 2020 12:47:50 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 27 Jul 2020 12:47:49 +0000
+Received: from anrao-ubunu.nvidia.com (Not Verified[10.19.64.172]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f1eccf30000>; Mon, 27 Jul 2020 05:47:49 -0700
+From:   Aniruddha Rao <anrao@nvidia.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <p.zabel@pengutronix.de>
+CC:     <linux-mmc@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Aniruddha Rao <anrao@nvidia.com>
+Subject: [PATCH] mmc: tegra: Add Runtime PM callbacks
+Date:   Mon, 27 Jul 2020 18:17:16 +0530
+Message-ID: <1595854036-15434-1-git-send-email-anrao@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Message-ID: <159585397612.4006.5992564516237216042.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595854061; bh=WolOPBz9JWl3X6ZBkIVDpzlgxsusBYvfIi2mntwl+KQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=EAmZMQalbqRHt8kWeKYXB79Kyel8mpZ5PuJchcHsMew/Zdqw/8wIbKC2a+716oZkA
+         RGBF5aIcRQpgQNOVIoa6h28tme8O7bCdh/fGIKbGyxrGoZh0mWSHpypk4D1H14nOwC
+         qqpuyC3fSfFpkN4tPyiCZnTjiuWPY2350MqFu4SGHhgOwhFqrx19J7iCkwX2JTm//K
+         N0/aBTC499JgNzz8s36S7IWo4/ejabUapWdO4P8gunZq4jnErlTrPCyqP5FUlWiKs8
+         0x0Rmbu6F5J2zjl9egkH1HFN183MT3+/UcsEqdOxi7bo33mk0XwLBbf0cQ0Ni7ahQZ
+         iDYFFe4xWuLqQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cpu branch of tip:
+Add runtime suspend/resume callbacks to save power
+when the bus is not in use.
+In runtime suspend
+- Turn off the SDMMC host CAR clock.
+- Turn off the trimmer/DLL circuit(BG) power supply(VREG).
+- Turn off the SDMMC host internal clocks.
 
-Commit-ID:     f69ca629d89d65737537e05308ac531f7bb07d5c
-Gitweb:        https://git.kernel.org/tip/f69ca629d89d65737537e05308ac531f7bb07d5c
-Author:        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-AuthorDate:    Sun, 26 Jul 2020 21:31:31 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 27 Jul 2020 12:42:06 +02:00
+Re-enable all the disabled clocks/regulators in runtime resume.
 
-x86/cpu: Refactor sync_core() for readability
-
-Instead of having #ifdef/#endif blocks inside sync_core() for X86_64 and
-X86_32, implement the new function iret_to_self() with two versions.
-
-In this manner, avoid having to use even more more #ifdef/#endif blocks
-when adding support for SERIALIZE in sync_core().
-
-Co-developed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200727043132.15082-4-ricardo.neri-calderon@linux.intel.com
+Signed-off-by: Aniruddha Rao <anrao@nvidia.com>
 ---
- arch/x86/include/asm/special_insns.h |  1 +-
- arch/x86/include/asm/sync_core.h     | 56 +++++++++++++++------------
- 2 files changed, 32 insertions(+), 25 deletions(-)
+ drivers/mmc/host/sdhci-tegra.c | 149 ++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 140 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index eb8e781..59a3e13 100644
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -234,7 +234,6 @@ static inline void clwb(volatile void *__p)
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 0a3f9d0..1b4b245 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -23,6 +23,7 @@
+ #include <linux/mmc/slot-gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/ktime.h>
++#include <linux/pm_runtime.h>
  
- #define nop() asm volatile ("nop")
+ #include "sdhci-pltfm.h"
+ #include "cqhci.h"
+@@ -36,6 +37,7 @@
+ #define SDHCI_CLOCK_CTRL_SDR50_TUNING_OVERRIDE		BIT(5)
+ #define SDHCI_CLOCK_CTRL_PADPIPE_CLKEN_OVERRIDE		BIT(3)
+ #define SDHCI_CLOCK_CTRL_SPI_MODE_CLKEN_OVERRIDE	BIT(2)
++#define SDHCI_CLOCK_CTRL_SDMMC_CLK			BIT(0)
  
--
- #endif /* __KERNEL__ */
+ #define SDHCI_TEGRA_VENDOR_SYS_SW_CTRL			0x104
+ #define SDHCI_TEGRA_SYS_SW_CTRL_ENHANCED_STROBE		BIT(31)
+@@ -51,6 +53,9 @@
+ #define SDHCI_MISC_CTRL_ENABLE_SDHCI_SPEC_300		0x20
+ #define SDHCI_MISC_CTRL_ENABLE_DDR50			0x200
  
- #endif /* _ASM_X86_SPECIAL_INSNS_H */
-diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
-index 9c5573f..fdb5b35 100644
---- a/arch/x86/include/asm/sync_core.h
-+++ b/arch/x86/include/asm/sync_core.h
-@@ -6,6 +6,37 @@
- #include <asm/processor.h>
- #include <asm/cpufeature.h>
- 
-+#ifdef CONFIG_X86_32
-+static inline void iret_to_self(void)
-+{
-+	asm volatile (
-+		"pushfl\n\t"
-+		"pushl %%cs\n\t"
-+		"pushl $1f\n\t"
-+		"iret\n\t"
-+		"1:"
-+		: ASM_CALL_CONSTRAINT : : "memory");
-+}
-+#else
-+static inline void iret_to_self(void)
-+{
-+	unsigned int tmp;
++#define SDHCI_TEGRA_VENDOR_IO_TRIM_CTRL_0		0x1AC
++#define SDHCI_TEGRA_IO_TRIM_CTRL_0_SEL_VREG_MASK	0x4
 +
-+	asm volatile (
-+		"mov %%ss, %0\n\t"
-+		"pushq %q0\n\t"
-+		"pushq %%rsp\n\t"
-+		"addq $8, (%%rsp)\n\t"
-+		"pushfq\n\t"
-+		"mov %%cs, %0\n\t"
-+		"pushq %q0\n\t"
-+		"pushq $1f\n\t"
-+		"iretq\n\t"
-+		"1:"
-+		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
-+}
-+#endif /* CONFIG_X86_32 */
+ #define SDHCI_TEGRA_VENDOR_DLLCAL_CFG			0x1b0
+ #define SDHCI_TEGRA_DLLCAL_CALIBRATE			BIT(31)
+ 
+@@ -113,6 +118,9 @@
+ /* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
+ #define SDHCI_TEGRA_CQE_BASE_ADDR			0xF000
+ 
++#define SDHCI_TEGRA_FALLBACK_CLK_HZ			400000
++#define SDHCI_TEGRA_RTPM_MSEC_TMOUT			10
 +
- /*
-  * This function forces the icache and prefetched instruction stream to
-  * catch up with reality in two very specific cases:
-@@ -44,30 +75,7 @@ static inline void sync_core(void)
- 	 * Like all of Linux's memory ordering operations, this is a
- 	 * compiler barrier as well.
- 	 */
--#ifdef CONFIG_X86_32
--	asm volatile (
--		"pushfl\n\t"
--		"pushl %%cs\n\t"
--		"pushl $1f\n\t"
--		"iret\n\t"
--		"1:"
--		: ASM_CALL_CONSTRAINT : : "memory");
--#else
--	unsigned int tmp;
--
--	asm volatile (
--		"mov %%ss, %0\n\t"
--		"pushq %q0\n\t"
--		"pushq %%rsp\n\t"
--		"addq $8, (%%rsp)\n\t"
--		"pushfq\n\t"
--		"mov %%cs, %0\n\t"
--		"pushq %q0\n\t"
--		"pushq $1f\n\t"
--		"iretq\n\t"
--		"1:"
--		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
--#endif
-+	iret_to_self();
+ struct sdhci_tegra_soc_data {
+ 	const struct sdhci_pltfm_data *pdata;
+ 	u64 dma_mask;
+@@ -743,6 +751,24 @@ static void tegra_sdhci_parse_dt(struct sdhci_host *host)
+ 	tegra_sdhci_parse_tap_and_trim(host);
  }
  
- /*
++static void tegra_sdhci_set_bg_trimmer_supply(struct sdhci_host *host,
++					      bool enable)
++{
++	unsigned int misc_ctrl;
++
++	misc_ctrl = sdhci_readl(host, SDHCI_TEGRA_VENDOR_IO_TRIM_CTRL_0);
++	if (enable) {
++		misc_ctrl &= ~(SDHCI_TEGRA_IO_TRIM_CTRL_0_SEL_VREG_MASK);
++		sdhci_writel(host, misc_ctrl, SDHCI_TEGRA_VENDOR_IO_TRIM_CTRL_0);
++		udelay(3);
++		sdhci_reset(host, SDHCI_RESET_CMD | SDHCI_RESET_DATA);
++	} else {
++		misc_ctrl |= (SDHCI_TEGRA_IO_TRIM_CTRL_0_SEL_VREG_MASK);
++		sdhci_writel(host, misc_ctrl, SDHCI_TEGRA_VENDOR_IO_TRIM_CTRL_0);
++		udelay(1);
++	}
++}
++
+ static void tegra_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+ {
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+@@ -780,6 +806,57 @@ static void tegra_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
+ 	}
+ }
+ 
++static int tegra_sdhci_set_host_clock(struct sdhci_host *host, bool enable)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
++	u8 vndr_ctrl;
++	int err;
++
++	if (!enable) {
++		dev_dbg(mmc_dev(host->mmc), "Disabling clk\n");
++
++		/*
++		 * Power down BG trimmer supply(VREG).
++		 * Ensure SDMMC host internal clocks are
++		 * turned off before calling this function.
++		 */
++		tegra_sdhci_set_bg_trimmer_supply(host, false);
++
++		/* Update SDMMC host CAR clock status */
++		vndr_ctrl = sdhci_readb(host, SDHCI_TEGRA_VENDOR_CLOCK_CTRL);
++		vndr_ctrl &= ~SDHCI_CLOCK_CTRL_SDMMC_CLK;
++		sdhci_writeb(host, vndr_ctrl, SDHCI_TEGRA_VENDOR_CLOCK_CTRL);
++
++		/* Disable SDMMC host CAR clock */
++		clk_disable_unprepare(pltfm_host->clk);
++	} else {
++		dev_dbg(mmc_dev(host->mmc), "Enabling clk\n");
++
++		/* Enable SDMMC host CAR clock */
++		err = clk_prepare_enable(pltfm_host->clk);
++		if (err) {
++			dev_err(mmc_dev(host->mmc),
++				"clk enable failed %d\n", err);
++			return err;
++		}
++
++		/* Reset SDMMC host CAR clock status */
++		vndr_ctrl = sdhci_readb(host, SDHCI_TEGRA_VENDOR_CLOCK_CTRL);
++		vndr_ctrl |= SDHCI_CLOCK_CTRL_SDMMC_CLK;
++		sdhci_writeb(host, vndr_ctrl, SDHCI_TEGRA_VENDOR_CLOCK_CTRL);
++
++		/*
++		 * Power up BG trimmer supply(VREG).
++		 * Ensure SDMMC host internal clocks are
++		 * turned off before calling this function.
++		 */
++		tegra_sdhci_set_bg_trimmer_supply(host, true);
++	}
++
++	return 0;
++}
++
+ static unsigned int tegra_sdhci_get_max_clock(struct sdhci_host *host)
+ {
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+@@ -1622,7 +1699,6 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+ 
+ 		goto err_clk_get;
+ 	}
+-	clk_prepare_enable(clk);
+ 	pltfm_host->clk = clk;
+ 
+ 	tegra_host->rst = devm_reset_control_get_exclusive(&pdev->dev,
+@@ -1645,16 +1721,29 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+ 
+ 	usleep_range(2000, 4000);
+ 
++	pm_runtime_enable(&pdev->dev);
++	rc = pm_runtime_get_sync(&pdev->dev);
++	if (rc < 0)
++		goto pm_disable;
++	pm_runtime_set_autosuspend_delay(&pdev->dev,
++					 SDHCI_TEGRA_RTPM_MSEC_TMOUT);
++	pm_runtime_use_autosuspend(&pdev->dev);
++
+ 	rc = sdhci_tegra_add_host(host);
+ 	if (rc)
+ 		goto err_add_host;
+ 
++	pm_runtime_mark_last_busy(&pdev->dev);
++	pm_runtime_put_autosuspend(&pdev->dev);
++
+ 	return 0;
+ 
+ err_add_host:
+ 	reset_control_assert(tegra_host->rst);
++	pm_runtime_put_autosuspend(&pdev->dev);
++pm_disable:
++	pm_runtime_disable(&pdev->dev);
+ err_rst_get:
+-	clk_disable_unprepare(pltfm_host->clk);
+ err_clk_get:
+ err_power_req:
+ err_parse_dt:
+@@ -1679,6 +1768,41 @@ static int sdhci_tegra_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int sdhci_tegra_runtime_suspend(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++
++	/* Disable SDMMC internal clock */
++	sdhci_set_clock(host, 0);
++
++	/* Disable SDMMC host CAR clock and BG trimmer supply */
++	return tegra_sdhci_set_host_clock(host, false);
++}
++
++static int sdhci_tegra_runtime_resume(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	unsigned int clk;
++	int err = 0;
++
++	/* Clock enable should be invoked with a non-zero freq */
++	if (host->clock)
++		clk = host->clock;
++	else if (host->mmc->ios.clock)
++		clk = host->mmc->ios.clock;
++	else
++		clk = SDHCI_TEGRA_FALLBACK_CLK_HZ;
++
++	/* Enable SDMMC host CAR clock and BG trimmer supply */
++	err = tegra_sdhci_set_host_clock(host, true);
++	if (!err) {
++		/* Re-enable SDMMC internal clock */
++		sdhci_set_clock(host, clk);
++	}
++
++	return err;
++}
++
+ #ifdef CONFIG_PM_SLEEP
+ static int __maybe_unused sdhci_tegra_suspend(struct device *dev)
+ {
+@@ -1686,6 +1810,12 @@ static int __maybe_unused sdhci_tegra_suspend(struct device *dev)
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+ 	int ret;
+ 
++	if (pm_runtime_status_suspended(dev)) {
++		ret = tegra_sdhci_set_host_clock(host, true);
++		if (ret)
++			return ret;
++	}
++
+ 	if (host->mmc->caps2 & MMC_CAP2_CQE) {
+ 		ret = cqhci_suspend(host->mmc);
+ 		if (ret)
+@@ -1698,8 +1828,7 @@ static int __maybe_unused sdhci_tegra_suspend(struct device *dev)
+ 		return ret;
+ 	}
+ 
+-	clk_disable_unprepare(pltfm_host->clk);
+-	return 0;
++	return tegra_sdhci_set_host_clock(host, false);
+ }
+ 
+ static int __maybe_unused sdhci_tegra_resume(struct device *dev)
+@@ -1708,7 +1837,7 @@ static int __maybe_unused sdhci_tegra_resume(struct device *dev)
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+ 	int ret;
+ 
+-	ret = clk_prepare_enable(pltfm_host->clk);
++	ret = tegra_sdhci_set_host_clock(host, true);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1727,13 +1856,15 @@ static int __maybe_unused sdhci_tegra_resume(struct device *dev)
+ suspend_host:
+ 	sdhci_suspend_host(host);
+ disable_clk:
+-	clk_disable_unprepare(pltfm_host->clk);
+-	return ret;
++	return tegra_sdhci_set_host_clock(host, false);
+ }
+ #endif
+ 
+-static SIMPLE_DEV_PM_OPS(sdhci_tegra_dev_pm_ops, sdhci_tegra_suspend,
+-			 sdhci_tegra_resume);
++const struct dev_pm_ops sdhci_tegra_dev_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(sdhci_tegra_suspend, sdhci_tegra_resume)
++	SET_RUNTIME_PM_OPS(sdhci_tegra_runtime_suspend,
++			   sdhci_tegra_runtime_resume, NULL)
++};
+ 
+ static struct platform_driver sdhci_tegra_driver = {
+ 	.driver		= {
+-- 
+2.7.4
+
