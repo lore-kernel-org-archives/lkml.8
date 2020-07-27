@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9A0C43446
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A356C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B80D20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5106820719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860774;
-	bh=TIhLDenDiUzlHo0WlCWSDO4biF+szFVqHksXro8nHYM=;
+	s=default; t=1595860782;
+	bh=l8HeCmPkk//bGW1au8adPFQS7xsRUtU3zITNzOeRkHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cKr26r/bAp0PlPPYETSUd3SizRi38H2esIzLUeVmfLQglblforuZoJR56WfWZlv0Z
-	 b87uWGCmarRxqCtJC19t2pTrQ7a9p5yjE6gnBzEFcUg9bdYXZoKvgbOk2OwcKoqevP
-	 VSAH1ZxNfyU4t+1ijB2A/DQVUx0TcDeRaPWztsv8=
+	b=IVHyELT/9mJDVeldk9SAMU1R/vUF10jU5UsnNn4WY/Bp8bzDLAydWMSzfj8KuQcVL
+	 QpImeRTcGvavfbyS4b7UOftDHieF4c3y3P/aW2s4FuDSQ9jcBikowMVTnqwgKv3ff0
+	 fqgKpv53zB9pV4snyfy56kAWlmW/Jy4es+5Vad4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732994AbgG0Ojd (ORCPT
+        id S1729686AbgG0OJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:39:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60526 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:09:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729378AbgG0OJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:09:54 -0400
+        id S1729675AbgG0OJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:09:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1246A2083E;
-        Mon, 27 Jul 2020 14:09:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95E4C2250E;
+        Mon, 27 Jul 2020 14:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858994;
-        bh=TIhLDenDiUzlHo0WlCWSDO4biF+szFVqHksXro8nHYM=;
+        s=default; t=1595858979;
+        bh=l8HeCmPkk//bGW1au8adPFQS7xsRUtU3zITNzOeRkHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mq9nbZHMCeqzbPJtzXKqPGi+vwJ11lMQUF/Fg6lyAITTzf5gHsIOzB0MbrAwuOFR/
-         BayaY+Ly8inpZLXIaZQ36MHtkS2NtKOgYEp9A+CK/gX7PNobUPxvgvzdlj4zTR2e8f
-         WK/HjEnUWIYLMCKv1U9kc4A9iPfShwFHdYWrB48Q=
+        b=fUAuOeIFNpb1zVJATryrACZn9E5EOruQOd3CttSgtz5mt1Ky28JVvAHZWgEo0rpzR
+         XWsxYENcKNY+rIJLOKvUfKxHZNYorzZEao5vEG4Jsxc90Q3dIqw6cMFIZFH58Qfxka
+         fkMBtSamRGUXzUqNKxcvtzpGQry2keFRSZy6+CcY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 25/86] bnxt_en: Fix race when modifying pause settings.
-Date:   Mon, 27 Jul 2020 16:03:59 +0200
-Message-Id: <20200727134915.625690928@linuxfoundation.org>
+Subject: [PATCH 4.19 02/86] gpio: arizona: handle pm_runtime_get_sync failure case
+Date:   Mon, 27 Jul 2020 16:03:36 +0200
+Message-Id: <20200727134914.441587217@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -63,42 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 163e9ef63641a02de4c95cd921577265c52e1ce2 ]
+[ Upstream commit e6f390a834b56583e6fc0949822644ce92fbb107 ]
 
-The driver was modified to not rely on rtnl lock to protect link
-settings about 2 years ago.  The pause setting was missed when
-making that change.  Fix it by acquiring link_lock mutex before
-calling bnxt_hwrm_set_pause().
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-Fixes: e2dc9b6e38fa ("bnxt_en: Don't use rtnl lock to protect link change logic in workqueue.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Reviewed-by: Edwin Peer <edwin.peer@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200605025207.65719-1-navid.emamdoost@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-arizona.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index 047024717d654..63730e449e088 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -1392,8 +1392,11 @@ static int bnxt_set_pauseparam(struct net_device *dev,
- 	if (epause->tx_pause)
- 		link_info->req_flow_ctrl |= BNXT_LINK_PAUSE_TX;
- 
--	if (netif_running(dev))
-+	if (netif_running(dev)) {
-+		mutex_lock(&bp->link_lock);
- 		rc = bnxt_hwrm_set_pause(bp);
-+		mutex_unlock(&bp->link_lock);
-+	}
- 	return rc;
- }
- 
+diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
+index ba51ea15f3794..485aa45fc5d53 100644
+--- a/drivers/gpio/gpio-arizona.c
++++ b/drivers/gpio/gpio-arizona.c
+@@ -111,6 +111,7 @@ static int arizona_gpio_direction_out(struct gpio_chip *chip,
+ 		ret = pm_runtime_get_sync(chip->parent);
+ 		if (ret < 0) {
+ 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
++			pm_runtime_put(chip->parent);
+ 			return ret;
+ 		}
+ 	}
 -- 
 2.25.1
 
