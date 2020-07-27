@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E716C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9A6C433FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2D02250E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBACA208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859407;
-	bh=KHiEmeSDHEk36Ap081u5lxBnesPSBOC4MwK1QNOPB98=;
+	s=default; t=1595859410;
+	bh=iBO41IItOf1SqfGhheAjtKbnoUPdrkRC8ORQw9SEKCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UKlZNKljwhGuhx9P3IOUu0x529ekJi0f5Jfcd9imyS3brlnx8ADKVeZblABgxIjLb
-	 vTouxQFSlpKS2Ak6xnFuMz5djz1kyCNY+1l0Vp0r4I0Txlf8uAfr4N90c+WITXED8k
-	 iqE9dhr5sV6feYB9SyKnNqH28453PnTCadZUAgWE=
+	b=TzQefnHmGVRuncKht/OUufzN29H70ntY/eASjSJm8KAqUSUvRGKzbrJLkVDxk8CWr
+	 0Nk0OPi7LfwdtvzSMRWxGpAFFWhocKwCy1ymDNqbXqdJqqH58c9zLrldw1s8OuWhxK
+	 Mw33m4pF/8UZCINHeBFBdL2unsDLMYlYCIWW5W7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbgG0OQq (ORCPT
+        id S1730941AbgG0OQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:16:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43678 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:16:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730918AbgG0OQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:16:42 -0400
+        id S1730918AbgG0OQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:16:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F5A02070A;
-        Mon, 27 Jul 2020 14:16:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DE8720FC3;
+        Mon, 27 Jul 2020 14:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859401;
-        bh=KHiEmeSDHEk36Ap081u5lxBnesPSBOC4MwK1QNOPB98=;
+        s=default; t=1595859406;
+        bh=iBO41IItOf1SqfGhheAjtKbnoUPdrkRC8ORQw9SEKCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e91EX2abEWlTZJbQpkegbBxyavBDnWEQSGvUbNNn8coIsor2bXeRyQGF31VQn0xvb
-         UvjDH0Hff9NrdvtLFIr02qlrOjAKjqylRcg17CJQSvAcOQ492pjxcGxn+oC8IZxdIJ
-         46GIwjfiBFW4hOgoddd7lCz7ZBjuhIoC+ZoINNwk=
+        b=GBNyxA2EwVV4Xl/lRvaB4RlDuWZ/sa1cnWzIehWWp06D7G8CktvTgBxcoiEQZY7af
+         VAW8kS9xKOcaRVJ052xXlYID26G5TG2xDg2wIVjiFbONOZkZUU7mQDbbaShcTSbSA6
+         wDfi1Wvj9jeeYsSMCso3V59KqYM33wRKyVTN37mg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Dietrich <roots@gmx.de>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Vasiliy Kupriakov <rublag-ns@yandex.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 093/138] hwmon: (nct6775) Accept PECI Calibration as temperature source for NCT6798D
-Date:   Mon, 27 Jul 2020 16:04:48 +0200
-Message-Id: <20200727134930.028179403@linuxfoundation.org>
+Subject: [PATCH 5.4 095/138] platform/x86: asus-wmi: allow BAT1 battery name
+Date:   Mon, 27 Jul 2020 16:04:50 +0200
+Message-Id: <20200727134930.128529717@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,49 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Vasiliy Kupriakov <rublag-ns@yandex.ru>
 
-[ Upstream commit 8a03746c8baf82e1616f05a1a716d34378dcf780 ]
+[ Upstream commit 9a33e375d98ece5ea40c576eabd3257acb90c509 ]
 
-Stefan Dietrich reports invalid temperature source messages on Asus Formula
-XII Z490.
+The battery on my laptop ASUS TUF Gaming FX706II is named BAT1.
+This patch allows battery extension to load.
 
-nct6775 nct6775.656: Invalid temperature source 28 at index 0,
-		source register 0x100, temp register 0x73
-
-Debugging suggests that temperature source 28 reports the CPU temperature.
-Let's assume that temperature sources 28 and 29 reflect "PECI Agent {0,1}
-Calibration", similar to other chips of the series.
-
-Reported-by: Stefan Dietrich <roots@gmx.de>
-Cc: Stefan Dietrich <roots@gmx.de>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Vasiliy Kupriakov <rublag-ns@yandex.ru>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/nct6775.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
-index 7efa6bfef0609..ba9b96973e808 100644
---- a/drivers/hwmon/nct6775.c
-+++ b/drivers/hwmon/nct6775.c
-@@ -786,13 +786,13 @@ static const char *const nct6798_temp_label[] = {
- 	"Agent1 Dimm1",
- 	"BYTE_TEMP0",
- 	"BYTE_TEMP1",
--	"",
--	"",
-+	"PECI Agent 0 Calibration",	/* undocumented */
-+	"PECI Agent 1 Calibration",	/* undocumented */
- 	"",
- 	"Virtual_TEMP"
- };
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index b1f4a31ba1ee5..ed83fb135bab3 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -424,6 +424,7 @@ static int asus_wmi_battery_add(struct power_supply *battery)
+ 	 * battery is named BATT.
+ 	 */
+ 	if (strcmp(battery->desc->name, "BAT0") != 0 &&
++	    strcmp(battery->desc->name, "BAT1") != 0 &&
+ 	    strcmp(battery->desc->name, "BATT") != 0)
+ 		return -ENODEV;
  
--#define NCT6798_TEMP_MASK	0x8fff0ffe
-+#define NCT6798_TEMP_MASK	0xbfff0ffe
- #define NCT6798_VIRT_TEMP_MASK	0x80000c00
- 
- /* NCT6102D/NCT6106D specific data */
 -- 
 2.25.1
 
