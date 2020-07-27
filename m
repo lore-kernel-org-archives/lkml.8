@@ -2,158 +2,118 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79F3C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3174C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A14722BF3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859913;
-	bh=8howY8j9fNGGWqKTj9zlyAhmGqYzekyWtWpnYVgsxus=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dl6z7xYr+xQZBTDTJqwswcZG6czZCVcnsRYLPxAIcmDP5Ghi0MiA+7GKA39L/jJtj
-	 80+VQIzBVCXb2miiEx27j91i/evQGR5YqhfAzS+03x9NuLkuVGv1TpNOJ4hqscdngj
-	 TnRr/XadA910y8lJLKn887CbQ6uarb9GkmXcHa7U=
+	by mail.kernel.org (Postfix) with ESMTP id 80A1A20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vLbPGjbD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IOBF3Boh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732386AbgG0OZM (ORCPT
+        id S1732418AbgG0OZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:25:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732370AbgG0OZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:25:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1B8A208E4;
-        Mon, 27 Jul 2020 14:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859908;
-        bh=8howY8j9fNGGWqKTj9zlyAhmGqYzekyWtWpnYVgsxus=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xyskdaqtobhnpGgjstVC1sw8E0+z7LhmTgpNGr4jfBisHjYUsokabnhUm8el9PUIx
-         v4Tj+Q7H7cvkmhgJUwHd2IlzTanJ5+C8HC6YTdSE4jeLbZrU3c9AsXJFc2tSRcFFrh
-         gKYK4+8aN7muDnq2rpfnEO/A8KPA7YzhN1SGcICg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 122/179] usb: cdns3: ep0: fix some endian issues
-Date:   Mon, 27 Jul 2020 16:04:57 +0200
-Message-Id: <20200727134938.594430262@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
-References: <20200727134932.659499757@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 27 Jul 2020 10:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732389AbgG0OZN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:25:13 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500DCC0619D2;
+        Mon, 27 Jul 2020 07:25:13 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 14:25:10 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595859911;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uMD+An+yRJFnhJevzCpA9ASEr2Q20FpshnheoKFP3lk=;
+        b=vLbPGjbDu2xic82PJEQ82vZLPeFAmFqYivgCm3yc34Cj16gmBHbwTTTHFiqTA1WMuXH/QX
+        gXkpT0pMoEUlUucqKl1a/NiojyhBygGLmFH6kQoRvjPiK89gCtrztGXI7sXsaTZQqOKd3m
+        Lofu5ZC0RjLd/7/vn4d/bQwvuMd1gQrRHsVagm55eQbUW0yR0E3y5lATi0gCJf/yPRvNGm
+        GT/Jt9wfAUlz1WBEnZMD247e/B0Mow2VjDM3efkG527VkUUOig648RuYH68STzFOWUAmB2
+        9RWMkmd4R30aCPVBgMf1gjMdhHeQQU8+bxWy2vybPWhCocfM1hCNgsegsnHKhw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595859911;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uMD+An+yRJFnhJevzCpA9ASEr2Q20FpshnheoKFP3lk=;
+        b=IOBF3Bohu/1/UggaMobfJVuRHvPh1liRAcuGVDP/hHcgLq3VqJMpBOdUPgworZ3sud2/a5
+        JngDew5W/0T70ECA==
+From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] genirq/debugfs: Add missing irqchip flags
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <874kpvydxc.wl-maz@kernel.org>
+References: <874kpvydxc.wl-maz@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <159585991070.4006.15343271710137526648.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+The following commit has been merged into the irq/urgent branch of tip:
 
-[ Upstream commit 9f81d45c79271def8a9b90447b04b9c6323291f9 ]
+Commit-ID:     aa251fc5b936d3ddb4b4c4b36427eb9aa3347c82
+Gitweb:        https://git.kernel.org/tip/aa251fc5b936d3ddb4b4c4b36427eb9aa3347c82
+Author:        Marc Zyngier <maz@kernel.org>
+AuthorDate:    Sat, 25 Jul 2020 13:30:55 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 27 Jul 2020 16:20:40 +02:00
 
-It is found by sparse.
+genirq/debugfs: Add missing irqchip flags
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Recently introduced irqchip flags lack the corresponding printouts in
+debugfs. Add them.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/874kpvydxc.wl-maz@kernel.org
+
+
 ---
- drivers/usb/cdns3/ep0.c | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ kernel/irq/debugfs.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
-index da4c5eb03d7ee..666cebd9c5f29 100644
---- a/drivers/usb/cdns3/ep0.c
-+++ b/drivers/usb/cdns3/ep0.c
-@@ -37,18 +37,18 @@ static void cdns3_ep0_run_transfer(struct cdns3_device *priv_dev,
- 	struct cdns3_usb_regs __iomem *regs = priv_dev->regs;
- 	struct cdns3_endpoint *priv_ep = priv_dev->eps[0];
+diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
+index 4f9f844..b95ff5d 100644
+--- a/kernel/irq/debugfs.c
++++ b/kernel/irq/debugfs.c
+@@ -112,6 +112,7 @@ static const struct irq_bit_descr irqdata_states[] = {
+ 	BIT_MASK_DESCR(IRQD_AFFINITY_SET),
+ 	BIT_MASK_DESCR(IRQD_SETAFFINITY_PENDING),
+ 	BIT_MASK_DESCR(IRQD_AFFINITY_MANAGED),
++	BIT_MASK_DESCR(IRQD_AFFINITY_ON_ACTIVATE),
+ 	BIT_MASK_DESCR(IRQD_MANAGED_SHUTDOWN),
+ 	BIT_MASK_DESCR(IRQD_CAN_RESERVE),
+ 	BIT_MASK_DESCR(IRQD_MSI_NOMASK_QUIRK),
+@@ -120,6 +121,10 @@ static const struct irq_bit_descr irqdata_states[] = {
  
--	priv_ep->trb_pool[0].buffer = TRB_BUFFER(dma_addr);
--	priv_ep->trb_pool[0].length = TRB_LEN(length);
-+	priv_ep->trb_pool[0].buffer = cpu_to_le32(TRB_BUFFER(dma_addr));
-+	priv_ep->trb_pool[0].length = cpu_to_le32(TRB_LEN(length));
+ 	BIT_MASK_DESCR(IRQD_WAKEUP_STATE),
+ 	BIT_MASK_DESCR(IRQD_WAKEUP_ARMED),
++
++	BIT_MASK_DESCR(IRQD_DEFAULT_TRIGGER_SET),
++
++	BIT_MASK_DESCR(IRQD_HANDLE_ENFORCE_IRQCTX),
+ };
  
- 	if (zlp) {
--		priv_ep->trb_pool[0].control = TRB_CYCLE | TRB_TYPE(TRB_NORMAL);
--		priv_ep->trb_pool[1].buffer = TRB_BUFFER(dma_addr);
--		priv_ep->trb_pool[1].length = TRB_LEN(0);
--		priv_ep->trb_pool[1].control = TRB_CYCLE | TRB_IOC |
--		    TRB_TYPE(TRB_NORMAL);
-+		priv_ep->trb_pool[0].control = cpu_to_le32(TRB_CYCLE | TRB_TYPE(TRB_NORMAL));
-+		priv_ep->trb_pool[1].buffer = cpu_to_le32(TRB_BUFFER(dma_addr));
-+		priv_ep->trb_pool[1].length = cpu_to_le32(TRB_LEN(0));
-+		priv_ep->trb_pool[1].control = cpu_to_le32(TRB_CYCLE | TRB_IOC |
-+		    TRB_TYPE(TRB_NORMAL));
- 	} else {
--		priv_ep->trb_pool[0].control = TRB_CYCLE | TRB_IOC |
--		    TRB_TYPE(TRB_NORMAL);
-+		priv_ep->trb_pool[0].control = cpu_to_le32(TRB_CYCLE | TRB_IOC |
-+		    TRB_TYPE(TRB_NORMAL));
- 		priv_ep->trb_pool[1].control = 0;
- 	}
- 
-@@ -264,11 +264,11 @@ static int cdns3_req_ep0_get_status(struct cdns3_device *priv_dev,
- 	case USB_RECIP_INTERFACE:
- 		return cdns3_ep0_delegate_req(priv_dev, ctrl);
- 	case USB_RECIP_ENDPOINT:
--		index = cdns3_ep_addr_to_index(ctrl->wIndex);
-+		index = cdns3_ep_addr_to_index(le16_to_cpu(ctrl->wIndex));
- 		priv_ep = priv_dev->eps[index];
- 
- 		/* check if endpoint is stalled or stall is pending */
--		cdns3_select_ep(priv_dev, ctrl->wIndex);
-+		cdns3_select_ep(priv_dev, le16_to_cpu(ctrl->wIndex));
- 		if (EP_STS_STALL(readl(&priv_dev->regs->ep_sts)) ||
- 		    (priv_ep->flags & EP_STALL_PENDING))
- 			usb_status =  BIT(USB_ENDPOINT_HALT);
-@@ -388,10 +388,10 @@ static int cdns3_ep0_feature_handle_endpoint(struct cdns3_device *priv_dev,
- 	if (!(ctrl->wIndex & ~USB_DIR_IN))
- 		return 0;
- 
--	index = cdns3_ep_addr_to_index(ctrl->wIndex);
-+	index = cdns3_ep_addr_to_index(le16_to_cpu(ctrl->wIndex));
- 	priv_ep = priv_dev->eps[index];
- 
--	cdns3_select_ep(priv_dev, ctrl->wIndex);
-+	cdns3_select_ep(priv_dev, le16_to_cpu(ctrl->wIndex));
- 
- 	if (set)
- 		__cdns3_gadget_ep_set_halt(priv_ep);
-@@ -452,7 +452,7 @@ static int cdns3_req_ep0_set_sel(struct cdns3_device *priv_dev,
- 	if (priv_dev->gadget.state < USB_STATE_ADDRESS)
- 		return -EINVAL;
- 
--	if (ctrl_req->wLength != 6) {
-+	if (le16_to_cpu(ctrl_req->wLength) != 6) {
- 		dev_err(priv_dev->dev, "Set SEL should be 6 bytes, got %d\n",
- 			ctrl_req->wLength);
- 		return -EINVAL;
-@@ -476,7 +476,7 @@ static int cdns3_req_ep0_set_isoch_delay(struct cdns3_device *priv_dev,
- 	if (ctrl_req->wIndex || ctrl_req->wLength)
- 		return -EINVAL;
- 
--	priv_dev->isoch_delay = ctrl_req->wValue;
-+	priv_dev->isoch_delay = le16_to_cpu(ctrl_req->wValue);
- 
- 	return 0;
- }
--- 
-2.25.1
-
-
-
+ static const struct irq_bit_descr irqdesc_states[] = {
