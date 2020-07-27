@@ -2,199 +2,227 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6634C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D24C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C98892078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7942078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:19:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tnPmAVCa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgG0LT2 (ORCPT
+        id S1728231AbgG0LTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:19:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:42188 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgG0LT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:19:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEC9E30E;
-        Mon, 27 Jul 2020 04:19:26 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 292EC3F66E;
-        Mon, 27 Jul 2020 04:19:25 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 12:18:52 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Wei Hu <weh@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, robh@kernel.org, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, decui@microsoft.com,
-        mikelley@microsoft.com
-Subject: Re: [PATCH v4] PCI: hv: Fix a timing issue which causes kdump to
- fail occasionally
-Message-ID: <20200727111852.GA14239@e121166-lin.cambridge.arm.com>
-References: <20200727071731.18516-1-weh@microsoft.com>
+        Mon, 27 Jul 2020 07:19:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbgG0LT3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:19:29 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD6D8C061794;
+        Mon, 27 Jul 2020 04:19:29 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id il6so3397502pjb.0;
+        Mon, 27 Jul 2020 04:19:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WlZG7+7DASiAzqRKJZMw2+Puq2+bYr5zSYxEeHcy5yE=;
+        b=tnPmAVCazQgMI6svqYEuWU5taBJyw947KUxPTAau0I/QZbDyWIrbIpF91LGxjwuXGS
+         LRPhm0xQXCIHj6tLs3yJMPYfYpDu6C2ECNaIk4i+MVZtfJSrr3XrrO8UUwTiZNve2FKx
+         tt61tOCsJ7vzFAXkYye3SH7Ypg93rIZ6DSgW08NfmYPzTXpbStrm3Apl1ZWnrYNHLvWD
+         OBldOrdbRoK6cSzFCmd5prG6Tm8BCV2/TP0GPyY4scENzh9f169OGou9zJOOMnO77e2T
+         BtfzRoDkSg4mYSwTZbYir+6sEgEO3hafKHhPd/Dxho5+HIiA0vuqcDXdyTYNzbfldbHo
+         Wldw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WlZG7+7DASiAzqRKJZMw2+Puq2+bYr5zSYxEeHcy5yE=;
+        b=cj2GAMnw6cpsEmp7YZMMbhUUeU9x0CGTpVvuOocr3plvA2onphV6HKZExUugHM11Ak
+         ufvwoUPQvufz/tirZ8Zz6ZFccOAZgLt/dXVD9boNhS7sqGvMfEPYG6kyCVhdZmyDKpA6
+         ME1QN5BI+OvvaTVDhdQCw0c4M7VR2g0BCf8vH/Z26m+oXwudrrm+Pj7sazqbVyMHZuub
+         Yn+77KTwmpPrWpMVrbCNreaaV5/oBA1EqOVUM5cSCcoembfz0/oN0dHbbSc2fPa82hQN
+         zmtI23KbBUKS6cJGWvXxLtdIvnfT6hTUm2CquVYRcCd/IxRyf1YEBE5PZowXdG7DkA75
+         3ldA==
+X-Gm-Message-State: AOAM5336Qy8o5nOZVkKMTxdSL3qSDXkq0brp9Ejstj+WacUFNOIfd5z5
+        xqnXfMIb0Np5PhyYaCNY2cqmvzcZ9F8ryyyQ6kI=
+X-Google-Smtp-Source: ABdhPJyXz/W9tfXLQ1P01pH1D/POYketJG+WWNnTcbGfmsPrhZC3owwch/SJ3tmfvaxowkKhGEHHRFKy/88Ks6iHGfQ=
+X-Received: by 2002:a17:90a:8985:: with SMTP id v5mr2785017pjn.181.1595848769238;
+ Mon, 27 Jul 2020 04:19:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727071731.18516-1-weh@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200720113740.353479-1-vaibhavgupta40@gmail.com> <20200727085621.GL12965@vkoul-mobl>
+In-Reply-To: <20200727085621.GL12965@vkoul-mobl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Jul 2020 14:19:14 +0300
+Message-ID: <CAHp75VesTCOffxiy6=HG=g2t4=js3SnTm4LcdrgAGYiNvSS65Q@mail.gmail.com>
+Subject: Re: [PATCH v1] dmaengine: pch_dma: use generic power management
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        dmaengine <dmaengine@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 03:17:31PM +0800, Wei Hu wrote:
-> Kdump could fail sometime on Hyper-V guest over Accelerated Network
-> interface. This is because the retry in hv_pci_enter_d0() releases
-> child device strurctures in hv_pci_bus_exit(). Although there is
-> a second asynchronous device relations message sending from the host,
-> if this message arrives guest after hv_send_resource_allocated() is
-> called, the retry would fail.
-> 
-> Fix the problem by moving retry to hv_pci_probe() and starting retry
-> from hv_pci_query_relations() call.  This will cause a device relations
-> message to arrive guest synchronously.  The guest would be able to
-> rebuild the child device structures before calling
-> hv_send_resource_allocated().
-> 
-> This problem only happens on Accelerated Network or SRIOV devices as
-> only such devices currently are attached under vmbus PCI bridge.
-> 
-> Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid device state")
-> Signed-off-by: Wei Hu <weh@microsoft.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> ---
->     v2: Adding Fixes tag according to Michael Kelley's review comment.
->     v3: Fix couple typos and reword commit message to make it clearer.
->     Thanks the comments from Bjorn Helgaas.
->     v4: Adding more  problem descritpions in the commit message
->     and code upon request from Lorenze Pieralisi.
-> 
->  drivers/pci/controller/pci-hyperv.c | 71 +++++++++++++++--------------
->  1 file changed, 37 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+On Mon, Jul 27, 2020 at 1:16 PM Vinod Koul <vkoul@kernel.org> wrote:
+> On 20-07-20, 17:07, Vaibhav Gupta wrote:
+> > Drivers using legacy PM have to manage PCI states and device's PM states
+> > themselves. They also need to take care of configuration registers.
+> >
+> > With improved and powerful support of generic PM, PCI Core takes care of
+> > above mentioned, device-independent, jobs.
+> >
+> > This driver makes use of PCI helper functions like
+> > pci_save/restore_state(), pci_enable/disable_device(),
+> > and pci_set_power_state() to do required operations. In generic mode, they
+> > are no longer needed.
+> >
+> > Change function parameter in both .suspend() and .resume() to
+> > "struct device*" type. Use dev_get_drvdata() to get drv data.
+>
+> You are doing too many things in One patch. Do consider splitting them
+> up to a change per patch. for example using __maybe could be one patch,
+> removing code is suspend-resume callbacks would be other one.
 
-I edited commit log and a comment in the code to fix a typo and pushed
-out to pci/hv.
+Vinod, while I completely agree with you in general, in this case it
+would make more unnecessary churn and will be rather unhelpful in all
+ways: for the contributor to do this work, for the reader to collect
+all the pieces. It also will be a bisectability issue, because the
+#ifdeffery replacement (IIRC you need to move from CONFIG_PM to
+CONFIG_PM_SLEEP). I really don't see any advantages of the splitting
+here.
 
-Thanks,
-Lorenzo
+> > Compile-tested only.
+>
+> I would like to see some testing before we merge this
 
-> index bf40ff09c99d..d1758986fbc9 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -2759,10 +2759,8 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
->  	struct pci_bus_d0_entry *d0_entry;
->  	struct hv_pci_compl comp_pkt;
->  	struct pci_packet *pkt;
-> -	bool retry = true;
->  	int ret;
->  
-> -enter_d0_retry:
->  	/*
->  	 * Tell the host that the bus is ready to use, and moved into the
->  	 * powered-on state.  This includes telling the host which region
-> @@ -2789,38 +2787,6 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
->  	if (ret)
->  		goto exit;
->  
-> -	/*
-> -	 * In certain case (Kdump) the pci device of interest was
-> -	 * not cleanly shut down and resource is still held on host
-> -	 * side, the host could return invalid device status.
-> -	 * We need to explicitly request host to release the resource
-> -	 * and try to enter D0 again.
-> -	 */
-> -	if (comp_pkt.completion_status < 0 && retry) {
-> -		retry = false;
-> -
-> -		dev_err(&hdev->device, "Retrying D0 Entry\n");
-> -
-> -		/*
-> -		 * Hv_pci_bus_exit() calls hv_send_resource_released()
-> -		 * to free up resources of its child devices.
-> -		 * In the kdump kernel we need to set the
-> -		 * wslot_res_allocated to 255 so it scans all child
-> -		 * devices to release resources allocated in the
-> -		 * normal kernel before panic happened.
-> -		 */
-> -		hbus->wslot_res_allocated = 255;
-> -
-> -		ret = hv_pci_bus_exit(hdev, true);
-> -
-> -		if (ret == 0) {
-> -			kfree(pkt);
-> -			goto enter_d0_retry;
-> -		}
-> -		dev_err(&hdev->device,
-> -			"Retrying D0 failed with ret %d\n", ret);
-> -	}
-> -
->  	if (comp_pkt.completion_status < 0) {
->  		dev_err(&hdev->device,
->  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
-> @@ -3058,6 +3024,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	struct hv_pcibus_device *hbus;
->  	u16 dom_req, dom;
->  	char *name;
-> +	bool enter_d0_retry = true;
->  	int ret;
->  
->  	/*
-> @@ -3178,11 +3145,47 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	if (ret)
->  		goto free_fwnode;
->  
-> +retry:
->  	ret = hv_pci_query_relations(hdev);
->  	if (ret)
->  		goto free_irq_domain;
->  
->  	ret = hv_pci_enter_d0(hdev);
-> +	/*
-> +	 * In certain case (Kdump) the pci device of interest was
-> +	 * not cleanly shut down and resource is still held on host
-> +	 * side, the host could return invalid device status.
-> +	 * We need to explicitly request host to release the resource
-> +	 * and try to enter D0 again.
-> +	 * Since the hv_pci_bus_exit() call releases structures
-> +	 * of all its child devices, we need to start the retry from
-> +	 * hv_pci_query_relations() call, requesting host to send
-> +	 * the synchronous child device relations message before this
-> +	 * information is needed in hv_send_resources_allocated()
-> +	 * call later .
-> +	 */
-> +	if (ret == -EPROTO && enter_d0_retry) {
-> +		enter_d0_retry = false;
-> +
-> +		dev_err(&hdev->device, "Retrying D0 Entry\n");
-> +
-> +		/*
-> +		 * Hv_pci_bus_exit() calls hv_send_resources_released()
-> +		 * to free up resources of its child devices.
-> +		 * In the kdump kernel we need to set the
-> +		 * wslot_res_allocated to 255 so it scans all child
-> +		 * devices to release resources allocated in the
-> +		 * normal kernel before panic happened.
-> +		 */
-> +		hbus->wslot_res_allocated = 255;
-> +		ret = hv_pci_bus_exit(hdev, true);
-> +
-> +		if (ret == 0)
-> +			goto retry;
-> +
-> +		dev_err(&hdev->device,
-> +			"Retrying D0 failed with ret %d\n", ret);
-> +	}
->  	if (ret)
->  		goto free_irq_domain;
->  
-> -- 
-> 2.20.1
-> 
+I have hardware to test (Intel Minnowboard v1) but have no time. And
+taking into account that I did similar changes for many other drivers,
+I can give my
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+and take responsibility if somebody complains in the future (I don't
+believe it will be one).
+
+P.S. Another scenario if Vaibhav can find that board (there were
+dozens of thousands at least produced and floating on the second hand
+market) and test himself. It may be good since he touches the full lot
+of PCH (EGT20) drivers.
+
+> > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> > ---
+> >  drivers/dma/pch_dma.c | 35 +++++++++--------------------------
+> >  1 file changed, 9 insertions(+), 26 deletions(-)
+> >
+> > diff --git a/drivers/dma/pch_dma.c b/drivers/dma/pch_dma.c
+> > index a3b0b4c56a19..e93005837e3f 100644
+> > --- a/drivers/dma/pch_dma.c
+> > +++ b/drivers/dma/pch_dma.c
+> > @@ -735,8 +735,7 @@ static irqreturn_t pd_irq(int irq, void *devid)
+> >       return ret0 | ret2;
+> >  }
+> >
+> > -#ifdef       CONFIG_PM
+> > -static void pch_dma_save_regs(struct pch_dma *pd)
+> > +static void __maybe_unused pch_dma_save_regs(struct pch_dma *pd)
+> >  {
+> >       struct pch_dma_chan *pd_chan;
+> >       struct dma_chan *chan, *_c;
+> > @@ -759,7 +758,7 @@ static void pch_dma_save_regs(struct pch_dma *pd)
+> >       }
+> >  }
+> >
+> > -static void pch_dma_restore_regs(struct pch_dma *pd)
+> > +static void __maybe_unused pch_dma_restore_regs(struct pch_dma *pd)
+> >  {
+> >       struct pch_dma_chan *pd_chan;
+> >       struct dma_chan *chan, *_c;
+> > @@ -782,40 +781,25 @@ static void pch_dma_restore_regs(struct pch_dma *pd)
+> >       }
+> >  }
+> >
+> > -static int pch_dma_suspend(struct pci_dev *pdev, pm_message_t state)
+> > +static int __maybe_unused pch_dma_suspend(struct device *dev)
+> >  {
+> > -     struct pch_dma *pd = pci_get_drvdata(pdev);
+> > +     struct pch_dma *pd = dev_get_drvdata(dev);
+> >
+> >       if (pd)
+> >               pch_dma_save_regs(pd);
+> >
+> > -     pci_save_state(pdev);
+> > -     pci_disable_device(pdev);
+> > -     pci_set_power_state(pdev, pci_choose_state(pdev, state));
+> > -
+> >       return 0;
+> >  }
+> >
+> > -static int pch_dma_resume(struct pci_dev *pdev)
+> > +static int __maybe_unused pch_dma_resume(struct device *dev)
+> >  {
+> > -     struct pch_dma *pd = pci_get_drvdata(pdev);
+> > -     int err;
+> > -
+> > -     pci_set_power_state(pdev, PCI_D0);
+> > -     pci_restore_state(pdev);
+> > -
+> > -     err = pci_enable_device(pdev);
+> > -     if (err) {
+> > -             dev_dbg(&pdev->dev, "failed to enable device\n");
+> > -             return err;
+> > -     }
+> > +     struct pch_dma *pd = dev_get_drvdata(dev);
+> >
+> >       if (pd)
+> >               pch_dma_restore_regs(pd);
+> >
+> >       return 0;
+> >  }
+> > -#endif
+> >
+> >  static int pch_dma_probe(struct pci_dev *pdev,
+> >                                  const struct pci_device_id *id)
+> > @@ -993,15 +977,14 @@ static const struct pci_device_id pch_dma_id_table[] = {
+> >       { 0, },
+> >  };
+> >
+> > +static SIMPLE_DEV_PM_OPS(pch_dma_pm_ops, pch_dma_suspend, pch_dma_resume);
+> > +
+> >  static struct pci_driver pch_dma_driver = {
+> >       .name           = DRV_NAME,
+> >       .id_table       = pch_dma_id_table,
+> >       .probe          = pch_dma_probe,
+> >       .remove         = pch_dma_remove,
+> > -#ifdef CONFIG_PM
+> > -     .suspend        = pch_dma_suspend,
+> > -     .resume         = pch_dma_resume,
+> > -#endif
+> > +     .driver.pm      = &pch_dma_pm_ops,
+> >  };
+> >
+> >  module_pci_driver(pch_dma_driver);
+> > --
+> > 2.27.0
+>
+> --
+> ~Vinod
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
