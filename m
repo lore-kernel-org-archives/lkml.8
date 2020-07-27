@@ -2,79 +2,90 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2236EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F8CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD09A20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:36:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PIq29Lqf"
+	by mail.kernel.org (Postfix) with ESMTP id BFDFA2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595857097;
+	bh=UQu1gVo9L4rw5zqbtV+t10WaKXY4Uy+PnQiLyriZrwQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GRpbuMvox/cgFHsGqpX0XwtVnLxMC4YOC5TM1zTqjDgaYVyUqsB0/Qew2XuHKhJaX
+	 lOc/2WNN0I2AQiY5hBqQggG/MUy+XAtV4d5AABVs6W/3NuY4eayKEzdxJnmT6iJCHN
+	 mTvVhrdiPWJXKFubXC71Mb4tEK48rHYWhffNepyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgG0Ngr (ORCPT
+        id S1728311AbgG0NiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:36:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43265 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726298AbgG0Ngr (ORCPT
+        Mon, 27 Jul 2020 09:38:16 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42994 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgG0NiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:36:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595857006;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8D67ol3aJBpMshrqkN6iSV7ca0jH4mAuZgj7ZHwQHi4=;
-        b=PIq29LqfNaHzcccdszTbHYWEisEdEt0CmVIOomHqXigbJzghqPRH/Ta70JwkJfoW2nGr6j
-        W+734zG7C6LW43AlFfxX7bP3CtUEPSc5v78GR3xQa/es721+qjWyAxbBrQC12OGhTn0LrF
-        4BCmhPVnkEW3k77l/iEvP91K6/xRbRI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-395-sUa4tk6JNR63pW1PtrxTuw-1; Mon, 27 Jul 2020 09:36:41 -0400
-X-MC-Unique: sUa4tk6JNR63pW1PtrxTuw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53EA91932482;
-        Mon, 27 Jul 2020 13:36:40 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6E97B5C1B2;
-        Mon, 27 Jul 2020 13:36:39 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200727224626.463ffeaf@canb.auug.org.au>
-References: <20200727224626.463ffeaf@canb.auug.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     dhowells@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the akpm tree with the fsinfo tree
+        Mon, 27 Jul 2020 09:38:14 -0400
+Received: by mail-ot1-f68.google.com with SMTP id v21so5038867otj.9;
+        Mon, 27 Jul 2020 06:38:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GDgvxbFtjoqaUGPEDtkInSIpJVJqkW3IcV+Wtsu5ITc=;
+        b=jhprwpJIoQNfyotKw7z1LMzWKpQo7AV2X/QKY3t2H76Hwhu7eN/1HnzYjb2qh0HDI4
+         CplFkvXn/D3yoviIItBgSxzuAmpst3iBWRHn6zp0WsOVFbvBnXCkpvt4oqP5Vb8LqFnl
+         NQSkw33fARMF841U/77bLsva5Yom0l/k01jZPZPyPQ/T11Cn5s05mYcuoB2faXzUDyPd
+         eIMLFblkpv2PWkmoMarPoJrGoj/Md1oAtrMCx5lxktzoG3wMItCwW4TkFQ7FKdk4wWPI
+         ijV0lWpKg/wzFSCWjj9DPla0Y5ypTH1dbwxubJUYASwrTNHFQbmAwePk9PmOeGvhZfok
+         lmAA==
+X-Gm-Message-State: AOAM5329GVgf1plMyji0Aph1G7BKFPeOmoxxUSeevX50toVbMWXTXEm5
+        Ms5rvLHWvDFB3XCPmzl4w8xXD6iqxbdsSIie1Ys=
+X-Google-Smtp-Source: ABdhPJy3txxI99b+fWzbhQVo+HWM4RYjrP2BIU1Ci2RDTj9GPs21eK4gnxtDjDTfKgLqwvw2gVDmbZ5VIuYYJXomKTc=
+X-Received: by 2002:a05:6830:1e5c:: with SMTP id e28mr2285084otj.118.1595857093698;
+ Mon, 27 Jul 2020 06:38:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2814723.1595856998.1@warthog.procyon.org.uk>
-Date:   Mon, 27 Jul 2020 14:36:38 +0100
-Message-ID: <2814724.1595856998@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200707172845.4177903-1-abhishekpandit@chromium.org>
+ <20200707102823.v5.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid> <20200723183235.GA3445384@kroah.com>
+In-Reply-To: <20200723183235.GA3445384@kroah.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 27 Jul 2020 15:38:02 +0200
+Message-ID: <CAJZ5v0jXcfO3YiMgkc7u=qqZy+jyT=RGagF3yAFnAhiJfyfcuQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/1] power: Emit changed uevent on wakeup_sysfs_add/remove
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Thu, Jul 23, 2020 at 8:32 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Jul 07, 2020 at 10:28:44AM -0700, Abhishek Pandit-Subedi wrote:
+> > Udev rules that depend on the power/wakeup attribute don't get triggered
+> > correctly if device_set_wakeup_capable is called after the device is
+> > created. This can happen for several reasons (driver sets wakeup after
+> > device is created, wakeup is changed on parent device, etc) and it seems
+> > reasonable to emit a changed event when adding or removing attributes on
+> > the device.
+> >
+> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+>
+> Rafael, any objection to this?  Do you want me to take it through my
+> tree, or are you going to take it through yours?  Either is fine for me.
 
-> The notificiations tree has been rebased to remove a new syscall and
-> the fsinfo tree rebased on top of that, so the syscall numbers have all
-> changed again :-(
+It's already there in my tree with the R-by tag from you.
 
-Would it make it easier it if I just left a hole for the syscall I dropped for
-the moment?
-
-David
-
+Cheers!
