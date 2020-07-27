@@ -2,108 +2,267 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0E5C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCF4C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D957B2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1578420672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Px+7gUwt"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="LAU0Mjbf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbgG0PSO (ORCPT
+        id S1729976AbgG0PTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46036 "EHLO
+        Mon, 27 Jul 2020 11:19:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728627AbgG0PSO (ORCPT
+        with ESMTP id S1728297AbgG0PTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:18:14 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21768C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:18:14 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id 6so12482782qtt.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:18:14 -0700 (PDT)
+        Mon, 27 Jul 2020 11:19:40 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4231BC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:19:40 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ha11so2306031pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:19:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oumv6DjctSmluV8Ivacc6/Q4aJir+U55bBJZDerGc5I=;
-        b=Px+7gUwtxpKPDvHuoB6IlCBvk6EYS0HihLI+J0DD9Ezkc74/7XR8zWE5ozirQqLiAX
-         GkTIW+1WD/9kORpCBOnAiXOdvsQplAmxjt4x9u68njVmagBRd1EPT/DkywHRiMxics9e
-         g+KAmVPtsnmWT9MDCxCqrBnvLaV+shLM7I1MiYFWmRJGOJ1QK8QLcbClczKJNwMT1IVb
-         5b+QaTWXQGkSWsYgGI870ieUbNiJ7NlmKpo6RigKaZKsss2an4B4b3lV5RFz7Oczzu7I
-         bE5utPmhMSYKh8aNIeJoUcULYkWff3tElXuJttV6jWPZZ0P8nCREx7rS3j57zkNrQAIe
-         C5iA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=IHt3OW1PiSHH3TWA+f0N3SNu3bHzJ0l57BQilBA3+pI=;
+        b=LAU0Mjbfq939NMhR/eiOISTSzZ9oAfhJTSxKjcTso60ALATkC5zXQCp5KQUPL/wCgm
+         ja60LFpDGWc1sSr3aQq6ZI8QaeLAxCnpPBydGhrg0x8zaWXLfdLDojDDaEmc+CaDGm6I
+         GwlwDmf79WJcCprY+TwEZf/+gK4kaMLzdwcoUc6N+1fD9zGbEc8Mb0AN+WuQNEKZ8pzH
+         5RqDhNJYq63sLWYrmnbB1xjMCrh9pDx5ZujZB1fwWi1a7i38pnbRNRk8LVvwWuwggpLu
+         TkSXyYOHtOqwjHstCtR7RKNkjup6VSaIuwvXfSZqJN54lxeu5fOprak8fJBeJ/ixzz6T
+         e9RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oumv6DjctSmluV8Ivacc6/Q4aJir+U55bBJZDerGc5I=;
-        b=QYuVi7WtUn0fnQXfk0pAbjFWrYW1pKr3jpYU5no2OtEpN1QenLJjRbq3EMexZ33ofx
-         iRzcnj+96t4A2L1KUIS9DdS2PLi2xuECCHzYZPT1edV4pggVQoCBOMXbC6yfx2U/Zm3W
-         HDpMkkVVkhiq+kTAFS7OW+H+cvFL/zZndlhPwxTmKhpNaNTeQPLcAU6t0eeIVJ/fCTP8
-         9VhdSwpu0M7Dyn5XL6nXbydkmnMVhv7ouLMJXBb30dMV5VcGnIlSb39+tYqwHzRQDGzu
-         PH6pQ0ComfMVbz6QQE7Z4GCCFNoSaLiaKwM0R7hOf2uBG6Q0e1SsSmawtEpE55zESLeq
-         SuvA==
-X-Gm-Message-State: AOAM531zl4wb2Xr+E3Jfr5BR2oFd+zk2MTxbTZzblQkWrsR4fzEe5lJS
-        lCFNxJDEWpj/+vdt6TW3tQ==
-X-Google-Smtp-Source: ABdhPJyLTAelIjtu78jYMToVbssYjgYPk3s7pOniRfc3akQhku8vGAuGb0/YsOPPTj334y5KEiY9SA==
-X-Received: by 2002:aed:2199:: with SMTP id l25mr21958744qtc.309.1595863092480;
-        Mon, 27 Jul 2020 08:18:12 -0700 (PDT)
-Received: from localhost.localdomain ([209.94.141.207])
-        by smtp.gmail.com with ESMTPSA id o21sm3445003qkk.94.2020.07.27.08.18.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 08:18:12 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH] firewire: Prevent kernel-infoleak in ioctl_get_info()
-Date:   Mon, 27 Jul 2020 11:15:37 -0400
-Message-Id: <20200727151537.315023-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IHt3OW1PiSHH3TWA+f0N3SNu3bHzJ0l57BQilBA3+pI=;
+        b=gBN26NED2roQKA4vxZJqQE0dNEI+PYo6TBqnM/9w16q8Tv3HsQoSTUvgWnRo40dBRh
+         znk1vMrUr06x+ihbM29Ag5rYNmBQafNnMUoNL2SUTTcSxrjUKNoM069xs7s+cnxH6E1L
+         T+xeI2g5l6S8Q3U0b0caXb0QFZQCu4kPkTHZ5E6DGCxwRiKRF7kD8kLh2AAEW+RdRgq4
+         1gSqGm2vt/6lvSezG74VBs1wbIKuwMKT98aUi1P1QI7tdSWRYCFiDTrn7GJ0cJ0u4mW+
+         XPSL3SJrzx4q1xGQgJkpDvbrHdJ6ZCDg5bMJTpyssk2PE+vCIp0xQ77jh7UCQ6ERZ+wo
+         NiUA==
+X-Gm-Message-State: AOAM532NLJBQhCHRpKi06G71gGNLXBrrG+QUIxhBE7gBj4a48lsDjxjM
+        rrXNJK1K8XUB+P3TE0tEoG2T4g==
+X-Google-Smtp-Source: ABdhPJwy0oTu2o2WnKkue2AcW6YKBHustiMeVNrhbryx+OeQ6y1H8Rr3bvh4JQxasU+B4vomTScXCg==
+X-Received: by 2002:a17:902:b18b:: with SMTP id s11mr19674722plr.152.1595863179706;
+        Mon, 27 Jul 2020 08:19:39 -0700 (PDT)
+Received: from [192.168.1.102] (c-24-20-148-49.hsd1.or.comcast.net. [24.20.148.49])
+        by smtp.gmail.com with ESMTPSA id 66sm16045562pfg.63.2020.07.27.08.19.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Jul 2020 08:19:39 -0700 (PDT)
+From:   "Sean V Kelley" <sean.v.kelley@intel.com>
+To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
+Cc:     bhelgaas@google.com, rjw@rjwysocki.net, tony.luck@intel.com,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Qiuxu Zhuo" <qiuxu.zhuo@intel.com>
+Subject: Re: [RFC PATCH 7/9] PCI/AER: Add RCEC AER handling
+Date:   Mon, 27 Jul 2020 08:19:39 -0700
+X-Mailer: MailMate (1.13.1r5671)
+Message-ID: <6C5C96C5-0365-48A0-B623-1A4C0CE0D13E@intel.com>
+In-Reply-To: <20200727132252.0000644c@Huawei.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+ <20200724172223.145608-8-sean.v.kelley@intel.com>
+ <20200727132252.0000644c@Huawei.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ioctl_get_info() is copying uninitialized stack memory to userspace due to
-the compiler not initializing holes in statically allocated structures.
-Fix it by initializing `event` using memset() in fill_bus_reset_event().
+On 27 Jul 2020, at 5:22, Jonathan Cameron wrote:
 
-Cc: stable@vger.kernel.org
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
- drivers/firewire/core-cdev.c | 2 ++
- 1 file changed, 2 insertions(+)
+> On Fri, 24 Jul 2020 10:22:21 -0700
+> Sean V Kelley <sean.v.kelley@intel.com> wrote:
+>
+>> The Root Complex Event Collectors(RCEC) appear as peers to Root Ports
+>> and also have the AER capability. So add RCEC support to the current 
+>> AER
+>> service driver and attach the AER service driver to the RCEC device.
+>>
+>> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>
+> A few questions and comments for this patch.
+>
+> See inline.
+>
+> Jonathan
+>
+>
+>> ---
+>>  drivers/pci/pcie/aer.c | 34 +++++++++++++++++++++++++++-------
+>>  1 file changed, 27 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index f1bf06be449e..7cc430c74c46 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -303,7 +303,7 @@ int pci_aer_raw_clear_status(struct pci_dev *dev)
+>>  		return -EIO;
+>>
+>>  	port_type = pci_pcie_type(dev);
+>> -	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
+>> +	if (port_type == PCI_EXP_TYPE_ROOT_PORT || port_type == 
+>> PCI_EXP_TYPE_RC_EC) {
+>>  		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &status);
+>>  		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, status);
+>>  	}
+>> @@ -389,6 +389,12 @@ void pci_aer_init(struct pci_dev *dev)
+>>  	pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR, sizeof(u32) * 
+>> n);
+>>
+>>  	pci_aer_clear_status(dev);
+>> +
+>> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) {
+>> +		if (!pci_find_ext_capability(dev, PCI_EXT_CAP_ID_RCEC))
+>> +			return;
+>> +		pci_info(dev, "AER: RCEC CAP FOUND and cap_has_rtctl = %d\n", n);
+>
+> It feels like failing to find an RC_EC extended cap in a RCEC deserved
+> a nice strong error message.  Perhaps this isn't the right place to do 
+> it
+> though.  For that matter, why are we checking for it here?
 
-diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
-index fb6c651214f3..2341d762df5b 100644
---- a/drivers/firewire/core-cdev.c
-+++ b/drivers/firewire/core-cdev.c
-@@ -340,6 +340,8 @@ static void fill_bus_reset_event(struct fw_cdev_event_bus_reset *event,
- {
- 	struct fw_card *card = client->device->card;
- 
-+	memset(event, 0, sizeof(*event));
-+
- 	spin_lock_irq(&card->lock);
- 
- 	event->closure	     = client->bus_reset_closure;
--- 
-2.25.1
+Sorry, I’ve left an in-development output in the code.  Will replace 
+with a check with more meaningful output elsewhere.
 
+>
+>> +	}
+>>  }
+>>
+>>  void pci_aer_exit(struct pci_dev *dev)
+>> @@ -577,7 +583,8 @@ static umode_t aer_stats_attrs_are_visible(struct 
+>> kobject *kobj,
+>>  	if ((a == &dev_attr_aer_rootport_total_err_cor.attr ||
+>>  	     a == &dev_attr_aer_rootport_total_err_fatal.attr ||
+>>  	     a == &dev_attr_aer_rootport_total_err_nonfatal.attr) &&
+>
+> It is a bit ugly to have these called rootport_total_err etc for the 
+> rcec.
+> Perhaps we should just add additional attributes to reflect we are 
+> looking at
+> an RCEC?
+
+I was trying to avoid any renaming to reduce churn as I did with my 
+first patch for ACPI / CLX_OSC support.
+Will take a look.
+
+>
+>> -	    pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
+>> +	    ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
+>> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_EC)))
+>>  		return 0;
+>>
+>>  	return a->mode;
+>> @@ -894,7 +901,10 @@ static bool find_source_device(struct pci_dev 
+>> *parent,
+>>  	if (result)
+>>  		return true;
+>>
+>> -	pci_walk_bus(parent->subordinate, find_device_iter, e_info);
+>> +	if (pci_pcie_type(parent) == PCI_EXP_TYPE_RC_EC)
+>> +		pcie_walk_rcec(parent, find_device_iter, e_info);
+>> +	else
+>> +		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
+>>
+>>  	if (!e_info->error_dev_num) {
+>>  		pci_info(parent, "can't find device of ID%04x\n", e_info->id);
+>> @@ -1030,6 +1040,7 @@ int aer_get_device_error_info(struct pci_dev 
+>> *dev, struct aer_err_info *info)
+>>  		if (!(info->status & ~info->mask))
+>>  			return 0;
+>>  	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+>> +		   pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC ||
+>>  	           pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+>>  		   info->severity == AER_NONFATAL) {
+>>
+>> @@ -1182,6 +1193,8 @@ static int set_device_error_reporting(struct 
+>> pci_dev *dev, void *data)
+>>  	int type = pci_pcie_type(dev);
+>>
+>>  	if ((type == PCI_EXP_TYPE_ROOT_PORT) ||
+>> +	    (type == PCI_EXP_TYPE_RC_EC) ||
+>> +	    (type == PCI_EXP_TYPE_RC_END) ||
+>
+> Why add RC_END here?
+
+I’m not clear on your question.  Errors can come from RCEC or RCiEPs.  
+We still need to enable reporting by the RCiEPs.
+
+>
+>>  	    (type == PCI_EXP_TYPE_UPSTREAM) ||
+>>  	    (type == PCI_EXP_TYPE_DOWNSTREAM)) {
+>>  		if (enable)
+>> @@ -1206,9 +1219,11 @@ static void 
+>> set_downstream_devices_error_reporting(struct pci_dev *dev,
+>>  {
+>>  	set_device_error_reporting(dev, &enable);
+>>
+>> -	if (!dev->subordinate)
+>> -		return;
+>> -	pci_walk_bus(dev->subordinate, set_device_error_reporting, 
+>> &enable);
+>> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
+>> +		pcie_walk_rcec(dev, set_device_error_reporting, &enable);
+>> +	else if (dev->subordinate)
+>> +		pci_walk_bus(dev->subordinate, set_device_error_reporting, 
+>> &enable);
+>> +
+>>  }
+>>
+>>  /**
+>> @@ -1306,6 +1321,11 @@ static int aer_probe(struct pcie_device *dev)
+>>  	struct device *device = &dev->device;
+>>  	struct pci_dev *port = dev->port;
+>>
+>> +	/* Limit to Root Ports or Root Complex Event Collectors */
+>> +	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
+>> +	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
+>> +		return -ENODEV;
+>> +
+>>  	rpc = devm_kzalloc(device, sizeof(struct aer_rpc), GFP_KERNEL);
+>>  	if (!rpc)
+>>  		return -ENOMEM;
+>> @@ -1362,7 +1382,7 @@ static pci_ers_result_t aer_root_reset(struct 
+>> pci_dev *dev)
+>>
+>>  static struct pcie_port_service_driver aerdriver = {
+>>  	.name		= "aer",
+>> -	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
+>> +	.port_type	= PCIE_ANY_PORT,
+>
+> Why this particular change?  Seems that is a lot wider than simply
+> adding RCEC.  Obviously we'll then drop out in the aer_probe but it
+> is still rather inelegant.
+
+In order to extend the service drivers to non-root-port devices (i.e., 
+RCEC), the simple path appeared to only require setting the type to 
+ANY_PORT and catching the needed types arriving in the probe.  Would you 
+prefer extending to a type2?  I’m not sure how one is more elegant 
+than another but open to that approach.  However, this seems to require 
+less code perhaps and seems consistent with most ‘drop-out’ 
+conditional patterns in the kernel.  The same applies to pme.
+
+Thanks,
+
+Sean
+
+
+>
+>>  	.service	= PCIE_PORT_SERVICE_AER,
+>>
+>>  	.probe		= aer_probe,
