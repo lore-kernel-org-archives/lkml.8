@@ -2,215 +2,177 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C198C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A431FC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 350AF20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B56F2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:39:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ex/jfVq0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgG0HiF (ORCPT
+        id S1726942AbgG0Hjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:38:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgG0HiF (ORCPT
+        Mon, 27 Jul 2020 03:39:43 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:10339 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgG0Hjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:38:05 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 010AAC0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:38:05 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jzxht-0002NO-VG; Mon, 27 Jul 2020 09:37:57 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jzxht-0007xt-1v; Mon, 27 Jul 2020 09:37:57 +0200
-Date:   Mon, 27 Jul 2020 09:37:57 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
-Message-ID: <20200727073757.r2vq6djh3a4dyfp6@pengutronix.de>
-References: <20200724080813.24884-1-peng.fan@nxp.com>
- <20200724080813.24884-4-peng.fan@nxp.com>
- <20200727062335.v2pxgu6kr6ao2qmh@pengutronix.de>
- <DB6PR0402MB27601C875FF5F1E02DBF5C6488720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
- <20200727064151.767kc7622tcqmqfs@pengutronix.de>
- <DB6PR0402MB276063FBE74FCF222CB00F8588720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+        Mon, 27 Jul 2020 03:39:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1595835582; x=1627371582;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=FJjAKma81/3e1UdMJPfy23qzvOyOf8SJmgiY8ZS3SwA=;
+  b=ex/jfVq0nddF4SBLvR4zfmrMpPeA+YQSK6183G1WXwd1iCq4cWt3zlWA
+   ka18EbWHvN7kphx3AyKrpQeL2EmUEkFBdrxzD5jdwVQn0lDbkF5mC01dL
+   omxfjMa20CAwJWl9t7kC7sAfdiUDvK9ncZ5rjuhbFGWVdgfcCwG0/En4B
+   4=;
+IronPort-SDR: GtoPqIMqHLbnDdpFfyhmM3oVIKC3Lc1/KnaY7PBDZJxaLojcdz3M1DT24zbnD4ZVtrJfa9LKoq
+ neDhI05BVRAA==
+X-IronPort-AV: E=Sophos;i="5.75,401,1589241600"; 
+   d="scan'208";a="54913381"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 27 Jul 2020 07:39:32 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id 561E2A2A57;
+        Mon, 27 Jul 2020 07:39:18 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 27 Jul 2020 07:39:17 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.145) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 27 Jul 2020 07:38:59 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Greg Thelen <gthelen@google.com>
+CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
+        <dwmw@amazon.com>, <foersleo@amazon.de>, <irogers@google.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <rppt@kernel.org>, <sblbir@amazon.com>,
+        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <snu@amazon.de>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH v18 11/14] Documentation: Add documents for DAMON
+Date:   Mon, 27 Jul 2020 09:38:42 +0200
+Message-ID: <20200727073842.5328-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lledsvdu3e7clex3"
-Content-Disposition: inline
-In-Reply-To: <DB6PR0402MB276063FBE74FCF222CB00F8588720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:08:39 up 254 days, 22:27, 241 users,  load average: 0.11, 0.11,
- 0.08
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <xr938sf577dn.fsf@gthelen.svl.corp.google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.161.145]
+X-ClientProxiedBy: EX13D12UWC003.ant.amazon.com (10.43.162.12) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 27 Jul 2020 00:19:00 -0700 Greg Thelen <gthelen@google.com> wrote:
 
---lledsvdu3e7clex3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> SeongJae Park <sjpark@amazon.com> wrote:
+> 
+> > From: SeongJae Park <sjpark@amazon.de>
+> >
+> > This commit adds documents for DAMON under
+> > `Documentation/admin-guide/mm/damon/` and `Documentation/vm/damon/`.
+> >
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > ---
+> >  Documentation/admin-guide/mm/damon/guide.rst | 157 ++++++++++
+> >  Documentation/admin-guide/mm/damon/index.rst |  15 +
+> >  Documentation/admin-guide/mm/damon/plans.rst |  29 ++
+> >  Documentation/admin-guide/mm/damon/start.rst |  98 ++++++
+> >  Documentation/admin-guide/mm/damon/usage.rst | 298 +++++++++++++++++++
+> >  Documentation/admin-guide/mm/index.rst       |   1 +
+> >  Documentation/vm/damon/api.rst               |  20 ++
+> >  Documentation/vm/damon/eval.rst              | 222 ++++++++++++++
+> >  Documentation/vm/damon/faq.rst               |  59 ++++
+> >  Documentation/vm/damon/index.rst             |  32 ++
+> >  Documentation/vm/damon/mechanisms.rst        | 165 ++++++++++
+> >  Documentation/vm/index.rst                   |   1 +
+> >  12 files changed, 1097 insertions(+)
+> >  create mode 100644 Documentation/admin-guide/mm/damon/guide.rst
+> >  create mode 100644 Documentation/admin-guide/mm/damon/index.rst
+> >  create mode 100644 Documentation/admin-guide/mm/damon/plans.rst
+> >  create mode 100644 Documentation/admin-guide/mm/damon/start.rst
+> >  create mode 100644 Documentation/admin-guide/mm/damon/usage.rst
+> >  create mode 100644 Documentation/vm/damon/api.rst
+> >  create mode 100644 Documentation/vm/damon/eval.rst
+> >  create mode 100644 Documentation/vm/damon/faq.rst
+> >  create mode 100644 Documentation/vm/damon/index.rst
+> >  create mode 100644 Documentation/vm/damon/mechanisms.rst
+> >+
+[...]
+> > +===============
+> > +Detailed Usages
+> > +===============
+> > +
+> > +DAMON provides below three interfaces for different users.
+> > +
+> > +- *DAMON user space tool.*
+> > +  This is for privileged people such as system administrators who want a
+> > +  just-working human-friendly interface.  Using this, users can use the DAMON’s
+> > +  major features in a human-friendly way.  It may not be highly tuned for
+> > +  special cases, though.  It supports only virtual address spaces monitoring.
+> > +- *debugfs interface.*
+> > +  This is for privileged user space programmers who want more optimized use of
+> > +  DAMON.  Using this, users can use DAMON’s major features by reading
+> > +  from and writing to special debugfs files.  Therefore, you can write and use
+> > +  your personalized DAMON debugfs wrapper programs that reads/writes the
+> > +  debugfs files instead of you.  The DAMON user space tool is also a reference
+> > +  implementation of such programs.  It supports only virtual address spaces
+> > +  monitoring.
+> > +- *Kernel Space Programming Interface.*
+> > +  This is for kernel space programmers.  Using this, users can utilize every
+> > +  feature of DAMON most flexibly and efficiently by writing kernel space
+> > +  DAMON application programs for you.  You can even extend DAMON for various
+> > +  address spaces.
+> > +
+> > +This document does not describe the kernel space programming interface in
+> > +detail.  For that, please refer to the :doc:`/vm/damon/api`.
+> > +
+> > +
+> > +DAMON User Sapce Tool
+> 
+> Space
 
-On Mon, Jul 27, 2020 at 06:51:00AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
-> >=20
-> > On Mon, Jul 27, 2020 at 06:28:20AM +0000, Peng Fan wrote:
-> > > Hi Oleksij,
-> > >
-> > > > Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
-> > > >
-> > > > On Fri, Jul 24, 2020 at 04:08:06PM +0800, Peng Fan wrote:
-> > > > > We might need to map an region multiple times, becaue the region
-> > > > > might be shared between remote processors, such i.MX8QM with dual
-> > M4 cores.
-> > > > > So use devm_ioremap, not devm_ioremap_resource.
-> > > >
-> > > > Can you please give an example of this kind of shared resources and
-> > > > how they should be handled by two separate devices?
-> > >
-> > > This is to share vdevbuffer space, there is a vdevbuffer in device
-> > > tree, it will be shared between M4_0 and M4_1.
-> > >
-> > > For the buffer, it is Linux DMA API will handle the space.
-> >=20
-> > Why remoteproc need to care about it? If I see it correctly, from the l=
-inux
-> > perspective, it is one buffer and one driver is responsible for it. Or =
-do I missing
-> > some thing?
->=20
-> We not have the vdev buffer in resource table, so I added in device tree,=
- see below:
+Right, thanks!
 
-Hm.. if vdev is not in resource table and should not be controlled by
-remoteproc, why do we need remoteproc?
+> 
+[...]
+> > +
+> > +Can 'idle pages tracking' or 'perf mem' substitute DAMON?
+> > +=========================================================
+> > +
+> > +Idle page tracking is a low level primitive for access check of the physical
+> > +address space.  'perf mem' is similar, though it can use sampling to minimize
+> > +the overhead.  On the other hand, DAMON is a higher-level framework for the
+> > +monitoring of various address spaces.  It is focused on memory management
+> > +optimization and provides sophisticated accuracy/overhead handling mechanisms.
+> > +Therefore, 'idle pages tracking' and 'perf mem' could provide a subset of
+> > +DAMON's output, but cannot substitute DAMON.  Rather than that, thouse could be
+> 
+> those?
 
->         imx8qm_cm40: imx8qm_cm4@0 {
->                 compatible =3D "fsl,imx8qm-cm4";
->                 rsc-da =3D <0x90000000>;
->                 mbox-names =3D "tx", "rx", "rxdb";
->                 mboxes =3D <&lsio_mu5 0 1
->                           &lsio_mu5 1 1
->                           &lsio_mu5 3 1>;
->                 mub-partition =3D <3>;
->                 memory-region =3D <&vdev0vring0>, <&vdev0vring1>, <&vdevb=
-uffer>,
->                                 <&vdev1vring0>, <&vdev1vring1>;
->                 core-index =3D <0>;
->                 core-id =3D <IMX_SC_R_M4_0_PID0>;
->                 status =3D "okay";
->                 power-domains =3D <&pd IMX_SC_R_M4_0_PID0>,
->                                 <&pd IMX_SC_R_M4_0_MU_1A>;
->         };
->=20
->         imx8qm_cm41: imx8x_cm4@1 {
->                 compatible =3D "fsl,imx8qm-cm4";
->                 rsc-da =3D <0x90100000>;
->                 mbox-names =3D "tx", "rx", "rxdb";
->                 mboxes =3D <&lsio_mu6 0 1
->                           &lsio_mu6 1 1
->                           &lsio_mu6 3 1>;
->                 mub-partition =3D <4>;
->                 memory-region =3D <&vdev2vring0>, <&vdev2vring1>, <&vdevb=
-uffer>,
->                                 <&vdev3vring0>, <&vdev3vring1>;
->                 core-index =3D <1>;
->                 core-id =3D <IMX_SC_R_M4_1_PID0>;
->                 status =3D "okay";
->                 power-domains =3D <&pd IMX_SC_R_M4_1_PID0>,
->                                 <&pd IMX_SC_R_M4_1_MU_1A>;
->         };
->=20
->                 vdevbuffer: vdevbuffer {
->                         compatible =3D "shared-dma-pool";
->                         reg =3D <0 0x90400000 0 0x100000>;
->                         no-map;
->                 };
->=20
-> I have the upper vdevbuffer node shared between M40 and M41 node.
-> The vdevbuffer will be used as virtio data buffer.
->=20
-> And I have the following in rproc_add_virtio_dev to share vdevbuffer:
->         /* Try to find dedicated vdev buffer carveout */
->         mem =3D rproc_find_carveout_by_name(rproc, "vdev%dbuffer", rvdev-=
->index);
->         if (!mem)
->                 mem =3D rproc_find_carveout_by_name(rproc, "vdevbuffer");
-
-With kernel v5.8-rc7 i get following call chain:
-rproc_boot()
-  rproc_fw_boot()
-    rproc_handle_vdev
-      rproc_vdev_do_start()
-        rproc_add_virtio_dev()
+Good eye!  I will fix both in the next spin.
 
 
-So, at the end, we will call rproc_add_virtio_dev() only if we boot
-firmware by linux, or if we get at least the resource table.
-
-Since none of this seems to be the case, i still do not understand how
-it should work.
-
-> Hope this is clear.
-
-:) i still need some time to understand it.
-
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---lledsvdu3e7clex3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8ehFAACgkQ4omh9DUa
-UbNuvBAAzaHrZx+RWrM1K4wZ6lTlnlom0/YvoOHFJy6BFwR3G5839nr1109/x9Rg
-SBhifCjiIISDYSDl2MdlgAPxjjEcLfjIJH9PTCzk9YoXZOkBvCzTnxBxSePlXAol
-ezH+BJsu/Bfc9iva+cLflE3CAEAc80MESPXlMoQg6W7E7CS0CsvTh4MwuWWc0KDR
-a9lEI7axGKePILdQzK6r25cAerJwxH1YA4EWOg09Da9kwSnECMdcY+fI5Bp1aYxg
-zlpxbtcpwtLgeR3s+IzKSOEGkWeMQOOwumVJ5hEs2Rdl4GoPvWBt+YH34XYnziU3
-gTLCfpJkno5smfBOub49/6UA+wj8aDVzZaAWZj0/FwowFvmymgncl4RpSRtkqG1s
-k6xiBSBES+IIBHeZek7SINYI4UoA0rV4GnbzIFza6IzhB58mcv1a3i1S+TnNHEoi
-ZyR+tTyK7NdeuRoWO5W7dlgFa7pt1Y+pia1HGWiksnUY4xCsdaVm+Ugpm4OXY1KB
-9IneQA0QfggVk8BuXnP0i6qlQGc5abdLYhPM8SI71jzuRtMzt2O/yAKGt+mhHQTO
-VxNfoa+q7DVG/bce3Q3iRCK+BG92BznmYF7v+uiHEWuD/7tRcztXKjJkxxuu9MTc
-l+FN2vsU9w/tdeFrEivpA4yq/Lr5ExMvHYmjDzqnYj3NTlFdd88=
-=1uiY
------END PGP SIGNATURE-----
-
---lledsvdu3e7clex3--
+Thanks,
+SeongJae Park
