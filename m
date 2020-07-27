@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38489C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDE4C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 118A820838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2023D207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860382;
-	bh=1w8MiR6uKDyPlF/1ToVflJLi46J2u7KN6DicBT8X3T4=;
+	s=default; t=1595860385;
+	bh=L4T2+3ROUy7Jc2kE2LVhOT1dUpleqA6JyPuFcdEiiDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QUhOONma11XatBamuWXsztTUklClu9vNH824VEqn/qi4iiWMiR79rrbZ1HB1qcOJz
-	 DFzP3BNmr7ZMQyUODo472J3i5KF2W1M8Ho66c4dAIE//G2v+vk01+NNoDxobEY2GB3
-	 eXc5W84o4w17418hm2sUCv5903REtVkEftrSaNsk=
+	b=GN+bHBq9QZR9CS8Vy52seWXg/kffkGhy3M4HNUtsIe9QlShRbVOiijeYX4a8Jt41Y
+	 5EZN4o8P20O9LT/YcHQ+5QzvXu3A59nuFo39zacCAL5+Xl0xaHE6GLk8sx9Qi7M4Ke
+	 EpC/+2DBH41rN4BlFf4PALdRPcRXa3G1YLjvz680=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731182AbgG0OSJ (ORCPT
+        id S1731441AbgG0OdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45592 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:33:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731158AbgG0OSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:04 -0400
+        id S1731175AbgG0OSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17F622075A;
-        Mon, 27 Jul 2020 14:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 178DA2177B;
+        Mon, 27 Jul 2020 14:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859483;
-        bh=1w8MiR6uKDyPlF/1ToVflJLi46J2u7KN6DicBT8X3T4=;
+        s=default; t=1595859488;
+        bh=L4T2+3ROUy7Jc2kE2LVhOT1dUpleqA6JyPuFcdEiiDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l02IGlZamQsrUH+iRv4UNZG6+0l/gcMlfrpWCH0XrX4nmyLzxTkPjPRjmpSPns2GZ
-         lU+sHstJoM+5l8WAopy94WB9yrtTnk0Trjbj+8P1QrFybYqQBs6dySsFLLj/EPfL/r
-         pGr5zl51Ity59/4aqFcd+AEEaHdvjsE31X0Ij+ZQ=
+        b=yp9EK8IMC2OXHS7rwtbmYarxXhGh6cAHWQyo5Fo5Q0inzjOPU258cDR8wlcicJncR
+         n6R+NpjZ7roRHHhkRHb/Qs3aTAxN0B8tild9gvOmXPCUF/YYStAJ7U2gT2PW6GC6pY
+         rDuUo2B+Vduh1sZEkNqkyBIgSrMaHpWi2gSPgtD8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 126/138] io-mapping: indicate mapping failure
-Date:   Mon, 27 Jul 2020 16:05:21 +0200
-Message-Id: <20200727134931.729052190@linuxfoundation.org>
+        =?UTF-8?q?Pawe=C5=82=20Gronowski?= <me@woland.xyz>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 128/138] drm/amdgpu: Fix NULL dereference in dpm sysfs handlers
+Date:   Mon, 27 Jul 2020 16:05:23 +0200
+Message-Id: <20200727134931.829986832@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -65,73 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael J. Ruhl <michael.j.ruhl@intel.com>
+From: Paweł Gronowski <me@woland.xyz>
 
-commit e0b3e0b1a04367fc15c07f44e78361545b55357c upstream.
+commit 38e0c89a19fd13f28d2b4721035160a3e66e270b upstream.
 
-The !ATOMIC_IOMAP version of io_maping_init_wc will always return
-success, even when the ioremap fails.
+NULL dereference occurs when string that is not ended with space or
+newline is written to some dpm sysfs interface (for example pp_dpm_sclk).
+This happens because strsep replaces the tmp with NULL if the delimiter
+is not present in string, which is then dereferenced by tmp[0].
 
-Since the ATOMIC_IOMAP version returns NULL when the init fails, and
-callers check for a NULL return on error this is unexpected.
+Reproduction example:
+sudo sh -c 'echo -n 1 > /sys/class/drm/card0/device/pp_dpm_sclk'
 
-During a device probe, where the ioremap failed, a crash can look like
-this:
-
-    BUG: unable to handle page fault for address: 0000000000210000
-     #PF: supervisor write access in kernel mode
-     #PF: error_code(0x0002) - not-present page
-     Oops: 0002 [#1] PREEMPT SMP
-     CPU: 0 PID: 177 Comm:
-     RIP: 0010:fill_page_dma [i915]
-       gen8_ppgtt_create [i915]
-       i915_ppgtt_create [i915]
-       intel_gt_init [i915]
-       i915_gem_init [i915]
-       i915_driver_probe [i915]
-       pci_device_probe
-       really_probe
-       driver_probe_device
-
-The remap failure occurred much earlier in the probe.  If it had been
-propagated, the driver would have exited with an error.
-
-Return NULL on ioremap failure.
-
-[akpm@linux-foundation.org: detect ioremap_wc() errors earlier]
-
-Fixes: cafaf14a5d8f ("io-mapping: Always create a struct to hold metadata about the io-mapping")
-Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200721171936.81563-1-michael.j.ruhl@intel.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Paweł Gronowski <me@woland.xyz>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/io-mapping.h |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
---- a/include/linux/io-mapping.h
-+++ b/include/linux/io-mapping.h
-@@ -108,9 +108,12 @@ io_mapping_init_wc(struct io_mapping *io
- 		   resource_size_t base,
- 		   unsigned long size)
- {
-+	iomap->iomem = ioremap_wc(base, size);
-+	if (!iomap->iomem)
-+		return NULL;
-+
- 	iomap->base = base;
- 	iomap->size = size;
--	iomap->iomem = ioremap_wc(base, size);
- #if defined(pgprot_noncached_wc) /* archs can't agree on a name ... */
- 	iomap->prot = pgprot_noncached_wc(PAGE_KERNEL);
- #elif defined(pgprot_writecombine)
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+@@ -691,8 +691,7 @@ static ssize_t amdgpu_set_pp_od_clk_volt
+ 		tmp_str++;
+ 	while (isspace(*++tmp_str));
+ 
+-	while (tmp_str[0]) {
+-		sub_str = strsep(&tmp_str, delimiter);
++	while ((sub_str = strsep(&tmp_str, delimiter)) != NULL) {
+ 		ret = kstrtol(sub_str, 0, &parameter[parameter_size]);
+ 		if (ret)
+ 			return -EINVAL;
+@@ -883,8 +882,7 @@ static ssize_t amdgpu_read_mask(const ch
+ 	memcpy(buf_cpy, buf, bytes);
+ 	buf_cpy[bytes] = '\0';
+ 	tmp = buf_cpy;
+-	while (tmp[0]) {
+-		sub_str = strsep(&tmp, delimiter);
++	while ((sub_str = strsep(&tmp, delimiter)) != NULL) {
+ 		if (strlen(sub_str)) {
+ 			ret = kstrtol(sub_str, 0, &level);
+ 			if (ret)
+@@ -1300,8 +1298,7 @@ static ssize_t amdgpu_set_pp_power_profi
+ 			i++;
+ 		memcpy(buf_cpy, buf, count-i);
+ 		tmp_str = buf_cpy;
+-		while (tmp_str[0]) {
+-			sub_str = strsep(&tmp_str, delimiter);
++		while ((sub_str = strsep(&tmp_str, delimiter)) != NULL) {
+ 			ret = kstrtol(sub_str, 0, &parameter[parameter_size]);
+ 			if (ret) {
+ 				count = -EINVAL;
 
 
