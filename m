@@ -2,97 +2,123 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCD9C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51B2620719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5648220719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:46:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HUSvyOs+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbgG0OqG (ORCPT
+        id S1729134AbgG0Oqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:46:06 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:16454 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728536AbgG0OqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:46:05 -0400
-Received: by ajax-webmail-mail-app4 (Coremail) ; Mon, 27 Jul 2020 22:45:24
- +0800 (GMT+08:00)
-X-Originating-IP: [210.32.144.186]
-Date:   Mon, 27 Jul 2020 22:45:24 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Dan Carpenter" <dan.carpenter@oracle.com>
-Cc:     devel@driverdev.osuosl.org,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, kjlu@umn.edu,
-        linux-kernel@vger.kernel.org,
-        "Julia Lawall" <julia.lawall@inria.fr>,
-        "Stefano Brivio" <sbrivio@redhat.com>,
-        "Shreeya Patel" <shreeya.patel23498@gmail.com>,
-        "Larry Finger" <Larry.Finger@lwfinger.net>
-Subject: Re: Re: [PATCH] Staging: rtl8188eu: rtw_mlme: Fix uninitialized
- variable authmode
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20200727132351.GF1913@kadam>
-References: <20200724122957.30411-1-dinghao.liu@zju.edu.cn>
- <20200727114451.GA1913@kadam> <20200727132351.GF1913@kadam>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Mon, 27 Jul 2020 10:46:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51526 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728314AbgG0Oqf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:46:35 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06REVmaZ087477;
+        Mon, 27 Jul 2020 14:46:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=XZwDFP7/Bk7zQbeafucYS3tZ79YR2yepxvTQrzg7myI=;
+ b=HUSvyOs+R8abvlti5/CYCUsc1Mun5agLKVhE1J1FYLAAeUJlNpRpQZICRy3PXxpK/oA4
+ emDk2wTO26NGj2FfHLKWZVeO7GphKusAf6DeZSjixEatmThFucWRrkoZGBgjovp2kzA2
+ zNXdlKF7Z2OinXOHmL2XssewXx8zNb66bVZAEV7RxZ1ByL12T29HT4l4JHGKSmqOlXkh
+ eo/diz1WnEyyVgHe2eJefifzeyjF+2abfJMMft+xY49tGExm8n6vQVYTw9Ir/OeVS1cK
+ kTx87K5xgctwCJObs8wYtxTq1y9DPKJDDzXzo23MnOOzp4FGuwCp+pXRsMb3WprhiroC Aw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 32hu1j9ysc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jul 2020 14:46:22 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06REiONS085503;
+        Mon, 27 Jul 2020 14:46:21 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 32hu5qv06y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 14:46:21 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06REkIMi026768;
+        Mon, 27 Jul 2020 14:46:18 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Jul 2020 07:46:18 -0700
+Date:   Mon, 27 Jul 2020 17:46:09 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Peilin Ye <yepeilin.cs@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vandana BN <bnvandana@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
+ kernel-infoleak in video_put_user()
+Message-ID: <20200727144609.GG1913@kadam>
+References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
+ <20200726222703.102701-1-yepeilin.cs@gmail.com>
+ <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
+ <20200727131608.GD1913@kadam>
+ <CAK8P3a3+9Gr6G6KDWu=iW3316O9cPH+XupBBajJaxrq20xQcyQ@mail.gmail.com>
+ <20200727141416.GA306745@PWN>
 MIME-Version: 1.0
-Message-ID: <37fe50b0.13978.17390bc440f.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cS_KCgD3__+E6B5fh0ZfAA--.11823W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAggHBlZdtPRcawAjsU
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbGCS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wCS07vE84ACjcxK6I8E87Iv67AKxVW0oV
-        Cq3wCS07vE84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DMIAIbVAS0I0E0xvYzxvE52x0
-        82IY62kv0487MIAIbVAqx4xG64xvF2IEw4CE5I8CrVC2j2WlV2xY6cIj6xIIjxv20xvE14
-        v26r1j6r18MIAIbVAv7VC2z280aVAFwI0_Jr0_Gr1lV2xY6cvjeVCFs4IE7xkEbVWUJVW8
-        JwCS07vE7I0Y64k_MIAIbVCY02Avz4vE14v_XrylV2xY6xkI7II2jI8vz4vEwIxGrwCS07
-        vE42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMIAIbVCF72vE77IF4wCS07vE4I8I3I0E4IkC
-        6x0Yz7v_Jr0_Gr1lV2xY6I8I3I0E5I8CrVAFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4vE14
-        v26r106r1rMIAIbVC2zVAF1VAY17CE14v26r1q6r43MIAIbVCI42IY6xIIjxv20xvE14v2
-        6r1j6r1xMIAIbVCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lV2xY6IIF0xvE42xK8V
-        AvwI8IcIk0rVWrZr1j6s0DMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAIcVC2
-        z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727141416.GA306745@PWN>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270104
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 mlxlogscore=999
+ malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBJIHJldmlldyB0aGluZ3MgaW4gdGhlIG9yZGVyIHRoYXQgdGhleSBhcHBlYXIgaW4gbXkgaW5i
-b3ggc28gSSBoYWRuJ3QKPiBzZWVuIEdyZWcgYW5kIExhcnJ5J3MgY29tbWVudHMuICBZb3UndmUg
-bm93IHN0dW1ibGVkIGludG8gYW4gYXJlYSBvZgo+IHBvbGl0aWNzIHdoZXJlIHlvdSBoYXZlIGNv
-bmZsaWN0aW5nIHJldmlld3MuLi4gIDpQICBGb3J0dW5hdGVseSwgd2UncmUKPiBhbGwgb2YgdXMg
-cmVhc29uYWJsZSBwZW9wbGUuCj4gCj4gSSB0aGluayB5b3VyIHBhdGNoIGlzIGNvcnJlY3QgaW4g
-dGhhdCBpdCBpcyB3aGF0IHRoZSBvcmlnaW5hbCBjb2Rlcgo+IGludGVuZGVkLiAgWW91IGp1c3Qg
-bmVlZCB0byBzZWxsIHRoZSBwYXRjaCBjb3JyZWN0bHkgaW4gdGhlIGNvbW1pdAo+IG1lc3NhZ2Uu
-ICBUaGUgcmVhbCBkYW5nZXIgb2YgdGhlIG9yaWdpbmFsIGNvZGUgd291bGQgYmUgaWYgImF1dGht
-b2RlIiBpcwo+IGFjY2lkZW50YWxseSAweDMwIG9yIDB4ZGQganVzdCBiZWNhdXNlIGl0IHdhcyB1
-bmluaXRpYWxpemVkLiAgU2V0dGluZyBpdAo+IHRvIHplcm8gZW5zdXJlcyB0aGF0IGl0IGlzIG5v
-dCBhbmQgaXQgYWxzbyBtYXRjaGVzIGhvdyB0aGlzIGlzIGhhbmRsZWQKPiBpbiB0aGUgcnRsODcy
-M2JzIGRyaXZlci4gIFRoaXMgbWF0Y2hlcyB0aGUgb3JpZ2luYWwgYXV0aG9yJ3MgaW50ZW50aW9u
-Lgo+IAo+IFNvOgo+IAo+IDEpIFJlLXdyaXRlIHRoZSBjb21taXQgbWVzc2FnZS4KPiAKPiAgICAg
-VGhlIHZhcmlhYmxlIGF1dGhtb2RlIGNhbiBiZSB1bmluaXRpYWxpemVkLiAgVGhlIGRhbmdlciB3
-b3VsZCBiZQo+ICAgICBpZiBpdCBlcXVhbHMgX1dQQV9JRV9JRF8gKDB4ZGQpIG9yIF9XUEEyX0lF
-X0lEXyAoMHgzMykuICBXZSBjYW4KPiAgICAgYXZvaWQgdGhpcyBieSBzZXR0aW5nIGl0IHRvIHpl
-cm8gaW5zdGVhZC4gIFRoaXMgaXMgdGhlIGFwcHJvYWNoIHRoYXQKPiAgICAgd2FzIHVzZWQgaW4g
-dGhlIHJ0bDg3MjNicyBkcml2ZXIuCj4gCj4gMikgQWRkIGEgZml4ZXMgdGFnLgo+ICAgIEZpeGVz
-OiA3YjQ2NGM5ZmE1Y2MgKCJzdGFnaW5nOiByODE4OGV1OiBBZGQgZmlsZXMgZm9yIG5ldyBkcml2
-ZXIgLSBwYXJ0IDQiKQo+IAo+IDMpIENoYW5nZSB0aGUgY29tbWl0IHRvIExhcnJ5J3Mgc3R5bGUg
-d2l0aCB0aGUgImVsc2UgaWYiIGFuZCAiZWxzZSIuCj4gICAgU29tZXRpbWVzIHBlb3BsZSBqdXN0
-IGRpc2FncmVlIGFib3V0IHN0eWxlIHNvIGl0J3MgZWFzaWVzdCB0byBnbyB3aXRoCj4gICAgd2hh
-dGV2ZXIgdGhlIG1haW50YWluZXIgKExhcnJ5KSB3YW50cy4gIEl0J3Mgbm90IHdvcnRoIGRlYmF0
-aW5nIG9uZQo+ICAgIHdheSBvciB0aGUgb3RoZXIgc28ganVzdCByZWRvIGl0Lgo+IAo+IFRoZW4g
-cmVzZW5kLiAgR29vZ2xlIGZvciAiaG93IHRvIHNlbmQgYSB2MiBwYXRjaCIgdG8gZ2V0IHRoZSBy
-aWdodAo+IGZvcm1hdC4KPiAKPiByZWdhcmRzLAo+IGRhbiBjYXJwZW50ZXIKPiAKCllvdXIgYWR2
-aWNlIGlzIHZlcnkgaGVscGZ1bCB0byBtZSwgdGhhbmtzISBJIHdpbGwgcHJlcGFyZSB2MiBwYXRj
-aCBhbmQKcmVzZW5kIGl0IHNvb24uCgpSZWdhcmRzLApEaW5naGFvCgo=
+On Mon, Jul 27, 2020 at 10:14:16AM -0400, Peilin Ye wrote:
+> Yes, I would like to! I will start from:
+> 
+> 	drivers/firewire/core-cdev.c:463
+
+My prefered fix for this would be to add a memset at the start of
+fill_bus_reset_event().
+
+	memset(event, 0, sizeof(*event));
+
+	spin_lock_irq(&card->lock);
+
+	event->closure       = client->bus_reset_closure;
+
+
+> 	drivers/input/misc/uinput.c:743
+
+I don't think this is a bug.
+
+regards,
+dan carpenter
+
