@@ -2,138 +2,128 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EADC433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5AC206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:00:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="RH217IGe"
+	by mail.kernel.org (Postfix) with ESMTP id 5DAEC2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgG0CAP (ORCPT
+        id S1726817AbgG0CHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 22:00:15 -0400
-Received: from mail-mw2nam10on2119.outbound.protection.outlook.com ([40.107.94.119]:60641
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726072AbgG0CAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 22:00:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Qk6zkvsqsvLC0mOLnnEXBKT7o+Icre5pGqCcZHV9lakEzPsDtbVMQJsS8jdZSqDEVf6xN6yeZKg1GvMDTTAz4nSY+S2JSN72SeekQrHMpynRtrKkleizRehzpoa4LWWyBYArmXS6hXI03HEWjbndoqzHpjqcUKwcU10tdRqLa17hXW/0X2kdh06LpUMmwLVRXIeAPGxEurBjWgEg72PVNKtiqHbWX8I685Enz3cjIx2E4ZFWwNUszNnO43/pbi279lLr3o9MSvVqpZCmHjFVx6QdzgbSZthVmWQe6/Cke5MAXNxXx2MPQJblEh+Mop1dCG3VaPgEDtDkE+YycXp1WQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Z8vR0vZusoOGBdKuhfpQCkHnG3GovnIOcTN3y8HhuE=;
- b=JPkBm1laOo8xOGFvGaA6llh2kHobu3pvwbpBqmTGwYhBkLeNhZplQI9/ag9TQ0G0r86yW1TKAsfb57DJTbZ50pmY8Dmsiyk1WTKoBQT+dRtUDp3WIbjhGxV4dTC07n9lwxyngJFGj05D5RuC7LdYa5N7m2l4nQUPBuEl91jp5YWX9vKQ6VnYmsd/u8bCb6UwDHr8gnxWLN5ECD4tRBXCVwmOO7FBYdXuGnVeKViQ9Cpa7rmvTVLuP2qVXRHd/L9W2DvKvQEr57Kt/8lTituR8lHU5Cku6Q/24EGzyUBZ+k3I+uPlOWNS2Ud0yF8zWV9831W0nc4cVDMsVPLB4IgCRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
- header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=maximintegrated.onmicrosoft.com;
- s=selector2-maximintegrated-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Z8vR0vZusoOGBdKuhfpQCkHnG3GovnIOcTN3y8HhuE=;
- b=RH217IGeFkHVPjWLnnapRwjdpv2tkwqebdBQeWbGmU1apMHhyXMKXL1ZUyNJBkapv3sSNHQYb7TpyrniHPtiGlvrItg7XD8OuWXPcOKBZ6xckHvrMUU/EgUI64zGjkbVbU29aJeZxhmOa+dH9VR2cEtFZ18Or/nGytNDbAnXT2U=
-Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
- by MWHPR1101MB2205.namprd11.prod.outlook.com (2603:10b6:301:59::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Mon, 27 Jul
- 2020 02:00:10 +0000
-Received: from MWHPR11MB2047.namprd11.prod.outlook.com
- ([fe80::d9e8:a3eb:4f08:e795]) by MWHPR11MB2047.namprd11.prod.outlook.com
- ([fe80::d9e8:a3eb:4f08:e795%5]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
- 02:00:10 +0000
-From:   Steve Lee <SteveS.Lee@maximintegrated.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "ckeepax@opensource.cirrus.com" <ckeepax@opensource.cirrus.com>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "rf@opensource.wolfsonmicro.com" <rf@opensource.wolfsonmicro.com>,
-        "shumingf@realtek.com" <shumingf@realtek.com>,
-        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "jack.yu@realtek.com" <jack.yu@realtek.com>,
-        "nuno.sa@analog.com" <nuno.sa@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "ryan.lee.maxim@gmail.com" <ryan.lee.maxim@gmail.com>,
-        Ryan Lee <RyanS.Lee@maximintegrated.com>,
-        "steves.lee.maxim@gmail.com" <steves.lee.maxim@gmail.com>
-Subject: RE: [PATCH 3/3] ASoC: max98390: update dsm param bin max size
-Thread-Topic: [PATCH 3/3] ASoC: max98390: update dsm param bin max size
-Thread-Index: AQHWYZh9qD+EsXpBKU+c1fLFOfcsSqkWjXCAgAQirUA=
-Date:   Mon, 27 Jul 2020 02:00:09 +0000
-Message-ID: <MWHPR11MB204753BF80DED8923AD3BEA292720@MWHPR11MB2047.namprd11.prod.outlook.com>
-References: <20200724085644.9837-1-steves.lee@maximintegrated.com>
- <20200724105059.GA5664@sirena.org.uk>
-In-Reply-To: <20200724105059.GA5664@sirena.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none
- header.from=maximintegrated.com;
-x-originating-ip: [211.35.184.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e13587f4-4fef-448a-2014-08d831d0cafc
-x-ms-traffictypediagnostic: MWHPR1101MB2205:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR1101MB2205FC319066E5F4974BBAF492720@MWHPR1101MB2205.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pG/6T2k5ZvT8FheJ5DDst5ozd4XT32MCi483BA419rlCCp+DUF020AbxKw11KhfzwavjLe6e9ajjOJao4QcJDZwpld9bpQIgyjiR1Iy1baQLuGuw0nm0XNr8pCyFCfSiNuF9IyTlE6iexeXgfIG7BKrzfpSURdF3z3YSKbHLyhTNeIPZZFxQ2VnHBOqA7NdXV4CtbQ5fsjT04e0prBNnOytQtGzCJhcUpi8kfKlpJWPySr2jr3tWZENGXEBX92I/82DL+1me8Y3xgEfI7V76L2rpa1XTlcYuWw9wUplYdL7EBeo3bN4hXPZ+w98GiL74
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(39860400002)(376002)(136003)(71200400001)(478600001)(55016002)(9686003)(2906002)(6916009)(316002)(54906003)(186003)(26005)(8676002)(8936002)(15650500001)(4326008)(76116006)(66946007)(53546011)(6506007)(7696005)(66476007)(66556008)(64756008)(83380400001)(66446008)(33656002)(7416002)(5660300002)(4744005)(52536014)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: MyIjzU82/e5PIKuYcHdTi5Nfx4euZieqrz7TRGdXMXJTPs2x5ACn670LwBnxqIrumz9ZqLww8u/epyaLU6ppDdG0XKTTxaojsUgGGn3GqtnL9ZVG1h96Fig0ol+ef7VDDsFuoU+CkvP8Afsf5gaFUHgbJWMcK78QZTZDh8nFnCTgMpMNEhuhsFfU3WHSD0O7Lx949CJnvk4FhufOgfDC3vLhZAC9nILZLN2MrE8VxgMzuaI4MqpPyPFwMeiGkA4qF/8vOW0YA0GU5qxqptgTCEpvyxSZC8wc5CxslXVuQzodFoN5rBzgB+8AoMB54O5kmDNqBasO9q/x4kkOKw0JqpSwz7TP47pq0MHPU1CfezEKsTRAywCRnV5hnahPL7thehntZ4k4YEEJcq1p5kAfmLlTYsnqSF3ZoBEnhEdZ2IhYZsn1ToCfpT38xa4HIu5jon6smBhvDYZlJg4lC6WyWZrnyDKNPAFpIoxEAxKSOo4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 26 Jul 2020 22:07:42 -0400
+Received: from mga12.intel.com ([192.55.52.136]:13311 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbgG0CHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 22:07:41 -0400
+IronPort-SDR: rW708y1MZFBcw0hztjkyt0Zbu4SiDcdmhw4mlcABbiabSIpMgZuCsONNCGXczudJHkIOBq6f9l
+ tA8ldyT3adCw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="130491847"
+X-IronPort-AV: E=Sophos;i="5.75,400,1589266800"; 
+   d="scan'208";a="130491847"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 19:07:41 -0700
+IronPort-SDR: TtGtgOgwmpxakpzrZxKBcbKzj4fmqoZX35n5z+t1z5fEo+iAlzaHPsu2bta6oHIw3pqDK2JuO6
+ LB+tUzoEEnIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,400,1589266800"; 
+   d="scan'208";a="489350796"
+Received: from xingzhen-mobl1.ccr.corp.intel.com (HELO [10.238.4.18]) ([10.238.4.18])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Jul 2020 19:07:39 -0700
+Subject: Re: [LKP] Re: [fsnotify] c738fbabb0: will-it-scale.per_process_ops
+ -9.5% regression
+To:     Rong Chen <rong.a.chen@intel.com>,
+        Amir Goldstein <amir73il@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, LKML <linux-kernel@vger.kernel.org>,
+        lkp@lists.01.org
+References: <20200721001505.GD19262@shao2-debian>
+ <CAOQ4uxgq39EDS_k3eDTngEAm8cxHPa7qrkUSW8Rk6qS9cxC18w@mail.gmail.com>
+ <9a2a4086-fbad-b4f8-9c00-2b7606441022@intel.com>
+From:   Xing Zhengjun <zhengjun.xing@linux.intel.com>
+Message-ID: <e54b662d-4a21-7b80-31ea-530cd2d40160@linux.intel.com>
+Date:   Mon, 27 Jul 2020 10:07:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: maximintegrated.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB2047.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e13587f4-4fef-448a-2014-08d831d0cafc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jul 2020 02:00:09.9765
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fbd909df-ea69-4788-a554-f24b7854ad03
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7fUX855C5YwdD8EPgkSIjPt8Us1iDc4i1SAQjyj7cDkL6+B/vtQyZt1rF6POALH4rKLA7Y9xHupiwxWFVdkHYhCdHHzyFprzy60+m4xMtlw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1101MB2205
+In-Reply-To: <9a2a4086-fbad-b4f8-9c00-2b7606441022@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Mark Brown <broonie@kernel.org>
-> Sent: Friday, July 24, 2020 7:51 PM
-> To: Steve Lee <SteveS.Lee@maximintegrated.com>
-> Cc: lgirdwood@gmail.com; perex@perex.cz; tiwai@suse.com;
-> ckeepax@opensource.cirrus.com; geert@linux-m68k.org;
-> rf@opensource.wolfsonmicro.com; shumingf@realtek.com;
-> srinivas.kandagatla@linaro.org; krzk@kernel.org; dmurphy@ti.com;
-> jack.yu@realtek.com; nuno.sa@analog.com; linux-kernel@vger.kernel.org;
-> alsa-devel@alsa-project.org; ryan.lee.maxim@gmail.com; Ryan Lee
-> <RyanS.Lee@maximintegrated.com>; steves.lee.maxim@gmail.com
-> Subject: Re: [PATCH 3/3] ASoC: max98390: update dsm param bin max size
->=20
-> On Fri, Jul 24, 2020 at 05:56:44PM +0900, Steve Lee wrote:
-> >  MAX98390_DSM_PARAM_MAX_SIZE is changed to support extended  register
-> > update.
->=20
-> I'm missing patches 1-2 and have no cover letter - what's the story with
-> dependencies?
- I will re-send patch ang please ignore this patch.=20
-DSM init param is extended to cover more register so that DSM MAX PARAM SIZ=
-E value is changed.
-Thanks.!
+
+
+On 7/24/2020 10:44 AM, Rong Chen wrote:
+> 
+> 
+> On 7/21/20 11:59 PM, Amir Goldstein wrote:
+>> On Tue, Jul 21, 2020 at 3:15 AM kernel test robot 
+>> <rong.a.chen@intel.com> wrote:
+>>> Greeting,
+>>>
+>>> FYI, we noticed a -9.5% regression of will-it-scale.per_process_ops 
+>>> due to commit:
+>>>
+>>>
+>>> commit: c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a ("fsnotify: fold 
+>>> fsnotify() call into fsnotify_parent()")
+>> Strange, that's a pretty dumb patch moving some inlined code from one
+>> function to
+>> another (assuming there are no fsnotify marks in this test).
+>>
+>> Unless I am missing something the only thing that changes slightly is
+>> an extra d_inode(file->f_path.dentry) deference.
+>> I can get rid of it.
+>>
+>> Is it possible to ask for a re-test with fix patch (attached)?
+> 
+
+I apply the fix patch, the regression still exists.
+=========================================================================================
+tbox_group/testcase/rootfs/kconfig/compiler/nr_task/mode/test/cpufreq_governor/ucode:
+ 
+lkp-csl-2ap2/will-it-scale/debian-10.4-x86_64-20200603.cgz/x86_64-rhel-8.3/gcc-9/16/process/open1/performance/0x5002f01
+
+commit:
+   71d734103edfa2b4c6657578a3082ee0e51d767e
+   c738fbabb0ff62d0f9a9572e56e65d05a1b34c6a
+   5c32fe90f2a57e7c4da06be51f705aec6affceb6 (the commit which the fix 
+patch apply based on)
+   7f66797f773621d0ef6718df0ef2cf849814d114 (the fix patch)
+
+71d734103edfa2b4 c738fbabb0ff62d0f9a9572e56e 5c32fe90f2a57e7c4da06be51f7 
+7f66797f773621d0ef6718df0ef
+---------------- --------------------------- --------------------------- 
+---------------------------
+          %stddev     %change         %stddev     %change 
+%stddev     %change         %stddev
+              \          |                \          |                \ 
+         |                \
+     229940            -9.8%     207333           -13.0%     199996 
+      -11.7%     202927        will-it-scale.per_process_ops
+    3679048            -9.8%    3317347           -13.0%    3199942 
+      -11.7%    3246851        will-it-scale.workload
+
+
+
+> Hi Amir,
+> 
+> We failed to apply this patch, could you tell us the base commit or the 
+> base branch?
+> 
+> Best Regards,
+> Rong Chen
+> _______________________________________________
+> LKP mailing list -- lkp@lists.01.org
+> To unsubscribe send an email to lkp-leave@lists.01.org
+
+-- 
+Zhengjun Xing
