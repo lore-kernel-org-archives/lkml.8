@@ -2,108 +2,90 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C21C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88E9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B14EB2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:44:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q1ZgQoFO"
+	by mail.kernel.org (Postfix) with ESMTP id AF92020FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595894128;
+	bh=Xembc9dQ8yhlgzOVMOC2fFG1tNs/RdV/1tNnSRkgMtg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=itl+pqouhbX2ZgoOFIlITuJGduVo5/87NdSX8gsZZX4k9u8SQBiOo8TI8Q0kkhuZA
+	 bhsOzm6oh6MkZLt4Xqs5GyBP89DSQiSnF20+/6a7qp642RMIkokM030Jdoiy/BAmUO
+	 3XWABOAAJx/CpOelolpifAQnph1xwKpBRaypB8jE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgG0Xo2 (ORCPT
+        id S1726814AbgG0Xz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:44:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbgG0Xo1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:44:27 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DBC6C061794;
-        Mon, 27 Jul 2020 16:44:26 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id q7so19163568ljm.1;
-        Mon, 27 Jul 2020 16:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=moew+kZmDVAfG4fC4F4BUXU70dVOAPvVXz3aPRqWV+c=;
-        b=q1ZgQoFOYhEzcRTpKcFgFCwWWkfWsdZN9V77ruy9ePxp4kkFu4iPnUpH6Txm9eLP3K
-         Ducw5HyWELvKNTA+jGcHYqDLUPshvYa6BmrnXsro8UdgdiIcrU/WSHxuxBkofSyDwPCK
-         TL8TsWCPnDJ18icY0/LWUZd2Sf104gIsH82LtIgNn5usBJrvJ2wX+OTCcL7H5YyRraDW
-         TQ2B8A2apljo5nq5fx3VbvAbnjLgeQO4cJCsZlPAWIMOggk2NxTzZQzt4E2XAwnt/gxw
-         MRlKi6jvRdfZ1zwqyWJQ6ShIwLJze7Jc7KuP45j9bUeq+E5Vts/jXc4z8RiPWgeDrc06
-         tj2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=moew+kZmDVAfG4fC4F4BUXU70dVOAPvVXz3aPRqWV+c=;
-        b=KQgx2hHuYCOZ+EC/T7tXekyDCgeZPd5ZZT9i8JHqoQzt8KZgtMkC1Pst1V0OgJcUVs
-         pChkVdLN2waoeMwfa09oGBjZIjAgA7z+C0Fe8e11FzNCVvKchkTyyQ5Lzfl1Zutx1YzW
-         CSlYBY/eeUXEkZoorBsirx8VgUGUvkb+BGbeAFQ11FKFeH8guTV3s3YOrHIW9fvt0sdd
-         HwTGeBSkdpPWfa9FHm+VcwKYtNTJz9X12D9jwqdFxhlchJQX7faQ8fhw8Fo62hLpcPU2
-         A1xII6T3vu6N5rOfQ/sbvVXpmgLStTYR3NyCIJcrZ/9mbO16x/ZgvahpPZ6YHZ/RBA0X
-         MCQA==
-X-Gm-Message-State: AOAM5310mAtFqSbcEhjqLba5PXAYqTw69MXLQf/n5PjI8Y1cwMEU2rR6
-        er+9aXk9C2jyANSr2ShPHCKvpDtO5Zpid59Kl86Iyawxrgw=
-X-Google-Smtp-Source: ABdhPJxqt7yjHQHbPupJG9vvFvZjRsehmeM8o56Au9FRmksB3Q9itPwQ3rIbmzHlg9L/qPzCtL3kCB6IQ7KGZUHAu6M=
-X-Received: by 2002:a2e:8059:: with SMTP id p25mr5366425ljg.219.1595893464673;
- Mon, 27 Jul 2020 16:44:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200727194415.GA1275@embeddedor> <70ed74d65b5909615c7a9430f3479695465d3b1d.camel@perches.com>
-In-Reply-To: <70ed74d65b5909615c7a9430f3479695465d3b1d.camel@perches.com>
-From:   Julian Calaby <julian.calaby@gmail.com>
-Date:   Tue, 28 Jul 2020 09:44:13 +1000
-Message-ID: <CAGRGNgW4VB1F9TdHf1Kg6WQtgHyH-ZKAnZ0kU5eKQaqUWHwbqg@mail.gmail.com>
-Subject: Re: [PATCH][next] ath11k: Use fallthrough pseudo-keyword
-To:     Joe Perches <joe@perches.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Jul 2020 19:55:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbgG0Xz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:55:27 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A336521744;
+        Mon, 27 Jul 2020 23:55:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595894126;
+        bh=Xembc9dQ8yhlgzOVMOC2fFG1tNs/RdV/1tNnSRkgMtg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rDBV3X7yDRkwB/WvcqzUHljBjiz/lmYYobbY3bGZxNHcMCEXaS+OsXRjpimZYcm8v
+         OXjlJeTsW8gyrZXBUngSaFRZozmITIgTsQUKE4n+pAb+ePM474uRvJa81g9MdyLrMF
+         natG8kkzgBq7kzUl6eFfG9VYLxUfnNor5WpSIHm0=
+From:   paulmck@kernel.org
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, peterz@infradead.org, mingo@kernel.org,
+        tglx@linutronix.de, bigeasy@linutronix.de, frederic@kernel.org,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH smp v2 3/3] smp: Make symbol 'csd_bug_count' static
+Date:   Mon, 27 Jul 2020 16:55:24 -0700
+Message-Id: <20200727235524.828-3-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200727235343.GA30963@paulmck-ThinkPad-P72>
+References: <20200727235343.GA30963@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-On Tue, Jul 28, 2020 at 5:48 AM Joe Perches <joe@perches.com> wrote:
->
-> On Mon, 2020-07-27 at 14:44 -0500, Gustavo A. R. Silva wrote:
-> > Replace the existing /* fall through */ comments and its variants with
-> > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> > fall-through markings when it is the case.
-> []
-> > diff --git a/drivers/net/wireless/ath/ath11k/dp.c b/drivers/net/wireless/ath/ath11k/dp.c
-> []
-> > @@ -159,7 +159,7 @@ int ath11k_dp_srng_setup(struct ath11k_base *ab, struct dp_srng *ring,
-> >                       break;
-> >               }
-> >               /* follow through when ring_num >= 3 */
-> > -             /* fall through */
-> > +             fallthrough;
->
-> Likely the /* follow through ... */ comment can be deleted too
+The sparse tool complains as follows:
 
-If the "when ring_num >= 3" comment is needed, how should this get
-formatted? Maybe something like:
+kernel/smp.c:107:10: warning:
+ symbol 'csd_bug_count' was not declared. Should it be static?
 
-fallthrough; /* when ring_num >= 3 */
+Because variable is not used outside of smp.c, this commit marks it
+static.
 
-Thanks,
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 3830f93..33036d9 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -106,7 +106,7 @@ static DEFINE_PER_CPU(smp_call_func_t, cur_csd_func);
+ static DEFINE_PER_CPU(void *, cur_csd_info);
+ 
+ #define CSD_LOCK_TIMEOUT (5ULL * NSEC_PER_SEC)
+-atomic_t csd_bug_count = ATOMIC_INIT(0);
++static atomic_t csd_bug_count = ATOMIC_INIT(0);
+ 
+ /* Record current CSD work for current CPU, NULL to erase. */
+ static void csd_lock_record(call_single_data_t *csd)
 -- 
-Julian Calaby
+2.9.5
 
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
