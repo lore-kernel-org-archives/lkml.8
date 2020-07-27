@@ -2,174 +2,203 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79714C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5909B20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="scf1g10G"
+	by mail.kernel.org (Postfix) with ESMTP id CAF262075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595859474;
+	bh=Txv9P7zWDYH7+3/kskkvoPiB2sxdzvFslSBo3emadgY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Pt4CoQteTfGE2tRWu8In+/TZnkgDk/FAf+u8h3pDXWp3Afjpx60Kc0uRDXdESzC6V
+	 9riuMFTFKwGzBjOzgaC2iTLcAULjadBF/VXMXNwYPI/hNaQDwsPBpdasxAIqKgOYOv
+	 kZvnmY7dPR/zVs3NU3fZWJxSG5PirHvsk+AxkM5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731118AbgG0ORu (ORCPT
+        id S1730546AbgG0ORw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:17:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731101AbgG0ORm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:17:42 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D622C061794;
-        Mon, 27 Jul 2020 07:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bjl5+gq9U2Z2bSaiJfRP1zE+wAOWJevhrAxgUgYzigo=; b=scf1g10GNIN9R7N3bdXIm5T3X
-        V8f6RnSM/4Xa9NqtWNHxFbujD3DawFPmJEdB5C+0xf/QAPOHOsbAVsy0lJnPB1QBEd633qDI+ASX1
-        U2BvCGMKw5OL+Bn8VyhCXqKOjnxsoOl9q16TV9mYn+uTAStQNaJHeOrSRu9KoC/RmVTnlrnFHl3+3
-        76hmuHXIOSDej96ZKbi0/+GxDswQdm4PLsUcFMOO0imklYud/ud8/7J9zrPKGJ4Z6nuMos5KuT8Gi
-        EdoJyBJA/6npMLkE57eHlhGosxv68mTqP/rgd1RON+dMfXYJeqj0K0LLyowzgJ4hJlAVwyqjXylAI
-        IWXbxI4xQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44830)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1k03wa-0002xY-0h; Mon, 27 Jul 2020 15:17:32 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1k03wX-0003ir-Gd; Mon, 27 Jul 2020 15:17:29 +0100
-Date:   Mon, 27 Jul 2020 15:17:29 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jon Nettleton <jon@solid-run.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sascha Hauer <kernel@pengutronix.de>, a.zummo@towertech.it,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
- battery switch-over
-Message-ID: <20200727141729.GJ1551@shell.armlinux.org.uk>
-References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-1-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
- <20200723174905.GA596242@bogus>
- <20200723195755.GV3428@piout.net>
- <20200727094553.GH1551@shell.armlinux.org.uk>
- <CABdtJHu2BacX+EeVkCxFYWfNxJ-7Z5MP7BqVfF2KHy+XfJGN3w@mail.gmail.com>
+        Mon, 27 Jul 2020 10:17:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731108AbgG0ORr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:17:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE13C20775;
+        Mon, 27 Jul 2020 14:17:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595859466;
+        bh=Txv9P7zWDYH7+3/kskkvoPiB2sxdzvFslSBo3emadgY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Fr7Hul8PNBjBgavTl2BEZwt+UitfdRQUMelQeVK+OdZC8BSZGBEYaIWKxSx8YZkyx
+         tH2wFP5oFK/W739hhadUBv6b2WCI6KJgV797p/hNYlmEFjbgL8s5gYynriX3msXGK+
+         5eoULiiT1iiWQGWzQ6VU+tf3bxAZfLFdCxEUGq6E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+Subject: [PATCH 5.4 120/138] vt: Reject zero-sized screen buffer size.
+Date:   Mon, 27 Jul 2020 16:05:15 +0200
+Message-Id: <20200727134931.448446297@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
+References: <20200727134925.228313570@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABdtJHu2BacX+EeVkCxFYWfNxJ-7Z5MP7BqVfF2KHy+XfJGN3w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 03:33:17PM +0200, Jon Nettleton wrote:
-> On Mon, Jul 27, 2020 at 11:46 AM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Thu, Jul 23, 2020 at 09:57:55PM +0200, Alexandre Belloni wrote:
-> > > On 23/07/2020 11:49:05-0600, Rob Herring wrote:
-> > > > On Mon, Jul 20, 2020 at 12:23:59PM +0100, miguelborgesdefreitas@gmail.com wrote:
-> > > > > From: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-> > > > >
-> > > > > This adds direct-switching mode as a configurable DT flag for
-> > > > > RTC modules supporting it (e.g. nxp pcf8523).
-> > > > > DSM switches the power source to the battery supply whenever the
-> > > > > VDD drops below VBAT. The option is recommended for hw designs
-> > > > > where VDD is always expected to be higher than VBAT.
-> > > > >
-> > > > > Signed-off-by: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-> > > > > ---
-> > > > > Changes in v2:
-> > > > > - Added extended commit message for git history
-> > > > > - Separate dt bindings documentation into a single patch
-> > > > >
-> > > > >  Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt | 7 ++++++-
-> > > > >  Documentation/devicetree/bindings/rtc/rtc.yaml        | 7 +++++++
-> > > > >  2 files changed, 13 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > > > > index 0b1080c..f715a8f 100644
-> > > > > --- a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > > > > +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > > > > @@ -4,10 +4,14 @@ Required properties:
-> > > > >  - compatible: Should contain "nxp,pcf8523".
-> > > > >  - reg: I2C address for chip.
-> > > > >
-> > > > > -Optional property:
-> > > > > +Optional properties:
-> > > > >  - quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
-> > > > >    expressed in femto Farad (fF). Valid values are 7000 and 12500.
-> > > > >    Default value (if no value is specified) is 12500fF.
-> > > > > +- pm-enable-dsm: battery switch-over function is enabled in direct
-> > > > > +  switching mode. The power failure condition happens when VDD < VBAT,
-> > > > > +  without requiring VDD to drop below Vth(sw)bat.
-> > > > > +  Default value (if not provided) is the standard mode.
-> > > > >
-> > > > >  Example:
-> > > > >
-> > > > > @@ -15,4 +19,5 @@ pcf8523: rtc@68 {
-> > > > >   compatible = "nxp,pcf8523";
-> > > > >   reg = <0x68>;
-> > > > >   quartz-load-femtofarads = <7000>;
-> > > > > + pm-enable-dsm;
-> > > > >  };
-> > > > > diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > > > > index ee237b2..a0048f4 100644
-> > > > > --- a/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > > > > @@ -47,4 +47,11 @@ properties:
-> > > > >      description:
-> > > > >        Enables wake up of host system on alarm.
-> > > > >
-> > > > > +  pm-enable-dsm:
-> > > > > +    $ref: /schemas/types.yaml#/definitions/flag
-> > > > > +    description:
-> > > > > +      Enables the battery switch-over function in direct switching
-> > > > > +      mode. Should be set in systems where VDD is higher than VBAT
-> > > > > +      at all times.
-> > > >
-> > > > I'm all for common properties, but is this common across vendors?
-> > > >
-> > >
-> > > This is but this shouldn't be a DT property as it has to be changed
-> > > dynamically. I'm working on an ioctl interface to change this
-> > > configuration.
-> >
-> > Why does it need to be changed dynamically?  If the hardware components
-> > are not fitted to allow the RTC to be safely used without DSM, then
-> > why should userspace be able to disable DSM?
-> >
-> 
-> My presumption would be if you had a system that ran at different
-> system voltages depending if it is plugged in to mains or running on a
-> battery.
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-Yes, but we're not talking about that case with the Cubox-i.
+commit ce684552a266cb1c7cc2f7e623f38567adec6653 upstream.
 
-Should a platform like the Cubox-i allow the user to disable DSM?
+syzbot is reporting general protection fault in do_con_write() [1] caused
+by vc->vc_screenbuf == ZERO_SIZE_PTR caused by vc->vc_screenbuf_size == 0
+caused by vc->vc_cols == vc->vc_rows == vc->vc_size_row == 0 caused by
+fb_set_var() from ioctl(FBIOPUT_VSCREENINFO) on /dev/fb0 , for
+gotoxy(vc, 0, 0) from reset_terminal() from vc_init() from vc_allocate()
+ from con_install() from tty_init_dev() from tty_open() on such console
+causes vc->vc_pos == 0x10000000e due to
+((unsigned long) ZERO_SIZE_PTR) + -1U * 0 + (-1U << 1).
 
-There needs to be a way to block the ability to dynamically change
-this mode if the hardware is not up to operating without DSM.
+I don't think that a console with 0 column or 0 row makes sense. And it
+seems that vc_do_resize() does not intend to allow resizing a console to
+0 column or 0 row due to
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+  new_cols = (cols ? cols : vc->vc_cols);
+  new_rows = (lines ? lines : vc->vc_rows);
+
+exception.
+
+Theoretically, cols and rows can be any range as long as
+0 < cols * rows * 2 <= KMALLOC_MAX_SIZE is satisfied (e.g.
+cols == 1048576 && rows == 2 is possible) because of
+
+  vc->vc_size_row = vc->vc_cols << 1;
+  vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
+
+in visual_init() and kzalloc(vc->vc_screenbuf_size) in vc_allocate().
+
+Since we can detect cols == 0 or rows == 0 via screenbuf_size = 0 in
+visual_init(), we can reject kzalloc(0). Then, vc_allocate() will return
+an error, and con_write() will not be called on a console with 0 column
+or 0 row.
+
+We need to make sure that integer overflow in visual_init() won't happen.
+Since vc_do_resize() restricts cols <= 32767 and rows <= 32767, applying
+1 <= cols <= 32767 and 1 <= rows <= 32767 restrictions to vc_allocate()
+will be practically fine.
+
+This patch does not touch con_init(), for returning -EINVAL there
+does not help when we are not returning -ENOMEM.
+
+[1] https://syzkaller.appspot.com/bug?extid=017265e8553724e514e8
+
+Reported-and-tested-by: syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/tty/vt/vt.c |   29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
+
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1092,10 +1092,19 @@ static const struct tty_port_operations
+ 	.destruct = vc_port_destruct,
+ };
+ 
++/*
++ * Change # of rows and columns (0 means unchanged/the size of fg_console)
++ * [this is to be used together with some user program
++ * like resize that changes the hardware videomode]
++ */
++#define VC_MAXCOL (32767)
++#define VC_MAXROW (32767)
++
+ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+ {
+ 	struct vt_notifier_param param;
+ 	struct vc_data *vc;
++	int err;
+ 
+ 	WARN_CONSOLE_UNLOCKED();
+ 
+@@ -1125,6 +1134,11 @@ int vc_allocate(unsigned int currcons)	/
+ 	if (!*vc->vc_uni_pagedir_loc)
+ 		con_set_default_unimap(vc);
+ 
++	err = -EINVAL;
++	if (vc->vc_cols > VC_MAXCOL || vc->vc_rows > VC_MAXROW ||
++	    vc->vc_screenbuf_size > KMALLOC_MAX_SIZE || !vc->vc_screenbuf_size)
++		goto err_free;
++	err = -ENOMEM;
+ 	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
+ 	if (!vc->vc_screenbuf)
+ 		goto err_free;
+@@ -1143,7 +1157,7 @@ err_free:
+ 	visual_deinit(vc);
+ 	kfree(vc);
+ 	vc_cons[currcons].d = NULL;
+-	return -ENOMEM;
++	return err;
+ }
+ 
+ static inline int resize_screen(struct vc_data *vc, int width, int height,
+@@ -1158,14 +1172,6 @@ static inline int resize_screen(struct v
+ 	return err;
+ }
+ 
+-/*
+- * Change # of rows and columns (0 means unchanged/the size of fg_console)
+- * [this is to be used together with some user program
+- * like resize that changes the hardware videomode]
+- */
+-#define VC_RESIZE_MAXCOL (32767)
+-#define VC_RESIZE_MAXROW (32767)
+-
+ /**
+  *	vc_do_resize	-	resizing method for the tty
+  *	@tty: tty being resized
+@@ -1201,7 +1207,7 @@ static int vc_do_resize(struct tty_struc
+ 	user = vc->vc_resize_user;
+ 	vc->vc_resize_user = 0;
+ 
+-	if (cols > VC_RESIZE_MAXCOL || lines > VC_RESIZE_MAXROW)
++	if (cols > VC_MAXCOL || lines > VC_MAXROW)
+ 		return -EINVAL;
+ 
+ 	new_cols = (cols ? cols : vc->vc_cols);
+@@ -1212,7 +1218,7 @@ static int vc_do_resize(struct tty_struc
+ 	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
+ 		return 0;
+ 
+-	if (new_screen_size > KMALLOC_MAX_SIZE)
++	if (new_screen_size > KMALLOC_MAX_SIZE || !new_screen_size)
+ 		return -EINVAL;
+ 	newscreen = kzalloc(new_screen_size, GFP_USER);
+ 	if (!newscreen)
+@@ -3396,6 +3402,7 @@ static int __init con_init(void)
+ 		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
+ 		tty_port_init(&vc->port);
+ 		visual_init(vc, currcons, 1);
++		/* Assuming vc->vc_{cols,rows,screenbuf_size} are sane here. */
+ 		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
+ 		vc_init(vc, vc->vc_rows, vc->vc_cols,
+ 			currcons || !vc->vc_sw->con_save_screen);
+
+
