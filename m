@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BE5C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EA0C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A766520729
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3642320729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:52:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Vm4bseEO"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="W3Dp8dzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgG0UwB (ORCPT
+        id S1727969AbgG0UwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:52:01 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9067 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbgG0Uvy (ORCPT
+        Mon, 27 Jul 2020 16:52:03 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16203 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727892AbgG0Uv4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:51:54 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f1f3e5c0000>; Mon, 27 Jul 2020 13:51:40 -0700
+        Mon, 27 Jul 2020 16:51:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f1f3e3f0003>; Mon, 27 Jul 2020 13:51:11 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 27 Jul 2020 13:51:53 -0700
+  Mon, 27 Jul 2020 13:51:55 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 27 Jul 2020 13:51:53 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jul
- 2020 20:51:53 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 27 Jul 2020 20:51:53 +0000
+        by hqpgpgate101.nvidia.com on Mon, 27 Jul 2020 13:51:55 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jul
+ 2020 20:51:55 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 27 Jul 2020 20:51:55 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.236]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f1f3e680003>; Mon, 27 Jul 2020 13:51:53 -0700
+        id <B5f1f3e6a0007>; Mon, 27 Jul 2020 13:51:55 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
@@ -47,9 +47,9 @@ CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
         <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-Subject: [RFC PATCH v5 05/14] i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
-Date:   Mon, 27 Jul 2020 13:57:23 -0700
-Message-ID: <1595883452-17343-6-git-send-email-skomatineni@nvidia.com>
+Subject: [RFC PATCH v5 08/14] media: tegra-video: Update format lookup to offset based
+Date:   Mon, 27 Jul 2020 13:57:26 -0700
+Message-ID: <1595883452-17343-9-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
 References: <1595883452-17343-1-git-send-email-skomatineni@nvidia.com>
@@ -57,45 +57,71 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1595883100; bh=BMA/iG9RTUEd5/zUo8Vr5bcj5BAWPvKwkFECh1c8kbY=;
+        t=1595883071; bh=5U56MbpoGgbizDY87xBQZF5BWeIIcAyUuev+l62V8Co=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=Vm4bseEOhBXlmHuGTHvTM+6gHWj51y/yeUvD6TKm0OY+eBExPSLvCmsOJZUYFpRSl
-         gt4/bPkyhR1Yju+bQBoiCQaGMn3ptgoRR3jaW22oV7CmyFbrwWFlMu6URP7XrhAvmX
-         RJ1fhE8izr0+eVNZqYi1xL8BsNIWXmFXa7926STvhe0o73MtBa51Q9RIABQoUr+Zkk
-         AJMjMEW8Z2pXv7ovwk9oqAGZHaTGIm5YPHkgYQ9tvPraB6NkjUuGmX+pjo9TErdM83
-         FVJy3S3tntyECy1pQFbBAWl+s3AQROkFNCEGAF5UAzmCyKcZRubdisWrQii+t9aUAX
-         Ay2+Wq0Hli01A==
+        b=W3Dp8dzc+VlAE1hw0y3/hPM6aNeNghCEivS7z5sezvzd6Oz4O7mD6esrU8XGz3WNZ
+         anIndmk0/8/p+jifpMKuCSOLbOweUiJpzhuGba2MoslEL5Z9iMX/0+5cBXtr0ONF5n
+         dYV9nvlxzzDMzIur7NN2fd3AqTPEBHoDkGaerJp6V9cjwnIod1RzuaWtgP59R7ZPnf
+         GDlPkNSs15j8veUPCAenawifpSjJKHqndHL2Ahr23sF6PNd5hosh8d24JO8Uv7hkL3
+         FMj3+7aEhWB+6vgT1HvwrEVJje40/mJhiti+rw5kCDHbpz2jl8B12SBgxB2qTv5XIf
+         aTnFSJmVmO+iw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VI I2C is on host1x bus so APB DMA can't be used for Tegra210 VI
-I2C and there are no tx and rx dma channels for VI I2C.
+Tegra VI supported video formats are more for non TPG and there
+can be multiple pixel formats for the same media bus format.
 
-So, avoid attempt of requesting DMA channels.
+This patch updates the helper function for format lookup based on
+mbus code from pre-defined Tegra supported format list to look from
+the specified list index offset.
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Offset based look up is used with sensor device graph (non TPG)
+where format enumeration can list all supported formats for the
+specific sensor mbus codes.
+
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/media/tegra-video/vi.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 1bf3666..00d3e4d 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -421,7 +421,7 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
- 	dma_addr_t dma_phys;
- 	int err;
+diff --git a/drivers/staging/media/tegra-video/vi.c b/drivers/staging/media/tegra-video/vi.c
+index 0197f4e..52d751f 100644
+--- a/drivers/staging/media/tegra-video/vi.c
++++ b/drivers/staging/media/tegra-video/vi.c
+@@ -53,11 +53,12 @@ to_tegra_channel_buffer(struct vb2_v4l2_buffer *vb)
+ }
  
--	if (!i2c_dev->hw->has_apb_dma)
-+	if (!i2c_dev->hw->has_apb_dma || i2c_dev->is_vi)
- 		return 0;
+ static int tegra_get_format_idx_by_code(struct tegra_vi *vi,
+-					unsigned int code)
++					unsigned int code,
++					unsigned int offset)
+ {
+ 	unsigned int i;
  
- 	if (!IS_ENABLED(CONFIG_TEGRA20_APB_DMA)) {
+-	for (i = 0; i < vi->soc->nformats; ++i) {
++	for (i = offset; i < vi->soc->nformats; ++i) {
+ 		if (vi->soc->video_formats[i].code == code)
+ 			return i;
+ 	}
+@@ -598,11 +599,12 @@ static void vi_tpg_fmts_bitmap_init(struct tegra_vi_channel *chan)
+ 	bitmap_zero(chan->tpg_fmts_bitmap, MAX_FORMAT_NUM);
+ 
+ 	index = tegra_get_format_idx_by_code(chan->vi,
+-					     MEDIA_BUS_FMT_SRGGB10_1X10);
++					     MEDIA_BUS_FMT_SRGGB10_1X10, 0);
+ 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
+ 
+ 	index = tegra_get_format_idx_by_code(chan->vi,
+-					     MEDIA_BUS_FMT_RGB888_1X32_PADHI);
++					     MEDIA_BUS_FMT_RGB888_1X32_PADHI,
++					     0);
+ 	bitmap_set(chan->tpg_fmts_bitmap, index, 1);
+ }
+ 
 -- 
 2.7.4
 
