@@ -2,99 +2,127 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1952BC433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9288DC433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E20B720838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858991;
-	bh=391sbRHYpWgc8awcde+J3xrFm3+48hwdU8hDC9WLgas=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CvZAHc8MOPH8wNB3MW03ZSNET0XwRXRhCBDy5IEDPk+XTA1IHD2XCs83gV+WlUp1Z
-	 dQSMEJuwTx0U+UV3MZaP3aHorC+9ZrSrgvRh3erqf5FFK7ig9Mrqp3JWma1mDrb/ZR
-	 X4IjdP8bjcP9NZBloZI094KTlO8uF2ub2/XqhmLQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7C7B822B4B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbgG0OJu (ORCPT
+        id S1729703AbgG0OJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:09:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60132 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:09:47 -0400
+Received: from mga03.intel.com ([134.134.136.65]:12471 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729694AbgG0OJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729675AbgG0OJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Jul 2020 10:09:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBDCD2083E;
-        Mon, 27 Jul 2020 14:09:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858984;
-        bh=391sbRHYpWgc8awcde+J3xrFm3+48hwdU8hDC9WLgas=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qn7IjSjlEWmKjbWYaQ9d0A+UtzhBYpbPrPiWxtTlhwvj8lnR7uW0+I/QZ1BmhDCCY
-         iL6tP4WwvVlqgWoFOK/t8KeusXtKdYEaGVp7PpdVl9IKtHSfhMGdtLsyZzRUwRgnlH
-         NbR0Q3Ww3vB0GxyZ5ArSNWoN1jPQwEPVSJxyBCPg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 21/86] ASoC: rt5670: Correct RT5670_LDO_SEL_MASK
-Date:   Mon, 27 Jul 2020 16:03:55 +0200
-Message-Id: <20200727134915.420924035@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
-References: <20200727134914.312934924@linuxfoundation.org>
-User-Agent: quilt/0.66
+IronPort-SDR: hMLBCNFjZ2UOpqvdOHS16f4r3XkGSBFVtz1JyGKgxzPj585QiqJqy7Xbz1tP4mTTd1qYX/rlwX
+ bKoaV2hIXyZQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="150999341"
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="150999341"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 07:09:41 -0700
+IronPort-SDR: TteHECRx2z8pElXEkov08M+PbVBtWngjBskOFUpL4BVnmJcFp1UnVeZf4MHtlf6s5hX1B1yDBG
+ F8P+M2f4mb7Q==
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="464070925"
+Received: from pdewan-mobl1.amr.corp.intel.com (HELO [10.255.228.220]) ([10.255.228.220])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 07:09:34 -0700
+Subject: Re: [PATCH] ASoC: Intel: Atom: use hardware counter to update hw_ptr
+To:     Brent Lu <brent.lu@intel.com>, alsa-devel@alsa-project.org
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org
+References: <1595779727-31404-1-git-send-email-brent.lu@intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <7dec7fcd-0381-d279-4dac-77c27ea5f6fe@linux.intel.com>
+Date:   Mon, 27 Jul 2020 09:09:33 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1595779727-31404-1-git-send-email-brent.lu@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
-
-commit 5cacc6f5764e94fa753b2c1f5f7f1f3f74286e82 upstream.
-
-The RT5670_PWR_ANLG1 register has 3 bits to select the LDO voltage,
-so the correct mask is 0x7 not 0x3.
-
-Because of this wrong mask we were programming the ldo bits
-to a setting of binary 001 (0x05 & 0x03) instead of binary 101
-when moving to SND_SOC_BIAS_PREPARE.
-
-According to the datasheet 001 is a reserved value, so no idea
-what it did, since the driver was working fine before I guess we
-got lucky and it does something which is ok.
-
-Fixes: 5e8351de740d ("ASoC: add RT5670 CODEC driver")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200628155231.71089-3-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/soc/codecs/rt5670.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/sound/soc/codecs/rt5670.h
-+++ b/sound/soc/codecs/rt5670.h
-@@ -760,7 +760,7 @@
- #define RT5670_PWR_VREF2_BIT			4
- #define RT5670_PWR_FV2				(0x1 << 3)
- #define RT5670_PWR_FV2_BIT			3
--#define RT5670_LDO_SEL_MASK			(0x3)
-+#define RT5670_LDO_SEL_MASK			(0x7)
- #define RT5670_LDO_SEL_SFT			0
- 
- /* Power Management for Analog 2 (0x64) */
 
 
+On 7/26/20 11:08 AM, Brent Lu wrote:
+> The ring buffer counter runs faster than hardware counter if the
+> period size in hw_param is larger than 240. Although the differce is
+> not much (around 2k frames), it causes false underrun in CRAS
+> sometimes because it's using 256 frames as period size in hw_param.
+
+All the Atom firmware assumes data chunks in multiples of 1ms (typically 
+5, 10 or 20ms). I have never seen anyone use 256 frames, that's asking 
+for trouble really.
+
+it's actually the same with Skylake and SOF in most cases.
+
+Is this a 'real' problem or a problem detected by the Chrome ALSA 
+compliance tests, in the latter case that would hint at a too generic 
+value of min_period.
+
+> Using the hardware counter could provide precise hw_ptr to user space
+> and avoid the false underrun in CRAS.
+> 
+> Signed-off-by: Brent Lu <brent.lu@intel.com>
+> ---
+>   sound/soc/intel/atom/sst/sst_drv_interface.c | 15 +++------------
+>   1 file changed, 3 insertions(+), 12 deletions(-)
+> 
+> diff --git a/sound/soc/intel/atom/sst/sst_drv_interface.c b/sound/soc/intel/atom/sst/sst_drv_interface.c
+> index 7624953..1949ad9 100644
+> --- a/sound/soc/intel/atom/sst/sst_drv_interface.c
+> +++ b/sound/soc/intel/atom/sst/sst_drv_interface.c
+> @@ -485,7 +485,6 @@ static inline int sst_calc_tstamp(struct intel_sst_drv *ctx,
+>   		struct snd_pcm_substream *substream,
+>   		struct snd_sst_tstamp *fw_tstamp)
+>   {
+> -	size_t delay_bytes, delay_frames;
+>   	size_t buffer_sz;
+>   	u32 pointer_bytes, pointer_samples;
+>   
+> @@ -493,22 +492,14 @@ static inline int sst_calc_tstamp(struct intel_sst_drv *ctx,
+>   			fw_tstamp->ring_buffer_counter);
+>   	dev_dbg(ctx->dev, "mrfld hardware_counter %llu in bytes\n",
+>   			 fw_tstamp->hardware_counter);
+> -	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+> -		delay_bytes = (size_t) (fw_tstamp->ring_buffer_counter -
+> -					fw_tstamp->hardware_counter);
+> -	else
+> -		delay_bytes = (size_t) (fw_tstamp->hardware_counter -
+> -					fw_tstamp->ring_buffer_counter);
+> -	delay_frames = bytes_to_frames(substream->runtime, delay_bytes);
+> +
+>   	buffer_sz = snd_pcm_lib_buffer_bytes(substream);
+> -	div_u64_rem(fw_tstamp->ring_buffer_counter, buffer_sz, &pointer_bytes);
+> +	div_u64_rem(fw_tstamp->hardware_counter, buffer_sz, &pointer_bytes);
+>   	pointer_samples = bytes_to_samples(substream->runtime, pointer_bytes);
+>   
+> -	dev_dbg(ctx->dev, "pcm delay %zu in bytes\n", delay_bytes);
+> -
+>   	info->buffer_ptr = pointer_samples / substream->runtime->channels;
+> +	info->pcm_delay = 0;
+
+and that seems also wrong? Why would the delay be zero?
+
+> -	info->pcm_delay = delay_frames;
+>   	dev_dbg(ctx->dev, "buffer ptr %llu pcm_delay rep: %llu\n",
+>   			info->buffer_ptr, info->pcm_delay);
+>   	return 0;
+> 
