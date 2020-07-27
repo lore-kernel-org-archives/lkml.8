@@ -2,120 +2,66 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D57EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27839C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58873206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE69206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgG0Duu (ORCPT
+        id S1726794AbgG0D6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 23:50:50 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8828 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726666AbgG0Dut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 23:50:49 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D6B0E8BD8447F8CEA390;
-        Mon, 27 Jul 2020 11:50:44 +0800 (CST)
-Received: from [10.174.185.226] (10.174.185.226) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 27 Jul 2020 11:50:36 +0800
-Subject: Re: [PATCH] irqchip/gic-v4.1: Use GFP_ATOMIC flag in
- allocate_vpe_l1_table()
-To:     <linux-kernel@vger.kernel.org>, <maz@kernel.org>
-CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <wanghaibin.wang@huawei.com>, <kuhn.chenqun@huawei.com>,
-        <wangjingyi11@huawei.com>
-References: <20200630133746.816-1-yuzenghui@huawei.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <076a3e82-ba21-6e6a-c6cd-937abb063eb9@huawei.com>
-Date:   Mon, 27 Jul 2020 11:50:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 26 Jul 2020 23:58:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbgG0D6R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 23:58:17 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3362C0619D2;
+        Sun, 26 Jul 2020 20:58:17 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jzuHG-003PCx-LN; Mon, 27 Jul 2020 03:58:14 +0000
+Date:   Mon, 27 Jul 2020 04:58:14 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2 04/20] unify generic instances of
+ csum_partial_copy_nocheck()
+Message-ID: <20200727035814.GA794331@ZenIV.linux.org.uk>
+References: <20200724012512.GK2786714@ZenIV.linux.org.uk>
+ <20200724012546.302155-1-viro@ZenIV.linux.org.uk>
+ <20200724012546.302155-4-viro@ZenIV.linux.org.uk>
+ <20200724064117.GA10522@infradead.org>
+ <20200724121918.GL2786714@ZenIV.linux.org.uk>
+ <20200724122337.GA23095@infradead.org>
+ <20200724123040.GM2786714@ZenIV.linux.org.uk>
+ <20200726071132.GA8862@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200630133746.816-1-yuzenghui@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.185.226]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726071132.GA8862@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+On Sun, Jul 26, 2020 at 08:11:32AM +0100, Christoph Hellwig wrote:
+> On Fri, Jul 24, 2020 at 01:30:40PM +0100, Al Viro wrote:
+> > > Sorry, I meant csum_and_copy_from_nocheck, just as in this patch.
+> > > 
+> > > Merging your branch into the net-next tree thus will conflict in
+> > > the nios2 and asm-geneeric/checksum.h as well as lib/checksum.c.
+> > 
+> > Noted, but that asm-generic/checksum.h conflict will be "massage
+> > in net-next/outright removal in this branch"; the same goes for
+> > lib/checksum.c and nios2.  It's c6x that is unpleasant in that respect...
+> 
+> What about just rebasing your branch on the net-next tree?
 
-On 2020/6/30 21:37, Zenghui Yu wrote:
-> Booting the latest kernel with DEBUG_ATOMIC_SLEEP=y on a GICv4.1 enabled
-> box, I get the following kernel splat:
-> 
-> [    0.053766] BUG: sleeping function called from invalid context at mm/slab.h:567
-> [    0.053767] in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 0, name: swapper/1
-> [    0.053769] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc3+ #23
-> [    0.053770] Call trace:
-> [    0.053774]  dump_backtrace+0x0/0x218
-> [    0.053775]  show_stack+0x2c/0x38
-> [    0.053777]  dump_stack+0xc4/0x10c
-> [    0.053779]  ___might_sleep+0xfc/0x140
-> [    0.053780]  __might_sleep+0x58/0x90
-> [    0.053782]  slab_pre_alloc_hook+0x7c/0x90
-> [    0.053783]  kmem_cache_alloc_trace+0x60/0x2f0
-> [    0.053785]  its_cpu_init+0x6f4/0xe40
-> [    0.053786]  gic_starting_cpu+0x24/0x38
-> [    0.053788]  cpuhp_invoke_callback+0xa0/0x710
-> [    0.053789]  notify_cpu_starting+0xcc/0xd8
-> [    0.053790]  secondary_start_kernel+0x148/0x200
-> 
->  # ./scripts/faddr2line vmlinux its_cpu_init+0x6f4/0xe40
-> its_cpu_init+0x6f4/0xe40:
-> allocate_vpe_l1_table at drivers/irqchip/irq-gic-v3-its.c:2818
-> (inlined by) its_cpu_init_lpis at drivers/irqchip/irq-gic-v3-its.c:3138
-> (inlined by) its_cpu_init at drivers/irqchip/irq-gic-v3-its.c:5166
-> 
-> It turned out that we're allocating memory using GFP_KERNEL (may sleep)
-> within the CPU hotplug notifier, which is indeed an atomic context. Bad
-> thing may happen if we're playing on a system with more than a single
-> CommonLPIAff group. Avoid it by turning this into an atomic allocation.
-> 
-> Fixes: 5e5168461c22 ("irqchip/gic-v4.1: VPE table (aka GICR_VPROPBASER) allocation")
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 6a5a87fc4601..b66eeca442c4 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -2814,7 +2814,7 @@ static int allocate_vpe_l1_table(void)
->  	if (val & GICR_VPROPBASER_4_1_VALID)
->  		goto out;
->  
-> -	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_KERNEL);
-> +	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_ATOMIC);
->  	if (!gic_data_rdist()->vpe_table_mask)
->  		return -ENOMEM;
->  
-> @@ -2881,7 +2881,7 @@ static int allocate_vpe_l1_table(void)
->  
->  	pr_debug("np = %d, npg = %lld, psz = %d, epp = %d, esz = %d\n",
->  		 np, npg, psz, epp, esz);
-> -	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, get_order(np * PAGE_SIZE));
-> +	page = alloc_pages(GFP_ATOMIC | __GFP_ZERO, get_order(np * PAGE_SIZE));
->  	if (!page)
->  		return -ENOMEM;
->  
-
-Do you mind taking this patch into v5.9? Or please let me know if you
-still have any concerns on it?
-
-
-Thanks,
-Zenghui
+For now I've just cherry-picked your commit in there.  net-next interaction
+there is minimal; most of the PITA (and potential breakage) is in arch/*...
