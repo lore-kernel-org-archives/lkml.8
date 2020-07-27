@@ -2,224 +2,84 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AC9C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AC6C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0E7720729
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:10:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hjuYOhxW"
+	by mail.kernel.org (Postfix) with ESMTP id 0FEFF207BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgG0TKg (ORCPT
+        id S1728412AbgG0TKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:10:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728343AbgG0TKe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:10:34 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5141EC0619D5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:10:33 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t10so3303322plz.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:10:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ticL88R8RKVjHDYqCYmCobrUYUcpfnt5xb8RKMzCzX8=;
-        b=hjuYOhxWkyxIkco7cz3flsCxvz6RvIAHgzIzkNfgT/x9e/YFx9ROmQLeBaibN/AKQl
-         ggH65I1gR0cWWpulPuQvwAQeqlpl5ZyPDgty8hvNF6MJYWNnYWO7dS6mt4IGxRndNyne
-         BScKhSPjV9rATxM4xUcrdiLZorsRsZxf3g2IY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ticL88R8RKVjHDYqCYmCobrUYUcpfnt5xb8RKMzCzX8=;
-        b=sqn9DeOZnkpfD6gq5HKKSLccmQhSW37abJMS0TWLqb4bPmKEZG4D0rBe5d+5ekbQoE
-         6kA0XiYPpZNAUWDHudqSJhRbc6ZRqj9IDTKZftKBxjKnNaYU2F5J9Qrx5Vy4rux+fawU
-         E5izEdCGkMCb1T7Ch55NYv4Nktc4JHc1fUk4nJEk2JMhr1cEITteVuznf82pIn6Waiq9
-         1/vHx663AAhb7BvO23F7F8BgWkvmVhgcQcs3MuqJpyYLK/ktjVrrKRfOoJrBAPCrSnc/
-         YsExnHoNfCver/JYuTv5vpB66mqTO2O+RSrFtstQ7LD8E88U+TdnAVul91uCRmHf4XFY
-         nkAw==
-X-Gm-Message-State: AOAM532fTLvIpIqLfgpxIiTmpVaK9Z/4Dd/OKLo/xjkcRaaveF1QAI0L
-        ThIeOmwdcSlf9cMFriy4xOlS5g==
-X-Google-Smtp-Source: ABdhPJzhN2J2URR4fF9kWcorXsxPGq7WahUMX2XK2Ft+FbSesYam4d3A186M8w/xW8iuE7/l28C8SQ==
-X-Received: by 2002:a17:90a:c087:: with SMTP id o7mr688207pjs.37.1595877032628;
-        Mon, 27 Jul 2020 12:10:32 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id v28sm16425617pgn.81.2020.07.27.12.10.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 12:10:31 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 12:10:29 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     sbhanu@codeaurora.org
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, rnayak@codeaurora.org,
-        Pradeep P V K <ppvk@codeaurora.org>,
-        devicetree-owner@vger.kernel.org
-Subject: Re: [PATCH V2] arm64: dts: qcom: sc7180: Add bandwidth votes for
- eMMC and SDcard
-Message-ID: <20200727191029.GA3191083@google.com>
-References: <1595328381-29552-1-git-send-email-sbhanu@codeaurora.org>
- <20200724171018.GZ3191083@google.com>
- <7ffcb56e9e6723f4bae687e0f491cb93@codeaurora.org>
+        Mon, 27 Jul 2020 15:10:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728387AbgG0TKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 15:10:38 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EC06207FC;
+        Mon, 27 Jul 2020 19:10:36 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 15:10:33 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Daniel Wagner <dwagner@suse.de>
+Cc:     Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Clark Williams <williams@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Pavel Machek <pavel@denx.de>,
+        Joe Korty <joe.korty@concurrent-rt.com>
+Subject: Re: [ANNOUNCE] v4.4.231-rt202
+Message-ID: <20200727151033.7c37df2b@oasis.local.home>
+In-Reply-To: <3732c1c4-36d4-2cdc-677a-cb58a9507df1@suse.de>
+References: <159559806551.29587.13643956941367278015@beryllium>
+        <3732c1c4-36d4-2cdc-677a-cb58a9507df1@suse.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <7ffcb56e9e6723f4bae687e0f491cb93@codeaurora.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun, 26 Jul 2020 13:55:12 +0200
+Daniel Wagner <dwagner@suse.de> wrote:
 
-On Mon, Jul 27, 2020 at 12:20:38PM +0530, sbhanu@codeaurora.org wrote:
-> On 2020-07-24 22:40, Matthias Kaehlcke wrote:
-> > Hi Shaik,
-> > 
-> > On Tue, Jul 21, 2020 at 04:16:21PM +0530, Shaik Sajida Bhanu wrote:
-> > > From: Pradeep P V K <ppvk@codeaurora.org>
-> > > 
-> > > Add the bandwidth domain supporting performance state and
-> > > the corresponding OPP tables for the sdhc device on sc7180.
-> > > 
-> > > Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
-> > > Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
-> > > ---
-> > > 
-> > > Changes since V1:
-> > > 	- Incorporated review comments by Bjorn Andersson.
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 15 +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > index 68f9894..d78a066 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > @@ -684,6 +684,9 @@
-> > >  			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
-> > >  					<&gcc GCC_SDCC1_AHB_CLK>;
-> > >  			clock-names = "core", "iface";
-> > > +			interconnects = <&aggre1_noc MASTER_EMMC &mc_virt SLAVE_EBI1>,
-> > > +				<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_EMMC_CFG>;
-> > > +			interconnect-names = "sdhc-ddr","cpu-sdhc";
-> > >  			power-domains = <&rpmhpd SC7180_CX>;
-> > >  			operating-points-v2 = <&sdhc1_opp_table>;
-> > > 
-> > > @@ -704,11 +707,15 @@
-> > >  				opp-100000000 {
-> > >  					opp-hz = /bits/ 64 <100000000>;
-> > >  					required-opps = <&rpmhpd_opp_low_svs>;
-> > > +					opp-peak-kBps = <100000 100000>;
-> > > +					opp-avg-kBps = <100000 50000>;
-> > >  				};
-> > > 
-> > >  				opp-384000000 {
-> > >  					opp-hz = /bits/ 64 <384000000>;
-> > >  					required-opps = <&rpmhpd_opp_svs_l1>;
-> > > +					opp-peak-kBps = <600000 900000>;
-> > > +					opp-avg-kBps = <261438 300000>;
-> > >  				};
-> > >  			};
-> > >  		};
-> > > @@ -2476,6 +2483,10 @@
-> > >  			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
-> > >  					<&gcc GCC_SDCC2_AHB_CLK>;
-> > >  			clock-names = "core", "iface";
-> > > +
-> > > +			interconnects = <&aggre1_noc MASTER_SDCC_2 &mc_virt SLAVE_EBI1>,
-> > > +				<&gem_noc MASTER_APPSS_PROC &config_noc	SLAVE_SDCC_2>;
-> > > +			interconnect-names = "sdhc-ddr","cpu-sdhc";
-> > >  			power-domains = <&rpmhpd SC7180_CX>;
-> > >  			operating-points-v2 = <&sdhc2_opp_table>;
-> > > 
-> > > @@ -2489,11 +2500,15 @@
-> > >  				opp-100000000 {
-> > >  					opp-hz = /bits/ 64 <100000000>;
-> > >  					required-opps = <&rpmhpd_opp_low_svs>;
-> > > +					opp-peak-kBps = <160000 100000>;
-> > > +					opp-avg-kBps = <80000 50000>;
-> > >  				};
-> > > 
-> > >  				opp-202000000 {
-> > >  					opp-hz = /bits/ 64 <202000000>;
-> > >  					required-opps = <&rpmhpd_opp_svs_l1>;
-> > > +					opp-peak-kBps = <200000	120000>;
-> > > +					opp-avg-kBps = <100000 60000>;
-> > >  				};
-> > >  			};
-> > >  		};
-> > 
-> > Does the sdhci-msm driver actually have BW scaling support at this
-> > point?
-> > 
+> Hi,
 > 
-> yes
-> 
-> > There is commit 4ece9795be56 ("mmc: sdhci-msm: Add interconnect
-> > bandwidth scaling support"), whose commit message says "make sure
-> > interconnect driver is ready before handling interconnect scaling.".
+> On 24.07.20 15:41, Daniel Wagner wrote:
+> > Known issues:
 > > 
-> > I haven't seen any patch adding the scaling support (supposedly by
-> > adding dev_pm_opp_set_bw() calls?). Did I miss it? If not it seems
-> > it would make sense to post it in a series together with this patch,
-> > as far as I can tell this patch alone does nothing in practical terms.
-> > 
-> > grep sdhc /sys/kernel/debug/interconnect/interconnect_summary
-> >   8804000.sdhci                          0            0            0
-> >   7c4000.sdhci                           0            0            0
-> >   7c4000.sdhci                           0            0            0
-> >   8804000.sdhci                          0            0            0
-> >   ...
+> >     sigwaittest with hackbench as workload is able to trigger a crash on x86_64,
+> >     the same as reported for the v4.4.220-rt196 release. As it turns
+> >     out it was not triggered by BPF.
+> >     https://paste.opensuse.org/view/raw/58939248  
 > 
-> "mmc: sdhci-msm: Use OPP API to set clk/perf
-> state"(https://lkml.org/lkml/2020/4/8/425) and "mmc: sdhci-msm: Add
-> interconnect bandwidth scaling support"(https://lkml.org/lkml/2020/3/12/60)
-> with these two patches scaling will be supported for sdhci-msm driver.
-
-Are you testing with exactly these patches or with the ones that landed
-upstream? At least the second one changed substantially
-
-> the values  in  grep sdhc
-> /sys/kernel/debug/interconnect/interconnect_summary will be zero during
-> device is in suspend state...
-
-Yes, I forgot to mention that I started MMC IO before looking at
-'interconnect_summary'.
-
-> and the values in  grep sdhc
-> /sys/kernel/debug/interconnect/interconnect_summary during device in resume
-> state will be like the following::
+> Joe pointed out [1] that v4.4-rt is missing 9567db2ebe56 ("signal: 
+> Prevent double-free of user struct") from devel-rt. With this
+> patch all my tests pass.
 > 
-> cicalhost / # cat /sys/kernel/debug/interconnect/interconnect_summary | grep
-> sdh
->   8804000.sdhci                          0        60000       120000
->   7c4000.sdhci                           0       300000       900000
->   7c4000.sdhci                           0       300000       900000
->   8804000.sdhci                          0        60000       120000
->   8804000.sdhci                          0       100000       200000
->   7c4000.sdhci                           0       261438       600000
->   8804000.sdhci                          0        60000       120000
+> @stable-rt team: Can you please add it to the missing trees?
 
-On my system the bandwidth is never set:
+Good catch,
 
-3.590152] sdhci_msm 7c4000.sdhci: DBG: old/new frequencies (384000000 Hz) are same, nothing to do
-https://elixir.bootlin.com/linux/v5.7.8/source/drivers/opp/core.c#L847
+I'll pull this in on Friday.
 
-This happens every time, even after the bandwith is set to 0. The problem
-seems to be that opp_table->clk doesn't change for target_freq = 0.
+-- Steve
 
-My system is based on v5.4, so it is possible that my kernel is missing some
-relevant patch from upstream.
+> 
+> Thanks,
+> Daniel
+> 
+> [1] 
+> https://lore.kernel.org/linux-rt-users/20200626130544.GA37967@zipoli.concurrent-rt.com/
+
