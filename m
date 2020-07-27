@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF449C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF62C4345D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B03A2083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE77420775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858832;
-	bh=04hSxckEE+xLDBkj4UTbZjGpGuuD88fIQvilD+Jlc+s=;
+	s=default; t=1595858836;
+	bh=N0SkKePWFaO9n1oE5ygZgBzsZoFwT09V6OJ5rQjxDf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=txs1KFF2O37ncVlv96OmAXWAsK4jiSquqNgNEEFWc3Xus2XJe2OQ/HjoEBYH+G1TJ
-	 Mf+i0RsT8VBhyd7HrFAuqFUxyJ/bfZDwAD83WebUJt1G1FRznUrFgr+qyVOgDHXsFQ
-	 D4qJx2RZWvmo3t3E1tjfS3xEkezxn1psRApR51D8=
+	b=oW4qdGjH1kIrrvJ7/1quVRwujAbX8Ee83WFkGUSOl5z+pyD4vt2w077ejtrXojt9J
+	 kBLOX7PgpMmQA7lUG2hiWzvV0i1tQZ7nIOJWLzikGg/HvpJVpyX2UmtITEezNePv+C
+	 xy/Rh7Hxp4gqDo9mkSLmS3iq/4QFwXLqHxKQJKrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgG0OHL (ORCPT
+        id S1729187AbgG0OHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:07:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55588 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:07:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729171AbgG0OHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:07:10 -0400
+        id S1729171AbgG0OHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:07:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2A60207FC;
-        Mon, 27 Jul 2020 14:07:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC6792073E;
+        Mon, 27 Jul 2020 14:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858829;
-        bh=04hSxckEE+xLDBkj4UTbZjGpGuuD88fIQvilD+Jlc+s=;
+        s=default; t=1595858832;
+        bh=N0SkKePWFaO9n1oE5ygZgBzsZoFwT09V6OJ5rQjxDf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1GBW5pY1WLDE3ekfUEtbnUXXRAxUBe3r0WZ8LNy8uL/sOxfSwFUh9vRtq1fmGAwR9
-         wt+SItvjC17ESboeIyT0xbE35yLg4lJfjTA85lYRdcQDzMvDxzsOKG/KHOC5QytWmX
-         eAhJ+cXCXVjEIjx/RnDJSCXPc/b/dPNh7ednXDaY=
+        b=DUXJoRrRJWMb2g8Vype4840MEWom2xqbRnDaUJAEnuTaYcQgCC/EdvtsIEghtbqd2
+         h/IfLYhunUmrAC2JpJrd9sOhhdA8iEByR28CyqtkA/3UPiFNf9UKE1Ercz4ArEb2IX
+         jT/VHPcUwPjrLt/rl499NOoo9EmVHSUWuV064Wo4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, James Bottomley <jejb@linux.ibm.com>,
+        Tom Rix <trix@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 04/64] mac80211: allow rx of mesh eapol frames with default rx key
-Date:   Mon, 27 Jul 2020 16:03:43 +0200
-Message-Id: <20200727134911.253360836@linuxfoundation.org>
+Subject: [PATCH 4.14 05/64] scsi: scsi_transport_spi: Fix function pointer check
+Date:   Mon, 27 Jul 2020 16:03:44 +0200
+Message-Id: <20200727134911.299275123@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -60,78 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Tom Rix <trix@redhat.com>
 
-[ Upstream commit 0b467b63870d9c05c81456aa9bfee894ab2db3b6 ]
+[ Upstream commit 5aee52c44d9170591df65fafa1cd408acc1225ce ]
 
-Without this patch, eapol frames cannot be received in mesh
-mode, when 802.1X should be used. Initially only a MGTK is
-defined, which is found and set as rx->key, when there are
-no other keys set. ieee80211_drop_unencrypted would then
-drop these eapol frames, as they are data frames without
-encryption and there exists some rx->key.
+clang static analysis flags several null function pointer problems.
 
-Fix this by differentiating between mesh eapol frames and
-other data frames with existing rx->key. Allow mesh mesh
-eapol frames only if they are for our vif address.
+drivers/scsi/scsi_transport_spi.c:374:1: warning: Called function pointer is null (null dereference) [core.CallAndMessage]
+spi_transport_max_attr(offset, "%d\n");
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-With this patch in-place, ieee80211_rx_h_mesh_fwding continues
-after the ieee80211_drop_unencrypted check and notices, that
-these eapol frames have to be delivered locally, as they should.
+Reviewing the store_spi_store_max macro
 
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20200625104214.50319-1-markus.theil@tu-ilmenau.de
-[small code cleanups]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+	if (i->f->set_##field)
+		return -EINVAL;
+
+should be
+
+	if (!i->f->set_##field)
+		return -EINVAL;
+
+Link: https://lore.kernel.org/r/20200627133242.21618-1-trix@redhat.com
+Reviewed-by: James Bottomley <jejb@linux.ibm.com>
+Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/scsi/scsi_transport_spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 56d7a3dfa543b..04ae9de55d74b 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -2120,6 +2120,7 @@ static int ieee80211_802_1x_port_control(struct ieee80211_rx_data *rx)
- 
- static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
- {
-+	struct ieee80211_hdr *hdr = (void *)rx->skb->data;
- 	struct sk_buff *skb = rx->skb;
- 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
- 
-@@ -2130,6 +2131,31 @@ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
- 	if (status->flag & RX_FLAG_DECRYPTED)
- 		return 0;
- 
-+	/* check mesh EAPOL frames first */
-+	if (unlikely(rx->sta && ieee80211_vif_is_mesh(&rx->sdata->vif) &&
-+		     ieee80211_is_data(fc))) {
-+		struct ieee80211s_hdr *mesh_hdr;
-+		u16 hdr_len = ieee80211_hdrlen(fc);
-+		u16 ethertype_offset;
-+		__be16 ethertype;
-+
-+		if (!ether_addr_equal(hdr->addr1, rx->sdata->vif.addr))
-+			goto drop_check;
-+
-+		/* make sure fixed part of mesh header is there, also checks skb len */
-+		if (!pskb_may_pull(rx->skb, hdr_len + 6))
-+			goto drop_check;
-+
-+		mesh_hdr = (struct ieee80211s_hdr *)(skb->data + hdr_len);
-+		ethertype_offset = hdr_len + ieee80211_get_mesh_hdrlen(mesh_hdr) +
-+				   sizeof(rfc1042_header);
-+
-+		if (skb_copy_bits(rx->skb, ethertype_offset, &ethertype, 2) == 0 &&
-+		    ethertype == rx->sdata->control_port_protocol)
-+			return 0;
-+	}
-+
-+drop_check:
- 	/* Drop unencrypted frames if key is set. */
- 	if (unlikely(!ieee80211_has_protected(fc) &&
- 		     !ieee80211_is_any_nullfunc(fc) &&
+diff --git a/drivers/scsi/scsi_transport_spi.c b/drivers/scsi/scsi_transport_spi.c
+index d0219e36080c3..e626fc2cc7813 100644
+--- a/drivers/scsi/scsi_transport_spi.c
++++ b/drivers/scsi/scsi_transport_spi.c
+@@ -349,7 +349,7 @@ store_spi_transport_##field(struct device *dev, 			\
+ 	struct spi_transport_attrs *tp					\
+ 		= (struct spi_transport_attrs *)&starget->starget_data;	\
+ 									\
+-	if (i->f->set_##field)						\
++	if (!i->f->set_##field)						\
+ 		return -EINVAL;						\
+ 	val = simple_strtoul(buf, NULL, 0);				\
+ 	if (val > tp->max_##field)					\
 -- 
 2.25.1
 
