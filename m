@@ -2,123 +2,174 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C52C43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF183C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6575020838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860162;
-	bh=R9n7i2d/2LiyirSf3VoJw7eQXDiACzZfwZCeutMFhUo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xYd4c/IvMDEXFQsyP1FKRRsBXDeAYO4vJal9x5WCnV2bONod+lNsbilUfnQVFwk4V
-	 l13WHg/SUCtQG6Ni/TQ8dLW0CoW2oXseArbnn6HNsUjkftIF0nKGtWfHmbd5RANHZZ
-	 8gytD1vz4h+QUDlKTfUpljxGHTnzXiu9A+w9hmzA=
+	by mail.kernel.org (Postfix) with ESMTP id 7E33B20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X19ILMVn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732554AbgG0O3V (ORCPT
+        id S1732763AbgG0O3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:29:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732078AbgG0OX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:23:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39D7420775;
-        Mon, 27 Jul 2020 14:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859805;
-        bh=R9n7i2d/2LiyirSf3VoJw7eQXDiACzZfwZCeutMFhUo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wI0LSRtCdJHI04U5nIxqe3QcE1U9H3lr8nM0qoQ9bDriQlwx1Tu+FjCuNAOEbi9DF
-         x1/g2FmdkOnIFuu7PSWBcjDx3KOy1mxkXf9iVN/7ntPcV3+1qJYUuOzWwVhirs/ejs
-         ymUoORc+qkSWdiFKbxiz2IBIlj4QMhiAGjjmvGV8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhouxudong <zhouxudong8@huawei.com>,
-        guodeqing <geffrey.guo@huawei.com>, Julian Anastasov <ja@ssi.bg>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 085/179] ipvs: fix the connection sync failed in some cases
-Date:   Mon, 27 Jul 2020 16:04:20 +0200
-Message-Id: <20200727134936.828153247@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
-References: <20200727134932.659499757@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 27 Jul 2020 10:29:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729827AbgG0O32 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:29:28 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1929C061794;
+        Mon, 27 Jul 2020 07:29:28 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id 72so8083674ple.0;
+        Mon, 27 Jul 2020 07:29:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o0FwXWJzk9fg0IFqdpyGQiSwsPpWPqkwzppi0kl4fRE=;
+        b=X19ILMVnSbYreBVhndZtyG/r7ymaNtXrolJRzStGqDjC4fBj1tBNPp2/0EwMC3pEWg
+         ctByeaI16babSvSD07KdX/CGEYLGi5oDewwAmTQiiLyTPSU0nBcIJb0wqd9+0ZXUt5NA
+         R2wyGyskfKapkd0fa3WPAgXzhhvGPwgabtTeWg1q7bYeE4mpxLYsaj+mRlQqb931qLHs
+         Ol1abQ97x1y0CCetMhhAss3ahDc2dUUmOHVJjViV/pwqNlM9bsfT5zU3D1sK6nhYk/+g
+         sJrbZsg3VGdG7rPYQVrDxWsbptv6eFp2fcjuyDNBPEl+L7E1nbxdz/VVj9M823BV1jJs
+         6KRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o0FwXWJzk9fg0IFqdpyGQiSwsPpWPqkwzppi0kl4fRE=;
+        b=hLIXlFTygGHP28woh80l2FN+tLaiQ7p0VmbldHdffDzdoW72Bk0b2DPBeiWkVuHXOZ
+         8Uv78JOMdQVWPMP5seCmt0pwhQMyf92u+6XZq2v8o5tl7hBSmyV7GI/8uNuFYlPBH2z3
+         l9j+BrmqDS3A3cwEMK0001wXCyFSQk6en3t86yLFNqc8LFqEOoYFk4Sqc6UFzi0yv+IJ
+         O3PtDsXyii6RyWItQuKbh0MyBbCnHDBygp+FoIG/dD3AACzxUnhjuNWSKMD4Fnh5Lgch
+         9Ko/H/m16MuV5WUOsJ+SidnEVoZPkIj5AvbHAzKStMkqoERBaBwaWsNz3rivLF8/cLCZ
+         EMjg==
+X-Gm-Message-State: AOAM532YpSKk/lS0d68YXDZtJcaPV0V7YZe7zrQGr09MTBz1bwxOoymd
+        oU/ijqafGsubDy1Fo2ERshg=
+X-Google-Smtp-Source: ABdhPJw9puvQA92a0JkpFjjmz2WkQsRKIqNGuvtIwBDIBtS9+/irr2W/OVTdPqbqO7VVJ6F2Tr0LAg==
+X-Received: by 2002:a17:902:9a96:: with SMTP id w22mr19257977plp.172.1595860168111;
+        Mon, 27 Jul 2020 07:29:28 -0700 (PDT)
+Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id o8sm14330081pgb.23.2020.07.27.07.29.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 07:29:27 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 07:29:25 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     "Ooi, Joyce" <joyce.ooi@intel.com>
+Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>,
+        Dalon Westergreen <dalon.westergreen@intel.com>
+Subject: Re: [PATCH v5 08/10] net: eth: altera: add support for ptp and
+ timestamping
+Message-ID: <20200727142925.GB16836@hoboy>
+References: <20200727092157.115937-1-joyce.ooi@intel.com>
+ <20200727092157.115937-9-joyce.ooi@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727092157.115937-9-joyce.ooi@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: guodeqing <geffrey.guo@huawei.com>
+On Mon, Jul 27, 2020 at 05:21:55PM +0800, Ooi, Joyce wrote:
 
-[ Upstream commit 8210e344ccb798c672ab237b1a4f241bda08909b ]
+> +/* ioctl to configure timestamping */
+> +static int tse_do_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
+> +{
+> +	struct altera_tse_private *priv = netdev_priv(dev);
+> +	struct hwtstamp_config config;
+> +
+> +	if (!netif_running(dev))
+> +		return -EINVAL;
+> +
+> +	if (!priv->has_ptp) {
+> +		netdev_alert(priv->dev, "Timestamping not supported");
+> +		return -EOPNOTSUPP;
+> +	}
 
-The sync_thread_backup only checks sk_receive_queue is empty or not,
-there is a situation which cannot sync the connection entries when
-sk_receive_queue is empty and sk_rmem_alloc is larger than sk_rcvbuf,
-the sync packets are dropped in __udp_enqueue_schedule_skb, this is
-because the packets in reader_queue is not read, so the rmem is
-not reclaimed.
+The user might well have a PHY that supports time stamping.  The code
+must pass the ioctl through to the PHY even when !priv->has_ptp.
 
-Here I add the check of whether the reader_queue of the udp sock is
-empty or not to solve this problem.
+> +
+> +	if (!dev->phydev)
+> +		return -EINVAL;
+> +
+> +	if (!phy_has_hwtstamp(dev->phydev)) {
+> +		if (cmd == SIOCSHWTSTAMP) {
+> +			if (copy_from_user(&config, ifr->ifr_data,
+> +					   sizeof(struct hwtstamp_config)))
+> +				return -EFAULT;
+> +
+> +			if (config.flags)
+> +				return -EINVAL;
+> +
+> +			switch (config.tx_type) {
+> +			case HWTSTAMP_TX_OFF:
+> +				priv->hwts_tx_en = 0;
+> +				break;
+> +			case HWTSTAMP_TX_ON:
+> +				priv->hwts_tx_en = 1;
+> +				break;
+> +			default:
+> +				return -ERANGE;
+> +			}
+> +
+> +			switch (config.rx_filter) {
+> +			case HWTSTAMP_FILTER_NONE:
+> +				priv->hwts_rx_en = 0;
+> +				config.rx_filter = HWTSTAMP_FILTER_NONE;
+> +				break;
+> +			default:
+> +				priv->hwts_rx_en = 1;
+> +				config.rx_filter = HWTSTAMP_FILTER_ALL;
+> +				break;
+> +			}
+> +
+> +			if (copy_to_user(ifr->ifr_data, &config,
+> +					 sizeof(struct hwtstamp_config)))
+> +				return -EFAULT;
+> +			else
+> +				return 0;
+> +		}
+> +
+> +		if (cmd == SIOCGHWTSTAMP) {
+> +			config.flags = 0;
+> +
+> +			if (priv->hwts_tx_en)
+> +				config.tx_type = HWTSTAMP_TX_ON;
+> +			else
+> +				config.tx_type = HWTSTAMP_TX_OFF;
+> +
+> +			if (priv->hwts_rx_en)
+> +				config.rx_filter = HWTSTAMP_FILTER_ALL;
+> +			else
+> +				config.rx_filter = HWTSTAMP_FILTER_NONE;
+> +
+> +			if (copy_to_user(ifr->ifr_data, &config,
+> +					 sizeof(struct hwtstamp_config)))
+> +				return -EFAULT;
+> +			else
+> +				return 0;
+> +		}
+> +	}
+> +
+> +	return phy_mii_ioctl(dev->phydev, ifr, cmd);
+> +}
 
-Fixes: 2276f58ac589 ("udp: use a separate rx queue for packet reception")
-Reported-by: zhouxudong <zhouxudong8@huawei.com>
-Signed-off-by: guodeqing <geffrey.guo@huawei.com>
-Acked-by: Julian Anastasov <ja@ssi.bg>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/netfilter/ipvs/ip_vs_sync.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/net/netfilter/ipvs/ip_vs_sync.c b/net/netfilter/ipvs/ip_vs_sync.c
-index 605e0f68f8bd3..2b8abbfe018cf 100644
---- a/net/netfilter/ipvs/ip_vs_sync.c
-+++ b/net/netfilter/ipvs/ip_vs_sync.c
-@@ -1717,6 +1717,8 @@ static int sync_thread_backup(void *data)
- {
- 	struct ip_vs_sync_thread_data *tinfo = data;
- 	struct netns_ipvs *ipvs = tinfo->ipvs;
-+	struct sock *sk = tinfo->sock->sk;
-+	struct udp_sock *up = udp_sk(sk);
- 	int len;
- 
- 	pr_info("sync thread started: state = BACKUP, mcast_ifn = %s, "
-@@ -1724,12 +1726,14 @@ static int sync_thread_backup(void *data)
- 		ipvs->bcfg.mcast_ifn, ipvs->bcfg.syncid, tinfo->id);
- 
- 	while (!kthread_should_stop()) {
--		wait_event_interruptible(*sk_sleep(tinfo->sock->sk),
--			 !skb_queue_empty(&tinfo->sock->sk->sk_receive_queue)
--			 || kthread_should_stop());
-+		wait_event_interruptible(*sk_sleep(sk),
-+					 !skb_queue_empty_lockless(&sk->sk_receive_queue) ||
-+					 !skb_queue_empty_lockless(&up->reader_queue) ||
-+					 kthread_should_stop());
- 
- 		/* do we have data now? */
--		while (!skb_queue_empty(&(tinfo->sock->sk->sk_receive_queue))) {
-+		while (!skb_queue_empty_lockless(&sk->sk_receive_queue) ||
-+		       !skb_queue_empty_lockless(&up->reader_queue)) {
- 			len = ip_vs_receive(tinfo->sock, tinfo->buf,
- 					ipvs->bcfg.sync_maxlen);
- 			if (len <= 0) {
--- 
-2.25.1
-
-
-
+Thanks,
+Richard
