@@ -2,88 +2,83 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA9EC43459
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAE4C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76CD8208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892350;
-	bh=bZHxh33PZkH/MAFburC2lqHt5TjiyHUeFr/pGPuH/zU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HR1dvIR7rbOwpUebD9uuyyl4FjuV7eXZiPVHR0avlaITIt4pQWWFHIOHbXnBkUuHe
-	 VNrOK8ExSKoR+VSSIkReHC/EJo3fyFSV5VavmIKqXN7S+SclJkl0Agwtf1J0cRIfMH
-	 y5cklqy6fhpqev2NGWAx/tfDi+0HEdJPZuZ0z67Q=
+	by mail.kernel.org (Postfix) with ESMTP id 5FDD120A8B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbgG0XZt (ORCPT
+        id S1728704AbgG0XZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36816 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:25:58 -0400
+Received: from mga11.intel.com ([192.55.52.93]:64301 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728629AbgG0XZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728621AbgG0XZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Jul 2020 19:25:27 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F2C920A8B;
-        Mon, 27 Jul 2020 23:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892327;
-        bh=bZHxh33PZkH/MAFburC2lqHt5TjiyHUeFr/pGPuH/zU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WfGBr3a4B3dlxFCeccty/Q1ig54sR8UfWqn9TbiuKMW8jR0WgVi7eFQuzK+mAEy7z
-         NqiZZ9yWsbn/4S00eD9ApWOtvEjkFcCuqHEcrt29R1RS3Kr4JhasDWHWDKts2Z+Jvr
-         mafhSrhmAe3BtTMmdcUT2BFw6N1HTy6NnvTbc+6k=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-nfc@lists.01.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 1/4] nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
-Date:   Mon, 27 Jul 2020 19:25:22 -0400
-Message-Id: <20200727232525.718372-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
+IronPort-SDR: HmUWTz+ZV2E1mnBdL3nQjhmmfdbqFT5myWMbLlSvtDd+fi164dOxpwu+DmyRLW31AXlAdkLblc
+ NS9R2GZf/DcA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="148991034"
+X-IronPort-AV: E=Sophos;i="5.75,404,1589266800"; 
+   d="scan'208";a="148991034"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 16:25:26 -0700
+IronPort-SDR: I5hFIpPRz/MeeKxICmXiippEuDFNU0wUnicuq5fVYa6zq9TQWr0NVMUAkCrQmKnDWq7igeBT8H
+ C/gGqr5NAhng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,404,1589266800"; 
+   d="scan'208";a="434114739"
+Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 27 Jul 2020 16:25:24 -0700
+Received: from kbuild by df0563f96c37 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k0CUl-00025h-Fv; Mon, 27 Jul 2020 23:25:23 +0000
+Date:   Tue, 28 Jul 2020 07:24:51 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Cc:     kbuild-all@lists.01.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH linux-next] mmc: mediatek: msdc_cqe_disable() can be
+ static
+Message-ID: <20200727232451.GA16371@cc981e2e651b>
+References: <202007280704.Sbr6LVoE%lkp@intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202007280704.Sbr6LVoE%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 1e8fd3a97f2d83a7197876ceb4f37b4c2b00a0f3 ]
-
-The implementation of s3fwrn5_recv_frame() is supposed to consume skb on
-all execution paths. Release skb before returning -ENODEV.
-
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 88bd652b3c74 ("mmc: mediatek: command queue support")
+Signed-off-by: kernel test robot <lkp@intel.com>
 ---
- drivers/nfc/s3fwrn5/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ mtk-sd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nfc/s3fwrn5/core.c b/drivers/nfc/s3fwrn5/core.c
-index 0d866ca295e3f..cafab107ba9bc 100644
---- a/drivers/nfc/s3fwrn5/core.c
-+++ b/drivers/nfc/s3fwrn5/core.c
-@@ -209,6 +209,7 @@ int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
- 	case S3FWRN5_MODE_FW:
- 		return s3fwrn5_fw_recv_frame(ndev, skb);
- 	default:
-+		kfree_skb(skb);
- 		return -ENODEV;
- 	}
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index 734e403a142e4..4e2583f69a631 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -2266,7 +2266,7 @@ static void msdc_cqe_enable(struct mmc_host *mmc)
+ 	msdc_set_timeout(host, 1000000000ULL, 0);
  }
--- 
-2.25.1
-
+ 
+-void msdc_cqe_disable(struct mmc_host *mmc, bool recovery)
++static void msdc_cqe_disable(struct mmc_host *mmc, bool recovery)
+ {
+ 	struct msdc_host *host = mmc_priv(mmc);
+ 
