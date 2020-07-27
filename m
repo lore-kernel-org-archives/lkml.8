@@ -2,134 +2,135 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419A2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A27E4C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 275E120719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8243420719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:18:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="b9Xi8EPK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgG0TSh (ORCPT
+        id S1728797AbgG0TSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:18:37 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:38247 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728107AbgG0TSh (ORCPT
+        Mon, 27 Jul 2020 15:18:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728107AbgG0TSl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:18:37 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N4yuK-1kyoJi1ap2-010reW; Mon, 27 Jul 2020 21:18:34 +0200
-Received: by mail-qk1-f172.google.com with SMTP id b14so14647372qkn.4;
-        Mon, 27 Jul 2020 12:18:34 -0700 (PDT)
-X-Gm-Message-State: AOAM5315TarJ964jIzA0jkckVQjgHvwvmD9Z6JJjIamE3Zd6/6EMrXDy
-        B+Jc0wRqz2acYj+Cqi5OsE8WNaqqNhDvKkMTfUA=
-X-Google-Smtp-Source: ABdhPJyPyuOhSSKcN3s0PoPWgWpIsASyjJkBJWTfjnn06ZQrJGvrqqFPGvwBi9CaJlGj78PTXJEf6kW9xdQMA/GJnj4=
-X-Received: by 2002:a05:620a:2444:: with SMTP id h4mr25459006qkn.352.1595877513159;
- Mon, 27 Jul 2020 12:18:33 -0700 (PDT)
+        Mon, 27 Jul 2020 15:18:41 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 965D9C0619D7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:18:40 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id c80so15129682wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:18:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=AD/pgeUaAWIctoPbHAQcCg8O5lgu8H5ssjeAH3MlNAE=;
+        b=b9Xi8EPKDhPyvptqzRh9TEyHmMfd/reQxGu/+VvNXDLeNkn94+A5XsLMU4sZGwGnYc
+         VQ7cN6oppIHp7Sb9aOnqtUx8KbqUL2t0VNncf/TBpGWpM0VcUa7jrep3fZu9VV7ljCF3
+         Wx50YZGH7fXe4vbZqShyP7XqktwHUoOhIiKJk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=AD/pgeUaAWIctoPbHAQcCg8O5lgu8H5ssjeAH3MlNAE=;
+        b=PML67doGSx/JozIrP4w83sohv9fr3dWm9tLB2fLW0YsSsQQEPFYm6Hwdww4n5Ozmkf
+         qodoDVZJrJTk8z7zaB3n2kL7VE27tYimobLI1V2pKZo4e0uIqZvG53ui/cHpZYodzWRy
+         /RF09Xys05hy6o1OhmLxSNZqr+wtXgYlW7t42w6SxOCqkc7+nwnnA4s/fdGBfiK+1aGd
+         jPE/Lk7x+O7Vbs3PiAk2x6lAV7+v74JGTUtbU7KagxfzT+YgJoKaV6h4Bagw5thudshA
+         vbeRDEvgDKUUxtKgb/hU6EnmSq9xG3TOQ7Kr+tzEx+eflHMGToMSirbs+G59lzABWTq8
+         JLBw==
+X-Gm-Message-State: AOAM532nA6uW6Ht47z9L+pwnnkbCshGLw/iN1OXqyN5QPsbNGhjKQeSM
+        N5H8qa2BqBprMbHhAYCEOmLZTV+0tMeojFQkOBkEhPUtRziOBq2zD7nqjiL6eK5W49vXLPTbNhr
+        m261k08By/AMFj3EhP9Rphq33JeWGT9B7DJG6IyHaXSbWOtv4dKxs/nbz2SMynuGDQZPhBjev/h
+        Yu3RnHfgEu
+X-Google-Smtp-Source: ABdhPJw7IDXDgUVkm/BmOYhovEDy4epUcWGU5dwgTcbUsYWhYOQSjfwYb9HbZEpCRr1sm9NvxhoSPA==
+X-Received: by 2002:a1c:7fd3:: with SMTP id a202mr607949wmd.67.1595877518878;
+        Mon, 27 Jul 2020 12:18:38 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id p11sm13730030wre.32.2020.07.27.12.18.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 12:18:38 -0700 (PDT)
+Subject: Re: [PATCH v3 00/19] Introduce partial kernel_read_file() support
+To:     Mimi Zohar <zohar@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200724213640.389191-1-keescook@chromium.org>
+ <1595848589.4841.78.camel@kernel.org>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <1a46db6f-1c8a-3509-6371-7c77999833f2@broadcom.com>
+Date:   Mon, 27 Jul 2020 12:18:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200726191428.26767-1-samuel@sholland.org>
-In-Reply-To: <20200726191428.26767-1-samuel@sholland.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 21:18:17 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3yj=ySNCn7YtEXxWiRK0FtG+5ftkV+vb3s82yRi7cdLw@mail.gmail.com>
-Message-ID: <CAK8P3a3yj=ySNCn7YtEXxWiRK0FtG+5ftkV+vb3s82yRi7cdLw@mail.gmail.com>
-Subject: Re: [PATCH] scsi: 3w-9xxx: Fix endianness issues found by sparse
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Adam Radford <aradford@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:UTGN9kH981sad+tzK2dGq9L2NaYVeEeMZy6v6a2LlDQ9ci+Wn6/
- YTtyH2IsyOhjgLd4lo8vq1iZPrOC0Q4APJAJVDAO/S1p5vV+hxLsyP51feGlHi81GSSON12
- NhchqazUdiae6HxhWyxO7odDe+aKGwc5avTQIQi/stGOfLxkmcMn0foU1FHE6dTkoYHUaOx
- m8hi0FJHBEifpYx38s6AQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WY/a3fnxwng=:NU9/9WsxwVggoUJLyMB5bi
- QOoRm9smivL+qrAIICUGoNBwgRs21vTHrL1pETKVrwTVpViLiFmeCEyNCpS6WxP77m6YQmwIf
- VMPuTNJBa6HH2jPIAIo77ijtBRFtkbqXY6s/lS8ha+cauuoFyz4tP6caPCNMuJdOEFOySLH/M
- H9VGZzB8uhJyecBa5WS2JHkGixmw7sqFszZwaFr24LXXrsq1z+O+vJPxydeuYv3d5hK/bsN7t
- v1xqFg9rKpHsSiSE2g904eg/UpRAvXRE5Y0t6atgwx2jXssHGB/D8jkv9qrKAUzbgO/zq6yuD
- u76deoNWur84eZO4/hG8L4mrrojdUdSAjfXjH8qN0UtWMfZLPydYYCrWcF7G50KEf5+5VUUe/
- Eiit7CZFHyDGALJoQ9ScP7TogOd3eEYk0qUWZLHY73sKpjNGWVtJa0mnomrFvpv8/zFe3Y5Zd
- 7nR0NG3MYrmwTvCleAqG5rkq0XxUjKhHbf6UzBaMbSASY+9JsG+yVZRWCX/iLzLv67ZO426Qm
- C79g0SVeUVa9Uh0Dujkas8L4AUn4LgD48dZhypnOUQfTtKhg/Xju0jr6Igxp4tj521PNtpYxo
- 7nalHVUA5JQyE0MxvKqQbl/zSvIpByu6Cq0QtccTHwlPWs2o9FrDg1ipPTpE/hJwoM1HoPBEn
- 9n+DLs1Iy1aczVcYqkn72613nCV0BwSgLgptmuMCVEd3I7HlR7zaClxyxSKPyiqXPX0mb8Ucc
- QEA1BKCU32gfir6xjpD2pTa+yc7PXTmkHEfezBj45ImLrXnAhYYkns+rHiCdBu+fT1E8zHaJi
- TecCER1YaldxTx1IGFwEIU06szaryIxK/dOq5OxDYFqqtADCCWDMntA9cxT2vx0clGuBoML
+In-Reply-To: <1595848589.4841.78.camel@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-CA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 9:15 PM Samuel Holland <samuel@sholland.org> wrote:
+Hi Mimi/Kees,
+
+On 2020-07-27 4:16 a.m., Mimi Zohar wrote:
+> On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
+>> v3:
+>> - add reviews/acks
+>> - add "IMA: Add support for file reads without contents" patch
+>> - trim CC list, in case that's why vger ignored v2
+>> v2: [missing from lkml archives! (CC list too long?) repeating changes here]
+>> - fix issues in firmware test suite
+>> - add firmware partial read patches
+>> - various bug fixes/cleanups
+>> v1: https://lore.kernel.org/lkml/20200717174309.1164575-1-keescook@chromium.org/
+>>
+>> Hi,
+>>
+>> Here's my tree for adding partial read support in kernel_read_file(),
+>> which fixes a number of issues along the way. It's got Scott's firmware
+>> and IMA patches ported and everything tests cleanly for me (even with
+>> CONFIG_IMA_APPRAISE=y).
+> Thanks, Kees.  Other than my comments on the new
+> security_kernel_post_load_data() hook, the patch set is really nice.
 >
-> The main issue observed was at the call to scsi_set_resid, where the
-> byteswapped parameter would eventually trigger the alignment check at
-> drivers/scsi/sd.c:2009. At that point, the kernel would continuously
-> complain about an "Unaligned partial completion", and no further I/O
-> could occur.
+> In addition to compiling with CONFIG_IMA_APPRAISE enabled, have you
+> booted the kernel with the ima_policy=tcb?  The tcb policy will add
+> measurements to the IMA measurement list and extend the TPM with the
+> file or buffer data digest.  Are you seeing the firmware measurements,
+> in particular the partial read measurement?
+I booted the kernel with ima_policy=tcb.
+
+Unfortunately after enabling the following, fw_run_tests.sh does not run.
+
+mkdir /sys/kernel/security
+mount -t securityfs securityfs /sys/kernel/security
+echo "measure func=FIRMWARE_CHECK" > /sys/kernel/security/ima/policy
+echo "appraise func=FIRMWARE_CHECK appraise_type=imasig" > /sys/kernel/security/ima/policy
+./fw_run_tests.sh
+
+[ 1296.258052] test_firmware: loading 'test-firmware.bin'
+[ 1296.263903] misc test_firmware: loading /lib/firmware/test-firmware.bin failed with error -13
+[ 1296.263905] audit: type=1800 audit(1595905754.266:9): pid=5696 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=appraise_data cause=IMA-signature-required comm="fw_namespace" name="/lib/firmware/test-firmware.bin" dev="tmpfs" ino=4592 res=0
+[ 1296.297085] misc test_firmware: Direct firmware load for test-firmware.bin failed with error -13
+[ 1296.305947] test_firmware: load of 'test-firmware.bin' failed: -13
+
 >
-> This gets the controller working on big endian powerpc64.
+> thanks,
 >
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
->  drivers/scsi/3w-9xxx.c | 35 +++++++++++++++++------------------
->  drivers/scsi/3w-9xxx.h |  6 +++++-
->  2 files changed, 22 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/scsi/3w-9xxx.c b/drivers/scsi/3w-9xxx.c
-> index 3337b1e80412..95e25fda1f90 100644
-> --- a/drivers/scsi/3w-9xxx.c
-> +++ b/drivers/scsi/3w-9xxx.c
-> @@ -303,10 +303,10 @@ static int twa_aen_drain_queue(TW_Device_Extension *tw_dev, int no_check_reset)
->
->         /* Initialize sglist */
->         memset(&sglist, 0, sizeof(TW_SG_Entry));
-> -       sglist[0].length = TW_SECTOR_SIZE;
-> -       sglist[0].address = tw_dev->generic_buffer_phys[request_id];
-> +       sglist[0].length = cpu_to_le32(TW_SECTOR_SIZE);
-> +       sglist[0].address = TW_CPU_TO_SGL(tw_dev->generic_buffer_phys[request_id]);
+> Mimi
 
-This looks like it would add a sparse warning, not fix one, unless you also
-change the types of the target structure.
-
-> @@ -501,7 +501,7 @@ static void twa_aen_sync_time(TW_Device_Extension *tw_dev, int request_id)
->             Sunday 12:00AM */
->         local_time = (ktime_get_real_seconds() - (sys_tz.tz_minuteswest * 60));
->         div_u64_rem(local_time - (3 * 86400), 604800, &schedulertime);
-> -       schedulertime = cpu_to_le32(schedulertime % 604800);
-> +       cpu_to_le32p(&schedulertime);
->
->         memcpy(param->data, &schedulertime, sizeof(u32));
-
-You dropped the '%' operation, and the result of the byteswap?
-
-> @@ -1004,7 +1004,7 @@ static int twa_fill_sense(TW_Device_Extension *tw_dev, int request_id, int copy_
->                                full_command_packet->header.status_block.error,
->                                error_str[0] == '\0' ?
->                                twa_string_lookup(twa_error_table,
-> -                                                full_command_packet->header.status_block.error) : error_str,
-> +                                                le16_to_cpu(full_command_packet->header.status_block.error)) : error_str,
->                                full_command_packet->header.err_specific_desc);
->                 else
-
-This looks correct, but the error value has already been copied into the local
-'error' variable, which you could use for simplification. As 'status_block' is
-defined as a native_endian structure, this also introduced a sparse warning.
-
-> @@ -1012,7 +1012,7 @@ static int twa_fill_sense(TW_Device_Extension *tw_dev, int request_id, int copy_
->                                full_command_packet->header.status_block.error,
->                                error_str[0] == '\0' ?
->                                twa_string_lookup(twa_error_table,
-> -                                                full_command_packet->header.status_block.error) : error_str,
-> +                                                le16_to_cpu(full_command_packet->header.status_block.error)) : error_str,
-
-Same here
-
-       Arnd
