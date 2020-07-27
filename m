@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 403E3C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1C0C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1349B2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9422A20FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859703;
-	bh=aJMqigb34Dubd5tY2sT5LEuMGU4M7GKg1c09Z+B65LA=;
+	s=default; t=1595859415;
+	bh=cPR2zPn5HSoqWO5iLEJ+606lEqfGx63K60WONIiPpHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RsV3L1azDUqLs8O0i3mUgW1u7w8+sZPw0woYS59ozvf6/yp43ma1fcj/ADUpzfsxc
-	 twLgFJkH+P3brngr2AfWvb5x1Kygr+jkHku5cmaZWXuqvVIG60rDUW4JTasGYiyzbq
-	 PpqUxFhIZVdwP/qTUn26xC5UHbJ8WOey0yukNhdY=
+	b=FsgC7aIXpl+oSx05Vz4Zb3HAoxfKlwGLjrZmQYqyHG0Uxnu8EjYPdnpADpEZvXmgB
+	 wbaQFMqZ4Z2JH5u+P4hiJpCB64mJUYq+VjSjcdo7QpamFr7jlIhi3hRTvgiYn7LDmh
+	 TYsr3xZiSaB1Jh5pzyFNYi36PKc2TiAewFEtj6HY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731774AbgG0OVm (ORCPT
+        id S1730368AbgG0OQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:21:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50302 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:16:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730258AbgG0OVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:21:38 -0400
+        id S1730939AbgG0OQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:16:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7153F2070B;
-        Mon, 27 Jul 2020 14:21:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6B6F20775;
+        Mon, 27 Jul 2020 14:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859698;
-        bh=aJMqigb34Dubd5tY2sT5LEuMGU4M7GKg1c09Z+B65LA=;
+        s=default; t=1595859409;
+        bh=cPR2zPn5HSoqWO5iLEJ+606lEqfGx63K60WONIiPpHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yB/zpXSPQaLm2UVv7v1F7Uvdba7NrPf6b0Djk6ogpiGyUohiZSZ9xvMw6at4z+h59
-         cV4QnIWD0XjS1EhfYM1e+Zs/apXDXEJBKpCEVIrYZKEvvl05hpDJ38MgCf3H11vmzb
-         XWNh25an7srSAPkcoytFAPe0cj5U/zPN+b9n7dJ4=
+        b=KvWNlNPlIkSBNq5GCZ9Oy4UDtTxcVR7osSQxe5VRAObHtAHtFCWevU33akQHYPtqD
+         LjhlTbxZ+nN2xDj3/BC8bENscVVJ8S/jjsIgO6qF1sUQaYbFxFqyo1UDPO/ZctRY3V
+         Ml6bFP4R34C0N193n4luvI/13SQ95+vRhgvMoNDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shannon Nelson <snelson@pensando.io>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 070/179] ionic: use offset for ethtool regs data
-Date:   Mon, 27 Jul 2020 16:04:05 +0200
-Message-Id: <20200727134936.091115895@linuxfoundation.org>
+Subject: [PATCH 5.4 096/138] hwmon: (scmi) Fix potential buffer overflow in scmi_hwmon_probe()
+Date:   Mon, 27 Jul 2020 16:04:51 +0200
+Message-Id: <20200727134930.177243965@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
-References: <20200727134932.659499757@linuxfoundation.org>
+In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
+References: <20200727134925.228313570@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,46 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shannon Nelson <snelson@pensando.io>
+From: Cristian Marussi <cristian.marussi@arm.com>
 
-[ Upstream commit f85ae16f924f92a370b81b4e77862c1c59882fce ]
+[ Upstream commit 3ce17cd2b94907f6d91b81b32848044b84c97606 ]
 
-Use an offset to write the second half of the regs data into the
-second half of the buffer instead of overwriting the first half.
+SMATCH detected a potential buffer overflow in the manipulation of
+hwmon_attributes array inside the scmi_hwmon_probe function:
 
-Fixes: 4d03e00a2140 ("ionic: Add initial ethtool support")
-Signed-off-by: Shannon Nelson <snelson@pensando.io>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+drivers/hwmon/scmi-hwmon.c:226
+ scmi_hwmon_probe() error: buffer overflow 'hwmon_attributes' 6 <= 9
+
+Fix it by statically declaring the size of the array as the maximum
+possible as defined by hwmon_max define.
+
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Link: https://lore.kernel.org/r/20200715121338.GA18761@e119603-lin.cambridge.arm.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/pensando/ionic/ionic_ethtool.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/hwmon/scmi-hwmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c b/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c
-index 22430fa911e2c..63d78519cbc6f 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c
-@@ -102,15 +102,18 @@ static void ionic_get_regs(struct net_device *netdev, struct ethtool_regs *regs,
- 			   void *p)
- {
- 	struct ionic_lif *lif = netdev_priv(netdev);
-+	unsigned int offset;
- 	unsigned int size;
+diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+index 8a7732c0bef3e..7cd13a217c615 100644
+--- a/drivers/hwmon/scmi-hwmon.c
++++ b/drivers/hwmon/scmi-hwmon.c
+@@ -147,7 +147,7 @@ static enum hwmon_sensor_types scmi_types[] = {
+ 	[ENERGY] = hwmon_energy,
+ };
  
- 	regs->version = IONIC_DEV_CMD_REG_VERSION;
- 
-+	offset = 0;
- 	size = IONIC_DEV_INFO_REG_COUNT * sizeof(u32);
--	memcpy_fromio(p, lif->ionic->idev.dev_info_regs->words, size);
-+	memcpy_fromio(p + offset, lif->ionic->idev.dev_info_regs->words, size);
- 
-+	offset += size;
- 	size = IONIC_DEV_CMD_REG_COUNT * sizeof(u32);
--	memcpy_fromio(p, lif->ionic->idev.dev_cmd_regs->words, size);
-+	memcpy_fromio(p + offset, lif->ionic->idev.dev_cmd_regs->words, size);
- }
- 
- static int ionic_get_link_ksettings(struct net_device *netdev,
+-static u32 hwmon_attributes[] = {
++static u32 hwmon_attributes[hwmon_max] = {
+ 	[hwmon_chip] = HWMON_C_REGISTER_TZ,
+ 	[hwmon_temp] = HWMON_T_INPUT | HWMON_T_LABEL,
+ 	[hwmon_in] = HWMON_I_INPUT | HWMON_I_LABEL,
 -- 
 2.25.1
 
