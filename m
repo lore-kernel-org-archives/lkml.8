@@ -2,109 +2,112 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30947C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F49C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05A07206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A75206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:55:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bYCwTD5k"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bMgExa5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbgG0Mxk (ORCPT
+        id S1728566AbgG0Mzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:53:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbgG0Mxk (ORCPT
+        Mon, 27 Jul 2020 08:55:45 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:29484 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728387AbgG0Mzp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:53:40 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB14EC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:53:38 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id p14so13714011wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=OKBC78fRUsagIQPVuNlcQcC33WynfMSk7xXsZ9n82rA=;
-        b=bYCwTD5kGiJc9stvrIrWpJi8eMtSpUPEF24UjTrPUeYxuhFn0Rgk6BtH8i2UHYueEl
-         NOD5q1z7ArkNw54bgJXM37dM0RHqB2/Znl38N7/85Wc+Hd6oslBMQiCgM1jb7gcjM3+o
-         ZFq9mouI2Cgi/l3icqbcls2SXpvfFarLsa2Pd2pBxQXRO295JioWV9H4VfgRQ2C8R7Ry
-         ayB6wOnvEnUVF9nREAR1Lhivz9CsEII2+C/aNnG6BOHH6MVUNDPDHOsIu6pox/MbWSSU
-         bJcrWu2VhhMsDLR4O6rNpX3qm3TJwSdsuvXBFZrv7lMyUaeHO55u8/a0RMc8j56slAm/
-         X+Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=OKBC78fRUsagIQPVuNlcQcC33WynfMSk7xXsZ9n82rA=;
-        b=U9Bfc1mp6U6XEbjK1nXfMoF9EPJE9gDIXSxw5IyYPXuzQF/XzLNDP2EQYPXMKAc2+k
-         Fqorql/Gc+g6joGuZULqWdJFK03VNwnXJuuYheQoKnYjO1RJ3UhPfA/GaGj8y7zWdhpY
-         +Ap7sWktMUKzWN26jGqYc0XfrsCjjfVgMKqf9vqQTwTZJ1fDQt+Hcpzlb5ipfoEXKYXp
-         SPIOEz5JXieZX1GviCVeM1Mx8/SnmahGHcYQv7SOZuE4sIw2mx6DmASBnqcCdWfrdeBe
-         QcOBC5N7jVsgpTBQ9T+oGakjiJ5tteZSq9t8vvzWaUCjgnbwQ0yz3hPoL67LbeaK4WKZ
-         8lqA==
-X-Gm-Message-State: AOAM530TPP+JRBTrimtk45xaORpFm7yvUZUTctvwHSebvdvRA/kqRoe8
-        Trul/kNuObjcP5zVx5WK77RFVw==
-X-Google-Smtp-Source: ABdhPJzTYBZjZp631h4EWSAdPJc21hD2BcQhj8E+Hf8SShiAji9/FKFYk4MV1Y+v4RqIjdAmqmAF6g==
-X-Received: by 2002:a1c:1d2:: with SMTP id 201mr19142377wmb.132.1595854417540;
-        Mon, 27 Jul 2020 05:53:37 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id c16sm12689205wrx.73.2020.07.27.05.53.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 05:53:36 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 13:53:35 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Xu Wang <vulab@iscas.ac.cn>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] intel_soc_pmic_mrfld: simplify the return expression of
- intel_scu_ipc_dev_iowrite8()
-Message-ID: <20200727125335.GQ1850026@dell>
-References: <20200727030407.8820-1-vulab@iscas.ac.cn>
- <20200727120908.GR3703480@smile.fi.intel.com>
+        Mon, 27 Jul 2020 08:55:45 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RCb6Fo013340;
+        Mon, 27 Jul 2020 14:55:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=mjY/7dksrDC7M4Ud2YDvD9iqbnxWCHmQNoGB5GRnp2M=;
+ b=bMgExa5ztW937ye1ZcAy14vLwvQA+T0FDcWOyldE4Ee+O+rx6KLOtd/1W9f6ebDxkn1U
+ st+MEnKYNB4Khb3BAKF91tFIshx8+JyOOERJth7f+BKjSVx1OGyn0SRmrPokUIfGU+0t
+ wonz8gwJcgwlOpoZa1R+vX/doMX4vGmrxqUUxiflw5+m7EfeYbT/4qswjVtkyMH8JLBR
+ re2Yjdi5dPsseWdAvg75nJqhV2XUKKBtqjzBbqktITMVU8uF/vX53xg15ZzR4789JnCv
+ f1qVMbP5hZf26Pd2Am81CQtKClTVee9e/VmyE4UmdU8cu94oZRPQf0MTHTSjg6xsnH97 Uw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32g9v99cqk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 14:55:31 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6226710002A;
+        Mon, 27 Jul 2020 14:55:30 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4D2EA2BF9B4;
+        Mon, 27 Jul 2020 14:55:30 +0200 (CEST)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jul
+ 2020 14:55:29 +0200
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1473.003; Mon, 27 Jul 2020 14:55:29 +0200
+From:   Patrice CHOTARD <patrice.chotard@st.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH 4/7] usb: dwc3: convert to
+ devm_platform_ioremap_resource_byname
+Thread-Topic: [PATCH 4/7] usb: dwc3: convert to
+ devm_platform_ioremap_resource_byname
+Thread-Index: AQHWX/0W9J7PYecCTkOfnceP/F29OqkbSOeA
+Date:   Mon, 27 Jul 2020 12:55:29 +0000
+Message-ID: <7e8ab37e-d94b-ac7d-3642-b82329c653cd@st.com>
+References: <1595404275-8449-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1595404275-8449-4-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1595404275-8449-4-git-send-email-chunfeng.yun@mediatek.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <66DBBCCCBDA2664D99A68A00CFC169EC@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200727120908.GR3703480@smile.fi.intel.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_08:2020-07-27,2020-07-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020, Andy Shevchenko wrote:
-
-> On Mon, Jul 27, 2020 at 03:04:07AM +0000, Xu Wang wrote:
-> > Simplify the return expression.
-> 
-> I understand your intention, but I would rather leave as is.
-> It's a bit more helpful in the original form in case to add some debugging.
-
-If you wish to add debugging, you'll have to add the extra line of
-code yourself. :)
-
-> It also keep it symmetrical with read() counterpart.
-
-Can this be fixed-up too?
-
-> That said, I'm not objecting the change if Lee finds it good enough.
-> 
-> > Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-> > ---
-> >  drivers/mfd/intel_soc_pmic_mrfld.c | 7 +------
-> >  1 file changed, 1 insertion(+), 6 deletions(-)
-
-Applied, thanks.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+SGkgQ2h1bmZlbmcNCg0KT24gNy8yMi8yMCA5OjUxIEFNLCBDaHVuZmVuZyBZdW4gd3JvdGU6DQo+
+IFVzZSBkZXZtX3BsYXRmb3JtX2lvcmVtYXBfcmVzb3VyY2VfYnluYW1lKCkgdG8gc2ltcGxpZnkg
+Y29kZQ0KPg0KPiBDYzogUGF0cmljZSBDaG90YXJkIDxwYXRyaWNlLmNob3RhcmRAc3QuY29tPg0K
+PiBTaWduZWQtb2ZmLWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+
+DQo+IC0tLQ0KPiAgZHJpdmVycy91c2IvZHdjMy9kd2MzLXN0LmMgfCA0ICsrLS0NCj4gIDEgZmls
+ZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3VzYi9kd2MzL2R3YzMtc3QuYyBiL2RyaXZlcnMvdXNiL2R3YzMvZHdjMy1z
+dC5jDQo+IGluZGV4IGM2ODI0MjAuLmU3MzNiZTggMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvdXNi
+L2R3YzMvZHdjMy1zdC5jDQo+ICsrKyBiL2RyaXZlcnMvdXNiL2R3YzMvZHdjMy1zdC5jDQo+IEBA
+IC0yMDYsOCArMjA2LDggQEAgc3RhdGljIGludCBzdF9kd2MzX3Byb2JlKHN0cnVjdCBwbGF0Zm9y
+bV9kZXZpY2UgKnBkZXYpDQo+ICAJaWYgKCFkd2MzX2RhdGEpDQo+ICAJCXJldHVybiAtRU5PTUVN
+Ow0KPiAgDQo+IC0JcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlX2J5bmFtZShwZGV2LCBJT1JF
+U09VUkNFX01FTSwgInJlZy1nbHVlIik7DQo+IC0JZHdjM19kYXRhLT5nbHVlX2Jhc2UgPSBkZXZt
+X2lvcmVtYXBfcmVzb3VyY2UoZGV2LCByZXMpOw0KPiArCWR3YzNfZGF0YS0+Z2x1ZV9iYXNlID0N
+Cj4gKwkJZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlX2J5bmFtZShwZGV2LCAicmVnLWds
+dWUiKTsNCj4gIAlpZiAoSVNfRVJSKGR3YzNfZGF0YS0+Z2x1ZV9iYXNlKSkNCj4gIAkJcmV0dXJu
+IFBUUl9FUlIoZHdjM19kYXRhLT5nbHVlX2Jhc2UpOw0KPiAgDQoNClJldmlld2VkLWJ5OiBQYXRy
+aWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+DQoNClRoYW5rcw0KDQpQYXRyaWNl
+DQo=
