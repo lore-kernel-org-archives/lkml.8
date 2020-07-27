@@ -2,209 +2,206 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E665AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A91AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB45920714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D2C2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:03:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RcvyZM8o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgG0MDR (ORCPT
+        id S1728227AbgG0MD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:03:17 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:47543 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728078AbgG0MDQ (ORCPT
+        Mon, 27 Jul 2020 08:03:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbgG0MD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:03:16 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MIMXC-1k3NuY190O-00EKUr; Mon, 27 Jul 2020 14:03:14 +0200
-Received: by mail-qk1-f180.google.com with SMTP id j187so14875609qke.11;
-        Mon, 27 Jul 2020 05:03:13 -0700 (PDT)
-X-Gm-Message-State: AOAM533vcq9HHCeOtxxuXp9nKyaIPoPsv2/0lVI3fLwKdvbKNhYEJHqj
-        UBa+oBPQorQSlW4XJ0OJq0bNdVF4zQUMcPoyg5o=
-X-Google-Smtp-Source: ABdhPJydGNaPbQYPQdZATnOhyJECt4gM7ebVNHN/s58MfHpiqyeZg0LpWkWDpFJ/kGqnCHjmw5AV+vpIysJTLWAzkXQ=
-X-Received: by 2002:a05:620a:2444:: with SMTP id h4mr23543261qkn.352.1595851392985;
- Mon, 27 Jul 2020 05:03:12 -0700 (PDT)
+        Mon, 27 Jul 2020 08:03:27 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5E9DC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:03:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=YYDAeaKa4t/sO3n4UaLOXKVO5eJx6cBV3X1O1+WLrX4=; b=RcvyZM8oyQX0TeQIjDDZ2G0Z3P
+        i+Y/FDbDCqBDLlGR0hT0JjhneQfdMwGjZJRuI2gBoRyfho+lK99X2JhmaRirbgWv7oq20AJTuZ3I4
+        rnWwhwTqvePIwy8ML0NBxgk8u1bdSX3ZoQGOTi1oxSWHhFQ5jKKWdn+r4IArTg5ulIdSiLNQx9W6C
+        8xC54wSRDALGHxrlfgL9OhzUuUa0+vCuCmKKoWeWpiTP2mBCSj3eP/EY2K4jrCbZN24qtyO6ibeXI
+        szwpPR7Vmxp1uPfp04A202vD4JMplVt+bZuZ2RrpwBZWQ6fJGrJtHmUa9W4iYL7KyI000wYzKxiSo
+        cIA/8rQA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k01qY-0005oy-Jy; Mon, 27 Jul 2020 12:03:11 +0000
+Date:   Mon, 27 Jul 2020 13:03:10 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Hillf Danton <hdanton@sina.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: kernel BUG at include/linux/swapops.h:LINE!
+Message-ID: <20200727120310.GJ23808@casper.infradead.org>
+References: <000000000000bc4fd705a6e090e2@google.com>
+ <0000000000004c38cd05aad1d13f@google.com>
+ <20200720165144.93189f7825bd28e234a42cb8@linux-foundation.org>
+ <20200723073744.5268-1-hdanton@sina.com>
+ <20200724111311.rcjqigtjqpkenxg6@box>
+ <20200726164904.GG23808@casper.infradead.org>
+ <20200727103140.xycdx6ctecomqsoe@box>
 MIME-Version: 1.0
-References: <20200727112236.8199-1-lars.povlsen@microchip.com>
-In-Reply-To: <20200727112236.8199-1-lars.povlsen@microchip.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 14:02:56 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3WJTKH7-KGgp7CuhZv_wtrtY1k+1LEL-62_Rj+wqbrGQ@mail.gmail.com>
-Message-ID: <CAK8P3a3WJTKH7-KGgp7CuhZv_wtrtY1k+1LEL-62_Rj+wqbrGQ@mail.gmail.com>
-Subject: Re: [PATCH linux-next] clk: sparx5: Review changes
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:465JAMwYQa9HIm4CivSQ/S/sK6bLJowniVJSY13POUZJPhe/UdJ
- 7dbmVCEz9a643FvD0FBn095gmv8iRBeKqX2skW6BWkF2qaWn2UH4qGDXQUtPQt6NSZLRiP/
- p2Zt/xPeUaZ4t3WHYpx5OLTk6ahjSCWb1xxOtUD/FT3pA/V/J/g5Qz9Y4jF/MJfyghWXv5r
- QZUT2T6Rz4LQ/pBXm7wJA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5B+5thkMcBg=:a6wSIwMOIhetIaf11yCBjD
- ztoxN+ptE5pFQlWDZYRIb2YEVO/pJBNqglXgtmyBuHhBH2l0v9JLfbdfP3W4mwJxtD9oGxGSz
- U/JRTc34LKOuhMyUpQESV30eimaSomHFH9Hrsf3J3oMM7hNEELizfv8nlBKN3XynbHQGPaCEe
- uP6qeXYvAT/gs9ZDMwhkNezAidigsxyL/6WXU7QNCXRliNR55D20Naf3XVtzI95lhe6FD/QWm
- TJ2hNdbyKfG0zZd2/k1fhBKxNMn2wLxYsvLBVTHiKG+zxKCpZMz4wxTDukyEPBX7B3dqfjHsv
- 1RnEnEUy2nLqnGkhikvvaZuJ+0IhJORo5uyyym4SgVzNkTrnVuZOMGGMkUTgTqeuFtgNmlGbu
- 9Ik+gH2LMFZfikUwlqicoQtVjNy7QIi9Wzxohp1iobqQJeoxgHsEqpr0Xbe8p8sdPPh/qjCqK
- zspddDoNpRG6A7Z9WkLKXdFIFn8t75Nf7z1u3bMNmkJiyEQzklEyoQQ1TQX7aAoykq9xt542z
- nakU4nHzv7gnPjD2EHDlwARpsCb29vI4slVHgLni2xWpsUzgXLdZdbVh+qlP7KuamiJ/9x7rN
- 6u7hFoB1qbmwI7PCJ4XkbU+fih8scAqg4xOdCEQ4vO663MgArsmH18HXL+/959pMqqjX2+N/3
- +B/Jrb8zFMEo+bi8FSWgwYEd+PqoEp6JFUAIeNUwCtnSQzQnoaYuyYfPRberMAM7iyTHdaMag
- mqTwhmyFZ3pAMXYnDGSbNPviBaHQtPK3Wq1g8VMAeWaoS+rRDE8dXjYXaYyzo+LDb1YrsYYXw
- 704KacatUzHSrpvtK2POnoOF55jUmL908MV1909O+blxdX7z/c71XCQiq4EtCB0wDjVock1A5
- VI0o8BADF+K1t2lomyPdRJFx5+DEV4gu6xpOQ5jw9yF21GWKw7htvbTuzVSez+emyTUxNZAPb
- 6kSKqNdhF9YKI9WWntxzrxYoy1Pnd56wpu7Dg4WOJqHuDqRSR0N+N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727103140.xycdx6ctecomqsoe@box>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 1:22 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
->
-> This address the review comments for the sparx5 clk driver from Stephen
-> Boyd <sboyd@kernel.org>:
->
->  - Remove unused include of of_address.h
->  - Remove unused member in s5_hw_clk struct
->  - Changed type (to unsigned long) for freq in s5_pll_conf struct
->  - Use .parent_data instead of looking up parent name
->  - Use devm_of_clk_add_hw_provider
->  - Some minor comsmetics
->
-> The patch is intended for linux-next (incremental), as the original
-> driver was already merged.
->
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+On Mon, Jul 27, 2020 at 01:31:40PM +0300, Kirill A. Shutemov wrote:
+> On Sun, Jul 26, 2020 at 05:49:04PM +0100, Matthew Wilcox wrote:
+> > On Fri, Jul 24, 2020 at 02:13:11PM +0300, Kirill A. Shutemov wrote:
+> > > On Thu, Jul 23, 2020 at 03:37:44PM +0800, Hillf Danton wrote:
+> > > > 
+> > > > On Tue, 21 Jul 2020 14:11:31 +0300 Kirill A. Shutemov wrote:
+> > > > > On Mon, Jul 20, 2020 at 04:51:44PM -0700, Andrew Morton wrote:
+> > > > > > On Sun, 19 Jul 2020 14:10:19 -0700 syzbot wrote:
+> > > > > > 
+> > > > > > > syzbot has found a reproducer for the following issue on:
+> > > > > > > 
+> > > > > > > HEAD commit:    4c43049f Add linux-next specific files for 20200716
+> > > > > > > git tree:       linux-next
+> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=12c56087100000
+> > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=2c76d72659687242
+> > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=c48f34012b06c4ac67dd
+> > > > > > > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1344abeb100000
+> > > > > > > 
+> > > > > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > > > > > Reported-by: syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com
+> > > > > > 
+> > > > > > Thanks.
+> > > > > > 
+> > > > > > __handle_mm_fault
+> > > > > >   ->pmd_migration_entry_wait
+> > > > > >     ->migration_entry_to_page
+> > > > > > 
+> > > > > > stumbled onto an unlocked page.
+> > > > > > 
+> > > > > > I don't immediately see a cause.  Perhaps Matthew's "THP prep patches",
+> > > > > > perhaps something else.
+> > > > > > 
+> > > > > > Is it possible to perform a bisection?
+> > > > > 
+> > > > > Maybe it's related to the new lock_page_async()?
+> > > > 
+> > > > Or is there likely the window that after copy_huge_pmd() the src pmd migrate
+> > > > entry is removed and the page unlocked but the dst is not?
+> > > 
+> > > No.
+> > > 
+> > > copy_huge_pmd() runs with exclusive mmap_lock on the source side and
+> > > destination side is not running yet.
+> > 
+> > The one I'm hitting is huge related though.
+> > 
+> > I added this debug:
+> > 
+> > +++ b/include/linux/swapops.h
+> > @@ -165,8 +165,9 @@ static inline struct page *device_private_entry_to_page(swp_entry_t entry)
+> >  #ifdef CONFIG_MIGRATION
+> >  static inline swp_entry_t make_migration_entry(struct page *page, int write)
+> >  {
+> > -       BUG_ON(!PageLocked(compound_head(page)));
+> > +       VM_BUG_ON_PAGE(!PageLocked(page), page);
+> >  
+> > +if (PageCompound(page)) printk("pfn %lx order %d\n", page_to_pfn(page), thp_order(thp_head(page)));
+> >         return swp_entry(write ? SWP_MIGRATION_WRITE : SWP_MIGRATION_READ,
+> >                         page_to_pfn(page));
+> >  }
+> > @@ -194,7 +195,11 @@ static inline struct page *migration_entry_to_page(swp_entry_t entry)
+> >          * Any use of migration entries may only occur while the
+> >          * corresponding page is locked
+> >          */
+> > -       BUG_ON(!PageLocked(compound_head(p)));
+> > +       if (!PageLocked(p)) {
+> > +               dump_page(p, "not locked");
+> > +               printk("swap entry %d.%lx\n", swp_type(entry), swp_offset(entry));
+> > +               BUG();
+> > +       }
+> >         return p;
+> >  }
+> >  
+> > 
+> > and got useful output (while running generic/086):
+> > 
+> > 1457 086 (20181): drop_caches: 3
+> > 1457 page:00000000a216ae9a refcount:2 mapcount:0 mapping:000000009ba7bfed index:0x2227 pfn:0x229e7
+> > 1457 aops:def_blk_aops ino:0
+> > 1457 flags: 0x4000000000002030(lru|active|private)
+> > 1457 raw: 4000000000002030 fffff5b4416b5a48 fffff5b4408a7988 ffff9e9c34848578
+> > 1457 raw: 0000000000002227 ffff9e9bd18f0d00 00000002ffffffff 0000000000000000
+> > 1457 page dumped because: not locked
+> > 1457 swap entry 30.229e7
+> > 1457 ------------[ cut here ]------------
+> > 1457 kernel BUG at include/linux/swapops.h:201!
+> > 1457 invalid opcode: 0000 [#1] SMP PTI
+> > 1457 CPU: 3 PID: 646 Comm: check Kdump: loaded Tainted: G        W         5.8.0-rc6-00067-gd8b18bdf9870-dirty #355
+> > 1457 Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+> > 1457 RIP: 0010:__migration_entry_wait+0x109/0x110
+> > [...]
+> > 
+> > Looking back in the trace, I see:
+> > 
+> > ...
+> > 1457 pfn 229e5 order 9
+> > 1457 pfn 229e6 order 9
+> > 1457 pfn 229e7 order 9
+> > 1457 pfn 229e8 order 9
+> > 1457 pfn 229e9 order 9
+> > ...
+> > 
+> > so I would say we have a refcount problem.  I've probably made it worse by
+> > creating more THPs, but I don't think I'm the originator of the problem.
+> > 
+> > I know very little about the migration code today.  I suspect I'm going
+> > to have to learn about it next week.
+> 
+> It would be interesting to know if the migration entires ever got removed
+> for pfn. I mean if remove_migration_pte() got called for it.
+> 
+> It can be rmap issue too. Maybe it misses PMD on remove_migration_ptes()
+> or something.
 
-Hi Lars, thank you for addressing these!
+It's not mapped with a PMD.  I tweaked my debugging slightly:
 
-Generally speaking, you should avoid having patches that list a
-number of unrelated things that are done by a single commit.
+ static inline swp_entry_t make_migration_entry(struct page *page, int write)
+ {
+-       BUG_ON(!PageLocked(compound_head(page)));
++       VM_BUG_ON_PAGE(!PageLocked(page), page);
+ 
++if (PageHead(page)) dump_page(page, "make entry");
++if (PageTail(page)) printk("pfn %lx order %d\n", page_to_pfn(page), thp_order(thp_head(page)));
 
-Splitting this up into six patches is probably a little too much,
-but maybe you can find a better balance. What I'd like to see
-is to split the purely cosmetic changes from those that might
-actually change the behavior, and then for each patch that
-changes something non-obvious, explain why this was done.
+1523 page:0000000006f62206 refcount:490 mapcount:1 mapping:0000000000000000 index:0x562b12a00 pfn:0x1dc00
+1523 head:0000000006f62206 order:9 compound_mapcount:0 compound_pincount:0
+1523 anon flags: 0x400000000009003d(locked|uptodate|dirty|lru|active|head|swapbacked)
+1523 raw: 400000000009003d ffffecfd41301308 ffffecfd41b08008 ffff9e9971c00059
+1523 raw: 0000000562b12a00 0000000000000000 000001ea00000000 0000000000000000
+1523 page dumped because: make entry
+1523 pfn 1dc01 order 9
+1523 pfn 1dc02 order 9
+1523 pfn 1dc03 order 9
+...
 
-     Arnd
-
->  drivers/clk/clk-sparx5.c | 31 +++++++------------------------
->  1 file changed, 7 insertions(+), 24 deletions(-)
->
-> diff --git a/drivers/clk/clk-sparx5.c b/drivers/clk/clk-sparx5.c
-> index c2e7aa0214ebd..0fad0c1a01862 100644
-> --- a/drivers/clk/clk-sparx5.c
-> +++ b/drivers/clk/clk-sparx5.c
-> @@ -12,7 +12,6 @@
->  #include <linux/clk-provider.h>
->  #include <linux/bitfield.h>
->  #include <linux/of.h>
-> -#include <linux/of_address.h>
->  #include <linux/slab.h>
->  #include <linux/platform_device.h>
->  #include <dt-bindings/clock/microchip,sparx5.h>
-> @@ -38,7 +37,6 @@ static const char *clk_names[N_CLOCKS] = {
->  struct s5_hw_clk {
->         struct clk_hw hw;
->         void __iomem *reg;
-> -       int index;
->  };
->
->  struct s5_clk_data {
-> @@ -47,7 +45,7 @@ struct s5_clk_data {
->  };
->
->  struct s5_pll_conf {
-> -       int freq;
-> +       unsigned long freq;
->         u8 div;
->         bool rot_ena;
->         u8 rot_sel;
-> @@ -208,8 +206,9 @@ static unsigned long s5_pll_recalc_rate(struct clk_hw *hw,
->                 conf.rot_sel = FIELD_GET(PLL_ROT_SEL, val);
->
->                 conf.freq = s5_calc_freq(parent_rate, &conf);
-> -       } else
-> +       } else {
->                 conf.freq = 0;
-> +       }
->
->         return conf.freq;
->  }
-> @@ -246,14 +245,13 @@ static struct clk_hw *s5_clk_hw_get(struct of_phandle_args *clkspec, void *data)
->  static int s5_clk_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
-> -       struct device_node *np = dev->of_node;
->         int i, ret;
->         struct s5_clk_data *s5_clk;
-> -       const char *parent_name;
-> +       struct clk_parent_data pdata = { .index = 0 };
->         struct clk_init_data init = {
->                 .ops = &s5_pll_ops,
-> -               .parent_names = &parent_name,
->                 .num_parents = 1,
-> +               .parent_data = &pdata,
->         };
->
->         s5_clk = devm_kzalloc(dev, sizeof(*s5_clk), GFP_KERNEL);
-> @@ -264,18 +262,11 @@ static int s5_clk_probe(struct platform_device *pdev)
->         if (IS_ERR(s5_clk->base))
->                 return PTR_ERR(s5_clk->base);
->
-> -       parent_name = of_clk_get_parent_name(np, 0);
-> -       if (!parent_name) {
-> -               dev_err(dev, "%pOFn: missing parent clock\n", np);
-> -               return -EINVAL;
-> -       }
-> -
->         for (i = 0; i < N_CLOCKS; i++) {
->                 struct s5_hw_clk *s5_hw = &s5_clk->s5_hw[i];
->
->                 init.name = clk_names[i];
-> -               s5_hw->index = i;
-> -               s5_hw->reg = s5_clk->base + (i * sizeof(u32));
-> +               s5_hw->reg = s5_clk->base + (i * 4);
->                 s5_hw->hw.init = &init;
->                 ret = devm_clk_hw_register(dev, &s5_hw->hw);
->                 if (ret) {
-> @@ -285,14 +276,7 @@ static int s5_clk_probe(struct platform_device *pdev)
->                 }
->         }
->
-> -       return of_clk_add_hw_provider(np, s5_clk_hw_get, s5_clk);
-> -}
-> -
-> -static int s5_clk_remove(struct platform_device *pdev)
-> -{
-> -       of_clk_del_provider(pdev->dev.of_node);
-> -
-> -       return 0;
-> +       return devm_of_clk_add_hw_provider(dev, s5_clk_hw_get, s5_clk);
->  }
->
->  static const struct of_device_id s5_clk_dt_ids[] = {
-> @@ -303,7 +287,6 @@ MODULE_DEVICE_TABLE(of, s5_clk_dt_ids);
->
->  static struct platform_driver s5_clk_driver = {
->         .probe  = s5_clk_probe,
-> -       .remove = s5_clk_remove,
->         .driver = {
->                 .name = "sparx5-clk",
->                 .of_match_table = s5_clk_dt_ids,
-> --
-> 2.27.0
+Notice that it's an anonymous page, so it's not related to my work.
