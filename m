@@ -2,182 +2,288 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A4BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C9CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58046206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A8E206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:56:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="aWuJNc/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729518AbgG0OzX (ORCPT
+        id S1729558AbgG0O4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:55:23 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:36535 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728593AbgG0OzX (ORCPT
+        Mon, 27 Jul 2020 10:56:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbgG0O4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:55:23 -0400
-Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M1rGy-1jxrbk3MBU-002EwH; Mon, 27 Jul 2020 16:55:21 +0200
-Received: by mail-qt1-f176.google.com with SMTP id a32so12388268qtb.5;
-        Mon, 27 Jul 2020 07:55:20 -0700 (PDT)
-X-Gm-Message-State: AOAM533ZWz0enoIgMN0JE8JFROIGl461VIVcMTiHe2Z7S1MsrzAZZ1fy
-        W0aPOd+sqKZ2zAnni0baLsQQ+DfCTt131kJTXJA=
-X-Google-Smtp-Source: ABdhPJx9V72QTymo8w1nyOPNr9QDIb1f85k08B5c7bfE5ycZlPzb1BLAKjqSaYTOQzF9HCrRgrx1SHcX9er4/B6hPNo=
-X-Received: by 2002:ac8:4652:: with SMTP id f18mr4923449qto.142.1595861719558;
- Mon, 27 Jul 2020 07:55:19 -0700 (PDT)
+        Mon, 27 Jul 2020 10:56:36 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80450C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:56:36 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id j20so9194495pfe.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version;
+        bh=OlYVjQkhuW+DpvyGdYp6ANgYaCy9yrWHvu5eQ5Kq3qw=;
+        b=aWuJNc/PDTimiz7m+gzMYSslvoJtRmOD3zYjtFk2VleGD8jWaUrMjVwZyTI1HS4KwY
+         Bi92LLLwOeAUy7w19cPf1n27UpLURH2SAfQIQAkpXHwd0uRurIpEabtWmBbXRsqOE/c1
+         7UqrnwTrFMwpsQKClit/TG1A8zh2mgG1bo5jFjf+FenoCccDymS+C5BHLWyqSYPLmmbK
+         KgJNkf9/0I8O7I3G403Zd3AsgFyRTz3zChV1TdebRrK5Ls2Q5EaXC00kHacuYh8UyBFG
+         wxYKp9ai1Enfd5exK3AFATIssAqB1m7/xAS6qqT2MaiGVaOu9Fm31Ob1EI+K31D+uugV
+         FD/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version;
+        bh=OlYVjQkhuW+DpvyGdYp6ANgYaCy9yrWHvu5eQ5Kq3qw=;
+        b=pJN1+WbnuTGTK0uqtT0w1A0XZLyT/Jys7EperIoaNtJwXfRodQigHZAhbdQNA9G/9k
+         zDVh/CBLmLiOZIRZkBpU2IPseF9VBFgnpiz+dViDji0c+x2WM9qmuAjTRkmFP5jClFw+
+         Zv3a6Ki6sq1EvDTPx3BCHqeG9FrBLFB4CyMmXwbvjr2qdO/m8BLzpNWLwFo25rkStjzB
+         OpabxSOI3BadpWrgTYZKHNLqRzUU+WfAspWpCghrBbsEIXx74M5ME3spzuriSLuGQ5lC
+         4rT01MluxbClOZUI76LZcxkyEsifGoD6t6jpQ4RR/OgB1boG9cBi52TqC4najWX89/Fe
+         254g==
+X-Gm-Message-State: AOAM532QCajicxzg6iF7vrxiugU94LCim6uIu8AOVuUkiioTP/fKs0m9
+        TVb8M8qUwU0O+xbdKoEE241mOw==
+X-Google-Smtp-Source: ABdhPJy/H3S4qMTMVLHI4lHou5D0M1ramtReWu7AUnWA1ozqw7tS/AFiD98OXLRx8bjSOhOKtNXtOg==
+X-Received: by 2002:a62:3446:: with SMTP id b67mr19665682pfa.184.1595861795846;
+        Mon, 27 Jul 2020 07:56:35 -0700 (PDT)
+Received: from [192.168.1.102] (c-24-20-148-49.hsd1.or.comcast.net. [24.20.148.49])
+        by smtp.gmail.com with ESMTPSA id w2sm3464735pfu.85.2020.07.27.07.56.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Jul 2020 07:56:35 -0700 (PDT)
+From:   "Sean V Kelley" <sean.v.kelley@intel.com>
+To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
+Cc:     bhelgaas@google.com, rjw@rjwysocki.net, tony.luck@intel.com,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/9] Add RCEC handling to PCI/AER
+Date:   Mon, 27 Jul 2020 07:56:35 -0700
+X-Mailer: MailMate (1.13.1r5671)
+Message-ID: <E04FFB14-95BA-4D04-BC53-037B5EB2FE80@intel.com>
+In-Reply-To: <20200727133736.00001066@Huawei.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+ <20200727133736.00001066@Huawei.com>
 MIME-Version: 1.0
-References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
- <20200726222703.102701-1-yepeilin.cs@gmail.com> <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
- <20200727131608.GD1913@kadam> <CAK8P3a3+9Gr6G6KDWu=iW3316O9cPH+XupBBajJaxrq20xQcyQ@mail.gmail.com>
- <20200727144335.GB2571@kadam>
-In-Reply-To: <20200727144335.GB2571@kadam>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 16:55:03 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1q-6aWWs0E0BeGo2S2jcQ7ELU2Q0o4Utc4Qb9J8An5kQ@mail.gmail.com>
-Message-ID: <CAK8P3a1q-6aWWs0E0BeGo2S2jcQ7ELU2Q0o4Utc4Qb9J8An5kQ@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
- kernel-infoleak in video_put_user()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vandana BN <bnvandana@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:tg/AoHCEOzFAvg7gpivm7llDARO5ETgYItX/UyNLv11Hj+kUEss
- gaoEZqF9Swg/frhxewZMg9np3RCE8raNgC8ifNllb/2kfx9JXS/lpMeXQj+12lADYBftr4C
- 5ZnjmUFYNLZ2i/SKgmvJ3NpOxAVewrdOxuX169B0fKxB5Joo/4933kfNlVhejQc+DYsIkdT
- QfzF1CVkSuqzlvs0yjJ4A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/gJ4HQPTSlA=:wK7KjLlZvMxrMBqGlgrOEl
- C6EwE3AgVo1zSP7IpVa33AMGlCVKQg5Zc5b9knmZCKjhTTey8rr324tkm4gRqtg6zOn7tHg8v
- uZfE4F8RVgfydtO7QcBkqd3ThzLh34apHEeAE+czrGQMiPrD1RYdni9lxILFSEvQ+TluXsaZI
- +6fZFucgrJlAYi6uTL1rm24BQZ0S4YIl2qh42fBL2yo2yO7gF785b/QidG/euLr8nEJlnrC+e
- ybyI+PGXUaHkqvL+vnzNGHzFu4bkFpMK83qR5NnLfyQw+qsTQC4s3EJ54wZ2fyPbTvHlQi5FV
- 7eIHAwkCI9z9gFD8RBGP3679fF3w+KhW7fUQwMDQrIeflsgLLwjaZZCdfkfF5WPbksoX64U9u
- f6VTTxWTt5CLVNzoOmv2Vvvd5KQKzSSYaX9+p1QJeDZ0mWP35c6Ll/jhqDgEK1VZ9+W0nhxJB
- y7c8hcpMbS/0rthFWxJkrcwU+rBHgRHf92zf1lMd71o0ZEQz5+1h6WCEnZ5isX4D6ou+pACeO
- yiOPOn1K9kLNB6HupDV9qO5CX3SGV7yTJbaouNVcQ5rxEUFYAExaNxEX7P3adupDVxPX6oE2A
- 3evrpnfcgNPf2TvbGOa+yCq24tELJ3054emLX/JE35o0kvIg36miAcSUOGOVawj/yr+QRx9qn
- TjKz2c6A7iKOBVbumWnUDkznQnH3s105E36io3PEmrxHoOPzcuy1j7aHWKPMvHRMHNgr02ds9
- 8hOf+N9I0cp1rED498wkQfcRm19Cr+539pKmooSvRWipVtCZDAM4Q13WMaJ0kusE58GHM9ncs
- Hyyw/oX+bYYy01LUdJ7lBed2eyMFtMDPpxsImOQGc2ZrwRU3WlOi+oCKT4HrMTkOFsZFIw1cw
- H/ERaHBb2Lut0TYrgrsIQo83fZVABCuU4aaClyF5VXn/rjJSNluW8GGdg0PZLnisI2zYThrTa
- lwLC2cn7oHiSCyeUHOnkIGFuSZSmhuoQRQkYEz+8n12UyceBN5ADh
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 4:43 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> On Mon, Jul 27, 2020 at 04:05:38PM +0200, Arnd Bergmann wrote:
-> > On Mon, Jul 27, 2020 at 3:16 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > >
-> > > On Mon, Jul 27, 2020 at 09:25:16AM +0200, Arnd Bergmann wrote:
-> > > > On Mon, Jul 27, 2020 at 12:28 AM Peilin Ye <yepeilin.cs@gmail.com> wrote:
-> > > > >
-> > > > > video_put_user() is copying uninitialized stack memory to userspace due
-> > > > > to the compiler not initializing holes in the structures declared on the
-> > > > > stack. Fix it by initializing `ev32` and `vb32` using memset().
-> > > > >
-> > > > > Reported-and-tested-by: syzbot+79d751604cb6f29fbf59@syzkaller.appspotmail.com
-> > > > > Link: https://syzkaller.appspot.com/bug?extid=79d751604cb6f29fbf59
-> > > > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > > > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> > > >
-> > > > Thanks a lot for addressing this! I now see that I actually created a similar
-> > > > bugfix for it back in January, but for some reason that got stuck in my
-> > > > backlog and I never wrote a proper description for it or sent it out to the
-> > > > list, sorry about that. I would hope we could find a way to have either
-> > > > the compiler or sparse warn if we copy uninitialized data to user space,
-> > > > but we now don't even check for that within the kernel any more.
-> > >
-> > > Here are my latest warnings on linux-next from Friday.
-> >
-> > Ah, I forgot you had that kind of list already, thanks for checking!
-> >
-> > > block/scsi_ioctl.c:707 scsi_put_cdrom_generic_arg() warn: check that 'cgc32' doesn't leak information (struct has a hole after 'data_direction')
-> >
-> > I see no padding in this one, should be fine AFAICT. Any idea why you
-> > get a warning
-> > for this instance?
-> >
->
-> The warning message only prints the first struct hole or uninitialized
-> struct memeber.  ->data_direction in this case.
->
-> block/scsi_ioctl.c
->    646  #ifdef CONFIG_COMPAT
->    647  struct compat_cdrom_generic_command {
->    648          unsigned char   cmd[CDROM_PACKET_SIZE];
->    649          compat_caddr_t  buffer;
->    650          compat_uint_t   buflen;
->    651          compat_int_t    stat;
->    652          compat_caddr_t  sense;
->    653          unsigned char   data_direction;
->
-> There is going to be 3 bytes of padding between this char and the next
-> int.
->
->    654          compat_int_t    quiet;
->    655          compat_int_t    timeout;
->    656          compat_caddr_t  reserved[1];
->    657  };
->    658  #endif
->
-> The bug seems real, but it depends on the compiler of course.
+Hi Jonathan,
 
-Right, I misread the single 'char' in there.
+On 27 Jul 2020, at 5:37, Jonathan Cameron wrote:
 
-
-> > > drivers/input/misc/uinput.c:743 uinput_ff_upload_to_user() warn: check that 'ff_up_compat' doesn't leak information (struct has a hole after 'replay')
-> >
-> > This one hs padding in it and looks broken.
+> On Fri, 24 Jul 2020 10:22:14 -0700
+> Sean V Kelley <sean.v.kelley@intel.com> wrote:
 >
-> No.  This a bug in smatch.  It's memcpy() over the hole, but the check
-> isn't capturing that.  The code is slightly weird...  I could try
-> silence the warning but it would only silence this one false positive so
-> I haven't investigated it.
-
-
-Ah right, and the structure it copies in turn comes from user space
-originally.
-
-> > > drivers/scsi/megaraid/megaraid_mm.c:824 kioc_to_mimd() warn: check that 'cinfo.base' doesn't leak information
-> >
-> > Seems fine due to __packed annotation.
-> >
+>> Root Complex Event Collectors (RCEC) provide support for terminating 
+>> error
+>> and PME messages from Root Complex Integrated Endpoints (RCiEPs).  An 
+>> RCEC
+>> resides on a Bus in the Root Complex. Multiple RCECs can in fact 
+>> reside on
+>> a single bus. An RCEC will explicitly declare supported RCiEPs 
+>> through the
+>> Root Complex Endpoint Association Extended Capability.
+>>
+>> (See PCIe 5.0-1, sections 1.3.2.3 (RCiEP), and 7.9.10 (RCEC Ext. 
+>> Cap.))
+>>
+>> The kernel lacks handling for these RCECs and the error messages 
+>> received
+>> from their respective associated RCiEPs. More recently, a new CPU
+>> interconnect, Compute eXpress Link (CXL) depends on RCEC capabilities 
+>> for
+>> purposes of error messaging from CXL 1.1 supported RCiEP devices.
+>>
+>> DocLink: https://www.computeexpresslink.org/
+>>
+>> This use case is not limited to CXL. Existing hardware today includes
+>> support for RCECs, such as the Denverton microserver product
+>> family. Future hardware will be forthcoming.
+>>
+>> (See Intel Document, Order number: 33061-003US)
+>>
+>> So services such as AER or PME could be associated with an RCEC 
+>> driver.
+>> In the case of CXL, if an RCiEP (i.e., CXL 1.1 device) is associated 
+>> with a
+>> platform's RCEC it shall signal PME and AER error conditions through 
+>> that
+>> RCEC.
+>>
+>> Towards the above use cases, add the missing RCEC class and extend 
+>> the
+>> PCIe Root Port and service drivers to allow association of RCiEPs to 
+>> their
+>> respective parent RCEC and facilitate handling of terminating error 
+>> and PME
+>> messages.
 >
-> It's not related __packed.  Smatch is saying that cinfo.base isn't
-> necessarily initialized.
->
-> drivers/scsi/megaraid/megaraid_mm.c
->    816
->    817                  case MEGAIOC_QADAPINFO:
->    818
->    819                          hinfo = (mraid_hba_info_t *)(unsigned long)
->    820                                          kioc->buf_vaddr;
->    821
->    822                          hinfo_to_cinfo(hinfo, &cinfo);
->
-> hinfo_to_cinfo() is a no-op if hinfo is NULL.  Smatch can't tell if
-> "hinfo" is non-NULL.
+> Silly question number 1.  Why an RFC? I always find it helps to 
+> highlight which
+> bits you are unsure on / want particular input on.
 
-Ok, that sounds fair, I couldn't easily tell either ;-)
+I suppose it was because we were continuing the conversation from 
+discussion on the mailing list.
+And I was not fully sure about the impact to your use case.  No worries, 
+I will remove it.
 
-     Arnd
+>
+> Otherwise, I've left the PME and error injection patches as I don't 
+> really know
+> anything about those two paths.
+>
+> I'll fire up my APEI etc test VMs in the nex day or so and report back 
+> if there
+> any problems with that case (fairly sure there is one in patch 6, 
+> highlighted in
+> review but it is possible I've missed others.
+>
+> It all seems to have come together rather simpler than I was expecting 
+> which is
+> great!
+
+Sounds good, looking forward to your feedback.
+
+Sean
+
+>
+> Thanks,
+>
+> Jonathan
+>
+>
+>>
+>> TESTING:
+>>
+>>    Results:
+>>     1) Show RCiEPs which are associated with RCECs:
+>> 	Run dmesg | grep "RCiEP"
+>> 	Log:
+>> 	[    8.981698] pcieport 0000:e8:00.4: RCiEP(under an RCEC) 
+>> 0000:e8:01.0
+>> 	[    8.988830] pcieport 0000:e8:00.4: RCiEP(under an RCEC) 
+>> 0000:e8:02.0
+>> 	[    8.995956] pcieport 0000:e8:00.4: RCiEP(under an RCEC) 
+>> 0000:e9:00.0
+>> 	[    9.023034] pcieport 0000:ed:00.4: RCiEP(under an RCEC) 
+>> 0000:ed:01.0
+>> 	[    9.030159] pcieport 0000:ed:00.4: RCiEP(under an RCEC) 
+>> 0000:ed:02.0
+>> 	[    9.037282] pcieport 0000:ed:00.4: RCiEP(under an RCEC) 
+>> 0000:ee:00.0
+>> 	[    9.064294] pcieport 0000:f2:00.4: RCiEP(under an RCEC) 
+>> 0000:f2:01.0
+>> 	[    9.071409] pcieport 0000:f2:00.4: RCiEP(under an RCEC) 
+>> 0000:f2:02.0
+>> 	[    9.078526] pcieport 0000:f2:00.4: RCiEP(under an RCEC) 
+>> 0000:f3:00.0
+>> 	[    9.105535] pcieport 0000:f7:00.4: RCiEP(under an RCEC) 
+>> 0000:f7:01.0
+>> 	[    9.112652] pcieport 0000:f7:00.4: RCiEP(under an RCEC) 
+>> 0000:f7:02.0
+>> 	[    9.119774] pcieport 0000:f7:00.4: RCiEP(under an RCEC) 
+>> 0000:f8:00.0
+>>
+>>     2) Inject a correctable error to the RCiEP 0000:e9:00.0
+>> 	Run ./aer_inject <a parameter file as below>:
+>> 	AER
+>> 	PCI_ID 0000:e9:00.0
+>> 	COR_STATUS BAD_TLP
+>> 	HEADER_LOG 0 1 2 3
+>>
+>> 	Log:
+>> 	[  253.248362] pcieport 0000:e8:00.4: aer_inject: Injecting errors 
+>> 00000040/00000000 into device 0000:e9:00.0
+>> 	[  253.260656] pcieport 0000:e8:00.4: AER: Corrected error received: 
+>> 0000:e9:00.0
+>> 	[  253.269919] pci 0000:e9:00.0: AER: PCIe Bus Error: 
+>> severity=Corrected, type=Data Link Layer, (Receiver ID)
+>> 	[  253.282549] pci 0000:e9:00.0: AER:   device [8086:4940] error 
+>> status/mask=00000040/00002000
+>> 	[  253.293937] pci 0000:e9:00.0: AER:    [ 6] BadTLP
+>>
+>>     3) Inject a non-fatal error to the RCiEP 0000:e8:01.0
+>> 	Run ./aer_inject <a parameter file as below>:
+>> 	AER
+>> 	PCI_ID 0000:e8:01.0
+>> 	UNCOR_STATUS COMP_ABORT
+>> 	HEADER_LOG 0 1 2 3
+>>
+>> 	Log:
+>> 	[  288.405326] pcieport 0000:e8:00.4: aer_inject: Injecting errors 
+>> 00000000/00008000 into device 0000:e8:01.0
+>> 	[  288.416881] pcieport 0000:e8:00.4: AER: Uncorrected (Non-Fatal) 
+>> error received: 0000:e8:01.0
+>> 	[  288.427487] igen6_edac 0000:e8:01.0: AER: PCIe Bus Error: 
+>> severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Completer 
+>> ID)
+>> 	[  288.442098] igen6_edac 0000:e8:01.0: AER:   device [8086:0b25] 
+>> error status/mask=00008000/00100000
+>> 	[  288.452869] igen6_edac 0000:e8:01.0: AER:    [15] CmpltAbrt
+>> 	[  288.461118] igen6_edac 0000:e8:01.0: AER:   TLP Header: 00000000 
+>> 00000001 00000002 00000003
+>> 	[  288.471192] igen6_edac 0000:e8:01.0: AER: device recovery 
+>> successful
+>>
+>>     4) Inject a fatal error to the RCiEP 0000:ed:01.0
+>> 	Run ./aer_inject <a parameter file as below>:
+>> 	AER
+>> 	PCI_ID 0000:ed:01.0
+>> 	UNCOR_STATUS MALF_TLP
+>> 	HEADER_LOG 0 1 2 3
+>>
+>> 	Log:
+>> 	[  535.537281] pcieport 0000:ed:00.4: aer_inject: Injecting errors 
+>> 00000000/00040000 into device 0000:ed:01.0
+>> 	[  535.551911] pcieport 0000:ed:00.4: AER: Uncorrected (Fatal) error 
+>> received: 0000:ed:01.0
+>> 	[  535.561556] igen6_edac 0000:ed:01.0: AER: PCIe Bus Error: 
+>> severity=Uncorrected (Fatal), type=Inaccessible, (Unregistered Agent 
+>> ID)
+>> 	[  535.684964] igen6_edac 0000:ed:01.0: AER: device recovery 
+>> successful
+>>
+>>
+>> Jonathan Cameron (1):
+>>   PCI/AER: Extend AER error handling to RCECs
+>>
+>> Qiuxu Zhuo (6):
+>>   pci_ids: Add class code and extended capability for RCEC
+>>   PCI: Extend Root Port Driver to support RCEC
+>>   PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs associated with 
+>> RCEC
+>>   PCI/AER: Apply function level reset to RCiEP on fatal error
+>>   PCI: Add 'rcec' field to pci_dev for associated RCiEPs
+>>   PCI/AER: Add RCEC AER error injection support
+>>
+>> Sean V Kelley (2):
+>>   PCI/AER: Add RCEC AER handling
+>>   PCI/PME: Add RCEC PME handling
+>>
+>>  drivers/pci/pcie/aer.c          | 43 ++++++++++++-----
+>>  drivers/pci/pcie/aer_inject.c   |  5 +-
+>>  drivers/pci/pcie/err.c          | 85 
+>> +++++++++++++++++++++++++++------
+>>  drivers/pci/pcie/pme.c          | 15 ++++--
+>>  drivers/pci/pcie/portdrv.h      |  2 +
+>>  drivers/pci/pcie/portdrv_core.c | 82 +++++++++++++++++++++++++++++++
+>>  drivers/pci/pcie/portdrv_pci.c  | 20 +++++++-
+>>  include/linux/pci.h             |  3 ++
+>>  include/linux/pci_ids.h         |  1 +
+>>  include/uapi/linux/pci_regs.h   |  7 +++
+>>  10 files changed, 232 insertions(+), 31 deletions(-)
+>>
+>> --
+>> 2.27.0
+>>
