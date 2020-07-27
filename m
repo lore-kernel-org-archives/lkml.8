@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2451C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DA4C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7E8A20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE5620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860047;
-	bh=aH9N2X8cK9yWknxgS/kGhUdLd4Tp5DOTt7iEgW0I6Q0=;
+	s=default; t=1595860051;
+	bh=Hs1apUF6pzLa7pMZi6aK6zvEfY1TgSs8aSzgRfjS6aA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OnN3U07omhgrzQsda5exClwwLPZ5XG9/Ga24u1EM8vOlHMmGkM+gw8Gdv4NkRM7jb
-	 GP5wyMD2aTZk3b5E6vkZM5tYNmqltmr0CVCaQOabchy2oX0APljSmMYuoAXTguf7Bc
-	 DzFMO6cPdhCwuecmp1ggqQiehR+jlcqfaqmmbmRs=
+	b=Syka8Z3cOuzqCYr7zdKI6AdPDI7Ms7F9VmNYYH9tsz3Q8uYhu0Ip0RBhANg5B5XnI
+	 ncb41W5k7VUketoiNCwaSbJZWGSGciCI7uQJ7IiJCfDX8h40JQrwwq3bMI6e0Qsj6S
+	 VsFr4y8ZwrLapWv+lqz7uFrZnHgvAi/rK97fDkYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732505AbgG0OZr (ORCPT
+        id S1732477AbgG0OZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:25:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55816 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:25:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731876AbgG0OZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:25:44 -0400
+        id S1732457AbgG0OZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:25:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8421207FC;
-        Mon, 27 Jul 2020 14:25:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47EB2207FC;
+        Mon, 27 Jul 2020 14:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859944;
-        bh=aH9N2X8cK9yWknxgS/kGhUdLd4Tp5DOTt7iEgW0I6Q0=;
+        s=default; t=1595859934;
+        bh=Hs1apUF6pzLa7pMZi6aK6zvEfY1TgSs8aSzgRfjS6aA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xamtOT0S8Nwv2Wew5yJ23K4cw2cz6n9PQ6JLdTtynZDEWRG/p41TFNwwCrfTxG5Gl
-         Gfivwlo3G3KMNzBX08DMkESfWX/43zC6WtQNNmhdCwhf1eJPKhP77hdNz0AnfrJaBH
-         dro+dIntJzxKDKToopaLcDI8D71qdb4LqN2IPiyg=
+        b=CotbSERApdT6RVKYA5K149ts24DBJyJ+MDKHm7Hf26Sgkhcat3avA7eAdyp0iiR5D
+         vuZlAGZd+5hoAgku09HNOVpql8EomqytsdLVk+zq0SroNOaQLMujQHlpzkfxbdyu0y
+         IFrz3lqhnro3iWrDpqXG+bvxLrSmbNPGeE5xaCSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.7 166/179] mmc: sdhci-of-aspeed: Fix clock divider calculation
-Date:   Mon, 27 Jul 2020 16:05:41 +0200
-Message-Id: <20200727134940.746906590@linuxfoundation.org>
+        stable@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 162/179] mm: memcg/slab: fix memory leak at non-root kmem_cache destroy
+Date:   Mon, 27 Jul 2020 16:05:37 +0200
+Message-Id: <20200727134940.558718371@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -62,37 +66,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eddie James <eajames@linux.ibm.com>
+From: Muchun Song <songmuchun@bytedance.com>
 
-commit ebd4050c6144b38098d8eed34df461e5e3fa82a9 upstream.
+commit d38a2b7a9c939e6d7329ab92b96559ccebf7b135 upstream.
 
-When calculating the clock divider, start dividing at 2 instead of 1.
-The divider is divided by two at the end of the calculation, so starting
-at 1 may result in a divider of 0, which shouldn't happen.
+If the kmem_cache refcount is greater than one, we should not mark the
+root kmem_cache as dying.  If we mark the root kmem_cache dying
+incorrectly, the non-root kmem_cache can never be destroyed.  It
+resulted in memory leak when memcg was destroyed.  We can use the
+following steps to reproduce.
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-Acked-by: Joel Stanley <joel@jms.id.au>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20200709195706.12741-3-eajames@linux.ibm.com
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+  1) Use kmem_cache_create() to create a new kmem_cache named A.
+  2) Coincidentally, the kmem_cache A is an alias for kmem_cache B,
+     so the refcount of B is just increased.
+  3) Use kmem_cache_destroy() to destroy the kmem_cache A, just
+     decrease the B's refcount but mark the B as dying.
+  4) Create a new memory cgroup and alloc memory from the kmem_cache
+     B. It leads to create a non-root kmem_cache for allocating memory.
+  5) When destroy the memory cgroup created in the step 4), the
+     non-root kmem_cache can never be destroyed.
+
+If we repeat steps 4) and 5), this will cause a lot of memory leak.  So
+only when refcount reach zero, we mark the root kmem_cache as dying.
+
+Fixes: 92ee383f6daa ("mm: fix race between kmem_cache destroy, create and deactivate")
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200716165103.83462-1-songmuchun@bytedance.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-of-aspeed.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/slab_common.c |   35 ++++++++++++++++++++++++++++-------
+ 1 file changed, 28 insertions(+), 7 deletions(-)
 
---- a/drivers/mmc/host/sdhci-of-aspeed.c
-+++ b/drivers/mmc/host/sdhci-of-aspeed.c
-@@ -68,7 +68,7 @@ static void aspeed_sdhci_set_clock(struc
- 	if (WARN_ON(clock > host->max_clk))
- 		clock = host->max_clk;
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -326,6 +326,14 @@ int slab_unmergeable(struct kmem_cache *
+ 	if (s->refcount < 0)
+ 		return 1;
  
--	for (div = 1; div < 256; div *= 2) {
-+	for (div = 2; div < 256; div *= 2) {
- 		if ((parent / div) <= clock)
- 			break;
- 	}
++#ifdef CONFIG_MEMCG_KMEM
++	/*
++	 * Skip the dying kmem_cache.
++	 */
++	if (s->memcg_params.dying)
++		return 1;
++#endif
++
+ 	return 0;
+ }
+ 
+@@ -886,12 +894,15 @@ static int shutdown_memcg_caches(struct
+ 	return 0;
+ }
+ 
+-static void flush_memcg_workqueue(struct kmem_cache *s)
++static void memcg_set_kmem_cache_dying(struct kmem_cache *s)
+ {
+ 	spin_lock_irq(&memcg_kmem_wq_lock);
+ 	s->memcg_params.dying = true;
+ 	spin_unlock_irq(&memcg_kmem_wq_lock);
++}
+ 
++static void flush_memcg_workqueue(struct kmem_cache *s)
++{
+ 	/*
+ 	 * SLAB and SLUB deactivate the kmem_caches through call_rcu. Make
+ 	 * sure all registered rcu callbacks have been invoked.
+@@ -923,10 +934,6 @@ static inline int shutdown_memcg_caches(
+ {
+ 	return 0;
+ }
+-
+-static inline void flush_memcg_workqueue(struct kmem_cache *s)
+-{
+-}
+ #endif /* CONFIG_MEMCG_KMEM */
+ 
+ void slab_kmem_cache_release(struct kmem_cache *s)
+@@ -944,8 +951,6 @@ void kmem_cache_destroy(struct kmem_cach
+ 	if (unlikely(!s))
+ 		return;
+ 
+-	flush_memcg_workqueue(s);
+-
+ 	get_online_cpus();
+ 	get_online_mems();
+ 
+@@ -955,6 +960,22 @@ void kmem_cache_destroy(struct kmem_cach
+ 	if (s->refcount)
+ 		goto out_unlock;
+ 
++#ifdef CONFIG_MEMCG_KMEM
++	memcg_set_kmem_cache_dying(s);
++
++	mutex_unlock(&slab_mutex);
++
++	put_online_mems();
++	put_online_cpus();
++
++	flush_memcg_workqueue(s);
++
++	get_online_cpus();
++	get_online_mems();
++
++	mutex_lock(&slab_mutex);
++#endif
++
+ 	err = shutdown_memcg_caches(s);
+ 	if (!err)
+ 		err = shutdown_cache(s);
 
 
