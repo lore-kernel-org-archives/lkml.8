@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98D2C4345B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80B4C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9209120838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A45FA207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858906;
-	bh=2N5Wm++7+eoqHG8fsn7/XL8Q1oSa/XmTbUdG1O2wd7U=;
+	s=default; t=1595858915;
+	bh=/YydLRvkoKVz03blHEasLvIRqIOV/wARQ1buAMOoUk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gfDUWsN6VB2bLvIv/Pqv8l0YRvyOa6ATW0ubJTquVVXgEfLeq+49ciHoueNC1Ri1O
-	 hrZ5b20w83Hvg4HbwsJ4uEBYx8w1Ihq4Ks10p5pUn9mdAnJ4pXPKTtExKIbNAU5h8d
-	 AxaQz/uo05poJeWEY3irbIVK/k2CTQzpBCqgzLp8=
+	b=YI9VGLwTYGiMRg0pnVZxxi7xYu+Fz9uw/i36QwPsT4RIVhV5+4V13fIyeo5drA4I4
+	 zIlrXA9QSeMX07GFPbLGV1Mcla3Gqb7ONSFzb39st3s8dLxnddC8tAxVDTRtQe5HXJ
+	 sZKpOfvY5TOSV9VLYbhxjMZlD6KqF96LYwu5mMGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgG0OIY (ORCPT
+        id S1729429AbgG0OIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:08:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57750 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:08:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729400AbgG0OIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:08:21 -0400
+        id S1729426AbgG0OIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:08:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B276E207FC;
-        Mon, 27 Jul 2020 14:08:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB99E2073E;
+        Mon, 27 Jul 2020 14:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858901;
-        bh=2N5Wm++7+eoqHG8fsn7/XL8Q1oSa/XmTbUdG1O2wd7U=;
+        s=default; t=1595858911;
+        bh=/YydLRvkoKVz03blHEasLvIRqIOV/wARQ1buAMOoUk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GOGigsdfczEFWa0wvZauTgyVUR85BnwGi//+Y3x2Hgh+LrbtLVg79T99jMF+29v33
-         z20iNb6XNFvcgReoniwSW+A8Ieru+7ITiL6gFYMRXNIxle8cayxhc+Nr0cEYxHdGD5
-         tHUpoJ5246KroJ5cT0sHB/vTAVeuWGrqa9I66fd0=
+        b=DSlnr1r2dLccrAKH4ff8Cexw07PpMMKjoTjjukEzyyUVf+1ofBaYLUQsx8RMsNRqs
+         kLkVGwixsAwJX1Iv40lFSLfW0k+PMkSDs+B7XCYTVCYHN1Bcv2nBDSEyULypodk2BR
+         ojOp/ZUDlTQVaulmbX35M4JBxhfoxA8qCfaegp9U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.14 54/64] staging: comedi: addi_apci_1564: check INSN_CONFIG_DIGITAL_TRIG shift
-Date:   Mon, 27 Jul 2020 16:04:33 +0200
-Message-Id: <20200727134913.849293400@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+Subject: [PATCH 4.14 57/64] fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
+Date:   Mon, 27 Jul 2020 16:04:36 +0200
+Message-Id: <20200727134914.003824428@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -58,74 +61,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit 926234f1b8434c4409aa4c53637aa3362ca07cea upstream.
+commit 033724d6864245a11f8e04c066002e6ad22b3fd0 upstream.
 
-The `INSN_CONFIG` comedi instruction with sub-instruction code
-`INSN_CONFIG_DIGITAL_TRIG` includes a base channel in `data[3]`. This is
-used as a right shift amount for other bitmask values without being
-checked.  Shift amounts greater than or equal to 32 will result in
-undefined behavior.  Add code to deal with this.
+syzbot is reporting general protection fault in bitfill_aligned() [1]
+caused by integer underflow in bit_clear_margins(). The cause of this
+problem is when and how do_vc_resize() updates vc->vc_{cols,rows}.
 
-Fixes: 1e15687ea472 ("staging: comedi: addi_apci_1564: add Change-of-State interrupt subdevice and required functions")
-Cc: <stable@vger.kernel.org> #3.17+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20200717145257.112660-4-abbotti@mev.co.uk
+If vc_do_resize() fails (e.g. kzalloc() fails) when var.xres or var.yres
+is going to shrink, vc->vc_{cols,rows} will not be updated. This allows
+bit_clear_margins() to see info->var.xres < (vc->vc_cols * cw) or
+info->var.yres < (vc->vc_rows * ch). Unexpectedly large rw or bh will
+try to overrun the __iomem region and causes general protection fault.
+
+Also, vc_resize(vc, 0, 0) does not set vc->vc_{cols,rows} = 0 due to
+
+  new_cols = (cols ? cols : vc->vc_cols);
+  new_rows = (lines ? lines : vc->vc_rows);
+
+exception. Since cols and lines are calculated as
+
+  cols = FBCON_SWAP(ops->rotate, info->var.xres, info->var.yres);
+  rows = FBCON_SWAP(ops->rotate, info->var.yres, info->var.xres);
+  cols /= vc->vc_font.width;
+  rows /= vc->vc_font.height;
+  vc_resize(vc, cols, rows);
+
+in fbcon_modechanged(), var.xres < vc->vc_font.width makes cols = 0
+and var.yres < vc->vc_font.height makes rows = 0. This means that
+
+  const int fd = open("/dev/fb0", O_ACCMODE);
+  struct fb_var_screeninfo var = { };
+  ioctl(fd, FBIOGET_VSCREENINFO, &var);
+  var.xres = var.yres = 1;
+  ioctl(fd, FBIOPUT_VSCREENINFO, &var);
+
+easily reproduces integer underflow bug explained above.
+
+Of course, callers of vc_resize() are not handling vc_do_resize() failure
+is bad. But we can't avoid vc_resize(vc, 0, 0) which returns 0. Therefore,
+as a band-aid workaround, this patch checks integer underflow in
+"struct fbcon_ops"->clear_margins call, assuming that
+vc->vc_cols * vc->vc_font.width and vc->vc_rows * vc->vc_font.heigh do not
+cause integer overflow.
+
+[1] https://syzkaller.appspot.com/bug?id=a565882df74fa76f10d3a6fec4be31098dbb37c6
+
+Reported-and-tested-by: syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/addi_apci_1564.c |   20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/video/fbdev/core/bitblit.c   |    4 ++--
+ drivers/video/fbdev/core/fbcon_ccw.c |    4 ++--
+ drivers/video/fbdev/core/fbcon_cw.c  |    4 ++--
+ drivers/video/fbdev/core/fbcon_ud.c  |    4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/staging/comedi/drivers/addi_apci_1564.c
-+++ b/drivers/staging/comedi/drivers/addi_apci_1564.c
-@@ -340,14 +340,22 @@ static int apci1564_cos_insn_config(stru
- 				    unsigned int *data)
- {
- 	struct apci1564_private *devpriv = dev->private;
--	unsigned int shift, oldmask;
-+	unsigned int shift, oldmask, himask, lomask;
+--- a/drivers/video/fbdev/core/bitblit.c
++++ b/drivers/video/fbdev/core/bitblit.c
+@@ -216,7 +216,7 @@ static void bit_clear_margins(struct vc_
+ 	region.color = color;
+ 	region.rop = ROP_COPY;
  
- 	switch (data[0]) {
- 	case INSN_CONFIG_DIGITAL_TRIG:
- 		if (data[1] != 0)
- 			return -EINVAL;
- 		shift = data[3];
--		oldmask = (1U << shift) - 1;
-+		if (shift < 32) {
-+			oldmask = (1U << shift) - 1;
-+			himask = data[4] << shift;
-+			lomask = data[5] << shift;
-+		} else {
-+			oldmask = 0xffffffffu;
-+			himask = 0;
-+			lomask = 0;
-+		}
- 		switch (data[2]) {
- 		case COMEDI_DIGITAL_TRIG_DISABLE:
- 			devpriv->ctrl = 0;
-@@ -371,8 +379,8 @@ static int apci1564_cos_insn_config(stru
- 				devpriv->mode2 &= oldmask;
- 			}
- 			/* configure specified channels */
--			devpriv->mode1 |= data[4] << shift;
--			devpriv->mode2 |= data[5] << shift;
-+			devpriv->mode1 |= himask;
-+			devpriv->mode2 |= lomask;
- 			break;
- 		case COMEDI_DIGITAL_TRIG_ENABLE_LEVELS:
- 			if (devpriv->ctrl != (APCI1564_DI_IRQ_ENA |
-@@ -389,8 +397,8 @@ static int apci1564_cos_insn_config(stru
- 				devpriv->mode2 &= oldmask;
- 			}
- 			/* configure specified channels */
--			devpriv->mode1 |= data[4] << shift;
--			devpriv->mode2 |= data[5] << shift;
-+			devpriv->mode1 |= himask;
-+			devpriv->mode2 |= lomask;
- 			break;
- 		default:
- 			return -EINVAL;
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dx = info->var.xoffset + rs;
+ 		region.dy = 0;
+ 		region.width = rw;
+@@ -224,7 +224,7 @@ static void bit_clear_margins(struct vc_
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
+ 
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dx = info->var.xoffset;
+ 		region.dy = info->var.yoffset + bs;
+ 		region.width = rs;
+--- a/drivers/video/fbdev/core/fbcon_ccw.c
++++ b/drivers/video/fbdev/core/fbcon_ccw.c
+@@ -201,7 +201,7 @@ static void ccw_clear_margins(struct vc_
+ 	region.color = color;
+ 	region.rop = ROP_COPY;
+ 
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dx = 0;
+ 		region.dy = info->var.yoffset;
+ 		region.height = rw;
+@@ -209,7 +209,7 @@ static void ccw_clear_margins(struct vc_
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
+ 
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dx = info->var.xoffset + bs;
+ 		region.dy = 0;
+                 region.height = info->var.yres_virtual;
+--- a/drivers/video/fbdev/core/fbcon_cw.c
++++ b/drivers/video/fbdev/core/fbcon_cw.c
+@@ -184,7 +184,7 @@ static void cw_clear_margins(struct vc_d
+ 	region.color = color;
+ 	region.rop = ROP_COPY;
+ 
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dx = 0;
+ 		region.dy = info->var.yoffset + rs;
+ 		region.height = rw;
+@@ -192,7 +192,7 @@ static void cw_clear_margins(struct vc_d
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
+ 
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dx = info->var.xoffset;
+ 		region.dy = info->var.yoffset;
+                 region.height = info->var.yres;
+--- a/drivers/video/fbdev/core/fbcon_ud.c
++++ b/drivers/video/fbdev/core/fbcon_ud.c
+@@ -231,7 +231,7 @@ static void ud_clear_margins(struct vc_d
+ 	region.color = color;
+ 	region.rop = ROP_COPY;
+ 
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dy = 0;
+ 		region.dx = info->var.xoffset;
+ 		region.width  = rw;
+@@ -239,7 +239,7 @@ static void ud_clear_margins(struct vc_d
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
+ 
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dy = info->var.yoffset;
+ 		region.dx = info->var.xoffset;
+                 region.height  = bh;
 
 
