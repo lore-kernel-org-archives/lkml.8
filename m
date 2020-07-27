@@ -2,88 +2,108 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF5FC433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 039532075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36BE206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:00:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="S1ebDFYG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgG0VvP (ORCPT
+        id S1726237AbgG0WA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 17:51:15 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35009 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgG0Vux (ORCPT
+        Mon, 27 Jul 2020 18:00:29 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13871 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgG0WA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:50:53 -0400
-Received: by mail-qk1-f194.google.com with SMTP id 11so16846936qkn.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:50:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9T+6TTM2jquV/2xo6rzyYgs+MoQ8msgYOchHxJqCp/Q=;
-        b=Z3loWG6KW4RGWDf4uzs1B9sGWN8tCuCnVqN5LYnzHINGICtmxejLHnYHJs4AzE5ePa
-         raMkj5wJZCEQJxZZRNxgMKHetFnQUDQr7CEfgQ6+lftn7s4Xjim7s0uvDTERW521J2lg
-         eWCUd6CEIWXxrlaCYfH2pKt+aG1zCGoYK/V4/1zw1n0CKWygwORNhHc0FDlDQYHagFsu
-         b/MLJjITRrNuXKSudKJhrtgl1fTU86sfklyKhP2p9e4fe+ymQDsNcuIyzF0OvnRAI8Eh
-         XaQOjVNyT5K7qWkC1+PkaJO4l1VVhHnco79YmCfkkQY64MtrSl0eeJ1ZmcJw0y0qVN0G
-         GpZw==
-X-Gm-Message-State: AOAM530URolssWvkbGjfGhHW0Yt9D1RZ9KcNOdTom2OqmGsclJWsLmSa
-        QKBInX0b8ucBD602sHdFYYga0v1w
-X-Google-Smtp-Source: ABdhPJy2xNWHvfQmp1PbIEJArxugvJ1DIXxY//nerGTV7Iv0yl3q5gj2Nu3AsBOxtj0fRJ8/Ixys1Q==
-X-Received: by 2002:a37:9ccf:: with SMTP id f198mr25740900qke.168.1595886652252;
-        Mon, 27 Jul 2020 14:50:52 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id n90sm15629338qte.21.2020.07.27.14.50.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 14:50:51 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Kees Cook <keescook@chromium.org>, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 3/8] x86/kaslr: Fix process_efi_entries comment
-Date:   Mon, 27 Jul 2020 17:50:42 -0400
-Message-Id: <20200727215047.3341098-4-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200727215047.3341098-1-nivedita@alum.mit.edu>
-References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
+        Mon, 27 Jul 2020 18:00:28 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f1f4e6f0002>; Mon, 27 Jul 2020 15:00:15 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 27 Jul 2020 15:00:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 27 Jul 2020 15:00:28 -0700
+Received: from [172.20.40.94] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jul
+ 2020 22:00:28 +0000
+Subject: Re: [PATCH] checkpatch: improve MAINTAINERS file update test
+To:     Joe Perches <joe@perches.com>, <apw@canonical.com>
+CC:     LKML <linux-kernel@vger.kernel.org>
+References: <20200727205856.28343-1-ddadap@nvidia.com>
+ <0801ef9d2489ed816ec97ee3054de2d20bfac14c.camel@perches.com>
+From:   Daniel Dadap <ddadap@nvidia.com>
+Message-ID: <41c8d9a1-cc4d-7ff0-c269-3f631b7d4a78@nvidia.com>
+Date:   Mon, 27 Jul 2020 17:02:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <0801ef9d2489ed816ec97ee3054de2d20bfac14c.camel@perches.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595887215; bh=NfYWylJQoMGZ9rIrniDEzW+cASJlZAmTbI3bHVXz5DU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=S1ebDFYG8FZgOp/MfW4t1pmZV+00223kTg3Sj0udZAcDabs7nZZGX90RIWMGpkfYJ
+         dlYOdk7w2eP2DMyxMyAJ2rFINp0RLwss+n9/PxASx+mtu9eIZQbIukYpDSJZ9vzcpW
+         xkKkk69E+DLwEJVgNGheM/b/PqDkZrJKlIeZMayaaUEt0KVA+kTXQxfGyTTsXlt4ed
+         euRX0//63tfOXOF8GzRApXgsJ5MHkJlzjCluH3Vlj1aF4ZZt1HXOmG6YjhFsp9If6Q
+         C7h8ccFmPxAOxinO9HY9NURf09MKVcorKlvOIlLdzz981wXjaiZcARMCuDiuJcrwE1
+         Ne7ubaYnLfwUw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit
-  0982adc74673 ("x86/boot/KASLR: Work around firmware bugs by excluding EFI_BOOT_SERVICES_* and EFI_LOADER_* from KASLR's choice")
-process_efi_entries will return true if we have an EFI memmap, not just
-if it contained EFI_MEMORY_MORE_RELIABLE regions.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- arch/x86/boot/compressed/kaslr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 7/27/20 4:07 PM, Joe Perches wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On Mon, 2020-07-27 at 15:58 -0500, Daniel Dadap wrote:
+>> Add an additional regular expression to detect updates to the
+>> MAINTAINERS file as reported in the unified diffs generated by
+>> `git format-patch`. This suppresses the "does MAINTAINERS need
+>> updating" message when MAINTAINERS is updated with this format.
+> Please cc at least LKML.
 
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 21cd9e07f1f6..207fcb7e7b71 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -741,8 +741,8 @@ static bool process_mem_region(struct mem_vector *region,
- 
- #ifdef CONFIG_EFI
- /*
-- * Returns true if mirror region found (and must have been processed
-- * for slots adding)
-+ * Returns true if we processed the EFI memmap, which we prefer over the E820
-+ * table if it is available.
-  */
- static bool
- process_efi_entries(unsigned long minimum, unsigned long image_size)
--- 
-2.26.2
+
+Oops; thanks for adding the list. I'll be sure to include it for any 
+revised patches.
+
+
+>> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> []
+>> @@ -2621,7 +2621,8 @@ sub process {
+>>
+>>   # Check if MAINTAINERS is being updated.  If so, there's probably no need to
+>>   # emit the "does MAINTAINERS need updating?" message on file add/move/delete
+>> -             if ($line =~ /^\s*MAINTAINERS\s*\|/) {
+>> +             if ($line =~ /^\s*MAINTAINERS\s*\|/ ||
+>> +                 $line =~ /^[-+]{3} [ab]\/MAINTAINERS$/) {
+> I don't believe this works well as any test
+> for a file modification to MAINTAINERS occurs
+> after the block that would show a diffstat
+> where the warning is emitted.
+
+
+Hmm. It must have worked for me because the MAINTAINERS file appeared 
+earlier in the patch than a newly added file in a patch I was checking 
+that triggers this warning before this change, but doesn't after this 
+change. This needn't be the case, though. Would it make sense to move 
+the check for a diffstat-style /^\sMAINTAINERS\s*\|/ as well as a 
+unidiff-style /^[-+]{3} [ab]\/MAINTAINERS$/ to the pre-scan sanitize phase?
 
