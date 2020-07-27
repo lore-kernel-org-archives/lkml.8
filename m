@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE38C433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541F2C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C02A20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D152173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858924;
-	bh=xttXnH6x3+HhRrYAa34beiJShJ/kR7G4N4zi+w5MELM=;
+	s=default; t=1595858925;
+	bh=bkASIU+tcHNYr4Je/uAYwATeDov4hpolKUnT+rpI18o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d9n68Rkug9UoqM9X+pHOgS4/Zf6eFKRR+cxj0DSSZhF+rlyGPqOMvF+8fKfw5aQX2
-	 fISF0yB4UJbeS5Y4eamosrST9xlU+o0bKt3vOTEPV5WNvcR6JjeDCvupUz2Mz114UV
-	 OtZMN1rYi8qdBO7K0gYHI2NK1ZDIGDkXUYEHbhAQ=
+	b=2hUUkTbI1VIhuRXErtm7leW7q6cIAZXoAQnPCXGCk5g/WOjBHp0ijEyJ9goNTYsft
+	 LN79AqIhGLL0eknDzvwqhlp7oYbVnIQSz9G/7W4BcsIApydzuU1tJopU8Sk6BTkziS
+	 32jGCn5eDKLg0dplQgULIt3qO2r8KdBDd1ZrhyyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbgG0OIm (ORCPT
+        id S1729478AbgG0OIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:08:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58208 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729451AbgG0OIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:08:39 -0400
+        id S1729472AbgG0OIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:08:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEB382083B;
-        Mon, 27 Jul 2020 14:08:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 973732083E;
+        Mon, 27 Jul 2020 14:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858919;
-        bh=xttXnH6x3+HhRrYAa34beiJShJ/kR7G4N4zi+w5MELM=;
+        s=default; t=1595858922;
+        bh=bkASIU+tcHNYr4Je/uAYwATeDov4hpolKUnT+rpI18o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RIoM31cUINne4HeoDp8ngcWFjBnRjoh5YMXFLTDaOMCDppsymiPcpzyfT2z6Y5lk+
-         fmGYXa0mIAWTTyPPBgkXO/4Ws3e2MWDYYBVKMq8oM/66lyY6ilyDVSSNX1mpn5fgMm
-         Qn2l6ULzLvYx6OuDYK4MJO6kqP9RVfdnw3MikVDo=
+        b=fXdG92NdjLEur3fUcO8BtQ7iO+bBu5qkvwluBhMJQng4+yPTfbMwPq6JUGiWCeoe0
+         M1/GLxgmBbr7WK6cKiexBlS+0J/cAXESp7wDMOKZzz9Z5BQTL6wt/TEdRDICbGiLZT
+         hxoP4pwvfThGjJyyZ7PdIvP6oSpEn0hY7zuD43FA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Beniamino Galvani <bgalvani@redhat.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+bbc3a11c4da63c1b74d6@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 31/64] bonding: check return value of register_netdevice() in bond_newlink()
-Date:   Mon, 27 Jul 2020 16:04:10 +0200
-Message-Id: <20200727134912.700178242@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Matthew Howell <matthew.howell@sealevel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 32/64] serial: exar: Fix GPIO configuration for Sealevel cards based on XR17V35X
+Date:   Mon, 27 Jul 2020 16:04:11 +0200
+Message-Id: <20200727134912.750933479@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -64,44 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Matthew Howell <matthew.howell@sealevel.com>
 
-[ Upstream commit c75d1d5248c0c97996051809ad0e9f154ba5d76e ]
+[ Upstream commit 5fdbe136ae19ab751daaa4d08d9a42f3e30d17f9 ]
 
-Very similar to commit 544f287b8495
-("bonding: check error value of register_netdevice() immediately"),
-we should immediately check the return value of register_netdevice()
-before doing anything else.
+Sealevel XR17V35X based devices are inoperable on kernel versions
+4.11 and above due to a change in the GPIO preconfiguration introduced in
+commit
+7dea8165f1d. This patch fixes this by preconfiguring the GPIO on Sealevel
+cards to the value (0x00) used prior to commit 7dea8165f1d
 
-Fixes: 005db31d5f5f ("bonding: set carrier off for devices created through netlink")
-Reported-and-tested-by: syzbot+bbc3a11c4da63c1b74d6@syzkaller.appspotmail.com
-Cc: Beniamino Galvani <bgalvani@redhat.com>
-Cc: Taehee Yoo <ap420073@gmail.com>
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+With GPIOs preconfigured as per commit 7dea8165f1d all ports on
+Sealevel XR17V35X based devices become stuck in high impedance
+mode, regardless of dip-switch or software configuration. This
+causes the device to become effectively unusable. This patch (in
+various forms) has been distributed to our customers and no issues
+related to it have been reported.
+
+Fixes: 7dea8165f1d6 ("serial: exar: Preconfigure xr17v35x MPIOs as output")
+Signed-off-by: Matthew Howell <matthew.howell@sealevel.com>
+Link: https://lore.kernel.org/r/alpine.DEB.2.21.2007221605270.13247@tstest-VirtualBox
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_netlink.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/tty/serial/8250/8250_exar.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/bonding/bond_netlink.c b/drivers/net/bonding/bond_netlink.c
-index 77babf1417a7e..0e95eeb822ea5 100644
---- a/drivers/net/bonding/bond_netlink.c
-+++ b/drivers/net/bonding/bond_netlink.c
-@@ -451,11 +451,10 @@ static int bond_newlink(struct net *src_net, struct net_device *bond_dev,
- 		return err;
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+index 899f36b59af79..ed81128bb42e0 100644
+--- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -229,7 +229,17 @@ static void setup_gpio(struct pci_dev *pcidev, u8 __iomem *p)
+ 	 * devices will export them as GPIOs, so we pre-configure them safely
+ 	 * as inputs.
+ 	 */
+-	u8 dir = pcidev->vendor == PCI_VENDOR_ID_EXAR ? 0xff : 0x00;
++
++	u8 dir = 0x00;
++
++	if  ((pcidev->vendor == PCI_VENDOR_ID_EXAR) &&
++		(pcidev->subsystem_vendor != PCI_VENDOR_ID_SEALEVEL)) {
++		// Configure GPIO as inputs for Commtech adapters
++		dir = 0xff;
++	} else {
++		// Configure GPIO as outputs for SeaLevel adapters
++		dir = 0x00;
++	}
  
- 	err = register_netdevice(bond_dev);
--
--	netif_carrier_off(bond_dev);
- 	if (!err) {
- 		struct bonding *bond = netdev_priv(bond_dev);
- 
-+		netif_carrier_off(bond_dev);
- 		bond_work_init_all(bond);
- 	}
- 
+ 	writeb(0x00, p + UART_EXAR_MPIOINT_7_0);
+ 	writeb(0x00, p + UART_EXAR_MPIOLVL_7_0);
 -- 
 2.25.1
 
