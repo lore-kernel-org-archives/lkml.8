@@ -2,128 +2,97 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13088C43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B046C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F148220719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13ADE20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595860760;
+	bh=JSY/ZG6E/SThjrRqN49pp2TkyzumB4ywJMpDltI+IAU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CgL/hEjPz7dAsEPoKscERvvH8HgMnmFFtKM3aWzjpuACcXEckbUQcS5UZIcRomU7L
+	 2K2ykA62F6lI22BEuRkuWWpA97FDFYCtyuCuSzMxXUkYVegrXgIN+Au0IFmCRU5Ewv
+	 JwmjOK8RenXivudLedNcVVxSc2jhImATauwC5u9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732995AbgG0Oj1 (ORCPT
+        id S1732871AbgG0OjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:39:27 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39000 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732992AbgG0OjY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:39:24 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 070152948A2
-Message-ID: <636aab0a2be83e751a82a84ac3946afec2c87a17.camel@collabora.com>
-Subject: Re: [PATCH 08/10] media: uapi: h264: Clean slice invariants syntax
- elements
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Alexandre Courbot <acourbot@chromium.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Date:   Mon, 27 Jul 2020 11:39:12 -0300
-In-Reply-To: <CAPBb6MVMXeTcUfb-98McYCKjh=eM=BTo2dSY=L1c6dv2jHqXcg@mail.gmail.com>
-References: <20200715202233.185680-1-ezequiel@collabora.com>
-         <20200715202233.185680-9-ezequiel@collabora.com>
-         <CAPBb6MVMXeTcUfb-98McYCKjh=eM=BTo2dSY=L1c6dv2jHqXcg@mail.gmail.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-1 
+        Mon, 27 Jul 2020 10:39:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729748AbgG0OKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:10:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F9852083E;
+        Mon, 27 Jul 2020 14:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595858999;
+        bh=JSY/ZG6E/SThjrRqN49pp2TkyzumB4ywJMpDltI+IAU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uJW9axA9Ga3x2J66eniy2WIqGb/o4hE0YMAftk4Iu1OQrGz0cSto2aLwD+FhqJDL3
+         4SlSON38m2BLdmSWjDQNFmd8JyAjeShPVwLBLemm60HK66B/Ftwe2sjEv/FF0XoJMI
+         jvySwhQpuNXuCaDl6hQ9JJs503t3g17/1IWqu3Ds=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 27/86] hippi: Fix a size used in a pci_free_consistent() in an error handling path
+Date:   Mon, 27 Jul 2020 16:04:01 +0200
+Message-Id: <20200727134915.816999436@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
+References: <20200727134914.312934924@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Thanks a lot for the review.
+[ Upstream commit 3195c4706b00106aa82c73acd28340fa8fc2bfc1 ]
 
-On Sat, 2020-07-25 at 23:34 +0900, Alexandre Courbot wrote:
-> On Thu, Jul 16, 2020 at 5:23 AM Ezequiel Garcia <ezequiel@collabora.com> wrote:
-> > The H.264 specification requires in its "Slice header semantics"
-> > section that the following values shall be the same in all slice headers:
-> > 
-> >   pic_parameter_set_id
-> >   frame_num
-> >   field_pic_flag
-> >   bottom_field_flag
-> >   idr_pic_id
-> >   pic_order_cnt_lsb
-> >   delta_pic_order_cnt_bottom
-> >   delta_pic_order_cnt[ 0 ]
-> >   delta_pic_order_cnt[ 1 ]
-> >   sp_for_switch_flag
-> >   slice_group_change_cycle
-> > 
-> > and can therefore be moved to the per-frame decode parameters control.
-> 
-> I am really not a H.264 expert, so this question may not be relevant,
+The size used when calling 'pci_alloc_consistent()' and
+'pci_free_consistent()' should match.
 
-All questions are welcome. I'm more than happy to discuss this patchset.
+Fix it and have it consistent with the corresponding call in 'rr_close()'.
 
-> but are these values specified for every slice header in the
-> bitstream, or are they specified only once per frame?
-> 
-> I am asking this because it would certainly make user-space code
-> simpler if we could remain as close to the bitstream as possible. If
-> these values are specified once per slice, then factorizing them would
-> leave user-space with the burden of deciding what to do if they change
-> across slices.
-> 
-> Note that this is a double-edged sword, because it is not necessarily
-> better to leave the firmware in charge of deciding what to do in such
-> a case. :) So hopefully these are only specified once per frame in the
-> bitstream, in which case your proposal makes complete sense.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/hippi/rrunner.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Frame-based hardwares accelerators such as Hantro and Rockchip VDEC
-are doing the slice header parsing themselves. Therefore, the
-driver is not really parsing these fields on each slice header.
+diff --git a/drivers/net/hippi/rrunner.c b/drivers/net/hippi/rrunner.c
+index 029206e4da3b3..2a8c33abb363a 100644
+--- a/drivers/net/hippi/rrunner.c
++++ b/drivers/net/hippi/rrunner.c
+@@ -1248,7 +1248,7 @@ static int rr_open(struct net_device *dev)
+ 		rrpriv->info = NULL;
+ 	}
+ 	if (rrpriv->rx_ctrl) {
+-		pci_free_consistent(pdev, sizeof(struct ring_ctrl),
++		pci_free_consistent(pdev, 256 * sizeof(struct ring_ctrl),
+ 				    rrpriv->rx_ctrl, rrpriv->rx_ctrl_dma);
+ 		rrpriv->rx_ctrl = NULL;
+ 	}
+-- 
+2.25.1
 
-Currently, we are already using only the first slice in a frame,
-as you can see from:
-
-        if (slices[0].flags & V4L2_H264_SLICE_FLAG_FIELD_PIC)
-                reg |= G1_REG_DEC_CTRL0_PIC_FIELDMODE_E;
-
-Even if these fields are transported in the slice header,
-I think it makes sense for us to split them into the decode params
-(per-frame) control.
-
-They are really specified to be the same across all slices,
-so even I'd say if a bitstream violates this, it's likely
-either a corrupted bitstream or an encoder bug.
-
-OTOH, one thing this makes me realize is that the slice params control
-is wrongly specified as an array. Namely, this text
-should be removed:
-
-       This structure is expected to be passed as an array, with one
-       entry for each slice included in the bitstream buffer.
-
-As the API is really not defined that way.
-
-I'll remove that on next iteration.
-
-Thanks for raising this point,
-Ezequiel
 
 
