@@ -2,52 +2,54 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A42E3C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CAEC433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8071221744
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D3221744
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858974;
-	bh=PmqNglSethUnlEQrhNyXgEHuVzSZszf9Q54SGbecUY4=;
+	s=default; t=1595858975;
+	bh=FrKXr/6KwIFqjkGnn/7CduLurD7L57pnS1D+ZPzd4ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TK50iFvth71V8aHMzlDI/fxk1khUxRr/Cf2+T0cj9LzSCdk6/Bd6zz4uCPdTxJhuf
-	 xyDcSkBwj8Wn64Zsmgs/zDSrNUp4OX9Wi9zjsux+MSxTS9hwxnk334zrcPXyc4bayc
-	 FN6ubmC4+yb9BBTEbUpqG3RIM9UohU8oxA538UN4=
+	b=meIinmaBXm6LbrIv00mqvnNsQ+m4R9Co87FYyz0CrHPqtmLLlEaaKDd4AHzlKScd3
+	 IPl2JS4+vD9LxV3DPZZpszdk+1qd4ncv2yDvOthzItrA/6+l1QEZfRwK09hz+iKd6/
+	 McrT4OD6/RDTOw8oAQ3LMXqq5ZVVtpuQNHU4LKtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbgG0OJc (ORCPT
+        id S1729653AbgG0OJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:09:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59634 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:09:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728446AbgG0OJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:09:29 -0400
+        id S1729630AbgG0OJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:09:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74F1E2073E;
-        Mon, 27 Jul 2020 14:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5BBF2073E;
+        Mon, 27 Jul 2020 14:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858969;
-        bh=PmqNglSethUnlEQrhNyXgEHuVzSZszf9Q54SGbecUY4=;
+        s=default; t=1595858961;
+        bh=FrKXr/6KwIFqjkGnn/7CduLurD7L57pnS1D+ZPzd4ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D/c7np6oCT3EI8p6N0hw5LiKkd07bcQNrbEx/Cc79XTdtwewO08hYztbHQuIibamH
-         fGqjvuTdK4mEZVdTbm8qDrbHNBRojmenJeo7q2lYaxw83DnpuEqYqEyYRmNItiFocz
-         Qc1eW74OiqLE0M0gCOmkcnBC7/oZRP1F+hXzHM4o=
+        b=yPpSiZmGd1CmSkPJKMJibz0Gl3QImhCkZ89pheedzr9Y8k597ZeGIc0clF2KEUSh9
+         wKCal+k//sPNAusjDjYV2SJEuYcadC8XMRhCZ1pd+/p6qNtTMcOc8CPZvpNkOp98lB
+         MZB+4MmAYsXIHvzl+tyMLX/C1czzgZ4Kz/py6tM0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 16/86] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when its not ours
-Date:   Mon, 27 Jul 2020 16:03:50 +0200
-Message-Id: <20200727134915.156933894@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolaus Rath <Nikolaus@rath.org>,
+        Hugh Dickins <hughd@google.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 13/86] fuse: fix weird page warning
+Date:   Mon, 27 Jul 2020 16:03:47 +0200
+Message-Id: <20200727134915.001245278@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -60,41 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit d41f36a6464a85c06ad920703d878e4491d2c023 upstream.
+commit a5005c3cda6eeb6b95645e6cc32f58dafeffc976 upstream.
 
-The DSPI interrupt can be shared between two controllers at least on the
-LX2160A. In that case, the driver for one controller might misbehave and
-consume the other's interrupt. Fix this by actually checking if any of
-the bits in the status register have been asserted.
+When PageWaiters was added, updating this check was missed.
 
-Fixes: 13aed2392741 ("spi: spi-fsl-dspi: use IRQF_SHARED mode to request IRQ")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Link: https://lore.kernel.org/r/20190822212450.21420-2-olteanv@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Nikolaus Rath <Nikolaus@rath.org>
+Reported-by: Hugh Dickins <hughd@google.com>
+Fixes: 62906027091f ("mm: add PageWaiters indicating tasks are waiting for a page bit")
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-dspi.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/fuse/dev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -878,9 +878,11 @@ static irqreturn_t dspi_interrupt(int ir
- 					trans_mode);
- 			}
- 		}
-+
-+		return IRQ_HANDLED;
- 	}
- 
--	return IRQ_HANDLED;
-+	return IRQ_NONE;
- }
- 
- static const struct of_device_id fsl_dspi_dt_ids[] = {
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index 6d39143cfa094..01e6ea11822bf 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -838,7 +838,8 @@ static int fuse_check_page(struct page *page)
+ 	       1 << PG_uptodate |
+ 	       1 << PG_lru |
+ 	       1 << PG_active |
+-	       1 << PG_reclaim))) {
++	       1 << PG_reclaim |
++	       1 << PG_waiters))) {
+ 		printk(KERN_WARNING "fuse: trying to steal weird page\n");
+ 		printk(KERN_WARNING "  page=%p index=%li flags=%08lx, count=%i, mapcount=%i, mapping=%p\n", page, page->index, page->flags, page_count(page), page_mapcount(page), page->mapping);
+ 		return 1;
+-- 
+2.25.1
+
 
 
