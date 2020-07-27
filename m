@@ -2,55 +2,52 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCFEC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00D9C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96DC0208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E532083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860565;
-	bh=ZMywclo+5R/Gc/XvHS3+MFq+PuAks1cUnMcIkj5lS4k=;
+	s=default; t=1595860576;
+	bh=PMynnTiHUeYKzcfyde8yITdPrHhIF1AHcy7x965s7+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TSRY7gIqObW++5h54ALMN89r7Zv7Rf+C0fP2B3V8YrUaFCisK+E4/eyx1a/qUIB3Q
-	 8vd22DrvX7TTgVIbcGTD6nqoWIHxDXVy0nPMewPixWhQlddTtQynetGzKy/HK8PcSi
-	 OvbisLB60OxNmzGFIUeZpphVSKwivthj8z4jfAd8=
+	b=sw087IjZeGCPa0OtoHY5v24/cXyHx6gec7JJT+ycz9eYTn0JC761BhHEVPFVSqqoC
+	 Z8xuYUw7wUUaGB3ayeKHXezHcX1Csj4/rZBvbL/ZJq4yk+FtBY0BBpHpwYsw4gGyPA
+	 r6VaVwICvcdCUvJFSTq+hXTQbrPFGowQ8d0qoIQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgG0OOU (ORCPT
+        id S1729839AbgG0OgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:14:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39780 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:36:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbgG0OOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:14:19 -0400
+        id S1730454AbgG0OOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:14:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 285012073E;
-        Mon, 27 Jul 2020 14:14:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECB722073E;
+        Mon, 27 Jul 2020 14:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859258;
-        bh=ZMywclo+5R/Gc/XvHS3+MFq+PuAks1cUnMcIkj5lS4k=;
+        s=default; t=1595859248;
+        bh=PMynnTiHUeYKzcfyde8yITdPrHhIF1AHcy7x965s7+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=udHzyhOTvwymg1Ut8yPssDnH3mD/0b93vZrX84Tx/6kcTT700NUyjkwBUdHr6/pGb
-         FAk9QejOo2Q6au+9sly2jkCvqAN/I6adW4rXCOMSqh5VZ20wtZayOLdVNNAke4W2Bj
-         N/vJtuhUGeSu8HCTeMKAeU07V8PqHfSPrnqH46LA=
+        b=GpkWhQvo2Xzy6oGQAvQ/pEPdSqGWU+UHRnULni97H3ss5fSykpFfWWJnUxW9UJExi
+         CgpvgRXp6ZGSc6PiCTsh5+BSyxbLmDwa8W8lS8gZYOL9HlQWb6dGkjgsrL19PryFaN
+         LGOUQvmRvf9Um5oKOsX03+GgoMuhxL87ApT/25fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 009/138] scsi: mpt3sas: Fix unlock imbalance
-Date:   Mon, 27 Jul 2020 16:03:24 +0200
-Message-Id: <20200727134925.710554287@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 033/138] btrfs: fix double free on ulist after backref resolution failure
+Date:   Mon, 27 Jul 2020 16:03:48 +0200
+Message-Id: <20200727134927.030459759@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -63,82 +60,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit cb551b8dc079d2ef189145782627c99cb68c0255 ]
+commit 580c079b5766ac706f56eec5c79aee4bf929fef6 upstream.
 
-In BRM_status_show(), if the condition "!ioc->is_warpdrive" tested on entry
-to the function is true, a "goto out" is called. This results in unlocking
-ioc->pci_access_mutex without this mutex lock being taken.  This generates
-the following splat:
+At btrfs_find_all_roots_safe() we allocate a ulist and set the **roots
+argument to point to it. However if later we fail due to an error returned
+by find_parent_nodes(), we free that ulist but leave a dangling pointer in
+the **roots argument. Upon receiving the error, a caller of this function
+can attempt to free the same ulist again, resulting in an invalid memory
+access.
 
-[ 1148.539883] mpt3sas_cm2: BRM_status_show: BRM attribute is only for warpdrive
-[ 1148.547184]
-[ 1148.548708] =====================================
-[ 1148.553501] WARNING: bad unlock balance detected!
-[ 1148.558277] 5.8.0-rc3+ #827 Not tainted
-[ 1148.562183] -------------------------------------
-[ 1148.566959] cat/5008 is trying to release lock (&ioc->pci_access_mutex) at:
-[ 1148.574035] [<ffffffffc070b7a3>] BRM_status_show+0xd3/0x100 [mpt3sas]
-[ 1148.580574] but there are no more locks to release!
-[ 1148.585524]
-[ 1148.585524] other info that might help us debug this:
-[ 1148.599624] 3 locks held by cat/5008:
-[ 1148.607085]  #0: ffff92aea3e392c0 (&p->lock){+.+.}-{3:3}, at: seq_read+0x34/0x480
-[ 1148.618509]  #1: ffff922ef14c4888 (&of->mutex){+.+.}-{3:3}, at: kernfs_seq_start+0x2a/0xb0
-[ 1148.630729]  #2: ffff92aedb5d7310 (kn->active#224){.+.+}-{0:0}, at: kernfs_seq_start+0x32/0xb0
-[ 1148.643347]
-[ 1148.643347] stack backtrace:
-[ 1148.655259] CPU: 73 PID: 5008 Comm: cat Not tainted 5.8.0-rc3+ #827
-[ 1148.665309] Hardware name: HGST H4060-S/S2600STB, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
-[ 1148.678394] Call Trace:
-[ 1148.684750]  dump_stack+0x78/0xa0
-[ 1148.691802]  lock_release.cold+0x45/0x4a
-[ 1148.699451]  __mutex_unlock_slowpath+0x35/0x270
-[ 1148.707675]  BRM_status_show+0xd3/0x100 [mpt3sas]
-[ 1148.716092]  dev_attr_show+0x19/0x40
-[ 1148.723664]  sysfs_kf_seq_show+0x87/0x100
-[ 1148.731193]  seq_read+0xbc/0x480
-[ 1148.737882]  vfs_read+0xa0/0x160
-[ 1148.744514]  ksys_read+0x58/0xd0
-[ 1148.751129]  do_syscall_64+0x4c/0xa0
-[ 1148.757941]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 1148.766240] RIP: 0033:0x7f1230566542
-[ 1148.772957] Code: Bad RIP value.
-[ 1148.779206] RSP: 002b:00007ffeac1bcac8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-[ 1148.790063] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f1230566542
-[ 1148.800284] RDX: 0000000000020000 RSI: 00007f1223460000 RDI: 0000000000000003
-[ 1148.810474] RBP: 00007f1223460000 R08: 00007f122345f010 R09: 0000000000000000
-[ 1148.820641] R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000000000
-[ 1148.830728] R13: 0000000000000003 R14: 0000000000020000 R15: 0000000000020000
+One such scenario is during qgroup accounting:
 
-Fix this by returning immediately instead of jumping to the out label.
+btrfs_qgroup_account_extents()
 
-Link: https://lore.kernel.org/r/20200701085254.51740-1-damien.lemoal@wdc.com
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Acked-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+ --> calls btrfs_find_all_roots() passes &new_roots (a stack allocated
+     pointer) to btrfs_find_all_roots()
+
+   --> btrfs_find_all_roots() just calls btrfs_find_all_roots_safe()
+       passing &new_roots to it
+
+     --> allocates ulist and assigns its address to **roots (which
+         points to new_roots from btrfs_qgroup_account_extents())
+
+     --> find_parent_nodes() returns an error, so we free the ulist
+         and leave **roots pointing to it after returning
+
+ --> btrfs_qgroup_account_extents() sees btrfs_find_all_roots() returned
+     an error and jumps to the label 'cleanup', which just tries to
+     free again the same ulist
+
+Stack trace example:
+
+ ------------[ cut here ]------------
+ BTRFS: tree first key check failed
+ WARNING: CPU: 1 PID: 1763215 at fs/btrfs/disk-io.c:422 btrfs_verify_level_key+0xe0/0x180 [btrfs]
+ Modules linked in: dm_snapshot dm_thin_pool (...)
+ CPU: 1 PID: 1763215 Comm: fsstress Tainted: G        W         5.8.0-rc3-btrfs-next-64 #1
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+ RIP: 0010:btrfs_verify_level_key+0xe0/0x180 [btrfs]
+ Code: 28 5b 5d (...)
+ RSP: 0018:ffffb89b473779a0 EFLAGS: 00010286
+ RAX: 0000000000000000 RBX: ffff90397759bf08 RCX: 0000000000000000
+ RDX: 0000000000000001 RSI: 0000000000000027 RDI: 00000000ffffffff
+ RBP: ffff9039a419c000 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: ffffb89b43301000 R12: 000000000000005e
+ R13: ffffb89b47377a2e R14: ffffb89b473779af R15: 0000000000000000
+ FS:  00007fc47e1e1000(0000) GS:ffff9039ac200000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007fc47e1df000 CR3: 00000003d9e4e001 CR4: 00000000003606e0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Call Trace:
+  read_block_for_search+0xf6/0x350 [btrfs]
+  btrfs_next_old_leaf+0x242/0x650 [btrfs]
+  resolve_indirect_refs+0x7cf/0x9e0 [btrfs]
+  find_parent_nodes+0x4ea/0x12c0 [btrfs]
+  btrfs_find_all_roots_safe+0xbf/0x130 [btrfs]
+  btrfs_qgroup_account_extents+0x9d/0x390 [btrfs]
+  btrfs_commit_transaction+0x4f7/0xb20 [btrfs]
+  btrfs_sync_file+0x3d4/0x4d0 [btrfs]
+  do_fsync+0x38/0x70
+  __x64_sys_fdatasync+0x13/0x20
+  do_syscall_64+0x5c/0xe0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0033:0x7fc47e2d72e3
+ Code: Bad RIP value.
+ RSP: 002b:00007fffa32098c8 EFLAGS: 00000246 ORIG_RAX: 000000000000004b
+ RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fc47e2d72e3
+ RDX: 00007fffa3209830 RSI: 00007fffa3209830 RDI: 0000000000000003
+ RBP: 000000000000072e R08: 0000000000000001 R09: 0000000000000003
+ R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000003e8
+ R13: 0000000051eb851f R14: 00007fffa3209970 R15: 00005607c4ac8b50
+ irq event stamp: 0
+ hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+ hardirqs last disabled at (0): [<ffffffffb8eb5e85>] copy_process+0x755/0x1eb0
+ softirqs last  enabled at (0): [<ffffffffb8eb5e85>] copy_process+0x755/0x1eb0
+ softirqs last disabled at (0): [<0000000000000000>] 0x0
+ ---[ end trace 8639237550317b48 ]---
+ BTRFS error (device sdc): tree first key mismatch detected, bytenr=62324736 parent_transid=94 key expected=(262,108,1351680) has=(259,108,1921024)
+ general protection fault, probably for non-canonical address 0x6b6b6b6b6b6b6b6b: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC PTI
+ CPU: 2 PID: 1763215 Comm: fsstress Tainted: G        W         5.8.0-rc3-btrfs-next-64 #1
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+ RIP: 0010:ulist_release+0x14/0x60 [btrfs]
+ Code: c7 07 00 (...)
+ RSP: 0018:ffffb89b47377d60 EFLAGS: 00010282
+ RAX: 6b6b6b6b6b6b6b6b RBX: ffff903959b56b90 RCX: 0000000000000000
+ RDX: 0000000000000001 RSI: 0000000000270024 RDI: ffff9036e2adc840
+ RBP: ffff9036e2adc848 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: 0000000000000000 R12: ffff9036e2adc840
+ R13: 0000000000000015 R14: ffff9039a419ccf8 R15: ffff90395d605840
+ FS:  00007fc47e1e1000(0000) GS:ffff9039ac600000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007f8c1c0a51c8 CR3: 00000003d9e4e004 CR4: 00000000003606e0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Call Trace:
+  ulist_free+0x13/0x20 [btrfs]
+  btrfs_qgroup_account_extents+0xf3/0x390 [btrfs]
+  btrfs_commit_transaction+0x4f7/0xb20 [btrfs]
+  btrfs_sync_file+0x3d4/0x4d0 [btrfs]
+  do_fsync+0x38/0x70
+  __x64_sys_fdatasync+0x13/0x20
+  do_syscall_64+0x5c/0xe0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0033:0x7fc47e2d72e3
+ Code: Bad RIP value.
+ RSP: 002b:00007fffa32098c8 EFLAGS: 00000246 ORIG_RAX: 000000000000004b
+ RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fc47e2d72e3
+ RDX: 00007fffa3209830 RSI: 00007fffa3209830 RDI: 0000000000000003
+ RBP: 000000000000072e R08: 0000000000000001 R09: 0000000000000003
+ R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000003e8
+ R13: 0000000051eb851f R14: 00007fffa3209970 R15: 00005607c4ac8b50
+ Modules linked in: dm_snapshot dm_thin_pool (...)
+ ---[ end trace 8639237550317b49 ]---
+ RIP: 0010:ulist_release+0x14/0x60 [btrfs]
+ Code: c7 07 00 (...)
+ RSP: 0018:ffffb89b47377d60 EFLAGS: 00010282
+ RAX: 6b6b6b6b6b6b6b6b RBX: ffff903959b56b90 RCX: 0000000000000000
+ RDX: 0000000000000001 RSI: 0000000000270024 RDI: ffff9036e2adc840
+ RBP: ffff9036e2adc848 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: 0000000000000000 R12: ffff9036e2adc840
+ R13: 0000000000000015 R14: ffff9039a419ccf8 R15: ffff90395d605840
+ FS:  00007fc47e1e1000(0000) GS:ffff9039ad200000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007f6a776f7d40 CR3: 00000003d9e4e002 CR4: 00000000003606e0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+Fix this by making btrfs_find_all_roots_safe() set *roots to NULL after
+it frees the ulist.
+
+Fixes: 8da6d5815c592b ("Btrfs: added btrfs_find_all_roots()")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/mpt3sas/mpt3sas_ctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/backref.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-index b95f7d062ea44..82c4ecc16f191 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-@@ -2921,7 +2921,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	if (!ioc->is_warpdrive) {
- 		ioc_err(ioc, "%s: BRM attribute is only for warpdrive\n",
- 			__func__);
--		goto out;
-+		return 0;
- 	}
- 	/* pci_access_mutex lock acquired by sysfs show path */
- 	mutex_lock(&ioc->pci_access_mutex);
--- 
-2.25.1
-
+--- a/fs/btrfs/backref.c
++++ b/fs/btrfs/backref.c
+@@ -1422,6 +1422,7 @@ static int btrfs_find_all_roots_safe(str
+ 		if (ret < 0 && ret != -ENOENT) {
+ 			ulist_free(tmp);
+ 			ulist_free(*roots);
++			*roots = NULL;
+ 			return ret;
+ 		}
+ 		node = ulist_next(tmp, &uiter);
 
 
