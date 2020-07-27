@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C46C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5027EC433FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01D152173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D2C208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892492;
-	bh=5x4VHvCv2++Zyq1VJE6H93Umf7432H6ql6zvKFs5sDg=;
+	s=default; t=1595892497;
+	bh=+J6fOoLK985RugK/lghNk9b0GLsZJS34xZ+SIvL3Gdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AdbNX7SGTtg4BBMeNZ3gM7v/tZXI3ME0vAmq5n33b5OqWulDzS878nf2XYblt+7rm
-	 Cl7Gr3bW+CH/spJEBNg9vCuhQaz6I/+/1iifX+TW/OAJbqwJegAeuQtYuYO4hXPICH
-	 72KEGAjgQEUv+Ni7pa1cp0x7uLH7K6jqxucrhm5w=
+	b=R5tI2Kd7T5Uibpk6fQTV9FvTmXI+DgxKvxuZYEj98cyWnQMnUqB/dkdvhfUVP/pG5
+	 9MlhfWoiE1ogvJyMwTI9ZeJWwm9aNgs7AjxglEN2Mr43EsAkYWfWhjDoAI7lavwV1U
+	 9M0e1KHZlhbI5Y1ptwcq/KCVqfo8pM/9swYBdmTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbgG0X2K (ORCPT
+        id S1728803AbgG0X2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:28:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35720 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:28:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbgG0XYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:24:37 -0400
+        id S1728291AbgG0XYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:24:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D7C9208E4;
-        Mon, 27 Jul 2020 23:24:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A60512173E;
+        Mon, 27 Jul 2020 23:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892276;
-        bh=5x4VHvCv2++Zyq1VJE6H93Umf7432H6ql6zvKFs5sDg=;
+        s=default; t=1595892275;
+        bh=+J6fOoLK985RugK/lghNk9b0GLsZJS34xZ+SIvL3Gdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fXb3tPNi+1Kc0GI/ByJ1153r+45Ep+vzCkV1LyUbDosslrpseqLUMWy/YWWLVI5iu
-         7ly9Yss2mD+8w5BLaEG7zE0D1uBqDvJpS1XX5h/OYkDWw0cW3Zr/vmurzRl6WZi+Mf
-         TLJ3/Ckimd6SKMmkvBqAbdDWyJDugp8DhxOVUggo=
+        b=CIlnm/BGpsR2r4jHFhTzm93BWTKDMoqDUAowxJSXzh0ZwF0fhPLUC6LPQOWcNpa/u
+         mzlJCtBQLGqFfBNZOeoa1MPbI96x6GgZd7ISqhN7DCO9sQ2ZXSHqQTciqxGF2wtmLJ
+         QLleUULIZ9E2UfEa174glVh5dtgXlwOBxq7o4B2o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 12/17] x86/unwind/orc: Fix ORC for newly forked tasks
-Date:   Mon, 27 Jul 2020 19:24:15 -0400
-Message-Id: <20200727232420.717684-12-sashal@kernel.org>
+Cc:     Raviteja Narayanam <raviteja.narayanam@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 11/17] Revert "i2c: cadence: Fix the hold bit setting"
+Date:   Mon, 27 Jul 2020 19:24:14 -0400
+Message-Id: <20200727232420.717684-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200727232420.717684-1-sashal@kernel.org>
 References: <20200727232420.717684-1-sashal@kernel.org>
@@ -60,55 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
 
-[ Upstream commit 372a8eaa05998cd45b3417d0e0ffd3a70978211a ]
+[ Upstream commit 0db9254d6b896b587759e2c844c277fb1a6da5b9 ]
 
-The ORC unwinder fails to unwind newly forked tasks which haven't yet
-run on the CPU.  It correctly reads the 'ret_from_fork' instruction
-pointer from the stack, but it incorrectly interprets that value as a
-call stack address rather than a "signal" one, so the address gets
-incorrectly decremented in the call to orc_find(), resulting in bad ORC
-data.
+This reverts commit d358def706880defa4c9e87381c5bf086a97d5f9.
 
-Fix it by forcing 'ret_from_fork' frames to be signal frames.
+There are two issues with "i2c: cadence: Fix the hold bit setting" commit.
 
-Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Link: https://lkml.kernel.org/r/f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com
+1. In case of combined message request from user space, when the HOLD
+bit is cleared in cdns_i2c_mrecv function, a STOP condition is sent
+on the bus even before the last message is started. This is because when
+the HOLD bit is cleared, the FIFOS are empty and there is no pending
+transfer. The STOP condition should occur only after the last message
+is completed.
+
+2. The code added by the commit is redundant. Driver is handling the
+setting/clearing of HOLD bit in right way before the commit.
+
+The setting of HOLD bit based on 'bus_hold_flag' is taken care in
+cdns_i2c_master_xfer function even before cdns_i2c_msend/cdns_i2c_recv
+functions.
+
+The clearing of HOLD bit is taken care at the end of cdns_i2c_msend and
+cdns_i2c_recv functions based on bus_hold_flag and byte count.
+Since clearing of HOLD bit is done after the slave address is written to
+the register (writing to address register triggers the message transfer),
+it is ensured that STOP condition occurs at the right time after
+completion of the pending transfer (last message).
+
+Signed-off-by: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/unwind_orc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-cadence.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index aa0f39dc81298..187a86e0e7531 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -431,8 +431,11 @@ bool unwind_next_frame(struct unwind_state *state)
- 	/*
- 	 * Find the orc_entry associated with the text address.
- 	 *
--	 * Decrement call return addresses by one so they work for sibling
--	 * calls and calls to noreturn functions.
-+	 * For a call frame (as opposed to a signal frame), state->ip points to
-+	 * the instruction after the call.  That instruction's stack layout
-+	 * could be different from the call instruction's layout, for example
-+	 * if the call was to a noreturn function.  So get the ORC data for the
-+	 * call instruction itself.
+diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
+index 9d71ce15db050..a51d3b7957701 100644
+--- a/drivers/i2c/busses/i2c-cadence.c
++++ b/drivers/i2c/busses/i2c-cadence.c
+@@ -377,10 +377,8 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
+ 	 * Check for the message size against FIFO depth and set the
+ 	 * 'hold bus' bit if it is greater than FIFO depth.
  	 */
- 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
- 	if (!orc) {
-@@ -653,6 +656,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 		state->sp = task->thread.sp;
- 		state->bp = READ_ONCE_NOCHECK(frame->bp);
- 		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-+		state->signal = (void *)state->ip == ret_from_fork;
- 	}
+-	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
++	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
+ 		ctrl_reg |= CDNS_I2C_CR_HOLD;
+-	else
+-		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
  
- 	if (get_stack_info((unsigned long *)state->sp, state->task,
+ 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 
+@@ -437,11 +435,8 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
+ 	 * Check for the message size against FIFO depth and set the
+ 	 * 'hold bus' bit if it is greater than FIFO depth.
+ 	 */
+-	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
++	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
+ 		ctrl_reg |= CDNS_I2C_CR_HOLD;
+-	else
+-		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+-
+ 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 
+ 	/* Clear the interrupts in interrupt status register. */
 -- 
 2.25.1
 
