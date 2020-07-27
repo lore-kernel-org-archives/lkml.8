@@ -2,356 +2,163 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CD6C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0852075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:32:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VUrZPynJ"
+	by mail.kernel.org (Postfix) with ESMTP id D419720809
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595885691;
+	bh=866a6hhZ+01yYr2IlzYYM4VKfpwbUMYsvmFHKGcJ3PI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xgbIdsdhAwejAXd5Hgk4Ca6+OxVJDpPZgg+VxYuk9aMAC5J/ZzURxodOGlFZkmlfO
+	 3+hKtDR8rXN30bCe9IMAYPWAekcdCMGnsSuQh48cA5T+TJegVtPAJFQowKftvQ+LrF
+	 wMo6wDihegYsMzTYIQrUl7MAtxBtEvd7tnDpiypY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgG0VcQ (ORCPT
+        id S1726410AbgG0Veu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 17:32:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47942 "EHLO
+        Mon, 27 Jul 2020 17:34:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgG0VcP (ORCPT
+        with ESMTP id S1726110AbgG0Veu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:32:15 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 774D4C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:32:15 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id t18so13423065otq.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:32:15 -0700 (PDT)
+        Mon, 27 Jul 2020 17:34:50 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE365C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:34:49 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id c15so3574534edj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:34:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OEiABl8b8tMlt/Qjct9uHQEISrUoWRGPs6oS3G8P/Sg=;
-        b=VUrZPynJWuf9eFzr9X2aORsn/uGDuxjcZXWBOXdYq4G1h1/6Yc73v20NP/NyvHN/ny
-         Lx9PgDSPOL9caa27MAeNHFVTdqcwU5WOn8+asUuheUEAyvS2o0YU2kcyyO4tHqXB7tCp
-         j1lDA9ekpawR45YUdOfqCj34e+FHiq5cHqBUs=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=o4V97hvZvA5I26Zuba2zhsiecwp3cc1CvQSO+r7h56c=;
+        b=c1L2iv4CgFakkeP6iB5hqF8Ke/yqNnvEz1pTYOgVRjn2ec8DMtEmkbhMUPZXfYVfFQ
+         Gs+HxMgy9Zc1DZWhLiL1Y3UYgkzzmHw/1wX5KOvd9OutyiP9neggpDrpGoTrShcS2Aln
+         rSmc6DUUeXtnePYoZPO9z8ag6H3L2Hsd6CjXSGp9IIRkED+4w2SJuR2yjRGUEMHh9+6o
+         x+3HyFsgDpEgF1lJOvKqAvQLjfIirttooGAbl8LcsWSsDe3aSGDDC1s7qwqN+iBOdZwm
+         6Cw3hXxdRoCQJSHwVm5dGWYgYCMCfNULmd/7NQxEWExUQj3hpxa5RGvUNUEDSHyD8rLS
+         oSHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OEiABl8b8tMlt/Qjct9uHQEISrUoWRGPs6oS3G8P/Sg=;
-        b=BMaOpGq80tiCSmS1Z70ggR515IPdbq9wpOuinW5f5J0i4bP+mL7kj2SHgb2oPxzMtE
-         YELu9jzJMik1f7iS2iDYs5kAJ+MwLHfJ+90gJaiyH3BlOzS9focQQQzy5TziuhbknjRP
-         ik6hJziZlulRXZtZTT3XeMOiiwO//pIFzsrI19lwPaT74VFnkpuVhl8PYLpg1clfckGj
-         6OrCuLAFJDA2Tny9g9DpfvpiALy058CCj4w2SHeCML5qE5LR6gKEf7rYDkTDDnPGcHb/
-         UJH6u8aHcfJqvgp3rh25GiUHwedI3jrecXkUmurrIEyKSfT2NhnC2jR/VhKxwhlwFPho
-         ANCQ==
-X-Gm-Message-State: AOAM531VF7ynoMFneI51r29Aa8bk1OXNwT62iPsS0IaknSj6F0aTn5Wq
-        CD2F5BBM83RFBylKpx5MeQuESBsLyV4CBlzrOaZSbw==
-X-Google-Smtp-Source: ABdhPJytl09X4a3cc8s/p1HxizemA6EhYEyZ4hdPIc9TNvGDyslLQ5lFiLoPZFNsA8h2/+W0Ii5y1F+lPL4rDpPTDdU=
-X-Received: by 2002:a05:6830:1613:: with SMTP id g19mr21092624otr.303.1595885534733;
- Mon, 27 Jul 2020 14:32:14 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=o4V97hvZvA5I26Zuba2zhsiecwp3cc1CvQSO+r7h56c=;
+        b=VYtW6eojJ6EjvyTX4rJDLCd3nGp0gLfqDPR92ePZ0ZwQ/bRCojPtXYG3WQPnQhjW32
+         /l0FO7lboZfMFU7aFOgBkc8Opfb4BU3DtQ8NgNKx+ea1KZtBu1hN0a8E3xtBo9s7fYYs
+         QDSDBR+6Wb9Id/0iHLaYRH+cEMOyzo221R2VL+KjA9n7ov8tNmAwDbdqxo9Au5TjXJVF
+         KsIJYdNfT0XpBWaiSCkZxtJq5CwpS7WnKNbzlO5TmKX7Mqntfo7Xg1rJhFqi2MdK1z1o
+         SRnbE2mFtMqRovTM5Sag/ZUK8lPRj9gX3qsvKzv03gnG0eCkl/STAhsRXkWZd97gH3+3
+         blcw==
+X-Gm-Message-State: AOAM532siSEpuRSJBiOUlrXBVc6hm4ji/DeHy+8t6PBkyvbBp7KOa+zY
+        Yei+v23jhUf30Vu81fhsNkg=
+X-Google-Smtp-Source: ABdhPJygorYCMbji9g+nTinak9IwZZpT053mfFgZL2Sv/1SCj2D53f+FmlIq4aiDdGRx/2jp5LbaGw==
+X-Received: by 2002:a50:8f83:: with SMTP id y3mr23652080edy.257.1595885688477;
+        Mon, 27 Jul 2020 14:34:48 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id p1sm4076630ejz.50.2020.07.27.14.34.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 14:34:47 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 23:34:44 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Muchun Song <songmuchun@bytedance.com>, peterz@infradead.org,
+        bigeasy@linutronix.de, namit@vmware.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] smp: Fix a potential usage of stale nr_cpus
+Message-ID: <20200727213444.GB121479@gmail.com>
+References: <20200721034239.72013-1-songmuchun@bytedance.com>
+ <20200727114303.GA57241@gmail.com>
+ <87mu3laqqi.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <M0lxN5AUlPvzBKULfIBe5BZRwfQGXeMQCdWItYcQ-9P79y32WzExYK2Y0DwyNVtyGelqbvV07_lFk1oeT4cApbT-P_oH0bnxQbMmFsJv_xg=@protonmail.com>
- <ba078fb0-0dbc-df06-cfe9-f9537883f82a@amd.com> <e2f55480-c24f-6c85-08d3-21131a22d0bf@amd.com>
- <3b7e3e50-2ff7-eff3-2ffc-abaa4b36ce7f@amd.com> <CAKMK7uHCu02P4tvhF4LQbtYeNciU61ONC9EZRmQ-0wEGFPzZgg@mail.gmail.com>
- <Fnx2lsAReNccvQbyMYBgghvef4ekiQ_ZWL0m5BwF-2h48gvnNLghI4zkIWhQwy-H6CiytTXaxEtZ83dYRlzAXeKHujBRLc_tffmcJVWjwuo=@protonmail.com>
-In-Reply-To: <Fnx2lsAReNccvQbyMYBgghvef4ekiQ_ZWL0m5BwF-2h48gvnNLghI4zkIWhQwy-H6CiytTXaxEtZ83dYRlzAXeKHujBRLc_tffmcJVWjwuo=@protonmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Mon, 27 Jul 2020 23:32:03 +0200
-Message-ID: <CAKMK7uFAnedLTp6LJYum6gYj3xaWkuuXJr70UJ48Pxxr-4dA7w@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Clear dm_state for fast updates
-To:     Mazin Rezk <mnrzk@protonmail.com>
-Cc:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
-        Duncan <1i5t5.duncan@cox.net>, Kees Cook <keescook@chromium.org>,
-        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
-        "regressions@leemhuis.info" <regressions@leemhuis.info>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87mu3laqqi.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:11 PM Mazin Rezk <mnrzk@protonmail.com> wrote:
->
-> On Monday, July 27, 2020 4:29 PM, Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> > On Mon, Jul 27, 2020 at 9:28 PM Christian K=C3=B6nig
-> > <christian.koenig@amd.com> wrote:
-> > >
-> > > Am 27.07.20 um 16:05 schrieb Kazlauskas, Nicholas:
-> > > > On 2020-07-27 9:39 a.m., Christian K=C3=B6nig wrote:
-> > > >> Am 27.07.20 um 07:40 schrieb Mazin Rezk:
-> > > >>> This patch fixes a race condition that causes a use-after-free du=
-ring
-> > > >>> amdgpu_dm_atomic_commit_tail. This can occur when 2 non-blocking
-> > > >>> commits
-> > > >>> are requested and the second one finishes before the first.
-> > > >>> Essentially,
-> > > >>> this bug occurs when the following sequence of events happens:
-> > > >>>
-> > > >>> 1. Non-blocking commit #1 is requested w/ a new dm_state #1 and i=
-s
-> > > >>> deferred to the workqueue.
-> > > >>>
-> > > >>> 2. Non-blocking commit #2 is requested w/ a new dm_state #2 and i=
-s
-> > > >>> deferred to the workqueue.
-> > > >>>
-> > > >>> 3. Commit #2 starts before commit #1, dm_state #1 is used in the
-> > > >>> commit_tail and commit #2 completes, freeing dm_state #1.
-> > > >>>
-> > > >>> 4. Commit #1 starts after commit #2 completes, uses the freed dm_=
-state
-> > > >>> 1 and dereferences a freelist pointer while setting the context.
-> > > >>
-> > > >> Well I only have a one mile high view on this, but why don't you l=
-et
-> > > >> the work items execute in order?
-> > > >>
-> > > >> That would be better anyway cause this way we don't trigger a cach=
-e
-> > > >> line ping pong between CPUs.
-> > > >>
-> > > >> Christian.
-> > > >
-> > > > We use the DRM helpers for managing drm_atomic_commit_state and tho=
-se
-> > > > helpers internally push non-blocking commit work into the system
-> > > > unbound work queue.
-> > >
-> > > Mhm, well if you send those helper atomic commits in the order A,B an=
-d
-> > > they execute it in the order B,A I would call that a bug :)
-> >
-> > The way it works is it pushes all commits into unbound work queue, but
-> > then forces serialization as needed. We do _not_ want e.g. updates on
-> > different CRTC to be serialized, that would result in lots of judder.
-> > And hw is funny enough that there's all kinds of dependencies.
-> >
-> > The way you force synchronization is by adding other CRTC state
-> > objects. So if DC is busted and can only handle a single update per
-> > work item, then I guess you always need all CRTC states and everything
-> > will be run in order. But that also totally kills modern multi-screen
-> > compositors. Xorg isn't modern, just in case that's not clear :-)
-> >
-> > Lucking at the code it seems like you indeed have only a single dm
-> > state, so yeah global sync is what you'll need as immediate fix, and
-> > then maybe fix up DM to not be quite so silly ... or at least only do
-> > the dm state stuff when really needed.
-> >
-> > We could also sprinkle the drm_crtc_commit structure around a bit
-> > (it's the glue that provides the synchronization across commits), but
-> > since your dm state is global just grabbing all crtc states
-> > unconditionally as part of that is probably best.
-> >
-> > > > While we could duplicate a copy of that code with nothing but the
-> > > > workqueue changed that isn't something I'd really like to maintain
-> > > > going forward.
-> > >
-> > > I'm not talking about duplicating the code, I'm talking about fixing =
-the
-> > > helpers. I don't know that code well, but from the outside it sounds
-> > > like a bug there.
-> > >
-> > > And executing work items in the order they are submitted is trivial.
-> > >
-> > > Had anybody pinged Daniel or other people familiar with the helper co=
-de
-> > > about it?
-> >
-> > Yeah something is wrong here, and the fix looks horrible :-)
-> >
-> > Aside, I've also seen some recent discussion flare up about
-> > drm_atomic_state_get/put used to paper over some other use-after-free,
-> > but this time related to interrupt handlers. Maybe a few rules about
-> > that:
-> > - dont
-> > - especially not when it's interrupt handlers, because you can't call
-> > drm_atomic_state_put from interrupt handlers.
-> >
-> > Instead have an spin_lock_irq to protect the shared date with your
-> > interrupt handler, and _copy_ the date over. This is e.g. what
-> > drm_crtc_arm_vblank_event does.
->
-> Nicholas wrote a patch that attempted to resolve the issue by adding ever=
-y
-> CRTC into the commit to use use the stall checks. [1] While this forces
-> synchronisation on commits, it's kind of a hacky method that may take a
-> toll on performance.
->
-> Is it possible to have a DRM helper that forces synchronisation on some
-> commits without having to add every CRTC into the commit?
->
-> Also, is synchronisation really necessary for fast updates in amdgpu?
-> I'll admit, the idea of eliminating the use-after-free bug by eliminating
-> the use entirely doesn't seem ideal; but is forcing synchronisation on
-> these updates that much better?
 
-Well clearing the dc_state pointer here and then allocating another
-one in atomic_commit_tail also looks fishy. The proper fix is probably
-a lot more involved, but yeah interim fix is to grab all crtc states
-iff you also grabbed the dm_atomic_state structure. Real fix is to
-only do this when necessary, which pretty much means the dc_state
-needs to be somehow split up, or there needs to be some guarantees
-about when it's necessary and when not. Otherwise parallel commits on
-different CRTC are not possible with the current dc backend code.
+* Thomas Gleixner <tglx@linutronix.de> wrote:
 
-See also my dma-fence annotation fixup patch, there dc_state also gets
-in the way:
+> Ingo Molnar <mingo@kernel.org> writes:
+> >> -	get_option(&str, &nr_cpus);
+> >> +	if (get_option(&str, &nr_cpus) != 1)
+> >> +		return -EINVAL;
+> >> +
+> >>  	if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
+> >>  		nr_cpu_ids = nr_cpus;
+> >> +	else
+> >> +		return -EINVAL;
+> >
+> > Exactly what does 'not valid' mean, and why doesn't get_option() 
+> > return -EINVAL in that case?
+> 
+> What's unclear about invalid? If you specify nr_cpus=-1 or
+> nr_cpus=2000000 the its obviously invalid.
 
-https://lore.kernel.org/dri-devel/20200707201229.472834-21-daniel.vetter@ff=
-wll.ch/
+So this was the old (buggy) code:
 
-Nicholas, btw I'm still waiting for some dc feedback on that entire
-series, and what/if there's plans to fix these issues properly.
-
-Maybe even going back to the subclassed drm_atomic_state might be
-better than what we currently have.
--Daniel
+>  {
+>       int nr_cpus;
 >
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D207383#c96
->
-> Thanks,
-> Mazin Rezk
->
-> >
-> > Cheers, Daniel
-> >
-> > >
-> > > Regards,
-> > > Christian.
-> > >
-> > > >
-> > > > Regards,
-> > > > Nicholas Kazlauskas
-> > > >
-> > > >>
-> > > >>>
-> > > >>> Since this bug has only been spotted with fast commits, this patc=
-h
-> > > >>> fixes
-> > > >>> the bug by clearing the dm_state instead of using the old dc_stat=
-e for
-> > > >>> fast updates. In addition, since dm_state is only used for its dc=
-_state
-> > > >>> and amdgpu_dm_atomic_commit_tail will retain the dc_state if none=
- is
-> > > >>> found,
-> > > >>> removing the dm_state should not have any consequences in fast up=
-dates.
-> > > >>>
-> > > >>> This use-after-free bug has existed for a while now, but only cau=
-sed a
-> > > >>> noticeable issue starting from 5.7-rc1 due to 3202fa62f ("slub:
-> > > >>> relocate
-> > > >>> freelist pointer to middle of object") moving the freelist pointe=
-r from
-> > > >>> dm_state->base (which was unused) to dm_state->context (which is
-> > > >>> dereferenced).
-> > > >>>
-> > > >>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D207383
-> > > >>> Fixes: bd200d190f45 ("drm/amd/display: Don't replace the dc_state
-> > > >>> for fast updates")
-> > > >>> Reported-by: Duncan <1i5t5.duncan@cox.net>
-> > > >>> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
-> > > >>> ---
-> > > >>>   .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 36
-> > > >>> ++++++++++++++-----
-> > > >>>   1 file changed, 27 insertions(+), 9 deletions(-)
-> > > >>>
-> > > >>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > > >>> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > > >>> index 86ffa0c2880f..710edc70e37e 100644
-> > > >>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > > >>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > > >>> @@ -8717,20 +8717,38 @@ static int amdgpu_dm_atomic_check(struct
-> > > >>> drm_device *dev,
-> > > >>>            * the same resource. If we have a new DC context as pa=
-rt of
-> > > >>>            * the DM atomic state from validation we need to free =
-it and
-> > > >>>            * retain the existing one instead.
-> > > >>> +         *
-> > > >>> +         * Furthermore, since the DM atomic state only contains =
-the DC
-> > > >>> +         * context and can safely be annulled, we can free the s=
-tate
-> > > >>> +         * and clear the associated private object now to free
-> > > >>> +         * some memory and avoid a possible use-after-free later=
-.
-> > > >>>            */
-> > > >>> -        struct dm_atomic_state *new_dm_state, *old_dm_state;
-> > > >>>
-> > > >>> -        new_dm_state =3D dm_atomic_get_new_state(state);
-> > > >>> -        old_dm_state =3D dm_atomic_get_old_state(state);
-> > > >>> +        for (i =3D 0; i < state->num_private_objs; i++) {
-> > > >>> +            struct drm_private_obj *obj =3D state->private_objs[=
-i].ptr;
-> > > >>>
-> > > >>> -        if (new_dm_state && old_dm_state) {
-> > > >>> -            if (new_dm_state->context)
-> > > >>> -                dc_release_state(new_dm_state->context);
-> > > >>> +            if (obj->funcs =3D=3D adev->dm.atomic_obj.funcs) {
-> > > >>> +                int j =3D state->num_private_objs-1;
-> > > >>>
-> > > >>> -            new_dm_state->context =3D old_dm_state->context;
-> > > >>> +                dm_atomic_destroy_state(obj,
-> > > >>> +                        state->private_objs[i].state);
-> > > >>> +
-> > > >>> +                /* If i is not at the end of the array then the
-> > > >>> +                 * last element needs to be moved to where i was
-> > > >>> +                 * before the array can safely be truncated.
-> > > >>> +                 */
-> > > >>> +                if (i !=3D j)
-> > > >>> +                    state->private_objs[i] =3D
-> > > >>> +                        state->private_objs[j];
-> > > >>>
-> > > >>> -            if (old_dm_state->context)
-> > > >>> -                dc_retain_state(old_dm_state->context);
-> > > >>> +                state->private_objs[j].ptr =3D NULL;
-> > > >>> +                state->private_objs[j].state =3D NULL;
-> > > >>> +                state->private_objs[j].old_state =3D NULL;
-> > > >>> +                state->private_objs[j].new_state =3D NULL;
-> > > >>> +
-> > > >>> +                state->num_private_objs =3D j;
-> > > >>> +                break;
-> > > >>> +            }
-> > > >>>           }
-> > > >>>       }
-> > > >>>
-> > > >>> --
-> > > >>> 2.27.0
-> > > >>>
-> > > >>
-> > > >
-> > >
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> >
-> >
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
+>       get_option(&str, &nr_cpus);
+>       if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
+>               nr_cpu_ids = nr_cpus;
 
+And this was the explanation given in the changelog:
 
+>> When the cmdline of "nr_cpus" is not valid, the @nr_cpu_ids is 
+>> assigned a stale value. The nr_cpus is only valid when get_option() 
+>> return 1. So check the return value to prevent this.
 
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+The answer to my question is that the bug is that the return value of 
+get_option() wasn't checked properly, and if get_option() returns an 
+error then the nr_cpus local variable is not set - but we used it in 
+the old code, which can result in essentially a random value for 
+nr_cpu_ids.
+
+> How should get_option() know that this is invalid? get_option() is a 
+> number parser and does not know about any restrictions on the parsed 
+> value obviously.
+
+But that's apparently not the bug here, 'invalid' here was meant as 
+per the parser's syntax. If nr_cpus is out of range (like the 2000000 
+example you gave), then nr_cpu_ids might not be set at all, and 
+remains at the 0 initialized value. Which isn't good but not 'stale' 
+either.
+
+This is why I was puzzled where a 'stale' value might come from, at 
+first sight I was assuming that some large value was written, like 
+your 200000 example. The "stale value" happens if it's invalid syntax 
+and get_option() returns an error, in which case 'nr_cpus' remains 
+uninitialized.
+
+And this is the explanation I didn't find at first reading, and which 
+explanation future changelogs should perhaps include.
+
+The new code does this:
+
+        int nr_cpus;
+
+        if (get_option(&str, &nr_cpus) != 1)
+                return -EINVAL;
+ 
+        if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
+                nr_cpu_ids = nr_cpus;
+        else
+                return -EINVAL;
+
+Which does all the proper error handling and fixes the uninitialized 
+'nr_cpus' local variable usage. So I agree with the fix:
+
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+
+Thanks,
+
+	Ingo
