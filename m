@@ -2,89 +2,181 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D217C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 425B12072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB49820714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:36:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zFSrD8T4"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="tVkPu1ds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgG0Md7 (ORCPT
+        id S1728407AbgG0MgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:33:59 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:63584 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgG0Md6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:33:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1595853237; x=1627389237;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IZQlZGNtosjkY1BTFF856UFpmZkCHqAhPaAMwvSuxaM=;
-  b=zFSrD8T4POrDLzzPbWOIk0CKimXhJKG4btESFCntRs2WKAV8qEP42dCe
-   1pZjnao+FFerK00NZiQsyNAHUkdLbqZ28buALNtKwIol0QT3x/u/kMpq8
-   ozXVAG+r62fNqUPKIOTZpAhv0JtmyImJu9lmDITX3ylI8mhi3wih5jQsZ
-   8q56i3bwAfitktDCz66Y7NMbiewqpAu1bXx8qncnzbV0rrr1ZApUsgaEt
-   DqvhdFcWrL2mcEiVpbqGxQoCLgepFKXGDUjyjNyUzhhkQ3wPv54G5puwm
-   dpHjI4IOlNzLaZ1kETkPlzxgeY4V2ER0SdksYA1lsPEul4EVkBphe7/TP
-   g==;
-IronPort-SDR: FA8jFvW+fpnDsWy2BmShj3vdgj2KTnzFgF9zcDKJi8TTi9dPx+abSDW/160FVz5ZgPGughJHJl
- SNjc4BjzvCv2qi+hCpt65dgBEDGgLhgLuYefO0nSctBBJOoCgHCF/UNMDbnHHBEWtBa6FRdNq6
- HXnHtlRY7EQjbryYg73RMyQDV44CXmpOhaTwGNoto/r0AfkJ+X0opLLeHUWtMhzBc29e8ltjkv
- AlCrCEs1QPhdxwnwf7x2V/U4rXORtJ7oEnqJ7+WC3cA5SPqd8BZC21u6FHcxFi+PqYz7lWv9qQ
- JUw=
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="81386719"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jul 2020 05:33:57 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 27 Jul 2020 05:33:11 -0700
-Received: from atudor-ThinkPad-T470p.amer.actel.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 27 Jul 2020 05:33:09 -0700
-From:   Tudor Ambarus <tudor.ambarus@microchip.com>
-To:     <linux-mtd@lists.infradead.org>,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: Re: [PATCH v2 1/1] drivers: mtd: spi-nor: update read capabilities for w25q64 and s25fl064k
-Date:   Mon, 27 Jul 2020 15:33:44 +0300
-Message-ID: <159585278401.156466.6163208089372747874.b4-ty@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200529071655.739-1-rayagonda.kokatanur@broadcom.com>
-References: <20200529071655.739-1-rayagonda.kokatanur@broadcom.com>
+        Mon, 27 Jul 2020 08:36:03 -0400
+Received: from mail-eopbgr70100.outbound.protection.outlook.com ([40.107.7.100]:31104
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727120AbgG0MgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:36:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F9RvsqoyWpCW5N1LN7QSlGRJpi3zVaH1wnGMXw6iIpFTlyAb5cdcyj31ihLVTOcx5vZ1glSU3MZ0YSYLPHRAheZC4jx5xfH6PfKUKHJKX6zHkxb54Xk6BGa6TfSibZBYVcdU5/S9Fkb2k6D7YSuPDpKJlfo9m7z5Z7gKqL7grxyIs6GN4M63RGttJfWOibhaNqgSEeAGnHFWOrNKE23FYwnnAcszEipCptq7JKHjmG7M5QF48RjDNfQ+pF+KDjzcJxAsf8bV/skNfjxFMwR9mgUKawGzJGJRK3iFjw+xOo38Dp81vDbflPvxkPk+pleU7oHDO+CBbRiS1yV9gTksHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uj87WIcpyEkT6WXf7bC9bT/pIOVTM3t6RBpAjosxdjE=;
+ b=UxjGhVJ/rWABS2Tvf5UevogcYFUOURD7xeeEfqgE6Gad8cOF3dM+vkQUlb3HYPB30ZB02fOdAsoQwrxVXxOEBjprh9i+Y9koNw1Xh6kL5Ti3AG30wbgDO0GtNrOV9wfi1UlwzySAVxkpMG1AQePgaAqtmiNH5m+0h2JEYSNbF8baPxdly8wPuMZ2/VTFxhy8IXcS3Mugris34pIfQyFpO5pvoUH8yhErh4mcGmiJa3ma7Y/CMcb/TJaVn5hDJNee2CxGyNqnT5dSi04tuO1elygqM/lVIkB/zXlzeMrAdblmsCy2lziRj1WNsFdgWHxoY0EQlPHFGsd9ZXCd+652UA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uj87WIcpyEkT6WXf7bC9bT/pIOVTM3t6RBpAjosxdjE=;
+ b=tVkPu1dsv+gYyt1WkcEyFOw1F0CYvY3ue07dlFNYjsGvKk3igi2Rbu96d1gtZ4naBbI+bPOS2VH8+w1OHJSjOmOkXYYKzgVN/iwIqTuOUAFhs+Eb0Cz14lRUVfsR5ahvH8vUP/03oR1rk/KSLpJ4q4FxdctiTpLiJFAPWj55qEc=
+Authentication-Results: resnulli.us; dkim=none (message not signed)
+ header.d=none;resnulli.us; dmarc=none action=none header.from=plvision.eu;
+Received: from DB6P190MB0534.EURP190.PROD.OUTLOOK.COM (2603:10a6:6:33::15) by
+ DB6P190MB0469.EURP190.PROD.OUTLOOK.COM (2603:10a6:6:33::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3216.26; Mon, 27 Jul 2020 12:35:57 +0000
+Received: from DB6P190MB0534.EURP190.PROD.OUTLOOK.COM
+ ([fe80::2c35:1eb3:3877:3c1d]) by DB6P190MB0534.EURP190.PROD.OUTLOOK.COM
+ ([fe80::2c35:1eb3:3877:3c1d%7]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
+ 12:35:57 +0000
+Date:   Mon, 27 Jul 2020 15:35:53 +0300
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [net-next v4 2/6] net: marvell: prestera: Add PCI interface
+ support
+Message-ID: <20200727123553.GC21360@plvision.eu>
+References: <20200727122242.32337-1-vadym.kochan@plvision.eu>
+ <20200727122242.32337-3-vadym.kochan@plvision.eu>
+ <20200727123205.GJ2216@nanopsycho>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727123205.GJ2216@nanopsycho>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: AM6P194CA0095.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:209:8f::36) To DB6P190MB0534.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:6:33::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from plvision.eu (217.20.186.93) by AM6P194CA0095.EURP194.PROD.OUTLOOK.COM (2603:10a6:209:8f::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Mon, 27 Jul 2020 12:35:55 +0000
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f87b3411-ccd8-4f91-3f55-08d832299c66
+X-MS-TrafficTypeDiagnostic: DB6P190MB0469:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6P190MB0469D70128FE1F7AA239F9D295720@DB6P190MB0469.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lUcqy5UfvMSPZJFETJ3iXysJ2tul1MxrkzZuuRkI5IkIKCMbqhiwGS3imu9U61eODwlKWOMrHvR+oLW4GLjP5dgkF0u4sQSfi7QCmJ6DTTEQCiJiGW9xJnIRKreuWfc0kDMZEz5BIloXCPG1Yid2FpPZfWlaY3BKtY0uCsOpqYD/JN3tyNoWSSq/8Y9tQfVbCJDrlBJfBxcJgA4F4nnQG3U9l0iOII7DhsgXvc8yzFjKLuGf5uHLmRLIXKYKiG2lCXLdVxbFIfayw/oyI69gMmuNxsbS+NnsJyQDvoW1zdbA7C1gmQHvuDVPGWgEUXHL
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6P190MB0534.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39830400003)(396003)(346002)(376002)(366004)(66946007)(36756003)(8936002)(66476007)(2906002)(66556008)(956004)(55016002)(83380400001)(2616005)(7416002)(44832011)(4326008)(8886007)(8676002)(86362001)(316002)(186003)(33656002)(26005)(7696005)(16526019)(54906003)(5660300002)(508600001)(6916009)(1076003)(52116002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: /flGuBDFNER0/cCp/MlpclE7RqCj4XeKLVJrrC3Kz2fbp8PNYB+cDr8Jcn76m9vB++fJOCiMEEWuEMPqUar/D4jD1xlp9AYGyMWviA64TQ4k6HxGS4g6ZJ6AMOhyJWqrkVHkQ/cn9iA8gzzbHWAbxlf0V+plV/jAACeHlvbNGmhzo4lO4/+ekIMpx2MakEO6//sr8sP0RjMBjbT61whJig//yzivz0tFceKVGHre+yvR4C1bpJlpZJlKTu8UUxdhlfFU+dbSgThuAAOZQaN1Y43UQMU0FEn199T396uctAFi3JCf+YPvelMi45wNYY28jytiDSQ3MhJWYhfXRuVM2ZG9zJI8oiQgVtzc8iSPBYieP/yjpOJSHlmJjyQnCakqFk0Ybf8uWCKxXOgDbf9HaZElEo+5Y/rJvzYMGkqPiac9pHyQZ6Kz1PuAoZ6GC/bqr+APY/+ze4RuWjZat6HJ8skkT5ONxMCUY2CZ17wbr5k=
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: f87b3411-ccd8-4f91-3f55-08d832299c66
+X-MS-Exchange-CrossTenant-AuthSource: DB6P190MB0534.EURP190.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 12:35:57.3378
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KfcMEQuF0j4hsEwRjXjolXt8I5539ATMf5fzKbstsRbzFvNBwMvx2JGe0T0/HwcF79zvPdL31qFIr+RMcm2L1GxedcQvXk3chXGqH78J44I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6P190MB0469
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 29 May 2020 12:46:55 +0530, Rayagonda Kokatanur wrote:
-> Both w25q64 and s25fl064k nor flash support QUAD and DUAL read
-> command, hence update the same in flash_info table.
+Hi Jiri,
+
+On Mon, Jul 27, 2020 at 02:32:05PM +0200, Jiri Pirko wrote:
+> Mon, Jul 27, 2020 at 02:22:38PM CEST, vadym.kochan@plvision.eu wrote:
+> >Add PCI interface driver for Prestera Switch ASICs family devices, which
+> >provides:
+> >
+> >    - Firmware loading mechanism
+> >    - Requests & events handling to/from the firmware
+> >    - Access to the firmware on the bus level
+> >
+> >The firmware has to be loaded each time the device is reset. The driver
+> >is loading it from:
+> >
+> >    /lib/firmware/marvell/prestera_fw-v{MAJOR}.{MINOR}.img
+> >
+> >The full firmware image version is located within the internal header
+> >and consists of 3 numbers - MAJOR.MINOR.PATCH. Additionally, driver has
+> >hard-coded minimum supported firmware version which it can work with:
+> >
+> >    MAJOR - reflects the support on ABI level between driver and loaded
+> >            firmware, this number should be the same for driver and loaded
+> >            firmware.
+> >
+> >    MINOR - this is the minimum supported version between driver and the
+> >            firmware.
+> >
+> >    PATCH - indicates only fixes, firmware ABI is not changed.
+> >
+> >Firmware image file name contains only MAJOR and MINOR numbers to make
+> >driver be compatible with any PATCH version.
+> >
+> >Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
+> >Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+> >Acked-by: Jiri Pirko <jiri@mellanox.com>
 > 
-> This is tested on Broadcom Stingray SoC (bcm958742t).
+> You have to remove the tag if you change the patch from last tagged
+> version...
+> 
+OK, sorry, makes sense, should I re-spin with v5 or wait when the status
+is changed to 'Changes Requested' in the patchwork ?
 
-Applied to spi-nor/next, thanks!
-
-[1/1] mtd: spi-nor: update read capabilities for w25q64 and s25fl064k
-      https://git.kernel.org/mtd/c/99eae48fd4c5
-
-Best regards,
--- 
-Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> >---
+> >PATCH v4:
+> >    1) Get rid of "packed" attribute for the fw image header, it is
+> >       already aligned.
+> >
+> >    2) Cleanup not needed initialization of variables which are used in
+> >       readl_poll_timeout() helpers.
+> >
+> >    3) Replace #define's of prestera_{fw,ldr}_{read,write} to static funcs.
+> >
+> >    4) Use pcim_ helpers for resource allocation
+> >
+> >    5) Use devm_zalloc() for struct prestera_fw instance allocation.
+> >
+> >    6) Use module_pci_driver(prestera_pci_driver) instead of module_{init,exit}.
+> >
+> >    7) Use _MS prefix for timeout #define's.
+> >
+> >    8) Use snprintf for firmware image path generation instead of using
+> >       macrosses.
+> >
+> >    9) Use memcpy_xxxio helpers for IO memory copying.
+> >
+> >   10) By default use same build type ('m' or 'y') for
+> >       CONFIG_PRESTERA_PCI which is used by CONFIG_PRESTERA.
+> >
+> 
+> [...]
