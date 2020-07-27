@@ -2,154 +2,162 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ACBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 579B32075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595882678;
-	bh=l3BPaepxqdMUgPeHzaQPpwBApbyngWFfAIbCpH62N4E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FzYLYYNVaKc2hH5vo8H8smM0anXBqkEA5bF+OH9MDQDxUDCKVPvP2hNl/vM2IPfJw
-	 NbTtmYYRTR3eH2j2gbRW8ofSGKx3jczJ8oLlFWvnW6Bp2BV3CsDu51ojto6iNOSb4t
-	 4DMxcdRy4oFzMLdsieFSyCcWNDiCTCV60xITP7Yo=
+	by mail.kernel.org (Postfix) with ESMTP id B63AE2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:40:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WOWsIZqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgG0Uoh (ORCPT
+        id S1726760AbgG0Ukp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:44:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbgG0Uog (ORCPT
+        Mon, 27 Jul 2020 16:40:45 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41480 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbgG0Ukp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:44:36 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283A2C061794;
-        Mon, 27 Jul 2020 13:38:50 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id l17so4065204ilq.13;
-        Mon, 27 Jul 2020 13:38:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cKdW+grdmMQSHxJMAoZvPNlBL11Q09cWhyyo13ys2bI=;
-        b=I7oqel0uPK5yNykeEPGkM2wntlhQHCyZChnUcWmgYtx1IBCUw1BngS2drpCSOwXShV
-         tyntXnpf7s1DwuorTHYqh3kFcfXGAOBG4mHZKf0sq0yhJorPasp0fbAcVp8PPVA87wD/
-         cfSGd1+o8yuNoca3uAJDIPYp6P+hHeo/aqG7lBjlW5wOg1x0Xu5hkrJ4+aqGPFFgvFGV
-         Dgdfq92GQc6amxiRixw0Jp7Y9tXwcNlZt54AUgyX2T6MMut49kXB4+hyGLRFUeiXv/dT
-         qckXgY/0r6pL9z115tsy2Ng6+HlvcmQe/42shhr1nlihWra1gu2wMZ1KMRucM+NoYWHF
-         qMHw==
-X-Gm-Message-State: AOAM532dskbRb5zYjRsYq4Lq5cPEiOcoy3yIr3hrHHmRVAmqE2TVg8Vm
-        o2ukUPlL1/t01ndtaxh/PA==
-X-Google-Smtp-Source: ABdhPJy9O/ZdIIW2uzTQWTdhUSFiitu2eaLf82UdvHppY862YgDtihIZUI+Ug5Bc98jvfGhPnhKwGg==
-X-Received: by 2002:a92:9fcb:: with SMTP id z72mr25457987ilk.195.1595882329431;
-        Mon, 27 Jul 2020 13:38:49 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id b20sm9124735ila.5.2020.07.27.13.38.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 13:38:48 -0700 (PDT)
-Received: (nullmailer pid 834377 invoked by uid 1000);
-        Mon, 27 Jul 2020 20:38:47 -0000
-Date:   Mon, 27 Jul 2020 14:38:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v4 4/6] dt-bindings: snps,dw-apb-ssi: Add sparx5 support,
- plus rx-sample-delay-ns property
-Message-ID: <20200727203847.GA782308@bogus>
-References: <20200724111404.13293-1-lars.povlsen@microchip.com>
- <20200724111404.13293-5-lars.povlsen@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724111404.13293-5-lars.povlsen@microchip.com>
+        Mon, 27 Jul 2020 16:40:45 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RKbcpu146352;
+        Mon, 27 Jul 2020 20:40:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=LyXgMk0f2r2QyhaI8yTJHaBKGPFro/rxd5GTPDWD6B4=;
+ b=WOWsIZqj41ThqMb+p7GdDDHm5AV1uiYsm/CMxIzod/VeKcNyQ1mShNlKBXPFcNeIwzXo
+ zoL0SFIIU826nYdlE6U8cRdy6QLmR5LyFfBF1NQperb779Daxxxxgub//yaFkE3fV2BB
+ 9D/InZpmLbvu5xwMDKkAK9eWesUZGD52OplWgyADvSMqdIQhb/QXMHzDGelJnPWuh9G3
+ pGAs79+GVrWrF6HGk5e02tRg6/oyrmCOv6UeHTPSMuYEDewjKk26bbueRmLFp8sw4Qs7
+ J3QxxFKPWSLyWUyOwcLtiKos3seIDcZCYwhusTx4+eZX4y4dvJM4dr8071IKQo7NikOo Yw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 32hu1jbsg9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jul 2020 20:40:41 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RKcO2f014022;
+        Mon, 27 Jul 2020 20:38:40 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 32hu5rq8qg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 20:38:40 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06RKcdHI010469;
+        Mon, 27 Jul 2020 20:38:39 GMT
+Received: from dhcp-10-154-112-121.vpn.oracle.com (/10.154.112.121)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Jul 2020 13:38:39 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.5\))
+Subject: Re: (resend) [PATCH [linux-4.14.y]] dm cache: submit writethrough
+ writes in parallel to origin and cache
+From:   John Donnelly <john.p.donnelly@oracle.com>
+In-Reply-To: <20200727201700.GJ406581@sasha-vm>
+Date:   Mon, 27 Jul 2020 15:38:38 -0500
+Cc:     Mike Snitzer <snitzer@redhat.com>, stable@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6F764B9B-DEE6-4060-9F11-050D2F0999ED@oracle.com>
+References: <37c5a615-655d-c106-afd0-54e03f3c0eef@oracle.com>
+ <20200727150014.GA27472@redhat.com> <20200727191809.GI406581@sasha-vm>
+ <D8DDA535-33D5-4E80-85B3-62A463441B5F@oracle.com>
+ <20200727201700.GJ406581@sasha-vm>
+To:     Sasha Levin <sashal@kernel.org>
+X-Mailer: Apple Mail (2.3445.9.5)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 adultscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270138
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 mlxlogscore=999
+ malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ suspectscore=3 bulkscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 01:14:02PM +0200, Lars Povlsen wrote:
-> This has the following changes for the snps,dw-apb-ss DT bindings:
-> 
-> - Add "microchip,sparx5-spi" as the compatible for the Sparx5 SoC
->   controller
-> 
-> - Add the property "rx-sample-delay-ns"
-> 
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> ---
->  .../bindings/spi/snps,dw-apb-ssi.yaml         | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> index c62cbe79f00dd..c0adaad1aa695 100644
-> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> @@ -36,6 +36,8 @@ properties:
->                - mscc,ocelot-spi
->                - mscc,jaguar2-spi
->            - const: snps,dw-apb-ssi
-> +      - description: Microchip Sparx5 SoC SPI Controller
-> +        const: microchip,sparx5-spi
->        - description: Amazon Alpine SPI Controller
->          const: amazon,alpine-dw-apb-ssi
->        - description: Renesas RZ/N1 SPI Controller
-> @@ -93,6 +95,12 @@ properties:
->        - const: tx
->        - const: rx
->  
-> +  rx-sample-delay-ns:
-> +    description: Default value of the rx-sample-delay-ns property.
-> +      This value will be used if the property is not explicitly defined
-> +      for a SPI slave device. Default value is 0. See below.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-Don't need a type for properties with unit suffixes.
 
-Also, add:
+> On Jul 27, 2020, at 3:17 PM, Sasha Levin <sashal@kernel.org> wrote:
+>=20
+> On Mon, Jul 27, 2020 at 02:38:52PM -0500, John Donnelly wrote:
+>>=20
+>>=20
+>>> On Jul 27, 2020, at 2:18 PM, Sasha Levin <sashal@kernel.org> wrote:
+>>>=20
+>>> On Mon, Jul 27, 2020 at 11:00:14AM -0400, Mike Snitzer wrote:
+>>>> This mail needs to be saent to stable@vger.kernel.org (now cc'd).
+>>>>=20
+>>>> Greg et al: please backport =
+2df3bae9a6543e90042291707b8db0cbfbae9ee9
+>>>=20
+>>> Hm, what's the issue that this patch addresses? It's not clear from =
+the
+>>> commit message.
+>>>=20
+>>> --
+>>> Thanks,
+>>> Sasha
+>>=20
+>> HI Sasha ,
+>>=20
+>> In an off-line conversation I had with Mike , he indicated that :
+>>=20
+>>=20
+>> commit 1b17159e52bb31f982f82a6278acd7fab1d3f67b
+>> Author: Mike Snitzer <snitzer@redhat.com>
+>> Date:   Fri Feb 28 18:00:53 2020 -0500
+>>=20
+>>  dm bio record: save/restore bi_end_io and bi_integrity
+>>=20
+>>=20
+>> commit 248aa2645aa7fc9175d1107c2593cc90d4af5a4e
+>> Author: Mike Snitzer <snitzer@redhat.com>
+>> Date:   Fri Feb 28 18:11:53 2020 -0500
+>>=20
+>>  dm integrity: use dm_bio_record and dm_bio_restore
+>>=20
+>>=20
+>> Were picked up  in  "stable" kernels picked up even though
+>> neither was marked for stable@vger.kernel.org
+>>=20
+>> Adding this missing  commit :
+>>=20
+>> 2df3bae9a6543e90042291707b8db0cbfbae9ee9
+>>=20
+>>=20
+>> Completes the series
+>=20
+> Should we just revert those two commits instead if they're not needed?
+>=20
+> --=20
+> Thanks,
+> Sasha
 
-'default: 0'
+  As I stated above:
 
-> +
->  patternProperties:
->    "^.*@[0-9a-f]+$":
->      type: object
-> @@ -107,6 +115,13 @@ patternProperties:
->        spi-tx-bus-width:
->          const: 1
->  
-> +      rx-sample-delay-ns:
-> +        description: SPI Rx sample delay offset, unit is nanoseconds.
-> +          The delay from the default sample time before the actual
-> +          sample of the rxd input signal occurs. The "rx_sample_delay"
-> +          is an optional feature of the designware controller, and the
-> +          upper limit is also subject to controller configuration.
-> +
->  unevaluatedProperties: false
->  
->  required:
-> @@ -129,5 +144,11 @@ examples:
->        num-cs = <2>;
->        cs-gpios = <&gpio0 13 0>,
->                   <&gpio0 14 0>;
-> +      rx-sample-delay-ns = <3>;
-> +      spi-flash@1 {
-> +        compatible = "spi-nand";
-> +        reg = <1>;
-> +        rx-sample-delay-ns = <7>;
-> +      };
->      };
->  ...
-> -- 
-> 2.27.0
-> 
+> Fixes: 705559706d62038b74c5088114c1799cf2c9dce8 (dm bio record:
+> save/restore bi_end_io and bi_integrity, version 4.14.188)
+>=20
+> 70555970 introduced a mkfs.ext4 hang on a LVM device that has been
+> modified with lvconvert --cachemode=3Dwritethrough.
+
+  It corrects an issue we discovered in 4.14.188 .    Any other branches =
+those two commits have migrated to will likely have the same regression.=20=
+
+
+I am confident linux-4.14.y will  be better off with it ;-)=20
+
+
+
+
