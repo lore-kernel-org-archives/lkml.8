@@ -2,367 +2,138 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E2BC433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF449C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5CD820775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B03A2083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858851;
-	bh=d0rm8pf1VjIRHQ6IqBMlyRQ1akt8PToj2Jo9IIE3/SE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Bqvo7c5qNMhNn+EolM9xbHP55N5x0oieGO4WQTEVR90g000UnNF1606lizRqJ1/iZ
-	 vkCsZ8b2PrXU3ezhyVB5+u4R9A0d5/Vqt51bL9i4r/i6SY3NxLZfOU2/BVpslWKi7F
-	 +9kJ/k7/vHsG003AbNw8y65H/Gjda0fDhL6upSNg=
+	s=default; t=1595858832;
+	bh=04hSxckEE+xLDBkj4UTbZjGpGuuD88fIQvilD+Jlc+s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=txs1KFF2O37ncVlv96OmAXWAsK4jiSquqNgNEEFWc3Xus2XJe2OQ/HjoEBYH+G1TJ
+	 Mf+i0RsT8VBhyd7HrFAuqFUxyJ/bfZDwAD83WebUJt1G1FRznUrFgr+qyVOgDHXsFQ
+	 D4qJx2RZWvmo3t3E1tjfS3xEkezxn1psRApR51D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgG0OH3 (ORCPT
+        id S1729179AbgG0OHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:07:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:07:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgG0OHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:07:25 -0400
+        id S1729171AbgG0OHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:07:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D07A321744;
-        Mon, 27 Jul 2020 14:07:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2A60207FC;
+        Mon, 27 Jul 2020 14:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858844;
-        bh=d0rm8pf1VjIRHQ6IqBMlyRQ1akt8PToj2Jo9IIE3/SE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SUitiHQXZNRnTgv294O9Tj2MkJG2JoyPkmryuQ6VSjTz9ReBnrsDd7WmJPM7I5u4n
-         ud8o+R8pH25fJfUUvbddqFdXOqey9YytYcnEa6eM1MzvW1iZjpTifB0CcRz9/p98j0
-         KeZunKjvg5MJ0omEZto0zEtrQ9S6rxolNIMW0kLs=
+        s=default; t=1595858829;
+        bh=04hSxckEE+xLDBkj4UTbZjGpGuuD88fIQvilD+Jlc+s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1GBW5pY1WLDE3ekfUEtbnUXXRAxUBe3r0WZ8LNy8uL/sOxfSwFUh9vRtq1fmGAwR9
+         wt+SItvjC17ESboeIyT0xbE35yLg4lJfjTA85lYRdcQDzMvDxzsOKG/KHOC5QytWmX
+         eAhJ+cXCXVjEIjx/RnDJSCXPc/b/dPNh7ednXDaY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 00/64] 4.14.190-rc1 review
-Date:   Mon, 27 Jul 2020 16:03:39 +0200
-Message-Id: <20200727134911.020675249@linuxfoundation.org>
+        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 04/64] mac80211: allow rx of mesh eapol frames with default rx key
+Date:   Mon, 27 Jul 2020 16:03:43 +0200
+Message-Id: <20200727134911.253360836@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
+In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
+References: <20200727134911.020675249@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.190-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.190-rc1
-X-KernelTest-Deadline: 2020-07-29T13:49+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.190 release.
-There are 64 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Markus Theil <markus.theil@tu-ilmenau.de>
+
+[ Upstream commit 0b467b63870d9c05c81456aa9bfee894ab2db3b6 ]
+
+Without this patch, eapol frames cannot be received in mesh
+mode, when 802.1X should be used. Initially only a MGTK is
+defined, which is found and set as rx->key, when there are
+no other keys set. ieee80211_drop_unencrypted would then
+drop these eapol frames, as they are data frames without
+encryption and there exists some rx->key.
+
+Fix this by differentiating between mesh eapol frames and
+other data frames with existing rx->key. Allow mesh mesh
+eapol frames only if they are for our vif address.
+
+With this patch in-place, ieee80211_rx_h_mesh_fwding continues
+after the ieee80211_drop_unencrypted check and notices, that
+these eapol frames have to be delivered locally, as they should.
+
+Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
+Link: https://lore.kernel.org/r/20200625104214.50319-1-markus.theil@tu-ilmenau.de
+[small code cleanups]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/mac80211/rx.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 56d7a3dfa543b..04ae9de55d74b 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -2120,6 +2120,7 @@ static int ieee80211_802_1x_port_control(struct ieee80211_rx_data *rx)
+ 
+ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
+ {
++	struct ieee80211_hdr *hdr = (void *)rx->skb->data;
+ 	struct sk_buff *skb = rx->skb;
+ 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
+ 
+@@ -2130,6 +2131,31 @@ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
+ 	if (status->flag & RX_FLAG_DECRYPTED)
+ 		return 0;
+ 
++	/* check mesh EAPOL frames first */
++	if (unlikely(rx->sta && ieee80211_vif_is_mesh(&rx->sdata->vif) &&
++		     ieee80211_is_data(fc))) {
++		struct ieee80211s_hdr *mesh_hdr;
++		u16 hdr_len = ieee80211_hdrlen(fc);
++		u16 ethertype_offset;
++		__be16 ethertype;
++
++		if (!ether_addr_equal(hdr->addr1, rx->sdata->vif.addr))
++			goto drop_check;
++
++		/* make sure fixed part of mesh header is there, also checks skb len */
++		if (!pskb_may_pull(rx->skb, hdr_len + 6))
++			goto drop_check;
++
++		mesh_hdr = (struct ieee80211s_hdr *)(skb->data + hdr_len);
++		ethertype_offset = hdr_len + ieee80211_get_mesh_hdrlen(mesh_hdr) +
++				   sizeof(rfc1042_header);
++
++		if (skb_copy_bits(rx->skb, ethertype_offset, &ethertype, 2) == 0 &&
++		    ethertype == rx->sdata->control_port_protocol)
++			return 0;
++	}
++
++drop_check:
+ 	/* Drop unencrypted frames if key is set. */
+ 	if (unlikely(!ieee80211_has_protected(fc) &&
+ 		     !ieee80211_is_any_nullfunc(fc) &&
+-- 
+2.25.1
 
-Responses should be made by Wed, 29 Jul 2020 13:48:51 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.190-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.190-rc1
-
-Mark O'Donovan <shiftee@posteo.net>
-    ath9k: Fix regression with Atheros 9271
-
-Qiujun Huang <hqjagain@gmail.com>
-    ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-
-John David Anglin <dave.anglin@bell.net>
-    parisc: Add atomic64_set_release() define to avoid CPU soft lockups
-
-Michael J. Ruhl <michael.j.ruhl@intel.com>
-    io-mapping: indicate mapping failure
-
-Hugh Dickins <hughd@google.com>
-    mm/memcg: fix refcount error while moving and swapping
-
-Fangrui Song <maskray@google.com>
-    Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang cross compilation
-
-Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-    vt: Reject zero-sized screen buffer size.
-
-Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-    fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
-
-Serge Semin <Sergey.Semin@baikalelectronics.ru>
-    serial: 8250_mtk: Fix high-speed baud rates clamping
-
-Yang Yingliang <yangyingliang@huawei.com>
-    serial: 8250: fix null-ptr-deref in serial8250_start_tx()
-
-Ian Abbott <abbotti@mev.co.uk>
-    staging: comedi: addi_apci_1564: check INSN_CONFIG_DIGITAL_TRIG shift
-
-Ian Abbott <abbotti@mev.co.uk>
-    staging: comedi: addi_apci_1500: check INSN_CONFIG_DIGITAL_TRIG shift
-
-Ian Abbott <abbotti@mev.co.uk>
-    staging: comedi: ni_6527: fix INSN_CONFIG_DIGITAL_TRIG support
-
-Ian Abbott <abbotti@mev.co.uk>
-    staging: comedi: addi_apci_1032: check INSN_CONFIG_DIGITAL_TRIG shift
-
-Rustam Kovhaev <rkovhaev@gmail.com>
-    staging: wlan-ng: properly check endpoint types
-
-Steve French <stfrench@microsoft.com>
-    Revert "cifs: Fix the target file was deleted when rename failed."
-
-Forest Crossman <cyrozap@gmail.com>
-    usb: xhci: Fix ASM2142/ASM3142 DMA addressing
-
-Chunfeng Yun <chunfeng.yun@mediatek.com>
-    usb: xhci-mtk: fix the failure of bandwidth allocation
-
-Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-    binder: Don't use mmput() from shrinker function.
-
-Arnd Bergmann <arnd@arndb.de>
-    x86: math-emu: Fix up 'cmp' insn for clang ias
-
-Will Deacon <will@kernel.org>
-    arm64: Use test_tsk_thread_flag() for checking TIF_SINGLESTEP
-
-Evgeny Novikov <novikov@ispras.ru>
-    usb: gadget: udc: gr_udc: fix memleak on error handling path in gr_ep_init()
-
-Ilya Katsnelson <me@0upti.me>
-    Input: synaptics - enable InterTouch for ThinkPad X1E 1st gen
-
-Leonid Ravich <Leonid.Ravich@emc.com>
-    dmaengine: ioat setting ioat timeout as module parameter
-
-Evgeny Novikov <novikov@ispras.ru>
-    hwmon: (aspeed-pwm-tacho) Avoid possible buffer overflow
-
-Marc Kleine-Budde <mkl@pengutronix.de>
-    regmap: dev_get_regmap_match(): fix string comparison
-
-leilk.liu <leilk.liu@mediatek.com>
-    spi: mediatek: use correct SPI_CFG2_REG MACRO
-
-Merlijn Wajer <merlijn@wizzup.org>
-    Input: add `SW_MACHINE_COVER`
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    dmaengine: tegra210-adma: Fix runtime PM imbalance on error
-
-Hans de Goede <hdegoede@redhat.com>
-    HID: apple: Disable Fn-key key-re-mapping on clone keyboards
-
-Federico Ricchiuto <fed.ricchiuto@gmail.com>
-    HID: i2c-hid: add Mediacom FlexBook edge13 to descriptor override
-
-Pi-Hsun Shih <pihsun@chromium.org>
-    scripts/decode_stacktrace: strip basepath from all paths
-
-Matthew Howell <matthew.howell@sealevel.com>
-    serial: exar: Fix GPIO configuration for Sealevel cards based on XR17V35X
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    bonding: check return value of register_netdevice() in bond_newlink()
-
-Wolfram Sang <wsa+renesas@sang-engineering.com>
-    i2c: rcar: always clear ICSAR to avoid side effects
-
-guodeqing <geffrey.guo@huawei.com>
-    ipvs: fix the connection sync failed in some cases
-
-Liu Jian <liujian56@huawei.com>
-    mlxsw: destroy workqueue when trap_register in mlxsw_emad_init
-
-Taehee Yoo <ap420073@gmail.com>
-    bonding: check error value of register_netdevice() immediately
-
-Wang Hai <wanghai38@huawei.com>
-    net: smc91x: Fix possible memory leak in smc_drv_probe()
-
-Chen-Yu Tsai <wens@csie.org>
-    drm: sun4i: hdmi: Fix inverted HPD result
-
-Sergey Organov <sorganov@gmail.com>
-    net: dp83640: fix SIOCSHWTSTAMP to update the struct with actual configuration
-
-George Kennedy <george.kennedy@oracle.com>
-    ax88172a: fix ax88172a_unbind() failures
-
-Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-    hippi: Fix a size used in a 'pci_free_consistent()' in an error handling path
-
-Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-    bnxt_en: Fix race when modifying pause settings.
-
-Robbie Ko <robbieko@synology.com>
-    btrfs: fix page leaks after failure to lock page for delalloc
-
-Boris Burkov <boris@bur.io>
-    btrfs: fix mount failure caused by race with umount
-
-Filipe Manana <fdmanana@suse.com>
-    btrfs: fix double free on ulist after backref resolution failure
-
-Hans de Goede <hdegoede@redhat.com>
-    ASoC: rt5670: Correct RT5670_LDO_SEL_MASK
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: info: Drop WARN_ON() from buffer NULL sanity check
-
-Oleg Nesterov <oleg@redhat.com>
-    uprobes: Change handle_swbp() to send SIGTRAP with si_code=SI_KERNEL, to fix GDB regression
-
-Yang Yingliang <yangyingliang@huawei.com>
-    IB/umem: fix reference count leak in ib_umem_odp_get()
-
-Vladimir Oltean <olteanv@gmail.com>
-    spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not ours
-
-Olga Kornievskaia <kolga@netapp.com>
-    SUNRPC reverting d03727b248d0 ("NFSv4 fix CLOSE not waiting for direct IO compeletion")
-
-Thomas Gleixner <tglx@linutronix.de>
-    irqdomain/treewide: Keep firmware node unconditionally allocated
-
-Ben Skeggs <bskeggs@redhat.com>
-    drm/nouveau/i2c/g94-: increase NV_PMGR_DP_AUXCTL_TRANSACTREQ timeout
-
-Tom Rix <trix@redhat.com>
-    net: sky2: initialize return of gm_phy_read
-
-Xie He <xie.he.0141@gmail.com>
-    drivers/net/wan/lapbether: Fixed the value of hard_header_len
-
-Max Filippov <jcmvbkbc@gmail.com>
-    xtensa: update *pos in cpuinfo_op.next
-
-Max Filippov <jcmvbkbc@gmail.com>
-    xtensa: fix __sync_fetch_and_{and,or}_4 declarations
-
-Tom Rix <trix@redhat.com>
-    scsi: scsi_transport_spi: Fix function pointer check
-
-Markus Theil <markus.theil@tu-ilmenau.de>
-    mac80211: allow rx of mesh eapol frames with default rx key
-
-Jacky Hu <hengqing.hu@gmail.com>
-    pinctrl: amd: fix npins for uart0 in kerncz_groups
-
-Navid Emamdoost <navid.emamdoost@gmail.com>
-    gpio: arizona: put pm_runtime in case of failure
-
-Navid Emamdoost <navid.emamdoost@gmail.com>
-    gpio: arizona: handle pm_runtime_get_sync failure case
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  6 +--
- arch/arm64/kernel/debug-monitors.c                 |  4 +-
- arch/parisc/include/asm/atomic.h                   |  2 +
- arch/x86/kernel/apic/io_apic.c                     | 10 ++---
- arch/x86/kernel/apic/msi.c                         | 16 ++++---
- arch/x86/kernel/apic/vector.c                      |  1 -
- arch/x86/math-emu/wm_sqrt.S                        |  2 +-
- arch/x86/platform/uv/uv_irq.c                      |  3 +-
- arch/xtensa/kernel/setup.c                         |  3 +-
- arch/xtensa/kernel/xtensa_ksyms.c                  |  4 +-
- drivers/android/binder_alloc.c                     |  2 +-
- drivers/base/regmap/regmap.c                       |  2 +-
- drivers/dma/ioat/dma.c                             | 12 +++++
- drivers/dma/ioat/dma.h                             |  2 -
- drivers/dma/tegra210-adma.c                        |  5 ++-
- drivers/gpio/gpio-arizona.c                        |  7 ++-
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c   |  4 +-
- drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c |  4 +-
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c             |  2 +-
- drivers/hid/hid-apple.c                            | 18 ++++++++
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c           |  8 ++++
- drivers/hwmon/aspeed-pwm-tacho.c                   |  2 +
- drivers/i2c/busses/i2c-rcar.c                      |  3 ++
- drivers/infiniband/core/umem_odp.c                 |  3 +-
- drivers/input/mouse/synaptics.c                    |  1 +
- drivers/iommu/amd_iommu.c                          |  5 ++-
- drivers/iommu/intel_irq_remapping.c                |  2 +-
- drivers/net/bonding/bond_main.c                    | 10 +++--
- drivers/net/bonding/bond_netlink.c                 |  3 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c  |  5 ++-
- drivers/net/ethernet/marvell/sky2.c                |  2 +-
- drivers/net/ethernet/mellanox/mlxsw/core.c         |  3 +-
- drivers/net/ethernet/smsc/smc91x.c                 |  4 +-
- drivers/net/hippi/rrunner.c                        |  2 +-
- drivers/net/phy/dp83640.c                          |  4 ++
- drivers/net/usb/ax88172a.c                         |  1 +
- drivers/net/wan/lapbether.c                        |  9 +++-
- drivers/net/wireless/ath/ath9k/hif_usb.c           | 52 +++++++++++++++++-----
- drivers/net/wireless/ath/ath9k/hif_usb.h           |  5 +++
- drivers/pci/host/vmd.c                             |  5 ++-
- drivers/pinctrl/pinctrl-amd.h                      |  2 +-
- drivers/scsi/scsi_transport_spi.c                  |  2 +-
- drivers/spi/spi-fsl-dspi.c                         |  4 +-
- drivers/spi/spi-mt65xx.c                           | 15 ++++---
- drivers/staging/comedi/drivers/addi_apci_1032.c    | 20 ++++++---
- drivers/staging/comedi/drivers/addi_apci_1500.c    | 24 +++++++---
- drivers/staging/comedi/drivers/addi_apci_1564.c    | 20 ++++++---
- drivers/staging/comedi/drivers/ni_6527.c           |  2 +-
- drivers/staging/wlan-ng/prism2usb.c                | 16 ++++++-
- drivers/tty/serial/8250/8250_core.c                |  2 +-
- drivers/tty/serial/8250/8250_exar.c                | 12 ++++-
- drivers/tty/serial/8250/8250_mtk.c                 | 18 ++++++++
- drivers/tty/vt/vt.c                                | 29 +++++++-----
- drivers/usb/gadget/udc/gr_udc.c                    |  7 ++-
- drivers/usb/host/xhci-mtk-sch.c                    |  4 ++
- drivers/usb/host/xhci-pci.c                        |  3 ++
- drivers/video/fbdev/core/bitblit.c                 |  4 +-
- drivers/video/fbdev/core/fbcon_ccw.c               |  4 +-
- drivers/video/fbdev/core/fbcon_cw.c                |  4 +-
- drivers/video/fbdev/core/fbcon_ud.c                |  4 +-
- fs/btrfs/backref.c                                 |  1 +
- fs/btrfs/extent_io.c                               |  3 +-
- fs/btrfs/volumes.c                                 |  8 ++++
- fs/cifs/inode.c                                    | 10 +----
- fs/nfs/direct.c                                    | 13 ++----
- fs/nfs/file.c                                      |  1 -
- include/linux/io-mapping.h                         |  5 ++-
- include/linux/mod_devicetable.h                    |  2 +-
- include/uapi/linux/input-event-codes.h             |  3 +-
- kernel/events/uprobes.c                            |  2 +-
- mm/memcontrol.c                                    |  4 +-
- net/mac80211/rx.c                                  | 26 +++++++++++
- net/netfilter/ipvs/ip_vs_sync.c                    | 12 +++--
- scripts/decode_stacktrace.sh                       |  4 +-
- sound/core/info.c                                  |  4 +-
- sound/soc/codecs/rt5670.h                          |  2 +-
- 76 files changed, 387 insertions(+), 147 deletions(-)
 
 
