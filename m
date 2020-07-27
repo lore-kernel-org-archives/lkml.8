@@ -2,90 +2,142 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 597C3C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0ACC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38CFC20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D4020672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lZUCBhCd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="it786BeQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgG0Igf (ORCPT
+        id S1727094AbgG0Igv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:36:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbgG0Igf (ORCPT
+        Mon, 27 Jul 2020 04:36:51 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:13263 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726227AbgG0Igs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:36:35 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35293C061794;
-        Mon, 27 Jul 2020 01:36:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3jHDYPNEyZSDNf8t0KwCcgaWouvTTdLYFPAan9XpiKk=; b=lZUCBhCdH3I6A6wocrCmJymCJP
-        Fkb1/ZtOrqdP7f+wjkm51CuCM55nKeuek7tPVOf0F/G86vyUCb4ivpVLrzze+e/Tetrd1q6pxGLX2
-        KpnoCQ1LBM7CsEWFUeuJIwdKSSvKrYgK94wISM+s1KD2+0VMUJYYPoGQl4+LfWo55RqoBUSYFJp7b
-        Y/tTjW7zFdAuYcWRcGciwN6B8wXRJmshlcvShtzQs3EIk78TxBilCNwFAuBqcfmFYRA9Nv2a84qDF
-        tMYs5w0u9G7sz+yZT7/QRlO9oLJWMWw/gJNi5ZYWL46fBrO5CitPmos/2nnn5oZQQzpNL+EvGeGWi
-        oBy3TJ4w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzycP-0003Lm-5n; Mon, 27 Jul 2020 08:36:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3B81530411F;
-        Mon, 27 Jul 2020 10:36:20 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F0CB52B73BB17; Mon, 27 Jul 2020 10:36:19 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 10:36:19 +0200
-From:   peterz@infradead.org
-To:     hpa@zytor.com
-Cc:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Cathy Zhang <cathy.zhang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-edac@vger.kernel.org
-Subject: Re: [PATCH 4/4] x86/cpu: Use SERIALIZE in sync_core() when available
-Message-ID: <20200727083619.GF119549@hirez.programming.kicks-ass.net>
-References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
- <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
- <D51F2DC3-3C56-44E6-A1F2-434E7D27133C@zytor.com>
+        Mon, 27 Jul 2020 04:36:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595839007; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=JqWfd/1AwzywENu929p5CV6pTKTw5ZyiTiaOJDpxEvU=; b=it786BeQVO7B62hO4K10hgc6mtPsdl+YoUynIHzDUHF8FUc0JM215WL+5DGjfUrK9fq604JW
+ A2yb+G/tvoYy3Qw0BxpO4e+etpHwznh87so2zCHWJP3PmcCGloCbyA9CNRnis2LK3Nf0Wq3X
+ 8bKWLGJ5d18IEu26N6eVb4/W418=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f1e921cc7e7bf09e0ce2348 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 08:36:44
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3B4E6C4339C; Mon, 27 Jul 2020 08:36:44 +0000 (UTC)
+Received: from [192.168.0.13] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5B086C433C9;
+        Mon, 27 Jul 2020 08:36:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5B086C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH v2] i2c: i2c-qcom-geni: Fix DMA transfer race
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Douglas Anderson <dianders@chromium.org>
+Cc:     swboyd@chromium.org, msavaliy@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        Karthikeyan Ramasubramanian <kramasub@codeaurora.org>,
+        Sagar Dharia <sdharia@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200722145948.v2.1.I7efdf6efaa6edadbb690196cd4fbe3392a582c89@changeid>
+ <20200723195634.GA908@ninjato> <20200726124747.GA16169@ninjato>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <ed066f01-0c3a-a14b-5616-cbdfd074bfeb@codeaurora.org>
+Date:   Mon, 27 Jul 2020 14:06:36 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D51F2DC3-3C56-44E6-A1F2-434E7D27133C@zytor.com>
+In-Reply-To: <20200726124747.GA16169@ninjato>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 10:55:15PM -0700, hpa@zytor.com wrote:
-> For a really overenginered solution, but which might perform
-> unnecessary poorly on existing hardware:
-> 
-> asm volatile("1: .byte 0xf, 0x1, 0xe8; 2:"
->                         _ASM_EXTABLE(1b,2b));
+On 7/26/2020 6:17 PM, Wolfram Sang wrote:
+> On Thu, Jul 23, 2020 at 09:56:34PM +0200, Wolfram Sang wrote:
+>> On Wed, Jul 22, 2020 at 03:00:21PM -0700, Douglas Anderson wrote:
+>>> When I have KASAN enabled on my kernel and I start stressing the
+>>> touchscreen my system tends to hang.  The touchscreen is one of the
+>>> only things that does a lot of big i2c transfers and ends up hitting
+>>> the DMA paths in the geni i2c driver.  It appears that KASAN adds
+>>> enough delay in my system to tickle a race condition in the DMA setup
+>>> code.
+>>>
+>>> When the system hangs, I found that it was running the geni_i2c_irq()
+>>> over and over again.  It had these:
+>>>
+>>> m_stat   = 0x04000080
+>>> rx_st    = 0x30000011
+>>> dm_tx_st = 0x00000000
+>>> dm_rx_st = 0x00000000
+>>> dma      = 0x00000001
+>>>
+>>> Notably we're in DMA mode but are getting M_RX_IRQ_EN and
+>>> M_RX_FIFO_WATERMARK_EN over and over again.
+>>>
+>>> Putting some traces in geni_i2c_rx_one_msg() showed that when we
+>>> failed we were getting to the start of geni_i2c_rx_one_msg() but were
+>>> never executing geni_se_rx_dma_prep().
+>>>
+>>> I believe that the problem here is that we are starting the geni
+>>> command before we run geni_se_rx_dma_prep().  If a transfer makes it
+>>> far enough before we do that then we get into the state I have
+>>> observed.  Let's change the order, which seems to work fine.
+>>>
+>>> Although problems were seen on the RX path, code inspection suggests
+>>> that the TX should be changed too.  Change it as well.
+>>>
+>>> Fixes: 37692de5d523 ("i2c: i2c-qcom-geni: Add bus driver for the Qualcomm GENI I2C controller")
+>>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>>> Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+>> Applied to for-current, thanks!
+> Glad we got this sorted. I just wondered that Alok wasn't part of the
+> discussion. Is he still interested in maintaining the driver? Also
+> because there is an unprocessed patch left for this driver:
+>
+> http://patchwork.ozlabs.org/project/linux-i2c/patch/20191103212204.13606-1-colin.king@canonical.com/
 
-Ha! cute, you take an #UD ?
+Alok has moved out of GENI team, he no longer supports GENI I2C drivers.
 
-We could optimize the #UD exception handler for this I suppose, but that
-makes it an even worse hack. The simple alternative() seems like a much
-simpler approach.
+I have posted a patch to update maintainers list. Patch: 
+https://patchwork.kernel.org/patch/11686541/ [MAINTAINERS: Update Geni 
+I2C maintainers list]
+
+Also, Girish Mahadevan, Sagar Dharia and Karthikeyan Ramasubramanian  no 
+longer supports GENI drivers.
+
+Regards,
+
+Akash
+
+>
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+
