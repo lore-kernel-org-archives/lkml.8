@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D44AC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5329AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F80A2083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3053E2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859320;
-	bh=LvnyYxvjXdHcMbft6ooLrDkrVOamx3GpTTFhktluOso=;
+	s=default; t=1595859326;
+	bh=sZJADNEv5yYJ4d0fShCRIvioPpF6lHr/82zsUvW411o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s8u88rnzC124tlBUYE1+zPfp8xXm54hvaFDTeyHyVPfDFZ07q/dN/+ysG9Vz788iY
-	 bAqpdFiRM5wQT2WkE8vWujlEG1MPtRxfy0eX+TJBBlZT145dBeBPmPpqtnIkZtpb2g
-	 eprDwEsGM7ZsOtmYBvx05mnCnWsSxxKgOJgpaMKw=
+	b=iSDTPhSdz6XSbSffCgEVReY1m/0obNAIPSRSODfFpzfX22H5Kczf222eshHbDMM0R
+	 SmL5toOye6RFcS++kTIgHoX+PjyGQU/vkdieKxfEDBJBWA7A+Vw7gvnmdbYJRmszpK
+	 gqsRrVlAI629SQ9d5iv2PXRLgQbBV0t/21tTg9wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730688AbgG0OPT (ORCPT
+        id S1730703AbgG0OPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:15:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41510 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:15:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730673AbgG0OPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:15:15 -0400
+        id S1730682AbgG0OPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:15:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B435522C9E;
-        Mon, 27 Jul 2020 14:15:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48FF420663;
+        Mon, 27 Jul 2020 14:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859315;
-        bh=LvnyYxvjXdHcMbft6ooLrDkrVOamx3GpTTFhktluOso=;
+        s=default; t=1595859317;
+        bh=sZJADNEv5yYJ4d0fShCRIvioPpF6lHr/82zsUvW411o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MsuiE6l7O1PEdg9YlGkC/SDIUQWgCXIHh9EUbin5p3bfV7nud5kCjIM1iayrx8NRl
-         nEuIEbGsIzZBlnGdDQKYr7tjMP055a8BCQbAgaU2e3644Emu6/XfYNKyk6VXaM+M82
-         AVl8B7Le8q3xh7t4gWIPoMiBJSZUCYkUXtnmmxZk=
+        b=o7fNtseREti7SwBR6hy1ugzYdbvAr1inyeU+RCFIJedmOsQvkp7EjTDYmFCi0I1oz
+         yszLuAQmjI0oazS/6tj38ENHZSllm7dc4v7XXz+TlVgv6qf1MFdmkYQNzow7uwWnjh
+         7piRlC+PK89KWR3etMWyfriOLQcham5qSTHlYhtg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Patrick Volkerding <volkerdi@gmail.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 060/138] net: ethernet: ave: Fix error returns in ave_init
-Date:   Mon, 27 Jul 2020 16:04:15 +0200
-Message-Id: <20200727134928.410814754@linuxfoundation.org>
+Subject: [PATCH 5.4 061/138] Revert "PCI/PM: Assume ports without DLL Link Active train links in 100 ms"
+Date:   Mon, 27 Jul 2020 16:04:16 +0200
+Message-Id: <20200727134928.461807301@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -62,37 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit 1264d7fa3a64d8bea7aebb77253f917947ffda25 ]
+[ Upstream commit d08c30d7a0d1826f771f16cde32bd86e48401791 ]
 
-When regmap_update_bits failed in ave_init(), calls of the functions
-reset_control_assert() and clk_disable_unprepare() were missed.
-Add goto out_reset_assert to do this.
+This reverts commit ec411e02b7a2e785a4ed9ed283207cd14f48699d.
 
-Fixes: 57878f2f4697 ("net: ethernet: ave: add support for phy-mode setting of system controller")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Reviewed-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Patrick reported that this commit broke hybrid graphics on a ThinkPad X1
+Extreme 2nd with Intel UHD Graphics 630 and NVIDIA GeForce GTX 1650 Mobile:
+
+  nouveau 0000:01:00.0: fifo: PBDMA0: 01000000 [] ch 0 [00ff992000 DRM] subc 0 mthd 0008 data 00000000
+
+Karol reported that this commit broke Nouveau firmware loading on a Lenovo
+P1G2 with Intel UHD Graphics 630 and NVIDIA TU117GLM [Quadro T1000 Mobile]:
+
+  nouveau 0000:01:00.0: acr: AHESASC binary failed
+
+In both cases, reverting ec411e02b7a2 solved the problem.  Unfortunately,
+this revert will reintroduce the "Thunderbolt bridges take long time to
+resume from D3cold" problem:
+https://bugzilla.kernel.org/show_bug.cgi?id=206837
+
+Link: https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
+Link: https://lore.kernel.org/r/CACO55tsAEa5GXw5oeJPG=mcn+qxNvspXreJYWDJGZBy5v82JDA@mail.gmail.com
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208597
+Reported-by: Patrick Volkerding <volkerdi@gmail.com>
+Reported-by: Karol Herbst <kherbst@redhat.com>
+Fixes: ec411e02b7a2 ("PCI/PM: Assume ports without DLL Link Active train links in 100 ms")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/socionext/sni_ave.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pci.c | 30 +++++++++---------------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
-index 38d39c4b5ac83..603d54f83399c 100644
---- a/drivers/net/ethernet/socionext/sni_ave.c
-+++ b/drivers/net/ethernet/socionext/sni_ave.c
-@@ -1191,7 +1191,7 @@ static int ave_init(struct net_device *ndev)
- 	ret = regmap_update_bits(priv->regmap, SG_ETPINMODE,
- 				 priv->pinmode_mask, priv->pinmode_val);
- 	if (ret)
--		return ret;
-+		goto out_reset_assert;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 08f7b1ed8c62e..b1b2c8ddbc927 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4610,8 +4610,7 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
+  * pcie_wait_for_link_delay - Wait until link is active or inactive
+  * @pdev: Bridge device
+  * @active: waiting for active or inactive?
+- * @delay: Delay to wait after link has become active (in ms). Specify %0
+- *	   for no delay.
++ * @delay: Delay to wait after link has become active (in ms)
+  *
+  * Use this to wait till link becomes active or inactive.
+  */
+@@ -4652,7 +4651,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
+ 		msleep(10);
+ 		timeout -= 10;
+ 	}
+-	if (active && ret && delay)
++	if (active && ret)
+ 		msleep(delay);
+ 	else if (ret != active)
+ 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
+@@ -4773,28 +4772,17 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+ 	if (!pcie_downstream_port(dev))
+ 		return;
  
- 	ave_global_reset(ndev);
+-	/*
+-	 * Per PCIe r5.0, sec 6.6.1, for downstream ports that support
+-	 * speeds > 5 GT/s, we must wait for link training to complete
+-	 * before the mandatory delay.
+-	 *
+-	 * We can only tell when link training completes via DLL Link
+-	 * Active, which is required for downstream ports that support
+-	 * speeds > 5 GT/s (sec 7.5.3.6).  Unfortunately some common
+-	 * devices do not implement Link Active reporting even when it's
+-	 * required, so we'll check for that directly instead of checking
+-	 * the supported link speed.  We assume devices without Link Active
+-	 * reporting can train in 100 ms regardless of speed.
+-	 */
+-	if (dev->link_active_reporting) {
+-		pci_dbg(dev, "waiting for link to train\n");
+-		if (!pcie_wait_for_link_delay(dev, true, 0)) {
++	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
++		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
++		msleep(delay);
++	} else {
++		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
++			delay);
++		if (!pcie_wait_for_link_delay(dev, true, delay)) {
+ 			/* Did not train, no need to wait any further */
+ 			return;
+ 		}
+ 	}
+-	pci_dbg(child, "waiting %d ms to become accessible\n", delay);
+-	msleep(delay);
  
+ 	if (!pci_device_is_present(child)) {
+ 		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
 -- 
 2.25.1
 
