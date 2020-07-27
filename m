@@ -2,175 +2,211 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 466BFC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:19:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A13E2075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:19:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="N+phtonw"
+	by mail.kernel.org (Postfix) with ESMTP id 239392075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgG0FT6 (ORCPT
+        id S1726853AbgG0FTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:19:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgG0FT5 (ORCPT
+        Mon, 27 Jul 2020 01:19:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56300 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726064AbgG0FTD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:19:57 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70831C0619D4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 22:19:56 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id j22so2380627lfm.2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 22:19:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ozt9OYkcD6AjbMEqO1NrB1cTbEGxVehRnBtW5ShPGTE=;
-        b=N+phtonw/dLSV8xFacy0xHc1wofpvI9z3iQxJQwYwoEXtwfSpEPSi1hVNut4CuuvW1
-         tanKnHYJGp/zyWkmdRyClrxB5CGH6z9xpKgkuxzTJXXwJrUbarnS4POKJaxuECOuWYUV
-         uYFbWVBoP1grcT0vbngIsGoi9q6ukeITNW4mBpFW2za6vClqsSRwvtXr2TXr4RtaeOg5
-         ObpwnkCcJO1mvVGlsxSsGTOfw1i5zrdqGzOnaZzKjB9MXRn7Y4M8NfLExIZfcWRiqP8Q
-         EsMyHuOoeU3hvws/PJX+CcFfGH7bV+1ZTtF3cwkaBMdoiMVtAIgnkxDNar79iUtG+ADU
-         fR6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ozt9OYkcD6AjbMEqO1NrB1cTbEGxVehRnBtW5ShPGTE=;
-        b=NoMnejlpuFfMPBQRfKwJGYur33avIV+Ni+z4Jmv1OPLvR8XMyXWVUm4WbPg2ESe9lF
-         ZkkjsOgVWvRe3ebzEpkZ05QzWrEMJj9pSnaP72qX0onitVzenAmrFbHipj0vvt1+R7Tv
-         At2Qn5SUEZQ40pMZtywo9aztmUsiBkgE5JAcnZ+B5erM2sYcTa3P/ag1tOMFHdxDEGF7
-         0tWI1vfSljMM7OwbtWsmYZEW91XFs3ojnglSEm0/+ekugymGNZc065B4Gm0xysYB7dKe
-         whHDJwRWCObWh7aVpxEFmkSYWYuEazebWIWBxBJ+Gmu6Am8ex42uIywzsbXrMR31pjhh
-         XDew==
-X-Gm-Message-State: AOAM531BCH0eCpxam1xPM12iwJSvSHGAZy6kDi4bdMKNH2bYQ6T8xVNM
-        3ISuRtQ265AhKDC1hGPn0qZBuyFrWM5yR9+QwtY1Og==
-X-Google-Smtp-Source: ABdhPJztlE0965bqCYFX7suGiujXvJJ3ywyoZaR6TB+veUzG5oUH+5xrRYioBMIf1tP3Ihlkzp5YBmatVk9njhY+7vw=
-X-Received: by 2002:ac2:4144:: with SMTP id c4mr10880776lfi.118.1595827194783;
- Sun, 26 Jul 2020 22:19:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200726030855.q6dfjekazfzl5usw@pesu.pes.edu> <CAM_iQpUFL7VdCKSgUa6N3pg7ijjZRu6-6UAs2oNosM-EzgXbaQ@mail.gmail.com>
- <CAAhDqq28h9_ji=ANttUyx2Q1Md=bZD3-JVCwQRW06W7aikPN0A@mail.gmail.com> <CAM_iQpX+iw+5AALriNZLfx5P-LV_ratiwhMRiHXmuLE2z81aaw@mail.gmail.com>
-In-Reply-To: <CAM_iQpX+iw+5AALriNZLfx5P-LV_ratiwhMRiHXmuLE2z81aaw@mail.gmail.com>
-From:   B K Karthik <bkkarthik@pesu.pes.edu>
-Date:   Mon, 27 Jul 2020 10:49:43 +0530
-Message-ID: <CAAhDqq3kf-XPB5nEEr76YOT=DifuCWM4HagB9R7brs1TaDbzZw@mail.gmail.com>
-Subject: Re: [PATCH v2] net: ipv6: fix use-after-free Read in __xfrm6_tunnel_spi_lookup
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        Mon, 27 Jul 2020 01:19:03 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5IA2B160856;
+        Mon, 27 Jul 2020 01:18:47 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrnkg0ff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 01:18:47 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R5Ilwk161855;
+        Mon, 27 Jul 2020 01:18:47 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrnkg0ew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 01:18:46 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R5FQ96013378;
+        Mon, 27 Jul 2020 05:18:45 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4htf9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 05:18:45 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R5IgeK58589410
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 05:18:43 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D39BEA4057;
+        Mon, 27 Jul 2020 05:18:42 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4ECFFA404D;
+        Mon, 27 Jul 2020 05:18:39 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.85.97.241])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jul 2020 05:18:39 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+        Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: [PATCH v4 07/10] Powerpc/numa: Detect support for coregroup
+Date:   Mon, 27 Jul 2020 10:48:02 +0530
+Message-Id: <20200727051805.16728-8-srikar@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200727051805.16728-1-srikar@linux.vnet.ibm.com>
+References: <20200727051805.16728-1-srikar@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_03:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1015 impostorscore=0 phishscore=0
+ mlxscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 1:37 AM Cong Wang <xiyou.wangcong@gmail.com> wrote:
->
-> On Sat, Jul 25, 2020 at 11:12 PM B K Karthik <bkkarthik@pesu.pes.edu> wrote:
-> >
-> > On Sun, Jul 26, 2020 at 11:05 AM Cong Wang <xiyou.wangcong@gmail.com> wrote:
-> > >
-> > > On Sat, Jul 25, 2020 at 8:09 PM B K Karthik <bkkarthik@pesu.pes.edu> wrote:
-> > > > @@ -103,10 +103,10 @@ static int __xfrm6_tunnel_spi_check(struct net *net, u32 spi)
-> > > >  {
-> > > >         struct xfrm6_tunnel_net *xfrm6_tn = xfrm6_tunnel_pernet(net);
-> > > >         struct xfrm6_tunnel_spi *x6spi;
-> > > > -       int index = xfrm6_tunnel_spi_hash_byspi(spi);
-> > > > +       int index = xfrm6_tunnel_spi_hash_byaddr((const xfrm_address_t *)spi);
-> > > >
-> > > >         hlist_for_each_entry(x6spi,
-> > > > -                            &xfrm6_tn->spi_byspi[index],
-> > > > +                            &xfrm6_tn->spi_byaddr[index],
-> > > >                              list_byspi) {
-> > > >                 if (x6spi->spi == spi)
-> > >
-> > > How did you convince yourself this is correct? This lookup is still
-> > > using spi. :)
-> >
-> > I'm sorry, but my intention behind writing this patch was not to fix
-> > the UAF, but to fix a slab-out-of-bound.
->
-> Odd, your $subject is clearly UAF, so is the stack trace in your changelog.
-> :)
->
->
-> > If required, I can definitely change the subject line and resend the
-> > patch, but I figured this was correct for
-> > https://syzkaller.appspot.com/bug?id=058d05f470583ab2843b1d6785fa8d0658ef66ae
-> > . since that particular report did not have a reproducer,
-> > Dmitry Vyukov <dvyukov@google.com> suggested that I test this patch on
-> > other reports for xfrm/spi .
->
-> You have to change it to avoid misleading.
+Add support for grouping cores based on the device-tree classification.
+- The last domain in the associativity domains always refers to the
+core.
+- If primary reference domain happens to be the penultimate domain in
+the associativity domains device-tree property, then there are no
+coregroups. However if its not a penultimate domain, then there are
+coregroups. There can be more than one coregroup. For now we would be
+interested in the last or the smallest coregroups.
 
-I will do that once somebody tells me this patch is reasonable to
-avoid wasting people's time.
->
-> >
-> > Forgive me if this was the wrong way to send a patch for that
-> > particular report, but I guessed since the reproducer did not trigger
-> > the crash
-> > for UAF, I would leave the subject line as 'fix UAF' :)
-> >
-> > xfrm6_spi_hash_by_hash seemed more convincing because I had to prevent
-> > a slab-out-of-bounds because it uses ipv6_addr_hash.
-> > It would be of great help if you could help me understand how this was
-> > able to fix a UAF.
->
-> Sure, you just avoid a pointer deref, which of course can fix the UAF,
-> but I still don't think it is correct in any aspect.
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Anton Blanchard <anton@ozlabs.org>
+Cc: Oliver O'Halloran <oohall@gmail.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Michael Neuling <mikey@neuling.org>
+Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Jordan Niethe <jniethe5@gmail.com>
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+---
+Changelog v1 -> v2:
+	Explained Coregroup in commit msg (Michael Ellerman)
 
-I saw a function call being made to tomoyo_check_acl(). the next thing
-happening is a kfree().
-Also, spi_hash_byspi just returns spi % XFRM6_TUNNEL_SPI_BYSPI_HSIZE .
+ arch/powerpc/include/asm/smp.h |  1 +
+ arch/powerpc/kernel/smp.c      |  1 +
+ arch/powerpc/mm/numa.c         | 34 +++++++++++++++++++++-------------
+ 3 files changed, 23 insertions(+), 13 deletions(-)
 
-I'm a mentee, hence I would say my knowledge is very limited, please
-let me know if I am making a horrible mistake somewhere,
-but return (__force u32)(a->s6_addr32[0] ^ a->s6_addr32[1] ^
-a->s6_addr32[2] ^ a->s6_addr32[3]); seems like a better because
-as David S. Miller <davem@davemloft.net> said "It is doing a XOR on
-all bits of an IPv6 address, it is doing more bit shifting which the
-existing hash was ignoring" .
+diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
+index 49a25e2400f2..5bdc17a7049f 100644
+--- a/arch/powerpc/include/asm/smp.h
++++ b/arch/powerpc/include/asm/smp.h
+@@ -28,6 +28,7 @@
+ extern int boot_cpuid;
+ extern int spinning_secondaries;
+ extern u32 *cpu_to_phys_id;
++extern bool coregroup_enabled;
+ 
+ extern void cpu_die(void);
+ extern int cpu_to_chip_id(int cpu);
+diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+index 3c5ccf6d2b1c..698000c7f76f 100644
+--- a/arch/powerpc/kernel/smp.c
++++ b/arch/powerpc/kernel/smp.c
+@@ -74,6 +74,7 @@ static DEFINE_PER_CPU(int, cpu_state) = { 0 };
+ 
+ struct task_struct *secondary_current;
+ bool has_big_cores;
++bool coregroup_enabled;
+ 
+ DEFINE_PER_CPU(cpumask_var_t, cpu_sibling_map);
+ DEFINE_PER_CPU(cpumask_var_t, cpu_smallcore_map);
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index 2298899a0f0a..51cb672f113b 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -886,7 +886,9 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+ static void __init find_possible_nodes(void)
+ {
+ 	struct device_node *rtas;
+-	u32 numnodes, i;
++	const __be32 *domains;
++	int prop_length, max_nodes;
++	u32 i;
+ 
+ 	if (!numa_enabled)
+ 		return;
+@@ -895,25 +897,31 @@ static void __init find_possible_nodes(void)
+ 	if (!rtas)
+ 		return;
+ 
+-	if (of_property_read_u32_index(rtas, "ibm,current-associativity-domains",
+-				min_common_depth, &numnodes)) {
+-		/*
+-		 * ibm,current-associativity-domains is a fairly recent
+-		 * property. If it doesn't exist, then fallback on
+-		 * ibm,max-associativity-domains. Current denotes what the
+-		 * platform can support compared to max which denotes what the
+-		 * Hypervisor can support.
+-		 */
+-		if (of_property_read_u32_index(rtas, "ibm,max-associativity-domains",
+-				min_common_depth, &numnodes))
++	/*
++	 * ibm,current-associativity-domains is a fairly recent property. If
++	 * it doesn't exist, then fallback on ibm,max-associativity-domains.
++	 * Current denotes what the platform can support compared to max
++	 * which denotes what the Hypervisor can support.
++	 */
++	domains = of_get_property(rtas, "ibm,current-associativity-domains",
++					&prop_length);
++	if (!domains) {
++		domains = of_get_property(rtas, "ibm,max-associativity-domains",
++					&prop_length);
++		if (!domains)
+ 			goto out;
+ 	}
+ 
+-	for (i = 0; i < numnodes; i++) {
++	max_nodes = of_read_number(&domains[min_common_depth], 1);
++	for (i = 0; i < max_nodes; i++) {
+ 		if (!node_possible(i))
+ 			node_set(i, node_possible_map);
+ 	}
+ 
++	prop_length /= sizeof(int);
++	if (prop_length > min_common_depth + 2)
++		coregroup_enabled = 1;
++
+ out:
+ 	of_node_put(rtas);
+ }
+-- 
+2.17.1
 
-Please help me understand this better if I am going wrong.
-
->
-> Even if it is a OOB, you still have to explain why it happened. Once
-> again, I can't see how it could happen either.
->
-> >
-> > >
-> > > More importantly, can you explain how UAF happens? Apparently
-> > > the syzbot stack traces you quote make no sense at all. I also
-> > > looked at other similar reports, none of them makes sense to me.
-> >
-> > Forgive me, but I do not understand what you mean by the stack traces
-> > (this or other similar reports) "make no sense".
->
-> Because the stack trace in your changelog clearly shows it is allocated
-> in tomoyo_init_log(), which is a buffer in struct tomoyo_query, but
-> none of xfrm paths uses it. Or do you see anything otherwise?
-
-Aren't there indirect inet calls and netfilter hooks? I'm sorry I do
-not see anything otherwise.
-Please help me understand.
-
-thanks,
-
-karthik
