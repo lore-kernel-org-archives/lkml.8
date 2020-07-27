@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B8FC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE026C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3ED620775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDA8207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860330;
-	bh=W5hJfN9Y40bj2uQePclR1+xZKsHiNxXy/7bYaeb6BKI=;
+	s=default; t=1595860331;
+	bh=J25/JXUK4b6mmR7U9r7A6ToZsorSLCfD4+2z74cq+Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cfdup9EQoo0GSNbDnKVzpiKMkH/0FIxFVZZAVEgXV7I9ulfKujHgO5PrCcMPq/oez
-	 7Zsuc43UyyYlvvHgHE5gzdBjoRbg390oLgPlLWohNWbYJd84ziQeH9XHwNTX2GlXbP
-	 0Icw/QeerA9c6G2RN4fLrSUg8XgfMup995LNjy2M=
+	b=cbZq7P4moP6hzTC4GubsaKEAdSOc89gc3E+eQA3uSfRoQ+jxlU4AhDnGrHnqaRtwf
+	 AC/K9e4zYeBn6Tj5D0X8oeLlDomz+KqYTjnxOTysDebXAJK14MensRW3cmwiHLUauX
+	 LRcbhDSPJmKXbkz7KsQyLI+Mf8hHK13yozBDyL+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732825AbgG0OcI (ORCPT
+        id S1732818AbgG0OcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:32:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47688 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:32:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731427AbgG0OTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:19:40 -0400
+        id S1730648AbgG0OTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:19:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E6352070A;
-        Mon, 27 Jul 2020 14:19:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B72BD2075A;
+        Mon, 27 Jul 2020 14:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859579;
-        bh=W5hJfN9Y40bj2uQePclR1+xZKsHiNxXy/7bYaeb6BKI=;
+        s=default; t=1595859582;
+        bh=J25/JXUK4b6mmR7U9r7A6ToZsorSLCfD4+2z74cq+Ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2HAU+HTsvNXyGqGEEuphtMWZq3u9HzyvIISdyAwH8KAnJ7WynBBTrE/JnMWqocs2d
-         vipK8vXMBaFKeOJEb33+Ntt0Oui22Wp36f2Ww6LBwQLSOhQauFFRwTzC1GXDMTy8Zm
-         2YndeBgo5vbgc3ipayrx2sKW9KxlNly5EneJBXD0=
+        b=lXhYUJB8prtmZ4POyXczz6ACTXrIVD0jzC7PG9Lp/J8AIAd+7W79YJpDtP52pr91c
+         RHDt6/NQhxWDY/Nu/PDn8iHNkE67T19mCZhn4jyUEGFLdGPgGb5OLoj+2TbPterdTs
+         l2kvz1nBY70hKK8xO6cFJO4M8zYA+GJrbJxo1HxY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.7 026/179] SUNRPC reverting d03727b248d0 ("NFSv4 fix CLOSE not waiting for direct IO compeletion")
-Date:   Mon, 27 Jul 2020 16:03:21 +0200
-Message-Id: <20200727134933.943922332@linuxfoundation.org>
+        stable@vger.kernel.org, Sungjong Seo <sj1557.seo@samsung.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>
+Subject: [PATCH 5.7 027/179] exfat: fix overflow issue in exfat_cluster_to_sector()
+Date:   Mon, 27 Jul 2020 16:03:22 +0200
+Message-Id: <20200727134933.991795930@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -59,84 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: Namjae Jeon <namjae.jeon@samsung.com>
 
-commit 65caafd0d2145d1dd02072c4ced540624daeab40 upstream.
+commit 43946b70494beefe40ec1b2ba4744c0f294d7736 upstream.
 
-Reverting commit d03727b248d0 "NFSv4 fix CLOSE not waiting for
-direct IO compeletion". This patch made it so that fput() by calling
-inode_dio_done() in nfs_file_release() would wait uninterruptably
-for any outstanding directIO to the file (but that wait on IO should
-be killable).
+An overflow issue can occur while calculating sector in
+exfat_cluster_to_sector(). It needs to cast clus's type to sector_t
+before left shifting.
 
-The problem the patch was also trying to address was REMOVE returning
-ERR_ACCESS because the file is still opened, is supposed to be resolved
-by server returning ERR_FILE_OPEN and not ERR_ACCESS.
-
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Fixes: 1acf1a564b60 ("exfat: add in-memory and on-disk structures and headers")
+Cc: stable@vger.kernel.org # v5.7
+Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
+Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/direct.c |   13 ++++---------
- fs/nfs/file.c   |    1 -
- 2 files changed, 4 insertions(+), 10 deletions(-)
+ fs/exfat/exfat_fs.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -267,6 +267,8 @@ static void nfs_direct_complete(struct n
+--- a/fs/exfat/exfat_fs.h
++++ b/fs/exfat/exfat_fs.h
+@@ -375,7 +375,7 @@ static inline bool exfat_is_last_sector_
+ static inline sector_t exfat_cluster_to_sector(struct exfat_sb_info *sbi,
+ 		unsigned int clus)
  {
- 	struct inode *inode = dreq->inode;
- 
-+	inode_dio_end(inode);
-+
- 	if (dreq->iocb) {
- 		long res = (long) dreq->error;
- 		if (dreq->count != 0) {
-@@ -278,10 +280,7 @@ static void nfs_direct_complete(struct n
- 
- 	complete(&dreq->completion);
- 
--	igrab(inode);
- 	nfs_direct_req_release(dreq);
--	inode_dio_end(inode);
--	iput(inode);
+-	return ((clus - EXFAT_RESERVED_CLUSTERS) << sbi->sect_per_clus_bits) +
++	return ((sector_t)(clus - EXFAT_RESERVED_CLUSTERS) << sbi->sect_per_clus_bits) +
+ 		sbi->data_start_sector;
  }
  
- static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
-@@ -411,10 +410,8 @@ static ssize_t nfs_direct_read_schedule_
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		igrab(inode);
--		nfs_direct_req_release(dreq);
- 		inode_dio_end(inode);
--		iput(inode);
-+		nfs_direct_req_release(dreq);
- 		return result < 0 ? result : -EIO;
- 	}
- 
-@@ -867,10 +864,8 @@ static ssize_t nfs_direct_write_schedule
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		igrab(inode);
--		nfs_direct_req_release(dreq);
- 		inode_dio_end(inode);
--		iput(inode);
-+		nfs_direct_req_release(dreq);
- 		return result < 0 ? result : -EIO;
- 	}
- 
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -83,7 +83,6 @@ nfs_file_release(struct inode *inode, st
- 	dprintk("NFS: release(%pD2)\n", filp);
- 
- 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
--	inode_dio_wait(inode);
- 	nfs_file_clear_open_context(filp);
- 	return 0;
- }
 
 
