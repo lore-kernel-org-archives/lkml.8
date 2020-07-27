@@ -2,85 +2,140 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A89C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A14D0C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE4E2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595850563;
-	bh=AP8qQis0mm9kaqZRRNwDPioe7x3P6w6WMGgquzMgdJk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SuwqbbRhXBYordpYhIJ/wxTy5GR0pzKKjVsDU2hnQTDxCOstkTsZeEtD79DWRHNJF
-	 9N05GIBH7SkukqXLWNpJ2K3RqdUsDD3T/1Z86ofHwJfW7/lWJBjx0E0GXidcYb+oZ+
-	 jTMLQgi8igEKbPJUvyCb6XCRqnbM0sCxffiHfUyE=
+	by mail.kernel.org (Postfix) with ESMTP id 863DC2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgG0LtW (ORCPT
+        id S1728079AbgG0Lt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:49:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52054 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 07:49:28 -0400
+Received: from mga03.intel.com ([134.134.136.65]:62437 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726885AbgG0LtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:49:22 -0400
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C857D2074F;
-        Mon, 27 Jul 2020 11:49:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595850562;
-        bh=AP8qQis0mm9kaqZRRNwDPioe7x3P6w6WMGgquzMgdJk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wBJ+TaJaoAWCitlegwqY4aSQWrI1IL2hO0Z9FBEJWbMn6/b4asehZypWLMxPJygjp
-         gsNIlnNYt3NiijmvRTVep2Wp0v5iqcAfDv9ZQUZ55ahk3GyKh03keYB7m4vYlsiw0i
-         /+6K98xWldd4c7HSmbndUHXDi8EqY+VuRZahFFH4=
-Received: by mail-lf1-f50.google.com with SMTP id 140so8836508lfi.5;
-        Mon, 27 Jul 2020 04:49:21 -0700 (PDT)
-X-Gm-Message-State: AOAM533XoBcDB2pe18x+UtOrj10zRVXdh2s+o85jKH4goOPR11lKKI1R
-        JusjLuJuPhVEeXOGaxrQpUaXlTxoYof/hYn5Yu0=
-X-Google-Smtp-Source: ABdhPJzF9ksBLcDaFH7InKBJ6D2AjvYVzzXFLPKUYrij9YkRoYcS3582wzerTkvg4RKeanCee4bQcMwaB6qCppwKFz8=
-X-Received: by 2002:ac2:5548:: with SMTP id l8mr5573404lfk.39.1595850560136;
- Mon, 27 Jul 2020 04:49:20 -0700 (PDT)
+        id S1726885AbgG0Lt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:49:26 -0400
+IronPort-SDR: cpyaPVBOsfXub/4wxfV6SSaBVtAKf6o1eLUUgfdrIofUYBebL7uKTAlr3TzW6kpvQSv/7ixsOa
+ G2fzqktk5grA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="150978227"
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="150978227"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 04:49:25 -0700
+IronPort-SDR: oi6os8eK3DVQPXWpO+nPUBKoGPQ/afgWR+Kl6mvwiumIhCo2Oybht27RMSjUEEpYQRpKox1RDd
+ ZTdT2561P4JQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="289758264"
+Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 27 Jul 2020 04:49:24 -0700
+Received: from kbuild by df0563f96c37 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k01dD-0001uf-MF; Mon, 27 Jul 2020 11:49:23 +0000
+Date:   Mon, 27 Jul 2020 19:48:29 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:core/entry] BUILD SUCCESS
+ 3135f5b73592988af0eb1b11ccbb72a8667be201
+Message-ID: <5f1ebf0d.b+FziQWnnCeYnNgB%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20200727213641.3491e3d1@canb.auug.org.au>
-In-Reply-To: <20200727213641.3491e3d1@canb.auug.org.au>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 27 Jul 2020 13:49:08 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdPVEB7V3Kvz5rrVu9DUULWGZ-ne804NJSB+QtB=6C30w@mail.gmail.com>
-Message-ID: <CAJKOXPdPVEB7V3Kvz5rrVu9DUULWGZ-ne804NJSB+QtB=6C30w@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the drivers-memory tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 at 13:36, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the drivers-memory tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->
-> drivers/memory/omap-gpmc.c:36:10: fatal error: asm/mach-types.h: No such file or directory
->    36 | #include <asm/mach-types.h>
->       |          ^~~~~~~~~~~~~~~~~~
->
-> Caused by commit
->
->   99b42df9d57e ("memory: Enable compile testing for most of the drivers")
->
-> I have reverted that commit for today.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  core/entry
+branch HEAD: 3135f5b73592988af0eb1b11ccbb72a8667be201  entry: Correct __secure_computing() stub
 
-Yes, I applied the patch too early, without all dependencies fixing
-compile testing. I will drop the commit from the tree soon.
+elapsed time: 1077m
 
-Best Regards,
-Krzysztof
+configs tested: 70
+configs skipped: 1
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm64                            allyesconfig
+arm64                               defconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+m68k                           sun3_defconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+xtensa                              defconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a003-20200727
+i386                 randconfig-a005-20200727
+i386                 randconfig-a004-20200727
+i386                 randconfig-a006-20200727
+i386                 randconfig-a002-20200727
+i386                 randconfig-a001-20200727
+x86_64               randconfig-a005-20200727
+x86_64               randconfig-a004-20200727
+x86_64               randconfig-a003-20200727
+x86_64               randconfig-a006-20200727
+x86_64               randconfig-a002-20200727
+x86_64               randconfig-a001-20200727
+i386                 randconfig-a016-20200727
+i386                 randconfig-a013-20200727
+i386                 randconfig-a012-20200727
+i386                 randconfig-a015-20200727
+i386                 randconfig-a011-20200727
+i386                 randconfig-a014-20200727
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+sparc64                             defconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                              defconfig
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
