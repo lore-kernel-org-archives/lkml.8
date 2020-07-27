@@ -2,160 +2,132 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FE8C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11D282073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595836683;
-	bh=pFZyTgLd3xYYzeu+q0Y9eI/gLqSakkiOd6qEy6AoK6c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=o/un1qwdeQfiAriJj1wnf97cnUVqidxp5pn2QXJBjiwSEjtNDLCkWZX7x42R7t/KX
-	 wUsXd9LEJm+rKzfZrKlQnTQVGwFtyDsuyRDhebrwptBMvcDV2IRjjbmR+QlYVyFSyo
-	 h2Ycj7FOSRt0jWPmO+WhxUH7Cch7zOkfnW5CXEys=
+	by mail.kernel.org (Postfix) with ESMTP id 95CE620738
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:52:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgG0H6B (ORCPT
+        id S1726814AbgG0Hw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:58:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgG0H6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:58:01 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80C1420738;
-        Mon, 27 Jul 2020 07:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595836680;
-        bh=pFZyTgLd3xYYzeu+q0Y9eI/gLqSakkiOd6qEy6AoK6c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UEu83P/HXZHqBR8qjfrTD2iwi1LEuDZFHt9rIx5+1N3VTQT6sGC4Xupm00PFzSWsJ
-         nDjzJysoa3s8HauGOOTrX0gIALShEOHsXGV3lvTU1qrC+tsKwaqKMGTUtUat6WF0R8
-         /ARAA9sDFnKmKSXw4TVhq9XVBZKJXxJCk5onfYpI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        Mon, 27 Jul 2020 03:52:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbgG0Hwz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 03:52:55 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69ED7C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:52:55 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jzy1G-00FE6z-RP; Mon, 27 Jul 2020 08:57:59 +0100
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jzxwC-00040Z-QA; Mon, 27 Jul 2020 09:52:44 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jzxwB-0008Oq-Im; Mon, 27 Jul 2020 09:52:43 +0200
+Date:   Mon, 27 Jul 2020 09:52:43 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Martin Botka <martin.botka1@gmail.com>
+Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
+ with u64 data length
+Message-ID: <20200727075243.cjkxblsivgnn6jsk@pengutronix.de>
+References: <20200724213659.273599-1-martin.botka1@gmail.com>
+ <20200724213659.273599-3-martin.botka1@gmail.com>
+ <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
+ <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gmail.com>
+ <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 27 Jul 2020 08:57:58 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, wanghaibin.wang@huawei.com,
-        kuhn.chenqun@huawei.com, wangjingyi11@huawei.com
-Subject: Re: [PATCH] irqchip/gic-v4.1: Use GFP_ATOMIC flag in
- allocate_vpe_l1_table()
-In-Reply-To: <076a3e82-ba21-6e6a-c6cd-937abb063eb9@huawei.com>
-References: <20200630133746.816-1-yuzenghui@huawei.com>
- <076a3e82-ba21-6e6a-c6cd-937abb063eb9@huawei.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <9c18d534e3a57aad5f8d4a6f69c7c041@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, wanghaibin.wang@huawei.com, kuhn.chenqun@huawei.com, wangjingyi11@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mpvmemv5yw3hvfa3"
+Content-Disposition: inline
+In-Reply-To: <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zenghui,
 
-On 2020-07-27 04:50, Zenghui Yu wrote:
-> Hi Marc,
-> 
-> On 2020/6/30 21:37, Zenghui Yu wrote:
->> Booting the latest kernel with DEBUG_ATOMIC_SLEEP=y on a GICv4.1 
->> enabled
->> box, I get the following kernel splat:
->> 
->> [    0.053766] BUG: sleeping function called from invalid context at 
->> mm/slab.h:567
->> [    0.053767] in_atomic(): 1, irqs_disabled(): 128, non_block: 0, 
->> pid: 0, name: swapper/1
->> [    0.053769] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc3+ 
->> #23
->> [    0.053770] Call trace:
->> [    0.053774]  dump_backtrace+0x0/0x218
->> [    0.053775]  show_stack+0x2c/0x38
->> [    0.053777]  dump_stack+0xc4/0x10c
->> [    0.053779]  ___might_sleep+0xfc/0x140
->> [    0.053780]  __might_sleep+0x58/0x90
->> [    0.053782]  slab_pre_alloc_hook+0x7c/0x90
->> [    0.053783]  kmem_cache_alloc_trace+0x60/0x2f0
->> [    0.053785]  its_cpu_init+0x6f4/0xe40
->> [    0.053786]  gic_starting_cpu+0x24/0x38
->> [    0.053788]  cpuhp_invoke_callback+0xa0/0x710
->> [    0.053789]  notify_cpu_starting+0xcc/0xd8
->> [    0.053790]  secondary_start_kernel+0x148/0x200
->> 
->>  # ./scripts/faddr2line vmlinux its_cpu_init+0x6f4/0xe40
->> its_cpu_init+0x6f4/0xe40:
->> allocate_vpe_l1_table at drivers/irqchip/irq-gic-v3-its.c:2818
->> (inlined by) its_cpu_init_lpis at 
->> drivers/irqchip/irq-gic-v3-its.c:3138
->> (inlined by) its_cpu_init at drivers/irqchip/irq-gic-v3-its.c:5166
->> 
->> It turned out that we're allocating memory using GFP_KERNEL (may 
->> sleep)
->> within the CPU hotplug notifier, which is indeed an atomic context. 
->> Bad
->> thing may happen if we're playing on a system with more than a single
->> CommonLPIAff group. Avoid it by turning this into an atomic 
->> allocation.
->> 
->> Fixes: 5e5168461c22 ("irqchip/gic-v4.1: VPE table (aka 
->> GICR_VPROPBASER) allocation")
->> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->> ---
->>  drivers/irqchip/irq-gic-v3-its.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
->> b/drivers/irqchip/irq-gic-v3-its.c
->> index 6a5a87fc4601..b66eeca442c4 100644
->> --- a/drivers/irqchip/irq-gic-v3-its.c
->> +++ b/drivers/irqchip/irq-gic-v3-its.c
->> @@ -2814,7 +2814,7 @@ static int allocate_vpe_l1_table(void)
->>  	if (val & GICR_VPROPBASER_4_1_VALID)
->>  		goto out;
->>  -	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), 
->> GFP_KERNEL);
->> +	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), 
->> GFP_ATOMIC);
->>  	if (!gic_data_rdist()->vpe_table_mask)
->>  		return -ENOMEM;
->>  @@ -2881,7 +2881,7 @@ static int allocate_vpe_l1_table(void)
->>   	pr_debug("np = %d, npg = %lld, psz = %d, epp = %d, esz = %d\n",
->>  		 np, npg, psz, epp, esz);
->> -	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, get_order(np * 
->> PAGE_SIZE));
->> +	page = alloc_pages(GFP_ATOMIC | __GFP_ZERO, get_order(np * 
->> PAGE_SIZE));
->>  	if (!page)
->>  		return -ENOMEM;
->> 
-> 
-> Do you mind taking this patch into v5.9? Or please let me know if you
-> still have any concerns on it?
+--mpvmemv5yw3hvfa3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Oops, I seem to have dropped this one on the floor.
-I've picked it up now.
+Hello Martin,
 
-Thanks for the heads up,
+On Mon, Jul 27, 2020 at 09:29:19AM +0200, Martin Botka wrote:
+> On Sat, Jul 25, 2020 at 09:12:23PM +0200, Martin Botka wrote:
+> >> > Note there is already a series that changes these values to u64. See
+> >> > a9d887dc1c60ed67f2271d66560cdcf864c4a578 in linux-next.
+> >>
+> >> Amazing. But isn't there the same issue with it as this one where this
+> >> would fail to build on 32 bit architecture?
+> >
+> > In theory all these cases are coped for. I didn't see any problems yet,
+> > so I still assume also the 32 bit archs are fine.
+>=20
+> OK then all is fine. I will drop the patch in V2.
+>=20
+> Also Uwe i just realized that you sent the original message and also
+> this reply only to me and not to anyone else.
+> Could you please send the messages also to everyone else ?
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+I hit "reply-to-all" and the mail only was sent to you because you wrote
+to only me.
+
+Also threading is somehow strange because your reply to my mail (with
+
+	Message-Id: 20200727070411.ovkuwm76vuw3heo7@pengutronix.de
+
+) has
+
+	In-Reply-To: <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gma=
+il.com>
+
+=2E So I assume all the strange things happened on your side until proved
+otherwise. :-)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--mpvmemv5yw3hvfa3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8eh8cACgkQwfwUeK3K
+7AmqRgf+LF2ACIQRbyfDBMtCAu02MQT3NxAZnOjqpQDAAHorTjQai+jQc33k+CZV
+KZR0cLROaFcfgDQnBtDglqbfboTEOlIhxsSMRtNpE5tiDVhORIVgvw0xr1UNR9A5
+UZIPcfC3P6CuGZAwOJOLQsmCKwLAu+FZNrQA0pLRrhadwkh9UEff09J+quoycHCX
+2PEmSoOfux9TG0GO8OTYC6tLI6BTkcyM/6NaJO2RCSlOwFBkQHxpETrI++qD3FpE
+lON/IgXogThGKOnDjkPWLdR3QtEE+ExFnO3SGgPS5/nkeyToKd1hjZ3xbvfwUUld
+Ob3rwCEjGhInxkeIni5Fqe96oqbBnA==
+=Sbbf
+-----END PGP SIGNATURE-----
+
+--mpvmemv5yw3hvfa3--
