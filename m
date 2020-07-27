@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7688FC433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0965EC433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56FF3207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2328207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860438;
-	bh=T91JMT8+ATmHZgGTjTGeIrl+abx5KOHBjY+EUmJFlaQ=;
+	s=default; t=1595860444;
+	bh=8gj+gLcINm454lhIuhKjsm+FVsjMo2Q6mwn60Q42hKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D0S4rg7fhZlEUCPu+I3LXI7FKhJiWg218G6OjzEfMtO+kE7tSzTd9YSR3XT7DnIqV
-	 WJGrkoTiz0u56ccQl7DDlR22b/qc4FcWCD+6BS77zwEASf2wz12pxMIK7In2AfXU4J
-	 5ySU7Gxkju8Pga01hqflcG2pWpaGuZ1nfsVRfEOo=
+	b=um9AKWaGAiAxOjtvASEw0/yiPp/Q4vEzrax4/MxeUQZtyH7a08vRAANoZGOy2aYLS
+	 MnPBIG3tn2zsKNZKykgafzPsTbmn5KeWEnhAz0zFU60/0+rongZ8ypq/pA6CaplZgw
+	 9Ec90v3xUCMnwpiAAjCJTre1s7QYFMh5hnVyYnQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732883AbgG0Od4 (ORCPT
+        id S1732890AbgG0OeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:33:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44496 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:34:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731013AbgG0ORQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:17:16 -0400
+        id S1730980AbgG0OQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:16:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EBA4208E4;
-        Mon, 27 Jul 2020 14:17:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08F57208E4;
+        Mon, 27 Jul 2020 14:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859434;
-        bh=T91JMT8+ATmHZgGTjTGeIrl+abx5KOHBjY+EUmJFlaQ=;
+        s=default; t=1595859419;
+        bh=8gj+gLcINm454lhIuhKjsm+FVsjMo2Q6mwn60Q42hKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z/gF1gkGcd6A5DxxdF27YkDCCZceoY7ZmIwcSxRYMx9b+lZqNZwfViBfPdCguMmuO
-         aTOh8JQHSsJ9VTTYBG1Ap2p1jLh/b95F1T3vtV05Q/TJ/44TdZsFzSUjygJDFovTh7
-         9CWqt0huDee7ML6kJEwJYAnTfRLcCPOHYIbh0YCk=
+        b=LyRt51NYcaZt1kFHq74+RYxIp/BOVlcb+q7QbJywRmmRJxHPin6dVe08nEvyL2z6j
+         vmQnEqQIwY6tip/3Plwg8lecylQfV8ZGWWoSUDcREb8u3fND+4wtNfwJpIH9b3tU/2
+         G1eBrd3xCeXn0iXhHEHKo0XCuY34P4R/xyctGMmk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 076/138] Input: add `SW_MACHINE_COVER`
-Date:   Mon, 27 Jul 2020 16:04:31 +0200
-Message-Id: <20200727134929.185115628@linuxfoundation.org>
+Subject: [PATCH 5.4 099/138] arm64: Use test_tsk_thread_flag() for checking TIF_SINGLESTEP
+Date:   Mon, 27 Jul 2020 16:04:54 +0200
+Message-Id: <20200727134930.321109260@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -63,52 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Merlijn Wajer <merlijn@wizzup.org>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit c463bb2a8f8d7d97aa414bf7714fc77e9d3b10df ]
+[ Upstream commit 5afc78551bf5d53279036e0bf63314e35631d79f ]
 
-This event code represents the state of a removable cover of a device.
-Value 0 means that the cover is open or removed, value 1 means that the
-cover is closed.
+Rather than open-code test_tsk_thread_flag() at each callsite, simply
+replace the couple of offenders with calls to test_tsk_thread_flag()
+directly.
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
-Link: https://lore.kernel.org/r/20200612125402.18393-2-merlijn@wizzup.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mod_devicetable.h        | 2 +-
- include/uapi/linux/input-event-codes.h | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/debug-monitors.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 953d7ca01eb60..4c56404e53a76 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -318,7 +318,7 @@ struct pcmcia_device_id {
- #define INPUT_DEVICE_ID_LED_MAX		0x0f
- #define INPUT_DEVICE_ID_SND_MAX		0x07
- #define INPUT_DEVICE_ID_FF_MAX		0x7f
--#define INPUT_DEVICE_ID_SW_MAX		0x0f
-+#define INPUT_DEVICE_ID_SW_MAX		0x10
- #define INPUT_DEVICE_ID_PROP_MAX	0x1f
+diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+index 7569deb1eac17..d64a3c1e1b6ba 100644
+--- a/arch/arm64/kernel/debug-monitors.c
++++ b/arch/arm64/kernel/debug-monitors.c
+@@ -396,14 +396,14 @@ void user_rewind_single_step(struct task_struct *task)
+ 	 * If single step is active for this thread, then set SPSR.SS
+ 	 * to 1 to avoid returning to the active-pending state.
+ 	 */
+-	if (test_ti_thread_flag(task_thread_info(task), TIF_SINGLESTEP))
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
+ 		set_regs_spsr_ss(task_pt_regs(task));
+ }
+ NOKPROBE_SYMBOL(user_rewind_single_step);
  
- #define INPUT_DEVICE_ID_MATCH_BUS	1
-diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-index 85387c76c24f3..472cd5bc55676 100644
---- a/include/uapi/linux/input-event-codes.h
-+++ b/include/uapi/linux/input-event-codes.h
-@@ -808,7 +808,8 @@
- #define SW_LINEIN_INSERT	0x0d  /* set = inserted */
- #define SW_MUTE_DEVICE		0x0e  /* set = device disabled */
- #define SW_PEN_INSERTED		0x0f  /* set = pen inserted */
--#define SW_MAX			0x0f
-+#define SW_MACHINE_COVER	0x10  /* set = cover closed */
-+#define SW_MAX			0x10
- #define SW_CNT			(SW_MAX+1)
+ void user_fastforward_single_step(struct task_struct *task)
+ {
+-	if (test_ti_thread_flag(task_thread_info(task), TIF_SINGLESTEP))
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
+ 		clear_regs_spsr_ss(task_pt_regs(task));
+ }
  
- /*
 -- 
 2.25.1
 
