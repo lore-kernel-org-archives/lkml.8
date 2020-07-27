@@ -2,128 +2,107 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90C10206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACDF92074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:36:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iH5n0MEY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730535AbgG0Pfc (ORCPT
+        id S1730668AbgG0Pgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:35:32 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:38947 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727784AbgG0Pfb (ORCPT
+        Mon, 27 Jul 2020 11:36:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727784AbgG0Pgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:35:31 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MD9Gh-1k97ia2Nij-0095Zf for <linux-kernel@vger.kernel.org>; Mon, 27 Jul
- 2020 17:35:29 +0200
-Received: by mail-qk1-f170.google.com with SMTP id g26so15645170qka.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:35:29 -0700 (PDT)
-X-Gm-Message-State: AOAM532WVumWIFn8JG9R6iY/W1j6mf1qRQb5Yz0ZbD8qUA11k5VFe7G8
-        WjQnECL96fHnRa3Y3d8Pm3ZSE+KzvnhpK9WJX2c=
-X-Google-Smtp-Source: ABdhPJyVQdveqzi3+Zb7UJcBadCVqyMgS/2llv9C5krFaKnCxaCdt2m5GnZ6CZHjLDH5JnzHZKBsLh1LbsXT3UyAjOs=
-X-Received: by 2002:a37:b484:: with SMTP id d126mr23352046qkf.394.1595864128427;
- Mon, 27 Jul 2020 08:35:28 -0700 (PDT)
+        Mon, 27 Jul 2020 11:36:50 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6CF9C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:36:49 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g10so13636186wmc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:36:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=9Sxz73y7RgL+u8rtUA8o/y4P1sug9uuvbcujn5qnKbQ=;
+        b=iH5n0MEYtT4YX4vz0+es0cG6ngjgu8JZkgehP9d1Bac8LeJBip7FVVyiY0MVpzYDOa
+         z1+qJnnWCG0bhO/7hP7PJnr4wjg1smeucxRq6DamKSBf/86PS1DS7G/fBV5vQesgnxVN
+         j+E7kKqmYvUW5bOghim2SeKo26bigiIkvcWnKSbqlo8BZDmYM0d6Ia8MgE198BNkNtj0
+         Uxjs1O28nvudo6Ced6APXqNqGP/Y7iJDwYQrZ3iyJE/7VMfE3L2mYpxEmHnz+4MxG2GU
+         FvlYU32xK+jYorluwclaGotK+Tf2ok4aZ4XNNVcRovbVxkqhvKgwDo16A+ytuH7Fp//G
+         oLZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=9Sxz73y7RgL+u8rtUA8o/y4P1sug9uuvbcujn5qnKbQ=;
+        b=fNaA78SJUSsA0P+aqJFx5CAeM/+YUJPAAySiDF/C+V45LuK8zQ4CQrapCXMDZ/JyNp
+         Dx9UKbTBH54vwSJdctsZti6w9SYiw7wj3poTRglPthY7/4NZJy010K/1/TXY0/cJDMHx
+         XbwnRt65WEx+UGTsDirKgBNaSXuWDDHAv4S4j0MlR3haQlOJirnxroIxamZyzs86RnYW
+         VKwWmMeJRhnYxZ7/4bPGPjE6eqw8gu3RObQSxxXBRHEUN5QGbAzFhZziyv9Vq9T9MDMO
+         hObrnuJDQNa1q7FnB9KKGXsakFdVrpxZGxw6qptQE8sTw+wGozPPIu2RfJ3/lFQPGNcA
+         9i3Q==
+X-Gm-Message-State: AOAM530OhhUpkRmRQLv0c62lwxazwKX38vwbcOPiHmGg/zTNHDQcLpk+
+        ZiiVJqZYC8QsvCHY6aNanScv3Q==
+X-Google-Smtp-Source: ABdhPJzDd+slK0xeJj9N8JVIU+68m7qp81qNM4BOeECx6/igXbWfKhNRBt+GUriqZEYH6Z8lCODsUw==
+X-Received: by 2002:a1c:19c4:: with SMTP id 187mr21778043wmz.100.1595864208416;
+        Mon, 27 Jul 2020 08:36:48 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id k126sm19423810wme.17.2020.07.27.08.36.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 08:36:47 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 16:36:46 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     wens@csie.org, linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
+        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com
+Subject: Re: [PATCH v5 10/16] mfd: axp20x: Allow the AXP803 to be probed by
+ I2C
+Message-ID: <20200727153646.GX1850026@dell>
+References: <cover.1595572867.git.frank@allwinnertech.com>
+ <c19530b2ee1f377bfeb1273f07a7ceb4ea4372ab.1595572867.git.frank@allwinnertech.com>
 MIME-Version: 1.0
-References: <20200727151537.315023-1-yepeilin.cs@gmail.com>
-In-Reply-To: <20200727151537.315023-1-yepeilin.cs@gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 17:35:12 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3zz-xfz2jwUpEU5R7GyCK735PFQK7OjFmmTESgnSzq=Q@mail.gmail.com>
-Message-ID: <CAK8P3a3zz-xfz2jwUpEU5R7GyCK735PFQK7OjFmmTESgnSzq=Q@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH] firewire: Prevent kernel-infoleak
- in ioctl_get_info()
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux1394-devel@lists.sourceforge.net,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:zbOxuSIsI5mjZrgdzMRoJRr329VZYfnzrW3OumMbzpug6f2xYra
- 5lDDoU8xEj67l5752hoIPmaQSEVrMvI0T5D+LX1ZLixjUdpW0GyrmpGqNzpgm334sY3B0i/
- hcy5Cuu8T26rdwyS0/Bho4YE2vyTdkZ6XhWrl7FIGhlbHBamAd1HDHfLLoprTzvtaS5xPZV
- SgjEbgnGtR1qXBTD+M64g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7ezjon7aq/c=:PkUl8pQ6sR4wL1bXY6sbnl
- c/K7G2fjj2WhgpX3X8PAxNakJr59x+oXR6a8O/DthBSznPDxkmHiJzwfGQ2546WyJFCsGyCtL
- akQy8dz0Hqp9EQxWrEZcnU1CwSBRTlQhqfMbSJpvSovBtodJ04J5oLPlKUwqV5VmBDeqJmdpu
- l/pabICFLIsBHSHPq6Ry80+sh3rWBVB/WInhWHBp6jnqlcyj/1SxEYJf9sQNEB+FAncIiEP/V
- YaHe/KnGCHUrNxVSC/fXEvUqp9OjPwNqAV4VAAVT5B3dy6fNlfgYA75QnDuGK5EdbA7BbBrtZ
- dbLP6NG08xkHXAmotVSlbieySW4FPEov0Zk87tjlz3Uo8snNkD1qVl+EUex96KqIY3dGduPsd
- B6oxtP8CNpx58/DaYptvgdIKezUgxqmPS6LxFYtvAeucUAYWnnd/Ow7U4CEdvMytIKyZPqgnk
- fHCgiUuQIap7/cTU2EPeIEYL8PqFp+SUplao6zintP1O1oaMbHqvM6luCqGnTxdWjCaGi8vd9
- k2hmZd+U0PkOrcbEsMPmRG10KQdwvjeYJkS+vR89Rcc5H06TUqaRrJd8zEKrWO3Rck3TDcJcN
- 9HjKOJMgdmv1u9vvad5EZsXCBPJW1Ig9V6uDL15J6czPUuM1OxNPkvytPvBib/kUwmDtr9USi
- baNp79RRb1IZMdZMkPRCc7/LcdIFFOjWuOThrGPUVCi6vUAgZzTj31IQBWMkRJHUEYXJi63vM
- 0Z5/g0/GpHVdfRvB29y7YfcZIH52ZQKBriwYm5Pa3GXVozzRQPSWHKLpxnjBLYr08s4I3nTxw
- Wrz6rnzZeT/ZW4QNfgwmfmGICaSxtNTtlqba2uBESzJ3kq6ZmTmdLfOYUTzPZx7cDgvmPwqYE
- slffCg3o3JJwogDrRczjpLHMw6Rn6xev5e4v1E8OWeMszfilsp8VVD8bPFGXg3Z8aQExt/YZB
- su+8+Qsg8mAo39hkZg4UFamGUUoynt15K8q8F85EFvZETCXL5PoNX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c19530b2ee1f377bfeb1273f07a7ceb4ea4372ab.1595572867.git.frank@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 5:18 PM Peilin Ye <yepeilin.cs@gmail.com> wrote:
->
-> ioctl_get_info() is copying uninitialized stack memory to userspace due to
-> the compiler not initializing holes in statically allocated structures.
-> Fix it by initializing `event` using memset() in fill_bus_reset_event().
->
-> Cc: stable@vger.kernel.org
-> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+On Fri, 24 Jul 2020, Frank Lee wrote:
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-
-I would recommend always looking through the git history of the
-file to come up with an appropriate 'Fixes' tag. In this case
-
-$ git log -p --follow drivers/firewire/core-cdev.c
-
-searching for any mention of fill_bus_reset_event leads you to
-commit 344bbc4de14e.
-
-In my ~/.gitconfig I have this alias:
-
-[core]
-        abbrev = 12
-[alias]
-        fixes = show --format='Fixes: %h (\"%s\")' -s
-
-With something like that, calling 'git fixes 344bbc4de14e' produces
-the line to copy:
-
-Fixes: 344bbc4de14e ("firewire: Generalize get_config_rom to get_info.")
-
-     Arnd
-
+> From: Yangtao Li <frank@allwinnertech.com>
+> 
+> The AXP803 can be used both using the RSB proprietary bus, or a more
+> traditional I2C bus.
+> 
+> Let's add that possibility.
+> 
+> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
 > ---
->  drivers/firewire/core-cdev.c | 2 ++
+>  drivers/mfd/axp20x-i2c.c | 2 ++
 >  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/firewire/core-cdev.c b/drivers/firewire/core-cdev.c
-> index fb6c651214f3..2341d762df5b 100644
-> --- a/drivers/firewire/core-cdev.c
-> +++ b/drivers/firewire/core-cdev.c
-> @@ -340,6 +340,8 @@ static void fill_bus_reset_event(struct fw_cdev_event_bus_reset *event,
->  {
->         struct fw_card *card = client->device->card;
->
-> +       memset(event, 0, sizeof(*event));
-> +
->         spin_lock_irq(&card->lock);
->
->         event->closure       = client->bus_reset_closure;
-> --
-> 2.25.1
->
+
+Why do you keep sending this?
+
+It was applied in v3 [0].
+
+[0] https://lkml.org/lkml/2020/7/16/745
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
