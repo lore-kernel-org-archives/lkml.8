@@ -2,116 +2,82 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237ADC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE396C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0B162074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:02:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CIpehUOt"
+	by mail.kernel.org (Postfix) with ESMTP id C6CA2207BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:02:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595876557;
+	bh=HSIZOSbBdMb6VdSL3tSd4Iq3pXLj2Kfj7HeeT8Y2K3Y=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=XWBJXox2mJm5WO9cl9WMbaWQFswYu75FaRbOnUqx1bDyVJs4rsqrrAcE2z1yVoXH7
+	 UQ0BLFwyUcg7WtCEN6s0I+m2hAWA/49ZTZxTITXKX1PO5rBw5wriho7msBMlvFo8H5
+	 mAf+t6Bh5HHuzWdjHT6ko7kw30jR5g+jitR3Mnuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgG0TCJ (ORCPT
+        id S1728219AbgG0TCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgG0TCJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:02:09 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511B8C061794;
-        Mon, 27 Jul 2020 12:02:09 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id a19so1986129qvy.3;
-        Mon, 27 Jul 2020 12:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uPEUCGwUhu6gC7effbwPg+v6omwHm9FSYu/MnszzrTw=;
-        b=CIpehUOt0pFLGtZUceSvBaC7bKoxZRO5SIVUlQxu72u1BpL2T7RsEqJZkmlZgbQlNI
-         ytkyQCLn2n1RnVX+H6GtBKDp9qt8SAvZpm+2KnCzJD1HwCKKDqzR1jYaRyopVDaNCv9s
-         wXE2QZvRW2KliOdYmLGCiSjgteZdqeX6yWfWIceG+rdnBhUECimGxWr4I/vf0lIeubN/
-         092IvLfWVygDK6Uzi4Fjb4JPPrGBf2Lz5twZNdFtfUgwfT6lg5vUcDV/tD0uGvNIFGg4
-         QX4TrAF1mhaZZhLCC0oWLJOgeYHHZOlxlDWwZ4ztcNmURs54knHDYuGFLPELdHHT9TCB
-         /K1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uPEUCGwUhu6gC7effbwPg+v6omwHm9FSYu/MnszzrTw=;
-        b=rprPbP/DjpHBlxj0YU7KVKeAx9NjDNFLD0U2GxPA2+C5/VAnbBNtGcU/f1SIcs/mY/
-         /snB1zAAhaa2i7T4izGz6KXjwVnl934vPN29kJN4CkCaOmBx2f8DZOQckvdNOXKikAgl
-         VmbTBlkLo6b8RDSrnTHlKXboYAmDMIenxHPc2bebwgvW1r1nadNXQuZbUBcTHHTN+qZl
-         on6+5PQhUAmYlzMoik7uf7itj7MYzulEi9laECXRJuPv1dznpmloxTkZYoILzKGtNAtr
-         bfggl0w3SbBEzVbtPtU0qWyIsrs15RL+QuFQGrGFh2mWVZWvqkSaRZOo7220YeRikBfe
-         Bn9Q==
-X-Gm-Message-State: AOAM531Tb+SgLosve1WIsReDQRi+Lw6JgvVozVp/06I1tFcUAC9xtnhZ
-        3q77kJWIPuzqJdtu/D9VdH0l4DqoAg==
-X-Google-Smtp-Source: ABdhPJxl55vKVbiqhnwds/IIJ1yz9AlsuPAU+JHNpS/sdbZCaQOhnqlEjfFyhJfVgvLP1VrKW1oURQ==
-X-Received: by 2002:ad4:4ead:: with SMTP id ed13mr8757280qvb.161.1595876528455;
-        Mon, 27 Jul 2020 12:02:08 -0700 (PDT)
-Received: from localhost.localdomain ([209.94.141.207])
-        by smtp.gmail.com with ESMTPSA id 6sm18964139qkj.134.2020.07.27.12.02.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 12:02:07 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH v2] block/scsi-ioctl: Prevent kernel-infoleak in scsi_put_cdrom_generic_arg()
-Date:   Mon, 27 Jul 2020 15:00:13 -0400
-Message-Id: <20200727190013.324812-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200727161932.322955-1-yepeilin.cs@gmail.com>
-References: <20200727161932.322955-1-yepeilin.cs@gmail.com>
+        Mon, 27 Jul 2020 15:02:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbgG0TCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 15:02:36 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 755752074F;
+        Mon, 27 Jul 2020 19:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595876555;
+        bh=HSIZOSbBdMb6VdSL3tSd4Iq3pXLj2Kfj7HeeT8Y2K3Y=;
+        h=Date:From:To:Cc:Subject:From;
+        b=E5k8wckeCWRGKrjoXhlbhQzokEsEqXckpIR0pIo1NjAuyXsrh3cYagdMhp6swLRpF
+         dCjjPX7AQZ2KQdajj8Cv9xc4zahdLnZqf2/+spxnkNzLSx+Tzg/4vQ+FjmNUUrLqyn
+         E4boQWGCsYcxGsjsC0Hzowa5UIj1kkqel5eSAriU=
+Date:   Mon, 27 Jul 2020 14:08:29 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] staging: gdm724x: Use fallthrough pseudo-keyword
+Message-ID: <20200727190829.GA30332@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-scsi_put_cdrom_generic_arg() is copying uninitialized stack memory to
-userspace due to the compiler not initializing holes in statically
-allocated structures. Fix it by adding a padding field to `struct
-compat_cdrom_generic_command`.
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-Cc: stable@vger.kernel.org
-Fixes: f3ee6e63a9df ("compat_ioctl: move CDROM_SEND_PACKET handling into scsi")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
-Change in v2:
-    - Add a padding field to `struct compat_cdrom_generic_command`,
-      instead of doing memset() on `cgc32`. (Suggested by Jens Axboe
-      <axboe@kernel.dk>)
+ drivers/staging/gdm724x/gdm_lte.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- block/scsi_ioctl.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/block/scsi_ioctl.c b/block/scsi_ioctl.c
-index ef722f04f88a..72108404718f 100644
---- a/block/scsi_ioctl.c
-+++ b/block/scsi_ioctl.c
-@@ -651,6 +651,7 @@ struct compat_cdrom_generic_command {
- 	compat_int_t	stat;
- 	compat_caddr_t	sense;
- 	unsigned char	data_direction;
-+	unsigned char	pad[3];
- 	compat_int_t	quiet;
- 	compat_int_t	timeout;
- 	compat_caddr_t	reserved[1];
+diff --git a/drivers/staging/gdm724x/gdm_lte.c b/drivers/staging/gdm724x/gdm_lte.c
+index eb309190f5be..571f47d39484 100644
+--- a/drivers/staging/gdm724x/gdm_lte.c
++++ b/drivers/staging/gdm724x/gdm_lte.c
+@@ -784,7 +784,7 @@ static int gdm_lte_receive_pkt(struct phy_dev *phy_dev, char *buf, int len)
+ 			return index;
+ 		dev = phy_dev->dev[index];
+ 		gdm_lte_pdn_table(dev, buf, len);
+-		/* Fall through */
++		fallthrough;
+ 	default:
+ 		ret = gdm_lte_event_send(dev, buf, len);
+ 		break;
 -- 
-2.25.1
+2.27.0
 
