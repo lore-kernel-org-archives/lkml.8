@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B05FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C52C43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8BA20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6575020838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860160;
-	bh=iwmpauxY7ye7TKgOjmLPiQNamZ32rwVmIfVlNHkDXnk=;
+	s=default; t=1595860162;
+	bh=R9n7i2d/2LiyirSf3VoJw7eQXDiACzZfwZCeutMFhUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sHfV8idAFn5rBLGahB4mcSwOLtpe0S1iZTCq/CQiKqlamil6jBQ3p4W6qKxHGSGtA
-	 mzsbx3qNatSvfre7yX4Xq5SfWeN8Xp+j/UaEDsKaT6ei4/B9TMH2pL2nTfzVrbOpcg
-	 uJEER3m9HBqN3TlPxUC2VaYKX6URnXnMmONXUQTY=
+	b=xYd4c/IvMDEXFQsyP1FKRRsBXDeAYO4vJal9x5WCnV2bONod+lNsbilUfnQVFwk4V
+	 l13WHg/SUCtQG6Ni/TQ8dLW0CoW2oXseArbnn6HNsUjkftIF0nKGtWfHmbd5RANHZZ
+	 8gytD1vz4h+QUDlKTfUpljxGHTnzXiu9A+w9hmzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbgG0OXZ (ORCPT
+        id S1732554AbgG0O3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52526 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:29:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732047AbgG0OXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:23:20 -0400
+        id S1732078AbgG0OX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:23:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A154421D95;
-        Mon, 27 Jul 2020 14:23:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39D7420775;
+        Mon, 27 Jul 2020 14:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859798;
-        bh=iwmpauxY7ye7TKgOjmLPiQNamZ32rwVmIfVlNHkDXnk=;
+        s=default; t=1595859805;
+        bh=R9n7i2d/2LiyirSf3VoJw7eQXDiACzZfwZCeutMFhUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rkrtcbIDrjXhLaki8H6HlcAL28MAQUvTejM3DdsWwBkt5Q+QrIcCZbQXRdgRYD3IQ
-         1g4FMU7ub00omtnQ69VkcMq/7GFay66D8bqcPNzEphewCHlqzI/oMi+miDSIfryP8d
-         4YFA/AhLBSg2S0MnSaFRtfwyprGCYhX/MWSfYqDk=
+        b=wI0LSRtCdJHI04U5nIxqe3QcE1U9H3lr8nM0qoQ9bDriQlwx1Tu+FjCuNAOEbi9DF
+         x1/g2FmdkOnIFuu7PSWBcjDx3KOy1mxkXf9iVN/7ntPcV3+1qJYUuOzWwVhirs/ejs
+         ymUoORc+qkSWdiFKbxiz2IBIlj4QMhiAGjjmvGV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        stable@vger.kernel.org, zhouxudong <zhouxudong8@huawei.com>,
+        guodeqing <geffrey.guo@huawei.com>, Julian Anastasov <ja@ssi.bg>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 109/179] soc: amlogic: meson-gx-socinfo: Fix S905X3 and S905D3 IDs
-Date:   Mon, 27 Jul 2020 16:04:44 +0200
-Message-Id: <20200727134937.964032133@linuxfoundation.org>
+Subject: [PATCH 5.7 085/179] ipvs: fix the connection sync failed in some cases
+Date:   Mon, 27 Jul 2020 16:04:20 +0200
+Message-Id: <20200727134936.828153247@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,51 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Hewitt <christianshewitt@gmail.com>
+From: guodeqing <geffrey.guo@huawei.com>
 
-[ Upstream commit d16d0481e6bab5a916450e4ef0e1c958b550880c ]
+[ Upstream commit 8210e344ccb798c672ab237b1a4f241bda08909b ]
 
-Correct the SoC revision and package bits/mask values for S905D3/X3 to detect
-a wider range of observed SoC IDs, and tweak sort order for A311D/S922X.
+The sync_thread_backup only checks sk_receive_queue is empty or not,
+there is a situation which cannot sync the connection entries when
+sk_receive_queue is empty and sk_rmem_alloc is larger than sk_rcvbuf,
+the sync packets are dropped in __udp_enqueue_schedule_skb, this is
+because the packets in reader_queue is not read, so the rmem is
+not reclaimed.
 
-S905X3 05 0000 0101  (SEI610 initial devices)
-S905X3 10 0001 0000  (ODROID-C4 and recent Android boxes)
-S905X3 50 0101 0000  (SEI610 later revisions)
-S905D3 04 0000 0100  (VIM3L devices in kernelci)
-S905D3 b0 1011 0000  (VIM3L initial production)
+Here I add the check of whether the reader_queue of the udp sock is
+empty or not to solve this problem.
 
-Fixes commit c9cc9bec36d0 ("soc: amlogic: meson-gx-socinfo: Add SM1 and S905X3 IDs")
-
-Suggested-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://lore.kernel.org/r/20200609081318.28023-1-christianshewitt@gmail.com
+Fixes: 2276f58ac589 ("udp: use a separate rx queue for packet reception")
+Reported-by: zhouxudong <zhouxudong8@huawei.com>
+Signed-off-by: guodeqing <geffrey.guo@huawei.com>
+Acked-by: Julian Anastasov <ja@ssi.bg>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/amlogic/meson-gx-socinfo.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/netfilter/ipvs/ip_vs_sync.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
-index 01fc0d20a70db..6f54bd832c8b8 100644
---- a/drivers/soc/amlogic/meson-gx-socinfo.c
-+++ b/drivers/soc/amlogic/meson-gx-socinfo.c
-@@ -66,10 +66,12 @@ static const struct meson_gx_package_id {
- 	{ "A113D", 0x25, 0x22, 0xff },
- 	{ "S905D2", 0x28, 0x10, 0xf0 },
- 	{ "S905X2", 0x28, 0x40, 0xf0 },
--	{ "S922X", 0x29, 0x40, 0xf0 },
- 	{ "A311D", 0x29, 0x10, 0xf0 },
--	{ "S905X3", 0x2b, 0x5, 0xf },
--	{ "S905D3", 0x2b, 0xb0, 0xf0 },
-+	{ "S922X", 0x29, 0x40, 0xf0 },
-+	{ "S905D3", 0x2b, 0x4, 0xf5 },
-+	{ "S905X3", 0x2b, 0x5, 0xf5 },
-+	{ "S905X3", 0x2b, 0x10, 0x3f },
-+	{ "S905D3", 0x2b, 0x30, 0x3f },
- 	{ "A113L", 0x2c, 0x0, 0xf8 },
- };
+diff --git a/net/netfilter/ipvs/ip_vs_sync.c b/net/netfilter/ipvs/ip_vs_sync.c
+index 605e0f68f8bd3..2b8abbfe018cf 100644
+--- a/net/netfilter/ipvs/ip_vs_sync.c
++++ b/net/netfilter/ipvs/ip_vs_sync.c
+@@ -1717,6 +1717,8 @@ static int sync_thread_backup(void *data)
+ {
+ 	struct ip_vs_sync_thread_data *tinfo = data;
+ 	struct netns_ipvs *ipvs = tinfo->ipvs;
++	struct sock *sk = tinfo->sock->sk;
++	struct udp_sock *up = udp_sk(sk);
+ 	int len;
  
+ 	pr_info("sync thread started: state = BACKUP, mcast_ifn = %s, "
+@@ -1724,12 +1726,14 @@ static int sync_thread_backup(void *data)
+ 		ipvs->bcfg.mcast_ifn, ipvs->bcfg.syncid, tinfo->id);
+ 
+ 	while (!kthread_should_stop()) {
+-		wait_event_interruptible(*sk_sleep(tinfo->sock->sk),
+-			 !skb_queue_empty(&tinfo->sock->sk->sk_receive_queue)
+-			 || kthread_should_stop());
++		wait_event_interruptible(*sk_sleep(sk),
++					 !skb_queue_empty_lockless(&sk->sk_receive_queue) ||
++					 !skb_queue_empty_lockless(&up->reader_queue) ||
++					 kthread_should_stop());
+ 
+ 		/* do we have data now? */
+-		while (!skb_queue_empty(&(tinfo->sock->sk->sk_receive_queue))) {
++		while (!skb_queue_empty_lockless(&sk->sk_receive_queue) ||
++		       !skb_queue_empty_lockless(&up->reader_queue)) {
+ 			len = ip_vs_receive(tinfo->sock, tinfo->buf,
+ 					ipvs->bcfg.sync_maxlen);
+ 			if (len <= 0) {
 -- 
 2.25.1
 
