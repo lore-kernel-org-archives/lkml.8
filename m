@@ -2,395 +2,92 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A25C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC09C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 052C120719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:26:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="LPJ9ZmYa"
+	by mail.kernel.org (Postfix) with ESMTP id 224C3206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730332AbgG0Q0k (ORCPT
+        id S1729752AbgG0Q1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:26:40 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:33953 "EHLO mail.zx2c4.com"
+        Mon, 27 Jul 2020 12:27:21 -0400
+Received: from mga02.intel.com ([134.134.136.20]:17460 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbgG0Q0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:26:37 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 5699ce70;
-        Mon, 27 Jul 2020 16:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=sL2Z6xHv+s9MbkLOrzrOQhZ0af0=; b=LPJ9Zm
-        YaVP8dj/BNE/oIXgMWXiR9QsHqFZvwCmHPKj+CmUXFfwgS5UAfubyxSnjCOeB3lH
-        +Bwl3c/LXHT8AL+CVDzRG2OK1cEcjnn6j5K88A3sTuzlJ1dUUjpVk7flYaQ4QGix
-        Ecxfzo8V4C3PxkkFXeejI0nZXIneDreaOSL3OidJycl2/vpcTM+O2E6XDAeWvr3E
-        tB8pcRvqEps3l/ljGAs19y1wXHZ7w+rG2v1ljZBPNElpYUKnkx/tuqhwCYKGaRY5
-        Bbz1DI7O2FDM7F1t3/7RwKiXc55u/gnkaJERPhZq+gFkn2OnNwRWbrI7HXF8tJm3
-        qsI9245bR4dyy8nw==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 40084fe1 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Mon, 27 Jul 2020 16:03:14 +0000 (UTC)
-Received: by mail-io1-xd32.google.com with SMTP id l1so17561135ioh.5;
-        Mon, 27 Jul 2020 09:26:33 -0700 (PDT)
-X-Gm-Message-State: AOAM53044uf8Ct5bu+iCXpyL1Q3s2ZbWvgQfnnBJh4HPwu7P7eKiMLHl
-        WLLXTQVAwgqKyAkb6O+01EdlKR8Kz7IMUoEaY0Q=
-X-Google-Smtp-Source: ABdhPJzHnH4n8LVUhc9laLi7Gjj4KPIYdTCtAFjGI/NzItWJYWKwmRT1E1P7HjXOfS7ZwU4o5uqkgWm85XGW2/o5gRY=
-X-Received: by 2002:a05:6638:1027:: with SMTP id n7mr14068670jan.86.1595866892746;
- Mon, 27 Jul 2020 09:21:32 -0700 (PDT)
+        id S1728398AbgG0Q1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 12:27:21 -0400
+IronPort-SDR: Zyrt3+BfaOtjdtjZZV+UkB/nvfcEMGxND+8xw1RB12XAwqBbyEHd4GkyMOY2II0tb2Ks0WEy89
+ jz2w91RLJD6w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="139093719"
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="139093719"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 09:27:19 -0700
+IronPort-SDR: nF9r4Ff70lscw3zHgJ4L5MfCizfqd26FMjfRw15FVNDjjE6Yj+Y0Po5vFBUGzSdTCfPYyjAheu
+ mhnzQ7O2hliw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="312267699"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by fmsmga004.fm.intel.com with ESMTP; 27 Jul 2020 09:27:18 -0700
+Received: from orsmsx121.amr.corp.intel.com (10.22.225.226) by
+ ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 27 Jul 2020 09:27:18 -0700
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.57]) by
+ ORSMSX121.amr.corp.intel.com ([169.254.10.221]) with mapi id 14.03.0439.000;
+ Mon, 27 Jul 2020 09:27:18 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     "hpa@zytor.com" <hpa@zytor.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     "Hansen, Dave" <dave.hansen@intel.com>,
+        "Zhang, Cathy" <cathy.zhang@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "Park, Kyung Min" <kyung.min.park@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Neri, Ricardo" <ricardo.neri@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Subject: RE: [PATCH 4/4] x86/cpu: Use SERIALIZE in sync_core() when available
+Thread-Topic: [PATCH 4/4] x86/cpu: Use SERIALIZE in sync_core() when
+ available
+Thread-Index: AQHWY87lOQINcdfFdkGk2Wd5AEVUOKkbYrqAgAA6k+A=
+Date:   Mon, 27 Jul 2020 16:27:18 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F6B0D4A@ORSMSX115.amr.corp.intel.com>
+References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
+ <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
+ <D51F2DC3-3C56-44E6-A1F2-434E7D27133C@zytor.com>
+In-Reply-To: <D51F2DC3-3C56-44E6-A1F2-434E7D27133C@zytor.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200723060908.50081-1-hch@lst.de> <20200723060908.50081-13-hch@lst.de>
- <20200727150310.GA1632472@zx2c4.com> <20200727161615.GB7817@lst.de>
-In-Reply-To: <20200727161615.GB7817@lst.de>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 27 Jul 2020 18:21:21 +0200
-X-Gmail-Original-Message-ID: <CAHmME9oU9+5Pbm6pUkOqaxQyYLr9JhAkwV55+P7AWR601WW-nA@mail.gmail.com>
-Message-ID: <CAHmME9oU9+5Pbm6pUkOqaxQyYLr9JhAkwV55+P7AWR601WW-nA@mail.gmail.com>
-Subject: Re: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From cce2d2e1b43ecee5f4af7cf116808b74b330080f Mon Sep 17 00:00:00 2001
-> From: Christoph Hellwig <hch@lst.de>
-> Date: Mon, 27 Jul 2020 17:42:27 +0200
-> Subject: net: remove sockptr_advance
->
-> sockptr_advance never properly worked.  Replace it with _offset variants
-> of copy_from_sockptr and copy_to_sockptr.
->
-> Fixes: ba423fdaa589 ("net: add a new sockptr_t type")
-> Reported-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Reported-by: Ido Schimmel <idosch@idosch.org>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/crypto/chelsio/chtls/chtls_main.c | 12 +++++-----
->  include/linux/sockptr.h                   | 27 +++++++++++------------
->  net/dccp/proto.c                          |  5 ++---
->  net/ipv4/netfilter/arp_tables.c           |  8 +++----
->  net/ipv4/netfilter/ip_tables.c            |  8 +++----
->  net/ipv4/tcp.c                            |  5 +++--
->  net/ipv6/ip6_flowlabel.c                  | 11 ++++-----
->  net/ipv6/netfilter/ip6_tables.c           |  8 +++----
->  net/netfilter/x_tables.c                  |  7 +++---
->  net/tls/tls_main.c                        |  6 ++---
->  10 files changed, 49 insertions(+), 48 deletions(-)
->
-> diff --git a/drivers/crypto/chelsio/chtls/chtls_main.c b/drivers/crypto/chelsio/chtls/chtls_main.c
-> index c3058dcdb33c5c..66d247efd5615b 100644
-> --- a/drivers/crypto/chelsio/chtls/chtls_main.c
-> +++ b/drivers/crypto/chelsio/chtls/chtls_main.c
-> @@ -525,9 +525,9 @@ static int do_chtls_setsockopt(struct sock *sk, int optname,
->                 /* Obtain version and type from previous copy */
->                 crypto_info[0] = tmp_crypto_info;
->                 /* Now copy the following data */
-> -               sockptr_advance(optval, sizeof(*crypto_info));
-> -               rc = copy_from_sockptr((char *)crypto_info + sizeof(*crypto_info),
-> -                               optval,
-> +               rc = copy_from_sockptr_offset((char *)crypto_info +
-> +                               sizeof(*crypto_info),
-> +                               optval, sizeof(*crypto_info),
->                                 sizeof(struct tls12_crypto_info_aes_gcm_128)
->                                 - sizeof(*crypto_info));
->
-> @@ -542,9 +542,9 @@ static int do_chtls_setsockopt(struct sock *sk, int optname,
->         }
->         case TLS_CIPHER_AES_GCM_256: {
->                 crypto_info[0] = tmp_crypto_info;
-> -               sockptr_advance(optval, sizeof(*crypto_info));
-> -               rc = copy_from_sockptr((char *)crypto_info + sizeof(*crypto_info),
-> -                                   optval,
-> +               rc = copy_from_sockptr_offset((char *)crypto_info +
-> +                               sizeof(*crypto_info),
-> +                               optval, sizeof(*crypto_info),
->                                 sizeof(struct tls12_crypto_info_aes_gcm_256)
->                                 - sizeof(*crypto_info));
->
-> diff --git a/include/linux/sockptr.h b/include/linux/sockptr.h
-> index b13ea1422f93a5..9e6c81d474cba8 100644
-> --- a/include/linux/sockptr.h
-> +++ b/include/linux/sockptr.h
-> @@ -69,19 +69,26 @@ static inline bool sockptr_is_null(sockptr_t sockptr)
->         return !sockptr.user;
->  }
->
-> -static inline int copy_from_sockptr(void *dst, sockptr_t src, size_t size)
-> +static inline int copy_from_sockptr_offset(void *dst, sockptr_t src,
-> +               size_t offset, size_t size)
->  {
->         if (!sockptr_is_kernel(src))
-> -               return copy_from_user(dst, src.user, size);
-> -       memcpy(dst, src.kernel, size);
-> +               return copy_from_user(dst, src.user + offset, size);
-> +       memcpy(dst, src.kernel + offset, size);
->         return 0;
->  }
->
-> -static inline int copy_to_sockptr(sockptr_t dst, const void *src, size_t size)
-> +static inline int copy_from_sockptr(void *dst, sockptr_t src, size_t size)
-> +{
-> +       return copy_from_sockptr_offset(dst, src, 0, size);
-> +}
-> +
-> +static inline int copy_to_sockptr_offset(sockptr_t dst, size_t offset,
-> +               const void *src, size_t size)
->  {
->         if (!sockptr_is_kernel(dst))
-> -               return copy_to_user(dst.user, src, size);
-> -       memcpy(dst.kernel, src, size);
-> +               return copy_to_user(dst.user + offset, src, size);
-> +       memcpy(dst.kernel + offset, src, size);
->         return 0;
->  }
->
-> @@ -112,14 +119,6 @@ static inline void *memdup_sockptr_nul(sockptr_t src, size_t len)
->         return p;
->  }
->
-> -static inline void sockptr_advance(sockptr_t sockptr, size_t len)
-> -{
-> -       if (sockptr_is_kernel(sockptr))
-> -               sockptr.kernel += len;
-> -       else
-> -               sockptr.user += len;
-> -}
-> -
->  static inline long strncpy_from_sockptr(char *dst, sockptr_t src, size_t count)
->  {
->         if (sockptr_is_kernel(src)) {
-> diff --git a/net/dccp/proto.c b/net/dccp/proto.c
-> index 2e9e8449698fb4..d148ab1530e57b 100644
-> --- a/net/dccp/proto.c
-> +++ b/net/dccp/proto.c
-> @@ -426,9 +426,8 @@ static int dccp_setsockopt_service(struct sock *sk, const __be32 service,
->                         return -ENOMEM;
->
->                 sl->dccpsl_nr = optlen / sizeof(u32) - 1;
-> -               sockptr_advance(optval, sizeof(service));
-> -               if (copy_from_sockptr(sl->dccpsl_list, optval,
-> -                                     optlen - sizeof(service)) ||
-> +               if (copy_from_sockptr_offset(sl->dccpsl_list, optval,
-> +                               sizeof(service), optlen - sizeof(service)) ||
->                     dccp_list_has_service(sl, DCCP_SERVICE_INVALID_VALUE)) {
->                         kfree(sl);
->                         return -EFAULT;
-> diff --git a/net/ipv4/netfilter/arp_tables.c b/net/ipv4/netfilter/arp_tables.c
-> index 9a1567dbc022b6..d1e04d2b5170ec 100644
-> --- a/net/ipv4/netfilter/arp_tables.c
-> +++ b/net/ipv4/netfilter/arp_tables.c
-> @@ -971,8 +971,8 @@ static int do_replace(struct net *net, sockptr_t arg, unsigned int len)
->                 return -ENOMEM;
->
->         loc_cpu_entry = newinfo->entries;
-> -       sockptr_advance(arg, sizeof(tmp));
-> -       if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) != 0) {
-> +       if (copy_from_sockptr_offset(loc_cpu_entry, arg, sizeof(tmp),
-> +                       tmp.size) != 0) {
->                 ret = -EFAULT;
->                 goto free_newinfo;
->         }
-> @@ -1267,8 +1267,8 @@ static int compat_do_replace(struct net *net, sockptr_t arg, unsigned int len)
->                 return -ENOMEM;
->
->         loc_cpu_entry = newinfo->entries;
-> -       sockptr_advance(arg, sizeof(tmp));
-> -       if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) != 0) {
-> +       if (copy_from_sockptr_offset(loc_cpu_entry, arg, sizeof(tmp),
-> +                       tmp.size) != 0) {
->                 ret = -EFAULT;
->                 goto free_newinfo;
->         }
-> diff --git a/net/ipv4/netfilter/ip_tables.c b/net/ipv4/netfilter/ip_tables.c
-> index f2a9680303d8c0..f15bc21d730164 100644
-> --- a/net/ipv4/netfilter/ip_tables.c
-> +++ b/net/ipv4/netfilter/ip_tables.c
-> @@ -1126,8 +1126,8 @@ do_replace(struct net *net, sockptr_t arg, unsigned int len)
->                 return -ENOMEM;
->
->         loc_cpu_entry = newinfo->entries;
-> -       sockptr_advance(arg, sizeof(tmp));
-> -       if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) != 0) {
-> +       if (copy_from_sockptr_offset(loc_cpu_entry, arg, sizeof(tmp),
-> +                       tmp.size) != 0) {
->                 ret = -EFAULT;
->                 goto free_newinfo;
->         }
-> @@ -1508,8 +1508,8 @@ compat_do_replace(struct net *net, sockptr_t arg, unsigned int len)
->                 return -ENOMEM;
->
->         loc_cpu_entry = newinfo->entries;
-> -       sockptr_advance(arg, sizeof(tmp));
-> -       if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) != 0) {
-> +       if (copy_from_sockptr_offset(loc_cpu_entry, arg, sizeof(tmp),
-> +                       tmp.size) != 0) {
->                 ret = -EFAULT;
->                 goto free_newinfo;
->         }
-> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> index 27de9380ed140e..4afec552f211b9 100644
-> --- a/net/ipv4/tcp.c
-> +++ b/net/ipv4/tcp.c
-> @@ -2801,12 +2801,13 @@ static int tcp_repair_options_est(struct sock *sk, sockptr_t optbuf,
->  {
->         struct tcp_sock *tp = tcp_sk(sk);
->         struct tcp_repair_opt opt;
-> +       size_t offset = 0;
->
->         while (len >= sizeof(opt)) {
-> -               if (copy_from_sockptr(&opt, optbuf, sizeof(opt)))
-> +               if (copy_from_sockptr_offset(&opt, optbuf, offset, sizeof(opt)))
->                         return -EFAULT;
->
-> -               sockptr_advance(optbuf, sizeof(opt));
-> +               offset += sizeof(opt);
->                 len -= sizeof(opt);
->
->                 switch (opt.opt_code) {
-> diff --git a/net/ipv6/ip6_flowlabel.c b/net/ipv6/ip6_flowlabel.c
-> index 215b6f5e733ec9..2d655260dedc75 100644
-> --- a/net/ipv6/ip6_flowlabel.c
-> +++ b/net/ipv6/ip6_flowlabel.c
-> @@ -401,8 +401,8 @@ fl_create(struct net *net, struct sock *sk, struct in6_flowlabel_req *freq,
->                 memset(fl->opt, 0, sizeof(*fl->opt));
->                 fl->opt->tot_len = sizeof(*fl->opt) + olen;
->                 err = -EFAULT;
-> -               sockptr_advance(optval, CMSG_ALIGN(sizeof(*freq)));
-> -               if (copy_from_sockptr(fl->opt + 1, optval, olen))
-> +               if (copy_from_sockptr_offset(fl->opt + 1, optval,
-> +                               CMSG_ALIGN(sizeof(*freq)), olen))
->                         goto done;
->
->                 msg.msg_controllen = olen;
-> @@ -703,9 +703,10 @@ static int ipv6_flowlabel_get(struct sock *sk, struct in6_flowlabel_req *freq,
->                 goto recheck;
->
->         if (!freq->flr_label) {
-> -               sockptr_advance(optval,
-> -                               offsetof(struct in6_flowlabel_req, flr_label));
-> -               if (copy_to_sockptr(optval, &fl->label, sizeof(fl->label))) {
-> +               size_t offset = offsetof(struct in6_flowlabel_req, flr_label);
-> +
-> +               if (copy_to_sockptr_offset(optval, offset, &fl->label,
-> +                               sizeof(fl->label))) {
->                         /* Intentionally ignore fault. */
->                 }
->         }
-> diff --git a/net/ipv6/netfilter/ip6_tables.c b/net/ipv6/netfilter/ip6_tables.c
-> index 1d52957a413f4a..2e2119bfcf1373 100644
-> --- a/net/ipv6/netfilter/ip6_tables.c
-> +++ b/net/ipv6/netfilter/ip6_tables.c
-> @@ -1143,8 +1143,8 @@ do_replace(struct net *net, sockptr_t arg, unsigned int len)
->                 return -ENOMEM;
->
->         loc_cpu_entry = newinfo->entries;
-> -       sockptr_advance(arg, sizeof(tmp));
-> -       if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) != 0) {
-> +       if (copy_from_sockptr_offset(loc_cpu_entry, arg, sizeof(tmp),
-> +                       tmp.size) != 0) {
->                 ret = -EFAULT;
->                 goto free_newinfo;
->         }
-> @@ -1517,8 +1517,8 @@ compat_do_replace(struct net *net, sockptr_t arg, unsigned int len)
->                 return -ENOMEM;
->
->         loc_cpu_entry = newinfo->entries;
-> -       sockptr_advance(arg, sizeof(tmp));
-> -       if (copy_from_sockptr(loc_cpu_entry, arg, tmp.size) != 0) {
-> +       if (copy_from_sockptr_offset(loc_cpu_entry, arg, sizeof(tmp),
-> +                       tmp.size) != 0) {
->                 ret = -EFAULT;
->                 goto free_newinfo;
->         }
-> diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
-> index b97eb4b538fd4e..91bf6635ea9ee4 100644
-> --- a/net/netfilter/x_tables.c
-> +++ b/net/netfilter/x_tables.c
-> @@ -1050,6 +1050,7 @@ EXPORT_SYMBOL_GPL(xt_check_target);
->  void *xt_copy_counters(sockptr_t arg, unsigned int len,
->                        struct xt_counters_info *info)
->  {
-> +       size_t offset;
->         void *mem;
->         u64 size;
->
-> @@ -1067,7 +1068,7 @@ void *xt_copy_counters(sockptr_t arg, unsigned int len,
->
->                 memcpy(info->name, compat_tmp.name, sizeof(info->name) - 1);
->                 info->num_counters = compat_tmp.num_counters;
-> -               sockptr_advance(arg, sizeof(compat_tmp));
-> +               offset = sizeof(compat_tmp);
->         } else
->  #endif
->         {
-> @@ -1078,7 +1079,7 @@ void *xt_copy_counters(sockptr_t arg, unsigned int len,
->                 if (copy_from_sockptr(info, arg, sizeof(*info)) != 0)
->                         return ERR_PTR(-EFAULT);
->
-> -               sockptr_advance(arg, sizeof(*info));
-> +               offset = sizeof(*info);
->         }
->         info->name[sizeof(info->name) - 1] = '\0';
->
-> @@ -1092,7 +1093,7 @@ void *xt_copy_counters(sockptr_t arg, unsigned int len,
->         if (!mem)
->                 return ERR_PTR(-ENOMEM);
->
-> -       if (copy_from_sockptr(mem, arg, len) == 0)
-> +       if (copy_from_sockptr_offset(mem, arg, offset, len) == 0)
->                 return mem;
->
->         vfree(mem);
-> diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-> index d77f7d821130db..bbc52b088d2968 100644
-> --- a/net/tls/tls_main.c
-> +++ b/net/tls/tls_main.c
-> @@ -522,9 +522,9 @@ static int do_tls_setsockopt_conf(struct sock *sk, sockptr_t optval,
->                 goto err_crypto_info;
->         }
->
-> -       sockptr_advance(optval, sizeof(*crypto_info));
-> -       rc = copy_from_sockptr(crypto_info + 1, optval,
-> -                              optlen - sizeof(*crypto_info));
-> +       rc = copy_from_sockptr_offset(crypto_info + 1, optval,
-> +                                     sizeof(*crypto_info),
-> +                                     optlen - sizeof(*crypto_info));
->         if (rc) {
->                 rc = -EFAULT;
->                 goto err_crypto_info;
-> --
-> 2.27.0
-
-Getting rid of sockptr_advance entirely seems like the right decision
-here. You still might want to make sure the addition in
-copy_from_sockptr_offset doesn't overflow, and return -EFAULT if it
-does.
-
-But this indeed fixes the bug, so:
-
-Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
+PiBGb3IgYSByZWFsbHkgb3ZlcmVuZ2luZXJlZCBzb2x1dGlvbiwgYnV0IHdoaWNoIG1pZ2h0IHBl
+cmZvcm0gdW5uZWNlc3NhcnkgcG9vcmx5IG9uIGV4aXN0aW5nIGhhcmR3YXJlOg0KPg0KPiBhc20g
+dm9sYXRpbGUoIjE6IC5ieXRlIDB4ZiwgMHgxLCAweGU4OyAyOiINCj4gICAgICAgICAgICAgICAg
+ICAgICAgICBfQVNNX0VYVEFCTEUoMWIsMmIpKTsNCg0KWW91IHdpbiB0aGUgcHJpemUgZm9yIHRo
+ZSBzbWFsbGVzdCBjb2RlLiAgTWlnaHQgbmVlZCAodGhlIGFscmVhZHkgbGFyZ2UpIGNvbW1lbnQg
+dG8gZG91YmxlDQppbiBzaXplIHRvIGV4cGxhaW4gdGhlIHN1YnRsZXRpZXMhDQoNCi1Ub255DQo=
