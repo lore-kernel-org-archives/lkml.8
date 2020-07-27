@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7691AC433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C005EC433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49418208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0374208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859093;
-	bh=GGUUnrT70vCshPJghf6krsi3BKNCu8O77QYQpIvqC9M=;
+	s=default; t=1595859099;
+	bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WRCF/57NioxR8iJX+ob/qiJ6IbxEbcXBvlnj20Q4HWwCePiBc9SeBxNNxU9xuuOmb
-	 4X7E8UJ6Lum0GDENvCNHeYDjSwNL9vvKhXPFMvot2spfYp2K53V/NYOoQsEGyMy16c
-	 iX3EQMPJYROlqNuajPbXw5mG2YJU51fEbugq1hjA=
+	b=LJLd0HSAUJCcVd/o79ZVsnfG9no+t/X4EG5rY05DT0N4iTJ19lyYYQbbw6YKTk6MF
+	 EAl1sjAwWintZL4XA3p37FOYuNbEJUMiHewTB0hA1iRDBk6QJRjD88nA3yw+K0x1JH
+	 Pa44r4sxuK/WtFvqhWGCG8NrXa8ezYyKTiKjTKdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbgG0OLc (ORCPT
+        id S1730045AbgG0OLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:11:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35096 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728654AbgG0OL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:11:29 -0400
+        id S1729452AbgG0OL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:11:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 909C72173E;
-        Mon, 27 Jul 2020 14:11:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C972920838;
+        Mon, 27 Jul 2020 14:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859089;
-        bh=GGUUnrT70vCshPJghf6krsi3BKNCu8O77QYQpIvqC9M=;
+        s=default; t=1595859086;
+        bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b1XMcfOUqsH2914v7EkcmuFkKoCZGHnSWmBFkpJ+KT+fxoBVNG6i79jmZSxFfsf7H
-         RvZVCrZdbPm8Lxa3+7lgpuvTrvaVbyMJ+Cox8Oe+DrapeeuAGYASRQWqFyXyKjwfTY
-         9gJmWHZK+fJERgB0VSS0YvWlm8vuujbJPnYf3n6c=
+        b=180DPRe+hrjhJZC6XYqnwqzGxeMzu1JbtxFWLlO1dNkqondoJMWmWmgVdgA7TzMec
+         RoB/jrlYbAEimVeRUhmz5ZkrSY7t/PftZR+PTdatNgCf1TYOE/pIxKA8nEngzunxcY
+         YvAw3/QuwxS2YQwliCV+X+SOL2hKwILvlY3TGnFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Palmer Dabbelt <palmerdabbelt@google.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 60/86] RISC-V: Upgrade smp_mb__after_spinlock() to iorw,iorw
-Date:   Mon, 27 Jul 2020 16:04:34 +0200
-Message-Id: <20200727134917.444705980@linuxfoundation.org>
+Subject: [PATCH 4.19 59/86] x86: math-emu: Fix up cmp insn for clang ias
+Date:   Mon, 27 Jul 2020 16:04:33 +0200
+Message-Id: <20200727134917.395764070@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -59,42 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Palmer Dabbelt <palmerdabbelt@google.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 38b7c2a3ffb1fce8358ddc6006cfe5c038ff9963 ]
+[ Upstream commit 81e96851ea32deb2c921c870eecabf335f598aeb ]
 
-While digging through the recent mmiowb preemption issue it came up that
-we aren't actually preventing IO from crossing a scheduling boundary.
-While it's a bit ugly to overload smp_mb__after_spinlock() with this
-behavior, it's what PowerPC is doing so there's some precedent.
+The clang integrated assembler requires the 'cmp' instruction to
+have a length prefix here:
 
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+arch/x86/math-emu/wm_sqrt.S:212:2: error: ambiguous instructions require an explicit suffix (could be 'cmpb', 'cmpw', or 'cmpl')
+ cmp $0xffffffff,-24(%ebp)
+ ^
+
+Make this a 32-bit comparison, which it was clearly meant to be.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Link: https://lkml.kernel.org/r/20200527135352.1198078-1-arnd@arndb.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/include/asm/barrier.h | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ arch/x86/math-emu/wm_sqrt.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/barrier.h b/arch/riscv/include/asm/barrier.h
-index d4628e4b3a5ea..f4c92c91aa047 100644
---- a/arch/riscv/include/asm/barrier.h
-+++ b/arch/riscv/include/asm/barrier.h
-@@ -69,8 +69,16 @@ do {									\
-  * The AQ/RL pair provides a RCpc critical section, but there's not really any
-  * way we can take advantage of that here because the ordering is only enforced
-  * on that one lock.  Thus, we're just doing a full fence.
-+ *
-+ * Since we allow writeX to be called from preemptive regions we need at least
-+ * an "o" in the predecessor set to ensure device writes are visible before the
-+ * task is marked as available for scheduling on a new hart.  While I don't see
-+ * any concrete reason we need a full IO fence, it seems safer to just upgrade
-+ * this in order to avoid any IO crossing a scheduling boundary.  In both
-+ * instances the scheduler pairs this with an mb(), so nothing is necessary on
-+ * the new hart.
-  */
--#define smp_mb__after_spinlock()	RISCV_FENCE(rw,rw)
-+#define smp_mb__after_spinlock()	RISCV_FENCE(iorw,iorw)
+diff --git a/arch/x86/math-emu/wm_sqrt.S b/arch/x86/math-emu/wm_sqrt.S
+index f031c0e193565..515cdee90df72 100644
+--- a/arch/x86/math-emu/wm_sqrt.S
++++ b/arch/x86/math-emu/wm_sqrt.S
+@@ -209,7 +209,7 @@ sqrt_stage_2_finish:
  
- #include <asm-generic/barrier.h>
+ #ifdef PARANOID
+ /* It should be possible to get here only if the arg is ffff....ffff */
+-	cmp	$0xffffffff,FPU_fsqrt_arg_1
++	cmpl	$0xffffffff,FPU_fsqrt_arg_1
+ 	jnz	sqrt_stage_2_error
+ #endif /* PARANOID */
  
 -- 
 2.25.1
