@@ -2,296 +2,147 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1799AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF686C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDB192074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0DD2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:28:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="T8MbmVVq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DxmNZ/hV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbgG0MXQ (ORCPT
+        id S1728391AbgG0M2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:23:16 -0400
-Received: from mail-vi1eur05on2133.outbound.protection.outlook.com ([40.107.21.133]:30592
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727078AbgG0MXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:23:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NZGBTBbLAlNwpZcZJPcVzW9idK3prGXZv5SAvRC6JqD6L9ump0NrVmWKruq+TB2sVzTnD8J29HAmcAklHV9cvQtm2Ur57LxjdpQE6Nt3i7E+6kIUa6YT2M4k8o7wcfd8E0pAvrshTLr8j9UsdlNyhI395v3pFK+TaO5Sr9ZNPWjv1SBrZYVosT9sgxEHK182Up1K7YPtxl/w/3V7ZwopVnT10GvGQT3VBB/37VChpfOMvTxsNSmR4B6BORg7OMs6L7BbIeMNCaTcj8ePNNjGjWpAsg0jiwonb4z6eHnBmHhGCJi404HZl6WPVBBuga0sm222pMJBjGzV/7OLZs8+GA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M0t2ZXOlTVnMlgNUjfmaUblgPx1JpYb6gG9RlrlS9Yo=;
- b=YQx0smbb1sKQV0umcPUeOZDo+aB3Sh1ptiTKS9Fb/ZoY2hG37Cpz5asO/tdd71AOZoa2DQtMbuzWj2qkTNjSRqvnaoOAbpiAbiVoe3YxhULIyYir5jSnejTGi6gUEaQDzLxA/Z0mLx6DsJbcpbHZ5fBPn0/pb7znT81b3yTP69J5ePa6ztIF0/us7MKE+rUwRggIrSsutiy4gOY6TJ80auaHRVnfudDYE/cRnUihAWY5YOmW4ozhXkibdY8hme51dR2WWXalC8JYFDK66kWnQ5LMbXrUnZx+8ZlYkumaW4k068ppDBW1esvW66VS7kWXVBkhxRwH56QMd2ZWv345Eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M0t2ZXOlTVnMlgNUjfmaUblgPx1JpYb6gG9RlrlS9Yo=;
- b=T8MbmVVqPMJedQPswMscWNXKSTZhoRMUhBK5vzP4HpMIo0CyT7F++PY+EXC6stBvOZltW3YxCQj6wG1wqsp5f+Gn5PUsJKXynVUNzl3JTTBisY3GYDj6KMAb46/z4li7GX7+qIOjHGmEBekusaih9/U2nn8xe2IU3FS1LvoLD54=
-Authentication-Results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none header.from=plvision.eu;
-Received: from DB6P190MB0534.EURP190.PROD.OUTLOOK.COM (2603:10a6:6:33::15) by
- DB6P190MB0151.EURP190.PROD.OUTLOOK.COM (2603:10a6:4:88::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3216.24; Mon, 27 Jul 2020 12:23:09 +0000
-Received: from DB6P190MB0534.EURP190.PROD.OUTLOOK.COM
- ([fe80::2c35:1eb3:3877:3c1d]) by DB6P190MB0534.EURP190.PROD.OUTLOOK.COM
- ([fe80::2c35:1eb3:3877:3c1d%7]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
- 12:23:09 +0000
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mickey Rachamim <mickeyr@marvell.com>,
-        Vadym Kochan <vadym.kochan@plvision.eu>
-Subject: [net-next v4 0/6] net: marvell: prestera: Add Switchdev driver for Prestera family ASIC device 98DX326x (AC3x)
-Date:   Mon, 27 Jul 2020 15:22:36 +0300
-Message-Id: <20200727122242.32337-1-vadym.kochan@plvision.eu>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: AM5PR0602CA0010.eurprd06.prod.outlook.com
- (2603:10a6:203:a3::20) To DB6P190MB0534.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:6:33::15)
+        Mon, 27 Jul 2020 08:28:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbgG0M2o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:28:44 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22EE1C061794;
+        Mon, 27 Jul 2020 05:28:43 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id y11so4356580qvl.4;
+        Mon, 27 Jul 2020 05:28:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3FUvNO9QMUZaqN3Ipima2yOyS4OGa1w1vhSOjtrsS1U=;
+        b=DxmNZ/hV1l3c8QXSHzQXkUZb/Z9d8DjaC5EUiIhS2y9OI2/ktcJGAK2KAqBVxQt4p6
+         81KhwXm/Vu44aYbx6GkGtJjuqeiXR4AzEQWVeT75oFfLLvGlZUs8JM6AEcghDwd5p9CD
+         Zj6MV27gDND0M/j8NLRLnzqLg/bTFdEhaB5kEuXWNBHGa73VPjlsKmUhRROCc0oRoFOk
+         ecd4ynSApNINne2CB958m1OApG6aN01iRL2k/o4w/ZU5zBxI7PqVvQw9LCWReT7a/3dU
+         86CHsj1nqyNFNRkrIhhuWyyGl5W3/2/v/rOOr5QpBj+sz17OdrBMeG4hBeg3k5DvbhhZ
+         NS2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3FUvNO9QMUZaqN3Ipima2yOyS4OGa1w1vhSOjtrsS1U=;
+        b=Bs1jmqmrLkWi+8+44NCHip1SnRG8xsDhA9xGnG5OkbXRJofHdqr8S3EJCGffxOh/Qv
+         TnRC69FYj5lV4sVA38AfmTsijsABavjDdOubDzq6eDiF5JiyjfNi7Y5fyjyouSK+n5OR
+         kC7wuJE/3jowB5V33EUmgj2mbQyn9XmKfZfx9oVIM8AsxN7yuvL7i8kwIJr9Pb68hg8t
+         J+Fd0MHVTC0a7cVr4p9Uz3MDjcaYW51LQTyn1pkJd7VXrGEYr9H05TARTPNZSJniVVIL
+         eS1K4OIEKuNkvX6NRs3yDhMx1z3/MZ/FkgtL38U8iTMEwsrqGJ/pW5OWd+orJJMeDZOo
+         OMVg==
+X-Gm-Message-State: AOAM530NEQpPKzxETWo7zI5pLBay1MyS5L5CHaPog5SxOsYUnP711W1U
+        wBkloSJV545wMIIlZadKdW59f3yoAUE=
+X-Google-Smtp-Source: ABdhPJwsgPOCQNSWkS+36B2kABD5Q2ICEbCWIF6UhfzJQDJA1Mn7bb1dc8mUMJFkAgUkEk4CClKRDg==
+X-Received: by 2002:a0c:fe91:: with SMTP id d17mr10227579qvs.156.1595852922163;
+        Mon, 27 Jul 2020 05:28:42 -0700 (PDT)
+Received: from shinobu (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id s5sm19024320qke.120.2020.07.27.05.28.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 05:28:41 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 08:28:25 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] counter: microchip-tcb-capture: check the correct
+ variable
+Message-ID: <20200727122825.GA5614@shinobu>
+References: <20200727112316.GG389488@mwanda>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc60716vkochan.x.ow.s (217.20.186.93) by AM5PR0602CA0010.eurprd06.prod.outlook.com (2603:10a6:203:a3::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20 via Frontend Transport; Mon, 27 Jul 2020 12:23:07 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fa47ae27-a5da-4f59-8e0d-08d83227d276
-X-MS-TrafficTypeDiagnostic: DB6P190MB0151:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6P190MB01519800CAE77AB7302CA2BF95720@DB6P190MB0151.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RfEcIWQQauhJRcmTgLGxytU0euRzNtow0Np+vEr2z+rGe2ueVmzQzMYwgzhpse0vcNH26YvUE+cBS6zEL6IiSzfTofdZ17TTAc065tQffIPMAuYtGv/ptr+9G8AR5fkzhZZ7utp91ymZ7hDB0P7oFMk/a6OxA6vWpFXIjGMygkyBB9d+GkDkk4T0yG69mB3rUeFtnkR/G5pHS4mhmQ6+mQN7QBavTX4NEnxOOXBvpIy7SB04nnwVuun6OgbILtRUxK9GuwDyH9b46vrxZg2oyRnPDKjzPxHDcpf/9qIppGMWcznyMJL1IXuCbT4vkeMrmlcEDRaOXGIbDQ2vh9e7n7gOYop5gs0ALcccgPWjsomlj4GRmV/K7MqYXhoY0328y/OEL315xjrXPlRbMq3JWQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6P190MB0534.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(39830400003)(396003)(136003)(376002)(346002)(366004)(6506007)(508600001)(83380400001)(956004)(52116002)(316002)(66946007)(8936002)(36756003)(26005)(2616005)(8676002)(66476007)(66556008)(186003)(44832011)(54906003)(6486002)(110136005)(16526019)(6512007)(86362001)(1076003)(107886003)(4326008)(6666004)(5660300002)(2906002)(21314003)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: QTo6nNCC7LUfIidRGOLVeJiwI4mn4AfghG67odeHVsABzpw+tCTqd1f8hvJHFoUYacUCKwq3vdz9KCA99XlbcXDgs4CdxO2HIaIJlKjToU77xDbubcFMh7BogSyS37KOAh+g5E1ZZC9CYgYB1LBvP25MjHiis5KTzbWQn42SDUs+0e8IggJrc7vs9DDmshlHnJuCaIPivyuMMYqDD+UGrAsJ3SBzALbItQ+HgWozhCQ6xht1pPlQu0fI53mLZDtm5hLDiOxssMwwD26+0SKCeKw/pOGLO0ZdTG4O6nMk245hcBuR0h0Zu6zjkMKcY55+JHFvdQr4a3TWfb7EVKMB9D69jiTaJCd0240OoBSQCz7m7ypZURHc4ePSvcx7BCeTSvCpSe+7MMIbApcy8f5OaSGVGdS2tKU9p3ChpVsnK/4t6Vh1tr0cSO29w76uGs0o1Z351cVnRc+mxX1Ti2vXCgYowk7v6NYavjzMZiZyJeg=
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa47ae27-a5da-4f59-8e0d-08d83227d276
-X-MS-Exchange-CrossTenant-AuthSource: DB6P190MB0534.EURP190.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 12:23:09.1272
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6dpAZLLpUKt3B14PJKfxvzzX07LNP8vOTNxaaw/u93+9sUjOI66rhfAWpILZcEwhhJMQgFwpQH0iWYdAV/holMBC3m33r5e3ImRJeQHdDLE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6P190MB0151
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
+Content-Disposition: inline
+In-Reply-To: <20200727112316.GG389488@mwanda>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
-ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
-wireless SMB deployment.
 
-Prestera Switchdev is a firmware based driver that operates via PCI bus.  The
-current implementation supports only boards designed for the Marvell Switchdev
-solution and requires special firmware.
+--IJpNTDwzlM2Ie8A6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This driver implementation includes only L1, basic L2 support, and RX/TX.
+On Mon, Jul 27, 2020 at 02:23:16PM +0300, Dan Carpenter wrote:
+> This should be testing "regmap" instead of "priv->regmap".  The
+> "priv->regmap" variable is always zero so it's not an error pointer.
+>=20
+> Fixes: 106b104137fd ("counter: Add microchip TCB capture counter")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-The core Prestera switching logic is implemented in prestera_main.c, there is
-an intermediate hw layer between core logic and firmware. It is
-implemented in prestera_hw.c, the purpose of it is to encapsulate hw
-related logic, in future there is a plan to support more devices with
-different HW related configurations.
+Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-The following Switchdev features are supported:
+> ---
+> The commit 106b104137fd ("counter: Add microchip TCB capture counter")
+> doesn't use the correct patch prefix.  This is a common mistake for the
+> the first commit which adds the driver.  There is no kernel wide
+> standard for patch prefixes so it's difficult for people sending fixes
+> to know the correct prefix should be.
+>=20
+>  drivers/counter/microchip-tcb-capture.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/mi=
+crochip-tcb-capture.c
+> index f7b7743ddb94..b7b252c5addf 100644
+> --- a/drivers/counter/microchip-tcb-capture.c
+> +++ b/drivers/counter/microchip-tcb-capture.c
+> @@ -320,8 +320,8 @@ static int mchp_tc_probe(struct platform_device *pdev)
+>  	}
+> =20
+>  	regmap =3D syscon_node_to_regmap(np->parent);
+> -	if (IS_ERR(priv->regmap))
+> -		return PTR_ERR(priv->regmap);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> =20
+>  	/* max. channels number is 2 when in QDEC mode */
+>  	priv->num_channels =3D of_property_count_u32_elems(np, "reg");
+> --=20
+> 2.27.0
+>=20
 
-    - VLAN-aware bridge offloading
-    - VLAN-unaware bridge offloading
-    - FDB offloading (learning, ageing)
-    - Switchport configuration
+--IJpNTDwzlM2Ie8A6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The original firmware image is uploaded to the linux-firmware repository.
+-----BEGIN PGP SIGNATURE-----
 
-PATCH v4:
-    1) Use prestera_ prefix in netdev_ops variable.
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl8eyEoACgkQhvpINdm7
+VJK0WA/+NeMk3F3w6l1WBuWUgdRiZ7HzmFUqDleCv9qgVbPynOPQH7yYrf3TcsBd
+8KoRrfJLXGRwlzZr1B9kGGbQF4C9lve8Zt3yzq4nlZkvt0IoKgfIUza0L/1thbmC
+cN7YXZQMshUEQd+aMQ2jn0efwxTyN3dPfV97u8nGeiA6ZIdaH8R1c+myrgN/CgXF
++cOiATSqcTr8Zb+1baIaxlI0vIH80/P8Aid47nhe5hzJMUb3ZBuoUTVdZz9f3mXf
+Ljx1PlUIr90YtPuQ6x88K/7jGtN3iJg3Y7xl9vkulvJm2ABYGQUaJVjasG+8e5vb
+Z2+8eyV6MaL9Hd94yXudmljFdoxF0ecqrc8qJstnD+A9h45+jB3CqLw7HrEYziUn
+UMRQefVumrlSxUENNBbW5iHdBZXzsxkNXXJYJbPCE/TEc0Dj4glogqqFsLjOjLw7
+zsWSbqmG5Oa8pVFUiRespqL+DIgGDrOMhQ6NJVITLJmI0pkNbPHGSDXBtrVgoT3v
+mPjzP5DihRxhLMR0jvX0Zz7M8fhB7G++tBb/RgBG0vfbGBiGgp1e0EB58WbHAuXp
++Ldvsb9HcRftlyHOFygBfrFCRzmAq3V/fPvZOWhqYD2mZDJpG4DbtmC0dc0eKFJ/
+oO6tL9pL92d0qikvfC52qBJwEVYmbvFi9HRB+DDegisA/c5YskY=
+=sSZ0
+-----END PGP SIGNATURE-----
 
-    2) Kconfig: use 'default PRESTERA' build type for CONFIG_PRESTERA_PCI to be
-       synced by default with prestera core module.
-
-    3) Use memcpy_xxio helpers in prestera_pci.c for IO buffer copying.
-
-    4) Generate fw image path via snprintf() instead of macroses.
-
-    5) Use pcim_ helpers in prestera_pci.c which simplified the
-       probe/remove logic.
-
-    6) Removed not needed initializations of variables which are used in
-       readl_poll_xxx() helpers.
-
-    7) Fixed few grammar mistakes in patch[2] description.
-
-    8) Export only prestera_ethtool_ops struct instead of each
-       ethtool handler.
-
-    9) Add check for prestera_dev_check() in switchdev event handling to
-       make sure there is no wrong topology.
-
-    Patches updated:
-        [1] net: marvell: prestera: Add driver for Prestera family ASIC devices
-	[2] net: marvell: prestera: Add PCI interface support
-	[4] net: marvell: prestera: Add ethtool interface support
-	[5] net: marvell: prestera: Add Switchdev driver implementation
-
-PATCH v3:
-    1) Simplify __be32 type casting in prestera_dsa.c
-
-    2) Added per-patch changelog under "---" line.
-
-PATCH v2:
-    1) Use devlink_port_type_clear()
-
-    2) Add _MS prefix to timeout defines.
-
-    3) Remove not-needed packed attribute from the firmware ipc structs,
-       also the firmware image needs to be uploaded too (will do it soon).
-
-    4) Introduce prestera_hw_switch_fini(), to be mirrored with init and
-       do simple validation if the event handlers are unregistered.
-
-    5) Use kfree_rcu() for event handler unregistering.
-
-    6) Get rid of rcu-list usage when dealing with ports, not needed for
-       now.
-
-    7) Little spelling corrections in the error/info messages.
-
-    8) Make pci probe & remove logic mirrored.
-
-    9) Get rid of ETH_FCS_LEN in headroom setting, not needed.
-
-PATCH:
-    1) Fixed W=1 warnings
-
-    2) Renamed PCI driver name to be more generic "Prestera DX" because
-       there will be more devices supported.
-
-    3) Changed firmware image dir path: marvell/ -> mrvl/prestera/
-       to be aligned with location in linux-firmware.git (if such
-       will be accepted).
-
-RFC v3:
-    1) Fix prestera prefix in prestera_rxtx.c
-
-    2) Protect concurrent access from multiple ports on multiple CPU system
-       on tx path by spinlock in prestera_rxtx.c
-
-    3) Try to get base mac address from device-tree, otherwise use a random generated one.
-
-    4) Move ethtool interface support into separate prestera_ethtool.c file.
-
-    5) Add basic devlink support and get rid of physical port naming ops.
-
-    6) Add STP support in Switchdev driver.
-
-    7) Removed MODULE_AUTHOR
-
-    8) Renamed prestera.c -> prestera_main.c, and kernel module to
-       prestera.ko
-
-RFC v2:
-    1) Use "pestera_" prefix in struct's and functions instead of mvsw_pr_
-
-    2) Original series split into additional patches for Switchdev ethtool support.
-
-    3) Use major and minor firmware version numbers in the firmware image filename.
-
-    4) Removed not needed prints.
-
-    5) Use iopoll API for waiting on register's value in prestera_pci.c
-
-    6) Use standart approach for describing PCI ID matching section instead of using
-       custom wrappers in prestera_pci.c
-
-    7) Add RX/TX support in prestera_rxtx.c.
-
-    8) Rewritten prestera_switchdev.c with following changes:
-       - handle netdev events from prestera.c
-
-       - use struct prestera_bridge for bridge objects, and get rid of
-         struct prestera_bridge_device which may confuse.
-
-       - use refcount_t
-
-    9) Get rid of macro usage for sending fw requests in prestera_hw.c
-
-    10) Add base_mac setting as module parameter. base_mac is required for
-        generation default port's mac.
-
-Vadym Kochan (6):
-  net: marvell: prestera: Add driver for Prestera family ASIC devices
-  net: marvell: prestera: Add PCI interface support
-  net: marvell: prestera: Add basic devlink support
-  net: marvell: prestera: Add ethtool interface support
-  net: marvell: prestera: Add Switchdev driver implementation
-  dt-bindings: marvell,prestera: Add description for device-tree
-    bindings
-
- .../bindings/net/marvell,prestera.txt         |   34 +
- drivers/net/ethernet/marvell/Kconfig          |    1 +
- drivers/net/ethernet/marvell/Makefile         |    1 +
- drivers/net/ethernet/marvell/prestera/Kconfig |   25 +
- .../net/ethernet/marvell/prestera/Makefile    |    7 +
- .../net/ethernet/marvell/prestera/prestera.h  |  208 +++
- .../marvell/prestera/prestera_devlink.c       |  120 ++
- .../marvell/prestera/prestera_devlink.h       |   26 +
- .../ethernet/marvell/prestera/prestera_dsa.c  |  134 ++
- .../ethernet/marvell/prestera/prestera_dsa.h  |   37 +
- .../marvell/prestera/prestera_ethtool.c       |  752 ++++++++++
- .../marvell/prestera/prestera_ethtool.h       |   14 +
- .../ethernet/marvell/prestera/prestera_hw.c   | 1231 ++++++++++++++++
- .../ethernet/marvell/prestera/prestera_hw.h   |  181 +++
- .../ethernet/marvell/prestera/prestera_main.c |  639 ++++++++
- .../ethernet/marvell/prestera/prestera_pci.c  |  778 ++++++++++
- .../ethernet/marvell/prestera/prestera_rxtx.c |  860 +++++++++++
- .../ethernet/marvell/prestera/prestera_rxtx.h |   21 +
- .../marvell/prestera/prestera_switchdev.c     | 1289 +++++++++++++++++
- .../marvell/prestera/prestera_switchdev.h     |   16 +
- 20 files changed, 6374 insertions(+)
- create mode 100644 drivers/net/ethernet/marvell/prestera/Kconfig
- create mode 100644 drivers/net/ethernet/marvell/prestera/Makefile
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera.h
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_devlink.c
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_devlink.h
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_dsa.c
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_dsa.h
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_ethtool.c
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_ethtool.h
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_hw.c
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_hw.h
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_main.c
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_pci.c
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_rxtx.c
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_rxtx.h
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_switchdev.c
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_switchdev.h
-
--- 
-2.17.1
-
+--IJpNTDwzlM2Ie8A6--
