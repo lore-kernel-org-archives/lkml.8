@@ -2,83 +2,55 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE34C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7910C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8762074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:42:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="r0nWfJei"
+	by mail.kernel.org (Postfix) with ESMTP id A56B32070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731485AbgG0Rmz (ORCPT
+        id S1730187AbgG0RqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40374 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731172AbgG0Rmy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:42:54 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D91DEC0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 10:42:53 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id m8so2615839pfh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 10:42:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Lsbka09HUg/6AnqlzwCmUEpN5zjWnvzDu4J8ThOF1eI=;
-        b=r0nWfJeixf6Lj+km7L3Pz6DT4+fYo1qxHNgUPJGoxKo++zwulrc9YaIPT3UXHuIFUL
-         pyAFnxAqlRTX2/FXo5stzuidX1UmOct461dBiSxciWndxFchoDGsjWuSL3RacmTZ4A1C
-         6IslrowS3wNyVTSWlpn83eYTjMZvfSvVpyldJWR8cHvzAP5CFInMEvpxNP1fE0p5FWpK
-         nJ9mU7a7pBJcjLWs68/tAzSTfjNM0MtxYc0csTehZE+6SHYk3k/2uUgOaDWgGSk4unAA
-         Bm9OpajN3Jl44obCfwbnB0mAR4jnTreXXynFQwJMnlTsof78GjRoscNpCiKEZu0PyLGF
-         griw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Lsbka09HUg/6AnqlzwCmUEpN5zjWnvzDu4J8ThOF1eI=;
-        b=GPXiNP3YTPqfJ/V13GZt/ETFjfwpNK4f5jOYw9mgasdLxEWg/i3mQpmRklRCoY6PZQ
-         BRfLSFTv96qnLRPrrJ30BC19DPQ8A/FTVMP0B55Kk0nXnJoQos1jeHcXfNhHe0UcBkrR
-         lA3bBh0NKioCygH+YIv5a7Kfj3Q+dyy7uFYWyRMGvoIFGCl0PNco9w8cuIosJxtWr7rF
-         Tlm2eKG4aqYT6X+4y6hhOfj8nhpPkqR5MoxxBXF7vPjR8QKGdcYm5cRJF9R/mQB/Zg1E
-         Tidmxj8phq9tmEBBwOT/RE3CkcHfH5H3DCPirHHlGZI3endvYknu2qnLoPbajLAfn2Cy
-         IT2A==
-X-Gm-Message-State: AOAM5324a/DwI/WIkvB5uU49FnZfI9nllZNjuRofIehLD1DgFlxx4i+y
-        e8j/n3HD/9mpBj2ZS3xhxFQMfw==
-X-Google-Smtp-Source: ABdhPJxtBjozrrmTF4k4W+BHFQLbRoB8W6XPzUk4V7UxSjHortXTE1AqQ3bjd1AMkeifgNSJklFueg==
-X-Received: by 2002:a63:9dcd:: with SMTP id i196mr20321294pgd.378.1595871773315;
-        Mon, 27 Jul 2020 10:42:53 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id b22sm218988pju.26.2020.07.27.10.42.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 10:42:52 -0700 (PDT)
-Subject: Re: [PATCH v2] ata: use generic power management
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200727173923.694872-1-vaibhavgupta40@gmail.com>
- <20200727174012.GA696265@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2b4738b0-5c2c-8ee2-83f9-10b961a5d0d3@kernel.dk>
-Date:   Mon, 27 Jul 2020 11:42:51 -0600
+        Mon, 27 Jul 2020 13:46:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:48616 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728109AbgG0RqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 13:46:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 278AB30E;
+        Mon, 27 Jul 2020 10:46:00 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16AF83F718;
+        Mon, 27 Jul 2020 10:45:50 -0700 (PDT)
+Subject: Re: [PATCH v2 2/3] sched: Cleanup SCHED_THERMAL_PRESSURE kconfig
+ entry
+To:     Qian Cai <cai@lca.pw>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+References: <20200712165917.9168-1-valentin.schneider@arm.com>
+ <20200712165917.9168-3-valentin.schneider@arm.com>
+ <20200727141825.GA4174@lca.pw>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <16f8c1d4-778b-3ab8-f328-bae80f3973b4@arm.com>
+Date:   Mon, 27 Jul 2020 19:45:49 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200727174012.GA696265@gmail.com>
+In-Reply-To: <20200727141825.GA4174@lca.pw>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,12 +59,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/20 11:40 AM, Vaibhav Gupta wrote:
-> The patch is compile-tested only.
+On 27/07/2020 16:18, Qian Cai wrote:
+> On Sun, Jul 12, 2020 at 05:59:16PM +0100, Valentin Schneider wrote:
+>> As Russell pointed out [1], this option is severely lacking in the
+>> documentation department, and figuring out if one has the required
+>> dependencies to benefit from turning it on is not straightforward.
+>>
+>> Make it non user-visible, and add a bit of help to it. While at it, make it
+>> depend on CPU_FREQ_THERMAL.
+>>
+>> [1]: https://lkml.kernel.org/r/20200603173150.GB1551@shell.armlinux.org.uk
+>>
+>> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+>> ---
+>>  init/Kconfig | 15 ++++++++++++++-
+>>  1 file changed, 14 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/init/Kconfig b/init/Kconfig
+>> index 0498af567f70..0a97d85568b2 100644
+>> --- a/init/Kconfig
+>> +++ b/init/Kconfig
+>> @@ -492,8 +492,21 @@ config HAVE_SCHED_AVG_IRQ
+>>  	depends on SMP
+>>  
+>>  config SCHED_THERMAL_PRESSURE
+>> -	bool "Enable periodic averaging of thermal pressure"
+>> +	bool
+>>  	depends on SMP
+>> +	depends on CPU_FREQ_THERMAL
+>> +	help
+>> +	  Select this option to enable thermal pressure accounting in the
+>> +	  scheduler. Thermal pressure is the value conveyed to the scheduler
+>> +	  that reflects the reduction in CPU compute capacity resulted from
+>> +	  thermal throttling. Thermal throttling occurs when the performance of
+>> +	  a CPU is capped due to high operating temperatures.
+>> +
+>> +	  If selected, the scheduler will be able to balance tasks accordingly,
+>> +	  i.e. put less load on throttled CPUs than on non/less throttled ones.
+>> +
+>> +	  This requires the architecture to implement
+>> +	  arch_set_thermal_pressure() and arch_get_thermal_pressure().
+>>  
+>>  config BSD_PROCESS_ACCT
+>>  	bool "BSD Process Accounting"
+>> -- 
+> 
+> On arm64 linux-next (20200727),
+> 
+> https://gitlab.com/cailca/linux-mm/-/blob/master/arm64.config
+> 
+> WARNING: unmet direct dependencies detected for SCHED_THERMAL_PRESSURE
+>   Depends on [n]: SMP [=y] && CPU_FREQ_THERMAL [=n]
+>   Selected by [y]:
+>   - ARM64 [=y]
 
-Please test and verify actual functionality, if you're serious about
-potentially getting this into the kernel.
+Not sure, but:
 
--- 
-Jens Axboe
+(1) do we wan to let people enable SCHED_THERMAL_PRESSURE for arm64 so
+arm64 can potentially run w/o a CPU freq cooling device?
 
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 2d4abbc9f8d0..baffe8b66da2 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -192,7 +192,6 @@ config ARM64
+        select PCI_SYSCALL if PCI
+        select POWER_RESET
+        select POWER_SUPPLY
+-       select SCHED_THERMAL_PRESSURE
+        select SPARSE_IRQ
+        select SWIOTLB
+        select SYSCTL_EXCEPTION_TRACE
+diff --git a/init/Kconfig b/init/Kconfig
+index 37b089f87804..8b36e07fb230 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -492,7 +492,7 @@ config HAVE_SCHED_AVG_IRQ
+        depends on SMP
+
+ config SCHED_THERMAL_PRESSURE
+-       bool
++       bool "Thermal pressure accounting"
+        depends on SMP
+        depends on CPU_FREQ_THERMAL
+        help
+
+Or
+
+(2) should SCHED_THERMAL_PRESSURE for arm64 be enabled by default?
+
+But then it makes no sense to allow the removal of CONFIG_CPU_FREQ_THERMAL.
+
+linux-next/master$ make ARCH=arm64 defconfig
+
+// Remove CONFIG_CPU_FREQ_THERMAL
+linux-next/master$ grep CPU_FREQ_THERMAL .config
+# CONFIG_CPU_FREQ_THERMAL is not set
+
+linux-next/master$ make
+scripts/kconfig/conf  --syncconfig Kconfig
+
+WARNING: unmet direct dependencies detected for SCHED_THERMAL_PRESSURE
+  Depends on [n]: SMP [=y] && CPU_FREQ_THERMAL [=n]
+  Selected by [y]:
+  - ARM64 [=y]
+
+WARNING: unmet direct dependencies detected for SCHED_THERMAL_PRESSURE
+  Depends on [n]: SMP [=y] && CPU_FREQ_THERMAL [=n]
+  Selected by [y]:
+  - ARM64 [=y]
+
+WARNING: unmet direct dependencies detected for SCHED_THERMAL_PRESSURE
+  Depends on [n]: SMP [=y] && CPU_FREQ_THERMAL [=n]
+  Selected by [y]:
+  - ARM64 [=y]
+  HOSTCC  scripts/dtc/dtc.o
+
+---
+
+There is a similar issue with arm.
+
+I would prefer for (1).
