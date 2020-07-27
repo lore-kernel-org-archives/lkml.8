@@ -2,181 +2,122 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6287C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D43EC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7282072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E129D205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:08:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595848092;
+	bh=FCKVuuwblXPspUiI5FTHTkVwa4FYH4IgbfJfxd4McO8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=teuKJxKLFygKWuIxr1hswGgtjwb9z2HfI6K+FutIfjXEBWrBIMGD+U1TUpUN10p08
+	 TV3tgfNOSN3KEHCJHqA57iybE1U86zbLSha6tmNM7y25O0NQ7W2/kKAxycNm/6x66v
+	 3wsHaSSCiLGh3GI/yFMHv2w2VD/TpX7IP0HKDyBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbgG0LHw (ORCPT
+        id S1728300AbgG0LIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:07:52 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40695 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728115AbgG0LGR (ORCPT
+        Mon, 27 Jul 2020 07:08:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbgG0LIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:06:17 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 27 Jul 2020 14:06:12 +0300
-Received: from dev-l-vrt-135.mtl.labs.mlnx (dev-l-vrt-135.mtl.labs.mlnx [10.234.135.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06RB6Bn5022176;
-        Mon, 27 Jul 2020 14:06:11 +0300
-Received: from dev-l-vrt-135.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 06RB6BIK002386;
-        Mon, 27 Jul 2020 14:06:11 +0300
-Received: (from moshe@localhost)
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 06RB6B3W002385;
-        Mon, 27 Jul 2020 14:06:11 +0300
-From:   Moshe Shemesh <moshe@mellanox.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC 02/13] devlink: Add reload levels data to dev get
-Date:   Mon, 27 Jul 2020 14:02:22 +0300
-Message-Id: <1595847753-2234-3-git-send-email-moshe@mellanox.com>
-X-Mailer: git-send-email 1.8.4.3
-In-Reply-To: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
-References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+        Mon, 27 Jul 2020 07:08:10 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E3D0C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 04:08:10 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id g7so8348900ejw.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 04:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RwIbYX4tpIvaMqMMybkeITF1WqLqpQeUKMEgUeMi77w=;
+        b=Wlk1/2t1P+pF4N7yMXUW4N2wf8GT1C+3c0lTst7Dm1Kl2N2vtZznaDJvyZ9+WzK9pD
+         +TTKk4kKUSt2+k1wdZxBpDqg6BN7JlexuzvAS8niYNsqg4HCOBMGa65SCcuQBUWbSf9q
+         At1LsqecLQDJh+XI4juzy+Ib/as0kYjWBfjO0ikwatUKCOVWWBFk3OddnMdPnEed9o+P
+         O9oYkcLmeOL2m9xLutdxlmagLjFZGb8L66YY74x458YTt769aJa9UXnT7gz9gxvLYzyZ
+         PHcxGynin8/rYFQME9NyCUUxZ/9evzFY34J+njGC2D1rNS05isLUF40pKcG+tuhbRgAU
+         nCZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=RwIbYX4tpIvaMqMMybkeITF1WqLqpQeUKMEgUeMi77w=;
+        b=MnEGjfwQnk7miCn7mY/B24FclrNvF6Q7iWy76CNW3ApkxyCBmMbxb0oAPZ9VPfxzvB
+         Ae1QeBLx78/o+pdgMOW+ghOAIB4kpyJT0lImPw62wc73CXliKql4PvJf3KnVWhzl9Vwd
+         b+kLXzvmDiVGkuAicT2fcmw4U5S4uMTgD2KCHGA5hPuPYqtc3vRe0FR1zNImnEm1hWxI
+         sPNX21IwqG4mSmvvHbjl4JZ67f0EdMvKP6vhyzvG94bsWMAWZrgeEvXzOJVRfUNxLOmL
+         Q6IGlwVPZu/w8u5sqirRy+fF9ykpBGU9tPYJcIoAuBSdZIpS4yrHqEjjIjLGCmQ5XKAJ
+         9Glw==
+X-Gm-Message-State: AOAM533R5sPHdDmCrTLhtpk5qubWsU2r8Kxkn6LMpgcfK/rLRS/PJFAb
+        viomMh3hvYy5G6PZovMooJtJLdJN
+X-Google-Smtp-Source: ABdhPJx74sN0vJYTB8+Uo4VZ5jmm4xaQnmBby1us3Jm4w0zB+hsL02a5kLmTjiyWDGYJjDvbg1cIDA==
+X-Received: by 2002:a17:906:3614:: with SMTP id q20mr14816263ejb.142.1595848089310;
+        Mon, 27 Jul 2020 04:08:09 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id w20sm7227187eds.21.2020.07.27.04.08.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 04:08:08 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 13:08:06 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] x86/mm/64: Remove vmalloc/ioremap pgtable
+ synchronization
+Message-ID: <20200727110806.GB3174@gmail.com>
+References: <20200721095953.6218-1-joro@8bytes.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721095953.6218-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expose devlink reload supported levels and driver's default level to the
-user through devlink dev get command.
 
-Examples:
-$ devlink dev show
-pci/0000:82:00.0:
-  reload_levels_info:
-    default_level driver
-    supported_levels:
-      driver fw_reset fw_live_patch
-pci/0000:82:00.1:
-  reload_levels_info:
-    default_level driver
-    supported_levels:
-      driver fw_reset fw_live_patch
+* Joerg Roedel <joro@8bytes.org> wrote:
 
-$ devlink dev show -jp
-{
-    "dev": {
-        "pci/0000:82:00.0": {
-            "reload_levels_info": {
-                "default_level": "driver",
-                "supported_levels": [ "driver","fw_reset","fw_live_patch" ]
-            }
-        },
-        "pci/0000:82:00.1": {
-            "reload_levels_info": {
-                "default_level": "driver",
-                "supported_levels": [ "driver","fw_reset","fw_live_patch" ]
-            }
-        }
-    }
-}
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> Hi,
+> 
+> here is the third version of the patches to pre-allocate P4D/PUD pages
+> for the vmalloc/ioremap areas on x86-64. This makes the page-table
+> synchronization code obsolete and so it is also removed.
+> 
+> Please review.
+> 
+> Thanks,
+> 
+> 	Joerg
+> 
+> Changes to v2:
+> 
+> 	- Rebased to tip/master
+> 	- Some rewording of the commit-messages 
+> 
+> Joerg Roedel (3):
+>   x86/mm: Pre-allocate p4d/pud pages for vmalloc area
+>   x86/mm/64: Do not sync vmalloc/ioremap mappings
+>   x86/mm/64: Make sync_global_pgds() static
+> 
+>  arch/x86/include/asm/pgtable_64.h       |  2 -
+>  arch/x86/include/asm/pgtable_64_types.h |  2 -
+>  arch/x86/mm/init_64.c                   | 59 ++++++++++++++++++++++---
+>  3 files changed, 53 insertions(+), 10 deletions(-)
 
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
----
- include/uapi/linux/devlink.h |  3 +++
- net/core/devlink.c           | 38 +++++++++++++++++++++++++++++++-----
- 2 files changed, 36 insertions(+), 5 deletions(-)
+Applied to tip:x86/mm, thanks Joerg!
 
-diff --git a/include/uapi/linux/devlink.h b/include/uapi/linux/devlink.h
-index fa5f66db5012..249e921ff106 100644
---- a/include/uapi/linux/devlink.h
-+++ b/include/uapi/linux/devlink.h
-@@ -476,6 +476,9 @@ enum devlink_attr {
- 	DEVLINK_ATTR_PORT_SPLITTABLE,			/* u8 */
- 
- 	DEVLINK_ATTR_RELOAD_LEVEL,		/* u8 */
-+	DEVLINK_ATTR_RELOAD_DEFAULT_LEVEL,	/* u8 */
-+	DEVLINK_ATTR_RELOAD_SUPPORTED_LEVELS,	/* nested */
-+	DEVLINK_ATTR_RELOAD_LEVELS_INFO,	/* nested */
- 
- 	/* add new attributes above here, update the policy in devlink.c */
- 
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index 31b367a1612d..f1812fc620d4 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -462,6 +462,11 @@ static int devlink_nl_put_handle(struct sk_buff *msg, struct devlink *devlink)
- 	return 0;
- }
- 
-+static bool devlink_reload_supported(struct devlink *devlink)
-+{
-+	return devlink->ops->reload_down && devlink->ops->reload_up;
-+}
-+
- static bool
- devlink_reload_level_is_supported(struct devlink *devlink, enum devlink_reload_level level)
- {
-@@ -472,7 +477,9 @@ static int devlink_nl_fill(struct sk_buff *msg, struct devlink *devlink,
- 			   enum devlink_command cmd, u32 portid,
- 			   u32 seq, int flags)
- {
-+	struct nlattr *reload_levels_info, *supported_levels;
- 	void *hdr;
-+	int i;
- 
- 	hdr = genlmsg_put(msg, portid, seq, &devlink_nl_family, flags, cmd);
- 	if (!hdr)
-@@ -483,9 +490,35 @@ static int devlink_nl_fill(struct sk_buff *msg, struct devlink *devlink,
- 	if (nla_put_u8(msg, DEVLINK_ATTR_RELOAD_FAILED, devlink->reload_failed))
- 		goto nla_put_failure;
- 
-+	if (devlink_reload_supported(devlink)) {
-+		reload_levels_info = nla_nest_start(msg, DEVLINK_ATTR_RELOAD_LEVELS_INFO);
-+		if (!reload_levels_info)
-+			goto nla_put_failure;
-+		if (nla_put_u8(msg, DEVLINK_ATTR_RELOAD_DEFAULT_LEVEL,
-+			       devlink->ops->default_reload_level))
-+			goto reload_levels_info_nest_cancel;
-+
-+		supported_levels = nla_nest_start(msg, DEVLINK_ATTR_RELOAD_SUPPORTED_LEVELS);
-+		if (!supported_levels)
-+			goto reload_levels_info_nest_cancel;
-+
-+		for (i = 0; i <= DEVLINK_RELOAD_LEVEL_MAX; i++) {
-+			if (!devlink_reload_level_is_supported(devlink, i))
-+				continue;
-+			if (nla_put_u8(msg, DEVLINK_ATTR_RELOAD_LEVEL, i))
-+				goto supported_levels_nest_cancel;
-+		}
-+		nla_nest_end(msg, supported_levels);
-+		nla_nest_end(msg, reload_levels_info);
-+	}
-+
- 	genlmsg_end(msg, hdr);
- 	return 0;
- 
-+supported_levels_nest_cancel:
-+	nla_nest_cancel(msg, supported_levels);
-+reload_levels_info_nest_cancel:
-+	nla_nest_cancel(msg, reload_levels_info);
- nla_put_failure:
- 	genlmsg_cancel(msg, hdr);
- 	return -EMSGSIZE;
-@@ -2943,11 +2976,6 @@ static void devlink_reload_netns_change(struct devlink *devlink,
- 				     DEVLINK_CMD_PARAM_NEW);
- }
- 
--static bool devlink_reload_supported(const struct devlink *devlink)
--{
--	return devlink->ops->reload_down && devlink->ops->reload_up;
--}
--
- static void devlink_reload_failed_set(struct devlink *devlink,
- 				      bool reload_failed)
- {
--- 
-2.17.1
-
+	Ingo
