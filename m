@@ -2,109 +2,99 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D529BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D077C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A52142070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:14:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J1I+TzWc"
+	by mail.kernel.org (Postfix) with ESMTP id 669432075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595837710;
+	bh=B3gdt/ll7RUmIznhZ7AxJhplRfzzyoFav7ioOUsrdHM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HxZ+a/xu6LqHmxR48FgogxS69UWsnGoaWlU8H0+BjdgHs7nCbQWnpSLpKywbQpnOJ
+	 K+BispLKF+q2f/swydVVg4FY0+g+Bhxw0H35iKEfgYu8a15QH89zYtuATPpd2KZeSr
+	 2fPf4ZeDaMB7aYyYDRoKxs6oKngqUqWLUwLuNNcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgG0IOf (ORCPT
+        id S1727852AbgG0IPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:14:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38798 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726270AbgG0IOf (ORCPT
+        Mon, 27 Jul 2020 04:15:08 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40125 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgG0IPC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:14:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595837674;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IY4OegseFyVH/DUlzMVrRnb9yo4KDwtMwLRH1768Rd8=;
-        b=J1I+TzWchfA/JgEtPLVu0r6PLxkrjP09U4jXlqG7nXTpLURNBBzXiqIGjB4IrZcEqytZro
-        ui2NjdtqAnFYTWOgZ4lO2GX7sLz227RtAu2eJmaUgCpd2BAIePH/JvWxH089XlNhqdRi/x
-        KDE8Cx+fETg194fF/gb07xyK8pXfHbQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-7-gh-Hn-vwNNedtzwxAzImGw-1; Mon, 27 Jul 2020 04:14:30 -0400
-X-MC-Unique: gh-Hn-vwNNedtzwxAzImGw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 074C8805723;
-        Mon, 27 Jul 2020 08:14:28 +0000 (UTC)
-Received: from T590 (ovpn-12-208.pek2.redhat.com [10.72.12.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E9896FEC6;
-        Mon, 27 Jul 2020 08:14:20 +0000 (UTC)
-Date:   Mon, 27 Jul 2020 16:14:16 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/fs-writeback.c: not WARN on unregistered BDI
-Message-ID: <20200727081416.GB1146643@T590>
-References: <20200611072251.474246-1-ming.lei@redhat.com>
+        Mon, 27 Jul 2020 04:15:02 -0400
+Received: by mail-ed1-f68.google.com with SMTP id b13so9067149edz.7;
+        Mon, 27 Jul 2020 01:15:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uQ6jS2p/wfLKpN5rZ4uG0Txi8VApzRXQQMOZTpW6E5I=;
+        b=FlSx8lyn6PxIQqtnya+AZusTMI7TnZzh4VZsyO2q4xap/E/TKNtQ3EdqGVTWt2H0U7
+         aPMm8gM3EPZr+WnMGc66W9a8Ir69ceWf9m0uLdbhV0iqmRcEfh/Su22WGENIPcfKB0B7
+         Ur6jPmE2rCcNb6bvxVrnIG9XzTZkga7ukNdIGoG8aPz1rUCOc1ZX/a4y9EtDMSelwR6w
+         iueugoGjhFyQT2/6vyGGWdwqcB+pydLnrYlaR18oYOmqhV8qQSw9R7+FDeXvtHO7bfe7
+         v3X7QXNKPlE05rXIE2WGNA5MMqDU7hHwa2O5ovqSwoA54FybRUb0vj/2kSRpujSOCM/h
+         u4UQ==
+X-Gm-Message-State: AOAM5318kQ9Pi4iKTuoXr/4vFC3T9U2VE10XiReBFOEmKeeuUxV54Lh1
+        fSXv63IZalKusBZ1zZInNyo=
+X-Google-Smtp-Source: ABdhPJzZy8lYuF4Dnv8+CzgE9UBuWcfCF+6QoG4nD0xokbAAauobBpYUph+um4SOa4k7Kb6rNYcUlQ==
+X-Received: by 2002:a05:6402:1bc1:: with SMTP id ch1mr11717034edb.142.1595837700542;
+        Mon, 27 Jul 2020 01:15:00 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id g6sm6545579ejz.19.2020.07.27.01.14.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 Jul 2020 01:14:59 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 10:14:57 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-pm@vger.kernel.org, Olof Johansson <olof@lixom.net>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 11/16] memory: brcmstb_dpfe: Fix language typo
+Message-ID: <20200727081457.GA17644@kozik-lap>
+References: <20200724182328.3348-1-krzk@kernel.org>
+ <20200724182328.3348-12-krzk@kernel.org>
+ <ca3f8dd3-7fc7-85dc-5656-e1e95302d501@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200611072251.474246-1-ming.lei@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <ca3f8dd3-7fc7-85dc-5656-e1e95302d501@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 03:22:51PM +0800, Ming Lei wrote:
-> BDI is unregistered from del_gendisk() which is usually done in device's
-> release handler from device hotplug or error handling context, so BDI
-> can be unregistered anytime.
+On Fri, Jul 24, 2020 at 11:38:57AM -0700, Florian Fainelli wrote:
+> On 7/24/20 11:23 AM, Krzysztof Kozlowski wrote:
+> > Fix firwmare -> firmware.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
-> It should be normal for __mark_inode_dirty to see un-registered BDI,
-> so kill the WARN().
-> 
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Brian Foster <bfoster@redhat.com>
-> Cc: Dave Chinner <dchinner@redhat.com>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: linux-block@vger.kernel.org
-> Signed-off-by: Ming Lei <ming.lei@redhat.com>
-> ---
->  fs/fs-writeback.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-> index a605c3dddabc..5e718580d4bf 100644
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -2318,10 +2318,6 @@ void __mark_inode_dirty(struct inode *inode, int flags)
->  
->  			wb = locked_inode_to_wb_and_lock_list(inode);
->  
-> -			WARN(bdi_cap_writeback_dirty(wb->bdi) &&
-> -			     !test_bit(WB_registered, &wb->state),
-> -			     "bdi-%s not registered\n", bdi_dev_name(wb->bdi));
-> -
->  			inode->dirtied_when = jiffies;
->  			if (dirtytime)
->  				inode->dirtied_time_when = jiffies;
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Hello Alexander,
+Thanks!
 
-Could you merge this patch if you are fine? 
+Applied to drivers/memory tree.
 
-Thanks,
-Ming
+Best regards,
+Krzysztof
 
