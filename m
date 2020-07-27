@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9A7C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D225DC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82BA722B4B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A597A21744
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859034;
-	bh=r9m2u3fFRZQaAQ2EmZjr12wYwtTC6YK4ob/28+R+PpI=;
+	s=default; t=1595859036;
+	bh=DKPMavGPBrYM78YOsHIPRxg7fswAFpWf5gmyCUqE340=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TYx0Ch8D/puDQb2OvkimRLpJ8+lOwk8Db1LueqqMw7a8HD4hzpmRtuSuE+urwER1d
-	 Cw51hhjNMAmhp28e40vRy1iU7NC2HKkbOJCkd1fMSDMpvgSlViuVoDHix75XU34YoL
-	 6sJaPsEZgl1EVaea14k/UfVcN40bQNOK2fiZ72Bc=
+	b=aPj+f4wVD9iygFJMOM9d+b0RTbJXo5hfi54rhz3bNwUflm5cg7X2xp1v5UErcuazP
+	 TA6uI6oW7g2LOiJu/i72bL6dNOsJFiGuoq0Hi3WrtNljsFikY6XW97qBZLX8NNYKxa
+	 2LtUpqsXsuoIHMtJe+BzMHiIR1dtbkxtudsMo9F4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729862AbgG0OKb (ORCPT
+        id S1729869AbgG0OKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:10:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33198 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:10:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729843AbgG0OKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:10:25 -0400
+        id S1729851AbgG0OK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:10:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FED02173E;
-        Mon, 27 Jul 2020 14:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4EBA2073E;
+        Mon, 27 Jul 2020 14:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859024;
-        bh=r9m2u3fFRZQaAQ2EmZjr12wYwtTC6YK4ob/28+R+PpI=;
+        s=default; t=1595859027;
+        bh=DKPMavGPBrYM78YOsHIPRxg7fswAFpWf5gmyCUqE340=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f1U0HLUOg5Ze1fW/9cdzKAn33uSiqfgAGRHN69ieHj4sxOFF/1qofCy/y9YimbCBj
-         Jns/sUV/lOWUjO7NNfJ0qG4pOIL2Q+McxCUw6LKaBmyX2skZ4p8jxlEXDDdvh5Lel2
-         1luHnnaqU6zzj+WmOoM4BQ0N0E7HTXCobT5/7eoA=
+        b=Ugkw8AXWrSltSCWzdiW/grtxd0MhxXfhp/sGvyAqTrZFiz3J3E4ExCjffhuBzVIz4
+         fx2G+Oze4UzOMf6bDk/48/0l8aN0xLDMUVvvd3rS3Ou1tOB5DpNq92JImsvlZcnciA
+         gV2OkkH/FOSRjo9fBlnt03EtycD9Ob9DLcan4/6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Jian <liujian56@huawei.com>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/86] ieee802154: fix one possible memleak in adf7242_probe
-Date:   Mon, 27 Jul 2020 16:04:04 +0200
-Message-Id: <20200727134915.953736595@linuxfoundation.org>
+        stable@vger.kernel.org, Beniamino Galvani <bgalvani@redhat.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+bbc3a11c4da63c1b74d6@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 39/86] bonding: check return value of register_netdevice() in bond_newlink()
+Date:   Mon, 27 Jul 2020 16:04:13 +0200
+Message-Id: <20200727134916.390664502@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -61,43 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Jian <liujian56@huawei.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 66673f96f0f968b991dc38be06102246919c663c ]
+[ Upstream commit c75d1d5248c0c97996051809ad0e9f154ba5d76e ]
 
-When probe fail, we should destroy the workqueue.
+Very similar to commit 544f287b8495
+("bonding: check error value of register_netdevice() immediately"),
+we should immediately check the return value of register_netdevice()
+before doing anything else.
 
-Fixes: 2795e8c25161 ("net: ieee802154: fix a potential NULL pointer dereference")
-Signed-off-by: Liu Jian <liujian56@huawei.com>
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
-Link: https://lore.kernel.org/r/20200717090121.2143-1-liujian56@huawei.com
-Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Fixes: 005db31d5f5f ("bonding: set carrier off for devices created through netlink")
+Reported-and-tested-by: syzbot+bbc3a11c4da63c1b74d6@syzkaller.appspotmail.com
+Cc: Beniamino Galvani <bgalvani@redhat.com>
+Cc: Taehee Yoo <ap420073@gmail.com>
+Cc: Jay Vosburgh <j.vosburgh@gmail.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ieee802154/adf7242.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/bonding/bond_netlink.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ieee802154/adf7242.c b/drivers/net/ieee802154/adf7242.c
-index cd6b95e673a58..71be8524cca87 100644
---- a/drivers/net/ieee802154/adf7242.c
-+++ b/drivers/net/ieee802154/adf7242.c
-@@ -1270,7 +1270,7 @@ static int adf7242_probe(struct spi_device *spi)
- 					     WQ_MEM_RECLAIM);
- 	if (unlikely(!lp->wqueue)) {
- 		ret = -ENOMEM;
--		goto err_hw_init;
-+		goto err_alloc_wq;
+diff --git a/drivers/net/bonding/bond_netlink.c b/drivers/net/bonding/bond_netlink.c
+index 6b9ad86732188..fbcd8a752ee70 100644
+--- a/drivers/net/bonding/bond_netlink.c
++++ b/drivers/net/bonding/bond_netlink.c
+@@ -451,11 +451,10 @@ static int bond_newlink(struct net *src_net, struct net_device *bond_dev,
+ 		return err;
+ 
+ 	err = register_netdevice(bond_dev);
+-
+-	netif_carrier_off(bond_dev);
+ 	if (!err) {
+ 		struct bonding *bond = netdev_priv(bond_dev);
+ 
++		netif_carrier_off(bond_dev);
+ 		bond_work_init_all(bond);
  	}
- 
- 	ret = adf7242_hw_init(lp);
-@@ -1302,6 +1302,8 @@ static int adf7242_probe(struct spi_device *spi)
- 	return ret;
- 
- err_hw_init:
-+	destroy_workqueue(lp->wqueue);
-+err_alloc_wq:
- 	mutex_destroy(&lp->bmux);
- 	ieee802154_free_hw(lp->hw);
  
 -- 
 2.25.1
