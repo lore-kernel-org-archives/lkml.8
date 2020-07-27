@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CC1C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D488C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5140620775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5F2620FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859606;
-	bh=iINv9F84Bgoo99yjFob1WezwwZvaTlQYEjVwF0s72S8=;
+	s=default; t=1595859607;
+	bh=pNZ5dqteI6Mnoc1TUKncTKofJ2ZiWdSCFdqSL3JX16o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lm8Dmlypy7oLdow+1roXVzQb/L7tn0DVruDxYuTo0zIhHDb+ljtkbM4HajRLANBmm
-	 I807Y624l5761EYkU9/KyL/i45coHwXjEKiPzrymwBNLs2tqSJZxdiLg/ojdWBaER8
-	 YHbf5gXdJSwUjc7N73Z23e7sGGWA1vbGD1t+zOzg=
+	b=NRRVXyqDQkZsgG0RP+3ITTxQS5k3VqKAcCHjGcyCkczD8uaDUd6Zh7zzTO81KNqUG
+	 S0sW4bhIFbol2pupbQz8BrEjCQIKAyF6sdiUMIviUff601itF8g4P2oOUaAH0sXkMc
+	 IF0h6obiMdnoFl7dgs6kLWsjWr4Dq/wJXdhnA03A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730580AbgG0OUE (ORCPT
+        id S1731501AbgG0OUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:20:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48084 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:20:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731461AbgG0OT5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:19:57 -0400
+        id S1731489AbgG0OUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:20:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFA592070A;
-        Mon, 27 Jul 2020 14:19:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08B9F2070A;
+        Mon, 27 Jul 2020 14:20:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859597;
-        bh=iINv9F84Bgoo99yjFob1WezwwZvaTlQYEjVwF0s72S8=;
+        s=default; t=1595859602;
+        bh=pNZ5dqteI6Mnoc1TUKncTKofJ2ZiWdSCFdqSL3JX16o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HajdEWyRRXdwXdOC61jAVC4pwatQTnCsyW3YG9YU26sUsdt+w0hIIK45mVcoplphj
-         KDfVSugCWFWTNa8HvxoMF8dElaCv2DATR7mqLK9ZjruKIZyhwRD9Tq+Q6Pw2mBJhUy
-         rR9QOd2azZ8FIDtEuPBf2XHtJ/shgUHDeLra8UvY=
+        b=MAkOnfsZ5878g1X0ORc6Eyn5rnQafwF9kEigScEPgBxsLwBwhJeDNitp9HQJ6O96I
+         2y2nbouHpyvyigEFyz70kiVX6X+cq9iyZsZ6Gr2ZYII+qyr/waylGjR7z+NcCUuAxm
+         plGS1HR0gH7MyZR8VEc059Hwaf91/VmCL23TkaLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joonho Wohn <doomsheart@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 033/179] ALSA: hda/realtek: Fixed ALC298 sound bug by adding quirk for Samsung Notebook Pen S
-Date:   Mon, 27 Jul 2020 16:03:28 +0200
-Message-Id: <20200727134934.279131875@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.7 035/179] ASoC: rt5670: Correct RT5670_LDO_SEL_MASK
+Date:   Mon, 27 Jul 2020 16:03:30 +0200
+Message-Id: <20200727134934.379751379@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -59,35 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joonho Wohn <doomsheart@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 568e4e82128aac2c62c2c359ebebb6007fd794f9 upstream.
+commit 5cacc6f5764e94fa753b2c1f5f7f1f3f74286e82 upstream.
 
-Fixed no headphone sound bug on laptop Samsung Notebook Pen S
-(950SBE-951SBE), by using existing patch in Linus' tree, commit
-14425f1f521f (ALSA: hda/realtek: Add quirk for Samsung Notebook).
-This laptop uses the same ALC298 but different subsystem id 0x144dc812.
-I added SND_PCI_QUIRK at sound/pci/hda/patch_realtek.c
+The RT5670_PWR_ANLG1 register has 3 bits to select the LDO voltage,
+so the correct mask is 0x7 not 0x3.
 
-Signed-off-by: Joonho Wohn <doomsheart@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/CAHcbMh291aWDKiWSZoxXB4-Eru6OYRwGA4AVEdCZeYmVLo5ZxQ@mail.gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Because of this wrong mask we were programming the ldo bits
+to a setting of binary 001 (0x05 & 0x03) instead of binary 101
+when moving to SND_SOC_BIAS_PREPARE.
+
+According to the datasheet 001 is a reserved value, so no idea
+what it did, since the driver was working fine before I guess we
+got lucky and it does something which is ok.
+
+Fixes: 5e8351de740d ("ASoC: add RT5670 CODEC driver")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200628155231.71089-3-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/rt5670.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7551,6 +7551,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x144d, 0xc176, "Samsung Notebook 9 Pro (NP930MBE-K04US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x144d, 0xc740, "Samsung Ativ book 8 (NP870Z5G)", ALC269_FIXUP_ATIV_BOOK_8),
-+	SND_PCI_QUIRK(0x144d, 0xc812, "Samsung Notebook Pen S (NT950SBE-X58)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
- 	SND_PCI_QUIRK(0x1458, 0xfa53, "Gigabyte BXBT-2807", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1462, 0xb120, "MSI Cubi MS-B120", ALC283_FIXUP_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1462, 0xb171, "Cubi N 8GL (MS-B171)", ALC283_FIXUP_HEADSET_MIC),
+--- a/sound/soc/codecs/rt5670.h
++++ b/sound/soc/codecs/rt5670.h
+@@ -757,7 +757,7 @@
+ #define RT5670_PWR_VREF2_BIT			4
+ #define RT5670_PWR_FV2				(0x1 << 3)
+ #define RT5670_PWR_FV2_BIT			3
+-#define RT5670_LDO_SEL_MASK			(0x3)
++#define RT5670_LDO_SEL_MASK			(0x7)
+ #define RT5670_LDO_SEL_SFT			0
+ 
+ /* Power Management for Analog 2 (0x64) */
 
 
