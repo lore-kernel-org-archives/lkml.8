@@ -2,376 +2,622 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C77C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D815C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBEF220714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:36:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OiTflPpg"
+	by mail.kernel.org (Postfix) with ESMTP id 010CD20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:37:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595853477;
+	bh=6wrNEqFGdEF+ETuaJ/O6zK7V8kxypt0JWYduzzjhA9k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tF4Ms6i360BPjdLSU+2z5r677JO/omRpOrK8ijq5YX7NMXsJDyaKHfUUWHCt+b+uy
+	 CPPu+NPZXyXicyZ+9tu/zi/4Q9lXM9lA00ab85hUoZwfeebeupIY40DuKg3/rntIFa
+	 AjO2RIo2mth1q39bK80fth/eLF4uHCLzo1EE4U4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgG0MgP (ORCPT
+        id S1728411AbgG0Mh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:36:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728367AbgG0MgO (ORCPT
+        Mon, 27 Jul 2020 08:37:56 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35727 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728173AbgG0Mhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:36:14 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511F0C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:36:14 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id qc22so2096137ejb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:36:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x6caQUjexH2eAZHZxrKkjTMYYhIZR/WDASSA74m2eu8=;
-        b=OiTflPpgY9Jcs6ZW5WSJtCWGR0RVMVivQ+3rv3KjYXDSrf7/bj4/gK1jpYSbwmnYwd
-         P8D31958M+sfgH5XdZH6hxKdHaQsYF85GF8k0mVNgaQQ8Dt5OSWFcDOTNdt1ZbMX+Fq/
-         Q3iZ1i7kISG1s1rTbnvt9RVkTjGw9Vxb8p8qU=
+        Mon, 27 Jul 2020 08:37:55 -0400
+Received: by mail-ot1-f65.google.com with SMTP id 93so2008567otx.2;
+        Mon, 27 Jul 2020 05:37:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=x6caQUjexH2eAZHZxrKkjTMYYhIZR/WDASSA74m2eu8=;
-        b=XeGfrxTxfUNwm+OyvXPIzNC7C87JIiHAFgHoFMXf80K35lczz1u8bDmkx4K5ntAGIy
-         rLhw9MkmOUJIeqCKbXsbtU4xAAe13qzlYWctga1XC23zJQx6OoJLMjFHcOTAV/HA5AE/
-         fr6WYyn8RH0cDIlOX0oBLvr3QTjiNqspXFMiybhua87LiSq24YXeRWn+VxR1zstaDf7V
-         2D2uyRrHBuYeva1ZJGFL10nXBMEYZBO3gCXjIK4jH+DMXt9QiDrV5b03GvgHhrN/R5LI
-         lmmEiW2zIxMWy/InxCwBRG2LF07gcn+pwCvu8gzyXuEydfdx+JLflKnvUxc/dHOEFR92
-         SaAQ==
-X-Gm-Message-State: AOAM531aN9eKZwYefqut3V8hCcJ62uuQBAnxW8voCDXv03Rxg3sI2YAe
-        46Fdp56yZDkP/9J/VYWBzvOd5apS3BOlgQ==
-X-Google-Smtp-Source: ABdhPJzfC4spVkEAzGI8haRCIbokYp2PAxth6qV7Lpk+mAqU8hZGUi4ccM7KwZxm2wSd6wL2akVOIQ==
-X-Received: by 2002:a17:906:8608:: with SMTP id o8mr19685591ejx.156.1595853372628;
-        Mon, 27 Jul 2020 05:36:12 -0700 (PDT)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
-        by smtp.gmail.com with ESMTPSA id a1sm6992127ejk.125.2020.07.27.05.36.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 05:36:11 -0700 (PDT)
-Received: by mail-wr1-f48.google.com with SMTP id r4so11749955wrx.9
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:36:10 -0700 (PDT)
-X-Received: by 2002:adf:ec45:: with SMTP id w5mr20525305wrn.415.1595853370267;
- Mon, 27 Jul 2020 05:36:10 -0700 (PDT)
+        bh=zQ9Ihi8yci7XalNb+gu41lSl31GNAge/uRi0+LA+Z6Q=;
+        b=dXngARJZvG7Ab6GyG7q3ql6XUsPF9s2GqDgs97IJQ5LaCAgxdAwqciuJUqecDSH+dH
+         cKdznTcqVb69p/dVy/tSMFFFGlDJNVbyn4ButTWO2JATnm5B/TVfB/DP9+v6bi81fhP5
+         7877RBDt5jy/9oh4kBzIUuQw2cudzdHCauLHjZBIt5c2J86i4EDfzLGNL87/G+KnF6Hs
+         MovYseZYZEP2A0qC+0hm2bSDjkqUEsDTV5wJY2uxaYpjFucDvuUwxXolmDw9WA64xOdy
+         jq5rSnSZPj52dGVPucbFHQ5ovR772aiVtIX787eW1rn3vZK0+MKWS3Z2PYe+/r/BgbBJ
+         /oJw==
+X-Gm-Message-State: AOAM53218uu7R++MPUx4+aHbHlK5W8NhHmtg3B5XoqvRZFD3HuNueAwR
+        xl4cN8SrZKiyQCcVEnbVMsXBTlHBhAJtmSyMQNo=
+X-Google-Smtp-Source: ABdhPJylGzZI7/B9p97/nvY8bNrX90zXNqY/Y15tkwTJz6I0qvmVHspGxJ8dyC+tzNQnE3PqB9ZBfQF6fUpv9yJV5bc=
+X-Received: by 2002:a9d:306:: with SMTP id 6mr10329744otv.167.1595853472512;
+ Mon, 27 Jul 2020 05:37:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200717115435.2632623-1-helen.koike@collabora.com>
- <20200717115435.2632623-3-helen.koike@collabora.com> <5665bbd4-75e2-ec73-ba24-54e5981eb4ac@linaro.org>
- <e4d4c88b-2724-76c0-fff2-2404d5073ae4@collabora.com> <0fd9e21d-4317-dbed-c035-9c1523e0195b@linaro.org>
- <15067dff-c802-d6f0-a2f8-817fb487b30d@collabora.com> <b11b0887-ce9e-63ab-9f74-7ad3dbda922b@linaro.org>
-In-Reply-To: <b11b0887-ce9e-63ab-9f74-7ad3dbda922b@linaro.org>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Mon, 27 Jul 2020 14:35:58 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5BJcTmyt5Ae5N8ZqvVZAN_Ta+j71FTG_C=R9sT_aHJdbw@mail.gmail.com>
-Message-ID: <CAAFQd5BJcTmyt5Ae5N8ZqvVZAN_Ta+j71FTG_C=R9sT_aHJdbw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/6] media: v4l2: Add extended buffer operations
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Hirokazu Honda <hiroh@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Brian Starkey <Brian.Starkey@arm.com>, kernel@collabora.com,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        frkoenig@chromium.org, Maxime Jourdan <mjourdan@baylibre.com>
+References: <159528284411.993790.11733759435137949717.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159528289856.993790.11787167534159675987.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <159528289856.993790.11787167534159675987.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 27 Jul 2020 14:37:41 +0200
+Message-ID: <CAJZ5v0jb87PnwVXKuvgFeP=c-BGstc4YmANGpbOOnXi-b1oL8w@mail.gmail.com>
+Subject: Re: [PATCH v3 10/11] PM, libnvdimm: Add runtime firmware activation support
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        Pavel Machek <pavel@ucw.cz>, Ira Weiny <ira.weiny@intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanimir,
+On Tue, Jul 21, 2020 at 12:24 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> Abstract platform specific mechanics for nvdimm firmware activation
+> behind a handful of generic ops. At the bus level ->activate_state()
+> indicates the unified state (idle, busy, armed) of all DIMMs on the bus,
+> and ->capability() indicates the system state expectations for activate.
+> At the DIMM level ->activate_state() indicates the per-DIMM state,
+> ->activate_result() indicates the outcome of the last activation
+> attempt, and ->arm() attempts to transition the DIMM from 'idle' to
+> 'armed'.
+>
+> A new hibernate_quiet_exec() facility is added to support firmware
+> activation in an OS defined system quiesce state. It leverages the fact
+> that the hibernate-freeze state wants to assert that a memory
+> hibernation snapshot can be taken. This is in contrast to a platform
+> firmware defined quiesce state that may forcefully quiet the memory
+> controller independent of whether an individual device-driver properly
+> supports hibernate-freeze.
+>
+> The libnvdimm sysfs interface is extended to support detection of a
+> firmware activate capability. The mechanism supports enumeration and
+> triggering of firmware activate, optionally in the
+> hibernate_quiet_exec() context.
+>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> [rafael: hibernate_quiet_exec() proposal]
+> Co-developed-by: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 
-On Fri, Jul 24, 2020 at 3:17 PM Stanimir Varbanov
-<stanimir.varbanov@linaro.org> wrote:
->
->
->
-> On 7/21/20 5:40 PM, Helen Koike wrote:
-> >
-> >
-> > On 7/21/20 11:30 AM, Stanimir Varbanov wrote:
-> >> Hi Helen,
-> >>
-> >> On 7/21/20 4:54 PM, Helen Koike wrote:
-> >>> Hi,
-> >>>
-> >>> On 7/21/20 8:26 AM, Stanimir Varbanov wrote:
-> >>>>
-> >>>>
-> >>>> On 7/17/20 2:54 PM, Helen Koike wrote:
-> >>>>> From: Hans Verkuil <hans.verkuil@cisco.com>
-> >>>>>
-> >>>>> Those extended buffer ops have several purpose:
-> >>>>> 1/ Fix y2038 issues by converting the timestamp into an u64 counting
-> >>>>>    the number of ns elapsed since 1970
-> >>>>> 2/ Unify single/multiplanar handling
-> >>>>> 3/ Add a new start offset field to each v4l2 plane buffer info struct
-> >>>>>    to support the case where a single buffer object is storing all
-> >>>>>    planes data, each one being placed at a different offset
-> >>>>>
-> >>>>> New hooks are created in v4l2_ioctl_ops so that drivers can start using
-> >>>>> these new objects.
-> >>>>>
-> >>>>> The core takes care of converting new ioctls requests to old ones
-> >>>>> if the driver does not support the new hooks, and vice versa.
-> >>>>>
-> >>>>> Note that the timecode field is gone, since there doesn't seem to be
-> >>>>> in-kernel users. We can be added back in the reserved area if needed or
-> >>>>> use the Request API to collect more metadata information from the
-> >>>>> frame.
-> >>>>>
-> >>>>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-> >>>>> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> >>>>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> >>>>> ---
-> >>>>> Changes in v4:
-> >>>>> - Use v4l2_ext_pix_format directly in the ioctl, drop v4l2_ext_format,
-> >>>>> making V4L2_BUF_TYPE_VIDEO_[OUTPUT,CAPTURE] the only valid types.
-> >>>>> - Drop VIDIOC_EXT_EXPBUF, since the only difference from VIDIOC_EXPBUF
-> >>>>> was that with VIDIOC_EXT_EXPBUF we could export multiple planes at once.
-> >>>>> I think we can add this later, so I removed it from this RFC to simplify it.
-> >>>>> - Remove num_planes field from struct v4l2_ext_buffer
-> >>>>> - Add flags field to struct v4l2_ext_create_buffers
-> >>>>> - Reformulate struct v4l2_ext_plane
-> >>>>> - Fix some bugs caught by v4l2-compliance
-> >>>>> - Rebased on top of media/master (post 5.8-rc1)
-> >>>>>
-> >>>>> Changes in v3:
-> >>>>> - Rebased on top of media/master (post 5.4-rc1)
-> >>>>>
-> >>>>> Changes in v2:
-> >>>>> - Add reserved space to v4l2_ext_buffer so that new fields can be added
-> >>>>>   later on
-> >>>>> ---
-> >>>>>  drivers/media/v4l2-core/v4l2-dev.c   |  29 ++-
-> >>>>>  drivers/media/v4l2-core/v4l2-ioctl.c | 349 +++++++++++++++++++++++++--
-> >>>>>  include/media/v4l2-ioctl.h           |  26 ++
-> >>>>>  include/uapi/linux/videodev2.h       |  89 +++++++
-> >>>>>  4 files changed, 471 insertions(+), 22 deletions(-)
-> >>>>>
-> >>>>
-> >>>> <cut>
-> >>>>
-> >>>>> +/**
-> >>>>> + * struct v4l2_ext_plane - extended plane buffer info
-> >>>>> + * @buffer_length:       size of the entire buffer in bytes, should fit
-> >>>>> + *                       @offset + @plane_length
-> >>>>> + * @plane_length:        size of the plane in bytes.
-> >>>>> + * @userptr:             when memory is V4L2_MEMORY_USERPTR, a userspace pointer pointing
-> >>>>> + *                       to this plane.
-> >>>>> + * @dmabuf_fd:           when memory is V4L2_MEMORY_DMABUF, a userspace file descriptor
-> >>>>> + *                       associated with this plane.
-> >>>>> + * @offset:              offset in the memory buffer where the plane starts. If
-> >>>>> + *                       V4L2_MEMORY_MMAP is used, then it can be a "cookie" that
-> >>>>> + *                       should be passed to mmap() called on the video node.
-> >>>>> + * @reserved:            extra space reserved for future fields, must be set to 0.
-> >>>>> + *
-> >>>>> + *
-> >>>>> + * Buffers consist of one or more planes, e.g. an YCbCr buffer with two planes
-> >>>>> + * can have one plane for Y, and another for interleaved CbCr components.
-> >>>>> + * Each plane can reside in a separate memory buffer, or even in
-> >>>>> + * a completely separate memory node (e.g. in embedded devices).
-> >>>>> + */
-> >>>>> +struct v4l2_ext_plane {
-> >>>>> + __u32 buffer_length;
-> >>>>> + __u32 plane_length;
-> >>>>> + union {
-> >>>>> +         __u64 userptr;
-> >>>>> +         __s32 dmabuf_fd;
-> >>>>> + } m;
-> >>>>> + __u32 offset;
-> >>>>> + __u32 reserved[4];
-> >>>>> +};
-> >>>>> +
-> >>>>>  /**
-> >>>>>   * struct v4l2_buffer - video buffer info
-> >>>>>   * @index:       id number of the buffer
-> >>>>> @@ -1055,6 +1086,36 @@ struct v4l2_buffer {
-> >>>>>   };
-> >>>>>  };
-> >>>>>
-> >>>>> +/**
-> >>>>> + * struct v4l2_ext_buffer - extended video buffer info
-> >>>>> + * @index:       id number of the buffer
-> >>>>> + * @type:        V4L2_BUF_TYPE_VIDEO_CAPTURE or V4L2_BUF_TYPE_VIDEO_OUTPUT
-> >>>>> + * @flags:       buffer informational flags
-> >>>>> + * @field:       enum v4l2_field; field order of the image in the buffer
-> >>>>> + * @timestamp:   frame timestamp
-> >>>>> + * @sequence:    sequence count of this frame
-> >>>>> + * @memory:      enum v4l2_memory; the method, in which the actual video data is
-> >>>>> + *               passed
-> >>>>> + * @planes:      per-plane buffer information
-> >>>>> + * @request_fd:  fd of the request that this buffer should use
-> >>>>> + * @reserved:    extra space reserved for future fields, must be set to 0
-> >>>>> + *
-> >>>>> + * Contains data exchanged by application and driver using one of the Streaming
-> >>>>> + * I/O methods.
-> >>>>> + */
-> >>>>> +struct v4l2_ext_buffer {
-> >>>>> + __u32 index;
-> >>>>> + __u32 type;
-> >>>>> + __u32 flags;
-> >>>>> + __u32 field;
-> >>>>> + __u64 timestamp;
-> >>>>> + __u32 sequence;
-> >>>>> + __u32 memory;
-> >>>>> + __u32 request_fd;
-> >>>>
-> >>>> This should be __s32, at least for consistency with dmabuf_fd?
-> >>>
-> >>> I see that in struct v4l2_buffer, we have __s32, I don't mind changing it
-> >>> to keep the consistency, I just don't see where this value can be a negative
-> >>> number.
-> >>
-> >> here
-> >> https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/media/common/videobuf2/videobuf2-v4l2.c#L134
-> >
-> > I saw that -1 is used to signal an invalid value, but I was just wondering when request_fd = 0 is valid.
->
-> The request_fd is valid system wide file descriptor and request_fd = 0
-> is STDIN_FILENO thus IMO it is valid as far as we call it file descriptor.
->
-> >
-> >>
-> >>>
-> >>>>
-> >>>>> + struct v4l2_ext_plane planes[VIDEO_MAX_PLANES];
-> >>>>> + __u32 reserved[4];
-> >>>>
-> >>>> I think we have to reserve more words here for future extensions.
-> >>>>
-> >>>> I'd like also to propose to add here __s32 metadata_fd. The idea behind
-> >>>> this is to have a way to pass per-frame metadata dmabuf buffers for
-> >>>> synchronous type of metadata where the metadata is coming at the same
-> >>>> time with data buffers. What would be the format of the metadata buffer
-> >>>> is TBD.
-> >>>>
-> >>>> One option for metadata buffer format could be:
-> >>>>
-> >>>> header {
-> >>>>    num_ctrls
-> >>>>    array_of_ctrls [0..N]
-> >>>>            ctrl_id
-> >>>>            ctrl_size
-> >>>>            ctrl_offset
-> >>>> }
-> >>>>
-> >>>> data {
-> >>>>    cid0    //offset of cid0 in dmabuf buffer
-> >>>>    cid1
-> >>>>    cidN
-> >>>> }
-> >>>
-> >>> Would it be better if, instead of adding a medatata_fd inside struct v4l2_ext_buffer,
-> >>> we create a new ioctl that gets this structs for the controls and sync them using the
-> >>> Request API ?
->
-> New ioctl means new syscall. There are use-cases where encoding
-> framerate is 480 fps (and more in near future, for example 960fps) this
-> means 480 more syscalls per second. I don't think this is optimal and
-> scalable solution at all.
->
+IMO it's better to change this to
 
-Do you happen to have some data to confirm that it's indeed a problem?
+Co-developed-by: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Best regards,
-Tomasz
+and please to add
 
-> >>
-> >> no, this solution has performance drawbacks when the metadata is big,
-> >> think of 64K.
-> >
-> > Why? You could still use a dmabuf in this new ioctl, no?
-> >
-> >
-> > Regards,
-> > Helen
-> >
-> >>
-> >>>
-> >>> I'd like to avoid too much metadata in the buffer object.
-> >>>
-> >>> Regards,
-> >>> Helen
-> >>>
-> >>>>
-> >>>> This will make easy to get concrete ctrl id without a need to parse the
-> >>>> whole metadata buffer. Also using dmabuf we don't need to copy data
-> >>>> between userspace <-> kernelspace (just cache syncs through
-> >>>> begin/end_cpu_access).
-> >>>>
-> >>>> The open question is who will validate the metadata buffer when it comes
-> >>>> from userspace. The obvious answer is v4l2-core but looking into DRM
-> >>>> subsytem they give more freedom to the drivers, and just provide generic
-> >>>> helpers which are not mandatory.
-> >>>>
-> >>>> I guess this will be a voice in the wilderness but I wanted to know your
-> >>>> opinion.
-> >>>>
-> >>>>> +};
-> >>>>> +
-> >>>>>  #ifndef __KERNEL__
-> >>>>>  /**
-> >>>>>   * v4l2_timeval_to_ns - Convert timeval to nanoseconds
-> >>>>> @@ -2520,6 +2581,29 @@ struct v4l2_create_buffers {
-> >>>>>   __u32                   reserved[6];
-> >>>>>  };
-> >>>>>
-> >>>>> +/**
-> >>>>> + * struct v4l2_ext_create_buffers - VIDIOC_EXT_CREATE_BUFS argument
-> >>>>> + * @index:       on return, index of the first created buffer
-> >>>>> + * @count:       entry: number of requested buffers,
-> >>>>> + *               return: number of created buffers
-> >>>>> + * @memory:      enum v4l2_memory; buffer memory type
-> >>>>> + * @capabilities: capabilities of this buffer type.
-> >>>>> + * @format:      frame format, for which buffers are requested
-> >>>>> + * @flags:       additional buffer management attributes (ignored unless the
-> >>>>> + *               queue has V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS capability
-> >>>>> + *               and configured for MMAP streaming I/O).
-> >>>>> + * @reserved:    extra space reserved for future fields, must be set to 0
-> >>>>> + */
-> >>>>> +struct v4l2_ext_create_buffers {
-> >>>>> + __u32                           index;
-> >>>>> + __u32                           count;
-> >>>>> + __u32                           memory;
-> >>>>> + struct v4l2_ext_pix_format      format;
-> >>>>> + __u32                           capabilities;
-> >>>>> + __u32                           flags;
-> >>>>> + __u32 reserved[4];
-> >>>>> +};
-> >>>>> +
-> >>>>>  /*
-> >>>>>   *       I O C T L   C O D E S   F O R   V I D E O   D E V I C E S
-> >>>>>   *
-> >>>>> @@ -2623,6 +2707,11 @@ struct v4l2_create_buffers {
-> >>>>>  #define VIDIOC_G_EXT_PIX_FMT     _IOWR('V', 104, struct v4l2_ext_pix_format)
-> >>>>>  #define VIDIOC_S_EXT_PIX_FMT     _IOWR('V', 105, struct v4l2_ext_pix_format)
-> >>>>>  #define VIDIOC_TRY_EXT_PIX_FMT   _IOWR('V', 106, struct v4l2_ext_pix_format)
-> >>>>> +#define VIDIOC_EXT_CREATE_BUFS   _IOWR('V', 107, struct v4l2_ext_create_buffers)
-> >>>>> +#define VIDIOC_EXT_QUERYBUF      _IOWR('V', 108, struct v4l2_ext_buffer)
-> >>>>> +#define VIDIOC_EXT_QBUF          _IOWR('V', 109, struct v4l2_ext_buffer)
-> >>>>> +#define VIDIOC_EXT_DQBUF _IOWR('V', 110, struct v4l2_ext_buffer)
-> >>>>> +#define VIDIOC_EXT_PREPARE_BUF   _IOWR('V', 111, struct v4l2_ext_buffer)
-> >>>>>
-> >>>>>  /* Reminder: when adding new ioctls please add support for them to
-> >>>>>     drivers/media/v4l2-core/v4l2-compat-ioctl32.c as well! */
-> >>>>>
-> >>>>
-> >>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+to it as per the development process documentation.
+
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  Documentation/ABI/testing/sysfs-bus-nvdimm         |    2
+>  .../driver-api/nvdimm/firmware-activate.rst        |   86 ++++++++++++
+>  drivers/nvdimm/core.c                              |  149 ++++++++++++++++++++
+>  drivers/nvdimm/dimm_devs.c                         |  115 +++++++++++++++
+>  drivers/nvdimm/nd-core.h                           |    1
+>  include/linux/libnvdimm.h                          |   44 ++++++
+>  include/linux/suspend.h                            |    6 +
+>  kernel/power/hibernate.c                           |   97 +++++++++++++
+>  8 files changed, 500 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-nvdimm
+>  create mode 100644 Documentation/driver-api/nvdimm/firmware-activate.rst
 >
-> --
-> regards,
-> Stan
+> diff --git a/Documentation/ABI/testing/sysfs-bus-nvdimm b/Documentation/ABI/testing/sysfs-bus-nvdimm
+> new file mode 100644
+> index 000000000000..d64380262be8
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-nvdimm
+> @@ -0,0 +1,2 @@
+> +The libnvdimm sub-system implements a common sysfs interface for
+> +platform nvdimm resources. See Documentation/driver-api/nvdimm/.
+> diff --git a/Documentation/driver-api/nvdimm/firmware-activate.rst b/Documentation/driver-api/nvdimm/firmware-activate.rst
+> new file mode 100644
+> index 000000000000..9eb98aa833c5
+> --- /dev/null
+> +++ b/Documentation/driver-api/nvdimm/firmware-activate.rst
+> @@ -0,0 +1,86 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +==================================
+> +NVDIMM Runtime Firmware Activation
+> +==================================
+> +
+> +Some persistent memory devices run a firmware locally on the device /
+> +"DIMM" to perform tasks like media management, capacity provisioning,
+> +and health monitoring. The process of updating that firmware typically
+> +involves a reboot because it has implications for in-flight memory
+> +transactions. However, reboots are disruptive and at least the Intel
+> +persistent memory platform implementation, described by the Intel ACPI
+> +DSM specification [1], has added support for activating firmware at
+> +runtime.
+> +
+> +A native sysfs interface is implemented in libnvdimm to allow platform
+> +to advertise and control their local runtime firmware activation
+> +capability.
+> +
+> +The libnvdimm bus object, ndbusX, implements an ndbusX/firmware/activate
+> +attribute that shows the state of the firmware activation as one of 'idle',
+> +'armed', 'overflow', and 'busy'.
+> +
+> +- idle:
+> +  No devices are set / armed to activate firmware
+> +
+> +- armed:
+> +  At least one device is armed
+> +
+> +- busy:
+> +  In the busy state armed devices are in the process of transitioning
+> +  back to idle and completing an activation cycle.
+> +
+> +- overflow:
+> +  If the platform has a concept of incremental work needed to perform
+> +  the activation it could be the case that too many DIMMs are armed for
+> +  activation. In that scenario the potential for firmware activation to
+> +  timeout is indicated by the 'overflow' state.
+> +
+> +The 'ndbusX/firmware/activate' property can be written with a value of
+> +either 'live', or 'quiesce'. A value of 'quiesce' triggers the kernel to
+> +run firmware activation from within the equivalent of the hibernation
+> +'freeze' state where drivers and applications are notified to stop their
+> +modifications of system memory. A value of 'live' attempts
+> +firmware-activation without this hibernation cycle. The
+> +'ndbusX/firmware/activate' property will be elided completely if no
+> +firmware activation capability is detected.
+> +
+> +Another property 'ndbusX/firmware/capability' indicates a value of
+> +'live', or 'quiesce'. Where 'live' indicates that the firmware
+> +does not require or inflict any quiesce period on the system to update
+> +firmware. A capability value of 'quiesce' indicates that firmware does
+> +expect and injects a quiet period for the memory controller, but 'live'
+> +may still be written to 'ndbusX/firmware/activate' as an override to
+> +assume the risk of racing firmware update with in-flight device and
+> +application activity. The 'ndbusX/firmware/capability' property will be
+> +elided completely if no firmware activation capability is detected.
+> +
+> +The libnvdimm memory-device / DIMM object, nmemX, implements
+> +'nmemX/firmware/activate' and 'nmemX/firmware/result' attributes to
+> +communicate the per-device firmware activation state. Similar to the
+> +'ndbusX/firmware/activate' attribute, the 'nmemX/firmware/activate'
+> +attribute indicates 'idle', 'armed', or 'busy'. The state transitions
+> +from 'armed' to 'idle' when the system is prepared to activate firmware,
+> +firmware staged + state set to armed, and 'ndbusX/firmware/activate' is
+> +triggered. After that activation event the nmemX/firmware/result
+> +attribute reflects the state of the last activation as one of:
+> +
+> +- none:
+> +  No runtime activation triggered since the last time the device was reset
+> +
+> +- success:
+> +  The last runtime activation completed successfully.
+> +
+> +- fail:
+> +  The last runtime activation failed for device-specific reasons.
+> +
+> +- not_staged:
+> +  The last runtime activation failed due to a sequencing error of the
+> +  firmware image not being staged.
+> +
+> +- need_reset:
+> +  Runtime firmware activation failed, but the firmware can still be
+> +  activated via the legacy method of power-cycling the system.
+> +
+> +[1]: https://docs.pmem.io/persistent-memory/
+> diff --git a/drivers/nvdimm/core.c b/drivers/nvdimm/core.c
+> index fe9bd6febdd2..c21ba0602029 100644
+> --- a/drivers/nvdimm/core.c
+> +++ b/drivers/nvdimm/core.c
+> @@ -4,6 +4,7 @@
+>   */
+>  #include <linux/libnvdimm.h>
+>  #include <linux/badblocks.h>
+> +#include <linux/suspend.h>
+>  #include <linux/export.h>
+>  #include <linux/module.h>
+>  #include <linux/blkdev.h>
+> @@ -389,8 +390,156 @@ static const struct attribute_group nvdimm_bus_attribute_group = {
+>         .attrs = nvdimm_bus_attributes,
+>  };
+>
+> +static ssize_t capability_show(struct device *dev,
+> +               struct device_attribute *attr, char *buf)
+> +{
+> +       struct nvdimm_bus *nvdimm_bus = to_nvdimm_bus(dev);
+> +       struct nvdimm_bus_descriptor *nd_desc = nvdimm_bus->nd_desc;
+> +       enum nvdimm_fwa_capability cap;
+> +
+> +       if (!nd_desc->fw_ops)
+> +               return -EOPNOTSUPP;
+> +
+> +       nvdimm_bus_lock(dev);
+> +       cap = nd_desc->fw_ops->capability(nd_desc);
+> +       nvdimm_bus_unlock(dev);
+> +
+> +       switch (cap) {
+> +       case NVDIMM_FWA_CAP_QUIESCE:
+> +               return sprintf(buf, "quiesce\n");
+> +       case NVDIMM_FWA_CAP_LIVE:
+> +               return sprintf(buf, "live\n");
+> +       default:
+> +               return -EOPNOTSUPP;
+> +       }
+> +}
+> +
+> +static DEVICE_ATTR_RO(capability);
+> +
+> +static ssize_t activate_show(struct device *dev,
+> +               struct device_attribute *attr, char *buf)
+> +{
+> +       struct nvdimm_bus *nvdimm_bus = to_nvdimm_bus(dev);
+> +       struct nvdimm_bus_descriptor *nd_desc = nvdimm_bus->nd_desc;
+> +       enum nvdimm_fwa_capability cap;
+> +       enum nvdimm_fwa_state state;
+> +
+> +       if (!nd_desc->fw_ops)
+> +               return -EOPNOTSUPP;
+> +
+> +       nvdimm_bus_lock(dev);
+> +       cap = nd_desc->fw_ops->capability(nd_desc);
+> +       state = nd_desc->fw_ops->activate_state(nd_desc);
+> +       nvdimm_bus_unlock(dev);
+> +
+> +       if (cap < NVDIMM_FWA_CAP_QUIESCE)
+> +               return -EOPNOTSUPP;
+> +
+> +       switch (state) {
+> +       case NVDIMM_FWA_IDLE:
+> +               return sprintf(buf, "idle\n");
+> +       case NVDIMM_FWA_BUSY:
+> +               return sprintf(buf, "busy\n");
+> +       case NVDIMM_FWA_ARMED:
+> +               return sprintf(buf, "armed\n");
+> +       case NVDIMM_FWA_ARM_OVERFLOW:
+> +               return sprintf(buf, "overflow\n");
+> +       default:
+> +               return -ENXIO;
+> +       }
+> +}
+> +
+> +static int exec_firmware_activate(void *data)
+> +{
+> +       struct nvdimm_bus_descriptor *nd_desc = data;
+> +
+> +       return nd_desc->fw_ops->activate(nd_desc);
+> +}
+> +
+> +static ssize_t activate_store(struct device *dev,
+> +               struct device_attribute *attr, const char *buf, size_t len)
+> +{
+> +       struct nvdimm_bus *nvdimm_bus = to_nvdimm_bus(dev);
+> +       struct nvdimm_bus_descriptor *nd_desc = nvdimm_bus->nd_desc;
+> +       enum nvdimm_fwa_state state;
+> +       bool quiesce;
+> +       ssize_t rc;
+> +
+> +       if (!nd_desc->fw_ops)
+> +               return -EOPNOTSUPP;
+> +
+> +       if (sysfs_streq(buf, "live"))
+> +               quiesce = false;
+> +       else if (sysfs_streq(buf, "quiesce"))
+> +               quiesce = true;
+> +       else
+> +               return -EINVAL;
+> +
+> +       nvdimm_bus_lock(dev);
+> +       state = nd_desc->fw_ops->activate_state(nd_desc);
+> +
+> +       switch (state) {
+> +       case NVDIMM_FWA_BUSY:
+> +               rc = -EBUSY;
+> +               break;
+> +       case NVDIMM_FWA_ARMED:
+> +       case NVDIMM_FWA_ARM_OVERFLOW:
+> +               if (quiesce)
+> +                       rc = hibernate_quiet_exec(exec_firmware_activate, nd_desc);
+> +               else
+> +                       rc = nd_desc->fw_ops->activate(nd_desc);
+> +               break;
+> +       case NVDIMM_FWA_IDLE:
+> +       default:
+> +               rc = -ENXIO;
+> +       }
+> +       nvdimm_bus_unlock(dev);
+> +
+> +       if (rc == 0)
+> +               rc = len;
+> +       return rc;
+> +}
+> +
+> +static DEVICE_ATTR_ADMIN_RW(activate);
+> +
+> +static umode_t nvdimm_bus_firmware_visible(struct kobject *kobj, struct attribute *a, int n)
+> +{
+> +       struct device *dev = container_of(kobj, typeof(*dev), kobj);
+> +       struct nvdimm_bus *nvdimm_bus = to_nvdimm_bus(dev);
+> +       struct nvdimm_bus_descriptor *nd_desc = nvdimm_bus->nd_desc;
+> +       enum nvdimm_fwa_capability cap;
+> +
+> +       /*
+> +        * Both 'activate' and 'capability' disappear when no ops
+> +        * detected, or a negative capability is indicated.
+> +        */
+> +       if (!nd_desc->fw_ops)
+> +               return 0;
+> +
+> +       nvdimm_bus_lock(dev);
+> +       cap = nd_desc->fw_ops->capability(nd_desc);
+> +       nvdimm_bus_unlock(dev);
+> +
+> +       if (cap < NVDIMM_FWA_CAP_QUIESCE)
+> +               return 0;
+> +
+> +       return a->mode;
+> +}
+> +static struct attribute *nvdimm_bus_firmware_attributes[] = {
+> +       &dev_attr_activate.attr,
+> +       &dev_attr_capability.attr,
+> +       NULL,
+> +};
+> +
+> +static const struct attribute_group nvdimm_bus_firmware_attribute_group = {
+> +       .name = "firmware",
+> +       .attrs = nvdimm_bus_firmware_attributes,
+> +       .is_visible = nvdimm_bus_firmware_visible,
+> +};
+> +
+>  const struct attribute_group *nvdimm_bus_attribute_groups[] = {
+>         &nvdimm_bus_attribute_group,
+> +       &nvdimm_bus_firmware_attribute_group,
+>         NULL,
+>  };
+>
+> diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+> index b7b77e8d9027..85b53a7f44f2 100644
+> --- a/drivers/nvdimm/dimm_devs.c
+> +++ b/drivers/nvdimm/dimm_devs.c
+> @@ -446,9 +446,124 @@ static const struct attribute_group nvdimm_attribute_group = {
+>         .is_visible = nvdimm_visible,
+>  };
+>
+> +static ssize_t result_show(struct device *dev, struct device_attribute *attr, char *buf)
+> +{
+> +       struct nvdimm *nvdimm = to_nvdimm(dev);
+> +       enum nvdimm_fwa_result result;
+> +
+> +       if (!nvdimm->fw_ops)
+> +               return -EOPNOTSUPP;
+> +
+> +       nvdimm_bus_lock(dev);
+> +       result = nvdimm->fw_ops->activate_result(nvdimm);
+> +       nvdimm_bus_unlock(dev);
+> +
+> +       switch (result) {
+> +       case NVDIMM_FWA_RESULT_NONE:
+> +               return sprintf(buf, "none\n");
+> +       case NVDIMM_FWA_RESULT_SUCCESS:
+> +               return sprintf(buf, "success\n");
+> +       case NVDIMM_FWA_RESULT_FAIL:
+> +               return sprintf(buf, "fail\n");
+> +       case NVDIMM_FWA_RESULT_NOTSTAGED:
+> +               return sprintf(buf, "not_staged\n");
+> +       case NVDIMM_FWA_RESULT_NEEDRESET:
+> +               return sprintf(buf, "need_reset\n");
+> +       default:
+> +               return -ENXIO;
+> +       }
+> +}
+> +static DEVICE_ATTR_ADMIN_RO(result);
+> +
+> +static ssize_t activate_show(struct device *dev, struct device_attribute *attr, char *buf)
+> +{
+> +       struct nvdimm *nvdimm = to_nvdimm(dev);
+> +       enum nvdimm_fwa_state state;
+> +
+> +       if (!nvdimm->fw_ops)
+> +               return -EOPNOTSUPP;
+> +
+> +       nvdimm_bus_lock(dev);
+> +       state = nvdimm->fw_ops->activate_state(nvdimm);
+> +       nvdimm_bus_unlock(dev);
+> +
+> +       switch (state) {
+> +       case NVDIMM_FWA_IDLE:
+> +               return sprintf(buf, "idle\n");
+> +       case NVDIMM_FWA_BUSY:
+> +               return sprintf(buf, "busy\n");
+> +       case NVDIMM_FWA_ARMED:
+> +               return sprintf(buf, "armed\n");
+> +       default:
+> +               return -ENXIO;
+> +       }
+> +}
+> +
+> +static ssize_t activate_store(struct device *dev, struct device_attribute *attr,
+> +               const char *buf, size_t len)
+> +{
+> +       struct nvdimm *nvdimm = to_nvdimm(dev);
+> +       enum nvdimm_fwa_trigger arg;
+> +       int rc;
+> +
+> +       if (!nvdimm->fw_ops)
+> +               return -EOPNOTSUPP;
+> +
+> +       if (sysfs_streq(buf, "arm"))
+> +               arg = NVDIMM_FWA_ARM;
+> +       else if (sysfs_streq(buf, "disarm"))
+> +               arg = NVDIMM_FWA_DISARM;
+> +       else
+> +               return -EINVAL;
+> +
+> +       nvdimm_bus_lock(dev);
+> +       rc = nvdimm->fw_ops->arm(nvdimm, arg);
+> +       nvdimm_bus_unlock(dev);
+> +
+> +       if (rc < 0)
+> +               return rc;
+> +       return len;
+> +}
+> +static DEVICE_ATTR_ADMIN_RW(activate);
+> +
+> +static struct attribute *nvdimm_firmware_attributes[] = {
+> +       &dev_attr_activate.attr,
+> +       &dev_attr_result.attr,
+> +};
+> +
+> +static umode_t nvdimm_firmware_visible(struct kobject *kobj, struct attribute *a, int n)
+> +{
+> +       struct device *dev = container_of(kobj, typeof(*dev), kobj);
+> +       struct nvdimm_bus *nvdimm_bus = walk_to_nvdimm_bus(dev);
+> +       struct nvdimm_bus_descriptor *nd_desc = nvdimm_bus->nd_desc;
+> +       struct nvdimm *nvdimm = to_nvdimm(dev);
+> +       enum nvdimm_fwa_capability cap;
+> +
+> +       if (!nd_desc->fw_ops)
+> +               return 0;
+> +       if (!nvdimm->fw_ops)
+> +               return 0;
+> +
+> +       nvdimm_bus_lock(dev);
+> +       cap = nd_desc->fw_ops->capability(nd_desc);
+> +       nvdimm_bus_unlock(dev);
+> +
+> +       if (cap < NVDIMM_FWA_CAP_QUIESCE)
+> +               return 0;
+> +
+> +       return a->mode;
+> +}
+> +
+> +static const struct attribute_group nvdimm_firmware_attribute_group = {
+> +       .name = "firmware",
+> +       .attrs = nvdimm_firmware_attributes,
+> +       .is_visible = nvdimm_firmware_visible,
+> +};
+> +
+>  static const struct attribute_group *nvdimm_attribute_groups[] = {
+>         &nd_device_attribute_group,
+>         &nvdimm_attribute_group,
+> +       &nvdimm_firmware_attribute_group,
+>         NULL,
+>  };
+>
+> diff --git a/drivers/nvdimm/nd-core.h b/drivers/nvdimm/nd-core.h
+> index ddb9d97d9129..564faa36a3ca 100644
+> --- a/drivers/nvdimm/nd-core.h
+> +++ b/drivers/nvdimm/nd-core.h
+> @@ -45,6 +45,7 @@ struct nvdimm {
+>                 struct kernfs_node *overwrite_state;
+>         } sec;
+>         struct delayed_work dwork;
+> +       const struct nvdimm_fw_ops *fw_ops;
+>  };
+>
+>  static inline unsigned long nvdimm_security_flags(
+> diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+> index ad9898ece7d3..15dbcb718316 100644
+> --- a/include/linux/libnvdimm.h
+> +++ b/include/linux/libnvdimm.h
+> @@ -86,6 +86,7 @@ struct nvdimm_bus_descriptor {
+>         int (*flush_probe)(struct nvdimm_bus_descriptor *nd_desc);
+>         int (*clear_to_send)(struct nvdimm_bus_descriptor *nd_desc,
+>                         struct nvdimm *nvdimm, unsigned int cmd, void *data);
+> +       const struct nvdimm_bus_fw_ops *fw_ops;
+>  };
+>
+>  struct nd_cmd_desc {
+> @@ -200,6 +201,49 @@ struct nvdimm_security_ops {
+>         int (*query_overwrite)(struct nvdimm *nvdimm);
+>  };
+>
+> +enum nvdimm_fwa_state {
+> +       NVDIMM_FWA_INVALID,
+> +       NVDIMM_FWA_IDLE,
+> +       NVDIMM_FWA_ARMED,
+> +       NVDIMM_FWA_BUSY,
+> +       NVDIMM_FWA_ARM_OVERFLOW,
+> +};
+> +
+> +enum nvdimm_fwa_trigger {
+> +       NVDIMM_FWA_ARM,
+> +       NVDIMM_FWA_DISARM,
+> +};
+> +
+> +enum nvdimm_fwa_capability {
+> +       NVDIMM_FWA_CAP_INVALID,
+> +       NVDIMM_FWA_CAP_NONE,
+> +       NVDIMM_FWA_CAP_QUIESCE,
+> +       NVDIMM_FWA_CAP_LIVE,
+> +};
+> +
+> +enum nvdimm_fwa_result {
+> +       NVDIMM_FWA_RESULT_INVALID,
+> +       NVDIMM_FWA_RESULT_NONE,
+> +       NVDIMM_FWA_RESULT_SUCCESS,
+> +       NVDIMM_FWA_RESULT_NOTSTAGED,
+> +       NVDIMM_FWA_RESULT_NEEDRESET,
+> +       NVDIMM_FWA_RESULT_FAIL,
+> +};
+> +
+> +struct nvdimm_bus_fw_ops {
+> +       enum nvdimm_fwa_state (*activate_state)
+> +               (struct nvdimm_bus_descriptor *nd_desc);
+> +       enum nvdimm_fwa_capability (*capability)
+> +               (struct nvdimm_bus_descriptor *nd_desc);
+> +       int (*activate)(struct nvdimm_bus_descriptor *nd_desc);
+> +};
+> +
+> +struct nvdimm_fw_ops {
+> +       enum nvdimm_fwa_state (*activate_state)(struct nvdimm *nvdimm);
+> +       enum nvdimm_fwa_result (*activate_result)(struct nvdimm *nvdimm);
+> +       int (*arm)(struct nvdimm *nvdimm, enum nvdimm_fwa_trigger arg);
+> +};
+> +
+>  void badrange_init(struct badrange *badrange);
+>  int badrange_add(struct badrange *badrange, u64 addr, u64 length);
+>  void badrange_forget(struct badrange *badrange, phys_addr_t start,
+> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+> index b960098acfb0..045499699b86 100644
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -453,6 +453,8 @@ extern bool hibernation_available(void);
+>  asmlinkage int swsusp_save(void);
+>  extern struct pbe *restore_pblist;
+>  int pfn_is_nosave(unsigned long pfn);
+> +
+> +int hibernate_quiet_exec(int (*func)(void *data), void *data);
+>  #else /* CONFIG_HIBERNATION */
+>  static inline void register_nosave_region(unsigned long b, unsigned long e) {}
+>  static inline void register_nosave_region_late(unsigned long b, unsigned long e) {}
+> @@ -464,6 +466,10 @@ static inline void hibernation_set_ops(const struct platform_hibernation_ops *op
+>  static inline int hibernate(void) { return -ENOSYS; }
+>  static inline bool system_entering_hibernation(void) { return false; }
+>  static inline bool hibernation_available(void) { return false; }
+> +
+> +static inline hibernate_quiet_exec(int (*func)(void *data), void *data) {
+
+This needs to be "static inline int".
+
+Thanks!
