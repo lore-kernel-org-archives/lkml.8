@@ -2,127 +2,137 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF72C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9494CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C83742073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:26:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brpUcL1d"
+	by mail.kernel.org (Postfix) with ESMTP id 7E6F020714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730810AbgG0R0W (ORCPT
+        id S1730843AbgG0R0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:26:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729927AbgG0R0W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:26:22 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA66C061794;
-        Mon, 27 Jul 2020 10:26:21 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f18so15570523wml.3;
-        Mon, 27 Jul 2020 10:26:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zsKxRhlKd+uQDOq2/CXnJ6zIjjtOUm8tfFO4C1ExSks=;
-        b=brpUcL1dvlfAx+vy6LtKzjhnTVyIriswGfEVAhcn4lBEgN/dKomchE/adCVnX6Oz32
-         zhDR+MYC8aTX9htq5QRg2ynAPL+FB8ryT3We2P5zzOC89WsfiY0bWxSW0myzQmURj22O
-         lQE6O8H0GvW4NxapvQP/VgTe3ERzx1YwXMVSMJNbiuGdOIeb6m6b0V4S9SeOjVKOU5g0
-         BSnRm4tHiaSZSJSWfdPIPZ/+OqdRqhvUxlgiToNidPwGm7Z3YRHWHbNHfVeYlxG+JSZ/
-         ajeP647s5kvSE4564J6Pyamp+hpZgvdecG6Xs90bphDofFiPSNteiTh986fJ17/h7F7L
-         kUGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zsKxRhlKd+uQDOq2/CXnJ6zIjjtOUm8tfFO4C1ExSks=;
-        b=EMafQtJnHvqyoF9twiOTVGIzqsBShyJohiAyXnQsYqsQEEGvThgglCkwxkrpJFppce
-         29Qh2utiAFHWfSuSFH7p9KNLMc+HViNmcfwYkrGUHJ4ISng6NLxOhJYgHNL5BFtktHwS
-         YtYI8Yp6YAivV0fcXxqVdfjSza9jwM3uPfhQpdtvEQgmjiYgye+8HZ9ET7LrLui+mnAk
-         TkFIO4/wIHgQjfmqtvv2Vtn5AeWE6MWjCJ95+v+TaKuKfk8LJcta+75Gu5mcXOcF2JP0
-         dysIBes0RB5I7+5i6Hor10lr1cthSFly4mCz3Kk9h7UjB4iKgx/JmrbF5Auh/Gk5pydM
-         WJdw==
-X-Gm-Message-State: AOAM530HlJPcGuNXYoycqoaThFsv/nT8t82fuQL/KVHiac/5brat3zcf
-        vfCN5ljSuEvQxbRdm+am/GkzgyD1JaVDPg==
-X-Google-Smtp-Source: ABdhPJwkJV3qaZGLM3sAXvMmmraw2MnHdwguxhJ8gmiBPedSmNgltn0XLRIhYjiS1VEvidDNTPbdvA==
-X-Received: by 2002:a1c:2dc6:: with SMTP id t189mr344180wmt.26.1595870780590;
-        Mon, 27 Jul 2020 10:26:20 -0700 (PDT)
-Received: from localhost.localdomain (112.red-81-32-35.dynamicip.rima-tde.net. [81.32.35.112])
-        by smtp.gmail.com with ESMTPSA id l10sm9198395wru.3.2020.07.27.10.26.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 10:26:20 -0700 (PDT)
-From:   Juan Antonio Aldea-Armenteros <juant.aldea@gmail.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Cc:     Juan Antonio Aldea-Armenteros <juant.aldea@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2] media: atomisp-mt9m114: replace fixed function names
-Date:   Mon, 27 Jul 2020 19:24:17 +0200
-Message-Id: <20200727172415.54935-1-juant.aldea@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 27 Jul 2020 13:26:51 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2542 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726617AbgG0R0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 13:26:50 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 0CDD76F1B6A00EEE974C;
+        Mon, 27 Jul 2020 18:26:49 +0100 (IST)
+Received: from localhost (10.227.96.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 27 Jul
+ 2020 18:26:48 +0100
+Date:   Mon, 27 Jul 2020 18:26:47 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Darius Berghe <darius.berghe@analog.com>
+CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jic23@kernel.org>, <robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] ltc2471: ltc2461/ltc2463 compatible strings
+Message-ID: <20200727182647.00002e3c@huawei.com>
+In-Reply-To: <20200727135834.84093-3-darius.berghe@analog.com>
+References: <20200727135834.84093-1-darius.berghe@analog.com>
+        <20200727135834.84093-3-darius.berghe@analog.com>
+Organization: Huawei tech. R&D (UK)  Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.227.96.57]
+X-ClientProxiedBy: lhreml719-chm.china.huawei.com (10.201.108.70) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a couple of debug messages using hardcoded function names
-instead of the preferred __func__ magic constant.
+On Mon, 27 Jul 2020 16:58:33 +0300
+Darius Berghe <darius.berghe@analog.com> wrote:
 
-Replace them:
+> Add compatible strings for these devices in the existing ltc2471
+> driver.
+> 
+> Signed-off-by: Darius Berghe <darius.berghe@analog.com>
 
-WARNING: Prefer using '"%s...", __func__' to using 'misensor_rmw_reg', this function's name, in a string
-215: FILE: ./media/atomisp/i2c/atomisp-mt9m114.c:215:
-+       v4l2_err(client, "misensor_rmw_reg error exit, read failed\n");
+Hi Darius,
 
-WARNING: Prefer using '"%s...", __func__' to using 'misensor_rmw_reg', this function's name, in a string
-236: FILE: ./media/atomisp/i2c/atomisp-mt9m114.c:236:
-+       v4l2_err(client, "misensor_rmw_reg error exit, write failed\n");
+A few additional minor comments from me.
 
-Signed-off-by: Juan Antonio Aldea-Armenteros <juant.aldea@gmail.com>
+> ---
+>  drivers/iio/adc/ltc2471.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ltc2471.c b/drivers/iio/adc/ltc2471.c
+> index e1c4e966524d..8c57203b1fe4 100644
+> --- a/drivers/iio/adc/ltc2471.c
+> +++ b/drivers/iio/adc/ltc2471.c
+> @@ -1,5 +1,7 @@
+>  /*
+> - * Driver for Linear Technology LTC2471 and LTC2473 voltage monitors
+> + * Driver for Linear Technology LTC2461, LTC2463, LTC2471 and LTC2473 voltage
+> + * monitors.
+> + * The LTC2463 is identical to the 2461, but reports a differential signal.
+>   * The LTC2473 is identical to the 2471, but reports a differential signal.
+>   *
+>   * Copyright (C) 2017 Topic Embedded Products
+> @@ -17,8 +19,10 @@
+>  #include <linux/mod_devicetable.h>
+>  
+>  enum ltc2471_chips {
+> +	ltc2461,
+> +	ltc2463,
+>  	ltc2471,
+> -	ltc2473,
+> +	ltc2473
 
-PATCH V2:
-* Restored word "error" as pointed out by Dan Carpenter <dan.carpenter@oracle.com>
+Why drop the comma?  We've just added two new devices. Seems possible there
+may be more in the future!
 
----
- drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>  };
+>  
+>  struct ltc2471_data {
+> @@ -122,7 +126,7 @@ static int ltc2471_i2c_probe(struct i2c_client *client,
+>  	indio_dev->name = id->name;
+>  	indio_dev->info = &ltc2471_info;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+> -	if (id->driver_data == ltc2473)
+> +	if (id->driver_data == ltc2473 || id->driver_data == ltc2463)
+If the only use of driver_data is going to be this check, then just set it
+to 2473 for the 2463 and 2473.  It's not uncommon to do this when we have
+a bunch of devices that look the same to software.
 
-diff --git a/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c b/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c
-index 0d60918a9b19..f5de81132177 100644
---- a/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c
-+++ b/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c
-@@ -212,7 +212,7 @@ misensor_rmw_reg(struct i2c_client *client, u16 data_length, u16 reg,
- 
- 	err = mt9m114_read_reg(client, data_length, reg, &val);
- 	if (err) {
--		v4l2_err(client, "misensor_rmw_reg error exit, read failed\n");
-+		v4l2_err(client, "%s error exit, read failed\n", __func__);
- 		return -EINVAL;
- 	}
- 
-@@ -233,7 +233,7 @@ misensor_rmw_reg(struct i2c_client *client, u16 data_length, u16 reg,
- 
- 	err = mt9m114_write_reg(client, data_length, reg, val);
- 	if (err) {
--		v4l2_err(client, "misensor_rmw_reg error exit, write failed\n");
-+		v4l2_err(client, "%s error exit, write failed\n", __func__);
- 		return -EINVAL;
- 	}
- 
--- 
-2.27.0
+>  		indio_dev->channels = ltc2473_channel;
+>  	else
+>  		indio_dev->channels = ltc2471_channel;
+> @@ -139,6 +143,8 @@ static int ltc2471_i2c_probe(struct i2c_client *client,
+>  }
+>  
+>  static const struct i2c_device_id ltc2471_i2c_id[] = {
+> +	{ "ltc2461", ltc2461 },
+> +	{ "ltc2463", ltc2463 },
+>  	{ "ltc2471", ltc2471 },
+>  	{ "ltc2473", ltc2473 },
+>  	{}
+> @@ -146,6 +152,8 @@ static const struct i2c_device_id ltc2471_i2c_id[] = {
+>  MODULE_DEVICE_TABLE(i2c, ltc2471_i2c_id);
+>  
+>  static const struct of_device_id ltc2471_of_match[] = {
+> +	{ .compatible = "adi,ltc2461" },
+> +	{ .compatible = "adi,ltc2463" },
+>  	{ .compatible = "adi,ltc2471" },
+>  	{ .compatible = "adi,ltc2473" },
+>  	{}
+> @@ -163,6 +171,6 @@ static struct i2c_driver ltc2471_i2c_driver = {
+>  
+>  module_i2c_driver(ltc2471_i2c_driver);
+>  
+> -MODULE_DESCRIPTION("LTC2471/LTC2473 ADC driver");
+> +MODULE_DESCRIPTION("LTC2461/LTC2463/LTC2471/LTC2473 ADC driver");
+>  MODULE_AUTHOR("Topic Embedded Products");
+>  MODULE_LICENSE("GPL v2");
 
