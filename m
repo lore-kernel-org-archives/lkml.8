@@ -2,100 +2,64 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C98C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD51C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2C2A206D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:44:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eqN5Hme3"
+	by mail.kernel.org (Postfix) with ESMTP id 856E820715
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 02:53:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgG0Coj (ORCPT
+        id S1727871AbgG0Cx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 22:44:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgG0Coj (ORCPT
+        Sun, 26 Jul 2020 22:53:27 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:57006 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727050AbgG0Cx1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 22:44:39 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB83C0619D2;
-        Sun, 26 Jul 2020 19:44:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ZKcV0ox/lLpxIzJ0hzm2hE1hqEes29OdpJh8YDdSZ80=; b=eqN5Hme3pioJ8foIOvGn7kVn6s
-        eagnHWU5NQgFh/tDKI7kGQ8FfaD4j6xUBjicP+0BJwRYRdqs1RBi5loQxdu990XSwXuVUPADi77Ju
-        nZaBrCk2ozwbKEtKCT8Mn9wABN9zGzj+wo7ZletduXtL/O6yNnCUypSVvgMxVaO+5/knoRrAE4SDS
-        MUUFrdTFDdCeNzJq0GvLN+DFzea/uC8Ih4aZFpwh5YDKIBQ7mveX7qw0KKwB1XsS9hX8iBXUoAfCQ
-        JnGzXQvp37ahr0R3ZPa7QrMVqSc2UexLM3xG5+vU3AriSd/PqLR4y0cDrcm/FTmJyvs7ZDP+2tfUD
-        6E4m+eZA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzt7r-0004Tv-2P; Mon, 27 Jul 2020 02:44:27 +0000
-Date:   Mon, 27 Jul 2020 03:44:26 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Lukasz Stelmach <l.stelmach@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Song Liu <song@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-raid@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Shaohua Li <shli@fb.com>
-Subject: Re: [PATCH 16/23] initramfs: simplify clean_rootfs
-Message-ID: <20200727024426.GI23808@casper.infradead.org>
-References: <20200714190427.4332-1-hch@lst.de>
- <20200714190427.4332-17-hch@lst.de>
- <CGME20200717205549eucas1p13fca9a8496836faa71df515524743648@eucas1p1.samsung.com>
- <7f37802c-d8d9-18cd-7394-df51fa785988@samsung.com>
- <20200718100035.GA8856@lst.de>
- <20200723092200.GA19922@lst.de>
- <dleftjblk6b95t.fsf%l.stelmach@samsung.com>
- <20200723142734.GA11080@lst.de>
- <20200727024149.GB795125@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727024149.GB795125@ZenIV.linux.org.uk>
+        Sun, 26 Jul 2020 22:53:27 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R791e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U3rv6BO_1595818403;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U3rv6BO_1595818403)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 27 Jul 2020 10:53:23 +0800
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+To:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     tianjia.zhang@linux.alibaba.com
+Subject: [PATCH] tpm: Fix the description error of the help information in Kconfig
+Date:   Mon, 27 Jul 2020 10:53:23 +0800
+Message-Id: <20200727025323.26712-1-tianjia.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 03:41:49AM +0100, Al Viro wrote:
-> On Thu, Jul 23, 2020 at 04:27:34PM +0200, Christoph Hellwig wrote:
-> > On Thu, Jul 23, 2020 at 04:25:34PM +0200, Lukasz Stelmach wrote:
-> > > >> Can you comment out the call to d_genocide?  It seems like for your
-> > > >> the fact that clean_rootfs didn't actually clean up was a feature and
-> > > >> not a bug.
-> > > >> 
-> > > >> I guess the old, pre-2008 code also wouldn't have worked for you in
-> > > >> that case.
-> > > >
-> > > > Did you get a chance to try this?
-> > > 
-> > > Indeed, commenting out d_genocide() helps.
-> > 
-> > So given that people have relied on at least the basic device nodes
-> > like /dev/console to not go away since 2008, I wonder if we should just
-> > remove clean_rootfs entirely
-> > 
-> > Linus, Al?
-> 
-> First of all, d_genocide() is simply wrong here from VFS point of view.  _IF_
-> you want recursive removal, you need simple_recursive_remove(path.dentry, NULL).
-> And it's a userland-visible change of behaviour.
-> 
-> As for removal of clean_rootfs()...  FWIW, the odds of an image that would
-> eventually fail accidentally getting past the signature mismatch check are
-> fairly low.  I've no idea what scenario the author of that thing used to have;
-> that would be Shaohua Li <shaohua.li@intel.com>.  Cc'd...
+Obviously, the TPM version number in the help message is wrong, which
+will cause confusion. This patch fixes it.
 
-Shaohua is now at Facebook.
+Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+---
+ drivers/char/tpm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+index 58b4c573d176..8eedb3e704f3 100644
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -62,7 +62,7 @@ config TCG_TIS_SPI
+ 	help
+ 	  If you have a TPM security chip which is connected to a regular,
+ 	  non-tcg SPI master (i.e. most embedded platforms) that is compliant with the
+-	  TCG TIS 1.3 TPM specification (TPM1.2) or the TCG PTP FIFO
++	  TCG TIS 1.3 TPM specification (TPM1.3) or the TCG PTP FIFO
+ 	  specification (TPM2.0) say Yes and it will be accessible from
+ 	  within Linux. To compile this driver as a module, choose  M here;
+ 	  the module will be called tpm_tis_spi.
+-- 
+2.17.1
+
