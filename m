@@ -2,115 +2,122 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA31C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C312C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 030832073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E52B20729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:30:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YS0RAus0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DMDO/s0V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbgG0P2s (ORCPT
+        id S1730234AbgG0Pah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47714 "EHLO
+        Mon, 27 Jul 2020 11:30:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727784AbgG0P2s (ORCPT
+        with ESMTP id S1726744AbgG0Pag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:28:48 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF59C061794;
-        Mon, 27 Jul 2020 08:28:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eT55c9MjBsQWKlmZyUWtYRtSFalE890lapak7aRvrio=; b=YS0RAus0uAL09mGmLyKM+UmK3G
-        cM7eCiuFIgblwhtvrF27VT+qDmo+/fsBzbjOmzViqzeYARvksWzhW4FmhenThmhX2u+CjWVSA+odw
-        DX+pvQRvoAQIkHo0BoTxVNztDOiPHROSUwoF1LZ9/tD7gupCMlod1ln9A1Bi4mriOT9EsShX89VYO
-        +z+r7IW8Jz2HhI4cJ8zhCNtQClnGWUAQgPotOx8b0x8Z07Wy+C8+/VlQ/RgrI0el+YpzzbHBCwp+F
-        QuuS9HC1qN/+T82n00YEWw7g4LryFgAGFBPCUk4xd44//Z0THr6V/aR/BvJQSmbqi59vnWcXAEkdM
-        Tv0058ew==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k053E-0000pN-HU; Mon, 27 Jul 2020 15:28:28 +0000
-Date:   Mon, 27 Jul 2020 16:28:27 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
-Message-ID: <20200727152827.GM23808@casper.infradead.org>
-References: <20200717044427.68747-1-ebiggers@kernel.org>
- <20200717174750.GQ12769@casper.infradead.org>
- <20200718013839.GD2183@sol.localdomain>
- <20200718021304.GS12769@casper.infradead.org>
- <20200718052818.GF2183@sol.localdomain>
- <20200727151746.GC1468275@rowland.harvard.edu>
+        Mon, 27 Jul 2020 11:30:36 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C665C061794;
+        Mon, 27 Jul 2020 08:30:36 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id u8so7616591qvj.12;
+        Mon, 27 Jul 2020 08:30:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=06/0Fc/CzxtKe/AQi80TbkGLzxKNq+FXAhjScQa1P0w=;
+        b=DMDO/s0VURJbuRU3EHjXuLMdKHeGJSp2p9miEcOKpygLfWx3etfGBJvyZT6YdaZv+D
+         cRoFG+Y+3ZnrS9yjMKJeiB0VelIwPoCw1EqPPnVv2zHz3BT28EHOgaRMlAD8lBHtJSV2
+         swA4A9tm6Gr6T7RraR1YT/GNZ2z1TVHDrKojgEASJ9i+C1WXyMQDEZvJIv8tYeF/jp7S
+         Tz9tY4hGgzbJZO8677sk2m2r2b3E4NQT2kL4hY1SAiikCv20LlP77egY5OY91ZRUSADj
+         BK240vqACl1y5S2tAum2n+iasGs2ljw/dzEQQdijqTFEuVEbFezqKj92L1fG5KWU/Mt+
+         X43A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=06/0Fc/CzxtKe/AQi80TbkGLzxKNq+FXAhjScQa1P0w=;
+        b=o3xGibHCqN4ftcE2X91ivADbsm3IIThXFMoIlAjbF8bAjAWJNoKUIM1eI0EpqAiX0y
+         gBu9vvGR1wsQfFnwOzrr0hzVqGprHiu719FoMZ6SuGNdBSbxHjfA1JawWt8v20v/Ji2Z
+         NNl84/KlIB97hbGDXNzVhyAW86YnBE3k5qV4rgwUkOx8d04tYpFWafvaDOH7aiSYApAa
+         8kTTd67nDXYfK0Y8JSrlIITJJmsCu6ucBC/sRD+8MKu+Y1SRL3uSjJv6v42Fa+6ESyMS
+         QDp3gdhpMnjqVu6L8yeHMiUt+DxXBR+jTSxyLXL6Hm4eCeML5f27TFr0ACJR8o/+nkox
+         X5fw==
+X-Gm-Message-State: AOAM531L1CDfbha934atYsv3fRMVxuNpv+uLsSfWO0SWEc1K8DNE5iWX
+        pKVw4LrLQv/MVEuQO+pwig==
+X-Google-Smtp-Source: ABdhPJw5MjdGAe9ULHqTPC3/a5mAB9/7H9/flRqXH8RawvWje9UzoAdVymmniLR/3m88yRIKeSCTXQ==
+X-Received: by 2002:a05:6214:1143:: with SMTP id b3mr21082466qvt.84.1595863835563;
+        Mon, 27 Jul 2020 08:30:35 -0700 (PDT)
+Received: from PWN ([209.94.141.207])
+        by smtp.gmail.com with ESMTPSA id c133sm19928340qkb.111.2020.07.27.08.30.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 08:30:34 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 11:30:32 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vandana BN <bnvandana@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
+ kernel-infoleak in video_put_user()
+Message-ID: <20200727153032.GB315139@PWN>
+References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
+ <20200726222703.102701-1-yepeilin.cs@gmail.com>
+ <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
+ <20200727131608.GD1913@kadam>
+ <CAK8P3a3+9Gr6G6KDWu=iW3316O9cPH+XupBBajJaxrq20xQcyQ@mail.gmail.com>
+ <20200727141416.GA306745@PWN>
+ <20200727144609.GG1913@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200727151746.GC1468275@rowland.harvard.edu>
+In-Reply-To: <20200727144609.GG1913@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:17:46AM -0400, Alan Stern wrote:
-> Given a type "T", an object x of type pointer-to-T, and a function
-> "func" that takes various arguments and returns a pointer-to-T, the
-> accepted API for calling func once would be to create once_func() as
-> follows:
+On Mon, Jul 27, 2020 at 05:46:09PM +0300, Dan Carpenter wrote:
+> On Mon, Jul 27, 2020 at 10:14:16AM -0400, Peilin Ye wrote:
+> > Yes, I would like to! I will start from:
+> > 
+> > 	drivers/firewire/core-cdev.c:463
 > 
-> T *once_func(T **ppt, args...)
-> {
-> 	static DEFINE_MUTEX(mut);
-> 	T *p;
+> My prefered fix for this would be to add a memset at the start of
+> fill_bus_reset_event().
 > 
-> 	p = smp_load_acquire(ppt);	/* Mild optimization */
-> 	if (p)
-> 		return p;
+> 	memset(event, 0, sizeof(*event));
 > 
-> 	mutex_lock(mut);
-> 	p = smp_load_acquire(ppt);
-> 	if (!p) {
-> 		p = func(args...);
-> 		if (!IS_ERR_OR_NULL(p))
-> 			smp_store_release(ppt, p);
-> 	}
-> 	mutex_unlock(mut);
-> 	return p;
-> }
+> 	spin_lock_irq(&card->lock);
 > 
-> Users then would have to call once_func(&x, args...) and check the
-> result.  Different x objects would constitute different "once"
-> domains.
-[...]
-> In fact, the only drawback I can think of is that because this relies
-> on a single mutex for all the different possible x's, it might lead to
-> locking conflicts (if func had to call once_func() recursively, for
-> example).  In most reasonable situations such conflicts would not
-> arise.
+> 	event->closure       = client->bus_reset_closure;
+> 
+> 
+> > 	drivers/input/misc/uinput.c:743
 
-Another drawback for this approach relative to my get_foo() approach
-upthread is that, because we don't have compiler support, there's no
-enforcement that accesses to 'x' go through once_func().  My approach
-wraps accesses in a deliberately-opaque struct so you have to write
-some really ugly code to get at the raw value, and it's just easier to
-call get_foo().
+I just sent a patch to fix this as you suggested.
+
+> I don't think this is a bug.
+
+I see. I am now fixing:
+
+	block/scsi_ioctl.c:707 scsi_put_cdrom_generic_arg() warn: check that 'cgc32' doesn't leak information (struct has a hole after 'data_direction')
