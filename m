@@ -2,134 +2,118 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BE3C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60ADB20679
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F53020679
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595894140;
-	bh=Q0slfXxM3359P9IVqQ4zRdxcRa0D0MZbAU7aHqYR8cE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ia6h8Fq9AXgKQ2AWoLU16M0lQY1LSl8t8ZIBalagTvz7JwqCE2tmjXZt7UK5IMNhN
-	 RHDl3Hkg076QT4J/I5WaJP+FutQ3gShWNhiGhupq8FrmmZf2nS/PhUDA2/fK7doJP7
-	 FvrWOwgRXZ8bpJ6pd8fVwaWXiISGdzMPwaAJePyc=
+	s=default; t=1595894202;
+	bh=pIvFrotDaXLQ53fI6ndW8jI8DT1JK2t5D5sC0WCfGr8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=j1STeQDn3wfPwPUTeCUb8W+ak9cVN2sXrZfYWFIdkqb8Ap6PJNIkkd98xAuEstZF4
+	 58s0Ft+qNlX5f3/+JuXeTxfseEaXg1wVzavMhcfOmxYeyn9rKEwHyUA/vX9Y77UDjD
+	 XepP4ug97czkovUMmC4qA7iKeT+07BrRQhw4ATiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgG0Xz1 (ORCPT
+        id S1726989AbgG0X4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:55:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46108 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbgG0Xz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:55:26 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        id S1726171AbgG0X4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:56:41 -0400
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A9B420679;
-        Mon, 27 Jul 2020 23:55:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21CC820679;
+        Mon, 27 Jul 2020 23:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595894126;
-        bh=Q0slfXxM3359P9IVqQ4zRdxcRa0D0MZbAU7aHqYR8cE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E186r9YuvNyCWl6qTGRwNE1WjDP8jSWWr28H4Xnxljrl5wfkIpbvORNAZ4dQt54wh
-         KN5qf3vFKpAgGgPNiqfpFXkiC9eOhXxqGbJcmaclidO2BcA6cRREeDsk5iO938vr9p
-         vUjNAHKtyOBE9q5K1TWOGQUaROKXgExWIWG81eL0=
-From:   paulmck@kernel.org
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@fb.com, peterz@infradead.org, mingo@kernel.org,
-        tglx@linutronix.de, bigeasy@linutronix.de, frederic@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH smp v2 1/3] smp: Add source and destination CPUs to __call_single_data
-Date:   Mon, 27 Jul 2020 16:55:22 -0700
-Message-Id: <20200727235524.828-1-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200727235343.GA30963@paulmck-ThinkPad-P72>
-References: <20200727235343.GA30963@paulmck-ThinkPad-P72>
+        s=default; t=1595894200;
+        bh=pIvFrotDaXLQ53fI6ndW8jI8DT1JK2t5D5sC0WCfGr8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jwF1CbD0GAuxK4wrdhWzcn+JPtunKxSvvFDxv5qAMwsY5AqtVnLIKyzChwRUJk+ET
+         BE14SahExuO3hIHqCFE1pgPACnIuaKaomfxpyf++C4hRYBSDYmaeUauI8Btk74+lqA
+         vCBR5Rtfhgo628/xVYhZZqeuhK8xu8QxK6183ZYw=
+Received: by mail-lj1-f170.google.com with SMTP id x9so19173325ljc.5;
+        Mon, 27 Jul 2020 16:56:40 -0700 (PDT)
+X-Gm-Message-State: AOAM533yHzAPkZCsK4PrudF5qxalH64OMNw9u+wycKBeuDpirpZBcCEC
+        8j56Q9RUACjym5fHkg6F1IxlJt1YMRwV7cgvxeg=
+X-Google-Smtp-Source: ABdhPJzU25QM6X7+NjrWASkQh6IbY/CuZrlfdu20GW08qB6Rm4g8RyXQjMZLEQ/1KX7I6CI0cW0kBqTdI8Zotm1w+nE=
+X-Received: by 2002:a2e:81c2:: with SMTP id s2mr2781767ljg.10.1595894198520;
+ Mon, 27 Jul 2020 16:56:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-10-guro@fb.com>
+In-Reply-To: <20200727184506.2279656-10-guro@fb.com>
+From:   Song Liu <song@kernel.org>
+Date:   Mon, 27 Jul 2020 16:56:27 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5W5TJUEcSH-q3Q2-YmJsPZ2PxvgKcAmYVO0xut3MD+sg@mail.gmail.com>
+Message-ID: <CAPhsuW5W5TJUEcSH-q3Q2-YmJsPZ2PxvgKcAmYVO0xut3MD+sg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 09/35] bpf: memcg-based memory accounting for
+ bpf ringbuffer
+To:     Roman Gushchin <guro@fb.com>
+Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+On Mon, Jul 27, 2020 at 12:22 PM Roman Gushchin <guro@fb.com> wrote:
+>
+> Enable the memcg-based memory accounting for the memory used by
+> the bpf ringbuffer.
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-This commit adds a destination CPU to __call_single_data, and is inspired
-by an earlier commit by Peter Zijlstra.  This version adds #ifdef to
-permit use by 32-bit systems and supplying the destination CPU for all
-smp_call_function*() requests, not just smp_call_function_single().
+Acked-by: Song Liu <songliubraving@fb.com>
 
-If need be, 32-bit systems could be accommodated by shrinking the flags
-field to 16 bits (the atomic_t variant is currently unused) and by
-providing only eight bits for CPU on such systems.
-
-It is not clear that the addition of the fields to __call_single_node
-are really needed.
-
-Link: https://lore.kernel.org/lkml/20200615164048.GC2531@hirez.programming.kicks-ass.net/
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- include/linux/smp.h       | 3 +++
- include/linux/smp_types.h | 3 +++
- kernel/smp.c              | 2 ++
- 3 files changed, 8 insertions(+)
-
-diff --git a/include/linux/smp.h b/include/linux/smp.h
-index 80d557e..9f13966 100644
---- a/include/linux/smp.h
-+++ b/include/linux/smp.h
-@@ -26,6 +26,9 @@ struct __call_single_data {
- 		struct {
- 			struct llist_node llist;
- 			unsigned int flags;
-+#ifdef CONFIG_64BIT
-+			u16 src, dst;
-+#endif
- 		};
- 	};
- 	smp_call_func_t func;
-diff --git a/include/linux/smp_types.h b/include/linux/smp_types.h
-index 364b3ae..2e8461a 100644
---- a/include/linux/smp_types.h
-+++ b/include/linux/smp_types.h
-@@ -61,6 +61,9 @@ struct __call_single_node {
- 		unsigned int	u_flags;
- 		atomic_t	a_flags;
- 	};
-+#ifdef CONFIG_64BIT
-+	u16 src, dst;
-+#endif
- };
- 
- #endif /* __LINUX_SMP_TYPES_H */
-diff --git a/kernel/smp.c b/kernel/smp.c
-index aa17eed..148d991 100644
---- a/kernel/smp.c
-+++ b/kernel/smp.c
-@@ -375,6 +375,7 @@ int smp_call_function_single(int cpu, smp_call_func_t func, void *info,
- 
- 	csd->func = func;
- 	csd->info = info;
-+	csd->dst = cpu;
- 
- 	err = generic_exec_single(cpu, csd);
- 
-@@ -540,6 +541,7 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
- 			csd->flags |= CSD_TYPE_SYNC;
- 		csd->func = func;
- 		csd->info = info;
-+		csd->dst = cpu;
- 		if (llist_add(&csd->llist, &per_cpu(call_single_queue, cpu)))
- 			__cpumask_set_cpu(cpu, cfd->cpumask_ipi);
- 	}
--- 
-2.9.5
-
+> ---
+>  kernel/bpf/ringbuf.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/bpf/ringbuf.c b/kernel/bpf/ringbuf.c
+> index 002f8a5c9e51..e8e2c39cbdc9 100644
+> --- a/kernel/bpf/ringbuf.c
+> +++ b/kernel/bpf/ringbuf.c
+> @@ -60,8 +60,8 @@ struct bpf_ringbuf_hdr {
+>
+>  static struct bpf_ringbuf *bpf_ringbuf_area_alloc(size_t data_sz, int numa_node)
+>  {
+> -       const gfp_t flags = GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_NOWARN |
+> -                           __GFP_ZERO;
+> +       const gfp_t flags = GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL |
+> +                           __GFP_NOWARN | __GFP_ZERO;
+>         int nr_meta_pages = RINGBUF_PGOFF + RINGBUF_POS_PAGES;
+>         int nr_data_pages = data_sz >> PAGE_SHIFT;
+>         int nr_pages = nr_meta_pages + nr_data_pages;
+> @@ -89,7 +89,8 @@ static struct bpf_ringbuf *bpf_ringbuf_area_alloc(size_t data_sz, int numa_node)
+>          */
+>         array_size = (nr_meta_pages + 2 * nr_data_pages) * sizeof(*pages);
+>         if (array_size > PAGE_SIZE)
+> -               pages = vmalloc_node(array_size, numa_node);
+> +               pages = __vmalloc_node(array_size, 1, GFP_KERNEL_ACCOUNT,
+> +                                      numa_node, __builtin_return_address(0));
+>         else
+>                 pages = kmalloc_node(array_size, flags, numa_node);
+>         if (!pages)
+> @@ -167,7 +168,7 @@ static struct bpf_map *ringbuf_map_alloc(union bpf_attr *attr)
+>                 return ERR_PTR(-E2BIG);
+>  #endif
+>
+> -       rb_map = kzalloc(sizeof(*rb_map), GFP_USER);
+> +       rb_map = kzalloc(sizeof(*rb_map), GFP_USER | __GFP_ACCOUNT);
+>         if (!rb_map)
+>                 return ERR_PTR(-ENOMEM);
+>
+> --
+> 2.26.2
+>
