@@ -2,103 +2,196 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3838C433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E92C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C92A4205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA40F2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:07:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbgG0LHh (ORCPT
+        id S1728694AbgG0LHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:07:37 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:45915 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgG0LHe (ORCPT
+        Mon, 27 Jul 2020 07:07:31 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40715 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728550AbgG0LGR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:07:34 -0400
-Received: from mail-qv1-f42.google.com ([209.85.219.42]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N5VLY-1ksLsH2eE6-0170OO; Mon, 27 Jul 2020 13:07:31 +0200
-Received: by mail-qv1-f42.google.com with SMTP id s15so2778448qvv.7;
-        Mon, 27 Jul 2020 04:07:31 -0700 (PDT)
-X-Gm-Message-State: AOAM533HndIsn7C3eJfJtiaRP6SJnOrlJpjKhwuyUJbBR8t7Ul8IEshi
-        WTie9KP6tuSWckZzxlidtav9DErxuzLgBbq74+Y=
-X-Google-Smtp-Source: ABdhPJzxOngJK6stFBNtdHenz0ykV74orh0S+FvohVN1V01bLg69miZWGOg43PNVNxMAXwrpCMzVbqT41VdOkXRTOnM=
-X-Received: by 2002:ad4:4c09:: with SMTP id bz9mr20821335qvb.210.1595848050219;
- Mon, 27 Jul 2020 04:07:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200727084211.6632-1-lars.povlsen@microchip.com>
- <20200727095009.GK4073@piout.net> <87v9i9fdy7.fsf@soft-dev15.microsemi.net>
-In-Reply-To: <87v9i9fdy7.fsf@soft-dev15.microsemi.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 13:07:14 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0CMqqFWM+QXC0wXxrfKBN0U5cyx_naBx+hS3V3SG2KOQ@mail.gmail.com>
-Message-ID: <CAK8P3a0CMqqFWM+QXC0wXxrfKBN0U5cyx_naBx+hS3V3SG2KOQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/10] Adding support for Microchip Sparx5 SoC
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        SoC Team <soc@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:VQrKRxNjIjvZRIEeCkAz30oJy/i+x4XOwSIIe22zj3vGPVX3xwW
- B8VT/nfb1I30p30rKj0Uuy9yjvkMzVHBSgnUOQ8npY2A/JwnN1j3vnSOhJadJa8D1e4ebjg
- I5kbFM46k8uMAK3FbSb8Jv819zX3TKO1LSnoASLFe4nDLMzVfbJdHE/4mYjvR6obfUWNR7X
- aSsD2jCdSZREqoHIzpZkg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zn333mraLCU=:K6u21uNyZfQWEhNs0LPmaG
- 0QCJBEOZ3RHArxr3HqpP347CBeQvh3hlTODTwJxmnRvFvGZ8ZC3nA2LalvBrtIG2zFi8KzpaN
- SZmj4R24ZiRSpzYnPD8kUTwSOd1k4MXTT3FMsVt77CCxkf6iHzGBV22Z2EWxJVi2erzNFDfNO
- 0eiJIJ0yo3dmThIQ0abPzum8M+hdaRITncovfY8fjijsYbx1FDCYKQLSbwyW51S3zK7loORi5
- 8YHUMa/7GsGpoWBz3kZuzBr/+hXtNhWVZwJ+EF/SOn/u3wsx9nG9inHenmkYryeC5I8+2efaX
- L3C4ReXq3CI522YkCfzs3BTqUJDdydCcIKWUNQM/HzEusSDq+31rpDIF6KHfw1vCB+VYUB9HM
- 9iL9MWFBF2j5DFT78ON2EvgsUdNhr4NOMZsTXbTj1vENSSHGmj4Vu/eajf4xsgx8f1nEgoG5L
- Ymc3I2fd3BLbSvwyoqMbxJrJSyjBaimXZzZ2G7r44JdxJFY96bIz2qhGWdZ0aWDKbQhs/ScQz
- yFq6jVAA0a3KyZAJwCPBHbQAgds95ppbuzCtG1ro8g07kYeqnhZWYjJrwcsYfWiaiwEMZLCap
- ff8gz2HZvFv1I39IqObBJKTUNGMFfvCUEcK44Vf0MnNAU1+hzHWGqklYTkARxbmGZlbjsCb0P
- w01HN5rJK1vMXhwEIlEr68wo90nTUSDYpRfn7sJL3UfRv9MeafJ4iU9p3zRle7tQyopNx3NAO
- fTxMCBNz5Brwp1GOpvZIqSKTroFsw5AE7uAjLbNzAyS++7/KOE3aOY6qDoFiyqB9Kr4okwC/U
- uJggSSGGIp1oBJ2CyHQdrk6AIntMvQX/V9yrvNh4398Rs0/TWswyhblAjJEkPulvDEyS0tYlm
- 8cZ5PKBg0dTaHVi4HwJ72TmgnuZJIATMfSDgujwO9QGCOgSaVSsSS/t7frgautm6I+wBraBmm
- uzHiAaQiyByeq6hm1akvyrg2RktphnyECXJgpW3RtidbAg5PMCVc/
+        Mon, 27 Jul 2020 07:06:17 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
+        with SMTP; 27 Jul 2020 14:06:14 +0300
+Received: from dev-l-vrt-135.mtl.labs.mlnx (dev-l-vrt-135.mtl.labs.mlnx [10.234.135.1])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06RB6Exr022250;
+        Mon, 27 Jul 2020 14:06:14 +0300
+Received: from dev-l-vrt-135.mtl.labs.mlnx (localhost [127.0.0.1])
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 06RB6Err002404;
+        Mon, 27 Jul 2020 14:06:14 +0300
+Received: (from moshe@localhost)
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 06RB6DNL002403;
+        Mon, 27 Jul 2020 14:06:13 +0300
+From:   Moshe Shemesh <moshe@mellanox.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Moshe Shemesh <moshe@mellanox.com>
+Subject: [PATCH net-next RFC 11/13] net/mlx5: Add support for fw live patch event
+Date:   Mon, 27 Jul 2020 14:02:31 +0300
+Message-Id: <1595847753-2234-12-git-send-email-moshe@mellanox.com>
+X-Mailer: git-send-email 1.8.4.3
+In-Reply-To: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:30 PM Lars Povlsen
-<lars.povlsen@microchip.com> wrote:
-> Alexandre Belloni writes:
-> > As Arnd stated, he already applied the patches so you have to send an
-> > incremental patch to fix the clock driver.
-> >
->
-> I actually wrote Arnd about this specifically, and he replied that a
-> patch against either next or mainline was fine - so that's why I
-> refreshed the lot (Including Reviewed-by: headers).
+Firmware live patch event notifies the driver that the firmware was just
+updated using live patch. In such case the driver should not reload or
+re-initiate entities, part to updating the firmware version and
+re-initiate the firmware tracer which can be updated by live patch with
+new strings database to help debugging an issue.
 
-I think I misunderstood your question. To clarify: Alexandre is right,
-you should not resend patches that have already been merged but
-instead send the incremental patches if you need further changes.
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+---
+ .../mellanox/mlx5/core/diag/fw_tracer.c       | 31 +++++++++++++++++++
+ .../mellanox/mlx5/core/diag/fw_tracer.h       |  1 +
+ .../ethernet/mellanox/mlx5/core/fw_reset.c    | 27 ++++++++++++++++
+ include/linux/mlx5/device.h                   |  1 +
+ 4 files changed, 60 insertions(+)
 
-I thought your question was about the case where your patch
-series has conflicts against another unrelated set of changes
-that may have been merged already.
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+index ad3594c4afcb..08dae045d185 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+@@ -1064,6 +1064,37 @@ void mlx5_fw_tracer_destroy(struct mlx5_fw_tracer *tracer)
+ 	kvfree(tracer);
+ }
+ 
++int mlx5_fw_tracer_recreate_strings_db(struct mlx5_fw_tracer *tracer)
++{
++	struct mlx5_core_dev *dev;
++	int err;
++
++	if (IS_ERR_OR_NULL(tracer))
++		return -EINVAL;
++
++	cancel_work_sync(&tracer->read_fw_strings_work);
++	mlx5_fw_tracer_clean_ready_list(tracer);
++	mlx5_fw_tracer_clean_print_hash(tracer);
++	mlx5_fw_tracer_clean_saved_traces_array(tracer);
++	mlx5_fw_tracer_free_strings_db(tracer);
++
++	dev = tracer->dev;
++	err = mlx5_query_mtrc_caps(tracer);
++	if (err) {
++		mlx5_core_dbg(dev, "FWTracer: Failed to query capabilities %d\n", err);
++		return err;
++	}
++
++	err = mlx5_fw_tracer_allocate_strings_db(tracer);
++	if (err) {
++		mlx5_core_warn(dev, "FWTracer: Allocate strings DB failed %d\n", err);
++		return err;
++	}
++	mlx5_fw_tracer_init_saved_traces_array(tracer);
++
++	return 0;
++}
++
+ static int fw_tracer_event(struct notifier_block *nb, unsigned long action, void *data)
+ {
+ 	struct mlx5_fw_tracer *tracer = mlx5_nb_cof(nb, struct mlx5_fw_tracer, nb);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.h b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.h
+index 40601fba80ba..1a755098aeeb 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.h
+@@ -191,5 +191,6 @@ void mlx5_fw_tracer_destroy(struct mlx5_fw_tracer *tracer);
+ int mlx5_fw_tracer_trigger_core_dump_general(struct mlx5_core_dev *dev);
+ int mlx5_fw_tracer_get_saved_traces_objects(struct mlx5_fw_tracer *tracer,
+ 					    struct devlink_fmsg *fmsg);
++int mlx5_fw_tracer_recreate_strings_db(struct mlx5_fw_tracer *tracer);
+ 
+ #endif
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+index 45fdecbadf52..87465a5e5577 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+@@ -2,11 +2,13 @@
+ /* Copyright (c) 2020, Mellanox Technologies inc.  All rights reserved. */
+ 
+ #include "fw_reset.h"
++#include "diag/fw_tracer.h"
+ 
+ struct mlx5_fw_reset {
+ 	struct mlx5_core_dev *dev;
+ 	struct mlx5_nb nb;
+ 	struct workqueue_struct *wq;
++	struct work_struct fw_live_patch_work;
+ 	struct work_struct reset_request_work;
+ 	struct work_struct reset_now_work;
+ 	struct work_struct reset_abort_work;
+@@ -66,6 +68,27 @@ static int mlx5_fw_set_reset_sync_nack(struct mlx5_core_dev *dev)
+ 	return mlx5_reg_mfrl_set(dev, MLX5_MFRL_REG_RESET_LEVEL3, 0, 2, false);
+ }
+ 
++static void mlx5_fw_live_patch_event(struct work_struct *work)
++{
++	struct mlx5_fw_reset *fw_reset = container_of(work, struct mlx5_fw_reset,
++						      fw_live_patch_work);
++	struct mlx5_core_dev *dev = fw_reset->dev;
++	struct mlx5_fw_tracer *tracer;
++
++	mlx5_core_info(dev, "Live patch updated firmware version: %d.%d.%d\n", fw_rev_maj(dev),
++		       fw_rev_min(dev), fw_rev_sub(dev));
++
++	tracer = dev->tracer;
++	if (IS_ERR_OR_NULL(tracer))
++		return;
++
++	mlx5_fw_tracer_cleanup(tracer);
++	if (mlx5_fw_tracer_recreate_strings_db(tracer))
++		mlx5_core_err(dev, "Failed to recreate FW tracer strings DB\n");
++	if (mlx5_fw_tracer_init(tracer))
++		mlx5_core_err(dev, "Failed to re-initialize FW tracer\n");
++}
++
+ static void mlx5_sync_reset_request_event(struct work_struct *work)
+ {
+ 	struct mlx5_fw_reset *fw_reset = container_of(work, struct mlx5_fw_reset,
+@@ -241,6 +264,9 @@ static int fw_reset_event_notifier(struct notifier_block *nb, unsigned long acti
+ 	struct mlx5_eqe *eqe = data;
+ 
+ 	switch (eqe->sub_type) {
++	case MLX5_GENERAL_SUBTYPE_FW_LIVE_PATCH_EVENT:
++			queue_work(fw_reset->wq, &fw_reset->fw_live_patch_work);
++		break;
+ 	case MLX5_GENERAL_SUBTYPE_PCI_SYNC_FOR_FW_UPDATE_EVENT:
+ 		mlx5_sync_reset_events_handle(fw_reset, eqe);
+ 		break;
+@@ -280,6 +306,7 @@ int mlx5_fw_reset_events_init(struct mlx5_core_dev *dev)
+ 	fw_reset->dev = dev;
+ 	dev->priv.fw_reset = fw_reset;
+ 
++	INIT_WORK(&fw_reset->fw_live_patch_work, mlx5_fw_live_patch_event);
+ 	INIT_WORK(&fw_reset->reset_request_work, mlx5_sync_reset_request_event);
+ 	INIT_WORK(&fw_reset->reset_now_work, mlx5_sync_reset_now_event);
+ 	INIT_WORK(&fw_reset->reset_abort_work, mlx5_sync_reset_abort_event);
+diff --git a/include/linux/mlx5/device.h b/include/linux/mlx5/device.h
+index 57db125e5802..58e63bb718a2 100644
+--- a/include/linux/mlx5/device.h
++++ b/include/linux/mlx5/device.h
+@@ -364,6 +364,7 @@ enum {
+ enum {
+ 	MLX5_GENERAL_SUBTYPE_DELAY_DROP_TIMEOUT = 0x1,
+ 	MLX5_GENERAL_SUBTYPE_PCI_POWER_CHANGE_EVENT = 0x5,
++	MLX5_GENERAL_SUBTYPE_FW_LIVE_PATCH_EVENT = 0x7,
+ 	MLX5_GENERAL_SUBTYPE_PCI_SYNC_FOR_FW_UPDATE_EVENT = 0x8,
+ };
+ 
+-- 
+2.17.1
 
-> But I will send an incremental patch just in case, no problem.
-
-Thanks,
-
-      Arnd
