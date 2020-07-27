@@ -2,82 +2,167 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1077EC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA104C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD7FE206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:28:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jkQ9wt5h"
+	by mail.kernel.org (Postfix) with ESMTP id B25EA206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbgG0Q2c (ORCPT
+        id S1731701AbgG0Q3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:28:32 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:56261 "EHLO m43-7.mailgun.net"
+        Mon, 27 Jul 2020 12:29:02 -0400
+Received: from mga11.intel.com ([192.55.52.93]:22556 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726887AbgG0Q2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:28:31 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595867310; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=AoGAWEheOFvz7olAYO+bhSgat67n1NnWWCqmG2/Tx6w=; b=jkQ9wt5hB33WkhZrB/5ckjRrscoer1pUdo+XPAq+CT91L0AayjvIzc3mXKb8oES0XpU1Qeab
- c2nkNJj5XGACeGXWOQEMG7vSV377rZT4OHmpHiHTHlwD6S+CSjjNgjEizRNoOcpm6MftUbQu
- GqO6OosvVfiun0ThCys0Zd7siAg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
- 5f1f00a8845c4d05a33e8173 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 16:28:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AB658C433C9; Mon, 27 Jul 2020 16:28:24 +0000 (UTC)
-Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kathirav)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 27020C433CA;
-        Mon, 27 Jul 2020 16:28:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 27020C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
-From:   Kathiravan T <kathirav@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     kathirav@codeaurora.org
-Subject: [PATCH] soc: qcom: socinfo: add soc id for IPQ6018
-Date:   Mon, 27 Jul 2020 21:58:10 +0530
-Message-Id: <1595867290-22318-1-git-send-email-kathirav@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        id S1726320AbgG0Q3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 12:29:02 -0400
+IronPort-SDR: hRjhxVLyBy6pZWxqOJBYEXNLDl/wpED3ZzAzqASKqm07x/YyjM0jtftafq6/2fSngXn39+/e4r
+ cLV0hcS448BQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="148933484"
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="148933484"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 09:29:01 -0700
+IronPort-SDR: bdMrx3VH1pOZBH7HrCMpWx80Ke4WrEZJaftJectfitABWJ9gyBX2X4331Xi2/SEzhR7+sM7RSp
+ 9e1U4z1fyyAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="303521030"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 27 Jul 2020 09:29:00 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id CA232580677;
+        Mon, 27 Jul 2020 09:29:00 -0700 (PDT)
+Message-ID: <718d3322c97561f69e156ed479e52d01d0899d78.camel@linux.intel.com>
+Subject: Re: [PATCH V4 0/3] Intel Platform Monitoring Technology
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Date:   Mon, 27 Jul 2020 09:29:00 -0700
+In-Reply-To: <CAHp75VftSf8pzSAYMjcKg-MSiy0T4xG=wiKpgY20_ZKOO0Tq0w@mail.gmail.com>
+References: <20200714062323.19990-1-david.e.box@linux.intel.com>
+         <20200717190620.29821-1-david.e.box@linux.intel.com>
+         <CAHp75VftSf8pzSAYMjcKg-MSiy0T4xG=wiKpgY20_ZKOO0Tq0w@mail.gmail.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the SoC ID for IPQ6018 variant.
+On Mon, 2020-07-27 at 13:23 +0300, Andy Shevchenko wrote:
+> On Fri, Jul 17, 2020 at 10:05 PM David E. Box
+> <david.e.box@linux.intel.com> wrote:
+> > Intel Platform Monitoring Technology (PMT) is an architecture for
+> > enumerating and accessing hardware monitoring capabilities on a
+> > device.
+> > With customers increasingly asking for hardware telemetry,
+> > engineers not
+> > only have to figure out how to measure and collect data, but also
+> > how to
+> > deliver it and make it discoverable. The latter may be through some
+> > device
+> > specific method requiring device specific tools to collect the
+> > data. This
+> > in turn requires customers to manage a suite of different tools in
+> > order to
+> > collect the differing assortment of monitoring data on their
+> > systems.  Even
+> > when such information can be provided in kernel drivers, they may
+> > require
+> > constant maintenance to update register mappings as they change
+> > with
+> > firmware updates and new versions of hardware. PMT provides a
+> > solution for
+> > discovering and reading telemetry from a device through a hardware
+> > agnostic
+> > framework that allows for updates to systems without requiring
+> > patches to
+> > the kernel or software tools.
+> > 
+> > PMT defines several capabilities to support collecting monitoring
+> > data from
+> > hardware. All are discoverable as separate instances of the PCIE
+> > Designated
+> > Vendor extended capability (DVSEC) with the Intel vendor code. The
+> > DVSEC ID
+> > field uniquely identifies the capability. Each DVSEC also provides
+> > a BAR
+> > offset to a header that defines capability-specific attributes,
+> > including
+> > GUID, feature type, offset and length, as well as configuration
+> > settings
+> > where applicable. The GUID uniquely identifies the register space
+> > of any
+> > monitor data exposed by the capability. The GUID is associated with
+> > an XML
+> > file from the vendor that describes the mapping of the register
+> > space along
+> > with properties of the monitor data. This allows vendors to perform
+> > firmware updates that can change the mapping (e.g. add new metrics)
+> > without
+> > requiring any changes to drivers or software tools. The new mapping
+> > is
+> > confirmed by an updated GUID, read from the hardware, which
+> > software uses
+> > with a new XML.
+> > 
+> > The current capabilities defined by PMT are Telemetry, Watcher, and
+> > Crashlog.  The Telemetry capability provides access to a continuous
+> > block
+> > of read only data. The Watcher capability provides access to
+> > hardware
+> > sampling and tracing features. Crashlog provides access to device
+> > crash
+> > dumps.  While there is some relationship between capabilities
+> > (Watcher can
+> > be configured to sample from the Telemetry data set) each exists as
+> > stand
+> > alone features with no dependency on any other. The design
+> > therefore splits
+> > them into individual, capability specific drivers. MFD is used to
+> > create
+> > platform devices for each capability so that they may be managed by
+> > their
+> > own driver. The PMT architecture is (for the most part) agnostic to
+> > the
+> > type of device it can collect from. Devices nodes are consequently
+> > generic
+> > in naming, e.g. /dev/telem<n> and /dev/smplr<n>. Each capability
+> > driver
+> > creates a class to manage the list of devices supporting
+> > it.  Software can
+> > determine which devices support a PMT feature by searching through
+> > each
+> > device node entry in the sysfs class folder. It can additionally
+> > determine
+> > if a particular device supports a PMT feature by checking for a PMT
+> > class
+> > folder in the device folder.
+> > 
+> > This patch set provides support for the PMT framework, along with
+> > support
+> > for Telemetry on Tiger Lake.
+> > 
+> 
+> I assume this goes thru MFD tree.
 
-Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
----
- drivers/soc/qcom/socinfo.c | 1 +
- 1 file changed, 1 insertion(+)
+Yes, looking for pull by MFD. Thanks Andy.
 
-diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
-index d9c64a78e49c..b7972bdff027 100644
---- a/drivers/soc/qcom/socinfo.c
-+++ b/drivers/soc/qcom/socinfo.c
-@@ -223,6 +223,7 @@ static const struct soc_id soc_id[] = {
- 	{ 321, "SDM845" },
- 	{ 341, "SDA845" },
- 	{ 356, "SM8250" },
-+	{ 402, "IPQ6018" },
- };
- 
- static const char *socinfo_machine(struct device *dev, unsigned int id)
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
