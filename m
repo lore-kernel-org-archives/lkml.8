@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F3AC433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93660C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 437842070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B6B20825
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859500;
-	bh=n3RbqFT8KAWFA1dTxPYGZH156V8HwXIVPBz/LrIGyoE=;
+	s=default; t=1595859502;
+	bh=yDL8Vv8k1NbW6bGeTuxpjBDJNb81nTSEttoBN0jtCZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oBvoTE5DJ+UytyMnbNQ5S/3ngcSoYcMXFsYXKij4EV0bBEICTVCM9utqECpEoh8Wo
-	 iA6wIyccXWgCPlJaoZG75GpduEIfCSyv1LDsZZW0rxWTp0qxEUtD7iv0rIxDdZfAuV
-	 dhuJogYbn2Hm5YjRjYlzlvPVnxExWQ12LiRkA/xY=
+	b=f18C4qCU3BWulgCL1WQEAh4haq+w2mOEGYVTVmuq45q+PGwIGFHfmqNX5/b/+zqB9
+	 mOwjmuvsKTs26N3HwjA7fbmUNeB4KlxydxrtSA+5xna1HAqewRHgka0C6fBBd1Hzja
+	 VYZCsM2y7ZWEo2TM5P9bqMY21dRO7pYPEwn5X5fg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731204AbgG0OSS (ORCPT
+        id S1731212AbgG0OSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:18:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45884 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:18:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729781AbgG0OSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:16 -0400
+        id S1731194AbgG0OSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ADFF2070A;
-        Mon, 27 Jul 2020 14:18:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C65322250E;
+        Mon, 27 Jul 2020 14:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859495;
-        bh=n3RbqFT8KAWFA1dTxPYGZH156V8HwXIVPBz/LrIGyoE=;
+        s=default; t=1595859493;
+        bh=yDL8Vv8k1NbW6bGeTuxpjBDJNb81nTSEttoBN0jtCZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gg4JZRcEcHhiXEhEP07f5Ti/HYj+zqK7OTIQzgu33q5kTT4QAPj+lFdIB9lqb4tIv
-         0cjfnXDMYWRsvN6rnTpdBH+klft4eR+3ivtzQwEfzUgj4uwK0cvIStwMRytstX/jUZ
-         qZ/pAvWqZK9smefU7hz+TLBJjARqbL43BbgR+zQg=
+        b=LNcSnm+IOXvgTEjDbV5yhQRgbZuknQVvHUd/y4NMf40mN+FB1mDc109ZPMmAjY/og
+         xAkupxGRs68Bi3RcZHf7cf5wkgUsZ+aVJXn2U1i0RuGd1JAGGCxFOEbQtc0LdiS7gh
+         Gyp2/hPzUmGFHd9Ml3mNlkgDgI7+xVbk5GzeMSKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot <syzbot+1068f09c44d151250c33@syzkaller.appspotmail.com>,
-        syzbot <syzbot+e5344baa319c9a96edec@syzkaller.appspotmail.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Michal Hocko <mhocko@suse.com>, Todd Kjos <tkjos@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 5.4 104/138] binder: Dont use mmput() from shrinker function.
-Date:   Mon, 27 Jul 2020 16:04:59 +0200
-Message-Id: <20200727134930.671211807@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Anglin <dave.anglin@bell.net>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 5.4 130/138] parisc: Add atomic64_set_release() define to avoid CPU soft lockups
+Date:   Mon, 27 Jul 2020 16:05:25 +0200
+Message-Id: <20200727134931.925012885@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -63,46 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+From: John David Anglin <dave.anglin@bell.net>
 
-commit f867c771f98891841c217fa8459244ed0dd28921 upstream.
+commit be6577af0cef934ccb036445314072e8cb9217b9 upstream.
 
-syzbot is reporting that mmput() from shrinker function has a risk of
-deadlock [1], for delayed_uprobe_add() from update_ref_ctr() calls
-kzalloc(GFP_KERNEL) with delayed_uprobe_lock held, and
-uprobe_clear_state() from __mmput() also holds delayed_uprobe_lock.
+Stalls are quite frequent with recent kernels. I enabled
+CONFIG_SOFTLOCKUP_DETECTOR and I caught the following stall:
 
-Commit a1b2289cef92ef0e ("android: binder: drop lru lock in isolate
-callback") replaced mmput() with mmput_async() in order to avoid sleeping
-with spinlock held. But this patch replaces mmput() with mmput_async() in
-order not to start __mmput() from shrinker context.
+watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [cc1:22803]
+CPU: 0 PID: 22803 Comm: cc1 Not tainted 5.6.17+ #3
+Hardware name: 9000/800/rp3440
+ IAOQ[0]: d_alloc_parallel+0x384/0x688
+ IAOQ[1]: d_alloc_parallel+0x388/0x688
+ RP(r2): d_alloc_parallel+0x134/0x688
+Backtrace:
+ [<000000004036974c>] __lookup_slow+0xa4/0x200
+ [<0000000040369fc8>] walk_component+0x288/0x458
+ [<000000004036a9a0>] path_lookupat+0x88/0x198
+ [<000000004036e748>] filename_lookup+0xa0/0x168
+ [<000000004036e95c>] user_path_at_empty+0x64/0x80
+ [<000000004035d93c>] vfs_statx+0x104/0x158
+ [<000000004035dfcc>] __do_sys_lstat64+0x44/0x80
+ [<000000004035e5a0>] sys_lstat64+0x20/0x38
+ [<0000000040180054>] syscall_exit+0x0/0x14
 
-[1] https://syzkaller.appspot.com/bug?id=bc9e7303f537c41b2b0cc2dfcea3fc42964c2d45
+The code was stuck in this loop in d_alloc_parallel:
 
-Reported-by: syzbot <syzbot+1068f09c44d151250c33@syzkaller.appspotmail.com>
-Reported-by: syzbot <syzbot+e5344baa319c9a96edec@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reviewed-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Todd Kjos <tkjos@google.com>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/4ba9adb2-43f5-2de0-22de-f6075c1fab50@i-love.sakura.ne.jp
+    4037d414:   0e 00 10 dc     ldd 0(r16),ret0
+    4037d418:   c7 fc 5f ed     bb,< ret0,1f,4037d414 <d_alloc_parallel+0x384>
+    4037d41c:   08 00 02 40     nop
+
+This is the inner loop of bit_spin_lock which is called by hlist_bl_unlock in
+d_alloc_parallel:
+
+static inline void bit_spin_lock(int bitnum, unsigned long *addr)
+{
+        /*
+         * Assuming the lock is uncontended, this never enters
+         * the body of the outer loop. If it is contended, then
+         * within the inner loop a non-atomic test is used to
+         * busywait with less bus contention for a good time to
+         * attempt to acquire the lock bit.
+         */
+        preempt_disable();
+#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
+        while (unlikely(test_and_set_bit_lock(bitnum, addr))) {
+                preempt_enable();
+                do {
+                        cpu_relax();
+                } while (test_bit(bitnum, addr));
+                preempt_disable();
+        }
+#endif
+        __acquire(bitlock);
+}
+
+After consideration, I realized that we must be losing bit unlocks.
+Then, I noticed that we missed defining atomic64_set_release().
+Adding this define fixes the stalls in bit operations.
+
+Signed-off-by: Dave Anglin <dave.anglin@bell.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/android/binder_alloc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/parisc/include/asm/atomic.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -948,7 +948,7 @@ enum lru_status binder_alloc_free_page(s
- 		trace_binder_unmap_user_end(alloc, index);
- 	}
- 	up_read(&mm->mmap_sem);
--	mmput(mm);
-+	mmput_async(mm);
+--- a/arch/parisc/include/asm/atomic.h
++++ b/arch/parisc/include/asm/atomic.h
+@@ -212,6 +212,8 @@ atomic64_set(atomic64_t *v, s64 i)
+ 	_atomic_spin_unlock_irqrestore(v, flags);
+ }
  
- 	trace_binder_unmap_kernel_start(alloc, index);
- 
++#define atomic64_set_release(v, i)	atomic64_set((v), (i))
++
+ static __inline__ s64
+ atomic64_read(const atomic64_t *v)
+ {
 
 
