@@ -2,53 +2,51 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00471C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5C7C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2F1F20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8FD2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859229;
-	bh=eAee0Yhy+tSpMqQhl+nq7bZftpMdrjnGQy79r86fn+g=;
+	s=default; t=1595859231;
+	bh=PyKItyZXu5h72rWrRNxdEeI4VDXcixHmLh+6GmxK78Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ul6AYkK6tsqpTWFRRMhBD9yq1bL6nuJ4atSQmheRp92UKD9t3ETtfm5nSw5ta8hrV
-	 tscMD287sfh23NVyAfcyWpvo5K2eVXSJ3KEPwYK1TyUey8KibYb+Ix6seeqZp4Kjv3
-	 yIabLqGm5tEPVS7NoEuAONrgNlprEksWfz082tzg=
+	b=nLo7IAZ6PisNt8yKA8VLr9o4DdHbe9FZZ3WKBRio4Ee37YNTUGYNQpzugwnb0E2St
+	 msuyIWO3ZOMkxO5s8VHDgNM/sO6vulShDGSXeb5kG5aOza168E73oxpaIb3WluTywo
+	 lqdVwh1B8KRbvTTY2DdtkP/sdnfZkqCLD2yOuzL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730423AbgG0ONs (ORCPT
+        id S1730431AbgG0ONu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:13:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38814 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:13:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730400AbgG0ONl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:13:41 -0400
+        id S1730418AbgG0ONq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:13:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11BE62073E;
-        Mon, 27 Jul 2020 14:13:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4F062073E;
+        Mon, 27 Jul 2020 14:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859220;
-        bh=eAee0Yhy+tSpMqQhl+nq7bZftpMdrjnGQy79r86fn+g=;
+        s=default; t=1595859226;
+        bh=PyKItyZXu5h72rWrRNxdEeI4VDXcixHmLh+6GmxK78Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GdJQTsYiXWRKvs25wTfwuh2tSTvq3rr5Kq9YaTu7XmnCPu27g4XK9691kHdNGJZwN
-         SVbejhBXOLqj7B8RzY4DUMyNyKHPYOUmJ50uZ/Kd2vC3EGDdSf5HY4QF3b/Ed+dvyz
-         1c1KtKkZ4pBKCTnaj5AcptWN1bkcCjtl6zUyMSLQ=
+        b=bPlOTdBg4/iy5+rKQZY0reTL0xS+kwrE8IODXpGav9iuk4yuWLTzeOac6BPY1w+Pp
+         yJfA51tL7B3Yfnvuk20TL+yC2Fh8EjSH0rRjkxSxkwJZTzrUpAybdO/UTDlNXqmr5D
+         QY1y1zyenAPsR1cX51Zve8/6fAa35sF8zslgROWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 024/138] dm mpath: pass IO start time to path selector
-Date:   Mon, 27 Jul 2020 16:03:39 +0200
-Message-Id: <20200727134926.568755096@linuxfoundation.org>
+        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.4 026/138] SUNRPC reverting d03727b248d0 ("NFSv4 fix CLOSE not waiting for direct IO compeletion")
+Date:   Mon, 27 Jul 2020 16:03:41 +0200
+Message-Id: <20200727134926.682454498@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -61,134 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabriel Krisman Bertazi <krisman@collabora.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-[ Upstream commit 087615bf3acdafd0ba7c7c9ed5286e7b7c80fe1b ]
+commit 65caafd0d2145d1dd02072c4ced540624daeab40 upstream.
 
-The HST path selector needs this information to perform path
-prediction. For request-based mpath, struct request's io_start_time_ns
-is used, while for bio-based, use the start_time stored in dm_io.
+Reverting commit d03727b248d0 "NFSv4 fix CLOSE not waiting for
+direct IO compeletion". This patch made it so that fput() by calling
+inode_dio_done() in nfs_file_release() would wait uninterruptably
+for any outstanding directIO to the file (but that wait on IO should
+be killable).
 
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The problem the patch was also trying to address was REMOVE returning
+ERR_ACCESS because the file is still opened, is supposed to be resolved
+by server returning ERR_FILE_OPEN and not ERR_ACCESS.
+
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/md/dm-mpath.c         | 9 ++++++---
- drivers/md/dm-path-selector.h | 2 +-
- drivers/md/dm-queue-length.c  | 2 +-
- drivers/md/dm-service-time.c  | 2 +-
- drivers/md/dm.c               | 9 +++++++++
- include/linux/device-mapper.h | 2 ++
- 6 files changed, 20 insertions(+), 6 deletions(-)
+ fs/nfs/direct.c |   13 ++++---------
+ fs/nfs/file.c   |    1 -
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/md/dm-mpath.c b/drivers/md/dm-mpath.c
-index f2de4c73cc8fa..d7ebed50895f0 100644
---- a/drivers/md/dm-mpath.c
-+++ b/drivers/md/dm-mpath.c
-@@ -558,7 +558,8 @@ static void multipath_release_clone(struct request *clone,
- 		if (pgpath && pgpath->pg->ps.type->end_io)
- 			pgpath->pg->ps.type->end_io(&pgpath->pg->ps,
- 						    &pgpath->path,
--						    mpio->nr_bytes);
-+						    mpio->nr_bytes,
-+						    clone->io_start_time_ns);
- 	}
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -367,6 +367,8 @@ static void nfs_direct_complete(struct n
+ {
+ 	struct inode *inode = dreq->inode;
  
- 	blk_put_request(clone);
-@@ -1560,7 +1561,8 @@ static int multipath_end_io(struct dm_target *ti, struct request *clone,
- 		struct path_selector *ps = &pgpath->pg->ps;
++	inode_dio_end(inode);
++
+ 	if (dreq->iocb) {
+ 		long res = (long) dreq->error;
+ 		if (dreq->count != 0) {
+@@ -378,10 +380,7 @@ static void nfs_direct_complete(struct n
  
- 		if (ps->type->end_io)
--			ps->type->end_io(ps, &pgpath->path, mpio->nr_bytes);
-+			ps->type->end_io(ps, &pgpath->path, mpio->nr_bytes,
-+					 clone->io_start_time_ns);
- 	}
+ 	complete(&dreq->completion);
  
- 	return r;
-@@ -1604,7 +1606,8 @@ static int multipath_end_io_bio(struct dm_target *ti, struct bio *clone,
- 		struct path_selector *ps = &pgpath->pg->ps;
- 
- 		if (ps->type->end_io)
--			ps->type->end_io(ps, &pgpath->path, mpio->nr_bytes);
-+			ps->type->end_io(ps, &pgpath->path, mpio->nr_bytes,
-+					 dm_start_time_ns_from_clone(clone));
- 	}
- 
- 	return r;
-diff --git a/drivers/md/dm-path-selector.h b/drivers/md/dm-path-selector.h
-index b6eb5365b1a46..c47bc0e20275b 100644
---- a/drivers/md/dm-path-selector.h
-+++ b/drivers/md/dm-path-selector.h
-@@ -74,7 +74,7 @@ struct path_selector_type {
- 	int (*start_io) (struct path_selector *ps, struct dm_path *path,
- 			 size_t nr_bytes);
- 	int (*end_io) (struct path_selector *ps, struct dm_path *path,
--		       size_t nr_bytes);
-+		       size_t nr_bytes, u64 start_time);
- };
- 
- /* Register a path selector */
-diff --git a/drivers/md/dm-queue-length.c b/drivers/md/dm-queue-length.c
-index 969c4f1a36336..5fd018d184187 100644
---- a/drivers/md/dm-queue-length.c
-+++ b/drivers/md/dm-queue-length.c
-@@ -227,7 +227,7 @@ static int ql_start_io(struct path_selector *ps, struct dm_path *path,
+-	igrab(inode);
+ 	nfs_direct_req_release(dreq);
+-	inode_dio_end(inode);
+-	iput(inode);
  }
  
- static int ql_end_io(struct path_selector *ps, struct dm_path *path,
--		     size_t nr_bytes)
-+		     size_t nr_bytes, u64 start_time)
- {
- 	struct path_info *pi = path->pscontext;
+ static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
+@@ -511,10 +510,8 @@ static ssize_t nfs_direct_read_schedule_
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		igrab(inode);
+-		nfs_direct_req_release(dreq);
+ 		inode_dio_end(inode);
+-		iput(inode);
++		nfs_direct_req_release(dreq);
+ 		return result < 0 ? result : -EIO;
+ 	}
  
-diff --git a/drivers/md/dm-service-time.c b/drivers/md/dm-service-time.c
-index f006a9005593b..9cfda665e9ebd 100644
---- a/drivers/md/dm-service-time.c
-+++ b/drivers/md/dm-service-time.c
-@@ -309,7 +309,7 @@ static int st_start_io(struct path_selector *ps, struct dm_path *path,
+@@ -926,10 +923,8 @@ static ssize_t nfs_direct_write_schedule
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		igrab(inode);
+-		nfs_direct_req_release(dreq);
+ 		inode_dio_end(inode);
+-		iput(inode);
++		nfs_direct_req_release(dreq);
+ 		return result < 0 ? result : -EIO;
+ 	}
+ 
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -83,7 +83,6 @@ nfs_file_release(struct inode *inode, st
+ 	dprintk("NFS: release(%pD2)\n", filp);
+ 
+ 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
+-	inode_dio_wait(inode);
+ 	nfs_file_clear_open_context(filp);
+ 	return 0;
  }
- 
- static int st_end_io(struct path_selector *ps, struct dm_path *path,
--		     size_t nr_bytes)
-+		     size_t nr_bytes, u64 start_time)
- {
- 	struct path_info *pi = path->pscontext;
- 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 3cf5b354568e5..1e7ad2ad48295 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -649,6 +649,15 @@ static bool md_in_flight(struct mapped_device *md)
- 		return md_in_flight_bios(md);
- }
- 
-+u64 dm_start_time_ns_from_clone(struct bio *bio)
-+{
-+	struct dm_target_io *tio = container_of(bio, struct dm_target_io, clone);
-+	struct dm_io *io = tio->io;
-+
-+	return jiffies_to_nsecs(io->start_time);
-+}
-+EXPORT_SYMBOL_GPL(dm_start_time_ns_from_clone);
-+
- static void start_io_acct(struct dm_io *io)
- {
- 	struct mapped_device *md = io->md;
-diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
-index 399ad86323568..ec19222f67666 100644
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -328,6 +328,8 @@ void *dm_per_bio_data(struct bio *bio, size_t data_size);
- struct bio *dm_bio_from_per_bio_data(void *data, size_t data_size);
- unsigned dm_bio_get_target_bio_nr(const struct bio *bio);
- 
-+u64 dm_start_time_ns_from_clone(struct bio *bio);
-+
- int dm_register_target(struct target_type *t);
- void dm_unregister_target(struct target_type *t);
- 
--- 
-2.25.1
-
 
 
