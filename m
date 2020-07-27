@@ -2,114 +2,121 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85255C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DDA120714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08BFA20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:12:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hcPGk7dn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgG0HLK (ORCPT
+        id S1726953AbgG0HMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:11:10 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:50799 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0HLK (ORCPT
+        Mon, 27 Jul 2020 03:12:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgG0HMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:11:10 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N4h7p-1kyCr62TdH-011hog; Mon, 27 Jul 2020 09:11:07 +0200
-Received: by mail-qk1-f182.google.com with SMTP id u64so14355116qka.12;
-        Mon, 27 Jul 2020 00:11:07 -0700 (PDT)
-X-Gm-Message-State: AOAM531OSdJyh3z8+ghcN9eoMwnQL5ebKU0+xOc2zmyA/5ri9anUQq4Q
-        Ut1RRd6tvjNX2x1IolAjyHi7RKwuzKQBc8nCC74=
-X-Google-Smtp-Source: ABdhPJy3om/b5yfbL78HDLH/rnzkke+/U+UGsNkbziTiST5/6yFHt5avoAQwzc+RR0buVr7DFkGVHITGn7RcGzdsP58=
-X-Received: by 2002:a37:9004:: with SMTP id s4mr21325446qkd.286.1595833866359;
- Mon, 27 Jul 2020 00:11:06 -0700 (PDT)
+        Mon, 27 Jul 2020 03:12:05 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7ACFC0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:12:05 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id l2so2225091pff.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:12:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4bixwfwct2k8xSCZVPHvs9nu1u1j6pLSKhgka678QeM=;
+        b=hcPGk7dnyilX0AwUhmhxJdzZGdROIYNW8ufkHuNRw9P5LZunYCakJ74TtFIbMbDRjU
+         qUzuVq8cVYBVhlCAjlatpMqAaPDt4WtupA4YvsaDqt9DblWR+nWx4IS8TARIQCnocYLh
+         LUc5pGqAptJQDI0ZdSqfjCPXppCduI337dZRIDtF81hHOaSxGp8JRHnSXAROeqTwKH/1
+         TuTbGRptSKj72gpKX657DYiY7ZxVrtE554g3ysSNizv4qPdDA4qssvFogX8Y0rEhOFns
+         dxOGXa85TPuRlpWEtd+Gi4HnKwjVPaj2EfwvhbsH+1yjj7yKbZWBpL7wZy0Qi7JOeyKH
+         3tNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4bixwfwct2k8xSCZVPHvs9nu1u1j6pLSKhgka678QeM=;
+        b=Q5/ZPZMQ4m0QhRPk17mz9l1WJ76Duq4467j2CyVnC0baLjFPys0lQm2iBuBNmNAcRo
+         rd2gM8InivqMTAZT8x/OW/yskrzPLjjZa2rno9XhrPseMfv9oL0hx2lnsS5YXLopqwXb
+         lQNLDopaTnldyCuZqkBBy6pVi2511JcMvuqLRc7cJ4RrFHBPrpLU3gFqwNxnQlyQOvvO
+         bdL2ICHIvYiO8gjwzrkL0KsZ8efBEvfxEHmfzga3idRUYHTbyi++bvkz7/jgCxT6hfP9
+         6oaWr3NxMFFCRIynqetIfU6fajptODKDsXMr+8meK/fr0iyWZdPOD7fBzaGmhvNRFDNW
+         LwGQ==
+X-Gm-Message-State: AOAM532PlU4J3ZtzuNTFqKunpWHW3wOqDRwQtAxDbx65sfl+wubrcA0z
+        qwbbRHoakII/9DV4m/0BVK8=
+X-Google-Smtp-Source: ABdhPJz8+8Dd/vfUGvoRNMOT4vmx8g8yI0bKHPLM+TEPHx52oF2+lplNDDBxAB1GifafTfORuUtniQ==
+X-Received: by 2002:aa7:8d8b:: with SMTP id i11mr19321067pfr.263.1595833925328;
+        Mon, 27 Jul 2020 00:12:05 -0700 (PDT)
+Received: from endurance ([59.95.38.168])
+        by smtp.gmail.com with ESMTPSA id z11sm14152867pfj.104.2020.07.27.00.12.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 00:12:04 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 12:41:59 +0530
+From:   Nachiket Naganure <nachiketun8@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     apw@canonical.com, lukas.bulwahn@gmail.com,
+        skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] checkpatch: disable commit log length check warning for
+ signature tag
+Message-ID: <20200727071159.GA595854@endurance>
+References: <20200727055458.559558-1-nachiketun8@gmail.com>
+ <66bbaec73d8f69541535db5390c0f12b304c0467.camel@perches.com>
 MIME-Version: 1.0
-References: <20200727025323.26712-1-tianjia.zhang@linux.alibaba.com>
-In-Reply-To: <20200727025323.26712-1-tianjia.zhang@linux.alibaba.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 09:10:50 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2neQUP2marbRUxpSZE4OTJtf97JKSK5-LC6EzH8rRHDQ@mail.gmail.com>
-Message-ID: <CAK8P3a2neQUP2marbRUxpSZE4OTJtf97JKSK5-LC6EzH8rRHDQ@mail.gmail.com>
-Subject: Re: [PATCH] tpm: Fix the description error of the help information in Kconfig
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        gregkh <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christophe Ricard <christophe.ricard@gmail.com>,
-        Peter Huewe <peter.huewe@infineon.com>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:8Z5K81F9baE7B2UaBG7GLmf7c7eet4NNXGiJprqd+LoI1Ak6v7f
- N3woNLGYBGzhnzUxbrq31ftzIgs9tDE+CEmNTha3xdo5bRSWzA6cRN0loJIuhnFcivk633b
- 333pTz8tK9+eML8uu9LTYU7BuqCW00DJ/h64Y8wSmBr85k0hJX0C+/AoQn3nBfUPROuZyPA
- Oo8uSWdTLOOhzoYw2vjdQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3Wct88ulyn8=:KvaP+lz/86jDuuHMJ/yfXP
- /ELuXiqhtIm4OTTc2o+4wdhiXccCq3VCHZ37uaNyCEXy/fcG3g+3vPVdETIFApsAQ9iExLblS
- cLYkz0UQn2lU5rz5UtYXgSEQa/5xjFF4RioilFWaLoNxX+HJPHS8Ypv3FhYjO0a/h84HJeKw7
- 3YDbsRaiABB+zBkAcEZKcrJ2H6ywdRecH288pgt/g4MvN6tso9oKvGjBwUlBXK4w6qygFN6Hy
- kKfYN5+GotKLb41bHI+q7IyPR1VPhnXOP09uaW5LDkUfU9TdC3lF1oVzpbUNfXIXNYpv0fu/8
- 176F/g7ELCg3rECy2O+6s72mDftUNSlGYjI6rxTYlOFaiZEN/y17KwseNvNqfP2tzbXTGN6MP
- tzSEfnhXs7H4qh84Rm66xk0GZNK5ArXWd7qOoNGfGs3NZvPsMBnxD+jhzkX5tNrtDvo1CfHyN
- 79c7xy/e7puo/zy/kV4rXNTw5/Np04A4y1UrsojToSpiiYrE8K/M+6POtEIMQgXSMpbZ7CFrB
- wVvJY6+0w8LOtCxd2VoU3A3jMs/2Og5bPWRLypsS+XaiBw3uZgaayPB//6ZgrIjaCy+whDU7H
- ga52W04iYK8dMR1xLJQbH/UIUWRTgsakI7apDlvpHCxxNpguLx4jDyJ8Pd7exHVryasa5K7xc
- Vgl6qjbp78K2dXuaZHwIp2iTlAto4TJg9kf+817vugcGWhrSi5tJeYl/ET3ZDwFjAaVQHAMDl
- iNMqwy9jOWHI+tueEfNLV7yLT5vwx3MJ3Vc1QLf4SEV1MhfMnkaVnMwwT1Ya2kkiteuvOdck1
- R1rVF4U+TD4g3EKBWL5JMVjd2wPpm6nUwqomONkkLNKrz05/zvIXi2OWGe0TbxYVckc+YQ4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <66bbaec73d8f69541535db5390c0f12b304c0467.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 4:54 AM Tianjia Zhang
-<tianjia.zhang@linux.alibaba.com> wrote:
->
-> Obviously, the TPM version number in the help message is wrong, which
-> will cause confusion. This patch fixes it.
+On Sun, Jul 26, 2020 at 11:14:42PM -0700, Joe Perches wrote:
+> On Mon, 2020-07-27 at 11:24 +0530, Nachiket Naganure wrote:
+> > Disable commit log length check in case of signature tag. If the commit
+> > log line has valid signature tags such as "Reported-and-tested-by" with
+> > more than 75 characters, suppress the long length warning.
+> > 
+> > For instance in commit ac854131d984 ("USB: core: Fix misleading driver bug
+> > report"), the corresponding patch contains a "Reported by" tag line which
+> > exceeds 75 chars. And there is no valid way to shorten the length.
+> > 
+> > Signed-off-by: Nachiket Naganure <nachiketun8@gmail.com>
+> > ---
+> >  scripts/checkpatch.pl | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index 197436b20288..46237e9e0550 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -2806,6 +2806,8 @@ sub process {
+> >  					# filename then :
+> >  		      $line =~ /^\s*(?:Fixes:|Link:)/i ||
+> >  					# A Fixes: or Link: line
+> > +		      $line =~ /$signature_tags/ ||
+> > +					# Check for signature_tags
+> >  		      $commit_log_possible_stack_dump)) {
+> >  			WARN("COMMIT_LOG_LONG_LINE",
+> >  			     "Possible unwrapped commit description (prefer a maximum 75 chars per line)\n" . $herecurr);
+> 
+> OK, but the test should be:
+> 
+> 		      $line =~ /^\s*$signature_tags/ ||
+> 
+> so the line has to start with a signature and
+> it won't match on signature tags in the middle
+> of other content on the same line.
+> 
+> 
+But the suggested won't work in case of merged signatures.
+Such as "Reported-and-tested-by: user@email.com"
 
-How is this "obvious"? I tried finding the specification and could not
-see anything
-to back up TIS 1.3 being only supported with TPM 1.3, or the existence of a
-TPM 1.3 specification at all.
-
-Please consider that not everyone reading this patch description is deeply
-familiar with the details and explain exactly what the mistake is.
-
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-
-In a bug fix, try to always add a 'FIxes' tag such as 'Fixes: 0edbfea537d1
-("tpm/tpm_tis_spi: Add support for spi phy")', and Cc everyone that was
-involved in the original patch that introduced a bug so they can Ack or
-Nak it.
-
-      Arnd
-
->  drivers/char/tpm/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-> index 58b4c573d176..8eedb3e704f3 100644
-> --- a/drivers/char/tpm/Kconfig
-> +++ b/drivers/char/tpm/Kconfig
-> @@ -62,7 +62,7 @@ config TCG_TIS_SPI
->         help
->           If you have a TPM security chip which is connected to a regular,
->           non-tcg SPI master (i.e. most embedded platforms) that is compliant with the
-> -         TCG TIS 1.3 TPM specification (TPM1.2) or the TCG PTP FIFO
-> +         TCG TIS 1.3 TPM specification (TPM1.3) or the TCG PTP FIFO
->           specification (TPM2.0) say Yes and it will be accessible from
->           within Linux. To compile this driver as a module, choose  M here;
->           the module will be called tpm_tis_spi.
-> --
-> 2.17.1
->
