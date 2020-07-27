@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B1C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45239C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2A952083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249CB2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858890;
-	bh=8gpnCQXxrzuCe30fU4MKX30rljl7ytsstjVxo47e0UA=;
+	s=default; t=1595858895;
+	bh=1krdMMCgu2EhWpI5PXJAaTOqyzYFC6r2SVugadVwagU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2bSC2VBH5GvJVxz3MWFHKywaIQLqsznrlIjJU2+YMpBSHt480dEJYKeZEjGD4BkpV
-	 g6kmk3prpHXHV1JOVt3nRlHky046yfBJAA2cjo3gXnQoRjHAhTnTXckMHG8Nx5+7Vc
-	 qPJ335VUExx96Cz6TR8aNeCebF6/oovwqC61A9cw=
+	b=HqgMF94VmrTFItMrWXVuS71dnefqa89m9dD7ilFxkBE/AtpvdZ0wayV34uQKI6dqm
+	 02Qr5rQ9c2qFjdOYMzRtaNuIZqhdM7dCjgSUxs+cBdut+p4lJU6nNMpwxR5Qwpyi6n
+	 W7TLUhVVUiU7qTW6C43Qb5vFYZcmymj14tuh0iJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgG0OIJ (ORCPT
+        id S1728775AbgG0OIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:08:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57282 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:08:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729367AbgG0OIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:08:06 -0400
+        id S1729375AbgG0OII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:08:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1892073E;
-        Mon, 27 Jul 2020 14:08:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D53A52073E;
+        Mon, 27 Jul 2020 14:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858885;
-        bh=8gpnCQXxrzuCe30fU4MKX30rljl7ytsstjVxo47e0UA=;
+        s=default; t=1595858888;
+        bh=1krdMMCgu2EhWpI5PXJAaTOqyzYFC6r2SVugadVwagU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0SPeffcUDa/gPWNhbThxnuGmHwmgKyx4x3tltR4+MUOvwxQI9ErlQVFkIjCTrG44o
-         SXmoz25E63h62s5hUF+1TIdVwqOUdTvXOdQkP3XlsLJ12X1+1IExZP3vabeuWMbeeI
-         eIRBkMwgEhiwzh85kz9IWimx7zk8mEsV8ucbeXro=
+        b=zNP2vazWLfFsXwvPq7mp/pSW5f6LQfViFnB9MONEpUov5VbuL20JO0Hr3YvvgSZ6Y
+         eM7W5A1og5J1F58O0H1FENE8pwWpiaNMepDdkT8BDh/ZG2oPPeye2nyiOkd/o4Lr80
+         WR7gMgrkK8Lkw7SmupbSid/zH0KELURkzsD0ukXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Forest Crossman <cyrozap@gmail.com>
-Subject: [PATCH 4.14 48/64] usb: xhci: Fix ASM2142/ASM3142 DMA addressing
-Date:   Mon, 27 Jul 2020 16:04:27 +0200
-Message-Id: <20200727134913.561486112@linuxfoundation.org>
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
+        Patrick Fernie <patrick.fernie@gmail.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Subject: [PATCH 4.14 49/64] Revert "cifs: Fix the target file was deleted when rename failed."
+Date:   Mon, 27 Jul 2020 16:04:28 +0200
+Message-Id: <20200727134913.606900997@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -58,35 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Forest Crossman <cyrozap@gmail.com>
+From: Steve French <stfrench@microsoft.com>
 
-commit dbb0897e805f2ab1b8bc358f6c3d878a376b8897 upstream.
+commit 0e6705182d4e1b77248a93470d6d7b3013d59b30 upstream.
 
-The ASM2142/ASM3142 (same PCI IDs) does not support full 64-bit DMA
-addresses, which can cause silent memory corruption or IOMMU errors on
-platforms that use the upper bits. Add the XHCI_NO_64BIT_SUPPORT quirk
-to fix this issue.
+This reverts commit 9ffad9263b467efd8f8dc7ae1941a0a655a2bab2.
 
-Signed-off-by: Forest Crossman <cyrozap@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200717112734.328432-1-cyrozap@gmail.com
+Upon additional testing with older servers, it was found that
+the original commit introduced a regression when using the old SMB1
+dialect and rsyncing over an existing file.
+
+The patch will need to be respun to address this, likely including
+a larger refactoring of the SMB1 and SMB3 rename code paths to make
+it less confusing and also to address some additional rename error
+cases that SMB3 may be able to workaround.
+
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reported-by: Patrick Fernie <patrick.fernie@gmail.com>
+CC: Stable <stable@vger.kernel.org>
+Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
+Acked-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-pci.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/cifs/inode.c |   10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -235,6 +235,9 @@ static void xhci_pci_quirks(struct devic
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
- 			pdev->device == 0x1142)
- 		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
-+	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
-+			pdev->device == 0x2142)
-+		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
+--- a/fs/cifs/inode.c
++++ b/fs/cifs/inode.c
+@@ -1778,7 +1778,6 @@ cifs_rename2(struct inode *source_dir, s
+ 	FILE_UNIX_BASIC_INFO *info_buf_target;
+ 	unsigned int xid;
+ 	int rc, tmprc;
+-	bool new_target = d_really_is_negative(target_dentry);
  
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
- 		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
+ 	if (flags & ~RENAME_NOREPLACE)
+ 		return -EINVAL;
+@@ -1855,13 +1854,8 @@ cifs_rename2(struct inode *source_dir, s
+ 	 */
+ 
+ unlink_target:
+-	/*
+-	 * If the target dentry was created during the rename, try
+-	 * unlinking it if it's not negative
+-	 */
+-	if (new_target &&
+-	    d_really_is_positive(target_dentry) &&
+-	    (rc == -EACCES || rc == -EEXIST)) {
++	/* Try unlinking the target dentry if it's not negative */
++	if (d_really_is_positive(target_dentry) && (rc == -EACCES || rc == -EEXIST)) {
+ 		if (d_is_dir(target_dentry))
+ 			tmprc = cifs_rmdir(target_dir, target_dentry);
+ 		else
 
 
