@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA378C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85A4F2173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924F92078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859312;
-	bh=uyV1EY6BqY+Ry98Gg2lQg0RI0L86Z4p/Qz5iphu125s=;
+	s=default; t=1595859314;
+	bh=jSJn4G2I3ZBk2qmVanMQP0AK9waX/QaoJftNVEYKmN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KPWKPZoxq/TdSYapCjCxq71KrOt23k7jwcKVDw9n5ZDKTlGX3f+HnUTRpOTRBQfLg
-	 9yDhra6C0//f01FuFbCN4phnnTJkyX9vc0hA3YweNtjoiCw+q4J8N/NZpGiJs/nYf5
-	 7CpliLiLwvX2qMvW5z4srvOyg+oZCJyWyw719uUI=
+	b=PCHf/nLcRfoah5LzH+w1pDqiKd0qXyJP9V9MwDLUq/sba82fKQ+jImkRm9+P2QkTO
+	 rNkL4h7ZnkBqHaGVIA8an/oD5aPnQDtSWLDwf6MWWcy4nvm+tK1NtsTjUXXxj0L01l
+	 mk2Nvhdo2j5/7sTIr7WjJRvyIwpyuoWCTxIyF/1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbgG0OPK (ORCPT
+        id S1729501AbgG0OPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:15:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41248 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:15:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730657AbgG0OPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:15:08 -0400
+        id S1730662AbgG0OPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:15:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDECB2073E;
-        Mon, 27 Jul 2020 14:15:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8F382078E;
+        Mon, 27 Jul 2020 14:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859307;
-        bh=uyV1EY6BqY+Ry98Gg2lQg0RI0L86Z4p/Qz5iphu125s=;
+        s=default; t=1595859310;
+        bh=jSJn4G2I3ZBk2qmVanMQP0AK9waX/QaoJftNVEYKmN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GS9O6mEeZeJAd4XMPE8CKITAODDRQO9qKu+bW4+e3isg9WrAdDKtcq6lkqtaLk7FA
-         B3UjjvfvXWzllaXHMGJywC+Aro9Kt75vEFpztwz4noKfjlwt5eet3fWWPBGOJObgJV
-         pAuyT0RPaDAt4HNEovPI8viznmS8nG270kgXCWtk=
+        b=KhmlgiUGwz2YjFQm/YSMUghdND5AbtXYMNcBh3qZ/Y0T64pYXUwLqMXS/hxol100G
+         c27LnId9w17cE1hnvyBuP817xrVPJysxAHCCI3/X5re2BS+WEMd5KbiQPRkGuPtGz5
+         7H3zIQpE/eE2L5LPCPkZyxiA2w5MsTuHUNDliVSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Michal Kalderon <michal.kalderon@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 057/138] qed: suppress "dont support RoCE & iWARP" flooding on HW init
-Date:   Mon, 27 Jul 2020 16:04:12 +0200
-Message-Id: <20200727134928.260333603@linuxfoundation.org>
+Subject: [PATCH 5.4 058/138] qed: suppress false-positives interrupt error messages on HW init
+Date:   Mon, 27 Jul 2020 16:04:13 +0200
+Message-Id: <20200727134928.310793819@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -64,57 +64,144 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexander Lobakin <alobakin@marvell.com>
 
-[ Upstream commit 1ea999039fe7c7953da2fbb7ca7c3ef00064d328 ]
+[ Upstream commit eb61c2d69903e977ffa2b80b1da9d1f758cf228d ]
 
-Change the verbosity of the "don't support RoCE & iWARP simultaneously"
-warning to debug level to stop flooding on driver/hardware initialization:
+It was found that qed_pglueb_rbc_attn_handler() can produce a lot of
+false-positive error detections on driver load/reload (especially after
+crashes/recoveries) and spam the kernel log:
 
-[    4.783230] qede 01:00.00: Storm FW 8.37.7.0, Management FW 8.52.9.0
-[MBI 15.10.6] [eth0]
-[    4.810020] [qed_rdma_set_pf_params:2076()]Current day drivers don't
-support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
-[    4.861186] qede 01:00.01: Storm FW 8.37.7.0, Management FW 8.52.9.0
-[MBI 15.10.6] [eth1]
-[    4.893311] [qed_rdma_set_pf_params:2076()]Current day drivers don't
-support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
-[    5.181713] qede a1:00.00: Storm FW 8.37.7.0, Management FW 8.52.9.0
-[MBI 15.10.6] [eth2]
-[    5.224740] [qed_rdma_set_pf_params:2076()]Current day drivers don't
-support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
-[    5.276449] qede a1:00.01: Storm FW 8.37.7.0, Management FW 8.52.9.0
-[MBI 15.10.6] [eth3]
-[    5.318671] [qed_rdma_set_pf_params:2076()]Current day drivers don't
-support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
-[    5.369548] qede a1:00.02: Storm FW 8.37.7.0, Management FW 8.52.9.0
-[MBI 15.10.6] [eth4]
-[    5.411645] [qed_rdma_set_pf_params:2076()]Current day drivers don't
-support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
+[    4.958275] [qed_pglueb_rbc_attn_handler:324()]ICPL error - 00d00ff0
+[ 2079.146764] [qed_pglueb_rbc_attn_handler:324()]ICPL error - 00d80ff0
+[ 2116.374631] [qed_pglueb_rbc_attn_handler:324()]ICPL error - 00d80ff0
+[ 2135.250564] [qed_pglueb_rbc_attn_handler:324()]ICPL error - 00d80ff0
+[...]
 
-Fixes: e0a8f9de16fc ("qed: Add iWARP enablement support")
+Reduce the logging level of two false-positive prone error messages from
+notice to verbose on initialization (only) to not mix it with real error
+attentions while debugging.
+
+Fixes: 666db4862f2d ("qed: Revise load sequence to avoid PCI errors")
 Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
 Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_cxt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_dev.c |  2 +-
+ drivers/net/ethernet/qlogic/qed/qed_int.c | 50 +++++++++++++----------
+ drivers/net/ethernet/qlogic/qed/qed_int.h |  4 +-
+ 3 files changed, 32 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.c b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-index 1d6dfba0c034d..8ea46b81b7395 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-@@ -2073,8 +2073,8 @@ static void qed_rdma_set_pf_params(struct qed_hwfn *p_hwfn,
- 	num_srqs = min_t(u32, QED_RDMA_MAX_SRQS, p_params->num_srqs);
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+index 638047b937c65..4456ce5325a74 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+@@ -3092,7 +3092,7 @@ int qed_hw_init(struct qed_dev *cdev, struct qed_hw_init_params *p_params)
+ 		}
  
- 	if (p_hwfn->mcp_info->func_info.protocol == QED_PCI_ETH_RDMA) {
+ 		/* Log and clear previous pglue_b errors if such exist */
+-		qed_pglueb_rbc_attn_handler(p_hwfn, p_hwfn->p_main_ptt);
++		qed_pglueb_rbc_attn_handler(p_hwfn, p_hwfn->p_main_ptt, true);
+ 
+ 		/* Enable the PF's internal FID_enable in the PXP */
+ 		rc = qed_pglueb_set_pfid_enable(p_hwfn, p_hwfn->p_main_ptt,
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
+index 9f5113639eaf0..8d106063e9275 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_int.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
+@@ -256,9 +256,10 @@ out:
+ #define PGLUE_ATTENTION_ZLR_VALID		(1 << 25)
+ #define PGLUE_ATTENTION_ILT_VALID		(1 << 23)
+ 
+-int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn,
+-				struct qed_ptt *p_ptt)
++int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++				bool hw_init)
+ {
++	char msg[256];
+ 	u32 tmp;
+ 
+ 	tmp = qed_rd(p_hwfn, p_ptt, PGLUE_B_REG_TX_ERR_WR_DETAILS2);
+@@ -272,22 +273,23 @@ int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn,
+ 		details = qed_rd(p_hwfn, p_ptt,
+ 				 PGLUE_B_REG_TX_ERR_WR_DETAILS);
+ 
 -		DP_NOTICE(p_hwfn,
--			  "Current day drivers don't support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only\n");
-+		DP_VERBOSE(p_hwfn, QED_MSG_SP,
-+			   "Current day drivers don't support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only\n");
- 		p_hwfn->hw_info.personality = QED_PCI_ETH_ROCE;
+-			  "Illegal write by chip to [%08x:%08x] blocked.\n"
+-			  "Details: %08x [PFID %02x, VFID %02x, VF_VALID %02x]\n"
+-			  "Details2 %08x [Was_error %02x BME deassert %02x FID_enable deassert %02x]\n",
+-			  addr_hi, addr_lo, details,
+-			  (u8)GET_FIELD(details, PGLUE_ATTENTION_DETAILS_PFID),
+-			  (u8)GET_FIELD(details, PGLUE_ATTENTION_DETAILS_VFID),
+-			  GET_FIELD(details,
+-				    PGLUE_ATTENTION_DETAILS_VF_VALID) ? 1 : 0,
+-			  tmp,
+-			  GET_FIELD(tmp,
+-				    PGLUE_ATTENTION_DETAILS2_WAS_ERR) ? 1 : 0,
+-			  GET_FIELD(tmp,
+-				    PGLUE_ATTENTION_DETAILS2_BME) ? 1 : 0,
+-			  GET_FIELD(tmp,
+-				    PGLUE_ATTENTION_DETAILS2_FID_EN) ? 1 : 0);
++		snprintf(msg, sizeof(msg),
++			 "Illegal write by chip to [%08x:%08x] blocked.\n"
++			 "Details: %08x [PFID %02x, VFID %02x, VF_VALID %02x]\n"
++			 "Details2 %08x [Was_error %02x BME deassert %02x FID_enable deassert %02x]",
++			 addr_hi, addr_lo, details,
++			 (u8)GET_FIELD(details, PGLUE_ATTENTION_DETAILS_PFID),
++			 (u8)GET_FIELD(details, PGLUE_ATTENTION_DETAILS_VFID),
++			 !!GET_FIELD(details, PGLUE_ATTENTION_DETAILS_VF_VALID),
++			 tmp,
++			 !!GET_FIELD(tmp, PGLUE_ATTENTION_DETAILS2_WAS_ERR),
++			 !!GET_FIELD(tmp, PGLUE_ATTENTION_DETAILS2_BME),
++			 !!GET_FIELD(tmp, PGLUE_ATTENTION_DETAILS2_FID_EN));
++
++		if (hw_init)
++			DP_VERBOSE(p_hwfn, NETIF_MSG_INTR, "%s\n", msg);
++		else
++			DP_NOTICE(p_hwfn, "%s\n", msg);
  	}
  
+ 	tmp = qed_rd(p_hwfn, p_ptt, PGLUE_B_REG_TX_ERR_RD_DETAILS2);
+@@ -320,8 +322,14 @@ int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn,
+ 	}
+ 
+ 	tmp = qed_rd(p_hwfn, p_ptt, PGLUE_B_REG_TX_ERR_WR_DETAILS_ICPL);
+-	if (tmp & PGLUE_ATTENTION_ICPL_VALID)
+-		DP_NOTICE(p_hwfn, "ICPL error - %08x\n", tmp);
++	if (tmp & PGLUE_ATTENTION_ICPL_VALID) {
++		snprintf(msg, sizeof(msg), "ICPL error - %08x", tmp);
++
++		if (hw_init)
++			DP_VERBOSE(p_hwfn, NETIF_MSG_INTR, "%s\n", msg);
++		else
++			DP_NOTICE(p_hwfn, "%s\n", msg);
++	}
+ 
+ 	tmp = qed_rd(p_hwfn, p_ptt, PGLUE_B_REG_MASTER_ZLR_ERR_DETAILS);
+ 	if (tmp & PGLUE_ATTENTION_ZLR_VALID) {
+@@ -360,7 +368,7 @@ int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn,
+ 
+ static int qed_pglueb_rbc_attn_cb(struct qed_hwfn *p_hwfn)
+ {
+-	return qed_pglueb_rbc_attn_handler(p_hwfn, p_hwfn->p_dpc_ptt);
++	return qed_pglueb_rbc_attn_handler(p_hwfn, p_hwfn->p_dpc_ptt, false);
+ }
+ 
+ #define QED_DORQ_ATTENTION_REASON_MASK  (0xfffff)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.h b/drivers/net/ethernet/qlogic/qed/qed_int.h
+index d473b522afc51..ba5cfebf2d0d0 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_int.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_int.h
+@@ -431,7 +431,7 @@ int qed_int_set_timer_res(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
+ 
+ #define QED_MAPPING_MEMORY_SIZE(dev)	(NUM_OF_SBS(dev))
+ 
+-int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn,
+-				struct qed_ptt *p_ptt);
++int qed_pglueb_rbc_attn_handler(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt,
++				bool hw_init);
+ 
+ #endif
 -- 
 2.25.1
 
