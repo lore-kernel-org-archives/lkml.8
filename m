@@ -2,107 +2,198 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879CFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACDF92074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621AC206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:38:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iH5n0MEY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SQNYbubV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730668AbgG0Pgu (ORCPT
+        id S1730797AbgG0PiP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48952 "EHLO
+        Mon, 27 Jul 2020 11:38:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727784AbgG0Pgu (ORCPT
+        with ESMTP id S1729509AbgG0PiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:36:50 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6CF9C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:36:49 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g10so13636186wmc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:36:49 -0700 (PDT)
+        Mon, 27 Jul 2020 11:38:14 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DEE1C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:38:14 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d1so8195110plr.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:38:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9Sxz73y7RgL+u8rtUA8o/y4P1sug9uuvbcujn5qnKbQ=;
-        b=iH5n0MEYtT4YX4vz0+es0cG6ngjgu8JZkgehP9d1Bac8LeJBip7FVVyiY0MVpzYDOa
-         z1+qJnnWCG0bhO/7hP7PJnr4wjg1smeucxRq6DamKSBf/86PS1DS7G/fBV5vQesgnxVN
-         j+E7kKqmYvUW5bOghim2SeKo26bigiIkvcWnKSbqlo8BZDmYM0d6Ia8MgE198BNkNtj0
-         Uxjs1O28nvudo6Ced6APXqNqGP/Y7iJDwYQrZ3iyJE/7VMfE3L2mYpxEmHnz+4MxG2GU
-         FvlYU32xK+jYorluwclaGotK+Tf2ok4aZ4XNNVcRovbVxkqhvKgwDo16A+ytuH7Fp//G
-         oLZQ==
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=NkVbGEZqq2gtUYFFHihdCf9UlSJbj6QF8gPVaF8Bfbo=;
+        b=SQNYbubVmJC7AL7K9qiuOd/Gn3pZrb2Pj6GSZkzj5uiofy/xe8+FFypgWHTLDIlppl
+         JCleeZ9of5qVBsZWWlVx7kXEfl+m3LqjmR2QBW7rfu9QuEuS5xziWEVE6GYrMCSrSs7O
+         kXoF4xAo3teKyO/XcsnRddniMMAbVRMgsTEv33E/v4LDLxnHshM4KCBgvpoy/iQTXhIR
+         Btb28CisbS4v3W9GLSU1hM0q+zgKqoP8W0PEu1aTj9UldG7y3uuYRHT6tHkNmGwLJ2MN
+         99ss8OhFnJUsX021lCurIDBdvJGxzfmGkcXigsmA+phWdEJgEe+K7PpzOC3sq58gPFd7
+         W0Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9Sxz73y7RgL+u8rtUA8o/y4P1sug9uuvbcujn5qnKbQ=;
-        b=fNaA78SJUSsA0P+aqJFx5CAeM/+YUJPAAySiDF/C+V45LuK8zQ4CQrapCXMDZ/JyNp
-         Dx9UKbTBH54vwSJdctsZti6w9SYiw7wj3poTRglPthY7/4NZJy010K/1/TXY0/cJDMHx
-         XbwnRt65WEx+UGTsDirKgBNaSXuWDDHAv4S4j0MlR3haQlOJirnxroIxamZyzs86RnYW
-         VKwWmMeJRhnYxZ7/4bPGPjE6eqw8gu3RObQSxxXBRHEUN5QGbAzFhZziyv9Vq9T9MDMO
-         hObrnuJDQNa1q7FnB9KKGXsakFdVrpxZGxw6qptQE8sTw+wGozPPIu2RfJ3/lFQPGNcA
-         9i3Q==
-X-Gm-Message-State: AOAM530OhhUpkRmRQLv0c62lwxazwKX38vwbcOPiHmGg/zTNHDQcLpk+
-        ZiiVJqZYC8QsvCHY6aNanScv3Q==
-X-Google-Smtp-Source: ABdhPJzDd+slK0xeJj9N8JVIU+68m7qp81qNM4BOeECx6/igXbWfKhNRBt+GUriqZEYH6Z8lCODsUw==
-X-Received: by 2002:a1c:19c4:: with SMTP id 187mr21778043wmz.100.1595864208416;
-        Mon, 27 Jul 2020 08:36:48 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id k126sm19423810wme.17.2020.07.27.08.36.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 08:36:47 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 16:36:46 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     wens@csie.org, linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
-        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com
-Subject: Re: [PATCH v5 10/16] mfd: axp20x: Allow the AXP803 to be probed by
- I2C
-Message-ID: <20200727153646.GX1850026@dell>
-References: <cover.1595572867.git.frank@allwinnertech.com>
- <c19530b2ee1f377bfeb1273f07a7ceb4ea4372ab.1595572867.git.frank@allwinnertech.com>
+         :in-reply-to:user-agent;
+        bh=NkVbGEZqq2gtUYFFHihdCf9UlSJbj6QF8gPVaF8Bfbo=;
+        b=GbPe+Ro4kkWxc2w3B/26dQwWpew03PPbc4new6bm99x2SFkJDPXQNxlgPIaYbPOZ9+
+         bta2O4YdVNMc+ji3tjO7OGnpy02Rcb6Ch8c2K9tVXSsRwc/sarV7t3HL6HCWm1vCRdPK
+         2jQ/p56uMnQKPPN6CJrsofm8rB1GZtgc/oCNePEB3VlBrhaK1IE9NjFWLySu/bk7pV/X
+         TimVIn9UGm8GpQNfFdiktI5NTmIii7lRgHoLKVdOm0HBREN+zTb7t3tsnkvwgB9pkYLP
+         LbSkTIEpYKbOQfCz4zLbkUF5gXTUBo51qU8mojZ28eUq0f50n3fqGEPUiy/p6UB4sq1O
+         80kw==
+X-Gm-Message-State: AOAM530vXmebJ/iJUm3TkB8i3GQEVHkCNctd88fuMdjHKT0DA8OPXR8x
+        6/805FRneb52SvjKF8sQ2nX1Cg==
+X-Google-Smtp-Source: ABdhPJzAXd8kJn2pS6mbPjKZXLIavxQW9wr44q5/JPYSYykSlpkS173kdTtzJWxxIonR/XqZ3Jaxlg==
+X-Received: by 2002:a17:90a:ea0b:: with SMTP id w11mr2833577pjy.80.1595864293473;
+        Mon, 27 Jul 2020 08:38:13 -0700 (PDT)
+Received: from localhost ([223.190.9.130])
+        by smtp.gmail.com with ESMTPSA id y19sm4363801pfn.77.2020.07.27.08.38.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 Jul 2020 08:38:12 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 21:08:06 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Taniya Das <tdas@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
+ power-domains for venus
+Message-ID: <20200727153806.kgegadvghmkevch3@vireshk-mac-ubuntu>
+References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+ <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
+ <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
+ <94581989-e069-55e5-6b70-919185eda33e@linaro.org>
+ <e0c03ce2-136c-2c5c-6f36-bb0c69a82e2d@codeaurora.org>
+ <5a8af2da-cc3f-005d-47e6-b36be1104d6a@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c19530b2ee1f377bfeb1273f07a7ceb4ea4372ab.1595572867.git.frank@allwinnertech.com>
+In-Reply-To: <5a8af2da-cc3f-005d-47e6-b36be1104d6a@codeaurora.org>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020, Frank Lee wrote:
-
-> From: Yangtao Li <frank@allwinnertech.com>
+On 27-07-20, 17:38, Rajendra Nayak wrote:
 > 
-> The AXP803 can be used both using the RSB proprietary bus, or a more
-> traditional I2C bus.
+> On 7/27/2020 11:23 AM, Rajendra Nayak wrote:
+> > 
+> > 
+> > On 7/24/2020 7:39 PM, Stanimir Varbanov wrote:
+> > > Hi,
+> > > 
+> > > On 7/23/20 9:06 PM, Stanimir Varbanov wrote:
+> > > > Hi Rajendra,
+> > > > 
+> > > > After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
+> > > > below messages on db845:
+> > > > 
+> > > > qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
+> > > > current OPP for freq 533000097 (-34)
+> > > > 
+> > > > ^^^ This one is new.
+> > > > 
+> > > > qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
+> > > > 
+> > > > ^^^ and this message is annoying, can we make it pr_debug in rpmh?
+> > > > 
+> > > > On 7/23/20 2:26 PM, Rajendra Nayak wrote:
+> > > > > Add the OPP tables in order to be able to vote on the performance state of
+> > > > > a power-domain.
+> > > > > 
+> > > > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> > > > > ---
+> > > > >   arch/arm64/boot/dts/qcom/sdm845.dtsi | 40 ++++++++++++++++++++++++++++++++++--
+> > > > >   1 file changed, 38 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > > index e506793..5ca2265 100644
+> > > > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > > > @@ -3631,8 +3631,10 @@
+> > > > >               interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> > > > >               power-domains = <&videocc VENUS_GDSC>,
+> > > > >                       <&videocc VCODEC0_GDSC>,
+> > > > > -                    <&videocc VCODEC1_GDSC>;
+> > > > > -            power-domain-names = "venus", "vcodec0", "vcodec1";
+> > > > > +                    <&videocc VCODEC1_GDSC>,
+> > > > > +                    <&rpmhpd SDM845_CX>;
+> > > > > +            power-domain-names = "venus", "vcodec0", "vcodec1", "cx";
+> > > > > +            operating-points-v2 = <&venus_opp_table>;
+> > > > >               clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> > > > >                    <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> > > > >                    <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+> > > > > @@ -3654,6 +3656,40 @@
+> > > > >               video-core1 {
+> > > > >                   compatible = "venus-encoder";
+> > > > >               };
+> > > > > +
+> > > > > +            venus_opp_table: venus-opp-table {
+> > > > > +                compatible = "operating-points-v2";
+> > > > > +
+> > > > > +                opp-100000000 {
+> > > > > +                    opp-hz = /bits/ 64 <100000000>;
+> > > > > +                    required-opps = <&rpmhpd_opp_min_svs>;
+> > > > > +                };
+> > > > > +
+> > > > > +                opp-200000000 {
+> > > > > +                    opp-hz = /bits/ 64 <200000000>;
+> > > > > +                    required-opps = <&rpmhpd_opp_low_svs>;
+> > > > > +                };
+> > > > > +
+> > > > > +                opp-320000000 {
+> > > > > +                    opp-hz = /bits/ 64 <320000000>;
+> > > > > +                    required-opps = <&rpmhpd_opp_svs>;
+> > > > > +                };
+> > > > > +
+> > > > > +                opp-380000000 {
+> > > > > +                    opp-hz = /bits/ 64 <380000000>;
+> > > > > +                    required-opps = <&rpmhpd_opp_svs_l1>;
+> > > > > +                };
+> > > > > +
+> > > > > +                opp-444000000 {
+> > > > > +                    opp-hz = /bits/ 64 <444000000>;
+> > > > > +                    required-opps = <&rpmhpd_opp_nom>;
+> > > > > +                };
+> > > > > +
+> > > > > +                opp-533000000 {
+> > > > > +                    opp-hz = /bits/ 64 <533000000>;
+
+Is this the highest OPP in table ?
+
+> > > Actually it comes from videocc, where ftbl_video_cc_venus_clk_src
+> > > defines 533000000 but the real calculated freq is 533000097.
+> > 
+> > I still don't quite understand why the videocc driver returns this
+> > frequency despite this not being in the freq table.
 > 
-> Let's add that possibility.
+> Ok, so I see the same issue on sc7180 also. clk_round_rate() does seem to
+> return whats in the freq table, but clk_set_rate() goes ahead and sets it
+> to 533000097. Subsequently when we try to set a different OPP, it fails to
+> find the 'current' OPP entry for 533000097. This sounds like an issue with the OPP
+> framework? Should we not fall back to the highest OPP as the current OPP?
 > 
-> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->  drivers/mfd/axp20x-i2c.c | 2 ++
->  1 file changed, 2 insertions(+)
+> Stephen/Viresh, any thoughts?
 
-Why do you keep sending this?
-
-It was applied in v3 [0].
-
-[0] https://lkml.org/lkml/2020/7/16/745
+I think we (in all frameworks generally) try to set a frequency <=
+target frequency and so there may be a problem if the frequency is
+larger than highest supported. IOW, you need to fix tables a bit.
 
 -- 
-Lee Jones [æŽç¼æ–¯]
-Senior Technical Lead - Developer Services
-Linaro.org â”‚ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+viresh
