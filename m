@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AB1C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09C2C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21F2B20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C9DF207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860171;
-	bh=nE+iPYVH7YUcPYLNkoCTd+IU2wP0RX1TQuOswIQft7U=;
+	s=default; t=1595860185;
+	bh=CNA2UcGDHuCk9lpCPB6VSEaq6G3lroCk8+yxTtXAEhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HmiRvO5NT79tTJOhjNocuVPsI03OfLJqa9EA31a1MSaqmY56wV1lArYkGuQhXAD8d
-	 r5aPNw05OZIyDaSepSo0IDj2JcYGoJxNPN7iCIDXAqy87nAohncjuXKqxiD90AurQj
-	 3DLz5EAZthYoYl8UEDS0qU6dcGwbx+NswrJjLpsQ=
+	b=zRs2BMMgu/RdgYRjwnJs9jzZYQfAxhbqtqf9hrwftSWPy2dN22qzo3rfo6c+WcPEw
+	 HH3XzZXS7S/5oQ1aY8SySBcqdjnPybb/2XfOI/jdKCrQmHd+orDOeRdJO089KhInoh
+	 yYAVuNY1Z/g3o0NjS9qGxOtK02aMcIOa+NBwgE4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732749AbgG0O3a (ORCPT
+        id S1732598AbgG0O3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:29:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52566 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:29:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731491AbgG0OXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:23:21 -0400
+        id S1732009AbgG0OXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:23:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29D8C2070A;
-        Mon, 27 Jul 2020 14:23:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0C552070A;
+        Mon, 27 Jul 2020 14:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859800;
-        bh=nE+iPYVH7YUcPYLNkoCTd+IU2wP0RX1TQuOswIQft7U=;
+        s=default; t=1595859785;
+        bh=CNA2UcGDHuCk9lpCPB6VSEaq6G3lroCk8+yxTtXAEhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CqvrlblXWBXYLRGG3Vhi5S1lnkm3Cfu0WJge2D8t5lTNgzUPX0fCS0QYU/WcEPNV3
-         37cqNQz/NIdN5I0DL5iQ8OUE9VUyPjxQPno7r7Pln1QdkVl+OvpU9ZjdcZPeHcCJEx
-         qqelBi3Knr8mgwau/pvRZ1w75XNNeD4wlVsuY7nM=
+        b=s1pa5/nvBoIR4ZFwjh5B1Az1PQRbAM/kOAXxBnzs7myPrXHTn7DhL1nMq8izyjfPd
+         TOam1KQm4mwyUD4dqEOYSu0iiR8jdJAytIOH0qmsZ112oJqnITpo7RCDvhAC2A9Jas
+         7aPL9W1nbcJC8nmoF/whm5V97ukdw+lrnVW9Vg3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 110/179] Input: add `SW_MACHINE_COVER`
-Date:   Mon, 27 Jul 2020 16:04:45 +0200
-Message-Id: <20200727134938.013806903@linuxfoundation.org>
+        Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>,
+        Siarhei Vishniakou <svv@google.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 104/179] HID: steam: fixes race in handling device list.
+Date:   Mon, 27 Jul 2020 16:04:39 +0200
+Message-Id: <20200727134937.717489856@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -63,52 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Merlijn Wajer <merlijn@wizzup.org>
+From: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
 
-[ Upstream commit c463bb2a8f8d7d97aa414bf7714fc77e9d3b10df ]
+[ Upstream commit 2d3f53a80e4eed078669853a178ed96d88f74143 ]
 
-This event code represents the state of a removable cover of a device.
-Value 0 means that the cover is open or removed, value 1 means that the
-cover is closed.
+Using uhid and KASAN this driver crashed because it was getting
+several connection events where it only expected one. Then the
+device was added several times to the static device list and it got
+corrupted.
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
-Link: https://lore.kernel.org/r/20200612125402.18393-2-merlijn@wizzup.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This patch checks if the device is already in the list before adding
+it.
+
+Signed-off-by: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
+Tested-by: Siarhei Vishniakou <svv@google.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mod_devicetable.h        | 2 +-
- include/uapi/linux/input-event-codes.h | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ drivers/hid/hid-steam.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 0754b8d71262b..8a84f11bf1246 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -318,7 +318,7 @@ struct pcmcia_device_id {
- #define INPUT_DEVICE_ID_LED_MAX		0x0f
- #define INPUT_DEVICE_ID_SND_MAX		0x07
- #define INPUT_DEVICE_ID_FF_MAX		0x7f
--#define INPUT_DEVICE_ID_SW_MAX		0x0f
-+#define INPUT_DEVICE_ID_SW_MAX		0x10
- #define INPUT_DEVICE_ID_PROP_MAX	0x1f
+diff --git a/drivers/hid/hid-steam.c b/drivers/hid/hid-steam.c
+index 6286204d4c560..a3b151b29bd71 100644
+--- a/drivers/hid/hid-steam.c
++++ b/drivers/hid/hid-steam.c
+@@ -526,7 +526,8 @@ static int steam_register(struct steam_device *steam)
+ 			steam_battery_register(steam);
  
- #define INPUT_DEVICE_ID_MATCH_BUS	1
-diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-index b6a835d378263..0c2e27d28e0ac 100644
---- a/include/uapi/linux/input-event-codes.h
-+++ b/include/uapi/linux/input-event-codes.h
-@@ -888,7 +888,8 @@
- #define SW_LINEIN_INSERT	0x0d  /* set = inserted */
- #define SW_MUTE_DEVICE		0x0e  /* set = device disabled */
- #define SW_PEN_INSERTED		0x0f  /* set = pen inserted */
--#define SW_MAX			0x0f
-+#define SW_MACHINE_COVER	0x10  /* set = cover closed */
-+#define SW_MAX			0x10
- #define SW_CNT			(SW_MAX+1)
+ 		mutex_lock(&steam_devices_lock);
+-		list_add(&steam->list, &steam_devices);
++		if (list_empty(&steam->list))
++			list_add(&steam->list, &steam_devices);
+ 		mutex_unlock(&steam_devices_lock);
+ 	}
  
- /*
+@@ -552,7 +553,7 @@ static void steam_unregister(struct steam_device *steam)
+ 		hid_info(steam->hdev, "Steam Controller '%s' disconnected",
+ 				steam->serial_no);
+ 		mutex_lock(&steam_devices_lock);
+-		list_del(&steam->list);
++		list_del_init(&steam->list);
+ 		mutex_unlock(&steam_devices_lock);
+ 		steam->serial_no[0] = 0;
+ 	}
+@@ -738,6 +739,7 @@ static int steam_probe(struct hid_device *hdev,
+ 	mutex_init(&steam->mutex);
+ 	steam->quirks = id->driver_data;
+ 	INIT_WORK(&steam->work_connect, steam_work_connect_cb);
++	INIT_LIST_HEAD(&steam->list);
+ 
+ 	steam->client_hdev = steam_create_client_hid(hdev);
+ 	if (IS_ERR(steam->client_hdev)) {
 -- 
 2.25.1
 
