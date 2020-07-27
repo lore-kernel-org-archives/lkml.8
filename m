@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F43CC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60A3C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02E75208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77F42083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859841;
-	bh=r3iHyGQz9boyggQI7VCb+3Xt73g++0A/lGYtI0CTALU=;
+	s=default; t=1595859847;
+	bh=KHiEmeSDHEk36Ap081u5lxBnesPSBOC4MwK1QNOPB98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GuPaSsoGMtgQxpxw5uUITQhL4808T7hKBJ2KK6LAkPIvYAJsd5k5NJid5YRUKmkpV
-	 W2msLzW6AXa2Ti78sJYVS2ERMvSqYGe5pdy7aT4Jhzw1Xjvw6S4ttLd6OC3ZLZAr6Q
-	 njzGRkeE5UbSS7Nahs+wFyvPNriI7Zqjycw3Bg+8=
+	b=eCvtHpruf1DwllsP8FyUvbu/pLC/At5/bMI4OINxGFLqPAIXUE/BKoVqO6i8XHVfb
+	 tclG4rsMSAA6vg3RiUHiS60VplksMURfq5cOxTfwCTO8rx2Y2PUVbTwoboTMRNcfks
+	 An9Bf7URwq/5eJJGZYhxHLRVmw7/Ls0NmimOeN5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732189AbgG0OX7 (ORCPT
+        id S1732205AbgG0OYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:23:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:24:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732156AbgG0OXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:23:49 -0400
+        id S1732195AbgG0OYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:24:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1AC2208E4;
-        Mon, 27 Jul 2020 14:23:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE9832075A;
+        Mon, 27 Jul 2020 14:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859829;
-        bh=r3iHyGQz9boyggQI7VCb+3Xt73g++0A/lGYtI0CTALU=;
+        s=default; t=1595859842;
+        bh=KHiEmeSDHEk36Ap081u5lxBnesPSBOC4MwK1QNOPB98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xwRUIvuGm29/eyXhZqt9/MITr313t16O2etJzsPNHnAs3xOfeQSoXvN19KjqMTWF4
-         m0F1pTtOJfiw40H4vWkaNLaGQlAq+c5682xq31vK2d5Tt9/euKwzopqDgB77Qe08Zp
-         x+qLpT1dxCx7Ooc5sk4VGRgPlx08lW2aMUJZZ+r4=
+        b=kz8Bu13D4wcymZ+eawTMcUX7uW8EKyueGNrhucID9xSBZ3JAYw7Lh2EmhYy3zyJyv
+         sF4PTjxzfD3oWh31uZ6YrwM2MD3VUsGl0WFunMZS2zGwHq95XoWeuhiQy6odILtyD0
+         zfBGAdpQhVuvMfWnxhEbjIzPUAQSZPnnIWgW5esQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 091/179] i2c: rcar: always clear ICSAR to avoid side effects
-Date:   Mon, 27 Jul 2020 16:04:26 +0200
-Message-Id: <20200727134937.109276982@linuxfoundation.org>
+        stable@vger.kernel.org, Stefan Dietrich <roots@gmx.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 127/179] hwmon: (nct6775) Accept PECI Calibration as temperature source for NCT6798D
+Date:   Mon, 27 Jul 2020 16:05:02 +0200
+Message-Id: <20200727134938.836226027@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -60,46 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit eb01597158ffb1853a7a7fc2c57d4c844640f75e ]
+[ Upstream commit 8a03746c8baf82e1616f05a1a716d34378dcf780 ]
 
-On R-Car Gen2, we get a timeout when reading from the address set in
-ICSAR, even though the slave interface is disabled. Clearing it fixes
-this situation. Note that Gen3 is not affected.
+Stefan Dietrich reports invalid temperature source messages on Asus Formula
+XII Z490.
 
-To reproduce: bind and undbind an I2C slave on some bus, run
-'i2cdetect' on that bus.
+nct6775 nct6775.656: Invalid temperature source 28 at index 0,
+		source register 0x100, temp register 0x73
 
-Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Debugging suggests that temperature source 28 reports the CPU temperature.
+Let's assume that temperature sources 28 and 29 reflect "PECI Agent {0,1}
+Calibration", similar to other chips of the series.
+
+Reported-by: Stefan Dietrich <roots@gmx.de>
+Cc: Stefan Dietrich <roots@gmx.de>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-rcar.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hwmon/nct6775.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index 3b5397aa4ca60..50dd98803ca0c 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -868,6 +868,7 @@ static int rcar_unreg_slave(struct i2c_client *slave)
- 	/* disable irqs and ensure none is running before clearing ptr */
- 	rcar_i2c_write(priv, ICSIER, 0);
- 	rcar_i2c_write(priv, ICSCR, 0);
-+	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
+diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
+index 7efa6bfef0609..ba9b96973e808 100644
+--- a/drivers/hwmon/nct6775.c
++++ b/drivers/hwmon/nct6775.c
+@@ -786,13 +786,13 @@ static const char *const nct6798_temp_label[] = {
+ 	"Agent1 Dimm1",
+ 	"BYTE_TEMP0",
+ 	"BYTE_TEMP1",
+-	"",
+-	"",
++	"PECI Agent 0 Calibration",	/* undocumented */
++	"PECI Agent 1 Calibration",	/* undocumented */
+ 	"",
+ 	"Virtual_TEMP"
+ };
  
- 	synchronize_irq(priv->irq);
- 	priv->slave = NULL;
-@@ -971,6 +972,8 @@ static int rcar_i2c_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto out_pm_put;
+-#define NCT6798_TEMP_MASK	0x8fff0ffe
++#define NCT6798_TEMP_MASK	0xbfff0ffe
+ #define NCT6798_VIRT_TEMP_MASK	0x80000c00
  
-+	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
-+
- 	if (priv->devtype == I2C_RCAR_GEN3) {
- 		priv->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
- 		if (!IS_ERR(priv->rstc)) {
+ /* NCT6102D/NCT6106D specific data */
 -- 
 2.25.1
 
