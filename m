@@ -2,52 +2,54 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C04C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA29C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19FA42073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 687CE2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:07:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jzs4m41k"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JyBarzTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbgG0QHv (ORCPT
+        id S1731125AbgG0QH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:07:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53818 "EHLO
+        Mon, 27 Jul 2020 12:07:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726662AbgG0QHv (ORCPT
+        with ESMTP id S1730853AbgG0QH4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:07:51 -0400
+        Mon, 27 Jul 2020 12:07:56 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27034C061794;
-        Mon, 27 Jul 2020 09:07:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4415C061794;
+        Mon, 27 Jul 2020 09:07:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=2aQmIJDaFTj/Kf9z4Bfaajb+6jbNo420+J7NaCJSi0E=; b=Jzs4m41kN5iL1/gualbsul8T/y
-        cw4AZk4oqI7HMAnzxgjm5NiBMUORs3Q1BHldhz8+BUZ7DOuVz4VjJum57i6TOXIWZvjSl64osO29N
-        zutaD/Sp9RREubVIBg54Nelz22OU6LYT4kXCt4AsQoMJH9xay8IDCZtgPLn7xB5tN8Scve560/oWh
-        SnBwPBbhLFOsQIDOWKLTqhGqfj4mca2E84r8gD66FzBvJbofThKrI1uwWtg/TlKlhZfuN9OdSfe5u
-        KMILkhmtCx5VJy6RKXJK6zUOhjE+iPwOw2UOcDgEIn/on55e7XeUsBWOq1EBTWNSXTld5k9Y7yPUw
-        TbG0y9cw==;
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=fCMVB9ixQ5Y99KMpA0i0BlFL8bplTsu2KNx7sFr/t4g=; b=JyBarzTMK2VwWNuEXkoGRhOicw
+        v7ZQOkb8GxQWQwVvJESVo+jf1JBLvfEBIs86NEvTtiU+yqD4PgdlTs4/oMAZdy+1UTbMh/AniFeqw
+        290E+7h1WNNGCfwek6YPWGRW1rxBenNkkAEbK5Nn9hlGhR2FvVxXyPnShk3K4Q44GorNdqUPo+2se
+        d3hIhzK0mkxrz/Nu/hqbiC0X5rgCmqaaolPESOr1naKS37pkkNUPFiZsnq/a0dthVb0nd4xvYRNI/
+        FNvUXWbODO6UGSy0RfooZ7qVxcSVaI/7h7lsnJg6sw4yy2SAQGSTwbyCozC2qHD4oyt0rhD7IGv72
+        lQ8xeizw==;
 Received: from [2001:4bb8:18c:2acc:aa45:8411:1fb3:30ec] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k05fH-0002mL-1O; Mon, 27 Jul 2020 16:07:48 +0000
+        id 1k05fM-0002mb-Ft; Mon, 27 Jul 2020 16:07:54 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-fsdevel@vger.kernel.org
-Subject: fixes for: decruft the early init / initrd / initramfs code v2
-Date:   Mon, 27 Jul 2020 18:07:41 +0200
-Message-Id: <20200727160744.329121-1-hch@lst.de>
+Subject: [PATCH 2/3] initramfs: pass a non-f_pos offset to xwrite
+Date:   Mon, 27 Jul 2020 18:07:43 +0200
+Message-Id: <20200727160744.329121-3-hch@lst.de>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727160744.329121-1-hch@lst.de>
+References: <20200727160744.329121-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
@@ -56,10 +58,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Pass a offset with the same scope as the file instead of ->f_pos.
 
-this series fixes up a few issues found in my
+Fixes: b63c1cd1c339 ("initramfs: switch initramfs unpacking to struct file based APIs")
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ init/initramfs.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-    git://git.infradead.org/users/hch/misc.git init-user-pointers
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 50ec7e3c5389aa..584bc8fe88e77c 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -13,13 +13,14 @@
+ #include <linux/memblock.h>
+ #include <linux/namei.h>
+ 
+-static ssize_t __init xwrite(struct file *file, const char *p, size_t count)
++static ssize_t __init xwrite(struct file *file, const char *p, size_t count,
++		loff_t *pos)
+ {
+ 	ssize_t out = 0;
+ 
+ 	/* sys_write only can write MAX_RW_COUNT aka 2G-4K bytes at most */
+ 	while (count) {
+-		ssize_t rv = kernel_write(file, p, count, &file->f_pos);
++		ssize_t rv = kernel_write(file, p, count, pos);
+ 
+ 		if (rv < 0) {
+ 			if (rv == -EINTR || rv == -EAGAIN)
+@@ -317,6 +318,7 @@ static int __init maybe_link(void)
+ }
+ 
+ static __initdata struct file *wfile;
++static __initdata loff_t wfile_pos;
+ 
+ static int __init do_name(void)
+ {
+@@ -336,6 +338,7 @@ static int __init do_name(void)
+ 			wfile = filp_open(collected, openflags, mode);
+ 			if (IS_ERR(wfile))
+ 				return 0;
++			wfile_pos = 0;
+ 
+ 			vfs_fchown(wfile, uid, gid);
+ 			vfs_fchmod(wfile, mode);
+@@ -365,7 +368,7 @@ static int __init do_copy(void)
+ 	if (byte_count >= body_len) {
+ 		struct timespec64 t[2] = { };
+ 
+-		if (xwrite(wfile, victim, body_len) != body_len)
++		if (xwrite(wfile, victim, body_len, &wfile_pos) != body_len)
+ 			error("write error");
+ 
+ 		t[0].tv_sec = mtime;
+@@ -377,7 +380,7 @@ static int __init do_copy(void)
+ 		state = SkipIt;
+ 		return 0;
+ 	} else {
+-		if (xwrite(wfile, victim, byte_count) != byte_count)
++		if (xwrite(wfile, victim, byte_count, &wfile_pos) != byte_count)
+ 			error("write error");
+ 		body_len -= byte_count;
+ 		eat(byte_count);
+@@ -580,6 +583,7 @@ static void __init populate_initrd_image(char *err)
+ {
+ 	ssize_t written;
+ 	struct file *file;
++	loff_t pos = 0;
+ 
+ 	unpack_to_rootfs(__initramfs_start, __initramfs_size);
+ 
+@@ -589,7 +593,8 @@ static void __init populate_initrd_image(char *err)
+ 	if (IS_ERR(file))
+ 		return;
+ 
+-	written = xwrite(file, (char *)initrd_start, initrd_end - initrd_start);
++	written = xwrite(file, (char *)initrd_start, initrd_end - initrd_start,
++			&pos);
+ 	if (written != initrd_end - initrd_start)
+ 		pr_err("/initrd.image: incomplete write (%zd != %ld)\n",
+ 		       written, initrd_end - initrd_start);
+-- 
+2.27.0
 
-tree.  The patches are relative to it.
