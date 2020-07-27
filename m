@@ -2,129 +2,62 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79481C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25CEC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5453E2074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:31:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595871069;
-	bh=osqvklvmaTXGOifhXvDFzV85j8Kp/evJwoU4aORbmY8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=2D/PZnS4FR72EOICBwqrmjcG4wHHR2h5PGnAPk3ynh7/vEEsSbDvJw3KtLxi59x95
-	 qz+CkrEboHlhXoAvf6njgLSIQLsAunE6Y5+11/odMIjDm6UuvQI5sSyqCw0laIArA8
-	 MiFluIXScEoRRNHDg3feB5exlHjIbrz7ybGsNhFY=
+	by mail.kernel.org (Postfix) with ESMTP id 8C6C920729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:32:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731126AbgG0RbI (ORCPT
+        id S1731265AbgG0Rcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:31:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730662AbgG0RbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:31:07 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9CAA2073E;
-        Mon, 27 Jul 2020 17:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595871067;
-        bh=osqvklvmaTXGOifhXvDFzV85j8Kp/evJwoU4aORbmY8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GMi82eX9ZWYMrzDcjH+j+OtuU0r+iZUyVTpL1xTVnTNY4glD78FZ6guoGH5v/JiDs
-         uIDCUp1QDlH2pOgyLcoDK51r4Jg4JwhAEGABhEe3h8NRk1e6M2KQnvoD5eW7mT9t4/
-         tv2sTSfYNO1aNpt19NxZ1dtpgrAtnBdNSzupyzA8=
-Date:   Mon, 27 Jul 2020 12:31:05 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
-Cc:     "Cao, Bingbu" <bingbu.cao@intel.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "bingbu.cao@linux.intel.com" <bingbu.cao@linux.intel.com>
-Subject: Re: [PATCH] MAINTAINERS: Fix email typo and correct name of Tianshu
-Message-ID: <20200727173105.GA1758148@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL0PR11MB3028D74ABDBEBCED28ADFB9EDE720@BL0PR11MB3028.namprd11.prod.outlook.com>
+        Mon, 27 Jul 2020 13:32:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgG0Rcf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 13:32:35 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76076C061794;
+        Mon, 27 Jul 2020 10:32:35 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 60921128719F1;
+        Mon, 27 Jul 2020 10:15:49 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 10:32:33 -0700 (PDT)
+Message-Id: <20200727.103233.2024296985848607297.davem@davemloft.net>
+To:     andrew@lunn.ch
+Cc:     ilial@codeaurora.org, kuba@kernel.org, jiri@mellanox.com,
+        edumazet@google.com, ap420073@gmail.com, xiyou.wangcong@gmail.com,
+        maximmi@mellanox.com, ilia.lin@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: dev: Add API to check net_dev readiness
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200726194528.GC1661457@lunn.ch>
+References: <1595792274-28580-1-git-send-email-ilial@codeaurora.org>
+        <20200726194528.GC1661457@lunn.ch>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 27 Jul 2020 10:15:49 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 04:20:39AM +0000, Qiu, Tian Shu wrote:
-> Reviewed-by: Tianshu Qiu <tian.shu.qiu@intel.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Date: Sun, 26 Jul 2020 21:45:28 +0200
 
-This doesn't really make sense.  The patch already contains your
-Signed-off-by, which means you participated in its development (see
-Documentation/process/submitting-patches.rst), and I don't think it
-makes sense to review your own patch.
+> I also have to wonder why a network device driver is being probed the
+> subsys_initcall.
 
-> > -----Original Message-----
-> > From: Cao, Bingbu <bingbu.cao@intel.com>
-> > Sent: Monday, July 27, 2020 12:12 PM
-> > To: linux-media@vger.kernel.org; linux-kernel@vger.kernel.org; helgaas@kernel.org
-> > Cc: sakari.ailus@linux.intel.com; Qiu, Tian Shu <tian.shu.qiu@intel.com>; Cao, Bingbu <bingbu.cao@intel.com>;
-> > bingbu.cao@linux.intel.com
-> > Subject: [PATCH] MAINTAINERS: Fix email typo and correct name of Tianshu
-> > 
-> > Fix the typo in email address of Tianshu Qiu and correct the name.
-> > 
-> > Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
-> > Signed-off-by: Tianshu Qiu <tian.shu.qiu@intel.com>
-
-Also, Documentation/process/submitting-patches.rst says "the last
-Signed-off-by: must always be that of the developer submitting the
-patch," which means these should be reversed, since Bingbu submitted
-the patch.
-
-> > Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-
-I don't care whether you include this or not, but if you do, it would
-typically go first, since the report comes before the writing of the
-patch.
-
-> > ---
-> >  MAINTAINERS | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 5392f00cec46..638dfa99751b 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -8765,7 +8765,7 @@ INTEL IPU3 CSI-2 CIO2 DRIVER
-> >  M:	Yong Zhi <yong.zhi@intel.com>
-> >  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
-> >  M:	Bingbu Cao <bingbu.cao@intel.com>
-> > -R:	Tian Shu Qiu <tian.shu.qiu@intel.com>
-> > +R:	Tianshu Qiu <tian.shu.qiu@intel.com>
-> >  L:	linux-media@vger.kernel.org
-> >  S:	Maintained
-> >  F:	Documentation/userspace-api/media/v4l/pixfmt-srggb10-ipu3.rst
-> > @@ -8774,7 +8774,7 @@ F:	drivers/media/pci/intel/ipu3/
-> >  INTEL IPU3 CSI-2 IMGU DRIVER
-> >  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
-> >  R:	Bingbu Cao <bingbu.cao@intel.com>
-> > -R:	Tian Shu Qiu <tian.shu.qiu@intel.com>
-> > +R:	Tianshu Qiu <tian.shu.qiu@intel.com>
-> >  L:	linux-media@vger.kernel.org
-> >  S:	Maintained
-> >  F:	Documentation/admin-guide/media/ipu3.rst
-> > @@ -12609,7 +12609,7 @@ T:	git git://linuxtv.org/media_tree.git
-> >  F:	drivers/media/i2c/ov2685.c
-> > 
-> >  OMNIVISION OV2740 SENSOR DRIVER
-> > -M:	Tianshu Qiu <tian.shu.qiua@intel.com>
-> > +M:	Tianshu Qiu <tian.shu.qiu@intel.com>
-> >  R:	Shawn Tu <shawnx.tu@intel.com>
-> >  R:	Bingbu Cao <bingbu.cao@intel.com>
-> >  L:	linux-media@vger.kernel.org
-> > --
-> > 2.7.4
-> 
+This makes me wonder how this interface could even be useful.  The
+only way to fix the problem is to change when the device is probed,
+which would mean changing which initcall it uses.  So at run time,
+this information can't do much.
