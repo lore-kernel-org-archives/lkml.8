@@ -2,113 +2,152 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A824C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 01:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF422C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 01:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 062452070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 01:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94FCF2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 01:52:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZOrUNa8V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ulRkaaW1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgG0Bv3 (ORCPT
+        id S1727820AbgG0BwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 21:51:29 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54458 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgG0Bv2 (ORCPT
+        Sun, 26 Jul 2020 21:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgG0BwO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 21:51:28 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06R1lgM5082485;
-        Mon, 27 Jul 2020 01:51:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=v8j4co1+D3v+c4H3t/dkvw5oueyFcBk6iLjzS8BCI6Q=;
- b=ZOrUNa8VuS8u38ozXIpU653h6qI/25wA4nrXZoZNuSIo0LNZ3uCdJJ7+Kwu9kqXqVVu+
- o1l/zJCU/sBjARASyaMHEY3/DJDj0qtKVDmwfHlottld7epd3+h0CgEebcSwJWnlWs0+
- zqQrmoEwcD/XGGaees1JPb23EyaIsOqriRrKxfTpKow3omZsZldUIsWcmTPlNuLk5PYZ
- idoqqbLS6JfZU6O0SVQcHCDuiuRIzbssX6Wc7grz26EaWDETbPzr1vPydVwW9+FR7+S7
- bTwiinE9wJYfyzdUvt/y3HKvp71ph5PWIn96b7GusbEjo3DauN8ao8e7nlr9Znek4Sns mg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 32gx4rt58c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jul 2020 01:51:23 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06R1mSo6014200;
-        Mon, 27 Jul 2020 01:49:23 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 32hj437dq3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 01:49:23 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06R1nJcl027594;
-        Mon, 27 Jul 2020 01:49:20 GMT
-Received: from localhost (/10.159.225.49)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 26 Jul 2020 18:49:19 -0700
-Date:   Sun, 26 Jul 2020 18:49:20 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Julia Lawall <Julia.Lawall@inria.fr>
-Cc:     Jonathan Corbet <corbet@lwn.net>, kernel-janitors@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: filesystems: vfs: correct flag name
-Message-ID: <20200727014920.GN7625@magnolia>
-References: <1595789020-12941-1-git-send-email-Julia.Lawall@inria.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595789020-12941-1-git-send-email-Julia.Lawall@inria.fr>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=1 mlxscore=0
- mlxlogscore=999 malwarescore=0 phishscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270011
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=1
- lowpriorityscore=0 adultscore=0 mlxscore=0 spamscore=0 phishscore=0
- mlxlogscore=999 impostorscore=0 clxscore=1011 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007270011
+        Sun, 26 Jul 2020 21:52:14 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9819DC0619D2;
+        Sun, 26 Jul 2020 18:52:14 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id o2so6755299qvk.6;
+        Sun, 26 Jul 2020 18:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=s0MTKKieN/5uVLS9bf74sUuYGfWvsi8uePbeYi7/ZQQ=;
+        b=ulRkaaW1PHcCELDSdF9HxDj/uDBqyLm7aAEVHTvTq2QGpk6MJ1rgM+xjfHBhwORICq
+         aHnRrfVDzUSW+3dRGzk/5qDez9RBFjsuPkvHy4K3CY4r+gm8DcS5sCNnoCD88Hk2p8ko
+         P8YlgWPyvctOLknja1GCrRNdud90Jmbb0Xb2tQH/Nd+oIkYhlLjVDwHuHEr4PldIZPZq
+         wmoZxBMk2P1rU7zGuURTTqYnastOQiaNB0mXl5OzhpyyBq7CPRSdQenqSWbhLEIfZJoi
+         2RSaOhrRHOdcm/IF6kMBsHz22IW/kFBQwkhG2Vqq+mpah9pHr7OAvAbuemMzPrZhVupd
+         geHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=s0MTKKieN/5uVLS9bf74sUuYGfWvsi8uePbeYi7/ZQQ=;
+        b=nwHb7tOct8YfB6A7Zhciam5g8LvbHqKhmW3m4wbA/bFZq62aDploGd4foUu0SFHVDf
+         Mm/+AI7a8/hXDm4YvNHY1CpGy/ZmRgh8cIFGRy5pvcfOdPDDfMm2vkJPx209gWI1Ewfi
+         KPlV8jOLJO/czoSDEsJp5XlhOSt8LC6y+pzn6kL7//nBGFwNOuhgx8GltVGfDVyTWA+f
+         UBgbcRvf6iwk+jEY4ovLAtVOkKXqzBkJEVA5+ME7FwYwKb+4TUMSJYtC/skNVg6EPH/3
+         wvzyw2pplM0dtw2LhbpFFfqZs3U7DSk4Fv/eSLlrN/rRY8ICd8S/6PaJizswyXHOP4F8
+         yZuw==
+X-Gm-Message-State: AOAM533uF931eBaHryaBltQidr1/yBp1Z6gjBv2a4ZkW1y+xJeV45ced
+        a92ut58C9P6w0yCkKQHnTT0=
+X-Google-Smtp-Source: ABdhPJxSpUpXepXtpRmIc6e37L65Fv/e797GhCbnMphucuUsumOMoskJridQh/wS8Wfgd5AG5ymYvQ==
+X-Received: by 2002:a0c:82a2:: with SMTP id i31mr20687818qva.106.1595814733886;
+        Sun, 26 Jul 2020 18:52:13 -0700 (PDT)
+Received: from linux.home ([2604:2000:1344:41d:9cb8:60da:6bf0:c998])
+        by smtp.googlemail.com with ESMTPSA id 184sm15359142qkl.37.2020.07.26.18.52.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 18:52:13 -0700 (PDT)
+From:   Gaurav Singh <gaurav1086@gmail.com>
+To:     gaurav1086@gmail.com, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netfilter-devel@vger.kernel.org (open list:NETFILTER),
+        coreteam@netfilter.org (open list:NETFILTER),
+        netdev@vger.kernel.org (open list:NETWORKING [IPv4/IPv6]),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] netfilter: ip6tables: Remove redundant null checks
+Date:   Sun, 26 Jul 2020 21:52:05 -0400
+Message-Id: <20200727015206.26423-1-gaurav1086@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200625023626.32557-1-gaurav1086@gmail.com>
+References: <20200625023626.32557-1-gaurav1086@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 08:43:40PM +0200, Julia Lawall wrote:
-> There is no flag REMAP_CAN_SHORTEN.  Commit eca3654e3cc7 ("vfs: enable
-> remap callers that can handle short operations") that introduces this
-> text also introduces the flag REMAP_FILE_CAN_SHORTEN.  Change the name
-> in the documentation accordingly.
-> 
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+netfilter: ip6tables: Remove redundant null checks
 
-D'oh.  Good catch!
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+---
+ net/ipv6/netfilter/ip6t_ah.c   | 3 +--
+ net/ipv6/netfilter/ip6t_frag.c | 3 +--
+ net/ipv6/netfilter/ip6t_hbh.c  | 3 +--
+ net/ipv6/netfilter/ip6t_rt.c   | 3 +--
+ 4 files changed, 4 insertions(+), 8 deletions(-)
 
---D
+diff --git a/net/ipv6/netfilter/ip6t_ah.c b/net/ipv6/netfilter/ip6t_ah.c
+index 4e15a14435e4..70da2f2ce064 100644
+--- a/net/ipv6/netfilter/ip6t_ah.c
++++ b/net/ipv6/netfilter/ip6t_ah.c
+@@ -74,8 +74,7 @@ static bool ah_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 		 ahinfo->hdrres, ah->reserved,
+ 		 !(ahinfo->hdrres && ah->reserved));
+ 
+-	return (ah != NULL) &&
+-		spi_match(ahinfo->spis[0], ahinfo->spis[1],
++	return spi_match(ahinfo->spis[0], ahinfo->spis[1],
+ 			  ntohl(ah->spi),
+ 			  !!(ahinfo->invflags & IP6T_AH_INV_SPI)) &&
+ 		(!ahinfo->hdrlen ||
+diff --git a/net/ipv6/netfilter/ip6t_frag.c b/net/ipv6/netfilter/ip6t_frag.c
+index fb91eeee4a1e..3aad6439386b 100644
+--- a/net/ipv6/netfilter/ip6t_frag.c
++++ b/net/ipv6/netfilter/ip6t_frag.c
+@@ -85,8 +85,7 @@ frag_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 		 !((fraginfo->flags & IP6T_FRAG_NMF) &&
+ 		   (ntohs(fh->frag_off) & IP6_MF)));
+ 
+-	return (fh != NULL) &&
+-		id_match(fraginfo->ids[0], fraginfo->ids[1],
++	return id_match(fraginfo->ids[0], fraginfo->ids[1],
+ 			 ntohl(fh->identification),
+ 			 !!(fraginfo->invflags & IP6T_FRAG_INV_IDS)) &&
+ 		!((fraginfo->flags & IP6T_FRAG_RES) &&
+diff --git a/net/ipv6/netfilter/ip6t_hbh.c b/net/ipv6/netfilter/ip6t_hbh.c
+index 467b2a86031b..e7a3fb9355ee 100644
+--- a/net/ipv6/netfilter/ip6t_hbh.c
++++ b/net/ipv6/netfilter/ip6t_hbh.c
+@@ -86,8 +86,7 @@ hbh_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 		  ((optinfo->hdrlen == hdrlen) ^
+ 		   !!(optinfo->invflags & IP6T_OPTS_INV_LEN))));
+ 
+-	ret = (oh != NULL) &&
+-	      (!(optinfo->flags & IP6T_OPTS_LEN) ||
++	ret = (!(optinfo->flags & IP6T_OPTS_LEN) ||
+ 	       ((optinfo->hdrlen == hdrlen) ^
+ 		!!(optinfo->invflags & IP6T_OPTS_INV_LEN)));
+ 
+diff --git a/net/ipv6/netfilter/ip6t_rt.c b/net/ipv6/netfilter/ip6t_rt.c
+index f633dc84ca3f..733c83d38b30 100644
+--- a/net/ipv6/netfilter/ip6t_rt.c
++++ b/net/ipv6/netfilter/ip6t_rt.c
+@@ -89,8 +89,7 @@ static bool rt_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 		 !((rtinfo->flags & IP6T_RT_RES) &&
+ 		   (((const struct rt0_hdr *)rh)->reserved)));
+ 
+-	ret = (rh != NULL) &&
+-	      (segsleft_match(rtinfo->segsleft[0], rtinfo->segsleft[1],
++	ret = (segsleft_match(rtinfo->segsleft[0], rtinfo->segsleft[1],
+ 			      rh->segments_left,
+ 			      !!(rtinfo->invflags & IP6T_RT_INV_SGS))) &&
+ 	      (!(rtinfo->flags & IP6T_RT_LEN) ||
+-- 
+2.17.1
 
-> 
-> ---
->  Documentation/filesystems/vfs.rst |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-> index da4b735..d08357d 100644
-> --- a/Documentation/filesystems/vfs.rst
-> +++ b/Documentation/filesystems/vfs.rst
-> @@ -1116,7 +1116,7 @@ otherwise noted.
->  	before any bytes were remapped.  The remap_flags parameter
->  	accepts REMAP_FILE_* flags.  If REMAP_FILE_DEDUP is set then the
->  	implementation must only remap if the requested file ranges have
-> -	identical contents.  If REMAP_CAN_SHORTEN is set, the caller is
-> +	identical contents.  If REMAP_FILE_CAN_SHORTEN is set, the caller is
->  	ok with the implementation shortening the request length to
->  	satisfy alignment or EOF requirements (or any other reason).
->  
-> 
