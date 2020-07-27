@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1F7C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6E0C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA9E21775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAE5B208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859938;
-	bh=TbXNN2H51Ot2o0VSNGgDM3dKNoviQTATdC575C+5Cf8=;
+	s=default; t=1595859942;
+	bh=ggkb6GNnAaJi1PDawlhwRfvMEN7RJxZwWjUYOHVfT6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Trlq/TXCCQ2RWEEsuGZrVEiLxcAICU28UFGA70uIe/zr9Y9XEkk/fn5vOQZSh/cqP
-	 QVKao6fIuFbrZJke52ZfAOtQ8RvvaTs+JqDDLGiPoqR8ixzBXhvTnDSFkn07DD3B22
-	 GJSTnYgpudMb3MXCvYt3K07s0lvVNZBDJziQ7W3E=
+	b=oKW8icGTEMMtmQAWlRH16Xsue+uIBxYo+jjmVhQOt5WbnsZ+yLcEsjWnBYvo2KV8W
+	 tnoLS0WgwVEyDPPu8z/OABnhSbpP/Jbszn5Xxu76o3pm8pinGaaDNhVeYAOEuq0CtR
+	 xPhsRZhCOlYNIIhAsXOHyNGDM69kUYH421kp210c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732468AbgG0OZg (ORCPT
+        id S1732487AbgG0OZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:25:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55468 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:25:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732439AbgG0OZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:25:29 -0400
+        id S1732467AbgG0OZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:25:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C85B02083E;
-        Mon, 27 Jul 2020 14:25:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 013BA2177B;
+        Mon, 27 Jul 2020 14:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859928;
-        bh=TbXNN2H51Ot2o0VSNGgDM3dKNoviQTATdC575C+5Cf8=;
+        s=default; t=1595859936;
+        bh=ggkb6GNnAaJi1PDawlhwRfvMEN7RJxZwWjUYOHVfT6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x8x5YLseXp9wD6UTmuBfUDvAVENvbDqeGhEgj/R7HXTuZs1fuvQw4t1FY27mkdYzt
-         c6j90PCAq5gI9idFJYsLw6MHJlMBpnC396VXD7MdZV+OmMCkiiUF8gtrQMy+oEL/Yt
-         bCYWmM+4qipawrpXXNYRIf9bwvVkESW3E6o6ZX6s=
+        b=E3tEhvI1/riuJb/Co9smKlmg0cwUB+5cq1/QJor1AxLwNTuaUs3WyDKOdjzyuPlgn
+         Ypa+usFCWBNmwnfBce4V+9393KgMEFN4PNX4jMkiBFLfjv9Du9ruTj+0+c14Q4/ZkE
+         eyB0uex4AzCg6O2JGyHaGUqQv8shAzcf5kVN4rVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
+        stable@vger.kernel.org, Barry Song <song.bao.hua@hisilicon.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Tejun Heo <tj@kernel.org>,
-        Daniel Xu <dxu@dxuuu.xyz>, Chris Down <chris@chrisdown.name>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Roman Gushchin <guro@fb.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 160/179] vfs/xattr: mm/shmem: kernfs: release simple xattr entry in a right way
-Date:   Mon, 27 Jul 2020 16:05:35 +0200
-Message-Id: <20200727134940.469948028@linuxfoundation.org>
+Subject: [PATCH 5.7 163/179] mm/hugetlb: avoid hardcoding while checking if cma is enabled
+Date:   Mon, 27 Jul 2020 16:05:38 +0200
+Message-Id: <20200727134940.606780792@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -64,63 +63,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Barry Song <song.bao.hua@hisilicon.com>
 
-commit 3bef735ad7b7d987069181e7b58588043cbd1509 upstream.
+commit dbda8feadfa46b3d8dd7a2304f84ccbc036effe9 upstream.
 
-After commit fdc85222d58e ("kernfs: kvmalloc xattr value instead of
-kmalloc"), simple xattr entry is allocated with kvmalloc() instead of
-kmalloc(), so we should release it with kvfree() instead of kfree().
+hugetlb_cma[0] can be NULL due to various reasons, for example, node0
+has no memory.  so NULL hugetlb_cma[0] doesn't necessarily mean cma is
+not enabled.  gigantic pages might have been reserved on other nodes.
+This patch fixes possible double reservation and CMA leak.
 
-Fixes: fdc85222d58e ("kernfs: kvmalloc xattr value instead of kmalloc")
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+[akpm@linux-foundation.org: fix CONFIG_CMA=n warning]
+[sfr@canb.auug.org.au: better checks before using hugetlb_cma]
+  Link: http://lkml.kernel.org/r/20200721205716.6dbaa56b@canb.auug.org.au
+
+Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic hugepages using cma")
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Hugh Dickins <hughd@google.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Daniel Xu <dxu@dxuuu.xyz>
-Cc: Chris Down <chris@chrisdown.name>
-Cc: Andreas Dilger <adilger@dilger.ca>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: <stable@vger.kernel.org>	[5.7]
-Link: http://lkml.kernel.org/r/20200704051608.15043-1-cgxu519@mykernel.net
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200710005726.36068-1-song.bao.hua@hisilicon.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/xattr.h |    3 ++-
- mm/shmem.c            |    2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ mm/hugetlb.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/include/linux/xattr.h
-+++ b/include/linux/xattr.h
-@@ -15,6 +15,7 @@
- #include <linux/slab.h>
- #include <linux/types.h>
- #include <linux/spinlock.h>
-+#include <linux/mm.h>
- #include <uapi/linux/xattr.h>
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -46,7 +46,10 @@ int hugetlb_max_hstate __read_mostly;
+ unsigned int default_hstate_idx;
+ struct hstate hstates[HUGE_MAX_HSTATE];
  
- struct inode;
-@@ -94,7 +95,7 @@ static inline void simple_xattrs_free(st
++#ifdef CONFIG_CMA
+ static struct cma *hugetlb_cma[MAX_NUMNODES];
++#endif
++static unsigned long hugetlb_cma_size __initdata;
  
- 	list_for_each_entry_safe(xattr, node, &xattrs->head, list) {
- 		kfree(xattr->name);
--		kfree(xattr);
-+		kvfree(xattr);
+ /*
+  * Minimum page order among possible hugepage sizes, set to a proper value
+@@ -1236,9 +1239,10 @@ static void free_gigantic_page(struct pa
+ 	 * If the page isn't allocated using the cma allocator,
+ 	 * cma_release() returns false.
+ 	 */
+-	if (IS_ENABLED(CONFIG_CMA) &&
+-	    cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order))
++#ifdef CONFIG_CMA
++	if (cma_release(hugetlb_cma[page_to_nid(page)], page, 1 << order))
+ 		return;
++#endif
+ 
+ 	free_contig_range(page_to_pfn(page), 1 << order);
+ }
+@@ -1249,7 +1253,8 @@ static struct page *alloc_gigantic_page(
+ {
+ 	unsigned long nr_pages = 1UL << huge_page_order(h);
+ 
+-	if (IS_ENABLED(CONFIG_CMA)) {
++#ifdef CONFIG_CMA
++	{
+ 		struct page *page;
+ 		int node;
+ 
+@@ -1263,6 +1268,7 @@ static struct page *alloc_gigantic_page(
+ 				return page;
+ 		}
  	}
++#endif
+ 
+ 	return alloc_contig_pages(nr_pages, gfp_mask, nid, nodemask);
+ }
+@@ -2572,7 +2578,7 @@ static void __init hugetlb_hstate_alloc_
+ 
+ 	for (i = 0; i < h->max_huge_pages; ++i) {
+ 		if (hstate_is_gigantic(h)) {
+-			if (IS_ENABLED(CONFIG_CMA) && hugetlb_cma[0]) {
++			if (hugetlb_cma_size) {
+ 				pr_warn_once("HugeTLB: hugetlb_cma is enabled, skip boot time allocation\n");
+ 				break;
+ 			}
+@@ -5548,7 +5554,6 @@ void move_hugetlb_state(struct page *old
  }
  
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -3205,7 +3205,7 @@ static int shmem_initxattrs(struct inode
- 		new_xattr->name = kmalloc(XATTR_SECURITY_PREFIX_LEN + len,
- 					  GFP_KERNEL);
- 		if (!new_xattr->name) {
--			kfree(new_xattr);
-+			kvfree(new_xattr);
- 			return -ENOMEM;
- 		}
+ #ifdef CONFIG_CMA
+-static unsigned long hugetlb_cma_size __initdata;
+ static bool cma_reserve_called __initdata;
  
+ static int __init cmdline_parse_hugetlb_cma(char *p)
 
 
