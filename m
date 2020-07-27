@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7DCC43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A91C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E62012070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75DFE2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859655;
-	bh=8uOWQna+xF+wALsfQe81pslny6LeDhpRhdbY+HKlN6s=;
+	s=default; t=1595859657;
+	bh=XPOZuHx0Bmu2whHdaFaD9f4tjNBNzx0/U0ksny33t6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dFGwD661pO3fk+omYDcSJuXn/teIP337vgdHQQKs/AYzauKXG5pOZ4MKf9sxiE2h5
-	 1Z5zJ0psPJEoHhnyvBr++pFtpuEMzUybS2HcK9OCH5SARLfY8w5+AVH7J1RU+WBUvc
-	 UwZK/whnhTjKi4m9JyzD66RWpzBWROIWpOMxgXPY=
+	b=oRHo8RBJKlOzJvp2CTONECz11g7GNRszeXYKimvG0FNUEG70YXCOkgcsPOkW4AUda
+	 2ZNCf3LuE3Ozi1Q6AB8UB3xJJ95JHa3G4rQslFwqthDXnLA7oPpeFe+6MYWDJSq+Lm
+	 Fu34kbDhiVTmai8WacTRvX529Sz5S1T6NnThEdPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731620AbgG0OUw (ORCPT
+        id S1731627AbgG0OU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:20:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49080 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:20:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731042AbgG0OUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:20:43 -0400
+        id S1731588AbgG0OUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:20:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFFEE20775;
-        Mon, 27 Jul 2020 14:20:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBE7D2075A;
+        Mon, 27 Jul 2020 14:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859643;
-        bh=8uOWQna+xF+wALsfQe81pslny6LeDhpRhdbY+HKlN6s=;
+        s=default; t=1595859648;
+        bh=XPOZuHx0Bmu2whHdaFaD9f4tjNBNzx0/U0ksny33t6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B4KEfb+MhD/+8dIa9zdT8MCzj8fgcwDm7g86oHthV824sVY9elcIezQW2xXSVbFAH
-         LRFBr+kFCIUQUog9YSYp48Q/RV2siNq0G0DkvHgsgJiaRU0kK/dMEO57w/sa1SCKyA
-         fv2zBwIV5eTMNuMzLjdCVg0Z6WMShidsy6aCjwGg=
+        b=zZwktswBqrsV+FKW8ZdJOEvXNq/Q2uE5W6GTxIPvGYQAYePqQQV4j+HWZR2Lw+Vhi
+         ZPiGMbW0EMHmu2fTTSvGWuXFPJTyDc5Y6+KTEh5au7szghK+0scgcAxDMWTSx7GaVw
+         gYK6DP4PjD4Bun+xFQ4ZsthQVin42ZREbSIsemMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 048/179] hippi: Fix a size used in a pci_free_consistent() in an error handling path
-Date:   Mon, 27 Jul 2020 16:03:43 +0200
-Message-Id: <20200727134935.008020495@linuxfoundation.org>
+Subject: [PATCH 5.7 021/179] drm/nouveau/nouveau: fix page fault on device private memory
+Date:   Mon, 27 Jul 2020 16:03:16 +0200
+Message-Id: <20200727134933.700692019@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,36 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Ralph Campbell <rcampbell@nvidia.com>
 
-[ Upstream commit 3195c4706b00106aa82c73acd28340fa8fc2bfc1 ]
+[ Upstream commit ed710a6ed797430026aa5116dd0ab22378798b69 ]
 
-The size used when calling 'pci_alloc_consistent()' and
-'pci_free_consistent()' should match.
+If system memory is migrated to device private memory and no GPU MMU
+page table entry exists, the GPU will fault and call hmm_range_fault()
+to get the PFN for the page. Since the .dev_private_owner pointer in
+struct hmm_range is not set, hmm_range_fault returns an error which
+results in the GPU program stopping with a fatal fault.
+Fix this by setting .dev_private_owner appropriately.
 
-Fix it and have it consistent with the corresponding call in 'rr_close()'.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 08ddddda667b ("mm/hmm: check the device private page owner in hmm_range_fault()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hippi/rrunner.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nouveau_svm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/hippi/rrunner.c b/drivers/net/hippi/rrunner.c
-index 2a6ec53949666..a4b3fce69ecd9 100644
---- a/drivers/net/hippi/rrunner.c
-+++ b/drivers/net/hippi/rrunner.c
-@@ -1242,7 +1242,7 @@ static int rr_open(struct net_device *dev)
- 		rrpriv->info = NULL;
- 	}
- 	if (rrpriv->rx_ctrl) {
--		pci_free_consistent(pdev, sizeof(struct ring_ctrl),
-+		pci_free_consistent(pdev, 256 * sizeof(struct ring_ctrl),
- 				    rrpriv->rx_ctrl, rrpriv->rx_ctrl_dma);
- 		rrpriv->rx_ctrl = NULL;
- 	}
+diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
+index 645fedd77e21b..a9ce86740799f 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_svm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+@@ -534,6 +534,7 @@ static int nouveau_range_fault(struct nouveau_svmm *svmm,
+ 		.flags = nouveau_svm_pfn_flags,
+ 		.values = nouveau_svm_pfn_values,
+ 		.pfn_shift = NVIF_VMM_PFNMAP_V0_ADDR_SHIFT,
++		.dev_private_owner = drm->dev,
+ 	};
+ 	struct mm_struct *mm = notifier->notifier.mm;
+ 	long ret;
 -- 
 2.25.1
 
