@@ -2,95 +2,74 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC675C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26651C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A88902072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:06:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ps0PSNmy"
+	by mail.kernel.org (Postfix) with ESMTP id EE9742075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgG0WGA (ORCPT
+        id S1726861AbgG0WJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 18:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgG0WGA (ORCPT
+        Mon, 27 Jul 2020 18:09:25 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:36534 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgG0WJZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 18:06:00 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E84B5C061794;
-        Mon, 27 Jul 2020 15:05:59 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFv5J6Z96z9sRN;
-        Tue, 28 Jul 2020 08:05:56 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595887557;
-        bh=5Xgk6T29gT4r7qEJskUynBAKA/63XfobTqWY/vGkWtk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ps0PSNmyX5Biz2JN/zsbcWAR17F9L8CuKk1GIKyFLBZATuYVdrhkG60z/PkG4f/wA
-         H6aJ7VPTocC3R2xmZHF8d+Ry+BXEfZROu8duwBlmKWihBMvweigyVmv27kKoV8Xigg
-         b7FcQBmaa9vhfkWICpUc/UqbuvJkin9nlHrGkFfUq0lvvSMT+OdcfHEqH2KC9SgDpM
-         iJmqmeimjELKqraGaWhEai57Phm/jfmT6Iz4FL+SkWgPx9PyeRIPiCnQCcZ13a8iqZ
-         rHJuiBwfY6GbrFxTmNlIOKLf2NoqwfqyqdHai/+Y693x3WZe3xpibjOKZpSduztWIA
-         0y2n/h/WSmfUA==
-Date:   Tue, 28 Jul 2020 08:05:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the vhost tree
-Message-ID: <20200728080556.447ba206@canb.auug.org.au>
+        Mon, 27 Jul 2020 18:09:25 -0400
+Date:   Mon, 27 Jul 2020 18:09:24 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: [GIT PULL] arch/sh additional critical fixes 5.8
+Message-ID: <20200727220922.GP6949@brightrain.aerifal.cx>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_iYXZsDZiIk.98+epKb.6UF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_iYXZsDZiIk.98+epKb.6UF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Linus,
 
-Hi all,
+I have some last-minute fixes I hope you can still pull in for 5.8.
+One is for a boot regression (mmu code broken) and the other fixes a
+long-standing broken syscall number bounds check.
 
-ommit
+Rich
 
-  ed944d574cc7 ("ack! virtio: VIRTIO_F_IOMMU_PLATFORM -> VIRTIO_F_ACCESS_PL=
-ATFORM")
 
-is missing a Signed-off-by from its author and committer.
 
-I have never seen an empty commit like this before - I assume it is just
-a way to add an Reviewed-by to a previous commit without rebaseing
-the tree.
+The following changes since commit 92ed301919932f777713b9172e525674157e983d:
 
---=20
-Cheers,
-Stephen Rothwell
+  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
 
---Sig_/_iYXZsDZiIk.98+epKb.6UF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+are available in the Git repository at:
 
------BEGIN PGP SIGNATURE-----
+  git://git.libc.org/linux-sh tags/sh-for-5.8-part2
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8fT8QACgkQAVBC80lX
-0Gx7oAgAi3Yl36WvbxdjGo1Mmq+CZEK2eGeV7e9OEq1+sVULWB7+J/owkizFatnZ
-FyLaToLVp1Ywj9xKUuTyplBtYOYCO0us609Dj1urgOmOVBXhJR6yuRyuPG6gIojv
-iB2caUs+RjMblXeHekNSU3kpnh9zcIwbF6ovSZbaXBGEfN7jYGif7cuegRNbZu9j
-BeBQch8Yv9vCPyCwlVn7BO1k9ruhu6RLqAruaRHPbk6vJqbM3lnH24zObXgrIozA
-ps+NqdG17C4kfcSSLHLJdQLWyylJhbUq2SIaKEdOv1EnqatdQOeBYSdu7dsyUYHf
-oLwSGJNI08jXfDgh5DW9mqcv1+co0A==
-=3HhI
------END PGP SIGNATURE-----
+for you to fetch changes up to 04a8a3d0a73f51c7c2da84f494db7ec1df230e69:
 
---Sig_/_iYXZsDZiIk.98+epKb.6UF--
+  sh: Fix validation of system call number (2020-07-27 16:12:49 -0400)
+
+----------------------------------------------------------------
+Fixes for major regression and longstanding bounds-checking error.
+
+----------------------------------------------------------------
+Michael Karcher (1):
+      sh: Fix validation of system call number
+
+Peter Zijlstra (1):
+      sh/tlb: Fix PGTABLE_LEVELS > 2
+
+ arch/sh/include/asm/pgalloc.h | 10 +---------
+ arch/sh/kernel/entry-common.S |  6 +++---
+ 2 files changed, 4 insertions(+), 12 deletions(-)
