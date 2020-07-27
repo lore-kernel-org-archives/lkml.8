@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D808C43458
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38489C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05187207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 118A820838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860376;
-	bh=0ZJWlq1G8erVgH9EJ/RuAJrxn1aUU9FfBEqTpkzpFxc=;
+	s=default; t=1595860382;
+	bh=1w8MiR6uKDyPlF/1ToVflJLi46J2u7KN6DicBT8X3T4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o5FEg8/5MQH1YAcAf6bCnBZDAyi/s+Y/rRwGPU0UHdPPQGiNPPOXILAfG9su4B3eO
-	 nlWeQ5xMAC38dBaVIvS1u1lcZEBjBeOPQxLOHFCKhkvo57flIYs45qeu4TIKUUDkR2
-	 m/VrrP89WtLemgev/xhUFnEklMbxtxhRDvquP3Yw=
+	b=QUhOONma11XatBamuWXsztTUklClu9vNH824VEqn/qi4iiWMiR79rrbZ1HB1qcOJz
+	 DFzP3BNmr7ZMQyUODo472J3i5KF2W1M8Ho66c4dAIE//G2v+vk01+NNoDxobEY2GB3
+	 eXc5W84o4w17418hm2sUCv5903REtVkEftrSaNsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730576AbgG0Ocz (ORCPT
+        id S1731182AbgG0OSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:32:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46138 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:18:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731224AbgG0OS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:29 -0400
+        id S1731158AbgG0OSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5045F2070A;
-        Mon, 27 Jul 2020 14:18:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17F622075A;
+        Mon, 27 Jul 2020 14:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859508;
-        bh=0ZJWlq1G8erVgH9EJ/RuAJrxn1aUU9FfBEqTpkzpFxc=;
+        s=default; t=1595859483;
+        bh=1w8MiR6uKDyPlF/1ToVflJLi46J2u7KN6DicBT8X3T4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DKMBjkNHoKRWaGZxXSKU2FVTDQqChUDaNEbz6HYI5w3Vi12lkLiklR+v0IEC0RMYE
-         1ehOKKYb33MQf51fNWZyRxSCAnRuRpA7c6HlZihLFxKneBNoK19jF94xIqEzNhDerr
-         fzprGb2iEDSVs3Tnr3xY0RX79Wrrmmd0wwFw1jxw=
+        b=l02IGlZamQsrUH+iRv4UNZG6+0l/gcMlfrpWCH0XrX4nmyLzxTkPjPRjmpSPns2GZ
+         lU+sHstJoM+5l8WAopy94WB9yrtTnk0Trjbj+8P1QrFybYqQBs6dySsFLLj/EPfL/r
+         pGr5zl51Ity59/4aqFcd+AEEaHdvjsE31X0Ij+ZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Patrick Fernie <patrick.fernie@gmail.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Subject: [PATCH 5.4 107/138] Revert "cifs: Fix the target file was deleted when rename failed."
-Date:   Mon, 27 Jul 2020 16:05:02 +0200
-Message-Id: <20200727134930.819342802@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 126/138] io-mapping: indicate mapping failure
+Date:   Mon, 27 Jul 2020 16:05:21 +0200
+Message-Id: <20200727134931.729052190@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -62,58 +65,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Michael J. Ruhl <michael.j.ruhl@intel.com>
 
-commit 0e6705182d4e1b77248a93470d6d7b3013d59b30 upstream.
+commit e0b3e0b1a04367fc15c07f44e78361545b55357c upstream.
 
-This reverts commit 9ffad9263b467efd8f8dc7ae1941a0a655a2bab2.
+The !ATOMIC_IOMAP version of io_maping_init_wc will always return
+success, even when the ioremap fails.
 
-Upon additional testing with older servers, it was found that
-the original commit introduced a regression when using the old SMB1
-dialect and rsyncing over an existing file.
+Since the ATOMIC_IOMAP version returns NULL when the init fails, and
+callers check for a NULL return on error this is unexpected.
 
-The patch will need to be respun to address this, likely including
-a larger refactoring of the SMB1 and SMB3 rename code paths to make
-it less confusing and also to address some additional rename error
-cases that SMB3 may be able to workaround.
+During a device probe, where the ioremap failed, a crash can look like
+this:
 
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reported-by: Patrick Fernie <patrick.fernie@gmail.com>
-CC: Stable <stable@vger.kernel.org>
-Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
-Acked-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+    BUG: unable to handle page fault for address: 0000000000210000
+     #PF: supervisor write access in kernel mode
+     #PF: error_code(0x0002) - not-present page
+     Oops: 0002 [#1] PREEMPT SMP
+     CPU: 0 PID: 177 Comm:
+     RIP: 0010:fill_page_dma [i915]
+       gen8_ppgtt_create [i915]
+       i915_ppgtt_create [i915]
+       intel_gt_init [i915]
+       i915_gem_init [i915]
+       i915_driver_probe [i915]
+       pci_device_probe
+       really_probe
+       driver_probe_device
+
+The remap failure occurred much earlier in the probe.  If it had been
+propagated, the driver would have exited with an error.
+
+Return NULL on ioremap failure.
+
+[akpm@linux-foundation.org: detect ioremap_wc() errors earlier]
+
+Fixes: cafaf14a5d8f ("io-mapping: Always create a struct to hold metadata about the io-mapping")
+Signed-off-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200721171936.81563-1-michael.j.ruhl@intel.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |   10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ include/linux/io-mapping.h |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1791,7 +1791,6 @@ cifs_rename2(struct inode *source_dir, s
- 	FILE_UNIX_BASIC_INFO *info_buf_target;
- 	unsigned int xid;
- 	int rc, tmprc;
--	bool new_target = d_really_is_negative(target_dentry);
- 
- 	if (flags & ~RENAME_NOREPLACE)
- 		return -EINVAL;
-@@ -1868,13 +1867,8 @@ cifs_rename2(struct inode *source_dir, s
- 	 */
- 
- unlink_target:
--	/*
--	 * If the target dentry was created during the rename, try
--	 * unlinking it if it's not negative
--	 */
--	if (new_target &&
--	    d_really_is_positive(target_dentry) &&
--	    (rc == -EACCES || rc == -EEXIST)) {
-+	/* Try unlinking the target dentry if it's not negative */
-+	if (d_really_is_positive(target_dentry) && (rc == -EACCES || rc == -EEXIST)) {
- 		if (d_is_dir(target_dentry))
- 			tmprc = cifs_rmdir(target_dir, target_dentry);
- 		else
+--- a/include/linux/io-mapping.h
++++ b/include/linux/io-mapping.h
+@@ -108,9 +108,12 @@ io_mapping_init_wc(struct io_mapping *io
+ 		   resource_size_t base,
+ 		   unsigned long size)
+ {
++	iomap->iomem = ioremap_wc(base, size);
++	if (!iomap->iomem)
++		return NULL;
++
+ 	iomap->base = base;
+ 	iomap->size = size;
+-	iomap->iomem = ioremap_wc(base, size);
+ #if defined(pgprot_noncached_wc) /* archs can't agree on a name ... */
+ 	iomap->prot = pgprot_noncached_wc(PAGE_KERNEL);
+ #elif defined(pgprot_writecombine)
 
 
