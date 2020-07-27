@@ -2,176 +2,200 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 829EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5977B2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D30020658
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:17:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="UHP+9qf/"
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="i5D7zyV6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgG0JQx (ORCPT
+        id S1726799AbgG0JRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:16:53 -0400
-Received: from mail-eopbgr80092.outbound.protection.outlook.com ([40.107.8.92]:2273
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726228AbgG0JQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:16:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mEp22kv/0IoHje8sV6q49zBJ8Od//nPOdJoCchkeXFJrRniAzhrl9nHC8s1pTy0ZtJXOorumvy+7bRSqATyTdtYH9YPQVQW5VK5v2CQs2xX1TpeTjke7nWOQcjI3NOLBzFLjnv7jbuj8YhqHDtsyjt2zPSEQ3/S2QXWRBtr5crHEi0HYROcqo8cj1SVouIyluqS+L7AxfnUABH6CUBi++HKX8M4bOsVarEt7o/RWY1iR2NDE9EJEVuW+4W0AMWgwosuuGkCh+37+ClVoWkSVt1tHvHlZHPcg1QOhx1/Ti/n2XjJmFqIFc46pOa07NXO6UJQ02MdR36PCqlsPwJfDiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HHfbDT8EtNYDA7usp/FkCa1wC81cH3WxvoiVgY79GYw=;
- b=FZXF0QjZ5wTORz1cma0oq3v94Mo49+7y7eWotxhQP3C11QAkVbPlzeiV0HmfyzI1qIsej/GYONZtJjTcizhPkmyzYOdIhElJ+216GR9XkvprTt8BBN0gpvVctM0H9DldWK6CsQwl/inVu2KuH+TterkX6wU6u425IKXW6/wMbNAfVDOh4z+XW1XmdPBnHOyCa5ZX/mQBKNsmuU/sA2yKBSbJiFQ/Do9cXb5/7geOzDCQ6e2oNBRabCmXGeOd5dc9iY/rBl6AmohKooZUPBgs4SiAbtFO70G+3t+oL3N+xCNrtEgT6K4U3NO+P6Bty/2Xj8f525u+viGNW4MX0W4vMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HHfbDT8EtNYDA7usp/FkCa1wC81cH3WxvoiVgY79GYw=;
- b=UHP+9qf/qfp/HPjERn+Qgnz34TOKSuZbVyuqhgU+NnzW/3BqaE9DL+ZDFS8nF+Rm/wtO3V2jcb+yS34UQNXwwNWSMgrbhtgZey4v8wjNY28xDR7NqUD/D6pSV0NZVXu86KV5MutqrtCiKvam8hKrLaHdLHUY6Nn82jaboV+meJA=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=axentia.se;
-Received: from DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
- by DB7PR02MB4106.eurprd02.prod.outlook.com (2603:10a6:10:4c::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Mon, 27 Jul
- 2020 09:16:48 +0000
-Received: from DB8PR02MB5482.eurprd02.prod.outlook.com
- ([fe80::3890:7b1:97a6:1e47]) by DB8PR02MB5482.eurprd02.prod.outlook.com
- ([fe80::3890:7b1:97a6:1e47%7]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
- 09:16:48 +0000
-Subject: Re: [PATCH 2/2] iio: afe: rescale: Implement write_raw
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>
-Cc:     od@zcrc.me, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200210225438.112660-1-paul@crapouillou.net>
- <20200210225438.112660-2-paul@crapouillou.net>
- <20200215183249.2100b6e9@archlinux> <7CJSDQ.D8SUUUMJPNE02@crapouillou.net>
- <20200726134123.456bf3ad@archlinux>
-From:   Peter Rosin <peda@axentia.se>
-Organization: Axentia Technologies AB
-Message-ID: <800f2305-ad72-01c5-b57d-03e8b9152cca@axentia.se>
-Date:   Mon, 27 Jul 2020 11:16:26 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200726134123.456bf3ad@archlinux>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: HE1PR0901CA0059.eurprd09.prod.outlook.com
- (2603:10a6:3:45::27) To DB8PR02MB5482.eurprd02.prod.outlook.com
- (2603:10a6:10:eb::29)
+        Mon, 27 Jul 2020 05:17:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbgG0JRn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:17:43 -0400
+Received: from vulcan.natalenko.name (vulcan.natalenko.name [IPv6:2001:19f0:6c00:8846:5400:ff:fe0c:dfa0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18799C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:17:43 -0700 (PDT)
+Received: from mail.natalenko.name (vulcan.natalenko.name [IPv6:fe80::5400:ff:fe0c:dfa0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by vulcan.natalenko.name (Postfix) with ESMTPSA id 12CD77DB276;
+        Mon, 27 Jul 2020 11:17:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+        s=dkim-20170712; t=1595841456;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oE5bsJtqpXv5ohjSvoncB9kAagQg4UUv7dXdwAH9yOY=;
+        b=i5D7zyV6nYk9CoegNS1yttd4Dshy2BicvyyuR6N8oJLn26sNyExEVB49G/7wZrPMNDhzd5
+        V+/bL17nZOcCv97h7nrsYNDX3B1XLbvdyfI2H4J5rQ9gk1UDku2Ie68jl0X7iEBj8D4BdQ
+        DCM4mRCQottk8ceOHQIdOu1FYojkHG8=
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.13.3] (85.226.217.78) by HE1PR0901CA0059.eurprd09.prod.outlook.com (2603:10a6:3:45::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Mon, 27 Jul 2020 09:16:47 +0000
-X-Originating-IP: [85.226.217.78]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5f393d05-f8f4-4297-378d-08d8320dc9f1
-X-MS-TrafficTypeDiagnostic: DB7PR02MB4106:
-X-Microsoft-Antispam-PRVS: <DB7PR02MB41066827CF7758FF01397D14BC720@DB7PR02MB4106.eurprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pQpPvIfPGhKf6k6oL49bUNhLSNmH/0MESGdXgRaRLGqQssiHZcBM0WICNhZVfMDP47czgwsWdQtmB5j4hOmLXRhJU9l+QsGo6TD9SRSaGUkALhFgDUgJItc5nMCkS6AiyzNAzk3HVdPX7eI1NaHNEtKTOHk735sdseD1ZpptRULVUODdzCUbUu41mJKRs4vIBM4KVTmOvwYD2GGTjS1eJ15EeOdlDzjmvNk7CsyQOHSEz6SYVIh6+2ncJqCNMRL3j5H26+CjItAS4xNXhJg2E7Z2jwcIALYRnP5xYF/gtD5MMbHYncjjfUYPRcwM4LyUhrsDexAUiYZ9gfn3uLx1l80HKQuuw2Mh3d57INTv7hqSGbiDBUXzI2OCMkRiDeAl
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5482.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(39830400003)(376002)(136003)(346002)(366004)(66946007)(66556008)(956004)(2616005)(31696002)(66476007)(4326008)(110136005)(5660300002)(31686004)(26005)(8676002)(16576012)(16526019)(186003)(36916002)(316002)(2906002)(52116002)(6486002)(53546011)(508600001)(36756003)(6666004)(8936002)(86362001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: gavP1Fb1MTf9A+kaC3PIumKhpJxJuL8KY8H43BQ2Ge7UeWIO6yleOQyj9W0Tw2Pd2I/WaJuzLLZkmGJ1P/fPlI1mweA70rFhNmZvkQGq8VVlkS3MAsXzK2E8zoGXseBU8nheJHRFuhnCU9QpzPIyOtBnuIxILZjt4YB9fJbxhwSLybq1k3VinAIO7hfkeZdxYsGE3wdIUhvJtzCCRdmgxSrpIusytiQ+TIy7kCcUmeUNwuaWnhLIL7ylmK/wl3nRluNYKIxqlbMZX2xM5AzMyykl17EZXGsOtabAb6zo54OJngDWVjUD8+1o2f5EzUr3gDgasazT57DCQ1fD1PeBAiD9WBXEmEDDriAX/94MT9rZEt3qUlO3AfPq2heOCZBGTEDWS4CPMP4yM6UuFFwCzdIxYe5ekY1yAi5zN3sIgJhiepuirxjuz7SNt51VNyn6ubmAKD5WxFZDH6ANw59+uOhFX8ZFPVutfkvu57I/aNE=
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f393d05-f8f4-4297-378d-08d8320dc9f1
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5482.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 09:16:48.0625
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kTlOe6qWZJ6z+Y2oXC5VIDGJ9VE1Yv7lWTYowaurk6NtyX7dsPXeMFu1reDwGT5Y
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR02MB4106
+Date:   Mon, 27 Jul 2020 11:17:35 +0200
+From:   Oleksandr Natalenko <oleksandr@natalenko.name>
+To:     Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        axboe@kernel.dk, paolo.valente@linaro.org
+Subject: Re: [PATCH] block: bfq fix blkio cgroup leakage v3
+In-Reply-To: <20200727080107.6431-1-dmtrmonakhov@yandex-team.ru>
+References: <6422992afade0015d817a65c124e0c75@natalenko.name>
+ <20200727080107.6431-1-dmtrmonakhov@yandex-team.ru>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <1bfaa79dd9d336b0943c863f918737b2@natalenko.name>
+X-Sender: oleksandr@natalenko.name
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-
-Sorry for the delay. Vacation...
-
-On 2020-07-26 14:41, Jonathan Cameron wrote:
-> On Tue, 21 Jul 2020 01:16:55 +0200
-> Paul Cercueil <paul@crapouillou.net> wrote:
+On 27.07.2020 10:01, Dmitry Monakhov wrote:
+> commit db37a34c563b ("block, bfq: get a ref to a group when adding it
+> to a service tree")
+> introduce leak forbfq_group and blkcg_gq objects because of get/put
+> imbalance. See trace balow:
+> -> blkg_alloc
+>    -> bfq_pq_alloc
+>      -> bfqg_get (+1)
+> ->bfq_activate_bfqq
+>   ->bfq_activate_requeue_entity
+>     -> __bfq_activate_entity
+>        ->bfq_get_entity
+>          ->bfqg_and_blkg_get (+1)  <==== : Note1
+> ->bfq_del_bfqq_busy
+>   ->bfq_deactivate_entity+0x53/0xc0 [bfq]
+>     ->__bfq_deactivate_entity+0x1b8/0x210 [bfq]
+>       -> bfq_forget_entity(is_in_service = true)
+> 	 entity->on_st_or_in_serv = false   <=== :Note2
+> 	 if (is_in_service)
+> 	     return;  ==> do not touch reference
+> -> blkcg_css_offline
+>  -> blkcg_destroy_blkgs
+>   -> blkg_destroy
+>    -> bfq_pd_offline
+>     -> __bfq_deactivate_entity
+>          if (!entity->on_st_or_in_serv) /* true, because (Note2)
+> 		return false;
+>  -> bfq_pd_free
+>     -> bfqg_put() (-1, byt bfqg->ref == 2) because of (Note2)
+> So bfq_group and blkcg_gq  will leak forever, see test-case below.
 > 
->> Hi Jonathan,
->>
->> Le sam. 15 févr. 2020 à 18:32, Jonathan Cameron <jic23@kernel.org> a 
->> écrit :
->>> On Mon, 10 Feb 2020 19:54:38 -0300
->>> Paul Cercueil <paul@crapouillou.net> wrote:
->>>   
->>>>  Implement write_raw by converting the value if writing the scale, or
->>>>  just calling the managed channel driver's write_raw otherwise.
->>>>
->>>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>>>  ---
->>>>   drivers/iio/afe/iio-rescale.c | 22 ++++++++++++++++++++++
->>>>   1 file changed, 22 insertions(+)
->>>>
->>>>  diff --git a/drivers/iio/afe/iio-rescale.c 
->>>> b/drivers/iio/afe/iio-rescale.c
->>>>  index 95802d9ee25e..a48f6af9316d 100644
->>>>  --- a/drivers/iio/afe/iio-rescale.c
->>>>  +++ b/drivers/iio/afe/iio-rescale.c
->>>>  @@ -35,6 +35,27 @@ struct rescale {
->>>>   	int *scale_data;
->>>>   };
->>>>
->>>>  +static int rescale_write_raw(struct iio_dev *indio_dev,
->>>>  +			     struct iio_chan_spec const *chan,
->>>>  +			     int val, int val2, long mask)
->>>>  +{
->>>>  +	struct rescale *rescale = iio_priv(indio_dev);
->>>>  +	unsigned long long tmp;
->>>>  +
->>>>  +	switch (mask) {
->>>>  +	case IIO_CHAN_INFO_SCALE:
->>>>  +		tmp = val * 1000000000LL;
->>>>  +		do_div(tmp, rescale->numerator);
->>>>  +		tmp *= rescale->denominator;
->>>>  +		do_div(tmp, 1000000000LL);
->>>>  +		return iio_write_channel_attribute(rescale->source, tmp, 0,
->>>>  +						   IIO_CHAN_INFO_SCALE);  
->>>
->>> Why is val2 always 0?  Won't that only work if the backend device
->>> has integer scales?  
->>
->> Sorry, somehow I didn't see your answer.
->>
->> Indeed, this will only work if the backend device has integer scales, 
->> but what should I do? Just pass 'val2' instead of 0? Will the value be 
->> correct if I only apply the scale ratio to 'val'?
+> We should drop group reference once it finaly removed from service
+> inside __bfq_bfqd_reset_in_service, as we do with queue entities.
 > 
-> I think you'll need to include it through the calculation. Given you
-> premultiply by 1000000000LL it should be easy enough to do.
-> Then for the final do_div you can easily work out the val2 part.
+> ##TESTCASE_BEGIN:
+> #!/bin/bash
 > 
-> I'm not sure we currently have an inkern interface to get the type
-> of the channel attribute value though.  You may need to add one.
+> max_iters=${1:-100}
+> #prep cgroup mounts
+> mount -t tmpfs cgroup_root /sys/fs/cgroup
+> mkdir /sys/fs/cgroup/blkio
+> mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
+> 
+> # Prepare blkdev
+> grep blkio /proc/cgroups
+> truncate -s 1M img
+> losetup /dev/loop0 img
+> echo bfq > /sys/block/loop0/queue/scheduler
+> 
+> grep blkio /proc/cgroups
+> for ((i=0;i<max_iters;i++))
+> do
+>     mkdir -p /sys/fs/cgroup/blkio/a
+>     echo 0 > /sys/fs/cgroup/blkio/a/cgroup.procs
+>     dd if=/dev/loop0 bs=4k count=1 of=/dev/null iflag=direct 2> 
+> /dev/null
+>     echo 0 > /sys/fs/cgroup/blkio/cgroup.procs
+>     rmdir /sys/fs/cgroup/blkio/a
+>     grep blkio /proc/cgroups
+> done
+> ##TESTCASE_END:
+> 
+> changes since v2:
+>  - use safe iteration macro to prevent freed object dereference.
+> 
+> Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+> ---
+>  block/bfq-wf2q.c | 24 ++++++++++++++----------
+>  1 file changed, 14 insertions(+), 10 deletions(-)
+> 
+> diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+> index 8113138..13b417a 100644
+> --- a/block/bfq-wf2q.c
+> +++ b/block/bfq-wf2q.c
+> @@ -635,14 +635,10 @@ static void bfq_idle_insert(struct 
+> bfq_service_tree *st,
+>   * @entity: the entity being removed.
+>   * @is_in_service: true if entity is currently the in-service entity.
+>   *
+> - * Forget everything about @entity. In addition, if entity represents
+> - * a queue, and the latter is not in service, then release the service
+> - * reference to the queue (the one taken through bfq_get_entity). In
+> - * fact, in this case, there is really no more service reference to
+> - * the queue, as the latter is also outside any service tree. If,
+> - * instead, the queue is in service, then __bfq_bfqd_reset_in_service
+> - * will take care of putting the reference when the queue finally
+> - * stops being served.
+> + * Forget everything about @entity. If entity is not in service, then 
+> release
+> + * the service reference to the entity (the one taken through  
+> bfq_get_entity).
+> + * If the entity is in service, then __bfq_bfqd_reset_in_service will 
+> take care
+> + * of putting the reference when the entity finally stops being 
+> served.
+>   */
+>  static void bfq_forget_entity(struct bfq_service_tree *st,
+>  			      struct bfq_entity *entity,
+> @@ -1615,6 +1611,7 @@ bool __bfq_bfqd_reset_in_service(struct bfq_data 
+> *bfqd)
+>  	struct bfq_queue *in_serv_bfqq = bfqd->in_service_queue;
+>  	struct bfq_entity *in_serv_entity = &in_serv_bfqq->entity;
+>  	struct bfq_entity *entity = in_serv_entity;
+> +	struct bfq_entity *parent = NULL;
+> 
+>  	bfq_clear_bfqq_wait_request(in_serv_bfqq);
+>  	hrtimer_try_to_cancel(&bfqd->idle_slice_timer);
+> @@ -1626,9 +1623,16 @@ bool __bfq_bfqd_reset_in_service(struct bfq_data 
+> *bfqd)
+>  	 * execute the final step: reset in_service_entity along the
+>  	 * path from entity to the root.
+>  	 */
+> -	for_each_entity(entity)
+> +	for_each_entity_safe(entity, parent) {
+>  		entity->sched_data->in_service_entity = NULL;
+> -
+> +		/*
+> +		 * Release bfq_groups reference if it was not released in
+> +		 * bfq_forget_entity, which was taken in bfq_get_entity.
+> +		 */
+> +		if (!bfq_entity_to_bfqq(entity) && !entity->on_st_or_in_serv)
+> +			bfqg_and_blkg_put(container_of(entity, struct bfq_group,
+> +						       entity));
+> +	}
+>  	/*
+>  	 * in_serv_entity is no longer in service, so, if it is in no
+>  	 * service tree either, then release the service reference to
 
-Right, I didn't originally add scaled writing as
-1. I don't need it.
-2. It's a rats nest, IIRC some drivers are picky in what they take and
-   you would need some kind of matrix of how to best handle the different
-   conversion cases. I just didn't want to go there, and this patch
-   feels far too simple to be adequate. But then again, maybe my memory is
-   poorer that I thought...
+Reportedly, this one crashes too [1], and this happens even earlier than 
+with v2.
 
-Cheers,
-Peter
+[1] 
+http://pix.academ.info/images/img/2020/07/27/91f656514707728730b0b67f8c9f4a04.jpg
+
+-- 
+   Oleksandr Natalenko (post-factum)
