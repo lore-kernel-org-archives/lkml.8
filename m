@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AF8C433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D45C43466
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2241322B40
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652DD22B45
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892320;
-	bh=eKu6DjY96eDrcXdrf0WG2Xm8sTccD7/FHOeOGDcFR9Y=;
+	s=default; t=1595892324;
+	bh=eMP58QO9Rlabxhp3ZpKPfysVhjN0uuIbRwVWnL00Zh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6+P7DOHoc8Lgp3yBnY1IqFp7ktOnLBr3eY2LoxijaE3sAcVwdCTfO5vxCzJiky64
-	 McKKiLQnrOQWkF8Lp6sposMLnimEefYBi0ZueMIP7suPjjjekZ2pJddWRZyfpMiU0J
-	 E4RvuF6OXb83zyTbNwnDtqr48Xyt5P0QSaoiEndQ=
+	b=1F7MAcOdFbm2FSEfW0FqFQ7hB5aRx7u5XtDpJoDJQmmmfdls5UPRXE/0Y/gYHwTBH
+	 G3AMGi2RBhOeV8y0xUhzGBUwTpHrl57bVVKBi4cpJxKAxrxr53Gpt6fRYr04mvvpAJ
+	 2PiAG3a7/sTtkO099A1ja+ZW4J9HPKAMi73WlMJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgG0XZS (ORCPT
+        id S1728600AbgG0XZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:25:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36472 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728528AbgG0XZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:25:12 -0400
+        id S1728571AbgG0XZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:25:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 031E922B42;
-        Mon, 27 Jul 2020 23:25:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD94B208E4;
+        Mon, 27 Jul 2020 23:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892311;
-        bh=eKu6DjY96eDrcXdrf0WG2Xm8sTccD7/FHOeOGDcFR9Y=;
+        s=default; t=1595892317;
+        bh=eMP58QO9Rlabxhp3ZpKPfysVhjN0uuIbRwVWnL00Zh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9c8fIbOgxViMkEVR8kSxrL/jcvyUgiTLCr9LnjSzsjp3fY88MizfYI+mbP3QlDHB
-         YlPoxq9w9nOEYUAZznaFKQKPFQ0+NxytZzaKVUvvtLhvB9FBGCFkLuHUg+K3nLaEy2
-         JoR9ZFoYkt2x+JfsfXXIy/FIqy4FUnvbYXGrmq9s=
+        b=H6unBQStAoKVqj7CLUumZk9Grm5dRPP3F1p2wyPJq0gqa7uRmIIjDdP9v4o+0Ti0A
+         pc6xmD27wjNEY0E3kZr3SDKAq46ce+MNv+twFCjZl1yIzNWKmAXTINYHg9aZ1NR5Yt
+         98agtW5chnpdu6PsTfkBV+g7aVzm8OIy/8XKvbok=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+Cc:     Laurence Oberman <loberman@redhat.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 09/10] cxgb4: add missing release on skb in uld_send()
-Date:   Mon, 27 Jul 2020 19:24:57 -0400
-Message-Id: <20200727232458.718131-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 2/7] qed: Disable "MFW indication via attention" SPAM every 5 minutes
+Date:   Mon, 27 Jul 2020 19:25:09 -0400
+Message-Id: <20200727232514.718265-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200727232458.718131-1-sashal@kernel.org>
-References: <20200727232458.718131-1-sashal@kernel.org>
+In-Reply-To: <20200727232514.718265-1-sashal@kernel.org>
+References: <20200727232514.718265-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,32 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Laurence Oberman <loberman@redhat.com>
 
-[ Upstream commit e6827d1abdc9b061a57d7b7d3019c4e99fabea2f ]
+[ Upstream commit 1d61e21852d3161f234b9656797669fe185c251b ]
 
-In the implementation of uld_send(), the skb is consumed on all
-execution paths except one. Release skb when returning NET_XMIT_DROP.
+This is likely firmware causing this but its starting to annoy customers.
+Change the message level to verbose to prevent the spam.
+Note that this seems to only show up with ISCSI enabled on the HBA via the
+qedi driver.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Laurence Oberman <loberman@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/sge.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/qlogic/qed/qed_int.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-index 0a5c4c7da5052..006f8b8aaa7dc 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-@@ -1812,6 +1812,7 @@ static inline int uld_send(struct adapter *adap, struct sk_buff *skb,
- 	txq_info = adap->sge.uld_txq_info[tx_uld_type];
- 	if (unlikely(!txq_info)) {
- 		WARN_ON(true);
-+		kfree_skb(skb);
- 		return NET_XMIT_DROP;
- 	}
- 
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
+index fd19372db2f86..6e1d38041d0ac 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_int.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
+@@ -2158,7 +2158,8 @@ static int qed_int_attentions(struct qed_hwfn *p_hwfn)
+ 			index, attn_bits, attn_acks, asserted_bits,
+ 			deasserted_bits, p_sb_attn_sw->known_attn);
+ 	} else if (asserted_bits == 0x100) {
+-		DP_INFO(p_hwfn, "MFW indication via attention\n");
++		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
++			   "MFW indication via attention\n");
+ 	} else {
+ 		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
+ 			   "MFW indication [deassertion]\n");
 -- 
 2.25.1
 
