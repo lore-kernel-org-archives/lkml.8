@@ -2,201 +2,155 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8B7C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42933C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F18ED2078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229A42078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:17:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="N0aKyKBu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgG0QRb (ORCPT
+        id S1731627AbgG0QRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:17:31 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:15988 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731294AbgG0QQg (ORCPT
+        Mon, 27 Jul 2020 12:17:50 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4267 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728996AbgG0QRt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:16:36 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RG7xmi019091;
-        Mon, 27 Jul 2020 12:16:35 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 32ghn5eykp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 12:16:34 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 06RGGXh9050439
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 27 Jul 2020 12:16:33 -0400
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 27 Jul 2020 09:16:32 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Mon, 27 Jul 2020 09:16:31 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06RGGShj009603;
-        Mon, 27 Jul 2020 12:16:30 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>
-Subject: [PATCH v7 2/9] hwmon: pmbus: adm1266: Add Block process call
-Date:   Mon, 27 Jul 2020 19:18:07 +0300
-Message-ID: <20200727161814.14076-3-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200727161814.14076-1-alexandru.tachici@analog.com>
-References: <20200727161814.14076-1-alexandru.tachici@analog.com>
+        Mon, 27 Jul 2020 12:17:49 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f1efe1e0000>; Mon, 27 Jul 2020 09:17:34 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 27 Jul 2020 09:17:47 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 27 Jul 2020 09:17:47 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 27 Jul
+ 2020 16:17:43 +0000
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
+ by HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Mon, 27 Jul 2020 16:17:42 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cr+Bf5aAbOYMzo9dXV+L4rLDc5lYFmaV4DGiSQEFxUSIxY+0ZPhQuNlePIr7+WAyDHYsQX0mt21yCX8nTvgpv7vJz9ObOcJsJ2Mq1xxSpM5+wJpEjTxpf7/gZLzwaizYIe9vKYAsVlY4N5B+pcGj8wu9eVEmOc/ODH0p+ZTjA2d6eXfbdI6VeqDQXSXFGJlKUqzOf05MzuJD7NeosCrTFDt8c0v+CIt+QCxlCbnq7kGFbir4tOurdfxE4tyrjPRblM07mTuvd9dXLlvG/paJ1dNubEDXbiBXNSRKGZd6KXvpKL0GtHVI7YeqiOKLnQYbzvk6SL1lDROuHoeY9ggk+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ITjagY+5fmaN0QFmpLWh2IwmGPom7D+XzLTEiLGEjt0=;
+ b=Ypn1KmmrgzKNcnLHmg9FOxo2xpyB1HDtmCtmjx4csjt2Apk8uxO0ASRz1jSv25BkXNZvS7KSYjRp0AB9M8ltIJ9ILksBc0CXX6z4qcQUuwZa9heQerO0OK6FdjqqqEzyo7s67bMNRTXyrdjYotLkLtfiSLezI6gsR/ZyIAh+3KaNB5DqrLRmkfSpIY9exR2kOKjs8fTN01Xf2/LC2JRDqfNH8Znh6iEhs8AseI+VEraRSd1q71S9QAHAvaoh6485WgaOT9EJiNb2EYja59odnZhKd3Qsr1AHibt8HJT7C+MemSL4eY43ig+JyAYIJzPK6taWwTKBahIYPhaxcG73Og==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: canonical.com; dkim=none (message not signed)
+ header.d=none;canonical.com; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB2601.namprd12.prod.outlook.com (2603:10b6:5:45::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.26; Mon, 27 Jul
+ 2020 16:17:41 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
+ 16:17:41 +0000
+Date:   Mon, 27 Jul 2020 13:17:39 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Colin King <colin.king@canonical.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     Michal Kalderon <mkalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Alexander Lobakin <alobakin@marvell.com>,
+        <linux-rdma@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] qed: fix assignment of n_rq_elems to incorrect params
+ field
+Message-ID: <20200727161739.GA60250@nvidia.com>
+References: <20200727141712.112906-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200727141712.112906-1-colin.king@canonical.com>
+X-ClientProxiedBy: MN2PR05CA0060.namprd05.prod.outlook.com
+ (2603:10b6:208:236::29) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_11:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 lowpriorityscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007270111
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR05CA0060.namprd05.prod.outlook.com (2603:10b6:208:236::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.10 via Frontend Transport; Mon, 27 Jul 2020 16:17:40 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k05op-000FjP-82; Mon, 27 Jul 2020 13:17:39 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 632edbe3-d606-489f-f66e-08d8324895ad
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2601:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB2601862D5C48422DD31202D7C2720@DM6PR12MB2601.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HvWE3YPXyj9W1+DSMtKUrc+1lZ+RdoQ4d1tf+wNc8rvC0sCqxaYSOrSV3eeGMV/K6ewaZsjaWlxzipMpS5HaP3fL+o075ULL82l+v2KueneHshqtkf2UtYgkprhvDT/XdHpg1D+I3zTKrZ7H/aMrfPT1tQ8T0RzpcNr+l7NIoQHdFMbk2qUZUeecTXbQ1FUszCkqYPXvFVAIT5Ffu2boMebLHcDHqcwYSmrM0kib03bsu2NQNqfZw0nVqKQt7lPn/Y54LRIyCaKWoK+1Sk3F3lPe96mB4eAIkE/k9D6y+EGfQ9RwTN6CrrCpUWyrKpSMScXg4Ze4x0v9fTV3jKDJdg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(346002)(396003)(39860400002)(366004)(110136005)(54906003)(83380400001)(316002)(4326008)(86362001)(5660300002)(9786002)(33656002)(1076003)(9746002)(2906002)(36756003)(4744005)(478600001)(66946007)(26005)(186003)(2616005)(66476007)(7416002)(8936002)(426003)(8676002)(66556008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ghdDI4IkX0klU1kgAJXjvesTOyfa1C91qDKzg7ny5z0xd55EHUg0EJU69a9bdSjuHl1atJ6W0ss03fqKoXn9up4skLNoIefFH/jJqtk1g/ei2kyOWPusZiqfDXUgd6CcLMD1N3o7X9ilcFJnKVK5iX9zn2Eup6Aham/pxqUhmI7ZYmNFkxuND+O3d9tIqjsiJOeOs6qcbiYqnBG9z3cdWo182f6Jxse9H8NUwQLcD/lI7Ps5XWBEPVC2ur4gJXvDQtNl0cU/CtOQ6lK4luvJ6GRQ7PxTL20TMtc4hOV1WQaR2mryoOPECSjHcY6mOz16+5y1AtAHTUMGpPvanFu4yCGfLRhP+hyNCkWxxPN1J5Y6lgODHqdmhf3iDnGCx9NQSZL9IOVZz2E/V7+g/kM1geSyRtpYJU98SVEAnBGTXm+4RLQrhMzj3V7Elov9vA/30wfR9fEL2qMvUmGwH/JyD07h9IIXL7lpwRsY9Mzu+G8=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 632edbe3-d606-489f-f66e-08d8324895ad
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 16:17:40.9791
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CZJB6MjpqDs2GzBr9Nz2IkESaW9kV5HJa+GMNI9U7AYlq8jXMvetX92EcWud+gK9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2601
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1595866654; bh=ITjagY+5fmaN0QFmpLWh2IwmGPom7D+XzLTEiLGEjt0=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
+         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=N0aKyKBuQLbohWRsMYf9bMBLCYeAXUgUpXcAOYO2b4QCAeMzmsppODn7kYkdA3a4K
+         2N67gyS8plUmldOxQ78QDb+tXDzJiiSFxpNfBrzFV3OwRq6wpwV1ZDZlyG6cCaomaw
+         WhxnPc1rqsl6E5doHb1PqF9kMB9iWoD+VOHbCxnNrChEBeJXejDilbBCEQtPWqFdsh
+         qHMgO5fI0fUkbdEGYw8AIhHSNyU33gd6NfxuH0HAlBoT9SSOVm+7wruZIdtx3TJHao
+         e5B0QG19YgypNGQ1A8whOATFguTR4bD1MUCBCr0knDHOe+ByxD5gFRIYEpT00i+B9o
+         Vl8Ni37Dr6XSA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
+On Mon, Jul 27, 2020 at 03:17:12PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently n_rq_elems is being assigned to params.elem_size instead of the
+> field params.num_elems.  Coverity is detecting this as a double assingment
+> to params.elem_size and reporting this as an usused value on the first
+> assignment.  Fix this.
+> 
+> Addresses-Coverity: ("Unused value")
+> Fixes: b6db3f71c976 ("qed: simplify chain allocation with init params struct")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/infiniband/hw/qedr/verbs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-PmBus devices support Block Write-Block Read Process
-Call described in SMBus specification v 2.0 with the
-exception that Block writes and reads are permitted to
-have up 255 data bytes instead of max 32 bytes (SMBus).
+DaveM will need to take this since the Fixed patch is in his tree,
+thanks.
 
-This patch adds Block WR process call support for ADM1266.
-
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- drivers/hwmon/pmbus/Kconfig   |  1 +
- drivers/hwmon/pmbus/adm1266.c | 73 +++++++++++++++++++++++++++++++++++
- 2 files changed, 74 insertions(+)
-
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index da34083e1ffd..c04068b665e6 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -28,6 +28,7 @@ config SENSORS_PMBUS
- 
- config SENSORS_ADM1266
- 	tristate "Analog Devices ADM1266 Sequencer"
-+	select CRC8
- 	help
- 	  If you say yes here you get hardware monitoring support for Analog
- 	  Devices ADM1266 Cascadable Super Sequencer.
-diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
-index 79e8d90886b8..63975eba34ad 100644
---- a/drivers/hwmon/pmbus/adm1266.c
-+++ b/drivers/hwmon/pmbus/adm1266.c
-@@ -6,6 +6,7 @@
-  * Copyright 2020 Analog Devices Inc.
-  */
- 
-+#include <linux/crc8.h>
- #include <linux/i2c.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-@@ -13,11 +14,80 @@
- #include "pmbus.h"
- #include <linux/slab.h>
- 
-+#define ADM1266_PMBUS_BLOCK_MAX		255
-+
- struct adm1266_data {
- 	struct pmbus_driver_info info;
- 	struct i2c_client *client;
-+	struct mutex buf_mutex;
-+	u8 write_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
-+	u8 read_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
- };
- 
-+DECLARE_CRC8_TABLE(pmbus_crc_table);
-+
-+/*
-+ * Different from Block Read as it sends data and waits for the slave to
-+ * return a value dependent on that data. The protocol is simply a Write Block
-+ * followed by a Read Block without the Read-Block command field and the
-+ * Write-Block STOP bit.
-+ */
-+static int adm1266_pmbus_block_xfer(struct adm1266_data *data, u8 cmd, u8 w_len, u8 *data_w,
-+				    u8 *data_r)
-+{
-+	struct i2c_client *client = data->client;
-+	struct i2c_msg msgs[2] = {
-+		{
-+			.addr = client->addr,
-+			.flags = I2C_M_DMA_SAFE,
-+			.buf = data->write_buf,
-+			.len = w_len + 2,
-+		},
-+		{
-+			.addr = client->addr,
-+			.flags = I2C_M_RD | I2C_M_DMA_SAFE,
-+			.buf = data->read_buf,
-+			.len = ADM1266_PMBUS_BLOCK_MAX + 2,
-+		}
-+	};
-+	u8 addr;
-+	u8 crc;
-+	int ret;
-+
-+	mutex_lock(&data->buf_mutex);
-+
-+	msgs[0].buf[0] = cmd;
-+	msgs[0].buf[1] = w_len;
-+	memcpy(&msgs[0].buf[2], data_w, w_len);
-+
-+	ret = i2c_transfer(client->adapter, msgs, 2);
-+	if (ret != 2) {
-+		if (ret >= 0)
-+			ret = -EPROTO;
-+		return ret;
-+	}
-+
-+	if (client->flags & I2C_CLIENT_PEC) {
-+		addr = i2c_8bit_addr_from_msg(&msgs[0]);
-+		crc = crc8(pmbus_crc_table, &addr, 1, 0);
-+		crc = crc8(pmbus_crc_table, msgs[0].buf,  msgs[0].len, crc);
-+
-+		addr = i2c_8bit_addr_from_msg(&msgs[1]);
-+		crc = crc8(pmbus_crc_table, &addr, 1, crc);
-+		crc = crc8(pmbus_crc_table, msgs[1].buf,  msgs[1].buf[0] + 1, crc);
-+
-+		if (crc != msgs[1].buf[msgs[1].buf[0] + 1])
-+			return -EBADMSG;
-+	}
-+
-+	memcpy(data_r, &msgs[1].buf[1], msgs[1].buf[0]);
-+
-+	ret = msgs[1].buf[0];
-+	mutex_unlock(&data->buf_mutex);
-+
-+	return ret;
-+}
-+
- static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *id)
- {
- 	struct adm1266_data *data;
-@@ -33,6 +103,9 @@ static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *
- 	for (i = 0; i < data->info.pages; i++)
- 		data->info.func[i] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
- 
-+	crc8_populate_msb(pmbus_crc_table, 0x7);
-+	mutex_init(&data->buf_mutex);
-+
- 	return pmbus_do_probe(client, id, &data->info);
- }
- 
--- 
-2.20.1
-
+Jason
