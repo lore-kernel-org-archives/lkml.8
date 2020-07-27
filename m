@@ -2,138 +2,80 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B2DC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5581DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 608432070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E13E2083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbgG0OtT (ORCPT
+        id S1729398AbgG0Oto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:49:19 -0400
-Received: from mailout02.rmx.de ([62.245.148.41]:46941 "EHLO mailout02.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbgG0OtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:49:19 -0400
-Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout02.rmx.de (Postfix) with ESMTPS id 4BFjPQ0vN4zNkNc;
-        Mon, 27 Jul 2020 16:49:14 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin02.retarus.com (Postfix) with ESMTPS id 4BFjNs2bF8z2TTJK;
-        Mon, 27 Jul 2020 16:48:45 +0200 (CEST)
-Received: from N95HX1G2.wgnetz.xx (192.168.54.121) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 27 Jul
- 2020 16:48:45 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>
-CC:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Christian Eggers" <ceggers@arri.de>
-Subject: [PATCH 1/2] dt-bindings: iio: light: add AMS AS73211 support
-Date:   Mon, 27 Jul 2020 16:47:40 +0200
-Message-ID: <20200727144741.3927-2-ceggers@arri.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200727144741.3927-1-ceggers@arri.de>
-References: <20200727144741.3927-1-ceggers@arri.de>
+        Mon, 27 Jul 2020 10:49:44 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:57899 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728314AbgG0Otn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:49:43 -0400
+X-Originating-IP: 90.66.108.79
+Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 50C81E0019;
+        Mon, 27 Jul 2020 14:49:38 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 16:49:38 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Rob Herring <robh@kernel.org>, miguelborgesdefreitas@gmail.com,
+        a.zummo@towertech.it, baruch@tkos.co.il, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+Message-ID: <20200727144938.GC239143@piout.net>
+References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-1-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
+ <20200723174905.GA596242@bogus>
+ <20200723195755.GV3428@piout.net>
+ <20200727094553.GH1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [192.168.54.121]
-X-RMX-ID: 20200727-164845-4BFjNs2bF8z2TTJK-0@kdin02
-X-RMX-SOURCE: 217.111.95.66
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727094553.GH1551@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT bindings for AMS AS73211 XYZ True Color Sensor.
+On 27/07/2020 10:45:53+0100, Russell King - ARM Linux admin wrote:
+> > This is but this shouldn't be a DT property as it has to be changed
+> > dynamically. I'm working on an ioctl interface to change this
+> > configuration.
+> 
+> Why does it need to be changed dynamically?  If the hardware components
+> are not fitted to allow the RTC to be safely used without DSM, then
+> why should userspace be able to disable DSM?
 
-Signed-off-by: Christian Eggers <ceggers@arri.de>
----
- .../bindings/iio/light/ams,as73211.yaml       | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
+For RTCs with a standby mode, you want to be able to return to standby
+mode.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/ams,as73211.yaml b/Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
-new file mode 100644
-index 000000000000..25808123a434
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/as73211.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: AMS AS73211 JENCOLOR(R) Digital XYZ Sensor
-+
-+maintainers:
-+  - Christian Eggers <ceggers@arri.de>
-+
-+description: |
-+  XYZ True Color Sensor with I2C Interface
-+  https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf/a65474c0-b302-c2fd-e30a-c98df87616df
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ams,as73211
-+
-+  reg:
-+    description:
-+      I2C address of the device (0x74).
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      Interrupt specifier for the READY interrupt generated by the device.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        as73211@74 {
-+            compatible = "ams,as73211";
-+            reg = <0x74>;
-+            pinctrl-names = "default";
-+            pinctrl-0 = <&pinctrl_color_sensor>;
-+            interrupt-parent = <&gpio2>;
-+            interrupts = <19 IRQ_TYPE_EDGE_RISING>; /* READY */
-+        };
-+    };
-+...
+That would happen for example after factory flashing in that common use
+case:
+ - the board is manufactured
+ - Vbackup is installed, the RTC switches to standby mode
+ - the board is then booted to flash a system, Vprimary is now present,
+   the RTC switches to DSM.
+
+At this point, if the board is simply shut down, the RTC will start
+draining Vbackup before leaving the factory. Instead, we want to be able
+to return to standby mode until the final user switches the product on
+for the first time.
+
 -- 
-Christian Eggers
-Embedded software developer
-
-Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
-Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
-Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
