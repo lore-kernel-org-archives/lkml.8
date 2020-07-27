@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4C4C433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403E3C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D81462070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1349B2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859701;
-	bh=kLEHju0KVoJDbYE61TY9rQc9V4gcT5FyCvKtiHi0cDQ=;
+	s=default; t=1595859703;
+	bh=aJMqigb34Dubd5tY2sT5LEuMGU4M7GKg1c09Z+B65LA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e5+Y6iqZEL71S3eKefb5uU5/lyonJRhybt9nU8SaNzEbYGcIxbdWMnJJ0xcqqclOz
-	 +uC2DSLxh/0Ujyt+gYVFtpHiKjafVP+w0NaSlDxLIqjXAwHcZDJztcYDPpNjliLu7S
-	 1l2c48A2jytoInXq2cmaiGlPnlu85VZecvKsldlM=
+	b=RsV3L1azDUqLs8O0i3mUgW1u7w8+sZPw0woYS59ozvf6/yp43ma1fcj/ADUpzfsxc
+	 twLgFJkH+P3brngr2AfWvb5x1Kygr+jkHku5cmaZWXuqvVIG60rDUW4JTasGYiyzbq
+	 PpqUxFhIZVdwP/qTUn26xC5UHbJ8WOey0yukNhdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731767AbgG0OVj (ORCPT
+        id S1731774AbgG0OVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:21:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50192 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:21:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731736AbgG0OVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:21:35 -0400
+        id S1730258AbgG0OVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:21:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCB542070A;
-        Mon, 27 Jul 2020 14:21:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7153F2070B;
+        Mon, 27 Jul 2020 14:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859695;
-        bh=kLEHju0KVoJDbYE61TY9rQc9V4gcT5FyCvKtiHi0cDQ=;
+        s=default; t=1595859698;
+        bh=aJMqigb34Dubd5tY2sT5LEuMGU4M7GKg1c09Z+B65LA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZpHg/eAdmlKd5Ez7pNo0zy46PeRBsBIn+giF0kGxvKy+tzv+b/un63cA9ajnaKb22
-         t1lA01k6dyzQolcheT5dwIgMgQFiePqI5cr5LmWlIG0ZBynDbgoxuo51TM/IypfdPF
-         JzFG/RJ8ol3q/48pHQPwytfe1kU4IB7zrrkjGeHc=
+        b=yB/zpXSPQaLm2UVv7v1F7Uvdba7NrPf6b0Djk6ogpiGyUohiZSZ9xvMw6at4z+h59
+         cV4QnIWD0XjS1EhfYM1e+Zs/apXDXEJBKpCEVIrYZKEvvl05hpDJ38MgCf3H11vmzb
+         XWNh25an7srSAPkcoytFAPe0cj5U/zPN+b9n7dJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Jian <liujian56@huawei.com>,
-        Ido Schimmel <idosch@mellanox.com>,
+        stable@vger.kernel.org, Shannon Nelson <snelson@pensando.io>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 069/179] mlxsw: destroy workqueue when trap_register in mlxsw_emad_init
-Date:   Mon, 27 Jul 2020 16:04:04 +0200
-Message-Id: <20200727134936.031965866@linuxfoundation.org>
+Subject: [PATCH 5.7 070/179] ionic: use offset for ethtool regs data
+Date:   Mon, 27 Jul 2020 16:04:05 +0200
+Message-Id: <20200727134936.091115895@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,43 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Jian <liujian56@huawei.com>
+From: Shannon Nelson <snelson@pensando.io>
 
-[ Upstream commit 5dbaeb87f2b309936be0aeae00cbc9e7f20ab296 ]
+[ Upstream commit f85ae16f924f92a370b81b4e77862c1c59882fce ]
 
-When mlxsw_core_trap_register fails in mlxsw_emad_init,
-destroy_workqueue() shouled be called to destroy mlxsw_core->emad_wq.
+Use an offset to write the second half of the regs data into the
+second half of the buffer instead of overwriting the first half.
 
-Fixes: d965465b60ba ("mlxsw: core: Fix possible deadlock")
-Signed-off-by: Liu Jian <liujian56@huawei.com>
-Reviewed-by: Ido Schimmel <idosch@mellanox.com>
+Fixes: 4d03e00a2140 ("ionic: Add initial ethtool support")
+Signed-off-by: Shannon Nelson <snelson@pensando.io>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/pensando/ionic/ionic_ethtool.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
-index e9ccd333f61dd..d6d6fe64887b3 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/core.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
-@@ -710,7 +710,7 @@ static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
- 	err = mlxsw_core_trap_register(mlxsw_core, &mlxsw_emad_rx_listener,
- 				       mlxsw_core);
- 	if (err)
--		return err;
-+		goto err_trap_register;
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c b/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c
+index 22430fa911e2c..63d78519cbc6f 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c
+@@ -102,15 +102,18 @@ static void ionic_get_regs(struct net_device *netdev, struct ethtool_regs *regs,
+ 			   void *p)
+ {
+ 	struct ionic_lif *lif = netdev_priv(netdev);
++	unsigned int offset;
+ 	unsigned int size;
  
- 	err = mlxsw_core->driver->basic_trap_groups_set(mlxsw_core);
- 	if (err)
-@@ -722,6 +722,7 @@ static int mlxsw_emad_init(struct mlxsw_core *mlxsw_core)
- err_emad_trap_set:
- 	mlxsw_core_trap_unregister(mlxsw_core, &mlxsw_emad_rx_listener,
- 				   mlxsw_core);
-+err_trap_register:
- 	destroy_workqueue(mlxsw_core->emad_wq);
- 	return err;
+ 	regs->version = IONIC_DEV_CMD_REG_VERSION;
+ 
++	offset = 0;
+ 	size = IONIC_DEV_INFO_REG_COUNT * sizeof(u32);
+-	memcpy_fromio(p, lif->ionic->idev.dev_info_regs->words, size);
++	memcpy_fromio(p + offset, lif->ionic->idev.dev_info_regs->words, size);
+ 
++	offset += size;
+ 	size = IONIC_DEV_CMD_REG_COUNT * sizeof(u32);
+-	memcpy_fromio(p, lif->ionic->idev.dev_cmd_regs->words, size);
++	memcpy_fromio(p + offset, lif->ionic->idev.dev_cmd_regs->words, size);
  }
+ 
+ static int ionic_get_link_ksettings(struct net_device *netdev,
 -- 
 2.25.1
 
