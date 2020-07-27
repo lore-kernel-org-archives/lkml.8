@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6062C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EF2C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8650C2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FAD2083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859342;
-	bh=vDf3I3nHui18X9VZnDQ3p+uCLmyiMQGiKmwqcvdIqN4=;
+	s=default; t=1595859346;
+	bh=8uOWQna+xF+wALsfQe81pslny6LeDhpRhdbY+HKlN6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cN54THohTCXy+A9ReN+BSt3vncGbxXs2XTqzOJukeWESl8vg9QShZPekM1fEqsbIu
-	 yPohEeOINKb4c6z7sA9ZGpSgNCfEl1Ot1nHtq6nahbrFyoIYfQGTpx+kTK83+qeDHA
-	 MQqlobJsqJGuCKT/FOCgacq3s97IyB/9h/Q0jLyA=
+	b=eIToaIxhy4RoiKm4wXeMxiZsFD/1WIO2osSl7CelXKKOr21NZxiviEX4K/mAoIJfF
+	 142LVmAU6ilAG8mxu1fMwfVAXHBoL5TydYMwYwUDdq0hIL6aI6BLwkRm25ktLzw0/x
+	 x05/tnKiL7qfhO2TKUeuLeaFwOB+poM0ex5JDymo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730732AbgG0OPk (ORCPT
+        id S1730736AbgG0OPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:15:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42058 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:15:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730728AbgG0OPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:15:35 -0400
+        id S1730728AbgG0OPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:15:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E0C22078E;
-        Mon, 27 Jul 2020 14:15:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B4562078E;
+        Mon, 27 Jul 2020 14:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859335;
-        bh=vDf3I3nHui18X9VZnDQ3p+uCLmyiMQGiKmwqcvdIqN4=;
+        s=default; t=1595859341;
+        bh=8uOWQna+xF+wALsfQe81pslny6LeDhpRhdbY+HKlN6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xFOgPPDCi0+3nzuvZt5pzxYW64hafYGaBi/xamaidgZl6bGCgXlgTYAVuD7RTVYIW
-         n3ACjQx08mu7xM4o/OeCShVP7Xn/UA739kMpjqCC4wAAE8PqU+uaQfMW81iB16QMvO
-         oeXvpNEn/gSL8by7+PBB0bH4vz1mTPbB/DkQxHWs=
+        b=K9uD9JjDv21fK+To9GhhJvBy0MjyWaKqMhC764zlH98iJmGxZjhyVV/z07DXN8izq
+         bNPYIujXvHPJudEGVLlhEOyaOj0Bg6IK6OV+9KIW53bAoqWCG3GMuPdEK+Tcwcf/bD
+         oPooKDawDjcqAHaW3aeGvPGbujSsetzDdDrJbJxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+7ebc2e088af5e4c0c9fa@syzkaller.appspotmail.com,
-        Sabrina Dubroca <sd@queasysnail.net>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 067/138] geneve: fix an uninitialized value in geneve_changelink()
-Date:   Mon, 27 Jul 2020 16:04:22 +0200
-Message-Id: <20200727134928.746526420@linuxfoundation.org>
+Subject: [PATCH 5.4 040/138] hippi: Fix a size used in a pci_free_consistent() in an error handling path
+Date:   Mon, 27 Jul 2020 16:03:55 +0200
+Message-Id: <20200727134927.368645377@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -63,42 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 32818c075c54bb0cae44dd6f7ab00b01c52b8372 ]
+[ Upstream commit 3195c4706b00106aa82c73acd28340fa8fc2bfc1 ]
 
-geneve_nl2info() sets 'df' conditionally, so we have to
-initialize it by copying the value from existing geneve
-device in geneve_changelink().
+The size used when calling 'pci_alloc_consistent()' and
+'pci_free_consistent()' should match.
 
-Fixes: 56c09de347e4 ("geneve: allow changing DF behavior after creation")
-Reported-by: syzbot+7ebc2e088af5e4c0c9fa@syzkaller.appspotmail.com
-Cc: Sabrina Dubroca <sd@queasysnail.net>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Sabrina Dubroca <sd@queasysnail.net>
+Fix it and have it consistent with the corresponding call in 'rr_close()'.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/geneve.c | 2 +-
+ drivers/net/hippi/rrunner.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
-index 19d9d78a6df2c..adfdf6260b269 100644
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -1615,11 +1615,11 @@ static int geneve_changelink(struct net_device *dev, struct nlattr *tb[],
- 			     struct netlink_ext_ack *extack)
- {
- 	struct geneve_dev *geneve = netdev_priv(dev);
-+	enum ifla_geneve_df df = geneve->df;
- 	struct geneve_sock *gs4, *gs6;
- 	struct ip_tunnel_info info;
- 	bool metadata;
- 	bool use_udp6_rx_checksums;
--	enum ifla_geneve_df df;
- 	bool ttl_inherit;
- 	int err;
- 
+diff --git a/drivers/net/hippi/rrunner.c b/drivers/net/hippi/rrunner.c
+index 2a6ec53949666..a4b3fce69ecd9 100644
+--- a/drivers/net/hippi/rrunner.c
++++ b/drivers/net/hippi/rrunner.c
+@@ -1242,7 +1242,7 @@ static int rr_open(struct net_device *dev)
+ 		rrpriv->info = NULL;
+ 	}
+ 	if (rrpriv->rx_ctrl) {
+-		pci_free_consistent(pdev, sizeof(struct ring_ctrl),
++		pci_free_consistent(pdev, 256 * sizeof(struct ring_ctrl),
+ 				    rrpriv->rx_ctrl, rrpriv->rx_ctrl_dma);
+ 		rrpriv->rx_ctrl = NULL;
+ 	}
 -- 
 2.25.1
 
