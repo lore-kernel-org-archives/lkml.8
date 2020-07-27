@@ -2,115 +2,106 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44228C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8BAC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD4920672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:14:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bxpXFkKe"
+	by mail.kernel.org (Postfix) with ESMTP id D384F2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbgG0POm (ORCPT
+        id S1728556AbgG0PP4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:14:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29887 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728711AbgG0POl (ORCPT
+        Mon, 27 Jul 2020 11:15:56 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:46491 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728071AbgG0PPz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:14:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595862880;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=a2iihc1HWAJriXV+8/xi93MCdLbyiJT8cN8MK6IDGnQ=;
-        b=bxpXFkKehZV352XwKr5ldfC1K6vaq6j48OjnFLCsRkRhSIVYEH0L1axmweWUws0qNQxfKW
-        HUUUrbWGwt+rq7cqEMQvDWezIY1H2uoyVrLOryZujVjRZM2yj4UsRW7395K2Aplc2oeQ4s
-        DdVG5osze+SPQshqwSjcQPdSLyHtf+A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-2KTziDVCMn-lEWAW22M7jA-1; Mon, 27 Jul 2020 11:14:36 -0400
-X-MC-Unique: 2KTziDVCMn-lEWAW22M7jA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73B35193248A;
-        Mon, 27 Jul 2020 15:14:32 +0000 (UTC)
-Received: from T590 (ovpn-12-208.pek2.redhat.com [10.72.12.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 916045C1C3;
-        Mon, 27 Jul 2020 15:14:21 +0000 (UTC)
-Date:   Mon, 27 Jul 2020 23:14:16 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Petr Vorel <pvorel@suse.cz>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>, lkp@lists.01.org,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Christoph Hellwig <hch@lst.de>, ltp@lists.linux.it
-Subject: Re: [LTP] [blk] 6e6fcbc27e: ltp.fs_fill.fail
-Message-ID: <20200727151416.GA1298062@T590>
-References: <20200726075511.GI1850@shao2-debian>
- <20200727093156.GA29739@dell5510>
+        Mon, 27 Jul 2020 11:15:55 -0400
+Received: from mail-qv1-f46.google.com ([209.85.219.46]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mjjzx-1kfPo90V91-00lBjw for <linux-kernel@vger.kernel.org>; Mon, 27 Jul
+ 2020 17:15:54 +0200
+Received: by mail-qv1-f46.google.com with SMTP id dm12so7598488qvb.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:15:53 -0700 (PDT)
+X-Gm-Message-State: AOAM532kwl1dGaXmc3+QgYhJMw8Tifrm95VeOdwANoUNqfs3yduCI/7Z
+        0apZVdZGR0b5Zo2jPA86Kr/jbCef4NXqvvKH7ho=
+X-Google-Smtp-Source: ABdhPJz8JYqQMrxytjrFJZ6So17u6EFfd3xP72JlJzwExdG83wSW6pg2ww44Y8DvCC/6WlC7KCmUOokvY6zbG6c7byE=
+X-Received: by 2002:ad4:4c09:: with SMTP id bz9mr21830645qvb.210.1595862953011;
+ Mon, 27 Jul 2020 08:15:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727093156.GA29739@dell5510>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200724212853.11601-1-daniel.gutson@eclypsium.com>
+ <20200725055649.GA1047853@kroah.com> <CAFmMkTE_dT9+WJYyb19uQ_HmgJWZSARBy6PveheQJk++NuGbkQ@mail.gmail.com>
+ <20200726071723.GB441916@kroah.com> <CAFmMkTFzGfFDrJrdgHztzLK2K-zBWy6T2Tv+G4-rrbVpbahkgg@mail.gmail.com>
+In-Reply-To: <CAFmMkTFzGfFDrJrdgHztzLK2K-zBWy6T2Tv+G4-rrbVpbahkgg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 27 Jul 2020 17:15:37 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1nA7K15Cxz84Q8Grw3tKfgkUmsfURcytJEWb_0Wjqm5w@mail.gmail.com>
+Message-ID: <CAK8P3a1nA7K15Cxz84Q8Grw3tKfgkUmsfURcytJEWb_0Wjqm5w@mail.gmail.com>
+Subject: Re: [PATCH] Module argument to control whether intel-spi-pci attempts
+ to turn the SPI flash chip writeable
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:hOc+ZkqHfgNWGLVbPWlrhOmb5zC6xv/hIC+TVHVn8xzjtdMf5/0
+ bApDUjnlcyN7zYtHAmokOJHGDjlXRUAXWzIjYBRTeWXqpfqKuJNYVuQx1mVqrDwfttDtgAf
+ zAIjKcpZCoejpkICjTdFLaFbD48bc3biph/yUeO7hZMjBIGEoTM7BmnugLFJpn9GaGtbTeT
+ HCgzht//u1ffI324Dxkaw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lM9a73egz7I=:jRgB6SnjzPmh9pwPEvh5qD
+ 1RqHmRj04f5oXNrJYWFYjwO6qy7Mino+j34bx54RRsT2IlvHp1qWeKda0EsWmZTRGi8kINH6E
+ p1fuh3q25ldyUs6FX6Nt8Jg68uf3sJbawvxuV/lmhtlQKPS+9JuurZ8vAg8v5jNH6hC6gDfKw
+ gWFQk/XMQ1uKkGDnbuvRHwze0Z3mrlWekwqG/tx/2JAEOpE+CNgnuuWwDzyd+PxEJoK5LaEzK
+ kkkp/7nUb17uUQ3pCtIvWj/Nl64B9vMErS7zU3FToSunjxNzh0zuprQC+0Scnis/YA7wZfOFq
+ Sj3B3fJofb0JzynGDDdz8RnZaryvXLAxr3CnCd4h01ajRaUH0jMe3aqlHqh4yYJNyNWbmsLRP
+ wFhmBeVC3rYthDaUDbQh73ma5kiRYU4Xy/fyJfj5G65XX6oERtK7L8tghRxOmJLIyY+7pDYhp
+ fC5VHTuHtduvL4a3ugmktyeAp969JsAdNxZy+R9xosg8S1RnOyOn+n9R2Apo1aHg1XbNlUQf7
+ QOh9IraA0uJ7Gf1TL+7G9VLnr3xZZhVfiVQasbGcZaBO3mS932i0bEyXjRWYaI5+9kUtWwIMX
+ np7EpzhJ32RHI3MyJs79ZjIdIr4HpJx468aaABEofbeFsXozIJW5pUtM/+BYWEPELrGk+KxIQ
+ qxRgmKu4bHgLW9zBQEgIm6tXxD4ezEOXp4TUTkxJ7t7i3loOY0klr99yUHXDdTIDLPw3xUxzk
+ XDzHpy4ixyaeZUmBRE3dXIaFD2U5oKkmes+oDFLkXD1vFJOtMkdC8qTX4O79PT2jcP1P0C9t7
+ QTAx1D82Z1yyUgfZLdXjk2yH1ajzmzdWSyPIec/ck+sSARiMD6rMbEAFmxewxCsBbU6rYIr2d
+ d3DF0C4KYezfb46FFX5/cMkfZZSEtsF78ITG2rxVadLjvQ2bfSTj68vQPxWUd2PDlmYicJmtc
+ tYI0o3+FabE5k5EvjGCmPfLCnFp+bjueYWOfDe0xLWV6z4lnNFe8V
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:31:56AM +0200, Petr Vorel wrote:
-> Hi,
-> 
-> > FYI, we noticed the following commit (built with gcc-9):
-> 
-> > commit: 6e6fcbc27e7788af54139c53537395d95560f2ef ("blk-mq: support batching dispatch in case of io")
-> > https://git.kernel.org/cgit/linux/kernel/git/axboe/linux-block.git for-5.9/drivers
-> 
-> 
-> > in testcase: ltp
-> > with following parameters:
-> 
-> > 	disk: 1HDD
-> > 	fs: ext4
-> > 	test: fs-03
-> 
-> > test-description: The LTP testsuite contains a collection of tools for testing the Linux kernel and related features.
-> > test-url: http://linux-test-project.github.io/
-> 
-> 
-> > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
-> 
-> > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> ...
-> > tst_test.c:1308: INFO: Testing on vfat
-> > tst_mkfs.c:90: INFO: Formatting /dev/loop0 with vfat opts='' extra opts=''
-> > tst_test.c:1247: INFO: Timeout per run is 0h 05m 00s
-> > fs_fill.c:103: INFO: Running 10 writer threads
-> > Test timeouted, sending SIGKILL!
-> > Test timeouted, sending SIGKILL!
-> > Test timeouted, sending SIGKILL!
-> > Test timeouted, sending SIGKILL!
-> > Test timeouted, sending SIGKILL!
-> > Test timeouted, sending SIGKILL!
-> The only "error" I found is that fs_fill test timeouted on vfat. That might
-> indicate some problems. Note, for slow machines, there is LTP_TIMEOUT_MUL
-> https://github.com/linux-test-project/ltp/wiki/User-Guidelines#1-library-environment-variables
+On Mon, Jul 27, 2020 at 5:05 PM Daniel Gutson <daniel@eclypsium.com> wrote:
+> On Sun, Jul 26, 2020 at 4:17 AM Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>>
+>> On Sat, Jul 25, 2020 at 02:20:03PM -0300, Daniel Gutson wrote:
+>> > El sáb., 25 jul. 2020 2:56 a. m., Greg Kroah-Hartman <
+>> > gregkh@linuxfoundation.org> escribió:
+>> >
+>> >
+>> > 1) I just did the same that intel-spi.c does.
+>>
+>> No need to copy bad examples :)
+>
+>
+> Didn't know it was a bad example. What's is the current modern mechanism that replaces initialization-time configuration?
 
-I have run fs_fill test for a while, and can't reproduce it, and I am
-sure vfat is covered.
+I'd say you'd generally want this to be a per-instance setting, which
+could be a sysfs attribute of the physical device, or an ioctl for an
+existing user space abstraction.
 
+In the changelog, you should also explain what this is used for. Do
+you actually want to write to a device that is marked read-only, or
+are you just trying to make the interface more consistent between the
+two drivers?
 
-
-Thanks,
-Ming
-
+     Arnd
