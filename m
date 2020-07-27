@@ -2,86 +2,83 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9954CC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4604B20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:20:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595874009;
-	bh=bcOVSC6iwGmX4PhBNjaLhYR+tUBENZQVZ3yMoYlloLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cUf6n3UD+Rx59Pfo/blCmaqu/Ztde4UhXMeHBShKX4NiUPjR40IPoD6DVNN9UWVbx
-	 30TcdrsN4AS4iKGqN41TNLdTh/YvOQi/ijkFA0fATPVv3RfnvhEL0WngA+KITMeDpg
-	 hksAayZAqyOLUaxqCY4lWZ2RMuTbI3fHtqI4zk3Y=
+	by mail.kernel.org (Postfix) with ESMTP id 79F3D206D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:20:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8qW6bcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730362AbgG0SUI (ORCPT
+        id S1730461AbgG0SUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:20:08 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:43512 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729489AbgG0SUH (ORCPT
+        Mon, 27 Jul 2020 14:20:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729489AbgG0SUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 14:20:07 -0400
-Received: by mail-il1-f195.google.com with SMTP id y18so5501582ilp.10;
-        Mon, 27 Jul 2020 11:20:07 -0700 (PDT)
+        Mon, 27 Jul 2020 14:20:53 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2733C061794;
+        Mon, 27 Jul 2020 11:20:52 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id c2so7001356edx.8;
+        Mon, 27 Jul 2020 11:20:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8FUUw7esIwbMihyXWPXnlrNpN5U1e9E3wlcfC8HucZM=;
+        b=P8qW6bcXTH3Gi5PFyL52lOBoTaBYB1NoYPtY3IxVG7AD4QJVbu1XqrMGCuuPgzr3uS
+         7hEZPz8f9nQpiu1dayflvrHe/dZxIcXhQhh/lQLuEctzSHyDDLFdloBPnlEDMxEan5LI
+         E2ZF0bPSbZeRwj63itJZvoPpwqtBR247WiWKh/2vDziQpTcDzF6bwZeR6nZg25cBCgE9
+         p/q8makFjjL3XLCdqB8vuSVmA56oAwIY9PCX+yEesPyakuZR7XNLlITNoP08v4ai0mQR
+         Q9jY0I/L7FOmBkTncNPSvIpEiJaCM9oBM44eAIbg70sPAQcY04E2u6QFTr0LchIT633o
+         hM7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hHBgGmP6C/aVsle80stjB2DOBTx6fwthJHeqJ4Q1g+o=;
-        b=tuxxJOaVlwfj0E4rKjwNg9N9oa7a0PU2YS2CzOynIWgZLw89T1xkmMiAyYWYC/zdph
-         jxtbO+Orr42F4rHxLo+kq2rkj3rvJm8OW/seddvXAp5tNy6whQAdpheHiFXlEvdhRVD1
-         2UtJw8druo4rU0ubh6KhhYasVLXr9sPRULbRZB1df9v0GLMO//qTutg2XwKJ5zjq+u7+
-         Im3DaiX31M1xesvl5X962jWZwlNAP+VJddKkV00DVke9wtxJYtRTTirCBo0pjqyugVt2
-         N3nmkfGAA+CeY6sgsRuw0khM/Qn+KmFXneVBf6LXJgr4I4DcFzBiAUvjkCAOKMDmr+ls
-         1e2g==
-X-Gm-Message-State: AOAM533Yyiv72mYX7Hm2Q6vXhZOfVQcEs7RBG/E4HTzXZZQd3ctmpJRT
-        n6Fqo91tHe0quFye2HaSwA==
-X-Google-Smtp-Source: ABdhPJxq32PaoZ9jSiA8/vCo90i5yc8YqkH0UXNfMZI00ZGSughQbvZqqe9FqCxIhQs7xH2up94QLA==
-X-Received: by 2002:a92:1d1:: with SMTP id 200mr17557805ilb.71.1595874006899;
-        Mon, 27 Jul 2020 11:20:06 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t14sm5756318ios.18.2020.07.27.11.20.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 11:20:06 -0700 (PDT)
-Received: (nullmailer pid 649107 invoked by uid 1000);
-        Mon, 27 Jul 2020 18:20:04 -0000
-Date:   Mon, 27 Jul 2020 12:20:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>
-Cc:     lkundrak@v3.sk, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com,
-        heiko.stuebner@theobroma-systems.com, broonie@kernel.org,
-        linus.walleij@linaro.org, linux-stm32@st-md-mailman.stormreply.com,
-        sam@ravnborg.org, a.fatoum@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, mani@kernel.org,
-        allen.chen@ite.com.tw, alexandre.torgue@st.com, stephan@gerhold.net
-Subject: Re: [PATCH v5 2/3] dt-bindings: arm: stm32: document Odyssey
- compatible
-Message-ID: <20200727182004.GA648872@bogus>
-References: <20200724145107.35772-1-marcin.sloniewski@gmail.com>
- <20200724145107.35772-2-marcin.sloniewski@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8FUUw7esIwbMihyXWPXnlrNpN5U1e9E3wlcfC8HucZM=;
+        b=GkvVBAJcX21CqUnFhT+W00uEBkhY55gTVma0+A8WFThkZu1kJD8VjBc0CIyONid0yp
+         UDBWnSys+igA3WA4pjD+DjIQ8BGEWbuK0KD3dh8fEscZUsTTHo7My58V5Xc77M+LK/7n
+         XpbDpKNXLjGO0CbAKAsNdK2+U8gMQ2dQEpcK0lPo5s0fOdenkCrPB18UULC815ZRXz8j
+         qVTE05MUdN3js0EvZh+45QCJceBN/OzXhp9J7A+OMLBghgskFFX/4gTazWaFfclwDudg
+         ojWV9uCrQMu+v6PtmNv4Dl3qLGS0xD6eoAHFUHauLcS5E/UgD+L5cjO5O2G2GvxcJNAm
+         +z6w==
+X-Gm-Message-State: AOAM5313FcFofs3hVTQWh1Lk20VyhZr4U/xTvM5YcpuWoU46+XUxIHZU
+        hJ8zWKKZ1feSWsdXfrXJlt8dWYAvQd5ue75q+tM=
+X-Google-Smtp-Source: ABdhPJwK0LKOzxxRi7pxIz+arVdqs+BEK6hM7r+hWZ3wgjG2UaXOYBquWiCHySb+WcX4lDcFaaaclsdZohfDFsLYoHs=
+X-Received: by 2002:a05:6402:b57:: with SMTP id bx23mr21585421edb.304.1595874051657;
+ Mon, 27 Jul 2020 11:20:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200724145107.35772-2-marcin.sloniewski@gmail.com>
+References: <20200625182118.131476-1-konradybcio@gmail.com>
+In-Reply-To: <20200625182118.131476-1-konradybcio@gmail.com>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Mon, 27 Jul 2020 20:20:15 +0200
+Message-ID: <CAMS8qEVKssmOTZTQqgo3y6yUp7KztapQLtek+Q6FewqVaSGYyA@mail.gmail.com>
+Subject: Re: [PATCH v3 00/13] msm8992 DTS updates, peripheral enablement
+To:     skrzynka@konradybcio.pl
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 16:51:06 +0200, Marcin Sloniewski wrote:
-> Document device tree bindings of Seeed SoM and carrier board.
-> 
-> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+Bumping this up, in case it just got overlooked.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Konrad
