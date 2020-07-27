@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2B2C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5997EC433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2962075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309C32070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859671;
-	bh=XQDfGytVTpKeb+agTuSXemU8hW+k5+3VzA9zL6czwig=;
+	s=default; t=1595859676;
+	bh=buiKqjqGVgEIOE4MuNGd0Ftg20ivBkjeoj4PHmWWcTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BhgIkh2uvh5bNvmSoSijb9IWEgl1i1KFlWMh/EyY1lgKPvr0U6Cay/lnTcAt86EhN
-	 03wXPAbNe4gV2/eJ/XUe1oQGKbXzXUxgQmv4JH/MZLHD0Gtm673c9XGekg8fxXTEZ2
-	 BGg+eNMH0wnuqMbhAvhAiAL9aNcfVpE4ZpplMjRs=
+	b=t38qtco+p1TnhZn9ClDR1pvocHxk88xFBZCEzvL7dvxpVGbBjZHq+QrvZfuZg1XAP
+	 aoIxkrDNo2NyMUBUc8+CXzOrsrhp+bBxEhDgc2m42vJdX5dws52RBS5cIkI9562FwN
+	 ZOOgLwzmdtma6TMukHjyizCVqIsMxPWe7hzHfTrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730838AbgG0OVJ (ORCPT
+        id S1731694AbgG0OVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:21:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49638 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:21:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731638AbgG0OVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:21:07 -0400
+        id S1731681AbgG0OVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:21:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F6C22070A;
-        Mon, 27 Jul 2020 14:21:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B76D52075A;
+        Mon, 27 Jul 2020 14:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859666;
-        bh=XQDfGytVTpKeb+agTuSXemU8hW+k5+3VzA9zL6czwig=;
+        s=default; t=1595859672;
+        bh=buiKqjqGVgEIOE4MuNGd0Ftg20ivBkjeoj4PHmWWcTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PKupiYhceYfqkN7aiWz7u4BtA9LJj1hp5mUgv9FBn9/JviRa0NAkUogzGLBWwSP74
-         yxk7CE8stMMqaInIo3A1sgl4P4ZJ+6DhKGa1LGaOGD9MFzB02ruAVozM6MBRV7KP3W
-         1FM9Epa/2SVdacz92E2jw3ihdMMo9xTI4JpqLofg=
+        b=YmOqp6wHKNiCcEOzbqDlHI1Qy6Yymnp1rjDItNR/qFel2XNzcYDhgxKxcTTzGiwhu
+         OW0UE9Q8gdPvnfHPQAJaOm/N+TUVaNJQcqKcrutD/lPk/qpKpv15r7OGZfGRrdB73t
+         A2EDSHUXagkET2f2TMh6j6d4kmeVd7Sjxy7ErocQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Jian <liujian56@huawei.com>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 059/179] ieee802154: fix one possible memleak in adf7242_probe
-Date:   Mon, 27 Jul 2020 16:03:54 +0200
-Message-Id: <20200727134935.545552337@linuxfoundation.org>
+Subject: [PATCH 5.7 061/179] net: smc91x: Fix possible memory leak in smc_drv_probe()
+Date:   Mon, 27 Jul 2020 16:03:56 +0200
+Message-Id: <20200727134935.644201441@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,44 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Jian <liujian56@huawei.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit 66673f96f0f968b991dc38be06102246919c663c ]
+[ Upstream commit bca9749b1aa23d964d3ab930938af66dbf887f15 ]
 
-When probe fail, we should destroy the workqueue.
+If try_toggle_control_gpio() failed in smc_drv_probe(), free_netdev(ndev)
+should be called to free the ndev created earlier. Otherwise, a memleak
+will occur.
 
-Fixes: 2795e8c25161 ("net: ieee802154: fix a potential NULL pointer dereference")
-Signed-off-by: Liu Jian <liujian56@huawei.com>
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
-Link: https://lore.kernel.org/r/20200717090121.2143-1-liujian56@huawei.com
-Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Fixes: 7d2911c43815 ("net: smc91x: Fix gpios for device tree based booting")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ieee802154/adf7242.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/smsc/smc91x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ieee802154/adf7242.c b/drivers/net/ieee802154/adf7242.c
-index 5a37514e42347..8dbccec6ac866 100644
---- a/drivers/net/ieee802154/adf7242.c
-+++ b/drivers/net/ieee802154/adf7242.c
-@@ -1262,7 +1262,7 @@ static int adf7242_probe(struct spi_device *spi)
- 					     WQ_MEM_RECLAIM);
- 	if (unlikely(!lp->wqueue)) {
- 		ret = -ENOMEM;
--		goto err_hw_init;
-+		goto err_alloc_wq;
- 	}
+diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
+index 90410f9d3b1aa..1c4fea9c3ec4c 100644
+--- a/drivers/net/ethernet/smsc/smc91x.c
++++ b/drivers/net/ethernet/smsc/smc91x.c
+@@ -2274,7 +2274,7 @@ static int smc_drv_probe(struct platform_device *pdev)
+ 		ret = try_toggle_control_gpio(&pdev->dev, &lp->power_gpio,
+ 					      "power", 0, 0, 100);
+ 		if (ret)
+-			return ret;
++			goto out_free_netdev;
  
- 	ret = adf7242_hw_init(lp);
-@@ -1294,6 +1294,8 @@ static int adf7242_probe(struct spi_device *spi)
- 	return ret;
+ 		/*
+ 		 * Optional reset GPIO configured? Minimum 100 ns reset needed
+@@ -2283,7 +2283,7 @@ static int smc_drv_probe(struct platform_device *pdev)
+ 		ret = try_toggle_control_gpio(&pdev->dev, &lp->reset_gpio,
+ 					      "reset", 0, 0, 100);
+ 		if (ret)
+-			return ret;
++			goto out_free_netdev;
  
- err_hw_init:
-+	destroy_workqueue(lp->wqueue);
-+err_alloc_wq:
- 	mutex_destroy(&lp->bmux);
- 	ieee802154_free_hw(lp->hw);
- 
+ 		/*
+ 		 * Need to wait for optional EEPROM to load, max 750 us according
 -- 
 2.25.1
 
