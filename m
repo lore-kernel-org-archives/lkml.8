@@ -2,176 +2,228 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7944C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A08C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7586A20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:54:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="byBzX42o"
+	by mail.kernel.org (Postfix) with ESMTP id CC79820672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgG0HyC (ORCPT
+        id S1726976AbgG0Hyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:54:02 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:18586 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726211AbgG0HyC (ORCPT
+        Mon, 27 Jul 2020 03:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbgG0Hyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:54:02 -0400
-X-UUID: 91c7ab34d29a4f468ea005c6b54afe61-20200727
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:Reply-To:From:Subject:Message-ID; bh=HUCKr8vXOrSaw/FQXtY9mYNTGslB4/jL1f0VJe+D7oI=;
-        b=byBzX42o2cKyf8SCNLyTlakWOL1T2h63dbRceLIEbKc7CME3CI0CDhpPeU9n2qqJShQPk78zv2zP+4LyqzRpsvBHCLoQqL9wrEw/OWRGfaFLIl6Q9M+E+IqJ9LyH+l9nrPOQ573KPRXJW4dzk1ALIdVic4PRyCwsHBWOZ94hxTg=;
-X-UUID: 91c7ab34d29a4f468ea005c6b54afe61-20200727
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <yongqiang.niu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 424405834; Mon, 27 Jul 2020 15:53:54 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs05n2.mediatek.inc
- (172.21.101.140) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 27 Jul
- 2020 15:53:51 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 27 Jul 2020 15:53:50 +0800
-Message-ID: <1595836355.13250.24.camel@mhfsdcap03>
-Subject: Re: [v7, PATCH 7/7] drm/mediatek: add support for mediatek SOC
- MT8183
-From:   Yongqiang Niu <yongqiang.niu@mediatek.com>
-Reply-To: Yongqiang Niu <yongqiang.niu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, "David Airlie" <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "DRI Development" <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 27 Jul 2020 15:52:35 +0800
-In-Reply-To: <CAAOTY_9hdvw7htuOkJmmmGR9SAev4O+kWuMopfP_F=8Vg=_U+A@mail.gmail.com>
-References: <1595469798-3824-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1595469798-3824-8-git-send-email-yongqiang.niu@mediatek.com>
-         <CAAOTY_9hdvw7htuOkJmmmGR9SAev4O+kWuMopfP_F=8Vg=_U+A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 27 Jul 2020 03:54:45 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC37C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:54:45 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jzxy5-0004EB-Nm; Mon, 27 Jul 2020 09:54:41 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jzxy5-0008Pg-AP; Mon, 27 Jul 2020 09:54:41 +0200
+Date:   Mon, 27 Jul 2020 09:54:41 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 00/10] remoteproc: imx_rproc: support iMX8M and early boot
+Message-ID: <20200727075441.lgscydoj3txupeay@pengutronix.de>
+References: <20200724080813.24884-1-peng.fan@nxp.com>
+ <20200727063839.kfgrtperzkygvjr2@pengutronix.de>
+ <DB6PR0402MB2760FBC0109E98A447BB716588720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ndwcthydipkpuzsn"
+Content-Disposition: inline
+In-Reply-To: <DB6PR0402MB2760FBC0109E98A447BB716588720@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:38:11 up 254 days, 22:56, 250 users,  load average: 0.02, 0.06,
+ 0.03
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU2F0LCAyMDIwLTA3LTI1IGF0IDA3OjI0ICswODAwLCBDaHVuLUt1YW5nIEh1IHdyb3RlOg0K
-PiBIaSBZb25ncWlhbmc6DQo+IA0KPiBZb25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1QG1lZGlh
-dGVrLmNvbT4g5pa8IDIwMjDlubQ35pyIMjPml6Ug6YCx5ZubIOS4iuWNiDEwOjE15a+r6YGT77ya
-DQo+ID4NCj4gPiBUaGlzIHBhdGNoIGFkZCBzdXBwb3J0IGZvciBtZWRpYXRlayBTT0MgTVQ4MTgz
-DQo+ID4gMS5vdmxfMmwgc2hhcmUgZHJpdmVyIHdpdGggb3ZsDQo+IA0KPiBJIHRoaW5rIHRoaXMg
-aXMgZG9uZSBpbiBbMV0sIFsyXSwgWzNdLCB0aGlzIHBhdGNoIGp1c3QgYWRkIHRoZSBzdXBwb3J0
-DQo+IG9mIG10ODE4My1vdmwgYW5kIG10ODE4My1vdmwtMmwuDQo+IA0KPiBbMV0gaHR0cHM6Ly9n
-aXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0
-L2NvbW1pdC9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWs/aD12NS44LXJjNiZpZD0xMzJjNmUyNTBl
-ZDc0NTQ0Mzk3M2NhZGE4ZGIxN2NkYmFlYmRmNTUxDQo+IFsyXSBodHRwczovL2dpdC5rZXJuZWwu
-b3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0L2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlaz9oPXY1LjgtcmM2JmlkPTMxODQ2MmQxYTU2ODYzNGJhMDky
-NjNjYzczMGNiMGZiMWQ1NmMyYjMNCj4gWzNdIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3Nj
-bS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrP2g9djUuOC1yYzYmaWQ9NTcxNDhiYWFjOGI3ODQ2MWUzOTQ5NTNjZmQ1MzE3
-YmRlOGY3OTVhYg0KPiANCj4gPiAyLnJkbWExIHNoYXJlIGRyaXZlIHdpdGggcmRtYTAsIGJ1dCBm
-aWZvIHNpemUgaXMgZGlmZmVyZW50DQo+IA0KPiBJIHRoaW5rIHRoaXMgaXMgZG9uZSBpbiBbNF0s
-IHRoaXMgcGF0Y2gganVzdCBhZGQgdGhlIHN1cHBvcnQgb2YgbXQ4MTgzLXJkbWEuDQo+IA0KPiBb
-NF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTY3OTU0OS8NCj4gDQo+ID4g
-My5hZGQgbXQ4MTgzIG11dGV4IHByaXZhdGUgZGF0YSwgYW5kIG1tc3lzIHByaXZhdGUgZGF0YQ0K
-PiA+IDQuYWRkIG10ODE4MyBtYWluIGFuZCBleHRlcm5hbCBwYXRoIG1vZHVsZSBmb3IgY3J0YyBj
-cmVhdGUNCj4gDQo+IFRoZSBmb3VydGggaXRlbSBpcyB0aGUgbW1zeXMgcHJpdmF0ZSBkYXRhIGlu
-IHRoaXJkIGl0ZW0sIHNvIHlvdSBuZWVkDQo+IG5vdCB0byByZXBlYXQgaXQuDQo+IA0KPiA+DQo+
-ID4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5j
-b20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwu
-YyAgfCAxOCArKysrKysrKysrKysNCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-aXNwX3JkbWEuYyB8ICA2ICsrKysNCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-cm1fZGRwLmMgICB8IDQ3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIGRy
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICAgfCA0MyArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKw0KPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDExNCBpbnNlcnRpb25zKCsp
-DQo+ID4NCj4gDQo+IFtzbmlwXQ0KPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9kZHAuYw0KPiA+IGluZGV4IDAxNGMxYmIuLjYwNzg4YzEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMNCj4gPiArKysgYi9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYw0KPiA+IEBAIC0xNSw2ICsxNSw4IEBADQo+ID4N
-Cj4gPiAgI2RlZmluZSBNVDI3MDFfRElTUF9NVVRFWDBfTU9EMCAgICAgICAgICAgICAgICAgICAg
-ICAgIDB4MmMNCj4gPiAgI2RlZmluZSBNVDI3MDFfRElTUF9NVVRFWDBfU09GMCAgICAgICAgICAg
-ICAgICAgICAgICAgIDB4MzANCj4gPiArI2RlZmluZSBNVDgxODNfRElTUF9NVVRFWDBfTU9EMCAg
-ICAgICAgICAgICAgICAgICAgICAgIDB4MzANCj4gPiArI2RlZmluZSBNVDgxODNfRElTUF9NVVRF
-WDBfU09GMCAgICAgICAgICAgICAgICAgICAgICAgIDB4MmMNCj4gPg0KPiA+ICAjZGVmaW5lIERJ
-U1BfUkVHX01VVEVYX0VOKG4pICAgICAgICAgICAgICAgICAgICgweDIwICsgMHgyMCAqIChuKSkN
-Cj4gPiAgI2RlZmluZSBESVNQX1JFR19NVVRFWChuKSAgICAgICAgICAgICAgICAgICAgICAoMHgy
-NCArIDB4MjAgKiAobikpDQo+ID4gQEAgLTI1LDYgKzI3LDE4IEBADQo+ID4NCj4gPiAgI2RlZmlu
-ZSBJTlRfTVVURVggICAgICAgICAgICAgICAgICAgICAgICAgICAgICBCSVQoMSkNCj4gPg0KPiA+
-ICsjZGVmaW5lIE1UODE4M19NVVRFWF9NT0RfRElTUF9SRE1BMCAgICAgICAgICAgIDANCj4gPiAr
-I2RlZmluZSBNVDgxODNfTVVURVhfTU9EX0RJU1BfUkRNQTEgICAgICAgICAgICAxDQo+ID4gKyNk
-ZWZpbmUgTVQ4MTgzX01VVEVYX01PRF9ESVNQX09WTDAgICAgICAgICAgICAgOQ0KPiA+ICsjZGVm
-aW5lIE1UODE4M19NVVRFWF9NT0RfRElTUF9PVkwwXzJMICAgICAgICAgIDEwDQo+ID4gKyNkZWZp
-bmUgTVQ4MTgzX01VVEVYX01PRF9ESVNQX09WTDFfMkwgICAgICAgICAgMTENCj4gPiArI2RlZmlu
-ZSBNVDgxODNfTVVURVhfTU9EX0RJU1BfV0RNQTAgICAgICAgICAgICAxMg0KPiA+ICsjZGVmaW5l
-IE1UODE4M19NVVRFWF9NT0RfRElTUF9DT0xPUjAgICAgICAgICAgIDEzDQo+ID4gKyNkZWZpbmUg
-TVQ4MTgzX01VVEVYX01PRF9ESVNQX0NDT1JSMCAgICAgICAgICAgMTQNCj4gPiArI2RlZmluZSBN
-VDgxODNfTVVURVhfTU9EX0RJU1BfQUFMMCAgICAgICAgICAgICAxNQ0KPiA+ICsjZGVmaW5lIE1U
-ODE4M19NVVRFWF9NT0RfRElTUF9HQU1NQTAgICAgICAgICAgIDE2DQo+ID4gKyNkZWZpbmUgTVQ4
-MTgzX01VVEVYX01PRF9ESVNQX0RJVEhFUjAgICAgICAgICAgMTcNCj4gPiArDQo+ID4gICNkZWZp
-bmUgTVQ4MTczX01VVEVYX01PRF9ESVNQX09WTDAgICAgICAgICAgICAgMTENCj4gPiAgI2RlZmlu
-ZSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfT1ZMMSAgICAgICAgICAgICAxMg0KPiA+ICAjZGVmaW5l
-IE1UODE3M19NVVRFWF9NT0RfRElTUF9SRE1BMCAgICAgICAgICAgIDEzDQo+ID4gQEAgLTc0LDYg
-Kzg4LDEwIEBADQo+ID4gICNkZWZpbmUgTVVURVhfU09GX0RTSTIgICAgICAgICAgICAgICAgIDUN
-Cj4gPiAgI2RlZmluZSBNVVRFWF9TT0ZfRFNJMyAgICAgICAgICAgICAgICAgNg0KPiA+DQo+ID4g
-KyNkZWZpbmUgTVQ4MTgzX01VVEVYX1NPRl9EUEkwICAgICAgICAgICAgICAgICAgMg0KPiA+ICsj
-ZGVmaW5lIE1UODE4M19NVVRFWF9FT0ZfRFNJMCAgICAgICAgICAgICAgICAgIChNVVRFWF9TT0Zf
-RFNJMCA8PCA2KQ0KPiA+ICsjZGVmaW5lIE1UODE4M19NVVRFWF9FT0ZfRFBJMCAgICAgICAgICAg
-ICAgICAgIChNVDgxODNfTVVURVhfU09GX0RQSTAgPDwgNikNCj4gPiArDQo+ID4NCj4gPiAgc3Ry
-dWN0IG10a19kaXNwX211dGV4IHsNCj4gPiAgICAgICAgIGludCBpZDsNCj4gPiBAQCAtMTUzLDYg
-KzE3MSwyMCBAQCBzdHJ1Y3QgbXRrX2RkcCB7DQo+ID4gICAgICAgICBbRERQX0NPTVBPTkVOVF9X
-RE1BMV0gPSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfV0RNQTEsDQo+ID4gIH07DQo+ID4NCj4gPiAr
-c3RhdGljIGNvbnN0IHVuc2lnbmVkIGludCBtdDgxODNfbXV0ZXhfbW9kW0REUF9DT01QT05FTlRf
-SURfTUFYXSA9IHsNCj4gPiArICAgICAgIFtERFBfQ09NUE9ORU5UX0FBTDBdID0gTVQ4MTgzX01V
-VEVYX01PRF9ESVNQX0FBTDAsDQo+ID4gKyAgICAgICBbRERQX0NPTVBPTkVOVF9DQ09SUl0gPSBN
-VDgxODNfTVVURVhfTU9EX0RJU1BfQ0NPUlIwLA0KPiA+ICsgICAgICAgW0REUF9DT01QT05FTlRf
-Q09MT1IwXSA9IE1UODE4M19NVVRFWF9NT0RfRElTUF9DT0xPUjAsDQo+ID4gKyAgICAgICBbRERQ
-X0NPTVBPTkVOVF9ESVRIRVJdID0gTVQ4MTgzX01VVEVYX01PRF9ESVNQX0RJVEhFUjAsDQo+ID4g
-KyAgICAgICBbRERQX0NPTVBPTkVOVF9HQU1NQV0gPSBNVDgxODNfTVVURVhfTU9EX0RJU1BfR0FN
-TUEwLA0KPiA+ICsgICAgICAgW0REUF9DT01QT05FTlRfT1ZMMF0gPSBNVDgxODNfTVVURVhfTU9E
-X0RJU1BfT1ZMMCwNCj4gPiArICAgICAgIFtERFBfQ09NUE9ORU5UX09WTF8yTDBdID0gTVQ4MTgz
-X01VVEVYX01PRF9ESVNQX09WTDBfMkwsDQo+ID4gKyAgICAgICBbRERQX0NPTVBPTkVOVF9PVkxf
-MkwxXSA9IE1UODE4M19NVVRFWF9NT0RfRElTUF9PVkwxXzJMLA0KPiA+ICsgICAgICAgW0REUF9D
-T01QT05FTlRfUkRNQTBdID0gTVQ4MTgzX01VVEVYX01PRF9ESVNQX1JETUEwLA0KPiA+ICsgICAg
-ICAgW0REUF9DT01QT05FTlRfUkRNQTFdID0gTVQ4MTgzX01VVEVYX01PRF9ESVNQX1JETUExLA0K
-PiA+ICsgICAgICAgW0REUF9DT01QT05FTlRfV0RNQTBdID0gTVQ4MTgzX01VVEVYX01PRF9ESVNQ
-X1dETUEwLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAgc3RhdGljIGNvbnN0IHVuc2lnbmVkIGludCBt
-dDI3MTJfbXV0ZXhfc29mW0REUF9NVVRFWF9TT0ZfRFNJMyArIDFdID0gew0KPiA+ICAgICAgICAg
-W0REUF9NVVRFWF9TT0ZfU0lOR0xFX01PREVdID0gTVVURVhfU09GX1NJTkdMRV9NT0RFLA0KPiA+
-ICAgICAgICAgW0REUF9NVVRFWF9TT0ZfRFNJMF0gPSBNVVRFWF9TT0ZfRFNJMCwNCj4gPiBAQCAt
-MTYzLDYgKzE5NSwxMiBAQCBzdHJ1Y3QgbXRrX2RkcCB7DQo+ID4gICAgICAgICBbRERQX01VVEVY
-X1NPRl9EU0kzXSA9IE1VVEVYX1NPRl9EU0kzLA0KPiA+ICB9Ow0KPiA+DQo+ID4gK3N0YXRpYyBj
-b25zdCB1bnNpZ25lZCBpbnQgbXQ4MTgzX211dGV4X3NvZltERFBfTVVURVhfU09GX0RTSTMgKyAx
-XSA9IHsNCj4gPiArICAgICAgIFtERFBfTVVURVhfU09GX1NJTkdMRV9NT0RFXSA9IE1VVEVYX1NP
-Rl9TSU5HTEVfTU9ERSwNCj4gPiArICAgICAgIFtERFBfTVVURVhfU09GX0RTSTBdID0gTVVURVhf
-U09GX0RTSTAgfCBNVDgxODNfTVVURVhfRU9GX0RTSTAsDQo+IA0KPiBJIHRoaW5rIHRoaXMgYXJy
-YXkgaXMgZm9yICdzb2YnLCBzbyB5b3Ugc2hvdWxkIGRyb3AgTVQ4MTgzX01VVEVYX0VPRl9EU0kw
-Lg0KPiANCj4gPiArICAgICAgIFtERFBfTVVURVhfU09GX0RQSTBdID0gTVQ4MTgzX01VVEVYX1NP
-Rl9EUEkwIHwgTVQ4MTgzX01VVEVYX0VPRl9EUEkwLA0KPiANCj4gRGl0dG8uDQo+IA0KPiBSZWdh
-cmRzLA0KPiBDaHVuLUt1YW5nLg0KDQpNVDgxODMgbXV0ZXggc2V0dGluZyBpcyBkaWZmZXJlbnQg
-d2l0aCBiZWZvcmUgU29DLg0KaWYgd2UgZG8gbm90IHNldCBFT0YsIE92ZXJsYXkgaGFyZHdhcmUg
-d2lsbCBub3QgcmVjZWl2ZSBmcmFtZSBkb25lIGlycSwNCmFuZCB3aWxsIGRpc3BsYXkgZXJyb3Iu
-DQo+IA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2Rh
-dGEgbXQyNzAxX2RkcF9kcml2ZXJfZGF0YSA9IHsNCj4gPiAgICAgICAgIC5tdXRleF9tb2QgPSBt
-dDI3MDFfbXV0ZXhfbW9kLA0KPiA+ICAgICAgICAgLm11dGV4X3NvZiA9IG10MjcxMl9tdXRleF9z
-b2YsDQo+ID4gQEAgLTE4NCw2ICsyMjIsMTMgQEAgc3RydWN0IG10a19kZHAgew0KPiA+ICAgICAg
-ICAgLm11dGV4X3NvZl9yZWcgPSBNVDI3MDFfRElTUF9NVVRFWDBfU09GMCwNCj4gPiAgfTsNCj4g
-Pg0KDQo=
 
+--ndwcthydipkpuzsn
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jul 27, 2020 at 06:44:32AM +0000, Peng Fan wrote:
+> Hi Oleksij,
+>=20
+> > Subject: Re: [PATCH 00/10] remoteproc: imx_rproc: support iMX8M and ear=
+ly
+> > boot
+> >=20
+> > Hi,
+> >=20
+> > On Fri, Jul 24, 2020 at 04:08:03PM +0800, Peng Fan wrote:
+> > > This patchset is to support i.MX8MQ/M coproc booted before linux.
+> > > Since i.MX8MQ/M was not supported, several patches are needed to first
+> > > support the platform, then support early boot case.
+> > >
+> > > I intended to included i.MX8QM/QXP, but that would introduce a large
+> > > patchset, so not included. But the clk/syscon optional patch for
+> > > i.MX8QM/QXP was still kept here to avoid rebase error.
+> >=20
+> > Thank you for your work.
+> >=20
+> > Can you please provide more information about big picture of this work.
+> >=20
+> > If I see it correctly, we have here support for i.MX8MM, which seems to=
+ be
+> > able to fully control Cortex M4 (enable CPU core, etc...).
+>=20
+> Yes.
+
+In this case, I would recommend to mainline the i.MX8MM part
+first/separately.
+
+> >=20
+> > And other case, where remoteproc is running on application processor and
+> > can't or should not touch M4 (i.MX7ULP, i.MX8QM/QXP..). Since M4 provid=
+es
+> > some functionality, you are trying to reuse remoteproc framework to get
+> > resource table present in ELF header and to dynamically load things. Fo=
+r some
+> > reasons this header provides more information then needed, so you are
+> > changing the ELF parser in the kernel to workaround it.
+>=20
+> Not exactly.
+>=20
+> For i.MX8MM, we support two cases. M4 kicked by U-Boot, M4 kicked by Linu=
+x remoteproc.
+> For i.MX8QM/QXP, the typical usecase is M4 kicked by SCFW, but we will al=
+so add M4 kicked
+> by Linux remoteproc.
+> For i.MX7ULP, I would only support M4 dual boot case, M4 control everythi=
+ng.
+
+=46rom current state of discussion, i'm not sure what role plays
+remoteproc in the scenario where M4 is started before linux. Especially
+if we are not using resource table.
+
+> The reason the change the elf parser is that when M4 elf is loaded by Lin=
+ux remoteproc,
+> It use memset to clear area.
+
+The use of memset, depends on ELF format. Fix/change the linker script
+on your firmware and memset will be never called.
+
+> However we use ioremap, memset on ARM64 will report
+> crash to device nGnRE memory. And we could not use ioremap_wc to TCM area=
+, since
+> it could have data correctly written into TCM.
+
+I have strong feeling, that we are talking about badly or not properly
+formatted ELF binary. I would prefer to double check it, before we will
+apply fixes on wrong place.
+
+> Maintainer not wanna to drop memset in common code, and TI guys suggest
+> add i.MX specific elf stuff. So I add elf handler in i.MX code.
+
+I think, removing memset may damage current users of imx_rproc driver.
+Since, like I said: the use of memset depends on ELF format.
+
+> Thanks,
+> Peng.
+>=20
+> >=20
+> > Correct?
+> >=20
+> > > Peng Fan (10):
+> > >   dt-bindings: remoteproc: imx_rproc: add i.MX8MQ/M
+> > >   remoteproc: imx_rproc: correct err message
+> > >   remoteproc: imx: use devm_ioremap
+> > >   remoteproc: imx_rproc: make syscon optional
+> > >   remoteproc: imx_rproc: make clk optional
+> > >   remoteproc: imx_rproc: add load hook
+> > >   remoteproc: imx_rproc: add i.MX specific parse fw hook
+> > >   remoteproc: imx_rproc: support i.MX8MQ/M
+> > >   remoteproc: imx_proc: enable virtio/mailbox
+> > >   remoteproc: imx_rproc: support coproc booting before Linux
+> > >
+> > >  .../devicetree/bindings/remoteproc/imx-rproc.txt   |   3 +
+> > >  drivers/remoteproc/imx_rproc.c                     | 409
+> > ++++++++++++++++++++-
+> > >  2 files changed, 401 insertions(+), 11 deletions(-)
+> > >
+> > > --
+> > > 2.16.4
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > >
+> >=20
+> > --
+> > Pengutronix e.K.                           |
+> > |
+> > Steuerwalder Str. 21                       |
+> > http://www.pengutronix.de/  |
+> > 31137 Hildesheim, Germany                  | Phone:
+> > +49-5121-206917-0    |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:
+> > +49-5121-206917-5555 |
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--ndwcthydipkpuzsn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8eiDwACgkQ4omh9DUa
+UbPVKw//RiwTubWT5hjSS95taFOhrjklnCkKnNdNrx15w38fSGf1Gly5UtAfKTRo
+7svoNWtbHzPDT5TILc/NQpP2C86ug3kuhLRzwzppP2DB217lFIzqwRWZ1QBYbYko
+Ho8u4nHgR/++MiZs3KwgeJvlvKhISpvTxNKR1wmXj8MPw4lD6Vrq1L2GdKMiiaOb
+x1bziy2+IEp+/ntohTvvjrUHjD7mcTEW25LPgP28cgED1mnJJX+IRKJnymBCTQi9
+w+MHTgAGOPXkHeho3BFhg7S8T+Wj9JeiVewLOpryzosw96gGYmkRXE+QW75iIJRu
+L4+2b1wrb5O3VpuhK7oVxpQe5QhEYG1PIAizWNQSJV5jRbuN1Xct7i949d+a91FF
+8dcE4xOqsGVhQ7+IMf+6HMOk0m/FXXmjBZzpOs++RTsQR/cPAuD2QTLWHuaETb4v
+H6aRwgLZGDZzyBAyF6HnFYdZvLYY0XiINfi1b65+lSarCgaIrHWqPogNtsX8RGET
+PngXCMQ85XF4Bi/TR6vj0ym1jEd4fPBIHPSS/nCzwfDC5pkUUCdzdpEOdVPSKxf0
+YIStW+5krTiQwnp566EC4+fHH+pyzcV6W6BrpKrDsAwUk4KUIpyxr9I9eKkp8YVp
+xzYl92mLOq0vkp1Mv4WZFpKaH3LTWYqq4AwbryvEhpM29g9XXjQ=
+=Hp2H
+-----END PGP SIGNATURE-----
+
+--ndwcthydipkpuzsn--
