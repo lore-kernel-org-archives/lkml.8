@@ -2,94 +2,97 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C94C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE676C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDE502074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BB92075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595843640;
-	bh=aU7nbbmxURhHho/spFo6gDr2WLaiWunOy8aTUFZfyYk=;
+	s=default; t=1595843722;
+	bh=urwdv9j9aZxm9yC48fvVH4Ln/hMjaLnoAMYUax2VmtI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XnRLB4rHo6zRGQnEBjWh9kSR/DucUpxT3WbKFNaXONHMo4rNSDuLO9nG8/RECsaek
-	 d/hHqsJRiWJH7exeTzhwD0+P+u/r0E/uzUrIoO5bbv3RNgAgmG2nejc9U0EQXisnFG
-	 L4EWFSfSmclSdU2TGCg2/5EQdmvY6GyeL0MoioCI=
+	b=y+g9CGZ5FGeewiGjpKaSjZPvC4vyzGWZNfXNEHmfTW5tF7ji2B9bXwNRK23hp7cFy
+	 VUIdggOouh14lZgyqRq7SEzbKUDpaDHm7IkYWX7RA7mb7ntyrMhRYvsfdoE2pkrfvI
+	 g/K+ys2I0fROeVXNMt+eEX8pAKTakjsmxgxyKG0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgG0Jx7 (ORCPT
+        id S1727864AbgG0JzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:53:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37346 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 05:55:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgG0Jx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:53:59 -0400
+        id S1726196AbgG0JzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:55:20 -0400
 Received: from localhost (unknown [122.171.202.192])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 207E52075A;
-        Mon, 27 Jul 2020 09:53:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE9B92075D;
+        Mon, 27 Jul 2020 09:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595843639;
-        bh=aU7nbbmxURhHho/spFo6gDr2WLaiWunOy8aTUFZfyYk=;
+        s=default; t=1595843719;
+        bh=urwdv9j9aZxm9yC48fvVH4Ln/hMjaLnoAMYUax2VmtI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xu3uzXpNJykBSNJ3260iKq72+1Nhgv8bEp410kTYw7z+zhQcYwCMDMyVh6k10Kgmc
-         A1c6O8cSu5tCq7zQoM20R+/NMhnmR0eKnOzGV+JryNTEUrqhWWuE8dsBAvhYmDctqL
-         TJRGGklJK3K/qM0JqyhfYsRer8ZES2FwsPlStimk=
-Date:   Mon, 27 Jul 2020 15:23:55 +0530
+        b=bt4R+NfqantUvxsvkWwOMaIhWn7H98Y6a08+SzJ/sgme2YPVupE+YVDeGrmVY1Y0G
+         u2Ryj+JqH6OcdTo2Ba8mgDj8Zngak384PTmh5O7CfBV3DH7Y7JM6u/QHLM7MKv6827
+         j37Cp+Cw1y7KSEBat1scAfFISX1iRVTTEfWenVK4=
+Date:   Mon, 27 Jul 2020 15:25:15 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Cc:     Felipe Balbi <balbi@kernel.org>, gregkh@linuxfoundation.org,
-        robh+dt@kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        paul@crapouillou.net, prasannatsmkumar@gmail.com, kishon@ti.com,
-        gor@linux.ibm.com, hca@linux.ibm.com,
-        christophe.jaillet@wanadoo.fr, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: Re: [PATCH v6 3/5] USB: PHY: JZ4770: Add support for new Ingenic
- SoCs.
-Message-ID: <20200727095355.GW12965@vkoul-mobl>
-References: <20200725035159.31231-1-zhouyanjie@wanyeetech.com>
- <20200725035159.31231-4-zhouyanjie@wanyeetech.com>
- <87r1t0nmpr.fsf@kernel.org>
- <1727b5db-5cdf-b88a-4672-bfb4e9809bb0@wanyeetech.com>
+To:     Sekhar Nori <nsekhar@ti.com>
+Cc:     Swapnil Jakhade <sjakhade@cadence.com>, kishon@ti.com,
+        linux-kernel@vger.kernel.org, maxime@cerno.tech,
+        mparab@cadence.com, yamonkar@cadence.com, tomi.valkeinen@ti.com,
+        jsarha@ti.com, praneeth@ti.com
+Subject: Re: [PATCH v4 0/2] Add new PHY APIs to framework to get/set PHY
+ attributes
+Message-ID: <20200727095515.GX12965@vkoul-mobl>
+References: <1594968633-12535-1-git-send-email-sjakhade@cadence.com>
+ <f1f2cdca-99a1-2bcc-6fe2-9ce95553a7cd@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1727b5db-5cdf-b88a-4672-bfb4e9809bb0@wanyeetech.com>
+In-Reply-To: <f1f2cdca-99a1-2bcc-6fe2-9ce95553a7cd@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-07-20, 15:34, Zhou Yanjie wrote:
-> Hi Felipe,
+Hi Sekhar,
+
+On 26-07-20, 01:24, Sekhar Nori wrote:
+> Hi Vinod,
 > 
-> 在 2020/7/25 下午2:16, Felipe Balbi 写道:
-> > Hi,
+> On 7/17/20 12:20 PM, Swapnil Jakhade wrote:
+> > This patch series adds a new pair of PHY APIs that can be used to get/set
+> > all the PHY attributes. It also adds a new PHY attribute max_link_rate.
 > > 
-> > 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com> writes:
-> > > Add support for probing the phy-jz4770 driver on the JZ4780 SoC,
-> > > the X1000 SoC and the X1830 SoC from Ingenic.
-> > > 
-> > > Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
-> > > Co-developed-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-> > > Signed-off-by: 漆鹏振 (Qi Pengzhen) <aric.pzqi@ingenic.com>
-> > > Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> > It would be better to move this driver to drivers/phy before adding
-> > support for new SoCs. We want to remove drivers/usb/phy/ in the near
-> > future, any help is welcome.
+> > It includes following patches:
 > > 
-> Seems my mailbox have something wrong, the [5/5] patch in this series is
-> used to move this river to drivers/phy, but seems that it has not been sent
-> out correctly, I already resend it.
+> > 1. v4-0001-phy-Add-new-PHY-attribute-max_link_rate-and-APIs-.patch
+> > This patch adds max_link_rate as a new PHY attribute along with a pair of
+> > APIs that allow using the generic PHY subsystem to get/set PHY attributes
+> > supported by the PHY.
+> > 
+> > 2. v4-0002-phy-cadence-torrent-Use-kernel-PHY-API-to-set-PHY.patch
+> > This patch uses PHY API phy_set_attrs() to set corresponding PHY properties
+> > in Cadence Torrent PHY driver. This will enable drivers using this PHY to
+> > read these properties using PHY framework.
+> > 
+> > The phy_get_attrs() API will be used in the DRM bridge driver [1] which is
+> > in the process of upstreaming.
+> 
+> Is it possible to queue these for v5.9 also? I did notice that phy
+> updates for v5.9-rc1 are posted already. But these APIs are needed for
+> the DisplayPort driver thats getting ready for merge too. Having these
+> queued now will make managing dependencies much easier.
 
-I have resend patches in my inbox but that seems missing patches too :(
+I would prefer if we defer core change to post rc1. For your display, we
+can provide a signed tag for you/drm folks to fetch.
 
+Would that be okay?
+
+Thanks
 -- 
 ~Vinod
