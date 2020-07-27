@@ -2,94 +2,149 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A2CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A34C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0705920729
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D5D92070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:03:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dGOnxmLz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgG0XIF (ORCPT
+        id S1726817AbgG0XD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:08:05 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35034 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgG0XIE (ORCPT
+        Mon, 27 Jul 2020 19:03:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgG0XD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:08:04 -0400
-Received: by mail-qt1-f196.google.com with SMTP id b25so13591388qto.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 16:08:03 -0700 (PDT)
+        Mon, 27 Jul 2020 19:03:27 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28238C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 16:03:27 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id u64so16945127qka.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 16:03:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GBftFvyHvrin0kdl06v10bVa3MCqdXQloUXFuRhSc9k=;
+        b=dGOnxmLzwK+/tLLwNr0I9cnSw4nho2QwiTGJwt0v2qNs6Z+PbQ1OhL4xeADddYSfQE
+         +KuWpveDYW1bObBiAAEn3QwjAy0tzAfgtgE9TGnAVDe5A1V9ec/MZQsj5xzbPrNLF0RW
+         xVesQErP5QQ8EtaQWU2UWIwv1t7gcE+ZM0XOc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=S8I1Kaf/LJR4Y2Bet9OYDl+rhIGtV8E+QzPTHozOKCg=;
-        b=A35PtSRVDxMx4Jq4p02ftwEcyCcr1+pe29UjivWiVnYIlSiB5Z92cKmJs+DeIwcQXe
-         nGmOWNt7yKr72aFEU0HTjOr3RPIXHuo2CN8xqcXxqwksvrhyE2YMZTIUj/XA3NWi+JIP
-         HBWV3oqcyhzFeLfAxOWd10l+sAgE8vV+rbW+saJU1Hl1auX+2ZWr04ZCSAwlqNIPHG7s
-         k1fmBEARxLR4zzUIJzKjTPJsMtbnNlgGL73OA0AJFsW8nXeI+NettqcVyqeu6W0BX/fi
-         oR+WhdL3dDkY3j0g0+dhY9tOy69dfV7weN/+SalZVd4JYgJ739eSbbWsx3b0zEabiw6L
-         IuSg==
-X-Gm-Message-State: AOAM533ZQDjkn7Kvz5j2OC0dYiv1+9vhVml8kU1CG9AD9sUIgRDfC1hb
-        uD7D+jmGbVbFLdGHUm0oJ8s=
-X-Google-Smtp-Source: ABdhPJxw+vDsMqIkXyqNp1yfZ+5/7GQ8e393lN1cnzbxP+t5nnYR1A/ddGwAZBVg5a7w1R0q8F6OMA==
-X-Received: by 2002:ac8:f73:: with SMTP id l48mr24198737qtk.296.1595891282983;
-        Mon, 27 Jul 2020 16:08:02 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id j61sm8216984qtd.52.2020.07.27.16.08.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GBftFvyHvrin0kdl06v10bVa3MCqdXQloUXFuRhSc9k=;
+        b=M7IE1I2IgpVADYFKYHVq0HhRpCUWCO09BrnVhtk4sfRGbyhczju6Hr7UjzUhFf/+eh
+         3ouJPk5S/+xITUm9insgKwQUxJl0TZkL3T5wzfU7EtxB7/63r7rnkbv1OoqMtgv6NiVk
+         jjH2ho1A2D0OzlpAqUifl4lTDFvd+j1J2KO8aFDVtA/WSc3z4p8pPCuAFqjvHjSNXEuV
+         BMzSKksgR2ghTZX4ypZjd+zLYOjf9rIVZnGTdHs1UUg/BbLXPHX2p6cV932i6wdJWH1T
+         gE7UTH8vmlkDgomFXjY0H+y77nQV9RAudCJmUhvA80ETV/h/duXSN8V2sWcp/OG228Wb
+         ztyA==
+X-Gm-Message-State: AOAM533rqwu/FvsJ6NmaMUuqeCgw2hu2J/OxvJrpDNbyb+e13zsyU/5g
+        CtpHxzk33bdARJbHvlUrMW67Mw==
+X-Google-Smtp-Source: ABdhPJzSqUgi++lBXyma31OuRRPsRzshcfFme7Q9i4ZBKMuKkAbLkRrL3kq111ejLYEBNlmHdA2LDg==
+X-Received: by 2002:a37:458f:: with SMTP id s137mr25188859qka.129.1595891005462;
+        Mon, 27 Jul 2020 16:03:25 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id t83sm20045377qke.133.2020.07.27.16.03.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 16:08:02 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Kees Cook <keescook@chromium.org>, x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/8] x86/kaslr: Cleanup and small bugfixes
-Date:   Mon, 27 Jul 2020 19:07:53 -0400
-Message-Id: <20200727230801.3468620-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200727215047.3341098-1-nivedita@alum.mit.edu>
-References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
+        Mon, 27 Jul 2020 16:03:24 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 19:03:23 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>, rcu <rcu@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH RFC v2] rcu/segcblist: Add counters to segcblist
+ datastructure
+Message-ID: <20200727230323.GA3390623@google.com>
+References: <20200719035518.2386828-1-joel@joelfernandes.org>
+ <CAEXW_YQhYiYQZOJ95dqBcu_fAZ_6k7HGbrw53eTgPrgXU+5few@mail.gmail.com>
+ <20200719041841.GA2398236@google.com>
+ <20200720082211.GA35358@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <CAEXW_YR4dxuPV+Yu9HcYCSAdiV1H=9Rk9HJgCST-YMMc7J2Mgg@mail.gmail.com>
+ <20200727134925.GB79404@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727134925.GB79404@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The first 7 patches are cleanup and minor bugfixes on the x86 KASLR
-code.
+On Mon, Jul 27, 2020 at 09:49:25PM +0800, Boqun Feng wrote:
+[...] 
+> So C11 features are available to gnu89 as extensions, also I tried to
+> compile the following code with -std=gnu89:
+> 
+> 	#include <stdio.h>
+> 
+> 	typedef struct {
+> 		int a;
+> 	} atomic_t;
+> 
+> 	void g(void) {
+> 		printf("this is g\n");
+> 	}
+> 
+> 	void h(void) {
+> 		printf("this is f\n");
+> 	}
+> 
+> 	#define gen(x) _Generic((x), atomic_t : h(), int : g())
+> 
+> 	int main(void) {
+> 		int a;
+> 		atomic_t b;
+> 		gen(a);
+> 		gen(b);
+> 		gen(b);
+> 	}
+> 
+> , and it worked.
+> 
+> Besides, please note that in include/linux/compiler_types.h, _Generic is
+> already used.
 
-The last one is a bit of an RFC. The memory regions used for KASLR are
-stored as 64-bit even on a 32-bit kernel. However there are still a few
-local variables that are 32-bit, but should be ok as far as I can see
-because they are assigned values that have been already limited to
-32-bit. It does make it a little harder to verify that the code is
-correct. Since KASLR cannot actually use 64-bit regions for the 32-bit
-kernel, the patch reduces regions to their below-4G segment when
-creating them, making the actual variables 32-bit. Alternatively, the
-few local variables could be upgraded to 64-bit.
+> > > With these primitives introduced, you can avoid () to add those
+> > > rcu_segcblist_*_seglen() which have #ifdefs in them. Of course, an
+> > > alternative would be that we implement rcu_segcblist_*_seglen() using
+> > > _Generic, but I think someone else may have the similar problems or
+> > > requirement (already or in the future), so it might be worthwhile to
+> > > introduce the gen_ primitives for broader usage.
+> > 
+> > One issue is code using memory barriers around the operation, such as
+> > in rcu_segcblist_add_len() where you use smp_mb__before_atomic() for
+> > the atomic version, and regular smp_mb() for the non-atomic version.
+> > So ifdef will still exist to some degree.
+> > 
+> 
+> Right, I think we can have two functions: long_add_mb() and
+> atomic_long_add_mb(), this part is similar to ifdef approach, but we can
+> make a gen_long_add_mb() based on these two functions, and
+> gen_long_add_mb() simply switches between those functions according to
+> the actual type of the field, which I think is better than ifdef
+> approach at readability and maintenance.
 
-v1->v2:
-- Fix a bug in the bugfix 5/8: overlap.start can be smaller than
-  region.start, so shouldn't subtract before comparing.
+Thanks for clarification. I agree with your idea, would you be able to write
+a patch to add the helpers my patch can use?
 
-Arvind Sankar (8):
-  x86/kaslr: Make command line handling safer
-  x86/kaslr: Remove bogus warning and unnecessary goto
-  x86/kaslr: Fix process_efi_entries comment
-  x86/kaslr: Initialize mem_limit to the real maximum address
-  x86/kaslr: Simplify __process_mem_region
-  x86/kaslr: Simplify process_gb_huge_pages
-  x86/kaslr: Clean up slot handling
-  x86/kaslr: Don't use 64-bit mem_vector for 32-bit kernel
+If others are Ok with your idea, I can go ahead and use your helpers.
 
- arch/x86/boot/compressed/acpi.c  |   7 +-
- arch/x86/boot/compressed/kaslr.c | 228 ++++++++++++-------------------
- arch/x86/boot/compressed/misc.h  |  19 ++-
- 3 files changed, 111 insertions(+), 143 deletions(-)
+(I could write the helpers myself as well, next time I send the patch).
 
--- 
-2.26.2
+thanks,
+
+ - Joel
 
