@@ -2,124 +2,126 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5660C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AD3C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A19F72074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC66E20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:20:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WCiKux6o"
+	dkim=pass (2048-bit key) header.d=solid-run-com.20150623.gappssmtp.com header.i=@solid-run-com.20150623.gappssmtp.com header.b="Rrme5m5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgG0JTX (ORCPT
+        id S1727088AbgG0JT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:19:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34840 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726982AbgG0JTW (ORCPT
+        Mon, 27 Jul 2020 05:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726315AbgG0JT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:19:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595841561;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QCPl26vQjULmYn4YuaO0oBKJfB0p6s8zWHm/BxwN4DE=;
-        b=WCiKux6o5qS82s0WrOQGc0/r3SvsBRSYAbN+MtJSviYQ16IrZp2fPZbQ/OnM1xei7Mp/zC
-        JRWu1sq5xFQHx6jBhX72zPYb8WvuI3wbO1It4mk+y34rXTbFYdtto4DVciycg/fsI6KVaZ
-        PsuQozz66uHQUYupwjXGvKqwovhwDfc=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-60-00t_0R-uN2uzdepoAZ3Eyg-1; Mon, 27 Jul 2020 05:19:18 -0400
-X-MC-Unique: 00t_0R-uN2uzdepoAZ3Eyg-1
-Received: by mail-pg1-f198.google.com with SMTP id m7so12195187pgv.12
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:19:18 -0700 (PDT)
+        Mon, 27 Jul 2020 05:19:59 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000E2C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:19:58 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id qc22so1512963ejb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:19:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=solid-run-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yLnBcJ7AAd3mxUPf3jGsnG6dsXBMorrtxynphcZ58Lo=;
+        b=Rrme5m5VJcvJfeb/5BW8Hq518uIh95lif7kMwJNVad8/btgBS/K25HDnjgKvI8vtO7
+         YI4LnrVFZ5bte7TgQnygpWDu4yyX00VmQ4d9DWQl0uJwumsl20t8YcFhULEuJmRmqLzH
+         MBYYsHgJd1Ruyr2KL95cXQCZPmpRWwUJCoq21BZwg2oz1hFMO6KA6viDQW333yocDKgh
+         m5QjZkGjhuIhDuMDV/FnhxfqO9sc39fLVqjoPlpSkVFTk0/HTd6fO51dYtA/3KqxVGq8
+         Wi7aQuSR824kbXY6eaRf9EHGuOGoJ4D30m4hIF1qsykmde7LH484tEGOA9/K9zTR5oG0
+         gYXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QCPl26vQjULmYn4YuaO0oBKJfB0p6s8zWHm/BxwN4DE=;
-        b=i39eGGZaOafDBSioxj90WgQ203+YWsHf6w6teQQd9RWNIQiKnNPI5GzMH/gUVZpY6/
-         r8OLCoXnYF55Mw8QPpQ57OV7T6hPQInEovCCFSDMuwGLb9OuVnKtyh347c1/3+Vae623
-         CBsy6hR9255W6wOIKw3tKjmLP5kBN2V4I3r8Ml/4PTtilYlWEhm5J4mdYjTpzZv5W6Kl
-         VytlZSdIWSx5+LvhRUjImwOFRdZPwvtNO34qJtfaxLAHVg8XV+CiUGegPGMaRfcYkiz3
-         bqVoVf2b+bF/qOyum3//XzUzQQFFAK5GUD4Knki2uIRVe1p+FM6tYngV6yRyeBxho3Xg
-         SM5Q==
-X-Gm-Message-State: AOAM532ZXA+w+5CrwpZZ967tHNIoXcRRIPvvU61klzAY26Da7yELLdyw
-        u1wmL186tJqG4BJvSZbSiVrLcNjP92ce7yt1jv5y0wBadPhFDrN8ND057RdLOgZIGUo8/l6LTfQ
-        rz7CLb+duymvbVlADVmZU6Qli
-X-Received: by 2002:a63:f91d:: with SMTP id h29mr18850254pgi.185.1595841556946;
-        Mon, 27 Jul 2020 02:19:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwomZ6+Vbp5luBgFa8hpysABhvhc7f3FEYvkY/cSFOsThpYQXzhZNVsN/6DsU8W0TlfjyleKQ==
-X-Received: by 2002:a63:f91d:: with SMTP id h29mr18850241pgi.185.1595841556701;
-        Mon, 27 Jul 2020 02:19:16 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id gf24sm4659062pjb.4.2020.07.27.02.19.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 02:19:16 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 17:19:05 +0800
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Gao Xiang <hsiangkao@aol.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: arch/alpha/include/asm/xchg.h:234:32: sparse: sparse: cast
- truncates bits from constant value (5f0ecafe becomes fe)
-Message-ID: <20200727091905.GA17835@xiangao.remote.csb>
-References: <202007251532.y5A10ZoO%lkp@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yLnBcJ7AAd3mxUPf3jGsnG6dsXBMorrtxynphcZ58Lo=;
+        b=U5HySB1EWWBs4SjYndJsDNSAg9ph/QW6ArgLsHbr1lnLP5w/YSrOj5ZInba+kH+nWx
+         FEihLbkyw8Q2gCPVh1Wg8WHfjQIfJaXbxlV/NzMw1Q1/ug1xjwLbXkNVDIffhvh6mlag
+         /ooWFcvyQlYLPvoxdgryVz+wA0xlgrEvQ3jOrRZBSAKL4Cghvc5s8iTIGmjkubxpS2Jw
+         ciLZKBg3tx81Mypvdb9xNgTtth44mZaU12WLk10gn7rNjqBbySizDaVX59dibGiXDE8W
+         4R/NcpsaVe9YJaPdPPeXmKN1DGTwCo/4OKpWgdaATlNxzI/eztXWAe+uEUb0FxobLbIE
+         SI5g==
+X-Gm-Message-State: AOAM533tU/IoRgmjd2y7bF5peXpiU6+f135aDOzvBAejdOCVg+QEP6cr
+        7H89fv2bLzzZMXf+cZgwiwbJQ7nJKqUwyqGKMqZpKjbi
+X-Google-Smtp-Source: ABdhPJyuwhYdkGGy++YHy8bXte3CGx1WkQqv2s1Zp2sQFaoV4RP9ZY9GnwaCnPl/RDaoqjmbMCr7jWPWPAn3ppjayGo=
+X-Received: by 2002:a17:906:2451:: with SMTP id a17mr17227540ejb.274.1595841597754;
+ Mon, 27 Jul 2020 02:19:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202007251532.y5A10ZoO%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-1-miguelborgesdefreitas@gmail.com> <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
+ <20200723174905.GA596242@bogus> <20200723195755.GV3428@piout.net> <CAC4G8N7Agb6pVVv6x9_pMMxkB9HnCFiaaC6EJb4-MNzEPd0Uhw@mail.gmail.com>
+In-Reply-To: <CAC4G8N7Agb6pVVv6x9_pMMxkB9HnCFiaaC6EJb4-MNzEPd0Uhw@mail.gmail.com>
+From:   Jon Nettleton <jon@solid-run.com>
+Date:   Mon, 27 Jul 2020 11:19:21 +0200
+Message-ID: <CABdtJHvA9YL76pf+ip--OuX1WOxLPm3f=WB_-BAdA2QguSu3tA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+To:     Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh@kernel.org>, a.zummo@towertech.it,
+        Baruch Siach <baruch@tkos.co.il>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Jul 23, 2020 at 10:41 PM Miguel Borges de Freitas
+<miguelborgesdefreitas@gmail.com> wrote:
+>
+> Hi Alexandre,
+>
+> Having a way to dynamically change the configuration would definitely
+> be helpful in most cases. I decided to go with a DT property because
+> in the case this patch tries to solve (the cubox-i) there isn't simply
+> any other option - the default mode won't work due to the missing hw
+> components. So, I thought that by defining it as a DT property it
+> could somehow be locked to the hardware definition.
+> Keep me posted
+>
+> Regards
+>
+> PS: Sorry for the second message, forgot to disable html and the
+> message couldn't be delivered to all recipients.
+>
+> Alexandre Belloni <alexandre.belloni@bootlin.com> escreveu no dia
+> quinta, 23/07/2020 =C3=A0(s) 20:57:
+> >
+>
+> > >
+> > > I'm all for common properties, but is this common across vendors?
+> > >
+> >
+> > This is but this shouldn't be a DT property as it has to be changed
+> > dynamically. I'm working on an ioctl interface to change this
+> > configuration.
+> >
+> >
 
-On Sat, Jul 25, 2020 at 03:15:39PM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   23ee3e4e5bd27bdbc0f1785eef7209ce872794c7
-> commit: 47e4937a4a7ca4184fd282791dfee76c6799966a erofs: move erofs out of staging
-> date:   11 months ago
-> config: alpha-randconfig-s031-20200725 (attached as .config)
-> compiler: alpha-linux-gcc (GCC) 9.3.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # apt-get install sparse
->         # sparse version: v0.6.2-93-g4c6cbe55-dirty
->         git checkout 47e4937a4a7ca4184fd282791dfee76c6799966a
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=alpha 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> 
-> sparse warnings: (new ones prefixed by >>)
-> 
->    fs/erofs/zdata.c: note: in included file (through arch/alpha/include/asm/cmpxchg.h, arch/alpha/include/asm/atomic.h, include/linux/atomic.h, ...):
-> >> arch/alpha/include/asm/xchg.h:234:32: sparse: sparse: cast truncates bits from constant value (5f0ecafe becomes fe)
-> >> arch/alpha/include/asm/xchg.h:236:32: sparse: sparse: cast truncates bits from constant value (5f0ecafe becomes cafe)
-> >> arch/alpha/include/asm/xchg.h:234:32: sparse: sparse: cast truncates bits from constant value (5f0ecafe becomes fe)
-> >> arch/alpha/include/asm/xchg.h:234:32: sparse: sparse: cast truncates bits from constant value (5f0edead becomes ad)
-> >> arch/alpha/include/asm/xchg.h:236:32: sparse: sparse: cast truncates bits from constant value (5f0ecafe becomes cafe)
-> >> arch/alpha/include/asm/xchg.h:236:32: sparse: sparse: cast truncates bits from constant value (5f0edead becomes dead)
+Thanks for sending this patch.  I think there are two paths forward if
+an ioctl interface is being added.
 
-I'm not sure what's wrong here? What should I proceed with it
-(it seems relating with Alpha architecture? since I didn't notice the sparse warning in x86 and arm)
+1)  Change the property to reflect that this is the default state the
+RTC should be initialized to.
+2)  Just move this configuration into the bootloader and then verify
+that the bootloader doesn't reset this value.
 
-Z_EROFS_PCLUSTER_TAIL is a pointer with magic value to indicate
-the end of opening decompressing chain, whose function is likewise
-the function of POISON_POINTER_DELTA and CONFIG_ILLEGAL_POINTER_VALUE.
-
-Thanks,
-Gao Xiang
-
+-Jon
