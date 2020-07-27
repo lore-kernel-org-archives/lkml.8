@@ -2,105 +2,105 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F23DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4B0C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3B420658
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E6312070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:08:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pO0yYGQC"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ObQ5W0T7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgG0IHa (ORCPT
+        id S1726905AbgG0IIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:07:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
+        Mon, 27 Jul 2020 04:08:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726122AbgG0IH3 (ORCPT
+        with ESMTP id S1726122AbgG0IIf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:07:29 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ECD9C0619D2;
-        Mon, 27 Jul 2020 01:07:28 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id d17so16192347ljl.3;
-        Mon, 27 Jul 2020 01:07:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QBY+w6jlyOsmPmSWdAT4jKigsszPSmssReg15Ky49UU=;
-        b=pO0yYGQCSTQKbT0MGpMhARYtQU/QS+0eHydoie2QLOig4M7Wwlc33+Ywk7W9mH1iMQ
-         oAUuHrynvVNvmmbF+k8N5B0j8+maV4Wn+MMIuXuxcXmBYtPtBwGDK7X6++E5EebQkd8O
-         g9DZWNBmfNbewt0xugznCCNnRCuL2u3UVzBv/R4Zu4SAiPnHNvI13/XNX7oUcF3Kzs0f
-         490YLr4rsAyv5QkH2FySa8u1/4vZugEYa8xG3LFW+GpfG1zFg9SetYLUes9Sfe9Xukli
-         pv8+nz6+btJpWeL5P/pnh68uiC7AYJCSCCFKuJtwxeAsOidqiGxeU9vW7SSq010YLTk2
-         GbhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=QBY+w6jlyOsmPmSWdAT4jKigsszPSmssReg15Ky49UU=;
-        b=V75b7BpvAOd4p1KGHWkdXBqYjvXXUE9+PHnSOj6hondqUdzRx28Ia5OHbQODf2ux5P
-         X4CRnWMoWyKQxUGcUKoIG7Bo0LI8hFwOpjr+eZR1haEHOu6XMpwSTGZ/WUQlzrEf+gKC
-         HPS94mTfEzGDSKX26+sHRdj3GTRuiOBOtloPzrrZizNCaP9fLz+Y0gAp4nc72Ue3WLsl
-         4r3SplNDPcuepnumWO4ogPwc5ogXtjx0RlUngW9XJ34QUrYjm9cP0n3Rb1fz5i+on2s4
-         OHfB7zOuYhTcsSr5OPchKWeGhXze9xp/cEu399siWfmlGm11xynz2B4tuxNPFPkyg1BF
-         PstA==
-X-Gm-Message-State: AOAM533GBqoCHKETkCmqZ+K6L31mewn+fkAmNdf1AnfEuWjRcM7SZx9w
-        1FRgW+5pR2tCXq1Sa5BXYKs=
-X-Google-Smtp-Source: ABdhPJyp2w8n0TkWqz8Tn1BMhL1Hbci2VJ8g3DYVzcr02L4rjMmleq2Q8xI7QTOB2HipNAT8vnpsPA==
-X-Received: by 2002:a2e:91ca:: with SMTP id u10mr8963831ljg.132.1595837246293;
-        Mon, 27 Jul 2020 01:07:26 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:2f5:268:51f1:5041:2d6d:a8b7? ([2a00:1fa0:2f5:268:51f1:5041:2d6d:a8b7])
-        by smtp.gmail.com with ESMTPSA id t205sm2861608lff.8.2020.07.27.01.07.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 01:07:25 -0700 (PDT)
-Subject: Re: [PATCH 10/11] usb: mtu3: clear dual mode of u3port when disable
- device
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Eddie Hung <eddie.hung@mediatek.com>
-References: <1595834101-13094-1-git-send-email-chunfeng.yun@mediatek.com>
- <1595834101-13094-10-git-send-email-chunfeng.yun@mediatek.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Organization: Brain-dead Software
-Message-ID: <e30483ff-e66a-1cba-e166-a1fe590c2f03@gmail.com>
-Date:   Mon, 27 Jul 2020 11:07:24 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 27 Jul 2020 04:08:35 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB2BC0619D2;
+        Mon, 27 Jul 2020 01:08:35 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFXW46K3hz9sRN;
+        Mon, 27 Jul 2020 18:08:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595837313;
+        bh=ZB0YfooDmJb71L7NPOII9upL0BQw1kzm26TJWFmNJvI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ObQ5W0T7KVZ6Ir3M3Uw2LogMkZzz0v5LK+9xQtfHDgApg/LsLpJbZRVzAyj8EyPMq
+         X72EUqWLziUQ/34KjXKVbrzSLEKwPt6NIDmVcYpFz15pTZ8yz39uGQ6e/8HIt7gG2S
+         KRPUrNr8scujsVTmH0fn7+6ZJRqjmKGtPamzxdzzzadLEb7g9j4zQBy3SUQoD6ciwg
+         L9QCAzHOSXi/U6mLHhV3o1IqFSkOuOnOtxMWyntqi3DtbcWaPNtAStIzxW8CkEtDYs
+         aUYKkKrpiA/lGYOxKeGGuWn/Azm4OeDK5dEzoQICJpj3rBJtOnIVf95kxenXMCMO7i
+         I2LJ0hYEMrDGg==
+Date:   Mon, 27 Jul 2020 18:08:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Omer Shpigelman <oshpigelman@habana.ai>
+Subject: linux-next: build failure after merge of the char-misc tree
+Message-ID: <20200727180831.6c356fc1@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <1595834101-13094-10-git-send-email-chunfeng.yun@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/wNv+Qy3O1nb0cUhVFMrSJS_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+--Sig_/wNv+Qy3O1nb0cUhVFMrSJS_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 27.07.2020 10:14, Chunfeng Yun wrote:
+Hi all,
 
-> If not clear u3port's dual mode when disable device, the IP
+After merging the char-misc tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-    If we don't clear ... when disabling ...?
+In file included from drivers/misc/habanalabs/goya/goya.c:8:
+drivers/misc/habanalabs/goya/goyaP.h:12:10: fatal error: habanalabs.h: No s=
+uch file or directory
+   12 | #include "habanalabs.h"
+      |          ^~~~~~~~~~~~~~
+In file included from drivers/misc/habanalabs/goya/goya_security.c:8:
+drivers/misc/habanalabs/goya/goyaP.h:12:10: fatal error: habanalabs.h: No s=
+uch file or directory
+   12 | #include "habanalabs.h"
+      |          ^~~~~~~~~~~~~~
 
-> will fail to enter sleep mode when suspend.
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-[...]
+Presumably caused by commit
 
-MBR, Sergei
+  70b2f993ea4a ("habanalabs: create common folder")
+
+I have used the char-misc tree from next-20200724 for today.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/wNv+Qy3O1nb0cUhVFMrSJS_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ei4AACgkQAVBC80lX
+0GwpbAf/W+vSs7w255A8tCEkIBcZiJvjLSaE1H/eeFvaEHrgwaRVpxmtFzl3eN3k
+upP61pSy5fHrS5ZnlIR5hbQZpnuZvSIiw+yBSwOxQWtXuMEgoLbaPnXUNF25jq2T
+P6mJ/iw22BqsvSi4sUYqDZy4So7Xp1JJQ67X5FEeRh0SWAyLeE6Lh4SZjSf58hEe
+WXvMYvW4nctN3OM1l/Pc/YzjJiUaZ6r7msc1a/30i3MU/EkQdr/i+o9JFTzYlA3Y
+Mty1rmQBqlz1jquwQ7MbUgDP4ugRdMcROQd74Sg029UZCDz2njZBmz3PJzUViXkN
+TCBdufQdyPief3ioZCgh3wH9UqIFCQ==
+=EXts
+-----END PGP SIGNATURE-----
+
+--Sig_/wNv+Qy3O1nb0cUhVFMrSJS_--
