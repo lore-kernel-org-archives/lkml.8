@@ -2,92 +2,103 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF67C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539C6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E26620714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2979120714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:23:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uGtwyHZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgG0GV6 (ORCPT
+        id S1726753AbgG0GXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 02:21:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:37586 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgG0GV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 02:21:57 -0400
-IronPort-SDR: 0Ek+KIbq5VNBLFkrkP4TSNYuarAV7OVUt6zIgUohyidJnq+1PQKCe++WqGafowKL01+Q2Hf9Jv
- XX9vnYT5euBA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="215510351"
-X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
-   d="scan'208";a="215510351"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 23:21:56 -0700
-IronPort-SDR: NVYS3ldD8YM0bctiebfnIS/AO0CV+wbOruJ/aZ4lYoLxZjs71eSbjqEcgZclf2L/35UWp4+KZQ
- C31Jc0BjZFXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
-   d="scan'208";a="312103645"
-Received: from bfarkas-mobl.ger.corp.intel.com ([10.249.254.210])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Jul 2020 23:21:53 -0700
-Message-ID: <8c5eadd1b400cf749a6ece07fedd7ce2a877bcdb.camel@intel.com>
-Subject: Re: [RFC PATCH] iwlwifi: yoyo: don't print failure if debug
- firmware is missing
-From:   Luciano Coelho <luciano.coelho@intel.com>
-To:     Kalle Valo <kvalo@codeaurora.org>, Wolfram Sang <wsa@kernel.org>
-Cc:     linux-wireless@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 27 Jul 2020 09:21:52 +0300
-In-Reply-To: <87y2n6404y.fsf@codeaurora.org>
-References: <20200625165210.14904-1-wsa@kernel.org>
-         <20200726152642.GA913@ninjato> <87y2n6404y.fsf@codeaurora.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-1 
-MIME-Version: 1.0
+        Mon, 27 Jul 2020 02:23:05 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:61142 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbgG0GXF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 02:23:05 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200727062302epoutp01c3fe3fd8c2cd536d17036d7346d9116b~lh9K_q5dV1114811148epoutp01Z
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 06:23:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200727062302epoutp01c3fe3fd8c2cd536d17036d7346d9116b~lh9K_q5dV1114811148epoutp01Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1595830982;
+        bh=JpORZJFQpljj7zbq7Uq5L0uuPoUohXTIkVippavmwNo=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=uGtwyHZKQj25OBa47nm1KPKAWS/DQNA1+E4kYmLoKictdMrWmAgjA7wIt0algacsO
+         /LRPH+uDxtoIfI4fFvo5cY3EGvL6Z7Xdtokrqi4to73VWp1Ie/vitbfROZXDLFhvSf
+         B7wYrtgu8ZmRIw9w/EZkgRUOQgcc6ElIv8bIdtTY=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p2.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200727062301epcas1p2c53b02094f8dd1da5fe76e202aaa895d~lh9Kj5iV33172031720epcas1p2e;
+        Mon, 27 Jul 2020 06:23:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: Re: [PATCH v6 2/5] scsi: ufs: Add UFS-feature layer
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>
+CC:     Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <7bcf45da-233b-0c38-b93a-99d205603e63@acm.org>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <963815509.21595830981720.JavaMail.epsvc@epcpadp2>
+Date:   Mon, 27 Jul 2020 15:18:15 +0900
+X-CMS-MailID: 20200727061815epcms2p3c85befcefda3bd5f292a32c29d29e000
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8
+References: <7bcf45da-233b-0c38-b93a-99d205603e63@acm.org>
+        <231786897.01594636801601.JavaMail.epsvc@epcpadp1>
+        <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
+        <231786897.01594637401708.JavaMail.epsvc@epcpadp1>
+        <20200722064112.GB21117@infradead.org>
+        <yq1h7tzg1lb.fsf@ca-mkp.ca.oracle.com>
+        <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-07-26 at 21:11 +0300, Kalle Valo wrote:
-> Wolfram Sang <wsa@kernel.org> writes:
+> > I am also not sold on the whole "bus" thing.
 > 
-> > On Thu, Jun 25, 2020 at 06:52:10PM +0200, Wolfram Sang wrote:
-> > > Missing this firmware is not fatal, my wifi card still works. Even more,
-> > > I couldn't find any documentation what it is or where to get it. So, I
-> > > don't think the users should be notified if it is missing. If you browse
-> > > the net, you see the message is present is in quite some logs. Better
-> > > remove it.
-> > > 
-> > > Signed-off-by: Wolfram Sang <wsa@kernel.org>
-> > > ---
-> > 
-> > Any input on this? Or people I should add to CC?
-> 
-> This was discussed on another thread:
-> 
-> https://lkml.kernel.org/r/87mu3magfp.fsf@tynnyri.adurom.net
-> 
-> Unless Intel folks object I'm planning to take this to
-> wireless-drivers-next.
+> How about implementing HPB as a kernel module that calls the functions
+> in the UFS core directly, or in other words, get rid completely of the
+> new ufsf_bus introduced by this patch?
 
-Yes, please, just go ahead and take it.  I have the same change in our
-internal tree, but I didn't have the time to send it out due to my
-vacations (from which I'm now back).
+OK, I will remove the ufsf_bus and indirect calling functions.
 
---
-Cheers,
-Luca.
-
+Thanks,
+Daejun
