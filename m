@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2757C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C351C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA071206E7
+	by mail.kernel.org (Postfix) with ESMTP id DE35D206E7
 	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgG0EcK (ORCPT
+        id S1726320AbgG0EcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 00:32:10 -0400
-Received: from mga17.intel.com ([192.55.52.151]:24188 "EHLO mga17.intel.com"
+        Mon, 27 Jul 2020 00:32:11 -0400
+Received: from mga17.intel.com ([192.55.52.151]:24190 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgG0EcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 00:32:09 -0400
-IronPort-SDR: EBgElcoLQ1uCt7QVtz5Yh3KX3Ppah0yDVDlhjhh5bk0dhpo9k/2VPBBgA0+qnEyUp1f8i599f/
- TSY6H1lxq1Rw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="131016889"
+        id S1726213AbgG0EcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 00:32:10 -0400
+IronPort-SDR: PGLO3TRlfbAwYKZ/pApuuOMh5MGzxLsN4ci+HKggEhaTJbrOQOKhLSiZfc8pkwspoHoDQb29sP
+ jlo8KjwHDceQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="131016893"
 X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
-   d="scan'208";a="131016889"
+   d="scan'208";a="131016893"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 21:32:08 -0700
-IronPort-SDR: 44mgJUxxoytHivjDr9PwqzBFsQYsM8cXniSJ+ZMqj/mBzE0YrVXm07Vd7k/Q8XBHCYlnhUQbnC
- w26Z94A5ubxA==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 21:32:09 -0700
+IronPort-SDR: EFguC1D63IEEvtnJE+miNIFEqv9bA3khDlh+AQAb/WX3f0F1SHb1Worytt0+MdZLvG0EoMZ5j4
+ wblJXTIVkCug==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
-   d="scan'208";a="329550032"
+   d="scan'208";a="329550040"
 Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga007.jf.intel.com with ESMTP; 26 Jul 2020 21:32:08 -0700
+  by orsmga007.jf.intel.com with ESMTP; 26 Jul 2020 21:32:09 -0700
 From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
@@ -52,10 +52,11 @@ Cc:     Dave Hansen <dave.hansen@intel.com>,
         linux-kernel@vger.kernel.org,
         Ricardo Neri <ricardo.neri@intel.com>,
         Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         linux-edac@vger.kernel.org
-Subject: [PATCH 1/4] x86/cpufeatures: Add enumeration for SERIALIZE instruction
-Date:   Sun, 26 Jul 2020 21:31:29 -0700
-Message-Id: <20200727043132.15082-2-ricardo.neri-calderon@linux.intel.com>
+Subject: [PATCH 3/4] x86/cpu: Refactor sync_core() for readability
+Date:   Sun, 26 Jul 2020 21:31:31 -0700
+Message-Id: <20200727043132.15082-4-ricardo.neri-calderon@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
 References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
@@ -64,52 +65,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Intel architecture defines a set of Serializing Instructions (a
-detailed definition can be found in Vol.3 Section 8.3 of the Intel "main"
-manual, SDM). However, these instructions do more than what is required,
-have side effects and/or may be rather invasive. Furthermore, some of
-these instructions are only available in kernel mode or may cause VMExits.
-Thus, software using these instructions only to serialize execution (as
-defined in the manual) must handle the undesired side effects.
+Instead of having #ifdef/#endif blocks inside sync_core() for X86_64 and
+X86_32, implement the new function iret_to_self() with two versions.
 
-As indicated in the name, SERIALIZE is a new Intel architecture
-Serializing Instruction. Crucially, it does not have any of the mentioned
-side effects. Also, it does not cause VMExit and can be used in user mode.
-
-This new instruction is currently documented in the latest "extensions"
-manual (ISE). It will appear in the "main" manual in the future.
+In this manner, avoid having to use even more more #ifdef/#endif blocks
+when adding support for SERIALIZE in sync_core().
 
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Cathy Zhang <cathy.zhang@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: Fenghua Yu <fenghua.yu@intel.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Kyung Min Park <kyung.min.park@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
 Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Tony Luck <tony.luck@intel.com>
 Cc: linux-edac@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
+Co-developed-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 ---
 ---
- arch/x86/include/asm/cpufeatures.h | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/special_insns.h |  1 -
+ arch/x86/include/asm/sync_core.h     | 56 ++++++++++++++++------------
+ 2 files changed, 32 insertions(+), 25 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 03390a1ef8e7..2901d5df4366 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -367,6 +367,7 @@
- #define X86_FEATURE_SRBDS_CTRL		(18*32+ 9) /* "" SRBDS mitigation MSR available */
- #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
- #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
-+#define X86_FEATURE_SERIALIZE		(18*32+14) /* SERIALIZE instruction */
- #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
- #define X86_FEATURE_ARCH_LBR		(18*32+19) /* Intel ARCH LBR */
- #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index eb8e781c4353..59a3e13204c3 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -234,7 +234,6 @@ static inline void clwb(volatile void *__p)
+ 
+ #define nop() asm volatile ("nop")
+ 
+-
+ #endif /* __KERNEL__ */
+ 
+ #endif /* _ASM_X86_SPECIAL_INSNS_H */
+diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
+index 9c5573f2c333..fdb5b356e59b 100644
+--- a/arch/x86/include/asm/sync_core.h
++++ b/arch/x86/include/asm/sync_core.h
+@@ -6,6 +6,37 @@
+ #include <asm/processor.h>
+ #include <asm/cpufeature.h>
+ 
++#ifdef CONFIG_X86_32
++static inline void iret_to_self(void)
++{
++	asm volatile (
++		"pushfl\n\t"
++		"pushl %%cs\n\t"
++		"pushl $1f\n\t"
++		"iret\n\t"
++		"1:"
++		: ASM_CALL_CONSTRAINT : : "memory");
++}
++#else
++static inline void iret_to_self(void)
++{
++	unsigned int tmp;
++
++	asm volatile (
++		"mov %%ss, %0\n\t"
++		"pushq %q0\n\t"
++		"pushq %%rsp\n\t"
++		"addq $8, (%%rsp)\n\t"
++		"pushfq\n\t"
++		"mov %%cs, %0\n\t"
++		"pushq %q0\n\t"
++		"pushq $1f\n\t"
++		"iretq\n\t"
++		"1:"
++		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
++}
++#endif /* CONFIG_X86_32 */
++
+ /*
+  * This function forces the icache and prefetched instruction stream to
+  * catch up with reality in two very specific cases:
+@@ -44,30 +75,7 @@ static inline void sync_core(void)
+ 	 * Like all of Linux's memory ordering operations, this is a
+ 	 * compiler barrier as well.
+ 	 */
+-#ifdef CONFIG_X86_32
+-	asm volatile (
+-		"pushfl\n\t"
+-		"pushl %%cs\n\t"
+-		"pushl $1f\n\t"
+-		"iret\n\t"
+-		"1:"
+-		: ASM_CALL_CONSTRAINT : : "memory");
+-#else
+-	unsigned int tmp;
+-
+-	asm volatile (
+-		"mov %%ss, %0\n\t"
+-		"pushq %q0\n\t"
+-		"pushq %%rsp\n\t"
+-		"addq $8, (%%rsp)\n\t"
+-		"pushfq\n\t"
+-		"mov %%cs, %0\n\t"
+-		"pushq %q0\n\t"
+-		"pushq $1f\n\t"
+-		"iretq\n\t"
+-		"1:"
+-		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
+-#endif
++	iret_to_self();
+ }
+ 
+ /*
 -- 
 2.17.1
 
