@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3E3C43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879F9C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C84BB22B3F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5757622B40
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892281;
-	bh=ChVaTdwZsimVO9XXRPpvGgqVvr8Bhfap1whGtgk08Gc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e0g8IIuobwHGbk6ytq157dXwR7B1c364mnEkmd4ccaSqAwNqBqpCpJFrkGpV1czbU
-	 fEkd9aFy77cGtUddwLVnAqRRQQT9wNBI9VOBW2MEUUTIDMl8VpZdMG+qaCFaJQCzRn
-	 8Je+B3jYJz6X1oUctso1A4CPb75UchV/CTaZgIio=
+	s=default; t=1595892308;
+	bh=aFwIehNjkrtNHgEAQFdf2TGEE0EjJC2wt9p3D5hWqBE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=L7kOoBttqDNJr9ijPTag2ZsgrW8qOXgQ9wGqjrhE9kEObgU6WiQV44nfl0eME9mT/
+	 o6HtNJwHszCOqVW9wiUlJBkwMjOT+bAjQNoOQrhRzI41sC3ZLHG4uIK9EbaCiPJpLx
+	 0tB09wkzlg8UPR9szdrWyab6hqNDgbFO5lHH9isQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgG0XYk (ORCPT
+        id S1728499AbgG0XZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35626 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728272AbgG0XYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:24:33 -0400
+        id S1728463AbgG0XZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:25:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2DBB20A8B;
-        Mon, 27 Jul 2020 23:24:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4FEB21744;
+        Mon, 27 Jul 2020 23:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892272;
-        bh=ChVaTdwZsimVO9XXRPpvGgqVvr8Bhfap1whGtgk08Gc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1dsH665sibEizPRZIx3vouiiFWlHi9rA6/RpEh9zkeXTZFMKJS6dv8xE9wrhoQtFC
-         RexKLcToPmxBumPdM0hBer/4rOJixb9lEpDit/gpcUMQoIoPI+7MwP58Gln1KMhRlT
-         kDgYKm0lWzr0m1gwVPOKtjYfUlbaw2T4neJ2mTGY=
+        s=default; t=1595892300;
+        bh=aFwIehNjkrtNHgEAQFdf2TGEE0EjJC2wt9p3D5hWqBE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VupQ49X4WSNnPsylIjL5bBzM53YuHNtxjKJEF5KAXMA1doRaob+cpDstGpCDDw9iA
+         wATW/SS+iI4rrwzGLgLLj7bTI7+o6RLlJFv367TH2zuPwIqkLcViJGd0O5cwhbpHzV
+         xKnxFj7vmD0We1qILxnghAZfKle1C5rF+RYe1aW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 09/17] net: ethernet: ravb: exit if re-initialization fails in tx timeout
-Date:   Mon, 27 Jul 2020 19:24:12 -0400
-Message-Id: <20200727232420.717684-9-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/10] usb: hso: Fix debug compile warning on sparc32
+Date:   Mon, 27 Jul 2020 19:24:49 -0400
+Message-Id: <20200727232458.718131-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200727232420.717684-1-sashal@kernel.org>
-References: <20200727232420.717684-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,89 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit 015c5d5e6aa3523c758a70eb87b291cece2dbbb4 ]
+[ Upstream commit e0484010ec05191a8edf980413fc92f28050c1cc ]
 
-According to the report of [1], this driver is possible to cause
-the following error in ravb_tx_timeout_work().
+On sparc32, tcflag_t is "unsigned long", unlike on all other
+architectures, where it is "unsigned int":
 
-ravb e6800000.ethernet ethernet: failed to switch device to config mode
+    drivers/net/usb/hso.c: In function ‘hso_serial_set_termios’:
+    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 4 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
+    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
+       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
+       ^~~~~~~
+    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 5 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
+    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
+       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
+       ^~~~~~~
 
-This error means that the hardware could not change the state
-from "Operation" to "Configuration" while some tx and/or rx queue
-are operating. After that, ravb_config() in ravb_dmac_init() will fail,
-and then any descriptors will be not allocaled anymore so that NULL
-pointer dereference happens after that on ravb_start_xmit().
+As "unsigned long" is 32-bit on sparc32, fix this by casting all tcflag_t
+parameters to "unsigned int".
+While at it, use "%u" to format unsigned numbers.
 
-To fix the issue, the ravb_tx_timeout_work() should check
-the return values of ravb_stop_dma() and ravb_dmac_init().
-If ravb_stop_dma() fails, ravb_tx_timeout_work() re-enables TX and RX
-and just exits. If ravb_dmac_init() fails, just exits.
-
-[1]
-https://lore.kernel.org/linux-renesas-soc/20200518045452.2390-1-dirk.behme@de.bosch.com/
-
-Reported-by: Dirk Behme <dirk.behme@de.bosch.com>
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/ravb_main.c | 26 ++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ drivers/net/usb/hso.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 3f165c137236d..30cdabf64ccc1 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1444,6 +1444,7 @@ static void ravb_tx_timeout_work(struct work_struct *work)
- 	struct ravb_private *priv = container_of(work, struct ravb_private,
- 						 work);
- 	struct net_device *ndev = priv->ndev;
-+	int error;
+diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
+index 6597d1f8d68c3..7988c41bff1d5 100644
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -1402,8 +1402,9 @@ static void hso_serial_set_termios(struct tty_struct *tty, struct ktermios *old)
+ 	unsigned long flags;
  
- 	netif_tx_stop_all_queues(ndev);
+ 	if (old)
+-		hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
+-			tty->termios.c_cflag, old->c_cflag);
++		hso_dbg(0x16, "Termios called with: cflags new[%u] - old[%u]\n",
++			(unsigned int)tty->termios.c_cflag,
++			(unsigned int)old->c_cflag);
  
-@@ -1452,15 +1453,36 @@ static void ravb_tx_timeout_work(struct work_struct *work)
- 		ravb_ptp_stop(ndev);
- 
- 	/* Wait for DMA stopping */
--	ravb_stop_dma(ndev);
-+	if (ravb_stop_dma(ndev)) {
-+		/* If ravb_stop_dma() fails, the hardware is still operating
-+		 * for TX and/or RX. So, this should not call the following
-+		 * functions because ravb_dmac_init() is possible to fail too.
-+		 * Also, this should not retry ravb_stop_dma() again and again
-+		 * here because it's possible to wait forever. So, this just
-+		 * re-enables the TX and RX and skip the following
-+		 * re-initialization procedure.
-+		 */
-+		ravb_rcv_snd_enable(ndev);
-+		goto out;
-+	}
- 
- 	ravb_ring_free(ndev, RAVB_BE);
- 	ravb_ring_free(ndev, RAVB_NC);
- 
- 	/* Device init */
--	ravb_dmac_init(ndev);
-+	error = ravb_dmac_init(ndev);
-+	if (error) {
-+		/* If ravb_dmac_init() fails, descriptors are freed. So, this
-+		 * should return here to avoid re-enabling the TX and RX in
-+		 * ravb_emac_init().
-+		 */
-+		netdev_err(ndev, "%s: ravb_dmac_init() failed, error %d\n",
-+			   __func__, error);
-+		return;
-+	}
- 	ravb_emac_init(ndev);
- 
-+out:
- 	/* Initialise PTP Clock driver */
- 	if (priv->chip_id == RCAR_GEN2)
- 		ravb_ptp_init(ndev, priv->pdev);
+ 	/* the actual setup */
+ 	spin_lock_irqsave(&serial->serial_lock, flags);
 -- 
 2.25.1
 
