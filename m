@@ -2,359 +2,203 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABF9C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFA020786
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7FA20786
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:44:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="YWcHLey6"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DKfvvjES";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="h5UW3YNp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgG0Wkr (ORCPT
+        id S1726967AbgG0Woi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 18:40:47 -0400
-Received: from gateway23.websitewelcome.com ([192.185.50.250]:19743 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726825AbgG0Wkp (ORCPT
+        Mon, 27 Jul 2020 18:44:38 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:30116 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726171AbgG0Woi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 18:40:45 -0400
-X-Greylist: delayed 1391 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Jul 2020 18:40:44 EDT
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 483E5157379
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 17:17:26 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 0BR0kPnR5SxZV0BR0kxc5R; Mon, 27 Jul 2020 17:17:26 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=eje+5+4yl5uoO2TllTHrOYESh/jzim1iBsJeaOtDBv8=; b=YWcHLey6OIExHHdL2vELVzvvQT
-        eWU73yzEe9J9GFuraOkoX+wyZ3SatQ/vqBcT7F5rYb4euWCm7ZEtuTNbljm2tAZW6vF5UoglvcsQn
-        QdnKj6Yhxo4aD+nuVwhQllOsRHFTX2ky9Fl0mN91MEHAvtagScQ4AFgqy7Z53BP5yjtNybu6QzcsD
-        PqU9icZBWmDHWmgbrrCAv33e8QXK1NQBLfhXlbBnZLhW05vJUqQ3MTxfSXPJYdy1J23Ogw1Z+7Akg
-        BSKLkYXTo9sz3NEZ2C0tkxQUygy35dCSAhf9yJlXyWwm0QUiWpuTtYeY41/btdliuF7hV5wFUvW6H
-        FkQOAM3Q==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:44956 helo=[192.168.15.2])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1k0BR0-000mMB-0e; Mon, 27 Jul 2020 17:17:26 -0500
-Subject: Re: [PATCH][next] ACPICA: Use fallthrough pseudo-keyword
-To:     "Moore, Robert" <robert.moore@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "Kaneda, Erik" <erik.kaneda@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200707200716.GA4920@embeddedor>
- <CAJZ5v0iDz_EsrpdMQQDfaVC2orMQkEcubmR6-J6mvtrXmKXbRg@mail.gmail.com>
- <BYAPR11MB325602EDA2D2ACC2B28EAF4687670@BYAPR11MB3256.namprd11.prod.outlook.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <b851b2c8-2d7c-939d-507d-b322dd4a0dbf@embeddedor.com>
-Date:   Mon, 27 Jul 2020 17:23:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <BYAPR11MB325602EDA2D2ACC2B28EAF4687670@BYAPR11MB3256.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 27 Jul 2020 18:44:38 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RMgxSA012358;
+        Mon, 27 Jul 2020 15:44:01 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=525sqUTcYb5GHN00Wyx31GhV58UMsp2kUidyci9tEbg=;
+ b=DKfvvjESaD97aeFbr6c3CxDNOQfjVbETskLAdR+EB3OIRQA+X5Ykehup2FrGuWpqLy+P
+ KB1WX0X9L8sbyo05S+vpxOlrBzHnuAVPgsWITmkK9qH74i9U1krgpRsAicTMm/3n162W
+ M65jo5Jvms3M70hdIfttPIaQ353t2t93n1M= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32h4q9eusq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 27 Jul 2020 15:44:00 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 27 Jul 2020 15:43:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cLZ5UcTA1uS5k/ukLZPorYHVNi0KKHYfoLTw+Q2nbxWEDPcGzdT9v8dkGwWe5ENO4lroyYAOyxdKKWOgD1lmY3ZG0OFCGJUvddt6MvlCfVr/L6j9/DQa/jVn/8+A5l93nG+pCNgf/HSYfskX5gX1cXGt1mFKuUx+prWgT3Txp/BOOdQmOPXJXv5+bTbAG9InaoDDyf7I0K2l/Mrwvux2lTrwVyh+k0Re26NN+jh1/PtdXyADjInuS0oEG/Xcdcttq0LG+mVoB7XR6103oSIPKsO+PiezW4u8rNICZhrE0iVSgSjhviNI/rpiwjt90WTe4YR4FMPLj+Jbha+JcDnGQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=525sqUTcYb5GHN00Wyx31GhV58UMsp2kUidyci9tEbg=;
+ b=JVXHzwYKRQxM9PUY84RQvTGqNWY+IqIBo1my+5INGpITSn2Ayrrf7/j1SJKZ7QTpsp4mEOkzMJWrw4Q4m5kTQzDgVbGxjFVYVVPIk3GQYzp23kTqVXtsmSWEd01gXyk+xUOBst+XmhHZCpU9svE20TKPc5oPC5IBPI10wp96A9ok7I4AAHeTd4391oD0BcY5bkSPODLlLs0/j6wnSyzPNi8g0IwkgI2EnquTs+KITLp8nDW+wdf3wZcxCn6J2Z1a9gnQvqapZkg3d8+rVYG2GLI1nLwzrP5/pFainncIVv6tiuzHNbPpauJft9+xBR0VSvq9UT7YoS/Y+CkwmbhuOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=525sqUTcYb5GHN00Wyx31GhV58UMsp2kUidyci9tEbg=;
+ b=h5UW3YNpBfD82XzKfJF+htXtKkss41wXeHZlgVVlzQnSVDopuuJ2XXz5+YmGFLBh2mVt4QigaomRgGly0fcAVSuDExwGwtOEsWWsqwXdEoR6irrAfDqPb0WMqZ5GvK7QuQMVfteltLOykI4kZyRR1U9gjaUZgsmZzfMD0u7bk0U=
+Received: from BY5PR15MB3667.namprd15.prod.outlook.com (2603:10b6:a03:1f9::18)
+ by BYAPR15MB2950.namprd15.prod.outlook.com (2603:10b6:a03:f6::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Mon, 27 Jul
+ 2020 22:43:54 +0000
+Received: from BY5PR15MB3667.namprd15.prod.outlook.com
+ ([fe80::f4b9:8011:9aaa:e4ea]) by BY5PR15MB3667.namprd15.prod.outlook.com
+ ([fe80::f4b9:8011:9aaa:e4ea%3]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
+ 22:43:54 +0000
+From:   Nick Terrell <terrelln@fb.com>
+To:     Ingo Molnar <mingo@kernel.org>
+CC:     Nick Terrell <nickrterrell@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>,
+        "Michael van der Westhuizen" <rmikey@fb.com>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Subject: Re: [PATCH v8 6/7] x86: Add support for ZSTD compressed kernel
+Thread-Topic: [PATCH v8 6/7] x86: Add support for ZSTD compressed kernel
+Thread-Index: AQHWYSfJcwxv6ZmoP0i5UtMjZQMfxakWqQ0AgAVjcwA=
+Date:   Mon, 27 Jul 2020 22:43:54 +0000
+Message-ID: <AC589A09-D0F0-4E24-A431-C3601370B2E7@fb.com>
+References: <20200723192801.351114-1-nickrterrell@gmail.com>
+ <20200723192801.351114-7-nickrterrell@gmail.com>
+ <20200724122640.GC632343@gmail.com>
+In-Reply-To: <20200724122640.GC632343@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1k0BR0-000mMB-0e
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.2]) [187.162.31.110]:44956
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 9
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c090:400::5:c3fc]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b69d4dc4-acb6-4f31-846d-08d8327e8ad7
+x-ms-traffictypediagnostic: BYAPR15MB2950:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR15MB295020899C176A2B65CE01B5AB720@BYAPR15MB2950.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PaDRMBcl3ExuMh6M8ChYvKexiguO9UJJV1+aWiV3j/9FruKfAHGJxCz3nTWdLGmOzF5PzHMk5cd5x6aUULh9h18syjAMj0H4nOrnSg+EfgBwpmKkoNjMiQxGyRqVfLBPDDNJBl729j0HZxqWWAU/T0JAo2/QXGgDH01yuAYqNWY2aDe5MXkDtQOLqQlrRjQe0NqGC2I+Bt+AW7qS2yHUS37lF+I7UHZSB9LsSO/9nMOU+/u+vFo5yKrIf/79zP9vydL6WGfk2XAJLZPs+9Rkkj8HItjiYYMHfsF5/XwlkO6hMUTb5Sl1Q3kzy4qewVuW
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3667.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(366004)(396003)(376002)(346002)(33656002)(6486002)(6506007)(6512007)(8936002)(66476007)(66556008)(53546011)(66446008)(64756008)(2906002)(6916009)(66946007)(478600001)(76116006)(86362001)(5660300002)(8676002)(71200400001)(4326008)(54906003)(83380400001)(36756003)(186003)(2616005)(316002)(7416002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: QmnVl3eGQBnvwOAyFQhdyS1sANuox8alkGZeFgqWyPWO1qFjrIf4b2W9zr4Z66Q95cGVadiDnzEqm162VDBiAQyKaTFm6Yh+TECQeFonOuW0oE9aXTgft3FPHVQs+OJD7fn8Etp0EOGS3Sax2MJ5alYjplwfRY6aOXY1FsE8j2l5weYUUGUttOsBgSTwRk9e8OkaKE3725Epx8quX+i44/UqvJoVoukNfkDov+7gsUwWgkSRil4YfS4N5j7pbt/YCw/S/QuWJR9GwyDI3QnkBnMaLPSms9LHD+FuXKG0I6ZMsb4/1jadRGF6xVNse49b5k26kigUDra/dupoKHNm699ycnsHEAGeVYk0/re4uRJ7Z2f5rjyfFomZURL4BfEvTV++orCZ6/3I2gIU4p7Hcwji6ZIyeDzy23MX3pz/czom9deanrN7i5d9eJF6p5hX2+5cwK1OGvCvQ2QJChnztxfBDAnM/muRjJcFZF2//C88qS5DzCoB2FrmlR8Sqe/ZW15qA7cn3sZfZ1Ac2/SDkQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <FA23E57C076A4A4F8873FC60CBF9D5A4@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3667.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b69d4dc4-acb6-4f31-846d-08d8327e8ad7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jul 2020 22:43:54.7034
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ca+y2RGv68xa/dDgTp2hSeNGfmslSaiXL78+tiWqYOU1ih41HiVarLCM1zgagovU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2950
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_15:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
+ impostorscore=0 clxscore=1011 lowpriorityscore=0 mlxlogscore=999
+ malwarescore=0 adultscore=0 phishscore=0 mlxscore=0 priorityscore=1501
+ bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270153
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
 
-This is a macro pseudo-keyword, which expands to /* fallthrough */
-for compilers that don't support the attribute __fallthrough__. See:
+> On Jul 24, 2020, at 5:26 AM, Ingo Molnar <mingo@kernel.org> wrote:
+>=20
+>=20
+> * Nick Terrell <nickrterrell@gmail.com> wrote:
+>=20
+>> --- a/arch/x86/boot/compressed/misc.c
+>> +++ b/arch/x86/boot/compressed/misc.c
+>> @@ -12,6 +12,11 @@
+>>  * High loaded stuff by Hans Lermen & Werner Almesberger, Feb. 1996
+>>  */
+>>=20
+>> +/* decompressors bring in EXPORT_SYMBOL which is meaningless and will
+>> + * cause compiler errors in some cases.
+>> + */
+>> +#define __DISABLE_EXPORTS
+>> +
+>> #include "misc.h"
+>> #include "error.h"
+>> #include "pgtable.h"
+>> @@ -77,6 +82,10 @@ static int lines, cols;
+>> #ifdef CONFIG_KERNEL_LZ4
+>> #include "../../../../lib/decompress_unlz4.c"
+>> #endif
+>> +
+>> +#ifdef CONFIG_KERNEL_ZSTD
+>> +#include "../../../../lib/decompress_unzstd.c"
+>> +#endif
+>> /*
+>>  * NOTE: When adding a new decompressor, please update the analysis in
+>>  * ../header.S.
+>> diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
+>> index 680c320363db..d6dd43d25d9f 100644
+>> --- a/arch/x86/include/asm/boot.h
+>> +++ b/arch/x86/include/asm/boot.h
+>> @@ -24,9 +24,11 @@
+>> # error "Invalid value for CONFIG_PHYSICAL_ALIGN"
+>> #endif
+>>=20
+>> -#ifdef CONFIG_KERNEL_BZIP2
+>> +#if defined(CONFIG_KERNEL_BZIP2)
+>> # define BOOT_HEAP_SIZE		0x400000
+>> -#else /* !CONFIG_KERNEL_BZIP2 */
+>> +#elif defined(CONFIG_KERNEL_ZSTD)
+>> +# define BOOT_HEAP_SIZE		 0x30000
+>> +#else
+>> # define BOOT_HEAP_SIZE		 0x10000
+>> #endif
+>=20
+> So the other patches explain why the decompression buffer extra space=20
+> was increased from 64k to 128k, but is there a similar=20
+> calculation/estimate for bumping BOOT_HEAD_SIZE from 64k to 192k?
+>=20
+> Admittedly the BZ2 exception doesn't set a good example, but maybe we=20
+> can do this for ZSTD?
 
-include/linux/compiler_attributes.h:213:
-213 #if __has_attribute(__fallthrough__)
-214 # define fallthrough                    __attribute__((__fallthrough__))
-215 #else
-216 # define fallthrough                    do {} while (0)  /* fallthrough */
-217 #endif
+Yup, the next version will include an explanation. Thanks for the review!
 
-So, any compiler (older or new) will be fine with it.
-
-Thanks
---
-Gustavo
-
-On 7/8/20 09:17, Moore, Robert wrote:
-> It looks like this attribute is not supported by msvc 2017 (and perhaps other compilers) -- it is apparently a GCC extension -- meaning that it cannot be used in the ACPICA compiler-independent code.
-> 
-> Bob
-> 
-> 
-> -----Original Message-----
-> From: Rafael J. Wysocki <rafael@kernel.org> 
-> Sent: Wednesday, July 08, 2020 3:59 AM
-> To: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: Moore, Robert <robert.moore@intel.com>; Kaneda, Erik <erik.kaneda@intel.com>; Wysocki, Rafael J <rafael.j.wysocki@intel.com>; Len Brown <lenb@kernel.org>; ACPI Devel Maling List <linux-acpi@vger.kernel.org>; open list:ACPI COMPONENT ARCHITECTURE (ACPICA) <devel@acpica.org>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH][next] ACPICA: Use fallthrough pseudo-keyword
-> 
-> On Tue, Jul 7, 2020 at 10:01 PM Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
->>
->> Replace the existing /* fall through */ comments and its variants with 
->> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary 
->> fall-through markings when it is the case.
->>
->> [1] 
->> https://www.kernel.org/doc/html/latest/process/deprecated.html?highlig
->> ht=fallthrough#implicit-switch-case-fall-through
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> I need to talk to Erik and Bob about this one.
-> 
->> ---
->>  drivers/acpi/acpica/dscontrol.c |    2 +-
->>  drivers/acpi/acpica/dswexec.c   |    3 +--
->>  drivers/acpi/acpica/dswload.c   |    2 +-
->>  drivers/acpi/acpica/dswload2.c  |    4 +---
->>  drivers/acpi/acpica/exfldio.c   |    2 +-
->>  drivers/acpi/acpica/exresop.c   |    4 ++--
->>  drivers/acpi/acpica/exstore.c   |    4 ++--
->>  drivers/acpi/acpica/hwgpe.c     |    3 +--
->>  drivers/acpi/acpica/utdelete.c  |    3 +--
->>  drivers/acpi/acpica/utprint.c   |    2 +-
->>  10 files changed, 12 insertions(+), 17 deletions(-)
->>
->> diff --git a/drivers/acpi/acpica/dscontrol.c 
->> b/drivers/acpi/acpica/dscontrol.c index 4b5b6e859f62..134d53380663 
->> 100644
->> --- a/drivers/acpi/acpica/dscontrol.c
->> +++ b/drivers/acpi/acpica/dscontrol.c
->> @@ -62,7 +62,7 @@ acpi_ds_exec_begin_control_op(struct acpi_walk_state *walk_state,
->>                         }
->>                 }
->>
->> -               /*lint -fallthrough */
->> +               fallthrough;
->>
->>         case AML_IF_OP:
->>                 /*
->> diff --git a/drivers/acpi/acpica/dswexec.c 
->> b/drivers/acpi/acpica/dswexec.c index 1d4f8c81028c..41f6cb61778a 
->> 100644
->> --- a/drivers/acpi/acpica/dswexec.c
->> +++ b/drivers/acpi/acpica/dswexec.c
->> @@ -598,8 +598,7 @@ acpi_status acpi_ds_exec_end_op(struct acpi_walk_state *walk_state)
->>                                         break;
->>                                 }
->>
->> -                               /* Fall through */
->> -                               /*lint -fallthrough */
->> +                               fallthrough;
->>
->>                         case AML_INT_EVAL_SUBTREE_OP:
->>
->> diff --git a/drivers/acpi/acpica/dswload.c 
->> b/drivers/acpi/acpica/dswload.c index 27069325b6de..1d8789869dda 
->> 100644
->> --- a/drivers/acpi/acpica/dswload.c
->> +++ b/drivers/acpi/acpica/dswload.c
->> @@ -224,7 +224,7 @@ acpi_ds_load1_begin_op(struct acpi_walk_state *walk_state,
->>                                 break;
->>                         }
->>
->> -                       /*lint -fallthrough */
->> +                       fallthrough;
->>
->>                 default:
->>
->> diff --git a/drivers/acpi/acpica/dswload2.c 
->> b/drivers/acpi/acpica/dswload2.c index edadbe146506..de367e8e4cf4 
->> 100644
->> --- a/drivers/acpi/acpica/dswload2.c
->> +++ b/drivers/acpi/acpica/dswload2.c
->> @@ -213,9 +213,7 @@ acpi_ds_load2_begin_op(struct acpi_walk_state *walk_state,
->>                              parse_flags & ACPI_PARSE_MODULE_LEVEL)) {
->>                                 break;
->>                         }
->> -
->> -                       /*lint -fallthrough */
->> -
->> +                       fallthrough;
->>                 default:
->>
->>                         /* All other types are an error */ diff --git 
->> a/drivers/acpi/acpica/exfldio.c b/drivers/acpi/acpica/exfldio.c index 
->> ade35ff1c7ba..677ba3ab1482 100644
->> --- a/drivers/acpi/acpica/exfldio.c
->> +++ b/drivers/acpi/acpica/exfldio.c
->> @@ -434,7 +434,7 @@ acpi_ex_field_datum_io(union acpi_operand_object *obj_desc,
->>                  * region_field case and write the datum to the Operation Region
->>                  */
->>
->> -               /*lint -fallthrough */
->> +               fallthrough;
->>
->>         case ACPI_TYPE_LOCAL_REGION_FIELD:
->>                 /*
->> diff --git a/drivers/acpi/acpica/exresop.c 
->> b/drivers/acpi/acpica/exresop.c index 4d1b22971d58..7c8676adcf43 
->> 100644
->> --- a/drivers/acpi/acpica/exresop.c
->> +++ b/drivers/acpi/acpica/exresop.c
->> @@ -198,7 +198,7 @@ acpi_ex_resolve_operands(u16 opcode,
->>
->>                                         target_op = AML_DEBUG_OP;
->>
->> -                                       /*lint -fallthrough */
->> +                                       fallthrough;
->>
->>                                 case ACPI_REFCLASS_ARG:
->>                                 case ACPI_REFCLASS_LOCAL:
->> @@ -264,7 +264,7 @@ acpi_ex_resolve_operands(u16 opcode,
->>                          * Else not a string - fall through to the normal Reference
->>                          * case below
->>                          */
->> -                       /*lint -fallthrough */
->> +                       fallthrough;
->>
->>                 case ARGI_REFERENCE:    /* References: */
->>                 case ARGI_INTEGER_REF:
->> diff --git a/drivers/acpi/acpica/exstore.c 
->> b/drivers/acpi/acpica/exstore.c index 3adc0a29d890..fcf8dff56c5b 
->> 100644
->> --- a/drivers/acpi/acpica/exstore.c
->> +++ b/drivers/acpi/acpica/exstore.c
->> @@ -96,7 +96,7 @@ acpi_ex_store(union acpi_operand_object *source_desc,
->>                         return_ACPI_STATUS(AE_OK);
->>                 }
->>
->> -               /*lint -fallthrough */
->> +               fallthrough;
->>
->>         default:
->>
->> @@ -422,7 +422,7 @@ acpi_ex_store_object_to_node(union acpi_operand_object *source_desc,
->>                                 break;
->>                         }
->>
->> -                       /* Fallthrough */
->> +                       fallthrough;
->>
->>                 case ACPI_TYPE_DEVICE:
->>                 case ACPI_TYPE_EVENT:
->> diff --git a/drivers/acpi/acpica/hwgpe.c b/drivers/acpi/acpica/hwgpe.c 
->> index 49c46d4dd070..19d574f64c78 100644
->> --- a/drivers/acpi/acpica/hwgpe.c
->> +++ b/drivers/acpi/acpica/hwgpe.c
->> @@ -95,8 +95,7 @@ acpi_hw_low_set_gpe(struct acpi_gpe_event_info *gpe_event_info, u32 action)
->>                 if (!(register_bit & gpe_register_info->enable_mask)) {
->>                         return (AE_BAD_PARAMETER);
->>                 }
->> -
->> -               /*lint -fallthrough */
->> +               fallthrough;
->>
->>         case ACPI_GPE_ENABLE:
->>
->> diff --git a/drivers/acpi/acpica/utdelete.c 
->> b/drivers/acpi/acpica/utdelete.c index c365faf4e6cd..6db09eb9d257 
->> 100644
->> --- a/drivers/acpi/acpica/utdelete.c
->> +++ b/drivers/acpi/acpica/utdelete.c
->> @@ -111,8 +111,7 @@ static void acpi_ut_delete_internal_obj(union acpi_operand_object *object)
->>                         (void)acpi_ev_delete_gpe_block(object->device.
->>                                                        gpe_block);
->>                 }
->> -
->> -               /*lint -fallthrough */
->> +               fallthrough;
->>
->>         case ACPI_TYPE_PROCESSOR:
->>         case ACPI_TYPE_THERMAL:
->> diff --git a/drivers/acpi/acpica/utprint.c 
->> b/drivers/acpi/acpica/utprint.c index 681c11f4af4e..f7e43baf5ff2 
->> 100644
->> --- a/drivers/acpi/acpica/utprint.c
->> +++ b/drivers/acpi/acpica/utprint.c
->> @@ -475,7 +475,7 @@ int vsnprintf(char *string, acpi_size size, const char *format, va_list args)
->>                 case 'X':
->>
->>                         type |= ACPI_FORMAT_UPPER;
->> -                       /* FALLTHROUGH */
->> +                       fallthrough;
->>
->>                 case 'x':
->>
->>
