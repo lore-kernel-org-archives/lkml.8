@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0263EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAC7C43446
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB4442083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87DBB2083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860709;
-	bh=iEtFf7QMN19S5dmrOUJonugb+EIs3TYktwEmUKejVvI=;
+	s=default; t=1595860718;
+	bh=xQI0yFnzNSvyeRpOKzZjkpmDe9gDpNvkcWJfGC4Ahyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X7yXgfbzjEXoL692MKEWsaCqxVMRtLXUWPO1PXLj6SxsQb/Yrj7ekNLLTCL6NsDbT
-	 s9mHZc05A7Zmb0tFT8gMxFkTZNQUqDz2vPRY2xfju7zGZ7XGAgeNevpVlBo2CG3w38
-	 Rh72j6cUDdC/EhVAfH8C+Rape7Z1OzNoTIrPceSw=
+	b=HT2eHBWmozBFo6KllIU2+3BMxgI3Ezw5RP7ylCyzCmO4RKlAJSRfxrBXTGhmzN/il
+	 LRi8Szulm12fOIHk02addRECxNlac1H+aS1kVyUYibfFmy7gljmPz4dEUrgSH9S6jE
+	 Uw7IaGc5BqJu+4OgXdto2EQRBczgtyatEZ8lq7EA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732952AbgG0Oi2 (ORCPT
+        id S1732941AbgG0Oih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:38:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33956 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:38:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729410AbgG0OKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:10:48 -0400
+        id S1729864AbgG0OKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:10:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD5ED2083E;
-        Mon, 27 Jul 2020 14:10:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1C9F21744;
+        Mon, 27 Jul 2020 14:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859048;
-        bh=iEtFf7QMN19S5dmrOUJonugb+EIs3TYktwEmUKejVvI=;
+        s=default; t=1595859032;
+        bh=xQI0yFnzNSvyeRpOKzZjkpmDe9gDpNvkcWJfGC4Ahyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CauK4a8jiVCT6HzTR5p3IcMMq+iKd6PXjHTtbFUsvSL8pwDLeaQlrB+5x6fHaM1U7
-         DL3LJxn3E895ZKdb4n//84zYTnGPLd1QgJNz1fKgaEpjwzaqSGSbHqLQtAExK0Ji2A
-         7j+3Rx66S2xJleP7dBbdmv5v+AwRTwvf3wII3lSk=
+        b=yBVwAQqncffz0jLtuUxfupds0anVjQAYvOeyIMz5amCDHOKxjyatEOaYXbC5rJQCH
+         vGeQrtY8W2KYjYPUsL3XWj5lve1tb5snMzXSVn0vBIqmR54liCp3HrvwiTt7g4znic
+         cIN3lLw0b4/UMGoycHPy3RG+voVTC/vI9uW8UcvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 47/86] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
-Date:   Mon, 27 Jul 2020 16:04:21 +0200
-Message-Id: <20200727134916.775045097@linuxfoundation.org>
+        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
+        Shik Chen <shik@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 41/86] scripts/decode_stacktrace: strip basepath from all paths
+Date:   Mon, 27 Jul 2020 16:04:15 +0200
+Message-Id: <20200727134916.507425735@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -60,47 +65,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-[ Upstream commit 5b78fac4b1ba731cf4177fdbc1e3a4661521bcd0 ]
+[ Upstream commit d178770d8d21489abf5bafefcbb6d5243b482e9a ]
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+Currently the basepath is removed only from the beginning of the string.
+When the symbol is inlined and there's multiple line outputs of
+addr2line, only the first line would have basepath removed.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20200624064626.19855-1-dinghao.liu@zju.edu.cn
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Change to remove the basepath prefix from all lines.
+
+Fixes: 31013836a71e ("scripts/decode_stacktrace: match basepath using shell prefix operator, not regex")
+Co-developed-by: Shik Chen <shik@chromium.org>
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Shik Chen <shik@chromium.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Nicolas Boichat <drinkcat@chromium.org>
+Cc: Jiri Slaby <jslaby@suse.cz>
+Link: http://lkml.kernel.org/r/20200720082709.252805-1-pihsun@chromium.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ scripts/decode_stacktrace.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 045351f3549c1..86b45198fb962 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -583,6 +583,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index 5aa75a0a1cede..946735bd5a252 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -77,8 +77,8 @@ parse_symbol() {
+ 		return
+ 	fi
  
- 	ret = pm_runtime_get_sync(tdc2dev(tdc));
- 	if (ret < 0) {
-+		pm_runtime_put_noidle(tdc2dev(tdc));
- 		free_irq(tdc->irq, tdc);
- 		return ret;
- 	}
-@@ -764,8 +765,10 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	pm_runtime_enable(&pdev->dev);
+-	# Strip out the base of the path
+-	code=${code#$basepath/}
++	# Strip out the base of the path on each line
++	code=$(while read -r line; do echo "${line#$basepath/}"; done <<< "$code")
  
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
- 		goto rpm_disable;
-+	}
- 
- 	ret = tegra_adma_init(tdma);
- 	if (ret)
+ 	# In the case of inlines, move everything to same line
+ 	code=${code//$'\n'/' '}
 -- 
 2.25.1
 
