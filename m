@@ -2,71 +2,84 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDED2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFC0C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D77842072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7BE20759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595877675;
+	bh=33bOnRxQYcLjfqzs2eI3Oh4V4hno6AGLyCBS3BV+qEI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=qedYKT008sfimRy+acigTnXvHnZbktrD3wlhAle9191swhFnXzyVS8nvSBS1SynAj
+	 fixpH4V60x8FenyTgcW02FrhHWBJc+DIyBzex9/YA9jP7fk6/ROVWIcyVB4l3Wh58D
+	 mC4fQNTYzUKkNYlUkWKKmkVq4mzEC5MAVqVwQLUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgG0TVW (ORCPT
+        id S1728887AbgG0TVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:21:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgG0TVW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:21:22 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF93FC061794;
-        Mon, 27 Jul 2020 12:21:21 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1A2E512763AE2;
-        Mon, 27 Jul 2020 12:04:36 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 12:21:20 -0700 (PDT)
-Message-Id: <20200727.122120.336438917999066726.davem@davemloft.net>
-To:     m-karicheri2@ti.com
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        nsekhar@ti.com, grygorii.strashko@ti.com, vinicius.gomes@intel.com
-Subject: Re: [net-next v5 PATCH 0/7] Add PRP driver
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200722144022.15746-1-m-karicheri2@ti.com>
-References: <20200722144022.15746-1-m-karicheri2@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 27 Jul 2020 12:04:36 -0700 (PDT)
+        Mon, 27 Jul 2020 15:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728358AbgG0TVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 15:21:13 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E08F20738;
+        Mon, 27 Jul 2020 19:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595877673;
+        bh=33bOnRxQYcLjfqzs2eI3Oh4V4hno6AGLyCBS3BV+qEI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZJIhaNPRUtDouDC2U8eKUF57o48dYvbfveBFRu6iUdzQrQCowwPbY8rWw6P0Ubha5
+         Mb7tOaHuYYZxv4WSEjKKoGbwzcs1A/70WzrBYtjdc7ov6KGz933Ln0lnGE+Cz6CKgF
+         HT1XRQ9/ZwQMJ3Rri8JKqDRFwQMXpAY0fh7Q0OA8=
+Date:   Mon, 27 Jul 2020 14:27:05 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Zwane Mwaikambo <zwanem@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] watchdog: sc1200wdt: Use fallthrough pseudo-keyword
+Message-ID: <20200727192705.GA31097@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Murali Karicheri <m-karicheri2@ti.com>
-Date: Wed, 22 Jul 2020 10:40:15 -0400
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-> This series is dependent on the following patches sent out to
-> netdev list. All (1-3) are already merged to net/master as of
-> sending this, but not on the net-next master branch. So need
-> to apply them to net-next before applying this series. v3 of
-> the iproute2 patches can be merged to work with this series
-> as there are no updates since then.
-> 
-> [1] https://marc.info/?l=linux-netdev&m=159526378131542&w=2
-> [2] https://marc.info/?l=linux-netdev&m=159499772225350&w=2
-> [3] https://marc.info/?l=linux-netdev&m=159499772425352&w=2
-> 
-> This series adds support for Parallel Redundancy Protocol (PRP)
-> in the Linux HSR driver as defined in IEC-62439-3. PRP Uses a
-> Redundancy Control Trailer (RCT) the format of which is
-> similar to HSR Tag. This is used for implementing redundancy.
- ...
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Series applied to net-next, thank you.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/watchdog/sc1200wdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/watchdog/sc1200wdt.c b/drivers/watchdog/sc1200wdt.c
+index 9673eb12dacd..f22ebe89fe13 100644
+--- a/drivers/watchdog/sc1200wdt.c
++++ b/drivers/watchdog/sc1200wdt.c
+@@ -234,7 +234,7 @@ static long sc1200wdt_ioctl(struct file *file, unsigned int cmd,
+ 			return -EINVAL;
+ 		timeout = new_timeout;
+ 		sc1200wdt_write_data(WDTO, timeout);
+-		/* fall through - and return the new timeout */
++		fallthrough;	/* and return the new timeout */
+ 
+ 	case WDIOC_GETTIMEOUT:
+ 		return put_user(timeout * 60, p);
+-- 
+2.27.0
+
