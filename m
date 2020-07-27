@@ -2,182 +2,174 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BCBC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE38C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A67052078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2762073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:16:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ciph4lQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbgG0TLA (ORCPT
+        id S1728558AbgG0TQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:11:00 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:34164 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbgG0TK7 (ORCPT
+        Mon, 27 Jul 2020 15:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728049AbgG0TQ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:10:59 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id CF9E98046C;
-        Mon, 27 Jul 2020 21:10:53 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 21:10:52 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        od@zcrc.me, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: display: Document NewVision NV3052C DT
- node
-Message-ID: <20200727191052.GA1011220@ravnborg.org>
-References: <20200727164613.19744-1-paul@crapouillou.net>
- <20200727164613.19744-2-paul@crapouillou.net>
+        Mon, 27 Jul 2020 15:16:57 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A13CAC061794;
+        Mon, 27 Jul 2020 12:16:56 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id t142so9483728wmt.4;
+        Mon, 27 Jul 2020 12:16:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fmgy8aOrOaosUqw8qw2R0Byip/Q6rVp5BO1Fak+JZ30=;
+        b=Ciph4lQ202oxMhxwuDhqC+FaifmbEaM4ku6yFaGBlpMsJ/TBl2hquhabMSj3Ctc68y
+         71l5lAisoevj4vjsC3D4Xvz2XPMwRkq0hk+wpcUH15DSQbUpBhvD5QR+D0A7VC75dOs8
+         8ZmcuCXrRtXD3nxfdQ1zhCaMFqf7ejIIzp+tNmrd8TvjijIU35BHnQSaNcfx1E+HFXRz
+         7nv5RpdBVUuJX/j1WYJ5iaVimObT+9TyGtFbpPbbRE01qD9FZcIkATukdYSXoBVxYhSw
+         6sC+q5osarJDE00mlIiAvfMDyM28rLwIV7WK7WG1TEBQFNjLeHl+ITPIVRJBL1pHJPbY
+         UwzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fmgy8aOrOaosUqw8qw2R0Byip/Q6rVp5BO1Fak+JZ30=;
+        b=M6ooYpysUgY/E/J/mTDvsBHauO1hberhbKDpACsaMEAodpo3CFpiBlhqKlHXl5dMJq
+         g0aGRFL83egBjKPwQqLFnM9jS9qg+d4nioDgyYIi9bun33lmd24WLqxG344UAAM9ZEwg
+         m/W0A0l9vBAGIhfIrCRTATkg4YZq7DW6nKC5KdAUBKJZp95DnpY03Kk4AFNRPDk2djwl
+         vOTqkFW2qviMcAcnH3UFSB8b+GZlepKb4whFHt5t3CKEWnmWrAGkp8n5USFnH9RUYU9x
+         NNWf4CV29tmVAxzSX1Kjtj1oXVKE4m/dvtAl628+qqGpppaHJftgIDiyYmcJ1klXFjhZ
+         oKQg==
+X-Gm-Message-State: AOAM532L06FFEhbk0LQ0UJge0eWqiafHiSixM7V4kbuqK2+p2H39Poip
+        8ciaJWUMa1PyLPbBzzQEJPGI49k1Ajw4pmiSK1U=
+X-Google-Smtp-Source: ABdhPJz5ci8PtopFnwl2wC3FFEjn8xB7o/gSCRHwfaULk/Ae+T/JB/W5PEyS1njIUPBTOUz96mZD/TBgW6vKMjQ0LSY=
+X-Received: by 2002:a7b:c841:: with SMTP id c1mr679956wml.25.1595877415006;
+ Mon, 27 Jul 2020 12:16:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727164613.19744-2-paul@crapouillou.net>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=gEfo2CItAAAA:8 a=cFL5_wh2AAAA:8
-        a=47UgJTjCgcInOTyXzTsA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=yWaY75k36LOQ25BSl4KT:22
+References: <1595605762-17010-1-git-send-email-joshi.k@samsung.com>
+ <CGME20200724155350epcas5p3b8f1d59eda7f8fbb38c828f692d42fd6@epcas5p3.samsung.com>
+ <1595605762-17010-7-git-send-email-joshi.k@samsung.com> <f5416bd4-93b3-4d14-3266-bdbc4ae1990b@kernel.dk>
+In-Reply-To: <f5416bd4-93b3-4d14-3266-bdbc4ae1990b@kernel.dk>
+From:   Kanchan Joshi <joshiiitr@gmail.com>
+Date:   Tue, 28 Jul 2020 00:46:28 +0530
+Message-ID: <CA+1E3rJAa3E2Ti0fvvQTzARP797qge619m4aYLjXeR3wxdFwWw@mail.gmail.com>
+Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, Matthew Wilcox <willy@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-api@vger.kernel.org, SelvaKumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul.
+On Fri, Jul 24, 2020 at 10:00 PM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 7/24/20 9:49 AM, Kanchan Joshi wrote:
+> > diff --git a/fs/io_uring.c b/fs/io_uring.c
+> > index 7809ab2..6510cf5 100644
+> > --- a/fs/io_uring.c
+> > +++ b/fs/io_uring.c
+> > @@ -1284,8 +1301,15 @@ static void __io_cqring_fill_event(struct io_kiocb *req, long res, long cflags)
+> >       cqe = io_get_cqring(ctx);
+> >       if (likely(cqe)) {
+> >               WRITE_ONCE(cqe->user_data, req->user_data);
+> > -             WRITE_ONCE(cqe->res, res);
+> > -             WRITE_ONCE(cqe->flags, cflags);
+> > +             if (unlikely(req->flags & REQ_F_ZONE_APPEND)) {
+> > +                     if (likely(res > 0))
+> > +                             WRITE_ONCE(cqe->res64, req->rw.append_offset);
+> > +                     else
+> > +                             WRITE_ONCE(cqe->res64, res);
+> > +             } else {
+> > +                     WRITE_ONCE(cqe->res, res);
+> > +                     WRITE_ONCE(cqe->flags, cflags);
+> > +             }
+>
+> This would be nice to keep out of the fast path, if possible.
 
-On Mon, Jul 27, 2020 at 06:46:08PM +0200, Paul Cercueil wrote:
-> Add documentation for the Device Tree node for LCD panels based on the
-> NewVision NV3052C controller.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+I was thinking of keeping a function-pointer (in io_kiocb) during
+submission. That would have avoided this check......but argument count
+differs, so it did not add up.
 
-Very happy to see work on RG-350 :-)
-Some feedback below.
+> > diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+> > index 92c2269..2580d93 100644
+> > --- a/include/uapi/linux/io_uring.h
+> > +++ b/include/uapi/linux/io_uring.h
+> > @@ -156,8 +156,13 @@ enum {
+> >   */
+> >  struct io_uring_cqe {
+> >       __u64   user_data;      /* sqe->data submission passed back */
+> > -     __s32   res;            /* result code for this event */
+> > -     __u32   flags;
+> > +     union {
+> > +             struct {
+> > +                     __s32   res;    /* result code for this event */
+> > +                     __u32   flags;
+> > +             };
+> > +             __s64   res64;  /* appending offset for zone append */
+> > +     };
+> >  };
+>
+> Is this a compatible change, both for now but also going forward? You
+> could randomly have IORING_CQE_F_BUFFER set, or any other future flags.
 
-	Sam
+Sorry, I didn't quite understand the concern. CQE_F_BUFFER is not
+used/set for write currently, so it looked compatible at this point.
+Yes, no room for future flags for this operation.
+Do you see any other way to enable this support in io-uring?
 
-> ---
->  .../display/panel/newvision,nv3052c.yaml      | 69 +++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/newvision,nv3052c.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/newvision,nv3052c.yaml b/Documentation/devicetree/bindings/display/panel/newvision,nv3052c.yaml
-> new file mode 100644
-> index 000000000000..751a28800fc2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/newvision,nv3052c.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/newvision,nv3052c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NewVision NV3052C TFT LCD panel driver with SPI control bus
-> +
-> +maintainers:
-> +  - Paul Cercueil <paul@crapouillou.net>
-> +
-> +description: |
-> +  This is a driver for 320x240 TFT panels,
-The binding describes the HW, not the driver. So please re-phrase this
-part.
+> Layout would also be different between big and little endian, so not
+> even that easy to set aside a flag for this. But even if that was done,
+> we'd still have this weird API where liburing or the app would need to
+> distinguish this cqe from all others based on... the user_data? Hence
+> liburing can't do it, only the app would be able to.
+>
+> Just seems like a hack to me.
 
-This datasheet: https://www.phoenixdisplay.com/wp-content/uploads/2019/05/NV3052C-Datasheet-V0.2.pdf
-tells that the driver supports additional resoltions.
-I guess the 320x240 resolution is limited to the leadtek panel.
-
-> +  accepting a variety of input
-> +  streams that get adapted and scaled to the panel. The panel output has
-> +  960 TFT source driver pins and 240 TFT gate driver pins, VCOM, VCOML and
-> +  VCOMH outputs.
-> +
-> +  The panel must obey the rules for a SPI slave device as specified in
-> +  spi/spi-controller.yaml
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - leadtek,ltk035c5444t-spi
-> +
-> +      - const: newvision,nv3052c
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  reset-gpios: true
-> +  port: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +unevaluatedProperties: false
-> +
-Do the panel need any power?
-I had expected to see a power-supply node as mandatory.
-
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    spi {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      display@0 {
-> +        compatible = "leadtek,ltk035c5444t-spi", "newvision,nv3052c";
-> +        reg = <0>;
-> +
-> +        spi-max-frequency = <15000000>;
-> +        spi-3wire;
-> +        reset-gpios = <&gpe 2 GPIO_ACTIVE_LOW>;
+Yes, only user_data to distinguish. Do liburing helpers need to look
+at cqe->res (and decide something) before returning the cqe to
+application?
+I see that happening at once place, but not sure when it would hit
+LIBURING_DATA_TIMEOUT condition.
+__io_uring_peek_cqe()
+{
+           do {
+                io_uring_for_each_cqe(ring, head, cqe)
+                        break;
+                if (cqe) {
+                        if (cqe->user_data == LIBURING_UDATA_TIMEOUT) {
+                                if (cqe->res < 0)
+                                        err = cqe->res;
+                                io_uring_cq_advance(ring, 1);
+                                if (!err)
+                                        continue;
+                                cqe = NULL;
+                        }
+                }
+                break;
+        } while (1);
+}
 
 
-> +        backlight = <&backlight>;
-> +        power-supply = <&vcc>;
-These would fail later due to "unevaluatedProperties: false".
-Add them above like
-  backlight: true
-  power-supply: true
 
-as done for reset-gpios for example.
-
-> +
-> +        port {
-> +          panel_input: endpoint {
-> +              remote-endpoint = <&panel_output>;
-> +          };
-> +        };
-> +      };
-> +    };
-Personally I prefer 4 space indent. But there is no fixed rule (yet)
-what to use.
-
-> +
-> +...
-> -- 
-> 2.27.0
+-- 
+Joshi
