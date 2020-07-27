@@ -2,106 +2,246 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D08AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DFFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54A952073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DDB82073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:40:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbgG0Ei7 (ORCPT
+        id S1726297AbgG0Ej6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 00:38:59 -0400
-Received: from mga09.intel.com ([134.134.136.24]:18171 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbgG0Ei7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 00:38:59 -0400
-IronPort-SDR: oHt++YRZMMtHbKQAZju13K2pWl5Sywl9mgmz5q4fVb/YxhLlJrt39CQ7Axp4Kh9FzW230mRgjg
- Cxs0KFhWKRrw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="152212542"
-X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
-   d="scan'208";a="152212542"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 21:38:58 -0700
-IronPort-SDR: L6jOe41O0iqVqciMLpspnbWmF0D/4Y9vYi1l/Y5ngszxIkVL7I31Gq/pAxbYff5Pj9SPokJhGM
- 6Q7GnAjVYErQ==
-X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
-   d="scan'208";a="463930493"
-Received: from unknown (HELO [10.239.13.99]) ([10.239.13.99])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 21:38:55 -0700
-Subject: Re: [RFC 2/2] KVM: VMX: Enable bus lock VM exit
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Chenyi Qiang <chenyi.qiang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200628085341.5107-1-chenyi.qiang@intel.com>
- <20200628085341.5107-3-chenyi.qiang@intel.com>
- <878sg3bo8b.fsf@vitty.brq.redhat.com>
- <0159554d-82d5-b388-d289-a5375ca91323@intel.com>
- <87366bbe1y.fsf@vitty.brq.redhat.com>
- <adad61e8-8252-0491-7feb-992a52c1b4f3@intel.com>
- <87zh8j9to2.fsf@vitty.brq.redhat.com> <20200723012114.GP9114@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <a1c2a7dc-d52a-daad-4078-3097579ffef2@intel.com>
-Date:   Mon, 27 Jul 2020 12:38:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 27 Jul 2020 00:39:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28216 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725775AbgG0Ej5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 00:39:57 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R4WH5O091837;
+        Mon, 27 Jul 2020 00:39:48 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32ggqrfyvg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 00:39:48 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R4YR6N000550;
+        Mon, 27 Jul 2020 04:39:47 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma04dal.us.ibm.com with ESMTP id 32gcq0t464-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 04:39:47 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R4dloU36634960
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 04:39:47 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E689DAC066;
+        Mon, 27 Jul 2020 04:39:46 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A6CBAC05E;
+        Mon, 27 Jul 2020 04:39:46 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.199.36.45])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jul 2020 04:39:46 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 31DA62E2DCD; Mon, 27 Jul 2020 10:09:41 +0530 (IST)
+Date:   Mon, 27 Jul 2020 10:09:41 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: Re: [PATCH v3 09/10] powerpc/smp: Create coregroup domain
+Message-ID: <20200727043941.GA18303@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200723085116.4731-1-srikar@linux.vnet.ibm.com>
+ <20200723085116.4731-10-srikar@linux.vnet.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200723012114.GP9114@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200723085116.4731-10-srikar@linux.vnet.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_02:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 mlxscore=0 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=999 adultscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/23/2020 9:21 AM, Sean Christopherson wrote:
-> On Wed, Jul 01, 2020 at 04:49:49PM +0200, Vitaly Kuznetsov wrote:
->> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->>> So you want an exit to userspace for every bus lock and leave it all to
->>> userspace. Yes, it's doable.
->>
->> In some cases we may not even want to have a VM exit: think
->> e.g. real-time/partitioning case when even in case of bus lock we may
->> not want to add additional latency just to count such events.
+On Thu, Jul 23, 2020 at 02:21:15PM +0530, Srikar Dronamraju wrote:
+> Add percpu coregroup maps and masks to create coregroup domain.
+> If a coregroup doesn't exist, the coregroup domain will be degenerated
+> in favour of SMT/CACHE domain.
 > 
-> Hmm, I suspect this isn't all that useful for real-time cases because they'd
-> probably want to prevent the split lock in the first place, e.g. would prefer
-> to use the #AC variant in fatal mode.  Of course, the availability of split
-> lock #AC is a whole other can of worms.
+> Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+> Cc: LKML <linux-kernel@vger.kernel.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Anton Blanchard <anton@ozlabs.org>
+> Cc: Oliver O'Halloran <oohall@gmail.com>
+> Cc: Nathan Lynch <nathanl@linux.ibm.com>
+> Cc: Michael Neuling <mikey@neuling.org>
+> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Jordan Niethe <jniethe5@gmail.com>
+> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> ---
+> Changelog v2 -> v3:
+> 	Add optimization for mask updation under coregroup_support
 > 
-> But anyways, I 100% agree that this needs either an off-by-default module
-> param or an opt-in per-VM capability.
+> Changelog v1 -> v2:
+> 	Moved coregroup topology fixup to fixup_topology (Gautham)
 > 
+>  arch/powerpc/include/asm/topology.h | 10 +++++++
+>  arch/powerpc/kernel/smp.c           | 44 +++++++++++++++++++++++++++++
+>  arch/powerpc/mm/numa.c              |  5 ++++
+>  3 files changed, 59 insertions(+)
+> 
+> diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
+> index f0b6300e7dd3..6609174918ab 100644
+> --- a/arch/powerpc/include/asm/topology.h
+> +++ b/arch/powerpc/include/asm/topology.h
+> @@ -88,12 +88,22 @@ static inline int cpu_distance(__be32 *cpu1_assoc, __be32 *cpu2_assoc)
+> 
+>  #if defined(CONFIG_NUMA) && defined(CONFIG_PPC_SPLPAR)
+>  extern int find_and_online_cpu_nid(int cpu);
+> +extern int cpu_to_coregroup_id(int cpu);
+>  #else
+>  static inline int find_and_online_cpu_nid(int cpu)
+>  {
+>  	return 0;
+>  }
+> 
+> +static inline int cpu_to_coregroup_id(int cpu)
+> +{
+> +#ifdef CONFIG_SMP
+> +	return cpu_to_core_id(cpu);
+> +#else
+> +	return 0;
+> +#endif
+> +}
+> +
+>  #endif /* CONFIG_NUMA && CONFIG_PPC_SPLPAR */
+> 
+>  #include <asm-generic/topology.h>
+> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+> index 7d8d44cbab11..1faedde3e406 100644
+> --- a/arch/powerpc/kernel/smp.c
+> +++ b/arch/powerpc/kernel/smp.c
+> @@ -80,6 +80,7 @@ DEFINE_PER_CPU(cpumask_var_t, cpu_sibling_map);
+>  DEFINE_PER_CPU(cpumask_var_t, cpu_smallcore_map);
+>  DEFINE_PER_CPU(cpumask_var_t, cpu_l2_cache_map);
+>  DEFINE_PER_CPU(cpumask_var_t, cpu_core_map);
+> +DEFINE_PER_CPU(cpumask_var_t, cpu_coregroup_map);
+> 
+>  EXPORT_PER_CPU_SYMBOL(cpu_sibling_map);
+>  EXPORT_PER_CPU_SYMBOL(cpu_l2_cache_map);
+> @@ -91,6 +92,7 @@ enum {
+>  	smt_idx,
+>  #endif
+>  	bigcore_idx,
+> +	mc_idx,
+>  	die_idx,
+>  };
+> 
+> @@ -869,6 +871,21 @@ static const struct cpumask *smallcore_smt_mask(int cpu)
+>  }
+>  #endif
+> 
+> +static struct cpumask *cpu_coregroup_mask(int cpu)
+> +{
+> +	return per_cpu(cpu_coregroup_map, cpu);
+> +}
+> +
+> +static bool has_coregroup_support(void)
+> +{
+> +	return coregroup_enabled;
+> +}
+> +
+> +static const struct cpumask *cpu_mc_mask(int cpu)
+> +{
+> +	return cpu_coregroup_mask(cpu);
+> +}
+> +
+>  static const struct cpumask *cpu_bigcore_mask(int cpu)
+>  {
+>  	return per_cpu(cpu_sibling_map, cpu);
+> @@ -879,6 +896,7 @@ static struct sched_domain_topology_level powerpc_topology[] = {
+>  	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
+>  #endif
+>  	{ cpu_bigcore_mask, SD_INIT_NAME(BIGCORE) },
+> +	{ cpu_mc_mask, SD_INIT_NAME(MC) },
+>  	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
+>  	{ NULL, },
+>  };
 
-Maybe on-by-default or an opt-out per-VM capability?
-Turning it on introduces no overhead if no bus lock happens in guest but 
-gives KVM the capability to track every potential bus lock. If user 
-doesn't want the extra latency due to bus lock VM exit, it's better try 
-to fix the bus lock, which also incurs high latency.
+[..snip..]
 
->> I'd suggest we make the new capability tri-state:
->> - disabled (no vmexit, default)
->> - stats only (what this patch does)
->> - userspace exit
->> But maybe this is an overkill, I'd like to hear what others think.
+> @@ -1384,6 +1425,9 @@ int setup_profiling_timer(unsigned int multiplier)
 > 
-> Userspace exit would also be interesting for debug.  Another throttling
-> option would be schedule() or cond_reched(), though that's probably getting
-> into overkill territory.
-> 
+>  static void fixup_topology(void)
+>  {
+> +	if (!has_coregroup_support())
+> +		powerpc_topology[mc_idx].mask = cpu_bigcore_mask;
+> +
+>  	if (shared_caches) {
+>  		pr_info("Using shared cache scheduler topology\n");
+>  		powerpc_topology[bigcore_idx].mask = shared_cache_mask;
 
-We're going to leverage host's policy, i.e., calling 
-handle_user_bus_lock(), for throttling, as proposed in 
-https://lkml.kernel.org/r/1595021700-68460-1-git-send-email-fenghua.yu@intel.com
+
+Suppose we consider a topology which does not have coregroup_support,
+but has shared_caches. In that case, we would want our coregroup
+domain to degenerate.
+
+From the above code, after the fixup, our topology will look as
+follows:
+
+static struct sched_domain_topology_level powerpc_topology[] = {
+  	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
+ 	{ shared_cache_mask, powerpc_shared_cache_flags, SD_INIT_NAME(CACHE) },
+	{ cpu_bigcore_mask, SD_INIT_NAME(MC) },
+  	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
+  	{ NULL, },
+
+So, in this case, the core-group domain (identified by MC) will
+degenerate only if cpu_bigcore_mask() and shared_cache_mask() return
+the same value. This may work for existing platforms, because either
+shared_caches don't exist, or when they do, cpu_bigcore_mask and
+shared_cache_mask return the same set of CPUs. But this may or may not
+continue to hold good in the future.
+
+Furthermore, if that is always going to be the case that in the
+presence of shared_caches the cpu_bigcore_mask() and
+shared_cache_mask() will always be the same, then why even define two
+separate masks and not just have only the cpu_bigcore_mask() ?
+
+The correct way would be to set the powerpc_topology[mc_idx].mask to
+powerpc_topology[bigcore_idx].mask *after* we have fixedup the
+big_core level.
+--
+Thanks and Regards
+gautham.
 
