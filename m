@@ -2,111 +2,84 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F89C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E327CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9A120714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:46:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="1U3QnYpt"
+	by mail.kernel.org (Postfix) with ESMTP id C5A21206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgG0DqW (ORCPT
+        id S1726826AbgG0Dsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 23:46:22 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:49680 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbgG0DqW (ORCPT
+        Sun, 26 Jul 2020 23:48:55 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:34389 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbgG0Dsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 23:46:22 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 341A9891AD;
-        Mon, 27 Jul 2020 15:46:17 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1595821577;
-        bh=MywvN3R7ImwNGUm6gdbp7R4JmN5HK8Bmgrie8Wzx3zg=;
-        h=From:To:Cc:Subject:Date;
-        b=1U3QnYpt7IEJvdQWcVBHz8SGuQnXEIP6HWyqDwqmZh6Vqp5mHTK0Vvw+ot7P0GvcJ
-         6WGgT9A3eYdLZIjfvTia5qu2n6Mc0Q4AvpSzcDkS3vBI7FOmb1q8Nt1h6zGFZgzKtR
-         hnBEUyUG0oV1kticYCm9lL3Swxkey4vq92dN6ox0ECi48YQdQ05zyg+2PJmKvRCqIT
-         +Ok0teLDu5O0LDb0hAdg19DSZNlVwrIf8KzIl+/lDEnZwz1F1XMD9CdCQ9ioxEgEMw
-         irMeHucJ42lcJ/HhU/mRZxdbK9K2cRP5MjfAq3jcJsvXDD/Mc1N1D5YwoyohoA7k+o
-         x9jOUqQB20B0A==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f1e4e090000>; Mon, 27 Jul 2020 15:46:17 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id BC1EF13EEA1;
-        Mon, 27 Jul 2020 15:46:16 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 03DC1280077; Mon, 27 Jul 2020 15:46:16 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux@roeck-us.net
-Cc:     linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v3] rtc: ds1307: provide an indication that the watchdog has fired
-Date:   Mon, 27 Jul 2020 15:46:14 +1200
-Message-Id: <20200727034615.19755-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.27.0
+        Sun, 26 Jul 2020 23:48:55 -0400
+Received: by mail-qv1-f67.google.com with SMTP id t6so1946776qvw.1
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 20:48:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yVIOi8enUGpBtLqtmUD4Tl/qpQ9yEu8l3OUS23dMPao=;
+        b=cEipDgdfAt9lpLWMCv1Kx6xieCQX5aI27pP2YYBN+qpvCX0JjGG7UrwoQhXSFfyaXG
+         WlqDHc2SrYrTCE3tKSZzXtw6LUnbCoE4IbHjK8E2Dh67iCxExAaIChh8iZpD/545zA8V
+         g6DKrYvSRiI3vxh+IaxU3W/hUReVyzPtlawCcD2QI0VT6Ise1iTjeXinIVz59VknPRfd
+         1udQoKIIVZY81VBAdYxvQ8iy2QCxvAx0E+jddRxEav6vEs/nNSQVEUC6uE86W64fMDPh
+         HI+fRy04cjqfGs7h08vbfMoLCHda4kpcBgOrBvcu3YmHqeXInkyxnJ4jm+aZkuJKSjCd
+         YOiA==
+X-Gm-Message-State: AOAM531Vqqqv33Eiepzx27FZMHP49sWe0t9obEJmDVwReK+VyAVJaLHP
+        4ubEZp9dM4dDuT6fqIzhIE8DCbXy
+X-Google-Smtp-Source: ABdhPJxfAWjZJYYpQLUq6iCzlAbSQoYClkEl0wXtKgAH4OqroY4oRu+9s+SzTvcBEljuc1PaD+FA8g==
+X-Received: by 2002:a0c:9e4f:: with SMTP id z15mr20642425qve.119.1595821733986;
+        Sun, 26 Jul 2020 20:48:53 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id b4sm17134861qkd.75.2020.07.26.20.48.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 20:48:53 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>
+Subject: [PATCH] kernel.h: Remove duplicate include of asm/div64.h
+Date:   Sun, 26 Jul 2020 23:48:52 -0400
+Message-Id: <20200727034852.2813453-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's not much feedback when the ds1388 watchdog fires. Generally it
-yanks on the reset line and the board reboots. Capture the fact that the
-watchdog has fired in the past so that userspace can retrieve it via
-WDIOC_GETBOOTSTATUS. This should help distinguish a watchdog triggered
-reset from a power interruption.
+This seems to have been added inadvertently in commit
+  72deb455b5ec ("block: remove CONFIG_LBDAF")
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Fixes: 72deb455b5ec ("block: remove CONFIG_LBDAF")
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Christoph Hellwig <hch@lst.de>
 ---
-Changes in v3:
-- Check for watchdog flag in ds1307_wdt_register()
-Changes in v2:
-- Set bootstatus to WDIOF_CARDRESET and let userspace decide what to do w=
-ith
-  the information.
+ include/linux/kernel.h | 1 -
+ 1 file changed, 1 deletion(-)
 
- drivers/rtc/rtc-ds1307.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index 49702942bb08..54c85cdd019d 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -1668,6 +1668,8 @@ static const struct watchdog_ops ds1388_wdt_ops =3D=
- {
- static void ds1307_wdt_register(struct ds1307 *ds1307)
- {
- 	struct watchdog_device	*wdt;
-+	int err;
-+	int val;
-=20
- 	if (ds1307->type !=3D ds_1388)
- 		return;
-@@ -1676,6 +1678,10 @@ static void ds1307_wdt_register(struct ds1307 *ds1=
-307)
- 	if (!wdt)
- 		return;
-=20
-+	err =3D regmap_read(ds1307->regmap, DS1388_REG_FLAG, &val);
-+	if (!err && val & DS1388_BIT_WF)
-+		wdt->bootstatus =3D WDIOF_CARDRESET;
-+
- 	wdt->info =3D &ds1388_wdt_info;
- 	wdt->ops =3D &ds1388_wdt_ops;
- 	wdt->timeout =3D 99;
---=20
-2.27.0
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 82d91547d122..ddaaaf53a251 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -17,7 +17,6 @@
+ #include <asm/byteorder.h>
+ #include <asm/div64.h>
+ #include <uapi/linux/kernel.h>
+-#include <asm/div64.h>
+ 
+ #define STACK_MAGIC	0xdeadbeef
+ 
+-- 
+2.26.2
 
