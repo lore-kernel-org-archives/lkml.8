@@ -2,54 +2,52 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C7FC433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA08C43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7817020663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BC5120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860057;
-	bh=eu30v+2vd52vuhOIMWCqVsoMKwz6eTSfGkwdDQQMxNU=;
+	s=default; t=1595860061;
+	bh=qwv1oXhk8at2vNn/hHKYLEGA/5GQhzw6wtG6R2MdQ4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mx4YClv3UkzJQwFND8Yxp9lUUGnZ+DqiUZ5uiaILxeINEQCixKuJHQC9zLwBy/YzD
-	 A4Jp2+hwGFXgx6IXfL2BGvpfECd+QJZlc/zkJ5dLb3EslZH5Fi8PUanT8rphJ5LHoF
-	 sZoqAdxm5sMmx+LU3Cle53upgd4RKE1s1Hao27n8=
+	b=b9iSHg6iCnBuebZPc2S820TJlVnHqs0vghafSYYuV2ltqDkm8XMrP1oJw+c3WanH/
+	 ruzo+4or8+qyQrMLAldga+BWFuZIt3wrfB9kxwA3cpn8s3qkRulzqyq+dEKmguDn7t
+	 YN9RcypymND7mV2DT1KaLeduIsTi86roQARc794U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732436AbgG0OZ2 (ORCPT
+        id S1732407AbgG0OZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:25:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55318 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:25:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732389AbgG0OZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:25:23 -0400
+        id S1732370AbgG0OZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:25:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D9EC20663;
-        Mon, 27 Jul 2020 14:25:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE4382075A;
+        Mon, 27 Jul 2020 14:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859923;
-        bh=eu30v+2vd52vuhOIMWCqVsoMKwz6eTSfGkwdDQQMxNU=;
+        s=default; t=1595859913;
+        bh=qwv1oXhk8at2vNn/hHKYLEGA/5GQhzw6wtG6R2MdQ4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YMrcSBE6I88xXPFpwRocXVbVKMXkL2+RQ+SDpV1BhtjcFvK67d5RPFTS1Qletar9Y
-         VtpClsyXwdGipqZx+cP2nWkDp/Wwy93iQUk8A4DEFHzIoyu1cSJvECAmYs/oJHb0yL
-         QR06OcWibskMm9cFSAin6I82yYPKGiLTh0KRmyOA=
+        b=CPN4q4JWL3XE6JzqW9VWc97mp+NQbFTSNYnJTZvcT8TypPDGVAKmlFMJDy792g1x4
+         bk+rbF3NZ2iKWZE4DzA9c6c9bzjt4fNMUatEFu3a9Ytabu6vygPGG1pICP/sBQn7PE
+         54q8Ofu6im41dDAepTgXZkNzuOQpuFYJg1NbEwks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 5.7 158/179] Makefile: Fix GCC_TOOLCHAIN_DIR prefix for Clang cross compilation
-Date:   Mon, 27 Jul 2020 16:05:33 +0200
-Message-Id: <20200727134940.369604684@linuxfoundation.org>
+        stable@vger.kernel.org, Chu Lin <linchuyuan@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 124/179] hwmon: (adm1275) Make sure we are reading enough data for different chips
+Date:   Mon, 27 Jul 2020 16:04:59 +0200
+Message-Id: <20200727134938.692888033@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -62,56 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fangrui Song <maskray@google.com>
+From: Chu Lin <linchuyuan@google.com>
 
-commit ca9b31f6bb9c6aa9b4e5f0792f39a97bbffb8c51 upstream.
+[ Upstream commit 6d1d41c075a1a54ba03370e268171fec20e06563 ]
 
-When CROSS_COMPILE is set (e.g. aarch64-linux-gnu-), if
-$(CROSS_COMPILE)elfedit is found at /usr/bin/aarch64-linux-gnu-elfedit,
-GCC_TOOLCHAIN_DIR will be set to /usr/bin/.  --prefix= will be set to
-/usr/bin/ and Clang as of 11 will search for both
-$(prefix)aarch64-linux-gnu-$needle and $(prefix)$needle.
+Issue:
+When PEC is enabled, binding adm1272 to the adm1275 would
+fail due to PEC error. See below:
+adm1275: probe of xxxx failed with error -74
 
-GCC searchs for $(prefix)aarch64-linux-gnu/$version/$needle,
-$(prefix)aarch64-linux-gnu/$needle and $(prefix)$needle. In practice,
-$(prefix)aarch64-linux-gnu/$needle rarely contains executables.
+Diagnosis:
+Per the datasheet of adm1272, adm1278, adm1293 and amd1294,
+PMON_CONFIG (0xd4) is 16bits wide. On the other hand,
+PMON_CONFIG (0xd4) for adm1275 is 8bits wide. The driver should not
+assume everything is 8bits wide and read only 8bits from it.
 
-To better model how GCC's -B/--prefix takes in effect in practice, newer
-Clang (since
-https://github.com/llvm/llvm-project/commit/3452a0d8c17f7166f479706b293caf6ac76ffd90)
-only searches for $(prefix)$needle. Currently it will find /usr/bin/as
-instead of /usr/bin/aarch64-linux-gnu-as.
+Solution:
+If it is adm1272, adm1278, adm1293 and adm1294, use i2c_read_word.
+Else, use i2c_read_byte
 
-Set --prefix= to $(GCC_TOOLCHAIN_DIR)$(notdir $(CROSS_COMPILE))
-(/usr/bin/aarch64-linux-gnu-) so that newer Clang can find the
-appropriate cross compiling GNU as (when -no-integrated-as is in
-effect).
+Testing:
+Binding adm1272 to the driver.
+The change is only tested on adm1272.
 
-Cc: stable@vger.kernel.org
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Fangrui Song <maskray@google.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://github.com/ClangBuiltLinux/linux/issues/1099
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Chu Lin <linchuyuan@google.com>
+Link: https://lore.kernel.org/r/20200709040612.3977094-1-linchuyuan@google.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/pmbus/adm1275.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -549,7 +549,7 @@ ifneq ($(shell $(CC) --version 2>&1 | he
- ifneq ($(CROSS_COMPILE),)
- CLANG_FLAGS	+= --target=$(notdir $(CROSS_COMPILE:%-=%))
- GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
--CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)
-+CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)$(notdir $(CROSS_COMPILE))
- GCC_TOOLCHAIN	:= $(realpath $(GCC_TOOLCHAIN_DIR)/..)
- endif
- ifneq ($(GCC_TOOLCHAIN),)
+diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
+index e25f541227dae..19317575d1c6a 100644
+--- a/drivers/hwmon/pmbus/adm1275.c
++++ b/drivers/hwmon/pmbus/adm1275.c
+@@ -465,6 +465,7 @@ MODULE_DEVICE_TABLE(i2c, adm1275_id);
+ static int adm1275_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *id)
+ {
++	s32 (*config_read_fn)(const struct i2c_client *client, u8 reg);
+ 	u8 block_buffer[I2C_SMBUS_BLOCK_MAX + 1];
+ 	int config, device_config;
+ 	int ret;
+@@ -510,11 +511,16 @@ static int adm1275_probe(struct i2c_client *client,
+ 			   "Device mismatch: Configured %s, detected %s\n",
+ 			   id->name, mid->name);
+ 
+-	config = i2c_smbus_read_byte_data(client, ADM1275_PMON_CONFIG);
++	if (mid->driver_data == adm1272 || mid->driver_data == adm1278 ||
++	    mid->driver_data == adm1293 || mid->driver_data == adm1294)
++		config_read_fn = i2c_smbus_read_word_data;
++	else
++		config_read_fn = i2c_smbus_read_byte_data;
++	config = config_read_fn(client, ADM1275_PMON_CONFIG);
+ 	if (config < 0)
+ 		return config;
+ 
+-	device_config = i2c_smbus_read_byte_data(client, ADM1275_DEVICE_CONFIG);
++	device_config = config_read_fn(client, ADM1275_DEVICE_CONFIG);
+ 	if (device_config < 0)
+ 		return device_config;
+ 
+-- 
+2.25.1
+
 
 
