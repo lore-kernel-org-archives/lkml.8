@@ -2,134 +2,71 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E772C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 868062073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162A2206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgG0TrH (ORCPT
+        id S1728933AbgG0Tto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:47:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59736 "EHLO
+        Mon, 27 Jul 2020 15:49:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728990AbgG0TrG (ORCPT
+        with ESMTP id S1726196AbgG0Ttn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:47:06 -0400
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [IPv6:2001:1600:3:17::190f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99584C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:47:06 -0700 (PDT)
-Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BFr1022KyzlhTrH;
-        Mon, 27 Jul 2020 21:47:00 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4BFr0w2zRPzlh8T4;
-        Mon, 27 Jul 2020 21:46:56 +0200 (CEST)
-Subject: Re: [PATCH v7 4/7] fs: Introduce O_MAYEXEC flag for openat2(2)
-To:     Florian Weimer <fweimer@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-References: <20200723171227.446711-1-mic@digikod.net>
- <20200723171227.446711-5-mic@digikod.net>
- <20200727042106.GB794331@ZenIV.linux.org.uk>
- <87y2n55xzv.fsf@oldenburg2.str.redhat.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <eaf5bc42-e086-740b-a90c-93e67c535eee@digikod.net>
-Date:   Mon, 27 Jul 2020 21:46:55 +0200
-User-Agent: 
-MIME-Version: 1.0
-In-Reply-To: <87y2n55xzv.fsf@oldenburg2.str.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+        Mon, 27 Jul 2020 15:49:43 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9499DC061794;
+        Mon, 27 Jul 2020 12:49:43 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 762A71277773A;
+        Mon, 27 Jul 2020 12:32:57 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 12:49:42 -0700 (PDT)
+Message-Id: <20200727.124942.1829978531845134184.davem@davemloft.net>
+To:     wenhu.wang@vivo.com
+Cc:     elder@kernel.org, kuba@kernel.org, kvalo@codeaurora.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, ohad@wizery.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, alsa-devel@alsa-project.org,
+        ath11k@lists.infradead.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        srinivas.kandagatla@linaro.org, sibis@codeaurora.org
+Subject: Re: [PATCH] soc: qmi: allow user to set handle wq to hiprio
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <AMoAtwB9DXJsyd-1khUpzqq9.1.1595862196133.Hmail.wenhu.wang@vivo.com>
+References: <AMoAtwB9DXJsyd-1khUpzqq9.1.1595862196133.Hmail.wenhu.wang@vivo.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-2022-jp
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 27 Jul 2020 12:32:58 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: $B2&J88W(B <wenhu.wang@vivo.com>
+Date: Mon, 27 Jul 2020 23:03:16 +0800 (GMT+08:00)
 
-On 27/07/2020 07:27, Florian Weimer wrote:
-> * Al Viro:
+> Currently the qmi_handle is initialized single threaded and strictly
+> ordered with the active set to 1. This is pretty simple and safe but
+> sometimes ineffency. So it is better to allow user to decide whether
+> a high priority workqueue should be used.
 > 
->> On Thu, Jul 23, 2020 at 07:12:24PM +0200, MickaÃ«l SalaÃ¼n wrote:
->>> When the O_MAYEXEC flag is passed, openat2(2) may be subject to
->>> additional restrictions depending on a security policy managed by the
->>> kernel through a sysctl or implemented by an LSM thanks to the
->>> inode_permission hook.  This new flag is ignored by open(2) and
->>> openat(2) because of their unspecified flags handling.  When used with
->>> openat2(2), the default behavior is only to forbid to open a directory.
->>
->> Correct me if I'm wrong, but it looks like you are introducing a magical
->> flag that would mean "let the Linux S&M take an extra special whip
->> for this open()".
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 
-There is nothing magic, it doesn't only work with the LSM framework, and
-there is nothing painful nor humiliating here (except maybe this language).
+Every caller sets the new value to "0", so you should submit this when
+you have a cast that actually sets it to "1".
 
->>
->> Why is it done during open?  If the caller is passing it deliberately,
->> why not have an explicit request to apply given torture device to an
->> already opened file?  Why not sys_masochism(int fd, char *hurt_flavour),
->> for that matter?
-> 
-> While I do not think this is appropriate language for a workplace, Al
-> has a point: If the auditing event can be generated on an already-open
-> descriptor, it would also cover scenarios like this one:
-> 
->   perl < /path/to/script
-> 
-> Where the process that opens the file does not (and cannot) know that it
-> will be used for execution purposes.
+Also, the new argument should be "bool" instead of "unsigned int" and
+use "true" and "false" in the callers.
 
-The check is done during open because the goal of this patch series is
-to address the problem of script execution when opening a script in well
-controlled systems (e.g. to enforce a "write xor execute" policy, to do
-an atomic integrity check [1], to check specific execute/read
-permissions, etc.). As discussed multiple times, controlling other means
-to interpret commands (stdin, environment variables, etc.) is out of
-scope and should be handled by interpreters (in userspace). Someone
-could still extend fcntl(2) to enable to check file descriptors, but it
-is an independent change not required for now.
-Specific audit features are also out of scope for now [2].
-
-[1] https://lore.kernel.org/lkml/1544699060.6703.11.camel@linux.ibm.com/
-[2] https://lore.kernel.org/lkml/202007160822.CCDB5478@keescook/
+Thank you.
