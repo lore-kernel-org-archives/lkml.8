@@ -2,136 +2,82 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4459AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4583BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23801206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:48:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cj1m6D1+"
+	by mail.kernel.org (Postfix) with ESMTP id 0A60B2083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595865297;
+	bh=r4gVtL5bEAhWJpndkYkQKV4g6kh85tQmBYzrzdeoQmY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DLoStozoXphKWjlEWisH8cCPuqiWB75NttXazlkhyenmOWJi1S6+6UjEgNvXe8qnE
+	 GYqOm8IX1dMq+iv/cFEwnlTYdcXyYzLtoGBzRrOwp6Xtpy29BWp3Dznt5PX5H8hrts
+	 UO21j3yFy5Npn5e5S27IO11ujiOhmA/aS3n8yZFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731085AbgG0Pso (ORCPT
+        id S1730651AbgG0Pyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729601AbgG0Pso (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:48:44 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BB50C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:48:44 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a14so15402114wra.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:48:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ftDaS4GB93pqR50K0HNKbC88ac2C5NLman44G8+/LyE=;
-        b=cj1m6D1+swe4DvbRaDEeTwdxgGLAdA0culkB6Ks72KZ3YF/BmYDotHHfe2/+AUJG5l
-         l1rQsTXvM7RO+oJdHgpMCmmCSP6Fc3/xaC4bD+7HQfE3/PEwvhaUCjNrHXJAXdqkxtRk
-         RodYtqA8PhxVLQ1zWBEuQgu65kRlrj18zaVdbAQ4SEMeB6eRqwzIK62XZeogD9dcq/ac
-         D3ZLysh+S5EnyQtnrvczHZ7SmdSUv1gjIBClYk+jZ0N+1AgHT8+e+KuhRH0UXsRnzq9s
-         I0958lQD71PhvsJrMc5owFCmX3UvrPO/7PAEcHu/2AlLiAxvO8jnEBv2CHpTCKWXOUJL
-         WQTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ftDaS4GB93pqR50K0HNKbC88ac2C5NLman44G8+/LyE=;
-        b=E5U4Uu51V9yha8ZoPN8PXINUMvXbThBs9jJ2fWG0qKhwPoKe8rQZLBA3q2RxKuARaP
-         N2N2v3EttH6aeeC5WONCI4Ljk3xh/oVvaQZESIRQrq5zKe7rVFH15c8SUQTGLGaJ/qkT
-         GuBpxE0o1o8ezgGNdC81aFFZHIVs+MZV3+AwYf+Mt61rpM5olMgCOu3NvMT3VuL7fbep
-         DwccIRja3p/mvMSzpk3lWrsrBMEB/YzeT90iWJyXLH7JugW4oQ3RD3uxBnKtHFrUfDyZ
-         tMSzQ2pgdfVq1+yEjIWTjFwp39t8VFOVCTHFSoL+zbnsnLBxivBnuvbMZyUsoCEAKZtZ
-         91Zw==
-X-Gm-Message-State: AOAM531pA/HxUhEqITk5eYudtpphI9a+NqXbyPvU3/x8gq8fj21RgYl8
-        xqyms1RIbfsh0iYLlqVqCv5gsw==
-X-Google-Smtp-Source: ABdhPJwGZmIBqv2Morq7xO0TtkIaGYFP6yK8oChVVtxF7/hPI4hIcO8UKMwe98O/xQHW7Hh7Ry8XpQ==
-X-Received: by 2002:a5d:544f:: with SMTP id w15mr21015839wrv.208.1595864922765;
-        Mon, 27 Jul 2020 08:48:42 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id r206sm34232wma.6.2020.07.27.08.48.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 08:48:42 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 16:48:40 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Subject: Re: [PATCH 1/8] mfd: mt6358: refine interrupt code
-Message-ID: <20200727154840.GY1850026@dell>
-References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1595509133-5358-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Mon, 27 Jul 2020 11:54:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728466AbgG0Pyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 11:54:55 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B3082083B;
+        Mon, 27 Jul 2020 15:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595865294;
+        bh=r4gVtL5bEAhWJpndkYkQKV4g6kh85tQmBYzrzdeoQmY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rFcPokJ1hNO2ZAZboOsd6quqJ7MkklxYnGhCWGroq121z/YTSqiAnl5FJEfckXHS9
+         KYrjHELe2AqYB3FFOyEY3sFaA0NjRlTR0Jz/FAcnQJ7nRW5o9H2rnqaiZbsojZwrKV
+         jugqO6ivP2SosEpZk1LStf5eKRj5TW+oLLgXBVPE=
+Date:   Mon, 27 Jul 2020 08:54:52 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     "Ooi, Joyce" <joyce.ooi@intel.com>
+Cc:     Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>,
+        Dalon Westergreen <dalon.westergreen@intel.com>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v5 08/10] net: eth: altera: add support for ptp and
+ timestamping
+Message-ID: <20200727085452.412f7031@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200727092157.115937-9-joyce.ooi@intel.com>
+References: <20200727092157.115937-1-joyce.ooi@intel.com>
+        <20200727092157.115937-9-joyce.ooi@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1595509133-5358-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jul 2020, Hsin-Hsiung Wang wrote:
-
-> This patch refines the interrupt related code to support new chips.
-
-Refines in what way?
-
-What makes this better?
-
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/mfd/mt6358-irq.c        | 65 ++++++++++++++++++++++++-----------------
->  include/linux/mfd/mt6358/core.h |  8 ++---
->  2 files changed, 41 insertions(+), 32 deletions(-)
+On Mon, 27 Jul 2020 17:21:55 +0800 Ooi, Joyce wrote:
+> From: Dalon Westergreen <dalon.westergreen@intel.com>
 > 
-> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
-> index db734f2..4b094e5 100644
-> --- a/drivers/mfd/mt6358-irq.c
-> +++ b/drivers/mfd/mt6358-irq.c
-> @@ -13,7 +13,9 @@
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  
-> -static struct irq_top_t mt6358_ints[] = {
-> +#define MTK_PMIC_REG_WIDTH 16
-> +
-> +static const struct irq_top_t mt6358_ints[] = {
->  	MT6358_TOP_GEN(BUCK),
->  	MT6358_TOP_GEN(LDO),
->  	MT6358_TOP_GEN(PSC),
-> @@ -24,6 +26,13 @@ static struct irq_top_t mt6358_ints[] = {
->  	MT6358_TOP_GEN(MISC),
->  };
->  
-> +static struct pmic_irq_data mt6358_irqd = {
-> +	.num_top = ARRAY_SIZE(mt6358_ints),
-> +	.num_pmic_irqs = MT6358_IRQ_NR,
-> +	.top_int_status_reg = MT6358_TOP_INT_STATUS0,
-> +	.pmic_ints = mt6358_ints,
-> +};
+> Add support for the ptp clock used with the tse, and update
+> the driver to support timestamping when enabled.  We also
+> enable debugfs entries for the ptp clock to allow some user
+> control and interaction with the ptp clock.
+> 
+> Cc: Richard Cochran <richardcochran@gmail.com>
+> Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+> Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
 
-Dynamically assigned driver data is usually preferred.
+W=1 build reveals a warnings, please fix:
 
-Why have you gone static?
+drivers/net/ethernet/altera/intel_fpga_tod.c:334:55: warning: Using plain integer as NULL 
+pointer
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
