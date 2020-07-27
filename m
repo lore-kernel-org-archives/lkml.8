@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76792C43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DB1C43446
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB672083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D962083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859826;
-	bh=FUp0VNab1O9xEaaJWh2nIEeHUfPjHwqXSlJBT8VPvsM=;
+	s=default; t=1595859828;
+	bh=AffMlMTKO4zKS4T/9efGfxZ+ta1j6Jw3kXv1B/QFf7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tUPEijZ9HUaOxyeoxMxbFGqUKj33xqsJgKIT5cEr4IjjmTLs4fR8uINn53Pu75EsG
-	 QYIN2mdYWzr1pOIVOrU+QEp6/fo2av/PTtacxeCr5zGWQHdE5nrHT0ESn9M/9OOzFJ
-	 BGZhUqQNgOY3CFBMi7ZWrJDaSHYMM/glzeWw4FxI=
+	b=zjm6TLmqJNxDTfijCZ654PXvdUFs9PQQdn+ZtDMyzk95dNFu2UiOubqTq01ju1jm6
+	 gWYeoTmzoEhJnVn8SkpkbDPoXoeKi4l16nH2JTj5LOoajzghgQXy3aYHWsPhyCjOqf
+	 NErkrf0KWL0amsDfelfUssBFoTxDviz+Pygz5Qmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgG0OXo (ORCPT
+        id S1732149AbgG0OXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:23:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52882 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:23:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732106AbgG0OXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:23:39 -0400
+        id S1732139AbgG0OXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:23:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 236642075A;
-        Mon, 27 Jul 2020 14:23:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A466A2075A;
+        Mon, 27 Jul 2020 14:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859818;
-        bh=FUp0VNab1O9xEaaJWh2nIEeHUfPjHwqXSlJBT8VPvsM=;
+        s=default; t=1595859824;
+        bh=AffMlMTKO4zKS4T/9efGfxZ+ta1j6Jw3kXv1B/QFf7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x3caCyfGYa9YlP2j5Q4UutqfK/GvxSzmo4mpfJa6Z38fn9zyZ7+jH0s0lnE1eHuGr
-         FrdWTn2kLXdxqc0FJ5KkHx7t0bO/1SeeTEiJlGF83h9Mtd50Cfg9q/PgRnZFn2FQ05
-         +QMita0PiwpM/+ORlnHk2dUuliyfzA40tKrwEkNs=
+        b=MeJtpgDayWF8oy8xDAqujdbtS0xRWLWtguuhCp2agQ77Dno2rUXatQhVlvunAFxo+
+         nGjEzx27Sw4YUB6xBNW+s/htmXnlmuuvtyKFo4WzJ+OdlHDCxPzPISimShMsBNrvHv
+         JWfK0IRsqWrCbSuU8nyIvoh6ljxZ4dXvmmiqW27A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 087/179] iommu/qcom: Use domain rather than dev as tlb cookie
-Date:   Mon, 27 Jul 2020 16:04:22 +0200
-Message-Id: <20200727134936.918578591@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 089/179] nfsd4: fix NULL dereference in nfsd/clients display code
+Date:   Mon, 27 Jul 2020 16:04:24 +0200
+Message-Id: <20200727134937.011848345@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -60,137 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: J. Bruce Fields <bfields@redhat.com>
 
-[ Upstream commit 1014a2f8d76b05e0f228dd097ac1a249c5934232 ]
+[ Upstream commit 9affa435817711861d774f5626c393c80f16d044 ]
 
-The device may be torn down, but the domain should still be valid.  Lets
-use that as the tlb flush ops cookie.
+We hold the cl_lock here, and that's enough to keep stateid's from going
+away, but it's not enough to prevent the files they point to from going
+away.  Take fi_lock and a reference and check for NULL, as we do in
+other code.
 
-Fixes a problem reported in [1]
-
-[1] https://lkml.org/lkml/2020/7/20/104
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Fixes: 09b5dfff9ad6 ("iommu/qcom: Use accessor functions for iommu private data")
-Link: https://lore.kernel.org/r/20200720155217.274994-1-robdclark@gmail.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reported-by: NeilBrown <neilb@suse.de>
+Fixes: 78599c42ae3c ("nfsd4: add file to display list of client's opens")
+Reviewed-by: NeilBrown <neilb@suse.de>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/qcom_iommu.c | 37 +++++++++++++++++--------------------
- 1 file changed, 17 insertions(+), 20 deletions(-)
+ fs/nfsd/nfs4state.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
-index 5b3b270972f80..c6277d7398f30 100644
---- a/drivers/iommu/qcom_iommu.c
-+++ b/drivers/iommu/qcom_iommu.c
-@@ -65,6 +65,7 @@ struct qcom_iommu_domain {
- 	struct mutex		 init_mutex; /* Protects iommu pointer */
- 	struct iommu_domain	 domain;
- 	struct qcom_iommu_dev	*iommu;
-+	struct iommu_fwspec	*fwspec;
- };
- 
- static struct qcom_iommu_domain *to_qcom_iommu_domain(struct iommu_domain *dom)
-@@ -84,9 +85,9 @@ static struct qcom_iommu_dev * to_iommu(struct device *dev)
- 	return dev_iommu_priv_get(dev);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index bdfae3ba39539..0a201bb074b0e 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -509,6 +509,17 @@ find_any_file(struct nfs4_file *f)
+ 	return ret;
  }
  
--static struct qcom_iommu_ctx * to_ctx(struct device *dev, unsigned asid)
-+static struct qcom_iommu_ctx * to_ctx(struct qcom_iommu_domain *d, unsigned asid)
- {
--	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
-+	struct qcom_iommu_dev *qcom_iommu = d->iommu;
- 	if (!qcom_iommu)
- 		return NULL;
- 	return qcom_iommu->ctxs[asid - 1];
-@@ -118,14 +119,12 @@ iommu_readq(struct qcom_iommu_ctx *ctx, unsigned reg)
- 
- static void qcom_iommu_tlb_sync(void *cookie)
- {
--	struct iommu_fwspec *fwspec;
--	struct device *dev = cookie;
-+	struct qcom_iommu_domain *qcom_domain = cookie;
-+	struct iommu_fwspec *fwspec = qcom_domain->fwspec;
- 	unsigned i;
- 
--	fwspec = dev_iommu_fwspec_get(dev);
--
- 	for (i = 0; i < fwspec->num_ids; i++) {
--		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
-+		struct qcom_iommu_ctx *ctx = to_ctx(qcom_domain, fwspec->ids[i]);
- 		unsigned int val, ret;
- 
- 		iommu_writel(ctx, ARM_SMMU_CB_TLBSYNC, 0);
-@@ -139,14 +138,12 @@ static void qcom_iommu_tlb_sync(void *cookie)
- 
- static void qcom_iommu_tlb_inv_context(void *cookie)
- {
--	struct device *dev = cookie;
--	struct iommu_fwspec *fwspec;
-+	struct qcom_iommu_domain *qcom_domain = cookie;
-+	struct iommu_fwspec *fwspec = qcom_domain->fwspec;
- 	unsigned i;
- 
--	fwspec = dev_iommu_fwspec_get(dev);
--
- 	for (i = 0; i < fwspec->num_ids; i++) {
--		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
-+		struct qcom_iommu_ctx *ctx = to_ctx(qcom_domain, fwspec->ids[i]);
- 		iommu_writel(ctx, ARM_SMMU_CB_S1_TLBIASID, ctx->asid);
- 	}
- 
-@@ -156,16 +153,14 @@ static void qcom_iommu_tlb_inv_context(void *cookie)
- static void qcom_iommu_tlb_inv_range_nosync(unsigned long iova, size_t size,
- 					    size_t granule, bool leaf, void *cookie)
- {
--	struct device *dev = cookie;
--	struct iommu_fwspec *fwspec;
-+	struct qcom_iommu_domain *qcom_domain = cookie;
-+	struct iommu_fwspec *fwspec = qcom_domain->fwspec;
- 	unsigned i, reg;
- 
- 	reg = leaf ? ARM_SMMU_CB_S1_TLBIVAL : ARM_SMMU_CB_S1_TLBIVA;
- 
--	fwspec = dev_iommu_fwspec_get(dev);
--
- 	for (i = 0; i < fwspec->num_ids; i++) {
--		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
-+		struct qcom_iommu_ctx *ctx = to_ctx(qcom_domain, fwspec->ids[i]);
- 		size_t s = size;
- 
- 		iova = (iova >> 12) << 12;
-@@ -256,7 +251,9 @@ static int qcom_iommu_init_domain(struct iommu_domain *domain,
- 	};
- 
- 	qcom_domain->iommu = qcom_iommu;
--	pgtbl_ops = alloc_io_pgtable_ops(ARM_32_LPAE_S1, &pgtbl_cfg, dev);
-+	qcom_domain->fwspec = fwspec;
++static struct nfsd_file *find_deleg_file(struct nfs4_file *f)
++{
++	struct nfsd_file *ret = NULL;
 +
-+	pgtbl_ops = alloc_io_pgtable_ops(ARM_32_LPAE_S1, &pgtbl_cfg, qcom_domain);
- 	if (!pgtbl_ops) {
- 		dev_err(qcom_iommu->dev, "failed to allocate pagetable ops\n");
- 		ret = -ENOMEM;
-@@ -269,7 +266,7 @@ static int qcom_iommu_init_domain(struct iommu_domain *domain,
- 	domain->geometry.force_aperture = true;
++	spin_lock(&f->fi_lock);
++	if (f->fi_deleg_file)
++		ret = nfsd_file_get(f->fi_deleg_file);
++	spin_unlock(&f->fi_lock);
++	return ret;
++}
++
+ static atomic_long_t num_delegations;
+ unsigned long max_delegations;
  
- 	for (i = 0; i < fwspec->num_ids; i++) {
--		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
-+		struct qcom_iommu_ctx *ctx = to_ctx(qcom_domain, fwspec->ids[i]);
+@@ -2436,6 +2447,8 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
+ 	oo = ols->st_stateowner;
+ 	nf = st->sc_file;
+ 	file = find_any_file(nf);
++	if (!file)
++		return 0;
  
- 		if (!ctx->secure_init) {
- 			ret = qcom_scm_restore_sec_cfg(qcom_iommu->sec_id, ctx->asid);
-@@ -419,7 +416,7 @@ static void qcom_iommu_detach_dev(struct iommu_domain *domain, struct device *de
+ 	seq_printf(s, "- 0x%16phN: { type: open, ", &st->sc_stateid);
  
- 	pm_runtime_get_sync(qcom_iommu->dev);
- 	for (i = 0; i < fwspec->num_ids; i++) {
--		struct qcom_iommu_ctx *ctx = to_ctx(dev, fwspec->ids[i]);
-+		struct qcom_iommu_ctx *ctx = to_ctx(qcom_domain, fwspec->ids[i]);
+@@ -2469,6 +2482,8 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
+ 	oo = ols->st_stateowner;
+ 	nf = st->sc_file;
+ 	file = find_any_file(nf);
++	if (!file)
++		return 0;
  
- 		/* Disable the context bank: */
- 		iommu_writel(ctx, ARM_SMMU_CB_SCTLR, 0);
+ 	seq_printf(s, "- 0x%16phN: { type: lock, ", &st->sc_stateid);
+ 
+@@ -2497,7 +2512,9 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
+ 
+ 	ds = delegstateid(st);
+ 	nf = st->sc_file;
+-	file = nf->fi_deleg_file;
++	file = find_deleg_file(nf);
++	if (!file)
++		return 0;
+ 
+ 	seq_printf(s, "- 0x%16phN: { type: deleg, ", &st->sc_stateid);
+ 
+@@ -2509,6 +2526,7 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
+ 
+ 	nfs4_show_superblock(s, file);
+ 	seq_printf(s, " }\n");
++	nfsd_file_put(file);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
