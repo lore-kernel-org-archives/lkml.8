@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5956CC433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA007C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39F3B2074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C34205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbgG0LGX (ORCPT
+        id S1728534AbgG0LGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:06:23 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40705 "EHLO
+        Mon, 27 Jul 2020 07:06:18 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40716 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728535AbgG0LGR (ORCPT
+        with ESMTP id S1728545AbgG0LGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:06:17 -0400
+        Mon, 27 Jul 2020 07:06:16 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 27 Jul 2020 14:06:13 +0300
+        with SMTP; 27 Jul 2020 14:06:14 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (dev-l-vrt-135.mtl.labs.mlnx [10.234.135.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06RB6Dwf022243;
-        Mon, 27 Jul 2020 14:06:13 +0300
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06RB6EmX022254;
+        Mon, 27 Jul 2020 14:06:14 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 06RB6DJB002400;
-        Mon, 27 Jul 2020 14:06:13 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 06RB6EuV002406;
+        Mon, 27 Jul 2020 14:06:14 +0300
 Received: (from moshe@localhost)
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 06RB6DeK002399;
-        Mon, 27 Jul 2020 14:06:13 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 06RB6Ex2002405;
+        Mon, 27 Jul 2020 14:06:14 +0300
 From:   Moshe Shemesh <moshe@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jiri Pirko <jiri@mellanox.com>,
         Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC 09/13] devlink: Add enable_remote_dev_reset generic parameter
-Date:   Mon, 27 Jul 2020 14:02:29 +0300
-Message-Id: <1595847753-2234-10-git-send-email-moshe@mellanox.com>
+Subject: [PATCH net-next RFC 12/13] net/mlx5: Add support for devlink reload level live patch
+Date:   Mon, 27 Jul 2020 14:02:32 +0300
+Message-Id: <1595847753-2234-13-git-send-email-moshe@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
 In-Reply-To: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
 References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
@@ -49,72 +49,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The enable_remote_dev_reset devlink param flags that the host admin
-allows device resets that can be initiated by other hosts. This
-parameter is useful for setups where a device is shared by different
-hosts, such as multi-host setup. Once the user set this parameter to
-false, the driver should NACK any attempt to reset the device while the
-driver is loaded.
+Add support for devlink reload level fw_live_patch which does live
+patching to firmware.
+The driver checks if the firmware is capable of handling the pending
+firmware changes as a live patch. If it is then it triggers
+fw_live_patch flow.
 
 Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
 ---
- Documentation/networking/devlink/devlink-params.rst | 6 ++++++
- include/net/devlink.h                               | 4 ++++
- net/core/devlink.c                                  | 5 +++++
- 3 files changed, 15 insertions(+)
+ .../net/ethernet/mellanox/mlx5/core/devlink.c | 30 ++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/networking/devlink/devlink-params.rst b/Documentation/networking/devlink/devlink-params.rst
-index d075fd090b3d..54c9f107c4b0 100644
---- a/Documentation/networking/devlink/devlink-params.rst
-+++ b/Documentation/networking/devlink/devlink-params.rst
-@@ -108,3 +108,9 @@ own name.
-    * - ``region_snapshot_enable``
-      - Boolean
-      - Enable capture of ``devlink-region`` snapshots.
-+   * - ``enable_remote_dev_reset``
-+     - Boolean
-+     - Enable device reset by remote host. When cleared, the device driver
-+       will NACK any attempt of other host to reset the device. This parameter
-+       is useful for setups where a device is shared by different hosts, such
-+       as multi-host setup.
-diff --git a/include/net/devlink.h b/include/net/devlink.h
-index b291cd8d6be6..125e7bb9bb82 100644
---- a/include/net/devlink.h
-+++ b/include/net/devlink.h
-@@ -420,6 +420,7 @@ enum devlink_param_generic_id {
- 	DEVLINK_PARAM_GENERIC_ID_FW_LOAD_POLICY,
- 	DEVLINK_PARAM_GENERIC_ID_RESET_DEV_ON_DRV_PROBE,
- 	DEVLINK_PARAM_GENERIC_ID_ENABLE_ROCE,
-+	DEVLINK_PARAM_GENERIC_ID_ENABLE_REMOTE_DEV_RESET,
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
+index a81204b3dd7c..804e1e7b25cc 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
+@@ -115,6 +115,29 @@ static int mlx5_devlink_trigger_fw_reset(struct devlink *devlink, struct netlink
+ 	return err;
+ }
  
- 	/* add new param generic ids above here*/
- 	__DEVLINK_PARAM_GENERIC_ID_MAX,
-@@ -457,6 +458,9 @@ enum devlink_param_generic_id {
- #define DEVLINK_PARAM_GENERIC_ENABLE_ROCE_NAME "enable_roce"
- #define DEVLINK_PARAM_GENERIC_ENABLE_ROCE_TYPE DEVLINK_PARAM_TYPE_BOOL
- 
-+#define DEVLINK_PARAM_GENERIC_ENABLE_REMOTE_DEV_RESET_NAME "enable_remote_dev_reset"
-+#define DEVLINK_PARAM_GENERIC_ENABLE_REMOTE_DEV_RESET_TYPE DEVLINK_PARAM_TYPE_BOOL
++static int mlx5_devlink_trigger_fw_live_patch(struct devlink *devlink,
++					      struct netlink_ext_ack *extack)
++{
++	struct mlx5_core_dev *dev = devlink_priv(devlink);
++	u8 reset_level;
++	int err;
 +
- #define DEVLINK_PARAM_GENERIC(_id, _cmodes, _get, _set, _validate)	\
- {									\
- 	.id = DEVLINK_PARAM_GENERIC_ID_##_id,				\
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index f1812fc620d4..4d7b0f2a6f7b 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -3230,6 +3230,11 @@ static const struct devlink_param devlink_param_generic[] = {
- 		.name = DEVLINK_PARAM_GENERIC_ENABLE_ROCE_NAME,
- 		.type = DEVLINK_PARAM_GENERIC_ENABLE_ROCE_TYPE,
- 	},
-+	{
-+		.id = DEVLINK_PARAM_GENERIC_ID_ENABLE_REMOTE_DEV_RESET,
-+		.name = DEVLINK_PARAM_GENERIC_ENABLE_REMOTE_DEV_RESET_NAME,
-+		.type = DEVLINK_PARAM_GENERIC_ENABLE_REMOTE_DEV_RESET_TYPE,
-+	},
- };
- 
- static int devlink_param_generic_verify(const struct devlink_param *param)
++	err = mlx5_reg_mfrl_query(dev, &reset_level, NULL);
++	if (err)
++		return err;
++	if (!(reset_level & MLX5_MFRL_REG_RESET_LEVEL0)) {
++		NL_SET_ERR_MSG_MOD(extack,
++				   "FW upgrade to the stored FW can't be done by FW live patching");
++		return -EINVAL;
++	}
++
++	err = mlx5_fw_set_live_patch(dev);
++	if (err)
++		return err;
++
++	return 0;
++}
++
+ static int mlx5_devlink_reload_down(struct devlink *devlink, bool netns_change,
+ 				    enum devlink_reload_level level, struct netlink_ext_ack *extack)
+ {
+@@ -126,6 +149,8 @@ static int mlx5_devlink_reload_down(struct devlink *devlink, bool netns_change,
+ 		return 0;
+ 	case DEVLINK_RELOAD_LEVEL_FW_RESET:
+ 		return mlx5_devlink_trigger_fw_reset(devlink, extack);
++	case DEVLINK_RELOAD_LEVEL_FW_LIVE_PATCH:
++		return mlx5_devlink_trigger_fw_live_patch(devlink, extack);
+ 	default:
+ 		/* Unsupported level should not get to this function */
+ 		WARN_ON(1);
+@@ -142,6 +167,8 @@ static int mlx5_devlink_reload_up(struct devlink *devlink, enum devlink_reload_l
+ 	case DEVLINK_RELOAD_LEVEL_DRIVER:
+ 	case DEVLINK_RELOAD_LEVEL_FW_RESET:
+ 		return mlx5_load_one(dev, false);
++	case DEVLINK_RELOAD_LEVEL_FW_LIVE_PATCH:
++		return 0;
+ 	default:
+ 		/* Unsupported level should not get to this function */
+ 		WARN_ON(1);
+@@ -163,7 +190,8 @@ static const struct devlink_ops mlx5_devlink_ops = {
+ 	.flash_update = mlx5_devlink_flash_update,
+ 	.info_get = mlx5_devlink_info_get,
+ 	.supported_reload_levels = BIT(DEVLINK_RELOAD_LEVEL_DRIVER) |
+-				   BIT(DEVLINK_RELOAD_LEVEL_FW_RESET),
++				   BIT(DEVLINK_RELOAD_LEVEL_FW_RESET) |
++				   BIT(DEVLINK_RELOAD_LEVEL_FW_LIVE_PATCH),
+ 	.default_reload_level = DEVLINK_RELOAD_LEVEL_DRIVER,
+ 	.reload_down = mlx5_devlink_reload_down,
+ 	.reload_up = mlx5_devlink_reload_up,
 -- 
 2.17.1
 
