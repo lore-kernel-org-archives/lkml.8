@@ -2,195 +2,90 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA89C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B9CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4646B21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C204E2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:26:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="If79azyx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgG0NYx convert rfc822-to-8bit (ORCPT
+        id S1728612AbgG0N0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:24:53 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:20656 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728790AbgG0NYv (ORCPT
+        Mon, 27 Jul 2020 09:26:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgG0N0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:24:51 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-193-MlZusWDpPT2OM9ZpGGXrfQ-1; Mon, 27 Jul 2020 14:24:47 +0100
-X-MC-Unique: MlZusWDpPT2OM9ZpGGXrfQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 27 Jul 2020 14:24:45 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 27 Jul 2020 14:24:45 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Ido Schimmel' <idosch@idosch.org>, Christoph Hellwig <hch@lst.de>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
-Subject: RE: [PATCH 19/26] net/ipv6: switch ipv6_flowlabel_opt to sockptr_t
-Thread-Topic: [PATCH 19/26] net/ipv6: switch ipv6_flowlabel_opt to sockptr_t
-Thread-Index: AQHWZA+bicrTMJDvYkuXLSSepOLT0qkbaJEw
-Date:   Mon, 27 Jul 2020 13:24:45 +0000
-Message-ID: <8c747034a5b641d18734de5f4d3a7507@AcuMS.aculab.com>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200723060908.50081-20-hch@lst.de> <20200727121505.GA1804864@shredder>
-In-Reply-To: <20200727121505.GA1804864@shredder>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 27 Jul 2020 09:26:14 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB92C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 06:26:14 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id c80so14163118wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 06:26:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YKKPREYGILmYMp+eFqNko6F6lq+cuK/i7WSSQ2ZE3Hk=;
+        b=If79azyxEjSToi9pX7xfDR5zdO751BfDriT825U/Wm2MnWThGzXL8GXxesxQGSt9/M
+         LFQ0Y5kC3trqO9DaR9nhDUvgdjurd4U352pKO7LAdFJeytzk4XsnIBp69bxd8umvgGay
+         P/5N3cJ/AxvibOoV5EHu3aXbvB/0FhvSeiCiY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YKKPREYGILmYMp+eFqNko6F6lq+cuK/i7WSSQ2ZE3Hk=;
+        b=b/g9InIbhfmWVW7s45bdeDg1M1KgcK+xJSSdiORPc02Kzd95gC1xvJeOds/qFZSxUt
+         MTKl6Txg+cg0j5c/M2keMkI0fOI8pKS0AP8Hoj0LQeA+6958oM7PszsDmGi80O+9Ut9Y
+         JBx319mcG8mTt0c6GFyrmmoMnG83pufNACAYOqvQnyxSp2wyOuTs8aQpj2UcJmu9z8nv
+         SYGoHNXLtEX4QLsuniM4P/2EMArBasUkCRseJHsn3r6SSOTFdZ66X4G2wmTYFC3Qbd+l
+         YH7zInWB7DW+1aNGRz/ZCUvWKwesTtyhhq56LqCIF61svm3BzgxgcCuZ5g0ZfiJZK72D
+         NDmA==
+X-Gm-Message-State: AOAM533nQbXhcSrW7ikTNxXyVJykonNwMruLNueXFjUdE8KytOS7DRib
+        eEMLYRkFwuCsv2bfxlCj96/cEjGjXUsVi7TEgrGQKbRlwwA=
+X-Google-Smtp-Source: ABdhPJxSF+Jp4nC/8wSlCQEWqZdDHaZcKdANlkvQY0cAmuU3OOzEHENuPDjtFwhuf0H0MXGapAolehqexgaYL7kFc2Y=
+X-Received: by 2002:a7b:c0c8:: with SMTP id s8mr6220474wmh.4.1595856373273;
+ Mon, 27 Jul 2020 06:26:13 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20200726043948.1357573-1-daniel@0x0f.com> <CAK8P3a0K6LmNkGPdKeBcFTgi5wJz8T0rzO=Kg2Fmz=NtyFWAfQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a0K6LmNkGPdKeBcFTgi5wJz8T0rzO=Kg2Fmz=NtyFWAfQ@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Mon, 27 Jul 2020 22:26:02 +0900
+Message-ID: <CAFr9PXmJwKaKUO-nTNY=4X7EyifZF8HbXcfsaZaYaouTr1ZJDg@mail.gmail.com>
+Subject: Re: [PATCH 0/7] ARM:mstar: DT filling out
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel
-> Sent: 27 July 2020 13:15
-> On Thu, Jul 23, 2020 at 08:09:01AM +0200, Christoph Hellwig wrote:
-> > Pass a sockptr_t to prepare for set_fs-less handling of the kernel
-> > pointer from bpf-cgroup.
-> >
-> > Note that the get case is pretty weird in that it actually copies data
-> > back to userspace from setsockopt.
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  include/net/ipv6.h       |  2 +-
-> >  net/ipv6/ip6_flowlabel.c | 16 +++++++++-------
-> >  net/ipv6/ipv6_sockglue.c |  2 +-
-> >  3 files changed, 11 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/include/net/ipv6.h b/include/net/ipv6.h
-> > index 262fc88dbd7e2f..4c9d89b5d73268 100644
-> > --- a/include/net/ipv6.h
-> > +++ b/include/net/ipv6.h
-> > @@ -406,7 +406,7 @@ struct ipv6_txoptions *fl6_merge_options(struct ipv6_txoptions *opt_space,
-> >  					 struct ip6_flowlabel *fl,
-> >  					 struct ipv6_txoptions *fopt);
-> >  void fl6_free_socklist(struct sock *sk);
-> > -int ipv6_flowlabel_opt(struct sock *sk, char __user *optval, int optlen);
-> > +int ipv6_flowlabel_opt(struct sock *sk, sockptr_t optval, int optlen);
-> >  int ipv6_flowlabel_opt_get(struct sock *sk, struct in6_flowlabel_req *freq,
-> >  			   int flags);
-> >  int ip6_flowlabel_init(void);
-> > diff --git a/net/ipv6/ip6_flowlabel.c b/net/ipv6/ip6_flowlabel.c
-> > index 27ee6de9beffc4..6b3c315f3d461a 100644
-> > --- a/net/ipv6/ip6_flowlabel.c
-> > +++ b/net/ipv6/ip6_flowlabel.c
-> > @@ -371,7 +371,7 @@ static int fl6_renew(struct ip6_flowlabel *fl, unsigned long linger, unsigned lo
-> >
-> >  static struct ip6_flowlabel *
-> >  fl_create(struct net *net, struct sock *sk, struct in6_flowlabel_req *freq,
-> > -	  char __user *optval, int optlen, int *err_p)
-> > +	  sockptr_t optval, int optlen, int *err_p)
-> >  {
-> >  	struct ip6_flowlabel *fl = NULL;
-> >  	int olen;
-> > @@ -401,7 +401,8 @@ fl_create(struct net *net, struct sock *sk, struct in6_flowlabel_req *freq,
-> >  		memset(fl->opt, 0, sizeof(*fl->opt));
-> >  		fl->opt->tot_len = sizeof(*fl->opt) + olen;
-> >  		err = -EFAULT;
-> > -		if (copy_from_user(fl->opt+1, optval+CMSG_ALIGN(sizeof(*freq)), olen))
-> > +		sockptr_advance(optval, CMSG_ALIGN(sizeof(*freq)));
-> > +		if (copy_from_sockptr(fl->opt + 1, optval, olen))
-> >  			goto done;
-> >
-> >  		msg.msg_controllen = olen;
-> > @@ -604,7 +605,7 @@ static int ipv6_flowlabel_renew(struct sock *sk, struct in6_flowlabel_req *freq)
-> >  }
-> >
-> >  static int ipv6_flowlabel_get(struct sock *sk, struct in6_flowlabel_req *freq,
-> > -		void __user *optval, int optlen)
-> > +		sockptr_t optval, int optlen)
-> >  {
-> >  	struct ipv6_fl_socklist *sfl, *sfl1 = NULL;
-> >  	struct ip6_flowlabel *fl, *fl1 = NULL;
-> > @@ -702,8 +703,9 @@ static int ipv6_flowlabel_get(struct sock *sk, struct in6_flowlabel_req *freq,
-> >  		goto recheck;
-> >
-> >  	if (!freq->flr_label) {
-> > -		if (copy_to_user(&((struct in6_flowlabel_req __user *) optval)->flr_label,
-> > -				 &fl->label, sizeof(fl->label))) {
-> > +		sockptr_advance(optval,
-> > +				offsetof(struct in6_flowlabel_req, flr_label));
-> 
-> Christoph,
-> 
-> I see a regression with IPv6 flowlabel that I bisected to this patch.
-> When passing '-F 0' to 'ping' the flow label should be random, yet it's
-> the same every time after this patch.
-> 
-> It seems that the pointer is never advanced after the call to
-> sockptr_advance() because it is passed by value and not by reference.
-> Even if you were to pass it by reference I think you would later need to
-> call sockptr_decrease() or something similar. Otherwise it is very
-> error-prone.
+Hi Arnd,
 
-Depending on the other checks you may also be able to cross from
-user addresses to kernel ones.
-At the minimum sockptr_advance() has to fail if the boundary
-would be crossed.
+On Mon, 27 Jul 2020 at 21:33, Arnd Bergmann <arnd@arndb.de> wrote:
 
-> Maybe adding an offset to copy_to_sockptr() and copy_from_sockptr() is
-> better?
+> I had one comment for the last commit in this list and have therefore
+> not applied the series (yet).
 
-The 'is this a kernel or user copy' needs to use the base
-address from the system call.
-So you do need the offset passed in to copy_to/from_sockptr().
+I was going to wait for other comments before making a v2 but it seems like
+it was just the pmsleep syscon that needs changes. I'll fix that up and send
+a v2.
 
-Clearly churn can be reduced by using a #define or static inline
-for the common case.
+> I also noticed that the subject lines are slightly inconsistent, please
+> add  a space between "ARM:" and "mstar:" as you did for the first
+> set of patches.
 
-The alternative is to pass a 'fat pointer' through than can
-contain an offset as well as the user/kernel bases and
-expected length.
+Oops sorry about that. Not sure why I did that. I'll fix for the next version.
 
-	David
+Thanks,
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Daniel
