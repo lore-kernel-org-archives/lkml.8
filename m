@@ -2,99 +2,106 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7E4C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A59C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 740322070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014FB2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ehp9guwS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgG0LDG (ORCPT
+        id S1728117AbgG0LEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:03:06 -0400
-Received: from mailout06.rmx.de ([94.199.90.92]:57682 "EHLO mailout06.rmx.de"
+        Mon, 27 Jul 2020 07:04:49 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55691 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726942AbgG0LDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:03:06 -0400
-Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727090AbgG0LEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:04:48 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mailout06.rmx.de (Postfix) with ESMTPS id 4BFcNN3p71z9w11;
-        Mon, 27 Jul 2020 13:03:00 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin01.retarus.com (Postfix) with ESMTPS id 4BFcLs4g65z2xDJ;
-        Mon, 27 Jul 2020 13:01:41 +0200 (CEST)
-Received: from N95HX1G2.wgnetz.xx (192.168.54.121) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 27 Jul
- 2020 12:59:47 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        "Sascha Hauer" <s.hauer@pengutronix.de>
-CC:     Christian Eggers <ceggers@arri.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Martin Kaiser <martin@kaiser.cx>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
-Subject: [PATCH 3/3] hwrng: imx-rngc - setup default RNG quality
-Date:   Mon, 27 Jul 2020 12:57:16 +0200
-Message-ID: <20200727105718.26225-4-ceggers@arri.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200727105718.26225-1-ceggers@arri.de>
-References: <20200727105718.26225-1-ceggers@arri.de>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFcQP55gHz9sPf;
+        Mon, 27 Jul 2020 21:04:45 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595847886;
+        bh=jbbYAGGF5TkFumuzxoC4AbluT+cv3457AvUjKy9IdI8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ehp9guwSIcGzXqaHZ68GtNWe0ltGk/Ax8i0Xqon6ya8Arvcyd1BiN5k1HxSF8COLZ
+         uKWlDC17Nbr8YiqcgK+k7sKORCV+yhBQ754+Ol3PyvRGJk/nlMJymUrDcKNX8LIWac
+         Zi4kQlVjYjTEDkvW8GmImwKQLT5Jyo0t1YxOoL8tXT0rLLY+VCttddd+WmMTUQpUpD
+         JkHTk12Cqj4+/BRLyp2H+BHIqlRAoBHfoTtO8ZgAdkrvxkczQm+HGwPFKF0HI+0oxk
+         NYr+BxzB88PqYr+E3VlylzC24ikWi4w+mIwXGjeMURyI2qt4qFVJ7d4j2WArTYdWNz
+         dnQUlGZIbjbKg==
+Date:   Mon, 27 Jul 2020 21:04:44 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qinglang Miao <miaoqinglang@huawei.com>
+Subject: linux-next: manual merge of the set_fs tree with the tip tree
+Message-ID: <20200727210444.458c56fd@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [192.168.54.121]
-X-RMX-ID: 20200727-130145-4BFcLs4g65z2xDJ-0@kdin01
-X-RMX-SOURCE: 217.111.95.66
+Content-Type: multipart/signed; boundary="Sig_/y7fVASij+Hlu4Wh5Qy6k5/h";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When hw_random device's quality is non-zero, it will automatically fill
-the kernel's entropy pool at boot.  For this purpose, one conservative
-quality value is being picked up as the default value.
+--Sig_/y7fVASij+Hlu4Wh5Qy6k5/h
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Christian Eggers <ceggers@arri.de>
----
- drivers/char/hw_random/imx-rngc.c | 1 +
- 1 file changed, 1 insertion(+)
+Hi all,
 
-diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
-index f9c5ddd0276b..a62ff78bd7ea 100644
---- a/drivers/char/hw_random/imx-rngc.c
-+++ b/drivers/char/hw_random/imx-rngc.c
-@@ -285,6 +285,7 @@ static int imx_rngc_probe(struct platform_device *pdev)
- 	rngc->rng.init = imx_rngc_init;
- 	rngc->rng.read = imx_rngc_read;
- 	rngc->rng.cleanup = imx_rngc_cleanup;
-+	rngc->rng.quality = 900;
- 
- 	rngc->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, rngc);
--- 
-Christian Eggers
-Embedded software developer
+Today's linux-next merge of the set_fs tree got a conflict in:
 
-Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
-Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
-Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
+  lib/debugobjects.c
 
+between commit:
+
+  0f85c4805184 ("debugobjects: Convert to DEFINE_SHOW_ATTRIBUTE")
+
+from the tip tree and commit:
+
+  4d4901c6d748 ("seq_file: switch over direct seq_read method calls to seq_=
+read_iter")
+
+from the set_fs tree.
+
+I fixed it up (I just used the former) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/y7fVASij+Hlu4Wh5Qy6k5/h
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8etM0ACgkQAVBC80lX
+0Gxj5gf+Nk6ycrK2zCc9gPqy9Fn7t1CFf+RzvpahhBulNjBoMXxPt8cDg0TqdURm
+3a5oRkdmCfgN9/VN0hHT/DGKUBi6Q/5VR9fxO9a4Whm7A+H+6rny+UN3dUv5/voN
+vUn3bJBwxLcvMgzEEMzHzc4pRMy0wTMF7VlAl8dS6jDu9uWa5tVPypqyVlICvdUs
+bHPdr9JxmkS25xPX0e+32Kgp6AK1WYCeWpdXqLkZL3U4UEtdHqagJ1IY+nZdUWqK
+tbm2mjYg3nX/UnQriC7f0tV2DrhRwvhP6j/YKUStwgk8yGgcRTKvLKplhb6txSQo
+FFDtMEN7ClH16Dc8p/itvAYgrQM1vg==
+=/sjm
+-----END PGP SIGNATURE-----
+
+--Sig_/y7fVASij+Hlu4Wh5Qy6k5/h--
