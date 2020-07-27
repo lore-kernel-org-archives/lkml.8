@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8219C43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC00C43446
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D47120838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48E7207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860361;
-	bh=GA44kHr1uHOcIhyuj8ab60+o5lfmvjI8RRbla3WfXHM=;
+	s=default; t=1595860366;
+	bh=4c3tmtRwnCf+yIJZfjnND5APlW/QsC1fiHAIjxvKpGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nSzt0dBr62E2Pjw+Oz+yZL8zSRlsndz8uIivJWIp1kL4bpd270DU+tfZ3KTny3yO4
-	 aHaFKk4DQXiBMZBxhE4B08oyJiDPxyMialgHJ6NrW14GZFOVn5L8oLrbMhygEdvX+o
-	 ofdixm/wasKrTV4S75Uc9pxfafExOj147JN8Qtr4=
+	b=wyV3bXoEnxzPUCQWHhSGRmo0hGYo84/LSOj7O2KDDOKwhKKaTWoWCRbiYZXXJHHu0
+	 r9RxzZV8H8++Br64VkhLp3wMqLXUJnOBsBMCwMTAg/8D8qw7bXWNzt9elZ7A9y7RGe
+	 zX4BESyunJXP40xslbIT5uQuTvuonAFhlSYdCKCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732851AbgG0Ocj (ORCPT
+        id S1731270AbgG0OSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:32:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46584 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:18:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731285AbgG0OSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:50 -0400
+        id S1731251AbgG0OSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 044B820825;
-        Mon, 27 Jul 2020 14:18:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EE0520825;
+        Mon, 27 Jul 2020 14:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859529;
-        bh=GA44kHr1uHOcIhyuj8ab60+o5lfmvjI8RRbla3WfXHM=;
+        s=default; t=1595859513;
+        bh=4c3tmtRwnCf+yIJZfjnND5APlW/QsC1fiHAIjxvKpGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z3MdnDrDF6zjVVVtnkv8N/CNqI1o1JLjAHbQU+1DYxkDQCTwnRH4LybzGmRo8VjCZ
-         1KDvgK2qi2t1Msh5tLGhlBsho71kXGnpPpVKtVg/6gyozYcC/31PolGXVjJwO17pyI
-         X09YaMxS7YR3Y6UVdvAUBH7jo7QLcXqs/5VMLlCI=
+        b=Equ5VsZymxeH/xCOTWToSRviIwMr9i5dfWkOROT/zHGo53uepEORAv+ocQ/E6Fd5X
+         KVpqgqCkHcFQM9ALAYTmJknlskDHRb8tCEGKsIRDXuFFXpeECnji73YeUQVtdtnrKM
+         23BNlwnGAsHwj9is+EHdjthX5VGYZBLi7rWCzx3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        =?UTF-8?q?Viktor=20J=C3=A4gersk=C3=BCpper?= 
-        <viktor_jaegerskuepper@freenet.de>,
-        syzbot+40d5d2e8a4680952f042@syzkaller.appspotmail.com
-Subject: [PATCH 5.4 137/138] ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
-Date:   Mon, 27 Jul 2020 16:05:32 +0200
-Message-Id: <20200727134932.260481169@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Jan Kiszka <jan.kiszka@web.de>,
+        Helmut Grohne <helmut.grohne@intenta.de>
+Subject: [PATCH 5.4 109/138] tty: xilinx_uartps: Really fix id assignment
+Date:   Mon, 27 Jul 2020 16:05:04 +0200
+Message-Id: <20200727134930.920178108@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -62,216 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Helmut Grohne <helmut.grohne@intenta.de>
 
-commit 2bbcaaee1fcbd83272e29f31e2bb7e70d8c49e05 upstream.
+commit 22a82fa7d6c3e16d56a036b1fa697a39b954adf0 upstream.
 
-In ath9k_hif_usb_rx_cb interface number is assumed to be 0.
-usb_ifnum_to_if(urb->dev, 0)
-But it isn't always true.
+The problems started with the revert (18cc7ac8a28e28). The
+cdns_uart_console.index is statically assigned -1. When the port is
+registered, Linux assigns consecutive numbers to it. It turned out that
+when using ttyPS1 as console, the index is not updated as we are reusing
+the same cdns_uart_console instance for multiple ports. When registering
+ttyPS0, it gets updated from -1 to 0, but when registering ttyPS1, it
+already is 0 and not updated.
 
-The case reported by syzbot:
-https://lore.kernel.org/linux-usb/000000000000666c9c05a1c05d12@google.com
-usb 2-1: new high-speed USB device number 2 using dummy_hcd
-usb 2-1: config 1 has an invalid interface number: 2 but max is 0
-usb 2-1: config 1 has no interface number 0
-usb 2-1: New USB device found, idVendor=0cf3, idProduct=9271, bcdDevice=
-1.08
-usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-general protection fault, probably for non-canonical address
-0xdffffc0000000015: 0000 [#1] SMP KASAN
-KASAN: null-ptr-deref in range [0x00000000000000a8-0x00000000000000af]
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
+That led to 2ae11c46d5fdc4. It assigns the index prior to registering
+the uart_driver once. Unfortunately, that ended up breaking the
+situation where the probe order does not match the id order. When using
+the same device tree for both uboot and linux, it is important that the
+serial0 alias points to the console. So some boards reverse those
+aliases. This was reported by Jan Kiszka. The proposed fix was reverting
+the index assignment and going back to the previous iteration.
 
-Call Trace
-__usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-expire_timers kernel/time/timer.c:1449 [inline]
-__run_timers kernel/time/timer.c:1773 [inline]
-__run_timers kernel/time/timer.c:1740 [inline]
-run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-__do_softirq+0x21e/0x950 kernel/softirq.c:292
-invoke_softirq kernel/softirq.c:373 [inline]
-irq_exit+0x178/0x1a0 kernel/softirq.c:413
-exiting_irq arch/x86/include/asm/apic.h:546 [inline]
-smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
-apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+However such a reversed assignement (serial0 -> uart1, serial1 -> uart0)
+was already partially broken by the revert (18cc7ac8a28e28). While the
+ttyPS device works, the kmsg connection is already broken and kernel
+messages go missing. Reverting the id assignment does not fix this.
 
-Reported-and-tested-by: syzbot+40d5d2e8a4680952f042@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200404041838.10426-6-hqjagain@gmail.com
-Cc: Viktor Jägersküpper <viktor_jaegerskuepper@freenet.de>
+>From the xilinx_uartps driver pov (after reverting the refactoring
+commits), there can be only one console. This manifests in static
+variables console_pprt and cdns_uart_console. These variables are not
+properly linked and can go out of sync. The cdns_uart_console.index is
+important for uart_add_one_port. We call that function for each port -
+one of which hopefully is the console. If it isn't, the CON_ENABLED flag
+is not set and console_port is cleared. The next cdns_uart_probe call
+then tries to register the next port using that same cdns_uart_console.
+
+It is important that console_port and cdns_uart_console (and its index
+in particular) stay in sync. The index assignment implemented by
+Shubhrajyoti Datta is correct in principle. It just may have to happen a
+second time if the first cdns_uart_probe call didn't encounter the
+console device. And we shouldn't change the index once the console uart
+is registered.
+
+Reported-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Reported-by: Jan Kiszka <jan.kiszka@web.de>
+Link: https://lore.kernel.org/linux-serial/f4092727-d8f5-5f91-2c9f-76643aace993@siemens.com/
+Fixes: 18cc7ac8a28e28 ("Revert "serial: uartps: Register own uart console and driver structures"")
+Fixes: 2ae11c46d5fdc4 ("tty: xilinx_uartps: Fix missing id assignment to the console")
+Fixes: 76ed2e10579671 ("Revert "tty: xilinx_uartps: Fix missing id assignment to the console"")
+Signed-off-by: Helmut Grohne <helmut.grohne@intenta.de>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200713073227.GA3805@laureti-dev
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath9k/hif_usb.c |   48 +++++++++++++++++++++++--------
- drivers/net/wireless/ath/ath9k/hif_usb.h |    5 +++
- 2 files changed, 42 insertions(+), 11 deletions(-)
+ drivers/tty/serial/xilinx_uartps.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/hif_usb.c
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.c
-@@ -643,9 +643,9 @@ err:
+--- a/drivers/tty/serial/xilinx_uartps.c
++++ b/drivers/tty/serial/xilinx_uartps.c
+@@ -1559,8 +1559,10 @@ static int cdns_uart_probe(struct platfo
+ 	 * If register_console() don't assign value, then console_port pointer
+ 	 * is cleanup.
+ 	 */
+-	if (!console_port)
++	if (!console_port) {
++		cdns_uart_console.index = id;
+ 		console_port = port;
++	}
+ #endif
  
- static void ath9k_hif_usb_rx_cb(struct urb *urb)
- {
--	struct sk_buff *skb = (struct sk_buff *) urb->context;
--	struct hif_device_usb *hif_dev =
--		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
-+	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
-+	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
-+	struct sk_buff *skb = rx_buf->skb;
- 	int ret;
+ 	rc = uart_add_one_port(&cdns_uart_uart_driver, port);
+@@ -1573,8 +1575,10 @@ static int cdns_uart_probe(struct platfo
+ #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
+ 	/* This is not port which is used for console that's why clean it up */
+ 	if (console_port == port &&
+-	    !(cdns_uart_uart_driver.cons->flags & CON_ENABLED))
++	    !(cdns_uart_uart_driver.cons->flags & CON_ENABLED)) {
+ 		console_port = NULL;
++		cdns_uart_console.index = -1;
++	}
+ #endif
  
- 	if (!skb)
-@@ -685,14 +685,15 @@ resubmit:
- 	return;
- free:
- 	kfree_skb(skb);
-+	kfree(rx_buf);
- }
- 
- static void ath9k_hif_usb_reg_in_cb(struct urb *urb)
- {
--	struct sk_buff *skb = (struct sk_buff *) urb->context;
-+	struct rx_buf *rx_buf = (struct rx_buf *)urb->context;
-+	struct hif_device_usb *hif_dev = rx_buf->hif_dev;
-+	struct sk_buff *skb = rx_buf->skb;
- 	struct sk_buff *nskb;
--	struct hif_device_usb *hif_dev =
--		usb_get_intfdata(usb_ifnum_to_if(urb->dev, 0));
- 	int ret;
- 
- 	if (!skb)
-@@ -750,6 +751,7 @@ resubmit:
- 	return;
- free:
- 	kfree_skb(skb);
-+	kfree(rx_buf);
- 	urb->context = NULL;
- }
- 
-@@ -795,7 +797,7 @@ static int ath9k_hif_usb_alloc_tx_urbs(s
- 	init_usb_anchor(&hif_dev->mgmt_submitted);
- 
- 	for (i = 0; i < MAX_TX_URB_NUM; i++) {
--		tx_buf = kzalloc(sizeof(struct tx_buf), GFP_KERNEL);
-+		tx_buf = kzalloc(sizeof(*tx_buf), GFP_KERNEL);
- 		if (!tx_buf)
- 			goto err;
- 
-@@ -832,8 +834,9 @@ static void ath9k_hif_usb_dealloc_rx_urb
- 
- static int ath9k_hif_usb_alloc_rx_urbs(struct hif_device_usb *hif_dev)
- {
--	struct urb *urb = NULL;
-+	struct rx_buf *rx_buf = NULL;
- 	struct sk_buff *skb = NULL;
-+	struct urb *urb = NULL;
- 	int i, ret;
- 
- 	init_usb_anchor(&hif_dev->rx_submitted);
-@@ -841,6 +844,12 @@ static int ath9k_hif_usb_alloc_rx_urbs(s
- 
- 	for (i = 0; i < MAX_RX_URB_NUM; i++) {
- 
-+		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
-+		if (!rx_buf) {
-+			ret = -ENOMEM;
-+			goto err_rxb;
-+		}
-+
- 		/* Allocate URB */
- 		urb = usb_alloc_urb(0, GFP_KERNEL);
- 		if (urb == NULL) {
-@@ -855,11 +864,14 @@ static int ath9k_hif_usb_alloc_rx_urbs(s
- 			goto err_skb;
- 		}
- 
-+		rx_buf->hif_dev = hif_dev;
-+		rx_buf->skb = skb;
-+
- 		usb_fill_bulk_urb(urb, hif_dev->udev,
- 				  usb_rcvbulkpipe(hif_dev->udev,
- 						  USB_WLAN_RX_PIPE),
- 				  skb->data, MAX_RX_BUF_SIZE,
--				  ath9k_hif_usb_rx_cb, skb);
-+				  ath9k_hif_usb_rx_cb, rx_buf);
- 
- 		/* Anchor URB */
- 		usb_anchor_urb(urb, &hif_dev->rx_submitted);
-@@ -885,6 +897,8 @@ err_submit:
- err_skb:
- 	usb_free_urb(urb);
- err_urb:
-+	kfree(rx_buf);
-+err_rxb:
- 	ath9k_hif_usb_dealloc_rx_urbs(hif_dev);
- 	return ret;
- }
-@@ -896,14 +910,21 @@ static void ath9k_hif_usb_dealloc_reg_in
- 
- static int ath9k_hif_usb_alloc_reg_in_urbs(struct hif_device_usb *hif_dev)
- {
--	struct urb *urb = NULL;
-+	struct rx_buf *rx_buf = NULL;
- 	struct sk_buff *skb = NULL;
-+	struct urb *urb = NULL;
- 	int i, ret;
- 
- 	init_usb_anchor(&hif_dev->reg_in_submitted);
- 
- 	for (i = 0; i < MAX_REG_IN_URB_NUM; i++) {
- 
-+		rx_buf = kzalloc(sizeof(*rx_buf), GFP_KERNEL);
-+		if (!rx_buf) {
-+			ret = -ENOMEM;
-+			goto err_rxb;
-+		}
-+
- 		/* Allocate URB */
- 		urb = usb_alloc_urb(0, GFP_KERNEL);
- 		if (urb == NULL) {
-@@ -918,11 +939,14 @@ static int ath9k_hif_usb_alloc_reg_in_ur
- 			goto err_skb;
- 		}
- 
-+		rx_buf->hif_dev = hif_dev;
-+		rx_buf->skb = skb;
-+
- 		usb_fill_int_urb(urb, hif_dev->udev,
- 				  usb_rcvintpipe(hif_dev->udev,
- 						  USB_REG_IN_PIPE),
- 				  skb->data, MAX_REG_IN_BUF_SIZE,
--				  ath9k_hif_usb_reg_in_cb, skb, 1);
-+				  ath9k_hif_usb_reg_in_cb, rx_buf, 1);
- 
- 		/* Anchor URB */
- 		usb_anchor_urb(urb, &hif_dev->reg_in_submitted);
-@@ -948,6 +972,8 @@ err_submit:
- err_skb:
- 	usb_free_urb(urb);
- err_urb:
-+	kfree(rx_buf);
-+err_rxb:
- 	ath9k_hif_usb_dealloc_reg_in_urbs(hif_dev);
- 	return ret;
- }
---- a/drivers/net/wireless/ath/ath9k/hif_usb.h
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
-@@ -86,6 +86,11 @@ struct tx_buf {
- 	struct list_head list;
- };
- 
-+struct rx_buf {
-+	struct sk_buff *skb;
-+	struct hif_device_usb *hif_dev;
-+};
-+
- #define HIF_USB_TX_STOP  BIT(0)
- #define HIF_USB_TX_FLUSH BIT(1)
- 
+ 	cdns_uart_data->cts_override = of_property_read_bool(pdev->dev.of_node,
 
 
