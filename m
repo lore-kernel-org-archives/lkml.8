@@ -2,81 +2,72 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19415C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAE6C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA5D12070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE8482075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IO7Asnw1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p4j78vfX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgG0NVJ (ORCPT
+        id S1728692AbgG0NWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:21:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55406 "EHLO
+        Mon, 27 Jul 2020 09:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgG0NVH (ORCPT
+        with ESMTP id S1726139AbgG0NWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:21:07 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE868C061794;
-        Mon, 27 Jul 2020 06:21:05 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z188so1212247pfc.6;
-        Mon, 27 Jul 2020 06:21:05 -0700 (PDT)
+        Mon, 27 Jul 2020 09:22:17 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A1EC061794;
+        Mon, 27 Jul 2020 06:22:15 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t6so4257065ljk.9;
+        Mon, 27 Jul 2020 06:22:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lCrFxpLw5jwB0ZWba+VhbgCI7p4GpK2jg/E4s1AB/yM=;
-        b=IO7Asnw1x5jaHrPrBYcTWUlGNNMyYH8tet7FkILH4HmzUn9u+meMUVh7296Xg4Rcrw
-         26mjFiFrtobGZP6/JQgzxcGK4uQo2Ig3wmk7+u7qj0oChgvGHJ5G9KhIY810qGt9ivDU
-         ecmte3moVCfdGcTryICQuGadpX09WZv7fo/TBHNX0iVyai2I1ajQfLVDjDziQuCVg66d
-         Op9jGMYmfwrIRYRcsmdDWYl1LEML4CLEJmejHa22x3gGRBecWBIPddPw5Uv7QAQUHlzf
-         sAX2Uzq+xrcpElEoZ7YiGfd1t7G8ipJ6UnABh/A6XbzkyEMxuz72nuyz0qykT0qrGyq2
-         K9VQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2G6P9Mf8J/hrSEoJOhnZnPBi+0zf3SP1iWdG7utZNS8=;
+        b=p4j78vfX/9mLAkK2YSP5Yi9mQ1SehLwx88UvLGkiXfO2Qei+pB48UaUc6JscCJK1Lt
+         2QAKnEH7PEnP5VeLoBgWoZTowuVxi2Ccsy4Z9ivgZ4yqzr18DieX2fJX5qBhXtUl0/FA
+         DvOWvDo2JiK7ILVAVSGd4wstB5mwxRAIkFJKjhzvqP0PdaJVSsoq6K9Ejp7H+nXBcHy/
+         UDGvw3aToxj6uZGAHG9jobc6tMWucM8GtxFygOJXqjZAg223CI6uHhO+iENG7TMWxZZ5
+         gKT8PSngLZ64u2gU/NaE7oW1wElf5q+IWH43GVvg+E8DJvq5p3bvhLqdTI9spTFbHEwX
+         axsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lCrFxpLw5jwB0ZWba+VhbgCI7p4GpK2jg/E4s1AB/yM=;
-        b=Xd1ssR79aJre2Ww0osYOzXlelshgca/9fMVXEWWC3fwiOCQcFWnVdSho8zgX4SNdMo
-         kiGcK37dTNPOr70byjQB/UYcjKOk9uPvh3edL4k5tNo9sTFFZBbMDkiNMQn8cgP7yDWZ
-         +ZNekGaTwksWb+Nh/IXfyitVZ5K1E/JPlHIxPzwfqvXhPbVcA9JJ9X8t+bras7stp59H
-         hPDrxLCLixYRAx1Iv6ps/n7Q7BGvfTExqmEvNe7V4Ujcs+hwhRixGv5mcijjhHKf57x7
-         /j9/x5qOa/VeSKitKooncazySmr5wGtMMowtGsb8trJjJMMRZ9Fn3AanG2rCxXhlS3OR
-         QpXQ==
-X-Gm-Message-State: AOAM5302EW+m3eEXkU/4/YB+RjFxiqcH6Au6Bac1kqkzI0K47DDACO+m
-        WDnRueyKhnL9QelWKXOAH8k=
-X-Google-Smtp-Source: ABdhPJxRloIPWLVUZ2/SuwNrfH74RWEzbhOzbwrdKU/RikSvAOSrIk2YgZzbcFwz0HqrECq6wOxFhQ==
-X-Received: by 2002:a63:5a20:: with SMTP id o32mr20002948pgb.15.1595856064511;
-        Mon, 27 Jul 2020 06:21:04 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id my16sm12206087pjb.43.2020.07.27.06.21.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2G6P9Mf8J/hrSEoJOhnZnPBi+0zf3SP1iWdG7utZNS8=;
+        b=SMWqXFGWstsBZwC5j6TKXwf8Xf59gos4ofAdKecZrqgLbN5WQEydnNLfGVosH/nJB9
+         mg8hGrefz3VOh7vWONd474PRxvI+iECHPS6J/LdDLmy8YSLjt0WAqBW+ozriYKh1mngd
+         gaBx/DTN4D9xMu42ECPCVcxhsv+n4Z6zvhldzOVA2v34kA3ecOxmQRbgrWxHDprR3vjI
+         gYNvjji3Ni80aqv9Dn90dcCdDBTTbbyf27LT3CqChcDDgLNKNfPUHLSznL33YXdn5QAz
+         JnYXBQOqF7lKbK+wlB7LVafvgDZrDdFmvNtAnUcu/gvLfzEXhBr1vY+TjBYEhvwnv4rD
+         AmsA==
+X-Gm-Message-State: AOAM532+nw492TPTSuiCY1cOyyHA32xJhom+99qCA+LCV02ETVseMEHe
+        hPh3FnfI/dTyWx0bme8nI14=
+X-Google-Smtp-Source: ABdhPJwrUr4FBzqkl+/Pvw7UoR0kBZ0rRVSxrqal7gJ0ZThva1s6ANeoZTwRhR7LY1z638OGO5g9UQ==
+X-Received: by 2002:a2e:9c59:: with SMTP id t25mr9793527ljj.402.1595856134330;
+        Mon, 27 Jul 2020 06:22:14 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-228-147.NA.cust.bahnhof.se. [98.128.228.147])
+        by smtp.gmail.com with ESMTPSA id s9sm501813ljh.46.2020.07.27.06.22.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 06:21:03 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v2] spi: spi-topcliff-pch: drop call to wakeup-disable
-Date:   Mon, 27 Jul 2020 18:47:43 +0530
-Message-Id: <20200727131742.82289-1-vaibhavgupta40@gmail.com>
+        Mon, 27 Jul 2020 06:22:13 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmlambea@gmail.com, alexhenrie24@gmail.com,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH 0/2] HID: Constify static struct hid_device_id
+Date:   Mon, 27 Jul 2020 15:21:58 +0200
+Message-Id: <20200727132200.32510-1-rikard.falkeborn@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <CAHp75Vdo22ofbCktupFYbfYy6PQ609fsk5B6u2b3FpfKxs8OQg@mail.gmail.com>
-References: <CAHp75Vdo22ofbCktupFYbfYy6PQ609fsk5B6u2b3FpfKxs8OQg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,34 +75,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before generic upgrade, both .suspend() and .resume() were invoking
-pci_enable_wake(pci_dev, PCI_D3hot, 0). Hence, disabling wakeup in both
-states. (Normal trend is .suspend() enables and .resume() disables the
-wakeup.)
+Constify hid_device_id in two drivers (these were the only drivers that
+didn't already have it as const).
 
-This was ambiguous and may be buggy. Instead of replicating the legacy
-behavior, drop the wakeup-disable call.
+Rikard Falkeborn (2):
+  HID: cougar: Constify cougar_id_table
+  HID: macally: Constify macally_id_table
 
-Fix: f185bcc77980("spi: spi-topcliff-pch: use generic power management")
-Reported by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/spi/spi-topcliff-pch.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/hid/hid-cougar.c  | 2 +-
+ drivers/hid/hid-macally.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-topcliff-pch.c b/drivers/spi/spi-topcliff-pch.c
-index 281a90f1b5d8..c73a03ddf5f3 100644
---- a/drivers/spi/spi-topcliff-pch.c
-+++ b/drivers/spi/spi-topcliff-pch.c
-@@ -1648,8 +1648,6 @@ static int __maybe_unused pch_spi_resume(struct device *dev)
- 
- 	dev_dbg(dev, "%s ENTRY\n", __func__);
- 
--	device_wakeup_disable(dev);
--
- 	/* set suspend status to false */
- 	pd_dev_save->board_dat->suspend_sts = false;
- 
 -- 
 2.27.0
 
