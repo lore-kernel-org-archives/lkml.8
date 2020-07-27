@@ -2,203 +2,114 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C16AC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE93DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4F4320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83262206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:23:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zmU/y3pV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgG0LZX (ORCPT
+        id S1728125AbgG0LXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:25:23 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2534 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726967AbgG0LZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:25:23 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id EC015FC00B6E85392BDD;
-        Mon, 27 Jul 2020 12:25:21 +0100 (IST)
-Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
- 2020 12:25:21 +0100
-Date:   Mon, 27 Jul 2020 12:23:58 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
-        <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [RFC PATCH 6/9] PCI: Add 'rcec' field to pci_dev for associated
- RCiEPs
-Message-ID: <20200727122358.00006c23@Huawei.com>
-In-Reply-To: <20200724172223.145608-7-sean.v.kelley@intel.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
-        <20200724172223.145608-7-sean.v.kelley@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 27 Jul 2020 07:23:47 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39742 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgG0LXr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:23:47 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RBMjtd087912;
+        Mon, 27 Jul 2020 11:23:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=4g8Mg/f4ko6sYKfDKAQgbqJbY3cbZ2DqaE6bhsDlpnI=;
+ b=zmU/y3pV+IRRyZNt1ksr/yXkQURQXKclNX9CmmxhC4KZwyaoF7GKsZLHqZYo9b4wB3ve
+ 94A0OGhfYwo64Oo6Z6YrMRnGmjvAgpwsqRiFtdHXCpbSk7a1zU7885AbQIcXm7JEmSP1
+ uDX7BbqZJsu3mVVbL/Xh0La52t7++xG4FO4Ckq4Zp1AO4R5P7GpFrS/DwtUT/imcxQhM
+ qV0H3DLpfVMDPqbabWeoHHEh8aEg4gqQO+aR3O0I1o2wiLUi6ReJPs/ksQ5XQH31Mj00
+ Jl+aLnH/6QOrVRZ3fJgVsVfwTCpmfhJuAKzAX2IPouILg1d61uz7L7iOp61pQC8gM6zv 3w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 32hu1j0xud-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jul 2020 11:23:26 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RBMdNV001885;
+        Mon, 27 Jul 2020 11:23:26 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 32hu5sf1pj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 11:23:25 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06RBNNGi004797;
+        Mon, 27 Jul 2020 11:23:23 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Jul 2020 04:23:23 -0700
+Date:   Mon, 27 Jul 2020 14:23:16 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] counter: microchip-tcb-capture: check the correct variable
+Message-ID: <20200727112316.GG389488@mwanda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.176]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 10:22:20 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
+This should be testing "regmap" instead of "priv->regmap".  The
+"priv->regmap" variable is always zero so it's not an error pointer.
 
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> 
-> When attempting error recovery for an RCiEP associated with an RCEC device,
-> there needs to be a way to update the Root Error Status, the Uncorrectable
-> Error Status and the Uncorrectable Error Severity of the parent RCEC.
-> So add the 'rcec' field to the pci_dev structure and provide a hook for the
-> Root Port Driver to associate RCiEPs with their respective parent RCEC.
-> 
-> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+Fixes: 106b104137fd ("counter: Add microchip TCB capture counter")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+The commit 106b104137fd ("counter: Add microchip TCB capture counter")
+doesn't use the correct patch prefix.  This is a common mistake for the
+the first commit which adds the driver.  There is no kernel wide
+standard for patch prefixes so it's difficult for people sending fixes
+to know the correct prefix should be.
 
-I haven't tested yet, but I think there is one path in here that breaks
-my case (no OS visible rcec / all done in firmware GHESv2 / APEI)
+ drivers/counter/microchip-tcb-capture.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Jonathan
-
-> ---
->  drivers/pci/pcie/aer.c         |  9 +++++----
->  drivers/pci/pcie/err.c         |  9 +++++++++
->  drivers/pci/pcie/portdrv_pci.c | 15 +++++++++++++++
->  include/linux/pci.h            |  3 +++
->  4 files changed, 32 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 3acf56683915..f1bf06be449e 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1335,17 +1335,18 @@ static int aer_probe(struct pcie_device *dev)
->  static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
->  {
->  	int aer = dev->aer_cap;
-> +	int rc = 0;
->  	u32 reg32;
-> -	int rc;
-> -
->  
->  	/* Disable Root's interrupt in response to error messages */
->  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
->  	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
->  	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
->  
-> -	rc = pci_bus_error_reset(dev);
-> -	pci_info(dev, "Root Port link has been reset\n");
-> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC) {
-> +		rc = pci_bus_error_reset(dev);
-> +		pci_info(dev, "Root Port link has been reset\n");
-> +	}
->  
->  	/* Clear Root Error Status */
->  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 9b3ec94bdf1d..0aae7643132e 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -203,6 +203,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  		pci_walk_dev_affected(dev, report_frozen_detected, &status);
->  		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
->  			status = flr_on_rciep(dev);
-> +			/*
-> +			 * The callback only clears the Root Error Status
-> +			 * of the RCEC (see aer.c).
-> +			 */
-> +			reset_link(dev->rcec);
-
-This looks dangerous for my case where APEI / GHESv2 is used.  In that case
-we don't expose an RCEC at all.   I don't think the reset_link callback
-is safe to a null pointer here.  Fix may be as simple as
-if (dev->rcec)
-	reset_link(dev->rcec);
-
-
->  			if (status != PCI_ERS_RESULT_RECOVERED) {
->  				pci_warn(dev, "function level reset failed\n");
->  				goto failed;
-> @@ -246,7 +251,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
->  		pci_aer_clear_device_status(dev);
->  		pci_aer_clear_nonfatal_status(dev);
-> +	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
-> +		pci_aer_clear_device_status(dev->rcec);
-> +		pci_aer_clear_nonfatal_status(dev->rcec);
-
-These may be safe as in my both now have protections for !pcie_aer_is_native.
-
->  	}
-> +
->  	pci_info(dev, "device recovery successful\n");
->  	return status;
->  
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index d5b109499b10..f9409a0110c2 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -90,6 +90,18 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
->  #define PCIE_PORTDRV_PM_OPS	NULL
->  #endif /* !PM */
->  
-> +static int pcie_hook_rcec(struct pci_dev *pdev, void *data)
-> +{
-> +	struct pci_dev *rcec = (struct pci_dev *)data;
-> +
-> +	pdev->rcec = rcec;
-> +	pci_info(rcec, "RCiEP(under an RCEC) %04x:%02x:%02x.%d\n",
-> +		 pci_domain_nr(pdev->bus), pdev->bus->number,
-> +		 PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
-
-We may want to make this debug info at somepoint if we have a way
-of discovering it from userspace.   The PCI boot up is extremely
-verbose already!
-
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * pcie_portdrv_probe - Probe PCI-Express port devices
->   * @dev: PCI-Express port device being probed
-> @@ -110,6 +122,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
->  		return -ENODEV;
->  
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
-> +		pcie_walk_rcec(dev, pcie_hook_rcec, dev);
-> +
->  	status = pcie_port_device_register(dev);
->  	if (status)
->  		return status;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 34c1c4f45288..e920f29df40b 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -326,6 +326,9 @@ struct pci_dev {
->  #ifdef CONFIG_PCIEAER
->  	u16		aer_cap;	/* AER capability offset */
->  	struct aer_stats *aer_stats;	/* AER stats for this device */
-> +#endif
-> +#ifdef CONFIG_PCIEPORTBUS
-> +	struct pci_dev	*rcec;		/* Associated RCEC device */
->  #endif
->  	u8		pcie_cap;	/* PCIe capability offset */
->  	u8		msi_cap;	/* MSI capability offset */
-
+diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
+index f7b7743ddb94..b7b252c5addf 100644
+--- a/drivers/counter/microchip-tcb-capture.c
++++ b/drivers/counter/microchip-tcb-capture.c
+@@ -320,8 +320,8 @@ static int mchp_tc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	regmap = syscon_node_to_regmap(np->parent);
+-	if (IS_ERR(priv->regmap))
+-		return PTR_ERR(priv->regmap);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
+ 
+ 	/* max. channels number is 2 when in QDEC mode */
+ 	priv->num_channels = of_property_count_u32_elems(np, "reg");
+-- 
+2.27.0
 
