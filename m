@@ -2,122 +2,83 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E703EC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4E892074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534DF2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tqOGBG1t"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="UTb5moqR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgG0UmM (ORCPT
+        id S1726987AbgG0Uns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:42:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40128 "EHLO
+        Mon, 27 Jul 2020 16:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgG0UmL (ORCPT
+        with ESMTP id S1726916AbgG0Unr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:42:11 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D4B3C0619D2;
-        Mon, 27 Jul 2020 13:42:11 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d188so3693190pfd.2;
-        Mon, 27 Jul 2020 13:42:11 -0700 (PDT)
+        Mon, 27 Jul 2020 16:43:47 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3FC1C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:43:46 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f18so5486842wmc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:43:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BDMAV7f5OrIagDzNiQlE5LZKEPsFG9K9rCvaCo4YyPw=;
-        b=tqOGBG1tnOAfV3IomR+MowY/MMOpP4LIe3+lfcpKqhJUNWOemYoYXLPTboF74cneCz
-         Tx01H0SeHJ3QgCJ/xnQPf7UJicbjboAZy3x5Y6t6q/RZb2EzCfzvGtuQ9SylYLxEe7At
-         QOR4a0CXJvEtHweBzO465kPcwxRQ5W/wE/298bYAF9RuZ1faJ1m+HQozhSnkfov7JwId
-         BBtFaXAJ3VyDtMsoogWF+sK/jlec3lt2vIspAhrX9AarbzyUlNFPEihQ5/KBSUNrySRg
-         aFTeat7uLTVCqhtyFMu8LgV3HHepR3/rUEuaJvM1/i50eKmB25+TFqA0EwtYieQ77zm1
-         tfOA==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LwHk6aa0qzWcTC/yZuHgrolyluxfSo5KPunX5fqAGbw=;
+        b=UTb5moqRzvVRGSeOsC/tlyLbR357acEUdpQNQ2CoohhFjd9JActentaHcrF/mWR85k
+         bKxt9YfCyoJI8HKYpGp9j0GJc0giVxFKEZUIozT68pVPTSpkPmVb0pL6MK7jFZgVsF7X
+         P4cqwFmeLdEqvq9BZHICVTzuhCcBOITHdEHCA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=BDMAV7f5OrIagDzNiQlE5LZKEPsFG9K9rCvaCo4YyPw=;
-        b=NlPhj0ezg8JykNSIYuXt4Bq/tqllGg1cw8IllkzUTCwhLFIiF7K22joOAbQ65adzcd
-         11InSRkhBQieL2BxU6NSmg+oudn0dKWMsphbyQrHJoeLSNfxvYK5gTWbos3yZDJ69mHG
-         XUG3ZlCb3AsW902a1U/nNDNPhmQbArHHI4qAKiOzsyheVQOaSEzYCgI2j6zE5nDDb74o
-         qB5iSr7Pim6G9QVeVfZsRl/R8z7m3MOmBWL/H3rdtzCRvvUqHmOgPERWihd5SuYSDQ3Y
-         4vwbX1EWNDZ3v2wegRQuY4MeF762xgDC2kKcr+oyA9X6CY9Vsej3VSVU6CUwNk5WMJmA
-         J2gQ==
-X-Gm-Message-State: AOAM532oZQLpZxQbcIaR34TFP3+vC3aMO9IZ/ZIx5SzMmldWEMl2C7Ik
-        5uf9Eqtz9ssyqMHv0MX7grv4hH4x
-X-Google-Smtp-Source: ABdhPJwtPzCRGi7dmahuBOWe+Rs/jSEDLAAQUgLUUJkwQInq0ypawxcCc11YGuVQeuidfyOYGHYFyw==
-X-Received: by 2002:a62:8096:: with SMTP id j144mr22287575pfd.78.1595882531013;
-        Mon, 27 Jul 2020 13:42:11 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j142sm6119167pfd.100.2020.07.27.13.42.09
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LwHk6aa0qzWcTC/yZuHgrolyluxfSo5KPunX5fqAGbw=;
+        b=Ck5oW/mPqG5m9V6ebUCj9BxAdL/4oFqnt2tpsj9R8sQEBQqktIflk5PgM4krG81C11
+         VByJVruHx5l+h+niIbbCQhGf2iDrUpMavbkqEp2rzz+S9KubqIub9AyS4spoS3E3VQVl
+         jhlHIVDJyfkMUpoCaST2B2Cb5ZcFn884mANRY+fOhmRrO9aMXg+G5IJG1EejojJvvJJP
+         0UchMt8Czfr6F+RtIBN4zFuUqVgCRwoodcl/cuLd37Gmabb39U/TfRd/+tkirvcFoirv
+         TotH996DM2yCGGIYfhCYWmWgW54iCB8+N9b/kF7ZrtRbfPwKABrf/ljqGJpuyK+sPas+
+         LfCA==
+X-Gm-Message-State: AOAM530t4FIeJDHcDRHTr8OLt6+JFXqXd1MWSS5ucag1TR3XfrmB0fpH
+        6WtQQeNrAD62a+5rdLjsCnZfXA==
+X-Google-Smtp-Source: ABdhPJyguFJOfr2iQoqeStNyg7OgwW3ooQlFP/fDjBmTDvsj7sNAi5F2ohgSA2ilzGwsvbfIcx7x9A==
+X-Received: by 2002:a7b:c76e:: with SMTP id x14mr863850wmk.176.1595882625429;
+        Mon, 27 Jul 2020 13:43:45 -0700 (PDT)
+Received: from [10.136.8.246] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id v11sm12099019wrr.10.2020.07.27.13.43.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 13:42:10 -0700 (PDT)
-Subject: Re: [PATCH][next] watchdog: sc1200wdt: Use fallthrough pseudo-keyword
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Zwane Mwaikambo <zwanem@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200727192705.GA31097@embeddedor>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <3271fd5f-9625-4ea5-47ec-a034531b5dda@roeck-us.net>
-Date:   Mon, 27 Jul 2020 13:42:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Mon, 27 Jul 2020 13:43:44 -0700 (PDT)
+Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
+ <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
+ <20200722104128.GK1030@ninjato>
+ <5048cf44-e2c2-ee31-a9fb-b823f16c2c7d@broadcom.com>
+ <20200725101815.GA1519@ninjato>
+ <4cf12c92-889d-ffbf-f8de-c1e08cfb8ce9@broadcom.com>
+ <20200727181346.GA1034@ninjato> <20200727202657.GA18997@ninjato>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <f56b0f2c-f723-a4b6-8c03-4b397aaa375c@broadcom.com>
+Date:   Mon, 27 Jul 2020 13:43:40 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200727192705.GA31097@embeddedor>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200727202657.GA18997@ninjato>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -125,32 +86,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/20 12:27 PM, Gustavo A. R. Silva wrote:
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1].
-> 
-> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-> ---
->  drivers/watchdog/sc1200wdt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On 7/27/2020 1:26 PM, Wolfram Sang wrote:
+> On Mon, Jul 27, 2020 at 08:13:46PM +0200, Wolfram Sang wrote:
+>>
+>>> Can you confirm that even if we have irq pending at the i2c IP core
+>>> level, as long as we execute Step 2. below (to disable/mask all slave
+>>> interrupts), after 'enable_irq' is called, we still will not receive any
+>>> further i2c slave interrupt?
+>>
+>> This is HW dependant. From my tests with Renesas HW, this is not the
+>> case. But the actual error case was impossible to trigger for me, so
+>> far. I might try again later. But even in the worst case, I would only
+>> get a "spurious interrupt" and not an NULL-ptr OOPS.
 > 
-> diff --git a/drivers/watchdog/sc1200wdt.c b/drivers/watchdog/sc1200wdt.c
-> index 9673eb12dacd..f22ebe89fe13 100644
-> --- a/drivers/watchdog/sc1200wdt.c
-> +++ b/drivers/watchdog/sc1200wdt.c
-> @@ -234,7 +234,7 @@ static long sc1200wdt_ioctl(struct file *file, unsigned int cmd,
->  			return -EINVAL;
->  		timeout = new_timeout;
->  		sc1200wdt_write_data(WDTO, timeout);
-> -		/* fall through - and return the new timeout */
-> +		fallthrough;	/* and return the new timeout */
->  
->  	case WDIOC_GETTIMEOUT:
->  		return put_user(timeout * 60, p);
+> Let me explain how I verified this:
+> 
+> 0) add a debug print whenever the slave irq part is called
+> 
+> 1) Put a 2 second delay after disable_irq() and before clearing
+> interrupt enable register
+> 
+> 2) unbind the slave driver in the background, triggering the 2s delay
+> 
+> 3) during the delay, try to read from the to-be-unbound slave in the
+>    foreground
+> 
+> 4) ensure there is no prinout from the slave irq
+> 
+> Worked fine for me with the Renesas R-Car I2C IP interface. As mentioned
+> before, I couldn't trigger a bad case with my setup. So, I hope this new
+> fix will work for Rayagonda's test case, too!
 > 
 
+Sure. I suggest Dhananjay gives the sequence you proposed here a try
+(with delay added during the testing to widen the window to cover corner
+cases). If it works, we can just go with your proposed sequence here.
+
+Thanks!
+
+Ray
