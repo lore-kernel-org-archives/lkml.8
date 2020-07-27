@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAEFC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E11C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5EE20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1E520FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859733;
-	bh=gyQdnrPqdFImMtpb8jo3c1WTMauHr62tKoWb/8+nMWM=;
+	s=default; t=1595859722;
+	bh=ahte494R7mAucQiPHBCE15donQWdWRi9rtiAC5TFAFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lWvtXXMzdKzDK/z2KPWT9FWEo/eHEuavjz2p8uwdpOWwbX8YysjZjj9mJb22MGi0W
-	 cVvIUWn9+UsTd3VJLl0eAKvAs8X7hpa86j+VgYv0EC67UN4Px8XN3U0mIMJPSS9iBc
-	 K1hkDE2ksULx16nRzRLHyCEvje1l4dN/Pz2pPHpk=
+	b=UYFjUfgxRLev0+7YW1lmLmk1ZL7LoH463EoyPUFuT5W2dMgC4gsyFfGcUUsTI4jEn
+	 rj394VnASQmiA6eVyt6+oAJidKGAikSLg2SMaabApENiS5BuA2tuW1QHbSjK/IocII
+	 nKuvwA/pI8g8frMXh2FfgeeZndN+jnBimPlO0r6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731848AbgG0OWL (ORCPT
+        id S1731823AbgG0OWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:22:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:22:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731296AbgG0OWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:22:08 -0400
+        id S1731273AbgG0OV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:21:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 029182173E;
-        Mon, 27 Jul 2020 14:22:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 318852070B;
+        Mon, 27 Jul 2020 14:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859727;
-        bh=gyQdnrPqdFImMtpb8jo3c1WTMauHr62tKoWb/8+nMWM=;
+        s=default; t=1595859716;
+        bh=ahte494R7mAucQiPHBCE15donQWdWRi9rtiAC5TFAFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cjKy1Way9fgeXeKnJRuyWef+5e3i04mg4T4fVe5dcDuAgAKYgp8VhdHSXGjklk2pL
-         dTbXs1/Ms7MxL71sPLZHYLrhlCNCHsr/26YcGjrnY4Q4ROGkXKbij1Lf8byxX+Wo5I
-         NKwqGi0GLCHC7LKYUXJtoMI04ViUGz4sQ5Itc7wI=
+        b=sXqSbf5AGvJUiqO2lxLFRyJlbst/eDg8hZ3oo6LGuDW6jiyjnhMCF2nilhRKLR6zq
+         mtZIJm9aG5zb3a3hfmdhBg/x2Yuc1CcrkIBw23KVl+lLBWLzWaHDrm7kBZRG7XaYRN
+         pCECF4XEAAbMa67tRxY9FcHpYu+FjBrk4JY93oi8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
-        Huazhong tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 080/179] net: hns3: fix return value error when query MAC link status fail
-Date:   Mon, 27 Jul 2020 16:04:15 +0200
-Message-Id: <20200727134936.580410663@linuxfoundation.org>
+Subject: [PATCH 5.7 077/179] RDMA/mlx5: Prevent prefetch from racing with implicit destruction
+Date:   Mon, 27 Jul 2020 16:04:12 +0200
+Message-Id: <20200727134936.434847478@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,152 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Jason Gunthorpe <jgg@nvidia.com>
 
-[ Upstream commit fac24df7b9a6d9363abdff0e351ade041dd16daa ]
+[ Upstream commit a862192e9227ad46e0447fd0a03869ba1b30d16f ]
 
-Currently, PF queries the MAC link status per second by calling
-function hclge_get_mac_link_status(). It return the error code
-when failed to send cmdq command to firmware. It's incorrect,
-because this return value is used as the MAC link status, which
-0 means link down, and none-zero means link up. So fixes it.
+Prefetch work in mlx5_ib_prefetch_mr_work can be queued and able to run
+concurrently with destruction of the implicit MR. The num_deferred_work
+was intended to serialize this, but there is a race:
 
-Fixes: 46a3df9f9718 ("net: hns3: Add HNS3 Acceleration Engine & Compatibility Layer Support")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Huazhong tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+       CPU0                                          CPU1
+
+    mlx5_ib_free_implicit_mr()
+      xa_erase(odp_mkeys)
+      synchronize_srcu()
+      __xa_erase(implicit_children)
+                                      mlx5_ib_prefetch_mr_work()
+                                        pagefault_mr()
+                                         pagefault_implicit_mr()
+                                          implicit_get_child_mr()
+                                           xa_cmpxchg()
+                                        atomic_dec_and_test(num_deferred_mr)
+      wait_event(imr->q_deferred_work)
+      ib_umem_odp_release(odp_imr)
+        kfree(odp_imr)
+
+At this point in mlx5_ib_free_implicit_mr() the implicit_children list is
+supposed to be empty forever so that destroy_unused_implicit_child_mr()
+and related are not and will not be running.
+
+Since it is not empty the destroy_unused_implicit_child_mr() flow ends up
+touching deallocated memory as mlx5_ib_free_implicit_mr() already tore down the
+imr parent.
+
+The solution is to flush out the prefetch wq by driving num_deferred_work
+to zero after creation of new prefetch work is blocked.
+
+Fixes: 5256edcb98a1 ("RDMA/mlx5: Rework implicit ODP destroy")
+Link: https://lore.kernel.org/r/20200719065435.130722-1-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../hisilicon/hns3/hns3pf/hclge_main.c        | 49 +++++++++----------
- .../hisilicon/hns3/hns3pf/hclge_main.h        |  3 ++
- 2 files changed, 25 insertions(+), 27 deletions(-)
+ drivers/infiniband/hw/mlx5/odp.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 4de268a879582..b66b93f320b42 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2680,11 +2680,10 @@ void hclge_task_schedule(struct hclge_dev *hdev, unsigned long delay_time)
- 				    delay_time);
- }
+diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
+index 3de7606d4a1a7..bdeb6500a9191 100644
+--- a/drivers/infiniband/hw/mlx5/odp.c
++++ b/drivers/infiniband/hw/mlx5/odp.c
+@@ -601,6 +601,23 @@ void mlx5_ib_free_implicit_mr(struct mlx5_ib_mr *imr)
+ 	 */
+ 	synchronize_srcu(&dev->odp_srcu);
  
--static int hclge_get_mac_link_status(struct hclge_dev *hdev)
-+static int hclge_get_mac_link_status(struct hclge_dev *hdev, int *link_status)
- {
- 	struct hclge_link_status_cmd *req;
- 	struct hclge_desc desc;
--	int link_status;
- 	int ret;
- 
- 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_QUERY_LINK_STATUS, true);
-@@ -2696,33 +2695,25 @@ static int hclge_get_mac_link_status(struct hclge_dev *hdev)
- 	}
- 
- 	req = (struct hclge_link_status_cmd *)desc.data;
--	link_status = req->status & HCLGE_LINK_STATUS_UP_M;
-+	*link_status = (req->status & HCLGE_LINK_STATUS_UP_M) > 0 ?
-+		HCLGE_LINK_STATUS_UP : HCLGE_LINK_STATUS_DOWN;
- 
--	return !!link_status;
-+	return 0;
- }
- 
--static int hclge_get_mac_phy_link(struct hclge_dev *hdev)
-+static int hclge_get_mac_phy_link(struct hclge_dev *hdev, int *link_status)
- {
--	unsigned int mac_state;
--	int link_stat;
-+	struct phy_device *phydev = hdev->hw.mac.phydev;
++	/*
++	 * All work on the prefetch list must be completed, xa_erase() prevented
++	 * new work from being created.
++	 */
++	wait_event(imr->q_deferred_work, !atomic_read(&imr->num_deferred_work));
 +
-+	*link_status = HCLGE_LINK_STATUS_DOWN;
- 
- 	if (test_bit(HCLGE_STATE_DOWN, &hdev->state))
- 		return 0;
- 
--	mac_state = hclge_get_mac_link_status(hdev);
--
--	if (hdev->hw.mac.phydev) {
--		if (hdev->hw.mac.phydev->state == PHY_RUNNING)
--			link_stat = mac_state &
--				hdev->hw.mac.phydev->link;
--		else
--			link_stat = 0;
--
--	} else {
--		link_stat = mac_state;
--	}
-+	if (phydev && (phydev->state != PHY_RUNNING || !phydev->link))
-+		return 0;
- 
--	return !!link_stat;
-+	return hclge_get_mac_link_status(hdev, link_status);
- }
- 
- static void hclge_update_link_status(struct hclge_dev *hdev)
-@@ -2732,6 +2723,7 @@ static void hclge_update_link_status(struct hclge_dev *hdev)
- 	struct hnae3_handle *rhandle;
- 	struct hnae3_handle *handle;
- 	int state;
-+	int ret;
- 	int i;
- 
- 	if (!client)
-@@ -2740,7 +2732,12 @@ static void hclge_update_link_status(struct hclge_dev *hdev)
- 	if (test_and_set_bit(HCLGE_STATE_LINK_UPDATING, &hdev->state))
- 		return;
- 
--	state = hclge_get_mac_phy_link(hdev);
-+	ret = hclge_get_mac_phy_link(hdev, &state);
-+	if (ret) {
-+		clear_bit(HCLGE_STATE_LINK_UPDATING, &hdev->state);
-+		return;
-+	}
++	/*
++	 * At this point it is forbidden for any other thread to enter
++	 * pagefault_mr() on this imr. It is already forbidden to call
++	 * pagefault_mr() on an implicit child. Due to this additions to
++	 * implicit_children are prevented.
++	 */
 +
- 	if (state != hdev->hw.mac.link) {
- 		for (i = 0; i < hdev->num_vmdq_vport + 1; i++) {
- 			handle = &hdev->vport[i].nic;
-@@ -6435,14 +6432,15 @@ static int hclge_mac_link_status_wait(struct hclge_dev *hdev, int link_ret)
- {
- #define HCLGE_MAC_LINK_STATUS_NUM  100
++	/*
++	 * Block destroy_unused_implicit_child_mr() from incrementing
++	 * num_deferred_work.
++	 */
+ 	xa_lock(&imr->implicit_children);
+ 	xa_for_each (&imr->implicit_children, idx, mtt) {
+ 		__xa_erase(&imr->implicit_children, idx);
+@@ -609,9 +626,8 @@ void mlx5_ib_free_implicit_mr(struct mlx5_ib_mr *imr)
+ 	xa_unlock(&imr->implicit_children);
  
-+	int link_status;
- 	int i = 0;
- 	int ret;
+ 	/*
+-	 * num_deferred_work can only be incremented inside the odp_srcu, or
+-	 * under xa_lock while the child is in the xarray. Thus at this point
+-	 * it is only decreasing, and all work holding it is now on the wq.
++	 * Wait for any concurrent destroy_unused_implicit_child_mr() to
++	 * complete.
+ 	 */
+ 	wait_event(imr->q_deferred_work, !atomic_read(&imr->num_deferred_work));
  
- 	do {
--		ret = hclge_get_mac_link_status(hdev);
--		if (ret < 0)
-+		ret = hclge_get_mac_link_status(hdev, &link_status);
-+		if (ret)
- 			return ret;
--		else if (ret == link_ret)
-+		if (link_status == link_ret)
- 			return 0;
- 
- 		msleep(HCLGE_LINK_STATUS_MS);
-@@ -6453,9 +6451,6 @@ static int hclge_mac_link_status_wait(struct hclge_dev *hdev, int link_ret)
- static int hclge_mac_phy_link_status_wait(struct hclge_dev *hdev, bool en,
- 					  bool is_phy)
- {
--#define HCLGE_LINK_STATUS_DOWN 0
--#define HCLGE_LINK_STATUS_UP   1
--
- 	int link_ret;
- 
- 	link_ret = en ? HCLGE_LINK_STATUS_UP : HCLGE_LINK_STATUS_DOWN;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 71df23d5f1b4d..8784168f8f6f7 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -316,6 +316,9 @@ enum hclge_link_fail_code {
- 	HCLGE_LF_XSFP_ABSENT,
- };
- 
-+#define HCLGE_LINK_STATUS_DOWN 0
-+#define HCLGE_LINK_STATUS_UP   1
-+
- #define HCLGE_PG_NUM		4
- #define HCLGE_SCH_MODE_SP	0
- #define HCLGE_SCH_MODE_DWRR	1
 -- 
 2.25.1
 
