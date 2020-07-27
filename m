@@ -2,146 +2,164 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700E6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDD8520719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B69206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:42:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Bc+X9WBp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgG0Ilt (ORCPT
+        id S1726495AbgG0ImW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:41:49 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:44333 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgG0Ilt (ORCPT
+        Mon, 27 Jul 2020 04:42:22 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:48503 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgG0ImV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:41:49 -0400
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MgNlH-1kR3ae0Egx-00htln; Mon, 27 Jul 2020 10:41:47 +0200
-Received: by mail-qv1-f49.google.com with SMTP id di5so7035416qvb.11;
-        Mon, 27 Jul 2020 01:41:46 -0700 (PDT)
-X-Gm-Message-State: AOAM530yS4+RaonJrbla95HZiwRrIyxT4V4282Enlt2KgZHCsM1W7ILs
-        AHOulQCiVbpZKpWoRzGM6CRS3PNXPI4rW+ni3/0=
-X-Google-Smtp-Source: ABdhPJyFy7iTz1AbZ0fR7sKfDU51z6IeCONSD5JbC+rvcHhVLzEoSaPB8khjv+HojCYyEyIzph23AGS99NUwimzjZoE=
-X-Received: by 2002:a0c:cc01:: with SMTP id r1mr709301qvk.4.1595839305851;
- Mon, 27 Jul 2020 01:41:45 -0700 (PDT)
+        Mon, 27 Jul 2020 04:42:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595839340; x=1627375340;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WYr258yzTXpeZq4ZS7iWdQCOwZdWx5s0U0DJNipkAO0=;
+  b=Bc+X9WBpeHmo+CrCXdXuZym1azvlpIUAbqr7ggO5wZdo0J8EXcZIZiwH
+   dsiUaIamy6a2CF0VgM0RfctgXtxnRnkdhJIxX89YaQRkdCTmAfU+yjROF
+   Hk2GEs9cjpf9H4bpk2BMrYn0r7M1mWTmPUcS+KXAAEnkDhcEaFbQLrhec
+   DNkxuscPDPnvBjMw5zjHaxf73sRfj6iFNA36f8bZmd4oPXirfoZ2datjs
+   yxSs34/nT/4zd/telN8V8MBIViDJd4j2/RQg9fthKADs+5eQ9KYQgkx5E
+   jJBgDw1AwuROnvJzg16Ti/SU84cNYAxJfdsfmq//QgkCX1bPEhm1cA4UU
+   g==;
+IronPort-SDR: 7h+9mPFX5+fDfqKRYGq7zEXieHZTt7NsmJTke6/7L715Muuz3SfkdXhHVnM66DkEqccEEj+ukp
+ NDKib/nWZE7FFABEM/h32SH09RBkARXxwLVFhHz9VUek5B99VQUJTwzEDPTUcgC63PwQ0/gilH
+ nGJWJ62R47lNOW5hWQo/WXLZJeRSYWfXcAqTr0xtpeNO7JlNJMbxnQ2oJFjaw0Gx3x3yxBTjD7
+ wYr9FHE612T+jn6UOrH4frPAqAaJ69C/HugGSAfq3cwXjvIA1IVNduSMzLp54NYdOmVvlqB4zc
+ sIQ=
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="85470205"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jul 2020 01:42:19 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 27 Jul 2020 01:42:18 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Mon, 27 Jul 2020 01:42:14 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v4 00/10] Adding support for Microchip Sparx5 SoC
+Date:   Mon, 27 Jul 2020 10:42:01 +0200
+Message-ID: <20200727084211.6632-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200726031154.1012044-1-shorne@gmail.com> <CAHp75VciC+gqkCZ9voNKHU3hrtiOVzeWBu9_YEagpCGdTME2yg@mail.gmail.com>
- <20200726125325.GC80756@lianli.shorne-pla.net> <CAK8P3a0-wPsVi-fXPW4Dghn30cumrzvLujp7usio50EHmCHM=g@mail.gmail.com>
- <a55f21a7-aff9-09a9-2fcd-c9ef76728116@huawei.com>
-In-Reply-To: <a55f21a7-aff9-09a9-2fcd-c9ef76728116@huawei.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 10:41:30 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a37s8ct5moydwwVO+C5TLfW+GU6VS-+zuAQfZzs2czXaw@mail.gmail.com>
-Message-ID: <CAK8P3a37s8ct5moydwwVO+C5TLfW+GU6VS-+zuAQfZzs2czXaw@mail.gmail.com>
-Subject: Re: [PATCH] io: Fix return type of _inb and _inl
-To:     John Garry <john.garry@huawei.com>
-Cc:     Stafford Horne <shorne@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:gzg4p9Vgjp+46iDBHEFnConwigWrr+5uZFAlW//h7+Z9pmupd4h
- LQy9RHqT1BM3PygvxEJAfygQ9Iq56S/lXffJxD8EbY4pBHLohnIqxAVATfI+AKZm81lP5fr
- w7lm32PtZSq5LYtiGPSPVt0tcS7avhyjG/jDrrY0FdO7kzksply7HS2JlNXeDep7gX63puk
- OGdEEa2tLUUDnp3Sbpn0A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yD8d1g1NW7g=:SehQg26NrsPZDVWSpyInSx
- Pw6nBb9dAfbt0G0+MJt7ZC18+XwDjHQUkz6zYakN73u72EVaRmJqJ/K/D1VN1+ETP+Wlg4PVU
- GGA2LqoxTNK3gox/nnkj0qzxRJK9fvhIrN4lnDDtV8m/T6DB5/myRIZKt2Bj7IT7Bj/IsK2Ks
- oTma2KROK5iopV4zQKvj7sOeFmIV4loR/3YgZqRVIPqJzup82+h0tKlioU7AfsrrhnVjH9N0H
- j+o94VMsn8GL5PKKFmCI/Uas9YRyujH159wxdEjj1L4Mp8MUUMRA3ch46X9Og0JZF/Ov3JSAT
- MayaHwXCGz6BUbysk3YFix33p3ASBzBgPt7QzfZffdlIQrbsVn2Rla5waDfrRu4oPzYOlwBdd
- qawDoziVEqk8uS7p6Ww/SCbDSWJ4Djei43UuOtOkSGLpZtc2qqs6zTj8djQDM3KqDCAinui+i
- TZokX613Hnbrp2+Mi7hD9l6/GkHHD9U7ZKqvF3plMG9mN2st2k9hE6rm+bcL1RxIqnFlaB6ey
- oGPunheLjNveZMpZo44y0KlxUix/3wkTbo/UaLgioKdqBp9HlxEWpAy/vYe/oHFeLXshsR/GE
- fdwZ8jQC4VyAdk+6ammoAcrZ9Rc62bx4RtIY39nvA/r3QM4Fx1kzCuEJgjbsAjY27FhwMgNF8
- YWRHi284XTPUrxUO/D3UYeX/rFUKsxBtO3CskaRx4cnPlq65A/BC8VT009rrylA6v2zk7dZI3
- PVO8CVV2k5B/VpZ6eYNgO7zhXvMXFvXlqjrF8ashU1DVgbWetCuddXqjgL1854lJbLT0HBoKR
- +rJX9wcqz3jxZxEiWr4pM+7kqWJHmFfGwkUOsvLTock/C04dBb82Vs0pY6B114y5Y7D+lXygM
- yXyU18UAOo5UQxJddeD2hbnSuZ2q0FFzBTRAmyLGiuXY0ggw/LPlARY2kwrKjGv61e3ZJ+GUN
- gYy1Hs3Dg5zNNLc3r6ulz3gmFjVgmNqpgGL/Gp63twJAs39svx9Ob
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 10:30 AM John Garry <john.garry@huawei.com> wrote:
-> On 27/07/2020 09:04, Arnd Bergmann wrote:> On Sun, Jul 26, 2020 at 2:53
-> PM Stafford Horne <shorne@gmail.com> wrote:
-> >>
-> >> On Sun, Jul 26, 2020 at 12:00:37PM +0300, Andy Shevchenko wrote:
-> >>> On Sun, Jul 26, 2020 at 6:14 AM Stafford Horne <shorne@gmail.com> wrote:
-> >>>>
-> >>>> The return type of functions _inb, _inw and _inl are all u16 which looks
-> >>>> wrong.  This patch makes them u8, u16 and u32 respectively.
-> >>>>
-> >>>> The original commit text for these does not indicate that these should
-> >>>> be all forced to u16.
-> >>>
-> >>> Is it in alight with all architectures? that support this interface natively?
-> >>>
-> >>> (Return value is arch-dependent AFAIU, so it might actually return
-> >>> 16-bit for byte read, but I agree that this is weird for 32-bit value.
-> >>> I think you have elaborate more in the commit message)
-> >>
-> >> Well, this is the generic io code,  at least these api's appear to not be different
-> >> for each architecture.  The output read by the architecture dependant code i.e.
-> >> __raw_readb() below is getting is placed into a u8.  So I think the output of
-> >> the function will be u8.
-> >>
-> >> static inline u8 _inb(unsigned long addr)
-> >> {
-> >>          u8 val;
-> >>
-> >>          __io_pbr();
-> >>          val = __raw_readb(PCI_IOBASE + addr);
-> >>          __io_par(val);
-> >>          return val;
-> >> }
-> >>
-> >> I can expand the commit text, but I would like to get some comments from the
-> >> original author to confirm if this is an issue.
-> >
-> > I think your original version is fine, this was clearly just a typo and I've
-> > applied your fix now and will forward it to Linus in the next few days,
-> > giving John the chance to add his Ack or further comments.
-> >
-> > Thanks a lot for spotting it and sending a fix.
->
-> Thanks Arnd.
->
-> Yeah, these looks like copy+paste errors on my part:
->
-> Reviewed-by: John Garry <john.garry@huawei.com>
+This patch series adds support for Microchip Sparx5 SoC, the CPU
+system of a advanced, TSN capable gigabit switch. The CPU is an armv8
+x 2 CPU core (A53).
 
-Thanks!
+Although this is an ARM core, it shares some peripherals with the
+Microsemi Ocelot MIPS SoC.
 
->
-> I'll give this patch a spin, but not expecting any differences (since
-> original seems ok).
->
-> Note that kbuild robot also reported this:
-> https://lore.kernel.org/lkml/202007140549.J7X9BVPT%25lkp@intel.com/
->
-> Extract:
->
-> include/asm-generic/io.h:521:22: sparse: sparse: incorrect type in
-> argument 1 (different base types) @@     expected unsigned int
-> [usertype] value @@     got restricted __le32 [usertype] @@
->     include/asm-generic/io.h:521:22: sparse:     expected unsigned int
-> [usertype] value
->     include/asm-generic/io.h:521:22: sparse:     got restricted __le32
-> [usertype]
->
-> But they look like issues which were in the existing code.
+NB: This version *only* updates the drivers/clk/clk-sparx5.c driver
 
-Yes, this driver code (atm/ambassador.c) seems to have been broken that
-way since it was merged in 1999.
+Changes in v4:
+- Updates to the clock driver per Stephen Boyd <sboyd@kernel.org>
+ - Remove unused include of of_address.h
+ - Remove unused member in s5_hw_clk struct
+ - Changed type (to unsigned long) for freq in s5_pll_conf struct
+ - Use .parent_data instead of looking up parent name
+ - Use devm_of_clk_add_hw_provider
+ - Some minor comsmetics
 
-      Arnd
+Changes in v3:
+- a "gpio-restart" node has been added to the pcb134/pcb135 DT files.
+- pinctrl-ocelot.c: ENOTSUPP replaced by EOPNOTSUPP. Fixed non-static
+  ocelot_pinconf_set(), Fixed ocelot_hw_get_value() not returning proper
+  read value.
+- Rebased on v5.8-rc1
+
+Changes in v2:
+- Misc fixes to bindings/arm/microchip,sparx5.yaml
+- Changed clock driver to platform driver, using bitfields, recalc
+  properly implented, using proper clock parent.
+- arch/arm64/boot/dts/microchip/sparx5.dtsi:
+ - Added pmu and psci node, using PSCI
+ - Updates to GICv3 register spaces (GICV/GICH)
+ - Updated timer interrupt specifiers
+- pinctrl: ocelot: Fixed symbol clashes from powerpc
+
+Lars Povlsen (10):
+  dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
+  arm64: sparx5: Add support for Microchip 2xA53 SoC
+  arm64: dts: sparx5: Add basic cpu support
+  arm64: dts: sparx5: Add pinctrl support
+  pinctrl: ocelot: Add Sparx5 SoC support
+  dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
+  dt-bindings: clock: sparx5: Add bindings include file
+  clk: sparx5: Add Sparx5 SoC DPLL clock driver
+  arm64: dts: sparx5: Add Sparx5 SoC DPLL clock
+  arm64: dts: sparx5: Add i2c devices, i2c muxes
+
+ .../bindings/arm/microchip,sparx5.yaml        |  65 +++
+ .../bindings/clock/microchip,sparx5-dpll.yaml |  52 +++
+ .../devicetree/bindings/mfd/syscon.yaml       |   1 +
+ MAINTAINERS                                   |   9 +
+ arch/arm64/Kconfig.platforms                  |  14 +
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/microchip/Makefile        |   4 +
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     | 213 +++++++++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |  21 +
+ .../boot/dts/microchip/sparx5_pcb134.dts      |  17 +
+ .../dts/microchip/sparx5_pcb134_board.dtsi    | 252 ++++++++++
+ .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  17 +
+ .../boot/dts/microchip/sparx5_pcb135.dts      |  17 +
+ .../dts/microchip/sparx5_pcb135_board.dtsi    |  92 ++++
+ .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  17 +
+ .../boot/dts/microchip/sparx5_pcb_common.dtsi |  19 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/clk-sparx5.c                      | 295 ++++++++++++
+ drivers/pinctrl/pinctrl-ocelot.c              | 430 +++++++++++++++++-
+ include/dt-bindings/clock/microchip,sparx5.h  |  23 +
+ 20 files changed, 1559 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+ create mode 100644 arch/arm64/boot/dts/microchip/Makefile
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
+ create mode 100644 drivers/clk/clk-sparx5.c
+ create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
+
+--
+2.27.0
