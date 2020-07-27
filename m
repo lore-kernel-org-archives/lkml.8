@@ -2,142 +2,116 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF481C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1F0C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FDBD20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0288E20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:59:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ukamY93F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgG0H6r (ORCPT
+        id S1727773AbgG0H7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:58:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23980 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726183AbgG0H6r (ORCPT
+        Mon, 27 Jul 2020 03:59:15 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:55551 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726997AbgG0H7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:58:47 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R7YcUo128842;
-        Mon, 27 Jul 2020 03:56:45 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrnkkgk9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 03:56:45 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R7lTDM170602;
-        Mon, 27 Jul 2020 03:56:45 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrnkkgju-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 03:56:45 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R7t1T8023670;
-        Mon, 27 Jul 2020 07:56:43 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 32gcq0s6hj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 07:56:43 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R7ueiC61931744
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 07:56:41 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D7F25AE056;
-        Mon, 27 Jul 2020 07:56:40 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5B483AE04D;
-        Mon, 27 Jul 2020 07:56:38 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.199.36.96])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jul 2020 07:56:38 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: [PATCH 7/7] powerpc/smp: Depend on cpu_l1_cache_map when adding cpus
-Date:   Mon, 27 Jul 2020 13:25:32 +0530
-Message-Id: <20200727075532.30058-8-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200727075532.30058-1-srikar@linux.vnet.ibm.com>
-References: <20200727075532.30058-1-srikar@linux.vnet.ibm.com>
+        Mon, 27 Jul 2020 03:59:14 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595836753; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
+ Subject: Sender; bh=+PV/mgFmHCpT1iOt87TCKArIUd/iWarn9UzS13Yi6VE=; b=ukamY93FWLgcciQtwsY8GLV7xCfZ7Rkbssn5eHkGkZOMgk4uCdScOxMOCf9mpzOKFpMPJ2xd
+ 5j7aX0Rq1UOc1jfm/5ZFmAqCDXMYpVHd4xekR8K1rjUfeHeSFpfkU11rWpOcl3et4EJm5XJO
+ pqhYXtN3KuxttoicnedQ/GzmrrQ=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-east-1.postgun.com with SMTP id
+ 5f1e8947bd0c3f02968c294b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 07:59:02
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 26DF1C433CA; Mon, 27 Jul 2020 07:59:02 +0000 (UTC)
+Received: from [192.168.0.13] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 72632C433C6;
+        Mon, 27 Jul 2020 07:58:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 72632C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH] i2c: qcom-geni: fix spelling mistake "unepxected" ->
+ "unexpected"
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     Colin King <colin.king@canonical.com>,
+        Alok Chauhan <alokc@codeaurora.org>,
+        Andy Gross <agross@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191103212204.13606-1-colin.king@canonical.com>
+ <74e71d14-9f27-6a44-f253-4756ba124695@codeaurora.org>
+Message-ID: <ee839cf4-6310-aa4e-6ed2-322f20343953@codeaurora.org>
+Date:   Mon, 27 Jul 2020 13:28:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <74e71d14-9f27-6a44-f253-4756ba124695@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_04:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 adultscore=0 clxscore=1015 impostorscore=0 phishscore=0
- mlxscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270051
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently on hotplug/hotunplug, the cpu iterates through all the cpus in
-its core to find threads in its thread group. However this info is
-already captured in cpu_l1_cache_map. Hence we could reduce the
-iteration and cleanup add_cpu_to_smallcore_masks function.
 
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Oliver O'Halloran <oohall@gmail.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
- arch/powerpc/kernel/smp.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+On 7/27/2020 1:25 PM, Akash Asthana wrote:
+>
+> On 11/4/2019 2:52 AM, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> There is a spelling mistake in an error message string, fix it.
+>>
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>   drivers/i2c/busses/i2c-qcom-geni.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c 
+>> b/drivers/i2c/busses/i2c-qcom-geni.c
+>> index 17abf60c94ae..387fb5a83471 100644
+>> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+>> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+>> @@ -98,7 +98,7 @@ static const struct geni_i2c_err_log gi2c_log[] = {
+>>       [GP_IRQ0] = {-EIO, "Unknown I2C err GP_IRQ0"},
+>>       [NACK] = {-ENXIO, "NACK: slv unresponsive, check its 
+>> power/reset-ln"},
+>>       [GP_IRQ2] = {-EIO, "Unknown I2C err GP IRQ2"},
+>> -    [BUS_PROTO] = {-EPROTO, "Bus proto err, noisy/unepxected 
+>> start/stop"},
+>> +    [BUS_PROTO] = {-EPROTO, "Bus proto err, noisy/unexpected 
+>> start/stop"},
+>>       [ARB_LOST] = {-EAGAIN, "Bus arbitration lost, clock line 
+>> undriveable"},
+>>       [GP_IRQ5] = {-EIO, "Unknown I2C err GP IRQ5"},
+>>       [GENI_OVERRUN] = {-EIO, "Cmd overrun, check GENI cmd-state 
+>> machine"},
+>
+> The patch is still applying cleanly on tip.
+>
+> Reviewed-by: Akash Asthana <akashast@codeauror.org>
+Correct tag
 
-diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index eceb7aa0f4b8..22f4b3856470 100644
---- a/arch/powerpc/kernel/smp.c
-+++ b/arch/powerpc/kernel/smp.c
-@@ -1276,16 +1276,15 @@ static void remove_cpu_from_masks(int cpu)
- 
- static inline void add_cpu_to_smallcore_masks(int cpu)
- {
--	struct cpumask *this_l1_cache_map = per_cpu(cpu_l1_cache_map, cpu);
--	int i, first_thread = cpu_first_thread_sibling(cpu);
-+	int i;
- 
- 	if (!has_big_cores)
- 		return;
- 
- 	cpumask_set_cpu(cpu, cpu_smallcore_mask(cpu));
- 
--	for (i = first_thread; i < first_thread + threads_per_core; i++) {
--		if (cpu_online(i) && cpumask_test_cpu(i, this_l1_cache_map))
-+	for_each_cpu(i, per_cpu(cpu_l1_cache_map, cpu)) {
-+		if (cpu_online(i))
- 			set_cpus_related(i, cpu, cpu_smallcore_mask);
- 	}
- }
+Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+
 -- 
-2.17.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
 
