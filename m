@@ -2,131 +2,89 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE399C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767C4C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 896DC206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:57:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="E+G3R4B1"
+	by mail.kernel.org (Postfix) with ESMTP id 5B848206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbgG0O5t (ORCPT
+        id S1729855AbgG0O55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:57:49 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:35054 "EHLO m43-7.mailgun.net"
+        Mon, 27 Jul 2020 10:57:57 -0400
+Received: from mailout06.rmx.de ([94.199.90.92]:57669 "EHLO mailout06.rmx.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727032AbgG0O5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:57:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595861868; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=7443zfi2pZMKrWNjK4v1Ad32a0BS0R3bKBhFoOV5yxQ=; b=E+G3R4B1sPqZCElfV4veCz/iyX+85irwaGkNLQADPlPX6Suuhnxufdqc/nrDXymdSLwKem9Q
- wI3qHOtlLXzgoGvNpt7PGXeZ6VEvnDe8pWBGpe8eMIbIiyUT8ZgqhQFGCMIdzU333C6ssXTD
- oBIl7nhqdaVgF+Nzk8R6WW6EdtQ=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5f1eeb6ba61bb9e3f5539ec2 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 14:57:47
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B7445C433AD; Mon, 27 Jul 2020 14:57:45 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728743AbgG0O54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:57:56 -0400
+Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2C638C433C9;
-        Mon, 27 Jul 2020 14:57:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2C638C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 27 Jul 2020 08:57:41 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 04/13] iommu/arm-smmu-qcom: Add implementation for
- the adreno GPU SMMU
-Message-ID: <20200727145740.GA32521@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200720154047.3611092-1-jcrouse@codeaurora.org>
- <20200720154047.3611092-5-jcrouse@codeaurora.org>
- <20200727062703.GB3521288@ripper>
+        by mailout06.rmx.de (Postfix) with ESMTPS id 4BFjbM0xLcz9tVS;
+        Mon, 27 Jul 2020 16:57:51 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin02.retarus.com (Postfix) with ESMTPS id 4BFjZw2vNzz2TTLj;
+        Mon, 27 Jul 2020 16:57:28 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.121) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 27 Jul
+ 2020 16:57:28 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     Christian Eggers <ceggers@arri.de>, <stable@vger.kernel.org>,
+        "Hartmut Knaack" <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] iio: trigger: sysfs: Disable irqs before calling iio_trigger_poll()
+Date:   Mon, 27 Jul 2020 16:57:13 +0200
+Message-ID: <20200727145714.4377-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727062703.GB3521288@ripper>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.121]
+X-RMX-ID: 20200727-165728-4BFjZw2vNzz2TTLj-0@kdin02
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 11:27:03PM -0700, Bjorn Andersson wrote:
-> On Mon 20 Jul 08:40 PDT 2020, Jordan Crouse wrote:
-> > diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-> [..]
-> > +static int qcom_adreno_smmu_alloc_context_bank(struct arm_smmu_domain *smmu_domain,
-> > +		struct device *dev, int start, int count)
-> > +{
-> > +	struct arm_smmu_device *smmu = smmu_domain->smmu;
-> > +
-> > +	/*
-> > +	 * Assign context bank 0 to the GPU device so the GPU hardware can
-> > +	 * switch pagetables
-> > +	 */
-> > +	if (qcom_adreno_smmu_is_gpu_device(dev)) {
-> > +		if (start > 0 || test_bit(0, smmu->context_map))
-> > +			return -ENOSPC;
-> > +
-> > +		set_bit(0, smmu->context_map);
-> > +		return 0;
-> > +	}
-> > +
-> > +	return __arm_smmu_alloc_bitmap(smmu->context_map, start, count);
-> 
-> If we end up here before the GPU device shows up this is going to
-> steal the first context bank, causing the subsequent allocation for the
-> GPU to always fail.
-> 
-> As such I think it would be appropriate for you to adjust "start" to
-> never be 0 here. And I think it would be appropriate to write this
-> function as:
-> 
-> 	if (gpu) {
-> 		start = 0;
-> 		count = 1;
-> 	} else {
-> 		if (start == 0)
-> 			start = 1;
-> 	}
-> 
-> 	return __arm_smmu_alloc_bitmap(smmu->context_map, start, count);
+iio_trigger_poll() calls generic_handle_irq(). This function expects to
+be run with local IRQs disabled.
 
-Excellent suggestions.  Thanks.
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+Cc: stable@vger.kernel.org
+---
+ drivers/iio/trigger/iio-trig-sysfs.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Jordan
-
-> Regards,
-> Bjorn
-
+diff --git a/drivers/iio/trigger/iio-trig-sysfs.c b/drivers/iio/trigger/iio-trig-sysfs.c
+index e09e58072872..66a96b1632f8 100644
+--- a/drivers/iio/trigger/iio-trig-sysfs.c
++++ b/drivers/iio/trigger/iio-trig-sysfs.c
+@@ -94,7 +94,9 @@ static void iio_sysfs_trigger_work(struct irq_work *work)
+ 	struct iio_sysfs_trig *trig = container_of(work, struct iio_sysfs_trig,
+ 							work);
+ 
++	local_irq_disable();
+ 	iio_trigger_poll(trig->trig);
++	local_irq_enable();
+ }
+ 
+ static ssize_t iio_sysfs_trigger_poll(struct device *dev,
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Christian Eggers
+Embedded software developer
+
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
+
