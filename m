@@ -2,116 +2,235 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5FDC433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D85EC433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 191BF21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859025;
-	bh=qCrRnVRA5KhdFuJB9e1HF7uBLgDqdl/68XqOah8yMvo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LEuFjsNgbsE7LQ8O7lwm6hpSneVGSmKDIZcgIl1m9osKNpBsifZgmiLbHyE0xrda6
-	 V9MubAlLwOrlvIPwAkiGbmhas2+MwytIMzh/xfTGmmXlr28w03zCOcuXkgQFg+m+xm
-	 cf4RAfH3yfjU34DrsDuIu2nx8ZcIOq5TT/GkVVY0=
+	by mail.kernel.org (Postfix) with ESMTP id 5CDCB21744
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbgG0OKX (ORCPT
+        id S1729847AbgG0OKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 27 Jul 2020 10:10:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11908 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729829AbgG0OKX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Jul 2020 10:10:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729825AbgG0OKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:10:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 641112083E;
-        Mon, 27 Jul 2020 14:10:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859019;
-        bh=qCrRnVRA5KhdFuJB9e1HF7uBLgDqdl/68XqOah8yMvo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tks4YwskOhFeyBpYcLFYw1L4KQmmAdxneSOwhwwNzKwlGPbjeqWI4NE6tbqLDFzKv
-         JdGaR+VVe7Go/H1/P40ANz2kJ3JC8Vgmit5xdpeI5pTGXQHLqEnKblf6VjXSa57xUA
-         NsH/qnJMLHhZx86nkr92vB8Ty7VxXrpcDl0qsKXE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xie He <xie.he.0141@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 09/86] drivers/net/wan/lapbether: Fixed the value of hard_header_len
-Date:   Mon, 27 Jul 2020 16:03:43 +0200
-Message-Id: <20200727134914.807480516@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
-References: <20200727134914.312934924@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RE0qlp162323;
+        Mon, 27 Jul 2020 10:10:04 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32hvhdqhmm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 10:10:04 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06RE0uYE162713;
+        Mon, 27 Jul 2020 10:10:03 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32hvhdqhm1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 10:10:03 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06RDoQQ0032136;
+        Mon, 27 Jul 2020 14:10:02 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03dal.us.ibm.com with ESMTP id 32gcy6p1qj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 14:10:02 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06RE9xjE41419180
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 14:09:59 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 75B786A05A;
+        Mon, 27 Jul 2020 14:09:59 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 288766A057;
+        Mon, 27 Jul 2020 14:09:58 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.167.215])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jul 2020 14:09:57 +0000 (GMT)
+Subject: Re: [PATCH v9 02/15] s390/vfio-ap: use new AP bus interface to search
+ for queue devices
+To:     Pierre Morel <pmorel@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, kernel test robot <lkp@intel.com>
+References: <20200720150344.24488-1-akrowiak@linux.ibm.com>
+ <20200720150344.24488-3-akrowiak@linux.ibm.com>
+ <a946e992-ff36-ca45-1811-7c6b0aaa161f@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <4b0bd2a8-4c28-7daa-8ea4-397926c9054b@linux.ibm.com>
+Date:   Mon, 27 Jul 2020 10:09:57 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <a946e992-ff36-ca45-1811-7c6b0aaa161f@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_08:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 phishscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ clxscore=1015 mlxscore=0 priorityscore=1501 suspectscore=3 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
-
-[ Upstream commit 9dc829a135fb5927f1519de11286e2bbb79f5b66 ]
-
-When this driver transmits data,
-  first this driver will remove a pseudo header of 1 byte,
-  then the lapb module will prepend the LAPB header of 2 or 3 bytes,
-  then this driver will prepend a length field of 2 bytes,
-  then the underlying Ethernet device will prepend its own header.
-
-So, the header length required should be:
-  -1 + 3 + 2 + "the header length needed by the underlying device".
-
-This patch fixes kernel panic when this driver is used with AF_PACKET
-SOCK_DGRAM sockets.
-
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wan/lapbether.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-index 0e3f8ed84660e..ac34257e9f203 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -308,7 +308,6 @@ static void lapbeth_setup(struct net_device *dev)
- 	dev->netdev_ops	     = &lapbeth_netdev_ops;
- 	dev->needs_free_netdev = true;
- 	dev->type            = ARPHRD_X25;
--	dev->hard_header_len = 3;
- 	dev->mtu             = 1000;
- 	dev->addr_len        = 0;
- }
-@@ -329,6 +328,14 @@ static int lapbeth_new_device(struct net_device *dev)
- 	if (!ndev)
- 		goto out;
- 
-+	/* When transmitting data:
-+	 * first this driver removes a pseudo header of 1 byte,
-+	 * then the lapb module prepends an LAPB header of at most 3 bytes,
-+	 * then this driver prepends a length field of 2 bytes,
-+	 * then the underlying Ethernet device prepends its own header.
-+	 */
-+	ndev->hard_header_len = -1 + 3 + 2 + dev->hard_header_len;
-+
- 	lapbeth = netdev_priv(ndev);
- 	lapbeth->axdev = ndev;
- 
--- 
-2.25.1
 
 
+On 7/24/20 4:38 AM, Pierre Morel wrote:
+>
+>
+> On 2020-07-20 17:03, Tony Krowiak wrote:
+>> This patch refactor's the vfio_ap device driver to use the AP bus's
+>> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
+>> information about a queue that is bound to the vfio_ap device driver.
+>> The bus's ap_get_qdev() function retrieves the queue device from a
+>> hashtable keyed by APQN. This is much more efficient than looping over
+>> the list of devices attached to the AP bus by several orders of
+>> magnitude.
+>
+> The patch does much more than modifying this line. ;)
+>
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_drv.c     | 27 ++-------
+>>   drivers/s390/crypto/vfio_ap_ops.c     | 86 +++++++++++++++------------
+>>   drivers/s390/crypto/vfio_ap_private.h |  8 ++-
+>>   3 files changed, 59 insertions(+), 62 deletions(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_drv.c 
+>> b/drivers/s390/crypto/vfio_ap_drv.c
+>> index f4ceb380dd61..24cdef60039a 100644
+>> --- a/drivers/s390/crypto/vfio_ap_drv.c
+>> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+>> @@ -53,15 +53,9 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
+>>    */
+>>   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+>>   {
+>> -    struct vfio_ap_queue *q;
+>> -
+>> -    q = kzalloc(sizeof(*q), GFP_KERNEL);
+>> -    if (!q)
+>> -        return -ENOMEM;
+>> -    dev_set_drvdata(&apdev->device, q);
+>> -    q->apqn = to_ap_queue(&apdev->device)->qid;
+>> -    q->saved_isc = VFIO_AP_ISC_INVALID;
+>> -    return 0;
+>> +    struct ap_queue *queue = to_ap_queue(&apdev->device);
+>> +
+>> +    return vfio_ap_mdev_probe_queue(queue);
+>>   }
+>
+> You should explain the reason why this function is modified.
+>
+>>     /**
+>> @@ -72,18 +66,9 @@ static int vfio_ap_queue_dev_probe(struct 
+>> ap_device *apdev)
+>>    */
+>>   static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
+>>   {
+>> -    struct vfio_ap_queue *q;
+>> -    int apid, apqi;
+>> -
+>> -    mutex_lock(&matrix_dev->lock);
+>> -    q = dev_get_drvdata(&apdev->device);
+>> -    dev_set_drvdata(&apdev->device, NULL);
+>> -    apid = AP_QID_CARD(q->apqn);
+>> -    apqi = AP_QID_QUEUE(q->apqn);
+>> -    vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>> -    vfio_ap_irq_disable(q);
+>> -    kfree(q);
+>> -    mutex_unlock(&matrix_dev->lock);
+>> +    struct ap_queue *queue = to_ap_queue(&apdev->device);
+>> +
+>> +    vfio_ap_mdev_remove_queue(queue);
+>>   }
+>
+> ... and this one?
+>
+>>     static void vfio_ap_matrix_dev_release(struct device *dev)
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
+>> b/drivers/s390/crypto/vfio_ap_ops.c
+>> index e0bde8518745..ad3925f04f61 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -26,43 +26,26 @@
+>>     static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
+>>   -static int match_apqn(struct device *dev, const void *data)
+>> -{
+>> -    struct vfio_ap_queue *q = dev_get_drvdata(dev);
+>> -
+>> -    return (q->apqn == *(int *)(data)) ? 1 : 0;
+>> -}
+>> -
+>>   /**
+>> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
+>> - * @matrix_mdev: the associated mediated matrix
+>> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
+>>    * @apqn: The queue APQN
+>>    *
+>> - * Retrieve a queue with a specific APQN from the list of the
+>> - * devices of the vfio_ap_drv.
+>> - * Verify that the APID and the APQI are set in the matrix.
+>> + * Retrieve a queue with a specific APQN from the AP queue devices 
+>> attached to
+>> + * the AP bus.
+>>    *
+>> - * Returns the pointer to the associated vfio_ap_queue
+>> + * Returns the pointer to the vfio_ap_queue with the specified APQN, 
+>> or NULL.
+>>    */
+>> -static struct vfio_ap_queue *vfio_ap_get_queue(
+>> -                    struct ap_matrix_mdev *matrix_mdev,
+>> -                    int apqn)
+>> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
+>>   {
+>> +    struct ap_queue *queue;
+>>       struct vfio_ap_queue *q;
+>> -    struct device *dev;
+>>   -    if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
+>> -        return NULL;
+>> -    if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
+>> +    queue = ap_get_qdev(apqn);
+>> +    if (!queue)
+>>           return NULL;
+>>   -    dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+>> -                 &apqn, match_apqn);
+>> -    if (!dev)
+>> -        return NULL;
+>> -    q = dev_get_drvdata(dev);
+>> -    q->matrix_mdev = matrix_mdev;
+>> -    put_device(dev);
+>> +    q = dev_get_drvdata(&queue->ap_dev.device);
+>> +    put_device(&queue->ap_dev.device);
+>>         return q;
+>>   }
+>
+> this function changed a lot too, you should explain the goal in the 
+> patch comment.
+
+This is precisely what the current patch comment describes.
+
+>
+> ...snip...
+>
+> Regards,
+> Pierre
+>
 
