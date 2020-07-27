@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE60AC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2783208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4CA208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859811;
-	bh=lPIAlXZ+TuTrN574WW+Cre/QNN//vIBP8RLlfz5OV8E=;
+	s=default; t=1595859818;
+	bh=Fdxxx/6s/07AQaFKa9HaHxd0Er/Fjo+qamSOf3sgGZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ltY6mb9N4Z2hTKh9kOilwHdNBvGtoSSDxoxHuE9Ux+/S4KjdV76x2tgE1On+649F
-	 sl4eE64H2GO2x1js8ywG65S74UtGUNOXAcLDZMcjeZZ9Q2Zqp1pJPgc3+P3aScvwLM
-	 1Z/84xVO1ui70A5nVjVH3Z5d3ib44hh1PSMJ6rWI=
+	b=GvnkoleqhiY9B6Irp+7wIRGhS2L7UGWVFkvdoCE7ah3EyfOK0UwQaeAVn7HiiQ693
+	 3F59JdNvlkFJmO4a1HVjSZbzux8p3c8oGqQJ6ZDUsTGwxMZeBs1ONrnQ8Ju860I1n8
+	 rHJTUq51c8DrN/h1i0oyjsBKwHkkh+bEoSCP8IzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732102AbgG0OXa (ORCPT
+        id S1732122AbgG0OXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52634 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:23:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732070AbgG0OXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:23:24 -0400
+        id S1732106AbgG0OXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:23:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6FD12075A;
-        Mon, 27 Jul 2020 14:23:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADF942070A;
+        Mon, 27 Jul 2020 14:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859803;
-        bh=lPIAlXZ+TuTrN574WW+Cre/QNN//vIBP8RLlfz5OV8E=;
+        s=default; t=1595859813;
+        bh=Fdxxx/6s/07AQaFKa9HaHxd0Er/Fjo+qamSOf3sgGZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TY1/rCtEq2k/6gc7XA9g0wxN4cITixU/4a2+T5fVc/6+oi3Vobq5VY5aQ6gKd/vEG
-         gRyZBlpeZvk3ncvP4WfYSFOPY2d7hWbsX1NSxR7x/a1iSRvBXEPErH/8ZcJWziqW6x
-         CWQ1HmT78n23ejDA7xqF4KA6XSlwwy85xMOgKjSM=
+        b=nqTHJ1WTEUp4OcDKrvPp/cbz+RPsDPm0Au2OqLDr7/jxrNubHYgGS0NYHEyoPRdD+
+         LZZrUgpI0XVVpYAitAIrXhV/gt3wzbAJqiFJdrzF8VQERFNp1rFRfTsGwIkI5CMQzZ
+         Q2HcSRT7mtPAZtarws06+IJjY2ZPEWw4wHfGc7IM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 111/179] ARM: dts: n900: remove mmc1 card detect gpio
-Date:   Mon, 27 Jul 2020 16:04:46 +0200
-Message-Id: <20200727134938.061895643@linuxfoundation.org>
+Subject: [PATCH 5.7 114/179] hwmon: (aspeed-pwm-tacho) Avoid possible buffer overflow
+Date:   Mon, 27 Jul 2020 16:04:49 +0200
+Message-Id: <20200727134938.207084422@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -63,62 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Merlijn Wajer <merlijn@wizzup.org>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit ed3e98e919aaaa47e9d9f8a40c3f6f4a22577842 ]
+[ Upstream commit bc4071aafcf4d0535ee423b69167696d6c03207d ]
 
-Instead, expose the key via the input framework, as SW_MACHINE_COVER
+aspeed_create_fan() reads a pwm_port value using of_property_read_u32().
+If pwm_port will be more than ARRAY_SIZE(pwm_port_params), there will be
+a buffer overflow in
+aspeed_create_pwm_port()->aspeed_set_pwm_port_enable(). The patch fixes
+the potential buffer overflow.
 
-The chip-detect GPIO is actually detecting if the cover is closed.
-Technically it's possible to use the SD card with open cover. The
-only downside is risk of battery falling out and user being able
-to physically remove the card.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-The behaviour of SD card not being available when the device is
-open is unexpected and creates more problems than it solves. There
-is a high chance, that more people accidentally break their rootfs
-by opening the case without physically removing the card.
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
-Link: https://lore.kernel.org/r/20200612125402.18393-3-merlijn@wizzup.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Link: https://lore.kernel.org/r/20200703111518.9644-1-novikov@ispras.ru
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-n900.dts | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/hwmon/aspeed-pwm-tacho.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 4089d97405c95..3dbcae3d60d28 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -105,6 +105,14 @@
- 			linux,code = <SW_FRONT_PROXIMITY>;
- 			linux,can-disable;
- 		};
-+
-+		machine_cover {
-+			label = "Machine Cover";
-+			gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
-+			linux,input-type = <EV_SW>;
-+			linux,code = <SW_MACHINE_COVER>;
-+			linux,can-disable;
-+		};
- 	};
+diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
+index 33fb54845bf6d..3d8239fd66ed6 100644
+--- a/drivers/hwmon/aspeed-pwm-tacho.c
++++ b/drivers/hwmon/aspeed-pwm-tacho.c
+@@ -851,6 +851,8 @@ static int aspeed_create_fan(struct device *dev,
+ 	ret = of_property_read_u32(child, "reg", &pwm_port);
+ 	if (ret)
+ 		return ret;
++	if (pwm_port >= ARRAY_SIZE(pwm_port_params))
++		return -EINVAL;
+ 	aspeed_create_pwm_port(priv, (u8)pwm_port);
  
- 	isp1707: isp1707 {
-@@ -819,10 +827,6 @@
- 	pinctrl-0 = <&mmc1_pins>;
- 	vmmc-supply = <&vmmc1>;
- 	bus-width = <4>;
--	/* For debugging, it is often good idea to remove this GPIO.
--	   It means you can remove back cover (to reboot by removing
--	   battery) and still use the MMC card. */
--	cd-gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
- };
- 
- /* most boards use vaux3, only some old versions use vmmc2 instead */
+ 	ret = of_property_count_u8_elems(child, "cooling-levels");
 -- 
 2.25.1
 
