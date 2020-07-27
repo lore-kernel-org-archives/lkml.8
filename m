@@ -2,129 +2,126 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334CCC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4316EC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1400F2074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:48:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWcLeYAW"
+	by mail.kernel.org (Postfix) with ESMTP id 1FBC620719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595872176;
+	bh=2HB61QDPf92Lsa6Jf9B/n+P3MmdDD0gqtDvjOvcjP1g=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=omux7VHtIGtLLjHBMyTsiMWBoUer9hbgOBxZ5t/w/z/jS/sOeBk6Gcbq8vIUTcQ3z
+	 UC57tZ1nFio/8nRLPxzAOZDHnEUNK54mwtu2KOXXm7VecBc2lMM+Pbxz0KaMTM3DOY
+	 XcuCm+OIx9sjpepCNQbqwefHFr7fOAeGzkGX5cso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730843AbgG0Rs5 (ORCPT
+        id S1730971AbgG0Rtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:48:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728532AbgG0Rs5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:48:57 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08A23C061794;
-        Mon, 27 Jul 2020 10:48:57 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id 9so14906212wmj.5;
-        Mon, 27 Jul 2020 10:48:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qOH/UoaqC+LDO4kkcL97+3vWeaaagSUdgiIVI5ufHis=;
-        b=XWcLeYAWwLQnQ/+Vniw+1NZMkQBf5jPAzdnX66/ZOrG+d8xxI/geLEvfjZuvZxTw6A
-         T5Na0PcnsDM5t4kNk6hPCIJTXxwx5VzLDWQa/DFx9ItkiyaVmZC0SsYIAOpwMP/MqLLW
-         wBtasEqQKV1jN/y3TFd9fkF1l3pw0pNF8OzWQ0T+erudPq0LAc6g9JSLk/NNmWG6/1Qk
-         B5U20kHwZgUKg4twqfKp0UjqMkkX0QwES20iQSgWlh/WpKektlQ0znluUNwnpdF7GuEW
-         1NGVzAaSZePpJpIgwJI6oPBcYrUVglr1Z0LoUZV8IKbJ7pyJ8sWlH9v3edi0eSRh7W8c
-         zApg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qOH/UoaqC+LDO4kkcL97+3vWeaaagSUdgiIVI5ufHis=;
-        b=TLopHUN7qFcsoS24mAIASZmjWMGuoLazJLg8Qx4oQjgy/Ur6j4Xlid6gLvjg0d1M/r
-         ZdcCH1j4fGl2Oa4n5/kqFDBgeB4IComL1wSMP/h8dJlAFgVJtNhQc4g8ppg5HYoUv3Yv
-         tUiRtz7jJPpI2HKNYdZV3ngCAoKUebhHJrXpd+gMd+s0KnjIWMFOjgm0o/5vnCkjOkjq
-         r6nqO0iHYR3pAcOWXfSVFZmIjb8LZLVaL5Q//NersT2d1dS9QnGOR2sAhpL1+SHd31aJ
-         3tfqNlUDB1moP+Hzr/a/xwlmJ2LbR2547UIqCXhDIALYekd9BEDK6F1lioWb4s7kANP+
-         dFCw==
-X-Gm-Message-State: AOAM533TWCzubT9ZA4M76ndQ03L9GRAXJmPYLKtZwrgW4KpoRU1SUjAZ
-        M0OFI9eKFRaZSPMqsMQyeeY=
-X-Google-Smtp-Source: ABdhPJxfNAV1+tUhphWVdB/yAnUKsH2CS8FGtw6ozsRuygaha6vREw+pf9Ma8uRtJcQlBCFiG9T9YQ==
-X-Received: by 2002:a1c:5646:: with SMTP id k67mr367294wmb.61.1595872135762;
-        Mon, 27 Jul 2020 10:48:55 -0700 (PDT)
-Received: from localhost.localdomain (112.red-81-32-35.dynamicip.rima-tde.net. [81.32.35.112])
-        by smtp.gmail.com with ESMTPSA id y11sm14072266wrs.80.2020.07.27.10.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 10:48:55 -0700 (PDT)
-From:   Juan Antonio Aldea-Armenteros <juant.aldea@gmail.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Cc:     Juan Antonio Aldea-Armenteros <juant.aldea@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v3] media: atomisp-mt9m114: replace fixed function names
-Date:   Mon, 27 Jul 2020 19:48:12 +0200
-Message-Id: <20200727174811.57486-1-juant.aldea@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 27 Jul 2020 13:49:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726846AbgG0Rte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 13:49:34 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39C8F2070B;
+        Mon, 27 Jul 2020 17:49:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595872174;
+        bh=2HB61QDPf92Lsa6Jf9B/n+P3MmdDD0gqtDvjOvcjP1g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UvUboc7otMxoumCsLUUP+igA9u9ZI3B8OmQXctMhbTROY+Bi5UZcwBQj468javLeg
+         qGOLSbbqKUQiM1LzYbtPooWQSyXO3YodxM9b+ZsvG3zBs7w/NVzrlY/M/NxENCA9SD
+         qgJFoRBthteOsmqjxUGcmYTfHnl+Zqckim4GbHkM=
+Date:   Mon, 27 Jul 2020 12:55:26 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] net/mlx4: Use fallthrough pseudo-keyword
+Message-ID: <20200727175526.GA21335@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a couple of debug messages using hardcoded function names
-instead of the preferred __func__ magic constant.
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-Replace them:
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-WARNING: Prefer using '"%s...", __func__' to using 'misensor_rmw_reg', this function's name, in a string
-215: FILE: ./media/atomisp/i2c/atomisp-mt9m114.c:215:
-+       v4l2_err(client, "misensor_rmw_reg error exit, read failed\n");
-
-WARNING: Prefer using '"%s...", __func__' to using 'misensor_rmw_reg', this function's name, in a string
-236: FILE: ./media/atomisp/i2c/atomisp-mt9m114.c:236:
-+       v4l2_err(client, "misensor_rmw_reg error exit, write failed\n");
-
-Signed-off-by: Juan Antonio Aldea-Armenteros <juant.aldea@gmail.com>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
-PATCH V2:
-* Restored word "error" as pointed out by Dan Carpenter <dan.carpenter@oracle.com>
+ drivers/net/ethernet/mellanox/mlx4/en_rx.c | 4 ++--
+ drivers/net/ethernet/mellanox/mlx4/eq.c    | 2 +-
+ drivers/net/ethernet/mellanox/mlx4/mcg.c   | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-PATCH V3: 
-* Fix V2 changelog message.
-
- drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c b/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c
-index 0d60918a9b19..f5de81132177 100644
---- a/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c
-+++ b/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c
-@@ -212,7 +212,7 @@ misensor_rmw_reg(struct i2c_client *client, u16 data_length, u16 reg,
+diff --git a/drivers/net/ethernet/mellanox/mlx4/en_rx.c b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
+index 8a10285b0e10..b50c567ef508 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
+@@ -806,10 +806,10 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
+ 				goto xdp_drop_no_cnt; /* Drop on xmit failure */
+ 			default:
+ 				bpf_warn_invalid_xdp_action(act);
+-				/* fall through */
++				fallthrough;
+ 			case XDP_ABORTED:
+ 				trace_xdp_exception(dev, xdp_prog, act);
+-				/* fall through */
++				fallthrough;
+ 			case XDP_DROP:
+ 				ring->xdp_drop++;
+ xdp_drop_no_cnt:
+diff --git a/drivers/net/ethernet/mellanox/mlx4/eq.c b/drivers/net/ethernet/mellanox/mlx4/eq.c
+index c790a5fcea73..ae305c2e9225 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/eq.c
++++ b/drivers/net/ethernet/mellanox/mlx4/eq.c
+@@ -558,7 +558,7 @@ static int mlx4_eq_int(struct mlx4_dev *dev, struct mlx4_eq *eq)
+ 			mlx4_dbg(dev, "%s: MLX4_EVENT_TYPE_SRQ_LIMIT. srq_no=0x%x, eq 0x%x\n",
+ 				 __func__, be32_to_cpu(eqe->event.srq.srqn),
+ 				 eq->eqn);
+-			/* fall through */
++			fallthrough;
+ 		case MLX4_EVENT_TYPE_SRQ_CATAS_ERROR:
+ 			if (mlx4_is_master(dev)) {
+ 				/* forward only to slave owning the SRQ */
+diff --git a/drivers/net/ethernet/mellanox/mlx4/mcg.c b/drivers/net/ethernet/mellanox/mlx4/mcg.c
+index 9486caecfbdc..f1b4ad9c66d2 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/mcg.c
++++ b/drivers/net/ethernet/mellanox/mlx4/mcg.c
+@@ -1412,7 +1412,7 @@ int mlx4_multicast_attach(struct mlx4_dev *dev, struct mlx4_qp *qp, u8 gid[16],
+ 	case MLX4_STEERING_MODE_A0:
+ 		if (prot == MLX4_PROT_ETH)
+ 			return 0;
+-		/* fall through */
++		fallthrough;
  
- 	err = mt9m114_read_reg(client, data_length, reg, &val);
- 	if (err) {
--		v4l2_err(client, "misensor_rmw_reg error exit, read failed\n");
-+		v4l2_err(client, "%s error exit, read failed\n", __func__);
- 		return -EINVAL;
- 	}
+ 	case MLX4_STEERING_MODE_B0:
+ 		if (prot == MLX4_PROT_ETH)
+@@ -1442,7 +1442,7 @@ int mlx4_multicast_detach(struct mlx4_dev *dev, struct mlx4_qp *qp, u8 gid[16],
+ 	case MLX4_STEERING_MODE_A0:
+ 		if (prot == MLX4_PROT_ETH)
+ 			return 0;
+-		/* fall through */
++		fallthrough;
  
-@@ -233,7 +233,7 @@ misensor_rmw_reg(struct i2c_client *client, u16 data_length, u16 reg,
- 
- 	err = mt9m114_write_reg(client, data_length, reg, val);
- 	if (err) {
--		v4l2_err(client, "misensor_rmw_reg error exit, write failed\n");
-+		v4l2_err(client, "%s error exit, write failed\n", __func__);
- 		return -EINVAL;
- 	}
- 
+ 	case MLX4_STEERING_MODE_B0:
+ 		if (prot == MLX4_PROT_ETH)
 -- 
 2.27.0
 
