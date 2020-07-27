@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784E3C433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2588C43445
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55C94206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B175C206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860663;
-	bh=1tjzgcHsU7Yc2ql1ucZGHJ6s+Wj3INa3jsaTYSwcXCk=;
+	s=default; t=1595860669;
+	bh=zrKBIjCnCmBPGY+wqL3lLsnjhyuLe5/lQbJwslNZXN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HY/rrYOzG9Cq+15cHdQ1b8TMkHThRqEmYXI/QWYc2mcfhW+m7dOtZ3WolEnydFj6s
-	 aEc/55rLm6zOOfxRGVrvkPuRGV2ttXjc78E8td37OGHQvIdeNgSswsBLGY2NB8PYfo
-	 yyEGoSN2o4FrOODm8QShBpqEgbdWeL3DfL+oE0TI=
+	b=qyhhLeW//5C/NaZ7VLFtgk1Zzcl6oT5haX8fq7mVaN/rJpA+hgmzDs5zxRfgvD1Vc
+	 d/mP08WbPKkWjLBwgIdUiHvz7OkkJOmTV04bnHrn8vJRCsy0vB9m+9Hb3P29OD/ofJ
+	 fS8XA01Z8vw+FSHcdF4qcZF1PYYDuZWfTn9oETow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732888AbgG0Ohm (ORCPT
+        id S1728545AbgG0OMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:37:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36720 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730202AbgG0OM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:12:27 -0400
+        id S1729192AbgG0OMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:12:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DACE720838;
-        Mon, 27 Jul 2020 14:12:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B17A2073E;
+        Mon, 27 Jul 2020 14:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859145;
-        bh=1tjzgcHsU7Yc2ql1ucZGHJ6s+Wj3INa3jsaTYSwcXCk=;
+        s=default; t=1595859124;
+        bh=zrKBIjCnCmBPGY+wqL3lLsnjhyuLe5/lQbJwslNZXN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QwD5CERkrGpBP/KiSpfCPpkZt41Kra6Ob+ShnkbpgdXF1qU44e0cWA7TNeazq3xv0
-         cGN+hBS+TqTkjkcFV9aC8OuGGOGr6I+MrTfIpbDsQOy/h91hf9Sy0CbgskgkpplzoV
-         Hj1o3vgYFtxRxPVSpRFduM41PgswM4Zpq2G6k1XE=
+        b=VEZ9aW7ZlouApy4RLSpv8X/iFTiw7T6nR7e2KOouktUgJLTHzKUw9BMSFywO6vO9+
+         LEzy8tU0DS8xiThVMjToRNHcg0xec5VCc3RwruBrcRgF1CnWRqCr4PQEb+FZimrwGI
+         FeG57CBpRqH9prbk2FTGfValoaBGT9AARRJPRKMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 82/86] ASoC: rt5670: Add new gpio1_is_ext_spk_en quirk and enable it on the Lenovo Miix 2 10
-Date:   Mon, 27 Jul 2020 16:04:56 +0200
-Message-Id: <20200727134918.513635702@linuxfoundation.org>
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 75/86] mm/memcg: fix refcount error while moving and swapping
+Date:   Mon, 27 Jul 2020 16:04:49 +0200
+Message-Id: <20200727134918.154511384@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -59,166 +64,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Hugh Dickins <hughd@google.com>
 
-commit 85ca6b17e2bb96b19caac3b02c003d670b66de96 upstream.
+commit 8d22a9351035ef2ff12ef163a1091b8b8cf1e49c upstream.
 
-The Lenovo Miix 2 10 has a keyboard dock with extra speakers in the dock.
-Rather then the ACL5672's GPIO1 pin being used as IRQ to the CPU, it is
-actually used to enable the amplifier for these speakers
-(the IRQ to the CPU comes directly from the jack-detect switch).
+It was hard to keep a test running, moving tasks between memcgs with
+move_charge_at_immigrate, while swapping: mem_cgroup_id_get_many()'s
+refcount is discovered to be 0 (supposedly impossible), so it is then
+forced to REFCOUNT_SATURATED, and after thousands of warnings in quick
+succession, the test is at last put out of misery by being OOM killed.
 
-Add a quirk for having an ext speaker-amplifier enable pin on GPIO1
-and replace the Lenovo Miix 2 10's dmi_system_id table entry's wrong
-GPIO_DEV quirk (which needs to be renamed to GPIO1_IS_IRQ) with the
-new RT5670_GPIO1_IS_EXT_SPK_EN quirk, so that we enable the external
-speaker-amplifier as necessary.
+This is because of the way moved_swap accounting was saved up until the
+task move gets completed in __mem_cgroup_clear_mc(), deferred from when
+mem_cgroup_move_swap_account() actually exchanged old and new ids.
+Concurrent activity can free up swap quicker than the task is scanned,
+bringing id refcount down 0 (which should only be possible when
+offlining).
 
-Also update the ident field for the dmi_system_id table entry, the
-Miix models are not Thinkpads.
+Just skip that optimization: do that part of the accounting immediately.
 
-Fixes: 67e03ff3f32f ("ASoC: codecs: rt5670: add Thinkpad Tablet 10 quirk")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1786723
-Link: https://lore.kernel.org/r/20200628155231.71089-4-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 615d66c37c75 ("mm: memcontrol: fix memcg id ref counter on swap charge move")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2007071431050.4726@eggly.anvils
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/sound/rt5670.h    |    1 
- sound/soc/codecs/rt5670.c |   71 ++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 57 insertions(+), 15 deletions(-)
+ mm/memcontrol.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/include/sound/rt5670.h
-+++ b/include/sound/rt5670.h
-@@ -15,6 +15,7 @@ struct rt5670_platform_data {
- 	int jd_mode;
- 	bool in2_diff;
- 	bool dev_gpio;
-+	bool gpio1_is_ext_spk_en;
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5147,7 +5147,6 @@ static void __mem_cgroup_clear_mc(void)
+ 		if (!mem_cgroup_is_root(mc.to))
+ 			page_counter_uncharge(&mc.to->memory, mc.moved_swap);
  
- 	bool dmic_en;
- 	unsigned int dmic1_data_pin;
---- a/sound/soc/codecs/rt5670.c
-+++ b/sound/soc/codecs/rt5670.c
-@@ -34,18 +34,19 @@
- #include "rt5670.h"
- #include "rt5670-dsp.h"
+-		mem_cgroup_id_get_many(mc.to, mc.moved_swap);
+ 		css_put_many(&mc.to->css, mc.moved_swap);
  
--#define RT5670_DEV_GPIO     BIT(0)
--#define RT5670_IN2_DIFF     BIT(1)
--#define RT5670_DMIC_EN      BIT(2)
--#define RT5670_DMIC1_IN2P   BIT(3)
--#define RT5670_DMIC1_GPIO6  BIT(4)
--#define RT5670_DMIC1_GPIO7  BIT(5)
--#define RT5670_DMIC2_INR    BIT(6)
--#define RT5670_DMIC2_GPIO8  BIT(7)
--#define RT5670_DMIC3_GPIO5  BIT(8)
--#define RT5670_JD_MODE1     BIT(9)
--#define RT5670_JD_MODE2     BIT(10)
--#define RT5670_JD_MODE3     BIT(11)
-+#define RT5670_DEV_GPIO			BIT(0)
-+#define RT5670_IN2_DIFF			BIT(1)
-+#define RT5670_DMIC_EN			BIT(2)
-+#define RT5670_DMIC1_IN2P		BIT(3)
-+#define RT5670_DMIC1_GPIO6		BIT(4)
-+#define RT5670_DMIC1_GPIO7		BIT(5)
-+#define RT5670_DMIC2_INR		BIT(6)
-+#define RT5670_DMIC2_GPIO8		BIT(7)
-+#define RT5670_DMIC3_GPIO5		BIT(8)
-+#define RT5670_JD_MODE1			BIT(9)
-+#define RT5670_JD_MODE2			BIT(10)
-+#define RT5670_JD_MODE3			BIT(11)
-+#define RT5670_GPIO1_IS_EXT_SPK_EN	BIT(12)
- 
- static unsigned long rt5670_quirk;
- static unsigned int quirk_override;
-@@ -1504,6 +1505,33 @@ static int rt5670_hp_event(struct snd_so
- 	return 0;
- }
- 
-+static int rt5670_spk_event(struct snd_soc_dapm_widget *w,
-+	struct snd_kcontrol *kcontrol, int event)
-+{
-+	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-+	struct rt5670_priv *rt5670 = snd_soc_component_get_drvdata(component);
-+
-+	if (!rt5670->pdata.gpio1_is_ext_spk_en)
-+		return 0;
-+
-+	switch (event) {
-+	case SND_SOC_DAPM_POST_PMU:
-+		regmap_update_bits(rt5670->regmap, RT5670_GPIO_CTRL2,
-+				   RT5670_GP1_OUT_MASK, RT5670_GP1_OUT_HI);
-+		break;
-+
-+	case SND_SOC_DAPM_PRE_PMD:
-+		regmap_update_bits(rt5670->regmap, RT5670_GPIO_CTRL2,
-+				   RT5670_GP1_OUT_MASK, RT5670_GP1_OUT_LO);
-+		break;
-+
-+	default:
-+		return 0;
-+	}
-+
-+	return 0;
-+}
-+
- static int rt5670_bst1_event(struct snd_soc_dapm_widget *w,
- 	struct snd_kcontrol *kcontrol, int event)
- {
-@@ -1917,7 +1945,9 @@ static const struct snd_soc_dapm_widget
- };
- 
- static const struct snd_soc_dapm_widget rt5672_specific_dapm_widgets[] = {
--	SND_SOC_DAPM_PGA("SPO Amp", SND_SOC_NOPM, 0, 0, NULL, 0),
-+	SND_SOC_DAPM_PGA_E("SPO Amp", SND_SOC_NOPM, 0, 0, NULL, 0,
-+			   rt5670_spk_event, SND_SOC_DAPM_PRE_PMD |
-+			   SND_SOC_DAPM_POST_PMU),
- 	SND_SOC_DAPM_OUTPUT("SPOLP"),
- 	SND_SOC_DAPM_OUTPUT("SPOLN"),
- 	SND_SOC_DAPM_OUTPUT("SPORP"),
-@@ -2901,14 +2931,14 @@ static const struct dmi_system_id dmi_pl
- 	},
- 	{
- 		.callback = rt5670_quirk_cb,
--		.ident = "Lenovo Thinkpad Tablet 10",
-+		.ident = "Lenovo Miix 2 10",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Miix 2 10"),
- 		},
- 		.driver_data = (unsigned long *)(RT5670_DMIC_EN |
- 						 RT5670_DMIC1_IN2P |
--						 RT5670_DEV_GPIO |
-+						 RT5670_GPIO1_IS_EXT_SPK_EN |
- 						 RT5670_JD_MODE2),
- 	},
- 	{
-@@ -2956,6 +2986,10 @@ static int rt5670_i2c_probe(struct i2c_c
- 		rt5670->pdata.dev_gpio = true;
- 		dev_info(&i2c->dev, "quirk dev_gpio\n");
- 	}
-+	if (rt5670_quirk & RT5670_GPIO1_IS_EXT_SPK_EN) {
-+		rt5670->pdata.gpio1_is_ext_spk_en = true;
-+		dev_info(&i2c->dev, "quirk GPIO1 is external speaker enable\n");
-+	}
- 	if (rt5670_quirk & RT5670_IN2_DIFF) {
- 		rt5670->pdata.in2_diff = true;
- 		dev_info(&i2c->dev, "quirk IN2_DIFF\n");
-@@ -3054,6 +3088,13 @@ static int rt5670_i2c_probe(struct i2c_c
- 		regmap_update_bits(rt5670->regmap, RT5670_GPIO_CTRL2,
- 				   RT5670_GP1_PF_MASK, RT5670_GP1_PF_OUT);
- 	}
-+
-+	if (rt5670->pdata.gpio1_is_ext_spk_en) {
-+		regmap_update_bits(rt5670->regmap, RT5670_GPIO_CTRL1,
-+				   RT5670_GP1_PIN_MASK, RT5670_GP1_PIN_GPIO1);
-+		regmap_update_bits(rt5670->regmap, RT5670_GPIO_CTRL2,
-+				   RT5670_GP1_PF_MASK, RT5670_GP1_PF_OUT);
-+	}
- 
- 	if (rt5670->pdata.jd_mode) {
- 		regmap_update_bits(rt5670->regmap, RT5670_GLB_CLK,
+ 		mc.moved_swap = 0;
+@@ -5338,7 +5337,8 @@ put:			/* get_mctgt_type() gets the page
+ 			ent = target.ent;
+ 			if (!mem_cgroup_move_swap_account(ent, mc.from, mc.to)) {
+ 				mc.precharge--;
+-				/* we fixup refcnts and charges later. */
++				mem_cgroup_id_get_many(mc.to, 1);
++				/* we fixup other refcnts and charges later. */
+ 				mc.moved_swap++;
+ 			}
+ 			break;
 
 
