@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E36C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B0BC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B73D02070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2EA120775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859493;
-	bh=aH9N2X8cK9yWknxgS/kGhUdLd4Tp5DOTt7iEgW0I6Q0=;
+	s=default; t=1595859496;
+	bh=9eh4zjibUGsJrkBsVkA2O+Xz5FTZwE39Qzz12cZceuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X0C657qOl6HALwxjOT8ENp2PhPc2jjSaBvU1LdRfJf5GYltwCPyCk+2qD413jEZRI
-	 o4eBAKPGcFJQj1Oatw3K3wmaNJWYxrawiRviVvE6lUnJD6W0bWae/6aCRDMHJVNIOP
-	 K44jTKIs7/wvUYWMoYheW9TeiPErWaoGM64hqovM=
+	b=XXJ1VahX8RzVohspuAbKHX15kflDrjZQJV/fRoyeFdXkj1DaXtxKxM+CioFGh+3J5
+	 cE2Q8z7eSI4eHhQ1KJ0713aqGcmMWHECOuo0BiW31L1cKn5z/f6zo43sulPCkAJJ3b
+	 rHJ0Vrb6xRFkqfJfOYl613qbjHV2ZINmBS2f62C8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731178AbgG0OSM (ORCPT
+        id S1731199AbgG0OSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:18:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45656 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:18:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731170AbgG0OSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:06 -0400
+        id S1731188AbgG0OSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA4DB2070A;
-        Mon, 27 Jul 2020 14:18:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6372520775;
+        Mon, 27 Jul 2020 14:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859486;
-        bh=aH9N2X8cK9yWknxgS/kGhUdLd4Tp5DOTt7iEgW0I6Q0=;
+        s=default; t=1595859490;
+        bh=9eh4zjibUGsJrkBsVkA2O+Xz5FTZwE39Qzz12cZceuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ktsnJ8EqCkXMVOH7MpGQGjU5iDSvQq/PaKWJM0df9Dtymt4etSHLP4cIs6muT9J50
-         ep9C5IyTYeogaaH5I37deqOftU0CriliBY3XeBwZp8StL/5K7cyi1U62mmUwctjAsF
-         mvHg0oG/7Mz5YUx2M7pxr6HunLcS9Tix9ginayZQ=
+        b=O+II9mm9XhSUHtcBDrb3spic9eQ6mywZ+qWnt9nmGQcH7Q7I74NcKKqyYJUt3i5G7
+         m5qr0FE7Y1n25HuFoglT91YorFs1otoHME8su6jOb/3i2DGBy1IyvuiFqIexH1V3Fj
+         W19R18yfGBaG7ln0G1bru1S/6is9MyAiCUGrUOUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 127/138] mmc: sdhci-of-aspeed: Fix clock divider calculation
-Date:   Mon, 27 Jul 2020 16:05:22 +0200
-Message-Id: <20200727134931.778827641@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Qiu Wenbo <qiuwenbo@phytium.com.cn>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 129/138] drm/amd/powerplay: fix a crash when overclocking Vega M
+Date:   Mon, 27 Jul 2020 16:05:24 +0200
+Message-Id: <20200727134931.876843687@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -62,37 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eddie James <eajames@linux.ibm.com>
+From: Qiu Wenbo <qiuwenbo@phytium.com.cn>
 
-commit ebd4050c6144b38098d8eed34df461e5e3fa82a9 upstream.
+commit 88bb16ad998a0395fe4b346b7d3f621aaa0a2324 upstream.
 
-When calculating the clock divider, start dividing at 2 instead of 1.
-The divider is divided by two at the end of the calculation, so starting
-at 1 may result in a divider of 0, which shouldn't happen.
+Avoid kernel crash when vddci_control is SMU7_VOLTAGE_CONTROL_NONE and
+vddci_voltage_table is empty. It has been tested on Intel Hades Canyon
+(i7-8809G).
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-Acked-by: Joel Stanley <joel@jms.id.au>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20200709195706.12741-3-eajames@linux.ibm.com
-Cc: stable@vger.kernel.org # v5.4+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=208489
+Fixes: ac7822b0026f ("drm/amd/powerplay: add smumgr support for VEGAM (v2)")
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-of-aspeed.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/mmc/host/sdhci-of-aspeed.c
-+++ b/drivers/mmc/host/sdhci-of-aspeed.c
-@@ -68,7 +68,7 @@ static void aspeed_sdhci_set_clock(struc
- 	if (WARN_ON(clock > host->max_clk))
- 		clock = host->max_clk;
+--- a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
++++ b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
+@@ -642,9 +642,6 @@ static int vegam_get_dependency_volt_by_
  
--	for (div = 1; div < 256; div *= 2) {
-+	for (div = 2; div < 256; div *= 2) {
- 		if ((parent / div) <= clock)
- 			break;
- 	}
+ 	/* sclk is bigger than max sclk in the dependence table */
+ 	*voltage |= (dep_table->entries[i - 1].vddc * VOLTAGE_SCALE) << VDDC_SHIFT;
+-	vddci = phm_find_closest_vddci(&(data->vddci_voltage_table),
+-			(dep_table->entries[i - 1].vddc -
+-					(uint16_t)VDDC_VDDCI_DELTA));
+ 
+ 	if (SMU7_VOLTAGE_CONTROL_NONE == data->vddci_control)
+ 		*voltage |= (data->vbios_boot_state.vddci_bootup_value *
+@@ -652,8 +649,13 @@ static int vegam_get_dependency_volt_by_
+ 	else if (dep_table->entries[i - 1].vddci)
+ 		*voltage |= (dep_table->entries[i - 1].vddci *
+ 				VOLTAGE_SCALE) << VDDC_SHIFT;
+-	else
++	else {
++		vddci = phm_find_closest_vddci(&(data->vddci_voltage_table),
++				(dep_table->entries[i - 1].vddc -
++						(uint16_t)VDDC_VDDCI_DELTA));
++
+ 		*voltage |= (vddci * VOLTAGE_SCALE) << VDDCI_SHIFT;
++	}
+ 
+ 	if (SMU7_VOLTAGE_CONTROL_NONE == data->mvdd_control)
+ 		*mvdd = data->vbios_boot_state.mvdd_bootup_value * VOLTAGE_SCALE;
 
 
