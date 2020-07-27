@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0C1C433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35CCC43446
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0D5020759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9198320759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgG0Faa (ORCPT
+        id S1726835AbgG0FaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:30:30 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:40012 "EHLO
+        Mon, 27 Jul 2020 01:30:08 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:32374 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726947AbgG0FaN (ORCPT
+        by vger.kernel.org with ESMTP id S1726753AbgG0FaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:30:13 -0400
+        Mon, 27 Jul 2020 01:30:07 -0400
 Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5S0bU011271;
-        Mon, 27 Jul 2020 01:29:56 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 32ghn5da4a-1
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5SkUc011858;
+        Mon, 27 Jul 2020 01:30:05 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32ghn5da4w-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:29:56 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 06R5Tsld017800
+        Mon, 27 Jul 2020 01:30:05 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 06R5U4hi047698
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 27 Jul 2020 01:29:54 -0400
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+        Mon, 27 Jul 2020 01:30:04 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sun, 26 Jul 2020 22:29:53 -0700
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ 15.1.1779.2; Mon, 27 Jul 2020 01:30:03 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sun, 26 Jul 2020 22:29:53 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Sun, 26 Jul 2020 22:29:52 -0700
+ 15.1.1779.2; Mon, 27 Jul 2020 01:30:03 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 27 Jul 2020 01:30:03 -0400
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06R5TksO007624;
-        Mon, 27 Jul 2020 01:29:50 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06R5TksU007624;
+        Mon, 27 Jul 2020 01:29:58 -0400
 From:   <alexandru.tachici@analog.com>
 To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>
 CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
         Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v6 2/9] hwmon: pmbus: adm1266: Add Block process call
-Date:   Mon, 27 Jul 2020 08:31:14 +0300
-Message-ID: <20200727053121.23288-3-alexandru.tachici@analog.com>
+Subject: [PATCH v6 8/9] hwmon: pmbus: adm1266: program configuration
+Date:   Mon, 27 Jul 2020 08:31:20 +0300
+Message-ID: <20200727053121.23288-9-alexandru.tachici@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200727053121.23288-1-alexandru.tachici@analog.com>
 References: <20200727053121.23288-1-alexandru.tachici@analog.com>
@@ -74,134 +74,273 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-PmBus devices support Block Write-Block Read Process
-Call described in SMBus specification v 2.0 with the
-exception that Block writes and reads are permitted to
-have up 255 data bytes instead of max 32 bytes (SMBus).
+Writing the configuration Intel hex file to the nvmem,
+of an adm1266, with offset 0x30000, will now
+trigger the configuration programming.
 
-This patch adds Block WR process call support for ADM1266.
+During this process the adm1266 sequencer will be
+stopped and at the end will be issued a seq reset
+(see AN-1453 Programming the configuration).
 
 Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 ---
- drivers/hwmon/pmbus/Kconfig   |  1 +
- drivers/hwmon/pmbus/adm1266.c | 73 +++++++++++++++++++++++++++++++++++
- 2 files changed, 74 insertions(+)
+ drivers/hwmon/pmbus/adm1266.c | 179 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 178 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index da34083e1ffd..c04068b665e6 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -28,6 +28,7 @@ config SENSORS_PMBUS
- 
- config SENSORS_ADM1266
- 	tristate "Analog Devices ADM1266 Sequencer"
-+	select CRC8
- 	help
- 	  If you say yes here you get hardware monitoring support for Analog
- 	  Devices ADM1266 Cascadable Super Sequencer.
 diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
-index 79e8d90886b8..63975eba34ad 100644
+index 376fc56abe04..2b07e38041da 100644
 --- a/drivers/hwmon/pmbus/adm1266.c
 +++ b/drivers/hwmon/pmbus/adm1266.c
-@@ -6,6 +6,7 @@
-  * Copyright 2020 Analog Devices Inc.
-  */
+@@ -40,7 +40,10 @@
+ #define ADM1266_BLACKBOX_INFO	0xE6
+ #define ADM1266_PDIO_STATUS	0xE9
+ #define ADM1266_GPIO_STATUS	0xEA
++#define ADM1266_STATUS_MFR_2	0xED
++#define ADM1266_REFRESH_FLASH	0xF5
+ #define ADM1266_MEMORY_CONFIG	0xF8
++#define ADM1266_MEMORY_CRC	0xF9
+ #define ADM1266_SWITCH_MEMORY	0xFA
+ #define ADM1266_UPDATE_FW	0xFC
+ #define ADM1266_FW_PASSWORD	0xFD
+@@ -66,6 +69,11 @@
  
-+#include <linux/crc8.h>
- #include <linux/i2c.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-@@ -13,11 +14,80 @@
- #include "pmbus.h"
- #include <linux/slab.h>
- 
-+#define ADM1266_PMBUS_BLOCK_MAX		255
+ /* ADM1266 STATUS_MFR defines */
+ #define ADM1266_STATUS_PART_LOCKED(x)	FIELD_GET(BIT(2), x)
++#define ADM1266_RUNNING_REFRESH(x)	FIELD_GET(BIT(3), x)
++#define ADM1266_ALL_CRC_FAULT(x)	FIELD_GET(BIT(5), x)
 +
- struct adm1266_data {
- 	struct pmbus_driver_info info;
- 	struct i2c_client *client;
-+	struct mutex buf_mutex;
-+	u8 write_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
-+	u8 read_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
++/* ADM1266 STATUS_MFR_2 defines */
++#define ADM1266_MAIN_CONFIG_FAULT(x)	FIELD_GET(GENMASK(9, 8), x)
+ 
+ /* ADM1266 GO_COMMAND defines */
+ #define ADM1266_GO_COMMAND_STOP		BIT(0)
+@@ -74,6 +82,8 @@
+ 
+ #define ADM1266_FIRMWARE_OFFSET		0x00000
+ #define ADM1266_FIRMWARE_SIZE		131072
++#define ADM1266_CONFIG_OFFSET		0x30000
++#define ADM1266_CONFIG_SIZE		131072
+ #define ADM1266_BLACKBOX_OFFSET		0x7F700
+ #define ADM1266_BLACKBOX_SIZE		64
+ 
+@@ -117,6 +127,11 @@ static const struct nvmem_cell_info adm1266_nvmem_cells[] = {
+ 		.offset         = ADM1266_FIRMWARE_OFFSET,
+ 		.bytes          = ADM1266_FIRMWARE_SIZE,
+ 	},
++	{
++		.name           = "configuration",
++		.offset         = ADM1266_CONFIG_OFFSET,
++		.bytes          = ADM1266_CONFIG_SIZE,
++	},
  };
  
-+DECLARE_CRC8_TABLE(pmbus_crc_table);
+ DECLARE_CRC8_TABLE(pmbus_crc_table);
+@@ -521,6 +536,9 @@ static int adm1266_read_mem_cell(struct adm1266_data *data, const struct nvmem_c
+ 	case ADM1266_FIRMWARE_OFFSET:
+ 		/* firmware is write-only */
+ 		return 0;
++	case ADM1266_CONFIG_OFFSET:
++		/* configuration is write-only */
++		return 0;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -677,6 +695,7 @@ static int adm1266_write_hex(struct adm1266_data *data,
+ 	u8 first_writes[7];
+ 	u8 byte_count;
+ 	u8 reg_address;
++	bool to_slaves = false;
+ 	int ret;
+ 	int i;
+ 
+@@ -707,7 +726,10 @@ static int adm1266_write_hex(struct adm1266_data *data,
+ 		if (ret < 0)
+ 			return ret;
+ 
+-		ret = adm1266_group_cmd(data, reg_address, write_buf, byte_count, true);
++		if (offset == ADM1266_FIRMWARE_OFFSET)
++			to_slaves = true;
 +
-+/*
-+ * Different from Block Read as it sends data and waits for the slave to
-+ * return a value dependent on that data. The protocol is simply a Write Block
-+ * followed by a Read Block without the Read-Block command field and the
-+ * Write-Block STOP bit.
-+ */
-+static int adm1266_pmbus_block_xfer(struct adm1266_data *data, u8 cmd, u8 w_len, u8 *data_w,
-+				    u8 *data_r)
++		ret = adm1266_group_cmd(data, reg_address, write_buf, byte_count, to_slaves);
+ 		if (ret < 0) {
+ 			dev_err(&data->client->dev, "Firmware write error: %d.", ret);
+ 			return ret;
+@@ -732,6 +754,87 @@ static int adm1266_write_hex(struct adm1266_data *data,
+ 	return 0;
+ }
+ 
++static int adm1266_verify_memory(struct adm1266_data *data)
 +{
-+	struct i2c_client *client = data->client;
-+	struct i2c_msg msgs[2] = {
-+		{
-+			.addr = client->addr,
-+			.flags = I2C_M_DMA_SAFE,
-+			.buf = data->write_buf,
-+			.len = w_len + 2,
-+		},
-+		{
-+			.addr = client->addr,
-+			.flags = I2C_M_RD | I2C_M_DMA_SAFE,
-+			.buf = data->read_buf,
-+			.len = ADM1266_PMBUS_BLOCK_MAX + 2,
-+		}
-+	};
-+	u8 addr;
-+	u8 crc;
++	char cmd[2];
 +	int ret;
++	int reg;
 +
-+	mutex_lock(&data->buf_mutex);
++	cmd[0] = 0x1;
++	cmd[1] = 0x0;
++	ret = adm1266_group_cmd(data, ADM1266_MEMORY_CRC, cmd,
++				sizeof(cmd), true);
++	if (ret < 0)
++		return ret;
 +
-+	msgs[0].buf[0] = cmd;
-+	msgs[0].buf[1] = w_len;
-+	memcpy(&msgs[0].buf[2], data_w, w_len);
++	/* after issuing a memory recalculate crc command, wait 1000 ms */
++	msleep(1000);
 +
-+	ret = i2c_transfer(client->adapter, msgs, 2);
-+	if (ret != 2) {
-+		if (ret >= 0)
-+			ret = -EPROTO;
++	reg = pmbus_read_word_data(data->client, 0, 0xFF, ADM1266_STATUS_MFR_2);
++	if (reg < 0)
++		return reg;
++
++	if (ADM1266_MAIN_CONFIG_FAULT(reg)) {
++		dev_err(&data->client->dev, "Main memory corrupted.");
++		return -EFAULT;
++	}
++
++	return 0;
++}
++
++static int adm1266_refresh_memory(struct adm1266_data *data)
++{
++	unsigned int timeout = 9000;
++	int ret;
++	u8 cmd[2];
++
++	cmd[0] = 0x2;
++	ret = adm1266_group_cmd(data, ADM1266_REFRESH_FLASH, cmd, 1, true);
++	if (ret < 0) {
++		dev_err(&data->client->dev, "Could not refresh flash.");
 +		return ret;
 +	}
 +
-+	if (client->flags & I2C_CLIENT_PEC) {
-+		addr = i2c_8bit_addr_from_msg(&msgs[0]);
-+		crc = crc8(pmbus_crc_table, &addr, 1, 0);
-+		crc = crc8(pmbus_crc_table, msgs[0].buf,  msgs[0].len, crc);
++	/* after issuing a refresh flash command, wait 9000 ms */
++	msleep(9000);
 +
-+		addr = i2c_8bit_addr_from_msg(&msgs[1]);
-+		crc = crc8(pmbus_crc_table, &addr, 1, crc);
-+		crc = crc8(pmbus_crc_table, msgs[1].buf,  msgs[1].buf[0] + 1, crc);
++	do {
++		msleep(1000);
++		timeout -= 1000;
 +
-+		if (crc != msgs[1].buf[msgs[1].buf[0] + 1])
-+			return -EBADMSG;
++		ret = pmbus_read_byte_data(data->client, 0, ADM1266_STATUS_MFR);
++		if (ret < 0) {
++			dev_err(&data->client->dev, "Could not read status.");
++			return ret;
++		}
++
++	} while (ADM1266_RUNNING_REFRESH(ret) && timeout > 0);
++
++	if (timeout == 0)
++		return -ETIMEDOUT;
++
++	cmd[0] = 0x1;
++	cmd[1] = 0x0;
++	ret = adm1266_group_cmd(data, ADM1266_MEMORY_CRC, cmd,
++				sizeof(cmd), true);
++	if (ret < 0)
++		return ret;
++
++	/* after issuing a memory recalculate crc command, wait 1000 ms */
++	msleep(1000);
++
++	ret = pmbus_read_byte_data(data->client, 0, ADM1266_STATUS_MFR);
++	if (ret < 0)
++		return ret;
++
++	if (ADM1266_ALL_CRC_FAULT(ret)) {
++		dev_err(&data->client->dev, "CRC checks failed.");
++		return ret;
 +	}
 +
-+	memcpy(data_r, &msgs[1].buf[1], msgs[1].buf[0]);
++	return 0;
++}
 +
-+	ret = msgs[1].buf[0];
-+	mutex_unlock(&data->buf_mutex);
+ static int adm1266_program_firmware(struct adm1266_data *data)
+ {
+ 	u8 write_data[3];
+@@ -784,6 +887,77 @@ static int adm1266_program_firmware(struct adm1266_data *data)
+ 	return ret;
+ }
+ 
++static int adm1266_program_config(struct adm1266_data *data)
++{
++	u8 cmd[2];
++	u8 value;
++	int ret;
++
++	value = ADM1266_GO_COMMAND_STOP | ADM1266_GO_COMMAND_SEQ_RES;
++	ret = pmbus_write_word_data(data->client, 0, ADM1266_GO_COMMAND, value);
++	if (ret < 0) {
++		dev_err(&data->client->dev, "Could not stop sequence.");
++		return ret;
++	}
++
++	/* after issuing a stop command, wait 100 ms */
++	msleep(100);
++
++	ret = adm1266_unlock_all_dev(data);
++	if (ret < 0) {
++		dev_err(&data->client->dev, "Could not unlock dev.");
++		goto lock_all_devices;
++	}
++
++	value = 0;
++	ret = i2c_smbus_write_block_data(data->client, ADM1266_SWITCH_MEMORY, 1, &value);
++	if (ret < 0) {
++		dev_err(&data->client->dev, "Could not switch to main mem.");
++		goto lock_all_devices;
++	}
++
++	/* after issuing a SWITCH_MEMORY command, wait 1000 ms */
++	msleep(1000);
++
++	ret = adm1266_write_hex(data, ADM1266_CONFIG_OFFSET, ADM1266_CONFIG_SIZE);
++	if (ret < 0) {
++		dev_err(&data->client->dev, "Could not write configuration.");
++		goto lock_all_devices;
++	}
++
++	ret = pmbus_write_byte(data->client, 0, ADM1266_STORE_USER_ALL);
++	if (ret < 0)
++		return ret;
++
++	/* after issuing a STORE_USER_ALL command, wait 300 ms */
++	msleep(300);
++
++	if (!data->master_dev)
++		goto lock_all_devices;
++
++	ret = adm1266_verify_memory(data);
++	if (ret < 0)
++		goto lock_all_devices;
++
++	cmd[0] = 0;
++	cmd[1] = 0;
++	ret = adm1266_group_cmd(data, ADM1266_GO_COMMAND, cmd, sizeof(cmd), true);
++	if (ret < 0) {
++		dev_err(&data->client->dev, "Could not restart sequence.");
++		goto lock_all_devices;
++	}
++
++	/* after issuing a restart sequence command, wait 350 ms */
++	msleep(350);
++
++	ret = adm1266_refresh_memory(data);
++
++lock_all_devices:
++	adm1266_lock_all_dev(data);
 +
 +	return ret;
 +}
 +
- static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *id)
- {
- 	struct adm1266_data *data;
-@@ -33,6 +103,9 @@ static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *
- 	for (i = 0; i < data->info.pages; i++)
- 		data->info.func[i] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
+ /* check if firmware/config write has ended */
+ static bool adm1266_check_ending(struct adm1266_data *data, unsigned int offset,
+ 				 unsigned int size)
+@@ -825,6 +999,9 @@ static int adm1266_write_mem_cell(struct adm1266_data *data,
  
-+	crc8_populate_msb(pmbus_crc_table, 0x7);
-+	mutex_init(&data->buf_mutex);
-+
- 	return pmbus_do_probe(client, id, &data->info);
- }
- 
+ 		program_func = &adm1266_program_firmware;
+ 		break;
++	case ADM1266_CONFIG_OFFSET:
++		program_func = &adm1266_program_config;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
 -- 
 2.20.1
 
