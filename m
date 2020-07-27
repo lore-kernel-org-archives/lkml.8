@@ -2,180 +2,153 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931B4C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011F3C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71925206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:52:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595857974;
-	bh=6gvUnAaga1o3SNK5TdyV+zzIUDToUrR4TM83c1UHhP8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mSf++5CAPiX62tWHriklXf/nl55nM7jX+VdJTqsGQe2Pt06yPbNYaFqFdySj+mwFj
-	 WciIlmhyL4qOA2zza8qV8bO2h6aKXc8CL9R67+ZNRnYL5Yv6wg4dfwUwd2HvB3p3x4
-	 ok+DO5T5rs3CdyICY0O03np7UiyFmrZgU/1IT9pU=
+	by mail.kernel.org (Postfix) with ESMTP id D975E20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgG0Nwx (ORCPT
+        id S1728593AbgG0NxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:52:53 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34598 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbgG0Nwx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:52:53 -0400
-Received: by mail-ot1-f66.google.com with SMTP id a26so3556146otf.1;
-        Mon, 27 Jul 2020 06:52:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MoIlXcMF9D4zeeYXp6UIV7DtFwc5SM0pMI4P1+Jngt0=;
-        b=PhDhku7wcRGPO2TcVoDlkzmXZfOUZdKZJikdeXgJvby1CyQa2Ju/NYj5od0Qz1qWGY
-         t6+zwnDmDyQxYGFHmh5zC6IbN/xodrImP3qBlmujrhHbz8SGyma1S0uW4PdstZtYpgQV
-         XFUt2m4d0e+e8ZJHupyZM1LGwT3FAl+NpoddNs3Bhs33tMIQBnEw3Czg1utvUibDCkdP
-         dgibiznNWyd+ZeYpaifQFOHzGTePuKt6UnrPc2AyGXWZ8BbXl9FvDTFXHUD+g+ycF8BR
-         BLPdjtrEGes1DowckY+uB5QwUCuyp5jKVSLCISVMqlzQvTVlavb4UYIsRgn1E8w9mNGF
-         9Wlw==
-X-Gm-Message-State: AOAM5336Tgk48D5bdvpWPVRRiAC2UVEzOrD6E4MpXiikkBcJjJ3sN28d
-        8B+9G9c1aWwtFFNpqZCTG55qnEckkVUITyazLXk=
-X-Google-Smtp-Source: ABdhPJz0eM8K7znzqJEUlA6BVvoNfTYawdzuFTAmQYRguizkocRok1Q5QrJvACM7dP3OmxvPAAYrFafrcmdq6gAQET8=
-X-Received: by 2002:a9d:590a:: with SMTP id t10mr20473486oth.262.1595857971989;
- Mon, 27 Jul 2020 06:52:51 -0700 (PDT)
+        Mon, 27 Jul 2020 09:53:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727784AbgG0NxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 09:53:10 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D508206E7;
+        Mon, 27 Jul 2020 13:53:09 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 09:53:06 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Oscar Carter <oscar.carter@gmx.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v2 2/2] kernel/trace: Remove function callback casts
+Message-ID: <20200727095306.7f369949@oasis.local.home>
+In-Reply-To: <20200726155148.GA9341@ubuntu>
+References: <20200719155033.24201-3-oscar.carter@gmx.com>
+        <20200721140545.445f0258@oasis.local.home>
+        <20200724161921.GA3123@ubuntu>
+        <20200724123528.36ea9c9e@oasis.local.home>
+        <20200724171418.GB3123@ubuntu>
+        <20200724133656.76c75629@oasis.local.home>
+        <20200724134020.3160dc7c@oasis.local.home>
+        <20200724175500.GD3123@ubuntu>
+        <20200724143457.27755412@oasis.local.home>
+        <20200725150914.GA3362@ubuntu>
+        <20200726155148.GA9341@ubuntu>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200722093732.14297-1-ionela.voinescu@arm.com> <20200722093732.14297-3-ionela.voinescu@arm.com>
-In-Reply-To: <20200722093732.14297-3-ionela.voinescu@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 27 Jul 2020 15:52:41 +0200
-Message-ID: <CAJZ5v0iiF75+POMF5oX8_NOBiLLqMQSYTTf-X0QoLAPV7fF0-g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] cpufreq: set invariance scale factor on transition end
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:38 AM Ionela Voinescu
-<ionela.voinescu@arm.com> wrote:
->
-> While the move of the invariance setter calls (arch_set_freq_scale())
-> from cpufreq drivers to cpufreq core maintained the previous
-> functionality for existing drivers that use target_index() and
-> fast_switch() for frequency switching, it also gives the possibility
-> of adding support for users of the target() callback, which is exploited
-> here.
->
-> To be noted that the target() callback has been flagged as deprecated
-> since:
->
-> commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
->
-> It also doesn't have that many users:
->
->   cpufreq-nforce2.c:371:2:      .target = nforce2_target,
->   cppc_cpufreq.c:416:2:         .target = cppc_cpufreq_set_target,
->   gx-suspmod.c:439:2:           .target = cpufreq_gx_target,
->   pcc-cpufreq.c:573:2:          .target = pcc_cpufreq_target,
->
-> Similarly to the path taken for target_index() calls in the cpufreq core
-> during a frequency change, all of the drivers above will mark the end of a
-> frequency change by a call to cpufreq_freq_transition_end().
->
-> Therefore, cpufreq_freq_transition_end() can be used as the location for
-> the arch_set_freq_scale() call to potentially inform the scheduler of the
-> frequency change.
->
-> This change maintains the previous functionality for the drivers that
-> implement the target_index() callback, while also adding support for the
-> few drivers that implement the deprecated target() callback.
->
-> Two notes are worthwhile here:
->  - In __target_index(), cpufreq_freq_transition_end() is called only for
->    drivers that have synchronous notifications enabled. There is only one
->    driver that disables them,
->
->    drivers/cpufreq/powernow-k8.c:1142: .flags = CPUFREQ_ASYNC_NOTIFICATION,
->
->    which is deprecated.
->
->  - Despite marking a successful frequency change, many cpufreq drivers
->    will populate the new policy->cur with the new requested frequency,
->    although this might not be the one granted by the hardware.
->
->    Therefore, the call to arch_set_freq_scale() is a "best effort" one,
->    and it is up to the architecture if the new frequency is used in the
->    new frequency scale factor setting or eventually used by the scheduler.
->    The architecture is in a better position to decide if it has better
->    methods to obtain more accurate information regarding the current
->    frequency (for example the use of counters).
->
-> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/cpufreq.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index bac4101546db..3497c1cd6818 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -448,6 +448,10 @@ void cpufreq_freq_transition_end(struct cpufreq_policy *policy,
->
->         cpufreq_notify_post_transition(policy, freqs, transition_failed);
->
-> +       arch_set_freq_scale(policy->related_cpus,
-> +                           policy->cur,
-> +                           policy->cpuinfo.max_freq);
+On Sun, 26 Jul 2020 17:52:42 +0200
+Oscar Carter <oscar.carter@gmx.com> wrote:
+
+> > If I try to do this I will need some help. Some info that point me to the
+> > right direction would be greatly appreciated. Some advice about what
+> > functions I will need to implement would be really helpfull. Or point me
+> > to the right piece of code that I can pick as base point.  
+> 
+> I've been searching and reading the code as much as possible. I've found
+> two patches that I think can be useful to guide me. One [1] adds support
+> for ftrace_ops to the riscv architecture. The other one [2] adds support
+> for ftrace_ops to the parisc architecture.
+> 
+> [1] commit 71e736a7d655 ("riscv/ftrace: Add ARCH_SUPPORTS_FTRACE_OPS support")
+> [2] commit d562aca37a54 ("parisc/ftrace: Add ARCH_SUPPORTS_FTRACE_OPS support")
+> 
+> Due to powerpc arch calls the needed functions from assembly, I based my
+> idea on the patch for the RISCV arch.
+> 
+> Can something like the following work?
+> 
+> diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
+> index bc76970b6ee5..1c51ff5afae1 100644
+> --- a/arch/powerpc/include/asm/ftrace.h
+> +++ b/arch/powerpc/include/asm/ftrace.h
+> @@ -61,9 +61,8 @@ struct dyn_arch_ftrace {
+>  };
+>  #endif /* __ASSEMBLY__ */
+> 
+> -#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+>  #define ARCH_SUPPORTS_FTRACE_OPS 1
+> -#endif
 > +
->         policy->transition_ongoing = false;
->         policy->transition_task = NULL;
->
-> @@ -2159,7 +2163,7 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
->                             unsigned int relation)
->  {
->         unsigned int old_target_freq = target_freq;
-> -       int index, retval;
-> +       int index;
->
->         if (cpufreq_disabled())
->                 return -ENODEV;
-> @@ -2190,14 +2194,7 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
->
->         index = cpufreq_frequency_table_target(policy, target_freq, relation);
->
-> -       retval = __target_index(policy, index);
-> -
-> -       if (!retval)
-> -               arch_set_freq_scale(policy->related_cpus,
-> -                                   policy->freq_table[index].frequency,
-> -                                   policy->cpuinfo.max_freq);
-> -
-> -       return retval;
-> +       return __target_index(policy, index);
->  }
->  EXPORT_SYMBOL_GPL(__cpufreq_driver_target);
->
-> --
+>  #endif /* CONFIG_FUNCTION_TRACER */
+> 
+>  #ifndef __ASSEMBLY__
+> diff --git a/arch/powerpc/kernel/trace/ftrace_32.S b/arch/powerpc/kernel/trace/ftrace_32.S
+> index e023ae59c429..e69a4e945986 100644
+> --- a/arch/powerpc/kernel/trace/ftrace_32.S
+> +++ b/arch/powerpc/kernel/trace/ftrace_32.S
+> @@ -29,6 +29,10 @@ _GLOBAL(ftrace_caller)
+>         MCOUNT_SAVE_FRAME
+>         /* r3 ends up with link register */
+>         subi    r3, r3, MCOUNT_INSN_SIZE
+> +
+> +       /* Set ftrace_ops (r5) to the global variable function_trace_op */
+> +       /* Set pt_regs (r6) to NULL */
+> +
+>  .globl ftrace_call
+>  ftrace_call:
+>         bl      ftrace_stub
+> diff --git a/arch/powerpc/kernel/trace/ftrace_64_pg.S b/arch/powerpc/kernel/trace/ftrace_64_pg.S
+> index 6708e24db0ab..a741448b1df9 100644
+> --- a/arch/powerpc/kernel/trace/ftrace_64_pg.S
+> +++ b/arch/powerpc/kernel/trace/ftrace_64_pg.S
+> @@ -22,6 +22,10 @@ _GLOBAL_TOC(ftrace_caller)
+>         std     r3, 128(r1)
+>         ld      r4, 16(r11)
+>         subi    r3, r3, MCOUNT_INSN_SIZE
+> +
+> +       /* Set ftrace_ops (r5) to the global variable function_trace_op */
+> +       /* Set pt_regs (r6) to NULL */
 
-I would fold this patch into the previous one.
+I'm guessing you are going to do the above here. If so, this looks correct.
 
-I don't see much reason for it to be separate and it looks like
-folding it in would cause the previous patch to be simpler.
+> +
+>  .globl ftrace_call
+>  ftrace_call:
+>         bl      ftrace_stub
+> 
+> To add support for ftrace_ops to the powerpc architecture is only necessary
+> to fill the r5 and r6 registers before the call to ftrace_stub in all the
+> cases. The register r5 is a pointer to ftrace_ops struct and the register
+> r6 is a pointer to pt_regs struct. These registers are the third and fourth
+> parameters of a function with the following prototype. The first and second
+> ones are yet set.
+
+I guess you mean that the first and second ones are already set. But,
+yeah, you are on the correct path here!
+
+> 
+> void func(unsigned long ip, unsigned long parent_ip,
+> 	  struct ftrace_ops *ops, struct pt_regs *regs);
+> 
+> Am I in the right direction? or am I totally wrong?
+
+No, you don't look wrong. But the true test is to try it out :-)
+
+Don't forget to update ftrace_32.S as well.
+
+
+> 
+> Thanks for your time and patience.
+
+My pleasure. Thanks for doing this. The more people that understand all
+this, the better!
+
+-- Steve
