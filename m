@@ -2,102 +2,150 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91104C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4D1C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E96720714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C715C20FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:26:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="owGCpEAi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726324AbgG0IZ6 (ORCPT
+        id S1726753AbgG0I0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:25:58 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:59391 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726139AbgG0IZ6 (ORCPT
+        Mon, 27 Jul 2020 04:26:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgG0I0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:25:58 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0U3v2TZF_1595838353;
-Received: from 30.27.116.241(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U3v2TZF_1595838353)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 27 Jul 2020 16:25:54 +0800
-Subject: Re: [PATCH] tpm: Fix the description error of the help information in
- Kconfig
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        gregkh <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christophe Ricard <christophe.ricard@gmail.com>,
-        Peter Huewe <peter.huewe@infineon.com>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>
-References: <20200727025323.26712-1-tianjia.zhang@linux.alibaba.com>
- <CAK8P3a2neQUP2marbRUxpSZE4OTJtf97JKSK5-LC6EzH8rRHDQ@mail.gmail.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <13d8ab17-5cea-3e00-ecdb-87c68d7f2a15@linux.alibaba.com>
-Date:   Mon, 27 Jul 2020 16:25:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 27 Jul 2020 04:26:04 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D5D0C061794;
+        Mon, 27 Jul 2020 01:26:03 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o18so16132479eje.7;
+        Mon, 27 Jul 2020 01:26:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=75BR4ui/0ei5yQ/BbLZ8dQhsQMEbT91i8MLm5t9Nf2U=;
+        b=owGCpEAi5GbEfwDmuPJDUCrKJt7+ltvauXcfi7ZysKlykaN4Xutj/4k+7Nb8jeiQKa
+         DKbhzfUuMxkk04v6PsYm4qSvEfr9ebImrHCpgOZQqiiAn9iIin70irnOUqhCa+EC99ir
+         oo/xuyKZAEplwDDxTpERFQNxxnPmZYpvoyWE2Rz7ehSCe95aOWyGbfQPguKFbJnfEAet
+         wZ5SyOEAKaBtf77LTYT9TFv76nmHRYVHOEDtCIriNjxAFLGs/3jusClExbD4IFcR4AMk
+         FQs8UtPLxlJqf5vNFOI6GkJEqVAdOafzle4dMFkpR5t5tsd+1xG45KubaX5wods9PuUr
+         7RGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=75BR4ui/0ei5yQ/BbLZ8dQhsQMEbT91i8MLm5t9Nf2U=;
+        b=b7HceWrh/PzFt+GAUAP/Z+BGWGkz8lwmrM+eFQmMGrv9+B78rA/CfpSxtQE8uaxeHc
+         JkRWbPMTQFlyhUshZcyA3QPWGZN5ZDhtt1PND/7esvPwh8Be+1wqRnruEFt4eIjzQ5FM
+         CEVn3L3TFwtwjqcXr/kBloHfh4scnW/uGkYjaXxfS2gdt/Vj0EPZL5zHOpYszrBTJnE1
+         nbJo59eEi6QjqGdmeP4+6SM7YFNQwSpSs8K6TpmAWnA0lGd63JODdLkTT8JCHz5+VDlI
+         DxSz8/DvoVaFJIsTfAf+tdaIL1LRhIZqnT17zQ4XADHZv8jiVEosD0DDRX2g0PJKZ93G
+         m4YQ==
+X-Gm-Message-State: AOAM5314P4jvSmROaiIpHIfrOF4+XZJSKl483YKQAmI54OGRspmOI2U8
+        nUhzIpef68+OOweJxdx3NCI=
+X-Google-Smtp-Source: ABdhPJzHxkdqn1qV/aCcO7xef5C6AfHKHQxhWk723h9S/iT9wh+cnmJ/koYvl7W9cTYh7pq7YFSMxQ==
+X-Received: by 2002:a17:906:3e54:: with SMTP id t20mr19622134eji.471.1595838362121;
+        Mon, 27 Jul 2020 01:26:02 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id t3sm4551175edq.26.2020.07.27.01.26.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 01:26:00 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 10:25:59 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: PWM SUBSYSTEM
+Message-ID: <20200727082559.GD2781612@ulmo>
+References: <20200708175924.15554-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2neQUP2marbRUxpSZE4OTJtf97JKSK5-LC6EzH8rRHDQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="d01dLTUuW90fS44H"
+Content-Disposition: inline
+In-Reply-To: <20200708175924.15554-1-grandmaster@al2klimov.de>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for your advice, I have submitted a v2 patch.
 
-Thanks,
-Tianjia
+--d01dLTUuW90fS44H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2020/7/27 15:10, Arnd Bergmann wrote:
-> On Mon, Jul 27, 2020 at 4:54 AM Tianjia Zhang
-> <tianjia.zhang@linux.alibaba.com> wrote:
->>
->> Obviously, the TPM version number in the help message is wrong, which
->> will cause confusion. This patch fixes it.
-> 
-> How is this "obvious"? I tried finding the specification and could not
-> see anything
-> to back up TIS 1.3 being only supported with TPM 1.3, or the existence of a
-> TPM 1.3 specification at all.
-> 
-> Please consider that not everyone reading this patch description is deeply
-> familiar with the details and explain exactly what the mistake is.
-> 
->> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> 
-> In a bug fix, try to always add a 'FIxes' tag such as 'Fixes: 0edbfea537d1
-> ("tpm/tpm_tis_spi: Add support for spi phy")', and Cc everyone that was
-> involved in the original patch that introduced a bug so they can Ack or
-> Nak it.
-> 
->        Arnd
-> 
->>   drivers/char/tpm/Kconfig | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
->> index 58b4c573d176..8eedb3e704f3 100644
->> --- a/drivers/char/tpm/Kconfig
->> +++ b/drivers/char/tpm/Kconfig
->> @@ -62,7 +62,7 @@ config TCG_TIS_SPI
->>          help
->>            If you have a TPM security chip which is connected to a regular,
->>            non-tcg SPI master (i.e. most embedded platforms) that is compliant with the
->> -         TCG TIS 1.3 TPM specification (TPM1.2) or the TCG PTP FIFO
->> +         TCG TIS 1.3 TPM specification (TPM1.3) or the TCG PTP FIFO
->>            specification (TPM2.0) say Yes and it will be accessible from
->>            within Linux. To compile this driver as a module, choose  M here;
->>            the module will be called tpm_tis_spi.
->> --
->> 2.17.1
->>
+On Wed, Jul 08, 2020 at 07:59:24PM +0200, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+>=20
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+>=20
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=3DAlexander A. Klimov <grandmaster=
+@al2klimov.de>' v5.7..master
+>  (Actually letting a shell for loop submit all this stuff for me.)
+>=20
+>  If there are any URLs to be removed completely or at least not HTTPSifie=
+d:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+>=20
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+>=20
+>  If you apply the patch, please let me know.
+>=20
+>=20
+>  drivers/pwm/pwm-omap-dmtimer.c | 2 +-
+>  drivers/pwm/pwm-tiecap.c       | 2 +-
+>  drivers/pwm/pwm-tiehrpwm.c     | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+
+Applied, thanks.
+
+Thierry
+
+--d01dLTUuW90fS44H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8ej5UACgkQ3SOs138+
+s6G28w//T+L8UNnep9xk+vlaQrJ5wQWoIjI1dia7qsVHT8fa9H3tZ2Msk3Erxh1c
+27EaNDgue1RqbIbmKy0eiz5D6ualoU83S4VLuuh8gxgMDgVZpnHlyI8IECz/w3LO
+2Md2K427Gwx3+vwYmL7bK38gREJKGyfW6dA1k6MkeDZtSOn9yeOW9SEHXp1G7TRn
+TlYgVV9NCUkieKGiqHVABFFsnXuM4JVabzUmjxLEM2CibGcpH/Tq8Dpol+i/1YKv
+5jpPrGtivvuknF0AVeR9SfXB8nhwc0bcIras6YfQdZNI3UDBJMiOD/+TFrox2g8T
+ybG0QL4e1gAUyM3vUNd7qCTk0xCJWKwD0NL0cdu19GCuzVUwY6CQNIyLVFITPAu8
+z1j1V5XU2mCj0GHCMfH8yv0AmKTTLyzOx/Z1OX6xxhPhW/Crpu9MA421f5s+63yK
+wMy7cccAQ9ho8vYRvZBH91nllSbXqmyPopJm+LQxKgImy2f6vpT6JjL21ESwFXK/
+zy0Ost+bMhO+29QlRxALUGbC6Ydo90C6G5b0UdWclLqCZqDLQ5wYcNNbyVO/X9F7
+ZJcoAqCSlQXQ/ygaiXsKRXSOvj8Q0Uvk+vG66Z5/lk5UHjs0vU0xmt2DcXXi+0r3
+9t1PMWO4DdIDy8MgnermuAEwVXIKnn0yscyEW7NCWZzROzAhE0g=
+=kX40
+-----END PGP SIGNATURE-----
+
+--d01dLTUuW90fS44H--
