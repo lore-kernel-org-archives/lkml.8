@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697C0C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 545042083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ABEE20759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgG0FaJ (ORCPT
+        id S1726993AbgG0FaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:30:09 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:31786 "EHLO
+        Mon, 27 Jul 2020 01:30:16 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:40002 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726006AbgG0FaG (ORCPT
+        by vger.kernel.org with ESMTP id S1726946AbgG0FaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:30:06 -0400
+        Mon, 27 Jul 2020 01:30:13 -0400
 Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5Rmv6011000;
-        Mon, 27 Jul 2020 01:30:05 -0400
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5StRa011949;
+        Mon, 27 Jul 2020 01:29:57 -0400
 Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 32ghn5da4u-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 32ghn5da4d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:30:05 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 06R5U3EM017819
+        Mon, 27 Jul 2020 01:29:57 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 06R5TuFp017805
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 27 Jul 2020 01:30:04 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Sun, 26 Jul
- 2020 22:30:02 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Sun, 26 Jul 2020 22:30:02 -0700
+        Mon, 27 Jul 2020 01:29:56 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 27 Jul
+ 2020 01:29:55 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 27 Jul 2020 01:29:55 -0400
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06R5TksV007624;
-        Mon, 27 Jul 2020 01:30:00 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06R5TksQ007624;
+        Mon, 27 Jul 2020 01:29:53 -0400
 From:   <alexandru.tachici@analog.com>
 To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>
 CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
         Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v6 9/9] dt-bindings: hwmon: Add bindings for ADM1266
-Date:   Mon, 27 Jul 2020 08:31:21 +0300
-Message-ID: <20200727053121.23288-10-alexandru.tachici@analog.com>
+Subject: [PATCH v6 4/9] hwmon: pmbus: adm1266: add debugfs for states
+Date:   Mon, 27 Jul 2020 08:31:16 +0300
+Message-ID: <20200727053121.23288-5-alexandru.tachici@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200727053121.23288-1-alexandru.tachici@analog.com>
 References: <20200727053121.23288-1-alexandru.tachici@analog.com>
@@ -70,76 +70,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-Add bindings for the Analog Devices ADM1266 sequencer.
+Add a debugfs entry which prints the current state
+of the adm1266 sequencer.
 
 Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 ---
- .../bindings/hwmon/adi,adm1266.yaml           | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+ drivers/hwmon/pmbus/adm1266.c | 42 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-new file mode 100644
-index 000000000000..ad92686e2ee6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/adi,adm1266.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+index be911de02cf6..dbffc6d12e87 100644
+--- a/drivers/hwmon/pmbus/adm1266.c
++++ b/drivers/hwmon/pmbus/adm1266.c
+@@ -19,6 +19,7 @@
+ #include <linux/slab.h>
+ 
+ #define ADM1266_PDIO_CONFIG	0xD4
++#define ADM1266_READ_STATE	0xD9
+ #define ADM1266_GPIO_CONFIG	0xE1
+ #define ADM1266_PDIO_STATUS	0xE9
+ #define ADM1266_GPIO_STATUS	0xEA
+@@ -43,6 +44,7 @@ struct adm1266_data {
+ 	struct gpio_chip gc;
+ 	const char *gpio_names[ADM1266_GPIO_NR + ADM1266_PDIO_NR];
+ 	struct i2c_client *client;
++	struct dentry *debugfs_dir;
+ 	struct mutex buf_mutex;
+ 	u8 write_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
+ 	u8 read_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
+@@ -287,6 +289,38 @@ static int adm1266_config_gpio(struct adm1266_data *data)
+ 	return ret;
+ }
+ 
++static int adm1266_state_read(struct seq_file *s, void *pdata)
++{
++	struct device *dev = s->private;
++	struct i2c_client *client = to_i2c_client(dev);
++	int ret;
 +
-+title: Analog Devices ADM1266 Cascadable Super Sequencer with Margin
-+  Control and Fault Recording
++	ret = i2c_smbus_read_word_data(client, ADM1266_READ_STATE);
++	if (ret < 0)
++		return ret;
 +
-+maintainers:
-+  - Alexandru Tachici <alexandru.tachici@analog.com>
++	seq_printf(s, "%d\n", ret);
 +
-+description: |
-+  Analog Devices ADM1266 Cascadable Super Sequencer with Margin
-+  Control and Fault Recording.
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
++	return 0;
++}
 +
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adm1266
++static void adm1266_init_debugfs(struct adm1266_data *data)
++{
++	struct dentry *entry;
++	struct dentry *root;
 +
-+  reg:
-+    description: |
-+      I2C address of slave device.
-+    items:
-+      minimum: 0x40
-+      maximum: 0x4F
++	root = pmbus_get_debugfs_dir(data->client);
++	if (!root)
++		return;
 +
-+  avcc-supply:
-+    description: |
-+      Phandle to the Avcc power supply.
++	data->debugfs_dir = debugfs_create_dir(data->client->name, root);
++	if (!data->debugfs_dir)
++		return;
 +
-+  adi,master-adm1266:
-+    description: |
-+      Represents phandle of a master ADM1266 device cascaded through the IDB.
-+    $ref: "/schemas/types.yaml#/definitions/phandle"
++	entry = debugfs_create_devm_seqfile(&data->client->dev, "sequencer_state",
++					    data->debugfs_dir, adm1266_state_read);
++}
 +
-+required:
-+  - compatible
-+  - reg
+ static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ {
+ 	struct adm1266_data *data;
+@@ -310,7 +344,13 @@ static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return pmbus_do_probe(client, id, &data->info);
++	ret = pmbus_do_probe(client, id, &data->info);
++	if (ret)
++		return ret;
 +
-+additionalProperties: false
++	adm1266_init_debugfs(data);
 +
-+examples:
-+  - |
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        adm1266@40 {
-+                compatible = "adi,adm1266";
-+                reg = <0x40>;
-+        };
-+    };
-+...
++	return 0;
+ }
+ 
+ static const struct of_device_id adm1266_of_match[] = {
 -- 
 2.20.1
 
