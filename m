@@ -2,100 +2,149 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6016BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE37C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38D342070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595843105;
-	bh=DLS6vu+tF/Yr4axusONjg1ATVJlwfe6hyJtgwtl3cEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e2JhTGhJHJ12v7RW1IUysxPj+xdLl+V9vLXNg9zT5hBNBWydhCgiw435Y9PfimNh0
-	 I4bziydPYTvi4OzXqXLSW1F6H2F4Iib+djtH/Pm6dOcb+6hNyhA+qOICfMtpHo3n8a
-	 tzbSdXhheh8vIOIQyfy5p/JcvrWr/IiUryEsKWxQ=
+	by mail.kernel.org (Postfix) with ESMTP id C0A0F2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:46:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="bmiSU3rf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgG0JpD (ORCPT
+        id S1726890AbgG0JqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726269AbgG0JpD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:45:03 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E014206D7;
-        Mon, 27 Jul 2020 09:45:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595843102;
-        bh=DLS6vu+tF/Yr4axusONjg1ATVJlwfe6hyJtgwtl3cEc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Nb96BsOq2UFJortPd2AwocDDVxbx43ewV+au31xXLCatkujH299GZIJ40VXDICWc+
-         jz+AhXxOnYIVA8X5MlTUwOt8yLVgxxdWAZnW0JqsvaWc71gmId1L0LeQOyElEADiYS
-         exnlU70eGFczsyRZcdsjPiFSRelD3n2PWlK2mi+w=
-Date:   Mon, 27 Jul 2020 15:14:58 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     EastL <EastL.Lee@mediatek.com>
-Cc:     Sean Wang <sean.wang@mediatek.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, matthias.bgg@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        wsd_upstream@mediatek.com, cc.hwang@mediatek.com
-Subject: Re: [PATCH v6 2/4] dmaengine: mediatek-cqdma: remove redundant queue
- structure
-Message-ID: <20200727094458.GU12965@vkoul-mobl>
-References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
- <1593673564-4425-3-git-send-email-EastL.Lee@mediatek.com>
- <20200715061957.GA34333@vkoul-mobl>
- <1595471650.22392.12.camel@mtkswgap22>
+        Mon, 27 Jul 2020 05:46:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgG0JqD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:46:03 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CC07C061794;
+        Mon, 27 Jul 2020 02:46:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ICcPARetP40zUorjS7dcYCqx0YJx8qUK4R318qaC2G4=; b=bmiSU3rfKiA+hjvdrfEZbldwW
+        5o7JEI+ATlaX78/5TW8fpGu0LNJ+qrq8e0gLOjeveOBJFNPTW+En2OI8jcR7tn74XRZOtTxPZq1v/
+        r/lq0lubttsxW+uEBNMX8IN2w9/bzzld/gcjAeGhTWtq1E2BeaOJcieMKeXlg4QgL2fSmlJbf18b1
+        nNAZPtkIJCLCKJlS4dR5rCoAuiHTbwZB5Z2azfdLRZebMVYTfFPkP0F46qGPc7G4Ugn8nUMP3Ftrx
+        Trxb46LgvkYjjBF9KyiQMb6I9FleJ/KqHVB8tZ5aR/cnF8bNAUDP1Ak2DsFnGdveBhrIZIzumCb9C
+        ehG6V1cCQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44750)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jzzhj-0002fr-Sw; Mon, 27 Jul 2020 10:45:55 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jzzhh-0003Yi-Sb; Mon, 27 Jul 2020 10:45:53 +0100
+Date:   Mon, 27 Jul 2020 10:45:53 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Rob Herring <robh@kernel.org>, miguelborgesdefreitas@gmail.com,
+        a.zummo@towertech.it, baruch@tkos.co.il, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+Message-ID: <20200727094553.GH1551@shell.armlinux.org.uk>
+References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-1-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
+ <20200723174905.GA596242@bogus>
+ <20200723195755.GV3428@piout.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1595471650.22392.12.camel@mtkswgap22>
+In-Reply-To: <20200723195755.GV3428@piout.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-07-20, 10:34, EastL wrote:
-> On Wed, 2020-07-15 at 11:49 +0530, Vinod Koul wrote:
-> > On 02-07-20, 15:06, EastL Lee wrote:
+On Thu, Jul 23, 2020 at 09:57:55PM +0200, Alexandre Belloni wrote:
+> On 23/07/2020 11:49:05-0600, Rob Herring wrote:
+> > On Mon, Jul 20, 2020 at 12:23:59PM +0100, miguelborgesdefreitas@gmail.com wrote:
+> > > From: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+> > > 
+> > > This adds direct-switching mode as a configurable DT flag for
+> > > RTC modules supporting it (e.g. nxp pcf8523).
+> > > DSM switches the power source to the battery supply whenever the
+> > > VDD drops below VBAT. The option is recommended for hw designs
+> > > where VDD is always expected to be higher than VBAT.
+> > > 
+> > > Signed-off-by: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+> > > ---
+> > > Changes in v2:
+> > > - Added extended commit message for git history
+> > > - Separate dt bindings documentation into a single patch
+> > > 
+> > >  Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt | 7 ++++++-
+> > >  Documentation/devicetree/bindings/rtc/rtc.yaml        | 7 +++++++
+> > >  2 files changed, 13 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> > > index 0b1080c..f715a8f 100644
+> > > --- a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> > > +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> > > @@ -4,10 +4,14 @@ Required properties:
+> > >  - compatible: Should contain "nxp,pcf8523".
+> > >  - reg: I2C address for chip.
+> > >  
+> > > -Optional property:
+> > > +Optional properties:
+> > >  - quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
+> > >    expressed in femto Farad (fF). Valid values are 7000 and 12500.
+> > >    Default value (if no value is specified) is 12500fF.
+> > > +- pm-enable-dsm: battery switch-over function is enabled in direct
+> > > +  switching mode. The power failure condition happens when VDD < VBAT,
+> > > +  without requiring VDD to drop below Vth(sw)bat.
+> > > +  Default value (if not provided) is the standard mode.
+> > >  
+> > >  Example:
+> > >  
+> > > @@ -15,4 +19,5 @@ pcf8523: rtc@68 {
+> > >  	compatible = "nxp,pcf8523";
+> > >  	reg = <0x68>;
+> > >  	quartz-load-femtofarads = <7000>;
+> > > +	pm-enable-dsm;
+> > >  };
+> > > diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
+> > > index ee237b2..a0048f4 100644
+> > > --- a/Documentation/devicetree/bindings/rtc/rtc.yaml
+> > > +++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
+> > > @@ -47,4 +47,11 @@ properties:
+> > >      description:
+> > >        Enables wake up of host system on alarm.
+> > >  
+> > > +  pm-enable-dsm:
+> > > +    $ref: /schemas/types.yaml#/definitions/flag
+> > > +    description:
+> > > +      Enables the battery switch-over function in direct switching
+> > > +      mode. Should be set in systems where VDD is higher than VBAT
+> > > +      at all times.
 > > 
-> > >  static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
-> > >  					   dma_cookie_t cookie,
-> > >  					   struct dma_tx_state *txstate)
-> > >  {
-> > > -	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
-> > > -	struct mtk_cqdma_vdesc *cvd;
-> > > -	struct virt_dma_desc *vd;
-> > > -	enum dma_status ret;
-> > > -	unsigned long flags;
-> > > -	size_t bytes = 0;
-> > > -
-> > > -	ret = dma_cookie_status(c, cookie, txstate);
-> > > -	if (ret == DMA_COMPLETE || !txstate)
-> > > -		return ret;
-> > > -
-> > > -	spin_lock_irqsave(&cvc->vc.lock, flags);
-> > > -	vd = mtk_cqdma_find_active_desc(c, cookie);
-> > > -	spin_unlock_irqrestore(&cvc->vc.lock, flags);
-> > > -
-> > > -	if (vd) {
-> > > -		cvd = to_cqdma_vdesc(vd);
-> > > -		bytes = cvd->residue;
-> > > -	}
-> > > -
-> > > -	dma_set_residue(txstate, bytes);
+> > I'm all for common properties, but is this common across vendors?
 > > 
-> > any reason why you want to remove setting residue?
-> Because Mediatek CQDMA HW can't support residue.
+> 
+> This is but this shouldn't be a DT property as it has to be changed
+> dynamically. I'm working on an ioctl interface to change this
+> configuration.
 
-And previously it did?
+Why does it need to be changed dynamically?  If the hardware components
+are not fitted to allow the RTC to be safely used without DSM, then
+why should userspace be able to disable DSM?
+
 -- 
-~Vinod
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
