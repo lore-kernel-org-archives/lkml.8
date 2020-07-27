@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D85C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA42C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8AA420775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED43920775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859626;
-	bh=MOF8PxowY2IX1IG9+eyJOE077JQuOix8lOZk4bZ86jo=;
+	s=default; t=1595859630;
+	bh=RLcNaTNA714BH6ClK6+z16LsGIqxCzLk7P66mk78IQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jDwTUaE9U7qaznmD9eQxFWbJ7kMvXD6x51p1BVfi5CRMNTALn1S7Sbk2pubs1be/2
-	 v5a8OKCGKWusASkOQ0lwmV9MoKtj21KYD+6r+E4KUv2i6ed37jYNH/Ltr+Dh+YarMf
-	 2I2pDn39Ojkn497azn6EBhD2dtroPHdGOzogpO+A=
+	b=Ldgl14ajMkSiHyR+YMBkdzGZ0zejglrd/B0ZNWY/wiaRX7amarhXrT/TmoKKJtfFH
+	 rPOJ+nMQ7PmxmI6Krm0GYJ5Ft+xWQYcQReq6FVok5tG0HoPmyynCwD4FCxlAW/za+x
+	 VmrCmU1ZIsgHjaBe0yHQ7ruN1hXOj0bWNMfnWV8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731542AbgG0OUZ (ORCPT
+        id S1731552AbgG0OU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:20:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48556 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:20:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731533AbgG0OUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:20:22 -0400
+        id S1731537AbgG0OUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:20:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BABB20775;
-        Mon, 27 Jul 2020 14:20:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 232F52070A;
+        Mon, 27 Jul 2020 14:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859621;
-        bh=MOF8PxowY2IX1IG9+eyJOE077JQuOix8lOZk4bZ86jo=;
+        s=default; t=1595859624;
+        bh=RLcNaTNA714BH6ClK6+z16LsGIqxCzLk7P66mk78IQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zSvacIkV0LbTwNK4h18tkU9Ro/e0Bxgho3r4uj3dDdGDbTGe0Fob4nJd/i1+j4GLW
-         PCZYSXaaKBgKwxIAwHkHSSMqXwTC7FvgB/VcW+Ah+AC3yII4XtKLlj8AwO8wm5cIgc
-         mxaI34rAmOHK3DLYWneQt1kRC6WC+reyxOWqJP4I=
+        b=XtpUKlidBSPpvAg2W5qGOJvG9BCSRgq1f7Ma3c6QHl2wI1EP/UNfMEtbAOxDEH6fj
+         XFvUew3xUcTLcbLtivcRdcVmuZaOAPEztPy+yz1HioP7bkd/vvGe6cY5sgYaewZOuc
+         rGnsyd8ZnUqhsJB5Dp0F44vgvDeHq77Q/LmdYNW8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        stable@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 041/179] mt76: mt76x02: fix handling MCU timeouts during hw restart
-Date:   Mon, 27 Jul 2020 16:03:36 +0200
-Message-Id: <20200727134934.679255973@linuxfoundation.org>
+Subject: [PATCH 5.7 042/179] efi/efivars: Expose RT service availability via efivars abstraction
+Date:   Mon, 27 Jul 2020 16:03:37 +0200
+Message-Id: <20200727134934.729499958@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -59,213 +61,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-[ Upstream commit fd6c2dfa49b762ffe773a835ba62fa692df4c1b0 ]
+[ Upstream commit f88814cc2578c121e6edef686365036db72af0ed ]
 
-If a MCU timeout occurs before a hw restart completes, another hw restart
-is scheduled, and the station state gets corrupted.
-To speed up dealing with that, do not issue any MCU commands after the first
-timeout, and defer handling timeouts until the reset has completed.
-Also ignore errors in MCU commands during start/config to avoid making user
-space fail on this condition. If it happens, another restart is scheduled
-quickly, and that usually recovers the hardware properly.
+Commit
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  bf67fad19e493b ("efi: Use more granular check for availability for variable services")
+
+introduced a check into the efivarfs, efi-pstore and other drivers that
+aborts loading of the module if not all three variable runtime services
+(GetVariable, SetVariable and GetNextVariable) are supported. However, this
+results in efivarfs being unavailable entirely if only SetVariable support
+is missing, which is only needed if you want to make any modifications.
+Also, efi-pstore and the sysfs EFI variable interface could be backed by
+another implementation of the 'efivars' abstraction, in which case it is
+completely irrelevant which services are supported by the EFI firmware.
+
+So make the generic 'efivars' abstraction dependent on the availibility of
+the GetVariable and GetNextVariable EFI runtime services, and add a helper
+'efivar_supports_writes()' to find out whether the currently active efivars
+abstraction supports writes (and wire it up to the availability of
+SetVariable for the generic one).
+
+Then, use the efivar_supports_writes() helper to decide whether to permit
+efivarfs to be mounted read-write, and whether to enable efi-pstore or the
+sysfs EFI variable interface altogether.
+
+Fixes: bf67fad19e493b ("efi: Use more granular check for availability for variable services")
+Reported-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Acked-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Tested-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt76.h     |  1 +
- .../net/wireless/mediatek/mt76/mt76x0/pci.c   |  2 ++
- drivers/net/wireless/mediatek/mt76/mt76x02.h  |  2 ++
- .../net/wireless/mediatek/mt76/mt76x02_mcu.c  |  3 +++
- .../net/wireless/mediatek/mt76/mt76x02_mmio.c | 16 ++++++++++++++++
- .../wireless/mediatek/mt76/mt76x2/pci_init.c  |  1 +
- .../wireless/mediatek/mt76/mt76x2/pci_main.c  | 19 ++++++-------------
- 7 files changed, 31 insertions(+), 13 deletions(-)
+ drivers/firmware/efi/efi-pstore.c |  5 +----
+ drivers/firmware/efi/efi.c        | 12 ++++++++----
+ drivers/firmware/efi/efivars.c    |  5 +----
+ drivers/firmware/efi/vars.c       |  6 ++++++
+ fs/efivarfs/super.c               |  6 +++---
+ include/linux/efi.h               |  1 +
+ 6 files changed, 20 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
-index 37641ad14d498..652dd05af16b0 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76.h
-@@ -275,6 +275,7 @@ enum {
- 	MT76_STATE_RUNNING,
- 	MT76_STATE_MCU_RUNNING,
- 	MT76_SCANNING,
-+	MT76_RESTART,
- 	MT76_RESET,
- 	MT76_MCU_RESET,
- 	MT76_REMOVED,
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/pci.c b/drivers/net/wireless/mediatek/mt76/mt76x0/pci.c
-index 0b520ae08d018..57091d41eb851 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x0/pci.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x0/pci.c
-@@ -29,6 +29,7 @@ static void mt76x0e_stop_hw(struct mt76x02_dev *dev)
+diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
+index c2f1d4e6630b1..feb7fe6f2da76 100644
+--- a/drivers/firmware/efi/efi-pstore.c
++++ b/drivers/firmware/efi/efi-pstore.c
+@@ -356,10 +356,7 @@ static struct pstore_info efi_pstore_info = {
+ 
+ static __init int efivars_pstore_init(void)
  {
- 	cancel_delayed_work_sync(&dev->cal_work);
- 	cancel_delayed_work_sync(&dev->mt76.mac_work);
-+	clear_bit(MT76_RESTART, &dev->mphy.state);
+-	if (!efi_rt_services_supported(EFI_RT_SUPPORTED_VARIABLE_SERVICES))
+-		return 0;
+-
+-	if (!efivars_kobject())
++	if (!efivars_kobject() || !efivar_supports_writes())
+ 		return 0;
  
- 	if (!mt76_poll(dev, MT_WPDMA_GLO_CFG, MT_WPDMA_GLO_CFG_TX_DMA_BUSY,
- 		       0, 1000))
-@@ -83,6 +84,7 @@ static const struct ieee80211_ops mt76x0e_ops = {
- 	.set_coverage_class = mt76x02_set_coverage_class,
- 	.set_rts_threshold = mt76x02_set_rts_threshold,
- 	.get_antenna = mt76_get_antenna,
-+	.reconfig_complete = mt76x02_reconfig_complete,
- };
+ 	if (efivars_pstore_disable)
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 20a7ba47a7924..99446b3847265 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -176,11 +176,13 @@ static struct efivar_operations generic_ops;
+ static int generic_ops_register(void)
+ {
+ 	generic_ops.get_variable = efi.get_variable;
+-	generic_ops.set_variable = efi.set_variable;
+-	generic_ops.set_variable_nonblocking = efi.set_variable_nonblocking;
+ 	generic_ops.get_next_variable = efi.get_next_variable;
+ 	generic_ops.query_variable_store = efi_query_variable_store;
  
- static int mt76x0e_register_device(struct mt76x02_dev *dev)
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02.h b/drivers/net/wireless/mediatek/mt76/mt76x02.h
-index 830532b85b58b..6ea210bd3f070 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x02.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x02.h
-@@ -187,6 +187,8 @@ void mt76x02_sta_ps(struct mt76_dev *dev, struct ieee80211_sta *sta, bool ps);
- void mt76x02_bss_info_changed(struct ieee80211_hw *hw,
- 			      struct ieee80211_vif *vif,
- 			      struct ieee80211_bss_conf *info, u32 changed);
-+void mt76x02_reconfig_complete(struct ieee80211_hw *hw,
-+			       enum ieee80211_reconfig_type reconfig_type);
++	if (efi_rt_services_supported(EFI_RT_SUPPORTED_SET_VARIABLE)) {
++		generic_ops.set_variable = efi.set_variable;
++		generic_ops.set_variable_nonblocking = efi.set_variable_nonblocking;
++	}
+ 	return efivars_register(&generic_efivars, &generic_ops, efi_kobj);
+ }
  
- struct beacon_bc_data {
- 	struct mt76x02_dev *dev;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_mcu.c b/drivers/net/wireless/mediatek/mt76/mt76x02_mcu.c
-index 5664749ad6c1a..8247611d9b18b 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x02_mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x02_mcu.c
-@@ -20,6 +20,9 @@ int mt76x02_mcu_msg_send(struct mt76_dev *mdev, int cmd, const void *data,
- 	int ret;
- 	u8 seq;
- 
-+	if (mt76_is_mmio(&dev->mt76) && dev->mcu_timeout)
-+		return -EIO;
-+
- 	skb = mt76x02_mcu_msg_alloc(data, len);
- 	if (!skb)
+@@ -382,7 +384,8 @@ static int __init efisubsys_init(void)
  		return -ENOMEM;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c b/drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c
-index 7dcc5d342e9f5..7e389dbccfeb8 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x02_mmio.c
-@@ -520,6 +520,7 @@ static void mt76x02_watchdog_reset(struct mt76x02_dev *dev)
  	}
  
- 	if (restart) {
-+		set_bit(MT76_RESTART, &dev->mphy.state);
- 		mt76x02_mcu_function_select(dev, Q_SELECT, 1);
- 		ieee80211_restart_hw(dev->mt76.hw);
- 	} else {
-@@ -528,8 +529,23 @@ static void mt76x02_watchdog_reset(struct mt76x02_dev *dev)
- 	}
+-	if (efi_rt_services_supported(EFI_RT_SUPPORTED_VARIABLE_SERVICES)) {
++	if (efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE |
++				      EFI_RT_SUPPORTED_GET_NEXT_VARIABLE_NAME)) {
+ 		efivar_ssdt_load();
+ 		error = generic_ops_register();
+ 		if (error)
+@@ -416,7 +419,8 @@ static int __init efisubsys_init(void)
+ err_remove_group:
+ 	sysfs_remove_group(efi_kobj, &efi_subsys_attr_group);
+ err_unregister:
+-	if (efi_rt_services_supported(EFI_RT_SUPPORTED_VARIABLE_SERVICES))
++	if (efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE |
++				      EFI_RT_SUPPORTED_GET_NEXT_VARIABLE_NAME))
+ 		generic_ops_unregister();
+ err_put:
+ 	kobject_put(efi_kobj);
+diff --git a/drivers/firmware/efi/efivars.c b/drivers/firmware/efi/efivars.c
+index 26528a46d99e9..dcea137142b3c 100644
+--- a/drivers/firmware/efi/efivars.c
++++ b/drivers/firmware/efi/efivars.c
+@@ -680,11 +680,8 @@ int efivars_sysfs_init(void)
+ 	struct kobject *parent_kobj = efivars_kobject();
+ 	int error = 0;
+ 
+-	if (!efi_rt_services_supported(EFI_RT_SUPPORTED_VARIABLE_SERVICES))
+-		return -ENODEV;
+-
+ 	/* No efivars has been registered yet */
+-	if (!parent_kobj)
++	if (!parent_kobj || !efivar_supports_writes())
+ 		return 0;
+ 
+ 	printk(KERN_INFO "EFI Variables Facility v%s %s\n", EFIVARS_VERSION,
+diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
+index 5f2a4d162795c..973eef234b365 100644
+--- a/drivers/firmware/efi/vars.c
++++ b/drivers/firmware/efi/vars.c
+@@ -1229,3 +1229,9 @@ out:
+ 	return rv;
  }
- 
-+void mt76x02_reconfig_complete(struct ieee80211_hw *hw,
-+			       enum ieee80211_reconfig_type reconfig_type)
+ EXPORT_SYMBOL_GPL(efivars_unregister);
++
++int efivar_supports_writes(void)
 +{
-+	struct mt76x02_dev *dev = hw->priv;
-+
-+	if (reconfig_type != IEEE80211_RECONFIG_TYPE_RESTART)
-+		return;
-+
-+	clear_bit(MT76_RESTART, &dev->mphy.state);
++	return __efivars && __efivars->ops->set_variable;
 +}
-+EXPORT_SYMBOL_GPL(mt76x02_reconfig_complete);
++EXPORT_SYMBOL_GPL(efivar_supports_writes);
+diff --git a/fs/efivarfs/super.c b/fs/efivarfs/super.c
+index 12c66f5d92dd2..28bb5689333a5 100644
+--- a/fs/efivarfs/super.c
++++ b/fs/efivarfs/super.c
+@@ -201,6 +201,9 @@ static int efivarfs_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	sb->s_d_op		= &efivarfs_d_ops;
+ 	sb->s_time_gran         = 1;
+ 
++	if (!efivar_supports_writes())
++		sb->s_flags |= SB_RDONLY;
 +
- static void mt76x02_check_tx_hang(struct mt76x02_dev *dev)
- {
-+	if (test_bit(MT76_RESTART, &dev->mphy.state))
-+		return;
-+
- 	if (mt76x02_tx_hang(dev)) {
- 		if (++dev->tx_hang_check >= MT_TX_HANG_TH)
- 			goto restart;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/pci_init.c b/drivers/net/wireless/mediatek/mt76/mt76x2/pci_init.c
-index c69579e5f6479..f27774f574382 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x2/pci_init.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2/pci_init.c
-@@ -256,6 +256,7 @@ void mt76x2_stop_hardware(struct mt76x02_dev *dev)
- 	cancel_delayed_work_sync(&dev->cal_work);
- 	cancel_delayed_work_sync(&dev->mt76.mac_work);
- 	cancel_delayed_work_sync(&dev->wdt_work);
-+	clear_bit(MT76_RESTART, &dev->mphy.state);
- 	mt76x02_mcu_set_radio_state(dev, false);
- 	mt76x2_mac_stop(dev, false);
- }
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2/pci_main.c b/drivers/net/wireless/mediatek/mt76/mt76x2/pci_main.c
-index 105e5b99b3f9b..a74599f7f729f 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x2/pci_main.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2/pci_main.c
-@@ -10,12 +10,9 @@ static int
- mt76x2_start(struct ieee80211_hw *hw)
- {
- 	struct mt76x02_dev *dev = hw->priv;
--	int ret;
+ 	inode = efivarfs_get_inode(sb, NULL, S_IFDIR | 0755, 0, true);
+ 	if (!inode)
+ 		return -ENOMEM;
+@@ -252,9 +255,6 @@ static struct file_system_type efivarfs_type = {
  
- 	mt76x02_mac_start(dev);
--	ret = mt76x2_phy_start(dev);
--	if (ret)
--		return ret;
-+	mt76x2_phy_start(dev);
- 
- 	ieee80211_queue_delayed_work(mt76_hw(dev), &dev->mt76.mac_work,
- 				     MT_MAC_WORK_INTERVAL);
-@@ -35,11 +32,9 @@ mt76x2_stop(struct ieee80211_hw *hw)
- 	mt76x2_stop_hardware(dev);
- }
- 
--static int
-+static void
- mt76x2_set_channel(struct mt76x02_dev *dev, struct cfg80211_chan_def *chandef)
+ static __init int efivarfs_init(void)
  {
--	int ret;
+-	if (!efi_rt_services_supported(EFI_RT_SUPPORTED_VARIABLE_SERVICES))
+-		return -ENODEV;
 -
- 	cancel_delayed_work_sync(&dev->cal_work);
- 	tasklet_disable(&dev->mt76.pre_tbtt_tasklet);
- 	tasklet_disable(&dev->dfs_pd.dfs_tasklet);
-@@ -50,7 +45,7 @@ mt76x2_set_channel(struct mt76x02_dev *dev, struct cfg80211_chan_def *chandef)
- 	mt76_set_channel(&dev->mphy);
+ 	if (!efivars_kobject())
+ 		return -ENODEV;
  
- 	mt76x2_mac_stop(dev, true);
--	ret = mt76x2_phy_set_channel(dev, chandef);
-+	mt76x2_phy_set_channel(dev, chandef);
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 9430d01c0c3d3..650794abfa326 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -991,6 +991,7 @@ int efivars_register(struct efivars *efivars,
+ int efivars_unregister(struct efivars *efivars);
+ struct kobject *efivars_kobject(void);
  
- 	mt76x02_mac_cc_reset(dev);
- 	mt76x02_dfs_init_params(dev);
-@@ -64,15 +59,12 @@ mt76x2_set_channel(struct mt76x02_dev *dev, struct cfg80211_chan_def *chandef)
- 	tasklet_enable(&dev->mt76.pre_tbtt_tasklet);
- 
- 	mt76_txq_schedule_all(&dev->mphy);
--
--	return ret;
- }
- 
- static int
- mt76x2_config(struct ieee80211_hw *hw, u32 changed)
- {
- 	struct mt76x02_dev *dev = hw->priv;
--	int ret = 0;
- 
- 	mutex_lock(&dev->mt76.mutex);
- 
-@@ -101,11 +93,11 @@ mt76x2_config(struct ieee80211_hw *hw, u32 changed)
- 
- 	if (changed & IEEE80211_CONF_CHANGE_CHANNEL) {
- 		ieee80211_stop_queues(hw);
--		ret = mt76x2_set_channel(dev, &hw->conf.chandef);
-+		mt76x2_set_channel(dev, &hw->conf.chandef);
- 		ieee80211_wake_queues(hw);
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- static void
-@@ -162,5 +154,6 @@ const struct ieee80211_ops mt76x2_ops = {
- 	.set_antenna = mt76x2_set_antenna,
- 	.get_antenna = mt76_get_antenna,
- 	.set_rts_threshold = mt76x02_set_rts_threshold,
-+	.reconfig_complete = mt76x02_reconfig_complete,
- };
++int efivar_supports_writes(void);
+ int efivar_init(int (*func)(efi_char16_t *, efi_guid_t, unsigned long, void *),
+ 		void *data, bool duplicates, struct list_head *head);
  
 -- 
 2.25.1
