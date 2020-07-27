@@ -2,78 +2,73 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C5FC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B80CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C54212083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CD82083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:39:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IDC6diKl"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FL5VaZqj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ImzOUJsK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgG0Njn (ORCPT
+        id S1729119AbgG0Njr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:39:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31020 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726620AbgG0Njn (ORCPT
+        Mon, 27 Jul 2020 09:39:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55758 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729044AbgG0Njo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:39:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595857182;
+        Mon, 27 Jul 2020 09:39:44 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595857181;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=fYBBQADx7LsYm+yccVufp29aOZIIf/4uKblRdnXFZb8=;
-        b=IDC6diKl1dm4ZboOTxU0xlJPLADUv9yvcPzAAZFq6GFro5qhDbRIYHqIkMo4K03yMVAlEs
-        8k9CAbMyRhnx0jnGUM/52+3S3SvyPxAoEQUNYiCyn4313TGJsTASPs+bKMYfBX1126NRAi
-        3zx6F+ltaZ9HF+AQJzYk14CzjsB91kc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-337-glqHWLosMyKK-wuLx4oP5g-1; Mon, 27 Jul 2020 09:39:38 -0400
-X-MC-Unique: glqHWLosMyKK-wuLx4oP5g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2409679EC4;
-        Mon, 27 Jul 2020 13:39:37 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F3FCF5D9F3;
-        Mon, 27 Jul 2020 13:39:34 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, aaronlewis@google.com
-Subject: [PATCH 0/3] KVM: nVMX: tighten some KVM_SET_NESTED_STATE validity checks
-Date:   Mon, 27 Jul 2020 09:39:31 -0400
-Message-Id: <20200727133934.25482-1-pbonzini@redhat.com>
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QbeOweV7BUtlk+ll/+wND848lKwzOjlmIST9iuJEcQA=;
+        b=FL5VaZqjrCpsgtmGXZR/Hd/pjLJJF21ewF45VZ3PxsPZ/e8OVR0Ii/Q++yZhhheThPqgzm
+        EJJIqm9PZ6syk/5KXSvtNv9cbh386yyOXVSMYddnO0Qol2IQ4w8B9y+11QCVJWTZmFzgpQ
+        aHKb6Fai86hkA9j/dqvX5Wd+AxZKlqXt4fNo/yjaDjH6DstEYtcW/pA94sNA91tLxPyLjs
+        DooQhVoPPVzh9PHYULku/wkQ1xyHxldFHOzQnZtxAQeBF9eswHHEqvSVFyj+wRdb/O13Lr
+        FsUlt71QrCBSQd34qt8gR0L2zs4o0o8Gb1nIgAlPA1r95dD9yln0HkQHnDBoIA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595857181;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QbeOweV7BUtlk+ll/+wND848lKwzOjlmIST9iuJEcQA=;
+        b=ImzOUJsKnt0dOdYQBmNRkQHA+Zn3kxuT7o8tp6DEOMjfxkLtlUHDR9o6fJV7ksLjHloGHT
+        wvaOG6f1at1231Cg==
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/2] entry: Fix CONFIG_SECCOMP assumption
+In-Reply-To: <20200726174731.GA786388@gmail.com>
+References: <20200725091951.744848-1-mingo@kernel.org> <20200725091951.744848-2-mingo@kernel.org> <87a6zmcs5q.fsf@nanos.tec.linutronix.de> <20200726174731.GA786388@gmail.com>
+Date:   Mon, 27 Jul 2020 15:39:41 +0200
+Message-ID: <87y2n5axgi.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch 1 is a fix to the tests so that we can cover the new cases properly.
-Patches 2-3 check for more cases of invalid nested state data.
+Ingo Molnar <mingo@kernel.org> writes:
+> * Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+>> Ingo Molnar <mingo@kernel.org> writes:
+>> > The __secure_computing() callback only exists on CONFIG_SECCOMP=y,
+>> 
+>> No. There is a stub function for the SECCOMP=n case.
+>
+> Which was buggy:
+>
+>   static inline int __secure_computing(void) { return 0; }
 
-Paolo
-
-Paolo Bonzini (3):
-  selftests: kvm: do not set guest mode flag
-  KVM: nVMX: check for required but missing VMCS12 in
-    KVM_SET_NESTED_STATE
-  KVM: nVMX: check for invalid hdr.vmx.flags
-
- arch/x86/kvm/vmx/nested.c                     | 16 +++++--
- arch/x86/kvm/vmx/nested.h                     |  5 +++
- .../kvm/x86_64/vmx_set_nested_state_test.c    | 42 +++++++++++++++----
- 3 files changed, 51 insertions(+), 12 deletions(-)
-
--- 
-2.26.2
-
+Yes. I screwed that up and fixing that is the right thing to do.
