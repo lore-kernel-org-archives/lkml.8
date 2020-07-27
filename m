@@ -2,97 +2,89 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC57C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29E4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D775C20809
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595883479;
-	bh=AMSN2ecQFesrryvC8lvOnbL7UBWDRobz8cXhfmoQXb4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=PSKdciLUlMeG8RP2qXgrc2VNOFMSCzP+57jqev+YQVxxlOj4umRURpMXzKvvfsaSi
-	 9QOd4bn+XlsMAjWlkuodE+aoNcetkBM8Se6xMj9jp0KrgqOjtke/w1+hJFhmRy4EmZ
-	 0XrF8csH1k93/N4RD4u83uR8waxKYA2NmrKP+dd8=
+	by mail.kernel.org (Postfix) with ESMTP id C236F20809
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:58:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I5dX71/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgG0U56 (ORCPT
+        id S1726797AbgG0U65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:57:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgG0U56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:57:58 -0400
-Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C0CB20838;
-        Mon, 27 Jul 2020 20:57:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595883478;
-        bh=AMSN2ecQFesrryvC8lvOnbL7UBWDRobz8cXhfmoQXb4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=RujnX9ZJola97Aga2AvExn0NHQBjg3drtWr/XHQ6jZ4Bc0og1CnxHQfuWQNuS6ZaG
-         JykataoGGPIl4l3hzdUZ/nqn255YvbgpeBbATvi+1N37QOjEb2XDMSURl2RnFLNU4j
-         eK98wqwZzlZwjr+FlyqNL7dT0Ix0TCYJ6eeykoZ0=
-Message-ID: <1595883476.4841.167.camel@kernel.org>
-Subject: Re: [PATCH] integrity: remove redundant initialization of variable
- ret
-From:   Mimi Zohar <zohar@kernel.org>
-To:     James Morris <jmorris@namei.org>,
-        Colin King <colin.king@canonical.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     "Serge E . Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 27 Jul 2020 16:57:56 -0400
-In-Reply-To: <alpine.LRH.2.21.2007280405340.18670@namei.org>
-References: <20200701134634.549399-1-colin.king@canonical.com>
-         <alpine.LRH.2.21.2007280405340.18670@namei.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 27 Jul 2020 16:58:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbgG0U65 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 16:58:57 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF231C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:58:56 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ha11so3014565pjb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:58:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1oR/0P9ErtpTgrX+m0OBVrR3VYxPvi53ReAdjDAOr4Y=;
+        b=I5dX71/Uvcfwk/jblm750/2EXt9yjhsPtSEdC4N4lQ/AO2FGB8gfWH/WsjvuuSQOyj
+         ONY5pB87KzLdpaf2iZKf6HtgyagXcsssjLA0pBtIbfYXso5X7qhilKimVkhh0S66fKIy
+         UdZRRQbO/XKIGmFIbA50WIhCZmfQ+15/zHM9A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1oR/0P9ErtpTgrX+m0OBVrR3VYxPvi53ReAdjDAOr4Y=;
+        b=QmyCZToFfmtJ5nFv+piRFs7+0Ur40kyZ/XEVaw73sB7N9EfBL1kYD+OejWG3oUsPkL
+         SReLa7aEroQ16V1ewkFixIPVFCDFKTI1JTRzdtRnEVlIRlkEvYtiK1fs7LxfSAeLi65D
+         xyYMwX4OWtyivQr652c95T5XCc3ybqDrwEUsPcAQzZQjMs0emskd7JIncZWTPYCO5UYw
+         pmsCV5aScOws8ooh3YIqTx1GlQI54h8BiPVjyF7xsvyKsld7Ag1T9M4wThbQYzvJ023G
+         35xFeTfudom4TboIQl3jGgFJyCiRe06DC10PrHa2kx556ert8BXAKySVYH7zPdCXD4Ra
+         BTJQ==
+X-Gm-Message-State: AOAM531FTiW45cXnXalzFd/DpMNcl3OPA38vyqNvCkGATOmGt0tUrY8t
+        z8tzsF2xcNRPAfvvJ3wCXEksbQ==
+X-Google-Smtp-Source: ABdhPJwNPDS+cc+l5C6Fk46mxdaDL9PclHliTxJP5rQfP6oKuQNDrzGsoCx2t1y2JMkjPqG1jMFPKw==
+X-Received: by 2002:a17:902:7485:: with SMTP id h5mr7030550pll.282.1595883536582;
+        Mon, 27 Jul 2020 13:58:56 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id g8sm15819746pgr.70.2020.07.27.13.58.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 13:58:55 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 13:58:55 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        sibis@codeaurora.org, dianders@chromium.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] interconnect: qcom: sc7180: Replace xlate with
+ xlate_extended
+Message-ID: <20200727205855.GI3191083@google.com>
+References: <20200723130942.28491-1-georgi.djakov@linaro.org>
+ <20200723130942.28491-6-georgi.djakov@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200723130942.28491-6-georgi.djakov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-28 at 04:05 +1000, James Morris wrote:
-> On Wed, 1 Jul 2020, Colin King wrote:
+On Thu, Jul 23, 2020 at 04:09:41PM +0300, Georgi Djakov wrote:
+> From: Sibi Sankar <sibis@codeaurora.org>
 > 
-> > From: Colin Ian King <colin.king@canonical.com>
-> > 
-> > The variable ret is being initialized with a value that is never read
-> > and it is being updated later with a new value.  The initialization is
-> > redundant and can be removed.
-> > 
-> > Addresses-Coverity: ("Unused value")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  security/integrity/digsig_asymmetric.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/security/integrity/digsig_asymmetric.c b/security/integrity/digsig_asymmetric.c
-> > index 4e0d6778277e..cfa4127d0518 100644
-> > --- a/security/integrity/digsig_asymmetric.c
-> > +++ b/security/integrity/digsig_asymmetric.c
-> > @@ -79,7 +79,7 @@ int asymmetric_verify(struct key *keyring, const char *sig,
-> >  	struct public_key_signature pks;
-> >  	struct signature_v2_hdr *hdr = (struct signature_v2_hdr *)sig;
-> >  	struct key *key;
-> > -	int ret = -ENOMEM;
-> > +	int ret;
+> Use the qcom_icc_xlate_extended() in order to parse tags, that are
+> specified as an additional arguments to the path endpoints in DT.
 > 
-> Assuming Mimi will grab this.
-> 
-> 
-> Acked-by: James Morris <jamorris@linux.microsoft.com>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-Yes, thank you for the reminder.
-
-Mimi
+Tested-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
