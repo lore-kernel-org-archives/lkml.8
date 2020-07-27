@@ -2,275 +2,135 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4FAC433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05C8C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A98122083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:39:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595857143;
-	bh=Ch8foSKe0HJ0Blu8CEHeXIcdrEOxplMElgo0OhRZ1ZQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wly46YeK+GqH7SgP9cf/GLj55I1u2gzkeOSJdemTcPe6zJ/vAC1ZlatOEZ28yGVhE
-	 Cuc9SP+GdUkIlVnodFRjBobIvTNWRtj5elmb5j0duRULqEaOEpbsoIheHokb+aVclw
-	 KUPfJJEhQD/v1VkTPTcoC6+k1mgu6mfnHMjYoU9w=
+	by mail.kernel.org (Postfix) with ESMTP id C75EE2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:39:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="r1IZzCJF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kC5ZbUN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgG0Ni7 (ORCPT
+        id S1729042AbgG0Nix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:38:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729066AbgG0Ni4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:38:56 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BB2D2083B;
-        Mon, 27 Jul 2020 13:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595857135;
-        bh=Ch8foSKe0HJ0Blu8CEHeXIcdrEOxplMElgo0OhRZ1ZQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uxjlqctLtriqwSUVt8cH1f/HHrHHc+KbWo5gn1UMpZzNqoCSADAoR/MJRCunWW0UX
-         h1BSVnl2xA9lAjY3nhSz84bONKAReQ1ZAd87HYkd1b64duP2lrWsFtlnKKiZJe/vLs
-         KPDmZTsMR3QZX63LUx8QdkkSEaTwqUW9Nc/foGpg=
-Received: by pali.im (Postfix)
-        id 8A270C89; Mon, 27 Jul 2020 15:38:53 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] mmc: sdio: Export SDIO revision and info strings to userspace
-Date:   Mon, 27 Jul 2020 15:38:37 +0200
-Message-Id: <20200727133837.19086-5-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200727133837.19086-1-pali@kernel.org>
-References: <20200727133837.19086-1-pali@kernel.org>
+        Mon, 27 Jul 2020 09:38:53 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:39845 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726298AbgG0Niw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 09:38:52 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1E7FF5C00E0;
+        Mon, 27 Jul 2020 09:38:51 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 27 Jul 2020 09:38:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=0mmwIwgCXcA2dLIOd7pzgN6JF1A
+        xROb9VRXpNp325Uk=; b=r1IZzCJF5qcf1q4OhChsQEWrQi1+zYfkczWSi7WlCB2
+        G1kkK1fLKULCt8KOUFPoV3LiHTstEdm0AXA5+JP/84AG5K5Nv+8XD2WWpVrfMsM2
+        bnDgEYuR3Ir61diMJ6liy+NmJ+CwDp3N1e5u2d34AO4CUVeaGeIETz6Ld148h4E6
+        JF461XU53MT/E8W+fOe3X32y0E7vt8QOm6Gl0wyMq723ymP0p9IbR2ybdRETJgHg
+        X8RQX2vlq+yRpVYhuP55AN4dhxF8J+nUzOJ0jb6T/xDUTsMXgui6G5J8wKyULzWA
+        6VX8LuiE4OKbQCBdpaKNe0tMaL2CPt81BqWMLAfz8xA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=0mmwIw
+        gCXcA2dLIOd7pzgN6JF1AxROb9VRXpNp325Uk=; b=kC5ZbUN5VKsNRlHfT4hyRq
+        +9s1RjzN8U8oK1xydmS7+LmE42bXXEdKEU64ZKeREitABfOpetusBnN+UtaVR3SH
+        u657PWG6qnn2JQKsc0KedmKP4nwYJmWjEx/3FAuazWQU57uK8h+VfjqjTox6JL6q
+        EaotPP7HZwBww209tJ/0HcRg0D1jnbDVAJZiwHk6UUYLbtGoFwtPpxwiFaLU6ahA
+        ktTuR1hCYJkRcG9xHj9WjtyBab4ZENGuyM7GmL6jIJVy2qoDSqH+LlWk1Jvu3e3g
+        +N/HHh9/ZyLvwWSEDi8Vm3k8OzgT3j53vV2/cNRFy4/5nflqS+8ZB1/rS0HKgLZA
+        ==
+X-ME-Sender: <xms:6tgeX-M4SRc7K4cUrap3WIMIB6yXtBS26yufduvnfhosxwVdOklqng>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedriedtgdeikecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
+    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
+    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:6tgeX89Gg0a4-HsUqX9jxNltxxR6eZhaN5YMER_r9somoRFQIze7lw>
+    <xmx:6tgeX1R4t7ddwta9z4dR6t4Eni1RrgZVpkwJVuRJD3bGcBEiaU7QWQ>
+    <xmx:6tgeX-sfjRk_O1EHTbHcwLSE-0CFOc0XMfPYgjvlgXJ6pjCuHqXdiw>
+    <xmx:69geX163RMYHF3O0McF6TuOjH_R3X6tWJRu_iTjk3BDBULuO4Es8QA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E9DD23280064;
+        Mon, 27 Jul 2020 09:38:49 -0400 (EDT)
+Date:   Mon, 27 Jul 2020 15:38:46 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH] drm/sun4i: mixer: Enable register value caching
+Message-ID: <20200727133846.kgrnmsocy4pel6cn@gilmour.lan>
+References: <20200724203549.35893-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rkf3mebagvwl47n5"
+Content-Disposition: inline
+In-Reply-To: <20200724203549.35893-1-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For SDIO functions, SDIO cards and SD COMBO cards are exported revision
-number and info strings from CISTPL_VERS_1 structure. Revision number
-should indicate compliance of standard and info strings should contain
-product information in same format as product information for PCMCIA cards.
 
-Product information for PCMCIA cards should contain following strings in
-this order: Manufacturer, Product Name, Lot number, Programming Conditions.
+--rkf3mebagvwl47n5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Note that not all SDIO cards export all those info strings in that order as
-described in PCMCIA Metaformat Specification.
+Hi,
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
----
- drivers/mmc/core/bus.c      | 12 ++++++++++++
- drivers/mmc/core/sd.c       | 36 +++++++++++++++++++++++++++++++++---
- drivers/mmc/core/sdio.c     | 24 ++++++++++++++++++++++++
- drivers/mmc/core/sdio_bus.c | 34 ++++++++++++++++++++++++++++++++++
- 4 files changed, 103 insertions(+), 3 deletions(-)
+On Fri, Jul 24, 2020 at 10:35:49PM +0200, Jernej Skrabec wrote:
+> It was discovered in the past by Ondrej Jirman that mixer register read
+> may occasionally return wrong value, most likely zero. It turns out
+> that all mixer units are affected by this issue. This becomes especially
+> obvious with applications like video player. After a few minutes of a
+> playback visual glitches appeared but not always in the same way. After
+> register inspection it was clear that some bits are not set even when
+> they should be.
 
-diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
-index 70207f11a654..c2e70b757dd1 100644
---- a/drivers/mmc/core/bus.c
-+++ b/drivers/mmc/core/bus.c
-@@ -68,6 +68,7 @@ mmc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
- {
- 	struct mmc_card *card = mmc_dev_to_card(dev);
- 	const char *type;
-+	unsigned int i;
- 	int retval = 0;
- 
- 	switch (card->type) {
-@@ -98,6 +99,17 @@ mmc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
- 					card->cis.vendor, card->cis.device);
- 		if (retval)
- 			return retval;
-+
-+		retval = add_uevent_var(env, "SDIO_REVISION=%u.%u",
-+					card->major_rev, card->minor_rev);
-+		if (retval)
-+			return retval;
-+
-+		for (i = 0; i < card->num_info; i++) {
-+			retval = add_uevent_var(env, "SDIO_INFO%u=%s", i+1, card->info[i]);
-+			if (retval)
-+				return retval;
-+		}
- 	}
- 
- 	/*
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index 5a2210c25aa7..429ca14fa7e1 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -709,10 +709,34 @@ static DEVICE_ATTR(dsr, S_IRUGO, mmc_dsr_show, NULL);
- 
- MMC_DEV_ATTR(vendor, "0x%04x\n", card->cis.vendor);
- MMC_DEV_ATTR(device, "0x%04x\n", card->cis.device);
-+MMC_DEV_ATTR(revision, "%u.%u\n", card->major_rev, card->minor_rev);
-+
-+#define sdio_info_attr(num)									\
-+static ssize_t info##num##_show(struct device *dev, struct device_attribute *attr, char *buf)	\
-+{												\
-+	struct mmc_card *card = mmc_dev_to_card(dev);						\
-+												\
-+	if (num > card->num_info)								\
-+		return -ENODATA;								\
-+	if (!card->info[num-1][0])								\
-+		return 0;									\
-+	return sprintf(buf, "%s\n", card->info[num-1]);						\
-+}												\
-+static DEVICE_ATTR_RO(info##num)
-+
-+sdio_info_attr(1);
-+sdio_info_attr(2);
-+sdio_info_attr(3);
-+sdio_info_attr(4);
- 
- static struct attribute *sd_std_attrs[] = {
- 	&dev_attr_vendor.attr,
- 	&dev_attr_device.attr,
-+	&dev_attr_revision.attr,
-+	&dev_attr_info1.attr,
-+	&dev_attr_info2.attr,
-+	&dev_attr_info3.attr,
-+	&dev_attr_info4.attr,
- 	&dev_attr_cid.attr,
- 	&dev_attr_csd.attr,
- 	&dev_attr_scr.attr,
-@@ -738,9 +762,15 @@ static umode_t sd_std_is_visible(struct kobject *kobj, struct attribute *attr,
- 	struct device *dev = container_of(kobj, struct device, kobj);
- 	struct mmc_card *card = mmc_dev_to_card(dev);
- 
--	/* CIS vendor and device ids are available only for Combo cards */
--	if ((attr == &dev_attr_vendor.attr || attr == &dev_attr_device.attr) &&
--	    card->type != MMC_TYPE_SD_COMBO)
-+	/* CIS vendor and device ids, revision and info string are available only for Combo cards */
-+	if ((attr == &dev_attr_vendor.attr ||
-+	     attr == &dev_attr_device.attr ||
-+	     attr == &dev_attr_revision.attr ||
-+	     attr == &dev_attr_info1.attr ||
-+	     attr == &dev_attr_info2.attr ||
-+	     attr == &dev_attr_info3.attr ||
-+	     attr == &dev_attr_info4.attr
-+	    ) && card->type != MMC_TYPE_SD_COMBO)
- 		return 0;
- 
- 	return attr->mode;
-diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-index 61ae909730f3..c4a4e67ef0a6 100644
---- a/drivers/mmc/core/sdio.c
-+++ b/drivers/mmc/core/sdio.c
-@@ -29,12 +29,36 @@
- 
- MMC_DEV_ATTR(vendor, "0x%04x\n", card->cis.vendor);
- MMC_DEV_ATTR(device, "0x%04x\n", card->cis.device);
-+MMC_DEV_ATTR(revision, "%u.%u\n", card->major_rev, card->minor_rev);
- MMC_DEV_ATTR(ocr, "0x%08x\n", card->ocr);
- MMC_DEV_ATTR(rca, "0x%04x\n", card->rca);
- 
-+#define sdio_info_attr(num)									\
-+static ssize_t info##num##_show(struct device *dev, struct device_attribute *attr, char *buf)	\
-+{												\
-+	struct mmc_card *card = mmc_dev_to_card(dev);						\
-+												\
-+	if (num > card->num_info)								\
-+		return -ENODATA;								\
-+	if (!card->info[num-1][0])								\
-+		return 0;									\
-+	return sprintf(buf, "%s\n", card->info[num-1]);						\
-+}												\
-+static DEVICE_ATTR_RO(info##num)
-+
-+sdio_info_attr(1);
-+sdio_info_attr(2);
-+sdio_info_attr(3);
-+sdio_info_attr(4);
-+
- static struct attribute *sdio_std_attrs[] = {
- 	&dev_attr_vendor.attr,
- 	&dev_attr_device.attr,
-+	&dev_attr_revision.attr,
-+	&dev_attr_info1.attr,
-+	&dev_attr_info2.attr,
-+	&dev_attr_info3.attr,
-+	&dev_attr_info4.attr,
- 	&dev_attr_ocr.attr,
- 	&dev_attr_rca.attr,
- 	NULL,
-diff --git a/drivers/mmc/core/sdio_bus.c b/drivers/mmc/core/sdio_bus.c
-index 2384829c8fb2..3d709029e07c 100644
---- a/drivers/mmc/core/sdio_bus.c
-+++ b/drivers/mmc/core/sdio_bus.c
-@@ -42,12 +42,36 @@ static DEVICE_ATTR_RO(field)
- sdio_config_attr(class, "0x%02x\n", func->class);
- sdio_config_attr(vendor, "0x%04x\n", func->vendor);
- sdio_config_attr(device, "0x%04x\n", func->device);
-+sdio_config_attr(revision, "%u.%u\n", func->major_rev, func->minor_rev);
- sdio_config_attr(modalias, "sdio:c%02Xv%04Xd%04X\n", func->class, func->vendor, func->device);
- 
-+#define sdio_info_attr(num)									\
-+static ssize_t info##num##_show(struct device *dev, struct device_attribute *attr, char *buf)	\
-+{												\
-+	struct sdio_func *func = dev_to_sdio_func(dev);						\
-+												\
-+	if (num > func->num_info)								\
-+		return -ENODATA;								\
-+	if (!func->info[num-1][0])								\
-+		return 0;									\
-+	return sprintf(buf, "%s\n", func->info[num-1]);						\
-+}												\
-+static DEVICE_ATTR_RO(info##num)
-+
-+sdio_info_attr(1);
-+sdio_info_attr(2);
-+sdio_info_attr(3);
-+sdio_info_attr(4);
-+
- static struct attribute *sdio_dev_attrs[] = {
- 	&dev_attr_class.attr,
- 	&dev_attr_vendor.attr,
- 	&dev_attr_device.attr,
-+	&dev_attr_revision.attr,
-+	&dev_attr_info1.attr,
-+	&dev_attr_info2.attr,
-+	&dev_attr_info3.attr,
-+	&dev_attr_info4.attr,
- 	&dev_attr_modalias.attr,
- 	NULL,
- };
-@@ -98,6 +122,7 @@ static int
- sdio_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
- {
- 	struct sdio_func *func = dev_to_sdio_func(dev);
-+	unsigned int i;
- 
- 	if (add_uevent_var(env,
- 			"SDIO_CLASS=%02X", func->class))
-@@ -107,6 +132,15 @@ sdio_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
- 			"SDIO_ID=%04X:%04X", func->vendor, func->device))
- 		return -ENOMEM;
- 
-+	if (add_uevent_var(env,
-+			"SDIO_REVISION=%u.%u", func->major_rev, func->minor_rev))
-+		return -ENOMEM;
-+
-+	for (i = 0; i < func->num_info; i++) {
-+		if (add_uevent_var(env, "SDIO_INFO%u=%s", i+1, func->info[i]))
-+			return -ENOMEM;
-+	}
-+
- 	if (add_uevent_var(env,
- 			"MODALIAS=sdio:c%02Xv%04Xd%04X",
- 			func->class, func->vendor, func->device))
--- 
-2.20.1
+There was a similar issue on the earlier backend stuff, and it turned
+out to be because we were accessing registers while the registers
+"commit" wasn't completed yet.
 
+It looks that in the DE2, it's the register GLB_DBUFFER that controls it
+(offset 0x08). It would be worth looking into whether it happens only
+when the bit 0 is still high.
+
+I ended up writing a small program using devmem back then to write a
+known value in known to be faulty register and checking it in a tight
+loop (and then with a poll on that bit) to see if that fixed it or not.
+
+> Best solution would be to shuffle the code a bit to avoid
+> read-modify-write operations and use only register writes. However,
+> quicker solution is to enable caching support in regmap which is also
+> used here. Such fix is also easier to backport in stable kernels.
+
+It only partially fixes the issue though. None of the volatile registers
+would be covered, and this includes GLB_CTL too at least.
+
+Maxime
+
+--rkf3mebagvwl47n5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXx7Y5gAKCRDj7w1vZxhR
+xTpvAQDC2aWjXyPe2xdJ6WjwIF72CckAJTJco3V8uth5Idw8TgEA1Hvn6WJiVmO5
+Et+T33XmkAq7D1qTPjEHncGpqQ4USgU=
+=9gPP
+-----END PGP SIGNATURE-----
+
+--rkf3mebagvwl47n5--
