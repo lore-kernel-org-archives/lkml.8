@@ -2,179 +2,76 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70758C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0040BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 469A52053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:22:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="YsRU7599"
+	by mail.kernel.org (Postfix) with ESMTP id D8F822070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730086AbgG0PWe (ORCPT
+        id S1730118AbgG0PXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729086AbgG0PWd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:22:33 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8183DC0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:22:33 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id o1so8183402plk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:22:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=WuC1tb7x6BvGKECYdAj7+6Xq8ux4z2ArO6V4hSqf9AI=;
-        b=YsRU7599SfR3atuSMTgfO+82rworsYawNL+SFlR7K4yxmzA8kced131hV/TIMD2ISK
-         P1DsnOytkQQI3VZFZM9YXG+X7w3CF94OS5mJzL3KTdiYUKbe4y3/I81W1NO1hQfiS7Vl
-         ywewvfg6YGOUYgp8HdkJ7X0xVvlYI4jMnWmVRc83zQJSRRiB7/UK9esy3oT34I477iCM
-         MyUaT/VzXb34HottKU4GBXQZZbF+wkV1bpd/4A6aU4l+B1sDHhS50Cib2NvfkfsHPts3
-         sbFG94sDNiUr5hWyM4HWb0AZRcHnjmh98+D05MpCHyhCoiznM0fywjImzzoprdG+dg0p
-         p9xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=WuC1tb7x6BvGKECYdAj7+6Xq8ux4z2ArO6V4hSqf9AI=;
-        b=oxb8aXsxDJQkqvnj+Rld8IdKHxWBt7/vRHpC5uxoDhDsBKACO0J7QsdFHcHxp3lqHk
-         CtzlLG73h/aA2PRqVq15QQ3aXaNGCzLJsk0VfSS+f+FXJwRPcBHjdjRx9Eicq1Irjz7H
-         Ome0FP6v0c2oLJpQIuur2F7j0CN1kla0ECVnwudpIBZeB4Ww6yIpi90w5BPheW9gdTtY
-         KsUOx4IvB1TBVnFbiw695P0sJg4qZZVW1DOXN8usEif0JBfjl7VszFS66Fz9W8Ag87xl
-         9ElxMzQLffkw0qfWrI3rcK0VyPSVYsrx+lA6I7QszhJe1NZMA/OZPA0HwZ1im5HvMgem
-         LCdQ==
-X-Gm-Message-State: AOAM531kyGLKC/B6ffJXh1FsZU70M9vSPgC/Pmnp87j3RkE+Iow/NFKW
-        gXAIFkDMTIzfxyCCTP3zqy/Btw==
-X-Google-Smtp-Source: ABdhPJxn578JPxUHbJg2Rzf/Arc8hfPOep4kNjExc3YQaChXVmlnG+GQatw85eg1Gzvp1O2gzoPQHw==
-X-Received: by 2002:a17:90a:14a5:: with SMTP id k34mr19914708pja.37.1595863353074;
-        Mon, 27 Jul 2020 08:22:33 -0700 (PDT)
-Received: from [192.168.1.102] (c-24-20-148-49.hsd1.or.comcast.net. [24.20.148.49])
-        by smtp.gmail.com with ESMTPSA id 141sm16274919pfw.72.2020.07.27.08.22.31
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Jul 2020 08:22:32 -0700 (PDT)
-From:   "Sean V Kelley" <sean.v.kelley@intel.com>
-To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
-Cc:     bhelgaas@google.com, rjw@rjwysocki.net,
-        "Raj, Ashok" <ashok.raj@intel.com>, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Qiuxu Zhuo" <qiuxu.zhuo@intel.com>
-Subject: Re: [RFC PATCH 1/9] pci_ids: Add class code and extended capability
- for RCEC
-Date:   Mon, 27 Jul 2020 08:22:33 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <4B3D13E2-4512-4CDE-A853-A4DB96B8258D@intel.com>
-In-Reply-To: <20200727112121.00007653@Huawei.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
- <20200724172223.145608-2-sean.v.kelley@intel.com>
- <20200727110010.00005042@Huawei.com> <20200727112121.00007653@Huawei.com>
+        Mon, 27 Jul 2020 11:23:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:46718 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727938AbgG0PXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 11:23:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96F94D6E;
+        Mon, 27 Jul 2020 08:23:10 -0700 (PDT)
+Received: from e120877-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 970BB3F718;
+        Mon, 27 Jul 2020 08:23:09 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 16:23:03 +0100
+From:   Vincent Donnefort <vincent.donnefort@arm.com>
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, vincent.guittot@linaro.org,
+        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+        lukasz.luba@arm.com, valentin.schneider@arm.com
+Subject: Re: [PATCH] sched/fair: provide u64 read for 32-bits arch helper
+Message-ID: <20200727152303.GA301827@e120877-lin.cambridge.arm.com>
+References: <1595847564-239957-1-git-send-email-vincent.donnefort@arm.com>
+ <20200727123801.GJ119549@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727123801.GJ119549@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27 Jul 2020, at 3:21, Jonathan Cameron wrote:
-
-> On Mon, 27 Jul 2020 11:00:10 +0100
-> Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+On Mon, Jul 27, 2020 at 02:38:01PM +0200, peterz@infradead.org wrote:
+> On Mon, Jul 27, 2020 at 11:59:24AM +0100, vincent.donnefort@arm.com wrote:
+> > From: Vincent Donnefort <vincent.donnefort@arm.com>
+> > 
+> > Introducing two macro helpers u64_32read() and u64_32read_set_copy() to
+> > factorize the u64 vminruntime and last_update_time read on a 32-bits
+> > architecture. Those new helpers encapsulate smp_rmb() and smp_wmb()
+> > synchronization and therefore, have a small penalty in set_task_rq_fair()
+> > and init_cfs_rq().
+> > 
+> > The choice of using a macro over an inline function is driven by the
+> > conditional u64 variable copy declarations.
+> > 
+> >   #ifndef CONFIG_64BIT
+> >      u64 [vminruntime|last_update_time]_copy;
+> >   #endif
+> 
+> This lacks a *why*... why did you get up this morning and wrote us this
+> patch.
+> 
 >
->> On Fri, 24 Jul 2020 10:22:15 -0700
->> Sean V Kelley <sean.v.kelley@intel.com> wrote:
->>
->>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->>>
->>> A PCIe Root Complex Event Collector(RCEC) has the base class 0x08,
->>> sub-class 0x07, and programming interface 0x00. Add the class code
->>> 0x0807 to identify RCEC devices and add the defines for the RCEC
->>> Endpoint Association Extended Capability.
->>>
->>> See PCI Express Base Specification, version 5.0-1, section "1.3.4
->>> Root Complex Event Collector" and section "7.9.10 Root Complex
->>> Event Collector Endpoint Association Extended Capability"
->>
->> Add a reference to the document
->> "PCI Code and ID Assignment Specification"
->> for the class number.
->
-> Actually probably no need. I'd somehow managed to fail to notice the
-> class code is also given in section 1.3.4 of the main spec.
 
-Okay, will leave as is.
+For 32-bit architectures, both min_vruntime and last_update_time are using
+similar access. This patch is simply an attempt to unify their usage by
+introducing two macros to rely on when accessing those. At the same time, it
+brings a comment regarding the barriers usage, as per the kernel policy. So
+overall this is just a clean-up without any functional changes.
 
-Thanks,
-
-Sean
-
->
->>
->> From the change log on latest version seems like it's been there 
->> since
->> version 1.4.
->>
->> There is a worrying note (bottom of page 16 of 1.12 version of that 
->> docs)
->> in there that says some older specs used 0x0806 for RCECs and that we
->> should use the port type field to actually check if we have one.
->>
->> Hopefully we won't encounter any of those in the wild.
->>
->> Otherwise, it's exactly what the spec says.
->> We could bike shed on naming choices, but the ones you have seem 
->> clear enough
->> to me.
->>
->> FWIW
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>
->>
->> Jonathan
->>>
->>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->>> ---
->>>  include/linux/pci_ids.h       | 1 +
->>>  include/uapi/linux/pci_regs.h | 7 +++++++
->>>  2 files changed, 8 insertions(+)
->>>
->>> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
->>> index 0ad57693f392..de8dff1fb176 100644
->>> --- a/include/linux/pci_ids.h
->>> +++ b/include/linux/pci_ids.h
->>> @@ -81,6 +81,7 @@
->>>  #define PCI_CLASS_SYSTEM_RTC		0x0803
->>>  #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
->>>  #define PCI_CLASS_SYSTEM_SDHCI		0x0805
->>> +#define PCI_CLASS_SYSTEM_RCEC		0x0807
->>>  #define PCI_CLASS_SYSTEM_OTHER		0x0880
->>>
->>>  #define PCI_BASE_CLASS_INPUT		0x09
->>> diff --git a/include/uapi/linux/pci_regs.h 
->>> b/include/uapi/linux/pci_regs.h
->>> index f9701410d3b5..f335f65f65d6 100644
->>> --- a/include/uapi/linux/pci_regs.h
->>> +++ b/include/uapi/linux/pci_regs.h
->>> @@ -828,6 +828,13 @@
->>>  #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system 
->>> budget */
->>>  #define PCI_EXT_CAP_PWR_SIZEOF	16
->>>
->>> +/* Root Complex Event Collector Endpoint Association  */
->>> +#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
->>> +#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
->>> +#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version 
->>> that BUSN present */
->>> +#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
->>> +#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
->>> +
->>>  /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
->>>  #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
->>>  #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)
->>
+-- 
+Vincent.
