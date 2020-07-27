@@ -2,125 +2,79 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396B8C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D3FC433F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA07208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859449;
-	bh=aR6hq68g+JgW0/2Rfx8A0TFHFTFCCggYO2Jse4nyR7E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EmTM3KcJ7FUMY+Ob/kVfB2XwXN5ha2lCuBFILlySqce1magfyUG5H1Yf6orlQTtki
-	 SBH8R8tcV8GS7CZKLNrFVO8o/gLiCIQofV6rVPBehvZXO155DX4MS+roWNxnPYsqC9
-	 7wUoPGCCq8qTq3YpdK57eoImue2cK7szHWKtzRZo=
+	by mail.kernel.org (Postfix) with ESMTP id 3A35120775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731056AbgG0OR2 (ORCPT
+        id S1731064AbgG0ORa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:17:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731019AbgG0ORR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:17:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74FD020825;
-        Mon, 27 Jul 2020 14:17:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859437;
-        bh=aR6hq68g+JgW0/2Rfx8A0TFHFTFCCggYO2Jse4nyR7E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DDL5ZX2QpjvVsgaOvZmCUxgl9xE6h/EWSqpc33cbv46CZa1TRKCmIWHz5eitM2ubf
-         nGzhhxuP+BrZO8PnJ2gL/MX3pD3ceUExc3EBzW79iKXa0+v+CeXc7FTanzWdNkrON+
-         q4imOx0l72Au1mF5jg03yanntThdp5M+/YRs3vLs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 077/138] ARM: dts: n900: remove mmc1 card detect gpio
-Date:   Mon, 27 Jul 2020 16:04:32 +0200
-Message-Id: <20200727134929.235445900@linuxfoundation.org>
+        Mon, 27 Jul 2020 10:17:30 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43625 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731022AbgG0ORS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:17:18 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1k03wG-0002jX-Uz; Mon, 27 Jul 2020 14:17:13 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Michal Kalderon <mkalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Alexander Lobakin <alobakin@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-rdma@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] qed: fix assignment of n_rq_elems to incorrect params field
+Date:   Mon, 27 Jul 2020 15:17:12 +0100
+Message-Id: <20200727141712.112906-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
-References: <20200727134925.228313570@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Merlijn Wajer <merlijn@wizzup.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit ed3e98e919aaaa47e9d9f8a40c3f6f4a22577842 ]
+Currently n_rq_elems is being assigned to params.elem_size instead of the
+field params.num_elems.  Coverity is detecting this as a double assingment
+to params.elem_size and reporting this as an usused value on the first
+assignment.  Fix this.
 
-Instead, expose the key via the input framework, as SW_MACHINE_COVER
-
-The chip-detect GPIO is actually detecting if the cover is closed.
-Technically it's possible to use the SD card with open cover. The
-only downside is risk of battery falling out and user being able
-to physically remove the card.
-
-The behaviour of SD card not being available when the device is
-open is unexpected and creates more problems than it solves. There
-is a high chance, that more people accidentally break their rootfs
-by opening the case without physically removing the card.
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
-Link: https://lore.kernel.org/r/20200612125402.18393-3-merlijn@wizzup.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Addresses-Coverity: ("Unused value")
+Fixes: b6db3f71c976 ("qed: simplify chain allocation with init params struct")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- arch/arm/boot/dts/omap3-n900.dts | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/qedr/verbs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 7f2ddb78da5fa..4227da71cc626 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -105,6 +105,14 @@
- 			linux,code = <SW_FRONT_PROXIMITY>;
- 			linux,can-disable;
- 		};
-+
-+		machine_cover {
-+			label = "Machine Cover";
-+			gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
-+			linux,input-type = <EV_SW>;
-+			linux,code = <SW_MACHINE_COVER>;
-+			linux,can-disable;
-+		};
- 	};
+diff --git a/drivers/infiniband/hw/qedr/verbs.c b/drivers/infiniband/hw/qedr/verbs.c
+index 5a80471577a6..4ce4e2eef6cc 100644
+--- a/drivers/infiniband/hw/qedr/verbs.c
++++ b/drivers/infiniband/hw/qedr/verbs.c
+@@ -1930,7 +1930,7 @@ qedr_roce_create_kernel_qp(struct qedr_dev *dev,
+ 	in_params->sq_pbl_ptr = qed_chain_get_pbl_phys(&qp->sq.pbl);
  
- 	isp1707: isp1707 {
-@@ -814,10 +822,6 @@
- 	pinctrl-0 = <&mmc1_pins>;
- 	vmmc-supply = <&vmmc1>;
- 	bus-width = <4>;
--	/* For debugging, it is often good idea to remove this GPIO.
--	   It means you can remove back cover (to reboot by removing
--	   battery) and still use the MMC card. */
--	cd-gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
- };
+ 	params.intended_use = QED_CHAIN_USE_TO_CONSUME_PRODUCE;
+-	params.elem_size = n_rq_elems;
++	params.num_elems = n_rq_elems;
+ 	params.elem_size = QEDR_RQE_ELEMENT_SIZE;
  
- /* most boards use vaux3, only some old versions use vmmc2 instead */
+ 	rc = dev->ops->common->chain_alloc(dev->cdev, &qp->rq.pbl, &params);
 -- 
-2.25.1
-
-
+2.27.0
 
