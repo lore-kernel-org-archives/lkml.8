@@ -2,162 +2,172 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4F7C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34730C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB5320775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1399420714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgG0Ffd (ORCPT
+        id S1726272AbgG0Fkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:35:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6180 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726124AbgG0Ffd (ORCPT
+        Mon, 27 Jul 2020 01:40:46 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:60923 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726140AbgG0Fkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:35:33 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5ZFE1119286;
-        Mon, 27 Jul 2020 01:35:18 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrcy0rft-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:35:18 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R5ZHHt119478;
-        Mon, 27 Jul 2020 01:35:17 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrcy0r23-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 01:35:17 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R5V4W5026236;
-        Mon, 27 Jul 2020 05:33:14 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4htsh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 05:33:13 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R5XBNk63570238
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 05:33:11 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C65354C04A;
-        Mon, 27 Jul 2020 05:33:11 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 91A844C040;
-        Mon, 27 Jul 2020 05:33:08 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.85.97.241])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jul 2020 05:33:08 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: [PATCH v4 10/10] powerpc/smp: Implement cpu_to_coregroup_id
-Date:   Mon, 27 Jul 2020 11:02:30 +0530
-Message-Id: <20200727053230.19753-11-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200727053230.19753-1-srikar@linux.vnet.ibm.com>
-References: <20200727053230.19753-1-srikar@linux.vnet.ibm.com>
+        Mon, 27 Jul 2020 01:40:46 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R861e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U3tiQ2q_1595828439;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U3tiQ2q_1595828439)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 27 Jul 2020 13:40:40 +0800
+Subject: Re: [PATCH v17 00/21] per memcg lru lock
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+Message-ID: <49d4f3bf-ccce-3c97-3a4c-f5cefe2d623a@linux.alibaba.com>
+Date:   Mon, 27 Jul 2020 13:40:31 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_03:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 suspectscore=0 adultscore=0 mlxlogscore=878
- priorityscore=1501 spamscore=0 clxscore=1015 mlxscore=0 phishscore=0
- bulkscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2007270037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lookup the coregroup id from the associativity array.
 
-If unable to detect the coregroup id, fallback on the core id.
-This way, ensure sched_domain degenerates and an extra sched domain is
-not created.
 
-Ideally this function should have been implemented in
-arch/powerpc/kernel/smp.c. However if its implemented in mm/numa.c, we
-don't need to find the primary domain again.
 
-If the device-tree mentions more than one coregroup, then kernel
-implements only the last or the smallest coregroup, which currently
-corresponds to the penultimate domain in the device-tree.
 
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Anton Blanchard <anton@ozlabs.org>
-Cc: Oliver O'Halloran <oohall@gmail.com>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Michael Neuling <mikey@neuling.org>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jordan Niethe <jniethe5@gmail.com>
-Reviewed-by : Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
-Changelog v1 -> v2:
-	Move coregroup_enabled before getting associativity (Gautham)
 
- arch/powerpc/mm/numa.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
 
-diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-index 0d57779e7942..8b3b3ec7fcc4 100644
---- a/arch/powerpc/mm/numa.c
-+++ b/arch/powerpc/mm/numa.c
-@@ -1218,6 +1218,26 @@ int find_and_online_cpu_nid(int cpu)
- 
- int cpu_to_coregroup_id(int cpu)
- {
-+	__be32 associativity[VPHN_ASSOC_BUFSIZE] = {0};
-+	int index;
-+
-+	if (cpu < 0 || cpu > nr_cpu_ids)
-+		return -1;
-+
-+	if (!coregroup_enabled)
-+		goto out;
-+
-+	if (!firmware_has_feature(FW_FEATURE_VPHN))
-+		goto out;
-+
-+	if (vphn_get_associativity(cpu, associativity))
-+		goto out;
-+
-+	index = of_read_number(associativity, 1);
-+	if (index > min_common_depth + 1)
-+		return of_read_number(&associativity[index - 1], 1);
-+
-+out:
- 	return cpu_to_core_id(cpu);
- }
- 
--- 
-2.17.1
+A standard for new page isolation steps like the following:
+1, get_page(); #pin the page avoid be free
+2, TestClearPageLRU(); #serialize other isolation, also memcg change
+3, spin_lock on lru_lock; #serialize lru list access
+The step 2 could be optimzed/replaced in scenarios which page is unlikely
+be accessed by others.
 
+
+
+在 2020/7/25 下午8:59, Alex Shi 写道:
+> The new version which bases on v5.8-rc6. It includes Hugh Dickins fix in 
+> mm/swap.c and mm/mlock.c fix which Alexander Duyck pointed out, then
+> removes 'mm/mlock: reorder isolation sequence during munlock' 
+> 
+> Hi Johanness & Hugh & Alexander & Willy,
+> 
+> Could you like to give a reviewed by since you address much of issue and
+> give lots of suggestions! Many thanks!
+> 
+> Current lru_lock is one for each of node, pgdat->lru_lock, that guard for
+> lru lists, but now we had moved the lru lists into memcg for long time. Still
+> using per node lru_lock is clearly unscalable, pages on each of memcgs have
+> to compete each others for a whole lru_lock. This patchset try to use per
+> lruvec/memcg lru_lock to repleace per node lru lock to guard lru lists, make
+> it scalable for memcgs and get performance gain.
+> 
+> Currently lru_lock still guards both lru list and page's lru bit, that's ok.
+> but if we want to use specific lruvec lock on the page, we need to pin down
+> the page's lruvec/memcg during locking. Just taking lruvec lock first may be
+> undermined by the page's memcg charge/migration. To fix this problem, we could
+> take out the page's lru bit clear and use it as pin down action to block the
+> memcg changes. That's the reason for new atomic func TestClearPageLRU.
+> So now isolating a page need both actions: TestClearPageLRU and hold the
+> lru_lock.
+> 
+> The typical usage of this is isolate_migratepages_block() in compaction.c
+> we have to take lru bit before lru lock, that serialized the page isolation
+> in memcg page charge/migration which will change page's lruvec and new 
+> lru_lock in it.
+> 
+> The above solution suggested by Johannes Weiner, and based on his new memcg 
+> charge path, then have this patchset. (Hugh Dickins tested and contributed much
+> code from compaction fix to general code polish, thanks a lot!).
+> 
+> The patchset includes 3 parts:
+> 1, some code cleanup and minimum optimization as a preparation.
+> 2, use TestCleanPageLRU as page isolation's precondition
+> 3, replace per node lru_lock with per memcg per node lru_lock
+> 
+> Following Daniel Jordan's suggestion, I have run 208 'dd' with on 104
+> containers on a 2s * 26cores * HT box with a modefied case:
+> https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
+> With this patchset, the readtwice performance increased about 80%
+> in concurrent containers.
+> 
+> Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought this
+> idea 8 years ago, and others who give comments as well: Daniel Jordan, 
+> Mel Gorman, Shakeel Butt, Matthew Wilcox etc.
+> 
+> Thanks for Testing support from Intel 0day and Rong Chen, Fengguang Wu,
+> and Yun Wang. Hugh Dickins also shared his kbuild-swap case. Thanks!
+> 
+> 
+> Alex Shi (19):
+>   mm/vmscan: remove unnecessary lruvec adding
+>   mm/page_idle: no unlikely double check for idle page counting
+>   mm/compaction: correct the comments of compact_defer_shift
+>   mm/compaction: rename compact_deferred as compact_should_defer
+>   mm/thp: move lru_add_page_tail func to huge_memory.c
+>   mm/thp: clean up lru_add_page_tail
+>   mm/thp: remove code path which never got into
+>   mm/thp: narrow lru locking
+>   mm/memcg: add debug checking in lock_page_memcg
+>   mm/swap: fold vm event PGROTATED into pagevec_move_tail_fn
+>   mm/lru: move lru_lock holding in func lru_note_cost_page
+>   mm/lru: move lock into lru_note_cost
+>   mm/lru: introduce TestClearPageLRU
+>   mm/compaction: do page isolation first in compaction
+>   mm/thp: add tail pages into lru anyway in split_huge_page()
+>   mm/swap: serialize memcg changes in pagevec_lru_move_fn
+>   mm/lru: replace pgdat lru_lock with lruvec lock
+>   mm/lru: introduce the relock_page_lruvec function
+>   mm/pgdat: remove pgdat lru_lock
+> 
+> Hugh Dickins (2):
+>   mm/vmscan: use relock for move_pages_to_lru
+>   mm/lru: revise the comments of lru_lock
+> 
+>  Documentation/admin-guide/cgroup-v1/memcg_test.rst |  15 +-
+>  Documentation/admin-guide/cgroup-v1/memory.rst     |  21 +--
+>  Documentation/trace/events-kmem.rst                |   2 +-
+>  Documentation/vm/unevictable-lru.rst               |  22 +--
+>  include/linux/compaction.h                         |   4 +-
+>  include/linux/memcontrol.h                         |  98 ++++++++++
+>  include/linux/mm_types.h                           |   2 +-
+>  include/linux/mmzone.h                             |   6 +-
+>  include/linux/page-flags.h                         |   1 +
+>  include/linux/swap.h                               |   4 +-
+>  include/trace/events/compaction.h                  |   2 +-
+>  mm/compaction.c                                    | 113 ++++++++----
+>  mm/filemap.c                                       |   4 +-
+>  mm/huge_memory.c                                   |  48 +++--
+>  mm/memcontrol.c                                    |  71 ++++++-
+>  mm/memory.c                                        |   3 -
+>  mm/mlock.c                                         |  43 +++--
+>  mm/mmzone.c                                        |   1 +
+>  mm/page_alloc.c                                    |   1 -
+>  mm/page_idle.c                                     |   8 -
+>  mm/rmap.c                                          |   4 +-
+>  mm/swap.c                                          | 203 ++++++++-------------
+>  mm/swap_state.c                                    |   2 -
+>  mm/vmscan.c                                        | 174 ++++++++++--------
+>  mm/workingset.c                                    |   2 -
+>  25 files changed, 510 insertions(+), 344 deletions(-)
+> 
