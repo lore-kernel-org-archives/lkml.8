@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73665C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA646C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 475D3207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E044207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860467;
-	bh=MV517qUDiknYDooGSvBVdtDwv42VgYuNr25i+D7Z/3E=;
+	s=default; t=1595860476;
+	bh=kOVhulJk+pdwU88duSZrqzaEiuBdYU+NRWyGSP6HyBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z1dyMKFoirJ+S+5p/N+PDtFvT8P9/7vd67rrHugpNKrF+sXAh+LPP+JjgbTWAprHv
-	 JtgOA5FwpiRsDAPJGlnf+U/7qrFrE0MivGwMnMtCHGonda/0MPiv7NZyjMMdTHaL9j
-	 QpzJARKXPgY+ReVuN9q1FyMQJa+MOYbUG4D+NhSg=
+	b=WimM/OJLFdrKJZnTbFKiZ8eXfv96qoeeE9zft0ETN40eKg3ffDbs+P5MJMLstbEhK
+	 ZGlHJmqKXpI4afByxnj4M6cafUHlJueaf0nOn+jXDW5InTFmjQvfCEPCwFR+ulGJ7X
+	 xgy2hvKtJQgyjqZnbFvATgA4W0qyCPBvhGXlgovs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732393AbgG0Oe0 (ORCPT
+        id S1731702AbgG0Oef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:34:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43320 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:34:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730859AbgG0OQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:16:23 -0400
+        id S1730825AbgG0OQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:16:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C100A2070A;
-        Mon, 27 Jul 2020 14:16:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7C8920775;
+        Mon, 27 Jul 2020 14:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859383;
-        bh=MV517qUDiknYDooGSvBVdtDwv42VgYuNr25i+D7Z/3E=;
+        s=default; t=1595859373;
+        bh=kOVhulJk+pdwU88duSZrqzaEiuBdYU+NRWyGSP6HyBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sSRuLRxDT1IAxaPXx5MSRolczlyyKlQlwOS6frz2ScK4saSLALsXpno91/HjmIW5y
-         K47MBY9zEufr6/Fq5FGB2V4j8GIWB9XJh5d14bPFxRZD07mCB9Oz1+RG+QtdyPkYHV
-         ySb64qRnB86PuwjxWmP6vT6sePnNj/At9YPAFoBk=
+        b=ylBacZGJWUMRlSq/4ImHIKsUaR2ZqjkY+7HNg4iEEiiri2VjxVoe9rVip1/CmDaDk
+         NGOXJADfZOCmFGe31Ut58Y8af9lDesPr8RjhumzW23sJ9XlI+lip/IVfO994PUCl1n
+         9f+V4PmM58OlNeupOnwvzzH6vJNvJksomdZ5OhIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Ilya Katsnelson <me@0upti.me>,
+        Lyude Paul <lyude@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 087/138] usb: gadget: udc: gr_udc: fix memleak on error handling path in gr_ep_init()
-Date:   Mon, 27 Jul 2020 16:04:42 +0200
-Message-Id: <20200727134929.717510843@linuxfoundation.org>
+Subject: [PATCH 5.4 083/138] Input: synaptics - enable InterTouch for ThinkPad X1E 1st gen
+Date:   Mon, 27 Jul 2020 16:04:38 +0200
+Message-Id: <20200727134929.523320856@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,42 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Ilya Katsnelson <me@0upti.me>
 
-[ Upstream commit c8f8529e2c4141afa2ebb487ad48e8a6ec3e8c99 ]
+[ Upstream commit dcb00fc799dc03fd320e123e4c81b3278c763ea5 ]
 
-gr_ep_init() does not assign the allocated request anywhere if allocation
-of memory for the buffer fails. This is a memory leak fixed by the given
-patch.
+Tested on my own laptop, touchpad feels slightly more responsive with
+this on, though it might just be placebo.
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Ilya Katsnelson <me@0upti.me>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Link: https://lore.kernel.org/r/20200703143457.132373-1-me@0upti.me
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/gr_udc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/input/mouse/synaptics.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
-index 116d386472efe..da73a06c20a39 100644
---- a/drivers/usb/gadget/udc/gr_udc.c
-+++ b/drivers/usb/gadget/udc/gr_udc.c
-@@ -1980,9 +1980,12 @@ static int gr_ep_init(struct gr_udc *dev, int num, int is_in, u32 maxplimit)
- 
- 	if (num == 0) {
- 		_req = gr_alloc_request(&ep->ep, GFP_ATOMIC);
-+		if (!_req)
-+			return -ENOMEM;
-+
- 		buf = devm_kzalloc(dev->dev, PAGE_SIZE, GFP_DMA | GFP_ATOMIC);
--		if (!_req || !buf) {
--			/* possible _req freed by gr_probe via gr_remove */
-+		if (!buf) {
-+			gr_free_request(&ep->ep, _req);
- 			return -ENOMEM;
- 		}
- 
+diff --git a/drivers/input/mouse/synaptics.c b/drivers/input/mouse/synaptics.c
+index 758dae8d65006..4b81b2d0fe067 100644
+--- a/drivers/input/mouse/synaptics.c
++++ b/drivers/input/mouse/synaptics.c
+@@ -179,6 +179,7 @@ static const char * const smbus_pnp_ids[] = {
+ 	"LEN0093", /* T480 */
+ 	"LEN0096", /* X280 */
+ 	"LEN0097", /* X280 -> ALPS trackpoint */
++	"LEN0099", /* X1 Extreme 1st */
+ 	"LEN009b", /* T580 */
+ 	"LEN200f", /* T450s */
+ 	"LEN2044", /* L470  */
 -- 
 2.25.1
 
