@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC5BC433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 361FCC433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5918A208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122B12083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859287;
-	bh=NTugThViFGiRXib5CKtPHuNzlpLklsHlIJrixb5zji8=;
+	s=default; t=1595859294;
+	bh=FqV7naqdE+WXYz3j7X7YOjTCWWaUZ3mIg+maH9TaCt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c1XmcaR35GLYaNBi3HWoEvsd7BYN9rP3yBT2/znYeTE+0iM+vP/OhXVa8xCsD4uJy
-	 uGshPXKsPN5KGi6Ov9Ze93jk31Iek+mcyJwmaqNOb8am0zX70yy3WQ+dtBeyS3/ibN
-	 QpC8LH82GHFHJ8/zhbyDax+E3prc/PH87m1PXjdU=
+	b=A5dg7n4sgAiWfQzgp3yQUnrSGls5ao3r219NQhVFk097I/FlnV4R213EWTs5asflR
+	 eHmikvj81RuHWDrOkXdJ9ZIb87J8dOOqGgqqwDTHoR4cEiLEmzk+pofj95kMrsolM0
+	 tOLDq5bcgtVi1oSfHySsHBbYP/BPG1gis00czoFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbgG0OOq (ORCPT
+        id S1730596AbgG0OOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:14:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40246 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:14:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730551AbgG0OOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:14:34 -0400
+        id S1730572AbgG0OOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:14:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35F2A2173E;
-        Mon, 27 Jul 2020 14:14:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8497D208E4;
+        Mon, 27 Jul 2020 14:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859273;
-        bh=NTugThViFGiRXib5CKtPHuNzlpLklsHlIJrixb5zji8=;
+        s=default; t=1595859279;
+        bh=FqV7naqdE+WXYz3j7X7YOjTCWWaUZ3mIg+maH9TaCt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qpTb/2QgajEvvizXyqH7dHIHrjTf2fkxrc5MCoRTmX19VY98wsxs4QhkSlA3LtW0F
-         /+bCUl4iJkMzPUtU4fWtdFVj0D1JnvlfaZ0CIsazPjtCI6+e+Nkb4eKKIwuyO+5jZw
-         1OtXzkRH/7N+LIJGfZzQXJTmRCKI0jjeLOX37FrQ=
+        b=CcbaWfvKc/FrPhPzfkjb7TDZcWkPfL6yvcMMXIh7gP3GqjOM+fMU1tfhjckKiwEOh
+         K8b9/QdhTrO9SQiWIn54jfxS7qoX971TRJR9hmS4wW2X4aZH3CqO6xB3ZIgEWFJnH2
+         3lm0Al/WrpCvTeOaoYDyAhEMMvhXabFVWkp8Ncs0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergey Organov <sorganov@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Mans Rullgard <mans@mansr.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 045/138] net: dp83640: fix SIOCSHWTSTAMP to update the struct with actual configuration
-Date:   Mon, 27 Jul 2020 16:04:00 +0200
-Message-Id: <20200727134927.618938911@linuxfoundation.org>
+Subject: [PATCH 5.4 047/138] drm: sun4i: hdmi: Fix inverted HPD result
+Date:   Mon, 27 Jul 2020 16:04:02 +0200
+Message-Id: <20200727134927.707753132@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -61,63 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Organov <sorganov@gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 473309fb8372365ad211f425bca760af800e10a7 ]
+[ Upstream commit baa1841eb797eadce6c907bdaed7cd6f01815404 ]
 
->From Documentation/networking/timestamping.txt:
+When the extra HPD polling in sun4i_hdmi was removed, the result of
+HPD was accidentally inverted.
 
-  A driver which supports hardware time stamping shall update the
-  struct with the actual, possibly more permissive configuration.
+Fix this by inverting the check.
 
-Do update the struct passed when we upscale the requested time
-stamping mode.
-
-Fixes: cb646e2b02b2 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
-Signed-off-by: Sergey Organov <sorganov@gmail.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: bda8eaa6dee7 ("drm: sun4i: hdmi: Remove extra HPD polling")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Tested-by: Mans Rullgard <mans@mansr.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200711011030.21997-1-wens@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83640.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-index 1c75b2627ca87..7d845117abb02 100644
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -1348,6 +1348,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L4;
- 		dp83640->version = PTP_CLASS_V1;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V1_L4_EVENT;
- 		break;
- 	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
-@@ -1355,6 +1356,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L4;
- 		dp83640->version = PTP_CLASS_V2;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L4_EVENT;
- 		break;
- 	case HWTSTAMP_FILTER_PTP_V2_L2_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_L2_SYNC:
-@@ -1362,6 +1364,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L2;
- 		dp83640->version = PTP_CLASS_V2;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L2_EVENT;
- 		break;
- 	case HWTSTAMP_FILTER_PTP_V2_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_SYNC:
-@@ -1369,6 +1372,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L4 | PTP_CLASS_L2;
- 		dp83640->version = PTP_CLASS_V2;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
- 		break;
- 	default:
- 		return -ERANGE;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+index 63b4de81686ac..4acdfa6087751 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+@@ -263,7 +263,7 @@ sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
+ 	unsigned long reg;
+ 
+ 	reg = readl(hdmi->base + SUN4I_HDMI_HPD_REG);
+-	if (reg & SUN4I_HDMI_HPD_HIGH) {
++	if (!(reg & SUN4I_HDMI_HPD_HIGH)) {
+ 		cec_phys_addr_invalidate(hdmi->cec_adap);
+ 		return connector_status_disconnected;
+ 	}
 -- 
 2.25.1
 
