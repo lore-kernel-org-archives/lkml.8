@@ -2,153 +2,178 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647EEC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB5EC433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4798A20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC5FC2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:30:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XrzxGc0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgG0HaX (ORCPT
+        id S1727091AbgG0Hag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:30:23 -0400
-Received: from mga03.intel.com ([134.134.136.65]:37225 "EHLO mga03.intel.com"
+        Mon, 27 Jul 2020 03:30:36 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:44078 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbgG0HaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:30:22 -0400
-IronPort-SDR: 5NlcthIJqQFLnri3xAiV4NCUMtAtrPkxeWdpm0Be9eSPseLU7AcFdeAW2nbxwejLNs4YnWIkAa
- qeBKtt8ED/6A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="150950820"
-X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
-   d="scan'208";a="150950820"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 00:30:21 -0700
-IronPort-SDR: klYhuM+dWW4fZNlkwtpjyfPXHdxUfs8O+YHwId7kpOPBUYr3DgLL12mT9xXXrzfE5hQrCjXbJ8
- Pnb6UYrc9YjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
-   d="scan'208";a="273181847"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 27 Jul 2020 00:30:21 -0700
-Received: from [10.215.255.196] (sangkeet-MOBL.gar.corp.intel.com [10.215.255.196])
-        by linux.intel.com (Postfix) with ESMTP id BAD365807FC;
-        Mon, 27 Jul 2020 00:30:17 -0700 (PDT)
-Subject: Re: [PATCH v5 2/2] Add PWM fan controller driver for LGM SoC
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com
-References: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
- <0f47648107ec23f72868ca37f29ea43e15c08e08.1595489518.git.rahul.tanwar@linux.intel.com>
- <20200723161553.ey47oijnwitf4hvu@pengutronix.de>
- <c2ef8f5c-af23-a63d-5f72-de0c307be8eb@linux.intel.com>
- <20200727070126.2juwfmra3i67lxfw@pengutronix.de>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <70fde2ba-b38f-a0d6-bc2d-89c074afd466@linux.intel.com>
-Date:   Mon, 27 Jul 2020 15:30:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726891AbgG0Hae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 03:30:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595835033; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=CVDJovx8o6kxZAd7Siw03nCa0NOSEKdy2eVnCp0MImQ=;
+ b=XrzxGc0kcC0g0Mv1zBjQ5DoJKw6PaY1tiyc09i2+npig/PNNjCOjJrRyJElBP7ugPX76/loA
+ lRBpAOgyv7R8moOziy/rvV58UhF9ZqtyZO/oOS55grd94LcI3BHMEtmaSnuC9swGWaARrl8L
+ fJcpNBSpAfkdYANv65RgozVBBSE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
+ 5f1e8284298a38b61655f804 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 07:30:12
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 08794C43391; Mon, 27 Jul 2020 07:30:11 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CB45FC433C9;
+        Mon, 27 Jul 2020 07:30:10 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200727070126.2juwfmra3i67lxfw@pengutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 27 Jul 2020 15:30:10 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        bvanassche@acm.org, beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
+        chaotian.jing@mediatek.com, cc.chou@mediatek.com
+Subject: Re: [PATCH v4] scsi: ufs: Quiesce all scsi devices before shutdown
+In-Reply-To: <20200724140140.18186-1-stanley.chu@mediatek.com>
+References: <20200724140140.18186-1-stanley.chu@mediatek.com>
+Message-ID: <84510fc12ada0de8284e6a689b7a2358@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Stanley,
 
-Hi Uwe,
+On 2020-07-24 22:01, Stanley Chu wrote:
+> Currently I/O request could be still submitted to UFS device while
+> UFS is working on shutdown flow. This may lead to racing as below
+> scenarios and finally system may crash due to unclocked register
+> accesses.
+> 
+> To fix this kind of issues, specifically quiesce all SCSI devices
+> before UFS shutdown to block all I/O request sending from block
+> layer.
+> 
+> Example of racing scenario: While UFS device is runtime-suspended
+> 
+> Thread #1: Executing UFS shutdown flow, e.g.,
+>            ufshcd_suspend(UFS_SHUTDOWN_PM)
+> Thread #2: Executing runtime resume flow triggered by I/O request,
+>            e.g., ufshcd_resume(UFS_RUNTIME_PM)
+> 
 
-On 27/7/2020 3:01 pm, Uwe Kleine-König wrote:
-> On Mon, Jul 27, 2020 at 02:04:56PM +0800, Tanwar, Rahul wrote:
->> Hi Uwe,
->>
->> On 24/7/2020 12:15 am, Uwe Kleine-König wrote:
->>> Hello,
->>>
->>> On Thu, Jul 23, 2020 at 03:44:18PM +0800, Rahul Tanwar wrote:
->>>> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->>>> +			 const struct pwm_state *state)
->>>> +{
->>>> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
->>>> +	u32 duty_cycle, val;
->>>> +	int ret;
->>>> +
->>>> +	if (!state->enabled) {
->>>> +		ret = lgm_pwm_enable(chip, 0);
->>>> +		return ret;
->>>> +	}
->>>> +
->>>> +	/*
->>>> +	 * HW only supports NORMAL polarity
->>>> +	 * HW supports fixed period which can not be changed/configured by user
->>>> +	 */
->>>> +	if (state->polarity != PWM_POLARITY_NORMAL ||
->>>> +	    state->period != pc->period)
->>>> +		return -EINVAL;
->>> At least for state->polarity you have to check before state->enabled, as
->>> the expectation on
->>>
->>>         .enabled = false
->>>         .polarity = PWM_POLARITY_INVERSED
->>>
->>> is that the output becomes constant high. Also as confirmed at the end
->>> of v4, state->period < pc->period was the right check to do.
->> For below case:
->>
->> .enabled = false
->> .polarity = PWM_POLARITY_INVERSED
->>
->> Since our HW does not support inversed polarity, the output for above case
->> is expected to be constant low. And if we disable PWM before checking for
->> polarity, the output becomes constant low. The code just does that. Sorry,
->> i could not understand what is wrong with the code. It looks correct to me.
-> As your hardware can only support normal polarity, the code must have:
->
-> 	if (state->polarity != PWM_POLARITY_NORMAL)
-> 		return -EINVAL;
->
-> 	if (!state->enabled) {
-> 		ret = lgm_pwm_enable(chip, 0);
-> 		return ret;
-> 	}
->
-> That's what I meant writing: "At least for state->polarity you have to
-> check before state->enabled".
+I don't quite get it, how can you prevent block layer PM from iniating
+hba runtime resume by quiescing the scsi devices? Block layer PM
+iniates hba async runtime resume in blk_queue_enter(). But quiescing
+the scsi devices can only prevent general I/O requests from passing
+through scsi_queue_rq() callback.
 
-Ok, i understand your point now.
+Say hba is runtime suspended, if an I/O request to sda is sent from
+block layer (sda must be runtime suspended as well at this time),
+blk_queue_enter() initiates async runtime resume for sda. But since
+sda's parents are also runtime suspended, the RPM framework shall do
+runtime resume to the devices in the sequence hba->host->target->sda.
+In this case, ufshcd_resume() still runs concurrently, no?
 
->> Given the fact that we support fixed period, if we allow
->> state->period < pc->period case then the duty cycle will be evaluated as
->> higher than the requested one because the state->period is lesser than
->> the actual fixed period supported by the HW. Can you please elaborate
->> on why you think we should allow state->period < pc->period case?
-> You should not allow it. In v4 you had:
->
-> 	if (state->polarity != PWM_POLARITY_NORMAL ||
-> 	    state->period < pc->period)
-> 		return -EINVAL;
->
-> That's the right thing to do (even though I was unsettled at one point
-> and wrote it was wrong). The check in v5 with state->period !=
-> pc->period is wrong.
->
+Thanks,
 
-Does that mean we should allow state->period >= pc->period cases?
-If the state->period is greater than HW supported pc->period and
-if we allow it then the duty cycle will again be evaluated to be
-incorrect/higher than requested duty cycle. Am i missing something
-else? Thanks.
+Can Guo.
 
-Regards,
-Rahul
+> This breaks the assumption that UFS PM flows can not be running
+> concurrently and some unexpected racing behavior may happen.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 9d180da77488..2e18596f3a8e 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -159,6 +159,12 @@ struct ufs_pm_lvl_states ufs_pm_lvl_states[] = {
+>  	{UFS_POWERDOWN_PWR_MODE, UIC_LINK_OFF_STATE},
+>  };
+> 
+> +#define ufshcd_scsi_for_each_sdev(fn) \
+> +	list_for_each_entry(starget, &hba->host->__targets, siblings) { \
+> +		__starget_for_each_device(starget, NULL, \
+> +					  fn); \
+> +	}
+> +
+>  static inline enum ufs_dev_pwr_mode
+>  ufs_get_pm_lvl_to_dev_pwr_mode(enum ufs_pm_level lvl)
+>  {
+> @@ -8620,6 +8626,13 @@ int ufshcd_runtime_idle(struct ufs_hba *hba)
+>  }
+>  EXPORT_SYMBOL(ufshcd_runtime_idle);
+> 
+> +static void ufshcd_quiesce_sdev(struct scsi_device *sdev, void *data)
+> +{
+> +	/* Suspended devices are already quiesced so can be skipped */
+> +	if (!pm_runtime_suspended(&sdev->sdev_gendev))
+> +		scsi_device_quiesce(sdev);
+> +}
+> +
+>  /**
+>   * ufshcd_shutdown - shutdown routine
+>   * @hba: per adapter instance
+> @@ -8631,6 +8644,7 @@ EXPORT_SYMBOL(ufshcd_runtime_idle);
+>  int ufshcd_shutdown(struct ufs_hba *hba)
+>  {
+>  	int ret = 0;
+> +	struct scsi_target *starget;
+> 
+>  	if (!hba->is_powered)
+>  		goto out;
+> @@ -8644,6 +8658,21 @@ int ufshcd_shutdown(struct ufs_hba *hba)
+>  			goto out;
+>  	}
+> 
+> +	/*
+> +	 * Quiesce all SCSI devices to prevent any non-PM requests sending
+> +	 * from block layer during and after shutdown.
+> +	 *
+> +	 * Here we can not use blk_cleanup_queue() since PM requests
+> +	 * (with BLK_MQ_REQ_PREEMPT flag) are still required to be sent
+> +	 * through block layer. Therefore SCSI command queued after the
+> +	 * scsi_target_quiesce() call returned will block until
+> +	 * blk_cleanup_queue() is called.
+> +	 *
+> +	 * Besides, scsi_target_"un"quiesce (e.g., scsi_target_resume) can
+> +	 * be ignored since shutdown is one-way flow.
+> +	 */
+> +	ufshcd_scsi_for_each_sdev(ufshcd_quiesce_sdev);
+> +
+>  	ret = ufshcd_suspend(hba, UFS_SHUTDOWN_PM);
+>  out:
+>  	if (ret)
