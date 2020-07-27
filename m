@@ -2,100 +2,196 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE34EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F084C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 809C52072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB83E2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:51:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xlV8JrP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgG0Guq (ORCPT
+        id S1726901AbgG0GvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 02:50:46 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:50362 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726116AbgG0Guq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 02:50:46 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 020D2A30C70C8211127B;
-        Mon, 27 Jul 2020 14:50:44 +0800 (CST)
-Received: from huawei.com (10.175.104.82) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Mon, 27 Jul 2020
- 14:50:41 +0800
-From:   Huang Guobin <huangguobin4@huawei.com>
-To:     <haren@us.ibm.com>, <herbert@gondor.apana.org.au>,
-        <ddstreet@ieee.org>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] lib: Verify array index is correct before using it
-Date:   Mon, 27 Jul 2020 02:59:10 -0400
-Message-ID: <20200727065910.1628-1-huangguobin4@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 27 Jul 2020 02:51:05 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:15954 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726116AbgG0GvF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 02:51:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595832663; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=NZJVjYhVsFEASgD9T7lU7RM9AwnOeyEC5q0Uw50tNJ4=;
+ b=xlV8JrP8bmwv97bU8kP/z69xedTccw1rtWfToleubvMFpDXfcCapZdlu0U6ltLOB1tpNgjSc
+ pf3HTz7SJ533r0ZTY+Qwne7jaV9lzHiG8C9XX05oyIoivskGqqplmyaAfgeM4NFcc/3PD6zO
+ 7AQTPqs9EhBQe4BJ8rD68t4rWvg=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n19.prod.us-east-1.postgun.com with SMTP id
+ 5f1e7940a61bb9e3f52225b9 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 06:50:40
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4E8AAC433C6; Mon, 27 Jul 2020 06:50:39 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sbhanu)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7C5A3C433C9;
+        Mon, 27 Jul 2020 06:50:38 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.104.82]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 27 Jul 2020 12:20:38 +0530
+From:   sbhanu@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, rnayak@codeaurora.org,
+        Pradeep P V K <ppvk@codeaurora.org>,
+        devicetree-owner@vger.kernel.org
+Subject: Re: [PATCH V2] arm64: dts: qcom: sc7180: Add bandwidth votes for eMMC
+ and SDcard
+In-Reply-To: <20200724171018.GZ3191083@google.com>
+References: <1595328381-29552-1-git-send-email-sbhanu@codeaurora.org>
+ <20200724171018.GZ3191083@google.com>
+Message-ID: <7ffcb56e9e6723f4bae687e0f491cb93@codeaurora.org>
+X-Sender: sbhanu@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code reads from the array before verifying that "c" is a valid
-index. Move test array offset code before use to fix it.
+On 2020-07-24 22:40, Matthias Kaehlcke wrote:
+> Hi Shaik,
+> 
+> On Tue, Jul 21, 2020 at 04:16:21PM +0530, Shaik Sajida Bhanu wrote:
+>> From: Pradeep P V K <ppvk@codeaurora.org>
+>> 
+>> Add the bandwidth domain supporting performance state and
+>> the corresponding OPP tables for the sdhc device on sc7180.
+>> 
+>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+>> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+>> ---
+>> 
+>> Changes since V1:
+>> 	- Incorporated review comments by Bjorn Andersson.
+>> ---
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 15 +++++++++++++++
+>>  1 file changed, 15 insertions(+)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
+>> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index 68f9894..d78a066 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -684,6 +684,9 @@
+>>  			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
+>>  					<&gcc GCC_SDCC1_AHB_CLK>;
+>>  			clock-names = "core", "iface";
+>> +			interconnects = <&aggre1_noc MASTER_EMMC &mc_virt SLAVE_EBI1>,
+>> +				<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_EMMC_CFG>;
+>> +			interconnect-names = "sdhc-ddr","cpu-sdhc";
+>>  			power-domains = <&rpmhpd SC7180_CX>;
+>>  			operating-points-v2 = <&sdhc1_opp_table>;
+>> 
+>> @@ -704,11 +707,15 @@
+>>  				opp-100000000 {
+>>  					opp-hz = /bits/ 64 <100000000>;
+>>  					required-opps = <&rpmhpd_opp_low_svs>;
+>> +					opp-peak-kBps = <100000 100000>;
+>> +					opp-avg-kBps = <100000 50000>;
+>>  				};
+>> 
+>>  				opp-384000000 {
+>>  					opp-hz = /bits/ 64 <384000000>;
+>>  					required-opps = <&rpmhpd_opp_svs_l1>;
+>> +					opp-peak-kBps = <600000 900000>;
+>> +					opp-avg-kBps = <261438 300000>;
+>>  				};
+>>  			};
+>>  		};
+>> @@ -2476,6 +2483,10 @@
+>>  			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
+>>  					<&gcc GCC_SDCC2_AHB_CLK>;
+>>  			clock-names = "core", "iface";
+>> +
+>> +			interconnects = <&aggre1_noc MASTER_SDCC_2 &mc_virt SLAVE_EBI1>,
+>> +				<&gem_noc MASTER_APPSS_PROC &config_noc	SLAVE_SDCC_2>;
+>> +			interconnect-names = "sdhc-ddr","cpu-sdhc";
+>>  			power-domains = <&rpmhpd SC7180_CX>;
+>>  			operating-points-v2 = <&sdhc2_opp_table>;
+>> 
+>> @@ -2489,11 +2500,15 @@
+>>  				opp-100000000 {
+>>  					opp-hz = /bits/ 64 <100000000>;
+>>  					required-opps = <&rpmhpd_opp_low_svs>;
+>> +					opp-peak-kBps = <160000 100000>;
+>> +					opp-avg-kBps = <80000 50000>;
+>>  				};
+>> 
+>>  				opp-202000000 {
+>>  					opp-hz = /bits/ 64 <202000000>;
+>>  					required-opps = <&rpmhpd_opp_svs_l1>;
+>> +					opp-peak-kBps = <200000	120000>;
+>> +					opp-avg-kBps = <100000 60000>;
+>>  				};
+>>  			};
+>>  		};
+> 
+> Does the sdhci-msm driver actually have BW scaling support at this 
+> point?
+> 
 
-Fixes: 2da572c959dd ("lib: add software 842 compression/decompression")
-Signed-off-by: Huang Guobin <huangguobin4@huawei.com>
----
- lib/842/842_compress.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+yes
 
-diff --git a/lib/842/842_compress.c b/lib/842/842_compress.c
-index c02baa4168e1..c37bfe0b9346 100644
---- a/lib/842/842_compress.c
-+++ b/lib/842/842_compress.c
-@@ -11,6 +11,7 @@
- #define MODULE_NAME "842_compress"
- 
- #include <linux/hashtable.h>
-+#include <linux/nospec.h>
- 
- #include "842.h"
- #include "842_debugfs.h"
-@@ -222,12 +223,14 @@ static int add_bits(struct sw842_param *p, u64 d, u8 n)
- static int add_template(struct sw842_param *p, u8 c)
- {
- 	int ret, i, b = 0;
--	u8 *t = comp_ops[c];
-+	u8 *t = NULL;
- 	bool inv = false;
- 
- 	if (c >= OPS_MAX)
- 		return -EINVAL;
-+	c = array_index_nospec(c, OPS_MAX);
- 
-+	t = comp_ops[c];
- 	pr_debug("template %x\n", t[4]);
- 
- 	ret = add_bits(p, t[4], OP_BITS);
-@@ -379,12 +382,14 @@ static int add_end_template(struct sw842_param *p)
- 
- static bool check_template(struct sw842_param *p, u8 c)
- {
--	u8 *t = comp_ops[c];
-+	u8 *t = NULL;
- 	int i, match, b = 0;
- 
- 	if (c >= OPS_MAX)
- 		return false;
-+	c = array_index_nospec(c, OPS_MAX);
- 
-+	t = comp_ops[c];
- 	for (i = 0; i < 4; i++) {
- 		if (t[i] & OP_ACTION_INDEX) {
- 			if (t[i] & OP_AMOUNT_2)
--- 
-2.17.1
+> There is commit 4ece9795be56 ("mmc: sdhci-msm: Add interconnect
+> bandwidth scaling support"), whose commit message says "make sure
+> interconnect driver is ready before handling interconnect scaling.".
+> 
+> I haven't seen any patch adding the scaling support (supposedly by
+> adding dev_pm_opp_set_bw() calls?). Did I miss it? If not it seems
+> it would make sense to post it in a series together with this patch,
+> as far as I can tell this patch alone does nothing in practical terms.
+> 
+> grep sdhc /sys/kernel/debug/interconnect/interconnect_summary
+>   8804000.sdhci                          0            0            0
+>   7c4000.sdhci                           0            0            0
+>   7c4000.sdhci                           0            0            0
+>   8804000.sdhci                          0            0            0
+>   ...
+
+"mmc: sdhci-msm: Use OPP API to set clk/perf 
+state"(https://lkml.org/lkml/2020/4/8/425) and "mmc: sdhci-msm: Add 
+interconnect bandwidth scaling 
+support"(https://lkml.org/lkml/2020/3/12/60) with these two patches 
+scaling will be supported for sdhci-msm driver.
+
+the values  in  grep sdhc 
+/sys/kernel/debug/interconnect/interconnect_summary will be zero during 
+device is in suspend state... and the values in  grep sdhc 
+/sys/kernel/debug/interconnect/interconnect_summary during device in 
+resume state will be like the following::
+
+cicalhost / # cat /sys/kernel/debug/interconnect/interconnect_summary | 
+grep sdh
+   8804000.sdhci                          0        60000       120000
+   7c4000.sdhci                           0       300000       900000
+   7c4000.sdhci                           0       300000       900000
+   8804000.sdhci                          0        60000       120000
+   8804000.sdhci                          0       100000       200000
+   7c4000.sdhci                           0       261438       600000
+   8804000.sdhci                          0        60000       120000
 
