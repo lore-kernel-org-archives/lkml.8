@@ -2,251 +2,228 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E03C433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1383B20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860968;
-	bh=sUDEn7GagDK4kW0p4laX8fT0RuspkOi4kAvCBwbQnLw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UQBUCMC72FBBe+Q2apL9Gz8+U2y4fycLrfWqzCkAfCZ76R66IVqFwPsP9tj++aB5c
-	 P77+oGxF/+GAsA94kwFIO6eBdQkCjc5jqqM3aAdJVjpbHCChDNxVeo9LFEoqUvmtFE
-	 zQZCzhisYSmjRhMOsnPPXiU80MxQDGUStYnY0pNc=
+	by mail.kernel.org (Postfix) with ESMTP id D6B43208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:44:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BaWHlInm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgG0OG3 (ORCPT
+        id S1728525AbgG0OoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:06:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgG0OG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:06:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AD492073E;
-        Mon, 27 Jul 2020 14:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858786;
-        bh=sUDEn7GagDK4kW0p4laX8fT0RuspkOi4kAvCBwbQnLw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vv0s7Htr4ytQh4p0d3Lg251fteWyQStkdK3K8av+aBOL7xvTLs2F3+uao47jvW1LV
-         /konK7BQDDoL8DtVqwuSyqkLnaVnXdgiD/5HyFqDK8wv8SzjJX5cib0JX+V1tbVRYP
-         rNAI16R7sfL+RamUhBnSgXs9G8h83oWhwJQ2foUI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 11/64] irqdomain/treewide: Keep firmware node unconditionally allocated
-Date:   Mon, 27 Jul 2020 16:03:50 +0200
-Message-Id: <20200727134911.596769409@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
-References: <20200727134911.020675249@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 27 Jul 2020 10:44:06 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42940 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727833AbgG0OoG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:44:06 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06REVp00042215;
+        Mon, 27 Jul 2020 14:43:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=Bt368gAPPpp7rvvC5hFX8UQ+yv9eW0vOFZjOfPmmBL8=;
+ b=BaWHlInmrtDf9J/Ey/RRm47Nq4nYhdDnJzUYiIwX+c+QwuN9x2SlXlg/jXL/YjKMNbHd
+ UQM0e+id4PDquDCSSeQYapYIPwIzQ5AOa4jDYRF4s46KqKmuFU/aZ9miQngpiocUfDWt
+ n5C7dC19eBX/uzochhOjEj0wjE2VXfZCOoKzVkN/52lkrq7dt0I9g5niLJEZnos4s7w7
+ VZ54WfRqH86rDFkeGvWt8Vo3pBpAhNlUGVuzvNmBZ8ysUp5r05/7gTdM7tLJt7CJ/eeF
+ VCzzA0FkCRiu6qrTKTjLRhZbdEX/nBp0hVUv6+9e0eDKoiSUf3pl7DjMfW85kAK+LhHW Cw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 32hu1j1xts-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jul 2020 14:43:48 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06REWbox036552;
+        Mon, 27 Jul 2020 14:43:48 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 32hu5quuuc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 14:43:47 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06REhkl7019489;
+        Mon, 27 Jul 2020 14:43:46 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Jul 2020 07:43:45 -0700
+Date:   Mon, 27 Jul 2020 17:43:35 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vandana BN <bnvandana@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
+ kernel-infoleak in video_put_user()
+Message-ID: <20200727144335.GB2571@kadam>
+References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
+ <20200726222703.102701-1-yepeilin.cs@gmail.com>
+ <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
+ <20200727131608.GD1913@kadam>
+ <CAK8P3a3+9Gr6G6KDWu=iW3316O9cPH+XupBBajJaxrq20xQcyQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3+9Gr6G6KDWu=iW3316O9cPH+XupBBajJaxrq20xQcyQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270104
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxscore=0 impostorscore=0
+ phishscore=0 adultscore=0 suspectscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Mon, Jul 27, 2020 at 04:05:38PM +0200, Arnd Bergmann wrote:
+> On Mon, Jul 27, 2020 at 3:16 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> >
+> > On Mon, Jul 27, 2020 at 09:25:16AM +0200, Arnd Bergmann wrote:
+> > > On Mon, Jul 27, 2020 at 12:28 AM Peilin Ye <yepeilin.cs@gmail.com> wrote:
+> > > >
+> > > > video_put_user() is copying uninitialized stack memory to userspace due
+> > > > to the compiler not initializing holes in the structures declared on the
+> > > > stack. Fix it by initializing `ev32` and `vb32` using memset().
+> > > >
+> > > > Reported-and-tested-by: syzbot+79d751604cb6f29fbf59@syzkaller.appspotmail.com
+> > > > Link: https://syzkaller.appspot.com/bug?extid=79d751604cb6f29fbf59
+> > > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> > >
+> > > Thanks a lot for addressing this! I now see that I actually created a similar
+> > > bugfix for it back in January, but for some reason that got stuck in my
+> > > backlog and I never wrote a proper description for it or sent it out to the
+> > > list, sorry about that. I would hope we could find a way to have either
+> > > the compiler or sparse warn if we copy uninitialized data to user space,
+> > > but we now don't even check for that within the kernel any more.
+> >
+> > Here are my latest warnings on linux-next from Friday.
+> 
+> Ah, I forgot you had that kind of list already, thanks for checking!
+> 
+> > block/scsi_ioctl.c:707 scsi_put_cdrom_generic_arg() warn: check that 'cgc32' doesn't leak information (struct has a hole after 'data_direction')
+> 
+> I see no padding in this one, should be fine AFAICT. Any idea why you
+> get a warning
+> for this instance?
+> 
 
-[ Upstream commit e3beca48a45b5e0e6e6a4e0124276b8248dcc9bb ]
+The warning message only prints the first struct hole or uninitialized
+struct memeber.  ->data_direction in this case.
 
-Quite some non OF/ACPI users of irqdomains allocate firmware nodes of type
-IRQCHIP_FWNODE_NAMED or IRQCHIP_FWNODE_NAMED_ID and free them right after
-creating the irqdomain. The only purpose of these FW nodes is to convey
-name information. When this was introduced the core code did not store the
-pointer to the node in the irqdomain. A recent change stored the firmware
-node pointer in irqdomain for other reasons and missed to notice that the
-usage sites which do the alloc_fwnode/create_domain/free_fwnode sequence
-are broken by this. Storing a dangling pointer is dangerous itself, but in
-case that the domain is destroyed later on this leads to a double free.
+block/scsi_ioctl.c
+   646  #ifdef CONFIG_COMPAT
+   647  struct compat_cdrom_generic_command {
+   648          unsigned char   cmd[CDROM_PACKET_SIZE];
+   649          compat_caddr_t  buffer;
+   650          compat_uint_t   buflen;
+   651          compat_int_t    stat;
+   652          compat_caddr_t  sense;
+   653          unsigned char   data_direction;
 
-Remove the freeing of the firmware node after creating the irqdomain from
-all affected call sites to cure this.
+There is going to be 3 bytes of padding between this char and the next
+int.
 
-Fixes: 711419e504eb ("irqdomain: Add the missing assignment of domain->fwnode for named fwnode")
-Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/873661qakd.fsf@nanos.tec.linutronix.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/apic/io_apic.c      | 10 +++++-----
- arch/x86/kernel/apic/msi.c          | 16 +++++++++++-----
- arch/x86/kernel/apic/vector.c       |  1 -
- arch/x86/platform/uv/uv_irq.c       |  3 ++-
- drivers/iommu/amd_iommu.c           |  5 +++--
- drivers/iommu/intel_irq_remapping.c |  2 +-
- drivers/pci/host/vmd.c              |  5 +++--
- 7 files changed, 25 insertions(+), 17 deletions(-)
+   654          compat_int_t    quiet;
+   655          compat_int_t    timeout;
+   656          compat_caddr_t  reserved[1];
+   657  };
+   658  #endif
 
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index 2271adbc3c42a..b5652233e6745 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2233,12 +2233,12 @@ static int mp_irqdomain_create(int ioapic)
- 	ip->irqdomain = irq_domain_create_linear(fn, hwirqs, cfg->ops,
- 						 (void *)(long)ioapic);
- 
--	/* Release fw handle if it was allocated above */
--	if (!cfg->dev)
--		irq_domain_free_fwnode(fn);
--
--	if (!ip->irqdomain)
-+	if (!ip->irqdomain) {
-+		/* Release fw handle if it was allocated above */
-+		if (!cfg->dev)
-+			irq_domain_free_fwnode(fn);
- 		return -ENOMEM;
-+	}
- 
- 	ip->irqdomain->parent = parent;
- 
-diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
-index f10e7f93b0e2c..8c102d62b8596 100644
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -149,10 +149,11 @@ void __init arch_init_msi_domain(struct irq_domain *parent)
- 		msi_default_domain =
- 			pci_msi_create_irq_domain(fn, &pci_msi_domain_info,
- 						  parent);
--		irq_domain_free_fwnode(fn);
- 	}
--	if (!msi_default_domain)
-+	if (!msi_default_domain) {
-+		irq_domain_free_fwnode(fn);
- 		pr_warn("failed to initialize irqdomain for MSI/MSI-x.\n");
-+	}
- }
- 
- #ifdef CONFIG_IRQ_REMAP
-@@ -185,7 +186,8 @@ struct irq_domain *arch_create_remap_msi_irq_domain(struct irq_domain *parent,
- 	if (!fn)
- 		return NULL;
- 	d = pci_msi_create_irq_domain(fn, &pci_msi_ir_domain_info, parent);
--	irq_domain_free_fwnode(fn);
-+	if (!d)
-+		irq_domain_free_fwnode(fn);
- 	return d;
- }
- #endif
-@@ -248,7 +250,8 @@ static struct irq_domain *dmar_get_irq_domain(void)
- 	if (fn) {
- 		dmar_domain = msi_create_irq_domain(fn, &dmar_msi_domain_info,
- 						    x86_vector_domain);
--		irq_domain_free_fwnode(fn);
-+		if (!dmar_domain)
-+			irq_domain_free_fwnode(fn);
- 	}
- out:
- 	mutex_unlock(&dmar_lock);
-@@ -373,7 +376,10 @@ struct irq_domain *hpet_create_irq_domain(int hpet_id)
- 	}
- 
- 	d = msi_create_irq_domain(fn, domain_info, parent);
--	irq_domain_free_fwnode(fn);
-+	if (!d) {
-+		irq_domain_free_fwnode(fn);
-+		kfree(domain_info);
-+	}
- 	return d;
- }
- 
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index b958082c74a77..36cd34524ac19 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -457,7 +457,6 @@ int __init arch_early_irq_init(void)
- 	x86_vector_domain = irq_domain_create_tree(fn, &x86_vector_domain_ops,
- 						   NULL);
- 	BUG_ON(x86_vector_domain == NULL);
--	irq_domain_free_fwnode(fn);
- 	irq_set_default_host(x86_vector_domain);
- 
- 	arch_init_msi_domain(x86_vector_domain);
-diff --git a/arch/x86/platform/uv/uv_irq.c b/arch/x86/platform/uv/uv_irq.c
-index 03fc397335b74..c9fc725a1dcf4 100644
---- a/arch/x86/platform/uv/uv_irq.c
-+++ b/arch/x86/platform/uv/uv_irq.c
-@@ -171,9 +171,10 @@ static struct irq_domain *uv_get_irq_domain(void)
- 		goto out;
- 
- 	uv_domain = irq_domain_create_tree(fn, &uv_domain_ops, NULL);
--	irq_domain_free_fwnode(fn);
- 	if (uv_domain)
- 		uv_domain->parent = x86_vector_domain;
-+	else
-+		irq_domain_free_fwnode(fn);
- out:
- 	mutex_unlock(&uv_lock);
- 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 778f167be2d35..494caaa265af0 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -4394,9 +4394,10 @@ int amd_iommu_create_irq_domain(struct amd_iommu *iommu)
- 	if (!fn)
- 		return -ENOMEM;
- 	iommu->ir_domain = irq_domain_create_tree(fn, &amd_ir_domain_ops, iommu);
--	irq_domain_free_fwnode(fn);
--	if (!iommu->ir_domain)
-+	if (!iommu->ir_domain) {
-+		irq_domain_free_fwnode(fn);
- 		return -ENOMEM;
-+	}
- 
- 	iommu->ir_domain->parent = arch_get_ir_parent_domain();
- 	iommu->msi_domain = arch_create_remap_msi_irq_domain(iommu->ir_domain,
-diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
-index 25842b566c39c..154949a499c21 100644
---- a/drivers/iommu/intel_irq_remapping.c
-+++ b/drivers/iommu/intel_irq_remapping.c
-@@ -536,8 +536,8 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
- 					    0, INTR_REMAP_TABLE_ENTRIES,
- 					    fn, &intel_ir_domain_ops,
- 					    iommu);
--	irq_domain_free_fwnode(fn);
- 	if (!iommu->ir_domain) {
-+		irq_domain_free_fwnode(fn);
- 		pr_err("IR%d: failed to allocate irqdomain\n", iommu->seq_id);
- 		goto out_free_bitmap;
- 	}
-diff --git a/drivers/pci/host/vmd.c b/drivers/pci/host/vmd.c
-index af6d5da10ea5f..05f191ae0ff1b 100644
---- a/drivers/pci/host/vmd.c
-+++ b/drivers/pci/host/vmd.c
-@@ -638,9 +638,10 @@ static int vmd_enable_domain(struct vmd_dev *vmd)
- 
- 	vmd->irq_domain = pci_msi_create_irq_domain(fn, &vmd_msi_domain_info,
- 						    x86_vector_domain);
--	irq_domain_free_fwnode(fn);
--	if (!vmd->irq_domain)
-+	if (!vmd->irq_domain) {
-+		irq_domain_free_fwnode(fn);
- 		return -ENODEV;
-+	}
- 
- 	pci_add_resource(&resources, &vmd->resources[0]);
- 	pci_add_resource(&resources, &vmd->resources[1]);
--- 
-2.25.1
+The bug seems real, but it depends on the compiler of course.
 
+> > drivers/input/misc/uinput.c:743 uinput_ff_upload_to_user() warn: check that 'ff_up_compat' doesn't leak information (struct has a hole after 'replay')
+> 
+> This one hs padding in it and looks broken.
 
+No.  This a bug in smatch.  It's memcpy() over the hole, but the check
+isn't capturing that.  The code is slightly weird...  I could try
+silence the warning but it would only silence this one false positive so
+I haven't investigated it.
+
+> 
+> > drivers/input/misc/uinput.c:958 uinput_ioctl_handler() warn: check that 'ff_up' doesn't leak information (struct has a hole after 'replay')
+> 
+> hard to tell.
+> 
+
+Looks ok, I think.
+
+> > drivers/firewire/core-cdev.c:463 ioctl_get_info() warn: check that 'bus_reset' doesn't leak information (struct has a hole after 'generation')
+> 
+> broken, trivial to fix
+> 
+> > drivers/scsi/megaraid/megaraid_mm.c:824 kioc_to_mimd() warn: check that 'cinfo.base' doesn't leak information
+> 
+> Seems fine due to __packed annotation.
+> 
+
+It's not related __packed.  Smatch is saying that cinfo.base isn't
+necessarily initialized.
+
+drivers/scsi/megaraid/megaraid_mm.c
+   816  
+   817                  case MEGAIOC_QADAPINFO:
+   818  
+   819                          hinfo = (mraid_hba_info_t *)(unsigned long)
+   820                                          kioc->buf_vaddr;
+   821  
+   822                          hinfo_to_cinfo(hinfo, &cinfo);
+
+hinfo_to_cinfo() is a no-op if hinfo is NULL.  Smatch can't tell if
+"hinfo" is non-NULL.
+
+   823  
+   824                          if (copy_to_user(kmimd.data, &cinfo, sizeof(cinfo)))
+   825                                  return (-EFAULT);
+   826  
+   827                          return 0;
+   828  
+
+> > drivers/gpio/gpiolib-cdev.c:473 lineevent_read() warn: check that 'ge' doesn't leak information (struct has a hole after 'id')
+> 
+> The driver seems to initialize the elements correctly before putting
+> them into the kfifo, so there is no infoleak. However the structure layout
+> of "struct gpioevent_data" is incompatible between x86-32 and x86-64
+> calling conventions, so this is likely broken in x86 compat mode,
+> unless user space can explicitly deal with the difference.
+
+Smatch isn't parsing kfifo_out() correctly.  It turns out that
+kfifo_out() is slightly complicated for Smatch.
+
+> 
+> > drivers/gpu/drm/i915/i915_query.c:136 query_engine_info() warn: check that 'query.num_engines' doesn't leak information
+> 
+> I don't think this leaks any state, as it just copies data to user space that
+> it copied from there originally.
+
+Yeah.  copy_query_item() isn't parsed correctly.  I've added this one
+to my TODO list because it should parse this correctly.
+
+regards,
+dan carpenter
 
