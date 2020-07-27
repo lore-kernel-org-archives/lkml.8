@@ -2,104 +2,307 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95756C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2807BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8502070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E146E2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZPCV0HEm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f2p97gOT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgG0Nye (ORCPT
+        id S1728633AbgG0N4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:54:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgG0Nye (ORCPT
+        Mon, 27 Jul 2020 09:56:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58452 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726371AbgG0N4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:54:34 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8664C061794;
-        Mon, 27 Jul 2020 06:54:33 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 27 Jul 2020 09:56:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595858170;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1WTZDVZ7JYwkegrUDoUVyhFhwtUfa2IQZOo5D6wEXmE=;
+        b=f2p97gOTh2DT1BAeyQ1sJyqVBWXiVUVzgOcuMqkRErZppAxy/yCF96fzVXoPLvLsG1717/
+        c629CQ6lqzs+AzaC/tWQQGZ6z3lE7RRJH0nIdVbj98C0mAsgao7+4ScxGbvPTs+PPcb2KX
+        Suo8umLHK2qPKIhr3BcrHTDCb/Fc/F8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-329-NVwF7KgtONqEpGYkYDws9Q-1; Mon, 27 Jul 2020 09:56:08 -0400
+X-MC-Unique: NVwF7KgtONqEpGYkYDws9Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFhBJ0X94z9sPB;
-        Mon, 27 Jul 2020 23:54:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595858072;
-        bh=RnY2bmxZCaMj2sq6R8j9Kiu19OP6YSL8pnxUOMPEECU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZPCV0HEmPdAgFm2cOrrnNfhPzq6NADZ6Rw8hiynji92a+xzclHBL6SiOlAE+RaadA
-         Q1Tt36wAFzlJbiyB6AM7JvDKLeenc07zH0U+AVy1t0XPAUracV9iIG53SUEDP4SVJo
-         EZ7Ge+r2lyggk6WeU9j3Inx3WujqRDaal0rDhS7pnTRpKj3Saqo9NjH63tUuWRidfm
-         pJBELbWRoUPdz4b8lRn1RqhsLee0V9sFVfHZQe04WuWb1P2OUm3O3SyVg3eFUTF8NJ
-         j4BkYQt9u6/Od48XF+y/ecgroVd0HfjcbNGIKBsupYcdIMbm11CxGZdfuFyAZ0ayrs
-         WLyJuGFl7Ibeg==
-Date:   Mon, 27 Jul 2020 23:54:31 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the akpm tree with the fsinfo tree
-Message-ID: <20200727235431.01e77f03@canb.auug.org.au>
-In-Reply-To: <2814724.1595856998@warthog.procyon.org.uk>
-References: <20200727224626.463ffeaf@canb.auug.org.au>
-        <2814724.1595856998@warthog.procyon.org.uk>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6B6E71005504;
+        Mon, 27 Jul 2020 13:56:07 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-115-13.rdu2.redhat.com [10.10.115.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C30AF10013C0;
+        Mon, 27 Jul 2020 13:56:03 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 4C904220264; Mon, 27 Jul 2020 09:56:03 -0400 (EDT)
+Date:   Mon, 27 Jul 2020 09:56:03 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     virtio-fs-list <virtio-fs@redhat.com>, vkuznets@redhat.com,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com
+Subject: Re: [PATCH v4] kvm,x86: Exit to user space in case page fault error
+Message-ID: <20200727135603.GA39559@redhat.com>
+References: <20200720211359.GF502563@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/SaNcrhBiXwrPH+HtcbX0zF_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720211359.GF502563@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/SaNcrhBiXwrPH+HtcbX0zF_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jul 20, 2020 at 05:13:59PM -0400, Vivek Goyal wrote:
+> Page fault error handling behavior in kvm seems little inconsistent when
+> page fault reports error. If we are doing fault synchronously
+> then we capture error (-EFAULT) returned by __gfn_to_pfn_memslot() and
+> exit to user space and qemu reports error, "error: kvm run failed Bad address".
 
-Hi David,
+Hi Vitaly,
 
-On Mon, 27 Jul 2020 14:36:38 +0100 David Howells <dhowells@redhat.com> wrot=
-e:
->
-> Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->=20
-> > The notificiations tree has been rebased to remove a new syscall and
-> > the fsinfo tree rebased on top of that, so the syscall numbers have all
-> > changed again :-( =20
->=20
-> Would it make it easier it if I just left a hole for the syscall I droppe=
-d for
-> the moment?
+A gentle reminder. How does this patch look now?
 
-Not now, as I have done the necessary updates in the akpm tree.
+Thanks
+Vivek
 
-Unless, you think it may come back and go away again :-(
---=20
-Cheers,
-Stephen Rothwell
+> 
+> But if we are doing async page fault, then async_pf_execute() will simply
+> ignore the error reported by get_user_pages_remote() or
+> by kvm_mmu_do_page_fault(). It is assumed that page fault was successful
+> and either a page ready event is injected in guest or guest is brought
+> out of artificial halt state and run again. In both the cases when guest
+> retries the instruction, it takes exit again as page fault was not
+> successful in previous attempt. And then this infinite loop continues
+> forever.
+> 
+> Trying fault in a loop will make sense if error is temporary and will
+> be resolved on retry. But I don't see any intention in the code to
+> determine if error is temporary or not.  Whether to do fault synchronously
+> or asynchronously, depends on so many variables but none of the varibales
+> is whether error is temporary or not. (kvm_can_do_async_pf()).
+> 
+> And that makes it very inconsistent or unpredictable to figure out whether
+> kvm will exit to qemu with error or it will just retry and go into an
+> infinite loop.
+> 
+> This patch tries to make this behavior consistent. That is instead of
+> getting into infinite loop of retrying page fault, exit to user space
+> and stop VM if page fault error happens.
+> 
+> In future this can be improved by injecting errors into guest. As of
+> now we don't have any race free method to inject errors in guest.
+> 
+> When page fault error happens in async path save that pfn and when next
+> time guest retries, do a sync fault instead of async fault. So that if error
+> is encountered, we exit to qemu and avoid infinite loop.
+> 
+> We maintain a cache of error gfns and force sync fault if a gfn is
+> found in cache of error gfn. There is a small possibility that we
+> miss an error gfn (as it got overwritten by a new error gfn). But
+> its just a hint and sooner or later some error pfn will match
+> and we will force sync fault and exit to user space.
+> 
+> Changes from v3:
+> - Added function kvm_find_and_remove_error_gfn() and removed
+>   kvm_find_error_gfn() and kvm_del_error_gfn(). (Vitaly)
+> 
+> - Added a macro GFN_INVALID (Vitaly).
+> 
+> - Used gpa_to_gfn() to convert gpa to gfn (Vitaly)
+> 
+> Change from v2:
+> - Fixed a warning by converting kvm_find_error_gfn() static.
+> 
+> Change from v1:
+> - Maintain a cache of error gfns, instead of single gfn. (Vitaly)
+> 
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  2 ++
+>  arch/x86/kvm/mmu.h              |  2 +-
+>  arch/x86/kvm/mmu/mmu.c          |  2 +-
+>  arch/x86/kvm/x86.c              | 54 +++++++++++++++++++++++++++++++--
+>  include/linux/kvm_types.h       |  1 +
+>  5 files changed, 56 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index be5363b21540..e6f8d3f1a377 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -137,6 +137,7 @@ static inline gfn_t gfn_to_index(gfn_t gfn, gfn_t base_gfn, int level)
+>  #define KVM_NR_VAR_MTRR 8
+>  
+>  #define ASYNC_PF_PER_VCPU 64
+> +#define ERROR_GFN_PER_VCPU 64
+>  
+>  enum kvm_reg {
+>  	VCPU_REGS_RAX = __VCPU_REGS_RAX,
+> @@ -778,6 +779,7 @@ struct kvm_vcpu_arch {
+>  		unsigned long nested_apf_token;
+>  		bool delivery_as_pf_vmexit;
+>  		bool pageready_pending;
+> +		gfn_t error_gfns[ERROR_GFN_PER_VCPU];
+>  	} apf;
+>  
+>  	/* OSVW MSRs (AMD only) */
+> diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+> index 444bb9c54548..d0a2a12c7bb6 100644
+> --- a/arch/x86/kvm/mmu.h
+> +++ b/arch/x86/kvm/mmu.h
+> @@ -60,7 +60,7 @@ void kvm_init_mmu(struct kvm_vcpu *vcpu, bool reset_roots);
+>  void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu, u32 cr0, u32 cr4, u32 efer);
+>  void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
+>  			     bool accessed_dirty, gpa_t new_eptp);
+> -bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu);
+> +bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu, gfn_t gfn);
+>  int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
+>  				u64 fault_address, char *insn, int insn_len);
+>  
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 6d6a0ae7800c..b51d4aa405e0 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4078,7 +4078,7 @@ static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
+>  	if (!async)
+>  		return false; /* *pfn has correct page already */
+>  
+> -	if (!prefault && kvm_can_do_async_pf(vcpu)) {
+> +	if (!prefault && kvm_can_do_async_pf(vcpu, gpa_to_gfn(cr2_or_gpa))) {
+>  		trace_kvm_try_async_get_page(cr2_or_gpa, gfn);
+>  		if (kvm_find_async_pf_gfn(vcpu, gfn)) {
+>  			trace_kvm_async_pf_doublefault(cr2_or_gpa, gfn);
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 88c593f83b28..c1f5094d6e53 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -263,6 +263,13 @@ static inline void kvm_async_pf_hash_reset(struct kvm_vcpu *vcpu)
+>  		vcpu->arch.apf.gfns[i] = ~0;
+>  }
+>  
+> +static inline void kvm_error_gfn_hash_reset(struct kvm_vcpu *vcpu)
+> +{
+> +	int i;
+> +	for (i = 0; i < ERROR_GFN_PER_VCPU; i++)
+> +		vcpu->arch.apf.error_gfns[i] = GFN_INVALID;
+> +}
+> +
+>  static void kvm_on_user_return(struct user_return_notifier *urn)
+>  {
+>  	unsigned slot;
+> @@ -9484,6 +9491,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>  	vcpu->arch.pat = MSR_IA32_CR_PAT_DEFAULT;
+>  
+>  	kvm_async_pf_hash_reset(vcpu);
+> +	kvm_error_gfn_hash_reset(vcpu);
+>  	kvm_pmu_init(vcpu);
+>  
+>  	vcpu->arch.pending_external_vector = -1;
+> @@ -9608,6 +9616,7 @@ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+>  
+>  	kvm_clear_async_pf_completion_queue(vcpu);
+>  	kvm_async_pf_hash_reset(vcpu);
+> +	kvm_error_gfn_hash_reset(vcpu);
+>  	vcpu->arch.apf.halted = false;
+>  
+>  	if (kvm_mpx_supported()) {
+> @@ -10369,6 +10378,36 @@ void kvm_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_set_rflags);
+>  
+> +static inline u32 kvm_error_gfn_hash_fn(gfn_t gfn)
+> +{
+> +	BUILD_BUG_ON(!is_power_of_2(ERROR_GFN_PER_VCPU));
+> +
+> +	return hash_32(gfn & 0xffffffff, order_base_2(ERROR_GFN_PER_VCPU));
+> +}
+> +
+> +static void kvm_add_error_gfn(struct kvm_vcpu *vcpu, gfn_t gfn)
+> +{
+> +	u32 key = kvm_error_gfn_hash_fn(gfn);
+> +
+> +	/*
+> +	 * Overwrite the previous gfn. This is just a hint to do
+> +	 * sync page fault.
+> +	 */
+> +	vcpu->arch.apf.error_gfns[key] = gfn;
+> +}
+> +
+> +/* Returns true if gfn was found in hash table, false otherwise */
+> +static bool kvm_find_and_remove_error_gfn(struct kvm_vcpu *vcpu, gfn_t gfn)
+> +{
+> +	u32 key = kvm_error_gfn_hash_fn(gfn);
+> +
+> +	if (vcpu->arch.apf.error_gfns[key] != gfn)
+> +		return 0;
+> +
+> +	vcpu->arch.apf.error_gfns[key] = GFN_INVALID;
+> +	return true;
+> +}
+> +
+>  void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu, struct kvm_async_pf *work)
+>  {
+>  	int r;
+> @@ -10385,7 +10424,9 @@ void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu, struct kvm_async_pf *work)
+>  	      work->arch.cr3 != vcpu->arch.mmu->get_guest_pgd(vcpu))
+>  		return;
+>  
+> -	kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, 0, true);
+> +	r = kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, 0, true);
+> +	if (r < 0)
+> +		kvm_add_error_gfn(vcpu, gpa_to_gfn(work->cr2_or_gpa));
+>  }
+>  
+>  static inline u32 kvm_async_pf_hash_fn(gfn_t gfn)
+> @@ -10495,7 +10536,7 @@ static bool kvm_can_deliver_async_pf(struct kvm_vcpu *vcpu)
+>  	return true;
+>  }
+>  
+> -bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
+> +bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu, gfn_t gfn)
+>  {
+>  	if (unlikely(!lapic_in_kernel(vcpu) ||
+>  		     kvm_event_needs_reinjection(vcpu) ||
+> @@ -10509,7 +10550,14 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
+>  	 * If interrupts are off we cannot even use an artificial
+>  	 * halt state.
+>  	 */
+> -	return kvm_arch_interrupt_allowed(vcpu);
+> +	if (!kvm_arch_interrupt_allowed(vcpu))
+> +		return false;
+> +
+> +	/* Found gfn in error gfn cache. Force sync fault */
+> +	if (kvm_find_and_remove_error_gfn(vcpu, gfn))
+> +		return false;
+> +
+> +	return true;
+>  }
+>  
+>  bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
+> diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
+> index 68e84cf42a3f..677bb8269cd3 100644
+> --- a/include/linux/kvm_types.h
+> +++ b/include/linux/kvm_types.h
+> @@ -36,6 +36,7 @@ typedef u64            gpa_t;
+>  typedef u64            gfn_t;
+>  
+>  #define GPA_INVALID	(~(gpa_t)0)
+> +#define GFN_INVALID	(~(gfn_t)0)
+>  
+>  typedef unsigned long  hva_t;
+>  typedef u64            hpa_t;
+> -- 
+> 2.25.4
+> 
 
---Sig_/SaNcrhBiXwrPH+HtcbX0zF_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8e3JcACgkQAVBC80lX
-0GyAAAf+KJ0bsLhlsNposebk/zJ2tELWAU+jBuVyxyExulbsF57Xg9lfa5oCTs9i
-ZniUYKhdz8ggjqUbpAFEp61Q8fHXKlvBXd5f+Cp1Hxy3QuWD1+WpX79qTj1ctISu
-jzUt1KtQjE60faOale16DcII51lKLKi++t3ZHvWsdPW7p2P0c9WlVYYtk2MKWkrH
-UL3POeL/mL+aqGRZNXiXbs0Pyzc/6eHBPwUGMaIa7KRzEDCB1QOjmuIq5808XI8g
-+hnTf0FL5o0fC6FPHr9t3y56tKkczX9rnEawOcZAPCDidtjG4Tn48fc/LT6ckWx6
-9BIiZUh0moHU9Md9MFOoaDR6I/B0Tw==
-=k6dQ
------END PGP SIGNATURE-----
-
---Sig_/SaNcrhBiXwrPH+HtcbX0zF_--
