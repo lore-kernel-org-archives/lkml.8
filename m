@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA05C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 477C62173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB3120838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859048;
-	bh=CNA2UcGDHuCk9lpCPB6VSEaq6G3lroCk8+yxTtXAEhs=;
+	s=default; t=1595859052;
+	bh=gsPJusJ2WJfAmoKVDrtfaIh+MKZOfkh8nvK442dShYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r3o19zKJme+fQMMMUYI1jGONeJDbFUe8qJ5pmO8kZo/1JrjFkJE+aChcJcnYE5PaI
-	 LdZaJxU20BbdwX8/Awm+u+mDDCd3NLtkUCMY5RFguuaRD3sj7F9dlPuEYS2AhaPv+L
-	 tWEsgQQwdAOWWFicS+CxzcWIwnhmce2bKeGbULmg=
+	b=oraxIVKYQFmoVZVkFWGoy5vTEh97TX6E7AKXeTyaQEfYGAHnQHvJqbrlqaTDQ2HIF
+	 Rp0KWlJ8JnJk/ECrm+R9oh404BiIzQl1eNwbib3LroiMKzD3YiiG9898n91qi4mZoS
+	 8nSSNygYFXK58tO+SVPRLAZIfHF4KQLzEBnrdbfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbgG0OKq (ORCPT
+        id S1729301AbgG0OKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:10:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33818 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729266AbgG0OKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:10:43 -0400
+        id S1729907AbgG0OKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:10:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1832B2173E;
-        Mon, 27 Jul 2020 14:10:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC26021744;
+        Mon, 27 Jul 2020 14:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859042;
-        bh=CNA2UcGDHuCk9lpCPB6VSEaq6G3lroCk8+yxTtXAEhs=;
+        s=default; t=1595859045;
+        bh=gsPJusJ2WJfAmoKVDrtfaIh+MKZOfkh8nvK442dShYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wCAScgS9cyVcwL9vYITVj34LyWdA45XvFaKJ4XNI/J2lKjHkNfWltMZuN3gLa/Rza
-         mW85b6L2HCOGVdr65XvVIrSInb+G/Vi1KIAU4NigzTSMhvcr2/IiAqdz/LZ5bv6IP4
-         AdH0EqejJUQOvpRHAaCa+jAcRoca0lgsMYKYIZUM=
+        b=cGz5EkQet3Xemc9BBY21XnsTq5RufpYnZDjAJbG6YFuBNg2AbGD6Lq4ko+KizYhli
+         NI+YDtW3+M6MbP/Og3inlsY6iuFUNhqzeWlwoTpt+JJsUPw7ruw9R4ym1Ld2DKuWqq
+         nAY/ZJvUTajkyWeW+MoYcpJJxgTCgsnATRjr8ijw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>,
-        Siarhei Vishniakou <svv@google.com>,
+        stable@vger.kernel.org, Joao Moreno <mail@joaomoreno.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 45/86] HID: steam: fixes race in handling device list.
-Date:   Mon, 27 Jul 2020 16:04:19 +0200
-Message-Id: <20200727134916.683187544@linuxfoundation.org>
+Subject: [PATCH 4.19 46/86] HID: apple: Disable Fn-key key-re-mapping on clone keyboards
+Date:   Mon, 27 Jul 2020 16:04:20 +0200
+Message-Id: <20200727134916.726651388@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -61,57 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 2d3f53a80e4eed078669853a178ed96d88f74143 ]
+[ Upstream commit a5d81646fa294eed57786a9310b06ca48902adf8 ]
 
-Using uhid and KASAN this driver crashed because it was getting
-several connection events where it only expected one. Then the
-device was added several times to the static device list and it got
-corrupted.
+The Maxxter KB-BT-001 Bluetooth keyboard, which looks somewhat like the
+Apple Wireless Keyboard, is using the vendor and product IDs (05AC:0239)
+of the Apple Wireless Keyboard (2009 ANSI version) <sigh>.
 
-This patch checks if the device is already in the list before adding
-it.
+But its F1 - F10 keys are marked as sending F1 - F10, not the special
+functions hid-apple.c maps them too; and since its descriptors do not
+contain the HID_UP_CUSTOM | 0x0003 usage apple-hid looks for for the
+Fn-key, apple_setup_input() never gets called, so F1 - F6 are mapped
+to key-codes which have not been set in the keybit array causing them
+to not send any events at all.
 
-Signed-off-by: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
-Tested-by: Siarhei Vishniakou <svv@google.com>
+The lack of a usage code matching the Fn key in the clone is actually
+useful as this allows solving this problem in a generic way.
+
+This commits adds a fn_found flag and it adds a input_configured
+callback which checks if this flag is set once all usages have been
+mapped. If it is not set, then assume this is a clone and clear the
+quirks bitmap so that the hid-apple code does not add any special
+handling to this keyboard.
+
+This fixes F1 - F6 not sending anything at all and F7 - F12 sending
+the wrong codes on the Maxxter KB-BT-001 Bluetooth keyboard and on
+similar clones.
+
+Cc: Joao Moreno <mail@joaomoreno.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-steam.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/hid/hid-apple.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/hid/hid-steam.c b/drivers/hid/hid-steam.c
-index 6286204d4c560..a3b151b29bd71 100644
---- a/drivers/hid/hid-steam.c
-+++ b/drivers/hid/hid-steam.c
-@@ -526,7 +526,8 @@ static int steam_register(struct steam_device *steam)
- 			steam_battery_register(steam);
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index 8ab8f2350bbcd..b58ab769aa7b3 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -57,6 +57,7 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
+ struct apple_sc {
+ 	unsigned long quirks;
+ 	unsigned int fn_on;
++	unsigned int fn_found;
+ 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
+ };
  
- 		mutex_lock(&steam_devices_lock);
--		list_add(&steam->list, &steam_devices);
-+		if (list_empty(&steam->list))
-+			list_add(&steam->list, &steam_devices);
- 		mutex_unlock(&steam_devices_lock);
+@@ -342,12 +343,15 @@ static int apple_input_mapping(struct hid_device *hdev, struct hid_input *hi,
+ 		struct hid_field *field, struct hid_usage *usage,
+ 		unsigned long **bit, int *max)
+ {
++	struct apple_sc *asc = hid_get_drvdata(hdev);
++
+ 	if (usage->hid == (HID_UP_CUSTOM | 0x0003) ||
+ 			usage->hid == (HID_UP_MSVENDOR | 0x0003) ||
+ 			usage->hid == (HID_UP_HPVENDOR2 | 0x0003)) {
+ 		/* The fn key on Apple USB keyboards */
+ 		set_bit(EV_REP, hi->input->evbit);
+ 		hid_map_usage_clear(hi, usage, bit, max, EV_KEY, KEY_FN);
++		asc->fn_found = true;
+ 		apple_setup_input(hi->input);
+ 		return 1;
  	}
+@@ -374,6 +378,19 @@ static int apple_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+ 	return 0;
+ }
  
-@@ -552,7 +553,7 @@ static void steam_unregister(struct steam_device *steam)
- 		hid_info(steam->hdev, "Steam Controller '%s' disconnected",
- 				steam->serial_no);
- 		mutex_lock(&steam_devices_lock);
--		list_del(&steam->list);
-+		list_del_init(&steam->list);
- 		mutex_unlock(&steam_devices_lock);
- 		steam->serial_no[0] = 0;
- 	}
-@@ -738,6 +739,7 @@ static int steam_probe(struct hid_device *hdev,
- 	mutex_init(&steam->mutex);
- 	steam->quirks = id->driver_data;
- 	INIT_WORK(&steam->work_connect, steam_work_connect_cb);
-+	INIT_LIST_HEAD(&steam->list);
++static int apple_input_configured(struct hid_device *hdev,
++		struct hid_input *hidinput)
++{
++	struct apple_sc *asc = hid_get_drvdata(hdev);
++
++	if ((asc->quirks & APPLE_HAS_FN) && !asc->fn_found) {
++		hid_info(hdev, "Fn key not found (Apple Wireless Keyboard clone?), disabling Fn key handling\n");
++		asc->quirks = 0;
++	}
++
++	return 0;
++}
++
+ static int apple_probe(struct hid_device *hdev,
+ 		const struct hid_device_id *id)
+ {
+@@ -588,6 +605,7 @@ static struct hid_driver apple_driver = {
+ 	.event = apple_event,
+ 	.input_mapping = apple_input_mapping,
+ 	.input_mapped = apple_input_mapped,
++	.input_configured = apple_input_configured,
+ };
+ module_hid_driver(apple_driver);
  
- 	steam->client_hdev = steam_create_client_hid(hdev);
- 	if (IS_ERR(steam->client_hdev)) {
 -- 
 2.25.1
 
