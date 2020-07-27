@@ -2,95 +2,102 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B90C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91104C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D612120719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:23:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ld5F/2GO"
+	by mail.kernel.org (Postfix) with ESMTP id 6E96720714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgG0IX4 (ORCPT
+        id S1726324AbgG0IZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:23:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgG0IX4 (ORCPT
+        Mon, 27 Jul 2020 04:25:58 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:59391 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726139AbgG0IZ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:23:56 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CAAC061794;
-        Mon, 27 Jul 2020 01:23:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eVJ7iMLYvYBztQgI6lzk7PXnjd4f0FDCuiAwyc2KUMU=; b=Ld5F/2GObxGjYm8R5RCxUuQYt/
-        1FH1UvnOqVuIbFrhkDFL+Ja2v1A7KYYjW7eNlyEnc6PmN7qeJ5m6ZWUroYpkEeLF5x1IYdSsJ1qR+
-        3m+kQhs7UtxlWvc5JUyY+lRQOrUadghJ6CHgyyTHnomFXp1J1WbQLZ++4ajnRpzv2QT8RvGdYPCYc
-        AkGf42Zow+YcodrMuuv44N9PzIZKTRJKPkDdOzkQIbmtxyapl+G2qpH5MooyhG50+nr9ZrIXY73aN
-        Q3MNpXxGvQ77yND9pjoJNkKzqPaujuIA8bwt/iF+iIoS7avN2fPxJKLvOxfNv1WoXKvvc8repx2fF
-        ubfRyEfQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzyQE-0002iI-27; Mon, 27 Jul 2020 08:23:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4331D30411F;
-        Mon, 27 Jul 2020 10:23:44 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CEE302BDC8D50; Mon, 27 Jul 2020 10:23:44 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 10:23:44 +0200
-From:   peterz@infradead.org
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Cathy Zhang <cathy.zhang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-edac@vger.kernel.org
-Subject: Re: [PATCH 4/4] x86/cpu: Use SERIALIZE in sync_core() when available
-Message-ID: <20200727082344.GE119549@hirez.programming.kicks-ass.net>
-References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
- <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
+        Mon, 27 Jul 2020 04:25:58 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0U3v2TZF_1595838353;
+Received: from 30.27.116.241(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U3v2TZF_1595838353)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 27 Jul 2020 16:25:54 +0800
+Subject: Re: [PATCH] tpm: Fix the description error of the help information in
+ Kconfig
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        gregkh <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christophe Ricard <christophe.ricard@gmail.com>,
+        Peter Huewe <peter.huewe@infineon.com>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>
+References: <20200727025323.26712-1-tianjia.zhang@linux.alibaba.com>
+ <CAK8P3a2neQUP2marbRUxpSZE4OTJtf97JKSK5-LC6EzH8rRHDQ@mail.gmail.com>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <13d8ab17-5cea-3e00-ecdb-87c68d7f2a15@linux.alibaba.com>
+Date:   Mon, 27 Jul 2020 16:25:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
+In-Reply-To: <CAK8P3a2neQUP2marbRUxpSZE4OTJtf97JKSK5-LC6EzH8rRHDQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 09:31:32PM -0700, Ricardo Neri wrote:
-> @@ -75,6 +77,12 @@ static inline void sync_core(void)
->  	 * Like all of Linux's memory ordering operations, this is a
->  	 * compiler barrier as well.
->  	 */
-> +
-> +	if (boot_cpu_has(X86_FEATURE_SERIALIZE)) {
-> +		serialize();
-> +		return;
-> +	}
-> +
->  	iret_to_self();
+Thanks for your advice, I have submitted a v2 patch.
 
-I was sorta expecting something like:
+Thanks,
+Tianjia
 
-	alternative(IRET_TO_SELF, SERIALIZE, X86_FEATURE_SERIALIZE);
-
-But instead you used boot_cpu_has() which is a dynamic test.
+On 2020/7/27 15:10, Arnd Bergmann wrote:
+> On Mon, Jul 27, 2020 at 4:54 AM Tianjia Zhang
+> <tianjia.zhang@linux.alibaba.com> wrote:
+>>
+>> Obviously, the TPM version number in the help message is wrong, which
+>> will cause confusion. This patch fixes it.
+> 
+> How is this "obvious"? I tried finding the specification and could not
+> see anything
+> to back up TIS 1.3 being only supported with TPM 1.3, or the existence of a
+> TPM 1.3 specification at all.
+> 
+> Please consider that not everyone reading this patch description is deeply
+> familiar with the details and explain exactly what the mistake is.
+> 
+>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> 
+> In a bug fix, try to always add a 'FIxes' tag such as 'Fixes: 0edbfea537d1
+> ("tpm/tpm_tis_spi: Add support for spi phy")', and Cc everyone that was
+> involved in the original patch that introduced a bug so they can Ack or
+> Nak it.
+> 
+>        Arnd
+> 
+>>   drivers/char/tpm/Kconfig | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+>> index 58b4c573d176..8eedb3e704f3 100644
+>> --- a/drivers/char/tpm/Kconfig
+>> +++ b/drivers/char/tpm/Kconfig
+>> @@ -62,7 +62,7 @@ config TCG_TIS_SPI
+>>          help
+>>            If you have a TPM security chip which is connected to a regular,
+>>            non-tcg SPI master (i.e. most embedded platforms) that is compliant with the
+>> -         TCG TIS 1.3 TPM specification (TPM1.2) or the TCG PTP FIFO
+>> +         TCG TIS 1.3 TPM specification (TPM1.3) or the TCG PTP FIFO
+>>            specification (TPM2.0) say Yes and it will be accessible from
+>>            within Linux. To compile this driver as a module, choose  M here;
+>>            the module will be called tpm_tis_spi.
+>> --
+>> 2.17.1
+>>
