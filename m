@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88176C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A851BC433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D90B20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8515D20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860337;
-	bh=10DbsIHggpfnX/L/cuS6NGvTsPwVjqJzSZhttOZm9R8=;
+	s=default; t=1595860339;
+	bh=GAFcz6VMhCl4x1qHq3sS9k3Cf5CjbBVOHTbT3FSCZ9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o0LPpwlQdCXQ4yEyqncD+iNX0zln5JvUQ8a/IvQ6l0iEOgvmGP+VFheYnmg6wbnGv
-	 HO3bs5BpinlnuEC8yUc8RiZVQrYpzSHJ2Se/b8epcXwT7lPl/CXT4iUCoW4nyLEOI4
-	 OuwmWp/RSvx8RoHZSjgONaoDHiOu8lhglu/FcPaI=
+	b=hptMCtzdbDMl1ntZEeqD4rcT8kUo6Uh7KEDjhWTF6/IgwqnPAPP+M3rjZJ12Le/WJ
+	 Zs2Mf7I8rkbKYMg6518cuNloucpF/R73EVdFIiUa9uDcQhmpgT7iDztsN4y4DQmAT5
+	 V3voQLL1dNmAKz3LFlxh2Y8VoPYhLumBcJ4FNG0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732721AbgG0OcQ (ORCPT
+        id S1732846AbgG0OcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:32:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47376 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:32:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731390AbgG0OTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:19:25 -0400
+        id S1730406AbgG0OTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:19:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0E022075A;
-        Mon, 27 Jul 2020 14:19:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03AD020775;
+        Mon, 27 Jul 2020 14:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859564;
-        bh=10DbsIHggpfnX/L/cuS6NGvTsPwVjqJzSZhttOZm9R8=;
+        s=default; t=1595859552;
+        bh=GAFcz6VMhCl4x1qHq3sS9k3Cf5CjbBVOHTbT3FSCZ9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xQbZinNuZKfBuchJqmF4rNdRxUBghLnhgGCuN5N349+wVBQUFteTc4ovVzHSHo/6F
-         lLCvhCvUo5PRav7a1ilCYshPNo4knVahRcdi5j1T6s8mUfdF5gbH4pWYgaUDLuhPIg
-         DfROaThjXrFZ2zYchbm722wNqJGfE0pHBrZqjn8E=
+        b=qifkfn3AjvJ1KHOMBhHG8nrWhBDVYb01Rqa2hc9BQ3QpsItHvjN0hbxJAbFEz64+r
+         gewkA4Yos29Bjb5th47buwpdqd+phDFBl2gieVwL5JSJCh1jrk7iNZldFRZcmeRH9t
+         9KiyOS9esKLlIaaBB8ipfzJe1hwEtNR734ulXUJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 006/179] mac80211: allow rx of mesh eapol frames with default rx key
-Date:   Mon, 27 Jul 2020 16:03:01 +0200
-Message-Id: <20200727134932.981087761@linuxfoundation.org>
+Subject: [PATCH 5.7 015/179] scsi: mpt3sas: Fix error returns in BRM_status_show
+Date:   Mon, 27 Jul 2020 16:03:10 +0200
+Message-Id: <20200727134933.416219782@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -60,78 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-[ Upstream commit 0b467b63870d9c05c81456aa9bfee894ab2db3b6 ]
+[ Upstream commit 0fd181456aa0826057adbfb6c79c40f4083cfd75 ]
 
-Without this patch, eapol frames cannot be received in mesh
-mode, when 802.1X should be used. Initially only a MGTK is
-defined, which is found and set as rx->key, when there are
-no other keys set. ieee80211_drop_unencrypted would then
-drop these eapol frames, as they are data frames without
-encryption and there exists some rx->key.
+BRM_status_show() has several error branches, but none of them record the
+error in the error return.
 
-Fix this by differentiating between mesh eapol frames and
-other data frames with existing rx->key. Allow mesh mesh
-eapol frames only if they are for our vif address.
+Also while at it remove the manual mutex_unlock() of the pci_access_mutex
+in case of an ongoing pci error recovery or host removal and jump to the
+cleanup label instead.
 
-With this patch in-place, ieee80211_rx_h_mesh_fwding continues
-after the ieee80211_drop_unencrypted check and notices, that
-these eapol frames have to be delivered locally, as they should.
+Note: We can safely jump to out from here as io_unit_pg3 is initialized to
+NULL and if it hasn't been allocated, kfree() skips the NULL pointer.
 
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20200625104214.50319-1-markus.theil@tu-ilmenau.de
-[small code cleanups]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+[mkp: compilation warning]
+
+Link: https://lore.kernel.org/r/20200701131454.5255-1-johannes.thumshirn@wdc.com
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Acked-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/scsi/mpt3sas/mpt3sas_ctl.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 91a13aee43784..961f37c0701bc 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -2357,6 +2357,7 @@ static int ieee80211_802_1x_port_control(struct ieee80211_rx_data *rx)
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+index e94e72de2fc68..983e568ff2317 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
+@@ -3149,15 +3149,14 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+ 	}
+ 	/* pci_access_mutex lock acquired by sysfs show path */
+ 	mutex_lock(&ioc->pci_access_mutex);
+-	if (ioc->pci_error_recovery || ioc->remove_host) {
+-		mutex_unlock(&ioc->pci_access_mutex);
+-		return 0;
+-	}
++	if (ioc->pci_error_recovery || ioc->remove_host)
++		goto out;
  
- static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
- {
-+	struct ieee80211_hdr *hdr = (void *)rx->skb->data;
- 	struct sk_buff *skb = rx->skb;
- 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
+ 	/* allocate upto GPIOVal 36 entries */
+ 	sz = offsetof(Mpi2IOUnitPage3_t, GPIOVal) + (sizeof(u16) * 36);
+ 	io_unit_pg3 = kzalloc(sz, GFP_KERNEL);
+ 	if (!io_unit_pg3) {
++		rc = -ENOMEM;
+ 		ioc_err(ioc, "%s: failed allocating memory for iounit_pg3: (%d) bytes\n",
+ 			__func__, sz);
+ 		goto out;
+@@ -3167,6 +3166,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+ 	    0) {
+ 		ioc_err(ioc, "%s: failed reading iounit_pg3\n",
+ 			__func__);
++		rc = -EINVAL;
+ 		goto out;
+ 	}
  
-@@ -2367,6 +2368,31 @@ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
- 	if (status->flag & RX_FLAG_DECRYPTED)
- 		return 0;
+@@ -3174,12 +3174,14 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
+ 	if (ioc_status != MPI2_IOCSTATUS_SUCCESS) {
+ 		ioc_err(ioc, "%s: iounit_pg3 failed with ioc_status(0x%04x)\n",
+ 			__func__, ioc_status);
++		rc = -EINVAL;
+ 		goto out;
+ 	}
  
-+	/* check mesh EAPOL frames first */
-+	if (unlikely(rx->sta && ieee80211_vif_is_mesh(&rx->sdata->vif) &&
-+		     ieee80211_is_data(fc))) {
-+		struct ieee80211s_hdr *mesh_hdr;
-+		u16 hdr_len = ieee80211_hdrlen(fc);
-+		u16 ethertype_offset;
-+		__be16 ethertype;
-+
-+		if (!ether_addr_equal(hdr->addr1, rx->sdata->vif.addr))
-+			goto drop_check;
-+
-+		/* make sure fixed part of mesh header is there, also checks skb len */
-+		if (!pskb_may_pull(rx->skb, hdr_len + 6))
-+			goto drop_check;
-+
-+		mesh_hdr = (struct ieee80211s_hdr *)(skb->data + hdr_len);
-+		ethertype_offset = hdr_len + ieee80211_get_mesh_hdrlen(mesh_hdr) +
-+				   sizeof(rfc1042_header);
-+
-+		if (skb_copy_bits(rx->skb, ethertype_offset, &ethertype, 2) == 0 &&
-+		    ethertype == rx->sdata->control_port_protocol)
-+			return 0;
-+	}
-+
-+drop_check:
- 	/* Drop unencrypted frames if key is set. */
- 	if (unlikely(!ieee80211_has_protected(fc) &&
- 		     !ieee80211_is_any_nullfunc(fc) &&
+ 	if (io_unit_pg3->GPIOCount < 25) {
+ 		ioc_err(ioc, "%s: iounit_pg3->GPIOCount less than 25 entries, detected (%d) entries\n",
+ 			__func__, io_unit_pg3->GPIOCount);
++		rc = -EINVAL;
+ 		goto out;
+ 	}
+ 
 -- 
 2.25.1
 
