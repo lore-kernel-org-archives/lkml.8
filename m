@@ -2,73 +2,121 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A84AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10981C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77B4F2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE15E20759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:01:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ge2yrJpO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgG0I7H (ORCPT
+        id S1727042AbgG0JBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:59:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39412 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgG0I7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:59:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BFA38AC1D;
-        Mon, 27 Jul 2020 08:59:15 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 818161E12C5; Mon, 27 Jul 2020 10:59:05 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 10:59:05 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Jan Kara <jack@suse.com>
-Subject: Re: [PATCH] udf: osta_udf.h: delete a duplicated word
-Message-ID: <20200727085905.GH23179@quack2.suse.cz>
-References: <20200720001455.31882-1-rdunlap@infradead.org>
+        Mon, 27 Jul 2020 05:01:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgG0JBh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:01:37 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71594C061794;
+        Mon, 27 Jul 2020 02:01:36 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id by13so11516610edb.11;
+        Mon, 27 Jul 2020 02:01:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JzEEhJ/gSEqeIPhKBNFMdZtgXlIDSYR3vaBxjVSErS4=;
+        b=ge2yrJpObzku3hqYB6XPsmzD6RqnM7NAA7SK3vvZYKMnJyN2FvALS22PctbgXQ4rW4
+         Fhd6dXSA7M/DqEOdNlj/YCoU39e71s6hf5nkY1vV6amNwVXagV6r6PTawElhR88tu/go
+         UVBJlRhzC2avJBCOgAHCbYA2bJi/zUlDeT2UR6hqJGwC3e4tg+FKkwsn8IPQ6iK4UYDB
+         xlJPOL2XE/x99z+Tw9IFi27yjV5exR3hh5FD41SiVCMtfTfsS0wgBh+obceJ44mLHm9P
+         n0fJTrymcfAtv7sJMgDdugRocPjRs+zbhIl2/B0C7ZAXklNcMCDGCN0fi0ENBTJCpOVE
+         WAig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JzEEhJ/gSEqeIPhKBNFMdZtgXlIDSYR3vaBxjVSErS4=;
+        b=XOwde3SYPZcbS5sB7v2Lcpq2z0vbVOO4LvyoI72CCXcuWN7ljO9pJFcS6+yhEcnkuH
+         bOAMJTCFW0HROvQ8LO98d3MUkbqVLDt1JZ2XREOBG8LOp2sYT5w6BKljQghx/ri1GK29
+         ZINKUleAlRbiL9/XvmZryzVinQTigeX1TeBzMhhfu1sVa5+ui+pn+u8I6Wc92tlPSUHz
+         oWrVMQrCEKGZ4+KmFCIwVWd/FL1x2r8C5KbA2FUqHuZqn92h4sMQ61SgRWVXcYqh8HmX
+         oTK1JDBt1p4LEVG2C4akDIfz5jmoRy3lwTDWJFHTAHREVUQuCoysGi3Do4ZPD5NlKldr
+         cQkg==
+X-Gm-Message-State: AOAM531KOVNFBtCEt4PtV5eUg5nBeipSP9P1QAwDYht8AsIbv/YyB0tc
+        MY31M2peXp6ZUVXqiRYl4nM=
+X-Google-Smtp-Source: ABdhPJy+W16tLSRAorS/TKv73RktJTDc+mCgc9hEqjcQbSBZKRilv/hpRbTfXvsFNEy7zkfLJzyScg==
+X-Received: by 2002:a05:6402:d0d:: with SMTP id eb13mr19567554edb.307.1595840495212;
+        Mon, 27 Jul 2020 02:01:35 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id gh24sm2545269ejb.45.2020.07.27.02.01.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 02:01:34 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 11:01:33 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>, Amit Kucheria <amitk@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] thermal: Fix zone lookup by ID
+Message-ID: <20200727090133.GG2781612@ulmo>
+References: <20200724170105.2705467-1-thierry.reding@gmail.com>
+ <db6efeab-b2bc-bad5-9c75-89e3e306256c@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="w/VI3ydZO+RcZ3Ux"
 Content-Disposition: inline
-In-Reply-To: <20200720001455.31882-1-rdunlap@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <db6efeab-b2bc-bad5-9c75-89e3e306256c@linaro.org>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 19-07-20 17:14:55, Randy Dunlap wrote:
-> Drop the repeated word "struct" in a comment.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jan Kara <jack@suse.com>
 
-Thanks! Applied.
+--w/VI3ydZO+RcZ3Ux
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-								Honza
+On Fri, Jul 24, 2020 at 07:12:49PM +0200, Daniel Lezcano wrote:
+> Hi Thierry,
+>=20
+> Applied, thanks for the fix!
 
-> ---
->  fs/udf/osta_udf.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- linux-next-20200717.orig/fs/udf/osta_udf.h
-> +++ linux-next-20200717/fs/udf/osta_udf.h
-> @@ -226,7 +226,7 @@ struct sparingTable {
->  #define ICBTAG_FILE_TYPE_MIRROR		0xFB
->  #define ICBTAG_FILE_TYPE_BITMAP		0xFC
->  
-> -/* struct struct long_ad ICB - ADImpUse (UDF 2.60 2.2.4.3) */
-> +/* struct long_ad ICB - ADImpUse (UDF 2.60 2.2.4.3) */
->  struct allocDescImpUse {
->  	__le16		flags;
->  	uint8_t		impUse[4];
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+I ran into this as I was experimenting with the new netlink interface
+and got things wrong. Do you have any userspace that you use for testing
+this that I can use as a reference?
+
+I have managed to get it to work now, but I'm still interested in any
+userspace that you might have for this.
+
+Thierry
+
+--w/VI3ydZO+RcZ3Ux
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8el+oACgkQ3SOs138+
+s6HOMg//f9Vxawx1IBVtdLfYPjp7vY5FLMOUjpu3SUKiyzjqyToDpWAsGPmBLTUJ
++uZmRHPp/tzkHG2yh9S/4EJV6dTDGi3QfxuvMM0PuYQpoPz8/20+LbNcvObHMrzi
+YMYWVhWWv65KTloweACuJzok32GAITuozNi0YLZaBqnFcGm36aNHdEU9XrTRDWuH
+NFnRfjwOheu83Rb3I3+maje9EpbalqW64VeRJkTU1oN2LgsrbzXxCV6bVDxOhX9i
+mwPnwedDz/IqW2AO9hKsfnnjRSbLreRKv/HdVjl3IY8R49Q9uJyiNK+OgBbSo966
++IK1Idl/HXLFuGCELMgle4ggq9dEnot45+iwwp9UnoNLETP96Tdc9OQFqEBDFx5r
+pHmruHxK/TNWQtca3MOKx0oIrURCiidkZR4g6wqlbmSufgNJ1lDsSO3z3Ki73Ixj
+bfRNqkwma7T1Rysh+8SrmNKTuJGyUfT+6dTkqwz3+nG0xNbl1RHi1OkuZWtuJhXY
+fHntFcU7tJkQMW0rN9PvIMU1Wnz0ihxTKNR911kI/dYjYIAzL7hiKI5BEdwWfIvG
+3pMG2kleSq7xPqVtJzri3jUht9qdqeuSTGPzq7cb08QMKjU6MW90ASoscLZWrIR7
+SCgDHqyEYPjV7SBF8+/QhSR6NkyrwuM4gEr2cm4x9DHxpeDyA7g=
+=1SZ3
+-----END PGP SIGNATURE-----
+
+--w/VI3ydZO+RcZ3Ux--
