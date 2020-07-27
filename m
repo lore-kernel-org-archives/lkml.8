@@ -2,107 +2,129 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C6CC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F61CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 295222070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 423D62070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ex96dlh+"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UrRHlzLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730375AbgG0Rwp (ORCPT
+        id S1730553AbgG0Rxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:52:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgG0Rwp (ORCPT
+        Mon, 27 Jul 2020 13:53:53 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38088 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbgG0Rxx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:52:45 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8CD9C061794;
-        Mon, 27 Jul 2020 10:52:44 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id p1so8487747pls.4;
-        Mon, 27 Jul 2020 10:52:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4VCScZRbl2Kssf66LOgWwySs23Ntsbywsu3NL3678ak=;
-        b=Ex96dlh+wuks3liR/urNzQZJVgLenPUAIj7Ed1wrcIQh6ZwCHVQwJ2OfuuZOzFxqhL
-         KUXIQYhr54D4KMp98E456whL4BBIeMawzkY0ZuXWNmIZiQ3NLGtPNSdkCbK0FkkiE/lS
-         Cqk1hdHNhLsbEasQS9o+Ccx8yqeiL0KL6LyMrF8ru3Ge2C9oVQTTqVYl5qdBTzd/r4sa
-         TWRmgPzr8VpRUjVKGuvzlHs6a70Fb13VJBNCvtU4Dw6rRMWHuqQ4e8isJEIsWMekxPMk
-         st9PA00EQAkiYyrF/kjpRLUIK/9+4FpG8oaJvHsshZu+cNRNCmVJCofG3XqNP5Rr732u
-         wKWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4VCScZRbl2Kssf66LOgWwySs23Ntsbywsu3NL3678ak=;
-        b=F/LuxPgdqs1iMhoxWCXlZQ6ae1MWzwl20BV1q8u4T9UK/KIKh83AcFEahNlO+/GVWE
-         myCGWgpV0HQbBmj8pNPR7ZLDfj3z5On+D1nLTP6iVo6HZEeho2nmGdZEDdSDCjwFZj+9
-         7OpA1AR/kTmUTiUdZYO/Yjvj370pjQvmgm4E6gV/GFs4+eQHa1flP4XFSL92W1du3vfk
-         /9tLoyq8gzOeXO7VKu1zw6EeorQ7KCJD94YrXiuMAe1vn0CSnrERiDzmDW8yNvl9dF0V
-         BRg+ESpg6XFEfzbVSmYWXYlqpOA3MW2clgEWDOY6TEEF7X79UciYJjxslCUPmRjETrMl
-         XqFw==
-X-Gm-Message-State: AOAM530j+y9VUV6RSkI4rjTihkM2k6KWe+30EhNFHGlmHvdJ4M2qVUu2
-        0sZRzFX/zSLifMIrmRLgirY=
-X-Google-Smtp-Source: ABdhPJzXEawmCxeONFI1GIOymjqICePldjpplnxMQ4v/+pEqGBpLiU8WhBycr0UoEGLF+1a0IrFrlA==
-X-Received: by 2002:a17:902:b412:: with SMTP id x18mr18885570plr.116.1595872364116;
-        Mon, 27 Jul 2020 10:52:44 -0700 (PDT)
-Received: from gmail.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id bx18sm211489pjb.49.2020.07.27.10.52.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 10:52:43 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 23:21:19 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v2] ata: use generic power management
-Message-ID: <20200727175119.GA700880@gmail.com>
-References: <20200727173923.694872-1-vaibhavgupta40@gmail.com>
- <20200727174012.GA696265@gmail.com>
- <2b4738b0-5c2c-8ee2-83f9-10b961a5d0d3@kernel.dk>
+        Mon, 27 Jul 2020 13:53:53 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RHqoFv190461;
+        Mon, 27 Jul 2020 17:52:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=v4an3MuX4g4lWL9k6MyepQTjR+HAxvvY/v4v0a98gns=;
+ b=UrRHlzLQf7TYexQ/9nkZqap+J3KX+KYKcyqhV+87gk+WtqzNuyY74QdHn4JWqTitHghC
+ vsFa4jYPklWCOm1iE7N/xmU/6rlglmf1Ikr+KRiofdkA63tGvYXu9QZ/YN3+LXK7KX/7
+ PYl8PsYaKPvxfGpKx+xq4YiBfIfmpIqHwJtD1Uz9yAr8jsYHubRZLAghJBh6VFBYmrsI
+ 0YeM07qd5i4c+yBi9Klud62Y/wIfP/0Yd9y6auGZ2Xdj6eUdVZTW/4XA5hlXkfy5X04j
+ 0uE8CItjoee4xkkrdWUCUqe9yi0v9lhcR+sa9sqiMKV7erTdfhCTCm9oz16uITbCqHG6 1Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 32hu1j30yv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jul 2020 17:52:57 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RHqMgT041167;
+        Mon, 27 Jul 2020 17:52:56 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 32hu5rb7x2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 17:52:56 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06RHqpqA014090;
+        Mon, 27 Jul 2020 17:52:52 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Jul 2020 10:52:51 -0700
+Subject: Re: [PATCH v3] mm/hugetlb: split hugetlb_cma in nodes with memory
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will@kernel.org>, Roman Gushchin <guro@fb.com>
+Cc:     Barry Song <song.bao.hua@hisilicon.com>,
+        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
+        linux-mm@kvack.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        "H.Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        akpm@linux-foundation.org, Mike Rapoport <rppt@linux.ibm.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200710120950.37716-1-song.bao.hua@hisilicon.com>
+ <359ea1d0-b1fd-d09f-d28a-a44655834277@oracle.com>
+ <20200715081822.GA5683@willie-the-truck>
+ <5724f1f8-63a6-ee0f-018c-06fb259b6290@oracle.com>
+ <20200716081243.GA6561@willie-the-truck>
+ <a867c7a2-e89b-2015-4895-f30f7aeb07cb@oracle.com>
+ <81103d30-f4fd-8807-03f9-d131da5097bd@arm.com>
+ <1efdfe52-abdb-3931-742c-70e4a170e403@oracle.com>
+ <11b03fcd-c210-032c-16d2-79ada41e0349@arm.com>
+ <c0c9f0a4-ae2c-e3e5-1df8-884f8300066c@oracle.com>
+ <874kptm3b4.fsf@linux.ibm.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <523426cd-1586-5d57-9650-134a2ac30d16@oracle.com>
+Date:   Mon, 27 Jul 2020 10:52:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <874kptm3b4.fsf@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2b4738b0-5c2c-8ee2-83f9-10b961a5d0d3@kernel.dk>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270120
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:42:51AM -0600, Jens Axboe wrote:
-> On 7/27/20 11:40 AM, Vaibhav Gupta wrote:
-> > The patch is compile-tested only.
+On 7/27/20 7:37 AM, Aneesh Kumar K.V wrote:
+> There is variant of this which is pseries powerpc where there is
+> hypervisor assistance w.r.t allocating gigantic pages. See the ppc64
+> enablement patch 
 > 
-> Please test and verify actual functionality, if you're serious about
-> potentially getting this into the kernel.
->
-Hello Jens,
-
-Sadly I don't have the hardware. This upgrade is part of my Linux Kernel
-Mentorship Program project. Like other PCI drivers which I have updated, I could
-do compile-testing only. Though this patch covers 54 drivers but the actual
-change is done only in drivers/ata/libata-core. Since rest of the drivers
-make use of the same ata_pci_device_suspend/resume(), it was a chain reaction. I
-only had to change variable binding in "struct pci_driver" variable of dependent
-drivers.
-
-Thanks
-Vaibhav Gupta
-> -- 
-> Jens Axboe
+> https://lore.kernel.org/linuxppc-dev/20200713150749.25245-1-aneesh.kumar@linux.ibm.com/
 > 
+
+Thanks Aneesh,  I missed the powerpc support.
+
+I knew about the powerpc hypervisor assistance which caused me to rethink
+my original idea that all this could be arch independent.  My next idea was
+that architectures would only need to provide a constant something like:
+
+#define HUGETLB_CMA_ORDER (PUD_SHIFT - PAGE_SHIFT)
+
+However, it looks like this can not be a compile time constant on powerpc.
+
+Moving more of the CMA support to arch independent code has moved down on
+my priority list.  So, it it likely not to get much work in the immediate
+future.
+
+Just curious, can you have multiple gigantic page sizes supported at one
+time (one system instance) on powerpc?
+-- 
+Mike Kravetz
