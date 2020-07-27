@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AC6C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5A3C433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5385620825
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4D320775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858797;
-	bh=isoaCogdPNR5CXhwqYXPPHVMPf/1j0W8wLT4k2MdSak=;
+	s=default; t=1595858799;
+	bh=shIKid6cw6jYyOMlV06L01pOqhOTRO7eh6ZaGm2irg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nRBKAfOVyXW9khsp7HjeKbr2PT/xfv40hF5Gt6XWFDpvUl6GBWlx//LH9QfpX/EFi
-	 lLMd5O2tGeottF1LUaGtBG+cwnaExeV3tbe7dG/+20oZ5YjWQoufRg8aVR4Vf0sxAu
-	 3CziLHnAorqME8jXT13gYmFc9og2bDvE2vvTqBjY=
+	b=ITMLtnLH7rXYxOlzQ3HEMYLyvuK5WysgatZhlHIMHqL0IBaKX3FWU0P+DVInbKaSI
+	 2Z/rY94DWtm/EYDb1UW2mjsY8pWfcox5Uadus3vDfTRj29e7NMP709PMkXjDaqWnxz
+	 MKafiWIqI7NRoeOJ8BP7rSYZlRu4lQXfg6rHEnyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbgG0OGg (ORCPT
+        id S1728907AbgG0OGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:06:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54546 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:06:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728731AbgG0OGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:06:34 -0400
+        id S1728731AbgG0OGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:06:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3545120775;
-        Mon, 27 Jul 2020 14:06:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B14152078E;
+        Mon, 27 Jul 2020 14:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858793;
-        bh=isoaCogdPNR5CXhwqYXPPHVMPf/1j0W8wLT4k2MdSak=;
+        s=default; t=1595858796;
+        bh=shIKid6cw6jYyOMlV06L01pOqhOTRO7eh6ZaGm2irg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q6NwQeGjEJH9Rjd9kM2YzlGzjPlL1O2ZzDUD2wnKebbF9raJdZ2nH/wiVUrz5NzuB
-         TKWcoiKCGBGcB3aEDziw0exI9INUTyIBOGjZZnFHO+h1gxgnq4M/mX/P3Mfga6P7FD
-         6RnYyTc9Z0OGOczJFo+mXUlA+ehmNVNZKs+emT8o=
+        b=ILcZEikIj8qL0TbUb7NT4khqWZwSjFnip9eXv7xBHOwDAJ+2fLBzOOZbTYGRrhSPP
+         RbhZT3pPQL4i1daNFbC0QF9xlAqSLOHhbNl3fdTscwWD1F4QbeBwWmTZRXoGYskQBt
+         HLSqf1XLgEYJ6jnsqGQay/zqJFw0OygzyBQtx1dU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>
-Subject: [PATCH 4.14 14/64] IB/umem: fix reference count leak in ib_umem_odp_get()
-Date:   Mon, 27 Jul 2020 16:03:53 +0200
-Message-Id: <20200727134911.739574662@linuxfoundation.org>
+        stable@vger.kernel.org, Aaron Merey <amerey@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Subject: [PATCH 4.14 15/64] uprobes: Change handle_swbp() to send SIGTRAP with si_code=SI_KERNEL, to fix GDB regression
+Date:   Mon, 27 Jul 2020 16:03:54 +0200
+Message-Id: <20200727134911.786692606@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -58,33 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Oleg Nesterov <oleg@redhat.com>
 
-Add missing mmput() on error path to avoid ref-count leak.
+commit fe5ed7ab99c656bd2f5b79b49df0e9ebf2cead8a upstream.
 
-This problem is introduced by 79bb5b7ee177 ("RDMA/umem: Fix missing mmap_sem in get umem ODP call")
-and resolved by f27a0d50a4bc ("RDMA/umem: Use umem->owning_mm inside ODP").
-So, it's only needed in stable-4.14 and stable-4.19.
+If a tracee is uprobed and it hits int3 inserted by debugger, handle_swbp()
+does send_sig(SIGTRAP, current, 0) which means si_code == SI_USER. This used
+to work when this code was written, but then GDB started to validate si_code
+and now it simply can't use breakpoints if the tracee has an active uprobe:
 
-Fixes: 79bb5b7ee177 ("RDMA/umem: Fix missing mmap_sem in get umem ODP call")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+	# cat test.c
+	void unused_func(void)
+	{
+	}
+	int main(void)
+	{
+		return 0;
+	}
+
+	# gcc -g test.c -o test
+	# perf probe -x ./test -a unused_func
+	# perf record -e probe_test:unused_func gdb ./test -ex run
+	GNU gdb (GDB) 10.0.50.20200714-git
+	...
+	Program received signal SIGTRAP, Trace/breakpoint trap.
+	0x00007ffff7ddf909 in dl_main () from /lib64/ld-linux-x86-64.so.2
+	(gdb)
+
+The tracee hits the internal breakpoint inserted by GDB to monitor shared
+library events but GDB misinterprets this SIGTRAP and reports a signal.
+
+Change handle_swbp() to use force_sig(SIGTRAP), this matches do_int3_user()
+and fixes the problem.
+
+This is the minimal fix for -stable, arch/x86/kernel/uprobes.c is equally
+wrong; it should use send_sigtrap(TRAP_TRACE) instead of send_sig(SIGTRAP),
+but this doesn't confuse GDB and needs another x86-specific patch.
+
+Reported-by: Aaron Merey <amerey@redhat.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200723154420.GA32043@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/umem_odp.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/events/uprobes.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/umem_odp.c
-+++ b/drivers/infiniband/core/umem_odp.c
-@@ -306,7 +306,8 @@ int ib_umem_odp_get(struct ib_ucontext *
- 		vma = find_vma(mm, ib_umem_start(umem));
- 		if (!vma || !is_vm_hugetlb_page(vma)) {
- 			up_read(&mm->mmap_sem);
--			return -EINVAL;
-+			ret_val = -EINVAL;
-+			goto out_mm;
- 		}
- 		h = hstate_vma(vma);
- 		umem->page_shift = huge_page_shift(h);
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1893,7 +1893,7 @@ static void handle_swbp(struct pt_regs *
+ 	if (!uprobe) {
+ 		if (is_swbp > 0) {
+ 			/* No matching uprobe; signal SIGTRAP. */
+-			send_sig(SIGTRAP, current, 0);
++			force_sig(SIGTRAP, current);
+ 		} else {
+ 			/*
+ 			 * Either we raced with uprobe_unregister() or we can't
 
 
