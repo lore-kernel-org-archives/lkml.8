@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F97DC4345B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07878C4345C
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78AAD207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA5C20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858827;
-	bh=/+lYmerbp5LL2nkMd56EBYUGie/PD1wv+QobVSI6++M=;
+	s=default; t=1595858829;
+	bh=8xLuIv/ZcOpNQLBrRzcPKJ+UEJZ4BOGUQtZowR3pxc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mV6xNPE+ZDJ/gm0s9GSFbiBfq5tPvw9+0RiFJ210k5aEBz9ZXczII7X7XOlA4lYYB
-	 XriF3z+LVtf+xYR7PqeKrpY6MqQZSG95MAQACV3/Cppk2CWnYHsCMSVHJM9yUbmblT
-	 u910ehSUBGNGfpSjgQewtu8EHozEK/+xNKqbqc00=
+	b=FB4GDZ1DzRqHzxWiXUkOSEMNnKh3k9twjbD0IkJbcynq+f6MY2O70zPMQI/Ofm450
+	 HpwX1IX7XYWJVIfkd/72PT9oqB5dqM1/dAkGXR9e7leaLn+/EQTXB9bGTU2EcDxdTO
+	 VUuza1w27eKJL0SSaZtqqkeroeQOKSuF0VhxgvCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgG0OHG (ORCPT
+        id S1729169AbgG0OHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:07:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55402 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:07:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729120AbgG0OHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:07:04 -0400
+        id S1729138AbgG0OHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:07:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 299D420775;
-        Mon, 27 Jul 2020 14:07:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AAE92073E;
+        Mon, 27 Jul 2020 14:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858823;
-        bh=/+lYmerbp5LL2nkMd56EBYUGie/PD1wv+QobVSI6++M=;
+        s=default; t=1595858826;
+        bh=8xLuIv/ZcOpNQLBrRzcPKJ+UEJZ4BOGUQtZowR3pxc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RmjLrT599/Zd67R/ltWcmaG9yt3jWgW+XkNC3dB1K2QnXrwIoCl8lmXbvVf77b5Ct
-         FWt05/QYIvPk4bWU83H7cCHwNTXgSJkqPtqLa2lyp/I4wmbdhf4D7oSfVUuMRMnfc2
-         l/oNlqOy2+FDQoG9JpHCDvQfr486YYaga+8+siAQ=
+        b=BgiqV6rcoZN1V28LiJu+4A8FbaT09SAuho3LfOTVGl7/XJA6A0HyBiLND9j8unswZ
+         Q2XPETcmtRFDItywGkVM8gQWcazyO3VHBLTq4YlLofwB0rJAl1fBkLXN1thQ8a2JHu
+         uL2fvxs6b8C6kwrNfD9e7YWBNiEy/+ajenzZdlXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergey Organov <sorganov@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Jacky Hu <hengqing.hu@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 24/64] net: dp83640: fix SIOCSHWTSTAMP to update the struct with actual configuration
-Date:   Mon, 27 Jul 2020 16:04:03 +0200
-Message-Id: <20200727134912.349190447@linuxfoundation.org>
+Subject: [PATCH 4.14 03/64] pinctrl: amd: fix npins for uart0 in kerncz_groups
+Date:   Mon, 27 Jul 2020 16:03:42 +0200
+Message-Id: <20200727134911.204394507@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -61,63 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Organov <sorganov@gmail.com>
+From: Jacky Hu <hengqing.hu@gmail.com>
 
-[ Upstream commit 473309fb8372365ad211f425bca760af800e10a7 ]
+[ Upstream commit 69339d083dfb7786b0e0b3fc19eaddcf11fabdfb ]
 
->From Documentation/networking/timestamping.txt:
+uart0_pins is defined as:
+static const unsigned uart0_pins[] = {135, 136, 137, 138, 139};
 
-  A driver which supports hardware time stamping shall update the
-  struct with the actual, possibly more permissive configuration.
+which npins is wronly specified as 9 later
+	{
+		.name = "uart0",
+		.pins = uart0_pins,
+		.npins = 9,
+	},
 
-Do update the struct passed when we upscale the requested time
-stamping mode.
+npins should be 5 instead of 9 according to the definition.
 
-Fixes: cb646e2b02b2 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
-Signed-off-by: Sergey Organov <sorganov@gmail.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
+Link: https://lore.kernel.org/r/20200616015024.287683-1-hengqing.hu@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83640.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/pinctrl-amd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-index c52c016676af3..5752280fdb408 100644
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -1339,6 +1339,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L4;
- 		dp83640->version = PTP_CLASS_V1;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V1_L4_EVENT;
- 		break;
- 	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
-@@ -1346,6 +1347,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L4;
- 		dp83640->version = PTP_CLASS_V2;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L4_EVENT;
- 		break;
- 	case HWTSTAMP_FILTER_PTP_V2_L2_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_L2_SYNC:
-@@ -1353,6 +1355,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L2;
- 		dp83640->version = PTP_CLASS_V2;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L2_EVENT;
- 		break;
- 	case HWTSTAMP_FILTER_PTP_V2_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_SYNC:
-@@ -1360,6 +1363,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L4 | PTP_CLASS_L2;
- 		dp83640->version = PTP_CLASS_V2;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
- 		break;
- 	default:
- 		return -ERANGE;
+diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
+index 8fa453a59da5e..884f48f7a6a36 100644
+--- a/drivers/pinctrl/pinctrl-amd.h
++++ b/drivers/pinctrl/pinctrl-amd.h
+@@ -252,7 +252,7 @@ static const struct amd_pingroup kerncz_groups[] = {
+ 	{
+ 		.name = "uart0",
+ 		.pins = uart0_pins,
+-		.npins = 9,
++		.npins = 5,
+ 	},
+ 	{
+ 		.name = "uart1",
 -- 
 2.25.1
 
