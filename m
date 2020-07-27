@@ -2,67 +2,117 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9749C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F1DC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B42AC20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4616D20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbgG0PRs (ORCPT
+        id S1729158AbgG0PRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:17:48 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:65052 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728825AbgG0PRp (ORCPT
+        Mon, 27 Jul 2020 11:17:49 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:46657 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729039AbgG0PRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:17:45 -0400
-Received: from 89-64-87-33.dynamic.chello.pl (89.64.87.33) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 4db2cf9f0cabc8c9; Mon, 27 Jul 2020 17:17:43 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Mon, 27 Jul 2020 11:17:47 -0400
+Received: (qmail 1470770 invoked by uid 1000); 27 Jul 2020 11:17:46 -0400
+Date:   Mon, 27 Jul 2020 11:17:46 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Doug Smythies <dsmythies@telus.net>,
-        Francisco Jerez <francisco.jerez.plata@intel.com>
-Subject: [PATCH v3 0/2] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-Date:   Mon, 27 Jul 2020 17:13:40 +0200
-Message-ID: <1709487.Bxjb1zNRZM@kreacher>
-In-Reply-To: <4981405.3kqTVLv5tO@kreacher>
-References: <4981405.3kqTVLv5tO@kreacher>
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] tools/memory-model: document the "one-time init" pattern
+Message-ID: <20200727151746.GC1468275@rowland.harvard.edu>
+References: <20200717044427.68747-1-ebiggers@kernel.org>
+ <20200717174750.GQ12769@casper.infradead.org>
+ <20200718013839.GD2183@sol.localdomain>
+ <20200718021304.GS12769@casper.infradead.org>
+ <20200718052818.GF2183@sol.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200718052818.GF2183@sol.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+On Fri, Jul 17, 2020 at 10:28:18PM -0700, Eric Biggers wrote:
+> I'm still not sure this is the best API.
 
-On Thursday, July 16, 2020 7:37:04 PM CEST Rafael J. Wysocki wrote:
->
-> This really is a v2 of this patch:
-> 
-> https://patchwork.kernel.org/patch/11663271/
-> 
-> with an extra preceding cleanup patch to avoid making unrelated changes in the
-> [2/2].
+I cast my vote for something along the following lines.  It's simple,
+easily understood and easily used.  The approach has two variants: One
+that returns an integer and one that returns a pointer.  I'll use the
+pointer variant to illustrate.
 
-Almost the same as before, but the first patch has been reworked to handle
-errors in store_energy_performance_preference() correctly and rebased on top
-of the current linux-pm.git branch.
+Given a type "T", an object x of type pointer-to-T, and a function
+"func" that takes various arguments and returns a pointer-to-T, the
+accepted API for calling func once would be to create once_func() as
+follows:
 
-No functional changes otherwise.
+T *once_func(T **ppt, args...)
+{
+	static DEFINE_MUTEX(mut);
+	T *p;
 
-Thanks!
+	p = smp_load_acquire(ppt);	/* Mild optimization */
+	if (p)
+		return p;
 
+	mutex_lock(mut);
+	p = smp_load_acquire(ppt);
+	if (!p) {
+		p = func(args...);
+		if (!IS_ERR_OR_NULL(p))
+			smp_store_release(ppt, p);
+	}
+	mutex_unlock(mut);
+	return p;
+}
 
+Users then would have to call once_func(&x, args...) and check the
+result.  Different x objects would constitute different "once"
+domains.
 
+(In the integer variant, x, p and the return type of func are all int,
+and ppt is an int *.  Everything else is the same.  This variant would
+be used in cases where you're not allocating anything, you're doing
+some other sort of initialization only once.)
+
+While this would be a perfectly good recipe in itself, the whole thing
+can be made much simpler for users by creating a MAKE_ONCE_FUNC macro
+which would generate once_func given the type T, the name "func", and
+the args.  The result is type-safe.
+
+IMO the fact that once_func() is not inline is an advantage, not a
+drawback.  Yes, it doesn't actually do any allocation or anything like
+that -- the idea is that once_func's purpose is merely to ensure that
+func is successfully called only once.  Any memory allocation or other
+stuff of that sort should be handled by func.
+
+In fact, the only drawback I can think of is that because this relies
+on a single mutex for all the different possible x's, it might lead to
+locking conflicts (if func had to call once_func() recursively, for
+example).  In most reasonable situations such conflicts would not
+arise.
+
+Alan Stern
