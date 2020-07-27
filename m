@@ -2,101 +2,113 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D547DC433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5246C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFFB320738
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:44:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLOh+BHL"
+	by mail.kernel.org (Postfix) with ESMTP id 75A0320738
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:45:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595879120;
+	bh=8p/mpBOD8QPWQP7hYQ4q+7NKUEkDaVHRM+uqJ5CVEtY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=x6xq997LF7yVAkn/nMr3kX98ynmFd2Q3RoOmHbvIOeBfP3g+IiRCDw2zI1X7PcyJU
+	 BpkbHtjsRzpgdR3BHyGCTDgb2yutXnwpD/nPgqi/tc8ITWrUP0p+uQ0CQhGYc/EMRg
+	 OtzqQqLnylWVSEGniuMmsj7FNVXp328glKVxpSvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728833AbgG0Toh (ORCPT
+        id S1728852AbgG0TpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:44:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgG0Tog (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:44:36 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60D54C061794;
-        Mon, 27 Jul 2020 12:44:36 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m8so2800927pfh.3;
-        Mon, 27 Jul 2020 12:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qzzZKFqE1nfVRb0bTdQAza1honJ2T0+1vW2BFXwTzqA=;
-        b=HLOh+BHLV83GvCy5qUxFSaZI0+nJP44EMKDBWsLY8Ovleoz0qJzz9U/WHyEcv8UmBR
-         K6dzaNevQflsp7u1+vL5BpA3XgDFl66RzHvFTsbEJAoMUxj8tAYHWQ5e2pNuo8db9gJe
-         PJegFSJz/dE71vnOhQ4JE8F7CAkptW/6IiGqB18TtsZS+FvQ+fpDtHyKSpGeyycOmDGk
-         +61FWMMRgSO3dsJRPTJYfH7iezRNM7LIchSAZBCfb8kF4+kXRublXv+myOcu6UNAEBgi
-         rLsNTbH1/YK8y3dO6mBN28vzkIqqhsJwgLugHq2jPJAK7F4CjOjeLidnlm6kM8JEwKL4
-         gi1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qzzZKFqE1nfVRb0bTdQAza1honJ2T0+1vW2BFXwTzqA=;
-        b=PyK+AxFqwavXoNnGZH2qOAPdlhoHmp60s5BR2CP+a/jJl/tNxTcXwnwplDAaM7nS6t
-         w9fZU1WMECHpmbd3ANQPVuY6wb01YNDPPufTiPV06dZJNZMOwWaXc+OY0ZvJQOKArfCp
-         exGVr3BdG2/HAauiWMydt3Gc6xKXy9tj6+M3eH/kW7zSEa+OayoesKkT5fnjxOKCOXD6
-         fREiuCyjEBr8QSCr6RkvB4aDtKsS4Gh82ZfIUJIWIaNtjy2uMAesscs6KocB7k05VbKy
-         DgGXMgKcQDB+LM1f1Ng8+6GVFkzEN9JFGkcleSEnhIs51BQbcocEzR7ZWq/9ffMltvtF
-         gYJA==
-X-Gm-Message-State: AOAM530mzj6zkTZJ8MZIo+e9eT/gFSkgTAVCA1+TYmqP192/S3esU6VD
-        cCpH4sWV7HpZ2j2TGP054GJJ6u9Xl+ZFZGgqFigzjVwPTQ0=
-X-Google-Smtp-Source: ABdhPJzEd9N2EW8275FRzfeT1fNAW9ksND1FAyY1KyG0A8DkhI41cM9sG0GJE6Li/KdL/CE30l9gi3zTMIRToWH2OsA=
-X-Received: by 2002:a62:758f:: with SMTP id q137mr3064389pfc.170.1595879075906;
- Mon, 27 Jul 2020 12:44:35 -0700 (PDT)
+        Mon, 27 Jul 2020 15:45:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgG0TpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 15:45:18 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A189C20672;
+        Mon, 27 Jul 2020 19:45:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595879118;
+        bh=8p/mpBOD8QPWQP7hYQ4q+7NKUEkDaVHRM+uqJ5CVEtY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=vwB3CVZJLOdBJmWAb7lI6QKfZB364JXIg1GW9NEBSecO7u5S8lNvkT0Rw0QR9go4o
+         1NrYuVy4c8N654v52Dh8djZmLqHI9rizTV7EvC8p7zBxjDnKNeWXNkV3sr88qZu/Ni
+         6HyX18T+LESDoPUr6ng+QbwgAAR/Txz2Z+ubhG5E=
+Date:   Mon, 27 Jul 2020 14:51:11 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] ath6kl: Use fallthrough pseudo-keyword
+Message-ID: <20200727195111.GA1603@embeddedor>
 MIME-Version: 1.0
-References: <20200727092346.19780-1-amelie.delaunay@st.com>
- <20200727092346.19780-4-amelie.delaunay@st.com> <CAFBinCCXuUC4PHgrobYjj=yjA3Tz73Wwx0KWz+B6PfCw_OSi_w@mail.gmail.com>
-In-Reply-To: <CAFBinCCXuUC4PHgrobYjj=yjA3Tz73Wwx0KWz+B6PfCw_OSi_w@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Jul 2020 22:44:19 +0300
-Message-ID: <CAHp75Ve75d+K87cokb4YYgim_wU0gTidGuiPs3BmohRKfTh5gA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] usb: dwc2: don't use ID/Vbus detection if
- usb-role-switch on STM32MP15 SoCs
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Amelie Delaunay <amelie.delaunay@st.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        USB <linux-usb@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 10:04 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
-> On Mon, Jul 27, 2020 at 11:23 AM Amelie Delaunay <amelie.delaunay@st.com> wrote:
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-> > -       p->activate_stm_id_vb_detection = true;
-> > +       p->activate_stm_id_vb_detection =
-> > +               !of_property_read_bool(np, "usb-role-switch");
-> the rest of params.c uses device_property_read_* instead of of_read_property_*
-> I thought I'd mention it so you can decide yourself whether this is
-> fine or needs to be changed
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Better to change and leave all on one line.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/ath/ath6kl/cfg80211.c | 6 +++---
+ drivers/net/wireless/ath/ath6kl/main.c     | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/net/wireless/ath/ath6kl/cfg80211.c b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+index 67f8f2aa7a53..9c83e9a4299b 100644
+--- a/drivers/net/wireless/ath/ath6kl/cfg80211.c
++++ b/drivers/net/wireless/ath/ath6kl/cfg80211.c
+@@ -3897,19 +3897,19 @@ int ath6kl_cfg80211_init(struct ath6kl *ar)
+ 	switch (ar->hw.cap) {
+ 	case WMI_11AN_CAP:
+ 		ht = true;
+-		/* fall through */
++		fallthrough;
+ 	case WMI_11A_CAP:
+ 		band_5gig = true;
+ 		break;
+ 	case WMI_11GN_CAP:
+ 		ht = true;
+-		/* fall through */
++		fallthrough;
+ 	case WMI_11G_CAP:
+ 		band_2gig = true;
+ 		break;
+ 	case WMI_11AGN_CAP:
+ 		ht = true;
+-		/* fall through */
++		fallthrough;
+ 	case WMI_11AG_CAP:
+ 		band_2gig = true;
+ 		band_5gig = true;
+diff --git a/drivers/net/wireless/ath/ath6kl/main.c b/drivers/net/wireless/ath/ath6kl/main.c
+index 5e7ea838a921..210218298e13 100644
+--- a/drivers/net/wireless/ath/ath6kl/main.c
++++ b/drivers/net/wireless/ath/ath6kl/main.c
+@@ -389,7 +389,7 @@ void ath6kl_connect_ap_mode_bss(struct ath6kl_vif *vif, u16 channel)
+ 		if (!ik->valid || ik->key_type != WAPI_CRYPT)
+ 			break;
+ 		/* for WAPI, we need to set the delayed group key, continue: */
+-		/* fall through */
++		fallthrough;
+ 	case WPA_PSK_AUTH:
+ 	case WPA2_PSK_AUTH:
+ 	case (WPA_PSK_AUTH | WPA2_PSK_AUTH):
 -- 
-With Best Regards,
-Andy Shevchenko
+2.27.0
+
