@@ -2,109 +2,74 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6852BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED14EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B36020775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67DA22BEB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbgG0Ov4 (ORCPT
+        id S1729681AbgG0Owk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:51:56 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8830 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727032AbgG0Ovz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:51:55 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1CF99BE30548D6D8FEA0;
-        Mon, 27 Jul 2020 22:51:52 +0800 (CST)
-Received: from [127.0.0.1] (10.174.186.173) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Mon, 27 Jul 2020
- 22:51:43 +0800
-Subject: Re: [RESEND RFC PATCH v1] arm64: kvm: flush tlbs by range in
- unmap_stage2_range function
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <james.morse@arm.com>, <julien.thierry.kdev@gmail.com>,
-        <suzuki.poulose@arm.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <steven.price@arm.com>, <mark.rutland@arm.com>,
-        <ascull@google.com>, <kvm@vger.kernel.org>,
-        <kvmarm@lists.cs.columbia.edu>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>
-References: <20200724134315.805-1-yezhenyu2@huawei.com>
- <5d54c860b3b4e7a98e4d53397e6424ae@kernel.org>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <f74277fd-5af2-c46f-169f-c15a321165cd@huawei.com>
-Date:   Mon, 27 Jul 2020 22:51:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 27 Jul 2020 10:52:40 -0400
+Received: from smtprelay0056.hostedemail.com ([216.40.44.56]:49920 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729015AbgG0Owj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:52:39 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 8B7171730851;
+        Mon, 27 Jul 2020 14:52:38 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: help13_470362226f62
+X-Filterd-Recvd-Size: 1689
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 27 Jul 2020 14:52:36 +0000 (UTC)
+Message-ID: <6e0c07bc3d2f48d4a62a9e270366c536cfe56783.camel@perches.com>
+Subject: Re: [PATCH 2/6] rtlwifi: Remove unnecessary parenthese in rtl_dbg
+ uses
+From:   Joe Perches <joe@perches.com>
+To:     Pkshih <pkshih@realtek.com>,
+        "Larry.Finger@lwfinger.net" <Larry.Finger@lwfinger.net>
+Cc:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuba@kernel.org" <kuba@kernel.org>
+Date:   Mon, 27 Jul 2020 07:52:35 -0700
+In-Reply-To: <1595840670.17671.4.camel@realtek.com>
+References: <cover.1595706419.git.joe@perches.com>
+         <9b2eaedb7ea123ea766a379459b20a9486d1cd41.1595706420.git.joe@perches.com>
+         <1595830034.12227.7.camel@realtek.com>
+         <ae9d562ec9ef765dddd1491d4cfb5f6d18f7025f.camel@perches.com>
+         <1595840670.17671.4.camel@realtek.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <5d54c860b3b4e7a98e4d53397e6424ae@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.186.173]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2020/7/26 1:40, Marc Zyngier wrote:
-> On 2020-07-24 14:43, Zhenyu Ye wrote:
->> Now in unmap_stage2_range(), we flush tlbs one by one just after the
->> corresponding pages cleared.  However, this may cause some performance
->> problems when the unmap range is very large (such as when the vm
->> migration rollback, this may cause vm downtime too loog).
+On Mon, 2020-07-27 at 09:04 +0000, Pkshih wrote:
+> So, I think you would like to have parenthesis intentionally.
+> If so, 
+> test1 ? : (test2 ? :)
+> would be better.
 > 
-> You keep resending this patch, but you don't give any numbers
-> that would back your assertion.
-
-I have tested the downtime of vm migration rollback on arm64, and found
-the downtime could even take up to 7s.  Then I traced the cost of
-unmap_stage2_range() and found it could take a maximum of 1.2s.  The
-vm configuration is as follows (with high memory pressure, the dirty
-rate is about 500MB/s):
-
-  <memory unit='GiB'>192</memory>
-  <vcpu placement='static'>48</vcpu>
-  <memoryBacking>
-    <hugepages>
-      <page size='1' unit='GiB' nodeset='0'/>
-    </hugepages>
-  </memoryBacking>
-
-After this patch applied, the cost of unmap_stage2_range() can reduce to
-16ms, and VM downtime can be less than 1s.
-
-The following figure shows a clear comparison:
-
-	      |	vm downtime  |	cost of unmap_stage2_range()
---------------+--------------+----------------------------------
-before change |		7s   |		1200 ms
-after  change |		1s   |		  16 ms
---------------+--------------+----------------------------------
-
->> +
->> +    if ((end - start) >= 512 << (PAGE_SHIFT - 12)) {
->> +        __tlbi(vmalls12e1is);
 > 
-> And what is this magic value based on? You don't even mention in the
-> commit log that you are taking this shortcut.
-> 
+> If not,
+> test1 ? : test2 ? :
+> may be what you want (without any parenthesis).
 
+Use whatever style you like, it's unimportant to me
+and it's not worth spending any real time on it.
 
-If the page num is bigger than 512, flush all tlbs of this vm to avoid
-soft lock-ups on large TLB flushing ranges.  Just like what the
-flush_tlb_range() does.
-
-
-Thanks,
-Zhenyu
 
