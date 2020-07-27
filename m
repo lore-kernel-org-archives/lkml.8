@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7711C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D021EC433FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ABE12075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08C52075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859898;
-	bh=J8sibqxTOUhnRXX9MLrBVHdwW6emw3YaiKL6e8OxHHo=;
+	s=default; t=1595859901;
+	bh=5MbtI0ihvkEoxI9SWcTbrLH2vIzaHkcSMuxKD1ckyRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QtH9JsSxw+r+4xBb5oacCKETKHHwpLwp22hZHIo13EcAR7217nPXxR6ddgUNW0rky
-	 OoxEE3NJa5wI8TjinnHhzazZtpBCKo6F11wqgNqxyUGCCLtobSWBrWrAK76vcPR0mE
-	 gSm0MEJX9gZD/4J6dzrQ44gyPAAj3zPySZZ8jgiM=
+	b=sl7SrHFd6JuungfaTOEyXm6EvLPJkvVxpol7T3aAc81WIUYipm4papcqn68wp1LFy
+	 X9mOM+Oqo6jqMIAvhMHKeHhyCVzDOrAoACqW/INdaCzrr0JwzA0tVMMUOAblXtOSKD
+	 B+m8yhHBT3/qCXbeJjrKM8qMhMv1hQwBADclHdcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732342AbgG0OY5 (ORCPT
+        id S1732350AbgG0OZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:24:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54466 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:25:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732314AbgG0OYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:24:46 -0400
+        id S1732314AbgG0OY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:24:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDEB32083E;
-        Mon, 27 Jul 2020 14:24:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC21C2075A;
+        Mon, 27 Jul 2020 14:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859886;
-        bh=J8sibqxTOUhnRXX9MLrBVHdwW6emw3YaiKL6e8OxHHo=;
+        s=default; t=1595859897;
+        bh=5MbtI0ihvkEoxI9SWcTbrLH2vIzaHkcSMuxKD1ckyRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZmSXR+KrWWMOL3nTGbDfFtHvrmaMo8I4OMLe4SFGVewakKnKAGZVIx+Pwb6NRo34U
-         QDtyzisyS1YTqdwXFd+BTe/IrgnhVLg4cfTuPCTu7nl2L/ftASpQY1A/m4IgrS0kGK
-         kUDYaY5R5BTnEFxVUKqCytOBmEqG7mN6X0hSHgbA=
+        b=sWYfBCgVKvvtDKfyvDn3j1yzX539D67dfnoG3QLxHljdl0CFkDn1rrby0VCocJ4GF
+         d6lNBtqGmSUxUelgukc+4aRAeMlJxpvTAESlH+cChXSzd5r/ej9R9gZzEnv+nLD1sm
+         pjEcyR3YZUmqYE4Pz5pmIAHl02TKA8aJlBOk5p/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Patrick Fernie <patrick.fernie@gmail.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Subject: [PATCH 5.7 143/179] Revert "cifs: Fix the target file was deleted when rename failed."
-Date:   Mon, 27 Jul 2020 16:05:18 +0200
-Message-Id: <20200727134939.598871064@linuxfoundation.org>
+        stable@vger.kernel.org, Rustam Kovhaev <rkovhaev@gmail.com>,
+        syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
+Subject: [PATCH 5.7 146/179] staging: wlan-ng: properly check endpoint types
+Date:   Mon, 27 Jul 2020 16:05:21 +0200
+Message-Id: <20200727134939.777363116@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -62,58 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Rustam Kovhaev <rkovhaev@gmail.com>
 
-commit 0e6705182d4e1b77248a93470d6d7b3013d59b30 upstream.
+commit faaff9765664009c1c7c65551d32e9ed3b1dda8f upstream.
 
-This reverts commit 9ffad9263b467efd8f8dc7ae1941a0a655a2bab2.
+As syzkaller detected, wlan-ng driver does not do sanity check of
+endpoints in prism2sta_probe_usb(), add check for xfer direction and type
 
-Upon additional testing with older servers, it was found that
-the original commit introduced a regression when using the old SMB1
-dialect and rsyncing over an existing file.
-
-The patch will need to be respun to address this, likely including
-a larger refactoring of the SMB1 and SMB3 rename code paths to make
-it less confusing and also to address some additional rename error
-cases that SMB3 may be able to workaround.
-
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reported-by: Patrick Fernie <patrick.fernie@gmail.com>
-CC: Stable <stable@vger.kernel.org>
-Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
-Acked-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Reported-and-tested-by: syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=c2a1fa67c02faa0de723
+Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200722161052.999754-1-rkovhaev@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |   10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/staging/wlan-ng/prism2usb.c |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1855,7 +1855,6 @@ cifs_rename2(struct inode *source_dir, s
- 	FILE_UNIX_BASIC_INFO *info_buf_target;
- 	unsigned int xid;
- 	int rc, tmprc;
--	bool new_target = d_really_is_negative(target_dentry);
+--- a/drivers/staging/wlan-ng/prism2usb.c
++++ b/drivers/staging/wlan-ng/prism2usb.c
+@@ -61,11 +61,25 @@ static int prism2sta_probe_usb(struct us
+ 			       const struct usb_device_id *id)
+ {
+ 	struct usb_device *dev;
+-
++	const struct usb_endpoint_descriptor *epd;
++	const struct usb_host_interface *iface_desc = interface->cur_altsetting;
+ 	struct wlandevice *wlandev = NULL;
+ 	struct hfa384x *hw = NULL;
+ 	int result = 0;
  
- 	if (flags & ~RENAME_NOREPLACE)
- 		return -EINVAL;
-@@ -1932,13 +1931,8 @@ cifs_rename2(struct inode *source_dir, s
- 	 */
- 
- unlink_target:
--	/*
--	 * If the target dentry was created during the rename, try
--	 * unlinking it if it's not negative
--	 */
--	if (new_target &&
--	    d_really_is_positive(target_dentry) &&
--	    (rc == -EACCES || rc == -EEXIST)) {
-+	/* Try unlinking the target dentry if it's not negative */
-+	if (d_really_is_positive(target_dentry) && (rc == -EACCES || rc == -EEXIST)) {
- 		if (d_is_dir(target_dentry))
- 			tmprc = cifs_rmdir(target_dir, target_dentry);
- 		else
++	if (iface_desc->desc.bNumEndpoints != 2) {
++		result = -ENODEV;
++		goto failed;
++	}
++
++	result = -EINVAL;
++	epd = &iface_desc->endpoint[1].desc;
++	if (!usb_endpoint_is_bulk_in(epd))
++		goto failed;
++	epd = &iface_desc->endpoint[2].desc;
++	if (!usb_endpoint_is_bulk_out(epd))
++		goto failed;
++
+ 	dev = interface_to_usbdev(interface);
+ 	wlandev = create_wlan();
+ 	if (!wlandev) {
 
 
