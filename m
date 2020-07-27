@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0F5C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E44DC433FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB78206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23CD6207BB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595867378;
-	bh=8oCB6uea+aVDOj/Yx59qQSnN7cBU25mvgxQKlD5dQsQ=;
+	s=default; t=1595867392;
+	bh=nDlItEL5wpDX+RL6B9cqSzJxrB0KNzx+009Wx5gZswo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=hI5imhl2WMMhnsdEI5nwr7MJrJJnSmxqpot4oco/W1p4G1TgKUqy6wqQlyCTdZ8kF
-	 AbHZQX2i/FZuz6HEYGQnyQDc2p18Ixxc9ywYVQFhnrGc/3JNVMKN1jBou6T+2PjdOV
-	 00FU1W3JaRN4rh+lgmontxMjq868LtSqDhDhqx8o=
+	b=1hOEi7NQmO5PfUerN5BQQWUXpmmal4osgYWNNUF7RlwZq+aEp7ffn4r3Ge7xcGwaq
+	 Z+S60WZpKhv/N/XxD78DeQbb11CEIWzEtM/qKfqSBzxkAwJT//iSHT4Um5nex9Ywtc
+	 /tAjhIBFCkMlZ+QTUb3Yi4f3LtbQv27rBzo5Vpsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732006AbgG0Q3h (ORCPT
+        id S1732070AbgG0Q3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:29:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58008 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 12:29:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbgG0Q3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:29:36 -0400
+        id S1732011AbgG0Q3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 12:29:47 -0400
 Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3311C20719;
-        Mon, 27 Jul 2020 16:29:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E521B2074F;
+        Mon, 27 Jul 2020 16:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595867376;
-        bh=8oCB6uea+aVDOj/Yx59qQSnN7cBU25mvgxQKlD5dQsQ=;
+        s=default; t=1595867387;
+        bh=nDlItEL5wpDX+RL6B9cqSzJxrB0KNzx+009Wx5gZswo=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=J7PC4nMUIbBazsfj45I5T2O5RZXhlruY1Jd9CA0AJI5vjSA1UL5rdPqK1C7d/pPCV
-         sLTGX0tw+4gnCZQY1RVslJDjjsiq48PwpQFy+rTHxjKdWcEnP6I7CAB4G6haKHwDTC
-         YztTFKyEh1+gVHD8M0jLZgoi7JNzq9DWCvOKvMbE=
-Message-ID: <1595867374.4841.135.camel@kernel.org>
-Subject: Re: [PATCH v3 09/19] fs/kernel_read_file: Switch buffer size arg to
- size_t
+        b=AUvFcPrKk6nVVZv/g3ZXTJTRo3msOEi2ugV5VFd6nCUhGxiVWQy+/OsvXmWbtA4N8
+         T4qzgDX9jr+r5rVsV27ANM7PbW9GF/6uZqcn4cFuiGrZOgBna91PS6uAVoSSCsvdk8
+         9qnTOezy0zA1q9PvNJqxKiqVn93pmZocMgzMoLoE=
+Message-ID: <1595867384.4841.136.camel@kernel.org>
+Subject: Re: [PATCH v3 10/19] fs/kernel_read_file: Add file_size output
+ argument
 From:   Mimi Zohar <zohar@kernel.org>
 To:     Kees Cook <keescook@chromium.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -52,10 +52,10 @@ Cc:     Scott Branden <scott.branden@broadcom.com>,
         linux-security-module@vger.kernel.org,
         linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
         linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 27 Jul 2020 12:29:34 -0400
-In-Reply-To: <20200724213640.389191-10-keescook@chromium.org>
+Date:   Mon, 27 Jul 2020 12:29:44 -0400
+In-Reply-To: <20200724213640.389191-11-keescook@chromium.org>
 References: <20200724213640.389191-1-keescook@chromium.org>
-         <20200724213640.389191-10-keescook@chromium.org>
+         <20200724213640.389191-11-keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
 Mime-Version: 1.0
@@ -66,12 +66,9 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
-> In preparation for further refactoring of kernel_read_file*(), rename
-> the "max_size" argument to the more accurate "buf_size", and correct
-> its type to size_t. Add kerndoc to explain the specifics of how the
-> arguments will be used. Note that with buf_size now size_t, it can no
-> longer be negative (and was never called with a negative value). Adjust
-> callers to use it as a "maximum size" when *buf is NULL.
+> In preparation for adding partial read support, add an optional output
+> argument to kernel_read_file*() that reports the file size so callers
+> can reason more easily about their reading progress.
 > 
 > Acked-by: Scott Branden <scott.branden@broadcom.com>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
