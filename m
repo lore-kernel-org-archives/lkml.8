@@ -2,140 +2,125 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50605C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E32CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3540820714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AAA20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:26:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ejdZFEQv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgG0GXn (ORCPT
+        id S1726323AbgG0G0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 02:23:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47298 "EHLO
+        Mon, 27 Jul 2020 02:26:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgG0GXn (ORCPT
+        with ESMTP id S1726139AbgG0G0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 02:23:43 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84773C0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 23:23:43 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jzwXw-0002of-IK; Mon, 27 Jul 2020 08:23:36 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jzwXv-0003o8-V4; Mon, 27 Jul 2020 08:23:35 +0200
-Date:   Mon, 27 Jul 2020 08:23:35 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
-        robh+dt@kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 03/10] remoteproc: imx: use devm_ioremap
-Message-ID: <20200727062335.v2pxgu6kr6ao2qmh@pengutronix.de>
-References: <20200724080813.24884-1-peng.fan@nxp.com>
- <20200724080813.24884-4-peng.fan@nxp.com>
+        Mon, 27 Jul 2020 02:26:55 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF1B1C0619D2
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 23:26:54 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ha11so1363296pjb.1
+        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 23:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SvwHT3zjyXrrBuntHjIVAEV0M2NnXn0+m3b0NtDYJoE=;
+        b=ejdZFEQvh05oUlpaaf9ORS5njhfQig6+GWZ5iAPvih6BwIK+yozIcqu5gDr5y2tL56
+         ADgJc78zCBS2EW98C0yjIxuIsjhx09ehgqbbeHbAwoyMpOQVXTQH1nMrTOPbKRHgt8O9
+         sEQlDf+2CMo4G6gOuRpnv5VESD2+VrOWa7LgfpsijoI1HeDvVons3C2Y9+dsPMLZ1Oz3
+         Bdws0mCecBLhZm6sHQMYNW4/SJu9hk164lbUn1lN17jQ742Assa0ed2lVhx7uFglNVLw
+         cZMgphZV/5Ax8e+K6npZ4GuvFErEUH7JIESgfsRAUz25GtLadeKzdGjt153zNVy4+pwE
+         fIiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SvwHT3zjyXrrBuntHjIVAEV0M2NnXn0+m3b0NtDYJoE=;
+        b=kApwUAQcn+zExNmi7pXKRGv0RZrhQMMFZaGRLV3j4q7fhVdOvYHEEHpW4VauSaj6/L
+         xPaG7teOSy56dJZLBAjw7IW8+RlPHJcDVHdYwuaoZrwl2SkoKBe+lKUI9yG6kdnLwTPl
+         ZYISDxaCOJw/ypSkBZ0mKgFLUqqbTJ0qThKFNMS5nXqSi0EjwpSCdXKYQKnQfrvmcWVh
+         0Ha9JiYbTLWuWk/K31SJNnPATqEQ6TpkMLGCJ1ZK4Yz/bU0yG0Tzl9Jo+2m4qPUs2d8l
+         7xR/shZlU0oCgrAFS4Nmfw61eAChy8m9KSprylU+WQIGrWHd6wGTfNSD16muWAZ7Ilgu
+         Qo2w==
+X-Gm-Message-State: AOAM532ceRVZmdpJ090/BwdlqXH7plIYl7MlmoiWKirJHMMEYd4hJrpW
+        BQBbOyQIuAFDQsB+wav0cmB7ag==
+X-Google-Smtp-Source: ABdhPJxzOwp68yM0wuFfeb8opsYwXxFrJEEJC31OdMJvY+oua+KBvMHJty3QtAaz4JwNX0GSAm9idQ==
+X-Received: by 2002:a17:902:aa82:: with SMTP id d2mr17236160plr.336.1595831214315;
+        Sun, 26 Jul 2020 23:26:54 -0700 (PDT)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id g23sm3090336pfo.95.2020.07.26.23.26.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jul 2020 23:26:53 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 23:27:03 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 04/13] iommu/arm-smmu-qcom: Add implementation for
+ the adreno GPU SMMU
+Message-ID: <20200727062703.GB3521288@ripper>
+References: <20200720154047.3611092-1-jcrouse@codeaurora.org>
+ <20200720154047.3611092-5-jcrouse@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6tzlik4lnidne2ag"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200724080813.24884-4-peng.fan@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:19:20 up 254 days, 21:37, 239 users,  load average: 0.12, 0.04,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200720154047.3611092-5-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon 20 Jul 08:40 PDT 2020, Jordan Crouse wrote:
+> diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+[..]
+> +static int qcom_adreno_smmu_alloc_context_bank(struct arm_smmu_domain *smmu_domain,
+> +		struct device *dev, int start, int count)
+> +{
+> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
+> +
+> +	/*
+> +	 * Assign context bank 0 to the GPU device so the GPU hardware can
+> +	 * switch pagetables
+> +	 */
+> +	if (qcom_adreno_smmu_is_gpu_device(dev)) {
+> +		if (start > 0 || test_bit(0, smmu->context_map))
+> +			return -ENOSPC;
+> +
+> +		set_bit(0, smmu->context_map);
+> +		return 0;
+> +	}
+> +
+> +	return __arm_smmu_alloc_bitmap(smmu->context_map, start, count);
 
---6tzlik4lnidne2ag
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If we end up here before the GPU device shows up this is going to
+steal the first context bank, causing the subsequent allocation for the
+GPU to always fail.
 
-On Fri, Jul 24, 2020 at 04:08:06PM +0800, Peng Fan wrote:
-> We might need to map an region multiple times, becaue the region might
-> be shared between remote processors, such i.MX8QM with dual M4 cores.
-> So use devm_ioremap, not devm_ioremap_resource.
+As such I think it would be appropriate for you to adjust "start" to
+never be 0 here. And I think it would be appropriate to write this
+function as:
 
-Can you please give an example of this kind of shared resources and
-how they should be handled by two separate devices?
+	if (gpu) {
+		start = 0;
+		count = 1;
+	} else {
+		if (start == 0)
+			start = 1;
+	}
 
-> Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/remoteproc/imx_rproc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rpro=
-c.c
-> index 3b3904ebac75..82594a800a1b 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -296,9 +296,10 @@ static int imx_rproc_addr_init(struct imx_rproc *pri=
-v,
->  		if (b >=3D IMX7D_RPROC_MEM_MAX)
->  			break;
-> =20
-> -		priv->mem[b].cpu_addr =3D devm_ioremap_resource(&pdev->dev, &res);
-> +		/* Not use resource version, because we might share region*/
-> +		priv->mem[b].cpu_addr =3D devm_ioremap(&pdev->dev, res.start, resource=
-_size(&res));
->  		if (IS_ERR(priv->mem[b].cpu_addr)) {
-> -			dev_err(dev, "devm_ioremap_resource failed\n");
-> +			dev_err(dev, "devm_ioremap %pR failed\n", &res);
->  			err =3D PTR_ERR(priv->mem[b].cpu_addr);
->  			return err;
->  		}
-> --=20
-> 2.16.4
->=20
->=20
+	return __arm_smmu_alloc_bitmap(smmu->context_map, start, count);
 
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---6tzlik4lnidne2ag
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl8ectMACgkQ4omh9DUa
-UbMnEw//ZgH40i5qUwwFDcMh8LHIrxrRN0O+VsFoBQ1duEG9Q84k0FJNjigGtOUJ
-G7y0Dw8/ar+figjxswgcs/YpcQuR246wnR4eb8LLXKV3bvJ4mNdPjEbzzOnd6nMo
-RMho0UsR8L2gryGDGHv1xn5eRN7xZiXwjw01bSDlJavcSIY6g6341RFRlNMLOs7d
-z+2NnQGcGy6PVc/CFcR33+1HW10N6eGtbPthYVZIhQaDoA/imBgqXkUTxWoJJzi8
-Ke3jbRP3XoDreV0+1NrK+7otk6JtXXWQQDnUtDhqZh+/iqJNoMcCkwYFORNqCCym
-GQuhLHEnrACRXACj/QMZ2P7Jquh7e4YlDTafMtZCzqSMhRa5LDTF6M/NoInZPW+P
-i8eZqtpNfqAIDehNJ1rXJOQ8q5Sb5JuhtuEUPz9yJ6huou6ArsyuRSY10rGm7S1B
-WSmmpoXaPkj4qspjo0CJlajzojiVucyE1ta05xlmmMHw5dvo+Mr+LOFDQaHWYfip
-8wNFRybYIZxlEsHX7Vwepxis5XUATKm7GEsApr/vaQTAaufO1FmZfgNa0VjfzPi1
-ks6mi6HdCbzOl5n0ODyGuwO8FxJRSML7KJZlSWI878Bi8Es4UpOHoBNWb6UfMwYh
-4h9kEgxFjcWK0Th5q6jpBtUSIGmAdjB+xsLwoonUz/r4Tcw1yIg=
-=yeys
------END PGP SIGNATURE-----
-
---6tzlik4lnidne2ag--
+Regards,
+Bjorn
