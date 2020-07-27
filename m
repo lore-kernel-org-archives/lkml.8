@@ -2,120 +2,122 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F87C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94A932074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51D820775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Fm0myA6r";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nn3Ccf0K"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EJiZs3gm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgG0NUh (ORCPT
+        id S1728537AbgG0NU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:20:37 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55648 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgG0NUg (ORCPT
+        Mon, 27 Jul 2020 09:20:58 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39458 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgG0NU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:20:36 -0400
-From:   John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595856034;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QEC599F9d5Phwiy4Paam7iRk0SAUOnpMx6pT2BgmNxk=;
-        b=Fm0myA6rXHM1+w5H5Trz/8ZiYA4t4LwTwf3FmObzt0//Ux1ppnJ3+3ru6H28X//ryQBfJE
-        gxKGnpQddqPor7JNsAbnDoNhVv6s/OiSWJZWy9q2nnCSUgDsEIVvP4vFcRrVGGv2sjxzZt
-        5BFYPzLGQnWER224YM0kqjXTAP36GmusLbBuvSvEJ3qgJPOM4Ox82WIyEo0KKCFywf7cZL
-        zh+hSyrTXBNN8exMXahbqwdqWUq6IBYaip8svDt13x+YV8S5qt/UfXUf/oGIWw0o+QJLq+
-        BhshrPhcQsDnmjamN6XnIw/DC41qiyDqkduOURHZlFrLXiEzKvNUWN63Kte3dg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595856034;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QEC599F9d5Phwiy4Paam7iRk0SAUOnpMx6pT2BgmNxk=;
-        b=nn3Ccf0KX4putGJjeUuJelLK04rIfaVzoa3gkLlqOlrBHwwfn0SbBMpekV1j9ylP2uhNWD
-        I9jGD6aCGCFG1zCQ==
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, kbuild-all@lists.01.org,
-        linux-rt-users <linux-rt-users@vger.kernel.org>
-Subject: Re: [PATCH] printk: fix ifnullfree.cocci warnings
-In-Reply-To: <alpine.DEB.2.21.2007241203410.2834@hadrien>
-References: <alpine.DEB.2.21.2007241203410.2834@hadrien>
-Date:   Mon, 27 Jul 2020 15:26:33 +0206
-Message-ID: <87y2n53xi6.fsf@jogness.linutronix.de>
+        Mon, 27 Jul 2020 09:20:58 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RDGwXU093400;
+        Mon, 27 Jul 2020 13:20:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=tBfbienhVFSWot4M/N0o6k7I0q1neTC6ZRkO3jt9YxE=;
+ b=EJiZs3gmYFJSMJ8cxvB5Xmb/2h5Yxym0yaAVmJs55bYeNyjJkPMOTszpivd1/fx43EP5
+ U3pnkTFxnsjk28H+0OErX1xacdpOWcaTPGDG72gTSzxJ0cm1Bhp75YfJMNNkuOH+5r2o
+ F/rDEPMIfaQNjY/bgz1XHRdZySJRU+u06h2luoOyGa0VN2agNy9aaxn59M5FRHA9BNls
+ jPLFaChGMkZalETtsw+lxurGpSOktjer19NnqQ2Xw4+8EZLG+0xPBNfPxCEZLyu4jYN1
+ Ni2/6eSZg+l+2bGA3Mk/7E4K2E710UrIsCXChrbx1HNw7g0nDeCtDF4+4YHdimio2FZE wg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 32hu1j1f9b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jul 2020 13:20:52 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RDIXhU147258;
+        Mon, 27 Jul 2020 13:20:52 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 32hu5qvwd9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 13:20:52 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06RDKpbg023514;
+        Mon, 27 Jul 2020 13:20:51 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Jul 2020 06:20:50 -0700
+Date:   Mon, 27 Jul 2020 16:20:43 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Juan Antonio Aldea-Armenteros <juant.aldea@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] media: atomisp-mt9m114: replace fixed function names
+Message-ID: <20200727132042.GE1913@kadam>
+References: <20200725081108.272643-1-juant.aldea@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200725081108.272643-1-juant.aldea@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 bulkscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270097
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9694 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1011
+ malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-24, Julia Lawall <julia.lawall@inria.fr> wrote:
-> Make the code a little simpler by dropping
-> some unneeded tests.
->
-> Generated by: scripts/coccinelle/free/ifnullfree.cocci
->
-> Fixes: c406fbce2054 ("printk: implement syslog")
-> CC: John Ogness <john.ogness@linutronix.de>
-> Signed-off-by: kernel test robot <lkp@intel.com>
-
-This is for the rogue version of the printk ringbuffer within RT at the
-moment. Until the new accepted version is mainline, we might as well
-keep the RT variant maintained.
-
-Acked-by: John Ogness <john.ogness@linutronix.de>
-
+On Sat, Jul 25, 2020 at 10:11:08AM +0200, Juan Antonio Aldea-Armenteros wrote:
+> There are a couple of debug messages using hardcoded function names
+> instead of the preferred __func__ magic constant.
+> 
+> Replace them:
+> 
+> WARNING: Prefer using '"%s...", __func__' to using 'misensor_rmw_reg', this function's name, in a string
+> 215: FILE: ./media/atomisp/i2c/atomisp-mt9m114.c:215:
+> +       v4l2_err(client, "misensor_rmw_reg error exit, read failed\n");
+> 
+> WARNING: Prefer using '"%s...", __func__' to using 'misensor_rmw_reg', this function's name, in a string
+> 236: FILE: ./media/atomisp/i2c/atomisp-mt9m114.c:236:
+> +       v4l2_err(client, "misensor_rmw_reg error exit, write failed\n");
+> 
+> Signed-off-by: Juan Antonio Aldea-Armenteros <juant.aldea@gmail.com>
 > ---
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.4.y-rt
-> head:   5fbf1e70f11dba64cc05c9d85120a3aa7c67a4a2
-> commit: c406fbce2054efbf812b3d811ed23a872f719db9 [43/325] printk: implement syslog
-> :::::: branch date: 4 months ago
-> :::::: commit date: 7 months ago
->
->  printk.c |   12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
->
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -1539,10 +1539,8 @@ static int syslog_print_all(char __user
->  	if (clear && !seq)
->  		syslog_clear();
->
-> -	if (text)
-> -		kfree(text);
-> -	if (msgbuf)
-> -		kfree(msgbuf);
-> +	kfree(text);
-> +	kfree(msgbuf);
->  	return len;
->  }
->
-> @@ -1695,10 +1693,8 @@ int do_syslog(int type, char __user *buf
->  		break;
->  	}
->  out:
-> -	if (msgbuf)
-> -		kfree(msgbuf);
-> -	if (text)
-> -		kfree(text);
-> +	kfree(msgbuf);
-> +	kfree(text);
->  	return error;
->  }
->
+>  drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c b/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c
+> index 0d60918a9b19..54c24bc2061d 100644
+> --- a/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c
+> +++ b/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c
+> @@ -212,7 +212,7 @@ misensor_rmw_reg(struct i2c_client *client, u16 data_length, u16 reg,
+>  
+>  	err = mt9m114_read_reg(client, data_length, reg, &val);
+>  	if (err) {
+> -		v4l2_err(client, "misensor_rmw_reg error exit, read failed\n");
+> +		v4l2_err(client, "%s exit, read failed\n", __func__);
+
+Did you intend to delete the word "error"?
+
+regards,
+dan carpenter
+
+
