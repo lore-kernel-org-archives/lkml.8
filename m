@@ -2,252 +2,152 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD02C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C5AC433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F56020714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E4120714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731831AbgG0QSQ (ORCPT
+        id S1731611AbgG0QS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:18:16 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:52338 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731754AbgG0QSI (ORCPT
+        Mon, 27 Jul 2020 12:18:28 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39798 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731648AbgG0QSM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:18:08 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RFxhUC030760;
-        Mon, 27 Jul 2020 12:17:52 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 32gek677xn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 12:17:52 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 06RGHphW050837
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 27 Jul 2020 12:17:51 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 27 Jul 2020 12:17:50 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 27 Jul 2020 12:17:49 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Mon, 27 Jul 2020 12:17:49 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06RGHjX7009637;
-        Mon, 27 Jul 2020 12:17:47 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v7 1/9] hwmon: pmbus: adm1266: add support
-Date:   Mon, 27 Jul 2020 19:19:20 +0300
-Message-ID: <20200727161928.14122-2-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200727161928.14122-1-alexandru.tachici@analog.com>
-References: <20200727161928.14122-1-alexandru.tachici@analog.com>
+        Mon, 27 Jul 2020 12:18:12 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 025CE296D3C
+Message-ID: <e49635b95db0e295a85f1be9a3909f7f29495e3a.camel@collabora.com>
+Subject: Re: [PATCH 08/10] media: uapi: h264: Clean slice invariants syntax
+ elements
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Alexandre Courbot <acourbot@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Date:   Mon, 27 Jul 2020 13:18:02 -0300
+In-Reply-To: <CAAFQd5DVfroAXRw+OT=EktDtVzRjPZYxnUS8daWQ5=3LLwn=SA@mail.gmail.com>
+References: <20200715202233.185680-1-ezequiel@collabora.com>
+         <20200715202233.185680-9-ezequiel@collabora.com>
+         <CAPBb6MVMXeTcUfb-98McYCKjh=eM=BTo2dSY=L1c6dv2jHqXcg@mail.gmail.com>
+         <636aab0a2be83e751a82a84ac3946afec2c87a17.camel@collabora.com>
+         <CAAFQd5DVfroAXRw+OT=EktDtVzRjPZYxnUS8daWQ5=3LLwn=SA@mail.gmail.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-1 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_11:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- adultscore=0 clxscore=1015 suspectscore=0 impostorscore=0 phishscore=0
- spamscore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007270110
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
+On Mon, 2020-07-27 at 16:52 +0200, Tomasz Figa wrote:
+> On Mon, Jul 27, 2020 at 4:39 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> > Hi Alexandre,
+> > 
+> > Thanks a lot for the review.
+> > 
+> > On Sat, 2020-07-25 at 23:34 +0900, Alexandre Courbot wrote:
+> > > On Thu, Jul 16, 2020 at 5:23 AM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> > > > The H.264 specification requires in its "Slice header semantics"
+> > > > section that the following values shall be the same in all slice headers:
+> > > > 
+> > > >   pic_parameter_set_id
+> > > >   frame_num
+> > > >   field_pic_flag
+> > > >   bottom_field_flag
+> > > >   idr_pic_id
+> > > >   pic_order_cnt_lsb
+> > > >   delta_pic_order_cnt_bottom
+> > > >   delta_pic_order_cnt[ 0 ]
+> > > >   delta_pic_order_cnt[ 1 ]
+> > > >   sp_for_switch_flag
+> > > >   slice_group_change_cycle
+> > > > 
+> > > > and can therefore be moved to the per-frame decode parameters control.
+> > > 
+> > > I am really not a H.264 expert, so this question may not be relevant,
+> > 
+> > All questions are welcome. I'm more than happy to discuss this patchset.
+> > 
+> > > but are these values specified for every slice header in the
+> > > bitstream, or are they specified only once per frame?
+> > > 
+> > > I am asking this because it would certainly make user-space code
+> > > simpler if we could remain as close to the bitstream as possible. If
+> > > these values are specified once per slice, then factorizing them would
+> > > leave user-space with the burden of deciding what to do if they change
+> > > across slices.
+> > > 
+> > > Note that this is a double-edged sword, because it is not necessarily
+> > > better to leave the firmware in charge of deciding what to do in such
+> > > a case. :) So hopefully these are only specified once per frame in the
+> > > bitstream, in which case your proposal makes complete sense.
+> > 
+> > Frame-based hardwares accelerators such as Hantro and Rockchip VDEC
+> > are doing the slice header parsing themselves. Therefore, the
+> > driver is not really parsing these fields on each slice header.
+> > 
+> > Currently, we are already using only the first slice in a frame,
+> > as you can see from:
+> > 
+> >         if (slices[0].flags & V4L2_H264_SLICE_FLAG_FIELD_PIC)
+> >                 reg |= G1_REG_DEC_CTRL0_PIC_FIELDMODE_E;
+> > 
+> > Even if these fields are transported in the slice header,
+> > I think it makes sense for us to split them into the decode params
+> > (per-frame) control.
+> > 
+> > They are really specified to be the same across all slices,
+> > so even I'd say if a bitstream violates this, it's likely
+> > either a corrupted bitstream or an encoder bug.
+> > 
+> > OTOH, one thing this makes me realize is that the slice params control
+> > is wrongly specified as an array.
+> 
+> It is _not_.
+> 
 
-Add pmbus probing driver for the adm1266 Cascadable
-Super Sequencer with Margin Control and Fault Recording.
-Driver is using the pmbus_core, creating sysfs files
-under hwmon for inputs: vh1->vh4 and vp1->vp13.
+We introduced the hold capture buffer specifically to support
+this without having a slice array.
 
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- Documentation/hwmon/adm1266.rst | 37 +++++++++++++++++++
- Documentation/hwmon/index.rst   |  1 +
- drivers/hwmon/pmbus/Kconfig     |  9 +++++
- drivers/hwmon/pmbus/Makefile    |  1 +
- drivers/hwmon/pmbus/adm1266.c   | 65 +++++++++++++++++++++++++++++++++
- 5 files changed, 113 insertions(+)
- create mode 100644 Documentation/hwmon/adm1266.rst
- create mode 100644 drivers/hwmon/pmbus/adm1266.c
+I don't think we have a plan to support this control properly
+as an array.
 
-diff --git a/Documentation/hwmon/adm1266.rst b/Documentation/hwmon/adm1266.rst
-new file mode 100644
-index 000000000000..9257f8a48650
---- /dev/null
-+++ b/Documentation/hwmon/adm1266.rst
-@@ -0,0 +1,37 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Kernel driver adm1266
-+=====================
-+
-+Supported chips:
-+  * Analog Devices ADM1266
-+    Prefix: 'adm1266'
-+    Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
-+
-+Author: Alexandru Tachici <alexandru.tachici@analog.com>
-+
-+
-+Description
-+-----------
-+
-+This driver supports hardware monitoring for Analog Devices ADM1266 sequencer.
-+
-+ADM1266 is a sequencer that features voltage readback from 17 channels via an
-+integrated 12 bit SAR ADC, accessed using a PMBus interface.
-+
-+The driver is a client driver to the core PMBus driver. Please see
-+Documentation/hwmon/pmbus for details on PMBus client drivers.
-+
-+
-+Sysfs entries
-+-------------
-+
-+The following attributes are supported. Limits are read-write, history reset
-+attributes are write-only, all other attributes are read-only.
-+
-+inX_label		"voutx"
-+inX_input		Measured voltage.
-+inX_min			Minimum Voltage.
-+inX_max			Maximum voltage.
-+inX_min_alarm		Voltage low alarm.
-+inX_max_alarm		Voltage high alarm.
-diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-index 55ff4b7c5349..056f7107d7b8 100644
---- a/Documentation/hwmon/index.rst
-+++ b/Documentation/hwmon/index.rst
-@@ -30,6 +30,7 @@ Hardware Monitoring Kernel Drivers
-    adm1026
-    adm1031
-    adm1177
-+   adm1266
-    adm1275
-    adm9240
-    ads7828
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index a337195b1c39..da34083e1ffd 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -26,6 +26,15 @@ config SENSORS_PMBUS
- 	  This driver can also be built as a module. If so, the module will
- 	  be called pmbus.
- 
-+config SENSORS_ADM1266
-+	tristate "Analog Devices ADM1266 Sequencer"
-+	help
-+	  If you say yes here you get hardware monitoring support for Analog
-+	  Devices ADM1266 Cascadable Super Sequencer.
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called adm1266.
-+
- config SENSORS_ADM1275
- 	tristate "Analog Devices ADM1275 and compatibles"
- 	help
-diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-index c4b15db996ad..da41d22be1c9 100644
---- a/drivers/hwmon/pmbus/Makefile
-+++ b/drivers/hwmon/pmbus/Makefile
-@@ -5,6 +5,7 @@
- 
- obj-$(CONFIG_PMBUS)		+= pmbus_core.o
- obj-$(CONFIG_SENSORS_PMBUS)	+= pmbus.o
-+obj-$(CONFIG_SENSORS_ADM1266)	+= adm1266.o
- obj-$(CONFIG_SENSORS_ADM1275)	+= adm1275.o
- obj-$(CONFIG_SENSORS_BEL_PFE)	+= bel-pfe.o
- obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
-diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
-new file mode 100644
-index 000000000000..79e8d90886b8
---- /dev/null
-+++ b/drivers/hwmon/pmbus/adm1266.c
-@@ -0,0 +1,65 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ADM1266 - Cascadable Super Sequencer with Margin
-+ * Control and Fault Recording
-+ *
-+ * Copyright 2020 Analog Devices Inc.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include "pmbus.h"
-+#include <linux/slab.h>
-+
-+struct adm1266_data {
-+	struct pmbus_driver_info info;
-+	struct i2c_client *client;
-+};
-+
-+static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *id)
-+{
-+	struct adm1266_data *data;
-+	int i;
-+
-+	data = devm_kzalloc(&client->dev, sizeof(struct adm1266_data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->client = client;
-+	data->info.pages = 17;
-+	data->info.format[PSC_VOLTAGE_OUT] = linear;
-+	for (i = 0; i < data->info.pages; i++)
-+		data->info.func[i] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
-+
-+	return pmbus_do_probe(client, id, &data->info);
-+}
-+
-+static const struct of_device_id adm1266_of_match[] = {
-+	{ .compatible = "adi,adm1266" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, adm1266_of_match);
-+
-+static const struct i2c_device_id adm1266_id[] = {
-+	{ "adm1266", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, adm1266_id);
-+
-+static struct i2c_driver adm1266_driver = {
-+	.driver = {
-+		   .name = "adm1266",
-+		   .of_match_table = adm1266_of_match,
-+		  },
-+	.probe = adm1266_probe,
-+	.remove = pmbus_do_remove,
-+	.id_table = adm1266_id,
-+};
-+
-+module_i2c_driver(adm1266_driver);
-+
-+MODULE_AUTHOR("Alexandru Tachici <alexandru.tachici@analog.com>");
-+MODULE_DESCRIPTION("PMBus driver for Analog Devices ADM1266");
-+MODULE_LICENSE("GPL v2");
--- 
-2.20.1
+If we decide to support the slice control as an array,
+we would have to implement a mechanism to specify the array size,
+which we currently don't have AFAIK.
+
+> > Namely, this text
+> > should be removed:
+> > 
+> >        This structure is expected to be passed as an array, with one
+> >        entry for each slice included in the bitstream buffer.
+> > 
+> > As the API is really not defined that way.
+> > 
+> > I'll remove that on next iteration.
+> 
+> The v4l2_ctrl_h264_slice_params struct has more data than those that
+> are deemed to be the same across all the slices. A remarkable example
+> are the size and start_byte_offset fields.
+
+Not sure how this applies to this discussion.
+
+Thanks!
+Ezequiel
 
