@@ -2,78 +2,115 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4774C43457
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AB1C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8288F20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F2B20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:29:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595860171;
+	bh=nE+iPYVH7YUcPYLNkoCTd+IU2wP0RX1TQuOswIQft7U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HmiRvO5NT79tTJOhjNocuVPsI03OfLJqa9EA31a1MSaqmY56wV1lArYkGuQhXAD8d
+	 r5aPNw05OZIyDaSepSo0IDj2JcYGoJxNPN7iCIDXAqy87nAohncjuXKqxiD90AurQj
+	 3DLz5EAZthYoYl8UEDS0qU6dcGwbx+NswrJjLpsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732068AbgG0OXX (ORCPT
+        id S1732749AbgG0O3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:23:23 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:51904 "EHLO raptor.unsafe.ru"
+        Mon, 27 Jul 2020 10:29:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732044AbgG0OXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:23:19 -0400
-X-Greylist: delayed 454 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Jul 2020 10:23:17 EDT
-Received: from comp-core-i7-2640m-0182e6.redhat.com (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1731491AbgG0OXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:23:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id DD21220A04;
-        Mon, 27 Jul 2020 14:15:41 +0000 (UTC)
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Gladkov <legion@kernel.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH v1 2/2] Show /proc/self/net only for CAP_NET_ADMIN
-Date:   Mon, 27 Jul 2020 16:14:11 +0200
-Message-Id: <20200727141411.203770-3-gladkov.alexey@gmail.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200727141411.203770-1-gladkov.alexey@gmail.com>
-References: <20200727141411.203770-1-gladkov.alexey@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 29D8C2070A;
+        Mon, 27 Jul 2020 14:23:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595859800;
+        bh=nE+iPYVH7YUcPYLNkoCTd+IU2wP0RX1TQuOswIQft7U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CqvrlblXWBXYLRGG3Vhi5S1lnkm3Cfu0WJge2D8t5lTNgzUPX0fCS0QYU/WcEPNV3
+         37cqNQz/NIdN5I0DL5iQ8OUE9VUyPjxQPno7r7Pln1QdkVl+OvpU9ZjdcZPeHcCJEx
+         qqelBi3Knr8mgwau/pvRZ1w75XNNeD4wlVsuY7nM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 110/179] Input: add `SW_MACHINE_COVER`
+Date:   Mon, 27 Jul 2020 16:04:45 +0200
+Message-Id: <20200727134938.013806903@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
+References: <20200727134932.659499757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Mon, 27 Jul 2020 14:15:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Show /proc/self/net only for CAP_NET_ADMIN if procfs is mounted with
-subset=pid option in user namespace. This is done to avoid possible
-information leakage.
+From: Merlijn Wajer <merlijn@wizzup.org>
 
-Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+[ Upstream commit c463bb2a8f8d7d97aa414bf7714fc77e9d3b10df ]
+
+This event code represents the state of a removable cover of a device.
+Value 0 means that the cover is open or removed, value 1 means that the
+cover is closed.
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
+Link: https://lore.kernel.org/r/20200612125402.18393-2-merlijn@wizzup.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/proc_net.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/linux/mod_devicetable.h        | 2 +-
+ include/uapi/linux/input-event-codes.h | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/proc/proc_net.c b/fs/proc/proc_net.c
-index dba63b2429f0..11fa2c4b3529 100644
---- a/fs/proc/proc_net.c
-+++ b/fs/proc/proc_net.c
-@@ -275,6 +275,12 @@ static struct net *get_proc_task_net(struct inode *dir)
- 	struct task_struct *task;
- 	struct nsproxy *ns;
- 	struct net *net = NULL;
-+	struct proc_fs_info *fs_info = proc_sb_info(dir->i_sb);
-+
-+	if ((fs_info->pidonly == PROC_PIDONLY_ON) &&
-+	    (current_user_ns() != &init_user_ns) &&
-+	    !capable(CAP_NET_ADMIN))
-+		return net;
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index 0754b8d71262b..8a84f11bf1246 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -318,7 +318,7 @@ struct pcmcia_device_id {
+ #define INPUT_DEVICE_ID_LED_MAX		0x0f
+ #define INPUT_DEVICE_ID_SND_MAX		0x07
+ #define INPUT_DEVICE_ID_FF_MAX		0x7f
+-#define INPUT_DEVICE_ID_SW_MAX		0x0f
++#define INPUT_DEVICE_ID_SW_MAX		0x10
+ #define INPUT_DEVICE_ID_PROP_MAX	0x1f
  
- 	rcu_read_lock();
- 	task = pid_task(proc_pid(dir), PIDTYPE_PID);
+ #define INPUT_DEVICE_ID_MATCH_BUS	1
+diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+index b6a835d378263..0c2e27d28e0ac 100644
+--- a/include/uapi/linux/input-event-codes.h
++++ b/include/uapi/linux/input-event-codes.h
+@@ -888,7 +888,8 @@
+ #define SW_LINEIN_INSERT	0x0d  /* set = inserted */
+ #define SW_MUTE_DEVICE		0x0e  /* set = device disabled */
+ #define SW_PEN_INSERTED		0x0f  /* set = pen inserted */
+-#define SW_MAX			0x0f
++#define SW_MACHINE_COVER	0x10  /* set = cover closed */
++#define SW_MAX			0x10
+ #define SW_CNT			(SW_MAX+1)
+ 
+ /*
 -- 
-2.25.4
+2.25.1
+
+
 
