@@ -2,106 +2,98 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA9EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B956C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD0F42074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:02:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y3HVXgsR"
+	by mail.kernel.org (Postfix) with ESMTP id 167C72075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:03:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595880213;
+	bh=mXVi6dNmeTTHEGhLpBn9kwB25pFNfvrXx1UPzS1ISEs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=B9wc03ojU4am9o6CyLdf+RNB3TrR28rA0bVQ9k5bo+5ltk5XCQZuSGEgbYrplVf5f
+	 KN9VJRpwcgQX9AvK2i/lbXJ51rLn8c7csKu3fEPmnalzlrMyLepvEzy2keuWiuZxEA
+	 BGRLaBgPI09WRtDVMadu+rcJjSIYe98wIz08Q2do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgG0UCk (ORCPT
+        id S1728917AbgG0UDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:02:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbgG0UCj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:02:39 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCF2AC0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:02:39 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d4so10532773pgk.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:02:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=IXDeKj/8CgvwBowlCvSFrtK4qV4sd1hCGAzTc7QYtD4=;
-        b=Y3HVXgsRYqk2PJIxygUxaAR7AKRLEORJjoG6eXL600/gkGgOi2sSTJ0j0691Qu0VWN
-         JI+1n6sCK5PDGAca2AOtTUa++CMoguByq0quyCD6X7WayrZ8TDfnlWxG/yBUO1UfjdOn
-         j0KYrkKQLQNv6UNdXBXDg2Q293ux5L7n7GxFk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=IXDeKj/8CgvwBowlCvSFrtK4qV4sd1hCGAzTc7QYtD4=;
-        b=rfAJrEPtQRN88iNzl+IfrHD7/jj/nQmh3+AulAbDOJUvozlYuvCmg62+dxs+wsXc3a
-         bFSIJNVjYaZJfrcErfW/s8jNyj4pun796ygU4478owfsXjlCY/16s1wyaTIhN3kiuHHr
-         5cvgII71JDQakBZXz1ZY7tR9y9orFVnT5FbleDwDfSbGMJ3hcNrv9tT3yCV/QSyK7aJF
-         8YaNXOOxK6WUA062hhU4LoxE/pI74dCl8ud52vrAo5i8/PsHmhF5QVrrjdKFVyFu0IHP
-         IpVVuwt1QDuAtnNh0XvlGLg4s2KWwplX3AobxurTWVnQLhqCwQNc2U/81rONygI6CPPs
-         Xj9Q==
-X-Gm-Message-State: AOAM5305s4tiZmE9kunzrzcdt+CCFEHkOST9C1LlqRj44xEXFgHL/mC7
-        PJN6vjtqhE7Km3ogyjV0TgyC9ahR+yw=
-X-Google-Smtp-Source: ABdhPJwoSS7iWNG6ib5qqh9HziwtyhV7QAHABX4BFAetR8LGWSTIw5v3Xyvkxa2lVfZQgeiGcZV5nw==
-X-Received: by 2002:a63:e24a:: with SMTP id y10mr19769530pgj.1.1595880159038;
-        Mon, 27 Jul 2020 13:02:39 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id 21sm15629639pfu.124.2020.07.27.13.02.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 13:02:38 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 27 Jul 2020 16:03:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726451AbgG0UDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 16:03:30 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64C162072E;
+        Mon, 27 Jul 2020 20:03:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595880210;
+        bh=mXVi6dNmeTTHEGhLpBn9kwB25pFNfvrXx1UPzS1ISEs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=u5zsRUdq8hH6l+EscwKa4buoH5QG+mDT1k8i/sGMnD7kku/kLDrEXtG6bY8kaKuK0
+         5qtsMZ/zdjsmrPvu5ldzw5E4+62aa50oPpaun70v/58lftuGVWBgDuZRto8+1DCivB
+         j+0xpCAIvPKLDfeWaCgdy+P+heTw9N9yYNtGc2L0=
+Date:   Mon, 27 Jul 2020 15:09:22 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] clk: imx: Use fallthrough pseudo-keyword
+Message-ID: <20200727200922.GA2326@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200726125636.3aa003ad@archlinux>
-References: <20200724213329.899216-1-swboyd@chromium.org> <20200726125636.3aa003ad@archlinux>
-Subject: Re: [PATCH 0/3] Some sx9310 iio driver updates
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Campello <campello@chromium.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Date:   Mon, 27 Jul 2020 13:02:37 -0700
-Message-ID: <159588015706.1360974.7201974727081274212@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jonathan Cameron (2020-07-26 04:56:36)
-> On Fri, 24 Jul 2020 14:33:24 -0700
-> Stephen Boyd <swboyd@chromium.org> wrote:
->=20
-> > These patches are only related because I'm looking at this driver. The
-> > first one resends the DT binding for the driver that was merged in
-> > v5.8-rc1 with a small change to update for proper regulators. The second
-> > patch fixes a few printks that are missing newlines and should be
-> > totally non-trivial to apply. The third patch changes whoami to unsigned
-> > to avoid confusing. The fourth patch drops channel_users because it's
-> > unused. The final patch adds support to enable the svdd and vdd supplies
-> > so that this driver can work on a board I have where the svdd supply
-> > isn't enabled at boot and needs to be turned on before this driver
-> > starts to communicate with the chip.
-> Hi Stephen,
->=20
-> I clearly made a mess of picking this driver up in the first place.
->=20
-> Anyhow, we now have two series in flight for the driver that, whilst
-> mostly independent (I think) will result in at least some fuzz.
-> If possible could you work with Daniel to send me one single series
-> with all the changes?
->=20
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1].
 
-Sure. No problem for me to work with Daniel. Thanks.
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/clk/imx/clk-pllv3.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/imx/clk-pllv3.c b/drivers/clk/imx/clk-pllv3.c
+index a7db93030e02..b20cdea3e9cc 100644
+--- a/drivers/clk/imx/clk-pllv3.c
++++ b/drivers/clk/imx/clk-pllv3.c
+@@ -433,7 +433,7 @@ struct clk_hw *imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
+ 		break;
+ 	case IMX_PLLV3_USB_VF610:
+ 		pll->div_shift = 1;
+-		/* fall through */
++		fallthrough;
+ 	case IMX_PLLV3_USB:
+ 		ops = &clk_pllv3_ops;
+ 		pll->powerup_set = true;
+@@ -441,7 +441,7 @@ struct clk_hw *imx_clk_hw_pllv3(enum imx_pllv3_type type, const char *name,
+ 	case IMX_PLLV3_AV_IMX7:
+ 		pll->num_offset = PLL_IMX7_NUM_OFFSET;
+ 		pll->denom_offset = PLL_IMX7_DENOM_OFFSET;
+-		/* fall through */
++		fallthrough;
+ 	case IMX_PLLV3_AV:
+ 		ops = &clk_pllv3_av_ops;
+ 		break;
+-- 
+2.27.0
+
