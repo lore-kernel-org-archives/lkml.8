@@ -2,116 +2,188 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C322AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A00D720759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFF920759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:29:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBMPjRAh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bNB8QPZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgG0K1u (ORCPT
+        id S1728021AbgG0K36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:27:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbgG0K1t (ORCPT
+        Mon, 27 Jul 2020 06:29:58 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:61323 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726701AbgG0K36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:27:49 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AC59C061794;
-        Mon, 27 Jul 2020 03:27:49 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t6so7789034plo.3;
-        Mon, 27 Jul 2020 03:27:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MfnAXIeR1KafYrufEJLqv/puSReDeQoJLVmC/MZWqGI=;
-        b=cBMPjRAhkvB1/gbD27+X++2U5e9tuVr2DvEmEMsdVWx+9ZPD7HRqswj0n48/wZE7Bx
-         /MIRkFKMsljFs/1/zplVRkxpBvwpVlgVh7Qok+iAnPdpCKxTXLBSh93y/frRqzaZlBms
-         ZAMrf6lNd04WR2kl9wvoJVZuRojPssXADz4eEPnPuGTOVWqSqBt2e+HwTGrCWTwuaj11
-         ZD0MW6hIf4M7FEk1VY9Z7qq5AK0GBiR19ZtfcPG9YdoKgfJtoz9IxJNxc21xRQYxPm/K
-         nlitfpaIwDsftdfnHXB51XPmXCat39CiviSqjUkXXdOtE/Qwn+wQTX+IsD8lKFerh0LX
-         rb0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MfnAXIeR1KafYrufEJLqv/puSReDeQoJLVmC/MZWqGI=;
-        b=CPUdDeoqar7y6UMsEcvDu8l3Nk2ML6zlm9vY4be05lJPzvLTz8DYWzMLu8J4zTjkBD
-         2uYGnxNhPPLt9RRuMDqrmd9HaAkzccKjl3qgi8wyoLP0mh34+246d3yn5evZEnQQQWRC
-         Hk3CaPsRYXahXcGcqnAFKRl+YOIfrfkhfDe/mBgP6ynt+t8qvTV7AYA5Ii7enXlRctU3
-         iy6FHLBmU4udOp0wqGiVbDmVXl4Pm2/jNEC9r93oyJ0OsgetY+glQNSijw/v0GVAAryO
-         ct8nYUlbAn6Rpj9su2Yk4TFZ1zy6grIPDeSUI/VczWP92vi0pRopBFSdeqAc6mHNoiO+
-         2AuQ==
-X-Gm-Message-State: AOAM530s4NvqR9RB6UkILoQCQk7B/vcQhoXDcQbL4X+lL3fbgCZfH3RB
-        fsSVSAfSvme1jIY1g+SCYZ6PEllxNL/Ef3eDlcM=
-X-Google-Smtp-Source: ABdhPJxEHPFoGSoZxU9r1b2GjJ1IWxHQsitK6DAhl4vZAYD76oQq7AHniHMA/DHdJb4mBAanhYP8ZH93gI5OO/jHCCs=
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr15807500pjp.228.1595845669025;
- Mon, 27 Jul 2020 03:27:49 -0700 (PDT)
+        Mon, 27 Jul 2020 06:29:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1595845797; x=1627381797;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=SuaWi4FTxbOTrEcgWevsnR8S8cQMlrxxVNKNOCQhSZo=;
+  b=bNB8QPZzD6zEKDeiRXX0tjg81G/JzpsVQInqnEP9Y80xL3w4kuxllpvm
+   cAzLH3k05ilofyv88Uo162ihERTm+THCqotJzuYcvLWkROx19BqqTSQ8s
+   Bqs3reUmiBRcoTx4VwxcrnC8odn64x8JLPu1Ez5rSfXGgtwVqSBOvQZNV
+   D3ejGlKa9PnlGU1dvTzSl/5WYfg8tvvK8wo3ibWCj3ShVAVU0L51Ew9gr
+   VeQQOhmQG69TqgVNN55n6rwDZPleyilkJ4vQOc9PpfY6zVb9pbhqst6fn
+   cnL6SKDvU2vFMxUsNHKKmcGvD5GGwRmxvjWJDSy+uXHfv/w41nlonYRmD
+   Q==;
+IronPort-SDR: OaYGCwf7gPUIibsrB0X04TK4Fbb+JcZA3AsAvOyyjYuuRf30ux71aCwdgpjaXTh7WnAw5T9Lr/
+ sXZHA4BZA3xsnKC3FrALgcAvjl6ug4VwDJvXP9jRLG+mLBgWqfPtSB/fpLC3gDufvglDxlA2Ny
+ rcqfPz/ZcQs+JciDcVjQI4dPbGA4VwQWfhQvo1Qvnoc0E+p4u0E7usD+iFZi4QlURTXWyxVQM8
+ eK8miRcun8QdOV3EWK48Z5IhDN+GKx4AevSlsr+VJ2UPMvOjQyEN8rc0aSnOW1Dt1TQa1Yb1C1
+ pO4=
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="89224922"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jul 2020 03:29:57 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 27 Jul 2020 03:29:56 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Mon, 27 Jul 2020 03:29:08 -0700
+References: <20200727084211.6632-1-lars.povlsen@microchip.com> <20200727095009.GK4073@piout.net>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        SoC Team <soc@kernel.org>, "Arnd Bergmann" <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 00/10] Adding support for Microchip Sparx5 SoC
+In-Reply-To: <20200727095009.GK4073@piout.net>
+Date:   Mon, 27 Jul 2020 12:29:52 +0200
+Message-ID: <87v9i9fdy7.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-References: <20200719002903.20469-1-rdunlap@infradead.org> <c76c51bfa78316caaf8201a63ac200fa373ae3ae.camel@linux.intel.com>
-In-Reply-To: <c76c51bfa78316caaf8201a63ac200fa373ae3ae.camel@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Jul 2020 13:27:34 +0300
-Message-ID: <CAHp75VeugozEiOMg1VeWegrP1m0VU5xKfxEj6gJPQbnuYh5zCw@mail.gmail.com>
-Subject: Re: [PATCH] isst: isst_if.h: drop a duplicated word
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 6:10 PM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
+
+Alexandre Belloni writes:
+
+> Hi Lars,
 >
-> On Sat, 2020-07-18 at 17:29 -0700, Randy Dunlap wrote:
-> > Drop the repeated word "for" in a comment.
-> >
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> > Cc: platform-driver-x86@vger.kernel.org
-> > Cc: Darren Hart <dvhart@infradead.org>
-> > Cc: Andy Shevchenko <andy@infradead.org>
-> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> As Arnd stated, he already applied the patches so you have to send an
+> incremental patch to fix the clock driver.
 >
 
-Pushed to my review and testing queue, thanks!
+I actually wrote Arnd about this specifically, and he replied that a
+patch against either next or mainline was fine - so that's why I
+refreshed the lot (Including Reviewed-by: headers).
 
-> > ---
-> > This description could still use some better wording.
->
-> I will fix the wording in a follow up patch.
->
-> >  include/uapi/linux/isst_if.h |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > --- linux-next-20200717.orig/include/uapi/linux/isst_if.h
-> > +++ linux-next-20200717/include/uapi/linux/isst_if.h
-> > @@ -69,7 +69,7 @@ struct isst_if_cpu_maps {
-> >   * @logical_cpu:     Logical CPU number to get target PCI device.
-> >   * @reg:             PUNIT register offset
-> >   * @value:           For write operation value to write and for
-> > - *                   for read placeholder read value
-> > + *                   read placeholder read value
-> >   *
-> >   * Structure to specify read/write data to PUNIT registers.
-> >   */
->
+But I will send an incremental patch just in case, no problem.
 
+---Lars
+
+
+> On 27/07/2020 10:42:01+0200, Lars Povlsen wrote:
+>> This patch series adds support for Microchip Sparx5 SoC, the CPU
+>> system of a advanced, TSN capable gigabit switch. The CPU is an armv8
+>> x 2 CPU core (A53).
+>>
+>> Although this is an ARM core, it shares some peripherals with the
+>> Microsemi Ocelot MIPS SoC.
+>>
+>> NB: This version *only* updates the drivers/clk/clk-sparx5.c driver
+>>
+>> Changes in v4:
+>> - Updates to the clock driver per Stephen Boyd <sboyd@kernel.org>
+>>  - Remove unused include of of_address.h
+>>  - Remove unused member in s5_hw_clk struct
+>>  - Changed type (to unsigned long) for freq in s5_pll_conf struct
+>>  - Use .parent_data instead of looking up parent name
+>>  - Use devm_of_clk_add_hw_provider
+>>  - Some minor comsmetics
+>>
+>> Changes in v3:
+>> - a "gpio-restart" node has been added to the pcb134/pcb135 DT files.
+>> - pinctrl-ocelot.c: ENOTSUPP replaced by EOPNOTSUPP. Fixed non-static
+>>   ocelot_pinconf_set(), Fixed ocelot_hw_get_value() not returning proper
+>>   read value.
+>> - Rebased on v5.8-rc1
+>>
+>> Changes in v2:
+>> - Misc fixes to bindings/arm/microchip,sparx5.yaml
+>> - Changed clock driver to platform driver, using bitfields, recalc
+>>   properly implented, using proper clock parent.
+>> - arch/arm64/boot/dts/microchip/sparx5.dtsi:
+>>  - Added pmu and psci node, using PSCI
+>>  - Updates to GICv3 register spaces (GICV/GICH)
+>>  - Updated timer interrupt specifiers
+>> - pinctrl: ocelot: Fixed symbol clashes from powerpc
+>>
+>> Lars Povlsen (10):
+>>   dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
+>>   arm64: sparx5: Add support for Microchip 2xA53 SoC
+>>   arm64: dts: sparx5: Add basic cpu support
+>>   arm64: dts: sparx5: Add pinctrl support
+>>   pinctrl: ocelot: Add Sparx5 SoC support
+>>   dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
+>>   dt-bindings: clock: sparx5: Add bindings include file
+>>   clk: sparx5: Add Sparx5 SoC DPLL clock driver
+>>   arm64: dts: sparx5: Add Sparx5 SoC DPLL clock
+>>   arm64: dts: sparx5: Add i2c devices, i2c muxes
+>>
+>>  .../bindings/arm/microchip,sparx5.yaml        |  65 +++
+>>  .../bindings/clock/microchip,sparx5-dpll.yaml |  52 +++
+>>  .../devicetree/bindings/mfd/syscon.yaml       |   1 +
+>>  MAINTAINERS                                   |   9 +
+>>  arch/arm64/Kconfig.platforms                  |  14 +
+>>  arch/arm64/boot/dts/Makefile                  |   1 +
+>>  arch/arm64/boot/dts/microchip/Makefile        |   4 +
+>>  arch/arm64/boot/dts/microchip/sparx5.dtsi     | 213 +++++++++
+>>  .../boot/dts/microchip/sparx5_pcb125.dts      |  21 +
+>>  .../boot/dts/microchip/sparx5_pcb134.dts      |  17 +
+>>  .../dts/microchip/sparx5_pcb134_board.dtsi    | 252 ++++++++++
+>>  .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  17 +
+>>  .../boot/dts/microchip/sparx5_pcb135.dts      |  17 +
+>>  .../dts/microchip/sparx5_pcb135_board.dtsi    |  92 ++++
+>>  .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  17 +
+>>  .../boot/dts/microchip/sparx5_pcb_common.dtsi |  19 +
+>>  drivers/clk/Makefile                          |   1 +
+>>  drivers/clk/clk-sparx5.c                      | 295 ++++++++++++
+>>  drivers/pinctrl/pinctrl-ocelot.c              | 430 +++++++++++++++++-
+>>  include/dt-bindings/clock/microchip,sparx5.h  |  23 +
+>>  20 files changed, 1559 insertions(+), 1 deletion(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+>>  create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+>>  create mode 100644 arch/arm64/boot/dts/microchip/Makefile
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5.dtsi
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
+>>  create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
+>>  create mode 100644 drivers/clk/clk-sparx5.c
+>>  create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
+>>
+>> --
+>> 2.27.0
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Lars Povlsen,
+Microchip
