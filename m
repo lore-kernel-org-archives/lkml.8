@@ -2,84 +2,80 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AC6C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC842C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FEFF207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC902073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595877161;
+	bh=iDjuqni09Ye+Y5tnBznZ5YEHc2O13s9uN4udYT6xhSg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l8qOjWRyIOrIXgPj5CQl8pfpsT2fVWakGlIB4hIL2LRvRK++Jb6IqUE85kXZnVV0b
+	 xx8xN9B/uKEYrEyS0FEmSJhpYZQXF+Ou6VO4bFUkJICzQErjpTPEB3k/vkjnHLW7tn
+	 TKgXXmRifg4W0Ko4pwqNSWl5+vcjgQE4jcOMQfFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgG0TKk (ORCPT
+        id S1728491AbgG0TMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:10:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55564 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 15:12:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728387AbgG0TKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:10:38 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1728343AbgG0TMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 15:12:40 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EC06207FC;
-        Mon, 27 Jul 2020 19:10:36 +0000 (UTC)
-Date:   Mon, 27 Jul 2020 15:10:33 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Daniel Wagner <dwagner@suse.de>
-Cc:     Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Pavel Machek <pavel@denx.de>,
-        Joe Korty <joe.korty@concurrent-rt.com>
-Subject: Re: [ANNOUNCE] v4.4.231-rt202
-Message-ID: <20200727151033.7c37df2b@oasis.local.home>
-In-Reply-To: <3732c1c4-36d4-2cdc-677a-cb58a9507df1@suse.de>
-References: <159559806551.29587.13643956941367278015@beryllium>
-        <3732c1c4-36d4-2cdc-677a-cb58a9507df1@suse.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id C24C520719;
+        Mon, 27 Jul 2020 19:12:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595877160;
+        bh=iDjuqni09Ye+Y5tnBznZ5YEHc2O13s9uN4udYT6xhSg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZbgCyEDCCb9e28CEWIs4zRb4ylp5tXAupnlxiuhkXb7GspPsQvYAzWADUqm5idmbp
+         W2kek20eQJMvggBOY7o0OMkIakJOOY8j9ATva8TRjGuJOByzP1YDl86skpoJBjb1ba
+         kbJgg10ZmpQCq/HNvMUXyz69h/3my82xjPz0H82U=
+Date:   Mon, 27 Jul 2020 15:12:38 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: Re: [PATCH 5.7 024/179] dm mpath: pass IO start time to path selector
+Message-ID: <20200727191238.GH406581@sasha-vm>
+References: <20200727134932.659499757@linuxfoundation.org>
+ <20200727134933.846667790@linuxfoundation.org>
+ <87sgdcuda6.fsf@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <87sgdcuda6.fsf@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 26 Jul 2020 13:55:12 +0200
-Daniel Wagner <dwagner@suse.de> wrote:
+On Mon, Jul 27, 2020 at 12:35:13PM -0400, Gabriel Krisman Bertazi wrote:
+>Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>
+>> From: Gabriel Krisman Bertazi <krisman@collabora.com>
+>>
+>> [ Upstream commit 087615bf3acdafd0ba7c7c9ed5286e7b7c80fe1b ]
+>>
+>> The HST path selector needs this information to perform path
+>> prediction. For request-based mpath, struct request's io_start_time_ns
+>> is used, while for bio-based, use the start_time stored in dm_io.
+>
+>Hi Greg,
+>
+>This patch is not -stable material.  It is only needed for a new feature
+>merged in 5.8.
 
-> Hi,
-> 
-> On 24.07.20 15:41, Daniel Wagner wrote:
-> > Known issues:
-> > 
-> >     sigwaittest with hackbench as workload is able to trigger a crash on x86_64,
-> >     the same as reported for the v4.4.220-rt196 release. As it turns
-> >     out it was not triggered by BPF.
-> >     https://paste.opensuse.org/view/raw/58939248  
-> 
-> Joe pointed out [1] that v4.4-rt is missing 9567db2ebe56 ("signal: 
-> Prevent double-free of user struct") from devel-rt. With this
-> patch all my tests pass.
-> 
-> @stable-rt team: Can you please add it to the missing trees?
+I've dropped it, thank you!
 
-Good catch,
-
-I'll pull this in on Friday.
-
--- Steve
-
-> 
-> Thanks,
-> Daniel
-> 
-> [1] 
-> https://lore.kernel.org/linux-rt-users/20200626130544.GA37967@zipoli.concurrent-rt.com/
-
+-- 
+Thanks,
+Sasha
