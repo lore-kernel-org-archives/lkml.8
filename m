@@ -2,53 +2,51 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A2AC433F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C2BC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDFD20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F372078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859253;
-	bh=Yl21JdGd0aDIm44jfQ3dqKB33jyFSYMfu+vyS93JraU=;
+	s=default; t=1595859256;
+	bh=qCDLhlhkFegasnlzwVfmv02VbyBzY+ZJq3EAce/cSaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P9IADJeurT6AXn2KLf/M6SEsMeFqI3tOab3qB7bLQoR/eAC+lyyDNb9OF1M907Ij8
-	 Z+6BEPbCk0Cskm5GcoJffSwu7/x76b02ul0nA5I5HUp7fbhEbHacZZGIffZKUEuFvf
-	 00qqOKvMPwh9d7zthORSLzYU1jTe3sebLv9xvePw=
+	b=nWT/wrRBozlvKIEEqebTcd4kr66yA/Katd6LeNNz/87DufuIDtqMPqj6Hg25pYMUk
+	 /eix9DlGq0N5R1XQKhgWh7Gvu5ADH0PbZiJvng3Gc2BmAIDJcv2zsfVFvF/S5FUEGJ
+	 WYNioMGBpBJvPrWTsHJlR/VVhgHgf3UaqQvAaiHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730492AbgG0OOL (ORCPT
+        id S1730483AbgG0OOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:14:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39428 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:14:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730475AbgG0OOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:14:06 -0400
+        id S1730490AbgG0OOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:14:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D50521775;
-        Mon, 27 Jul 2020 14:14:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81E962078E;
+        Mon, 27 Jul 2020 14:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859245;
-        bh=Yl21JdGd0aDIm44jfQ3dqKB33jyFSYMfu+vyS93JraU=;
+        s=default; t=1595859251;
+        bh=qCDLhlhkFegasnlzwVfmv02VbyBzY+ZJq3EAce/cSaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ppIWVKdtYW6iF/jXNpXM9EzvXFDLfFT/kCASRWWIfaBciV0x0PRBWsxXaLBEH7yS5
-         UOLvQaNAYz1qwuih3tl7ky8CFaMiFQKNTExETFafawuWjyW6EmYHSiLQLQCxv5tEYV
-         k43xc2Xgzbid3AG2wAZx9u4aNPSv9Ni65FdKNJGY=
+        b=VSQqyDjyku8QDRDbx+V0qsQftUJnL1UaGPBBdgfvTxv7voHT/1ixgCoN0VA14LsG9
+         XOG/WFMyUiJtkRvWxdZGoM5ow2bc7bS7fnwI3Mw8voCzsSH3GsfP2qgfyIF3wLTSGo
+         6JCoH+Q8BUrpyRoTEIe/DauTI33BQ1Sff8l7I1rc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Bottomley <jejb@linux.ibm.com>,
-        Tom Rix <trix@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 006/138] scsi: scsi_transport_spi: Fix function pointer check
-Date:   Mon, 27 Jul 2020 16:03:21 +0200
-Message-Id: <20200727134925.560479721@linuxfoundation.org>
+        stable@vger.kernel.org, Boris Burkov <boris@bur.io>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 034/138] btrfs: fix mount failure caused by race with umount
+Date:   Mon, 27 Jul 2020 16:03:49 +0200
+Message-Id: <20200727134927.080881996@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -61,50 +59,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Boris Burkov <boris@bur.io>
 
-[ Upstream commit 5aee52c44d9170591df65fafa1cd408acc1225ce ]
+commit 48cfa61b58a1fee0bc49eef04f8ccf31493b7cdd upstream.
 
-clang static analysis flags several null function pointer problems.
+It is possible to cause a btrfs mount to fail by racing it with a slow
+umount. The crux of the sequence is generic_shutdown_super not yet
+calling sop->put_super before btrfs_mount_root calls btrfs_open_devices.
+If that occurs, btrfs_open_devices will decide the opened counter is
+non-zero, increment it, and skip resetting fs_devices->total_rw_bytes to
+0. From here, mount will call sget which will result in grab_super
+trying to take the super block umount semaphore. That semaphore will be
+held by the slow umount, so mount will block. Before up-ing the
+semaphore, umount will delete the super block, resulting in mount's sget
+reliably allocating a new one, which causes the mount path to dutifully
+fill it out, and increment total_rw_bytes a second time, which causes
+the mount to fail, as we see double the expected bytes.
 
-drivers/scsi/scsi_transport_spi.c:374:1: warning: Called function pointer is null (null dereference) [core.CallAndMessage]
-spi_transport_max_attr(offset, "%d\n");
-^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Here is the sequence laid out in greater detail:
 
-Reviewing the store_spi_store_max macro
+CPU0                                                    CPU1
+down_write sb->s_umount
+btrfs_kill_super
+  kill_anon_super(sb)
+    generic_shutdown_super(sb);
+      shrink_dcache_for_umount(sb);
+      sync_filesystem(sb);
+      evict_inodes(sb); // SLOW
 
-	if (i->f->set_##field)
-		return -EINVAL;
+                                              btrfs_mount_root
+                                                btrfs_scan_one_device
+                                                fs_devices = device->fs_devices
+                                                fs_info->fs_devices = fs_devices
+                                                // fs_devices-opened makes this a no-op
+                                                btrfs_open_devices(fs_devices, mode, fs_type)
+                                                s = sget(fs_type, test, set, flags, fs_info);
+                                                  find sb in s_instances
+                                                  grab_super(sb);
+                                                    down_write(&s->s_umount); // blocks
 
-should be
+      sop->put_super(sb)
+        // sb->fs_devices->opened == 2; no-op
+      spin_lock(&sb_lock);
+      hlist_del_init(&sb->s_instances);
+      spin_unlock(&sb_lock);
+      up_write(&sb->s_umount);
+                                                    return 0;
+                                                  retry lookup
+                                                  don't find sb in s_instances (deleted by CPU0)
+                                                  s = alloc_super
+                                                  return s;
+                                                btrfs_fill_super(s, fs_devices, data)
+                                                  open_ctree // fs_devices total_rw_bytes improperly set!
+                                                    btrfs_read_chunk_tree
+                                                      read_one_dev // increment total_rw_bytes again!!
+                                                      super_total_bytes < fs_devices->total_rw_bytes // ERROR!!!
 
-	if (!i->f->set_##field)
-		return -EINVAL;
+To fix this, we clear total_rw_bytes from within btrfs_read_chunk_tree
+before the calls to read_one_dev, while holding the sb umount semaphore
+and the uuid mutex.
 
-Link: https://lore.kernel.org/r/20200627133242.21618-1-trix@redhat.com
-Reviewed-by: James Bottomley <jejb@linux.ibm.com>
-Signed-off-by: Tom Rix <trix@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+To reproduce, it is sufficient to dirty a decent number of inodes, then
+quickly umount and mount.
+
+  for i in $(seq 0 500)
+  do
+    dd if=/dev/zero of="/mnt/foo/$i" bs=1M count=1
+  done
+  umount /mnt/foo&
+  mount /mnt/foo
+
+does the trick for me.
+
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Boris Burkov <boris@bur.io>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/scsi_transport_spi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/volumes.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/scsi/scsi_transport_spi.c b/drivers/scsi/scsi_transport_spi.c
-index f8661062ef954..f3d5b1bbd5aa7 100644
---- a/drivers/scsi/scsi_transport_spi.c
-+++ b/drivers/scsi/scsi_transport_spi.c
-@@ -339,7 +339,7 @@ store_spi_transport_##field(struct device *dev, 			\
- 	struct spi_transport_attrs *tp					\
- 		= (struct spi_transport_attrs *)&starget->starget_data;	\
- 									\
--	if (i->f->set_##field)						\
-+	if (!i->f->set_##field)						\
- 		return -EINVAL;						\
- 	val = simple_strtoul(buf, NULL, 0);				\
- 	if (val > tp->max_##field)					\
--- 
-2.25.1
-
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -7270,6 +7270,14 @@ int btrfs_read_chunk_tree(struct btrfs_f
+ 	mutex_lock(&fs_info->chunk_mutex);
+ 
+ 	/*
++	 * It is possible for mount and umount to race in such a way that
++	 * we execute this code path, but open_fs_devices failed to clear
++	 * total_rw_bytes. We certainly want it cleared before reading the
++	 * device items, so clear it here.
++	 */
++	fs_info->fs_devices->total_rw_bytes = 0;
++
++	/*
+ 	 * Read all device items, and then all the chunk items. All
+ 	 * device items are found before any chunk item (their object id
+ 	 * is smaller than the lowest possible object id for a chunk
 
 
