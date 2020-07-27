@@ -2,120 +2,72 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=BAYES_00,
+	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96765C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8D1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7513C208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:39:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SA5Stpoz"
+	by mail.kernel.org (Postfix) with ESMTP id 42BA62083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgG0Nj4 (ORCPT
+        id S1729097AbgG0NkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:39:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20116 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729005AbgG0Njx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:39:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595857191;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a7lelb29LZtnN6arofL4WhBUdYv4sKzBvkIAGtgybEM=;
-        b=SA5StpozZrKOxF4usNp6bOZkfjGW9ffvIhezH0Idth5+/HHYENp/k+FbASvV9bkK6yIKL0
-        wjjUvN/B0+QDU0V6v868nTdWeKJOYMYcEs6rBxEo4RGtoDatZzlOXr24d4bsx8ZdXN6XZW
-        SQXvslZimv5FuG37b0qETZmQ/VL/BtY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-248-53Ab_tjPNxOoOCq2Wm5IDA-1; Mon, 27 Jul 2020 09:39:49 -0400
-X-MC-Unique: 53Ab_tjPNxOoOCq2Wm5IDA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5F49106B242;
-        Mon, 27 Jul 2020 13:39:48 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 872F65DA33;
-        Mon, 27 Jul 2020 13:39:42 +0000 (UTC)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     vkuznets@redhat.com, aaronlewis@google.com
-Subject: [PATCH 3/3] KVM: nVMX: check for invalid hdr.vmx.flags
-Date:   Mon, 27 Jul 2020 09:39:34 -0400
-Message-Id: <20200727133934.25482-4-pbonzini@redhat.com>
-In-Reply-To: <20200727133934.25482-1-pbonzini@redhat.com>
-References: <20200727133934.25482-1-pbonzini@redhat.com>
+        Mon, 27 Jul 2020 09:40:12 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:44906 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728314AbgG0NkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 09:40:10 -0400
+Received: from dggemi403-hub.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 6C8E8FA6F30BD7BEA73B;
+        Mon, 27 Jul 2020 21:40:09 +0800 (CST)
+Received: from DGGEMI526-MBX.china.huawei.com ([169.254.8.132]) by
+ dggemi403-hub.china.huawei.com ([10.3.17.136]) with mapi id 14.03.0487.000;
+ Mon, 27 Jul 2020 21:40:03 +0800
+From:   "Fangxiuning (Jack, EulerOS)" <fangxiuning@huawei.com>
+To:     jingrui <jingrui@huawei.com>, Michal Hocko <mhocko@kernel.org>
+CC:     "tj@kernel.org" <tj@kernel.org>, Lizefan <lizefan@huawei.com>,
+        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        caihaomin <caihaomin@huawei.com>,
+        "Weiwei (N)" <wick.wei@huawei.com>
+Subject: =?gb2312?B?tPC4tDogtPC4tDogUFJPQkxFTTogY2dyb3VwIGNvc3QgdG9vIG11Y2ggbWVt?=
+ =?gb2312?Q?ory_when_transfer_small_files_to_tmpfs?=
+Thread-Topic: =?gb2312?B?tPC4tDogUFJPQkxFTTogY2dyb3VwIGNvc3QgdG9vIG11Y2ggbWVtb3J5IHdo?=
+ =?gb2312?Q?en_transfer_small_files_to_tmpfs?=
+Thread-Index: AdZfPbaDbBlN0uuzRT+WBs1zGYD4fAAETDVgAH9ylAAAE+ehUP//nlQA//tVE3D/9fVQYA==
+Date:   Mon, 27 Jul 2020 13:40:02 +0000
+Message-ID: <E76E3B653DA8834F9E97D3B9694D2E5B816B7C@DGGEMI526-MBX.china.huawei.com>
+References: <2E04DD7753BE0E4ABABF0B664610AD6F2620CAF7@dggeml528-mbx.china.huawei.com>
+ <20200724075508.GF4061@dhcp22.suse.cz>
+ <2E04DD7753BE0E4ABABF0B664610AD6F2620D4F6@dggeml528-mbx.china.huawei.com>
+ <20200724113530.GH4061@dhcp22.suse.cz>
+ <2E04DD7753BE0E4ABABF0B664610AD6F2621907D@dggeml508-mbx.china.huawei.com>
+In-Reply-To: <2E04DD7753BE0E4ABABF0B664610AD6F2621907D@dggeml508-mbx.china.huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.174.179.95]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hdr.vmx.flags is meant for future extensions to the ABI, rejecting
-invalid flags is necessary to avoid broken half-loads of the
-nVMX state.
-
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/nested.c                           |  3 +++
- .../kvm/x86_64/vmx_set_nested_state_test.c          | 13 +++++++++++++
- 2 files changed, 16 insertions(+)
-
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 6a0e32a7418c..11e4df560018 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -6079,6 +6079,9 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
- 	    ~(KVM_STATE_NESTED_SMM_GUEST_MODE | KVM_STATE_NESTED_SMM_VMXON))
- 		return -EINVAL;
- 
-+	if (kvm_state->hdr.vmx.flags & ~KVM_STATE_VMX_PREEMPTION_TIMER_DEADLINE)
-+		return -EINVAL;
-+
- 	/*
- 	 * SMM temporarily disables VMX, so we cannot be in guest mode,
- 	 * nor can VMLAUNCH/VMRESUME be pending.  Outside SMM, SMM flags
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-index 94f28a657569..d59f3eb67c8f 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-@@ -146,6 +146,11 @@ void test_vmx_nested_state(struct kvm_vm *vm)
- 	state->hdr.vmx.smm.flags = 1;
- 	test_nested_state_expect_einval(vm, state);
- 
-+	/* Invalid flags are rejected. */
-+	set_default_vmx_state(state, state_sz);
-+	state->hdr.vmx.flags = ~0;
-+	test_nested_state_expect_einval(vm, state);
-+
- 	/* It is invalid to have vmxon_pa == -1ull and vmcs_pa != -1ull. */
- 	set_default_vmx_state(state, state_sz);
- 	state->hdr.vmx.vmxon_pa = -1ull;
-@@ -206,6 +211,14 @@ void test_vmx_nested_state(struct kvm_vm *vm)
- 	state->flags = 0;
- 	test_nested_state(vm, state);
- 
-+	/* Invalid flags are rejected, even if no VMCS loaded. */
-+	set_default_vmx_state(state, state_sz);
-+	state->size = sizeof(*state);
-+	state->flags = 0;
-+	state->hdr.vmx.vmcs12_pa = -1;
-+	state->hdr.vmx.flags = ~0;
-+	test_nested_state_expect_einval(vm, state);
-+
- 	/* vmxon_pa cannot be the same address as vmcs_pa. */
- 	set_default_vmx_state(state, state_sz);
- 	state->hdr.vmx.vmxon_pa = 0;
--- 
-2.26.2
-
+QFhpdW5pbmcgV291bGQgeW91IHBsZWFzZSB0YWtlIGEgbG9vayBhbmQgZ2l2ZSBzb21lIHN1Z2dl
+c3Rpb24/DQpJIGRvbid0IHN1Z2dlc3QgdGhpcyBzb2x1dGlvbiBmb3IgdXNpbmcgaW4gbG9uZyB0
+ZXJtIHdoaWNoIHNraXAgY2FsbCBwYW0tc3lzdGVtZC5zbyB0byBmaXggdGhpcyBpc3N1ZSwgU2Z0
+cCBzZW5kcyBmaWxlcyBhbmQgY2FsbCBwYW0tc3lzdGVtZC5zbyB0byBjcmVhdGUgc2Vzc2lvbiB3
+aGljaCBtYW5hZ2UgcmVzb3VyY2VzIG1vcmUgcmVhc29uYWJsZSwgdGhpcyBpcyBldm9sdXRpb24g
+ZGlyZWN0aW9uIG9mIHN5c3RlbWQgdXBzdHJlYW0uIFN5c3RlbWQgZG9uJ3QgaGF2ZSBiZXR0ZXIg
+c29sdXRpb24gYW5kIEtlcm5lbCBjZ3JvdXAgbWF5YmUgZ2l2ZSBhIGJldHRlciBvbmUgZm9yIHRo
+aXMgaXNzdWUuDQoNCg==
