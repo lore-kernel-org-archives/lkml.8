@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E11C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD108C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1E520FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6AF620775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859722;
-	bh=ahte494R7mAucQiPHBCE15donQWdWRi9rtiAC5TFAFw=;
+	s=default; t=1595859731;
+	bh=UB1WFAH0LsvRP3pR4wMVX8K7pSEkfAz9uaGlQBD04b8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UYFjUfgxRLev0+7YW1lmLmk1ZL7LoH463EoyPUFuT5W2dMgC4gsyFfGcUUsTI4jEn
-	 rj394VnASQmiA6eVyt6+oAJidKGAikSLg2SMaabApENiS5BuA2tuW1QHbSjK/IocII
-	 nKuvwA/pI8g8frMXh2FfgeeZndN+jnBimPlO0r6E=
+	b=G0OqXMAvIoaYRqAsKPL8h1SL9+FkepQvz4SkeW94vmCb8g8SW66b2F8eHg5dLw8V2
+	 Huk5Tw9T3d7aFXcH5fhGxPD9WMd5Xh1aMriYKkUYer4k3CAu58wpCQYvB4FiSNLRLA
+	 KusUTetxTM18drkYxEANK2a94/PMpNxffOj0Y/MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731823AbgG0OWA (ORCPT
+        id S1731839AbgG0OWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:22:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50724 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731273AbgG0OV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:21:57 -0400
+        id S1731833AbgG0OWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:22:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 318852070B;
-        Mon, 27 Jul 2020 14:21:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C9C721775;
+        Mon, 27 Jul 2020 14:22:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859716;
-        bh=ahte494R7mAucQiPHBCE15donQWdWRi9rtiAC5TFAFw=;
+        s=default; t=1595859724;
+        bh=UB1WFAH0LsvRP3pR4wMVX8K7pSEkfAz9uaGlQBD04b8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sXqSbf5AGvJUiqO2lxLFRyJlbst/eDg8hZ3oo6LGuDW6jiyjnhMCF2nilhRKLR6zq
-         mtZIJm9aG5zb3a3hfmdhBg/x2Yuc1CcrkIBw23KVl+lLBWLzWaHDrm7kBZRG7XaYRN
-         pCECF4XEAAbMa67tRxY9FcHpYu+FjBrk4JY93oi8=
+        b=LC4zaScf3dgloaNBJ1HMfoaXusieb9iA1avXkfVSYaQUvBk1+yso08XiAnMUIHuLF
+         +TKx3S3C9CidhXYgS751lKZanJioVHk2IXIeHIUaLqPwusPlodIVX3MElQPehMfMfN
+         e8vwi/TcJu3Krls0P9rk/XCyskJ8+Gp794oq9xi4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 077/179] RDMA/mlx5: Prevent prefetch from racing with implicit destruction
-Date:   Mon, 27 Jul 2020 16:04:12 +0200
-Message-Id: <20200727134936.434847478@linuxfoundation.org>
+Subject: [PATCH 5.7 079/179] net: hns3: fix error handling for desc filling
+Date:   Mon, 27 Jul 2020 16:04:14 +0200
+Message-Id: <20200727134936.531272429@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -60,89 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@nvidia.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[ Upstream commit a862192e9227ad46e0447fd0a03869ba1b30d16f ]
+[ Upstream commit 8ceca59fb3ed48a693171bd571c4fcbd555b7f1f ]
 
-Prefetch work in mlx5_ib_prefetch_mr_work can be queued and able to run
-concurrently with destruction of the implicit MR. The num_deferred_work
-was intended to serialize this, but there is a race:
+The content of the TX desc is automatically cleared by the HW
+when the HW has sent out the packet to the wire. When desc filling
+fails in hns3_nic_net_xmit(), it will call hns3_clear_desc() to do
+the error handling, which miss zeroing of the TX desc and the
+checking if a unmapping is needed.
 
-       CPU0                                          CPU1
+So add the zeroing and checking in hns3_clear_desc() to avoid the
+above problem. Also add DESC_TYPE_UNKNOWN to indicate the info in
+desc_cb is not valid, because hns3_nic_reclaim_desc() may treat
+the desc_cb->type of zero as packet and add to the sent pkt
+statistics accordingly.
 
-    mlx5_ib_free_implicit_mr()
-      xa_erase(odp_mkeys)
-      synchronize_srcu()
-      __xa_erase(implicit_children)
-                                      mlx5_ib_prefetch_mr_work()
-                                        pagefault_mr()
-                                         pagefault_implicit_mr()
-                                          implicit_get_child_mr()
-                                           xa_cmpxchg()
-                                        atomic_dec_and_test(num_deferred_mr)
-      wait_event(imr->q_deferred_work)
-      ib_umem_odp_release(odp_imr)
-        kfree(odp_imr)
-
-At this point in mlx5_ib_free_implicit_mr() the implicit_children list is
-supposed to be empty forever so that destroy_unused_implicit_child_mr()
-and related are not and will not be running.
-
-Since it is not empty the destroy_unused_implicit_child_mr() flow ends up
-touching deallocated memory as mlx5_ib_free_implicit_mr() already tore down the
-imr parent.
-
-The solution is to flush out the prefetch wq by driving num_deferred_work
-to zero after creation of new prefetch work is blocked.
-
-Fixes: 5256edcb98a1 ("RDMA/mlx5: Rework implicit ODP destroy")
-Link: https://lore.kernel.org/r/20200719065435.130722-1-leon@kernel.org
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/odp.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h     | 1 +
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 8 ++++++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
-index 3de7606d4a1a7..bdeb6500a9191 100644
---- a/drivers/infiniband/hw/mlx5/odp.c
-+++ b/drivers/infiniband/hw/mlx5/odp.c
-@@ -601,6 +601,23 @@ void mlx5_ib_free_implicit_mr(struct mlx5_ib_mr *imr)
- 	 */
- 	synchronize_srcu(&dev->odp_srcu);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+index 5587605d6deb2..cc45662f77f04 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
+@@ -77,6 +77,7 @@
+ 	((ring)->p = ((ring)->p - 1 + (ring)->desc_num) % (ring)->desc_num)
  
-+	/*
-+	 * All work on the prefetch list must be completed, xa_erase() prevented
-+	 * new work from being created.
-+	 */
-+	wait_event(imr->q_deferred_work, !atomic_read(&imr->num_deferred_work));
-+
-+	/*
-+	 * At this point it is forbidden for any other thread to enter
-+	 * pagefault_mr() on this imr. It is already forbidden to call
-+	 * pagefault_mr() on an implicit child. Due to this additions to
-+	 * implicit_children are prevented.
-+	 */
-+
-+	/*
-+	 * Block destroy_unused_implicit_child_mr() from incrementing
-+	 * num_deferred_work.
-+	 */
- 	xa_lock(&imr->implicit_children);
- 	xa_for_each (&imr->implicit_children, idx, mtt) {
- 		__xa_erase(&imr->implicit_children, idx);
-@@ -609,9 +626,8 @@ void mlx5_ib_free_implicit_mr(struct mlx5_ib_mr *imr)
- 	xa_unlock(&imr->implicit_children);
+ enum hns_desc_type {
++	DESC_TYPE_UNKNOWN,
+ 	DESC_TYPE_SKB,
+ 	DESC_TYPE_FRAGLIST_SKB,
+ 	DESC_TYPE_PAGE,
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 5dab84aa3afd5..df1cb0441183c 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1351,6 +1351,10 @@ static void hns3_clear_desc(struct hns3_enet_ring *ring, int next_to_use_orig)
+ 	unsigned int i;
  
- 	/*
--	 * num_deferred_work can only be incremented inside the odp_srcu, or
--	 * under xa_lock while the child is in the xarray. Thus at this point
--	 * it is only decreasing, and all work holding it is now on the wq.
-+	 * Wait for any concurrent destroy_unused_implicit_child_mr() to
-+	 * complete.
- 	 */
- 	wait_event(imr->q_deferred_work, !atomic_read(&imr->num_deferred_work));
+ 	for (i = 0; i < ring->desc_num; i++) {
++		struct hns3_desc *desc = &ring->desc[ring->next_to_use];
++
++		memset(desc, 0, sizeof(*desc));
++
+ 		/* check if this is where we started */
+ 		if (ring->next_to_use == next_to_use_orig)
+ 			break;
+@@ -1358,6 +1362,9 @@ static void hns3_clear_desc(struct hns3_enet_ring *ring, int next_to_use_orig)
+ 		/* rollback one */
+ 		ring_ptr_move_bw(ring, next_to_use);
+ 
++		if (!ring->desc_cb[ring->next_to_use].dma)
++			continue;
++
+ 		/* unmap the descriptor dma address */
+ 		if (ring->desc_cb[ring->next_to_use].type == DESC_TYPE_SKB ||
+ 		    ring->desc_cb[ring->next_to_use].type ==
+@@ -1374,6 +1381,7 @@ static void hns3_clear_desc(struct hns3_enet_ring *ring, int next_to_use_orig)
+ 
+ 		ring->desc_cb[ring->next_to_use].length = 0;
+ 		ring->desc_cb[ring->next_to_use].dma = 0;
++		ring->desc_cb[ring->next_to_use].type = DESC_TYPE_UNKNOWN;
+ 	}
+ }
  
 -- 
 2.25.1
