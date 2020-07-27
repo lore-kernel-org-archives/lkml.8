@@ -2,207 +2,215 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBCBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2B120786
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1554820786
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:33:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="iwguWkkz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="SJHrg99+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgG0Kbk (ORCPT
+        id S1728112AbgG0Kdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57498 "EHLO
+        Mon, 27 Jul 2020 06:33:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgG0Kbk (ORCPT
+        with ESMTP id S1726952AbgG0Kds (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:31:40 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0AABC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 03:31:39 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id x9so16637640ljc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 03:31:39 -0700 (PDT)
+        Mon, 27 Jul 2020 06:33:48 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCB53C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 03:33:47 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r2so9248649wrs.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 03:33:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=i3XwR98HxDmxV1ax4v8jtaggfWv+sYL3uUK+dd0akmY=;
-        b=iwguWkkz533L7LLgAfcn4S0q7w5+uQy4yBNRRiZmqHmr32Saxi4jkbpRXWOGmYcFh9
-         wYt/8XroNWsei+k2Lulvjr3b29rc4c1hCmMIO6c1lh/ETxygvSdcv1XgvUcRvdHJF2L7
-         hnjR40WWJhG/PTFhxsgv7Er8+AC3mAoRiEtdsUBHZd2IBpK4bQXfpk5cH63HFMF61hQc
-         apJWzSUgCMni5ogSzUMpttLSw8a89UIGWf5ttOdxT/+KqyphKKLCWwY6V7VrS1ijotai
-         GLyDHB6bPtzaTZqTraYp7a/TS9dowzYOEVzuzWFo8KjTaRZRjVCeOJTkOs6b9UqBXScv
-         ytrg==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Bp6uPhq8Td50m/QVbazzycqVQS9Vblt2hLy6wVK8dW8=;
+        b=SJHrg99+vGfbab57L7UdmSd/pGK823VctI12nhCPFOr+5GmU//4zl5vEsfn8zfX/vV
+         qt3hobr+jgDCAg5MdnBMV0nAEY56XWwKDedpRpFwB14zlcAtbmPiotp1Y4aU4171Ez03
+         Qu/PYee0BM6PBk+ezr25LOx1up1ct466XXA1Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i3XwR98HxDmxV1ax4v8jtaggfWv+sYL3uUK+dd0akmY=;
-        b=pG6iW/ugQvLczM/KXzzXj9/8g8YiFgDAsiJhDbNBtzKKAWywfJa11/FXcKuWsMAwy2
-         hn7Nt08AJXnYeLkzjocAg7sB5QHCJgBB/99E06reGNa++6wAVfSksGm+Ly3wMA/JLUgK
-         UQTftUfVeqVU0+EZGekKZepA1c0Co+BFKucXUMLtmOmtPgLEo34kygF3QmY/qO+0bJrO
-         Lxb11bd36f11vJfRPvfMKqrhxvZXaFtvCsBKlZMWgkIoIKqqjRXdO3Qh7zRpU9gUmUKX
-         WuPIt/qU59mbV0ZJT5jJtiktmhyHTYyCm6F7nWb6s5AMe0sDEzbFQVVpUdPxdLqkuWX6
-         YUgQ==
-X-Gm-Message-State: AOAM532TGhJS6SxRgPfiVXxxX4kY5VJOaGJ4iRwl1jxxAcjX5yFe+yZX
-        UmFbDRR39qUlD+rKPZym3tYgjw==
-X-Google-Smtp-Source: ABdhPJxAS93HRzUuftjwn7h5yhLOuVfWE5SlYaIHq2tQF/YYYmWM/rxNmsXtpjuWJK2FUaOVMTiT4g==
-X-Received: by 2002:a2e:8995:: with SMTP id c21mr1405063lji.52.1595845898317;
-        Mon, 27 Jul 2020 03:31:38 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id b2sm2607553lji.63.2020.07.27.03.31.37
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=Bp6uPhq8Td50m/QVbazzycqVQS9Vblt2hLy6wVK8dW8=;
+        b=WKCPGLTZXiMTiyPHne9cDOxKKLzifOrWflG5Fj1yDxiRMvxiIoX4aIuP21uES5wNIE
+         er44CNmoJ/qctsVVPUabBuFDdwMuMUlhUOlGVM8FA8Kp8NknhcwnLyYwWP/mOVqifzXu
+         RMWvXQVzmD17YUEs4v9vXc/fOUynDICdOfAxnM1CyA1CdJ94F8eZMtTQ82+l1Wty5VNJ
+         wTqwRpM15sYNtDLhs2/SMM8VJVfe4Tqj6WRCozvkcjTaOAhzwcB5CpxKOk6FU6ZTJwsU
+         OybSqcGPrikLuNeh4at0rDs3Wt9ICz09Ic/pl8STvCfQMuUaW+OL4wSrMrAQRdaXozRa
+         Bl6A==
+X-Gm-Message-State: AOAM532H9Q44Co3iJZULAMKKmiqMbFfNu/OOyrk54H4TwbjnBo9Pf59j
+        aI/L71YDuGwY0XXFXyfJLMwKGw==
+X-Google-Smtp-Source: ABdhPJw4ZkhN2VuqVSgEP8hgcS77O8oJSeL3Qre7Wb03kvDLQWqrlaQw6ghc6AiPiTbZD7LpESuyVQ==
+X-Received: by 2002:a5d:4ad1:: with SMTP id y17mr21040589wrs.132.1595846026409;
+        Mon, 27 Jul 2020 03:33:46 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id h23sm16668156wmb.3.2020.07.27.03.33.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 03:31:37 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id AC621102081; Mon, 27 Jul 2020 13:31:40 +0300 (+03)
-Date:   Mon, 27 Jul 2020 13:31:40 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: kernel BUG at include/linux/swapops.h:LINE!
-Message-ID: <20200727103140.xycdx6ctecomqsoe@box>
-References: <000000000000bc4fd705a6e090e2@google.com>
- <0000000000004c38cd05aad1d13f@google.com>
- <20200720165144.93189f7825bd28e234a42cb8@linux-foundation.org>
- <20200723073744.5268-1-hdanton@sina.com>
- <20200724111311.rcjqigtjqpkenxg6@box>
- <20200726164904.GG23808@casper.infradead.org>
+        Mon, 27 Jul 2020 03:33:45 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 12:33:43 +0200
+From:   daniel@ffwll.ch
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org, Liam Mark <lmark@codeaurora.org>,
+        "Andrew F . Davis" <afd@ti.com>, Laura Abbott <labbott@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [RFC][PATCH] dma-heap: Add proper kref handling on dma-buf heaps
+Message-ID: <20200727103343.GT6419@phenom.ffwll.local>
+Mail-Followup-To: John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org, Liam Mark <lmark@codeaurora.org>,
+        "Andrew F . Davis" <afd@ti.com>, Laura Abbott <labbott@kernel.org>,
+        linux-media@vger.kernel.org
+References: <20200725032633.125006-1-john.stultz@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200726164904.GG23808@casper.infradead.org>
+In-Reply-To: <20200725032633.125006-1-john.stultz@linaro.org>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 05:49:04PM +0100, Matthew Wilcox wrote:
-> On Fri, Jul 24, 2020 at 02:13:11PM +0300, Kirill A. Shutemov wrote:
-> > On Thu, Jul 23, 2020 at 03:37:44PM +0800, Hillf Danton wrote:
-> > > 
-> > > On Tue, 21 Jul 2020 14:11:31 +0300 Kirill A. Shutemov wrote:
-> > > > On Mon, Jul 20, 2020 at 04:51:44PM -0700, Andrew Morton wrote:
-> > > > > On Sun, 19 Jul 2020 14:10:19 -0700 syzbot wrote:
-> > > > > 
-> > > > > > syzbot has found a reproducer for the following issue on:
-> > > > > > 
-> > > > > > HEAD commit:    4c43049f Add linux-next specific files for 20200716
-> > > > > > git tree:       linux-next
-> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=12c56087100000
-> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=2c76d72659687242
-> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=c48f34012b06c4ac67dd
-> > > > > > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1344abeb100000
-> > > > > > 
-> > > > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > > > > > Reported-by: syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com
-> > > > > 
-> > > > > Thanks.
-> > > > > 
-> > > > > __handle_mm_fault
-> > > > >   ->pmd_migration_entry_wait
-> > > > >     ->migration_entry_to_page
-> > > > > 
-> > > > > stumbled onto an unlocked page.
-> > > > > 
-> > > > > I don't immediately see a cause.  Perhaps Matthew's "THP prep patches",
-> > > > > perhaps something else.
-> > > > > 
-> > > > > Is it possible to perform a bisection?
-> > > > 
-> > > > Maybe it's related to the new lock_page_async()?
-> > > 
-> > > Or is there likely the window that after copy_huge_pmd() the src pmd migrate
-> > > entry is removed and the page unlocked but the dst is not?
-> > 
-> > No.
-> > 
-> > copy_huge_pmd() runs with exclusive mmap_lock on the source side and
-> > destination side is not running yet.
+On Sat, Jul 25, 2020 at 03:26:33AM +0000, John Stultz wrote:
+> Add proper refcounting on the dma_heap structure.
+> While existing heaps are built-in, we may eventually
+> have heaps loaded from modules, and we'll need to be
+> able to properly handle the references to the heaps
+
+Uh I kinda want to wait until we cross that bridge ... this entire vendor
+heaps thing still sounds very much like vendor trees hacking around
+instead of having upstream drivers using upstream infrastructure.
+-Daniel
+
 > 
-> The one I'm hitting is huge related though.
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: Andrew F. Davis <afd@ti.com>
+> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> Cc: Liam Mark <lmark@codeaurora.org>
+> Cc: Laura Abbott <labbott@kernel.org>
+> Cc: Brian Starkey <Brian.Starkey@arm.com>
+> Cc: linux-media@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  drivers/dma-buf/dma-heap.c | 31 +++++++++++++++++++++++++++----
+>  include/linux/dma-heap.h   |  6 ++++++
+>  2 files changed, 33 insertions(+), 4 deletions(-)
 > 
-> I added this debug:
-> 
-> +++ b/include/linux/swapops.h
-> @@ -165,8 +165,9 @@ static inline struct page *device_private_entry_to_page(swp_entry_t entry)
->  #ifdef CONFIG_MIGRATION
->  static inline swp_entry_t make_migration_entry(struct page *page, int write)
+> diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
+> index afd22c9dbdcf..90c3720acc1c 100644
+> --- a/drivers/dma-buf/dma-heap.c
+> +++ b/drivers/dma-buf/dma-heap.c
+> @@ -40,6 +40,8 @@ struct dma_heap {
+>  	dev_t heap_devt;
+>  	struct list_head list;
+>  	struct cdev heap_cdev;
+> +	int minor;
+> +	struct kref refcount;
+>  };
+>  
+>  static LIST_HEAD(heap_list);
+> @@ -190,11 +192,31 @@ void *dma_heap_get_drvdata(struct dma_heap *heap)
+>  	return heap->priv;
+>  }
+>  
+> +static void dma_heap_release(struct kref *ref)
+> +{
+> +	struct dma_heap *heap = container_of(ref, struct dma_heap, refcount);
+> +
+> +	/* Remove heap from the list */
+> +	mutex_lock(&heap_list_lock);
+> +	list_del(&heap->list);
+> +	mutex_unlock(&heap_list_lock);
+> +
+> +	device_destroy(dma_heap_class, heap->heap_devt);
+> +	cdev_del(&heap->heap_cdev);
+> +	xa_erase(&dma_heap_minors, heap->minor);
+> +
+> +	kfree(heap);
+> +}
+> +
+> +void dma_heap_put(struct dma_heap *h)
+> +{
+> +	kref_put(&h->refcount, dma_heap_release);
+> +}
+> +
+>  struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
 >  {
-> -       BUG_ON(!PageLocked(compound_head(page)));
-> +       VM_BUG_ON_PAGE(!PageLocked(page), page);
+>  	struct dma_heap *heap, *h, *err_ret;
+>  	struct device *dev_ret;
+> -	unsigned int minor;
+>  	int ret;
 >  
-> +if (PageCompound(page)) printk("pfn %lx order %d\n", page_to_pfn(page), thp_order(thp_head(page)));
->         return swp_entry(write ? SWP_MIGRATION_WRITE : SWP_MIGRATION_READ,
->                         page_to_pfn(page));
->  }
-> @@ -194,7 +195,11 @@ static inline struct page *migration_entry_to_page(swp_entry_t entry)
->          * Any use of migration entries may only occur while the
->          * corresponding page is locked
->          */
-> -       BUG_ON(!PageLocked(compound_head(p)));
-> +       if (!PageLocked(p)) {
-> +               dump_page(p, "not locked");
-> +               printk("swap entry %d.%lx\n", swp_type(entry), swp_offset(entry));
-> +               BUG();
-> +       }
->         return p;
->  }
+>  	if (!exp_info->name || !strcmp(exp_info->name, "")) {
+> @@ -223,12 +245,13 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
+>  	if (!heap)
+>  		return ERR_PTR(-ENOMEM);
 >  
+> +	kref_init(&heap->refcount);
+>  	heap->name = exp_info->name;
+>  	heap->ops = exp_info->ops;
+>  	heap->priv = exp_info->priv;
+>  
+>  	/* Find unused minor number */
+> -	ret = xa_alloc(&dma_heap_minors, &minor, heap,
+> +	ret = xa_alloc(&dma_heap_minors, &heap->minor, heap,
+>  		       XA_LIMIT(0, NUM_HEAP_MINORS - 1), GFP_KERNEL);
+>  	if (ret < 0) {
+>  		pr_err("dma_heap: Unable to get minor number for heap\n");
+> @@ -237,7 +260,7 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
+>  	}
+>  
+>  	/* Create device */
+> -	heap->heap_devt = MKDEV(MAJOR(dma_heap_devt), minor);
+> +	heap->heap_devt = MKDEV(MAJOR(dma_heap_devt), heap->minor);
+>  
+>  	cdev_init(&heap->heap_cdev, &dma_heap_fops);
+>  	ret = cdev_add(&heap->heap_cdev, heap->heap_devt, 1);
+> @@ -267,7 +290,7 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
+>  err2:
+>  	cdev_del(&heap->heap_cdev);
+>  err1:
+> -	xa_erase(&dma_heap_minors, minor);
+> +	xa_erase(&dma_heap_minors, heap->minor);
+>  err0:
+>  	kfree(heap);
+>  	return err_ret;
+> diff --git a/include/linux/dma-heap.h b/include/linux/dma-heap.h
+> index 454e354d1ffb..c1572f29cfac 100644
+> --- a/include/linux/dma-heap.h
+> +++ b/include/linux/dma-heap.h
+> @@ -56,4 +56,10 @@ void *dma_heap_get_drvdata(struct dma_heap *heap);
+>   */
+>  struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info);
+>  
+> +/**
+> + * dma_heap_put - drops a reference to a dmabuf heaps, potentially freeing it
+> + * @heap:		heap pointer
+> + */
+> +void dma_heap_put(struct dma_heap *heap);
+> +
+>  #endif /* _DMA_HEAPS_H */
+> -- 
+> 2.17.1
 > 
-> and got useful output (while running generic/086):
-> 
-> 1457 086 (20181): drop_caches: 3
-> 1457 page:00000000a216ae9a refcount:2 mapcount:0 mapping:000000009ba7bfed index:0x2227 pfn:0x229e7
-> 1457 aops:def_blk_aops ino:0
-> 1457 flags: 0x4000000000002030(lru|active|private)
-> 1457 raw: 4000000000002030 fffff5b4416b5a48 fffff5b4408a7988 ffff9e9c34848578
-> 1457 raw: 0000000000002227 ffff9e9bd18f0d00 00000002ffffffff 0000000000000000
-> 1457 page dumped because: not locked
-> 1457 swap entry 30.229e7
-> 1457 ------------[ cut here ]------------
-> 1457 kernel BUG at include/linux/swapops.h:201!
-> 1457 invalid opcode: 0000 [#1] SMP PTI
-> 1457 CPU: 3 PID: 646 Comm: check Kdump: loaded Tainted: G        W         5.8.0-rc6-00067-gd8b18bdf9870-dirty #355
-> 1457 Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-> 1457 RIP: 0010:__migration_entry_wait+0x109/0x110
-> [...]
-> 
-> Looking back in the trace, I see:
-> 
-> ...
-> 1457 pfn 229e5 order 9
-> 1457 pfn 229e6 order 9
-> 1457 pfn 229e7 order 9
-> 1457 pfn 229e8 order 9
-> 1457 pfn 229e9 order 9
-> ...
-> 
-> so I would say we have a refcount problem.  I've probably made it worse by
-> creating more THPs, but I don't think I'm the originator of the problem.
-> 
-> I know very little about the migration code today.  I suspect I'm going
-> to have to learn about it next week.
-
-It would be interesting to know if the migration entires ever got removed
-for pfn. I mean if remove_migration_pte() got called for it.
-
-It can be rmap issue too. Maybe it misses PMD on remove_migration_ptes()
-or something.
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
 -- 
- Kirill A. Shutemov
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
