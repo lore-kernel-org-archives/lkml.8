@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5BAC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F692C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A57A21D95
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5664922B49
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859196;
-	bh=6Hipu7uWNfRUtHM/Af23/Iw1ZjSCu359/UrYQ+9V0vY=;
+	s=default; t=1595859202;
+	bh=Gj23uE/wUAfv9Vn6JjfEiTHDxLgeQuJq4HzYtVmfryI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eoWwa0RJiNqme6urNrh0irKjqosmUn5fSCxZTm+s5MVpXtAwHqEBsCFBCCBJCi3OK
-	 5ZKHBiVxC3Uvh1m9LIqZvDJeObAkgOkk/1VH67ZnkmuxY/iY/6k/2n1fa4PSeh3CZY
-	 dI1+ek++BtzPew6JcCGzTORhy8oAKkmHwxns1n00=
+	b=2s5Z60G38Pc6ggxCr3NtxfdyHnpkYBSqOvTbyuzNxWJPgluVJslCj2wLAcyraj5OQ
+	 p0vqtPul1HhGWeTl69i0sLejGyPSKP/QkNUdCf7CE2Tyk90X4qzNyqtsRX8Z+cYm/r
+	 ixuBnsdPu0Y1D3FEfxwrmn3TWMabtKYOabreD+vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgG0ONP (ORCPT
+        id S1730353AbgG0ONU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:13:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38014 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:13:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730321AbgG0ONM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:13:12 -0400
+        id S1729744AbgG0ONR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:13:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 216AE2073E;
-        Mon, 27 Jul 2020 14:13:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 365DA2073E;
+        Mon, 27 Jul 2020 14:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859191;
-        bh=6Hipu7uWNfRUtHM/Af23/Iw1ZjSCu359/UrYQ+9V0vY=;
+        s=default; t=1595859196;
+        bh=Gj23uE/wUAfv9Vn6JjfEiTHDxLgeQuJq4HzYtVmfryI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CEt1dr7cARG2dspxBF4A3MyWTD17DGpmk1fA6LH2a5WivVq57TJhpyi+eFQf5EF/q
-         4oSmMnUcjWUrq5PmZVu1AcUpLN/Rk93WWUj/pAWtp8JIGwdTGr3LdAbN3xReubIk4t
-         iTCs/jDdbesIUUAhxZ8+JEN4D041dRAa7ahkYlC8=
+        b=t0YNqfcr/FHOksFOET7bYxTU61Fp8+7NSqyDqP31NCIZ/2Lj+i/rrB0y+wap/Ind5
+         +gTizoM4uymUdY/kHhtGMN9QkBNjKzKtBa6F1bL/h3ZFYIZ4hTKQUc33noTe0yxmVG
+         19nFxMTfAXd2nHbhK18LtNVrDNFQbq0QVrRjgnsQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 014/138] scsi: mpt3sas: Fix error returns in BRM_status_show
-Date:   Mon, 27 Jul 2020 16:03:29 +0200
-Message-Id: <20200727134925.977427535@linuxfoundation.org>
+Subject: [PATCH 5.4 016/138] dm: use bio_uninit instead of bio_disassociate_blkg
+Date:   Mon, 27 Jul 2020 16:03:31 +0200
+Message-Id: <20200727134926.093362997@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -62,78 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 0fd181456aa0826057adbfb6c79c40f4083cfd75 ]
+[ Upstream commit 382761dc6312965a11f82f2217e16ec421bf17ae ]
 
-BRM_status_show() has several error branches, but none of them record the
-error in the error return.
+bio_uninit is the proper API to clean up a BIO that has been allocated
+on stack or inside a structure that doesn't come from the BIO allocator.
+Switch dm to use that instead of bio_disassociate_blkg, which really is
+an implementation detail.  Note that the bio_uninit calls are also moved
+to the two callers of __send_empty_flush, so that they better pair with
+the bio_init calls used to initialize them.
 
-Also while at it remove the manual mutex_unlock() of the pci_access_mutex
-in case of an ongoing pci error recovery or host removal and jump to the
-cleanup label instead.
-
-Note: We can safely jump to out from here as io_unit_pg3 is initialized to
-NULL and if it hasn't been allocated, kfree() skips the NULL pointer.
-
-[mkp: compilation warning]
-
-Link: https://lore.kernel.org/r/20200701131454.5255-1-johannes.thumshirn@wdc.com
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Acked-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_ctl.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/md/dm.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-index 82c4ecc16f191..d5a62fea8fe3e 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-@@ -2925,15 +2925,14 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	}
- 	/* pci_access_mutex lock acquired by sysfs show path */
- 	mutex_lock(&ioc->pci_access_mutex);
--	if (ioc->pci_error_recovery || ioc->remove_host) {
--		mutex_unlock(&ioc->pci_access_mutex);
--		return 0;
--	}
-+	if (ioc->pci_error_recovery || ioc->remove_host)
-+		goto out;
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index 915019ec0e25b..3cf5b354568e5 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1437,9 +1437,6 @@ static int __send_empty_flush(struct clone_info *ci)
+ 	BUG_ON(bio_has_data(ci->bio));
+ 	while ((ti = dm_table_get_target(ci->map, target_nr++)))
+ 		__send_duplicate_bios(ci, ti, ti->num_flush_bios, NULL);
+-
+-	bio_disassociate_blkg(ci->bio);
+-
+ 	return 0;
+ }
  
- 	/* allocate upto GPIOVal 36 entries */
- 	sz = offsetof(Mpi2IOUnitPage3_t, GPIOVal) + (sizeof(u16) * 36);
- 	io_unit_pg3 = kzalloc(sz, GFP_KERNEL);
- 	if (!io_unit_pg3) {
-+		rc = -ENOMEM;
- 		ioc_err(ioc, "%s: failed allocating memory for iounit_pg3: (%d) bytes\n",
- 			__func__, sz);
- 		goto out;
-@@ -2943,6 +2942,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	    0) {
- 		ioc_err(ioc, "%s: failed reading iounit_pg3\n",
- 			__func__);
-+		rc = -EINVAL;
- 		goto out;
- 	}
- 
-@@ -2950,12 +2950,14 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	if (ioc_status != MPI2_IOCSTATUS_SUCCESS) {
- 		ioc_err(ioc, "%s: iounit_pg3 failed with ioc_status(0x%04x)\n",
- 			__func__, ioc_status);
-+		rc = -EINVAL;
- 		goto out;
- 	}
- 
- 	if (io_unit_pg3->GPIOCount < 25) {
- 		ioc_err(ioc, "%s: iounit_pg3->GPIOCount less than 25 entries, detected (%d) entries\n",
- 			__func__, io_unit_pg3->GPIOCount);
-+		rc = -EINVAL;
- 		goto out;
- 	}
- 
+@@ -1627,6 +1624,7 @@ static blk_qc_t __split_and_process_bio(struct mapped_device *md,
+ 		ci.bio = &flush_bio;
+ 		ci.sector_count = 0;
+ 		error = __send_empty_flush(&ci);
++		bio_uninit(ci.bio);
+ 		/* dec_pending submits any data associated with flush */
+ 	} else if (bio_op(bio) == REQ_OP_ZONE_RESET) {
+ 		ci.bio = bio;
+@@ -1701,6 +1699,7 @@ static blk_qc_t __process_bio(struct mapped_device *md, struct dm_table *map,
+ 		ci.bio = &flush_bio;
+ 		ci.sector_count = 0;
+ 		error = __send_empty_flush(&ci);
++		bio_uninit(ci.bio);
+ 		/* dec_pending submits any data associated with flush */
+ 	} else {
+ 		struct dm_target_io *tio;
 -- 
 2.25.1
 
