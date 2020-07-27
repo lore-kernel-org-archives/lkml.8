@@ -2,184 +2,142 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB913C433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A16C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9687420838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860352;
-	bh=iJirAemF/CyfoWmMvNgo2psWOY/TmoreBsRJ3IibRUk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xGnwlHKFm2a33P5drvROSydG/bjNGSF33CiF60cR6I1OggfQTft7PTnu2rbDHuGYK
-	 WfIyzXUwFbPL/Pww7n1vNDkrV8OUGJMOhuvkmfgz4pdZ5vaUkdGrDQPMQduM0yd5ww
-	 fpTXmY1YzZCrFTrHOTqjq6Y453x4/1iVoDHGNiH4=
+	by mail.kernel.org (Postfix) with ESMTP id AE253207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IJ6z7XlW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgG0OS7 (ORCPT
+        id S1731334AbgG0Oce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:18:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731321AbgG0OSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D4D82070A;
-        Mon, 27 Jul 2020 14:18:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859535;
-        bh=iJirAemF/CyfoWmMvNgo2psWOY/TmoreBsRJ3IibRUk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B+2KRSy7Wfm8BdYtazLeCyPVZtSAOG1vuirzopj7tjB2vz20763xd1YTDwGYEO0Wj
-         k10DN8lkBmkA0fCCflrWOK3KUQErBopUnTgzM1AeBN8ALelKXF4oTfZBvRGiP3lx+S
-         hdJsX8WquZzIL90rFrUUXR3+5Cq5ZFNxXbunFHeA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 136/138] dm integrity: fix integrity recalculation that is improperly skipped
-Date:   Mon, 27 Jul 2020 16:05:31 +0200
-Message-Id: <20200727134932.209189611@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
-References: <20200727134925.228313570@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 27 Jul 2020 10:32:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730722AbgG0OS5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:57 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1981C0619D4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:18:56 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x12so3760913qtp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:18:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pdmKQetK0QLJ8rFRGpIDAlZksqbKSxwq3s5x5iSj/6k=;
+        b=IJ6z7XlWdHP11wN6ofEIEZ8eiR6sqBYmqASCFE7tsyV0XaLFN6UBCLhSDxG3ZtxFiB
+         6UUQmZZQPtZ5gWL5TR/BbzcqU4PRy1rsZs1ydjdNLg3DukK8x+zI+T5IrylXKZcJrp7X
+         wgzsam6DyjyXmTzlExIy6Gz+ESwjakDY8S7H+WJNUPiGauBejJX9bL1UdYuOeP4pj6DE
+         upJWQuBQhzHG9jhW6jTcUmhVdyytehsFjMWOs5NLeA9zWbEPdR+c2Lh3HlXUFaiIaFfI
+         c4NcJMTaVP+qgpPKCcMERNPi8R+BSrrTeP2DhEflbq++A2XpC+Qam2kcKEcY1g6hCLWg
+         xxXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pdmKQetK0QLJ8rFRGpIDAlZksqbKSxwq3s5x5iSj/6k=;
+        b=IK3Z2C5HD8HBakFHJt9/ddxT2MWWozBfcxX69KlBCKiLr54LrLZzR4gRhFV4s2RGMD
+         d4oqEQEWhYPTI1oEqFmmPGZ9oLw+zvG2kZ6Bt1PLBdP6OWk/PBnQnP37rTfF7sdTHu0d
+         1dUkCLOuSpgEMqRI5MyBM5491lEI92u5UqIBat8PhNbVr4g1TrTr51WjEJHOwsrPxXFs
+         obP0XJOwHAm+SPyb/jrD6kgcAUux/fmH6RcH5/CIGVpc66d7rem5iE307eTy1y5R+WY3
+         dS1g2WI24+1a3l0sp69vcfGxfiLtw2iKbNPmfZe1cGBkDYawLeYkJ0AxPT/iUDCDw2pE
+         09LA==
+X-Gm-Message-State: AOAM5303kXUHPTZFGIHIjexIGb0gwFFpd0i19J/VseSUOVTB/62S2UZy
+        Nmlkicn9pjKpKmk7XwKaMSR+8w==
+X-Google-Smtp-Source: ABdhPJy130C3D8M0rAarkjKcRWiHNErupodcdoc3UEhXmIRDecJWWcdT53d/lQhoGpyYSerZL6QGHQ==
+X-Received: by 2002:ac8:7a95:: with SMTP id x21mr7959782qtr.135.1595859535983;
+        Mon, 27 Jul 2020 07:18:55 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id k24sm14790073qtb.26.2020.07.27.07.18.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 07:18:55 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 10:18:48 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH v2 2/3] sched: Cleanup SCHED_THERMAL_PRESSURE kconfig
+ entry
+Message-ID: <20200727141825.GA4174@lca.pw>
+References: <20200712165917.9168-1-valentin.schneider@arm.com>
+ <20200712165917.9168-3-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200712165917.9168-3-valentin.schneider@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+On Sun, Jul 12, 2020 at 05:59:16PM +0100, Valentin Schneider wrote:
+> As Russell pointed out [1], this option is severely lacking in the
+> documentation department, and figuring out if one has the required
+> dependencies to benefit from turning it on is not straightforward.
+> 
+> Make it non user-visible, and add a bit of help to it. While at it, make it
+> depend on CPU_FREQ_THERMAL.
+> 
+> [1]: https://lkml.kernel.org/r/20200603173150.GB1551@shell.armlinux.org.uk
+> 
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
+>  init/Kconfig | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 0498af567f70..0a97d85568b2 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -492,8 +492,21 @@ config HAVE_SCHED_AVG_IRQ
+>  	depends on SMP
+>  
+>  config SCHED_THERMAL_PRESSURE
+> -	bool "Enable periodic averaging of thermal pressure"
+> +	bool
+>  	depends on SMP
+> +	depends on CPU_FREQ_THERMAL
+> +	help
+> +	  Select this option to enable thermal pressure accounting in the
+> +	  scheduler. Thermal pressure is the value conveyed to the scheduler
+> +	  that reflects the reduction in CPU compute capacity resulted from
+> +	  thermal throttling. Thermal throttling occurs when the performance of
+> +	  a CPU is capped due to high operating temperatures.
+> +
+> +	  If selected, the scheduler will be able to balance tasks accordingly,
+> +	  i.e. put less load on throttled CPUs than on non/less throttled ones.
+> +
+> +	  This requires the architecture to implement
+> +	  arch_set_thermal_pressure() and arch_get_thermal_pressure().
+>  
+>  config BSD_PROCESS_ACCT
+>  	bool "BSD Process Accounting"
+> -- 
 
-commit 5df96f2b9f58a5d2dc1f30fe7de75e197f2c25f2 upstream.
+On arm64 linux-next (20200727),
 
-Commit adc0daad366b62ca1bce3e2958a40b0b71a8b8b3 ("dm: report suspended
-device during destroy") broke integrity recalculation.
+https://gitlab.com/cailca/linux-mm/-/blob/master/arm64.config
 
-The problem is dm_suspended() returns true not only during suspend,
-but also during resume. So this race condition could occur:
-1. dm_integrity_resume calls queue_work(ic->recalc_wq, &ic->recalc_work)
-2. integrity_recalc (&ic->recalc_work) preempts the current thread
-3. integrity_recalc calls if (unlikely(dm_suspended(ic->ti))) goto unlock_ret;
-4. integrity_recalc exits and no recalculating is done.
-
-To fix this race condition, add a function dm_post_suspending that is
-only true during the postsuspend phase and use it instead of
-dm_suspended().
-
-Signed-off-by: Mikulas Patocka <mpatocka redhat com>
-Fixes: adc0daad366b ("dm: report suspended device during destroy")
-Cc: stable vger kernel org # v4.18+
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/md/dm-integrity.c     |    4 ++--
- drivers/md/dm.c               |   17 +++++++++++++++++
- include/linux/device-mapper.h |    1 +
- 3 files changed, 20 insertions(+), 2 deletions(-)
-
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -2298,7 +2298,7 @@ static void integrity_writer(struct work
- 	unsigned prev_free_sectors;
- 
- 	/* the following test is not needed, but it tests the replay code */
--	if (unlikely(dm_suspended(ic->ti)) && !ic->meta_dev)
-+	if (unlikely(dm_post_suspending(ic->ti)) && !ic->meta_dev)
- 		return;
- 
- 	spin_lock_irq(&ic->endio_wait.lock);
-@@ -2359,7 +2359,7 @@ static void integrity_recalc(struct work
- 
- next_chunk:
- 
--	if (unlikely(dm_suspended(ic->ti)))
-+	if (unlikely(dm_post_suspending(ic->ti)))
- 		goto unlock_ret;
- 
- 	range.logical_sector = le64_to_cpu(ic->sb->recalc_sector);
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -141,6 +141,7 @@ EXPORT_SYMBOL_GPL(dm_bio_get_target_bio_
- #define DMF_NOFLUSH_SUSPENDING 5
- #define DMF_DEFERRED_REMOVE 6
- #define DMF_SUSPENDED_INTERNALLY 7
-+#define DMF_POST_SUSPENDING 8
- 
- #define DM_NUMA_NODE NUMA_NO_NODE
- static int dm_numa_node = DM_NUMA_NODE;
-@@ -2377,6 +2378,7 @@ static void __dm_destroy(struct mapped_d
- 	if (!dm_suspended_md(md)) {
- 		dm_table_presuspend_targets(map);
- 		set_bit(DMF_SUSPENDED, &md->flags);
-+		set_bit(DMF_POST_SUSPENDING, &md->flags);
- 		dm_table_postsuspend_targets(map);
- 	}
- 	/* dm_put_live_table must be before msleep, otherwise deadlock is possible */
-@@ -2735,7 +2737,9 @@ retry:
- 	if (r)
- 		goto out_unlock;
- 
-+	set_bit(DMF_POST_SUSPENDING, &md->flags);
- 	dm_table_postsuspend_targets(map);
-+	clear_bit(DMF_POST_SUSPENDING, &md->flags);
- 
- out_unlock:
- 	mutex_unlock(&md->suspend_lock);
-@@ -2832,7 +2836,9 @@ static void __dm_internal_suspend(struct
- 	(void) __dm_suspend(md, map, suspend_flags, TASK_UNINTERRUPTIBLE,
- 			    DMF_SUSPENDED_INTERNALLY);
- 
-+	set_bit(DMF_POST_SUSPENDING, &md->flags);
- 	dm_table_postsuspend_targets(map);
-+	clear_bit(DMF_POST_SUSPENDING, &md->flags);
- }
- 
- static void __dm_internal_resume(struct mapped_device *md)
-@@ -2993,6 +2999,11 @@ int dm_suspended_md(struct mapped_device
- 	return test_bit(DMF_SUSPENDED, &md->flags);
- }
- 
-+static int dm_post_suspending_md(struct mapped_device *md)
-+{
-+	return test_bit(DMF_POST_SUSPENDING, &md->flags);
-+}
-+
- int dm_suspended_internally_md(struct mapped_device *md)
- {
- 	return test_bit(DMF_SUSPENDED_INTERNALLY, &md->flags);
-@@ -3009,6 +3020,12 @@ int dm_suspended(struct dm_target *ti)
- }
- EXPORT_SYMBOL_GPL(dm_suspended);
- 
-+int dm_post_suspending(struct dm_target *ti)
-+{
-+	return dm_post_suspending_md(dm_table_get_md(ti->table));
-+}
-+EXPORT_SYMBOL_GPL(dm_post_suspending);
-+
- int dm_noflush_suspending(struct dm_target *ti)
- {
- 	return __noflush_suspending(dm_table_get_md(ti->table));
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -422,6 +422,7 @@ const char *dm_device_name(struct mapped
- int dm_copy_name_and_uuid(struct mapped_device *md, char *name, char *uuid);
- struct gendisk *dm_disk(struct mapped_device *md);
- int dm_suspended(struct dm_target *ti);
-+int dm_post_suspending(struct dm_target *ti);
- int dm_noflush_suspending(struct dm_target *ti);
- void dm_accept_partial_bio(struct bio *bio, unsigned n_sectors);
- void dm_remap_zone_report(struct dm_target *ti, sector_t start,
-
-
+WARNING: unmet direct dependencies detected for SCHED_THERMAL_PRESSURE
+  Depends on [n]: SMP [=y] && CPU_FREQ_THERMAL [=n]
+  Selected by [y]:
+  - ARM64 [=y]
