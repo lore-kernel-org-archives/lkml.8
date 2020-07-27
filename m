@@ -2,163 +2,123 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D419720809
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595885691;
-	bh=866a6hhZ+01yYr2IlzYYM4VKfpwbUMYsvmFHKGcJ3PI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xgbIdsdhAwejAXd5Hgk4Ca6+OxVJDpPZgg+VxYuk9aMAC5J/ZzURxodOGlFZkmlfO
-	 3+hKtDR8rXN30bCe9IMAYPWAekcdCMGnsSuQh48cA5T+TJegVtPAJFQowKftvQ+LrF
-	 wMo6wDihegYsMzTYIQrUl7MAtxBtEvd7tnDpiypY=
+	by mail.kernel.org (Postfix) with ESMTP id 4578020809
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:38:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IcQwbCob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgG0Veu (ORCPT
+        id S1726313AbgG0Vir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 17:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48364 "EHLO
+        Mon, 27 Jul 2020 17:38:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbgG0Veu (ORCPT
+        with ESMTP id S1726110AbgG0Viq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:34:50 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE365C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:34:49 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id c15so3574534edj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:34:49 -0700 (PDT)
+        Mon, 27 Jul 2020 17:38:46 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A49FC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:38:46 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id m9so8219631qvx.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:38:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=o4V97hvZvA5I26Zuba2zhsiecwp3cc1CvQSO+r7h56c=;
-        b=c1L2iv4CgFakkeP6iB5hqF8Ke/yqNnvEz1pTYOgVRjn2ec8DMtEmkbhMUPZXfYVfFQ
-         Gs+HxMgy9Zc1DZWhLiL1Y3UYgkzzmHw/1wX5KOvd9OutyiP9neggpDrpGoTrShcS2Aln
-         rSmc6DUUeXtnePYoZPO9z8ag6H3L2Hsd6CjXSGp9IIRkED+4w2SJuR2yjRGUEMHh9+6o
-         x+3HyFsgDpEgF1lJOvKqAvQLjfIirttooGAbl8LcsWSsDe3aSGDDC1s7qwqN+iBOdZwm
-         6Cw3hXxdRoCQJSHwVm5dGWYgYCMCfNULmd/7NQxEWExUQj3hpxa5RGvUNUEDSHyD8rLS
-         oSHA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OBPW13q5QlzlSrMzZgbTLPGHsSTa3HJ7NZm2XA+DWro=;
+        b=IcQwbCobh7vNkJkcr8tb+vx7W74HheX2L8Fr7dpZ/em+hbTwhHjTLmVR+cPsFn6OsS
+         gPOStCmf9ky3UPVmE+InLyxIWDCcHAS77jlOJpw0ym4EqJyydFZ8mDhkIIfnsBfVTLMK
+         USUO2V1Pn8scghR4r3f87qt6DArxNQxzZd/Dlu0LiMs7L1FQR4Q8or8lgs7hH0e4qzS7
+         7QK0AhL4agBclZPMj6pGcJLOYAV9Ru8R4+qRTdJHOYEj5JExzL9ACW2pXGvB2C/F4u+t
+         LksyLeCqSowFyLoejfb9YdEZFCQLPt7IMNUxVKhgdiI2FP27N8A3XU5tPFjxdUTwadTU
+         rx+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=o4V97hvZvA5I26Zuba2zhsiecwp3cc1CvQSO+r7h56c=;
-        b=VYtW6eojJ6EjvyTX4rJDLCd3nGp0gLfqDPR92ePZ0ZwQ/bRCojPtXYG3WQPnQhjW32
-         /l0FO7lboZfMFU7aFOgBkc8Opfb4BU3DtQ8NgNKx+ea1KZtBu1hN0a8E3xtBo9s7fYYs
-         QDSDBR+6Wb9Id/0iHLaYRH+cEMOyzo221R2VL+KjA9n7ov8tNmAwDbdqxo9Au5TjXJVF
-         KsIJYdNfT0XpBWaiSCkZxtJq5CwpS7WnKNbzlO5TmKX7Mqntfo7Xg1rJhFqi2MdK1z1o
-         SRnbE2mFtMqRovTM5Sag/ZUK8lPRj9gX3qsvKzv03gnG0eCkl/STAhsRXkWZd97gH3+3
-         blcw==
-X-Gm-Message-State: AOAM532siSEpuRSJBiOUlrXBVc6hm4ji/DeHy+8t6PBkyvbBp7KOa+zY
-        Yei+v23jhUf30Vu81fhsNkg=
-X-Google-Smtp-Source: ABdhPJygorYCMbji9g+nTinak9IwZZpT053mfFgZL2Sv/1SCj2D53f+FmlIq4aiDdGRx/2jp5LbaGw==
-X-Received: by 2002:a50:8f83:: with SMTP id y3mr23652080edy.257.1595885688477;
-        Mon, 27 Jul 2020 14:34:48 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id p1sm4076630ejz.50.2020.07.27.14.34.46
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OBPW13q5QlzlSrMzZgbTLPGHsSTa3HJ7NZm2XA+DWro=;
+        b=Dcg8TZmk+27XGnZU7aM4VM1QXWYvShXbjMm7x2qdxORTEHbD31RI2V74Kw1m+H1E0E
+         8C9eYvjvTasB22scRzcq11/UOOXCSEyZWemBdZh4pFQhuEEpVxBiIWrCDv314G/lSfpI
+         x2YeA1X8zRyyRgPPEDs4f6+9kHJX3oNmESZW1rMbsAI2mUVd2O2irAmDDvcyJ1kQYK10
+         zT+I5ULEqX1GQAISjbKQJ7Ec8ETM0aMSe14ZSY23hjwUALgXx4pYE1UBDGlJa9oX7H/E
+         EkcgS8bdCCKuhOmcKanE+Elc4Hogn0Q8DdaisCtH4XJeskm2hgCGbL1v/CeRPi66Lbku
+         PNFg==
+X-Gm-Message-State: AOAM530A4Fe6rY598h23eeOHKsBifjA9Gu52PW4hBNYNNjdthtN7ZrL6
+        mMe44Bm39LjHVk0xcY6++w==
+X-Google-Smtp-Source: ABdhPJztgREWPYXpbY24y3xYJ2ab/diXDmx2tovh1N/94fVvWPtBBHR0/+nE3r/ezlx7C21gRN1SYQ==
+X-Received: by 2002:ad4:5748:: with SMTP id q8mr23598337qvx.1.1595885925464;
+        Mon, 27 Jul 2020 14:38:45 -0700 (PDT)
+Received: from localhost.localdomain ([209.94.141.207])
+        by smtp.gmail.com with ESMTPSA id y7sm17423217qta.36.2020.07.27.14.38.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 14:34:47 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 23:34:44 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Muchun Song <songmuchun@bytedance.com>, peterz@infradead.org,
-        bigeasy@linutronix.de, namit@vmware.com,
+        Mon, 27 Jul 2020 14:38:44 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] smp: Fix a potential usage of stale nr_cpus
-Message-ID: <20200727213444.GB121479@gmail.com>
-References: <20200721034239.72013-1-songmuchun@bytedance.com>
- <20200727114303.GA57241@gmail.com>
- <87mu3laqqi.fsf@nanos.tec.linutronix.de>
+Subject: [Linux-kernel-mentees] [PATCH] ptrace: Prevent kernel-infoleak in ptrace_get_syscall_info()
+Date:   Mon, 27 Jul 2020 17:36:44 -0400
+Message-Id: <20200727213644.328662-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mu3laqqi.fsf@nanos.tec.linutronix.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ptrace_get_syscall_info() is copying uninitialized stack memory to
+userspace due to the compiler not initializing holes in statically
+allocated structures. Fix it by initializing `info` with memset().
 
-* Thomas Gleixner <tglx@linutronix.de> wrote:
+Cc: stable@vger.kernel.org
+Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+ kernel/ptrace.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-> Ingo Molnar <mingo@kernel.org> writes:
-> >> -	get_option(&str, &nr_cpus);
-> >> +	if (get_option(&str, &nr_cpus) != 1)
-> >> +		return -EINVAL;
-> >> +
-> >>  	if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
-> >>  		nr_cpu_ids = nr_cpus;
-> >> +	else
-> >> +		return -EINVAL;
-> >
-> > Exactly what does 'not valid' mean, and why doesn't get_option() 
-> > return -EINVAL in that case?
-> 
-> What's unclear about invalid? If you specify nr_cpus=-1 or
-> nr_cpus=2000000 the its obviously invalid.
-
-So this was the old (buggy) code:
-
->  {
->       int nr_cpus;
->
->       get_option(&str, &nr_cpus);
->       if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
->               nr_cpu_ids = nr_cpus;
-
-And this was the explanation given in the changelog:
-
->> When the cmdline of "nr_cpus" is not valid, the @nr_cpu_ids is 
->> assigned a stale value. The nr_cpus is only valid when get_option() 
->> return 1. So check the return value to prevent this.
-
-The answer to my question is that the bug is that the return value of 
-get_option() wasn't checked properly, and if get_option() returns an 
-error then the nr_cpus local variable is not set - but we used it in 
-the old code, which can result in essentially a random value for 
-nr_cpu_ids.
-
-> How should get_option() know that this is invalid? get_option() is a 
-> number parser and does not know about any restrictions on the parsed 
-> value obviously.
-
-But that's apparently not the bug here, 'invalid' here was meant as 
-per the parser's syntax. If nr_cpus is out of range (like the 2000000 
-example you gave), then nr_cpu_ids might not be set at all, and 
-remains at the 0 initialized value. Which isn't good but not 'stale' 
-either.
-
-This is why I was puzzled where a 'stale' value might come from, at 
-first sight I was assuming that some large value was written, like 
-your 200000 example. The "stale value" happens if it's invalid syntax 
-and get_option() returns an error, in which case 'nr_cpus' remains 
-uninitialized.
-
-And this is the explanation I didn't find at first reading, and which 
-explanation future changelogs should perhaps include.
-
-The new code does this:
-
-        int nr_cpus;
-
-        if (get_option(&str, &nr_cpus) != 1)
-                return -EINVAL;
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index 43d6179508d6..e48d05b765b5 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -960,15 +960,17 @@ ptrace_get_syscall_info(struct task_struct *child, unsigned long user_size,
+ 			void __user *datavp)
+ {
+ 	struct pt_regs *regs = task_pt_regs(child);
+-	struct ptrace_syscall_info info = {
+-		.op = PTRACE_SYSCALL_INFO_NONE,
+-		.arch = syscall_get_arch(child),
+-		.instruction_pointer = instruction_pointer(regs),
+-		.stack_pointer = user_stack_pointer(regs),
+-	};
++	struct ptrace_syscall_info info;
+ 	unsigned long actual_size = offsetof(struct ptrace_syscall_info, entry);
+ 	unsigned long write_size;
  
-        if (nr_cpus > 0 && nr_cpus < nr_cpu_ids)
-                nr_cpu_ids = nr_cpus;
-        else
-                return -EINVAL;
++	memset(&info, 0, sizeof(info));
++
++	info.op	= PTRACE_SYSCALL_INFO_NONE;
++	info.arch = syscall_get_arch(child);
++	info.instruction_pointer = instruction_pointer(regs);
++	info.stack_pointer = user_stack_pointer(regs);
++
+ 	/*
+ 	 * This does not need lock_task_sighand() to access
+ 	 * child->last_siginfo because ptrace_freeze_traced()
+-- 
+2.25.1
 
-Which does all the proper error handling and fixes the uninitialized 
-'nr_cpus' local variable usage. So I agree with the fix:
-
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-
-Thanks,
-
-	Ingo
