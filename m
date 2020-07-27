@@ -2,144 +2,136 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F096C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4459AC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77D7B20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23801206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:48:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cj1m6D1+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731052AbgG0Pq4 (ORCPT
+        id S1731085AbgG0Pso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:46:56 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33366 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728015AbgG0Pqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:46:55 -0400
-IronPort-SDR: ijYCwLN+uF2fKAdRqy7GWUg2qeY5F000UrK8mmx8U1fCSoVbRwpuVJgTrLLBtM3Vj4+7nnJzIl
- E2wKSb/PJTpg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="130593839"
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="130593839"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 08:46:55 -0700
-IronPort-SDR: ih74wHAEYTgG09ISPxHpa0sZYUGRI/PD0HgCEATM0+pBVOUSwgyikQi0/0Q2DOSW/3f5JerjGz
- ZIhxFi+nRlFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="273290556"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga008.fm.intel.com with ESMTP; 27 Jul 2020 08:46:54 -0700
-Date:   Mon, 27 Jul 2020 08:46:54 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: nVMX: properly pad struct kvm_vmx_nested_state_hdr
-Message-ID: <20200727154654.GA8675@linux.intel.com>
-References: <20200713082824.1728868-1-vkuznets@redhat.com>
- <20200713151750.GA29901@linux.intel.com>
- <878sfntnoz.fsf@vitty.brq.redhat.com>
- <85fd54ff-01f5-0f1f-1bb7-922c740a37c1@redhat.com>
+        Mon, 27 Jul 2020 11:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729601AbgG0Pso (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 11:48:44 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BB50C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:48:44 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a14so15402114wra.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:48:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ftDaS4GB93pqR50K0HNKbC88ac2C5NLman44G8+/LyE=;
+        b=cj1m6D1+swe4DvbRaDEeTwdxgGLAdA0culkB6Ks72KZ3YF/BmYDotHHfe2/+AUJG5l
+         l1rQsTXvM7RO+oJdHgpMCmmCSP6Fc3/xaC4bD+7HQfE3/PEwvhaUCjNrHXJAXdqkxtRk
+         RodYtqA8PhxVLQ1zWBEuQgu65kRlrj18zaVdbAQ4SEMeB6eRqwzIK62XZeogD9dcq/ac
+         D3ZLysh+S5EnyQtnrvczHZ7SmdSUv1gjIBClYk+jZ0N+1AgHT8+e+KuhRH0UXsRnzq9s
+         I0958lQD71PhvsJrMc5owFCmX3UvrPO/7PAEcHu/2AlLiAxvO8jnEBv2CHpTCKWXOUJL
+         WQTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ftDaS4GB93pqR50K0HNKbC88ac2C5NLman44G8+/LyE=;
+        b=E5U4Uu51V9yha8ZoPN8PXINUMvXbThBs9jJ2fWG0qKhwPoKe8rQZLBA3q2RxKuARaP
+         N2N2v3EttH6aeeC5WONCI4Ljk3xh/oVvaQZESIRQrq5zKe7rVFH15c8SUQTGLGaJ/qkT
+         GuBpxE0o1o8ezgGNdC81aFFZHIVs+MZV3+AwYf+Mt61rpM5olMgCOu3NvMT3VuL7fbep
+         DwccIRja3p/mvMSzpk3lWrsrBMEB/YzeT90iWJyXLH7JugW4oQ3RD3uxBnKtHFrUfDyZ
+         tMSzQ2pgdfVq1+yEjIWTjFwp39t8VFOVCTHFSoL+zbnsnLBxivBnuvbMZyUsoCEAKZtZ
+         91Zw==
+X-Gm-Message-State: AOAM531pA/HxUhEqITk5eYudtpphI9a+NqXbyPvU3/x8gq8fj21RgYl8
+        xqyms1RIbfsh0iYLlqVqCv5gsw==
+X-Google-Smtp-Source: ABdhPJwGZmIBqv2Morq7xO0TtkIaGYFP6yK8oChVVtxF7/hPI4hIcO8UKMwe98O/xQHW7Hh7Ry8XpQ==
+X-Received: by 2002:a5d:544f:: with SMTP id w15mr21015839wrv.208.1595864922765;
+        Mon, 27 Jul 2020 08:48:42 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id r206sm34232wma.6.2020.07.27.08.48.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 08:48:42 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 16:48:40 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Subject: Re: [PATCH 1/8] mfd: mt6358: refine interrupt code
+Message-ID: <20200727154840.GY1850026@dell>
+References: <1595509133-5358-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1595509133-5358-2-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <85fd54ff-01f5-0f1f-1bb7-922c740a37c1@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1595509133-5358-2-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 01:43:34PM +0200, Paolo Bonzini wrote:
-> On 13/07/20 17:54, Vitaly Kuznetsov wrote:
-> > Which means that userspace built for the old kernel will potentially send in
-> > garbage for the new 'flags' field due to it being uninitialized stack data,
-> > even with the layout after this patch.
+On Thu, 23 Jul 2020, Hsin-Hsiung Wang wrote:
+
+> This patch refines the interrupt related code to support new chips.
+
+Refines in what way?
+
+What makes this better?
+
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/mfd/mt6358-irq.c        | 65 ++++++++++++++++++++++++-----------------
+>  include/linux/mfd/mt6358/core.h |  8 ++---
+>  2 files changed, 41 insertions(+), 32 deletions(-)
 > 
-> It might as well send it now if the code didn't attempt to zero the
-> struct before filling it in (this is another good reason to use a
-> "flags" field to say what's been filled in).
+> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
+> index db734f2..4b094e5 100644
+> --- a/drivers/mfd/mt6358-irq.c
+> +++ b/drivers/mfd/mt6358-irq.c
+> @@ -13,7 +13,9 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  
+> -static struct irq_top_t mt6358_ints[] = {
+> +#define MTK_PMIC_REG_WIDTH 16
+> +
+> +static const struct irq_top_t mt6358_ints[] = {
+>  	MT6358_TOP_GEN(BUCK),
+>  	MT6358_TOP_GEN(LDO),
+>  	MT6358_TOP_GEN(PSC),
+> @@ -24,6 +26,13 @@ static struct irq_top_t mt6358_ints[] = {
+>  	MT6358_TOP_GEN(MISC),
+>  };
+>  
+> +static struct pmic_irq_data mt6358_irqd = {
+> +	.num_top = ARRAY_SIZE(mt6358_ints),
+> +	.num_pmic_irqs = MT6358_IRQ_NR,
+> +	.top_int_status_reg = MT6358_TOP_INT_STATUS0,
+> +	.pmic_ints = mt6358_ints,
+> +};
 
-The issue is that flags itself could hold garbage.
+Dynamically assigned driver data is usually preferred.
 
-https://lkml.kernel.org/r/20200713151750.GA29901@linux.intel.com
+Why have you gone static?
 
->  I don't think special
-> casing padding is particularly useful; C11 for example requires
-> designated initializers to fill padding with zero bits[1] and even
-> before it's always been considered good behavior to use memset.
-> 
-> Paolo
-> 
-> [1]  It says: "If an object that has static or thread storage duration
-> is not initialized explicitly, then [...] any padding is initialized to
-> zero bits" 
-
-static and per-thread storage is unlikely to be relevant, 
-
-> and even for non-static objects, "If there are fewer
-> initializers in a brace-enclosed list than there are elements or members
-> of an aggregate [...] the remainder of the aggregate shall be
-> initialized implicitly the same as objects that have static storage
-> duration".
-
-That's specifically talking about members, not usused/padded space, e.g.
-smm.flags (in the hold struct) must be zeroed with this, but it doesn't
-say anything about initializing padding.
-
-  struct kvm_vmx_nested_state_hdr hdr = {
-      .vmxon_pa = root,
-      .vmcs12_pa = vmcs12,
-  };
-
-QEMU won't see issues because it zero allocates the entire nested state.
-
-All the above being said, after looking at the whole picture I think padding
-the header is a moot point.  The header is padded out to 120 bytes[*] when
-including in the full nested state, and KVM only ever consumes the header in
-the context of the full nested state.  I.e. if there's garbage at offset 6,
-odds are there's going to be garbage at offset 18, so internally padding the
-header does nothing.
-
-KVM should be checking that the unused bytes of (sizeof(pad) - sizeof(vmx/svm))
-is zero if we want to expand into the padding in the future.  Right now we're
-relying on userspace to zero allocate the struct without enforcing it.
-
-[*] Amusing side note, the comment in the header is wrong.  It states "pad
-    the header to 128 bytes", but only pads it to 120 bytes, because union.
-
-/* for KVM_CAP_NESTED_STATE */
-struct kvm_nested_state {
-	__u16 flags;
-	__u16 format;
-	__u32 size;
-
-	union {
-		struct kvm_vmx_nested_state_hdr vmx;
-		struct kvm_svm_nested_state_hdr svm;
-
-		/* Pad the header to 128 bytes.  */
-		__u8 pad[120];
-	} hdr;
-
-	/*
-	 * Define data region as 0 bytes to preserve backwards-compatability
-	 * to old definition of kvm_nested_state in order to avoid changing
-	 * KVM_{GET,PUT}_NESTED_STATE ioctl values.
-	 */
-	union {
-		struct kvm_vmx_nested_state_data vmx[0];
-		struct kvm_svm_nested_state_data svm[0];
-	} data;
-};
-
-
-Odds are no real VMM will have issue given the dynamic size of struct
-kvm_nested_state, but 
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
