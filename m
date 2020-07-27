@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69D0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88126C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8549D20792
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0F0206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:51:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgG0VvC (ORCPT
+        id S1726998AbgG0VvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 17:51:02 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34105 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbgG0Vu4 (ORCPT
+        Mon, 27 Jul 2020 17:51:01 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33061 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgG0Vu5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:50:56 -0400
-Received: by mail-qk1-f194.google.com with SMTP id x69so16842699qkb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:50:55 -0700 (PDT)
+        Mon, 27 Jul 2020 17:50:57 -0400
+Received: by mail-qk1-f195.google.com with SMTP id l23so16852118qkk.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:50:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xf8u112G9B6jocNxpIpSZ5Ma8y1M/w5PTt/UgbiI4/s=;
-        b=ZMsuDCfx/ThSZIAky4LIzEagGIbw1+E/u0IhdmOr/fR3FNrCqxQmVtUgRlhfYmAEdj
-         QmjukLET29BMQ5E4vNm0TzGWDXlvux4qrKPZO+WwlbLNry0u4e2WLn8XH/GcEZ3hiKZB
-         vNKSHQ8Hw9YutZwytIUNAlU/k946KxdUmVEXJ+c9uyWury7d3QlyGOqLXU6AfQBrjMWe
-         zQ5VSkNio0uHwbcOkIrDzZ8l8vpzrejluxEUVJTcUm67PzQ7RCTZx7PwkOW7t41sJ65H
-         O7DoNwf3ttoAnItL96ISt4Omu4+XlHGIGrQV+Yi1vfBTQ89lNZyOPMhALR89qGOQr1cD
-         dayA==
-X-Gm-Message-State: AOAM532/a4WFPbPKtd1GvwsE82i/5P/QN0p1CBtyk6gF2fXBjSvID5vD
-        hpAAwPsnFyBHrRjEFB62fsYIl5R9
-X-Google-Smtp-Source: ABdhPJwvTNjzxaJ0CBPfM3l41ojSWKcAqqK56y4tzPDyZNZNMTf7NEpoWfiFkmQt/TeswMFwR10T5w==
-X-Received: by 2002:a37:6482:: with SMTP id y124mr25625811qkb.470.1595886655245;
-        Mon, 27 Jul 2020 14:50:55 -0700 (PDT)
+        bh=l3GsyEgZ1ZhQH//T9847Gk3W7IJIff7D9aW0Sobp3BY=;
+        b=e2/lLoDoP1x+02XhLqhxicYwALW4kA57abfB/STbb+tyWT+qhi9s12C0khYbRf8jVC
+         h4/a4T9738t8AGI0gSJYvbyUKKU9mxEdIsQH9BJlkF3NTu6n886dx9ujP+gkkmIq8cPE
+         XnUET29EaeZ/VfUgThHsBByZiUji5YppLKfW9tJ7hfI/H5+QiRDPlkcQANmnA8/lbUIW
+         wdoUwfzHmFbvG/xMpZBsjqZYZXxKr8GsXbsHel2zqXYEngaBkqJcZ8HzjMhQBIOsXI30
+         bGiumDv7uh47d9sVXt8oQpch0WsWbBBdTPIlT9yHgn1v4Xe3aCQ1JzEnzPh80wLFDIC8
+         jkPA==
+X-Gm-Message-State: AOAM5327kwJ8tzF291X1TPAWjS5y9m+IB1eJIcFU3ddk2NCshTlSYj2W
+        +Do1VhDvtmUZzzzZTeRMYReC/H0x
+X-Google-Smtp-Source: ABdhPJyuA4LMINooE3m3CXgj9Y7/YHyndMG4PhvAVxu6BzcnHlYuCtqKUAiTVtX0yHma3F6usCte+Q==
+X-Received: by 2002:a05:620a:1292:: with SMTP id w18mr23265757qki.158.1595886656065;
+        Mon, 27 Jul 2020 14:50:56 -0700 (PDT)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id n90sm15629338qte.21.2020.07.27.14.50.54
+        by smtp.gmail.com with ESMTPSA id n90sm15629338qte.21.2020.07.27.14.50.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 14:50:54 -0700 (PDT)
+        Mon, 27 Jul 2020 14:50:55 -0700 (PDT)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Kees Cook <keescook@chromium.org>, x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 7/8] x86/kaslr: Clean up slot handling
-Date:   Mon, 27 Jul 2020 17:50:46 -0400
-Message-Id: <20200727215047.3341098-8-nivedita@alum.mit.edu>
+Subject: [PATCH 8/8] x86/kaslr: Don't use 64-bit mem_vector for 32-bit kernel
+Date:   Mon, 27 Jul 2020 17:50:47 -0400
+Message-Id: <20200727215047.3341098-9-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200727215047.3341098-1-nivedita@alum.mit.edu>
 References: <20200727215047.3341098-1-nivedita@alum.mit.edu>
@@ -59,127 +59,194 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The number of slots and slot areas can be unsigned int, since on 64-bit,
-the maximum amount of memory is 2^52, the minimum alignment is 2^21, so
-the slot number cannot be greater than 2^31. The slot areas are limited
-by MAX_SLOT_AREA, currently 100. Replace the type used for slot number,
-which is currently a mix of int and unsigned long, with unsigned int
-consistently.
+Commit
+  f28442497b5c ("x86/boot: Fix KASLR and memmap= collision")
+converted mem_vector type to use 64-bit on the 32-bit kernel as well,
+based on Thomas's review [0]. However:
+- the code still doesn't consistently use 64-bit types. For instance,
+  mem_avoid_overlap uses 32-bit types when checking for overlaps.  This
+  is actually okay, as the passed in memory range will have been clipped
+  to below 4G, but it is difficult to reason about the safety of the
+  code.
+- KASLR on 32-bit can't use memory above 4G anyway, so it's pointless
+  to keep track of ranges above 4G.
 
-Drop unnecessary check that number of slots is not zero in
-store_slot_info, it's guaranteed to be at least 1 by the calculation.
+Switch the type back to unsigned long, and use a helper function to clip
+regions to 4G on 32-bit, when storing mem_avoid, immovable_mem, EFI,
+E820 and command-line memory regions.
 
-Drop unnecessary alignment of image_size to CONFIG_PHYSICAL_ALIGN in
-find_random_virt_addr, it cannot change the result: the largest valid
-slot is the largest n that satisfies
-
-  minimum + n * CONFIG_PHYSICAL_ALIGN + image_size <= KERNEL_IMAGE_SIZE
-
-(since minimum is already aligned) and so n is equal to
-
-  (KERNEL_IMAGE_SIZE - minimum - image_size) / CONFIG_PHYSICAL_ALIGN
-
-even if image_size is not aligned to CONFIG_PHYSICAL_ALIGN.
+[0] https://lore.kernel.org/linux-nvdimm/alpine.DEB.2.20.1701111246400.3579@nanos/
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- arch/x86/boot/compressed/kaslr.c | 36 ++++++++++++--------------------
- 1 file changed, 13 insertions(+), 23 deletions(-)
+ arch/x86/boot/compressed/acpi.c  |  7 +++----
+ arch/x86/boot/compressed/kaslr.c | 25 ++++++++++---------------
+ arch/x86/boot/compressed/misc.h  | 19 +++++++++++++++++--
+ 3 files changed, 30 insertions(+), 21 deletions(-)
 
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index 8bcbcee54aa1..d09e0ec5637e 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -106,7 +106,7 @@ static acpi_physical_address kexec_get_rsdp_addr(void)
+ 	}
+ 
+ 	/* Get systab from boot params. */
+-	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
++	systab = (efi_system_table_64_t *) (ei->efi_systab | ((u64)ei->efi_systab_hi << 32));
+ 	if (!systab)
+ 		error("EFI system table not found in kexec boot_params.");
+ 
+@@ -139,7 +139,7 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+ 
+ 	/* Get systab from boot params. */
+ #ifdef CONFIG_X86_64
+-	systab = ei->efi_systab | ((__u64)ei->efi_systab_hi << 32);
++	systab = ei->efi_systab | ((u64)ei->efi_systab_hi << 32);
+ #else
+ 	if (ei->efi_systab_hi || ei->efi_memmap_hi) {
+ 		debug_putstr("Error getting RSDP address: EFI system table located above 4GB.\n");
+@@ -404,8 +404,7 @@ int count_immovable_mem_regions(void)
+ 
+ 			ma = (struct acpi_srat_mem_affinity *)sub_table;
+ 			if (!(ma->flags & ACPI_SRAT_MEM_HOT_PLUGGABLE) && ma->length) {
+-				immovable_mem[num].start = ma->base_address;
+-				immovable_mem[num].size = ma->length;
++				immovable_mem[num] = mem_vector_ctor(ma->base_address, ma->length);
+ 				num++;
+ 			}
+ 
 diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 29ec964b1330..ffbcc0444f70 100644
+index ffbcc0444f70..8bf4ceceb8ce 100644
 --- a/arch/x86/boot/compressed/kaslr.c
 +++ b/arch/x86/boot/compressed/kaslr.c
-@@ -511,16 +511,14 @@ static bool mem_avoid_overlap(struct mem_vector *img,
+@@ -98,7 +98,7 @@ static bool memmap_too_large;
+  * Store memory limit: MAXMEM on 64-bit and KERNEL_IMAGE_SIZE on 32-bit.
+  * It may be reduced by "mem=nn[KMG]" or "memmap=nn[KMG]" command line options.
+  */
+-static unsigned long long mem_limit;
++static unsigned long mem_limit;
  
- struct slot_area {
- 	unsigned long addr;
--	int num;
-+	unsigned int num;
+ /* Number of immovable memory regions */
+ static int num_immovable_mem;
+@@ -141,8 +141,7 @@ enum parse_mode {
  };
  
- #define MAX_SLOT_AREA 100
- 
- static struct slot_area slot_areas[MAX_SLOT_AREA];
--
--static unsigned long slot_max;
--
--static unsigned long slot_area_index;
-+static unsigned int slot_area_index;
-+static unsigned int slot_max;
- 
- static void store_slot_info(struct mem_vector *region, unsigned long image_size)
+ static int
+-parse_memmap(char *p, unsigned long long *start, unsigned long long *size,
+-		enum parse_mode mode)
++parse_memmap(char *p, u64 *start, u64 *size, enum parse_mode mode)
  {
-@@ -530,13 +528,10 @@ static void store_slot_info(struct mem_vector *region, unsigned long image_size)
- 		return;
+ 	char *oldp;
  
- 	slot_area.addr = region->start;
--	slot_area.num = (region->size - image_size) /
--			CONFIG_PHYSICAL_ALIGN + 1;
-+	slot_area.num = 1 + (region->size - image_size) / CONFIG_PHYSICAL_ALIGN;
+@@ -172,7 +171,7 @@ parse_memmap(char *p, unsigned long long *start, unsigned long long *size,
+ 			 */
+ 			*size = 0;
+ 		} else {
+-			unsigned long long flags;
++			u64 flags;
  
--	if (slot_area.num > 0) {
--		slot_areas[slot_area_index++] = slot_area;
--		slot_max += slot_area.num;
--	}
-+	slot_areas[slot_area_index++] = slot_area;
-+	slot_max += slot_area.num;
- }
+ 			/*
+ 			 * efi_fake_mem=nn@ss:attr the attr specifies
+@@ -211,7 +210,7 @@ static void mem_avoid_memmap(enum parse_mode mode, char *str)
  
- /*
-@@ -589,8 +584,7 @@ process_gb_huge_pages(struct mem_vector *region, unsigned long image_size)
+ 	while (str && (i < MAX_MEMMAP_REGIONS)) {
+ 		int rc;
+-		unsigned long long start, size;
++		u64 start, size;
+ 		char *k = strchr(str, ',');
  
- static unsigned long slots_fetch_random(void)
- {
--	unsigned long slot;
--	int i;
-+	unsigned int slot, i;
- 
- 	/* Handle case of no slots stored. */
- 	if (slot_max == 0)
-@@ -603,7 +597,7 @@ static unsigned long slots_fetch_random(void)
- 			slot -= slot_areas[i].num;
+ 		if (k)
+@@ -230,8 +229,7 @@ static void mem_avoid_memmap(enum parse_mode mode, char *str)
  			continue;
  		}
--		return slot_areas[i].addr + slot * CONFIG_PHYSICAL_ALIGN;
-+		return slot_areas[i].addr + (unsigned long)slot * CONFIG_PHYSICAL_ALIGN;
+ 
+-		mem_avoid[MEM_AVOID_MEMMAP_BEGIN + i].start = start;
+-		mem_avoid[MEM_AVOID_MEMMAP_BEGIN + i].size = size;
++		mem_avoid[MEM_AVOID_MEMMAP_BEGIN + i] = mem_vector_ctor(start, size);
+ 		i++;
  	}
  
- 	if (i == slot_area_index)
-@@ -819,28 +813,24 @@ static unsigned long find_random_phys_addr(unsigned long minimum,
- 		return 0;
- 	}
+@@ -422,8 +420,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
+ 	initrd_start |= boot_params->hdr.ramdisk_image;
+ 	initrd_size  = (u64)boot_params->ext_ramdisk_size << 32;
+ 	initrd_size |= boot_params->hdr.ramdisk_size;
+-	mem_avoid[MEM_AVOID_INITRD].start = initrd_start;
+-	mem_avoid[MEM_AVOID_INITRD].size = initrd_size;
++	mem_avoid[MEM_AVOID_INITRD] = mem_vector_ctor(initrd_start, initrd_size);
+ 	/* No need to set mapping for initrd, it will be handled in VO. */
  
--	if (process_efi_entries(minimum, image_size))
--		return slots_fetch_random();
-+	if (!process_efi_entries(minimum, image_size))
-+		process_e820_entries(minimum, image_size);
- 
--	process_e820_entries(minimum, image_size);
- 	return slots_fetch_random();
- }
- 
- static unsigned long find_random_virt_addr(unsigned long minimum,
- 					   unsigned long image_size)
- {
--	unsigned long slots, random_addr;
--
--	/* Align image_size for easy slot calculations. */
--	image_size = ALIGN(image_size, CONFIG_PHYSICAL_ALIGN);
-+	unsigned int slots;
-+	unsigned long random_addr;
- 
- 	/*
- 	 * There are how many CONFIG_PHYSICAL_ALIGN-sized slots
- 	 * that can hold image_size within the range of minimum to
- 	 * KERNEL_IMAGE_SIZE?
+ 	/* Avoid kernel command line. */
+@@ -673,7 +670,7 @@ static bool process_mem_region(struct mem_vector *region,
+ 	 * immovable memory and @region.
  	 */
--	slots = (KERNEL_IMAGE_SIZE - minimum - image_size) /
--		 CONFIG_PHYSICAL_ALIGN + 1;
-+	slots = 1 + (KERNEL_IMAGE_SIZE - minimum - image_size) / CONFIG_PHYSICAL_ALIGN;
+ 	for (i = 0; i < num_immovable_mem; i++) {
+-		unsigned long long start, end, entry_end, region_end;
++		unsigned long start, end, entry_end, region_end;
+ 		struct mem_vector entry;
  
- 	random_addr = kaslr_get_random_long("Virtual") % slots;
+ 		if (!mem_overlaps(region, &immovable_mem[i]))
+@@ -728,7 +725,7 @@ process_efi_entries(unsigned long minimum, unsigned long image_size)
+ 	}
+ 	pmap =  e->efi_memmap;
+ #else
+-	pmap = (e->efi_memmap | ((__u64)e->efi_memmap_hi << 32));
++	pmap = (e->efi_memmap | ((u64)e->efi_memmap_hi << 32));
+ #endif
  
+ 	nr_desc = e->efi_memmap_size / e->efi_memdesc_size;
+@@ -765,8 +762,7 @@ process_efi_entries(unsigned long minimum, unsigned long image_size)
+ 		    !(md->attribute & EFI_MEMORY_MORE_RELIABLE))
+ 			continue;
+ 
+-		region.start = md->phys_addr;
+-		region.size = md->num_pages << EFI_PAGE_SHIFT;
++		region = mem_vector_ctor(md->phys_addr, md->num_pages << EFI_PAGE_SHIFT);
+ 		if (process_mem_region(&region, minimum, image_size))
+ 			break;
+ 	}
+@@ -793,8 +789,7 @@ static void process_e820_entries(unsigned long minimum,
+ 		/* Skip non-RAM entries. */
+ 		if (entry->type != E820_TYPE_RAM)
+ 			continue;
+-		region.start = entry->addr;
+-		region.size = entry->size;
++		region = mem_vector_ctor(entry->addr, entry->size);
+ 		if (process_mem_region(&region, minimum, image_size))
+ 			break;
+ 	}
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 726e264410ff..fd7c49ab0f02 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -70,10 +70,25 @@ int cmdline_find_option(const char *option, char *buffer, int bufsize);
+ int cmdline_find_option_bool(const char *option);
+ 
+ struct mem_vector {
+-	unsigned long long start;
+-	unsigned long long size;
++	unsigned long start;
++	unsigned long size;
+ };
+ 
++static inline
++struct mem_vector mem_vector_ctor(u64 start, u64 size)
++{
++	u64 end = start + size;
++	struct mem_vector ret;
++
++	start = min_t(u64, start, ULONG_MAX);
++	end   = min_t(u64, end,   ULONG_MAX);
++
++	ret.start = (unsigned long)start;
++	ret.size  = (unsigned long)(end - start);
++
++	return ret;
++}
++
+ #if CONFIG_RANDOMIZE_BASE
+ /* kaslr.c */
+ void choose_random_location(unsigned long input,
 -- 
 2.26.2
 
