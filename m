@@ -2,140 +2,101 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEEAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04DA12065E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209A02075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:23:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595845417;
+	bh=XxYim61vj9XWnTWAtCc0xM5uLcDRky2FtTMJkZV70us=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SgxVsvnObRlTPuh8fNH4BLdxKzwo5O2N3uevgbxLCH/6ZQlHYO4F1W4IMkhQ24iwq
+	 c+RhzSRklFn3u8qlhzjL1kz+h01z/RABegJZkE75ycJVNdUFhuHe7M9x8l8wL8xflx
+	 TJtDY/ZCNzq08rsEu2hXeL+yRVS9ZNqNlLeMOkaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgG0KWr (ORCPT
+        id S1727957AbgG0KXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:22:47 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2530 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727813AbgG0KWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:22:47 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 58BA1E7371DCCA907CA0;
-        Mon, 27 Jul 2020 11:22:45 +0100 (IST)
-Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
- 2020 11:22:44 +0100
-Date:   Mon, 27 Jul 2020 11:21:21 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
-        <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [RFC PATCH 1/9] pci_ids: Add class code and extended capability
- for RCEC
-Message-ID: <20200727112121.00007653@Huawei.com>
-In-Reply-To: <20200727110010.00005042@Huawei.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
-        <20200724172223.145608-2-sean.v.kelley@intel.com>
-        <20200727110010.00005042@Huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 27 Jul 2020 06:23:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726979AbgG0KXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 06:23:35 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4646720759;
+        Mon, 27 Jul 2020 10:23:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595845414;
+        bh=XxYim61vj9XWnTWAtCc0xM5uLcDRky2FtTMJkZV70us=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NnLmhWv6HUMsyD3x495ERz0avjjxK92vbN0UJjhd++oT+8cMBQ/pSVQ2M38/ot9eT
+         S6X2Wc808FKsqOH+QlgIJWSHj1/Ml8R4Pbermm0l7ikLZ/i8mJjP+lVpHFaHGzloDE
+         C0XYDif9CRWu/pnNJJUZRWGqfTLkRlEDI6cMrvCY=
+Date:   Mon, 27 Jul 2020 11:23:17 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org, lgirdwood@gmail.com
+Subject: Re: [PATCH v3] usb: dwc3: Add support for VBUS power control
+Message-ID: <20200727102317.GA6275@sirena.org.uk>
+References: <20200619142512.19824-1-mike.looijmans@topic.nl>
+ <20200723075612.tn5dbkhes2chohwh@axis.com>
+ <20200723110523.GA4759@sirena.org.uk>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.2698920d-90ba-4c46-abda-83e18e2093c8@emailsignatures365.codetwo.com>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.0d2bd5fa-15cc-4b27-b94e-83614f9e5b38.ac9c2a67-d7df-4f70-81b3-db983bbfb4db@emailsignatures365.codetwo.com>
+ <e63ee918-c9e3-a8ee-e7c5-577b5a3e09be@topic.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.176]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
+Content-Disposition: inline
+In-Reply-To: <e63ee918-c9e3-a8ee-e7c5-577b5a3e09be@topic.nl>
+X-Cookie: Doing gets it done.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 11:00:10 +0100
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-> On Fri, 24 Jul 2020 10:22:15 -0700
-> Sean V Kelley <sean.v.kelley@intel.com> wrote:
-> 
-> > From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> > 
-> > A PCIe Root Complex Event Collector(RCEC) has the base class 0x08,
-> > sub-class 0x07, and programming interface 0x00. Add the class code
-> > 0x0807 to identify RCEC devices and add the defines for the RCEC
-> > Endpoint Association Extended Capability.
-> > 
-> > See PCI Express Base Specification, version 5.0-1, section "1.3.4
-> > Root Complex Event Collector" and section "7.9.10 Root Complex
-> > Event Collector Endpoint Association Extended Capability"  
-> 
-> Add a reference to the document
-> "PCI Code and ID Assignment Specification"
-> for the class number.
+--huq684BweRXVnRxX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Actually probably no need. I'd somehow managed to fail to notice the
-class code is also given in section 1.3.4 of the main spec.
+On Sun, Jul 26, 2020 at 09:10:39AM +0200, Mike Looijmans wrote:
+> On 23-07-2020 13:05, Mark Brown wrote:
 
-> 
-> From the change log on latest version seems like it's been there since
-> version 1.4.
-> 
-> There is a worrying note (bottom of page 16 of 1.12 version of that docs)
-> in there that says some older specs used 0x0806 for RCECs and that we
-> should use the port type field to actually check if we have one.
-> 
-> Hopefully we won't encounter any of those in the wild.
-> 
-> Otherwise, it's exactly what the spec says.
-> We could bike shed on naming choices, but the ones you have seem clear enough
-> to me.
-> 
-> FWIW
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> 
-> Jonathan
-> > 
-> > Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> > ---
-> >  include/linux/pci_ids.h       | 1 +
-> >  include/uapi/linux/pci_regs.h | 7 +++++++
-> >  2 files changed, 8 insertions(+)
-> > 
-> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > index 0ad57693f392..de8dff1fb176 100644
-> > --- a/include/linux/pci_ids.h
-> > +++ b/include/linux/pci_ids.h
-> > @@ -81,6 +81,7 @@
-> >  #define PCI_CLASS_SYSTEM_RTC		0x0803
-> >  #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
-> >  #define PCI_CLASS_SYSTEM_SDHCI		0x0805
-> > +#define PCI_CLASS_SYSTEM_RCEC		0x0807
-> >  #define PCI_CLASS_SYSTEM_OTHER		0x0880
-> >  
-> >  #define PCI_BASE_CLASS_INPUT		0x09
-> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> > index f9701410d3b5..f335f65f65d6 100644
-> > --- a/include/uapi/linux/pci_regs.h
-> > +++ b/include/uapi/linux/pci_regs.h
-> > @@ -828,6 +828,13 @@
-> >  #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system budget */
-> >  #define PCI_EXT_CAP_PWR_SIZEOF	16
-> >  
-> > +/* Root Complex Event Collector Endpoint Association  */
-> > +#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
-> > +#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
-> > +#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version that BUSN present */
-> > +#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
-> > +#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
-> > +
-> >  /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
-> >  #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
-> >  #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)  
-> 
+> > Does the device actually support running without power so that's a thing
+> > that can happen?  _get_optional() should only ever be used for supplies
+> > that may be physically absent.
 
+> It's the 5V VBUS power for the USB "plug" that's being controlled here. It
+> must turned on when the controller is in "host" mode. Some boards arrange
+> this in hardware through the PHY, and some just don't have any control at
+> all and have it permanently on or off. On a board where the 5V is controlled
+> using a GPIO line or an I2C chip, this patch is required to make it work.
 
+That sounds like the driver should not be using _get_optional() then.
+
+--huq684BweRXVnRxX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8eqxQACgkQJNaLcl1U
+h9D37gf+MqVp+KCPE5nCp6z56WtbbJ2SsaT2cXZ4Bu/Tftpv5fJXImgfZVXoiMo8
+izzNNNSlBbUvB4O9eBb5M303A+ObHHVGTYkZ7L2HO87ulhK3y0Xj/8mXti+IatXD
+uRLB4S5p4mf4tVxQYtWB7ipPMTfwrc3EpqnEb6pScY4OTtshbBoJH5sBKI6h2qnf
+5NRbXA7INPlp/nnobxhy1PL4sPs3sI8PCaBXbTWA+Kb/g8vVLUSGi32/zDTtjL2U
+niI6uey6i9PwraKfP+ZaU280nuoHd0zrs7MnGXuUcP0sxgd7NIRYQ7DMs/hhIhF4
+ebDKZ3eJuHkhhVWxU2ukURV5h+LOcw==
+=OkVm
+-----END PGP SIGNATURE-----
+
+--huq684BweRXVnRxX--
