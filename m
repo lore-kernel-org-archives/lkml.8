@@ -2,198 +2,284 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 621AC206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E11206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:39:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SQNYbubV"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="vhf34NpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbgG0PiP (ORCPT
+        id S1730830AbgG0Pjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:38:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49172 "EHLO
+        Mon, 27 Jul 2020 11:39:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729509AbgG0PiO (ORCPT
+        with ESMTP id S1729049AbgG0Pjn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:38:14 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DEE1C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:38:14 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d1so8195110plr.8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:38:14 -0700 (PDT)
+        Mon, 27 Jul 2020 11:39:43 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 865E7C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:39:43 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id il6so3865506pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:39:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=NkVbGEZqq2gtUYFFHihdCf9UlSJbj6QF8gPVaF8Bfbo=;
-        b=SQNYbubVmJC7AL7K9qiuOd/Gn3pZrb2Pj6GSZkzj5uiofy/xe8+FFypgWHTLDIlppl
-         JCleeZ9of5qVBsZWWlVx7kXEfl+m3LqjmR2QBW7rfu9QuEuS5xziWEVE6GYrMCSrSs7O
-         kXoF4xAo3teKyO/XcsnRddniMMAbVRMgsTEv33E/v4LDLxnHshM4KCBgvpoy/iQTXhIR
-         Btb28CisbS4v3W9GLSU1hM0q+zgKqoP8W0PEu1aTj9UldG7y3uuYRHT6tHkNmGwLJ2MN
-         99ss8OhFnJUsX021lCurIDBdvJGxzfmGkcXigsmA+phWdEJgEe+K7PpzOC3sq58gPFd7
-         W0Iw==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qeeFM2bqqm7Pdc6T9HvDOkYabM11vNorXeX2zlS9K54=;
+        b=vhf34NpACds/YSGc71eoyGJ72NMM4ZORy5yA3ZXbCrStEESeeFyyVkF300KCQaBC8w
+         PSaKk+FFNnGB0sf6xvZDd3BMDMkNhLqSUKtwwU4G8T/cMah+XdAe8M5J3lXpcfClB/c7
+         y3i6SaKs4u3NrbsrRScVX7Vq9nyEHH2lKsM3PYK3sxWLm3qRDXd1LyTnX6TQqSNae7EI
+         eIneM6S8FwgM+2lf2XyF77m7PFzF2rSUtgVFvqH8DW0sz1bwanvY39B1MRH/ylt0wl4f
+         HJZS8OSKEeJ5F39Qj6gJE2c4a9z2azeod2fzwFU3wzSLlY8/gaa8+RHBUfcYDEJOa4oC
+         UzHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=NkVbGEZqq2gtUYFFHihdCf9UlSJbj6QF8gPVaF8Bfbo=;
-        b=GbPe+Ro4kkWxc2w3B/26dQwWpew03PPbc4new6bm99x2SFkJDPXQNxlgPIaYbPOZ9+
-         bta2O4YdVNMc+ji3tjO7OGnpy02Rcb6Ch8c2K9tVXSsRwc/sarV7t3HL6HCWm1vCRdPK
-         2jQ/p56uMnQKPPN6CJrsofm8rB1GZtgc/oCNePEB3VlBrhaK1IE9NjFWLySu/bk7pV/X
-         TimVIn9UGm8GpQNfFdiktI5NTmIii7lRgHoLKVdOm0HBREN+zTb7t3tsnkvwgB9pkYLP
-         LbSkTIEpYKbOQfCz4zLbkUF5gXTUBo51qU8mojZ28eUq0f50n3fqGEPUiy/p6UB4sq1O
-         80kw==
-X-Gm-Message-State: AOAM530vXmebJ/iJUm3TkB8i3GQEVHkCNctd88fuMdjHKT0DA8OPXR8x
-        6/805FRneb52SvjKF8sQ2nX1Cg==
-X-Google-Smtp-Source: ABdhPJzAXd8kJn2pS6mbPjKZXLIavxQW9wr44q5/JPYSYykSlpkS173kdTtzJWxxIonR/XqZ3Jaxlg==
-X-Received: by 2002:a17:90a:ea0b:: with SMTP id w11mr2833577pjy.80.1595864293473;
-        Mon, 27 Jul 2020 08:38:13 -0700 (PDT)
-Received: from localhost ([223.190.9.130])
-        by smtp.gmail.com with ESMTPSA id y19sm4363801pfn.77.2020.07.27.08.38.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 Jul 2020 08:38:12 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 21:08:06 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Taniya Das <tdas@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
- power-domains for venus
-Message-ID: <20200727153806.kgegadvghmkevch3@vireshk-mac-ubuntu>
-References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
- <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
- <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
- <94581989-e069-55e5-6b70-919185eda33e@linaro.org>
- <e0c03ce2-136c-2c5c-6f36-bb0c69a82e2d@codeaurora.org>
- <5a8af2da-cc3f-005d-47e6-b36be1104d6a@codeaurora.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qeeFM2bqqm7Pdc6T9HvDOkYabM11vNorXeX2zlS9K54=;
+        b=gvJneXB7zwzi6owK+5hqXYCG6mmBgTzNQy1YEuhJRdoIIx0+fOlayTHz9FmkzRBCVe
+         yW/X7dO/TgUYXlgSiayqptWfyIzT9/NaMTBa1lnexh7kLzec1JjYBUsVinDxTrOgPhNr
+         7nbAZL1ge1UYUa5T9NvdeP/ms3i1cCetmd/EzAx7/Pjdq7+v9ZJwjXbUAZy6UEOG0bqS
+         Rr/LeL4849xJU26HF4+hzA+O4GCVpd2Zb3JkIV/jVr3NdOBpRnpWYnm7sKEKHbcFqkOu
+         uvs9BiQVhBiycFTVXgLXzJbLLY0YGhIGlxY19QO9jhf6tcOjAndNsP9Tgvy9OV3lZJWH
+         tV5g==
+X-Gm-Message-State: AOAM530hzDg2sZvHG04mU51hOyCDJ/Pzt0Z11YBVcY8m1LEz3EgqHRFU
+        T0GoW6SxyBJuqk8gpU3hUTib5w==
+X-Google-Smtp-Source: ABdhPJyqMal+7S3RURFS+mH7372yuxqLtS6DhV/dJoOjNq1VsqZhaUjtImYT21fxJGhSXLaKgBfcTQ==
+X-Received: by 2002:a17:902:bd90:: with SMTP id q16mr18126853pls.54.1595864382998;
+        Mon, 27 Jul 2020 08:39:42 -0700 (PDT)
+Received: from [192.168.1.102] (c-24-20-148-49.hsd1.or.comcast.net. [24.20.148.49])
+        by smtp.gmail.com with ESMTPSA id s22sm14545536pgv.43.2020.07.27.08.39.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Jul 2020 08:39:42 -0700 (PDT)
+From:   "Sean V Kelley" <sean.v.kelley@intel.com>
+To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
+Cc:     bhelgaas@google.com, rjw@rjwysocki.net,
+        "Raj, Ashok" <ashok.raj@intel.com>, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Qiuxu Zhuo" <qiuxu.zhuo@intel.com>
+Subject: Re: [RFC PATCH 6/9] PCI: Add 'rcec' field to pci_dev for associated
+ RCiEPs
+Date:   Mon, 27 Jul 2020 08:39:43 -0700
+X-Mailer: MailMate (1.13.1r5671)
+Message-ID: <9C45284A-6959-4CDE-AD56-2A9B9536403C@intel.com>
+In-Reply-To: <20200727122358.00006c23@Huawei.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+ <20200724172223.145608-7-sean.v.kelley@intel.com>
+ <20200727122358.00006c23@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5a8af2da-cc3f-005d-47e6-b36be1104d6a@codeaurora.org>
-User-Agent: NeoMutt/20170609 (1.8.3)
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-07-20, 17:38, Rajendra Nayak wrote:
-> 
-> On 7/27/2020 11:23 AM, Rajendra Nayak wrote:
-> > 
-> > 
-> > On 7/24/2020 7:39 PM, Stanimir Varbanov wrote:
-> > > Hi,
-> > > 
-> > > On 7/23/20 9:06 PM, Stanimir Varbanov wrote:
-> > > > Hi Rajendra,
-> > > > 
-> > > > After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
-> > > > below messages on db845:
-> > > > 
-> > > > qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
-> > > > current OPP for freq 533000097 (-34)
-> > > > 
-> > > > ^^^ This one is new.
-> > > > 
-> > > > qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
-> > > > 
-> > > > ^^^ and this message is annoying, can we make it pr_debug in rpmh?
-> > > > 
-> > > > On 7/23/20 2:26 PM, Rajendra Nayak wrote:
-> > > > > Add the OPP tables in order to be able to vote on the performance state of
-> > > > > a power-domain.
-> > > > > 
-> > > > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> > > > > ---
-> > > > >   arch/arm64/boot/dts/qcom/sdm845.dtsi | 40 ++++++++++++++++++++++++++++++++++--
-> > > > >   1 file changed, 38 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > > > index e506793..5ca2265 100644
-> > > > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > > > @@ -3631,8 +3631,10 @@
-> > > > >               interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> > > > >               power-domains = <&videocc VENUS_GDSC>,
-> > > > >                       <&videocc VCODEC0_GDSC>,
-> > > > > -                    <&videocc VCODEC1_GDSC>;
-> > > > > -            power-domain-names = "venus", "vcodec0", "vcodec1";
-> > > > > +                    <&videocc VCODEC1_GDSC>,
-> > > > > +                    <&rpmhpd SDM845_CX>;
-> > > > > +            power-domain-names = "venus", "vcodec0", "vcodec1", "cx";
-> > > > > +            operating-points-v2 = <&venus_opp_table>;
-> > > > >               clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-> > > > >                    <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-> > > > >                    <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
-> > > > > @@ -3654,6 +3656,40 @@
-> > > > >               video-core1 {
-> > > > >                   compatible = "venus-encoder";
-> > > > >               };
-> > > > > +
-> > > > > +            venus_opp_table: venus-opp-table {
-> > > > > +                compatible = "operating-points-v2";
-> > > > > +
-> > > > > +                opp-100000000 {
-> > > > > +                    opp-hz = /bits/ 64 <100000000>;
-> > > > > +                    required-opps = <&rpmhpd_opp_min_svs>;
-> > > > > +                };
-> > > > > +
-> > > > > +                opp-200000000 {
-> > > > > +                    opp-hz = /bits/ 64 <200000000>;
-> > > > > +                    required-opps = <&rpmhpd_opp_low_svs>;
-> > > > > +                };
-> > > > > +
-> > > > > +                opp-320000000 {
-> > > > > +                    opp-hz = /bits/ 64 <320000000>;
-> > > > > +                    required-opps = <&rpmhpd_opp_svs>;
-> > > > > +                };
-> > > > > +
-> > > > > +                opp-380000000 {
-> > > > > +                    opp-hz = /bits/ 64 <380000000>;
-> > > > > +                    required-opps = <&rpmhpd_opp_svs_l1>;
-> > > > > +                };
-> > > > > +
-> > > > > +                opp-444000000 {
-> > > > > +                    opp-hz = /bits/ 64 <444000000>;
-> > > > > +                    required-opps = <&rpmhpd_opp_nom>;
-> > > > > +                };
-> > > > > +
-> > > > > +                opp-533000000 {
-> > > > > +                    opp-hz = /bits/ 64 <533000000>;
+On 27 Jul 2020, at 4:23, Jonathan Cameron wrote:
 
-Is this the highest OPP in table ?
+> On Fri, 24 Jul 2020 10:22:20 -0700
+> Sean V Kelley <sean.v.kelley@intel.com> wrote:
+>
+>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>>
+>> When attempting error recovery for an RCiEP associated with an RCEC =
 
-> > > Actually it comes from videocc, where ftbl_video_cc_venus_clk_src
-> > > defines 533000000 but the real calculated freq is 533000097.
-> > 
-> > I still don't quite understand why the videocc driver returns this
-> > frequency despite this not being in the freq table.
-> 
-> Ok, so I see the same issue on sc7180 also. clk_round_rate() does seem to
-> return whats in the freq table, but clk_set_rate() goes ahead and sets it
-> to 533000097. Subsequently when we try to set a different OPP, it fails to
-> find the 'current' OPP entry for 533000097. This sounds like an issue with the OPP
-> framework? Should we not fall back to the highest OPP as the current OPP?
-> 
-> Stephen/Viresh, any thoughts?
+>> device,
+>> there needs to be a way to update the Root Error Status, the =
 
-I think we (in all frameworks generally) try to set a frequency <=
-target frequency and so there may be a problem if the frequency is
-larger than highest supported. IOW, you need to fix tables a bit.
+>> Uncorrectable
+>> Error Status and the Uncorrectable Error Severity of the parent RCEC.
+>> So add the 'rcec' field to the pci_dev structure and provide a hook =
 
--- 
-viresh
+>> for the
+>> Root Port Driver to associate RCiEPs with their respective parent =
+
+>> RCEC.
+>>
+>> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+>
+> I haven't tested yet, but I think there is one path in here that =
+
+> breaks
+> my case (no OS visible rcec / all done in firmware GHESv2 / APEI)
+>
+> Jonathan
+
+Okay, keep me up to date and if there is a way I can reproduce or better =
+
+test for your use case let me know and I will do so.
+
+>
+>> ---
+>>  drivers/pci/pcie/aer.c         |  9 +++++----
+>>  drivers/pci/pcie/err.c         |  9 +++++++++
+>>  drivers/pci/pcie/portdrv_pci.c | 15 +++++++++++++++
+>>  include/linux/pci.h            |  3 +++
+>>  4 files changed, 32 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>> index 3acf56683915..f1bf06be449e 100644
+>> --- a/drivers/pci/pcie/aer.c
+>> +++ b/drivers/pci/pcie/aer.c
+>> @@ -1335,17 +1335,18 @@ static int aer_probe(struct pcie_device *dev)
+>>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+>>  {
+>>  	int aer =3D dev->aer_cap;
+>> +	int rc =3D 0;
+>>  	u32 reg32;
+>> -	int rc;
+>> -
+>>
+>>  	/* Disable Root's interrupt in response to error messages */
+>>  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+>>  	reg32 &=3D ~ROOT_PORT_INTR_ON_MESG_MASK;
+>>  	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
+>>
+>> -	rc =3D pci_bus_error_reset(dev);
+>> -	pci_info(dev, "Root Port link has been reset\n");
+>> +	if (pci_pcie_type(dev) !=3D PCI_EXP_TYPE_RC_EC) {
+>> +		rc =3D pci_bus_error_reset(dev);
+>> +		pci_info(dev, "Root Port link has been reset\n");
+>> +	}
+>>
+>>  	/* Clear Root Error Status */
+>>  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
+>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>> index 9b3ec94bdf1d..0aae7643132e 100644
+>> --- a/drivers/pci/pcie/err.c
+>> +++ b/drivers/pci/pcie/err.c
+>> @@ -203,6 +203,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev =
+
+>> *dev,
+>>  		pci_walk_dev_affected(dev, report_frozen_detected, &status);
+>>  		if (pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_RC_END) {
+>>  			status =3D flr_on_rciep(dev);
+>> +			/*
+>> +			 * The callback only clears the Root Error Status
+>> +			 * of the RCEC (see aer.c).
+>> +			 */
+>> +			reset_link(dev->rcec);
+>
+> This looks dangerous for my case where APEI / GHESv2 is used.  In that =
+
+> case
+> we don't expose an RCEC at all.   I don't think the reset_link =
+
+> callback
+> is safe to a null pointer here.  Fix may be as simple as
+> if (dev->rcec)
+> 	reset_link(dev->rcec);
+
+Good catch.  Will look to NULL case as well as walk through code where =
+
+dev->rcec is further referenced (below and elsewhere) to ensure nothing =
+
+falls through. Glad you are pointing these out.
+
+>
+>
+>>  			if (status !=3D PCI_ERS_RESULT_RECOVERED) {
+>>  				pci_warn(dev, "function level reset failed\n");
+>>  				goto failed;
+>> @@ -246,7 +251,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev =
+
+>> *dev,
+>>  	     pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_RC_EC)) {
+>>  		pci_aer_clear_device_status(dev);
+>>  		pci_aer_clear_nonfatal_status(dev);
+>> +	} else if (pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_RC_END) {
+>> +		pci_aer_clear_device_status(dev->rcec);
+>> +		pci_aer_clear_nonfatal_status(dev->rcec);
+>
+> These may be safe as in my both now have protections for =
+
+> !pcie_aer_is_native.
+>
+I=E2=80=99ll have a look again for the NULL case
+
+>>  	}
+>> +
+>>  	pci_info(dev, "device recovery successful\n");
+>>  	return status;
+>>
+>> diff --git a/drivers/pci/pcie/portdrv_pci.c =
+
+>> b/drivers/pci/pcie/portdrv_pci.c
+>> index d5b109499b10..f9409a0110c2 100644
+>> --- a/drivers/pci/pcie/portdrv_pci.c
+>> +++ b/drivers/pci/pcie/portdrv_pci.c
+>> @@ -90,6 +90,18 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops =
+
+>> =3D {
+>>  #define PCIE_PORTDRV_PM_OPS	NULL
+>>  #endif /* !PM */
+>>
+>> +static int pcie_hook_rcec(struct pci_dev *pdev, void *data)
+>> +{
+>> +	struct pci_dev *rcec =3D (struct pci_dev *)data;
+>> +
+>> +	pdev->rcec =3D rcec;
+>> +	pci_info(rcec, "RCiEP(under an RCEC) %04x:%02x:%02x.%d\n",
+>> +		 pci_domain_nr(pdev->bus), pdev->bus->number,
+>> +		 PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
+>
+> We may want to make this debug info at somepoint if we have a way
+> of discovering it from userspace.   The PCI boot up is extremely
+> verbose already!
+
+I=E2=80=99ve submitted patches to pciutils, which expose this very detail=
+:
+
+https://lore.kernel.org/linux-pci/20200624223940.240463-1-sean.v.kelley@l=
+inux.intel.com/
+
+Flexible either way, could remove or make it debug info.
+
+Thanks,
+
+Sean
+
+>
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  /*
+>>   * pcie_portdrv_probe - Probe PCI-Express port devices
+>>   * @dev: PCI-Express port device being probed
+>> @@ -110,6 +122,9 @@ static int pcie_portdrv_probe(struct pci_dev =
+
+>> *dev,
+>>  	     (pci_pcie_type(dev) !=3D PCI_EXP_TYPE_RC_EC)))
+>>  		return -ENODEV;
+>>
+>> +	if (pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_RC_EC)
+>> +		pcie_walk_rcec(dev, pcie_hook_rcec, dev);
+>> +
+>>  	status =3D pcie_port_device_register(dev);
+>>  	if (status)
+>>  		return status;
+>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>> index 34c1c4f45288..e920f29df40b 100644
+>> --- a/include/linux/pci.h
+>> +++ b/include/linux/pci.h
+>> @@ -326,6 +326,9 @@ struct pci_dev {
+>>  #ifdef CONFIG_PCIEAER
+>>  	u16		aer_cap;	/* AER capability offset */
+>>  	struct aer_stats *aer_stats;	/* AER stats for this device */
+>> +#endif
+>> +#ifdef CONFIG_PCIEPORTBUS
+>> +	struct pci_dev	*rcec;		/* Associated RCEC device */
+>>  #endif
+>>  	u8		pcie_cap;	/* PCIe capability offset */
+>>  	u8		msi_cap;	/* MSI capability offset */
