@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B0BC433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F3AC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2EA120775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437842070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859496;
-	bh=9eh4zjibUGsJrkBsVkA2O+Xz5FTZwE39Qzz12cZceuk=;
+	s=default; t=1595859500;
+	bh=n3RbqFT8KAWFA1dTxPYGZH156V8HwXIVPBz/LrIGyoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XXJ1VahX8RzVohspuAbKHX15kflDrjZQJV/fRoyeFdXkj1DaXtxKxM+CioFGh+3J5
-	 cE2Q8z7eSI4eHhQ1KJ0713aqGcmMWHECOuo0BiW31L1cKn5z/f6zo43sulPCkAJJ3b
-	 rHJ0Vrb6xRFkqfJfOYl613qbjHV2ZINmBS2f62C8=
+	b=oBvoTE5DJ+UytyMnbNQ5S/3ngcSoYcMXFsYXKij4EV0bBEICTVCM9utqECpEoh8Wo
+	 iA6wIyccXWgCPlJaoZG75GpduEIfCSyv1LDsZZW0rxWTp0qxEUtD7iv0rIxDdZfAuV
+	 dhuJogYbn2Hm5YjRjYlzlvPVnxExWQ12LiRkA/xY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731199AbgG0OSP (ORCPT
+        id S1731204AbgG0OSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:18:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45792 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:18:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731188AbgG0OSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:11 -0400
+        id S1729781AbgG0OSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6372520775;
-        Mon, 27 Jul 2020 14:18:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ADFF2070A;
+        Mon, 27 Jul 2020 14:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859490;
-        bh=9eh4zjibUGsJrkBsVkA2O+Xz5FTZwE39Qzz12cZceuk=;
+        s=default; t=1595859495;
+        bh=n3RbqFT8KAWFA1dTxPYGZH156V8HwXIVPBz/LrIGyoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O+II9mm9XhSUHtcBDrb3spic9eQ6mywZ+qWnt9nmGQcH7Q7I74NcKKqyYJUt3i5G7
-         m5qr0FE7Y1n25HuFoglT91YorFs1otoHME8su6jOb/3i2DGBy1IyvuiFqIexH1V3Fj
-         W19R18yfGBaG7ln0G1bru1S/6is9MyAiCUGrUOUk=
+        b=Gg4JZRcEcHhiXEhEP07f5Ti/HYj+zqK7OTIQzgu33q5kTT4QAPj+lFdIB9lqb4tIv
+         0cjfnXDMYWRsvN6rnTpdBH+klft4eR+3ivtzQwEfzUgj4uwK0cvIStwMRytstX/jUZ
+         qZ/pAvWqZK9smefU7hz+TLBJjARqbL43BbgR+zQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Qiu Wenbo <qiuwenbo@phytium.com.cn>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 129/138] drm/amd/powerplay: fix a crash when overclocking Vega M
-Date:   Mon, 27 Jul 2020 16:05:24 +0200
-Message-Id: <20200727134931.876843687@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+1068f09c44d151250c33@syzkaller.appspotmail.com>,
+        syzbot <syzbot+e5344baa319c9a96edec@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Michal Hocko <mhocko@suse.com>, Todd Kjos <tkjos@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 5.4 104/138] binder: Dont use mmput() from shrinker function.
+Date:   Mon, 27 Jul 2020 16:04:59 +0200
+Message-Id: <20200727134930.671211807@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,52 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiu Wenbo <qiuwenbo@phytium.com.cn>
+From: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
 
-commit 88bb16ad998a0395fe4b346b7d3f621aaa0a2324 upstream.
+commit f867c771f98891841c217fa8459244ed0dd28921 upstream.
 
-Avoid kernel crash when vddci_control is SMU7_VOLTAGE_CONTROL_NONE and
-vddci_voltage_table is empty. It has been tested on Intel Hades Canyon
-(i7-8809G).
+syzbot is reporting that mmput() from shrinker function has a risk of
+deadlock [1], for delayed_uprobe_add() from update_ref_ctr() calls
+kzalloc(GFP_KERNEL) with delayed_uprobe_lock held, and
+uprobe_clear_state() from __mmput() also holds delayed_uprobe_lock.
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=208489
-Fixes: ac7822b0026f ("drm/amd/powerplay: add smumgr support for VEGAM (v2)")
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Qiu Wenbo <qiuwenbo@phytium.com.cn>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Commit a1b2289cef92ef0e ("android: binder: drop lru lock in isolate
+callback") replaced mmput() with mmput_async() in order to avoid sleeping
+with spinlock held. But this patch replaces mmput() with mmput_async() in
+order not to start __mmput() from shrinker context.
+
+[1] https://syzkaller.appspot.com/bug?id=bc9e7303f537c41b2b0cc2dfcea3fc42964c2d45
+
+Reported-by: syzbot <syzbot+1068f09c44d151250c33@syzkaller.appspotmail.com>
+Reported-by: syzbot <syzbot+e5344baa319c9a96edec@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reviewed-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Todd Kjos <tkjos@google.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/4ba9adb2-43f5-2de0-22de-f6075c1fab50@i-love.sakura.ne.jp
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/android/binder_alloc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/vegam_smumgr.c
-@@ -642,9 +642,6 @@ static int vegam_get_dependency_volt_by_
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -948,7 +948,7 @@ enum lru_status binder_alloc_free_page(s
+ 		trace_binder_unmap_user_end(alloc, index);
+ 	}
+ 	up_read(&mm->mmap_sem);
+-	mmput(mm);
++	mmput_async(mm);
  
- 	/* sclk is bigger than max sclk in the dependence table */
- 	*voltage |= (dep_table->entries[i - 1].vddc * VOLTAGE_SCALE) << VDDC_SHIFT;
--	vddci = phm_find_closest_vddci(&(data->vddci_voltage_table),
--			(dep_table->entries[i - 1].vddc -
--					(uint16_t)VDDC_VDDCI_DELTA));
+ 	trace_binder_unmap_kernel_start(alloc, index);
  
- 	if (SMU7_VOLTAGE_CONTROL_NONE == data->vddci_control)
- 		*voltage |= (data->vbios_boot_state.vddci_bootup_value *
-@@ -652,8 +649,13 @@ static int vegam_get_dependency_volt_by_
- 	else if (dep_table->entries[i - 1].vddci)
- 		*voltage |= (dep_table->entries[i - 1].vddci *
- 				VOLTAGE_SCALE) << VDDC_SHIFT;
--	else
-+	else {
-+		vddci = phm_find_closest_vddci(&(data->vddci_voltage_table),
-+				(dep_table->entries[i - 1].vddc -
-+						(uint16_t)VDDC_VDDCI_DELTA));
-+
- 		*voltage |= (vddci * VOLTAGE_SCALE) << VDDCI_SHIFT;
-+	}
- 
- 	if (SMU7_VOLTAGE_CONTROL_NONE == data->mvdd_control)
- 		*mvdd = data->vbios_boot_state.mvdd_bootup_value * VOLTAGE_SCALE;
 
 
