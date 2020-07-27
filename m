@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC86C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB665C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB972083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959542083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859009;
-	bh=Nm/dHAUfuy1HFJpIfxRVncku+Ny6xyq7czkzy8OAcYs=;
+	s=default; t=1595859014;
+	bh=yOHQNzrKgO5dGVzNFGwRdnu5BdnGHjIkXX7aoTeoJXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pRiasb+bFfAtsNaWqRNyJnGgsG7zaFqH1vioYE4/g2lH/zLj8/KwjeRi5/8CXqozG
-	 wnpNdjtY4HQVhny7Cn6gBOyOx2PjVrDuq8KWFfXux6ZIAIXK3LjTfjwcoIYr+quCvD
-	 4i11EHXdnMAqTy547Qpys2s9cFhvmBj+/sK3Oa0U=
+	b=MMSyxBCYb6n4ASd6Q1rO30Y0v8u8FRqObDFbrPkmYfcW7H03lqL0/rmiLo1Nc7Gyb
+	 wuLAxL7zoINniRa5CIbqAzu7ttgI6iJDQUOnYgxjyOjh2xaf77DUEWZ1lHQlKyvmo/
+	 qUDPnGmWL4I5c2ORm7uMbQCYpB+KiEEwLgj12Ud0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbgG0OKI (ORCPT
+        id S1729789AbgG0OKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:10:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60866 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:10:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729739AbgG0OKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:10:05 -0400
+        id S1729775AbgG0OKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:10:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57D7B2083E;
-        Mon, 27 Jul 2020 14:10:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4390F20838;
+        Mon, 27 Jul 2020 14:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859004;
-        bh=Nm/dHAUfuy1HFJpIfxRVncku+Ny6xyq7czkzy8OAcYs=;
+        s=default; t=1595859009;
+        bh=yOHQNzrKgO5dGVzNFGwRdnu5BdnGHjIkXX7aoTeoJXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TFs3Fk3Ba/WS844uPxI/YEUF8YzfgJ85b9hDF9TU+96DMg3pxlnXjfqijzGZ3XwQv
-         SAZz7muL8SqHIKJOzWEXKqKMY2W87pMJKKwiknnJUT/oPll2xohh49NE0NymsE/4M9
-         DJs5XlKlWc2a87iSR0o9XUy1Li4Xa9mdtQwvhNi4=
+        b=t32iJKlFmO5TvgI8a1wfQ4JEdKHnt2VkL5uPg9pTvfZsCVsY2WlgtI3gAN/LsJz4q
+         8zb7+d9FVAy/qwcl/jwybufWmcyZhTjSRaIUotbQiUu17DRnBz1MCuFzH/OVrqAFfY
+         vkATBqCXGIVH0maaulqDVI9B8kzbN31hTG25fM+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 03/86] gpio: arizona: put pm_runtime in case of failure
-Date:   Mon, 27 Jul 2020 16:03:37 +0200
-Message-Id: <20200727134914.493395796@linuxfoundation.org>
+Subject: [PATCH 4.19 05/86] mac80211: allow rx of mesh eapol frames with default rx key
+Date:   Mon, 27 Jul 2020 16:03:39 +0200
+Message-Id: <20200727134914.615975164@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -62,52 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Markus Theil <markus.theil@tu-ilmenau.de>
 
-[ Upstream commit 861254d826499944cb4d9b5a15f5a794a6b99a69 ]
+[ Upstream commit 0b467b63870d9c05c81456aa9bfee894ab2db3b6 ]
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count if pm_runtime_put is not called in
-error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+Without this patch, eapol frames cannot be received in mesh
+mode, when 802.1X should be used. Initially only a MGTK is
+defined, which is found and set as rx->key, when there are
+no other keys set. ieee80211_drop_unencrypted would then
+drop these eapol frames, as they are data frames without
+encryption and there exists some rx->key.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200605030052.78235-1-navid.emamdoost@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fix this by differentiating between mesh eapol frames and
+other data frames with existing rx->key. Allow mesh mesh
+eapol frames only if they are for our vif address.
+
+With this patch in-place, ieee80211_rx_h_mesh_fwding continues
+after the ieee80211_drop_unencrypted check and notices, that
+these eapol frames have to be delivered locally, as they should.
+
+Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
+Link: https://lore.kernel.org/r/20200625104214.50319-1-markus.theil@tu-ilmenau.de
+[small code cleanups]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-arizona.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/mac80211/rx.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/gpio/gpio-arizona.c b/drivers/gpio/gpio-arizona.c
-index 485aa45fc5d53..c6cf270035b56 100644
---- a/drivers/gpio/gpio-arizona.c
-+++ b/drivers/gpio/gpio-arizona.c
-@@ -69,6 +69,7 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
- 		ret = pm_runtime_get_sync(chip->parent);
- 		if (ret < 0) {
- 			dev_err(chip->parent, "Failed to resume: %d\n", ret);
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
- 		}
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index c17e148e06e71..5e56719f999c4 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -2230,6 +2230,7 @@ static int ieee80211_802_1x_port_control(struct ieee80211_rx_data *rx)
  
-@@ -77,12 +78,15 @@ static int arizona_gpio_get(struct gpio_chip *chip, unsigned offset)
- 		if (ret < 0) {
- 			dev_err(chip->parent, "Failed to drop cache: %d\n",
- 				ret);
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
- 		}
+ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
+ {
++	struct ieee80211_hdr *hdr = (void *)rx->skb->data;
+ 	struct sk_buff *skb = rx->skb;
+ 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
  
- 		ret = regmap_read(arizona->regmap, reg, &val);
--		if (ret < 0)
-+		if (ret < 0) {
-+			pm_runtime_put_autosuspend(chip->parent);
- 			return ret;
-+		}
+@@ -2240,6 +2241,31 @@ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
+ 	if (status->flag & RX_FLAG_DECRYPTED)
+ 		return 0;
  
- 		pm_runtime_mark_last_busy(chip->parent);
- 		pm_runtime_put_autosuspend(chip->parent);
++	/* check mesh EAPOL frames first */
++	if (unlikely(rx->sta && ieee80211_vif_is_mesh(&rx->sdata->vif) &&
++		     ieee80211_is_data(fc))) {
++		struct ieee80211s_hdr *mesh_hdr;
++		u16 hdr_len = ieee80211_hdrlen(fc);
++		u16 ethertype_offset;
++		__be16 ethertype;
++
++		if (!ether_addr_equal(hdr->addr1, rx->sdata->vif.addr))
++			goto drop_check;
++
++		/* make sure fixed part of mesh header is there, also checks skb len */
++		if (!pskb_may_pull(rx->skb, hdr_len + 6))
++			goto drop_check;
++
++		mesh_hdr = (struct ieee80211s_hdr *)(skb->data + hdr_len);
++		ethertype_offset = hdr_len + ieee80211_get_mesh_hdrlen(mesh_hdr) +
++				   sizeof(rfc1042_header);
++
++		if (skb_copy_bits(rx->skb, ethertype_offset, &ethertype, 2) == 0 &&
++		    ethertype == rx->sdata->control_port_protocol)
++			return 0;
++	}
++
++drop_check:
+ 	/* Drop unencrypted frames if key is set. */
+ 	if (unlikely(!ieee80211_has_protected(fc) &&
+ 		     !ieee80211_is_any_nullfunc(fc) &&
 -- 
 2.25.1
 
