@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCB8C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA378C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4922078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A4F2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859308;
-	bh=fdJBcHhe5Y0lEAqNrc+DepWq3JAQJpBhn8tEIoaSXVY=;
+	s=default; t=1595859312;
+	bh=uyV1EY6BqY+Ry98Gg2lQg0RI0L86Z4p/Qz5iphu125s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ETIraOO5RwZIR9c5PEapnL4y8aXKx1RyZvJHa3dVzXr8wSHb7+zv1s/WAUzhT3UMB
-	 u4lrZWDhungzs5D29L8cm7IJpo95P08AtJ/UM2SGhHZ8azOCdGIm7SthEyPnTFpif3
-	 73Wez2ocSkXm9+h3GCWO9mJlFIf7hd4imRTWxwZ0=
+	b=KPWKPZoxq/TdSYapCjCxq71KrOt23k7jwcKVDw9n5ZDKTlGX3f+HnUTRpOTRBQfLg
+	 9yDhra6C0//f01FuFbCN4phnnTJkyX9vc0hA3YweNtjoiCw+q4J8N/NZpGiJs/nYf5
+	 7CpliLiLwvX2qMvW5z4srvOyg+oZCJyWyw719uUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730658AbgG0OPH (ORCPT
+        id S1729471AbgG0OPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:15:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41198 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:15:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730646AbgG0OPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:15:05 -0400
+        id S1730657AbgG0OPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:15:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FB442078E;
-        Mon, 27 Jul 2020 14:15:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDECB2073E;
+        Mon, 27 Jul 2020 14:15:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859304;
-        bh=fdJBcHhe5Y0lEAqNrc+DepWq3JAQJpBhn8tEIoaSXVY=;
+        s=default; t=1595859307;
+        bh=uyV1EY6BqY+Ry98Gg2lQg0RI0L86Z4p/Qz5iphu125s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DTQpkrB4W8hgLkZMqrRH6+SGNSDANbDYMyynwTPzmnb/8TPpDDB3Yv0atzigc61Ql
-         Y1aRHLP/z5llmx2gE7rOjyt7daJBV1r455k0WxLlLr1f4h88fdcgR084MsKc7dyBJe
-         3OHp4OP0PmgNg3VXEqzBtm78hFWicj3mQx8CxqAI=
+        b=GS9O6mEeZeJAd4XMPE8CKITAODDRQO9qKu+bW4+e3isg9WrAdDKtcq6lkqtaLk7FA
+         B3UjjvfvXWzllaXHMGJywC+Aro9Kt75vEFpztwz4noKfjlwt5eet3fWWPBGOJObgJV
+         pAuyT0RPaDAt4HNEovPI8viznmS8nG270kgXCWtk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 056/138] netdevsim: fix unbalaced locking in nsim_create()
-Date:   Mon, 27 Jul 2020 16:04:11 +0200
-Message-Id: <20200727134928.210346069@linuxfoundation.org>
+Subject: [PATCH 5.4 057/138] qed: suppress "dont support RoCE & iWARP" flooding on HW init
+Date:   Mon, 27 Jul 2020 16:04:12 +0200
+Message-Id: <20200727134928.260333603@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -61,47 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Alexander Lobakin <alobakin@marvell.com>
 
-[ Upstream commit 2c9d8e01f0c6017317eee7638496173d4a64e6bc ]
+[ Upstream commit 1ea999039fe7c7953da2fbb7ca7c3ef00064d328 ]
 
-In the nsim_create(), rtnl_lock() is called before nsim_bpf_init().
-If nsim_bpf_init() is failed, rtnl_unlock() should be called,
-but it isn't called.
-So, unbalanced locking would occur.
+Change the verbosity of the "don't support RoCE & iWARP simultaneously"
+warning to debug level to stop flooding on driver/hardware initialization:
 
-Fixes: e05b2d141fef ("netdevsim: move netdev creation/destruction to dev probe")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+[    4.783230] qede 01:00.00: Storm FW 8.37.7.0, Management FW 8.52.9.0
+[MBI 15.10.6] [eth0]
+[    4.810020] [qed_rdma_set_pf_params:2076()]Current day drivers don't
+support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
+[    4.861186] qede 01:00.01: Storm FW 8.37.7.0, Management FW 8.52.9.0
+[MBI 15.10.6] [eth1]
+[    4.893311] [qed_rdma_set_pf_params:2076()]Current day drivers don't
+support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
+[    5.181713] qede a1:00.00: Storm FW 8.37.7.0, Management FW 8.52.9.0
+[MBI 15.10.6] [eth2]
+[    5.224740] [qed_rdma_set_pf_params:2076()]Current day drivers don't
+support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
+[    5.276449] qede a1:00.01: Storm FW 8.37.7.0, Management FW 8.52.9.0
+[MBI 15.10.6] [eth3]
+[    5.318671] [qed_rdma_set_pf_params:2076()]Current day drivers don't
+support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
+[    5.369548] qede a1:00.02: Storm FW 8.37.7.0, Management FW 8.52.9.0
+[MBI 15.10.6] [eth4]
+[    5.411645] [qed_rdma_set_pf_params:2076()]Current day drivers don't
+support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
+
+Fixes: e0a8f9de16fc ("qed: Add iWARP enablement support")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/netdevsim/netdev.c | 4 ++--
+ drivers/net/ethernet/qlogic/qed/qed_cxt.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-index 55f57f76d01bb..a6bbe93f29ef6 100644
---- a/drivers/net/netdevsim/netdev.c
-+++ b/drivers/net/netdevsim/netdev.c
-@@ -301,7 +301,7 @@ nsim_create(struct nsim_dev *nsim_dev, struct nsim_dev_port *nsim_dev_port)
- 	rtnl_lock();
- 	err = nsim_bpf_init(ns);
- 	if (err)
--		goto err_free_netdev;
-+		goto err_rtnl_unlock;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.c b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
+index 1d6dfba0c034d..8ea46b81b7395 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_cxt.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
+@@ -2073,8 +2073,8 @@ static void qed_rdma_set_pf_params(struct qed_hwfn *p_hwfn,
+ 	num_srqs = min_t(u32, QED_RDMA_MAX_SRQS, p_params->num_srqs);
  
- 	nsim_ipsec_init(ns);
+ 	if (p_hwfn->mcp_info->func_info.protocol == QED_PCI_ETH_RDMA) {
+-		DP_NOTICE(p_hwfn,
+-			  "Current day drivers don't support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only\n");
++		DP_VERBOSE(p_hwfn, QED_MSG_SP,
++			   "Current day drivers don't support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only\n");
+ 		p_hwfn->hw_info.personality = QED_PCI_ETH_ROCE;
+ 	}
  
-@@ -315,8 +315,8 @@ nsim_create(struct nsim_dev *nsim_dev, struct nsim_dev_port *nsim_dev_port)
- err_ipsec_teardown:
- 	nsim_ipsec_teardown(ns);
- 	nsim_bpf_uninit(ns);
-+err_rtnl_unlock:
- 	rtnl_unlock();
--err_free_netdev:
- 	free_netdev(dev);
- 	return ERR_PTR(err);
- }
 -- 
 2.25.1
 
