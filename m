@@ -2,123 +2,95 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99065C43458
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2BBC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 675E320809
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4012F2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892622;
-	bh=LkmYfpO8CCHqVPPYGJEJrOUiJmWXY43q7bamRMNf8qU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QIydfOAUGMJglltAqQjYomyu5twKscOAjYWx8Lb4HPcOcGk3ergIgGTgopFWDkWVU
-	 pvGA0MJl167StUerQgjAbl8g4M/hRZ/7aKTsSgqxN2kq3qM5odNMhhsPGXeJZ6c7kp
-	 shHsVI3s2y3SZ/pWPGpmXoWImAgCBOVPr9LRf2tc=
+	s=default; t=1595892698;
+	bh=3WgOruOKzCSuzhkkhtjKIh8EczQGKvyOznv0UR13wA0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mtUxFdlnqmI2iFvi2aP5c5ofakVpjKW90JsMSqvGFdBKnSnQHpXsdB/+bTHoIadRX
+	 ri1IvXm/UTBnK68UEjAm6XX2fYPNvvMsTsNifdiOBklnznjoDMFuipwgnCGOK2oDAv
+	 /RDBQK34tbaPb/lJp9fXJUpYW1+oj8gg7xdBij/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgG0XaU (ORCPT
+        id S1727101AbgG0Xbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34688 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:31:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727111AbgG0XXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:23:53 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726196AbgG0Xbg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:31:36 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E08720786;
-        Mon, 27 Jul 2020 23:23:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17CB620809;
+        Mon, 27 Jul 2020 23:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892232;
-        bh=LkmYfpO8CCHqVPPYGJEJrOUiJmWXY43q7bamRMNf8qU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T4RsDY1GBnQiV22D/QoCKi0FThMac9v/FduirBNAMNaDFMorSNWMIJNPK3/UkDzR9
-         qCfl8tYZL/Xy5KKhwI8fAdVu/FpeQ+gCincm9VJ64jjPBoqOrOJ/8+OCfpCyJkeqy4
-         uIjyRPbSDTz1Pn4PPybKg7txsVieMjox5qX4ikKU=
+        s=default; t=1595892696;
+        bh=3WgOruOKzCSuzhkkhtjKIh8EczQGKvyOznv0UR13wA0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zmqIbNd+qEmNo/XqbC3rfdu0JXJaGEwSp8aMRgMUPt42CQabXbvH4hsNLsHxtkFZu
+         5EDzecX2WfqeeCPihvDpw1525g6f6V75oab3La1CZPsJEojbizc4LktsQBl5oMG6/D
+         4XyRG/2/zgYN8LGHfqfNTZK4mYpXlIFbTrgDs+3o=
+Date:   Mon, 27 Jul 2020 19:31:35 -0400
 From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paolo Pisati <paolo.pisati@canonical.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 04/25] selftests: fib_nexthop_multiprefix: fix cleanup() netns deletion
-Date:   Mon, 27 Jul 2020 19:23:24 -0400
-Message-Id: <20200727232345.717432-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200727232345.717432-1-sashal@kernel.org>
-References: <20200727232345.717432-1-sashal@kernel.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: Re: [PATCH 4.19 84/86] dm integrity: fix integrity recalculation
+ that is improperly skipped
+Message-ID: <20200727233135.GL406581@sasha-vm>
+References: <20200727134914.312934924@linuxfoundation.org>
+ <20200727134918.614819996@linuxfoundation.org>
+ <20200727205635.t23z72lkdofoewi3@duo.ucw.cz>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200727205635.t23z72lkdofoewi3@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Pisati <paolo.pisati@canonical.com>
+On Mon, Jul 27, 2020 at 10:56:35PM +0200, Pavel Machek wrote:
+>Hi!
+>
+>> From: Mikulas Patocka <mpatocka@redhat.com>
+>>
+>> commit 5df96f2b9f58a5d2dc1f30fe7de75e197f2c25f2 upstream.
+>>
+>> Commit adc0daad366b62ca1bce3e2958a40b0b71a8b8b3 ("dm: report suspended
+>> device during destroy") broke integrity recalculation.
+>>
+>> The problem is dm_suspended() returns true not only during suspend,
+>> but also during resume. So this race condition could occur:
+>> 1. dm_integrity_resume calls queue_work(ic->recalc_wq, &ic->recalc_work)
+>> 2. integrity_recalc (&ic->recalc_work) preempts the current thread
+>> 3. integrity_recalc calls if (unlikely(dm_suspended(ic->ti))) goto unlock_ret;
+>> 4. integrity_recalc exits and no recalculating is done.
+>>
+>> To fix this race condition, add a function dm_post_suspending that is
+>> only true during the postsuspend phase and use it instead of
+>> dm_suspended().
+>>
+>> Signed-off-by: Mikulas Patocka <mpatocka redhat com>
+>
+>Something is wrong with signoff here...
 
-[ Upstream commit 651149f60376758a4759f761767965040f9e4464 ]
+Heh, and the same thing happened with the stable tag:
 
-During setup():
-...
-        for ns in h0 r1 h1 h2 h3
-        do
-                create_ns ${ns}
-        done
-...
+	Cc: stable vger kernel org # v4.18+
 
-while in cleanup():
-...
-        for n in h1 r1 h2 h3 h4
-        do
-                ip netns del ${n} 2>/dev/null
-        done
-...
+But given that this is the way the upstream commit looks like we can't
+do much here.
 
-and after removing the stderr redirection in cleanup():
-
-$ sudo ./fib_nexthop_multiprefix.sh
-...
-TEST: IPv4: host 0 to host 3, mtu 1400                              [ OK ]
-TEST: IPv6: host 0 to host 3, mtu 1400                              [ OK ]
-Cannot remove namespace file "/run/netns/h4": No such file or directory
-$ echo $?
-1
-
-and a non-zero return code, make kselftests fail (even if the test
-itself is fine):
-
-...
-not ok 34 selftests: net: fib_nexthop_multiprefix.sh # exit=1
-...
-
-Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/net/fib_nexthop_multiprefix.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/net/fib_nexthop_multiprefix.sh b/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
-index 9dc35a16e4159..51df5e305855a 100755
---- a/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
-+++ b/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
-@@ -144,7 +144,7 @@ setup()
- 
- cleanup()
- {
--	for n in h1 r1 h2 h3 h4
-+	for n in h0 r1 h1 h2 h3
- 	do
- 		ip netns del ${n} 2>/dev/null
- 	done
 -- 
-2.25.1
-
+Thanks,
+Sasha
