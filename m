@@ -2,129 +2,114 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F1CC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85255C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A55B620714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:08:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7drz06i"
+	by mail.kernel.org (Postfix) with ESMTP id 6DDA120714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgG0HIR (ORCPT
+        id S1726952AbgG0HLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0HIR (ORCPT
+        Mon, 27 Jul 2020 03:11:10 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:50799 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgG0HLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:08:17 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A929C0619D2;
-        Mon, 27 Jul 2020 00:08:17 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id q17so7506565pls.9;
-        Mon, 27 Jul 2020 00:08:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=r3ohMdUUisXXnJtg4Sj8gOXxHs0SULkmzOyNPW3p948=;
-        b=J7drz06irjdSn4IEzXgudUrCCZnvkKA7cxf4NRdogNw/S2loC8qb0x8wuxjbKR2HtB
-         PonGxSpWHuChJh9AYDUz65IOJtL7ALkmFRY6FQA/89hAZ2laXJu/9GNjCF8k3P/vC/67
-         LNpcl46FH8W63QyGQRdYKwDzNNpiAiqUNSDEYJoKWpTOciWVQA4+cZFE71/7GlKZntpn
-         2a4JTr5TWo3OP3y68Tdev/F0mICuQ1KuM2pRiyoXHocX0eGLj5/+DsTZKYsNihtrb2Tw
-         L8fabAssBOKF5M1nR2ITvjqijq0pPazWFZB2hG5+paAOZhilTt5mHzCCHil3ef/Kbprz
-         zPTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=r3ohMdUUisXXnJtg4Sj8gOXxHs0SULkmzOyNPW3p948=;
-        b=SVDUM8Bl3YoOLrx7kv0CIjNwZ8G31QbEeQM5QmR8Xrd0qJeLq9YBCNYecQyKQ5Ob0Z
-         ULc+gIpPRO2dE1XhNF66WRZR+85YyJBAVLL8qPb+ZDsrD5XZktyAnlLONNd3GwZZsIj4
-         b0/xv1B7CmkGJYyraTJJZETQSLVACZ0kNHmdfgtN9bHWCr1Axhm4avgabYcytPoeU/dS
-         GwukbbZbyyRbDNuT0MxUZNM51ZsHlDtZDyh05m3NviYgpU8iiuzRcn3TT1ZvybdKwyWI
-         eebKnOR8A7hI8GsBXP0N2CeSGz5TEapD2DMijvN0ILMZ8eK+PyKSbGifPSupU2FeGPN0
-         aVWg==
-X-Gm-Message-State: AOAM531K3YUiPCxE9kIax5nGVe7IeRgbiuqG3CG7EfiaAKdBr8FguByP
-        PA8wIbe3rPY8kHuDKlB34fo=
-X-Google-Smtp-Source: ABdhPJzKJySBE72OX3M6X924GWk4LabSjO0/kXJ/nn3paqyIlriQgFdkPx1NMQe+b8k/s7JD6PLQFQ==
-X-Received: by 2002:a17:90a:6948:: with SMTP id j8mr16013497pjm.45.1595833696391;
-        Mon, 27 Jul 2020 00:08:16 -0700 (PDT)
-Received: from gmail.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id o128sm13916110pfg.127.2020.07.27.00.08.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 00:08:15 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 12:36:52 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v1] spi: spi-topcliff-pch: use generic power management
-Message-ID: <20200727070652.GA5400@gmail.com>
-References: <CAHp75Vdo22ofbCktupFYbfYy6PQ609fsk5B6u2b3FpfKxs8OQg@mail.gmail.com>
- <20200724223746.GA1538991@bjorn-Precision-5520>
- <CAHp75VdSr1rguc9HJVh_rA1nBh1uyCdr18eyPosWPzCH1K2=zg@mail.gmail.com>
- <CAHp75VfKeTCBOne3tDSM46q6m_FE+7hS3H9Hx5C3RRPvueqZAQ@mail.gmail.com>
+        Mon, 27 Jul 2020 03:11:10 -0400
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N4h7p-1kyCr62TdH-011hog; Mon, 27 Jul 2020 09:11:07 +0200
+Received: by mail-qk1-f182.google.com with SMTP id u64so14355116qka.12;
+        Mon, 27 Jul 2020 00:11:07 -0700 (PDT)
+X-Gm-Message-State: AOAM531OSdJyh3z8+ghcN9eoMwnQL5ebKU0+xOc2zmyA/5ri9anUQq4Q
+        Ut1RRd6tvjNX2x1IolAjyHi7RKwuzKQBc8nCC74=
+X-Google-Smtp-Source: ABdhPJy3om/b5yfbL78HDLH/rnzkke+/U+UGsNkbziTiST5/6yFHt5avoAQwzc+RR0buVr7DFkGVHITGn7RcGzdsP58=
+X-Received: by 2002:a37:9004:: with SMTP id s4mr21325446qkd.286.1595833866359;
+ Mon, 27 Jul 2020 00:11:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfKeTCBOne3tDSM46q6m_FE+7hS3H9Hx5C3RRPvueqZAQ@mail.gmail.com>
+References: <20200727025323.26712-1-tianjia.zhang@linux.alibaba.com>
+In-Reply-To: <20200727025323.26712-1-tianjia.zhang@linux.alibaba.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 27 Jul 2020 09:10:50 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2neQUP2marbRUxpSZE4OTJtf97JKSK5-LC6EzH8rRHDQ@mail.gmail.com>
+Message-ID: <CAK8P3a2neQUP2marbRUxpSZE4OTJtf97JKSK5-LC6EzH8rRHDQ@mail.gmail.com>
+Subject: Re: [PATCH] tpm: Fix the description error of the help information in Kconfig
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        gregkh <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christophe Ricard <christophe.ricard@gmail.com>,
+        Peter Huewe <peter.huewe@infineon.com>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:8Z5K81F9baE7B2UaBG7GLmf7c7eet4NNXGiJprqd+LoI1Ak6v7f
+ N3woNLGYBGzhnzUxbrq31ftzIgs9tDE+CEmNTha3xdo5bRSWzA6cRN0loJIuhnFcivk633b
+ 333pTz8tK9+eML8uu9LTYU7BuqCW00DJ/h64Y8wSmBr85k0hJX0C+/AoQn3nBfUPROuZyPA
+ Oo8uSWdTLOOhzoYw2vjdQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3Wct88ulyn8=:KvaP+lz/86jDuuHMJ/yfXP
+ /ELuXiqhtIm4OTTc2o+4wdhiXccCq3VCHZ37uaNyCEXy/fcG3g+3vPVdETIFApsAQ9iExLblS
+ cLYkz0UQn2lU5rz5UtYXgSEQa/5xjFF4RioilFWaLoNxX+HJPHS8Ypv3FhYjO0a/h84HJeKw7
+ 3YDbsRaiABB+zBkAcEZKcrJ2H6ywdRecH288pgt/g4MvN6tso9oKvGjBwUlBXK4w6qygFN6Hy
+ kKfYN5+GotKLb41bHI+q7IyPR1VPhnXOP09uaW5LDkUfU9TdC3lF1oVzpbUNfXIXNYpv0fu/8
+ 176F/g7ELCg3rECy2O+6s72mDftUNSlGYjI6rxTYlOFaiZEN/y17KwseNvNqfP2tzbXTGN6MP
+ tzSEfnhXs7H4qh84Rm66xk0GZNK5ArXWd7qOoNGfGs3NZvPsMBnxD+jhzkX5tNrtDvo1CfHyN
+ 79c7xy/e7puo/zy/kV4rXNTw5/Np04A4y1UrsojToSpiiYrE8K/M+6POtEIMQgXSMpbZ7CFrB
+ wVvJY6+0w8LOtCxd2VoU3A3jMs/2Og5bPWRLypsS+XaiBw3uZgaayPB//6ZgrIjaCy+whDU7H
+ ga52W04iYK8dMR1xLJQbH/UIUWRTgsakI7apDlvpHCxxNpguLx4jDyJ8Pd7exHVryasa5K7xc
+ Vgl6qjbp78K2dXuaZHwIp2iTlAto4TJg9kf+817vugcGWhrSi5tJeYl/ET3ZDwFjAaVQHAMDl
+ iNMqwy9jOWHI+tueEfNLV7yLT5vwx3MJ3Vc1QLf4SEV1MhfMnkaVnMwwT1Ya2kkiteuvOdck1
+ R1rVF4U+TD4g3EKBWL5JMVjd2wPpm6nUwqomONkkLNKrz05/zvIXi2OWGe0TbxYVckc+YQ4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 01:44:44PM +0300, Andy Shevchenko wrote:
-> On Sat, Jul 25, 2020 at 1:42 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Sat, Jul 25, 2020 at 1:37 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, Jul 24, 2020 at 11:16:55PM +0300, Andy Shevchenko wrote:
-> 
-> ...
-> 
-> > > If it's a bug that spi-topcliff-pch.c disables but never enables
-> > > wakeup, I think this should turn into two patches:
-> > >
-> > >   1) Fix the bug by enabling wakeup in suspend (or whatever the right
-> > >   fix is), and
-> > >
-> > >   2) Convert to generic PM, which may involve removing the
-> > >   wakeup-related code completely.
-> >
-> > Works for me.
-> 
-> The only problem here, is that the 2nd is already in the Mark's tree
-> and he doesn't do rebases.
-> So, it will be the other way around.
+On Mon, Jul 27, 2020 at 4:54 AM Tianjia Zhang
+<tianjia.zhang@linux.alibaba.com> wrote:
 >
-Concluding from yours and Bjorn's suggestion, I will drop the
-device_wakeup_disable() call form .resume() and send the fix. I will also track
-the drivers who got similar upgrades and went un-noticed.
+> Obviously, the TPM version number in the help message is wrong, which
+> will cause confusion. This patch fixes it.
 
-As Bjorn mentioned, the problem is that I don't have hardware to test, so I just
-replicated the legacy behaviour in generic by replacing
-pci_enable_wake(....,false) with device_wakeup_disable().
+How is this "obvious"? I tried finding the specification and could not
+see anything
+to back up TIS 1.3 being only supported with TPM 1.3, or the existence of a
+TPM 1.3 specification at all.
 
-So, from now, while upgrading drivers with generic PM, should I completely drop
-the pci_enable_wake(....,false) calls if both .suspend() and .resume() try to
-wakeup-disable the device?
+Please consider that not everyone reading this patch description is deeply
+familiar with the details and explain exactly what the mistake is.
 
-Thanks
-Vaibhav Gupta
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+
+In a bug fix, try to always add a 'FIxes' tag such as 'Fixes: 0edbfea537d1
+("tpm/tpm_tis_spi: Add support for spi phy")', and Cc everyone that was
+involved in the original patch that introduced a bug so they can Ack or
+Nak it.
+
+      Arnd
+
+>  drivers/char/tpm/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index 58b4c573d176..8eedb3e704f3 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -62,7 +62,7 @@ config TCG_TIS_SPI
+>         help
+>           If you have a TPM security chip which is connected to a regular,
+>           non-tcg SPI master (i.e. most embedded platforms) that is compliant with the
+> -         TCG TIS 1.3 TPM specification (TPM1.2) or the TCG PTP FIFO
+> +         TCG TIS 1.3 TPM specification (TPM1.3) or the TCG PTP FIFO
+>           specification (TPM2.0) say Yes and it will be accessible from
+>           within Linux. To compile this driver as a module, choose  M here;
+>           the module will be called tpm_tis_spi.
+> --
+> 2.17.1
+>
