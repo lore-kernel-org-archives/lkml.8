@@ -2,107 +2,163 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20921C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D574EC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04D7420729
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595873705;
-	bh=+dahNFR3cG5IMqanUiTRLH+qQQZzYR0gRNzYuaqQTaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ybmqyhhG1CCfx+kxnfFMWxPzWsO7Q9e0HQKoJ8l1Eg98QCYj9Q13Cdve4g3ZiVwUK
-	 56V43JSNoGbY/SZfzoUlJ0heAmPbB0hSgSdtFRa6Apvh8hP7KUKyCfoYU0ORXxfNki
-	 q10VtWcx9XEi0xofYTs0/Mei23rXKyngbKesTAOk=
+	by mail.kernel.org (Postfix) with ESMTP id C57E520729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:15:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbgG0SPE (ORCPT
+        id S1731610AbgG0SPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:15:04 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36487 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728214AbgG0SPD (ORCPT
+        Mon, 27 Jul 2020 14:15:07 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:18368 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728214AbgG0SPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 14:15:03 -0400
-Received: by mail-io1-f66.google.com with SMTP id t15so9045455iob.3;
-        Mon, 27 Jul 2020 11:15:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YYtw9YpjryNj+P7sa7ru3omMiZtT2NKQkuKuKcuEOlo=;
-        b=XvtbHvt7eq4TVhAVk/grZjhQZbiqfFnZgi+1gGPndNhRoCz/Y9bXSZETHr5GoK9Jpt
-         BTF7/+RSBkF+YCCNfUaFxBN3lkcuYzNNpZ03T3G1m2sNMkzrxQJrSF8Ei9F28nEJQBu5
-         MOUvXardMIMjmJrw5t/n2Io8qwqCkWdrgzDUMNDq/ycnxZixLILo6VW1abxNeq0GQcmj
-         qrx56xx0Ra8G1KOqRzzxwrh19WABumDTvdId9LgGQhQ+iGyR8Lox2UaeoGfw5mpARhHX
-         za84boVdhKnJB8Cbp2x6XiByky+V5Rrqgrs3QbXZFEDWlxaMGyaYZmCnUIH84QAVCtpT
-         /S0Q==
-X-Gm-Message-State: AOAM533E3D/XTtWhk3oGdwcyoGaIz9GO5ye8vT9HIyi0wgJORFFxV1Zm
-        wHQESouOMimyZ2HIcS0Ixf6DmaMN4g==
-X-Google-Smtp-Source: ABdhPJxw3k8fI2bDsS359EwMlDuaaKCNDuNufmiHEEdYDjipxMFi7lqPsgIdQi6mLZJlEs4bF4ND4g==
-X-Received: by 2002:a5d:9347:: with SMTP id i7mr25043985ioo.40.1595873702435;
-        Mon, 27 Jul 2020 11:15:02 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i9sm8913885ile.48.2020.07.27.11.15.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 11:15:02 -0700 (PDT)
-Received: (nullmailer pid 640299 invoked by uid 1000);
-        Mon, 27 Jul 2020 18:15:01 -0000
-Date:   Mon, 27 Jul 2020 12:15:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Darius Berghe <darius.berghe@analog.com>
-Cc:     jic23@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] ltc2471 driver yaml
-Message-ID: <20200727181501.GA639934@bogus>
-References: <20200727135834.84093-1-darius.berghe@analog.com>
- <20200727135834.84093-4-darius.berghe@analog.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727135834.84093-4-darius.berghe@analog.com>
+        Mon, 27 Jul 2020 14:15:05 -0400
+Received: from pps.filterd (m0134425.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RIBYK8007070;
+        Mon, 27 Jul 2020 18:15:03 GMT
+Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
+        by mx0b-002e3701.pphosted.com with ESMTP id 32ge1nrsff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 18:15:03 +0000
+Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
+        by g4t3425.houston.hpe.com (Postfix) with ESMTP id 55236A1;
+        Mon, 27 Jul 2020 18:15:02 +0000 (UTC)
+Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 201855)
+        id 1C58B2006D2B4; Mon, 27 Jul 2020 13:15:02 -0500 (CDT)
+From:   Alex Kluver <alex.kluver@hpe.com>
+To:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     ardb@kernel.org, mchehab@kernel.org, russ.anderson@hpe.com,
+        dimitri.sivanich@hpe.com, Alex Kluver <alex.kluver@hpe.com>
+Subject: [PATCH] edac,ghes,cper: Add Row Extension to Memory Error Record
+Date:   Mon, 27 Jul 2020 13:14:45 -0500
+Message-Id: <20200727181445.111002-1-alex.kluver@hpe.com>
+X-Mailer: git-send-email 2.12.3
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_13:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ phishscore=0 clxscore=1011 adultscore=0 priorityscore=1501 malwarescore=0
+ mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 16:58:34 +0300, Darius Berghe wrote:
-> Add dt binding documentation for ltc2471 driver. This covers all supported
-> devices.
-> 
-> Signed-off-by: Darius Berghe <darius.berghe@analog.com>
-> ---
->  .../bindings/iio/adc/adi,ltc2471.yaml         | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml
-> 
+Memory errors could be printed with incorrect row values since the DIMM
+size has outgrown the 16 bit row field in the CPER structure. UEFI
+Specification Version 2.8 has increased the size of row by allowing it to
+use the first 2 bits from a previously reserved space within the structure.
 
+When needed, add the extension bits to the row value printed.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Based on UEFI 2.8 Table 299. Memory Error Record
 
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/iio/adc/adi,ltc2471.yaml#
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dts:22.13-26: Warning (reg_format): /example-0/i2c0/adc@14:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dts:20.18-23.13: Warning (avoid_default_addr_size): /example-0/i2c0/adc@14: Relying on default #address-cells value
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dts:20.18-23.13: Warning (avoid_default_addr_size): /example-0/i2c0/adc@14: Relying on default #size-cells value
-Documentation/devicetree/bindings/iio/adc/adi,ltc2471.example.dt.yaml: Warning (unique_unit_address): Failed prerequisite 'avoid_default_addr_size'
+Tested-by: Russ Anderson <russ.anderson@hpe.com>
+Signed-off-by: Alex Kluver <alex.kluver@hpe.com>
+---
+ drivers/edac/ghes_edac.c    | 10 ++++++++--
+ drivers/firmware/efi/cper.c | 11 +++++++++--
+ include/linux/cper.h        |  9 +++++++--
+ 3 files changed, 24 insertions(+), 6 deletions(-)
 
-
-See https://patchwork.ozlabs.org/patch/1336970
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+index cb3dab56a875..cfa3156300f5 100644
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -337,8 +337,14 @@ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+ 		p += sprintf(p, "rank:%d ", mem_err->rank);
+ 	if (mem_err->validation_bits & CPER_MEM_VALID_BANK)
+ 		p += sprintf(p, "bank:%d ", mem_err->bank);
+-	if (mem_err->validation_bits & CPER_MEM_VALID_ROW)
+-		p += sprintf(p, "row:%d ", mem_err->row);
++	if (mem_err->validation_bits & (CPER_MEM_VALID_ROW | CPER_MEM_VALID_ROW_EXT)) {
++		u32 row_extended = 0;
++		if (mem_err->validation_bits & CPER_MEM_VALID_ROW_EXT)
++			row_extended = (mem_err->extended & CPER_MEM_EXT_ROW_MASK)
++				<<CPER_MEM_EXT_ROW_SHIFT;
++		row_extended |= mem_err->row;
++		p += sprintf(p, "row:%d ", row_extended);
++	}
+ 	if (mem_err->validation_bits & CPER_MEM_VALID_COLUMN)
+ 		p += sprintf(p, "col:%d ", mem_err->column);
+ 	if (mem_err->validation_bits & CPER_MEM_VALID_BIT_POSITION)
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index f564e15fbc7e..5faaf6ecd659 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -234,8 +234,14 @@ static int cper_mem_err_location(struct cper_mem_err_compact *mem, char *msg)
+ 		n += scnprintf(msg + n, len - n, "bank: %d ", mem->bank);
+ 	if (mem->validation_bits & CPER_MEM_VALID_DEVICE)
+ 		n += scnprintf(msg + n, len - n, "device: %d ", mem->device);
+-	if (mem->validation_bits & CPER_MEM_VALID_ROW)
+-		n += scnprintf(msg + n, len - n, "row: %d ", mem->row);
++	if (mem->validation_bits & (CPER_MEM_VALID_ROW | CPER_MEM_VALID_ROW_EXT)) {
++		u32 row_extended = 0;
++		if (mem->validation_bits & CPER_MEM_VALID_ROW_EXT)
++			row_extended = (mem->extended & CPER_MEM_EXT_ROW_MASK)
++				<<CPER_MEM_EXT_ROW_SHIFT;
++		row_extended |= mem->row;
++		n += scnprintf(msg + n, len - n, "row: %d ", row_extended);
++	}
+ 	if (mem->validation_bits & CPER_MEM_VALID_COLUMN)
+ 		n += scnprintf(msg + n, len - n, "column: %d ", mem->column);
+ 	if (mem->validation_bits & CPER_MEM_VALID_BIT_POSITION)
+@@ -292,6 +298,7 @@ void cper_mem_err_pack(const struct cper_sec_mem_err *mem,
+ 	cmem->requestor_id = mem->requestor_id;
+ 	cmem->responder_id = mem->responder_id;
+ 	cmem->target_id = mem->target_id;
++	cmem->extended = mem->extended;
+ 	cmem->rank = mem->rank;
+ 	cmem->mem_array_handle = mem->mem_array_handle;
+ 	cmem->mem_dev_handle = mem->mem_dev_handle;
+diff --git a/include/linux/cper.h b/include/linux/cper.h
+index 8537e9282a65..c8313753ee49 100644
+--- a/include/linux/cper.h
++++ b/include/linux/cper.h
+@@ -230,6 +230,10 @@ enum {
+ #define CPER_MEM_VALID_RANK_NUMBER		0x8000
+ #define CPER_MEM_VALID_CARD_HANDLE		0x10000
+ #define CPER_MEM_VALID_MODULE_HANDLE		0x20000
++#define CPER_MEM_VALID_ROW_EXT			0x40000
++
++#define CPER_MEM_EXT_ROW_MASK			0x3
++#define CPER_MEM_EXT_ROW_SHIFT			16
+ 
+ #define CPER_PCIE_VALID_PORT_TYPE		0x0001
+ #define CPER_PCIE_VALID_VERSION			0x0002
+@@ -443,7 +447,7 @@ struct cper_sec_mem_err_old {
+ 	u8	error_type;
+ };
+ 
+-/* Memory Error Section (UEFI >= v2.3), UEFI v2.7 sec N.2.5 */
++/* Memory Error Section (UEFI >= v2.3), UEFI v2.8 sec N.2.5 */
+ struct cper_sec_mem_err {
+ 	u64	validation_bits;
+ 	u64	error_status;
+@@ -461,7 +465,7 @@ struct cper_sec_mem_err {
+ 	u64	responder_id;
+ 	u64	target_id;
+ 	u8	error_type;
+-	u8	reserved;
++	u8	extended;
+ 	u16	rank;
+ 	u16	mem_array_handle;	/* "card handle" in UEFI 2.4 */
+ 	u16	mem_dev_handle;		/* "module handle" in UEFI 2.4 */
+@@ -483,6 +487,7 @@ struct cper_mem_err_compact {
+ 	u16	rank;
+ 	u16	mem_array_handle;
+ 	u16	mem_dev_handle;
++	u8      extended;
+ };
+ 
+ /* PCI Express Error Section, UEFI v2.7 sec N.2.7 */
