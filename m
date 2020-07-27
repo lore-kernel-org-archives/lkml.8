@@ -2,126 +2,312 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05904C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FD6C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4D7320714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:35:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qVUWNj74"
+	by mail.kernel.org (Postfix) with ESMTP id 38E1420809
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgG0FfQ (ORCPT
+        id S1727041AbgG0FaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:35:16 -0400
-Received: from ozlabs.org ([203.11.71.1]:48161 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726116AbgG0FfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:35:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFT674WvTz9sRN;
-        Mon, 27 Jul 2020 15:35:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595828113;
-        bh=1EsiQmtDkiYBzy+8n8vWV2DMhajK8DJZlvg2WwmEZYk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qVUWNj74ZWUqEVoZEx/4cgO1IJ4ZFE5iCdwp/E9Vbb98cTvYi9IBbzgfjH2CMIce1
-         yeCmYCkUfaL+tzLIfz5GaUeUh4IQK0T/U2/CgupZRCbkNFk5BVR2wTLL9e7JkeoISL
-         P9esV1ALMy0dMP6ZxrUX1xoYR4T62dkgC4oCQMKjJK8h8lKUBgLluT1bVVazZYUnhP
-         jqjN3m10L8HfgWy9WJ8beLjwsdhC9NcQ8gGmbcVKr9muepMVGTZrKpNEW/JnNKpxzZ
-         /MJukrn85NjQcJe5knLdWTzABUS3TAJ0gLxYGjGvl6SWcQscLzRJh/MZhlBhq9q1G4
-         FEvTvNXopvfyg==
-Date:   Mon, 27 Jul 2020 15:35:10 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: linux-next: manual merge of the tip tree with the vfs tree
-Message-ID: <20200727153510.0996a35c@canb.auug.org.au>
+        Mon, 27 Jul 2020 01:30:20 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:44880 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727001AbgG0FaS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 01:30:18 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R5S0bW011271;
+        Mon, 27 Jul 2020 01:30:01 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32ghn5da4n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 01:30:01 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 06R5TxLF047678
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 27 Jul 2020 01:29:59 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sun, 26 Jul 2020 22:29:57 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Sun, 26 Jul 2020 22:29:57 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06R5TksR007624;
+        Mon, 27 Jul 2020 01:29:54 -0400
+From:   <alexandru.tachici@analog.com>
+To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH v6 5/9] hwmon: pmbus: adm1266: read blackbox
+Date:   Mon, 27 Jul 2020 08:31:17 +0300
+Message-ID: <20200727053121.23288-6-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200727053121.23288-1-alexandru.tachici@analog.com>
+References: <20200727053121.23288-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/jwXeHYB_R_DZH5TsxTSeBRK";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_03:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 lowpriorityscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/jwXeHYB_R_DZH5TsxTSeBRK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-Hi all,
+Use the nvmem kernel api to expose the black box
+chip functionality to userspace.
 
-Today's linux-next merge of the tip tree got a conflict in:
+Using this feature, the device is capable of recording
+to nonvolatile flash memory the vital data about the
+system status that caused the system to perform a
+black box write.
 
-  arch/x86/include/asm/fpu/xstate.h
+A blackbox is 64 bytes of data containing all the
+status registers, last two states of the sequencer,
+timestamp and counters. The mapping of this data is
+described in the adm1266 datasheet.
 
-between commit:
+On power-up the driver sets the unix time to
+the adm1266 using the SET_RTC command. This value
+is incremented by an internal clock and it is used
+as timestamp for the black box feature.
 
-  c196049cc732 ("x86: switch to ->regset_get()")
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ drivers/hwmon/pmbus/adm1266.c | 165 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 165 insertions(+)
 
-from the vfs tree and commit:
+diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
+index dbffc6d12e87..c06465100320 100644
+--- a/drivers/hwmon/pmbus/adm1266.c
++++ b/drivers/hwmon/pmbus/adm1266.c
+@@ -15,12 +15,19 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/nvmem-consumer.h>
++#include <linux/nvmem-provider.h>
+ #include "pmbus.h"
+ #include <linux/slab.h>
++#include <linux/timekeeping.h>
+ 
++#define ADM1266_BLACKBOX_CONFIG	0xD3
+ #define ADM1266_PDIO_CONFIG	0xD4
+ #define ADM1266_READ_STATE	0xD9
++#define ADM1266_READ_BLACKBOX	0xDE
++#define ADM1266_SET_RTC		0xDF
+ #define ADM1266_GPIO_CONFIG	0xE1
++#define ADM1266_BLACKBOX_INFO	0xE6
+ #define ADM1266_PDIO_STATUS	0xE9
+ #define ADM1266_GPIO_STATUS	0xEA
+ 
+@@ -37,6 +44,9 @@
+ #define ADM1266_PDIO_GLITCH_FILT(x)	FIELD_GET(GENMASK(12, 9), x)
+ #define ADM1266_PDIO_OUT_CFG(x)		FIELD_GET(GENMASK(2, 0), x)
+ 
++#define ADM1266_BLACKBOX_OFFSET		0x7F700
++#define ADM1266_BLACKBOX_SIZE		64
++
+ #define ADM1266_PMBUS_BLOCK_MAX		255
+ 
+ struct adm1266_data {
+@@ -45,11 +55,22 @@ struct adm1266_data {
+ 	const char *gpio_names[ADM1266_GPIO_NR + ADM1266_PDIO_NR];
+ 	struct i2c_client *client;
+ 	struct dentry *debugfs_dir;
++	struct nvmem_config nvmem_config;
++	struct nvmem_device *nvmem;
++	u8 *dev_mem;
+ 	struct mutex buf_mutex;
+ 	u8 write_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
+ 	u8 read_buf[ADM1266_PMBUS_BLOCK_MAX + 1] ____cacheline_aligned;
+ };
+ 
++static const struct nvmem_cell_info adm1266_nvmem_cells[] = {
++	{
++		.name           = "blackbox",
++		.offset         = ADM1266_BLACKBOX_OFFSET,
++		.bytes          = 2048,
++	},
++};
++
+ DECLARE_CRC8_TABLE(pmbus_crc_table);
+ 
+ /*
+@@ -321,6 +342,142 @@ static void adm1266_init_debugfs(struct adm1266_data *data)
+ 					    data->debugfs_dir, adm1266_state_read);
+ }
+ 
++#if IS_ENABLED(CONFIG_NVMEM)
++static int adm1266_nvmem_read_blackbox(struct adm1266_data *data, u8 *read_buff)
++{
++	int record_count;
++	char index;
++	u8 buf[5];
++	int ret;
++
++	ret = i2c_smbus_read_block_data(data->client, ADM1266_BLACKBOX_INFO, buf);
++	if (ret < 0)
++		return ret;
++
++	if (ret != 4)
++		return -EIO;
++
++	record_count = buf[3];
++
++	for (index = 0; index < record_count; index++) {
++		ret = adm1266_pmbus_block_xfer(data, ADM1266_READ_BLACKBOX, 1, &index, read_buff);
++		if (ret < 0)
++			return ret;
++
++		if (ret != ADM1266_BLACKBOX_SIZE)
++			return -EIO;
++
++		read_buff += ADM1266_BLACKBOX_SIZE;
++	}
++
++	return 0;
++}
++
++static bool adm1266_cell_is_accessed(const struct nvmem_cell_info *mem_cell, unsigned int offset,
++				     size_t bytes)
++{
++	unsigned int start_addr = offset;
++	unsigned int end_addr = offset + bytes;
++	unsigned int cell_start = mem_cell->offset;
++	unsigned int cell_end = mem_cell->offset + mem_cell->bytes;
++
++	return start_addr <= cell_end && cell_start <= end_addr;
++}
++
++static int adm1266_read_mem_cell(struct adm1266_data *data, const struct nvmem_cell_info *mem_cell)
++{
++	u8 *mem_offset;
++	int ret;
++
++	switch (mem_cell->offset) {
++	case ADM1266_BLACKBOX_OFFSET:
++		mem_offset = data->dev_mem + mem_cell->offset;
++
++		memset(mem_offset, 0, ADM1266_BLACKBOX_SIZE);
++
++		ret = adm1266_nvmem_read_blackbox(data, mem_offset);
++		if (ret)
++			dev_err(&data->client->dev, "Could not read blackbox!");
++		return ret;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int adm1266_nvmem_read(void *priv, unsigned int offset, void *val,
++			      size_t bytes)
++{
++	const struct nvmem_cell_info *mem_cell;
++	struct adm1266_data *data = priv;
++	int ret;
++	int i;
++
++	for (i = 0; i < data->nvmem_config.ncells; i++) {
++		mem_cell = &adm1266_nvmem_cells[i];
++		if (!adm1266_cell_is_accessed(mem_cell, offset, bytes))
++			continue;
++
++		ret = adm1266_read_mem_cell(data, mem_cell);
++		if (ret < 0)
++			return ret;
++	}
++
++	memcpy(val, data->dev_mem + offset, bytes);
++
++	return 0;
++}
++
++static int adm1266_config_nvmem(struct adm1266_data *data)
++{
++	data->nvmem_config.name = dev_name(&data->client->dev);
++	data->nvmem_config.dev = &data->client->dev;
++	data->nvmem_config.root_only = true;
++	data->nvmem_config.read_only = true;
++	data->nvmem_config.owner = THIS_MODULE;
++	data->nvmem_config.reg_read = adm1266_nvmem_read;
++	data->nvmem_config.cells = adm1266_nvmem_cells;
++	data->nvmem_config.ncells = ARRAY_SIZE(adm1266_nvmem_cells);
++	data->nvmem_config.priv = data;
++	data->nvmem_config.stride = 1;
++	data->nvmem_config.word_size = 1;
++	data->nvmem_config.size = 0x80000;
++
++	data->dev_mem = devm_kzalloc(&data->client->dev, data->nvmem_config.size, GFP_KERNEL);
++	if (!data->dev_mem)
++		return -ENOMEM;
++
++	data->nvmem = devm_nvmem_register(&data->client->dev, &data->nvmem_config);
++	if (IS_ERR(data->nvmem)) {
++		dev_err(&data->client->dev, "Could not register nvmem!");
++		return PTR_ERR(data->nvmem);
++	}
++
++	return 0;
++}
++#else
++static int adm1266_config_nvmem(struct adm1266_data *data)
++{
++	return 0;
++}
++#endif /* CONFIG_NVMEM */
++
++static int adm1266_set_rtc(struct adm1266_data *data)
++{
++	time64_t kt;
++	char write_buf[6];
++	int i;
++
++	kt = ktime_get_seconds();
++
++	memset(write_buf, 0, sizeof(write_buf));
++
++	for (i = 0; i < 4; i++)
++		write_buf[2 + i] = (kt >> (i * 8)) & 0xFF;
++
++	return i2c_smbus_write_block_data(data->client, ADM1266_SET_RTC, sizeof(write_buf),
++					  write_buf);
++}
++
+ static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ {
+ 	struct adm1266_data *data;
+@@ -344,6 +501,14 @@ static int adm1266_probe(struct i2c_client *client, const struct i2c_device_id *
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = adm1266_set_rtc(data);
++	if (ret < 0)
++		return ret;
++
++	ret = adm1266_config_nvmem(data);
++	if (ret < 0)
++		return ret;
++
+ 	ret = pmbus_do_probe(client, id, &data->info);
+ 	if (ret)
+ 		return ret;
+-- 
+2.20.1
 
-  ce711ea3cab9 ("perf/x86/intel/lbr: Support XSAVES/XRSTORS for LBR context=
- switch")
-
-from the tip tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/x86/include/asm/fpu/xstate.h
-index f691ea1bc086,1559554af931..000000000000
---- a/arch/x86/include/asm/fpu/xstate.h
-+++ b/arch/x86/include/asm/fpu/xstate.h
-@@@ -71,8 -103,9 +103,9 @@@ extern void __init update_regset_xstate
-  void *get_xsave_addr(struct xregs_state *xsave, int xfeature_nr);
-  const void *get_xsave_field_ptr(int xfeature_nr);
-  int using_compacted_format(void);
-+ int xfeature_size(int xfeature_nr);
- -int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsigned=
- int offset, unsigned int size);
- -int copy_xstate_to_user(void __user *ubuf, struct xregs_state *xsave, uns=
-igned int offset, unsigned int size);
- +struct membuf;
- +void copy_xstate_to_kernel(struct membuf to, struct xregs_state *xsave);
-  int copy_kernel_to_xstate(struct xregs_state *xsave, const void *kbuf);
-  int copy_user_to_xstate(struct xregs_state *xsave, const void __user *ubu=
-f);
-  void copy_supervisor_to_kernel(struct xregs_state *xsave);
-
---Sig_/jwXeHYB_R_DZH5TsxTSeBRK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8eZ44ACgkQAVBC80lX
-0Gy93gf/QMamEr9rHGIpLq4msB/JhcFzuNHEFPlAdmUO32Vq49lESHK0AinH3/WT
-7FvdVr7g3inO5c1DOo27p04DihMDaSW6LLo9IOPNvikwrKkS3N1umd8nH+/v4RLk
-EPnuXn5fhflZf7P2vYJu7OymmBTP2zRr8ByOOxf1IlEg+lcy5X4hTtDi9B1/LZDc
-NmH7Ol5EVOFaYNXqXoFv6oQOYGkVsLZ+jnXJGqV0KdZaqggcQmvIvHmgy2uZeolF
-6gCkKT3O7AEegL8C3PO7NoHJp06i/de3N/CN5wOdj0qnYdlUWxdqmDhSRlcAZa+I
-M0ieB/Sa0DHhgtHTyLTiiDqg2iakSQ==
-=oNRR
------END PGP SIGNATURE-----
-
---Sig_/jwXeHYB_R_DZH5TsxTSeBRK--
