@@ -2,514 +2,146 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81231C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE24DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54E512083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="auLYABpk"
+	by mail.kernel.org (Postfix) with ESMTP id 9D11D20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595860869;
+	bh=p/kmzlezXh0j8FdfaVp7CxMlXOuU9TqE/KqdV7WUn+c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KYa/yvFrsd0yvwyI/AQtkBlDTn5aFKQw4iiScpxL3+f4WoVMFCxZmNJ0gZijmPuM9
+	 IHXrns2CXJbN5fV3j9wjWvJm3OWPleVpVopBOZhcCgLMwt4d4VE7AyfhKQqeIKkrCS
+	 0WP5530XKB1SUAWWMzSXcjxwRK7fHY2Sl84IBIZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbgG0Ok7 (ORCPT
+        id S1729406AbgG0OIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729514AbgG0OIy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:08:54 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64EB5C061794;
-        Mon, 27 Jul 2020 07:08:54 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id k27so9596145pgm.2;
-        Mon, 27 Jul 2020 07:08:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KDlWBFaScx8Qud96hby0ZTh0yjULq2EGsmrzoFKN598=;
-        b=auLYABpkeVnkUEOQfCSqr8XtYazeAyirBZvZlJ/PDNKeJ9dgIUDg4poI2jemHMDUgR
-         /7MxO3VOPnaaFo8ZnFCEHZJ5pDBEpb6vbhvgMPKOga9KzkspuszgRjSWX1Gn3fAItqyv
-         UMRjAZfxPaFxJQ+u6JhcKRJ9YMG5hJdaWeK9SnwaAM83eJoKiHMVt2OCocay+H8EbM4g
-         QcBGqATyham/jk+XaoWCnZ4LIncJfqRRCiKnCQzXg3Wjcx8uYJur3QYL58wPdl+8V/9c
-         XXo9s9st/IcFl5B23H+rT+81YiJPS21cPWY0s3yG69se/vplyrkxYE2J/fRnNopP7Psy
-         nkNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KDlWBFaScx8Qud96hby0ZTh0yjULq2EGsmrzoFKN598=;
-        b=XfhZ7xxlnmFXs8riAk/+StE13wwgwWkj5eqejUio700nUX4958qy1+8biOJkUN8WEE
-         ArkXLLkQR36clRlRTXkvWQV64ujWvHze1z33o8XO3mU9LeaAHOMUk6nvAvFXWF+6IkCG
-         Jzock6A5RktCRA83QG0JS4yINX+9igioOwHlnR8GElH7t/DYLZI8d9nFP412rh3ii0Dm
-         udnBJ1+6P1mKPeppyTu8vxscX7+Iux3RTR2ndZjRwZs5WjlQ8qVQQNQandlEHfg+3YqK
-         Cc+5JHdjgEUHrazcghFFbgkEb6TQfNmp+F/rU3Wys+iMAnzRDniEA5uAKXQ3wwkAUx3/
-         1iEQ==
-X-Gm-Message-State: AOAM531vZR/pYYgxVHTlCka7SM93stz1NLWmRBcZv+nUGT8MOb55F2mI
-        /HbZNGja7Q1lgEE+XwRQQbQ=
-X-Google-Smtp-Source: ABdhPJwQGcaBeMXw6/sCyqc5ONLJKT5gr/uA1Zr2WaQmCWr8E679400w9CAo5Qc4idcoCstMoMpJGQ==
-X-Received: by 2002:a63:441c:: with SMTP id r28mr20089357pga.372.1595858933923;
-        Mon, 27 Jul 2020 07:08:53 -0700 (PDT)
-Received: from blackclown ([103.88.82.91])
-        by smtp.gmail.com with ESMTPSA id o8sm14278851pgb.23.2020.07.27.07.08.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 27 Jul 2020 07:08:53 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 19:38:47 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
-        shivasharan.srikanteshwara@broadcom.com, jejb@linux.ibm.com
-Cc:     megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 2/2] scsi: megaraid: Remove remaining pci-dma-compat
- wrapper APIs.
-Message-ID: <20200727140847.GF14759@blackclown>
-References: <55829944e20fb558dd3a42f11bfef42b7095e3cd.1595066170.git.usuraj35@gmail.com>
+        Mon, 27 Jul 2020 10:08:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729400AbgG0OI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:08:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4E3A2073E;
+        Mon, 27 Jul 2020 14:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595858906;
+        bh=p/kmzlezXh0j8FdfaVp7CxMlXOuU9TqE/KqdV7WUn+c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z+3QQrLpeIGkT+nASSjtdeOyHXw5THQq8kyVDZHM5arcyiei3Mmv1Ixqfgxdc4Tyl
+         2mSQyH8tiPbd2K4HJDRszpMebA4aNVcmjYGEfficQYqtlQRDxa2pVwdyuGbKFMvr0U
+         imW33e4dUzRYglRZMQb06EWaEirk0SEpRWInxUz4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>
+Subject: [PATCH 4.14 55/64] serial: 8250: fix null-ptr-deref in serial8250_start_tx()
+Date:   Mon, 27 Jul 2020 16:04:34 +0200
+Message-Id: <20200727134913.893539507@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
+References: <20200727134911.020675249@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="z0eOaCaDLjvTGF2l"
-Content-Disposition: inline
-In-Reply-To: <55829944e20fb558dd3a42f11bfef42b7095e3cd.1595066170.git.usuraj35@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Yang Yingliang <yangyingliang@huawei.com>
 
---z0eOaCaDLjvTGF2l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit f4c23a140d80ef5e6d3d1f8f57007649014b60fa upstream.
 
-The legacy API wrappers in include/linux/pci-dma-compat.h
-should go away as it creates unnecessary midlayering
-for include/linux/dma-mapping.h APIs, instead use dma-mapping.h
-APIs directly.
+I got null-ptr-deref in serial8250_start_tx():
 
-The patch has been generated with the coccinelle script below
-and has been hand modified to replace GFP_ with correct flags based on
-the context.
+[   78.114630] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[   78.123778] Mem abort info:
+[   78.126560]   ESR = 0x86000007
+[   78.129603]   EC = 0x21: IABT (current EL), IL = 32 bits
+[   78.134891]   SET = 0, FnV = 0
+[   78.137933]   EA = 0, S1PTW = 0
+[   78.141064] user pgtable: 64k pages, 48-bit VAs, pgdp=00000027d41a8600
+[   78.147562] [0000000000000000] pgd=00000027893f0003, p4d=00000027893f0003, pud=00000027893f0003, pmd=00000027c9a20003, pte=0000000000000000
+[   78.160029] Internal error: Oops: 86000007 [#1] SMP
+[   78.164886] Modules linked in: sunrpc vfat fat aes_ce_blk crypto_simd cryptd aes_ce_cipher crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce ses enclosure sg sbsa_gwdt ipmi_ssif spi_dw_mmio sch_fq_codel vhost_net tun vhost vhost_iotlb tap ip_tables ext4 mbcache jbd2 ahci hisi_sas_v3_hw libahci hisi_sas_main libsas hns3 scsi_transport_sas hclge libata megaraid_sas ipmi_si hnae3 ipmi_devintf ipmi_msghandler br_netfilter bridge stp llc nvme nvme_core xt_sctp sctp libcrc32c dm_mod nbd
+[   78.207383] CPU: 11 PID: 23258 Comm: null-ptr Not tainted 5.8.0-rc6+ #48
+[   78.214056] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B210.01 03/12/2020
+[   78.222888] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
+[   78.228435] pc : 0x0
+[   78.230618] lr : serial8250_start_tx+0x160/0x260
+[   78.235215] sp : ffff800062eefb80
+[   78.238517] x29: ffff800062eefb80 x28: 0000000000000fff
+[   78.243807] x27: ffff800062eefd80 x26: ffff202fd83b3000
+[   78.249098] x25: ffff800062eefd80 x24: ffff202fd83b3000
+[   78.254388] x23: ffff002fc5e50be8 x22: 0000000000000002
+[   78.259679] x21: 0000000000000001 x20: 0000000000000000
+[   78.264969] x19: ffffa688827eecc8 x18: 0000000000000000
+[   78.270259] x17: 0000000000000000 x16: 0000000000000000
+[   78.275550] x15: ffffa68881bc67a8 x14: 00000000000002e6
+[   78.280841] x13: ffffa68881bc67a8 x12: 000000000000c539
+[   78.286131] x11: d37a6f4de9bd37a7 x10: ffffa68881cccff0
+[   78.291421] x9 : ffffa68881bc6000 x8 : ffffa688819daa88
+[   78.296711] x7 : ffffa688822a0f20 x6 : ffffa688819e0000
+[   78.302002] x5 : ffff800062eef9d0 x4 : ffffa68881e707a8
+[   78.307292] x3 : 0000000000000000 x2 : 0000000000000002
+[   78.312582] x1 : 0000000000000001 x0 : ffffa688827eecc8
+[   78.317873] Call trace:
+[   78.320312]  0x0
+[   78.322147]  __uart_start.isra.9+0x64/0x78
+[   78.326229]  uart_start+0xb8/0x1c8
+[   78.329620]  uart_flush_chars+0x24/0x30
+[   78.333442]  n_tty_receive_buf_common+0x7b0/0xc30
+[   78.338128]  n_tty_receive_buf+0x44/0x2c8
+[   78.342122]  tty_ioctl+0x348/0x11f8
+[   78.345599]  ksys_ioctl+0xd8/0xf8
+[   78.348903]  __arm64_sys_ioctl+0x2c/0xc8
+[   78.352812]  el0_svc_common.constprop.2+0x88/0x1b0
+[   78.357583]  do_el0_svc+0x44/0xd0
+[   78.360887]  el0_sync_handler+0x14c/0x1d0
+[   78.364880]  el0_sync+0x140/0x180
+[   78.368185] Code: bad PC value
 
-Compile-tested.
+SERIAL_PORT_DFNS is not defined on each arch, if it's not defined,
+serial8250_set_defaults() won't be called in serial8250_isa_init_ports(),
+so the p->serial_in pointer won't be initialized, and it leads a null-ptr-deref.
+Fix this problem by calling serial8250_set_defaults() after init uart port.
 
-@@@@
-- PCI_DMA_BIDIRECTIONAL
-+ DMA_BIDIRECTIONAL
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200721143852.4058352-1-yangyingliang@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-@@@@
-- PCI_DMA_TODEVICE
-+ DMA_TO_DEVICE
-
-@@@@
-- PCI_DMA_FROMDEVICE
-+ DMA_FROM_DEVICE
-
-@@@@
-- PCI_DMA_NONE
-+ DMA_NONE
-
-@@ expression E1, E2, E3; @@
-- pci_alloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
-
-@@ expression E1, E2, E3; @@
-- pci_zalloc_consistent(E1, E2, E3)
-+ dma_alloc_coherent(&E1->dev, E2, E3, GFP_)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_free_consistent(E1, E2, E3, E4)
-+ dma_free_coherent(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_single(E1, E2, E3, E4)
-+ dma_map_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_single(E1, E2, E3, E4)
-+ dma_unmap_single(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4, E5; @@
-- pci_map_page(E1, E2, E3, E4, E5)
-+ dma_map_page(&E1->dev, E2, E3, E4, E5)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_page(E1, E2, E3, E4)
-+ dma_unmap_page(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_map_sg(E1, E2, E3, E4)
-+ dma_map_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_unmap_sg(E1, E2, E3, E4)
-+ dma_unmap_sg(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_cpu(E1, E2, E3, E4)
-+ dma_sync_single_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_single_for_device(E1, E2, E3, E4)
-+ dma_sync_single_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_cpu(E1, E2, E3, E4)
-+ dma_sync_sg_for_cpu(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2, E3, E4; @@
-- pci_dma_sync_sg_for_device(E1, E2, E3, E4)
-+ dma_sync_sg_for_device(&E1->dev, E2, E3, E4)
-
-@@ expression E1, E2; @@
-- pci_dma_mapping_error(E1, E2)
-+ dma_mapping_error(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_consistent_dma_mask(E1, E2)
-+ dma_set_coherent_mask(&E1->dev, E2)
-
-@@ expression E1, E2; @@
-- pci_set_dma_mask(E1, E2)
-+ dma_set_mask(&E1->dev, E2)
-
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
 ---
- drivers/scsi/megaraid.c | 125 +++++++++++++++++++++-------------------
- 1 file changed, 65 insertions(+), 60 deletions(-)
+ drivers/tty/serial/8250/8250_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/megaraid.c b/drivers/scsi/megaraid.c
-index 16bcdffeab37..ed06aafeeedc 100644
---- a/drivers/scsi/megaraid.c
-+++ b/drivers/scsi/megaraid.c
-@@ -2355,7 +2355,8 @@ proc_show_pdrv(struct seq_file *m, adapter_t *adapter=
-, int channel)
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -534,6 +534,7 @@ static void __init serial8250_isa_init_p
+ 		 */
+ 		up->mcr_mask = ~ALPHA_KLUDGE_MCR;
+ 		up->mcr_force = ALPHA_KLUDGE_MCR;
++		serial8250_set_defaults(up);
  	}
-=20
-=20
--	scsi_inq =3D pci_alloc_consistent(pdev, 256, &scsi_inq_dma_handle);
-+	scsi_inq =3D dma_alloc_coherent(&pdev->dev, 256, &scsi_inq_dma_handle,
-+				      GFP_KERNEL);
- 	if( scsi_inq =3D=3D NULL ) {
- 		seq_puts(m, "memory not available for scsi inq.\n");
- 		goto free_inquiry;
-@@ -2428,7 +2429,7 @@ proc_show_pdrv(struct seq_file *m, adapter_t *adapter=
-, int channel)
- 	}
-=20
- free_pci:
--	pci_free_consistent(pdev, 256, scsi_inq, scsi_inq_dma_handle);
-+	dma_free_coherent(&pdev->dev, 256, scsi_inq, scsi_inq_dma_handle);
- free_inquiry:
- 	mega_free_inquiry(inquiry, dma_handle, pdev);
- free_pdev:
-@@ -2548,8 +2549,8 @@ proc_show_rdrv(struct seq_file *m, adapter_t *adapter=
-, int start, int end )
- 			raid_inq.logdrv_info.num_ldrv;
- 	}
-=20
--	disk_array =3D pci_alloc_consistent(pdev, array_sz,
--			&disk_array_dma_handle);
-+	disk_array =3D dma_alloc_coherent(&pdev->dev, array_sz,
-+					&disk_array_dma_handle, GFP_KERNEL);
-=20
- 	if( disk_array =3D=3D NULL ) {
- 		seq_puts(m, "memory not available.\n");
-@@ -2668,8 +2669,8 @@ proc_show_rdrv(struct seq_file *m, adapter_t *adapter=
-, int start, int end )
- 	}
-=20
- free_pci:
--	pci_free_consistent(pdev, array_sz, disk_array,
--			disk_array_dma_handle);
-+	dma_free_coherent(&pdev->dev, array_sz, disk_array,
-+			  disk_array_dma_handle);
- free_inquiry:
- 	mega_free_inquiry(inquiry, dma_handle, pdev);
- free_pdev:
-@@ -2887,9 +2888,9 @@ mega_init_scb(adapter_t *adapter)
-=20
- 		scb->idx =3D i;
-=20
--		scb->sgl64 =3D pci_alloc_consistent(adapter->dev,
--				sizeof(mega_sgl64) * adapter->sglen,
--				&scb->sgl_dma_addr);
-+		scb->sgl64 =3D dma_alloc_coherent(&adapter->dev->dev,
-+						sizeof(mega_sgl64) * adapter->sglen,
-+						&scb->sgl_dma_addr, GFP_KERNEL);
-=20
- 		scb->sgl =3D (mega_sglist *)scb->sgl64;
-=20
-@@ -2899,9 +2900,9 @@ mega_init_scb(adapter_t *adapter)
- 			return -1;
- 		}
-=20
--		scb->pthru =3D pci_alloc_consistent(adapter->dev,
--				sizeof(mega_passthru),
--				&scb->pthru_dma_addr);
-+		scb->pthru =3D dma_alloc_coherent(&adapter->dev->dev,
-+						sizeof(mega_passthru),
-+						&scb->pthru_dma_addr, GFP_KERNEL);
-=20
- 		if( !scb->pthru ) {
- 			dev_warn(&adapter->dev->dev, "RAID: Can't allocate passthru\n");
-@@ -2909,9 +2910,9 @@ mega_init_scb(adapter_t *adapter)
- 			return -1;
- 		}
-=20
--		scb->epthru =3D pci_alloc_consistent(adapter->dev,
--				sizeof(mega_ext_passthru),
--				&scb->epthru_dma_addr);
-+		scb->epthru =3D dma_alloc_coherent(&adapter->dev->dev,
-+						 sizeof(mega_ext_passthru),
-+						 &scb->epthru_dma_addr, GFP_KERNEL);
-=20
- 		if( !scb->epthru ) {
- 			dev_warn(&adapter->dev->dev,
-@@ -3151,9 +3152,9 @@ megadev_ioctl(struct file *filep, unsigned int cmd, u=
-nsigned long arg)
- 		if( uioc.uioc_rmbox[0] =3D=3D MEGA_MBOXCMD_PASSTHRU ) {
- 			/* Passthru commands */
-=20
--			pthru =3D pci_alloc_consistent(pdev,
--					sizeof(mega_passthru),
--					&pthru_dma_hndl);
-+			pthru =3D dma_alloc_coherent(&pdev->dev,
-+						   sizeof(mega_passthru),
-+						   &pthru_dma_hndl, GFP_KERNEL);
-=20
- 			if( pthru =3D=3D NULL ) {
- 				free_local_pdev(pdev);
-@@ -3171,9 +3172,9 @@ megadev_ioctl(struct file *filep, unsigned int cmd, u=
-nsigned long arg)
- 			if( copy_from_user(pthru, upthru,
- 						sizeof(mega_passthru)) ) {
-=20
--				pci_free_consistent(pdev,
--						sizeof(mega_passthru), pthru,
--						pthru_dma_hndl);
-+				dma_free_coherent(&pdev->dev,
-+						  sizeof(mega_passthru),
-+						  pthru, pthru_dma_hndl);
-=20
- 				free_local_pdev(pdev);
-=20
-@@ -3184,15 +3185,16 @@ megadev_ioctl(struct file *filep, unsigned int cmd,=
- unsigned long arg)
- 			 * Is there a data transfer
- 			 */
- 			if( pthru->dataxferlen ) {
--				data =3D pci_alloc_consistent(pdev,
--						pthru->dataxferlen,
--						&data_dma_hndl);
-+				data =3D dma_alloc_coherent(&pdev->dev,
-+							  pthru->dataxferlen,
-+							  &data_dma_hndl,
-+							  GFP_KERNEL);
-=20
- 				if( data =3D=3D NULL ) {
--					pci_free_consistent(pdev,
--							sizeof(mega_passthru),
--							pthru,
--							pthru_dma_hndl);
-+					dma_free_coherent(&pdev->dev,
-+							  sizeof(mega_passthru),
-+							  pthru,
-+							  pthru_dma_hndl);
-=20
- 					free_local_pdev(pdev);
-=20
-@@ -3257,13 +3259,13 @@ megadev_ioctl(struct file *filep, unsigned int cmd,=
- unsigned long arg)
-=20
- freemem_and_return:
- 			if( pthru->dataxferlen ) {
--				pci_free_consistent(pdev,
--						pthru->dataxferlen, data,
--						data_dma_hndl);
-+				dma_free_coherent(&pdev->dev,
-+						  pthru->dataxferlen, data,
-+						  data_dma_hndl);
- 			}
-=20
--			pci_free_consistent(pdev, sizeof(mega_passthru),
--					pthru, pthru_dma_hndl);
-+			dma_free_coherent(&pdev->dev, sizeof(mega_passthru),
-+					  pthru, pthru_dma_hndl);
-=20
- 			free_local_pdev(pdev);
-=20
-@@ -3276,8 +3278,10 @@ megadev_ioctl(struct file *filep, unsigned int cmd, =
-unsigned long arg)
- 			 * Is there a data transfer
- 			 */
- 			if( uioc.xferlen ) {
--				data =3D pci_alloc_consistent(pdev,
--						uioc.xferlen, &data_dma_hndl);
-+				data =3D dma_alloc_coherent(&pdev->dev,
-+							  uioc.xferlen,
-+							  &data_dma_hndl,
-+							  GFP_KERNEL);
-=20
- 				if( data =3D=3D NULL ) {
- 					free_local_pdev(pdev);
-@@ -3297,9 +3301,9 @@ megadev_ioctl(struct file *filep, unsigned int cmd, u=
-nsigned long arg)
- 				if( copy_from_user(data, (char __user *)(unsigned long) uxferaddr,
- 							uioc.xferlen) ) {
-=20
--					pci_free_consistent(pdev,
--							uioc.xferlen,
--							data, data_dma_hndl);
-+					dma_free_coherent(&pdev->dev,
-+							  uioc.xferlen, data,
-+							  data_dma_hndl);
-=20
- 					free_local_pdev(pdev);
-=20
-@@ -3320,9 +3324,9 @@ megadev_ioctl(struct file *filep, unsigned int cmd, u=
-nsigned long arg)
-=20
- 			if( rval ) {
- 				if( uioc.xferlen ) {
--					pci_free_consistent(pdev,
--							uioc.xferlen, data,
--							data_dma_hndl);
-+					dma_free_coherent(&pdev->dev,
-+							  uioc.xferlen, data,
-+							  data_dma_hndl);
- 				}
-=20
- 				free_local_pdev(pdev);
-@@ -3342,9 +3346,8 @@ megadev_ioctl(struct file *filep, unsigned int cmd, u=
-nsigned long arg)
- 			}
-=20
- 			if( uioc.xferlen ) {
--				pci_free_consistent(pdev,
--						uioc.xferlen, data,
--						data_dma_hndl);
-+				dma_free_coherent(&pdev->dev, uioc.xferlen,
-+						  data, data_dma_hndl);
- 			}
-=20
- 			free_local_pdev(pdev);
-@@ -4010,8 +4013,8 @@ mega_internal_dev_inquiry(adapter_t *adapter, u8 ch, =
-u8 tgt,
- 	 */
- 	if( make_local_pdev(adapter, &pdev) !=3D 0 ) return -1;
-=20
--	pthru =3D pci_alloc_consistent(pdev, sizeof(mega_passthru),
--			&pthru_dma_handle);
-+	pthru =3D dma_alloc_coherent(&pdev->dev, sizeof(mega_passthru),
-+				   &pthru_dma_handle, GFP_KERNEL);
-=20
- 	if( pthru =3D=3D NULL ) {
- 		free_local_pdev(pdev);
-@@ -4047,8 +4050,8 @@ mega_internal_dev_inquiry(adapter_t *adapter, u8 ch, =
-u8 tgt,
-=20
- 	rval =3D mega_internal_command(adapter, &mc, pthru);
-=20
--	pci_free_consistent(pdev, sizeof(mega_passthru), pthru,
--			pthru_dma_handle);
-+	dma_free_coherent(&pdev->dev, sizeof(mega_passthru), pthru,
-+			  pthru_dma_handle);
-=20
- 	free_local_pdev(pdev);
-=20
-@@ -4273,8 +4276,10 @@ megaraid_probe_one(struct pci_dev *pdev, const struc=
-t pci_device_id *id)
- 	/*
- 	 * Allocate buffer to issue internal commands.
- 	 */
--	adapter->mega_buffer =3D pci_alloc_consistent(adapter->dev,
--		MEGA_BUFFER_SIZE, &adapter->buf_dma_handle);
-+	adapter->mega_buffer =3D dma_alloc_coherent(&adapter->dev->dev,
-+						  MEGA_BUFFER_SIZE,
-+						  &adapter->buf_dma_handle,
-+						  GFP_KERNEL);
- 	if (!adapter->mega_buffer) {
- 		dev_warn(&pdev->dev, "out of RAM\n");
- 		goto out_host_put;
-@@ -4433,10 +4438,10 @@ megaraid_probe_one(struct pci_dev *pdev, const stru=
-ct pci_device_id *id)
-=20
- 	/* Set the Mode of addressing to 64 bit if we can */
- 	if ((adapter->flag & BOARD_64BIT) && (sizeof(dma_addr_t) =3D=3D 8)) {
--		pci_set_dma_mask(pdev, DMA_BIT_MASK(64));
-+		dma_set_mask(&pdev->dev, DMA_BIT_MASK(64));
- 		adapter->has_64bit_addr =3D 1;
- 	} else  {
--		pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
-+		dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
- 		adapter->has_64bit_addr =3D 0;
- 	}
- 	=09
-@@ -4475,15 +4480,15 @@ megaraid_probe_one(struct pci_dev *pdev, const stru=
-ct pci_device_id *id)
- 	return 0;
-=20
-  out_free_mbox:
--	pci_free_consistent(adapter->dev, sizeof(mbox64_t),
--			adapter->una_mbox64, adapter->una_mbox64_dma);
-+	dma_free_coherent(&adapter->dev->dev, sizeof(mbox64_t),
-+			  adapter->una_mbox64, adapter->una_mbox64_dma);
-  out_free_irq:
- 	free_irq(adapter->host->irq, adapter);
-  out_free_scb_list:
- 	kfree(adapter->scb_list);
-  out_free_cmd_buffer:
--	pci_free_consistent(adapter->dev, MEGA_BUFFER_SIZE,
--			adapter->mega_buffer, adapter->buf_dma_handle);
-+	dma_free_coherent(&adapter->dev->dev, MEGA_BUFFER_SIZE,
-+			  adapter->mega_buffer, adapter->buf_dma_handle);
-  out_host_put:
- 	scsi_host_put(host);
-  out_iounmap:
-@@ -4557,11 +4562,11 @@ megaraid_remove_one(struct pci_dev *pdev)
- 	sprintf(buf, "hba%d", adapter->host->host_no);
- 	remove_proc_subtree(buf, mega_proc_dir_entry);
-=20
--	pci_free_consistent(adapter->dev, MEGA_BUFFER_SIZE,
--			adapter->mega_buffer, adapter->buf_dma_handle);
-+	dma_free_coherent(&adapter->dev->dev, MEGA_BUFFER_SIZE,
-+			  adapter->mega_buffer, adapter->buf_dma_handle);
- 	kfree(adapter->scb_list);
--	pci_free_consistent(adapter->dev, sizeof(mbox64_t),
--			adapter->una_mbox64, adapter->una_mbox64_dma);
-+	dma_free_coherent(&adapter->dev->dev, sizeof(mbox64_t),
-+			  adapter->una_mbox64, adapter->una_mbox64_dma);
-=20
- 	scsi_host_put(host);
- 	pci_disable_device(pdev);
---=20
-2.17.1
+ 
+ 	/* chain base port ops to support Remote Supervisor Adapter */
+@@ -557,7 +558,6 @@ static void __init serial8250_isa_init_p
+ 		port->membase  = old_serial_port[i].iomem_base;
+ 		port->iotype   = old_serial_port[i].io_type;
+ 		port->regshift = old_serial_port[i].iomem_reg_shift;
+-		serial8250_set_defaults(up);
+ 
+ 		port->irqflags |= irqflag;
+ 		if (serial8250_isa_config != NULL)
 
 
---z0eOaCaDLjvTGF2l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE7AbCa0kOsMJ4cx0j+gRsbIfe744FAl8e3+8ACgkQ+gRsbIfe
-7450QBAAl5uwVwFS8OtrWB91gwxY27Uk0fNup8Rveb5QJ+Dqql3yRNYFRyztB9s3
-+Ds82URQDS/5l+uKS0HhdYbUrcCibmnRAnozPT7VV7ZENjOARyXp0OvfAdK2QR6M
-/ZQCX4aSd3eQAg6jabe8pFHv+Dhn0Jyy/PPCGS8IPxsbLlYXqEHNSw0MU/7A+EW9
-Zpn4byIq9DicR7ddIg8B6dzHwJ0HTlOobI+yEqFdcBeSsjTFSJg/XhpVVcp6tWCH
-CKOODgBQeSvabEANRsFIkqiMpd1W+dubjOzJX7FZ7fKQjGF5w8WZR/gYaWW33Nmt
-+nLZRzDSh48MuOXdv9fHk1xprr1eYDVNHfxKgYQEZUFD809S/JBWVs+DGPpm78jT
-h3Zawt07iLgFizo2UJ+gS2R/mLkQK45KJBHX+NBSClcQSHhwB5TjYb518Hp+NYOt
-jCAkmYVE2k8UPnpLWCJ9vU+1FeH5PBzCBqGbcio+n9fqgoLoDFVpFSLu04dH7A6X
-3aybf4vrdUGSzowqlZ8shlDwXl5LWaM0m3dUiGIKQ8YKWmAMxXr/lZwuehXYf2Vu
-yqywLGdglVtPUDCFw9srp+hW8MoKIVQqsHpRPyxo1XWvfE7GORTl8/1wsUOpRsQs
-wc2rMDvcg5prq3SKhiEJ7ac5IWEynnca2S3ZS3n87NZXna8IZMg=
-=//kf
------END PGP SIGNATURE-----
-
---z0eOaCaDLjvTGF2l--
