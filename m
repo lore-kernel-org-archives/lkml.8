@@ -2,211 +2,85 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD74C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01DEC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0CB62070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B8920714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:46:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Vc60w6Re"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgG0Mpd (ORCPT
+        id S1728555AbgG0Mqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:45:33 -0400
-Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:57530 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728286AbgG0Mpd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:45:33 -0400
-Received: from localhost.localdomain ([93.23.198.229])
-        by mwinf5d78 with ME
-        id 8ClV2300K4xT3VZ03ClWrC; Mon, 27 Jul 2020 14:45:30 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 27 Jul 2020 14:45:30 +0200
-X-ME-IP: 93.23.198.229
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] media: b2c2: switch from 'pci_' to 'dma_' API
-Date:   Mon, 27 Jul 2020 14:45:27 +0200
-Message-Id: <20200727124527.52323-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Mon, 27 Jul 2020 08:46:33 -0400
+Received: from ozlabs.org ([203.11.71.1]:34313 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728387AbgG0Mq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:46:29 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFfgl5N6pz9sRW;
+        Mon, 27 Jul 2020 22:46:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595853987;
+        bh=z9rdvwOF6uXrEEHNg+TarJ4QGqVBruerZKTchw/2sqs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Vc60w6ReJvLWCbKWo3jwjNl8hn6/N9Afm3jxW8Er+eOy868pD19jv7wtklNnBvVPg
+         qGUp0pGey9Gmwrtk2CYQU8dXRPPT1+k5NB+pcT2JxgHZUzfyNjxn0XxnX3k341esPb
+         0SzucaSUWLu60FPYP9r1C0sjNaR91sZItdh8gen77A4TvS8hfKAu2pTC10pJ8eObfi
+         95Et2j0nOhGAUfNkKnIM4fOrLf8YXVgAQ4wxbGYd7+3FWvOJ+wSj008dqwUefteFN2
+         iK+H7fhiYQ9JOaJqoyhrz/N8mI7tWNinOLWfhvEMa44EDRMl+1izajNZZL3lF2cXGu
+         BdD9WYg/mtYug==
+Date:   Mon, 27 Jul 2020 22:46:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the akpm tree with the fsinfo tree
+Message-ID: <20200727224626.463ffeaf@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/+n6mSv4+B3O64+e2m+UyXow";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
+--Sig_/+n6mSv4+B3O64+e2m+UyXow
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GFP_ with a correct flag.
-It has been compile tested.
+Hi all,
 
-When memory is allocated in 'flexcop_dma_allocate()', GFP_KERNEL can be
-used because it is only called from the probe function (i.e.
-'flexcop_pci_probe()') and no lock is taken.
+The notificiations tree has been rebased to remove a new syscall and
+the fsinfo tree rebased on top of that, so the syscall numbers have all
+changed again :-(
 
-The call chain is:
-   flexcop_pci_probe
-      --> flexcop_pci_dma_init
-         --> flexcop_dma_allocate
+--=20
+Cheers,
+Stephen Rothwell
 
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
+--Sig_/+n6mSv4+B3O64+e2m+UyXow
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
+-----BEGIN PGP SIGNATURE-----
 
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ezKIACgkQAVBC80lX
+0GyOPAf+LP3r4a9kb3ESOw+ZN7NEbf59fKgeQ7aWApfy0ohv1uBuwwFaamsagvn0
+HLr/fv22tG5ovxMm9Im55mZo/IxnakX7Bhf8fZZ/vxhIcksqCJG38QymDIZ/UffL
+8vbIKPwFC4XdGgmf1P3UouxomvT84YKBY7Ci+USB+1l1vkvU7f7BTP4H+fMJj+bE
+tlvQs8QTJHiQUwnKslRRUoZuSjT2OsEiImvQgtaL/65yipRRe0LaFJpexh3lSYiS
+CYTr8A4GleXxOxuKTvPGd5yODntWBAavbyiZVYCeE4/CJQO8kxUHObZmGhzMBodt
+rPfqilgSjoVtq3FMYlzpfXnXspwDqg==
+=SgGv
+-----END PGP SIGNATURE-----
 
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
-
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- drivers/media/pci/b2c2/flexcop-dma.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/media/pci/b2c2/flexcop-dma.c b/drivers/media/pci/b2c2/flexcop-dma.c
-index ba45b378d739..ff8058568240 100644
---- a/drivers/media/pci/b2c2/flexcop-dma.c
-+++ b/drivers/media/pci/b2c2/flexcop-dma.c
-@@ -17,7 +17,7 @@ int flexcop_dma_allocate(struct pci_dev *pdev,
- 		return -EINVAL;
- 	}
- 
--	tcpu = pci_alloc_consistent(pdev, size, &tdma);
-+	tcpu = dma_alloc_coherent(&pdev->dev, size, &tdma, GFP_KERNEL);
- 	if (tcpu != NULL) {
- 		dma->pdev = pdev;
- 		dma->cpu_addr0 = tcpu;
-@@ -33,8 +33,8 @@ EXPORT_SYMBOL(flexcop_dma_allocate);
- 
- void flexcop_dma_free(struct flexcop_dma *dma)
- {
--	pci_free_consistent(dma->pdev, dma->size*2,
--			dma->cpu_addr0, dma->dma_addr0);
-+	dma_free_coherent(&dma->pdev->dev, dma->size * 2, dma->cpu_addr0,
-+			  dma->dma_addr0);
- 	memset(dma, 0, sizeof(struct flexcop_dma));
- }
- EXPORT_SYMBOL(flexcop_dma_free);
--- 
-2.25.1
-
+--Sig_/+n6mSv4+B3O64+e2m+UyXow--
