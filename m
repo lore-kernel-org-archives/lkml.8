@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE396C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C4CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6CA2207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEB912074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595876557;
-	bh=HSIZOSbBdMb6VdSL3tSd4Iq3pXLj2Kfj7HeeT8Y2K3Y=;
+	s=default; t=1595876655;
+	bh=lwunSgBdP0QP08cmjm8SVF811nFggBFZyE9513O5AFU=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=XWBJXox2mJm5WO9cl9WMbaWQFswYu75FaRbOnUqx1bDyVJs4rsqrrAcE2z1yVoXH7
-	 UQ0BLFwyUcg7WtCEN6s0I+m2hAWA/49ZTZxTITXKX1PO5rBw5wriho7msBMlvFo8H5
-	 mAf+t6Bh5HHuzWdjHT6ko7kw30jR5g+jitR3Mnuc=
+	b=zIC7zfO5hV5D9h91w3eoN/Nu/g1OH1FQ3hTJAZdWTNTrXXyQ69CTuxzX6s68OHWrg
+	 vaXzu2OgpsJHtpBk+m9GcKH8trv8aw1zzM1S350ciXhmGdMisLx/+I6NqxBeJd4Zna
+	 915MtpQ4dP7+KALb0xhbee/Ce1j0PaIWTPtZNU/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbgG0TCg (ORCPT
+        id S1728245AbgG0TEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:02:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51336 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 15:04:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726897AbgG0TCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:02:36 -0400
+        id S1726897AbgG0TEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 15:04:14 -0400
 Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 755752074F;
-        Mon, 27 Jul 2020 19:02:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 353F72074F;
+        Mon, 27 Jul 2020 19:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595876555;
-        bh=HSIZOSbBdMb6VdSL3tSd4Iq3pXLj2Kfj7HeeT8Y2K3Y=;
+        s=default; t=1595876653;
+        bh=lwunSgBdP0QP08cmjm8SVF811nFggBFZyE9513O5AFU=;
         h=Date:From:To:Cc:Subject:From;
-        b=E5k8wckeCWRGKrjoXhlbhQzokEsEqXckpIR0pIo1NjAuyXsrh3cYagdMhp6swLRpF
-         dCjjPX7AQZ2KQdajj8Cv9xc4zahdLnZqf2/+spxnkNzLSx+Tzg/4vQ+FjmNUUrLqyn
-         E4boQWGCsYcxGsjsC0Hzowa5UIj1kkqel5eSAriU=
-Date:   Mon, 27 Jul 2020 14:08:29 -0500
+        b=HA1b4Q5WTZfBweqH8pgrLcFkORB4/jQMyucR+NA2CofvHx/9zL++cmFhqp4clWBP6
+         ey5PPrztksg76Up3Bib78EUimHuKzgs1zLoUXLShp/ZPLIPSxYMwDj6oGgXwQsDv/3
+         mwjAIhuLhb+cvIk38H/PDg5B6d4IvxX0hMfK6W4I=
+Date:   Mon, 27 Jul 2020 14:10:06 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH][next] staging: gdm724x: Use fallthrough pseudo-keyword
-Message-ID: <20200727190829.GA30332@embeddedor>
+Subject: [PATCH][next] staging: rtl8192e: Use fallthrough pseudo-keyword
+Message-ID: <20200727191006.GA30474@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -62,22 +62,22 @@ the new pseudo-keyword macro fallthrough[1].
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/staging/gdm724x/gdm_lte.c | 2 +-
+ drivers/staging/rtl8192e/rtllib_wx.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/gdm724x/gdm_lte.c b/drivers/staging/gdm724x/gdm_lte.c
-index eb309190f5be..571f47d39484 100644
---- a/drivers/staging/gdm724x/gdm_lte.c
-+++ b/drivers/staging/gdm724x/gdm_lte.c
-@@ -784,7 +784,7 @@ static int gdm_lte_receive_pkt(struct phy_dev *phy_dev, char *buf, int len)
- 			return index;
- 		dev = phy_dev->dev[index];
- 		gdm_lte_pdn_table(dev, buf, len);
--		/* Fall through */
+diff --git a/drivers/staging/rtl8192e/rtllib_wx.c b/drivers/staging/rtl8192e/rtllib_wx.c
+index 7e7df50164fb..aa26b2fd2774 100644
+--- a/drivers/staging/rtl8192e/rtllib_wx.c
++++ b/drivers/staging/rtl8192e/rtllib_wx.c
+@@ -680,7 +680,7 @@ int rtllib_wx_set_mlme(struct rtllib_device *ieee,
+ 	switch (mlme->cmd) {
+ 	case IW_MLME_DEAUTH:
+ 		deauth = true;
+-		/* fall through */
 +		fallthrough;
- 	default:
- 		ret = gdm_lte_event_send(dev, buf, len);
- 		break;
+ 	case IW_MLME_DISASSOC:
+ 		if (deauth)
+ 			netdev_info(ieee->dev, "disauth packet !\n");
 -- 
 2.27.0
 
