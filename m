@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17726C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F9D2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7FF62075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859738;
-	bh=pn+3N3qao5RGEADIux0F+3sviVfdxhuxFwzMgymrng8=;
+	s=default; t=1595859741;
+	bh=zRyeNmoL3wHIHCpZmIbNx0rdAsjMnQGiXt97sJtg14w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L9nUKOAfON/L9IaHA1BZ//PH515aYrISocKg7/4RUE8JiAAzvvVv11hX4zwMCkCGN
-	 iEI3IHjhs4yKis/IB0EcsppU3KEpy4zFoD18IWRjx5pQjAXyTQbTNAHn1E85YgTDup
-	 YUZm1pxouMERtO/SgOU2/aAvZCucYQ6VCJFAAqvE=
+	b=uLZwVhvqd4HXSvxdK5y3fveMreaH0nLI+HYOa8U6LK5Vqr8pvHcj/uO5yxYrJFb8r
+	 6kYUX7SK7YnAg2PjptNik8zjrTxUqLMBhSbye53uSopQf4YjMhyyj30kkFWOu6v8pG
+	 p7eWE7KQpFDNAW2xeG4KhDl7jxw79OlM1nknjM/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731856AbgG0OWP (ORCPT
+        id S1731864AbgG0OWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:22:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:22:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731838AbgG0OWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:22:10 -0400
+        id S1731838AbgG0OWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:22:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD4ED2070A;
-        Mon, 27 Jul 2020 14:22:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B41AA2070A;
+        Mon, 27 Jul 2020 14:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859730;
-        bh=pn+3N3qao5RGEADIux0F+3sviVfdxhuxFwzMgymrng8=;
+        s=default; t=1595859735;
+        bh=zRyeNmoL3wHIHCpZmIbNx0rdAsjMnQGiXt97sJtg14w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q/wTw3+i4cI7iUSSfXWiDmLK5z0b2hPe2Jqf/5zkRhirDoSrmZiENuMM7m2evxYtE
-         8WGn4ap6CaGAWv9cDGJhQJ9DqVVveW61JuxJfy4dWXRwjAS3zrIfx+SVb0z8q2vve1
-         SZ7PLzlt2zLTUjZi2mICd/kidOPLWVIt18nr7Ps4=
+        b=Yl7mdC1cZNyQYYaJdojpqQezHcpQcf/pC2fsE+IMv54dxUx89fB7kpsLr/qlsjVgJ
+         btwV7T/EmZ8kNsUA711MpJV4OP+52/rzJBuLjrPx6vuMtdLVrDv1+XEbxvQ7QZ71cj
+         /4cA0YBVr5NibZ8FtX9DASvALbi3xCL57UeNddjY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helmut Grohne <helmut.grohne@intenta.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 081/179] net: dsa: microchip: call phy_remove_link_mode during probe
-Date:   Mon, 27 Jul 2020 16:04:16 +0200
-Message-Id: <20200727134936.627628764@linuxfoundation.org>
+Subject: [PATCH 5.7 054/179] RDMA/core: Fix race in rdma_alloc_commit_uobject()
+Date:   Mon, 27 Jul 2020 16:03:49 +0200
+Message-Id: <20200727134935.301622638@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,133 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helmut Grohne <helmut.grohne@intenta.de>
+From: Leon Romanovsky <leonro@mellanox.com>
 
-[ Upstream commit 3506b2f42dff66ea6814c3dfa1988bafb79e6f88 ]
+[ Upstream commit 0d1fd39bb27e479fb1de3dd4b4c247c7c9a1fabf ]
 
-When doing "ip link set dev ... up" for a ksz9477 backed link,
-ksz9477_phy_setup is called and it calls phy_remove_link_mode to remove
-1000baseT HDX. During phy_remove_link_mode, phy_advertise_supported is
-called. Doing so reverts any previous change to advertised link modes
-e.g. using a udevd .link file.
+The FD should not be installed until all of the setup is completed as the
+fd_install() transfers ownership of the kref to the FD table. A thread can
+race a close() and trigger concurrent rdma_alloc_commit_uobject() and
+uverbs_uobject_fd_release() which, at least, triggers a safety WARN_ON:
 
-phy_remove_link_mode is not meant to be used while opening a link and
-should be called during phy probe when the link is not yet available to
-userspace.
+  WARNING: CPU: 4 PID: 6913 at drivers/infiniband/core/rdma_core.c:768 uverbs_uobject_fd_release+0x202/0x230
+  Kernel panic - not syncing: panic_on_warn set ...
+  CPU: 4 PID: 6913 Comm: syz-executor.3 Not tainted 5.7.0-rc2 #22
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+  [..]
+  RIP: 0010:uverbs_uobject_fd_release+0x202/0x230
+  Code: fe 4c 89 e7 e8 af 23 fe ff e9 2a ff ff ff e8 c5 fa 61 fe be 03 00 00 00 4c 89 e7 e8 68 eb f5 fe e9 13 ff ff ff e8 ae fa 61 fe <0f> 0b eb ac e8 e5 aa 3c fe e8 50 2b 86 fe e9 6a fe ff ff e8 46 2b
+  RSP: 0018:ffffc90008117d88 EFLAGS: 00010293
+  RAX: ffff88810e146580 RBX: 1ffff92001022fb1 RCX: ffffffff82d5b902
+  RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffff88811951b040
+  RBP: ffff88811951b000 R08: ffffed10232a3609 R09: ffffed10232a3609
+  R10: ffff88811951b043 R11: 0000000000000001 R12: ffff888100a7c600
+  R13: ffff888100a7c650 R14: ffffc90008117da8 R15: ffffffff82d5b700
+   ? __uverbs_cleanup_ufile+0x270/0x270
+   ? uverbs_uobject_fd_release+0x202/0x230
+   ? uverbs_uobject_fd_release+0x202/0x230
+   ? __uverbs_cleanup_ufile+0x270/0x270
+   ? locks_remove_file+0x282/0x3d0
+   ? security_file_free+0xaa/0xd0
+   __fput+0x2be/0x770
+   task_work_run+0x10e/0x1b0
+   exit_to_usermode_loop+0x145/0x170
+   do_syscall_64+0x2d0/0x390
+   ? prepare_exit_to_usermode+0x17a/0x230
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x414da7
+  Code: 00 00 0f 05 48 3d 00 f0 ff ff 77 3f f3 c3 0f 1f 44 00 00 53 89 fb 48 83 ec 10 e8 f4 fb ff ff 89 df 89 c2 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 2b 89 d7 89 44 24 0c e8 36 fc ff ff 8b 44 24
+  RSP: 002b:00007fff39d379d0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+  RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000414da7
+  RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000003
+  RBP: 00007fff39d37a3c R08: 0000000400000000 R09: 0000000400000000
+  R10: 00007fff39d37910 R11: 0000000000000293 R12: 0000000000000001
+  R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000003
 
-Therefore move the phy_remove_link_mode calls into
-ksz9477_switch_register. It indirectly calls dsa_register_switch, which
-creates the relevant struct phy_devices and we update the link modes
-right after that. At that time dev->features is already initialized by
-ksz9477_switch_detect.
+Reorder so that fd_install() is the last thing done in
+rdma_alloc_commit_uobject().
 
-Remove phy_setup from ksz_dev_ops as no users remain.
-
-Link: https://lore.kernel.org/netdev/20200715192722.GD1256692@lunn.ch/
-Fixes: 42fc6a4c613019 ("net: dsa: microchip: prepare PHY for proper advertisement")
-Signed-off-by: Helmut Grohne <helmut.grohne@intenta.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: aba94548c9e4 ("IB/uverbs: Move the FD uobj type struct file allocation to alloc_commit")
+Link: https://lore.kernel.org/r/20200716102059.1420681-1-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/microchip/ksz9477.c    | 42 ++++++++++++++------------
- drivers/net/dsa/microchip/ksz_common.c |  2 --
- drivers/net/dsa/microchip/ksz_common.h |  2 --
- 3 files changed, 23 insertions(+), 23 deletions(-)
+ drivers/infiniband/core/rdma_core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
-index 65701e65b6c2c..95a406e2e3731 100644
---- a/drivers/net/dsa/microchip/ksz9477.c
-+++ b/drivers/net/dsa/microchip/ksz9477.c
-@@ -977,23 +977,6 @@ static void ksz9477_port_mirror_del(struct dsa_switch *ds, int port,
- 			     PORT_MIRROR_SNIFFER, false);
- }
- 
--static void ksz9477_phy_setup(struct ksz_device *dev, int port,
--			      struct phy_device *phy)
--{
--	/* Only apply to port with PHY. */
--	if (port >= dev->phy_port_cnt)
--		return;
--
--	/* The MAC actually cannot run in 1000 half-duplex mode. */
--	phy_remove_link_mode(phy,
--			     ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
--
--	/* PHY does not support gigabit. */
--	if (!(dev->features & GBIT_SUPPORT))
--		phy_remove_link_mode(phy,
--				     ETHTOOL_LINK_MODE_1000baseT_Full_BIT);
--}
--
- static bool ksz9477_get_gbit(struct ksz_device *dev, u8 data)
+diff --git a/drivers/infiniband/core/rdma_core.c b/drivers/infiniband/core/rdma_core.c
+index 75bcbc625616e..3ab84fcbaadec 100644
+--- a/drivers/infiniband/core/rdma_core.c
++++ b/drivers/infiniband/core/rdma_core.c
+@@ -638,9 +638,6 @@ void rdma_alloc_commit_uobject(struct ib_uobject *uobj,
  {
- 	bool gbit;
-@@ -1606,7 +1589,6 @@ static const struct ksz_dev_ops ksz9477_dev_ops = {
- 	.get_port_addr = ksz9477_get_port_addr,
- 	.cfg_port_member = ksz9477_cfg_port_member,
- 	.flush_dyn_mac_table = ksz9477_flush_dyn_mac_table,
--	.phy_setup = ksz9477_phy_setup,
- 	.port_setup = ksz9477_port_setup,
- 	.r_mib_cnt = ksz9477_r_mib_cnt,
- 	.r_mib_pkt = ksz9477_r_mib_pkt,
-@@ -1620,7 +1602,29 @@ static const struct ksz_dev_ops ksz9477_dev_ops = {
+ 	struct ib_uverbs_file *ufile = attrs->ufile;
  
- int ksz9477_switch_register(struct ksz_device *dev)
- {
--	return ksz_switch_register(dev, &ksz9477_dev_ops);
-+	int ret, i;
-+	struct phy_device *phydev;
+-	/* alloc_commit consumes the uobj kref */
+-	uobj->uapi_object->type_class->alloc_commit(uobj);
+-
+ 	/* kref is held so long as the uobj is on the uobj list. */
+ 	uverbs_uobject_get(uobj);
+ 	spin_lock_irq(&ufile->uobjects_lock);
+@@ -650,6 +647,9 @@ void rdma_alloc_commit_uobject(struct ib_uobject *uobj,
+ 	/* matches atomic_set(-1) in alloc_uobj */
+ 	atomic_set(&uobj->usecnt, 0);
+ 
++	/* alloc_commit consumes the uobj kref */
++	uobj->uapi_object->type_class->alloc_commit(uobj);
 +
-+	ret = ksz_switch_register(dev, &ksz9477_dev_ops);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < dev->phy_port_cnt; ++i) {
-+		if (!dsa_is_user_port(dev->ds, i))
-+			continue;
-+
-+		phydev = dsa_to_port(dev->ds, i)->slave->phydev;
-+
-+		/* The MAC actually cannot run in 1000 half-duplex mode. */
-+		phy_remove_link_mode(phydev,
-+				     ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
-+
-+		/* PHY does not support gigabit. */
-+		if (!(dev->features & GBIT_SUPPORT))
-+			phy_remove_link_mode(phydev,
-+					     ETHTOOL_LINK_MODE_1000baseT_Full_BIT);
-+	}
-+	return ret;
+ 	/* Matches the down_read in rdma_alloc_begin_uobject */
+ 	up_read(&ufile->hw_destroy_rwsem);
  }
- EXPORT_SYMBOL(ksz9477_switch_register);
- 
-diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-index fd1d6676ae4fd..7b6c0dce75360 100644
---- a/drivers/net/dsa/microchip/ksz_common.c
-+++ b/drivers/net/dsa/microchip/ksz_common.c
-@@ -358,8 +358,6 @@ int ksz_enable_port(struct dsa_switch *ds, int port, struct phy_device *phy)
- 
- 	/* setup slave port */
- 	dev->dev_ops->port_setup(dev, port, false);
--	if (dev->dev_ops->phy_setup)
--		dev->dev_ops->phy_setup(dev, port, phy);
- 
- 	/* port_stp_state_set() will be called after to enable the port so
- 	 * there is no need to do anything.
-diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
-index f2c9bb68fd330..7d11dd32ec0d1 100644
---- a/drivers/net/dsa/microchip/ksz_common.h
-+++ b/drivers/net/dsa/microchip/ksz_common.h
-@@ -119,8 +119,6 @@ struct ksz_dev_ops {
- 	u32 (*get_port_addr)(int port, int offset);
- 	void (*cfg_port_member)(struct ksz_device *dev, int port, u8 member);
- 	void (*flush_dyn_mac_table)(struct ksz_device *dev, int port);
--	void (*phy_setup)(struct ksz_device *dev, int port,
--			  struct phy_device *phy);
- 	void (*port_cleanup)(struct ksz_device *dev, int port);
- 	void (*port_setup)(struct ksz_device *dev, int port, bool cpu_port);
- 	void (*r_phy)(struct ksz_device *dev, u16 phy, u16 reg, u16 *val);
 -- 
 2.25.1
 
