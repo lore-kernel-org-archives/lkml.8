@@ -2,89 +2,129 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C392C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F1CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63C1A20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55B620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:08:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7drz06i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgG0HHm (ORCPT
+        id S1726918AbgG0HIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:07:42 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:36546 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726140AbgG0HHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:07:42 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv98UfR5fIRkBAA--.653S2;
-        Mon, 27 Jul 2020 15:07:01 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: Move pci_info() after pci_fixup_device() in pci_setup_device()
-Date:   Mon, 27 Jul 2020 15:06:55 +0800
-Message-Id: <1595833615-8049-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxv98UfR5fIRkBAA--.653S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xw45Jr47ZFW8ury5ArykAFb_yoWkCrXEv3
-        yUuF4xWr4DAa10kFn8Jw43Z3sYk3Z09rWxWr48Ka4IvayIvrZ8XF4UXry7K3WUua15Cr90
-        qFWDGr4rCr10kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbwkYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC2
-        0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
-        0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
-        14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
-        vaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-        xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8iL0UUUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Mon, 27 Jul 2020 03:08:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgG0HIR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 03:08:17 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A929C0619D2;
+        Mon, 27 Jul 2020 00:08:17 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q17so7506565pls.9;
+        Mon, 27 Jul 2020 00:08:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=r3ohMdUUisXXnJtg4Sj8gOXxHs0SULkmzOyNPW3p948=;
+        b=J7drz06irjdSn4IEzXgudUrCCZnvkKA7cxf4NRdogNw/S2loC8qb0x8wuxjbKR2HtB
+         PonGxSpWHuChJh9AYDUz65IOJtL7ALkmFRY6FQA/89hAZ2laXJu/9GNjCF8k3P/vC/67
+         LNpcl46FH8W63QyGQRdYKwDzNNpiAiqUNSDEYJoKWpTOciWVQA4+cZFE71/7GlKZntpn
+         2a4JTr5TWo3OP3y68Tdev/F0mICuQ1KuM2pRiyoXHocX0eGLj5/+DsTZKYsNihtrb2Tw
+         L8fabAssBOKF5M1nR2ITvjqijq0pPazWFZB2hG5+paAOZhilTt5mHzCCHil3ef/Kbprz
+         zPTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=r3ohMdUUisXXnJtg4Sj8gOXxHs0SULkmzOyNPW3p948=;
+        b=SVDUM8Bl3YoOLrx7kv0CIjNwZ8G31QbEeQM5QmR8Xrd0qJeLq9YBCNYecQyKQ5Ob0Z
+         ULc+gIpPRO2dE1XhNF66WRZR+85YyJBAVLL8qPb+ZDsrD5XZktyAnlLONNd3GwZZsIj4
+         b0/xv1B7CmkGJYyraTJJZETQSLVACZ0kNHmdfgtN9bHWCr1Axhm4avgabYcytPoeU/dS
+         GwukbbZbyyRbDNuT0MxUZNM51ZsHlDtZDyh05m3NviYgpU8iiuzRcn3TT1ZvybdKwyWI
+         eebKnOR8A7hI8GsBXP0N2CeSGz5TEapD2DMijvN0ILMZ8eK+PyKSbGifPSupU2FeGPN0
+         aVWg==
+X-Gm-Message-State: AOAM531K3YUiPCxE9kIax5nGVe7IeRgbiuqG3CG7EfiaAKdBr8FguByP
+        PA8wIbe3rPY8kHuDKlB34fo=
+X-Google-Smtp-Source: ABdhPJzKJySBE72OX3M6X924GWk4LabSjO0/kXJ/nn3paqyIlriQgFdkPx1NMQe+b8k/s7JD6PLQFQ==
+X-Received: by 2002:a17:90a:6948:: with SMTP id j8mr16013497pjm.45.1595833696391;
+        Mon, 27 Jul 2020 00:08:16 -0700 (PDT)
+Received: from gmail.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id o128sm13916110pfg.127.2020.07.27.00.08.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 00:08:15 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 12:36:52 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v1] spi: spi-topcliff-pch: use generic power management
+Message-ID: <20200727070652.GA5400@gmail.com>
+References: <CAHp75Vdo22ofbCktupFYbfYy6PQ609fsk5B6u2b3FpfKxs8OQg@mail.gmail.com>
+ <20200724223746.GA1538991@bjorn-Precision-5520>
+ <CAHp75VdSr1rguc9HJVh_rA1nBh1uyCdr18eyPosWPzCH1K2=zg@mail.gmail.com>
+ <CAHp75VfKeTCBOne3tDSM46q6m_FE+7hS3H9Hx5C3RRPvueqZAQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfKeTCBOne3tDSM46q6m_FE+7hS3H9Hx5C3RRPvueqZAQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the current code, we can not see the PCI info after fixup which is
-correct to reflect the reality, it is better to move pci_info() after
-pci_fixup_device() in pci_setup_device().
+On Sat, Jul 25, 2020 at 01:44:44PM +0300, Andy Shevchenko wrote:
+> On Sat, Jul 25, 2020 at 1:42 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Sat, Jul 25, 2020 at 1:37 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Fri, Jul 24, 2020 at 11:16:55PM +0300, Andy Shevchenko wrote:
+> 
+> ...
+> 
+> > > If it's a bug that spi-topcliff-pch.c disables but never enables
+> > > wakeup, I think this should turn into two patches:
+> > >
+> > >   1) Fix the bug by enabling wakeup in suspend (or whatever the right
+> > >   fix is), and
+> > >
+> > >   2) Convert to generic PM, which may involve removing the
+> > >   wakeup-related code completely.
+> >
+> > Works for me.
+> 
+> The only problem here, is that the 2nd is already in the Mark's tree
+> and he doesn't do rebases.
+> So, it will be the other way around.
+>
+Concluding from yours and Bjorn's suggestion, I will drop the
+device_wakeup_disable() call form .resume() and send the fix. I will also track
+the drivers who got similar upgrades and went un-noticed.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- drivers/pci/probe.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+As Bjorn mentioned, the problem is that I don't have hardware to test, so I just
+replicated the legacy behaviour in generic by replacing
+pci_enable_wake(....,false) with device_wakeup_disable().
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 2f66988..7c046aed 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1802,9 +1802,6 @@ int pci_setup_device(struct pci_dev *dev)
- 	dev->revision = class & 0xff;
- 	dev->class = class >> 8;		    /* upper 3 bytes */
- 
--	pci_info(dev, "[%04x:%04x] type %02x class %#08x\n",
--		   dev->vendor, dev->device, dev->hdr_type, dev->class);
--
- 	if (pci_early_dump)
- 		early_dump_pci_device(dev);
- 
-@@ -1822,6 +1819,9 @@ int pci_setup_device(struct pci_dev *dev)
- 	/* Early fixups, before probing the BARs */
- 	pci_fixup_device(pci_fixup_early, dev);
- 
-+	pci_info(dev, "[%04x:%04x] type %02x class %#08x\n",
-+		 dev->vendor, dev->device, dev->hdr_type, dev->class);
-+
- 	/* Device class may be changed after fixup */
- 	class = dev->class >> 8;
- 
--- 
-2.1.0
+So, from now, while upgrading drivers with generic PM, should I completely drop
+the pci_enable_wake(....,false) calls if both .suspend() and .resume() try to
+wakeup-disable the device?
 
+Thanks
+Vaibhav Gupta
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
