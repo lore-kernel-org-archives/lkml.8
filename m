@@ -2,84 +2,200 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4747C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9DDD2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:38:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CHym8wYj"
+	by mail.kernel.org (Postfix) with ESMTP id C81932072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbgG0MiH (ORCPT
+        id S1728451AbgG0MjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:38:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgG0MiH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:38:07 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 353A7C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:38:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=61Z9n5/dz4PPk59nykd8q+jpgUyvwUkxJM/Wz2QE8Nw=; b=CHym8wYjWZwDnBenqnoTe40Pv3
-        08Llb3R1qsue1NQSwk/pDcIqxKj0+YLN7c+P8PqL4sdOQPYoc5BCOfU9vxnQ/gLUIfBt5oBpKKGNs
-        9URHuqOxzfsD/dZKzdlJFZwIvH2M/RFyVBzwJTgk0yIkoHaRRrGqCPYCqRhz0X9W4WvG+3IYyU/MB
-        f0K1wtDpTAPGv1Ue4fTNE/xa9uOSjkdlPcdj5Ij/5jfgo5ZAKwsBp+dAAE7Yfy4pXhqD/sZUc1A8G
-        w6IaVhlZhKC/B1S57rxzNA2W4lxpVmC8kEN1Zg7JIiw5zjNlMg6rAHauGuKBTpaZsAj4s9Gn7QXFd
-        9q111rWg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k02OI-0007WG-Nk; Mon, 27 Jul 2020 12:38:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2246030411F;
-        Mon, 27 Jul 2020 14:38:01 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C17A829DC04EC; Mon, 27 Jul 2020 14:38:01 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 14:38:01 +0200
-From:   peterz@infradead.org
-To:     vincent.donnefort@arm.com
-Cc:     mingo@redhat.com, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
-        lukasz.luba@arm.com, valentin.schneider@arm.com
-Subject: Re: [PATCH] sched/fair: provide u64 read for 32-bits arch helper
-Message-ID: <20200727123801.GJ119549@hirez.programming.kicks-ass.net>
-References: <1595847564-239957-1-git-send-email-vincent.donnefort@arm.com>
+        Mon, 27 Jul 2020 08:39:02 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2537 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728304AbgG0MjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:39:02 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 010ED986CF3ABDF5185F;
+        Mon, 27 Jul 2020 13:39:00 +0100 (IST)
+Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
+ 2020 13:38:59 +0100
+Date:   Mon, 27 Jul 2020 13:37:36 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
+        <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/9] Add RCEC handling to PCI/AER
+Message-ID: <20200727133736.00001066@Huawei.com>
+In-Reply-To: <20200724172223.145608-1-sean.v.kelley@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595847564-239957-1-git-send-email-vincent.donnefort@arm.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.121.176]
+X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:59:24AM +0100, vincent.donnefort@arm.com wrote:
-> From: Vincent Donnefort <vincent.donnefort@arm.com>
-> 
-> Introducing two macro helpers u64_32read() and u64_32read_set_copy() to
-> factorize the u64 vminruntime and last_update_time read on a 32-bits
-> architecture. Those new helpers encapsulate smp_rmb() and smp_wmb()
-> synchronization and therefore, have a small penalty in set_task_rq_fair()
-> and init_cfs_rq().
-> 
-> The choice of using a macro over an inline function is driven by the
-> conditional u64 variable copy declarations.
-> 
->   #ifndef CONFIG_64BIT
->      u64 [vminruntime|last_update_time]_copy;
->   #endif
+On Fri, 24 Jul 2020 10:22:14 -0700
+Sean V Kelley <sean.v.kelley@intel.com> wrote:
 
-This lacks a *why*... why did you get up this morning and wrote us this
-patch.
+> Root Complex Event Collectors (RCEC) provide support for terminating error
+> and PME messages from Root Complex Integrated Endpoints (RCiEPs).  An RCEC
+> resides on a Bus in the Root Complex. Multiple RCECs can in fact reside on
+> a single bus. An RCEC will explicitly declare supported RCiEPs through the
+> Root Complex Endpoint Association Extended Capability.
+> 
+> (See PCIe 5.0-1, sections 1.3.2.3 (RCiEP), and 7.9.10 (RCEC Ext. Cap.))
+> 
+> The kernel lacks handling for these RCECs and the error messages received
+> from their respective associated RCiEPs. More recently, a new CPU
+> interconnect, Compute eXpress Link (CXL) depends on RCEC capabilities for
+> purposes of error messaging from CXL 1.1 supported RCiEP devices.
+> 
+> DocLink: https://www.computeexpresslink.org/
+> 
+> This use case is not limited to CXL. Existing hardware today includes
+> support for RCECs, such as the Denverton microserver product
+> family. Future hardware will be forthcoming.
+> 
+> (See Intel Document, Order number: 33061-003US)
+> 
+> So services such as AER or PME could be associated with an RCEC driver.
+> In the case of CXL, if an RCiEP (i.e., CXL 1.1 device) is associated with a
+> platform's RCEC it shall signal PME and AER error conditions through that
+> RCEC.
+> 
+> Towards the above use cases, add the missing RCEC class and extend the
+> PCIe Root Port and service drivers to allow association of RCiEPs to their
+> respective parent RCEC and facilitate handling of terminating error and PME
+> messages.
+
+Silly question number 1.  Why an RFC? I always find it helps to highlight which
+bits you are unsure on / want particular input on.
+
+Otherwise, I've left the PME and error injection patches as I don't really know
+anything about those two paths. 
+
+I'll fire up my APEI etc test VMs in the nex day or so and report back if there
+any problems with that case (fairly sure there is one in patch 6, highlighted in
+review but it is possible I've missed others.
+
+It all seems to have come together rather simpler than I was expecting which is
+great!
+
+Thanks,
+
+Jonathan
+
+
+> 
+> TESTING:
+> 
+>    Results:
+>     1) Show RCiEPs which are associated with RCECs:
+> 	Run dmesg | grep "RCiEP"
+> 	Log:
+> 	[    8.981698] pcieport 0000:e8:00.4: RCiEP(under an RCEC) 0000:e8:01.0
+> 	[    8.988830] pcieport 0000:e8:00.4: RCiEP(under an RCEC) 0000:e8:02.0
+> 	[    8.995956] pcieport 0000:e8:00.4: RCiEP(under an RCEC) 0000:e9:00.0
+> 	[    9.023034] pcieport 0000:ed:00.4: RCiEP(under an RCEC) 0000:ed:01.0
+> 	[    9.030159] pcieport 0000:ed:00.4: RCiEP(under an RCEC) 0000:ed:02.0
+> 	[    9.037282] pcieport 0000:ed:00.4: RCiEP(under an RCEC) 0000:ee:00.0
+> 	[    9.064294] pcieport 0000:f2:00.4: RCiEP(under an RCEC) 0000:f2:01.0
+> 	[    9.071409] pcieport 0000:f2:00.4: RCiEP(under an RCEC) 0000:f2:02.0
+> 	[    9.078526] pcieport 0000:f2:00.4: RCiEP(under an RCEC) 0000:f3:00.0
+> 	[    9.105535] pcieport 0000:f7:00.4: RCiEP(under an RCEC) 0000:f7:01.0
+> 	[    9.112652] pcieport 0000:f7:00.4: RCiEP(under an RCEC) 0000:f7:02.0
+> 	[    9.119774] pcieport 0000:f7:00.4: RCiEP(under an RCEC) 0000:f8:00.0
+> 
+>     2) Inject a correctable error to the RCiEP 0000:e9:00.0
+> 	Run ./aer_inject <a parameter file as below>:
+> 	AER
+> 	PCI_ID 0000:e9:00.0
+> 	COR_STATUS BAD_TLP
+> 	HEADER_LOG 0 1 2 3
+> 
+> 	Log:
+> 	[  253.248362] pcieport 0000:e8:00.4: aer_inject: Injecting errors 00000040/00000000 into device 0000:e9:00.0
+> 	[  253.260656] pcieport 0000:e8:00.4: AER: Corrected error received: 0000:e9:00.0
+> 	[  253.269919] pci 0000:e9:00.0: AER: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID)
+> 	[  253.282549] pci 0000:e9:00.0: AER:   device [8086:4940] error status/mask=00000040/00002000
+> 	[  253.293937] pci 0000:e9:00.0: AER:    [ 6] BadTLP
+> 
+>     3) Inject a non-fatal error to the RCiEP 0000:e8:01.0
+> 	Run ./aer_inject <a parameter file as below>:
+> 	AER
+> 	PCI_ID 0000:e8:01.0
+> 	UNCOR_STATUS COMP_ABORT
+> 	HEADER_LOG 0 1 2 3
+> 
+> 	Log:
+> 	[  288.405326] pcieport 0000:e8:00.4: aer_inject: Injecting errors 00000000/00008000 into device 0000:e8:01.0
+> 	[  288.416881] pcieport 0000:e8:00.4: AER: Uncorrected (Non-Fatal) error received: 0000:e8:01.0
+> 	[  288.427487] igen6_edac 0000:e8:01.0: AER: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Completer ID)
+> 	[  288.442098] igen6_edac 0000:e8:01.0: AER:   device [8086:0b25] error status/mask=00008000/00100000
+> 	[  288.452869] igen6_edac 0000:e8:01.0: AER:    [15] CmpltAbrt
+> 	[  288.461118] igen6_edac 0000:e8:01.0: AER:   TLP Header: 00000000 00000001 00000002 00000003
+> 	[  288.471192] igen6_edac 0000:e8:01.0: AER: device recovery successful
+> 
+>     4) Inject a fatal error to the RCiEP 0000:ed:01.0
+> 	Run ./aer_inject <a parameter file as below>:
+> 	AER
+> 	PCI_ID 0000:ed:01.0
+> 	UNCOR_STATUS MALF_TLP
+> 	HEADER_LOG 0 1 2 3
+> 
+> 	Log:
+> 	[  535.537281] pcieport 0000:ed:00.4: aer_inject: Injecting errors 00000000/00040000 into device 0000:ed:01.0
+> 	[  535.551911] pcieport 0000:ed:00.4: AER: Uncorrected (Fatal) error received: 0000:ed:01.0
+> 	[  535.561556] igen6_edac 0000:ed:01.0: AER: PCIe Bus Error: severity=Uncorrected (Fatal), type=Inaccessible, (Unregistered Agent ID)
+> 	[  535.684964] igen6_edac 0000:ed:01.0: AER: device recovery successful
+> 
+> 
+> Jonathan Cameron (1):
+>   PCI/AER: Extend AER error handling to RCECs
+> 
+> Qiuxu Zhuo (6):
+>   pci_ids: Add class code and extended capability for RCEC
+>   PCI: Extend Root Port Driver to support RCEC
+>   PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs associated with RCEC
+>   PCI/AER: Apply function level reset to RCiEP on fatal error
+>   PCI: Add 'rcec' field to pci_dev for associated RCiEPs
+>   PCI/AER: Add RCEC AER error injection support
+> 
+> Sean V Kelley (2):
+>   PCI/AER: Add RCEC AER handling
+>   PCI/PME: Add RCEC PME handling
+> 
+>  drivers/pci/pcie/aer.c          | 43 ++++++++++++-----
+>  drivers/pci/pcie/aer_inject.c   |  5 +-
+>  drivers/pci/pcie/err.c          | 85 +++++++++++++++++++++++++++------
+>  drivers/pci/pcie/pme.c          | 15 ++++--
+>  drivers/pci/pcie/portdrv.h      |  2 +
+>  drivers/pci/pcie/portdrv_core.c | 82 +++++++++++++++++++++++++++++++
+>  drivers/pci/pcie/portdrv_pci.c  | 20 +++++++-
+>  include/linux/pci.h             |  3 ++
+>  include/linux/pci_ids.h         |  1 +
+>  include/uapi/linux/pci_regs.h   |  7 +++
+>  10 files changed, 232 insertions(+), 31 deletions(-)
+> 
+> --
+> 2.27.0
+> 
 
 
