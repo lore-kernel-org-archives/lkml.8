@@ -2,110 +2,94 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68116C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7BAC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA572065C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B0A206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:28:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VNWPsY7E"
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="TqTg7bkh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgG0J2q (ORCPT
+        id S1728089AbgG0J26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:28:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgG0J2o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:28:44 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49351C061794;
-        Mon, 27 Jul 2020 02:28:44 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id l84so1231505oig.10;
-        Mon, 27 Jul 2020 02:28:44 -0700 (PDT)
+        Mon, 27 Jul 2020 05:28:58 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:7630 "EHLO smtp2.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726139AbgG0J25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:28:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZJg7rUQPxCJO68OHx9bQfRbdAKaeax6Y3AUlWjJj0tk=;
-        b=VNWPsY7EVxQ+M/2DB50xFQfaejUcZWxZpMi4qkl7zseIcKLWAZOo47Iwx7APalEdHL
-         iuinUjzMwB7TBFiMGjoaYsc8Kewh8YgvwhaH94pn/bZPYCXqf+ALkq5gDNAtfnoUqH3r
-         gIiMe9W6uzaAVimf+vx7tRQ0EKOWY46miy/zOJDh83u3VpWarVSMWNGuXTeBkR5KcrX7
-         LEH27Qmkft43NQmaS0ffcN05JBT6li8mVVGC4LA+gOliixvfC5mKRh9LZoWdNIGy6lXt
-         4/oUlGXPpgeFK4WU3zTfPFiUHVctUOZMfMYuojuS8K814bgfhQKsIU/a+doqNZMVde4B
-         dy4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZJg7rUQPxCJO68OHx9bQfRbdAKaeax6Y3AUlWjJj0tk=;
-        b=QzvXGiWvN8UT0ii9NxuvjdPJv4ls0mgSeItGFsGYca0ieZPPbQtAVNGN126IJkm4Rw
-         8QCJF+AfBCqCSZNXje1ZTNRbR+S2fh+4uqlPPbLiFIcse2GDwpnmmv9P7jTY6r6sxqYn
-         YK0qphnp0igyTxVOKQ4bf/IwkwZ9qPRroFq3FlydYNRbg4bGRjSfABa+31AJM7CYfyQk
-         yQvPg+t1JaFDGrkxPYdHHFOXfw5Y8r8SST6QC8iIUilxs4wgqhGp7Wp066rfaeY0ejIj
-         Z3siBAds2wo2Okxsin8zKKD+JwGOyHfoXGIdC3mhY2IQjImxJx1ex1sJeRgBRweUMYaq
-         kbDw==
-X-Gm-Message-State: AOAM533acVjg1aQ6hBUVEzU5s08r2aELeVb0SyMaUwXzoZKdpJJRQqbP
-        Aeg+25k+T3d4ACr9e9qdLAkMFORqt1bKUmKziuI=
-X-Google-Smtp-Source: ABdhPJxjye1QxLOvJO/FqAaSdrTq7LPaIbsNyIODBPl7Skk5VhikxfcFNp3lCFfJ6uQT/K/ypVcVEEIKI9owGzwJrN8=
-X-Received: by 2002:aca:cf15:: with SMTP id f21mr6552849oig.102.1595842123580;
- Mon, 27 Jul 2020 02:28:43 -0700 (PDT)
+  d=axis.com; l=1110; q=dns/txt; s=axis-central1;
+  t=1595842137; x=1627378137;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=LDGMiNDyHEEpsPh7ha2tAju2Qa0XvBjPxQymomgNiZU=;
+  b=TqTg7bkhR+PqETWVSxuQSXyVt0r3xPSF9Ul65CZIUgCW51/JcChQB6WO
+   /+2D7lkoBtgkOfeRfmqfhT4Xm+v3aeBykBlhe31exacC+6Gv5HLrwtMw+
+   TNUeND8fBbJpA4pehYDsVaLCVV6yMp7LN0hhcI1d9pAq+H7vLKoU/JBvR
+   1aQmSPhN6VGbU4Il+Zvo6uSgP+cDFTRR8E6GWdQHPDo8mVc7FKXEuXjb3
+   qz86EFEZG7WOD4gxnwLJptjLcsTcInwxYWHingvx3RFcNLvCFhkLxA47C
+   FHeKayKOBRYmRlKRhRfVyad7ctS8XYahK/gRL/1ZPn2O7vy41cJqvYpOI
+   A==;
+IronPort-SDR: 6H1P+HoGSEAeLwpLTlTr0VvQFeuXjp8ZiRVbfqpCucp2qs7Y3oONw1sIApR7+BuqX59LlHKR6Z
+ v2/Dx9AV0YivCd+WqOn80QKd+MiCGOMCYf8xC1ZyKNp0DMJvE1IvU4tYfVw9F6XS+RZcBP8ma5
+ +41Lyuo0alSXbXx9zNM2sk8bw1OGJ6wer4b0QwH2q41UXBKyEDyzEXwUDzwoVokL0OrKgodMqB
+ JA2AkAOtYcD6LLa4T37ALsr/BbkUzpUps+5aN48/RRb9stWj+tYd9kIw3bCuzxRFau+DVgvtnw
+ 0jo=
+X-IronPort-AV: E=Sophos;i="5.75,402,1589234400"; 
+   d="scan'208";a="10911943"
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+CC:     <kernel@axis.com>, <tglx@linutronix.de>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] tracing: Remove outdated comment in stack handling
+Date:   Mon, 27 Jul 2020 11:28:40 +0200
+Message-ID: <20200727092840.18659-1-vincent.whitchurch@axis.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200727180831.6c356fc1@canb.auug.org.au> <20200727092448.GB1764157@kroah.com>
-In-Reply-To: <20200727092448.GB1764157@kroah.com>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Mon, 27 Jul 2020 12:28:14 +0300
-Message-ID: <CAFCwf13o6A_88xBZdTk+XamAULckKB3Wk8A-V8NmmvkXDwB60w@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the char-misc tree
-To:     Greg KH <greg@kroah.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Omer Shpigelman <oshpigelman@habana.ai>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:24 PM Greg KH <greg@kroah.com> wrote:
->
-> On Mon, Jul 27, 2020 at 06:08:31PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >
-> > After merging the char-misc tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> >
-> > In file included from drivers/misc/habanalabs/goya/goya.c:8:
-> > drivers/misc/habanalabs/goya/goyaP.h:12:10: fatal error: habanalabs.h: No such file or directory
-> >    12 | #include "habanalabs.h"
-> >       |          ^~~~~~~~~~~~~~
-> > In file included from drivers/misc/habanalabs/goya/goya_security.c:8:
-> > drivers/misc/habanalabs/goya/goyaP.h:12:10: fatal error: habanalabs.h: No such file or directory
-> >    12 | #include "habanalabs.h"
-> >       |          ^~~~~~~~~~~~~~
-> >
-> > Presumably caused by commit
-> >
-> >   70b2f993ea4a ("habanalabs: create common folder")
-> >
-> > I have used the char-misc tree from next-20200724 for today.
->
-> Ugh, this is a mess of a merge with this driver.
->
-> Oded, I'll take Stephen's merge resolutions here and push out a new
-> version, and try to resolve this error, but if you could verify I got it
-> correct, that would be great.
->
-> thanks,
->
-> greg k-h
+This comment describes the behaviour before commit 2a820bf74918
+("tracing: Use percpu stack trace buffer more intelligently").  Since
+that commit, interrupts and NMIs do use the per-cpu stacks so the
+comment is no longer correct.  Remove it.
 
-Sure, np. Just point me where to look.
-Oded
+(Note that the FTRACE_STACK_SIZE mentioned in the comment has never
+existed, it probably should have said FTRACE_STACK_ENTRIES.)
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+---
+ kernel/trace/trace.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index bb62269724d5..0a0fd197888c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2932,12 +2932,6 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
+ 		skip++;
+ #endif
+ 
+-	/*
+-	 * Since events can happen in NMIs there's no safe way to
+-	 * use the per cpu ftrace_stacks. We reserve it and if an interrupt
+-	 * or NMI comes in, it will just have to use the default
+-	 * FTRACE_STACK_SIZE.
+-	 */
+ 	preempt_disable_notrace();
+ 
+ 	stackidx = __this_cpu_inc_return(ftrace_stack_reserve) - 1;
+-- 
+2.25.1
+
