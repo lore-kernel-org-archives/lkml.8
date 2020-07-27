@@ -2,62 +2,116 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25CEC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2130DC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6C920729
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32C520729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:32:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FHs7NZnj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731265AbgG0Rcf (ORCPT
+        id S1731310AbgG0Rcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:32:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38750 "EHLO
+        Mon, 27 Jul 2020 13:32:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgG0Rcf (ORCPT
+        with ESMTP id S1726617AbgG0Rcr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:32:35 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76076C061794;
-        Mon, 27 Jul 2020 10:32:35 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 60921128719F1;
-        Mon, 27 Jul 2020 10:15:49 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 10:32:33 -0700 (PDT)
-Message-Id: <20200727.103233.2024296985848607297.davem@davemloft.net>
-To:     andrew@lunn.ch
-Cc:     ilial@codeaurora.org, kuba@kernel.org, jiri@mellanox.com,
-        edumazet@google.com, ap420073@gmail.com, xiyou.wangcong@gmail.com,
-        maximmi@mellanox.com, ilia.lin@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dev: Add API to check net_dev readiness
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200726194528.GC1661457@lunn.ch>
-References: <1595792274-28580-1-git-send-email-ilial@codeaurora.org>
-        <20200726194528.GC1661457@lunn.ch>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 27 Jul 2020 10:15:49 -0700 (PDT)
+        Mon, 27 Jul 2020 13:32:47 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16122C061794;
+        Mon, 27 Jul 2020 10:32:47 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id w126so9283312pfw.8;
+        Mon, 27 Jul 2020 10:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Y/oiTZvRbIGlVilYBQAce6xZVdmLxNzc+uCZkzk1V9g=;
+        b=FHs7NZnjm1y+Y0yUChIknkWpkRZeJSCPECasUc1GMHAAX0gQC7gJAuExKfTQg7YxK1
+         RUEDwI/yoCS6n/MAz2kzUyR1GEi8teb8fBWPR71NfQOMldeVOEruRq8ehJwY9KQsapzX
+         VttbXvWYZpzHEXv3/AsCgnykZlqIkofJxNQRSl86UnfHYfHfCRpGD7QfBdOkCbCuc5/u
+         +tODKkcQ1dt1Q9MPe6D5gxWZL+sf27Y1rKDqNS/HwIDAbmf/aVM8qctgzobo3bNaN9Pq
+         DXAgXHVNMFUpmOkmRAZio1bmexKAlAfRo2vsRAcg5LU52jLv2Lri37SJq3juqcItZTqY
+         /xNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Y/oiTZvRbIGlVilYBQAce6xZVdmLxNzc+uCZkzk1V9g=;
+        b=D6pkcIsP8QuInK/8j8YIQAVmdMcaSiKf4pm0SNROqFypP4ceJNn/oloABUBj29dB7H
+         D8IAsOf5PEC+W0aeZ1HZadhkVAS5O+TnEIKORH+UofbzsTPbj9E4FMTUGgJz1pCSVtP2
+         ct9Bd0p1qClOTYplRxMM7mEZOjOPvX1pud+W0gpZhhcxnnaJUjV4VQQX2nqZ3HeeHXyi
+         NoIye4LeCiaoTV2TLOcjy+moMRJEJ5Y59+q/shZfK4lVNUDbNifiUpo2in/HnW9PM167
+         Gh9II375z6X8nO3QSu2WQvzXrLsLnh9orP6uLqb1j3lAmt+IgD1LidD/4kjlONHHOEqL
+         b5lQ==
+X-Gm-Message-State: AOAM532VmM5tb/fiyspLc0qJkl6TTjEheMOLMnf7yrgEl4p/7WC731X7
+        lEeww7Phd4ekxAeWRnTpRBY=
+X-Google-Smtp-Source: ABdhPJyCn9FDNTlrAkhDjbasGUiicJEpzPdljaTQslwjMY8oofLHLGd1j2EDiVq6xsMqKuOfd5dCeA==
+X-Received: by 2002:a65:620e:: with SMTP id d14mr20414491pgv.360.1595871166544;
+        Mon, 27 Jul 2020 10:32:46 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id x66sm15427782pgb.12.2020.07.27.10.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 10:32:45 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v3] spi: spi-topcliff-pch: drop call to wakeup-disable
+Date:   Mon, 27 Jul 2020 22:59:37 +0530
+Message-Id: <20200727172936.661567-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <CAHp75VfmKvAy6bSk70g3c2qJcUzzo0AUhzxR6dFja+ZppGMLRg@mail.gmail.com>
+References: <CAHp75VfmKvAy6bSk70g3c2qJcUzzo0AUhzxR6dFja+ZppGMLRg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
-Date: Sun, 26 Jul 2020 21:45:28 +0200
+Before generic upgrade, both .suspend() and .resume() were invoking
+pci_enable_wake(pci_dev, PCI_D3hot, 0). Hence, disabling wakeup in both
+states. (Normal trend is .suspend() enables and .resume() disables the
+wakeup.)
 
-> I also have to wonder why a network device driver is being probed the
-> subsys_initcall.
+This was ambiguous and may be buggy. Instead of replicating the legacy
+behavior, drop the wakeup-disable call.
 
-This makes me wonder how this interface could even be useful.  The
-only way to fix the problem is to change when the device is probed,
-which would mean changing which initcall it uses.  So at run time,
-this information can't do much.
+Fixes: f185bcc77980 ("spi: spi-topcliff-pch: use generic power management")
+Reported-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/spi/spi-topcliff-pch.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/spi/spi-topcliff-pch.c b/drivers/spi/spi-topcliff-pch.c
+index 281a90f1b5d8..c73a03ddf5f3 100644
+--- a/drivers/spi/spi-topcliff-pch.c
++++ b/drivers/spi/spi-topcliff-pch.c
+@@ -1648,8 +1648,6 @@ static int __maybe_unused pch_spi_resume(struct device *dev)
+ 
+ 	dev_dbg(dev, "%s ENTRY\n", __func__);
+ 
+-	device_wakeup_disable(dev);
+-
+ 	/* set suspend status to false */
+ 	pd_dev_save->board_dat->suspend_sts = false;
+ 
+-- 
+2.27.0
+
