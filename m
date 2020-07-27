@@ -2,115 +2,155 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043FCC433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0EDC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCC3620809
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595891703;
-	bh=v8ts5ptfBblDrLfpJLr7TpypfwC1w1Y5XMee7bF/txE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wLRgmYiHsN99xcJIp03swin4LheZR/X3eQCEHxr+H8EFxdUfVLTKTcedNIe96eisW
-	 BP09kpfsb44f5IWi6pCzDqoGWsYs23UGwSy4zKU1byM5ZyrlFLzi7JXTBvFTSpwBpe
-	 o0yRqqa7DM90glxSie8iCmZhfflPahi9HXqiJjeo=
+	by mail.kernel.org (Postfix) with ESMTP id B3E2520729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:16:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="eG/CU3B6";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="SsrL7AOy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgG0XPD (ORCPT
+        id S1727826AbgG0XQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:15:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726340AbgG0XPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:15:02 -0400
-Received: from earth.universe (unknown [185.213.155.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FE5B20729;
-        Mon, 27 Jul 2020 23:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595891701;
-        bh=v8ts5ptfBblDrLfpJLr7TpypfwC1w1Y5XMee7bF/txE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oS8lm+/yZhJTf0FBaXIBqH7uMqfHQlZ+i3nt9fI+tIdq83DbDJpsRhO3/m1OuA0GZ
-         5kiJD3SJkPIY9qVcm4I1a2pTjE23lMm7wjHprNbXdVev5ufTzAKFfiGX3JSHwiiL95
-         gIFVdehazw5wYmw3R61KxR+MqSXd6xgQgTbAASRM=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 699AB3C0B87; Tue, 28 Jul 2020 01:14:59 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 01:14:59 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chen Yongzhi <yongzhi.chen@unisoc.com>
-Subject: Re: [PATCH v2 0/2] fix an overflow error on sc27xx power supply
-Message-ID: <20200727231459.6gbmii5hfzcqsmm7@earth.universe>
-References: <20200724122148.26541-1-zhang.lyra@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="p6xj2pjprdkhghgi"
+        Mon, 27 Jul 2020 19:16:01 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:29472 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726313AbgG0XQA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:16:00 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 06RN7Iuk014872;
+        Mon, 27 Jul 2020 16:15:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=NmfcTJjN0IyDuAfHLwKbxC346sD4a4PSJ/de2fIauT0=;
+ b=eG/CU3B6sXxsQKZOW8g7GOMOIDgyr4I5gEDOG0vH2OV/dGAn/+Jmh1I+UOMQ8O3i57gw
+ sj7AeK8hwqwuRHOszfvcsaYiZE6UKbsToYhoYmMJ2EUPp9BfgaYv83sOKljrj5e+/aa4
+ Nm/1PAo23O0lTEfOi+eW2Qadd7/xvoVcnro= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 32ggdmhpxy-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 27 Jul 2020 16:15:47 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 27 Jul 2020 16:15:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IbeWD+8f2FDhhRz47BOnl7mf8Karm7m9zr8LpBJ5Q49BBnAjkAkz/ZTXxwYoxRVnaWlY/cgWg5i8/OYN+8mmeq8OyN/wHN44VmorWex8kiv4IoExzmys/5+B0gAhknEjNfuuhuUrVH4MJ2AYcuau3ByXsOeRru6lCDVH6t9gJG60DSwk2kwZ6uThyKIFZMtiDrWFszKCfuXlqMpmXfTGbWpKlw60IZiZiH4q98ZYL7+kwm7hlkPW/cVCRxXVNtS/flaG99j9YUddZ8DOBT/7b/THC6jEZaYBPSc1nL8NePprI5fEJZMT/Q284yAVbJtGJkXWbNIUZ+16l9xTgcuOSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NmfcTJjN0IyDuAfHLwKbxC346sD4a4PSJ/de2fIauT0=;
+ b=A4Ke15N3/N77S9T53jFFsOKqY7wbs7b95hCCwO8uNFtEW94AXt4wzd1w6YVPhyPonh5K4460A8cZyYOE854RCCS3nK/rG1spdLEzVuli2xMbTlT4udWq3sS7lijpIJ2vn9KvmKoc8lnCksIPD5X83Y4iRoEUhKy9kAZ2PaWvKX/9YPRz9HTdyvHxkzn1dvSpX8z4vOS5cOn9xCq6NG5AcQ31Hc5Ho8Ug/0wsE+Eva3n8DNQDP/hgnVMUYa+eSNQpwcT/DMFeqP00exEq8xo+WHyXMPWWWYDbSxqpFuhUSUXVSrNcyYtsFuDZM4CcA6ukOiCy8Cs0wU9pE9h1n1TxFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NmfcTJjN0IyDuAfHLwKbxC346sD4a4PSJ/de2fIauT0=;
+ b=SsrL7AOy986IJIgXfDcKIgKjXuVmCt3WQFiNnr4Jq4OPTVwhcocO0oBZ2ek+B2H2ui9LRCwcu5/DCU2k8oAg9VRGbE9njefePu3TAi4E3Txf8SM5r7UL7WC05IFYwupsZKMy7wMJ+KBn6ZSi06qv/VbzrUa9JYzn6MGbj449CA0=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB3477.namprd15.prod.outlook.com (2603:10b6:a03:10e::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Mon, 27 Jul
+ 2020 23:15:41 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
+ 23:15:41 +0000
+Date:   Mon, 27 Jul 2020 16:15:38 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf-next v2 29/35] bpf: libbpf: cleanup RLIMIT_MEMLOCK
+ usage
+Message-ID: <20200727231538.GA352883@carbon.DHCP.thefacebook.com>
+References: <20200727184506.2279656-1-guro@fb.com>
+ <20200727184506.2279656-30-guro@fb.com>
+ <CAEf4BzZjbK4W1fmW07tMOJsRGCYNeBd6eqyFE_fSXAK6+0uHhw@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200724122148.26541-1-zhang.lyra@gmail.com>
+In-Reply-To: <CAEf4BzZjbK4W1fmW07tMOJsRGCYNeBd6eqyFE_fSXAK6+0uHhw@mail.gmail.com>
+X-ClientProxiedBy: BYAPR05CA0032.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::45) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:9930) by BYAPR05CA0032.namprd05.prod.outlook.com (2603:10b6:a03:c0::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.10 via Frontend Transport; Mon, 27 Jul 2020 23:15:40 +0000
+X-Originating-IP: [2620:10d:c090:400::5:9930]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b3cb0c2c-cb09-4acb-9433-08d83282fb13
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3477:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB3477D7F3154B74CE2CBE26C9BE720@BYAPR15MB3477.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Jvxa/wwD6pWHUwx8dt8jbMGzqBIftvRrQ8GPjw5v9bvB6SA0PdcEgoiSZWlOg2A2TEMCk2cbtaybxYd2f4yfQAKM0Qdfh2iLZgh4xwWUB8EQUM5dcniyBS6TbaSsQGxvg4J/mrURmGphUjVQvaDZ0lWNKvdtFID7c0Wn9SeUjJZRef5VETZ6N7Cnpl8LaR7+9PQG/zXwLK8YASKFGAl//Q6t4KT9JUJ44ZqGSDLT6F/sCsX1qRHVJZgMC6vAfJzoaIrUZO7/jsOJgJEql31++G0xiIo2XNS5sajrgIRlDYvHzec++XIjpdMrtP1pHB5WbwhuPguO445JC6JcKHvO4g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(346002)(376002)(366004)(396003)(39860400002)(1076003)(4744005)(83380400001)(66946007)(8936002)(66556008)(66476007)(2906002)(52116002)(16526019)(9686003)(8676002)(478600001)(186003)(7696005)(55016002)(53546011)(316002)(86362001)(6506007)(5660300002)(6916009)(4326008)(33656002)(54906003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: y0irvZwOTm98S+72aC1sDW/tmzuWFRpXBufgt9n/U5LbcU29sELYYctfaNEUZ8YEyOpE76+porDhRw+MxJVbtSgXnmSRRSjVOgDIzY7Y3TH8PtC+kIHPLLyaFl9jzn26a8E3i5U0L3qreOstIReffrmwNw1/tbYlDKKmEi5z37t/uoDtEnhHn46u+GZGEyM1uVIe0wyhWApIKc3ptGR6geNzJFLyus08tWGS3/fFjZ4Aeeez+8mYfm/6uQimUB3Tdus2luINQ/LiGGtxCuTCcxSxO2dZi9wz7Um6M1uhiNgU7I2ssF1TFXTvXAwLCT/5wA/e+IU3SOwLX6FspCjhU+5aTGQAZslg5Kz7C/BbeKjYpv+9l5H33OjahbUmU7XGV/WTCq9nz8wHfZBh6sGeXS7SJGYNr0T09NBaPvpRoVHH4fwwMnnqGCTjExWXvKuBHZSZT9EG+fCl+RkeG7nUqnD4jt8ZD7Z44wc14lIHWkfHojqkVaxBorUgGMnD7qIWnpMEYAxyRCDor64O3VsLqw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3cb0c2c-cb09-4acb-9433-08d83282fb13
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4136.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 23:15:41.4335
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WPpPnxGeUEsiy9kFOFHI4IwDdWaYf6BQIhZb4b46P0K+F7e/glyu6uJC7Y/QYnOP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3477
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_15:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
+ malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 mlxscore=0
+ clxscore=1011 bulkscore=0 lowpriorityscore=0 suspectscore=1
+ priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007270157
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 27, 2020 at 03:05:11PM -0700, Andrii Nakryiko wrote:
+> On Mon, Jul 27, 2020 at 12:21 PM Roman Gushchin <guro@fb.com> wrote:
+> >
+> > As bpf is not using memlock rlimit for memory accounting anymore,
+> > let's remove the related code from libbpf.
+> >
+> > Bpf operations can't fail because of exceeding the limit anymore.
+> >
+> 
+> They can't in the newest kernel, but libbpf will keep working and
+> supporting old kernels for a very long time now. So please don't
+> remove any of this.
 
---p6xj2pjprdkhghgi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yeah, good point, agree.
+So we just can drop this patch from the series, no other changes
+are needed.
 
-Hi,
+> 
+> But it would be nice to add a detection of whether kernel needs a
+> RLIMIT_MEMLOCK bump or not. Is there some simple and reliable way to
+> detect this from user-space?
 
-On Fri, Jul 24, 2020 at 08:21:46PM +0800, Chunyan Zhang wrote:
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
->=20
-> The patch 2/2 fixes an overflow error by changing to 64-bit divide operat=
-ions.
-> In order to avoid compile error on 32-bit architectures, this patchset
-> also introduced a new 64-bit helper in patch 1/2.
->=20
-> Changes since v1: (https://lkml.org/lkml/2020/7/17/63)
-> - Added new help macro DIV_S64_ROUND_CLOSEST;
-> - Fixed an error reported by kernel test robot <lkp@intel.com>.
->=20
-> Chunyan Zhang (2):
->   math64: New DIV_S64_ROUND_CLOSEST helper
->   power: supply: sc27xx: prevent adc * 1000 from overflow
->=20
->  drivers/power/supply/sc27xx_fuel_gauge.c |  9 +++++----
->  include/linux/math64.h                   | 19 +++++++++++++++++++
->  2 files changed, 24 insertions(+), 4 deletions(-)
+Hm, the best idea I can think of is to wait for -EPERM before bumping.
+We can in theory look for the presence of memory.stat::percpu in cgroupfs,
+but it's way to cryptic.
 
-Thanks, queued.
-
--- Sebastian
-
---p6xj2pjprdkhghgi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8fX+0ACgkQ2O7X88g7
-+poVyg/6A2sloOske+Qb+S6kOWpcOP3Z4gJI7kEouDSwP/s1A9GpXZbOsAgd3RwY
-nUBBtAXj1sR3eddebA4fqDTFNDH/HrvceCNWU7kwWEq1/5If2rnW7/vin4ZOZE3D
-dZ/KgItuFvZMEuE7ikSNY0L2Eh8iMdWgRRx0bKEoNff2tvschFdIpmwgVrb2gSzu
-h08ETfoyF8y5MZj0wZUJ4tKTbnUozB1g3yxp6HrYv4V3kFOOH+jdEq6LmANjuGVw
-T04E9GCX0NQ4rz7VNRyFRYG5OfTk/0ig02r32BNpDu+OJtGW6e96xkYui0iY0ZYI
-o9qu8zKqa6jK/LbkFvH8mtEFpWdC6xhtie00t4JHThUhAFyIRzAOALybqQ+OM1E/
-N84u91MMzum4lgYT05Mr2xTEPGw6tl+SloEEgQS0ar1QoSUL7BSC3vxR2oStoA+v
-UPHXc3lN8oa3FjGaClBq7lCNRfb7+SghX6IOn7oyqZZ+XUO2HGklagPHQ9hsEqHE
-ImaM1kisuCTT4wB0gCLNgjwdhDeZVeG5Q+GxYhxCgedChA0MSAbQya+WOtmG2SqY
-6n/jgILSC1qPZqs+9yARZqslUPTRnnmZliIzqfsfc2ItQ08Ki7tTf5uOKUk7WdnB
-dYESNYPCljuBH1osmwmAOtQDHv2nITdR08rQU65k2ttfFeqIp6U=
-=4KPr
------END PGP SIGNATURE-----
-
---p6xj2pjprdkhghgi--
+Thanks!
