@@ -2,245 +2,114 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C17C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A002FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70BA020672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:55:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595836544;
-	bh=klIYZ3z3AZ82e3hAd5ya/zhpvWBojtO3/DLyBwGwpHA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=QWiPWrLsWqFFCkETr4Cs4UMUjiNSGVlgVY4dCq2zkGDtbXl9LB1DYZuhEcv3j77wA
-	 cnNougsWxilfKqVXBu9FES3hvzirdRMUXkK/g5TlN+H0i96jZpBXWX5fTQIMQYG0Rj
-	 g2dDPgvIDefc6eKVUWdsRASQ51ob111jIYU2tbtQ=
+	by mail.kernel.org (Postfix) with ESMTP id 86D7920672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgG0Hzn (ORCPT
+        id S1727780AbgG0H4P convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbgG0Hzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:55:43 -0400
-Received: from localhost.localdomain (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0AA320672;
-        Mon, 27 Jul 2020 07:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595836542;
-        bh=klIYZ3z3AZ82e3hAd5ya/zhpvWBojtO3/DLyBwGwpHA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fcx2rUQXA8HJhCYavhUebUtAby8I1DMdXZV1YYeNYIHbB0QCfO6xAo1G/ywddtxcg
-         Nsb55Ip7/oiqwz13Z/c0TKnTV5QC1NrfucD90T1VuptwznRdQ95njxQYlBxi7iOPRj
-         /rMVqBb5ldQ+YVYhCunj7CYj+uootpc6l3akxsEE=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH] arm64: dts: qcom: sdm845-db845c: Add hdmi bridge nodes
-Date:   Mon, 27 Jul 2020 13:25:32 +0530
-Message-Id: <20200727075532.1932134-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Mon, 27 Jul 2020 03:56:15 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:47899 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbgG0H4N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 03:56:13 -0400
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MQMmF-1kDWnN0KfJ-00MOyW for <linux-kernel@vger.kernel.org>; Mon, 27 Jul
+ 2020 09:56:12 +0200
+Received: by mail-qk1-f182.google.com with SMTP id b79so14432212qkg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:56:11 -0700 (PDT)
+X-Gm-Message-State: AOAM531Wokv7W6aWtxRYW721+KHdJb9UAPeHbLfQMdcfObI6Qfyzbwmp
+        zz8dw9mnGiRu004mmfrYLXlTjNNL35lEY9i0lmc=
+X-Google-Smtp-Source: ABdhPJwN73bC8kIruJcdjJC2GFRSQxWwqPQCem38agJRvfEW+LrAzk5A0Z4s9LvPRY/dFw6d3xdJR2PEcDvNhP9aTUY=
+X-Received: by 2002:a37:385:: with SMTP id 127mr20493263qkd.3.1595836570861;
+ Mon, 27 Jul 2020 00:56:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200724145401.2566-1-krzk@kernel.org> <20200724145401.2566-3-krzk@kernel.org>
+ <PWBZDQ.D1XCW6N2YMRA@crapouillou.net> <CAJKOXPc2w0QHQDEwqoeg9Nm361MszM4LRaCoJD2En-fPgPp+4Q@mail.gmail.com>
+ <IBDZDQ.K28R5FAI0BXI2@crapouillou.net> <20200724155436.GA7460@kozik-lap>
+ <K5Y0EQ.WYAK00ADM46F3@crapouillou.net> <CAK8P3a0HDu15u5dREd6gk_e9D6mrZ9JqT0DJs9AeC9C2602nAw@mail.gmail.com>
+ <20200726160616.GA2662@kozik-lap> <RO33EQ.546WD84D5N7K2@crapouillou.net>
+ <20200726161545.GA6058@kozik-lap> <B243EQ.VEXGA7ZL5JAE2@crapouillou.net>
+In-Reply-To: <B243EQ.VEXGA7ZL5JAE2@crapouillou.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 27 Jul 2020 09:55:54 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1r6AMz2wKBEosAqn7qkuJY4LGFYK7o85sO++d+TSVOgQ@mail.gmail.com>
+Message-ID: <CAK8P3a1r6AMz2wKBEosAqn7qkuJY4LGFYK7o85sO++d+TSVOgQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] mtd: rawnand: ingenic: Limit MTD_NAND_JZ4780 to
+ architecture only
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:dU5DLlV+sbrqR4UICfuTpx0/Lh9IPvagrWGBCSIgUCh5uqnV5r8
+ L9aw89+q+Gk1+tn9DBWV25UHAZmwYqmxnbf/VDQQ5vLg9AUAtLERNC7m/gAusPnq3jnR46c
+ 3MWCoGKLyAt7dR/sfP+0UioTI7NSUz8w+3uXxqG5uyZJ5JTmZusvK1YkdfqQ6HUd7adAaFk
+ cVsrC+GeAKX3L9ffVzuPw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+PvoUUmvStM=:2Kfr7htIz1Pt0/aj/fVZPh
+ O2N2gSr2lj0ywHcZMXVpZQHZpHulQ/2smksiRdojaoBvt4BXqc6r2zCPDSoVFRAK58DGh/+ia
+ 8Aigoom5sxUFmD1Tcyr2YLU5Niay/2h5FTEdvn5F6cDHUkmsrzn08RRZo9cPmNqqR5k2QuFAd
+ KFSKbTWtdi/h3xzMxIeaHYrvfY9gLPOB4lsOSPVdm5WMEPsKMlozv0uq9PgS49+Tr7yfvrYJr
+ FEGx3CQUDgO9E6ozaEO90Y3Rv4rj3Z6akea2yQetDsu0vxxclcJUbkeOmC0jUfYlsyHKP9nU6
+ 5S+FzRT3MVzfaf6/4hVGSRgjW+skoj3bKajvb/nU3jN5K9K5YkNPN6fmPcOvaPizkRj9f2xnb
+ c8A5pHsDSb0MT2mLkSud+JrhzYPiofxsRb4nl2L8BRLo4cpV53OC4jWF5ze+2F4c+yqKRxFY9
+ +OgAS9i6+KuvzKpVZte/QzNyy4dBD9+1ucj7pGkZ+tpSaW3VP0n9S4BvHfA8KzKMq+sPsbaie
+ YLGXVy9y4lkwzd54SzabgOjUUGtuEYFYGvSCJ7aO89xEj7aBh+LRC6zMEgz2x1KV/P6ph3/Nn
+ YdVSWDG8KhGxttFlbkitZFcerxgwAC1mHK6GR/uEeAKunppun7eGurlpY1x5aBGKW7QGwcflK
+ wFDErshG6jGveJE99NQ+U7LblC1cgRNGxXFbArQe+Tz4mzEQSA+8S4wJNnms2Mvzva9agHAb6
+ yzlR4+6crAwZg6oGkyihLqsmAQs1ntzihcLfuSAYG9PjKvhYcPuMsG0I5hrLvvW2r/dGy0tlZ
+ 7YlALXdtwaec/pJEWqew1wWVlh5EvjKHpwyU35sqCRDJzcnyC3R6/hNSYsHOkH7pqhhwH++Zt
+ +TETEBeLwFlFbapzHsbEXuf103/fqpBxLEPm7v+oUDnsIFnAx1bnTqkflSlqP+yNEDpDo5yPW
+ 5HY6+ikXF7/wH5PcLNK+vFVIx9AyFyQ92l53hfme3GOx/Fsqx643X
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Sun, Jul 26, 2020 at 6:20 PM Paul Cercueil <paul@crapouillou.net> wrote:
+> Le dim. 26 juil. 2020 à 18:15, Krzysztof Kozlowski <krzk@kernel.org> a écrit :
+> > On Sun, Jul 26, 2020 at 06:12:27PM +0200, Paul Cercueil wrote:
+> >>  Le dim. 26 juil. 2020 à 18:06, Krzysztof Kozlowski <krzk@kernel.org> a écrit
+ >
+> > OK, that's true. Anyway, I don't have strong opinion on any of this. I
+> > just followed Arnd's hint.
+> >
+> > For the memory driver (and MTD NAND as well) which one you prefer:
+> > 1. https://lore.kernel.org/lkml/20200724074038.5597-6-krzk@kernel.org/
+> > 2. depends on MACH_INGENIC || MIPS_GENERIC || COMPILE_TEST
+> >
+> > ?
+>
+> I'd say a slightly modified #1. The driver shouldn't be "default y" in
+> the first place, so the patch could be to disable it by default.
 
-Enable MDSS and DSI and add the LT9611 HDMI bridge. Also add the HDMI
-audio nodes.
+If it defaults to 'n' even for MACH_INGENIC, you may have to enable
+it in the four defconfig files for these machines to avoid surprises.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Co-developed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 118 +++++++++++++++++++++
- 1 file changed, 118 insertions(+)
+> And when the Ingenic code is merged into the MIPS generic framework, I'll
+> send a set of patches to change all driver dependencies on MIPS to
+> MIPS_GENERIC.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index c00797bd3b07..a2a98680ccf5 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -74,6 +74,17 @@ bt {
- 		};
- 	};
- 
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con: endpoint {
-+				remote-endpoint = <&lt9611_out>;
-+			};
-+		};
-+	};
-+
- 	lt9611_1v8: lt9611-vdd18-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "LT9611_1V8";
-@@ -382,6 +393,25 @@ &cdsp_pas {
- 	firmware-name = "qcom/sdm845/cdsp.mdt";
- };
- 
-+&dsi0 {
-+	status = "okay";
-+	vdda-supply = <&vreg_l26a_1p2>;
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&lt9611_a>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+};
-+
-+&dsi0_phy {
-+	status = "okay";
-+	vdds-supply = <&vreg_l1a_0p875>;
-+};
-+
- &gcc {
- 	protected-clocks = <GCC_QSPI_CORE_CLK>,
- 			   <GCC_QSPI_CORE_CLK_SRC>,
-@@ -395,6 +425,48 @@ zap-shader {
- 	};
- };
- 
-+&i2c10 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	lt9611_codec: hdmi-bridge@3b {
-+		compatible = "lontium,lt9611";
-+		reg = <0x3b>;
-+		#sound-dai-cells = <1>;
-+
-+		interrupts-extended = <&tlmm 84 IRQ_TYPE_EDGE_FALLING>;
-+
-+		reset-gpios = <&tlmm 128 GPIO_ACTIVE_HIGH>;
-+
-+		vdd-supply = <&lt9611_1v8>;
-+		vcc-supply = <&lt9611_3v3>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&lt9611_irq_pin>, <&dsi_sw_sel>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				lt9611_out: endpoint {
-+					remote-endpoint = <&hdmi_con>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				lt9611_a: endpoint {
-+					remote-endpoint = <&dsi0_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &i2c11 {
- 	/* On Low speed expansion */
- 	label = "LS-I2C1";
-@@ -407,6 +479,14 @@ &i2c14 {
- 	status = "okay";
- };
- 
-+&mdss {
-+	status = "okay";
-+};
-+
-+&mdss_mdp {
-+	status = "okay";
-+};
-+
- &mss_pil {
- 	status = "okay";
- 	firmware-name = "qcom/sdm845/mba.mbn", "qcom/sdm845/modem.mbn";
-@@ -612,6 +692,21 @@ cpu {
- 		};
- 	};
- 
-+	hdmi-dai-link {
-+		link-name = "HDMI Playback";
-+		cpu {
-+			sound-dai = <&q6afedai QUATERNARY_MI2S_RX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+
-+		codec {
-+			sound-dai =  <&lt9611_codec 0>;
-+		};
-+	};
-+
- 	slim-dai-link {
- 		link-name = "SLIM Playback";
- 		cpu {
-@@ -686,6 +781,21 @@ mclk3 {
- 		};
- 	};
- 
-+	dsi_sw_sel: dsi-sw-sel {
-+		pins = "gpio120";
-+		function = "gpio";
-+
-+		drive-strength = <2>;
-+		bias-disable;
-+		output-high;
-+	};
-+
-+	lt9611_irq_pin: lt9611-irq {
-+		pins = "gpio84";
-+		function = "gpio";
-+		bias-disable;
-+	};
-+
- 	pcie0_default_state: pcie0-default {
- 		clkreq {
- 			pins = "gpio36";
-@@ -943,6 +1053,14 @@ pinmux {
- 	};
- };
- 
-+&qup_i2c10_default {
-+	pinconf {
-+		pins = "gpio55", "gpio56";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
- &qup_uart6_default {
- 	pinmux {
- 		pins = "gpio45", "gpio46", "gpio47", "gpio48";
--- 
-2.26.2
+The way we do it on Arm, the machine Kconfig identifiers stay around
+even for multiplatform targets (which now make up basically actively
+maintained machines).
 
+I don't think it makes any sense for a driver to depend on MIPS_GENERIC:
+either it is a generic driver that should always be visible or it is specific
+to a set of SoCs and should depend on some corresponding vendor
+specific identifiers.
+
+       Arnd
