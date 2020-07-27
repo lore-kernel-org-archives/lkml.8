@@ -2,340 +2,166 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD8AC43458
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 317F4C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73A162250E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD502078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:17:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IuTQSyB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731529AbgG0QQ4 (ORCPT
+        id S1731557AbgG0QRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:16:56 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:26268 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731302AbgG0QQm (ORCPT
+        Mon, 27 Jul 2020 12:17:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35927 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731542AbgG0QRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:16:42 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RG7tIW019031;
-        Mon, 27 Jul 2020 12:16:41 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 32ghn5eym2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 12:16:41 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 06RGGdoC050476
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Mon, 27 Jul 2020 12:16:39 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 27 Jul
- 2020 12:16:38 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Mon, 27 Jul 2020 12:16:38 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 06RGGShp009603;
-        Mon, 27 Jul 2020 12:16:37 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>
-Subject: [PATCH v7 8/9] hwmon: pmbus: adm1266: program configuration
-Date:   Mon, 27 Jul 2020 19:18:13 +0300
-Message-ID: <20200727161814.14076-9-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200727161814.14076-1-alexandru.tachici@analog.com>
-References: <20200727161814.14076-1-alexandru.tachici@analog.com>
+        Mon, 27 Jul 2020 12:17:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595866621;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BsUwnhDK87WKgN3gqd90CcbtRyIxe05OQOcWAwl8fSE=;
+        b=IuTQSyB2ZJs58ydl0LAtJwvDyXThs2+AWlGZ+dlNC3u9TG6lex16s+BswLCmvoTG4lsNVy
+        8DUkXHEJgWM2V9b7MLiNa8yTzgEwrGd6brElj6E5dTVxBlHC/R7xeoAbS/4VL4WsSY3Jwq
+        QkO8BOA49hqOYcbmFUfhr9iHBlxMxTM=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-67-B5H_vO1jPPqp1TMy90Z1og-1; Mon, 27 Jul 2020 12:17:00 -0400
+X-MC-Unique: B5H_vO1jPPqp1TMy90Z1og-1
+Received: by mail-wr1-f72.google.com with SMTP id w7so1811933wre.11
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 09:16:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BsUwnhDK87WKgN3gqd90CcbtRyIxe05OQOcWAwl8fSE=;
+        b=WWxUvDxDcMw6CZ35dYqv1pNtLs0SLmlkWj+zKvDV1+F62iidmO/jzYL2w2OzaCclK3
+         740BIsLvfgC1iO342J5MV8MdltRPOIq0UtAP4ETbomR7gnCJZMcrZN17pqpLxtLHrN6f
+         lXahD8m6fTn8Pv47IMVOSI/wJq1p4sNDZRvvJEkiTNRhLnONTpViMcYfzTp6bbCgmRVY
+         If/8qOLcV+8NMlwfD44W1pP0aJO7/Yn7IGNKtHABYkqb8GLVkj5c6AxP4yTjxggWZahJ
+         TtEmtExXweuKLJWSMBBiDPamhkmhWdnGhVGNDqvnSgkSzKu0yL4Nj8dGrhT3HHsh2k5B
+         aS2A==
+X-Gm-Message-State: AOAM533PN830cBWEp7ytZ5Ld/YzE26pRGTyc6/bKgSLI6se1aOxMrV+/
+        ZcjLwTEHIbtwWLXh/SpGb57RDWKyIpU5Ua/+pyodjxRvbzPVwwOiPOnJ3iu9++IYXtJE6oAklqW
+        5uCd5JiLyIlv/jl7a1Q9qWMOF
+X-Received: by 2002:a1c:6408:: with SMTP id y8mr84041wmb.52.1595866618758;
+        Mon, 27 Jul 2020 09:16:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxLKcAmtjP5qdwtcop3VZz69phHqUmhA/GYnUvT8EjsYnFf+2mjdi7w0x6HCc4EEuewJ9M+uA==
+X-Received: by 2002:a1c:6408:: with SMTP id y8mr84025wmb.52.1595866618480;
+        Mon, 27 Jul 2020 09:16:58 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.170.5])
+        by smtp.gmail.com with ESMTPSA id u66sm76686wmu.37.2020.07.27.09.16.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 09:16:57 -0700 (PDT)
+Subject: Re: [PATCH] KVM: nVMX: properly pad struct kvm_vmx_nested_state_hdr
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+References: <20200713082824.1728868-1-vkuznets@redhat.com>
+ <20200713151750.GA29901@linux.intel.com>
+ <878sfntnoz.fsf@vitty.brq.redhat.com>
+ <85fd54ff-01f5-0f1f-1bb7-922c740a37c1@redhat.com>
+ <20200727154654.GA8675@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <5d50ea1e-f2a2-8aa9-1dd3-4cbca6c6f885@redhat.com>
+Date:   Mon, 27 Jul 2020 18:16:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_11:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 lowpriorityscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007270111
+In-Reply-To: <20200727154654.GA8675@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
+On 27/07/20 17:46, Sean Christopherson wrote:
+>> It might as well send it now if the code didn't attempt to zero the
+>> struct before filling it in (this is another good reason to use a
+>> "flags" field to say what's been filled in).
+> The issue is that flags itself could hold garbage.
+> 
+> https://lkml.kernel.org/r/20200713151750.GA29901@linux.intel.com
 
-Writing the configuration Intel hex file to the nvmem,
-of an adm1266, with offset 0x30000, will now
-trigger the configuration programming.
+Quoting from there:
 
-During this process the adm1266 sequencer will be
-stopped and at the end will be issued a seq reset
-(see AN-1453 Programming the configuration).
+> Which means that userspace built for the old kernel will potentially send in
+> garbage for the new 'flags' field due to it being uninitialized stack data,
+> even with the layout after this patch.
 
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- drivers/hwmon/pmbus/adm1266.c | 179 +++++++++++++++++++++++++++++++++-
- 1 file changed, 178 insertions(+), 1 deletion(-)
+Userspace should always zero everything.  I don't think that the padding
+between fields is any different from the other bytes padding the header
+to 128 bytes.
 
-diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
-index f851c6617870..50386c98d714 100644
---- a/drivers/hwmon/pmbus/adm1266.c
-+++ b/drivers/hwmon/pmbus/adm1266.c
-@@ -40,7 +40,10 @@
- #define ADM1266_BLACKBOX_INFO	0xE6
- #define ADM1266_PDIO_STATUS	0xE9
- #define ADM1266_GPIO_STATUS	0xEA
-+#define ADM1266_STATUS_MFR_2	0xED
-+#define ADM1266_REFRESH_FLASH	0xF5
- #define ADM1266_MEMORY_CONFIG	0xF8
-+#define ADM1266_MEMORY_CRC	0xF9
- #define ADM1266_SWITCH_MEMORY	0xFA
- #define ADM1266_UPDATE_FW	0xFC
- #define ADM1266_FW_PASSWORD	0xFD
-@@ -66,6 +69,11 @@
- 
- /* ADM1266 STATUS_MFR defines */
- #define ADM1266_STATUS_PART_LOCKED(x)	FIELD_GET(BIT(2), x)
-+#define ADM1266_RUNNING_REFRESH(x)	FIELD_GET(BIT(3), x)
-+#define ADM1266_ALL_CRC_FAULT(x)	FIELD_GET(BIT(5), x)
-+
-+/* ADM1266 STATUS_MFR_2 defines */
-+#define ADM1266_MAIN_CONFIG_FAULT(x)	FIELD_GET(GENMASK(9, 8), x)
- 
- /* ADM1266 GO_COMMAND defines */
- #define ADM1266_GO_COMMAND_STOP		BIT(0)
-@@ -74,6 +82,8 @@
- 
- #define ADM1266_FIRMWARE_OFFSET		0x00000
- #define ADM1266_FIRMWARE_SIZE		131072
-+#define ADM1266_CONFIG_OFFSET		0x30000
-+#define ADM1266_CONFIG_SIZE		131072
- #define ADM1266_BLACKBOX_OFFSET		0x7F700
- #define ADM1266_BLACKBOX_SIZE		64
- 
-@@ -117,6 +127,11 @@ static const struct nvmem_cell_info adm1266_nvmem_cells[] = {
- 		.offset         = ADM1266_FIRMWARE_OFFSET,
- 		.bytes          = ADM1266_FIRMWARE_SIZE,
- 	},
-+	{
-+		.name           = "configuration",
-+		.offset         = ADM1266_CONFIG_OFFSET,
-+		.bytes          = ADM1266_CONFIG_SIZE,
-+	},
- };
- 
- DECLARE_CRC8_TABLE(pmbus_crc_table);
-@@ -520,6 +535,9 @@ static int adm1266_read_mem_cell(struct adm1266_data *data, const struct nvmem_c
- 	case ADM1266_FIRMWARE_OFFSET:
- 		/* firmware is write-only */
- 		return 0;
-+	case ADM1266_CONFIG_OFFSET:
-+		/* configuration is write-only */
-+		return 0;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -676,6 +694,7 @@ static int adm1266_write_hex(struct adm1266_data *data,
- 	u8 first_writes[7];
- 	u8 byte_count;
- 	u8 reg_address;
-+	bool to_slaves = false;
- 	int ret;
- 	int i;
- 
-@@ -706,7 +725,10 @@ static int adm1266_write_hex(struct adm1266_data *data,
- 		if (ret < 0)
- 			return ret;
- 
--		ret = adm1266_group_cmd(data, reg_address, write_buf, byte_count, true);
-+		if (offset == ADM1266_FIRMWARE_OFFSET)
-+			to_slaves = true;
-+
-+		ret = adm1266_group_cmd(data, reg_address, write_buf, byte_count, to_slaves);
- 		if (ret < 0) {
- 			dev_err(&data->client->dev, "Firmware write error: %d.", ret);
- 			return ret;
-@@ -731,6 +753,87 @@ static int adm1266_write_hex(struct adm1266_data *data,
- 	return 0;
- }
- 
-+static int adm1266_verify_memory(struct adm1266_data *data)
-+{
-+	char cmd[2];
-+	int ret;
-+	int reg;
-+
-+	cmd[0] = 0x1;
-+	cmd[1] = 0x0;
-+	ret = adm1266_group_cmd(data, ADM1266_MEMORY_CRC, cmd,
-+				sizeof(cmd), true);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* after issuing a memory recalculate crc command, wait 1000 ms */
-+	msleep(1000);
-+
-+	reg = pmbus_read_word_data(data->client, 0, 0xFF, ADM1266_STATUS_MFR_2);
-+	if (reg < 0)
-+		return reg;
-+
-+	if (ADM1266_MAIN_CONFIG_FAULT(reg)) {
-+		dev_err(&data->client->dev, "Main memory corrupted.");
-+		return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+
-+static int adm1266_refresh_memory(struct adm1266_data *data)
-+{
-+	unsigned int timeout = 9000;
-+	int ret;
-+	u8 cmd[2];
-+
-+	cmd[0] = 0x2;
-+	ret = adm1266_group_cmd(data, ADM1266_REFRESH_FLASH, cmd, 1, true);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Could not refresh flash.");
-+		return ret;
-+	}
-+
-+	/* after issuing a refresh flash command, wait 9000 ms */
-+	msleep(9000);
-+
-+	do {
-+		msleep(1000);
-+		timeout -= 1000;
-+
-+		ret = pmbus_read_byte_data(data->client, 0, ADM1266_STATUS_MFR);
-+		if (ret < 0) {
-+			dev_err(&data->client->dev, "Could not read status.");
-+			return ret;
-+		}
-+
-+	} while (ADM1266_RUNNING_REFRESH(ret) && timeout > 0);
-+
-+	if (timeout == 0)
-+		return -ETIMEDOUT;
-+
-+	cmd[0] = 0x1;
-+	cmd[1] = 0x0;
-+	ret = adm1266_group_cmd(data, ADM1266_MEMORY_CRC, cmd,
-+				sizeof(cmd), true);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* after issuing a memory recalculate crc command, wait 1000 ms */
-+	msleep(1000);
-+
-+	ret = pmbus_read_byte_data(data->client, 0, ADM1266_STATUS_MFR);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ADM1266_ALL_CRC_FAULT(ret)) {
-+		dev_err(&data->client->dev, "CRC checks failed.");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int adm1266_program_firmware(struct adm1266_data *data)
- {
- 	u8 write_data[3];
-@@ -783,6 +886,77 @@ static int adm1266_program_firmware(struct adm1266_data *data)
- 	return ret;
- }
- 
-+static int adm1266_program_config(struct adm1266_data *data)
-+{
-+	u8 cmd[2];
-+	u8 value;
-+	int ret;
-+
-+	value = ADM1266_GO_COMMAND_STOP | ADM1266_GO_COMMAND_SEQ_RES;
-+	ret = pmbus_write_word_data(data->client, 0, ADM1266_GO_COMMAND, value);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Could not stop sequence.");
-+		return ret;
-+	}
-+
-+	/* after issuing a stop command, wait 100 ms */
-+	msleep(100);
-+
-+	ret = adm1266_unlock_all_dev(data);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Could not unlock dev.");
-+		goto lock_all_devices;
-+	}
-+
-+	value = 0;
-+	ret = i2c_smbus_write_block_data(data->client, ADM1266_SWITCH_MEMORY, 1, &value);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Could not switch to main mem.");
-+		goto lock_all_devices;
-+	}
-+
-+	/* after issuing a SWITCH_MEMORY command, wait 1000 ms */
-+	msleep(1000);
-+
-+	ret = adm1266_write_hex(data, ADM1266_CONFIG_OFFSET, ADM1266_CONFIG_SIZE);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Could not write configuration.");
-+		goto lock_all_devices;
-+	}
-+
-+	ret = pmbus_write_byte(data->client, 0, ADM1266_STORE_USER_ALL);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* after issuing a STORE_USER_ALL command, wait 300 ms */
-+	msleep(300);
-+
-+	if (!data->master_dev)
-+		goto lock_all_devices;
-+
-+	ret = adm1266_verify_memory(data);
-+	if (ret < 0)
-+		goto lock_all_devices;
-+
-+	cmd[0] = 0;
-+	cmd[1] = 0;
-+	ret = adm1266_group_cmd(data, ADM1266_GO_COMMAND, cmd, sizeof(cmd), true);
-+	if (ret < 0) {
-+		dev_err(&data->client->dev, "Could not restart sequence.");
-+		goto lock_all_devices;
-+	}
-+
-+	/* after issuing a restart sequence command, wait 350 ms */
-+	msleep(350);
-+
-+	ret = adm1266_refresh_memory(data);
-+
-+lock_all_devices:
-+	adm1266_lock_all_dev(data);
-+
-+	return ret;
-+}
-+
- /* check if firmware/config write has ended */
- static bool adm1266_check_ending(struct adm1266_data *data, unsigned int offset,
- 				 unsigned int size)
-@@ -824,6 +998,9 @@ static int adm1266_write_mem_cell(struct adm1266_data *data,
- 
- 		program_func = &adm1266_program_firmware;
- 		break;
-+	case ADM1266_CONFIG_OFFSET:
-+		program_func = &adm1266_program_config;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
--- 
-2.20.1
+>   struct kvm_vmx_nested_state_hdr hdr = {
+>       .vmxon_pa = root,
+>       .vmcs12_pa = vmcs12,
+>   };
+> 
+> QEMU won't see issues because it zero allocates the entire nested state.
+> 
+> All the above being said, after looking at the whole picture I think padding
+> the header is a moot point.  The header is padded out to 120 bytes[*] when
+> including in the full nested state, and KVM only ever consumes the header in
+> the context of the full nested state.  I.e. if there's garbage at offset 6,
+> odds are there's going to be garbage at offset 18, so internally padding the
+> header does nothing.
+
+Yes, that was what I was hinting at with "it might as well send it now"
+(i.e., after the patch).
+
+(All of this is moot for userspace that just uses KVM_GET_NESTED_STATE
+and passes it back to KVM_SET_NESTED_STATE).
+
+> KVM should be checking that the unused bytes of (sizeof(pad) - sizeof(vmx/svm))
+> is zero if we want to expand into the padding in the future.  Right now we're
+> relying on userspace to zero allocate the struct without enforcing it.
+
+The alternative, which is almost as good, is to only use these extra
+fields which could be garbage if the flags are not set, and check the
+flags (see the patches I have sent earlier today).
+
+The chance of the flags passing the check will decrease over time as
+more flags are added; but the chance of having buggy userspace that
+sends down garbage also will.
+
+> [*] Amusing side note, the comment in the header is wrong.  It states "pad
+>     the header to 128 bytes", but only pads it to 120 bytes, because union.
+> 
+> /* for KVM_CAP_NESTED_STATE */
+> struct kvm_nested_state {
+> 	__u16 flags;
+> 	__u16 format;
+> 	__u32 size;
+> 
+> 	union {
+> 		struct kvm_vmx_nested_state_hdr vmx;
+> 		struct kvm_svm_nested_state_hdr svm;
+> 
+> 		/* Pad the header to 128 bytes.  */
+> 		__u8 pad[120];
+> 	} hdr;
+
+There are 8 bytes before the union, and it's not a coincidence. :)
+"Header" refers to the stuff before the data region.
+
+> Odds are no real VMM will have issue given the dynamic size of struct
+> kvm_nested_state, but 
+
+... *suspence* ...
+
+Paolo
 
