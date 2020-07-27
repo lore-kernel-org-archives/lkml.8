@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6948C433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C02042083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B186021883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860906;
-	bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
+	s=default; t=1595860912;
+	bh=EiHdFGuyv6SSDSspwXrfE+iEnDphCE/McZEQwqx02eM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+Ibnh/Zmv/lUM58ut5DVn1fmRNDZYxePbSjhlAmgXMXR8c62WYohoKlgXUVO2Kb0
-	 fIcBedzdlieCDDSOO3JWVqFOb1l265klzgiSRPm1jQSUlkx2I6KiNufDJNbucFbbrO
-	 9UNk/qX8Vdicp6MFNelXEqHI/tqyXMHe3g9KYpAM=
+	b=NYkL4Bpn12YelIjBA5s7jXx83qOUto3pcDMKoeiOvhdYPHbzHCiXOiSKScnJBU2Ri
+	 wK3RyE26iQbZOu36LFzRAXOlQ6CVzjZZreMxSBVVFO+6rhsZw+QSIjqCA2zAPMuS85
+	 a0ZjjummmQbslQMeaEKSfNZUCiQjvpTD9MwMjsKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733080AbgG0Olo (ORCPT
+        id S1733090AbgG0Olu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:41:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57056 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:41:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729334AbgG0OH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:07:57 -0400
+        id S1729320AbgG0OHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:07:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07E1F2073E;
-        Mon, 27 Jul 2020 14:07:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9F312083B;
+        Mon, 27 Jul 2020 14:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858877;
-        bh=kB41gXh/gK69Ub+thQTzV8vVMeVaJNEl8ZZLFyl95ZQ=;
+        s=default; t=1595858872;
+        bh=EiHdFGuyv6SSDSspwXrfE+iEnDphCE/McZEQwqx02eM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JNWzhqBPxe59EsOFZTNU2HeEv02g1Y8nSMZM528JIRss416N6bQHI7I/QXxYyV3h2
-         k8ykFDw1s7EWrBNZt0njA23bMJgrW8zfi2VlfoKJgp58Tn/dlOxCv7vfhrB15u36hz
-         eEpRng3niaZbguabCl7Hn+d9KkVozKswQ+s4rcV4=
+        b=sgvoTfs9q87qixSJzxEMzSR8GdpGYFE4qOXpnaROQECwJF9ZthaLv0JFvuSoP+Nyn
+         tiNZpuwr0k8eGLiE7LlDAdgZX6plJRPcoiuYytb+gRrUTqGAWKVEkA2uFqE0Cnex0G
+         t97oVzmmox8pktzC4giQ9ZAbQk/9soxSWdj1cywo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 45/64] x86: math-emu: Fix up cmp insn for clang ias
-Date:   Mon, 27 Jul 2020 16:04:24 +0200
-Message-Id: <20200727134913.420317670@linuxfoundation.org>
+Subject: [PATCH 4.14 44/64] arm64: Use test_tsk_thread_flag() for checking TIF_SINGLESTEP
+Date:   Mon, 27 Jul 2020 16:04:23 +0200
+Message-Id: <20200727134913.364673097@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -61,40 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 81e96851ea32deb2c921c870eecabf335f598aeb ]
+[ Upstream commit 5afc78551bf5d53279036e0bf63314e35631d79f ]
 
-The clang integrated assembler requires the 'cmp' instruction to
-have a length prefix here:
+Rather than open-code test_tsk_thread_flag() at each callsite, simply
+replace the couple of offenders with calls to test_tsk_thread_flag()
+directly.
 
-arch/x86/math-emu/wm_sqrt.S:212:2: error: ambiguous instructions require an explicit suffix (could be 'cmpb', 'cmpw', or 'cmpl')
- cmp $0xffffffff,-24(%ebp)
- ^
-
-Make this a 32-bit comparison, which it was clearly meant to be.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lkml.kernel.org/r/20200527135352.1198078-1-arnd@arndb.de
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/math-emu/wm_sqrt.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/debug-monitors.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/math-emu/wm_sqrt.S b/arch/x86/math-emu/wm_sqrt.S
-index f031c0e193565..515cdee90df72 100644
---- a/arch/x86/math-emu/wm_sqrt.S
-+++ b/arch/x86/math-emu/wm_sqrt.S
-@@ -209,7 +209,7 @@ sqrt_stage_2_finish:
+diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+index db7ed460a5476..2ccd0a99d8b35 100644
+--- a/arch/arm64/kernel/debug-monitors.c
++++ b/arch/arm64/kernel/debug-monitors.c
+@@ -389,14 +389,14 @@ void user_rewind_single_step(struct task_struct *task)
+ 	 * If single step is active for this thread, then set SPSR.SS
+ 	 * to 1 to avoid returning to the active-pending state.
+ 	 */
+-	if (test_ti_thread_flag(task_thread_info(task), TIF_SINGLESTEP))
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
+ 		set_regs_spsr_ss(task_pt_regs(task));
+ }
+ NOKPROBE_SYMBOL(user_rewind_single_step);
  
- #ifdef PARANOID
- /* It should be possible to get here only if the arg is ffff....ffff */
--	cmp	$0xffffffff,FPU_fsqrt_arg_1
-+	cmpl	$0xffffffff,FPU_fsqrt_arg_1
- 	jnz	sqrt_stage_2_error
- #endif /* PARANOID */
+ void user_fastforward_single_step(struct task_struct *task)
+ {
+-	if (test_ti_thread_flag(task_thread_info(task), TIF_SINGLESTEP))
++	if (test_tsk_thread_flag(task, TIF_SINGLESTEP))
+ 		clear_regs_spsr_ss(task_pt_regs(task));
+ }
  
 -- 
 2.25.1
