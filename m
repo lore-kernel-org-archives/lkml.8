@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1A8C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B16DC43460
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3472E20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A29F2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858822;
-	bh=ZGHLr7kALoPqFwJLj/tZqPaw1QXVTJmEq/VIiu3n9H8=;
+	s=default; t=1595858840;
+	bh=/oDceVRvBcZtcSeouwu1wm8VWD2sKbRTIpY4H/q1V0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UCtq/rop2APMC3AmSj4ghQQuLZCQZejUSB84+j028Raj5U506OiHFdFGVxzH3khJf
-	 b2my/0Zkxj+MCHIL/DqCRVfNCPHiZeclQDbylkKenBj3nNs1pDUNBE7f7LROHOUFcK
-	 ugoeC2xMwWkxaOlBwYXa/b9pBlK21v6bwLA7TOWM=
+	b=zGp55JT8V0OhGjOZiGWd7km9qlLZGrGdQB7mjQKf8CB5qqpyPQk9jwkb3ZxTt6IkU
+	 WJpcUGj5Iii3B26GUV2KkfVvqmBnLYCXMAY4yXDYsHyqBBEcKpm0oq3mNa1OxqRWjw
+	 I+aLCRp6XNps35UvLNRrjhXnj8HELc/pS5NhyE/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgG0OHB (ORCPT
+        id S1729206AbgG0OHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:07:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55232 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:07:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729064AbgG0OG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:06:58 -0400
+        id S1729181AbgG0OHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:07:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E5C22078E;
-        Mon, 27 Jul 2020 14:06:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 214F720775;
+        Mon, 27 Jul 2020 14:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858818;
-        bh=ZGHLr7kALoPqFwJLj/tZqPaw1QXVTJmEq/VIiu3n9H8=;
+        s=default; t=1595858834;
+        bh=/oDceVRvBcZtcSeouwu1wm8VWD2sKbRTIpY4H/q1V0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1egwd68DsjfVZGRWu6P0Ro5kQ4ZyUvH8a7MsQ9df+gSVHAOUgOJgrJ1wat1VEbNI3
-         59x+0MqZe0JM5uwx/RiJxtBi+zqksS6dpc4/QXJyjFemkRDSbTeDFdizvGYIkFZ8eC
-         VQAdWr7YLa/r3vGlP/QqyNF2AlvkUkU+EjB+Jhc4=
+        b=GNVgRiT+2dU0OaxcEDCGnQjIlDFYdrLiwY3UM0Khdbk65wgA+Oj334PhEIfnqIkKu
+         O2ms6Mac4LMep1qvOLSMsrsWBsbU3oae9B0bpjyY5XDsboJlzyD3/ASR+nZGgxD/fh
+         k7CeXVtWPZqkbY7QseY9cdJ0Qx4obUj4b+h2JrbY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 22/64] hippi: Fix a size used in a pci_free_consistent() in an error handling path
-Date:   Mon, 27 Jul 2020 16:04:01 +0200
-Message-Id: <20200727134912.240928673@linuxfoundation.org>
+Subject: [PATCH 4.14 06/64] xtensa: fix __sync_fetch_and_{and,or}_4 declarations
+Date:   Mon, 27 Jul 2020 16:03:45 +0200
+Message-Id: <20200727134911.349920934@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -61,36 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-[ Upstream commit 3195c4706b00106aa82c73acd28340fa8fc2bfc1 ]
+[ Upstream commit 73f9941306d5ce030f3ffc7db425c7b2a798cf8e ]
 
-The size used when calling 'pci_alloc_consistent()' and
-'pci_free_consistent()' should match.
+Building xtensa kernel with gcc-10 produces the following warnings:
+  arch/xtensa/kernel/xtensa_ksyms.c:90:15: warning: conflicting types
+    for built-in function ‘__sync_fetch_and_and_4’;
+    expected ‘unsigned int(volatile void *, unsigned int)’
+    [-Wbuiltin-declaration-mismatch]
+  arch/xtensa/kernel/xtensa_ksyms.c:96:15: warning: conflicting types
+    for built-in function ‘__sync_fetch_and_or_4’;
+    expected ‘unsigned int(volatile void *, unsigned int)’
+    [-Wbuiltin-declaration-mismatch]
 
-Fix it and have it consistent with the corresponding call in 'rr_close()'.
+Fix declarations of these functions to avoid the warning.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hippi/rrunner.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/xtensa/kernel/xtensa_ksyms.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/hippi/rrunner.c b/drivers/net/hippi/rrunner.c
-index d7ba2b813effc..40ef4aeb0ef04 100644
---- a/drivers/net/hippi/rrunner.c
-+++ b/drivers/net/hippi/rrunner.c
-@@ -1250,7 +1250,7 @@ static int rr_open(struct net_device *dev)
- 		rrpriv->info = NULL;
- 	}
- 	if (rrpriv->rx_ctrl) {
--		pci_free_consistent(pdev, sizeof(struct ring_ctrl),
-+		pci_free_consistent(pdev, 256 * sizeof(struct ring_ctrl),
- 				    rrpriv->rx_ctrl, rrpriv->rx_ctrl_dma);
- 		rrpriv->rx_ctrl = NULL;
- 	}
+diff --git a/arch/xtensa/kernel/xtensa_ksyms.c b/arch/xtensa/kernel/xtensa_ksyms.c
+index dc7b470a423a6..58b79e2ea569c 100644
+--- a/arch/xtensa/kernel/xtensa_ksyms.c
++++ b/arch/xtensa/kernel/xtensa_ksyms.c
+@@ -82,13 +82,13 @@ void __xtensa_libgcc_window_spill(void)
+ }
+ EXPORT_SYMBOL(__xtensa_libgcc_window_spill);
+ 
+-unsigned long __sync_fetch_and_and_4(unsigned long *p, unsigned long v)
++unsigned int __sync_fetch_and_and_4(volatile void *p, unsigned int v)
+ {
+ 	BUG();
+ }
+ EXPORT_SYMBOL(__sync_fetch_and_and_4);
+ 
+-unsigned long __sync_fetch_and_or_4(unsigned long *p, unsigned long v)
++unsigned int __sync_fetch_and_or_4(volatile void *p, unsigned int v)
+ {
+ 	BUG();
+ }
 -- 
 2.25.1
 
