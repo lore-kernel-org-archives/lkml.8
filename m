@@ -2,75 +2,164 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E44DC433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E62BC43459
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23CD6207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECB720719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 16:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595867392;
-	bh=nDlItEL5wpDX+RL6B9cqSzJxrB0KNzx+009Wx5gZswo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=1hOEi7NQmO5PfUerN5BQQWUXpmmal4osgYWNNUF7RlwZq+aEp7ffn4r3Ge7xcGwaq
-	 Z+S60WZpKhv/N/XxD78DeQbb11CEIWzEtM/qKfqSBzxkAwJT//iSHT4Um5nex9Ywtc
-	 /tAjhIBFCkMlZ+QTUb3Yi4f3LtbQv27rBzo5Vpsc=
+	s=default; t=1595867400;
+	bh=hdVX0IsUo7eSkaqkoaF98FlrWWgQtbf1bZ3UXG9vp9E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KLrqP0fiy1A1044mYTLXwfvT5QejXW134Kb01dFd/1Jsuqk8L3d7dqaFhWy665EPV
+	 KnO3jE6RS2FhPMqCYEo4PjZyT5jpOAoONkjUfweJv03GeOsvh4ICLwvMs5y2AzWfd/
+	 pqXTntvQxl0/Zi/Lp7TC2BthrMm3ze2PPAW0gWn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732070AbgG0Q3u (ORCPT
+        id S1732091AbgG0Q36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 12:29:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58244 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 12:29:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732011AbgG0Q3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 12:29:47 -0400
-Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730778AbgG0Q34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 12:29:56 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E521B2074F;
-        Mon, 27 Jul 2020 16:29:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60A6A20775;
+        Mon, 27 Jul 2020 16:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595867387;
-        bh=nDlItEL5wpDX+RL6B9cqSzJxrB0KNzx+009Wx5gZswo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=AUvFcPrKk6nVVZv/g3ZXTJTRo3msOEi2ugV5VFd6nCUhGxiVWQy+/OsvXmWbtA4N8
-         T4qzgDX9jr+r5rVsV27ANM7PbW9GF/6uZqcn4cFuiGrZOgBna91PS6uAVoSSCsvdk8
-         9qnTOezy0zA1q9PvNJqxKiqVn93pmZocMgzMoLoE=
-Message-ID: <1595867384.4841.136.camel@kernel.org>
-Subject: Re: [PATCH v3 10/19] fs/kernel_read_file: Add file_size output
- argument
-From:   Mimi Zohar <zohar@kernel.org>
-To:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 27 Jul 2020 12:29:44 -0400
-In-Reply-To: <20200724213640.389191-11-keescook@chromium.org>
-References: <20200724213640.389191-1-keescook@chromium.org>
-         <20200724213640.389191-11-keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        s=default; t=1595867395;
+        bh=hdVX0IsUo7eSkaqkoaF98FlrWWgQtbf1bZ3UXG9vp9E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tpKi6YXufrADChYkIl1EiNp/etiAQqY8b6izlKQYhbgervIIKuPo/MhJD6AQKJRoV
+         0Ewn8WOwQZMfRXHtZHxCOV7Yg2QQlENg/hqmpF47QkCvnMZgby/XZSduYQFgHeQHEu
+         IRrJOSO5v+O0uFgkTUYV/hLN6+Qu/tTEDQVXuTSg=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-riscv@lists.infradead.org,
+        x86@kernel.org
+Subject: [PATCH v2 1/7] mm: add definition of PMD_PAGE_ORDER
+Date:   Mon, 27 Jul 2020 19:29:29 +0300
+Message-Id: <20200727162935.31714-2-rppt@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200727162935.31714-1-rppt@kernel.org>
+References: <20200727162935.31714-1-rppt@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
-> In preparation for adding partial read support, add an optional output
-> argument to kernel_read_file*() that reports the file size so callers
-> can reason more easily about their reading progress.
-> 
-> Acked-by: Scott Branden <scott.branden@broadcom.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+The definition of PMD_PAGE_ORDER denoting the number of base pages in the
+second-level leaf page is already used by DAX and maybe handy in other
+cases as well.
+
+Several architectures already have definition of PMD_ORDER as the size of
+second level page table, so to avoid conflict with these definitions use
+PMD_PAGE_ORDER name and update DAX respectively.
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ fs/dax.c                | 10 +++++-----
+ include/linux/pgtable.h |  3 +++
+ 2 files changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/fs/dax.c b/fs/dax.c
+index 11b16729b86f..b91d8c8dda45 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -50,7 +50,7 @@ static inline unsigned int pe_order(enum page_entry_size pe_size)
+ #define PG_PMD_NR	(PMD_SIZE >> PAGE_SHIFT)
+ 
+ /* The order of a PMD entry */
+-#define PMD_ORDER	(PMD_SHIFT - PAGE_SHIFT)
++#define PMD_PAGE_ORDER	(PMD_SHIFT - PAGE_SHIFT)
+ 
+ static wait_queue_head_t wait_table[DAX_WAIT_TABLE_ENTRIES];
+ 
+@@ -98,7 +98,7 @@ static bool dax_is_locked(void *entry)
+ static unsigned int dax_entry_order(void *entry)
+ {
+ 	if (xa_to_value(entry) & DAX_PMD)
+-		return PMD_ORDER;
++		return PMD_PAGE_ORDER;
+ 	return 0;
+ }
+ 
+@@ -1456,7 +1456,7 @@ static vm_fault_t dax_iomap_pmd_fault(struct vm_fault *vmf, pfn_t *pfnp,
+ {
+ 	struct vm_area_struct *vma = vmf->vma;
+ 	struct address_space *mapping = vma->vm_file->f_mapping;
+-	XA_STATE_ORDER(xas, &mapping->i_pages, vmf->pgoff, PMD_ORDER);
++	XA_STATE_ORDER(xas, &mapping->i_pages, vmf->pgoff, PMD_PAGE_ORDER);
+ 	unsigned long pmd_addr = vmf->address & PMD_MASK;
+ 	bool write = vmf->flags & FAULT_FLAG_WRITE;
+ 	bool sync;
+@@ -1515,7 +1515,7 @@ static vm_fault_t dax_iomap_pmd_fault(struct vm_fault *vmf, pfn_t *pfnp,
+ 	 * entry is already in the array, for instance), it will return
+ 	 * VM_FAULT_FALLBACK.
+ 	 */
+-	entry = grab_mapping_entry(&xas, mapping, PMD_ORDER);
++	entry = grab_mapping_entry(&xas, mapping, PMD_PAGE_ORDER);
+ 	if (xa_is_internal(entry)) {
+ 		result = xa_to_internal(entry);
+ 		goto fallback;
+@@ -1681,7 +1681,7 @@ dax_insert_pfn_mkwrite(struct vm_fault *vmf, pfn_t pfn, unsigned int order)
+ 	if (order == 0)
+ 		ret = vmf_insert_mixed_mkwrite(vmf->vma, vmf->address, pfn);
+ #ifdef CONFIG_FS_DAX_PMD
+-	else if (order == PMD_ORDER)
++	else if (order == PMD_PAGE_ORDER)
+ 		ret = vmf_insert_pfn_pmd(vmf, pfn, FAULT_FLAG_WRITE);
+ #endif
+ 	else
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index 56c1e8eb7bb0..79f8443609e7 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -28,6 +28,9 @@
+ #define USER_PGTABLES_CEILING	0UL
+ #endif
+ 
++/* Number of base pages in a second level leaf page */
++#define PMD_PAGE_ORDER	(PMD_SHIFT - PAGE_SHIFT)
++
+ /*
+  * A page table page can be thought of an array like this: pXd_t[PTRS_PER_PxD]
+  *
+-- 
+2.26.2
+
