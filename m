@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB2CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB62C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C069C205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6452072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="Plq9fiev"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="KqtCWh0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgG0LF6 (ORCPT
+        id S1728524AbgG0LGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:05:58 -0400
-Received: from mail-dm6nam11on2043.outbound.protection.outlook.com ([40.107.223.43]:10337
+        Mon, 27 Jul 2020 07:06:11 -0400
+Received: from mail-dm6nam11on2062.outbound.protection.outlook.com ([40.107.223.62]:45408
         "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728477AbgG0LF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:05:58 -0400
+        id S1728477AbgG0LGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:06:07 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IuTu1OrisARg/xJ7e2jpna6ApWPVpQtkAsDKgqFdqga4hglZu6op3gDe/70Suln6I43nDMVmA+2SnwgCH74t8GDvRTK9hdwmMshJ9Hc0pi5lWdTZbuWXLQQESO4v7xSAj58d1AoutozX3CW5Tww9grC4foKowhrTgYMFgwok0k95VB8rDQf5bjuhD4BxzYOZJVaO74pBuWcOFqUrkpmFZ6dytgjgF7QPjhVMwKVdZrxf9AUQPaSfGehbcRHvp6iO0Bxa+Y7b3PR9Yz9HfI+nAIECM5eFZrL9rWaPjw3+SwZtpwU/hZow1/oqQQMO+7Xnjcp1misme0ZDGK/oxDLgXw==
+ b=QXQtcFkhDs2keY7JzCLc7z77CQHl9PU2qqjswyCPPB6Bk64qbyQ/HOyu3AJ73fhpI4owWbRPArXhhpeQu5itRJ5ieZYtBN3gLX+dAZAcGoaafQoajQz7tBY+eQ91cUFrV/WpGfpgJCSjIMkYApmkmODAcOTn0qUZdpBOzFfe7RBx8F7Npbc3XzoevidnNul4U+Tk2BtdYfk2mBaYhpWeT7Pop41JJ11thbB7DrYTVYCHuUR+gaD3nSKKWFRUzSXyHnbWMSHtj3VAKexhHxwYuVSV7dvN5oy1F0YZP9bdruyGnBZlbJYdoccTxwx6KYydkugtQ0JPWFTq1SUZ/RqaMQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I0mJ5fOY5w5YplvJ8PfMzlPu/g0W4Z3tgtxf/esFL/M=;
- b=bV+DanoWHUNefzO7YbHNFWzwGKgqGn9QYWnBy3ZGrDKuEaYpRiqoGhKHuJgnJKpaMZ3p53dqflpSaafyfYFe/0cwB72hMVkESG+LVRbvxeSG88MTs66SbBE+XOJYm4fwthtNoa1VPTq2Tdrk2wkKODh/QPEdY9zbh63WM1sJqe8/YnUCgoht+FpIgrDe05/bJi+KqMgp5UiTZAMjGF5WCc97ElNupSdiAjt8dHajYJ+NXgEmxAM4q/TJBJJBLswrhf5m3H6cnzDREz4YPPVKebVaUozloqV9+GjXwQl1sM0Ur7EooO5lxCDVvtjTnXWXpVOBRLhFsp+y8ZWH0Pk4iA==
+ bh=zNKXLP0PbagGacXWTTUo8OuNepD5XC5OdU1vyNUQZwo=;
+ b=IbNZEuWbRWmJkp65p2+kbyFtLUibaWr5wLWB4Cg6ClilRD/U+YRkBJVl/5HSCaavnZKVtzsD1/QYlIB/EJP7aONv/NM/pPNfc24XmdOzFbWg7XTYMrW0fYp2OuENTYTAdRtwh458CWqlaBmw5t9O5E/IEt3yrCWSTq8YPgVd7XUxTzQpCrDAcaS2zq5rkuYFmMujuJuAC0gNeg6/0xjcTp+9EsWDnLVnzcVYDj6OQZoU2AYvnqOXNa/noUisS2ALdgz722qebrAIhwckeOsoTVUkhj+p7oqXU0jYgR7x2suL/O36NLXSed5Q2f/bqiZU0rByI/Kh7LAbhgMF5C2yVg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=synaptics.com; dmarc=pass action=none
  header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I0mJ5fOY5w5YplvJ8PfMzlPu/g0W4Z3tgtxf/esFL/M=;
- b=Plq9fievo6phw2KZvgBDESbDe52wqj9AoBQCvG6xzOd2QqC1AiFXJV0Tz0bJsb38SGIPhRCsUEEAQ1l63c+X8WT9NRAXYB4qYrk4R5Db/x7Fz0vWExk7XvJ2SXJrkbd5p6w8xJL7c+dtk+Qmu+EHuUaFmJU3BYULSulORUQHhF4=
+ bh=zNKXLP0PbagGacXWTTUo8OuNepD5XC5OdU1vyNUQZwo=;
+ b=KqtCWh0rOKSpBVJe6vIjdu0oOT61aF0cURji7PE2+nd52FGkxlfGUaWEFkyxGHFo7NN2qId5bQgrLtkETIdnYYN43fUQpFrTJhQBFkqlfHDd1Ix/bpRMDxe93MOTwMZaS1XLmikQIzHvVEArSPrTuuUN4fkHVpXkOLSDJI3eCsE=
 Authentication-Results: st.com; dkim=none (message not signed)
  header.d=none;st.com; dmarc=none action=none header.from=synaptics.com;
 Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
  by BYAPR03MB4198.namprd03.prod.outlook.com (2603:10b6:a03:7e::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Mon, 27 Jul
- 2020 11:05:54 +0000
+ 2020 11:06:04 +0000
 Received: from BYAPR03MB3573.namprd03.prod.outlook.com
  ([fe80::b5cc:ca6b:3c25:a99c]) by BYAPR03MB3573.namprd03.prod.outlook.com
  ([fe80::b5cc:ca6b:3c25:a99c%4]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
- 11:05:53 +0000
-Date:   Mon, 27 Jul 2020 19:05:20 +0800
+ 11:06:04 +0000
+Date:   Mon, 27 Jul 2020 19:01:48 +0800
 From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>,
@@ -60,8 +60,9 @@ To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Russell King <linux@armlinux.org.uk>
 Cc:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] net: stmmac: Speed down the PHY if WoL to save energy
-Message-ID: <20200727190520.3c07cf41@xhacker.debian>
+Subject: [PATCH 1/5] net: stmmac: Remove WAKE_MAGIC if HW shows no
+ pmt_magic_frame
+Message-ID: <20200727190148.78bab66e@xhacker.debian>
 In-Reply-To: <20200727190045.36f247cc@xhacker.debian>
 References: <20200727190045.36f247cc@xhacker.debian>
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
@@ -72,85 +73,56 @@ X-ClientProxiedBy: TY2PR01CA0012.jpnprd01.prod.outlook.com
  (2603:10b6:a02:ae::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TY2PR01CA0012.jpnprd01.prod.outlook.com (2603:1096:404:a::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Mon, 27 Jul 2020 11:05:50 +0000
+Received: from xhacker.debian (124.74.246.114) by TY2PR01CA0012.jpnprd01.prod.outlook.com (2603:1096:404:a::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Mon, 27 Jul 2020 11:06:01 +0000
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 X-Originating-IP: [124.74.246.114]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d5d2d1ba-c36e-46db-6fd2-08d8321d0760
+X-MS-Office365-Filtering-Correlation-Id: 93c91045-0083-4ef0-ded5-08d8321d0ddd
 X-MS-TrafficTypeDiagnostic: BYAPR03MB4198:
-X-Microsoft-Antispam-PRVS: <BYAPR03MB4198983DBB48B1BFE7A29079ED720@BYAPR03MB4198.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
+X-Microsoft-Antispam-PRVS: <BYAPR03MB41987D08FB847D6CBA388FB5ED720@BYAPR03MB4198.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zSC9B9vVhX6kYEA5qvR2ioC8hPtz9Ck7Hi/zT9gYl/8NuyQ/v/6ZZWu9D+AJ2vvNoVB0nvDc4cNTiRRABAwOcL9jHcYT2Cp/LCo/i5ywgEB/d3E3NHi7A6DYd1xpprGRhG09AQfndcbshFbIRQFd0fqIfP4F4a40bh3Xvo7pCKI92kyvEPhZD+wNtSroBBOHRtpK88FpUtiYvdr1236V2WccPIEo3V7TwsI76T2djMKgmXw13ZqpVDcQ764JQa6FbWJsUBbBwj2Nu/oOGRy/tfjvM6NEdQh9vodn0F+AE5f0iaVDXirtWnfSCMqQO9MA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(366004)(346002)(376002)(396003)(136003)(66946007)(66476007)(66556008)(5660300002)(6506007)(55016002)(86362001)(52116002)(9686003)(8676002)(478600001)(110136005)(7696005)(316002)(1076003)(4326008)(16526019)(8936002)(26005)(956004)(83380400001)(2906002)(6666004)(7416002)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: U9gOipn4XE70Q401JoA2yP1BanG2qA/6l+8h8T/plTJyPUxqayZTe6b5Y3mLUPLYKZOsBgikWCh3hH7w5zofrFJaHiRtTCZVRv7HfuAc9jsPT8alN+iwd5sEFajJkanLrfI3zNCSK/k2RMJK3JSjUiAmuQUPlzytKoWdO0F4Vk2PaCUmLr7pGtSFJkkBAM+0wMjYrkodYy1HNvguaBQwEs3tbvXCq/WY9DmdAr6870sqlSadaPodO3+ZNs3vgOEkZuMk/o0y4DGbQdKwOoaKW4ovHH/Kioc4Euabw0K+myXrSp+qSvZuOxumdCOdlt4WOQNGgb/utO0VajsVMYtO8OT9ihaJDtYV2+yZ70VX7NCYMF/kceRzm2Qfgn2Tz0+FtTdN3/Ni1EBkz5Thnh6xIz449a7ItOcEZG9nWFG9hhRzUad2knl7OTeRBPdxHwf7zK5ZRMBizRLyIRxQutfOicua2vr+GflYr9xFkCz7rg5hY/jveLjHd56pQwBLqMHy
+X-Microsoft-Antispam-Message-Info: eUW1zVOEXA4gec/Wb5cLC/SyfKbguX5niFfk6JrcySfO0Bymy1NYUm71h2c6HiR7aEaNQGPLP270mpWxGFGWyRrzJjedW6fVrhxYHdlhZ6xu1KHXJFatt/Idw9rnksOetzA/dho9r+hGEEBZWkzoI3LArVPThqNRwLR7QKOAPkv/iLAjY+afvBqZB9+xWVZJvMJ5yI1Tm4KdY2EwuLfica0O1R1MVUSXLuFH/F5ClxbFgKsUpHD5PevVPE9QJ6PR1ot3q4uNecZY6dnbrItJmV3zVt26ylMUDOVRr9IBAbOoVKMGwV4gZHFO9GhtcJuWJ0M9kWTiccythIQldv05Lg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(366004)(346002)(376002)(396003)(136003)(66946007)(66476007)(66556008)(5660300002)(6506007)(55016002)(86362001)(52116002)(9686003)(4744005)(8676002)(478600001)(110136005)(7696005)(316002)(1076003)(4326008)(16526019)(8936002)(26005)(956004)(83380400001)(2906002)(6666004)(7416002)(186003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: hC707TNY8xa9vG1wxowy2Qf+fmgKH8W2Penc6eo/2XP/DFcWMrF4MXqYz2iU6ZAuFUqiiKRxu7nJGUp0jt5k68larAYBTIe/7xCbJdW4BuMqpOgjK6fzJ7cIWS164YSzK4y4lEuwzquVDXYdpW3hM8UBupu9/pLxfzMz7h9IWYsGC8ea62teAXvDKAUlIJ1OW1H/r9lFgiBrdLwLh4DvwnbNvGXt4elzo6Ot5dmb2LqQxAcQaMbp+HJv1ydgg0Nd5dPYlkYNi72Z4I/Cc/eVoxYcU0FX3+3O4vzLApLKTVFoxCntPC2/BBTsRkcKl9neU7ZfKv9c7FERuPGzXNSxiCuBzz2Jh+TcDu3CiDuD4T8f+BgdpyqMOnwuo/O2gDhSZgE927vZuZHYR5CXIMUB9vUgfRAcI0DZhhDKDmgFj6q2+UJ1WK9RiCw0mA0ddd8itY9ja6PWV2wY34Xl6fXXu7Qp+honhuBza2e9dARCzruvq2p+arFW8a6lSj7uv2by
 X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5d2d1ba-c36e-46db-6fd2-08d8321d0760
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93c91045-0083-4ef0-ded5-08d8321d0ddd
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3573.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 11:05:53.5594
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 11:06:04.6886
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zfP9CxjVXZVM0coxsJV+6H25yvuL9PgXyLsOJgc4fgX7nLEE3Ikd5T0ivZYNOUURfpJa4lWe1wS60NS4ztmdLQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: /LLoOWfjiOOgopwVEMPrK/tugYc8gfA+jw9l0WkRy/LcOswipjictuGK72Phd2iGEaH2ISEWLtoesGvlb7oRGg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4198
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When WoL is enabled and the machine is powered off, the PHY remains
-waiting for wakeup events at max speed, which is a waste of energy.
-
-Slow down the PHY speed before stopping the ethernet if WoL is enabled,
+Remove WAKE_MAGIC from supported modes if the HW capability register
+shows no support for pmt_magic_frame.
 
 Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 32c0c9647b87..89b2b3472852 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2823,6 +2823,8 @@ static int stmmac_open(struct net_device *dev)
- 	stmmac_init_coalesce(priv);
- 
- 	phylink_start(priv->phylink);
-+	/* We may have called phylink_speed_down before */
-+	phylink_speed_up(priv->phylink);
- 
- 	/* Request the IRQ lines */
- 	ret = request_irq(dev->irq, stmmac_interrupt,
-@@ -2896,6 +2898,8 @@ static int stmmac_release(struct net_device *dev)
- 	if (priv->eee_enabled)
- 		del_timer_sync(&priv->eee_ctrl_timer);
- 
-+	if (device_may_wakeup(priv->device))
-+		phylink_speed_down(priv->phylink, false);
- 	/* Stop and disconnect the PHY */
- 	phylink_stop(priv->phylink);
- 	phylink_disconnect_phy(priv->phylink);
-@@ -5095,6 +5099,8 @@ int stmmac_suspend(struct device *dev)
- 	} else {
- 		mutex_unlock(&priv->lock);
- 		rtnl_lock();
-+		if (device_may_wakeup(priv->device))
-+			phylink_speed_down(priv->phylink, false);
- 		phylink_stop(priv->phylink);
- 		rtnl_unlock();
- 		mutex_lock(&priv->lock);
-@@ -5207,6 +5213,8 @@ int stmmac_resume(struct device *dev)
- 	if (!device_may_wakeup(priv->device) || !priv->plat->pmt) {
- 		rtnl_lock();
- 		phylink_start(priv->phylink);
-+		/* We may have called phylink_speed_down before */
-+		phylink_speed_up(priv->phylink);
- 		rtnl_unlock();
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+index eae11c585025..9e0af626a24a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+@@ -603,6 +603,8 @@ static void stmmac_get_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
+ 	mutex_lock(&priv->lock);
+ 	if (device_can_wakeup(priv->device)) {
+ 		wol->supported = WAKE_MAGIC | WAKE_UCAST;
++		if (priv->hw_cap_support && !priv->dma_cap.pmt_magic_frame)
++			wol->supported &= ~WAKE_MAGIC;
+ 		wol->wolopts = priv->wolopts;
  	}
- 
+ 	mutex_unlock(&priv->lock);
 -- 
 2.28.0.rc0
 
