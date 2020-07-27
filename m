@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14356C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897D0C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E25DA20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 612DD2177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859106;
-	bh=QeYImvGnpz91Ee2T2NshMXtxBus8Lw1i2ipm1jF76UA=;
+	s=default; t=1595859110;
+	bh=g/k/+eebFLLg+bq8uWIyE9YLJLGd/5lTSjMBtr8d9EE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FJdmgnLBYm1w3F07yFRicbatLPahirxgun40rSwRiQT7VC2EHRB5cXYq9iS6NiN/g
-	 TFMINXS2QTOAs+kZH8AHgNiBAtn55F6InQzqKwT9ycaQSPueFQbabK6QFg0diA/GMw
-	 Ih0MTSAdF/E72i98VcbUh6KX6fNVGhzYIAkKH4ts=
+	b=Eo2lAc2yRdvTCGzNEErBB/c0CiwpHzgE/lHPem9rH/qO1qGOUhDNF4zgefNyvqbYu
+	 Q2n1WuOe13goZI4h9a5Qkep/2DMAW4c+Y39BF7bWYmONOFrRTwaQCgNfTbGCR6WFc+
+	 D0OXnR0TXXphJGSmQx5OMrWxtSyTfM3Rn4j+Jk+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730064AbgG0OLp (ORCPT
+        id S1730081AbgG0OLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:11:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35364 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:11:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729239AbgG0OLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:11:40 -0400
+        id S1730054AbgG0OLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:11:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3AFE2083E;
-        Mon, 27 Jul 2020 14:11:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1C2721775;
+        Mon, 27 Jul 2020 14:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859099;
-        bh=QeYImvGnpz91Ee2T2NshMXtxBus8Lw1i2ipm1jF76UA=;
+        s=default; t=1595859105;
+        bh=g/k/+eebFLLg+bq8uWIyE9YLJLGd/5lTSjMBtr8d9EE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m2+HnHS+Vst38t+bCX9UHDMfWHAj+G0skcboekOTVXU191NXeynOZ9y2lAwfheD+E
-         DRAEL6BvJaEOytAlsUNldyuqOg1xjKAAmUDjHx8bh7mrPYE8aW68T3AAWGLHXvHqSP
-         jrj3ym+ulA5qmGxQRj3HU6hi/NnMmAkpz2FUtNIQ=
+        b=Dz/FFmjuJtS7LHYwHKsexp2a4fUFSX9/tq4ST7l4WNyp4GFt3k3RgDYAEWa3McqbK
+         6CiIiXSBpet5Smrf9KxP+SFkNE2tZcJuwsHx2BhqobovWelgt6st8HpZeLidw3inGu
+         lbc4qMhsYi38y06wvDVZAhr8ZRiavVj89jD2cB/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/86] qed: suppress "dont support RoCE & iWARP" flooding on HW init
-Date:   Mon, 27 Jul 2020 16:04:09 +0200
-Message-Id: <20200727134916.195608026@linuxfoundation.org>
+Subject: [PATCH 4.19 37/86] net: ethernet: ave: Fix error returns in ave_init
+Date:   Mon, 27 Jul 2020 16:04:11 +0200
+Message-Id: <20200727134916.293591334@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -62,58 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit 1ea999039fe7c7953da2fbb7ca7c3ef00064d328 ]
+[ Upstream commit 1264d7fa3a64d8bea7aebb77253f917947ffda25 ]
 
-Change the verbosity of the "don't support RoCE & iWARP simultaneously"
-warning to debug level to stop flooding on driver/hardware initialization:
+When regmap_update_bits failed in ave_init(), calls of the functions
+reset_control_assert() and clk_disable_unprepare() were missed.
+Add goto out_reset_assert to do this.
 
-[    4.783230] qede 01:00.00: Storm FW 8.37.7.0, Management FW 8.52.9.0
-[MBI 15.10.6] [eth0]
-[    4.810020] [qed_rdma_set_pf_params:2076()]Current day drivers don't
-support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
-[    4.861186] qede 01:00.01: Storm FW 8.37.7.0, Management FW 8.52.9.0
-[MBI 15.10.6] [eth1]
-[    4.893311] [qed_rdma_set_pf_params:2076()]Current day drivers don't
-support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
-[    5.181713] qede a1:00.00: Storm FW 8.37.7.0, Management FW 8.52.9.0
-[MBI 15.10.6] [eth2]
-[    5.224740] [qed_rdma_set_pf_params:2076()]Current day drivers don't
-support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
-[    5.276449] qede a1:00.01: Storm FW 8.37.7.0, Management FW 8.52.9.0
-[MBI 15.10.6] [eth3]
-[    5.318671] [qed_rdma_set_pf_params:2076()]Current day drivers don't
-support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
-[    5.369548] qede a1:00.02: Storm FW 8.37.7.0, Management FW 8.52.9.0
-[MBI 15.10.6] [eth4]
-[    5.411645] [qed_rdma_set_pf_params:2076()]Current day drivers don't
-support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only
-
-Fixes: e0a8f9de16fc ("qed: Add iWARP enablement support")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Fixes: 57878f2f4697 ("net: ethernet: ave: add support for phy-mode setting of system controller")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Reviewed-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_cxt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/socionext/sni_ave.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.c b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-index f3d7c38f539a8..734462f8d881c 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-@@ -2074,8 +2074,8 @@ static void qed_rdma_set_pf_params(struct qed_hwfn *p_hwfn,
- 	num_srqs = min_t(u32, QED_RDMA_MAX_SRQS, p_params->num_srqs);
+diff --git a/drivers/net/ethernet/socionext/sni_ave.c b/drivers/net/ethernet/socionext/sni_ave.c
+index c309accc6797e..01cde5f27eade 100644
+--- a/drivers/net/ethernet/socionext/sni_ave.c
++++ b/drivers/net/ethernet/socionext/sni_ave.c
+@@ -1196,7 +1196,7 @@ static int ave_init(struct net_device *ndev)
+ 	ret = regmap_update_bits(priv->regmap, SG_ETPINMODE,
+ 				 priv->pinmode_mask, priv->pinmode_val);
+ 	if (ret)
+-		return ret;
++		goto out_reset_assert;
  
- 	if (p_hwfn->mcp_info->func_info.protocol == QED_PCI_ETH_RDMA) {
--		DP_NOTICE(p_hwfn,
--			  "Current day drivers don't support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only\n");
-+		DP_VERBOSE(p_hwfn, QED_MSG_SP,
-+			   "Current day drivers don't support RoCE & iWARP simultaneously on the same PF. Default to RoCE-only\n");
- 		p_hwfn->hw_info.personality = QED_PCI_ETH_ROCE;
- 	}
+ 	ave_global_reset(ndev);
  
 -- 
 2.25.1
