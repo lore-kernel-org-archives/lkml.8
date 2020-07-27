@@ -2,174 +2,165 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580EBC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C9AC433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 227F82083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920992083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:33:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jQRpjra5"
+	dkim=pass (2048-bit key) header.d=solid-run-com.20150623.gappssmtp.com header.i=@solid-run-com.20150623.gappssmtp.com header.b="rtFeL/3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728962AbgG0Ndl (ORCPT
+        id S1728978AbgG0Nd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:33:41 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:37971 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728322AbgG0Ndk (ORCPT
+        Mon, 27 Jul 2020 09:33:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgG0Nd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:33:40 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 0448158053F;
-        Mon, 27 Jul 2020 09:33:38 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 27 Jul 2020 09:33:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=YgsMZx
-        5pwgpEVAvT6XOgIf4w7AHitJHDyTwwU4qEatA=; b=jQRpjra5a+K9eBy0w+s+Vz
-        mPB94ZBosBduEWOnSjljw+8hpjEzFFC904sOPmp7ARDe+7b/eXgsCKJmhtNyicBZ
-        zCPwwjkkb05K0YfGiAlA2DjbQ1tDLUZN+JjPw3S7qjVj1grZEX4aHI1AiVsE9Io+
-        bNlBAGI/fkhfHIPXd+03GrSnOlle3YkzFc7ppSc0/mjvP7Ug0ymP/jml3M2cNzpZ
-        3nqHV1F7F7FdVxhEmwJMcva5WUKD1OYbGuvTFkmIgufIhR4Y72HrPEITOBAe68Cd
-        fvWvVqG/K7r5+3fgppYIz90IWY9h/aEu1muFU3O5nc5cERR4JMg31zdbbJgisnTQ
-        ==
-X-ME-Sender: <xms:rtceXy0qPafjj9qpXmjj6TnMvhnN8iqgYqZd1rJD6mGA9-PBCQUb-w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedriedtgdeijecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepkfguohcuufgt
-    hhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecuggftrfgrthhtvg
-    hrnheptdffkeekfeduffevgeeujeffjefhtefgueeugfevtdeiheduueeukefhudehleet
-    necukfhppeejledrudekuddrvddrudejleenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehiughoshgthhesihguohhstghhrdhorhhg
-X-ME-Proxy: <xmx:rtceX1F_YViw2fDAyMCnC7fGnfljQba279q87vXUcjjPowXNi_Cqsg>
-    <xmx:rtceX65T8s2wLqXjs6IFdWVooA4TqBK23wtFXT8C9ITPngl1WqSE7w>
-    <xmx:rtceXz1hp7RD7fUx415E-Em3LUMy8FS0rLa4p_YYh0paweRCsdWclA>
-    <xmx:stceX9WkosEn1T_dUOgyyDuWyUiT95rC7CZ-5r4WjPh7lQcldUdW1g>
-Received: from localhost (bzq-79-181-2-179.red.bezeqint.net [79.181.2.179])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9886A3280064;
-        Mon, 27 Jul 2020 09:33:33 -0400 (EDT)
-Date:   Mon, 27 Jul 2020 16:33:31 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: Re: [PATCH 19/26] net/ipv6: switch ipv6_flowlabel_opt to sockptr_t
-Message-ID: <20200727133331.GA1851348@shredder>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200723060908.50081-20-hch@lst.de>
- <20200727121505.GA1804864@shredder>
- <20200727130029.GA26393@lst.de>
+        Mon, 27 Jul 2020 09:33:56 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5D2C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 06:33:55 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id d6so3258904ejr.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 06:33:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=solid-run-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wP4Kt6O/vFKZf7I8OioZ5wu30mbV3QIkDu9uPSa2GcI=;
+        b=rtFeL/3bkvsvdTZCa/KswNcWitGjGI+n5qCO6lZ7yIQ+yJ7VoEsrbaumluptUIpXIR
+         gglMmLoYeTYvw7qniGc8izu5WjyIu3Hy5A5B8LHwnTbHdH7dbIsKgE/DALB2OSSCtiQl
+         k2izB4ykZudJid3QApa7/xi5gU5+naaadOidfWiiJ2HPLtLrLIWWwXOFs0I0qa4q5dwa
+         9Ik2ECh2HoCE6GFbAkVHLMC+1wbHFJmmBCMqqBmxkb+4XcnpqUZoJuMGOScfeVpiuzri
+         hoF+SL6zVOKwskJDGPLPCZzuv82uXzEB1uvqCDoSV+wMA/zeQ7TyqFGPMXqXHb4E06yK
+         xsDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wP4Kt6O/vFKZf7I8OioZ5wu30mbV3QIkDu9uPSa2GcI=;
+        b=JqttsWl8aZxWlKobT8DvXM/TbfCu59gcnNx5j9KcVjwaiKMqx0rsN6WBF59UdzBbUD
+         vJGD2uNF9mV8gyindAJxp/1YPnp+F2DUxnznA8r19W5PYf/AR+q//lB4hj73+nLKl6TP
+         rCwcGpHpSeY1dU60/T1LQNKU0czjb01GmXL2lYIaMmonENzkNtXnfct0loIpZ5Yh+bRk
+         RL8BmgoHgzy4uyc4QwE2I4xXIbogeiZsOkqM7yt1W/1ReupMxld7XHh2ujf0fPZVajJD
+         e20C6LSyDj3Drb7yHuARqJGuFoywOobduGSe45kaxnewC2x5RsNUXwiEJUyjpCMlgn6E
+         gGCA==
+X-Gm-Message-State: AOAM532Gfg0JqdPPY+uQ+gKbbqb9Y18dqF+8ipyQvDik2j9hfFrnsONR
+        EI6d7F/fAauxdVEa0u4cScnP2EFiSqDsvUfAp907Ig==
+X-Google-Smtp-Source: ABdhPJzJGn+4YDJzQefhbMCC1tH9BXbFde1p6PfI6RTnxkY59oNtWoUgcWF5pmJomBPWvBJQO23dmeziJ/HbuhtjAYs=
+X-Received: by 2002:a17:906:a204:: with SMTP id r4mr13603758ejy.552.1595856834293;
+ Mon, 27 Jul 2020 06:33:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727130029.GA26393@lst.de>
+References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
+ <20200720112401.4620-1-miguelborgesdefreitas@gmail.com> <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
+ <20200723174905.GA596242@bogus> <20200723195755.GV3428@piout.net> <20200727094553.GH1551@shell.armlinux.org.uk>
+In-Reply-To: <20200727094553.GH1551@shell.armlinux.org.uk>
+From:   Jon Nettleton <jon@solid-run.com>
+Date:   Mon, 27 Jul 2020 15:33:17 +0200
+Message-ID: <CABdtJHu2BacX+EeVkCxFYWfNxJ-7Z5MP7BqVfF2KHy+XfJGN3w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh@kernel.org>,
+        Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>,
+        a.zummo@towertech.it, Baruch Siach <baruch@tkos.co.il>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 03:00:29PM +0200, Christoph Hellwig wrote:
-> On Mon, Jul 27, 2020 at 03:15:05PM +0300, Ido Schimmel wrote:
-> > I see a regression with IPv6 flowlabel that I bisected to this patch.
-> > When passing '-F 0' to 'ping' the flow label should be random, yet it's
-> > the same every time after this patch.
-> 
-> Can you send a reproducer?
+On Mon, Jul 27, 2020 at 11:46 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Thu, Jul 23, 2020 at 09:57:55PM +0200, Alexandre Belloni wrote:
+> > On 23/07/2020 11:49:05-0600, Rob Herring wrote:
+> > > On Mon, Jul 20, 2020 at 12:23:59PM +0100, miguelborgesdefreitas@gmail.com wrote:
+> > > > From: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+> > > >
+> > > > This adds direct-switching mode as a configurable DT flag for
+> > > > RTC modules supporting it (e.g. nxp pcf8523).
+> > > > DSM switches the power source to the battery supply whenever the
+> > > > VDD drops below VBAT. The option is recommended for hw designs
+> > > > where VDD is always expected to be higher than VBAT.
+> > > >
+> > > > Signed-off-by: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+> > > > ---
+> > > > Changes in v2:
+> > > > - Added extended commit message for git history
+> > > > - Separate dt bindings documentation into a single patch
+> > > >
+> > > >  Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt | 7 ++++++-
+> > > >  Documentation/devicetree/bindings/rtc/rtc.yaml        | 7 +++++++
+> > > >  2 files changed, 13 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> > > > index 0b1080c..f715a8f 100644
+> > > > --- a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> > > > +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> > > > @@ -4,10 +4,14 @@ Required properties:
+> > > >  - compatible: Should contain "nxp,pcf8523".
+> > > >  - reg: I2C address for chip.
+> > > >
+> > > > -Optional property:
+> > > > +Optional properties:
+> > > >  - quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
+> > > >    expressed in femto Farad (fF). Valid values are 7000 and 12500.
+> > > >    Default value (if no value is specified) is 12500fF.
+> > > > +- pm-enable-dsm: battery switch-over function is enabled in direct
+> > > > +  switching mode. The power failure condition happens when VDD < VBAT,
+> > > > +  without requiring VDD to drop below Vth(sw)bat.
+> > > > +  Default value (if not provided) is the standard mode.
+> > > >
+> > > >  Example:
+> > > >
+> > > > @@ -15,4 +19,5 @@ pcf8523: rtc@68 {
+> > > >   compatible = "nxp,pcf8523";
+> > > >   reg = <0x68>;
+> > > >   quartz-load-femtofarads = <7000>;
+> > > > + pm-enable-dsm;
+> > > >  };
+> > > > diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
+> > > > index ee237b2..a0048f4 100644
+> > > > --- a/Documentation/devicetree/bindings/rtc/rtc.yaml
+> > > > +++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
+> > > > @@ -47,4 +47,11 @@ properties:
+> > > >      description:
+> > > >        Enables wake up of host system on alarm.
+> > > >
+> > > > +  pm-enable-dsm:
+> > > > +    $ref: /schemas/types.yaml#/definitions/flag
+> > > > +    description:
+> > > > +      Enables the battery switch-over function in direct switching
+> > > > +      mode. Should be set in systems where VDD is higher than VBAT
+> > > > +      at all times.
+> > >
+> > > I'm all for common properties, but is this common across vendors?
+> > >
+> >
+> > This is but this shouldn't be a DT property as it has to be changed
+> > dynamically. I'm working on an ioctl interface to change this
+> > configuration.
+>
+> Why does it need to be changed dynamically?  If the hardware components
+> are not fitted to allow the RTC to be safely used without DSM, then
+> why should userspace be able to disable DSM?
+>
 
-```
-#!/bin/bash
-
-ip link add name dummy10 up type dummy
-
-ping -q -F 0 -I dummy10 ff02::1 &> /dev/null &
-tcpdump -nne -e -i dummy10 -vvv -c 1 dst host ff02::1
-pkill ping
-
-echo
-
-ping -F 0 -I dummy10 ff02::1 &> /dev/null &
-tcpdump -nne -e -i dummy10 -vvv -c 1 dst host ff02::1
-pkill ping
-
-ip link del dev dummy10
-```
-
-Output with commit ff6a4cf214ef ("net/ipv6: split up
-ipv6_flowlabel_opt"):
-
-```
-dropped privs to tcpdump
-tcpdump: listening on dummy10, link-type EN10MB (Ethernet), capture size 262144 bytes
-16:26:27.072559 62:80:34:1d:b4:b8 > 33:33:00:00:00:01, ethertype IPv6 (0x86dd), length 118: (flowlabel 0x920cf, hlim 1, next-header ICMPv6 (58) payload length: 64) fe80::6080:34ff:fe1d:b4b8 > ff02::1: [icmp6 sum ok] ICMP6, echo request, seq 2
-1 packet captured
-1 packet received by filter
-0 packets dropped by kernel
-
-dropped privs to tcpdump
-tcpdump: listening on dummy10, link-type EN10MB (Ethernet), capture size 262144 bytes
-16:26:28.352528 62:80:34:1d:b4:b8 > 33:33:00:00:00:01, ethertype IPv6 (0x86dd), length 118: (flowlabel 0xcdd97, hlim 1, next-header ICMPv6 (58) payload length: 64) fe80::6080:34ff:fe1d:b4b8 > ff02::1: [icmp6 sum ok] ICMP6, echo request, seq 2
-1 packet captured
-1 packet received by filter
-0 packets dropped by kernel
-```
-
-Output with commit 86298285c9ae ("net/ipv6: switch ipv6_flowlabel_opt to
-sockptr_t"):
-
-```
-dropped privs to tcpdump
-tcpdump: listening on dummy10, link-type EN10MB (Ethernet), capture size 262144 bytes
-16:32:17.848517 f2:9a:05:ff:cb:25 > 33:33:00:00:00:01, ethertype IPv6 (0x86dd), length 118: (flowlabel 0xfab36, hlim 1, next-header ICMPv6 (58) payload length: 64) fe80::f09a:5ff:feff:cb25 > ff02::1: [icmp6 sum ok] ICMP6, echo request, seq 2
-1 packet captured
-1 packet received by filter
-0 packets dropped by kernel
-
-dropped privs to tcpdump
-tcpdump: listening on dummy10, link-type EN10MB (Ethernet), capture size 262144 bytes
-16:32:19.000779 f2:9a:05:ff:cb:25 > 33:33:00:00:00:01, ethertype IPv6 (0x86dd), length 118: (flowlabel 0xfab36, hlim 1, next-header ICMPv6 (58) payload length: 64) fe80::f09
-a:5ff:feff:cb25 > ff02::1: [icmp6 sum ok] ICMP6, echo request, seq 2
-1 packet captured
-1 packet received by filter
-0 packets dropped by kernel
-```
-
-> 
-> > 
-> > It seems that the pointer is never advanced after the call to
-> > sockptr_advance() because it is passed by value and not by reference.
-> > Even if you were to pass it by reference I think you would later need to
-> > call sockptr_decrease() or something similar. Otherwise it is very
-> > error-prone.
-> > 
-> > Maybe adding an offset to copy_to_sockptr() and copy_from_sockptr() is
-> > better?
-> 
-> We could do that, although I wouldn't add it to the existing functions
-> to avoid the churns and instead add copy_to_sockptr_offset or something
-> like that.
-
-Sounds good
-
-Thanks
+My presumption would be if you had a system that ran at different
+system voltages depending if it is plugged in to mains or running on a
+battery.
