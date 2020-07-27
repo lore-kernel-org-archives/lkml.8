@@ -2,75 +2,88 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60086C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7B8C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FAF9206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E84020759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:47:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sMHMB8VZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbgG0Tqy (ORCPT
+        id S1729026AbgG0TrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:46:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59700 "EHLO
+        Mon, 27 Jul 2020 15:47:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgG0Tqx (ORCPT
+        with ESMTP id S1729014AbgG0TrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:46:53 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2710C061794;
-        Mon, 27 Jul 2020 12:46:53 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E5FF9127768A9;
-        Mon, 27 Jul 2020 12:30:07 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 12:46:52 -0700 (PDT)
-Message-Id: <20200727.124652.1347094721322555381.davem@davemloft.net>
-To:     jgg@nvidia.com
-Cc:     colin.king@canonical.com, mkalderon@marvell.com,
-        aelior@marvell.com, dledford@redhat.com, irusskikh@marvell.com,
-        alobakin@marvell.com, linux-rdma@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] qed: fix assignment of n_rq_elems to incorrect params
- field
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200727161739.GA60250@nvidia.com>
-References: <20200727141712.112906-1-colin.king@canonical.com>
-        <20200727161739.GA60250@nvidia.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 27 Jul 2020 12:30:08 -0700 (PDT)
+        Mon, 27 Jul 2020 15:47:13 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 753CAC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:47:13 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id k18so2432400pfp.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:47:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sGQ4r67ks10a9qe3fOk8YWAIOQIxbh+oSzV4pqpcTt8=;
+        b=sMHMB8VZWqlwbXWM79T30VxlVj+IefdVKIwTlDf0VEjEv0eg47NENQ/0P7cKueGUQI
+         +8nCHx/Ez7jCJPiWFvLniRPedw/rfenucP/14M5GaV6t8Zn2iq3AXAhY6Mc+cF3AR3If
+         tkCKJqdysJX89NANjkdlAhWQTwOG+8LgOxgJ2JlKw3YXfLyDeLItP97oJ/Uzr2hl1rMB
+         ZRjX+FLOJIycW9o9c32RRniQbyQMsB3tp05irQxgp5w0I2NSrE4EJqvs7BgHp59q6LFR
+         sSsaJU5PbtaQIrdsqZ8GU4BRO5vax1iCuEN5CX6vkdnYosN0wJ/x18k+S3G/oTn1SWP/
+         CnKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sGQ4r67ks10a9qe3fOk8YWAIOQIxbh+oSzV4pqpcTt8=;
+        b=QPzxGp4inDmhYTEKfKxo3R/PEjimGScPSsAH1xHFi16nAX93/E0Kojr5vuRRVSZN7I
+         6hJmjDBpCzI7sS5Hxl2+uaPhLlTyzPNB5/KNMLt11S+HrXO8yE+jnDEh8A1QM2PBp5RZ
+         a1H1YUzf0AwvJKIqoyDz5tPlsp8hIwBYP3pNOQuO4I3rqzw7oMw2ckIbieipXb9Bgjc9
+         kR08hIxZl6wkE4xoJWeLT9+YZVqhi7XBbFGKqAOIOKc45asz63mSNvbeHM2Y1V0dPy1B
+         CUtjrf9prystMvPmiLm26w6hb/Y7s3HXPloFS0TjgEGxFxT9YTu7WPT9ZR1rCwx3QSaZ
+         xfGg==
+X-Gm-Message-State: AOAM5324vIrUx+jfXj95TbAvjvjet8Jf/cYtQrZE5XgBbEmUr9xKx5Pa
+        bnqcCuLqiSEjkv3+0AyeYtqdrIghozu7q3SBt94=
+X-Google-Smtp-Source: ABdhPJy+//PBMIQeWkJdzakQn7hhFAyqjwSVtG1idgDdUKWtxtdXzoCU6G/qQ8c7jAKH4frEP1nSdfwatABy3IKsXas=
+X-Received: by 2002:a62:758f:: with SMTP id q137mr3071458pfc.170.1595879232782;
+ Mon, 27 Jul 2020 12:47:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <18cb4d48-6571-1fdb-5902-ba64c23eee75@broadcom.com>
+In-Reply-To: <18cb4d48-6571-1fdb-5902-ba64c23eee75@broadcom.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Jul 2020 22:46:56 +0300
+Message-ID: <CAHp75Ve1VUWsw8GdSmEbGs6v=B2=VGgcieS-voA+AqvypTpbdw@mail.gmail.com>
+Subject: Re: Kernel panic - not syncing: IO-APIC + timer doesn't work!
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@nvidia.com>
-Date: Mon, 27 Jul 2020 13:17:39 -0300
+On Mon, Jul 27, 2020 at 10:20 PM Scott Branden
+<scott.branden@broadcom.com> wrote:
+>
+> Occasionally I get the following Kernel panic on boot.  This is running on the latest kernel but have seen it previously as well.
+> "Kernel panic - not syncing: IO-APIC + timer doesn't work!  Boot with apic=debug and send a report."
+>
+> I don't know who I am support to send a report to.  But here is the log with apic=debug
 
-> On Mon, Jul 27, 2020 at 03:17:12PM +0100, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->> 
->> Currently n_rq_elems is being assigned to params.elem_size instead of the
->> field params.num_elems.  Coverity is detecting this as a double assingment
->> to params.elem_size and reporting this as an usused value on the first
->> assignment.  Fix this.
->> 
->> Addresses-Coverity: ("Unused value")
->> Fixes: b6db3f71c976 ("qed: simplify chain allocation with init params struct")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  drivers/infiniband/hw/qedr/verbs.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> DaveM will need to take this since the Fixed patch is in his tree,
-> thanks.
+Just a wild guess, do you have x2APIC in your system enabled and driver for it?
 
-Applied to net-next, thanks everyone.
+-- 
+With Best Regards,
+Andy Shevchenko
