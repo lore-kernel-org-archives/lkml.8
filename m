@@ -2,99 +2,98 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FB2C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15772C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDA1220775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA3A520775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595860278;
+	bh=uHBTrMrYml8VaPhAjZRyOEWnDq3qelk0BaB3G42UzUs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vi+1YXRg3fOzOcSOOYWrhhlFeoHZ8+1JwWtA9QfLcRO2dqK6wAtzI+7pLMKwLv2dY
+	 aJRn1cgw2mMs5gKvnd+DlpzMZktcLsRxsxvsEtcHwNb0rjWfbPZ/JXLTq+9xr3OiHi
+	 bYOVrYH3rIjxt67SxKzBUBmzAO69XfwxaOXhSv7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732811AbgG0ObY (ORCPT
+        id S1731629AbgG0ObQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:31:24 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:50865 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729944AbgG0OUt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:20:49 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N7Qkv-1ks1bu0Bv3-017mrg; Mon, 27 Jul 2020 16:20:47 +0200
-Received: by mail-qk1-f175.google.com with SMTP id 11so15376792qkn.2;
-        Mon, 27 Jul 2020 07:20:46 -0700 (PDT)
-X-Gm-Message-State: AOAM533y6Nxrz7bQxQrAS357lFSp6J8YyGfbQUyVTnIyHWCbjskNE+PF
-        UpFnPSk5BzPvBBZSUtUxA9hYRks2o8yWXY6vbbg=
-X-Google-Smtp-Source: ABdhPJw7HU4DkkeUrMcak+NpsOXmslOO3+jYmC/8AEojsfZg/P4wKNKY0WLTL5LRBq4hmj1FpqBJPo8pIawzXbM9u3M=
-X-Received: by 2002:a37:b484:: with SMTP id d126mr23013501qkf.394.1595859645873;
- Mon, 27 Jul 2020 07:20:45 -0700 (PDT)
+        Mon, 27 Jul 2020 10:31:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731626AbgG0OUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:20:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DAD22070B;
+        Mon, 27 Jul 2020 14:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595859653;
+        bh=uHBTrMrYml8VaPhAjZRyOEWnDq3qelk0BaB3G42UzUs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hFc1VBzKXTnZXoVBBFlMC8KhviQ+uWLtRa5Juibcxmdjv+5x/kgHpJ0iIR8J+28fR
+         N9DhnPZH0crGzYiwK4YwoqeafRHOAJfZCwSEi3I1E0pUPGLVa1JXq+XDDFI47ynAEM
+         DSSEHGHIVUQMxRm9+BWQe9gu7IoL5NMkVk6z47XU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Aaron Ma <aaron.ma@canonical.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 023/179] drm/amd/display: add dmcub check on RENOIR
+Date:   Mon, 27 Jul 2020 16:03:18 +0200
+Message-Id: <20200727134933.798087986@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
+References: <20200727134932.659499757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
- <20200726222703.102701-1-yepeilin.cs@gmail.com> <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
- <20200727131608.GD1913@kadam> <CAK8P3a3+9Gr6G6KDWu=iW3316O9cPH+XupBBajJaxrq20xQcyQ@mail.gmail.com>
- <20200727141416.GA306745@PWN>
-In-Reply-To: <20200727141416.GA306745@PWN>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 16:20:28 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3qBs8CsAeTqk7aKgdxsfR677sSwaEHR9+V1vn_4RKRbw@mail.gmail.com>
-Message-ID: <CAK8P3a3qBs8CsAeTqk7aKgdxsfR677sSwaEHR9+V1vn_4RKRbw@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
- kernel-infoleak in video_put_user()
-To:     Peilin Ye <yepeilin.cs@gmail.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vandana BN <bnvandana@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:bRdVwWHVEUXivD/D7sCmgCA140AsJUA9jRlU58lESa77rrOpZWF
- HuK62xNqTxjP/doIpKwpIrQ0kjahTavnNHVMBnOQ3wkR5QdZJcHFfQdxir2UdOF4oC9YeGX
- PUU3QgYBCEVOTjncVokTnHtCf42RMJ2j0J/Kgt8BKmAzT/bO4oqbKwuQRZ69QUL+EcnBiYo
- BwDCC1xuB6FyvScbGhVjQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gHAZ7reSrAM=:3DBYSZkIdy9kQzEPZ02bwO
- xEuWURKWvQduKdYtwGFqm3JZvZTZDUQheNMD7HkdWaZzmRLXYVS+phDRyYJbyijXrqzg5vBun
- ntBFbGT8Oh724pKf0uNFY6pay0OLgOt/hoM48XsdBU6QVF2lgY8EJEyhDQk9lvC+VG9OilsE+
- pSMIoZ/kVPXKdoRwJubXDFJ6R7qBLwsDvS9gOTEW7b13mKTyNCx5+1+iIfJz3GtCFLLhLIhbe
- EQBpX2ukO830QCcxTnECV/xAP09YKQzr3qM9b8n1q+qNzRx7oqC/azGJlPbcxGZUBeqI80rrK
- ft6kaQ5dNjMkO59S04LUpqFGABZ2iZqjkpppdgxSLGGMNx5RTvsPN3vG+tU48RSMv38qOwmEU
- 7YL5cqVUFf1TMGpeNTYh9wzwPMSUWcAArcsbFr5H544FON1uBC6g9KF+qw5eP3TZ+KexouN0p
- vcAcHa4l5PsvhTgJeJIvVYrYNWWboY2uY0X9BAaAOcgzfOxWDqm7uQdbYAGBvRjwdFfqxZ5M3
- g7+UO+p872pj4EjwcjA0cjxos68DaapCqlU7QiciLaqYB31sVDkgDBga6vcmpdaHE6jVlPtP0
- EAG9NARpau4Jvi5w8A7FKOqEaSdLKxZ8/AnuiZZ0IWKn4mW0xfGAf8/4/SQvPvEe9iqVnEQWQ
- 5nxKdpOJlxb/czjGyPLiXQHFjovnd86MzuCXXLnPgYkA/gQ/5sJ2KMhvDgeAgri/oUb/dlNmQ
- GJsrkR1tiD6bfHSePas9E0XGo+JDfeVfaVa1eo/9I5AyQLND7RSAeSzjBt5doPdrdKn21IXk+
- nUre7KiS8+/NhqMWFk0o96AeeRfYz4/DaZpxNb49bycFNK93cDgcXhqu6K99w5qVp6KzoWptc
- eHYAVt3D5anuz0sHCEwZM6XQbQQB33WN+0KtKkLojsoLAWTsPi6+mdRnyag3u8AkR7EK8k29A
- DV9oSh5V+zT04tM0WFF9Vh9rTl/J55r1TsQd4Vf5AG/drtr+lDDA3
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 4:14 PM Peilin Ye <yepeilin.cs@gmail.com> wrote:
-> On Mon, Jul 27, 2020 at 04:05:38PM +0200, Arnd Bergmann wrote:
-> > Peilin Ye, is this something you are interested in fixing for the other drivers
-> > as well? I'd be happy to help review any further patches if you Cc me.
->
-> Yes, I would like to! I will start from:
->
->         drivers/firewire/core-cdev.c:463
->         drivers/input/misc/uinput.c:743
->
-> ...as you mentioned above.
+From: Aaron Ma <aaron.ma@canonical.com>
 
-Sounds good, thanks!
+[ Upstream commit 3b2e973dff59d88bee1d814ddf8762a24fc02b60 ]
 
-     Arnd
+RENOIR loads dmub fw not dmcu, check dmcu only will prevent loading iram,
+it breaks backlight control.
+
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=208277
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 7da2a22dbde7e..837a286469ecf 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -1345,7 +1345,7 @@ static int dm_late_init(void *handle)
+ 	struct dmcu *dmcu = NULL;
+ 	bool ret;
+ 
+-	if (!adev->dm.fw_dmcu)
++	if (!adev->dm.fw_dmcu && !adev->dm.dmub_fw)
+ 		return detect_mst_link_for_all_connectors(adev->ddev);
+ 
+ 	dmcu = adev->dm.dc->res_pool->dmcu;
+-- 
+2.25.1
+
+
+
