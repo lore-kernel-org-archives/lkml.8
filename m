@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA06C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF90C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF3120775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610572075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859755;
-	bh=aRs0fHRFF09H6T/bvPZZeOQfEt5/6AqayuAMVUN2x9E=;
+	s=default; t=1595859761;
+	bh=R8+WIDpS4H1RZTphd6Bf4R5UoARIqfO9mbE2RtfVX08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DF+B74ngLl/6elYA5IwsgLXaJirP9gPBrpZxBRr3VfT0g5tfkb4CVAOVPrPyX1C2g
-	 Pxm+B86NKk9jtvfyrv4e+ZxQoZUzzcA9xvNTpsbRXrOV/qaLaqxXAWbAjelchUbqOZ
-	 t4aBNRh/exl/mS2eP4cVNx7BVIIlgiHiNOodyrBM=
+	b=G3U7RvpeB1d2zxT+wNNLLsoMouwZRSSec6fjvgNfbocOvYdXKeru7hqmdXyid7Yfy
+	 9jMqkAkBP4BkhiH9jxO018iZq6s6UCvKZnH2+UV9vgfym1L50QdFydRW7O3er1a08Q
+	 66/T7V4GptN3kBmdUe+B7R4c67uS34CzFqa17Fs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731912AbgG0OWc (ORCPT
+        id S1731921AbgG0OWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:22:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51408 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:22:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731868AbgG0OW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:22:29 -0400
+        id S1731941AbgG0OWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:22:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74F0E2075A;
-        Mon, 27 Jul 2020 14:22:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D4C920FC3;
+        Mon, 27 Jul 2020 14:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859747;
-        bh=aRs0fHRFF09H6T/bvPZZeOQfEt5/6AqayuAMVUN2x9E=;
+        s=default; t=1595859757;
+        bh=R8+WIDpS4H1RZTphd6Bf4R5UoARIqfO9mbE2RtfVX08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n6nh2axNkaB8FfgGztQ0h6duOT25JAzA/DHEAoGuOPJGhGIlPDlRrjqYt5EOba6IC
-         fZL0HYHYaJHWStx6o9+P8JayPzPHbBQLB9JvecR89LpBwYL44jTOJ/43GUxmSAopUN
-         epzBcUZqEx7lmbOk9orO4jsssc2wCBKyERALzubM=
+        b=sNvkqHVylglPa9ld6HIZ2Pa/oAm+OL0bmChssjZ0AxInivgNBdPgkKRaTkCBTRz5k
+         VQc6Sp++ju+3QL8jGR2WTii9pDjG2gdCvzn/zGDEH6iUXTsRfMYVcBXlvGWpa4xNPB
+         /cgLPf1ms67agj+VLOyXEaWuTDGtxuGDfMYv/wEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+2570f2c036e3da5db176@syzkaller.appspotmail.com,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzbot+7ebc2e088af5e4c0c9fa@syzkaller.appspotmail.com,
+        Sabrina Dubroca <sd@queasysnail.net>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 049/179] netfilter: nf_tables: fix nat hook table deletion
-Date:   Mon, 27 Jul 2020 16:03:44 +0200
-Message-Id: <20200727134935.057147558@linuxfoundation.org>
+Subject: [PATCH 5.7 094/179] geneve: fix an uninitialized value in geneve_changelink()
+Date:   Mon, 27 Jul 2020 16:04:29 +0200
+Message-Id: <20200727134937.245178729@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -62,154 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 1e9451cbda456a170518b2bfd643e2cb980880bf ]
+[ Upstream commit 32818c075c54bb0cae44dd6f7ab00b01c52b8372 ]
 
-sybot came up with following transaction:
- add table ip syz0
- add chain ip syz0 syz2 { type nat hook prerouting priority 0; policy accept; }
- add table ip syz0 { flags dormant; }
- delete chain ip syz0 syz2
- delete table ip syz0
+geneve_nl2info() sets 'df' conditionally, so we have to
+initialize it by copying the value from existing geneve
+device in geneve_changelink().
 
-which yields:
-hook not found, pf 2 num 0
-WARNING: CPU: 0 PID: 6775 at net/netfilter/core.c:413 __nf_unregister_net_hook+0x3e6/0x4a0 net/netfilter/core.c:413
-[..]
- nft_unregister_basechain_hooks net/netfilter/nf_tables_api.c:206 [inline]
- nft_table_disable net/netfilter/nf_tables_api.c:835 [inline]
- nf_tables_table_disable net/netfilter/nf_tables_api.c:868 [inline]
- nf_tables_commit+0x32d3/0x4d70 net/netfilter/nf_tables_api.c:7550
- nfnetlink_rcv_batch net/netfilter/nfnetlink.c:486 [inline]
- nfnetlink_rcv_skb_batch net/netfilter/nfnetlink.c:544 [inline]
- nfnetlink_rcv+0x14a5/0x1e50 net/netfilter/nfnetlink.c:562
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-
-Problem is that when I added ability to override base hook registration
-to make nat basechains register with the nat core instead of netfilter
-core, I forgot to update nft_table_disable() to use that instead of
-the 'raw' hook register interface.
-
-In syzbot transaction, the basechain is of 'nat' type. Its registered
-with the nat core.  The switch to 'dormant mode' attempts to delete from
-netfilter core instead.
-
-After updating nft_table_disable/enable to use the correct helper,
-nft_(un)register_basechain_hooks can be folded into the only remaining
-caller.
-
-Because nft_trans_table_enable() won't do anything when the DORMANT flag
-is set, remove the flag first, then re-add it in case re-enablement
-fails, else this patch breaks sequence:
-
-add table ip x { flags dormant; }
-/* add base chains */
-add table ip x
-
-The last 'add' will remove the dormant flags, but won't have any other
-effect -- base chains are not registered.
-Then, next 'set dormant flag' will create another 'hook not found'
-splat.
-
-Reported-by: syzbot+2570f2c036e3da5db176@syzkaller.appspotmail.com
-Fixes: 4e25ceb80b58 ("netfilter: nf_tables: allow chain type to override hook register")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 56c09de347e4 ("geneve: allow changing DF behavior after creation")
+Reported-by: syzbot+7ebc2e088af5e4c0c9fa@syzkaller.appspotmail.com
+Cc: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Reviewed-by: Sabrina Dubroca <sd@queasysnail.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 41 ++++++++++++-----------------------
- 1 file changed, 14 insertions(+), 27 deletions(-)
+ drivers/net/geneve.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 9780bd93b7e49..e1d678af8749b 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -188,24 +188,6 @@ static void nft_netdev_unregister_hooks(struct net *net,
- 		nf_unregister_net_hook(net, &hook->ops);
- }
+diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
+index 4661ef865807f..dec52b763d508 100644
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -1615,11 +1615,11 @@ static int geneve_changelink(struct net_device *dev, struct nlattr *tb[],
+ 			     struct netlink_ext_ack *extack)
+ {
+ 	struct geneve_dev *geneve = netdev_priv(dev);
++	enum ifla_geneve_df df = geneve->df;
+ 	struct geneve_sock *gs4, *gs6;
+ 	struct ip_tunnel_info info;
+ 	bool metadata;
+ 	bool use_udp6_rx_checksums;
+-	enum ifla_geneve_df df;
+ 	bool ttl_inherit;
+ 	int err;
  
--static int nft_register_basechain_hooks(struct net *net, int family,
--					struct nft_base_chain *basechain)
--{
--	if (family == NFPROTO_NETDEV)
--		return nft_netdev_register_hooks(net, &basechain->hook_list);
--
--	return nf_register_net_hook(net, &basechain->ops);
--}
--
--static void nft_unregister_basechain_hooks(struct net *net, int family,
--					   struct nft_base_chain *basechain)
--{
--	if (family == NFPROTO_NETDEV)
--		nft_netdev_unregister_hooks(net, &basechain->hook_list);
--	else
--		nf_unregister_net_hook(net, &basechain->ops);
--}
--
- static int nf_tables_register_hook(struct net *net,
- 				   const struct nft_table *table,
- 				   struct nft_chain *chain)
-@@ -223,7 +205,10 @@ static int nf_tables_register_hook(struct net *net,
- 	if (basechain->type->ops_register)
- 		return basechain->type->ops_register(net, ops);
- 
--	return nft_register_basechain_hooks(net, table->family, basechain);
-+	if (table->family == NFPROTO_NETDEV)
-+		return nft_netdev_register_hooks(net, &basechain->hook_list);
-+
-+	return nf_register_net_hook(net, &basechain->ops);
- }
- 
- static void nf_tables_unregister_hook(struct net *net,
-@@ -242,7 +227,10 @@ static void nf_tables_unregister_hook(struct net *net,
- 	if (basechain->type->ops_unregister)
- 		return basechain->type->ops_unregister(net, ops);
- 
--	nft_unregister_basechain_hooks(net, table->family, basechain);
-+	if (table->family == NFPROTO_NETDEV)
-+		nft_netdev_unregister_hooks(net, &basechain->hook_list);
-+	else
-+		nf_unregister_net_hook(net, &basechain->ops);
- }
- 
- static int nft_trans_table_add(struct nft_ctx *ctx, int msg_type)
-@@ -832,8 +820,7 @@ static void nft_table_disable(struct net *net, struct nft_table *table, u32 cnt)
- 		if (cnt && i++ == cnt)
- 			break;
- 
--		nft_unregister_basechain_hooks(net, table->family,
--					       nft_base_chain(chain));
-+		nf_tables_unregister_hook(net, table, chain);
- 	}
- }
- 
-@@ -848,8 +835,7 @@ static int nf_tables_table_enable(struct net *net, struct nft_table *table)
- 		if (!nft_is_base_chain(chain))
- 			continue;
- 
--		err = nft_register_basechain_hooks(net, table->family,
--						   nft_base_chain(chain));
-+		err = nf_tables_register_hook(net, table, chain);
- 		if (err < 0)
- 			goto err_register_hooks;
- 
-@@ -894,11 +880,12 @@ static int nf_tables_updtable(struct nft_ctx *ctx)
- 		nft_trans_table_enable(trans) = false;
- 	} else if (!(flags & NFT_TABLE_F_DORMANT) &&
- 		   ctx->table->flags & NFT_TABLE_F_DORMANT) {
-+		ctx->table->flags &= ~NFT_TABLE_F_DORMANT;
- 		ret = nf_tables_table_enable(ctx->net, ctx->table);
--		if (ret >= 0) {
--			ctx->table->flags &= ~NFT_TABLE_F_DORMANT;
-+		if (ret >= 0)
- 			nft_trans_table_enable(trans) = true;
--		}
-+		else
-+			ctx->table->flags |= NFT_TABLE_F_DORMANT;
- 	}
- 	if (ret < 0)
- 		goto err;
 -- 
 2.25.1
 
