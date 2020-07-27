@@ -2,130 +2,102 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD29EC43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73665C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA715207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hn668tMs"
+	by mail.kernel.org (Postfix) with ESMTP id 475D3207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595860467;
+	bh=MV517qUDiknYDooGSvBVdtDwv42VgYuNr25i+D7Z/3E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=z1dyMKFoirJ+S+5p/N+PDtFvT8P9/7vd67rrHugpNKrF+sXAh+LPP+JjgbTWAprHv
+	 JtgOA5FwpiRsDAPJGlnf+U/7qrFrE0MivGwMnMtCHGonda/0MPiv7NZyjMMdTHaL9j
+	 QpzJARKXPgY+ReVuN9q1FyMQJa+MOYbUG4D+NhSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730821AbgG0OQM (ORCPT
+        id S1732393AbgG0Oe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:16:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730808AbgG0OQJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:16:09 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50D0EC0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:16:09 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x5so13756876wmi.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=OfeIQ7fuyXMNX3+/WRYrDZ4OiAswU9YSpAGq0MJR3Qk=;
-        b=Hn668tMsYylryOuBEj9y8mjBaum1BR6RWwK0ku3JWX59ZQxBLDwOmMgBAWCVcE5Z5b
-         2c2kjrPGs/8IJv9fOZU6LTFL4823pdOCMHScobKcGB26/UvcwGxObmVQ+nfSYok3UVXV
-         y8jZntEGdDqBkfACeuCFPpviPI1bF4y/WyHmV64TdjpUWYcx/vlwfaEo93Q7N19ALPuf
-         dgxdM4C4v0gg99rHSeRt7zP0s+HePYSo+MBAgAcGaFshIYFkq6VtQN5LKuUuY+F7rHOv
-         KZsvs2TP7WvjrxFzkPBs4rtVc8MNiIke1P073VcVxPYEWd1vNSH6mYgIlLs/YdC5xo03
-         9vhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=OfeIQ7fuyXMNX3+/WRYrDZ4OiAswU9YSpAGq0MJR3Qk=;
-        b=k8EvcQXOQOBUXa8Gf0cyL51Q+BaKsY0WIRhkshjV3yHp4t/BI8DO871pfIM83hVhJN
-         hILr6xUDRM0dGS29lL4YyTKWhFOV4TkpAadDZOKF2NiHfkLmlxSBdBJC6XDWFpKknMZC
-         6z2X7Do929y4vAL5uEqS4nCZWA8NeQa69IX4xDqhUzsO25QTKLJvCs5cfdq4wpu6d2bs
-         gVzwFygXajcDPuNYencrI1ODrFGL5ByT7Qi5xTrTsbnsmsg/4nUrZGR6kteUxtJBERKB
-         X5Xknn+9mzzTefWy31c3AaJ8NFlIFN9BJzEJCEM1GmAOjCqU22J/mUqw8K5EpF1xxVgv
-         0lKA==
-X-Gm-Message-State: AOAM532Yd59S4cEYzMRnVGwdJFmdlsdH7IfXd8icF5dYoGfA5fZCWHaL
-        NSUlrFz6krLpg+zMMesEKjFflw==
-X-Google-Smtp-Source: ABdhPJwXT7IGhG6i2ax6YMsMfOUVYdF5VVpy+kpRsWP14/nCVLIlyPmNmTdhme4qI9qNmQgKjAM1MA==
-X-Received: by 2002:a1c:a7d1:: with SMTP id q200mr2832327wme.131.1595859368016;
-        Mon, 27 Jul 2020 07:16:08 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id 32sm12369292wrn.86.2020.07.27.07.16.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 07:16:07 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 15:16:05 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     robh+dt@kernel.org, tony@atomide.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] mfd: Replace HTTP links with HTTPS ones
-Message-ID: <20200727141605.GW1850026@dell>
-References: <20200722184711.GI3533@dell>
- <20200722192454.69591-1-grandmaster@al2klimov.de>
+        Mon, 27 Jul 2020 10:34:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730859AbgG0OQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:16:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C100A2070A;
+        Mon, 27 Jul 2020 14:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595859383;
+        bh=MV517qUDiknYDooGSvBVdtDwv42VgYuNr25i+D7Z/3E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sSRuLRxDT1IAxaPXx5MSRolczlyyKlQlwOS6frz2ScK4saSLALsXpno91/HjmIW5y
+         K47MBY9zEufr6/Fq5FGB2V4j8GIWB9XJh5d14bPFxRZD07mCB9Oz1+RG+QtdyPkYHV
+         ySb64qRnB86PuwjxWmP6vT6sePnNj/At9YPAFoBk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 087/138] usb: gadget: udc: gr_udc: fix memleak on error handling path in gr_ep_init()
+Date:   Mon, 27 Jul 2020 16:04:42 +0200
+Message-Id: <20200727134929.717510843@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
+References: <20200727134925.228313570@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200722192454.69591-1-grandmaster@al2klimov.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Jul 2020, Alexander A. Klimov wrote:
+From: Evgeny Novikov <novikov@ispras.ru>
 
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
-> ---
->  Documentation/devicetree/bindings/mfd/twl-family.txt | 2 +-
->  drivers/mfd/hi6421-pmic-core.c                       | 2 +-
->  drivers/mfd/lp873x.c                                 | 2 +-
->  drivers/mfd/lp87565.c                                | 2 +-
->  drivers/mfd/omap-usb-host.c                          | 2 +-
->  drivers/mfd/omap-usb-tll.c                           | 2 +-
->  drivers/mfd/smsc-ece1099.c                           | 2 +-
->  drivers/mfd/ti_am335x_tscadc.c                       | 2 +-
->  drivers/mfd/tps65086.c                               | 2 +-
->  drivers/mfd/tps65217.c                               | 2 +-
->  drivers/mfd/tps65218.c                               | 2 +-
->  drivers/mfd/tps65912-core.c                          | 2 +-
->  drivers/mfd/tps65912-i2c.c                           | 2 +-
->  drivers/mfd/tps65912-spi.c                           | 2 +-
->  include/linux/mfd/hi6421-pmic.h                      | 2 +-
->  include/linux/mfd/lp873x.h                           | 2 +-
->  include/linux/mfd/lp87565.h                          | 2 +-
->  include/linux/mfd/ti_am335x_tscadc.h                 | 2 +-
->  include/linux/mfd/tps65086.h                         | 2 +-
->  include/linux/mfd/tps65217.h                         | 2 +-
->  include/linux/mfd/tps65218.h                         | 2 +-
->  include/linux/mfd/tps65912.h                         | 2 +-
->  22 files changed, 22 insertions(+), 22 deletions(-)
+[ Upstream commit c8f8529e2c4141afa2ebb487ad48e8a6ec3e8c99 ]
 
-Applied, thanks.
+gr_ep_init() does not assign the allocated request anywhere if allocation
+of memory for the buffer fails. This is a memory leak fixed by the given
+patch.
 
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/gadget/udc/gr_udc.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
+index 116d386472efe..da73a06c20a39 100644
+--- a/drivers/usb/gadget/udc/gr_udc.c
++++ b/drivers/usb/gadget/udc/gr_udc.c
+@@ -1980,9 +1980,12 @@ static int gr_ep_init(struct gr_udc *dev, int num, int is_in, u32 maxplimit)
+ 
+ 	if (num == 0) {
+ 		_req = gr_alloc_request(&ep->ep, GFP_ATOMIC);
++		if (!_req)
++			return -ENOMEM;
++
+ 		buf = devm_kzalloc(dev->dev, PAGE_SIZE, GFP_DMA | GFP_ATOMIC);
+-		if (!_req || !buf) {
+-			/* possible _req freed by gr_probe via gr_remove */
++		if (!buf) {
++			gr_free_request(&ep->ep, _req);
+ 			return -ENOMEM;
+ 		}
+ 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.25.1
+
+
+
