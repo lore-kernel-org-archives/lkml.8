@@ -2,183 +2,148 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CF5C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7F3C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5806220792
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137D020792
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:34:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Zafaxclz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V1tC07P0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729343AbgG0Uee (ORCPT
+        id S1729362AbgG0Uel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:34:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38892 "EHLO
+        Mon, 27 Jul 2020 16:34:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728917AbgG0Uec (ORCPT
+        with ESMTP id S1728383AbgG0Uek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:34:32 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C182AC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:34:32 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id k71so10325726pje.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:34:32 -0700 (PDT)
+        Mon, 27 Jul 2020 16:34:40 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54709C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:34:40 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id w17so8757085ply.11
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:34:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1e9h0tE+ElK0HWRPXiuc5VM0AhTp1F0sLszAnPFX/o4=;
-        b=ZafaxclzPZhVsXz8l83xVPlfPaaHGIsnBsq3YYS+6u818LolWPB9JvqcfE5gaa8xTt
-         xMeKMiEUoOBjhQEN30y00OvB3GJvnZCmHen3WlDqQl1atnjPNZzXQnXq13xWBdO0RqDk
-         UjBeZR8HAFCSn6EgK2imAOBWV4HTBBMGp+cS1LMXd97OoXjDVUB7TSQtJTGuKlyPFlGv
-         47hzCZYu25rqnnw5lCBm48U/PxTUsLm9HQwDcpHJ8BS5Iqy1eq8Y1QSbIF+igXGeLiaw
-         5kQb4Je9qd10su3MNHjyZt2WiZXA5AoXdEge+klxew2Fz7tViQhLADlu2el1GkI3bMX9
-         ko6g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WP0fLNy8D403ScB05mOHvlfIuI3Tu9/pHzHxCWbIkXw=;
+        b=V1tC07P0C1HuxAi2wM10iFmcSTSGt/L09OuGoLRIA+huxAJ9JDkQx46T24Kiil1Ax9
+         ljXCLhT5b3mRb79bGD5X+jBT1yaP6I68UFGizDP39qT9H3jukxUJGycy0GGEFQXofdpB
+         VNYb7sLf6NsspCGNAr+qsl1L84hfDyttllEeEOTufecX7TnOrNJhjLxQEaexkgngOhsy
+         G7M34PMqr83wMpore2LkQSoRqKpxBlys/MG/S6UWytgdsS4xiVpxgfnTfTL/3aayVBUk
+         wi1pQb0/kef9Abs94i1a3DSTdga7caEIMxkqY8JKCY+iu8REwl1y+QzVQ67iCuDAnfd/
+         bm/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1e9h0tE+ElK0HWRPXiuc5VM0AhTp1F0sLszAnPFX/o4=;
-        b=TvYO2kAYYk/5bc9QTp0re4wWotFuS54e/8qZN67GkaMoJLOAoJncfewFKI7qF/b1BX
-         Uln2C5QdiEa1OTYhMH8lwhRo8xlraxnDWmNHf8roz4/elC5AKXpPsTfJBbjBtdzVXoHG
-         ETlS//kd797917JNEAaxBSfrZgUdTcHraOF1ZpXY6W0Nw7zZt1Nqc6J8uMAxi+BZDeYZ
-         OwuxNGjs6li35AGZUt4IX6VdS+cPkl2+Y1ygiX1hy53vgLXUXi8RF7s2AImnGaMYoG6X
-         I6j5YlRCbg7TPKkpkzWIntpqCenyq8AtRCLTB9jDiXSrcop9oA3kSkCIohJj1en9Q7Nr
-         7DMQ==
-X-Gm-Message-State: AOAM530ZjqR4lnBqmG2WFuste7NdMeUot3mT8V+hUaCRFaDpo7e8qeGD
-        hRZRAaozBzAK6EOPYrliTprfUdaQcoc=
-X-Google-Smtp-Source: ABdhPJwgxPuj693Id+Oo3CVUmOizUrGVehGlzvteg1ajBPCJTwzcrqE4V3UY3qCfXHxGAvoiCewkzg==
-X-Received: by 2002:a17:90b:120a:: with SMTP id gl10mr927614pjb.44.1595882072153;
-        Mon, 27 Jul 2020 13:34:32 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id u26sm16345833pfn.54.2020.07.27.13.34.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 13:34:31 -0700 (PDT)
-Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
-To:     Kanchan Joshi <joshiiitr@gmail.com>
-Cc:     Kanchan Joshi <joshi.k@samsung.com>, viro@zeniv.linux.org.uk,
-        bcrl@kvack.org, Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-api@vger.kernel.org, SelvaKumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <1595605762-17010-1-git-send-email-joshi.k@samsung.com>
- <CGME20200724155350epcas5p3b8f1d59eda7f8fbb38c828f692d42fd6@epcas5p3.samsung.com>
- <1595605762-17010-7-git-send-email-joshi.k@samsung.com>
- <f5416bd4-93b3-4d14-3266-bdbc4ae1990b@kernel.dk>
- <CA+1E3rJAa3E2Ti0fvvQTzARP797qge619m4aYLjXeR3wxdFwWw@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b0b7159d-ed10-08ad-b6c7-b85d45f60d16@kernel.dk>
-Date:   Mon, 27 Jul 2020 14:34:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WP0fLNy8D403ScB05mOHvlfIuI3Tu9/pHzHxCWbIkXw=;
+        b=M/XcFnQ5H2SP28eM+RIA78xj2dMywrSStJUO8RVBW/TXu12CtRst8IyvRgBAr2RlTn
+         bOJFBdx0kXLBmWNdPhgR0kshYdcD0fj4Xp6OJhTZjCLZl1NNbysS6nv3ytxpaSNG6cBH
+         SxOfqf8sTTICqSZeG74rDzafFStGsZvLzrkf01Oas9PrkrDB4VF6wBIhsPqISDdyPhAt
+         sNckFHXObyfF9+kQO0aIm4c8aojtDlw9YbP+E0jPGxBtNJ3hTBO3pwPkU6oqiOuBmPlV
+         QbmWTeorIqrZ4wojicuzYAWkLxM28+qPTv0vpBcH7lt0eRcAOeRpCffz4jgVeb9/XOBX
+         YgEw==
+X-Gm-Message-State: AOAM533HiwycanMl7t0yvUBzCMhQNKTtL5afCt1xFyLIqJrYbYVFfKFc
+        mM1Xse/RtRXlCZzjZ49Q9/rEsXt9JbM=
+X-Google-Smtp-Source: ABdhPJyF7g2Ad/CT2Y8o0gkeq9t2s5jq5sTKFwMKXA2IC7jBq7CmWYJ0t0OAvdUGzK0Mp0fsg2NehQ==
+X-Received: by 2002:a17:90b:247:: with SMTP id fz7mr942456pjb.17.1595882079803;
+        Mon, 27 Jul 2020 13:34:39 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id b21sm16520817pfb.45.2020.07.27.13.34.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 13:34:39 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 14:34:36 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Wei Li <liwei391@huawei.com>
+Cc:     leo.yan@linaro.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kim Phillips <kim.phillips@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, guohanjun@huawei.com
+Subject: Re: [PATCH v2 2/2] perf tools: ARM SPE code cleanup
+Message-ID: <20200727203436.GC2381376@xps15>
+References: <20200724071111.35593-1-liwei391@huawei.com>
+ <20200724071111.35593-3-liwei391@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+1E3rJAa3E2Ti0fvvQTzARP797qge619m4aYLjXeR3wxdFwWw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724071111.35593-3-liwei391@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/20 1:16 PM, Kanchan Joshi wrote:
-> On Fri, Jul 24, 2020 at 10:00 PM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 7/24/20 9:49 AM, Kanchan Joshi wrote:
->>> diff --git a/fs/io_uring.c b/fs/io_uring.c
->>> index 7809ab2..6510cf5 100644
->>> --- a/fs/io_uring.c
->>> +++ b/fs/io_uring.c
->>> @@ -1284,8 +1301,15 @@ static void __io_cqring_fill_event(struct io_kiocb *req, long res, long cflags)
->>>       cqe = io_get_cqring(ctx);
->>>       if (likely(cqe)) {
->>>               WRITE_ONCE(cqe->user_data, req->user_data);
->>> -             WRITE_ONCE(cqe->res, res);
->>> -             WRITE_ONCE(cqe->flags, cflags);
->>> +             if (unlikely(req->flags & REQ_F_ZONE_APPEND)) {
->>> +                     if (likely(res > 0))
->>> +                             WRITE_ONCE(cqe->res64, req->rw.append_offset);
->>> +                     else
->>> +                             WRITE_ONCE(cqe->res64, res);
->>> +             } else {
->>> +                     WRITE_ONCE(cqe->res, res);
->>> +                     WRITE_ONCE(cqe->flags, cflags);
->>> +             }
->>
->> This would be nice to keep out of the fast path, if possible.
+On Fri, Jul 24, 2020 at 03:11:11PM +0800, Wei Li wrote:
+> - Firstly, the function auxtrace_record__init() will be invoked only
+>   once, the variable "arm_spe_pmus" will not be used afterwards, thus
+>   we don't need to check "arm_spe_pmus" is NULL or not;
+> - Another reason is, even though SPE is micro-architecture dependent,
+>   but so far it only supports "statistical-profiling-extension-v1" and
+>   we have no chance to use multiple SPE's PMU events in Perf command.
+
+I find the above changelog somewhat out of touch with the patch itself.  The
+only thing that is happening here is the removal of a useless check and a fix
+for a memory leak.
+
+Once again whether Arnaldo wants to make the changes by hand or not you may have
+to resubmit.
+
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+
 > 
-> I was thinking of keeping a function-pointer (in io_kiocb) during
-> submission. That would have avoided this check......but argument count
-> differs, so it did not add up.
-
-But that'd grow the io_kiocb just for this use case, which is arguably
-even worse. Unless you can keep it in the per-request private data,
-but there's no more room there for the regular read/write side.
-
->>> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
->>> index 92c2269..2580d93 100644
->>> --- a/include/uapi/linux/io_uring.h
->>> +++ b/include/uapi/linux/io_uring.h
->>> @@ -156,8 +156,13 @@ enum {
->>>   */
->>>  struct io_uring_cqe {
->>>       __u64   user_data;      /* sqe->data submission passed back */
->>> -     __s32   res;            /* result code for this event */
->>> -     __u32   flags;
->>> +     union {
->>> +             struct {
->>> +                     __s32   res;    /* result code for this event */
->>> +                     __u32   flags;
->>> +             };
->>> +             __s64   res64;  /* appending offset for zone append */
->>> +     };
->>>  };
->>
->> Is this a compatible change, both for now but also going forward? You
->> could randomly have IORING_CQE_F_BUFFER set, or any other future flags.
+> So remove the useless check code to make it clear.
 > 
-> Sorry, I didn't quite understand the concern. CQE_F_BUFFER is not
-> used/set for write currently, so it looked compatible at this point.
-
-Not worried about that, since we won't ever use that for writes. But it
-is a potential headache down the line for other flags, if they apply to
-normal writes.
-
-> Yes, no room for future flags for this operation.
-> Do you see any other way to enable this support in io-uring?
-
-Honestly I think the only viable option is as we discussed previously,
-pass in a pointer to a 64-bit type where we can copy the additional
-completion information to.
-
->> Layout would also be different between big and little endian, so not
->> even that easy to set aside a flag for this. But even if that was done,
->> we'd still have this weird API where liburing or the app would need to
->> distinguish this cqe from all others based on... the user_data? Hence
->> liburing can't do it, only the app would be able to.
->>
->> Just seems like a hack to me.
+> Signed-off-by: Wei Li <liwei391@huawei.com>
+> ---
+>  tools/perf/arch/arm/util/auxtrace.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
 > 
-> Yes, only user_data to distinguish. Do liburing helpers need to look
-> at cqe->res (and decide something) before returning the cqe to
-> application?
-
-They generally don't, outside of the internal timeout. But it's an issue
-for the API, as it forces applications to handle the CQEs a certain way.
-Normally there's flexibility. This makes the append writes behave
-differently than everything else, which is never a good idea.
-
--- 
-Jens Axboe
-
+> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+> index 28a5d0c18b1d..b187bddbd01a 100644
+> --- a/tools/perf/arch/arm/util/auxtrace.c
+> +++ b/tools/perf/arch/arm/util/auxtrace.c
+> @@ -57,17 +57,15 @@ struct auxtrace_record
+>  	struct evsel *evsel;
+>  	bool found_etm = false;
+>  	struct perf_pmu *found_spe = NULL;
+> -	static struct perf_pmu **arm_spe_pmus = NULL;
+> -	static int nr_spes = 0;
+> +	struct perf_pmu **arm_spe_pmus = NULL;
+> +	int nr_spes = 0;
+>  	int i = 0;
+>  
+>  	if (!evlist)
+>  		return NULL;
+>  
+>  	cs_etm_pmu = perf_pmu__find(CORESIGHT_ETM_PMU_NAME);
+> -
+> -	if (!arm_spe_pmus)
+> -		arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+> +	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+>  
+>  	evlist__for_each_entry(evlist, evsel) {
+>  		if (cs_etm_pmu &&
+> @@ -84,6 +82,7 @@ struct auxtrace_record
+>  			}
+>  		}
+>  	}
+> +	free(arm_spe_pmus);
+>  
+>  	if (found_etm && found_spe) {
+>  		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
+> -- 
+> 2.17.1
+> 
