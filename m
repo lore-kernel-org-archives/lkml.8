@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCE7C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3046C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF3F32083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0BC21775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859884;
-	bh=WIIPYcX+La5dUgPvwyLCdvuORcDgdMxo2o+Zea3h6QU=;
+	s=default; t=1595859889;
+	bh=weRdGSoG9bjwzupYqd5vwcpAZAB7vdEjth1Z4RV9UpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n7uAHeURbZbR33wxRxLDT1PvDUy9UZon3uHFUPUw5goVW8k57HVj6qZcwZOS183x1
-	 GbzAnog+COwW2V1FIemQA0z4yn7zg+0b1FoYGhdkCOVvkv3f68imXlUqWOPEfjXwf7
-	 1G0HvUSw3dpcXR+15e/pPnvz4RiMhRqtn/33uNlg=
+	b=aJVgWBGnvUHCTVfHpc0ZWoAp//TMepXo9MYW7Um3Nlbc6UWY961xPH5OW72ajIOEL
+	 f65jryQnvuNAGpLyoi9ou2y+qhgrfmN91NCuhhKRW3KdMpktSU7evrDz8xveHd6Gyz
+	 Y9Y/SZMft8OIeYTtPwGO3aE1Czctps47/dX0ruF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732307AbgG0OYn (ORCPT
+        id S1731724AbgG0OYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:24:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54336 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:24:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730144AbgG0OYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:24:39 -0400
+        id S1730619AbgG0OYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:24:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52A672083E;
-        Mon, 27 Jul 2020 14:24:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D29BF208E4;
+        Mon, 27 Jul 2020 14:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859878;
-        bh=WIIPYcX+La5dUgPvwyLCdvuORcDgdMxo2o+Zea3h6QU=;
+        s=default; t=1595859881;
+        bh=weRdGSoG9bjwzupYqd5vwcpAZAB7vdEjth1Z4RV9UpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EDwVuNgOpfMZj54Zzm4moOueVfpJNq4HIZe9dxUGYmFYDB0WRiL/i0D7vkgjX5Uy0
-         Jg3Q0B06Fc2XSm/+kl8m2vsm9GGTwDvJeiTn3GgC9ou4QORSjW4ffYyMwn0+5+lkiK
-         urdV4eM0LUWANDoPAMgK6xmAa/aANhJL34ZYpngc=
+        b=dfVvoRerQEYlNEKQ+0xSD09BhPNT5CRk6jiJjQijlkc9hElFnfG/eIq3vmlu75ZvL
+         pAXBJEPpgFmMR+4WnxGKVqEHRfpd0YLr5Haq5R8l44ZfAGWzrOpFux+5yokC2Qxl1o
+         Dt77h06RJmP6HbPynM0WxewEIzmrhoAjfvhnolYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 5.7 140/179] usb: xhci-mtk: fix the failure of bandwidth allocation
-Date:   Mon, 27 Jul 2020 16:05:15 +0200
-Message-Id: <20200727134939.456486086@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.7 141/179] usb: tegra: Fix allocation for the FPCI context
+Date:   Mon, 27 Jul 2020 16:05:16 +0200
+Message-Id: <20200727134939.503608590@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -58,37 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-commit 5ce1a24dd98c00a57a8fa13660648abf7e08e3ef upstream.
+commit 0b987032f8b58ef51cc8a042f46cc0cf1f277172 upstream.
 
-The wMaxPacketSize field of endpoint descriptor may be zero
-as default value in alternate interface, and they are not
-actually selected when start stream, so skip them when try to
-allocate bandwidth.
+Commit 5c4e8d3781bc ("usb: host: xhci-tegra: Add support for XUSB
+context save/restore") is using the IPFS 'num_offsets' value when
+allocating memory for FPCI context instead of the FPCI 'num_offsets'.
 
-Cc: stable <stable@vger.kernel.org>
-Fixes: 0cbd4b34cda9 ("xhci: mediatek: support MTK xHCI host controller")
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Link: https://lore.kernel.org/r/1594360672-2076-1-git-send-email-chunfeng.yun@mediatek.com
+After commit cad064f1bd52 ("devres: handle zero size in devm_kmalloc()")
+was added system suspend started failing on Tegra186. The kernel log
+showed that the Tegra XHCI driver was crashing on entry to suspend when
+attempting the save the USB context. On Tegra186, the IPFS context has a
+zero length but the FPCI content has a non-zero length, and because of
+the bug in the Tegra XHCI driver we are incorrectly allocating a zero
+length array for the FPCI context. The crash seen on entering suspend
+when we attempt to save the FPCI context and following commit
+cad064f1bd52 ("devres: handle zero size in devm_kmalloc()") this now
+causes a NULL pointer deference when we access the memory. Fix this by
+correcting the amount of memory we are allocating for FPCI contexts.
+
+Cc: stable@vger.kernel.org
+
+Fixes: 5c4e8d3781bc ("usb: host: xhci-tegra: Add support for XUSB context save/restore")
+
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/20200715113842.30680-1-jonathanh@nvidia.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-mtk-sch.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/host/xhci-tegra.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci-mtk-sch.c
-+++ b/drivers/usb/host/xhci-mtk-sch.c
-@@ -557,6 +557,10 @@ static bool need_bw_sch(struct usb_host_
- 	if (is_fs_or_ls(speed) && !has_tt)
- 		return false;
+--- a/drivers/usb/host/xhci-tegra.c
++++ b/drivers/usb/host/xhci-tegra.c
+@@ -856,7 +856,7 @@ static int tegra_xusb_init_context(struc
+ 	if (!tegra->context.ipfs)
+ 		return -ENOMEM;
  
-+	/* skip endpoint with zero maxpkt */
-+	if (usb_endpoint_maxp(&ep->desc) == 0)
-+		return false;
-+
- 	return true;
- }
- 
+-	tegra->context.fpci = devm_kcalloc(tegra->dev, soc->ipfs.num_offsets,
++	tegra->context.fpci = devm_kcalloc(tegra->dev, soc->fpci.num_offsets,
+ 					   sizeof(u32), GFP_KERNEL);
+ 	if (!tegra->context.fpci)
+ 		return -ENOMEM;
 
 
