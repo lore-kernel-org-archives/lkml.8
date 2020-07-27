@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5C7C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2B5C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8FD2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7D12083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859231;
-	bh=PyKItyZXu5h72rWrRNxdEeI4VDXcixHmLh+6GmxK78Y=;
+	s=default; t=1595859235;
+	bh=pZ9p5vYRMnQqpRbmmkgXAAt2K9yoZbNpms4wRamUaqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nLo7IAZ6PisNt8yKA8VLr9o4DdHbe9FZZ3WKBRio4Ee37YNTUGYNQpzugwnb0E2St
-	 msuyIWO3ZOMkxO5s8VHDgNM/sO6vulShDGSXeb5kG5aOza168E73oxpaIb3WluTywo
-	 lqdVwh1B8KRbvTTY2DdtkP/sdnfZkqCLD2yOuzL4=
+	b=hPxrNdvuc3Jl05lOGwvEWdOdklWQOjwQgVw1s+PZTnmQKAokUUqsjHoGAlmT9btaP
+	 SI9++RAI2LY1vPRO41585zdxRxZJooDIHrIHR/aIzmrEc8Yk7OQz4z4rgFtVVGK7Pd
+	 ToDguKD16p+pPNTUzBSzptPfCVGONYdv6hlgE2Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbgG0ONu (ORCPT
+        id S1729920AbgG0ONy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:13:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38952 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730418AbgG0ONq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:13:46 -0400
+        id S1730425AbgG0ONu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:13:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4F062073E;
-        Mon, 27 Jul 2020 14:13:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FC9E2073E;
+        Mon, 27 Jul 2020 14:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859226;
-        bh=PyKItyZXu5h72rWrRNxdEeI4VDXcixHmLh+6GmxK78Y=;
+        s=default; t=1595859229;
+        bh=pZ9p5vYRMnQqpRbmmkgXAAt2K9yoZbNpms4wRamUaqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bPlOTdBg4/iy5+rKQZY0reTL0xS+kwrE8IODXpGav9iuk4yuWLTzeOac6BPY1w+Pp
-         yJfA51tL7B3Yfnvuk20TL+yC2Fh8EjSH0rRjkxSxkwJZTzrUpAybdO/UTDlNXqmr5D
-         QY1y1zyenAPsR1cX51Zve8/6fAa35sF8zslgROWs=
+        b=oVDYxOHcPK+aEhyECOZ22AMDIPHbAWvNYL153NsZQAegWq+pabf2ZruQKu+GvDprT
+         HAAZoCbcGFNrGrOrmosHjvexnAmoV+8xYuEQY8N1LRs82ESl4l+3xKK5PFXpz4Fwu8
+         zD1NLHTH1S8nmoUw6XbtsgSgkaxFNMqVdhM6V3Zc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.4 026/138] SUNRPC reverting d03727b248d0 ("NFSv4 fix CLOSE not waiting for direct IO compeletion")
-Date:   Mon, 27 Jul 2020 16:03:41 +0200
-Message-Id: <20200727134926.682454498@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 027/138] btrfs: reloc: fix reloc root leak and NULL pointer dereference
+Date:   Mon, 27 Jul 2020 16:03:42 +0200
+Message-Id: <20200727134926.726501281@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -59,84 +60,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 65caafd0d2145d1dd02072c4ced540624daeab40 upstream.
+commit 51415b6c1b117e223bc083e30af675cb5c5498f3 upstream.
 
-Reverting commit d03727b248d0 "NFSv4 fix CLOSE not waiting for
-direct IO compeletion". This patch made it so that fput() by calling
-inode_dio_done() in nfs_file_release() would wait uninterruptably
-for any outstanding directIO to the file (but that wait on IO should
-be killable).
+[BUG]
+When balance is canceled, there is a pretty high chance that unmounting
+the fs can lead to lead the NULL pointer dereference:
 
-The problem the patch was also trying to address was REMOVE returning
-ERR_ACCESS because the file is still opened, is supposed to be resolved
-by server returning ERR_FILE_OPEN and not ERR_ACCESS.
+  BTRFS warning (device dm-3): page private not zero on page 223158272
+  ...
+  BTRFS warning (device dm-3): page private not zero on page 223162368
+  BTRFS error (device dm-3): leaked root 18446744073709551608-304 refcount 1
+  BUG: kernel NULL pointer dereference, address: 0000000000000168
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 0 P4D 0
+  Oops: 0000 [#1] PREEMPT SMP NOPTI
+  CPU: 2 PID: 5793 Comm: umount Tainted: G           O      5.7.0-rc5-custom+ #53
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+  RIP: 0010:__lock_acquire+0x5dc/0x24c0
+  Call Trace:
+   lock_acquire+0xab/0x390
+   _raw_spin_lock+0x39/0x80
+   btrfs_release_extent_buffer_pages+0xd7/0x200 [btrfs]
+   release_extent_buffer+0xb2/0x170 [btrfs]
+   free_extent_buffer+0x66/0xb0 [btrfs]
+   btrfs_put_root+0x8e/0x130 [btrfs]
+   btrfs_check_leaked_roots.cold+0x5/0x5d [btrfs]
+   btrfs_free_fs_info+0xe5/0x120 [btrfs]
+   btrfs_kill_super+0x1f/0x30 [btrfs]
+   deactivate_locked_super+0x3b/0x80
+   deactivate_super+0x3e/0x50
+   cleanup_mnt+0x109/0x160
+   __cleanup_mnt+0x12/0x20
+   task_work_run+0x67/0xa0
+   exit_to_usermode_loop+0xc5/0xd0
+   syscall_return_slowpath+0x205/0x360
+   do_syscall_64+0x6e/0xb0
+   entry_SYSCALL_64_after_hwframe+0x49/0xb3
+  RIP: 0033:0x7fd028ef740b
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+[CAUSE]
+When balance is canceled, all reloc roots are marked as orphan, and
+orphan reloc roots are going to be cleaned up.
+
+However for orphan reloc roots and merged reloc roots, their lifespan
+are quite different:
+
+	Merged reloc roots	|	Orphan reloc roots by cancel
+--------------------------------------------------------------------
+create_reloc_root()		| create_reloc_root()
+|- refs == 1			| |- refs == 1
+				|
+btrfs_grab_root(reloc_root);	| btrfs_grab_root(reloc_root);
+|- refs == 2			| |- refs == 2
+				|
+root->reloc_root = reloc_root;	| root->reloc_root = reloc_root;
+		>>> No difference so far <<<
+				|
+prepare_to_merge()		| prepare_to_merge()
+|- btrfs_set_root_refs(item, 1);| |- if (!err) (err == -EINTR)
+				|
+merge_reloc_roots()		| merge_reloc_roots()
+|- merge_reloc_root()		| |- Doing nothing to put reloc root
+   |- insert_dirty_subvol()	| |- refs == 2
+      |- __del_reloc_root()	|
+         |- btrfs_put_root()	|
+            |- refs == 1	|
+		>>> Now orphan reloc roots still have refs 2 <<<
+				|
+clean_dirty_subvols()		| clean_dirty_subvols()
+|- btrfs_drop_snapshot()	| |- btrfS_drop_snapshot()
+   |- reloc_root get freed	|    |- reloc_root still has refs 2
+				|	related ebs get freed, but
+				|	reloc_root still recorded in
+				|	allocated_roots
+btrfs_check_leaked_roots()	| btrfs_check_leaked_roots()
+|- No leaked roots		| |- Leaked reloc_roots detected
+				| |- btrfs_put_root()
+				|    |- free_extent_buffer(root->node);
+				|       |- eb already freed, caused NULL
+				|	   pointer dereference
+
+[FIX]
+The fix is to clear fs_root->reloc_root and put it at
+merge_reloc_roots() time, so that we won't leak reloc roots.
+
+Fixes: d2311e698578 ("btrfs: relocation: Delay reloc tree deletion after merge_reloc_roots")
+CC: stable@vger.kernel.org # 5.1+
+Tested-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+[Manually solve the conflicts due to no btrfs root refs rework]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/direct.c |   13 ++++---------
- fs/nfs/file.c   |    1 -
- 2 files changed, 4 insertions(+), 10 deletions(-)
+ fs/btrfs/relocation.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -367,6 +367,8 @@ static void nfs_direct_complete(struct n
- {
- 	struct inode *inode = dreq->inode;
+--- a/fs/btrfs/relocation.c
++++ b/fs/btrfs/relocation.c
+@@ -2525,12 +2525,10 @@ again:
+ 		reloc_root = list_entry(reloc_roots.next,
+ 					struct btrfs_root, root_list);
  
-+	inode_dio_end(inode);
++		root = read_fs_root(fs_info, reloc_root->root_key.offset);
+ 		if (btrfs_root_refs(&reloc_root->root_item) > 0) {
+-			root = read_fs_root(fs_info,
+-					    reloc_root->root_key.offset);
+ 			BUG_ON(IS_ERR(root));
+ 			BUG_ON(root->reloc_root != reloc_root);
+-
+ 			ret = merge_reloc_root(rc, root);
+ 			if (ret) {
+ 				if (list_empty(&reloc_root->root_list))
+@@ -2539,6 +2537,11 @@ again:
+ 				goto out;
+ 			}
+ 		} else {
++			if (!IS_ERR(root)) {
++				if (root->reloc_root == reloc_root)
++					root->reloc_root = NULL;
++			}
 +
- 	if (dreq->iocb) {
- 		long res = (long) dreq->error;
- 		if (dreq->count != 0) {
-@@ -378,10 +380,7 @@ static void nfs_direct_complete(struct n
- 
- 	complete(&dreq->completion);
- 
--	igrab(inode);
- 	nfs_direct_req_release(dreq);
--	inode_dio_end(inode);
--	iput(inode);
- }
- 
- static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
-@@ -511,10 +510,8 @@ static ssize_t nfs_direct_read_schedule_
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		igrab(inode);
--		nfs_direct_req_release(dreq);
- 		inode_dio_end(inode);
--		iput(inode);
-+		nfs_direct_req_release(dreq);
- 		return result < 0 ? result : -EIO;
- 	}
- 
-@@ -926,10 +923,8 @@ static ssize_t nfs_direct_write_schedule
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		igrab(inode);
--		nfs_direct_req_release(dreq);
- 		inode_dio_end(inode);
--		iput(inode);
-+		nfs_direct_req_release(dreq);
- 		return result < 0 ? result : -EIO;
- 	}
- 
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -83,7 +83,6 @@ nfs_file_release(struct inode *inode, st
- 	dprintk("NFS: release(%pD2)\n", filp);
- 
- 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
--	inode_dio_wait(inode);
- 	nfs_file_clear_open_context(filp);
- 	return 0;
- }
+ 			list_del_init(&reloc_root->root_list);
+ 			/* Don't forget to queue this reloc root for cleanup */
+ 			list_add_tail(&reloc_root->reloc_dirty_list,
 
 
