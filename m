@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7593EC2BA4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD401C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 414AE208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96397208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892476;
-	bh=h5rqxxYfACI8lziQ7XNfbCk2S/drUfGwBebl1x248LA=;
+	s=default; t=1595892483;
+	bh=n1FukGZuQXyu2MVVpZOdKAmj1C0W92scKOGnuT4UQO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rT5nBWG8WAFwIVi8DddWc8kCj07gbSODgXSjS0uQfTSfTM4PwE+jm+rF4rbJwMo3q
-	 Gev1wcDioeZU7TjsN1RT/rUUSehBogiixA9C2yB9vma3DNqZAWaxVwA+DliFlBNQSl
-	 tYyu6o5lNuq7+yT8pjXjznikon/BQ+SaK8Qic4vk=
+	b=lF18N7tUvWyRnYDOdlaPAtvp0oYD5KiA4LxOBUTPb0Slw+YJAPQXR7qfswJYyIKn+
+	 OgJtJhYlcJmb177Mf3LVX47LHZ7fGmRG+KS9MlzyjZIfpp883YHFoYDCr7WW5xUqB9
+	 uO4lkc2ghwZDfk2TCtIt6TA0pKAMYrzdLNSOJ4Wo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgG0XYp (ORCPT
+        id S1728795AbgG0X2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:24:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35756 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:28:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728311AbgG0XYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:24:38 -0400
+        id S1728335AbgG0XYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:24:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51EF122B3F;
-        Mon, 27 Jul 2020 23:24:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2352208E4;
+        Mon, 27 Jul 2020 23:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892278;
-        bh=h5rqxxYfACI8lziQ7XNfbCk2S/drUfGwBebl1x248LA=;
+        s=default; t=1595892281;
+        bh=n1FukGZuQXyu2MVVpZOdKAmj1C0W92scKOGnuT4UQO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=muBV7uMn1ndrQ0TWhfc3sV2jXSg1dZ+eu/SIS/tX5iNOJK+g0mxH8ZlE/HoiQ7609
-         2Ee5QEsCVOAL/5zZ9Nou8Hsl4G3vU+PYPryvNBFWfVNybISOQEHvUOTednAckH7Efx
-         yREMSdujjSK3kJx5Zum/VBdF7gYYPBCC/wGEo4bQ=
+        b=fDUbjLgVDLKH3ZBC4o7O0sap26ef3QtaCDvmkjqFi+SD9BugZw8dVVC38vJ9Paimo
+         p5KL0t9biHW/+x1xtTj3V3u7n8Q4FQXDSM31o1Kv8hIOUd8zAq89DFw4Dsmx4IAdVO
+         gJOyunQXPWZ/c7jeXP2XlRYnnOvkt9KyqMl1LpOU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 13/17] x86/stacktrace: Fix reliable check for empty user task stacks
-Date:   Mon, 27 Jul 2020 19:24:16 -0400
-Message-Id: <20200727232420.717684-13-sashal@kernel.org>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 16/17] RISC-V: Set maximum number of mapped pages correctly
+Date:   Mon, 27 Jul 2020 19:24:19 -0400
+Message-Id: <20200727232420.717684-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200727232420.717684-1-sashal@kernel.org>
 References: <20200727232420.717684-1-sashal@kernel.org>
@@ -60,59 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Atish Patra <atish.patra@wdc.com>
 
-[ Upstream commit 039a7a30ec102ec866d382a66f87f6f7654f8140 ]
+[ Upstream commit d0d8aae64566b753c4330fbd5944b88af035f299 ]
 
-If a user task's stack is empty, or if it only has user regs, ORC
-reports it as a reliable empty stack.  But arch_stack_walk_reliable()
-incorrectly treats it as unreliable.
+Currently, maximum number of mapper pages are set to the pfn calculated
+from the memblock size of the memblock containing kernel. This will work
+until that memblock spans the entire memory. However, it will be set to
+a wrong value if there are multiple memblocks defined in kernel
+(e.g. with efi runtime services).
 
-That happens because the only success path for user tasks is inside the
-loop, which only iterates on non-empty stacks.  Generally, a user task
-must end in a user regs frame, but an empty stack is an exception to
-that rule.
+Set the the maximum value to the pfn calculated from dram size.
 
-Thanks to commit 71c95825289f ("x86/unwind/orc: Fix error handling in
-__unwind_start()"), unwind_start() now sets state->error appropriately.
-So now for both ORC and FP unwinders, unwind_done() and !unwind_error()
-always means the end of the stack was successfully reached.  So the
-success path for kthreads is no longer needed -- it can also be used for
-empty user tasks.
-
-Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Link: https://lkml.kernel.org/r/f136a4e5f019219cbc4f4da33b30c2f44fa65b84.1594994374.git.jpoimboe@redhat.com
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/stacktrace.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/riscv/mm/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
-index 2d6898c2cb647..6d83b4b857e6a 100644
---- a/arch/x86/kernel/stacktrace.c
-+++ b/arch/x86/kernel/stacktrace.c
-@@ -58,7 +58,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
- 			 * or a page fault), which can make frame pointers
- 			 * unreliable.
- 			 */
--
- 			if (IS_ENABLED(CONFIG_FRAME_POINTER))
- 				return -EINVAL;
- 		}
-@@ -81,10 +80,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
- 	if (unwind_error(&state))
- 		return -EINVAL;
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 3198129230126..b1eb6a0411183 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -115,9 +115,9 @@ void __init setup_bootmem(void)
+ 	/* Reserve from the start of the kernel to the end of the kernel */
+ 	memblock_reserve(vmlinux_start, vmlinux_end - vmlinux_start);
  
--	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
--	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
--		return -EINVAL;
--
- 	return 0;
- }
+-	set_max_mapnr(PFN_DOWN(mem_size));
+ 	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
+ 	max_low_pfn = max_pfn;
++	set_max_mapnr(max_low_pfn);
  
+ #ifdef CONFIG_BLK_DEV_INITRD
+ 	setup_initrd();
 -- 
 2.25.1
 
