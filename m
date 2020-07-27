@@ -2,84 +2,120 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E327CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D57EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5A21206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58873206F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgG0Dsz (ORCPT
+        id S1726879AbgG0Duu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 23:48:55 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:34389 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgG0Dsz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 23:48:55 -0400
-Received: by mail-qv1-f67.google.com with SMTP id t6so1946776qvw.1
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 20:48:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yVIOi8enUGpBtLqtmUD4Tl/qpQ9yEu8l3OUS23dMPao=;
-        b=cEipDgdfAt9lpLWMCv1Kx6xieCQX5aI27pP2YYBN+qpvCX0JjGG7UrwoQhXSFfyaXG
-         WlqDHc2SrYrTCE3tKSZzXtw6LUnbCoE4IbHjK8E2Dh67iCxExAaIChh8iZpD/545zA8V
-         g6DKrYvSRiI3vxh+IaxU3W/hUReVyzPtlawCcD2QI0VT6Ise1iTjeXinIVz59VknPRfd
-         1udQoKIIVZY81VBAdYxvQ8iy2QCxvAx0E+jddRxEav6vEs/nNSQVEUC6uE86W64fMDPh
-         HI+fRy04cjqfGs7h08vbfMoLCHda4kpcBgOrBvcu3YmHqeXInkyxnJ4jm+aZkuJKSjCd
-         YOiA==
-X-Gm-Message-State: AOAM531Vqqqv33Eiepzx27FZMHP49sWe0t9obEJmDVwReK+VyAVJaLHP
-        4ubEZp9dM4dDuT6fqIzhIE8DCbXy
-X-Google-Smtp-Source: ABdhPJxfAWjZJYYpQLUq6iCzlAbSQoYClkEl0wXtKgAH4OqroY4oRu+9s+SzTvcBEljuc1PaD+FA8g==
-X-Received: by 2002:a0c:9e4f:: with SMTP id z15mr20642425qve.119.1595821733986;
-        Sun, 26 Jul 2020 20:48:53 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id b4sm17134861qkd.75.2020.07.26.20.48.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 20:48:53 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>
-Subject: [PATCH] kernel.h: Remove duplicate include of asm/div64.h
-Date:   Sun, 26 Jul 2020 23:48:52 -0400
-Message-Id: <20200727034852.2813453-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
+        Sun, 26 Jul 2020 23:50:50 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8828 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726666AbgG0Dut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 23:50:49 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D6B0E8BD8447F8CEA390;
+        Mon, 27 Jul 2020 11:50:44 +0800 (CST)
+Received: from [10.174.185.226] (10.174.185.226) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 27 Jul 2020 11:50:36 +0800
+Subject: Re: [PATCH] irqchip/gic-v4.1: Use GFP_ATOMIC flag in
+ allocate_vpe_l1_table()
+To:     <linux-kernel@vger.kernel.org>, <maz@kernel.org>
+CC:     <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <wanghaibin.wang@huawei.com>, <kuhn.chenqun@huawei.com>,
+        <wangjingyi11@huawei.com>
+References: <20200630133746.816-1-yuzenghui@huawei.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <076a3e82-ba21-6e6a-c6cd-937abb063eb9@huawei.com>
+Date:   Mon, 27 Jul 2020 11:50:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200630133746.816-1-yuzenghui@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.185.226]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This seems to have been added inadvertently in commit
-  72deb455b5ec ("block: remove CONFIG_LBDAF")
+Hi Marc,
 
-Fixes: 72deb455b5ec ("block: remove CONFIG_LBDAF")
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: Christoph Hellwig <hch@lst.de>
----
- include/linux/kernel.h | 1 -
- 1 file changed, 1 deletion(-)
+On 2020/6/30 21:37, Zenghui Yu wrote:
+> Booting the latest kernel with DEBUG_ATOMIC_SLEEP=y on a GICv4.1 enabled
+> box, I get the following kernel splat:
+> 
+> [    0.053766] BUG: sleeping function called from invalid context at mm/slab.h:567
+> [    0.053767] in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 0, name: swapper/1
+> [    0.053769] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc3+ #23
+> [    0.053770] Call trace:
+> [    0.053774]  dump_backtrace+0x0/0x218
+> [    0.053775]  show_stack+0x2c/0x38
+> [    0.053777]  dump_stack+0xc4/0x10c
+> [    0.053779]  ___might_sleep+0xfc/0x140
+> [    0.053780]  __might_sleep+0x58/0x90
+> [    0.053782]  slab_pre_alloc_hook+0x7c/0x90
+> [    0.053783]  kmem_cache_alloc_trace+0x60/0x2f0
+> [    0.053785]  its_cpu_init+0x6f4/0xe40
+> [    0.053786]  gic_starting_cpu+0x24/0x38
+> [    0.053788]  cpuhp_invoke_callback+0xa0/0x710
+> [    0.053789]  notify_cpu_starting+0xcc/0xd8
+> [    0.053790]  secondary_start_kernel+0x148/0x200
+> 
+>  # ./scripts/faddr2line vmlinux its_cpu_init+0x6f4/0xe40
+> its_cpu_init+0x6f4/0xe40:
+> allocate_vpe_l1_table at drivers/irqchip/irq-gic-v3-its.c:2818
+> (inlined by) its_cpu_init_lpis at drivers/irqchip/irq-gic-v3-its.c:3138
+> (inlined by) its_cpu_init at drivers/irqchip/irq-gic-v3-its.c:5166
+> 
+> It turned out that we're allocating memory using GFP_KERNEL (may sleep)
+> within the CPU hotplug notifier, which is indeed an atomic context. Bad
+> thing may happen if we're playing on a system with more than a single
+> CommonLPIAff group. Avoid it by turning this into an atomic allocation.
+> 
+> Fixes: 5e5168461c22 ("irqchip/gic-v4.1: VPE table (aka GICR_VPROPBASER) allocation")
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 6a5a87fc4601..b66eeca442c4 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -2814,7 +2814,7 @@ static int allocate_vpe_l1_table(void)
+>  	if (val & GICR_VPROPBASER_4_1_VALID)
+>  		goto out;
+>  
+> -	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_KERNEL);
+> +	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_ATOMIC);
+>  	if (!gic_data_rdist()->vpe_table_mask)
+>  		return -ENOMEM;
+>  
+> @@ -2881,7 +2881,7 @@ static int allocate_vpe_l1_table(void)
+>  
+>  	pr_debug("np = %d, npg = %lld, psz = %d, epp = %d, esz = %d\n",
+>  		 np, npg, psz, epp, esz);
+> -	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, get_order(np * PAGE_SIZE));
+> +	page = alloc_pages(GFP_ATOMIC | __GFP_ZERO, get_order(np * PAGE_SIZE));
+>  	if (!page)
+>  		return -ENOMEM;
+>  
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 82d91547d122..ddaaaf53a251 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -17,7 +17,6 @@
- #include <asm/byteorder.h>
- #include <asm/div64.h>
- #include <uapi/linux/kernel.h>
--#include <asm/div64.h>
- 
- #define STACK_MAGIC	0xdeadbeef
- 
--- 
-2.26.2
+Do you mind taking this patch into v5.9? Or please let me know if you
+still have any concerns on it?
 
+
+Thanks,
+Zenghui
