@@ -2,90 +2,72 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F8CC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB34C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFDFA2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:38:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595857097;
-	bh=UQu1gVo9L4rw5zqbtV+t10WaKXY4Uy+PnQiLyriZrwQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GRpbuMvox/cgFHsGqpX0XwtVnLxMC4YOC5TM1zTqjDgaYVyUqsB0/Qew2XuHKhJaX
-	 lOc/2WNN0I2AQiY5hBqQggG/MUy+XAtV4d5AABVs6W/3NuY4eayKEzdxJnmT6iJCHN
-	 mTvVhrdiPWJXKFubXC71Mb4tEK48rHYWhffNepyE=
+	by mail.kernel.org (Postfix) with ESMTP id E94152073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:38:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WHZ+kc1L";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z+f4ULUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbgG0NiQ (ORCPT
+        id S1729017AbgG0Nia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:38:16 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42994 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbgG0NiO (ORCPT
+        Mon, 27 Jul 2020 09:38:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgG0Ni2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:38:14 -0400
-Received: by mail-ot1-f68.google.com with SMTP id v21so5038867otj.9;
-        Mon, 27 Jul 2020 06:38:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GDgvxbFtjoqaUGPEDtkInSIpJVJqkW3IcV+Wtsu5ITc=;
-        b=jhprwpJIoQNfyotKw7z1LMzWKpQo7AV2X/QKY3t2H76Hwhu7eN/1HnzYjb2qh0HDI4
-         CplFkvXn/D3yoviIItBgSxzuAmpst3iBWRHn6zp0WsOVFbvBnXCkpvt4oqP5Vb8LqFnl
-         NQSkw33fARMF841U/77bLsva5Yom0l/k01jZPZPyPQ/T11Cn5s05mYcuoB2faXzUDyPd
-         eIMLFblkpv2PWkmoMarPoJrGoj/Md1oAtrMCx5lxktzoG3wMItCwW4TkFQ7FKdk4wWPI
-         ijV0lWpKg/wzFSCWjj9DPla0Y5ypTH1dbwxubJUYASwrTNHFQbmAwePk9PmOeGvhZfok
-         lmAA==
-X-Gm-Message-State: AOAM5329GVgf1plMyji0Aph1G7BKFPeOmoxxUSeevX50toVbMWXTXEm5
-        Ms5rvLHWvDFB3XCPmzl4w8xXD6iqxbdsSIie1Ys=
-X-Google-Smtp-Source: ABdhPJy3txxI99b+fWzbhQVo+HWM4RYjrP2BIU1Ci2RDTj9GPs21eK4gnxtDjDTfKgLqwvw2gVDmbZ5VIuYYJXomKTc=
-X-Received: by 2002:a05:6830:1e5c:: with SMTP id e28mr2285084otj.118.1595857093698;
- Mon, 27 Jul 2020 06:38:13 -0700 (PDT)
+        Mon, 27 Jul 2020 09:38:28 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F4FC061794;
+        Mon, 27 Jul 2020 06:38:28 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595857107;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z2BEpkI5vpGjWsm2oiyzPGU1NItFEGOQoSzuPNAbSWY=;
+        b=WHZ+kc1LDZiycuwM8s1HhaC7PR6hPF8kId0KV438qsfbahmYdlB1EHRMOw8FKUziuZ7ufU
+        oYbMnXW+YniqQgr1eq9gGzKdDGKTbE8afv3rBCtU8G1nkGvu8Ff3d3i6B00WBbArQR0k5S
+        OOWG8/4hycdACA4hIkn8gt9KMNm7Dz3PrAKgn0rSTJHMLxZMS28XlaNwiNylOWKhFWANqP
+        nHdi2+UHeBRlIfo/jJmuwDFY2k67h07lCWxmsatYOyc3hHLRbPZR1oleepzj3/J2ptgjBJ
+        KpxprlL77nmkaWJHd5CbMYZ2iuj6Rsw7X3B54JEjukGbD+ToJveZxdOolK5gzA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595857107;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=z2BEpkI5vpGjWsm2oiyzPGU1NItFEGOQoSzuPNAbSWY=;
+        b=Z+f4ULUl2G2uBKiIkvf9zO71cFu/N2rXkClyOFy2z8kTKjHimuyTzpbTTi2ZCcFY+kC4Me
+        cV4tkZcCohMkq7Bw==
+To:     Brian Gerst <brgerst@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>
+Subject: Re: [tip: x86/entry] x86/entry: Consolidate 32/64 bit syscall entry
+In-Reply-To: <CAMzpN2ipn3tK7hg4njCG-svtbYSP_nmzr0mWHZCrkaJFYMuXWw@mail.gmail.com>
+References: <20200722220520.051234096@linutronix.de> <159562150262.4006.11750463088671474026.tip-bot2@tip-bot2> <CAMzpN2ipn3tK7hg4njCG-svtbYSP_nmzr0mWHZCrkaJFYMuXWw@mail.gmail.com>
+Date:   Mon, 27 Jul 2020 15:38:26 +0200
+Message-ID: <871rkxcc31.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200707172845.4177903-1-abhishekpandit@chromium.org>
- <20200707102823.v5.1.I51f5a0be89595b73c4dc17e6cf4cc6f26dc7f2fc@changeid> <20200723183235.GA3445384@kroah.com>
-In-Reply-To: <20200723183235.GA3445384@kroah.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 27 Jul 2020 15:38:02 +0200
-Message-ID: <CAJZ5v0jXcfO3YiMgkc7u=qqZy+jyT=RGagF3yAFnAhiJfyfcuQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] power: Emit changed uevent on wakeup_sysfs_add/remove
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 8:32 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Brian Gerst <brgerst@gmail.com> writes:
+> On Fri, Jul 24, 2020 at 4:14 PM tip-bot2 for Thomas Gleixner
+>>
+>> -static bool __do_fast_syscall_32(struct pt_regs *regs)
+>> +static noinstr bool __do_fast_syscall_32(struct pt_regs *regs)
 >
-> On Tue, Jul 07, 2020 at 10:28:44AM -0700, Abhishek Pandit-Subedi wrote:
-> > Udev rules that depend on the power/wakeup attribute don't get triggered
-> > correctly if device_set_wakeup_capable is called after the device is
-> > created. This can happen for several reasons (driver sets wakeup after
-> > device is created, wakeup is changed on parent device, etc) and it seems
-> > reasonable to emit a changed event when adding or removing attributes on
-> > the device.
-> >
-> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
->
-> Rafael, any objection to this?  Do you want me to take it through my
-> tree, or are you going to take it through yours?  Either is fine for me.
+> Can __do_fast_syscall_32() be merged back into do_fast_syscall_32()
+> now that both are marked noinstr?
 
-It's already there in my tree with the R-by tag from you.
-
-Cheers!
+It could.
