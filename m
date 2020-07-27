@@ -2,103 +2,98 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37580C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E3EC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0859D2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:01:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OV+7mc+C"
+	by mail.kernel.org (Postfix) with ESMTP id 7C9DC2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbgG0LBn (ORCPT
+        id S1728469AbgG0LBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:01:43 -0400
-Received: from ozlabs.org ([203.11.71.1]:37857 "EHLO ozlabs.org"
+        Mon, 27 Jul 2020 07:01:49 -0400
+Received: from mailout10.rmx.de ([94.199.88.75]:50208 "EHLO mailout10.rmx.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbgG0LBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:01:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728448AbgG0LBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:01:47 -0400
+Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFcLr2gP9z9sPf;
-        Mon, 27 Jul 2020 21:01:40 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595847701;
-        bh=JcrwtuzTf1Td8z0PhNeQgTOjS9LYgqoPWnumxhyecmQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=OV+7mc+C1WN55vuNaPEFt8baEO7b7I4Ip7yRw+Sx5V7mFkpSPDS5YpWxqgBEi3oS7
-         HHzHOZjPV6xlcoD4WCOPworR/4GcdXczPby15mtRk1BAkejbJQr579wLTKN6iFKE++
-         ccerq9hob9l0GklKUMlGnGdrwqsqiJC8xEV75aECkzb/9nMPFCgtRF8du5JeowBPgO
-         pW5lWnSL6Y8CCtTAr/H7bWMBPiT3PQ9rmBhs3ZrhdAaRdttvbDn8a3qVKb8MZPBq8g
-         xgWuOk4DUu754SK4vy/fnzcqMTcWjI96aX5gWRqIx/OAFZxVx3LbLfn8CrSWqvn26P
-         WAL+EDoyZ3s9Q==
-Date:   Mon, 27 Jul 2020 21:01:37 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>, Sebastian Reichel <sre@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yongqiang Liu <liuyongqiang13@huawei.com>
-Subject: linux-next: manual merge of the set_fs tree with the battery tree
-Message-ID: <20200727210137.01a5d03d@canb.auug.org.au>
+        by mailout10.rmx.de (Postfix) with ESMTPS id 4BFcLs4pvGz311B;
+        Mon, 27 Jul 2020 13:01:41 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin01.retarus.com (Postfix) with ESMTPS id 4BFcKZ5qFvz2xFb;
+        Mon, 27 Jul 2020 13:00:34 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.121) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 27 Jul
+ 2020 12:59:12 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        "Sascha Hauer" <s.hauer@pengutronix.de>
+CC:     Christian Eggers <ceggers@arri.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Martin Kaiser <martin@kaiser.cx>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
+Subject: [PATCH 2/3] hwrng: imx-rngc - make clock optional
+Date:   Mon, 27 Jul 2020 12:57:15 +0200
+Message-ID: <20200727105718.26225-3-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200727105718.26225-1-ceggers@arri.de>
+References: <20200727105718.26225-1-ceggers@arri.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4NmD3S59rw+DPsjjpoTFo70";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.121]
+X-RMX-ID: 20200727-130034-4BFcKZ5qFvz2xFb-0@kdin01
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4NmD3S59rw+DPsjjpoTFo70
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On i.MX6 ULL the RNGB has no switchable clock.
 
-Hi all,
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+---
+ drivers/char/hw_random/imx-rngc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Today's linux-next merge of the set_fs tree got a conflict in:
+diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
+index 9c47e431ce90..f9c5ddd0276b 100644
+--- a/drivers/char/hw_random/imx-rngc.c
++++ b/drivers/char/hw_random/imx-rngc.c
+@@ -245,7 +245,7 @@ static int imx_rngc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(rngc->base))
+ 		return PTR_ERR(rngc->base);
+ 
+-	rngc->clk = devm_clk_get(&pdev->dev, NULL);
++	rngc->clk = devm_clk_get_optional(&pdev->dev, NULL);
+ 	if (IS_ERR(rngc->clk)) {
+ 		dev_err(&pdev->dev, "Can not get rng_clk\n");
+ 		return PTR_ERR(rngc->clk);
+-- 
+Christian Eggers
+Embedded software developer
 
-  drivers/power/supply/da9030_battery.c
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
 
-between commit:
-
-  9d832cd36c60 ("power: Convert to DEFINE_SHOW_ATTRIBUTE")
-
-from the battery tree and commit:
-
-  4d4901c6d748 ("seq_file: switch over direct seq_read method calls to seq_=
-read_iter")
-
-from the set_fs tree.
-
-I fixed it up (I just used the former) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/4NmD3S59rw+DPsjjpoTFo70
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8etBEACgkQAVBC80lX
-0GyoUgf/c2wl8WGbs70FOlAtbSu3j63DNxJ5/TO6ifWmhLQ2o/OapGXF5h9KHF2x
-UYzrFf09jefoQnYV+2QJ4Ig3M5Tg0ooTc0IboO1uzgfjyTdCQ3qqUPrz+4EU9mXi
-5+Tke1eqrDOLnwr3g7atE3NhLScU+JoLshN27JZutE9O5ywvHW1ckEvWmzs4d+wI
-0k74kXc9YEziym2EIipBofNoaMHrR+kzhATr6QEtrwLt/ajDp7kydri13iuBXI2c
-fL4K0RLw3eetXZKRDQW/IQwrzqIYd5wXQP031ZNqNrT+hQJMwSsYC8bdMFNDWonP
-WODnEj4LVQpUmRz5tG7Du9kNn8K/9Q==
-=igdf
------END PGP SIGNATURE-----
-
---Sig_/4NmD3S59rw+DPsjjpoTFo70--
