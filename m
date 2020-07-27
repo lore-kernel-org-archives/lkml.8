@@ -2,335 +2,159 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6C182065C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA2A20759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:32:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgG0Jbl (ORCPT
+        id S1728031AbgG0JcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:31:41 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:25363 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgG0Jbk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:31:40 -0400
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB5m6IbY0="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id Y0939ew6R9VYKoe
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Mon, 27 Jul 2020 11:31:34 +0200 (CEST)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Niklas Cassel <nks@flawful.org>,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [RFC PATCH 1/2] opp: Allow dev_pm_opp_get_opp_table() to return -EPROBE_DEFER
-Date:   Mon, 27 Jul 2020 11:30:46 +0200
-Message-Id: <20200727093047.8274-1-stephan@gerhold.net>
-X-Mailer: git-send-email 2.27.0
+        Mon, 27 Jul 2020 05:32:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55166 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbgG0JcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:32:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 33228AC23;
+        Mon, 27 Jul 2020 09:32:09 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 11:31:56 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>, lkp@lists.01.org,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, ltp@lists.linux.it
+Subject: Re: [LTP] [blk] 6e6fcbc27e: ltp.fs_fill.fail
+Message-ID: <20200727093156.GA29739@dell5510>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20200726075511.GI1850@shao2-debian>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726075511.GI1850@shao2-debian>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The OPP core manages various resources, e.g. clocks or interconnect paths.
-These resources are looked up when the OPP table is allocated once
-dev_pm_opp_get_opp_table() is called the first time (either directly
-or indirectly through one of the many helper functions).
+Hi,
 
-At this point, the resources may not be available yet, i.e. looking them
-up will result in -EPROBE_DEFER. Unfortunately, dev_pm_opp_get_opp_table()
-is currently unable to propagate this error code since it only returns
-the allocated OPP table or NULL.
+> FYI, we noticed the following commit (built with gcc-9):
 
-This means that all consumers of the OPP core are required to make sure
-that all necessary resources are available. Usually this happens by
-requesting them, checking the result and releasing them immediately after.
+> commit: 6e6fcbc27e7788af54139c53537395d95560f2ef ("blk-mq: support batching dispatch in case of io")
+> https://git.kernel.org/cgit/linux/kernel/git/axboe/linux-block.git for-5.9/drivers
 
-For example, we have added "dev_pm_opp_of_find_icc_paths(dev, NULL)" to
-several drivers now just to make sure the interconnect providers are
-ready before the OPP table is allocated. If this call is missing,
-the OPP core will only warn about this and then attempt to continue
-without interconnect. This will eventually fail horribly, e.g.:
 
-    cpu cpu0: _allocate_opp_table: Error finding interconnect paths: -517
-    ... later ...
-    of: _read_bw: Mismatch between opp-peak-kBps and paths (1 0)
-    cpu cpu0: _opp_add_static_v2: opp key field not found
-    cpu cpu0: _of_add_opp_table_v2: Failed to add OPP, -22
+> in testcase: ltp
+> with following parameters:
 
-This example happens when trying to use interconnects for a CPU OPP
-table together with qcom-cpufreq-nvmem.c. qcom-cpufreq-nvmem calls
-dev_pm_opp_set_supported_hw(), which ends up allocating the OPP table
-early. To fix the problem with the current approach we would need to add
-yet another call to dev_pm_opp_of_find_icc_paths(dev, NULL).
-But actually qcom-cpufreq-nvmem.c has nothing to do with interconnects...
+> 	disk: 1HDD
+> 	fs: ext4
+> 	test: fs-03
 
-This commit attempts to make this more robust by allowing
-dev_pm_opp_get_opp_table() to return an error pointer. Fixing all
-the usages is trivial because the function is usually used indirectly
-through another helper (e.g. dev_pm_opp_set_supported_hw() above).
-These other helpers already return an error pointer.
+> test-description: The LTP testsuite contains a collection of tools for testing the Linux kernel and related features.
+> test-url: http://linux-test-project.github.io/
 
-The example above then works correctly because set_supported_hw() will
-return -EPROBE_DEFER, and qcom-cpufreq-nvmem.c already propagates that
-error. It should also be possible to remove the remaining usages of
-"dev_pm_opp_of_find_icc_paths(dev, NULL)" from other drivers as well.
 
-Note that this commit currently only handles -EPROBE_DEFER for the
-clock/interconnects within _allocate_opp_table(). Other errors are just
-ignored as before. Eventually those should be propagated as well.
+> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
-I wasn't sure if the changes in drivers/base/power/domain.c
-should be made in a separate commit, but they need to be made together
-with the other changes.
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
 
-Also note that this is RFC because this is just something I got really
-frustrated about. There might be situations where this won't work correctly...?
----
- drivers/base/power/domain.c | 28 ++++++++++++++++++-----
- drivers/opp/core.c          | 45 ++++++++++++++++++++++---------------
- drivers/opp/of.c            |  8 +++----
- 3 files changed, 53 insertions(+), 28 deletions(-)
+...
+> tst_test.c:1308: INFO: Testing on vfat
+> tst_mkfs.c:90: INFO: Formatting /dev/loop0 with vfat opts='' extra opts=''
+> tst_test.c:1247: INFO: Timeout per run is 0h 05m 00s
+> fs_fill.c:103: INFO: Running 10 writer threads
+> Test timeouted, sending SIGKILL!
+> Test timeouted, sending SIGKILL!
+> Test timeouted, sending SIGKILL!
+> Test timeouted, sending SIGKILL!
+> Test timeouted, sending SIGKILL!
+> Test timeouted, sending SIGKILL!
+The only "error" I found is that fs_fill test timeouted on vfat. That might
+indicate some problems. Note, for slow machines, there is LTP_TIMEOUT_MUL
+https://github.com/linux-test-project/ltp/wiki/User-Guidelines#1-library-environment-variables
 
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index 2cb5e04cf86c..c50f2de952c4 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -2044,8 +2044,9 @@ int of_genpd_add_provider_simple(struct device_node *np,
- 	if (genpd->set_performance_state) {
- 		ret = dev_pm_opp_of_add_table(&genpd->dev);
- 		if (ret) {
--			dev_err(&genpd->dev, "Failed to add OPP table: %d\n",
--				ret);
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(&genpd->dev, "Failed to add OPP table: %d\n",
-+					ret);
- 			goto unlock;
- 		}
- 
-@@ -2054,7 +2055,14 @@ int of_genpd_add_provider_simple(struct device_node *np,
- 		 * state.
- 		 */
- 		genpd->opp_table = dev_pm_opp_get_opp_table(&genpd->dev);
--		WARN_ON(!genpd->opp_table);
-+		if (IS_ERR(genpd->opp_table)) {
-+			if (PTR_ERR(genpd->opp_table) != -EPROBE_DEFER)
-+				dev_err(&genpd->dev, "Failed to get OPP table: %pe\n",
-+					genpd->opp_table);
-+
-+			dev_pm_opp_of_remove_table(&genpd->dev);
-+			goto unlock;
-+		}
- 	}
- 
- 	ret = genpd_add_provider(np, genpd_xlate_simple, genpd);
-@@ -2111,8 +2119,9 @@ int of_genpd_add_provider_onecell(struct device_node *np,
- 		if (genpd->set_performance_state) {
- 			ret = dev_pm_opp_of_add_table_indexed(&genpd->dev, i);
- 			if (ret) {
--				dev_err(&genpd->dev, "Failed to add OPP table for index %d: %d\n",
--					i, ret);
-+				if (ret != -EPROBE_DEFER)
-+					dev_err(&genpd->dev, "Failed to add OPP table for index %d: %d\n",
-+						i, ret);
- 				goto error;
- 			}
- 
-@@ -2121,7 +2130,14 @@ int of_genpd_add_provider_onecell(struct device_node *np,
- 			 * performance state.
- 			 */
- 			genpd->opp_table = dev_pm_opp_get_opp_table_indexed(&genpd->dev, i);
--			WARN_ON(!genpd->opp_table);
-+			if (IS_ERR(genpd->opp_table)) {
-+				if (PTR_ERR(genpd->opp_table) != -EPROBE_DEFER)
-+					dev_err(&genpd->dev, "Failed to get OPP table: %pe\n",
-+						genpd->opp_table);
-+
-+				dev_pm_opp_of_remove_table(&genpd->dev);
-+				goto error;
-+			}
- 		}
- 
- 		genpd->provider = &np->fwnode;
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 9d7fb45b1786..45d24de75e0e 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -1063,7 +1063,7 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
- 	 */
- 	opp_table = kzalloc(sizeof(*opp_table), GFP_KERNEL);
- 	if (!opp_table)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	mutex_init(&opp_table->lock);
- 	mutex_init(&opp_table->genpd_virt_dev_lock);
-@@ -1074,8 +1074,8 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
- 
- 	opp_dev = _add_opp_dev(dev, opp_table);
- 	if (!opp_dev) {
--		kfree(opp_table);
--		return NULL;
-+		ret = -ENOMEM;
-+		goto err;
- 	}
- 
- 	_of_init_opp_table(opp_table, dev, index);
-@@ -1087,13 +1087,18 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
- 		if (ret != -EPROBE_DEFER)
- 			dev_dbg(dev, "%s: Couldn't find clock: %d\n", __func__,
- 				ret);
-+		else
-+			goto err;
- 	}
- 
- 	/* Find interconnect path(s) for the device */
- 	ret = dev_pm_opp_of_find_icc_paths(dev, opp_table);
--	if (ret)
-+	if (ret) {
-+		if (ret == -EPROBE_DEFER)
-+			goto err;
- 		dev_warn(dev, "%s: Error finding interconnect paths: %d\n",
- 			 __func__, ret);
-+	}
- 
- 	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
- 	INIT_LIST_HEAD(&opp_table->opp_list);
-@@ -1102,6 +1107,10 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
- 	/* Secure the device table modification */
- 	list_add(&opp_table->node, &opp_tables);
- 	return opp_table;
-+
-+err:
-+	kfree(opp_table);
-+	return ERR_PTR(ret);
- }
- 
- void _get_opp_table_kref(struct opp_table *opp_table)
-@@ -1568,8 +1577,8 @@ struct opp_table *dev_pm_opp_set_supported_hw(struct device *dev,
- 	struct opp_table *opp_table;
- 
- 	opp_table = dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return ERR_PTR(-ENOMEM);
-+	if (IS_ERR(opp_table))
-+		return opp_table;
- 
- 	/* Make sure there are no concurrent readers while updating opp_table */
- 	WARN_ON(!list_empty(&opp_table->opp_list));
-@@ -1627,8 +1636,8 @@ struct opp_table *dev_pm_opp_set_prop_name(struct device *dev, const char *name)
- 	struct opp_table *opp_table;
- 
- 	opp_table = dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return ERR_PTR(-ENOMEM);
-+	if (IS_ERR(opp_table))
-+		return opp_table;
- 
- 	/* Make sure there are no concurrent readers while updating opp_table */
- 	WARN_ON(!list_empty(&opp_table->opp_list));
-@@ -1720,8 +1729,8 @@ struct opp_table *dev_pm_opp_set_regulators(struct device *dev,
- 	int ret, i;
- 
- 	opp_table = dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return ERR_PTR(-ENOMEM);
-+	if (IS_ERR(opp_table))
-+		return opp_table;
- 
- 	/* This should be called before OPPs are initialized */
- 	if (WARN_ON(!list_empty(&opp_table->opp_list))) {
-@@ -1830,8 +1839,8 @@ struct opp_table *dev_pm_opp_set_clkname(struct device *dev, const char *name)
- 	int ret;
- 
- 	opp_table = dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return ERR_PTR(-ENOMEM);
-+	if (IS_ERR(opp_table))
-+		return opp_table;
- 
- 	/* This should be called before OPPs are initialized */
- 	if (WARN_ON(!list_empty(&opp_table->opp_list))) {
-@@ -1898,8 +1907,8 @@ struct opp_table *dev_pm_opp_register_set_opp_helper(struct device *dev,
- 		return ERR_PTR(-EINVAL);
- 
- 	opp_table = dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return ERR_PTR(-ENOMEM);
-+	if (!IS_ERR(opp_table))
-+		return opp_table;
- 
- 	/* This should be called before OPPs are initialized */
- 	if (WARN_ON(!list_empty(&opp_table->opp_list))) {
-@@ -1979,8 +1988,8 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
- 	const char **name = names;
- 
- 	opp_table = dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return ERR_PTR(-ENOMEM);
-+	if (IS_ERR(opp_table))
-+		return opp_table;
- 
- 	/*
- 	 * If the genpd's OPP table isn't already initialized, parsing of the
-@@ -2150,8 +2159,8 @@ int dev_pm_opp_add(struct device *dev, unsigned long freq, unsigned long u_volt)
- 	int ret;
- 
- 	opp_table = dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return -ENOMEM;
-+	if (IS_ERR(opp_table))
-+		return PTR_ERR(opp_table);
- 
- 	/* Fix regulator count for dynamic OPPs */
- 	opp_table->regulator_count = 1;
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 0430290670ab..d8b623cc015a 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -947,8 +947,8 @@ int dev_pm_opp_of_add_table(struct device *dev)
- 	int ret;
- 
- 	opp_table = dev_pm_opp_get_opp_table_indexed(dev, 0);
--	if (!opp_table)
--		return -ENOMEM;
-+	if (IS_ERR(opp_table))
-+		return PTR_ERR(opp_table);
- 
- 	/*
- 	 * OPPs have two version of bindings now. Also try the old (v1)
-@@ -1002,8 +1002,8 @@ int dev_pm_opp_of_add_table_indexed(struct device *dev, int index)
- 	}
- 
- 	opp_table = dev_pm_opp_get_opp_table_indexed(dev, index);
--	if (!opp_table)
--		return -ENOMEM;
-+	if (IS_ERR(opp_table))
-+		return PTR_ERR(opp_table);
- 
- 	ret = _of_add_opp_table_v2(dev, opp_table);
- 	if (ret)
--- 
-2.27.0
+Some notes:
+* The "diff" is about 445. It took me some time to realize that it's a
+"diff" which reports some error, because LTP output is also after kernel config
+log(output is still not clear).
+* Log is huge: more than 7746 lines; ok, significant part 6275 lines is kernel config - if it's that huge,
+it should be at the end.
 
+> -------------- next part --------------
+Maybe also have description (sometimes obvious sometimes not).
+
+
+...
+> # CONFIG_HYPERV_TESTING is not set
+> # end of Kernel Testing and Coverage
+> # end of Kernel hacking
+> -------------- next part --------------
+> #!/bin/sh
+
+> export_top_env()
+> {
+> 	export suite='ltp'
+> 	export testcase='ltp'
+> 	export category='functional'
+> 	export need_modules=true
+> 	export need_memory='4G'
+> 	export job_origin='/lkp-src/allot/cyclic:p1:linux-devel:devel-hourly/vm-snb/ltp-1hdd-part2.yaml'
+> 	export queue_cmdline_keys='branch
+> commit
+> queue_at_least_once'
+> 	export queue='validate'
+> 	export testbox='vm-snb-223'
+> 	export tbox_group='vm-snb'
+> 	export kconfig='x86_64-rhel-8.3'
+> 	export nr_vm=64
+> 	export submit_id='5f1b6220d3e994389b75f575'
+> 	export job_file='/lkp/jobs/scheduled/vm-snb-223/ltp-1HDD-ext4-fs-03-debian-10.4-x86_64-20200603.cgz-6e6fcbc27e7788af54139c53537395d95560f2ef-20200725-14491-q8d1h6-26.yaml'
+> 	export id='065bec73e2a4ca800d1cb6ad4c3c7827984bbf55'
+> 	export queuer_version='/lkp-src'
+> 	export model='qemu-system-x86_64 -enable-kvm -cpu SandyBridge'
+> 	export nr_cpu=8
+> 	export memory='16G'
+> 	export hdd_partitions='/dev/vda /dev/vdb /dev/vdc /dev/vdd /dev/vde /dev/vdf'
+> 	export swap_partitions='/dev/vdg'
+> 	export need_kconfig='CONFIG_BLK_DEV_SD
+It looks like this shell function should not be part of the mail.
+Or at least not in the middle of kernel config (repeated several times).
+
+> CONFIG_SCSI
+> CONFIG_BLOCK=y
+> CONFIG_SATA_AHCI
+
+...
+> extract_stats()
+> {
+> 	export stats_part_begin=
+> 	export stats_part_end=
+
+> 	$LKP_SRC/stats/wrapper ltp
+> 	$LKP_SRC/stats/wrapper kmsg
+> 	$LKP_SRC/stats/wrapper meminfo
+
+> 	$LKP_SRC/stats/wrapper time ltp.time
+> 	$LKP_SRC/stats/wrapper dmesg
+> 	$LKP_SRC/stats/wrapper kmsg
+> 	$LKP_SRC/stats/wrapper last_state
+> 	$LKP_SRC/stats/wrapper stderr
+> 	$LKP_SRC/stats/wrapper time
+> }
+
+> "$@"
+
+That repeats till here.
+
+Kind regards,
+Petr
