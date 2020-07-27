@@ -2,103 +2,109 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D529BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B760820759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:15:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595837706;
-	bh=eXy/m7JHLeCOts1JoHZUSOPXrsnh+SvaKm23EURb5gI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IVQ2lkJgUk5voNsnUimBlbPo/Vp0HkEVgnWWRVq49XgqLjbQChfYJiA8xsLzqOOBv
-	 pA81qz5J+UJlSTm6b20dRlEzryUX0TIfKUDrsRjCE5YhvsG3F5T1LlrgZ8RmAUeZwO
-	 /k9FjT933DSA/lOUIFhU7p+IChM6c6H/OOg1sVXU=
+	by mail.kernel.org (Postfix) with ESMTP id A52142070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:14:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J1I+TzWc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgG0IPF (ORCPT
+        id S1727792AbgG0IOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:15:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbgG0IPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:15:03 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 27 Jul 2020 04:14:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38798 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726270AbgG0IOf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 04:14:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595837674;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IY4OegseFyVH/DUlzMVrRnb9yo4KDwtMwLRH1768Rd8=;
+        b=J1I+TzWchfA/JgEtPLVu0r6PLxkrjP09U4jXlqG7nXTpLURNBBzXiqIGjB4IrZcEqytZro
+        ui2NjdtqAnFYTWOgZ4lO2GX7sLz227RtAu2eJmaUgCpd2BAIePH/JvWxH089XlNhqdRi/x
+        KDE8Cx+fETg194fF/gb07xyK8pXfHbQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-7-gh-Hn-vwNNedtzwxAzImGw-1; Mon, 27 Jul 2020 04:14:30 -0400
+X-MC-Unique: gh-Hn-vwNNedtzwxAzImGw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2AB72070B;
-        Mon, 27 Jul 2020 08:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595837702;
-        bh=eXy/m7JHLeCOts1JoHZUSOPXrsnh+SvaKm23EURb5gI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DdnkLiFuG7mLHxg/eVJz8zjbPBL9E07Ttn5dB5bjjcnTnYO8p6EN7omVNMTKe3gUa
-         5yOY7DLhCQFMBjFYgwjfxXA6Ljprk174qd3bZPvPIsQII8J+B03itxlOUVaZb5dCN6
-         plOjwAFohCe2I6lj6KUV95qtaKYi6+bZO8tW3Qzc=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=hot-poop.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jzyHl-00FENM-8d; Mon, 27 Jul 2020 09:15:01 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     tglx@linutronix.de, Joakim Zhang <qiangqing.zhang@nxp.com>,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, jason@lakedaemon.net,
-        linux-kernel@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>
-Cc:     kernel@pengutronix.de, linux-imx@nxp.com, festevam@gmail.com,
-        wangjingyi11@huawei.com, wanghaibin.wang@huawei.com,
-        kuhn.chenqun@huawei.com
-Subject: Re: [PATCH] irqchip/gic-v4.1: Use GFP_ATOMIC flag in allocate_vpe_l1_table()
-Date:   Mon, 27 Jul 2020 09:14:49 +0100
-Message-Id: <159583764131.244522.1925786531384349855.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200630133746.816-1-yuzenghui@huawei.com>
-References: <20200630133746.816-1-yuzenghui@huawei.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 074C8805723;
+        Mon, 27 Jul 2020 08:14:28 +0000 (UTC)
+Received: from T590 (ovpn-12-208.pek2.redhat.com [10.72.12.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E9896FEC6;
+        Mon, 27 Jul 2020 08:14:20 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 16:14:16 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>,
+        Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs/fs-writeback.c: not WARN on unregistered BDI
+Message-ID: <20200727081416.GB1146643@T590>
+References: <20200611072251.474246-1-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, qiangqing.zhang@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, yuzenghui@huawei.com, kernel@pengutronix.de, linux-imx@nxp.com, festevam@gmail.com, wangjingyi11@huawei.com, wanghaibin.wang@huawei.com, kuhn.chenqun@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611072251.474246-1-ming.lei@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020 21:37:46 +0800, Zenghui Yu wrote:
-> Booting the latest kernel with DEBUG_ATOMIC_SLEEP=y on a GICv4.1 enabled
-> box, I get the following kernel splat:
+On Thu, Jun 11, 2020 at 03:22:51PM +0800, Ming Lei wrote:
+> BDI is unregistered from del_gendisk() which is usually done in device's
+> release handler from device hotplug or error handling context, so BDI
+> can be unregistered anytime.
 > 
-> [    0.053766] BUG: sleeping function called from invalid context at mm/slab.h:567
-> [    0.053767] in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 0, name: swapper/1
-> [    0.053769] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc3+ #23
-> [    0.053770] Call trace:
-> [    0.053774]  dump_backtrace+0x0/0x218
-> [    0.053775]  show_stack+0x2c/0x38
-> [    0.053777]  dump_stack+0xc4/0x10c
-> [    0.053779]  ___might_sleep+0xfc/0x140
-> [    0.053780]  __might_sleep+0x58/0x90
-> [    0.053782]  slab_pre_alloc_hook+0x7c/0x90
-> [    0.053783]  kmem_cache_alloc_trace+0x60/0x2f0
-> [    0.053785]  its_cpu_init+0x6f4/0xe40
-> [    0.053786]  gic_starting_cpu+0x24/0x38
-> [    0.053788]  cpuhp_invoke_callback+0xa0/0x710
-> [    0.053789]  notify_cpu_starting+0xcc/0xd8
-> [    0.053790]  secondary_start_kernel+0x148/0x200
+> It should be normal for __mark_inode_dirty to see un-registered BDI,
+> so kill the WARN().
 > 
-> [...]
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Brian Foster <bfoster@redhat.com>
+> Cc: Dave Chinner <dchinner@redhat.com>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: linux-block@vger.kernel.org
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> ---
+>  fs/fs-writeback.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+> index a605c3dddabc..5e718580d4bf 100644
+> --- a/fs/fs-writeback.c
+> +++ b/fs/fs-writeback.c
+> @@ -2318,10 +2318,6 @@ void __mark_inode_dirty(struct inode *inode, int flags)
+>  
+>  			wb = locked_inode_to_wb_and_lock_list(inode);
+>  
+> -			WARN(bdi_cap_writeback_dirty(wb->bdi) &&
+> -			     !test_bit(WB_registered, &wb->state),
+> -			     "bdi-%s not registered\n", bdi_dev_name(wb->bdi));
+> -
+>  			inode->dirtied_when = jiffies;
+>  			if (dirtytime)
+>  				inode->dirtied_time_when = jiffies;
 
-Applied to irq/irqchip-next, thanks!
+Hello Alexander,
 
-[1/1] irqchip/gic-v4.1: Use GFP_ATOMIC flag in allocate_vpe_l1_table()
-      commit: d1bd7e0ba533a2a6f313579ec9b504f6614c35c4
+Could you merge this patch if you are fine? 
 
-Cheers,
-
-	M.
--- 
-Without deviation from the norm, progress is not possible.
-
+Thanks,
+Ming
 
