@@ -2,257 +2,361 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE563C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B585C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8697D2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40DAD20786
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:42:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="qX/BMj1n"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="WPaKlK87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgG0XjP (ORCPT
+        id S1726975AbgG0Xm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:39:15 -0400
-Received: from o1.b.az.sendgrid.net ([208.117.55.133]:36476 "EHLO
-        o1.b.az.sendgrid.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgG0XjO (ORCPT
+        Mon, 27 Jul 2020 19:42:27 -0400
+Received: from mail-40141.protonmail.ch ([185.70.40.141]:13434 "EHLO
+        mail-40141.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgG0Xm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:39:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
-        h=subject:references:from:mime-version:in-reply-to:to:cc:content-type:
-        content-transfer-encoding;
-        s=001; bh=5Bs+S+DqcV4+vr9fx4AJBgWh2pekg079a6FzzAH0ATw=;
-        b=qX/BMj1nUwiTxzSd7H7AHKRfv5BbvfP4Jh8HDQo6yrXH7wDm59iQrE4bxAWHTzjqmwdy
-        WB4WdW8R4KENjpNSzz5bMESLlL/J7MSS676y5QIZfVVQWB+LOBJQz6LVeSCuG6uUt8w3bX
-        4NnrE3FgZfE6RD+pyZIYt9pp95wzgwSlQ=
-Received: by filterdrecv-p3iad2-5b55dcd864-kvwkt with SMTP id filterdrecv-p3iad2-5b55dcd864-kvwkt-20-5F1F65A0-2D
-        2020-07-27 23:39:12.870183937 +0000 UTC m=+2701788.345054250
-Received: from [192.168.1.14] (unknown)
-        by ismtpd0007p1lon1.sendgrid.net (SG) with ESMTP
-        id 3ZEc0KF5RNuDXvS6R__2MQ
-        Mon, 27 Jul 2020 23:39:12.527 +0000 (UTC)
-Subject: Re: [PATCH 06/10] media: uapi: h264: Cleanup DPB entry interface
-References: <20200715202233.185680-1-ezequiel@collabora.com>
- <20200715202233.185680-7-ezequiel@collabora.com>
- <5726fac8-9d3b-d429-0894-cd8c02c288ee@kwiboo.se>
- <6bac45d9b22deacf8ac7d68f5b51a5a6c30649f3.camel@collabora.com>
-From:   Jonas Karlman <jonas@kwiboo.se>
-Message-ID: <e435253e-67ea-fdec-bf18-059eb4c70a0e@kwiboo.se>
-Date:   Mon, 27 Jul 2020 23:39:13 +0000 (UTC)
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 27 Jul 2020 19:42:26 -0400
+Date:   Mon, 27 Jul 2020 23:42:14 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1595893340;
+        bh=AQmh+uIpMfdES2g/A6HYV2B7dFrVRubFbvwlphZUT8g=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=WPaKlK87v5tMlYboefBGF39WRaUFU27b7wQRzJkJ9uB7fbY/ytSsgHkgcbkkq8cfV
+         /OJfCX1otKSQfRrp98/he37W9RmEybcs/bJZU4qBd4/ja2FdEBxx0mVv06ZN9wj9JT
+         W/xhMBV3amEPPZj0xrA5KyRlcMg2flG8EQszcoG4=
+To:     Daniel Vetter <daniel@ffwll.ch>
+From:   Mazin Rezk <mnrzk@protonmail.com>
+Cc:     Mazin Rezk <mnrzk@protonmail.com>,
+        =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
+        Duncan <1i5t5.duncan@cox.net>, Kees Cook <keescook@chromium.org>,
+        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
+        "regressions@leemhuis.info" <regressions@leemhuis.info>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>
+Reply-To: Mazin Rezk <mnrzk@protonmail.com>
+Subject: Re: [PATCH] drm/amd/display: Clear dm_state for fast updates
+Message-ID: <YD-fbC_cowihrLhUGoqnRgtDZlb3b7XKwY7w-zv42iKinQLJ4S5NULKycSIyCPCDz6sFcCnPvB3MTNVLx8yQyde1J6P49FaKngQ68WhwQnE=@protonmail.com>
+In-Reply-To: <CAKMK7uFAnedLTp6LJYum6gYj3xaWkuuXJr70UJ48Pxxr-4dA7w@mail.gmail.com>
+References: <M0lxN5AUlPvzBKULfIBe5BZRwfQGXeMQCdWItYcQ-9P79y32WzExYK2Y0DwyNVtyGelqbvV07_lFk1oeT4cApbT-P_oH0bnxQbMmFsJv_xg=@protonmail.com> <ba078fb0-0dbc-df06-cfe9-f9537883f82a@amd.com> <e2f55480-c24f-6c85-08d3-21131a22d0bf@amd.com> <3b7e3e50-2ff7-eff3-2ffc-abaa4b36ce7f@amd.com> <CAKMK7uHCu02P4tvhF4LQbtYeNciU61ONC9EZRmQ-0wEGFPzZgg@mail.gmail.com> <Fnx2lsAReNccvQbyMYBgghvef4ekiQ_ZWL0m5BwF-2h48gvnNLghI4zkIWhQwy-H6CiytTXaxEtZ83dYRlzAXeKHujBRLc_tffmcJVWjwuo=@protonmail.com> <CAKMK7uFAnedLTp6LJYum6gYj3xaWkuuXJr70UJ48Pxxr-4dA7w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <6bac45d9b22deacf8ac7d68f5b51a5a6c30649f3.camel@collabora.com>
-X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
- =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0hyeVfXJ0qRFMQ=2Fad6?=
- =?us-ascii?Q?bY9XNaTywnYGO9boFDOKmCFO2cPO6rm6jR3CU4w?=
- =?us-ascii?Q?kEALqSzIetQnEGbUxI88Y2Lwy5T59lgFBStEUcC?=
- =?us-ascii?Q?7W4vSYVZcjcA8WFU7bpPLYr=2FUyNo2zodTkVIKnO?=
- =?us-ascii?Q?+yNw2Zwh6WlCcv9CX5PiiksHmyS+oX8xeJGLQW7?=
- =?us-ascii?Q?Z1GSmPYqVC503vnIOgypw=3D=3D?=
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Language: sv
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Monday, July 27, 2020 5:32 PM, Daniel Vetter <daniel@ffwll.ch> wrote:
 
-On 2020-07-24 21:08, Ezequiel Garcia wrote:
-> Hello Jonas,
-> 
-> On Wed, 2020-07-22 at 21:52 +0000, Jonas Karlman wrote:
->> On 2020-07-15 22:22, Ezequiel Garcia wrote:
->>> As discussed recently, the current interface for the
->>> Decoded Picture Buffer is not enough to properly
->>> support field coding.
->>>
->>> This commit introduces enough semantics to support
->>> frame and field coding, and to signal how DPB entries
->>> are "used for reference".
->>>
->>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
->>> ---
->>>  .../media/v4l/ext-ctrls-codec.rst             | 46 ++++++++++++-------
->>>  drivers/media/v4l2-core/v4l2-h264.c           |  4 +-
->>>  drivers/staging/media/rkvdec/rkvdec-h264.c    |  8 ++--
->>>  include/media/h264-ctrls.h                    |  8 +++-
->>>  4 files changed, 42 insertions(+), 24 deletions(-)
->>>
->>> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
->>> index dd8e5a2e8986..46d4c8c6ad47 100644
->>> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
->>> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
->>> @@ -2058,10 +2058,35 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->>>      * - __s32
->>>        - ``bottom_field_order_cnt``
->>>        -
->>> +    * - enum :c:type:`v4l2_h264_dpb_reference`
->>> +      - ``reference``
->>> +      - Specifies how the DPB entry is referenced.
->>>      * - __u32
->>>        - ``flags``
->>>        - See :ref:`DPB Entry Flags <h264_dpb_flags>`
->>>  
->>> +.. c:type:: v4l2_h264_dpb_reference
->>> +
->>> +.. cssclass:: longtable
->>> +
->>> +.. flat-table::
->>> +    :header-rows:  0
->>> +    :stub-columns: 0
->>> +    :widths:       1 1 2
->>> +
->>> +    * - ``V4L2_H264_DPB_TOP_REF``
->>> +      - 0x1
->>> +      - The top field in field pair is used for
->>> +        short-term reference.
->>> +    * - ``V4L2_H264_DPB_BOTTOM_REF``
->>> +      - 0x2
->>> +      - The bottom field in field pair is used for
->>> +        short-term reference.
->>> +    * - ``V4L2_H264_DPB_FRAME_REF``
->>> +      - 0x3
->>> +      - The frame (or the top/bottom fields, if it's a field pair)
->>> +        is used for short-term reference.
->>> +
->>>  .. _h264_dpb_flags:
->>>  
->>>  ``DPB Entries Flags``
->>> @@ -2075,29 +2100,16 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
->>>  
->>>      * - ``V4L2_H264_DPB_ENTRY_FLAG_VALID``
->>>        - 0x00000001
->>> -      - The DPB entry is valid and should be considered
->>> +      - The DPB entry is valid (non-empty) and should be considered.
->>>      * - ``V4L2_H264_DPB_ENTRY_FLAG_ACTIVE``
->>>        - 0x00000002
->>> -      - The DPB entry is currently being used as a reference frame
->>> +      - The DPB entry is used for reference.
->>>      * - ``V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM``
->>>        - 0x00000004
->>> -      - The DPB entry is a long term reference frame
->>> +      - The DPB entry is used for long-term reference.
->>>      * - ``V4L2_H264_DPB_ENTRY_FLAG_FIELD``
->>>        - 0x00000008
->>> -      - The DPB entry is a field reference, which means only one of the field
->>> -        will be used when decoding the new frame/field. When not set the DPB
->>> -        entry is a frame reference (both fields will be used). Note that this
->>> -        flag does not say anything about the number of fields contained in the
->>> -        reference frame, it just describes the one used to decode the new
->>> -        field/frame
->>> -    * - ``V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD``
->>> -      - 0x00000010
->>> -      - The DPB entry is a bottom field reference (only the bottom field of the
->>> -        reference frame is needed to decode the new frame/field). Only valid if
->>> -        V4L2_H264_DPB_ENTRY_FLAG_FIELD is set. When
->>> -        V4L2_H264_DPB_ENTRY_FLAG_FIELD is set but
->>> -        V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD is not, that means the
->>> -        DPB entry is a top field reference
->>> +      - The DPB entry is a single field or a complementary field pair.
->>>  
->>>  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE (enum)``
->>>      Specifies the decoding mode to use. Currently exposes slice-based and
->>> diff --git a/drivers/media/v4l2-core/v4l2-h264.c b/drivers/media/v4l2-core/v4l2-h264.c
->>> index edf6225f0522..306a51683606 100644
->>> --- a/drivers/media/v4l2-core/v4l2-h264.c
->>> +++ b/drivers/media/v4l2-core/v4l2-h264.c
->>> @@ -66,10 +66,10 @@ v4l2_h264_init_reflist_builder(struct v4l2_h264_reflist_builder *b,
->>>  		else
->>>  			b->refs[i].frame_num = dpb[i].frame_num;
->>>  
->>> -		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
->>> +		if (dpb[i].reference & V4L2_H264_DPB_FRAME_REF)
->>
->> This looks wrong, should probably use ==,
->>
->> dpb[i].reference == V4L2_H264_DPB_FRAME_REF
->>
->> else this would match any reference value.
->>
->>>  			pic_order_count = min(dpb[i].top_field_order_cnt,
->>>  					      dpb[i].bottom_field_order_cnt);
->>> -		else if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
->>> +		else if (dpb[i].reference & V4L2_H264_DPB_BOTTOM_REF)
->>>  			pic_order_count = dpb[i].bottom_field_order_cnt;
->>>  		else
->>>  			pic_order_count = dpb[i].top_field_order_cnt;
->>> diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
->>> index 7b66e2743a4f..57539c630422 100644
->>> --- a/drivers/staging/media/rkvdec/rkvdec-h264.c
->>> +++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
->>> @@ -953,11 +953,11 @@ static void config_registers(struct rkvdec_ctx *ctx,
->>>  			     RKVDEC_COLMV_USED_FLAG_REF;
->>>  
->>>  		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
->>> -			refer_addr |= RKVDEC_TOPFIELD_USED_REF |
->>> -				      RKVDEC_BOTFIELD_USED_REF;
->>> -		else if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
->>> +			refer_addr |= RKVDEC_FIELD_REF;
->>> +
->>> +		if (dpb[i].reference & V4L2_H264_DPB_TOP_REF)
->>>  			refer_addr |= RKVDEC_BOTFIELD_USED_REF;
->>> -		else
->>> +		else if (dpb[i].reference & V4L2_H264_DPB_BOTTOM_REF)
->>
->> This should probably be if and not else if, and BOTFIELD/TOPFIELD_USED_REF
->> seems to be mixed up.
->>
->> I have only taken a quick look so far, I will update ffmpeg and runtime test
->> later this weekend, will get back with result and full review on Sunday evening.
->>
-> 
-> Thanks that would be useful.
-> 
-> However, keep in mind this series is specifically concerned
-> with the uAPI review.
-> 
-> This is not supposed to fix the field coded support, or anything
-> else in any driver.
-> 
-> IMO, at this stage, fixing drivers is somewhat lower priority
-> than discussing and stabilizing the uAPI.
+> On Mon, Jul 27, 2020 at 11:11 PM Mazin Rezk <mnrzk@protonmail.com> wrote:
+> >
+> > On Monday, July 27, 2020 4:29 PM, Daniel Vetter <daniel@ffwll.ch> wrote=
+:
+> >
+> > > On Mon, Jul 27, 2020 at 9:28 PM Christian K=C3=B6nig
+> > > <christian.koenig@amd.com> wrote:
+> > > >
+> > > > Am 27.07.20 um 16:05 schrieb Kazlauskas, Nicholas:
+> > > > > On 2020-07-27 9:39 a.m., Christian K=C3=B6nig wrote:
+> > > > >> Am 27.07.20 um 07:40 schrieb Mazin Rezk:
+> > > > >>> This patch fixes a race condition that causes a use-after-free =
+during
+> > > > >>> amdgpu_dm_atomic_commit_tail. This can occur when 2 non-blockin=
+g
+> > > > >>> commits
+> > > > >>> are requested and the second one finishes before the first.
+> > > > >>> Essentially,
+> > > > >>> this bug occurs when the following sequence of events happens:
+> > > > >>>
+> > > > >>> 1. Non-blocking commit #1 is requested w/ a new dm_state #1 and=
+ is
+> > > > >>> deferred to the workqueue.
+> > > > >>>
+> > > > >>> 2. Non-blocking commit #2 is requested w/ a new dm_state #2 and=
+ is
+> > > > >>> deferred to the workqueue.
+> > > > >>>
+> > > > >>> 3. Commit #2 starts before commit #1, dm_state #1 is used in th=
+e
+> > > > >>> commit_tail and commit #2 completes, freeing dm_state #1.
+> > > > >>>
+> > > > >>> 4. Commit #1 starts after commit #2 completes, uses the freed d=
+m_state
+> > > > >>> 1 and dereferences a freelist pointer while setting the context=
+.
+> > > > >>
+> > > > >> Well I only have a one mile high view on this, but why don't you=
+ let
+> > > > >> the work items execute in order?
+> > > > >>
+> > > > >> That would be better anyway cause this way we don't trigger a ca=
+che
+> > > > >> line ping pong between CPUs.
+> > > > >>
+> > > > >> Christian.
+> > > > >
+> > > > > We use the DRM helpers for managing drm_atomic_commit_state and t=
+hose
+> > > > > helpers internally push non-blocking commit work into the system
+> > > > > unbound work queue.
+> > > >
+> > > > Mhm, well if you send those helper atomic commits in the order A,B =
+and
+> > > > they execute it in the order B,A I would call that a bug :)
+> > >
+> > > The way it works is it pushes all commits into unbound work queue, bu=
+t
+> > > then forces serialization as needed. We do _not_ want e.g. updates on
+> > > different CRTC to be serialized, that would result in lots of judder.
+> > > And hw is funny enough that there's all kinds of dependencies.
+> > >
+> > > The way you force synchronization is by adding other CRTC state
+> > > objects. So if DC is busted and can only handle a single update per
+> > > work item, then I guess you always need all CRTC states and everythin=
+g
+> > > will be run in order. But that also totally kills modern multi-screen
+> > > compositors. Xorg isn't modern, just in case that's not clear :-)
+> > >
+> > > Lucking at the code it seems like you indeed have only a single dm
+> > > state, so yeah global sync is what you'll need as immediate fix, and
+> > > then maybe fix up DM to not be quite so silly ... or at least only do
+> > > the dm state stuff when really needed.
+> > >
+> > > We could also sprinkle the drm_crtc_commit structure around a bit
+> > > (it's the glue that provides the synchronization across commits), but
+> > > since your dm state is global just grabbing all crtc states
+> > > unconditionally as part of that is probably best.
+> > >
+> > > > > While we could duplicate a copy of that code with nothing but the
+> > > > > workqueue changed that isn't something I'd really like to maintai=
+n
+> > > > > going forward.
+> > > >
+> > > > I'm not talking about duplicating the code, I'm talking about fixin=
+g the
+> > > > helpers. I don't know that code well, but from the outside it sound=
+s
+> > > > like a bug there.
+> > > >
+> > > > And executing work items in the order they are submitted is trivial=
+.
+> > > >
+> > > > Had anybody pinged Daniel or other people familiar with the helper =
+code
+> > > > about it?
+> > >
+> > > Yeah something is wrong here, and the fix looks horrible :-)
+> > >
+> > > Aside, I've also seen some recent discussion flare up about
+> > > drm_atomic_state_get/put used to paper over some other use-after-free=
+,
+> > > but this time related to interrupt handlers. Maybe a few rules about
+> > > that:
+> > > - dont
+> > > - especially not when it's interrupt handlers, because you can't call
+> > > drm_atomic_state_put from interrupt handlers.
+> > >
+> > > Instead have an spin_lock_irq to protect the shared date with your
+> > > interrupt handler, and _copy_ the date over. This is e.g. what
+> > > drm_crtc_arm_vblank_event does.
+> >
+> > Nicholas wrote a patch that attempted to resolve the issue by adding ev=
+ery
+> > CRTC into the commit to use use the stall checks. [1] While this forces
+> > synchronisation on commits, it's kind of a hacky method that may take a
+> > toll on performance.
+> >
+> > Is it possible to have a DRM helper that forces synchronisation on some
+> > commits without having to add every CRTC into the commit?
+> >
+> > Also, is synchronisation really necessary for fast updates in amdgpu?
+> > I'll admit, the idea of eliminating the use-after-free bug by eliminati=
+ng
+> > the use entirely doesn't seem ideal; but is forcing synchronisation on
+> > these updates that much better?
+>
+> Well clearing the dc_state pointer here and then allocating another
+> one in atomic_commit_tail also looks fishy. The proper fix is probably
+> a lot more involved, but yeah interim fix is to grab all crtc states
+> iff you also grabbed the dm_atomic_state structure. Real fix is to
+> only do this when necessary, which pretty much means the dc_state
+> needs to be somehow split up, or there needs to be some guarantees
+> about when it's necessary and when not. Otherwise parallel commits on
+> different CRTC are not possible with the current dc backend code.
 
-I have now tested rkvdec on a RK3328 device and needed to do 3 fixups, see [1].
-Initial ffmpeg update using update h264 uapi is located at [2], the ffmpeg
-update still needs to be tested with cedrus and hantro.
+In that case, I'll test out Nicholas' patch right now and see if it works.
+Unlike Duncan, something about my setup seems to trigger the bug rather
+quickly, so I should be able to tell if it works in the next couple of
+hours with a reasonable degree of accuracy.
 
-So far I have not seen any issue with the uapi changes.
+Thanks,
+Mazin Rezk
 
-Q: ffmpeg will not try to set SLICE_PARAMS or PRED_WEIGHT ctrls for
-DECODE_MODE_SLICE_BASED, should userspace check if ctrl exists or is using
-DECODE_MODE value okay?
-
-I have also pushed an updated WIP branch at [3] containing high 10,
-field encoded and hevc work.
-
-[1] https://github.com/Kwiboo/linux-rockchip/compare/b6b91f27c0cb33520e954e7bb2550e0e07ed4d85...b82b6e93feb9ca44d2c677f25416cf6345f0114d
-[2] https://github.com/Kwiboo/FFmpeg/commits/v4l2-request-hwaccel-4.3.1
-[3] https://github.com/Kwiboo/linux-rockchip/commits/linuxtv-rkvdec-work-in-progress
-
-Best regards,
-Jonas
-
-> 
-> Thanks,
-> Ezequiel
-> 
-> 
+>
+> See also my dma-fence annotation fixup patch, there dc_state also gets
+> in the way:
+>
+> https://lore.kernel.org/dri-devel/20200707201229.472834-21-daniel.vetter@=
+ffwll.ch/
+>
+> Nicholas, btw I'm still waiting for some dc feedback on that entire
+> series, and what/if there's plans to fix these issues properly.
+>
+> Maybe even going back to the subclassed drm_atomic_state might be
+> better than what we currently have.
+> -Daniel
+> >
+> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D207383#c96
+> >
+> > Thanks,
+> > Mazin Rezk
+> >
+> > >
+> > > Cheers, Daniel
+> > >
+> > > >
+> > > > Regards,
+> > > > Christian.
+> > > >
+> > > > >
+> > > > > Regards,
+> > > > > Nicholas Kazlauskas
+> > > > >
+> > > > >>
+> > > > >>>
+> > > > >>> Since this bug has only been spotted with fast commits, this pa=
+tch
+> > > > >>> fixes
+> > > > >>> the bug by clearing the dm_state instead of using the old dc_st=
+ate for
+> > > > >>> fast updates. In addition, since dm_state is only used for its =
+dc_state
+> > > > >>> and amdgpu_dm_atomic_commit_tail will retain the dc_state if no=
+ne is
+> > > > >>> found,
+> > > > >>> removing the dm_state should not have any consequences in fast =
+updates.
+> > > > >>>
+> > > > >>> This use-after-free bug has existed for a while now, but only c=
+aused a
+> > > > >>> noticeable issue starting from 5.7-rc1 due to 3202fa62f ("slub:
+> > > > >>> relocate
+> > > > >>> freelist pointer to middle of object") moving the freelist poin=
+ter from
+> > > > >>> dm_state->base (which was unused) to dm_state->context (which i=
+s
+> > > > >>> dereferenced).
+> > > > >>>
+> > > > >>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D207383
+> > > > >>> Fixes: bd200d190f45 ("drm/amd/display: Don't replace the dc_sta=
+te
+> > > > >>> for fast updates")
+> > > > >>> Reported-by: Duncan <1i5t5.duncan@cox.net>
+> > > > >>> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+> > > > >>> ---
+> > > > >>>   .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 36
+> > > > >>> ++++++++++++++-----
+> > > > >>>   1 file changed, 27 insertions(+), 9 deletions(-)
+> > > > >>>
+> > > > >>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > > >>> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > > >>> index 86ffa0c2880f..710edc70e37e 100644
+> > > > >>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > > >>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > > > >>> @@ -8717,20 +8717,38 @@ static int amdgpu_dm_atomic_check(struc=
+t
+> > > > >>> drm_device *dev,
+> > > > >>>            * the same resource. If we have a new DC context as =
+part of
+> > > > >>>            * the DM atomic state from validation we need to fre=
+e it and
+> > > > >>>            * retain the existing one instead.
+> > > > >>> +         *
+> > > > >>> +         * Furthermore, since the DM atomic state only contain=
+s the DC
+> > > > >>> +         * context and can safely be annulled, we can free the=
+ state
+> > > > >>> +         * and clear the associated private object now to free
+> > > > >>> +         * some memory and avoid a possible use-after-free lat=
+er.
+> > > > >>>            */
+> > > > >>> -        struct dm_atomic_state *new_dm_state, *old_dm_state;
+> > > > >>>
+> > > > >>> -        new_dm_state =3D dm_atomic_get_new_state(state);
+> > > > >>> -        old_dm_state =3D dm_atomic_get_old_state(state);
+> > > > >>> +        for (i =3D 0; i < state->num_private_objs; i++) {
+> > > > >>> +            struct drm_private_obj *obj =3D state->private_obj=
+s[i].ptr;
+> > > > >>>
+> > > > >>> -        if (new_dm_state && old_dm_state) {
+> > > > >>> -            if (new_dm_state->context)
+> > > > >>> -                dc_release_state(new_dm_state->context);
+> > > > >>> +            if (obj->funcs =3D=3D adev->dm.atomic_obj.funcs) {
+> > > > >>> +                int j =3D state->num_private_objs-1;
+> > > > >>>
+> > > > >>> -            new_dm_state->context =3D old_dm_state->context;
+> > > > >>> +                dm_atomic_destroy_state(obj,
+> > > > >>> +                        state->private_objs[i].state);
+> > > > >>> +
+> > > > >>> +                /* If i is not at the end of the array then th=
+e
+> > > > >>> +                 * last element needs to be moved to where i w=
+as
+> > > > >>> +                 * before the array can safely be truncated.
+> > > > >>> +                 */
+> > > > >>> +                if (i !=3D j)
+> > > > >>> +                    state->private_objs[i] =3D
+> > > > >>> +                        state->private_objs[j];
+> > > > >>>
+> > > > >>> -            if (old_dm_state->context)
+> > > > >>> -                dc_retain_state(old_dm_state->context);
+> > > > >>> +                state->private_objs[j].ptr =3D NULL;
+> > > > >>> +                state->private_objs[j].state =3D NULL;
+> > > > >>> +                state->private_objs[j].old_state =3D NULL;
+> > > > >>> +                state->private_objs[j].new_state =3D NULL;
+> > > > >>> +
+> > > > >>> +                state->num_private_objs =3D j;
+> > > > >>> +                break;
+> > > > >>> +            }
+> > > > >>>           }
+> > > > >>>       }
+> > > > >>>
+> > > > >>> --
+> > > > >>> 2.27.0
+> > > > >>>
+> > > > >>
+> > > > >
+> > > >
+> > > > _______________________________________________
+> > > > dri-devel mailing list
+> > > > dri-devel@lists.freedesktop.org
+> > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > >
+> > >
+> > >
+> > > --
+> > > Daniel Vetter
+> > > Software Engineer, Intel Corporation
+> > > http://blog.ffwll.ch
+>
+>
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
