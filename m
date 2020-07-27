@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFD5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405DCC433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40AB02173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169E32070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859511;
-	bh=ep+d7Iv3rXTIYLLXt+Mv1bQln7FvbbqZkmnX3wbQM+4=;
+	s=default; t=1595859515;
+	bh=N1qsdZkVZAZPDuNUk4mKrFEbtKcn95AWfSjOjhwaCH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K7hMPyVd9Dge6agy78dezXYstA84B9CmZh1kV008XfP6uHkRSa/DZuqgHGtvd2+ks
-	 DvKMziDLttTTVCZVXITGhLscz2N6qt1BX8hcsylxS/Ng6mROOWDkSn9MLu7SX7OTTB
-	 wLWTUvLIgTWQux8ZUena1KIa5CMVp9IBrJ69Z9Us=
+	b=gTZRd5A3O4uczDCJcPAc6E+ULE0904FceYnB0pTT0QtnjKD/44EEIgR1W5FZOEmQC
+	 YonTpuSAv18IX3bjdnFsy1ODPDDjo1Q7MsAsQQSIsibjAccHrjZ77lmHFvcUd8hIh3
+	 lzK7ZEmmuUdXpthl/6Zp+5jeo4uAYF6301rpbpts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731230AbgG0OS0 (ORCPT
+        id S1730653AbgG0OSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46000 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731214AbgG0OSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:22 -0400
+        id S1731229AbgG0OS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EFB120775;
-        Mon, 27 Jul 2020 14:18:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBF9720825;
+        Mon, 27 Jul 2020 14:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859501;
-        bh=ep+d7Iv3rXTIYLLXt+Mv1bQln7FvbbqZkmnX3wbQM+4=;
+        s=default; t=1595859506;
+        bh=N1qsdZkVZAZPDuNUk4mKrFEbtKcn95AWfSjOjhwaCH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g1GntiyIqx7m7JfNQcNr8dGF7H1opqT849t/WbE0mhWQmyNTAVbJy6enuMxgIRzQj
-         NHJP4Xsr5nKaHBnBMi28rLyUR6BKZCN5fnG5QTojuD5UeEEmrs+T+NYoQH9ejwDM4h
-         qeJDqCtqmpAMbEeshFdWPCUiq4ZemutiyLhQfd+E=
+        b=W86SqpXyDx4yR1YzxlQ8cf9u0t4vT0Ye2MkVvHvBWoQ66ZNLOGOMZ+BXPPQw5g5oQ
+         HowuuZt1MvpEXpz4+pJy28I89nLvKxR6A81tBGAunlbtZEiTYXh2NJ67o46HPOuBrp
+         bKz81YWfU2YK5eAV5DTSr4qGjBhN9JGgOPA8/iwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 132/138] ASoC: rt5670: Add new gpio1_is_ext_spk_en quirk and enable it on the Lenovo Miix 2 10
-Date:   Mon, 27 Jul 2020 16:05:27 +0200
-Message-Id: <20200727134932.015151849@linuxfoundation.org>
+        stable@vger.kernel.org, Forest Crossman <cyrozap@gmail.com>
+Subject: [PATCH 5.4 106/138] usb: xhci: Fix ASM2142/ASM3142 DMA addressing
+Date:   Mon, 27 Jul 2020 16:05:01 +0200
+Message-Id: <20200727134930.769999735@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -59,166 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Forest Crossman <cyrozap@gmail.com>
 
-commit 85ca6b17e2bb96b19caac3b02c003d670b66de96 upstream.
+commit dbb0897e805f2ab1b8bc358f6c3d878a376b8897 upstream.
 
-The Lenovo Miix 2 10 has a keyboard dock with extra speakers in the dock.
-Rather then the ACL5672's GPIO1 pin being used as IRQ to the CPU, it is
-actually used to enable the amplifier for these speakers
-(the IRQ to the CPU comes directly from the jack-detect switch).
+The ASM2142/ASM3142 (same PCI IDs) does not support full 64-bit DMA
+addresses, which can cause silent memory corruption or IOMMU errors on
+platforms that use the upper bits. Add the XHCI_NO_64BIT_SUPPORT quirk
+to fix this issue.
 
-Add a quirk for having an ext speaker-amplifier enable pin on GPIO1
-and replace the Lenovo Miix 2 10's dmi_system_id table entry's wrong
-GPIO_DEV quirk (which needs to be renamed to GPIO1_IS_IRQ) with the
-new RT5670_GPIO1_IS_EXT_SPK_EN quirk, so that we enable the external
-speaker-amplifier as necessary.
-
-Also update the ident field for the dmi_system_id table entry, the
-Miix models are not Thinkpads.
-
-Fixes: 67e03ff3f32f ("ASoC: codecs: rt5670: add Thinkpad Tablet 10 quirk")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1786723
-Link: https://lore.kernel.org/r/20200628155231.71089-4-hdegoede@redhat.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Forest Crossman <cyrozap@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200717112734.328432-1-cyrozap@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/sound/rt5670.h    |    1 
- sound/soc/codecs/rt5670.c |   71 ++++++++++++++++++++++++++++++++++++----------
- 2 files changed, 57 insertions(+), 15 deletions(-)
+ drivers/usb/host/xhci-pci.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/include/sound/rt5670.h
-+++ b/include/sound/rt5670.h
-@@ -12,6 +12,7 @@ struct rt5670_platform_data {
- 	int jd_mode;
- 	bool in2_diff;
- 	bool dev_gpio;
-+	bool gpio1_is_ext_spk_en;
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -250,6 +250,9 @@ static void xhci_pci_quirks(struct devic
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+ 			pdev->device == 0x1142)
+ 		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
++	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
++			pdev->device == 0x2142)
++		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
  
- 	bool dmic_en;
- 	unsigned int dmic1_data_pin;
---- a/sound/soc/codecs/rt5670.c
-+++ b/sound/soc/codecs/rt5670.c
-@@ -31,18 +31,19 @@
- #include "rt5670.h"
- #include "rt5670-dsp.h"
- 
--#define RT5670_DEV_GPIO     BIT(0)
--#define RT5670_IN2_DIFF     BIT(1)
--#define RT5670_DMIC_EN      BIT(2)
--#define RT5670_DMIC1_IN2P   BIT(3)
--#define RT5670_DMIC1_GPIO6  BIT(4)
--#define RT5670_DMIC1_GPIO7  BIT(5)
--#define RT5670_DMIC2_INR    BIT(6)
--#define RT5670_DMIC2_GPIO8  BIT(7)
--#define RT5670_DMIC3_GPIO5  BIT(8)
--#define RT5670_JD_MODE1     BIT(9)
--#define RT5670_JD_MODE2     BIT(10)
--#define RT5670_JD_MODE3     BIT(11)
-+#define RT5670_DEV_GPIO			BIT(0)
-+#define RT5670_IN2_DIFF			BIT(1)
-+#define RT5670_DMIC_EN			BIT(2)
-+#define RT5670_DMIC1_IN2P		BIT(3)
-+#define RT5670_DMIC1_GPIO6		BIT(4)
-+#define RT5670_DMIC1_GPIO7		BIT(5)
-+#define RT5670_DMIC2_INR		BIT(6)
-+#define RT5670_DMIC2_GPIO8		BIT(7)
-+#define RT5670_DMIC3_GPIO5		BIT(8)
-+#define RT5670_JD_MODE1			BIT(9)
-+#define RT5670_JD_MODE2			BIT(10)
-+#define RT5670_JD_MODE3			BIT(11)
-+#define RT5670_GPIO1_IS_EXT_SPK_EN	BIT(12)
- 
- static unsigned long rt5670_quirk;
- static unsigned int quirk_override;
-@@ -1447,6 +1448,33 @@ static int rt5670_hp_event(struct snd_so
- 	return 0;
- }
- 
-+static int rt5670_spk_event(struct snd_soc_dapm_widget *w,
-+	struct snd_kcontrol *kcontrol, int event)
-+{
-+	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-+	struct rt5670_priv *rt5670 = snd_soc_component_get_drvdata(component);
-+
-+	if (!rt5670->pdata.gpio1_is_ext_spk_en)
-+		return 0;
-+
-+	switch (event) {
-+	case SND_SOC_DAPM_POST_PMU:
-+		regmap_update_bits(rt5670->regmap, RT5670_GPIO_CTRL2,
-+				   RT5670_GP1_OUT_MASK, RT5670_GP1_OUT_HI);
-+		break;
-+
-+	case SND_SOC_DAPM_PRE_PMD:
-+		regmap_update_bits(rt5670->regmap, RT5670_GPIO_CTRL2,
-+				   RT5670_GP1_OUT_MASK, RT5670_GP1_OUT_LO);
-+		break;
-+
-+	default:
-+		return 0;
-+	}
-+
-+	return 0;
-+}
-+
- static int rt5670_bst1_event(struct snd_soc_dapm_widget *w,
- 	struct snd_kcontrol *kcontrol, int event)
- {
-@@ -1860,7 +1888,9 @@ static const struct snd_soc_dapm_widget
- };
- 
- static const struct snd_soc_dapm_widget rt5672_specific_dapm_widgets[] = {
--	SND_SOC_DAPM_PGA("SPO Amp", SND_SOC_NOPM, 0, 0, NULL, 0),
-+	SND_SOC_DAPM_PGA_E("SPO Amp", SND_SOC_NOPM, 0, 0, NULL, 0,
-+			   rt5670_spk_event, SND_SOC_DAPM_PRE_PMD |
-+			   SND_SOC_DAPM_POST_PMU),
- 	SND_SOC_DAPM_OUTPUT("SPOLP"),
- 	SND_SOC_DAPM_OUTPUT("SPOLN"),
- 	SND_SOC_DAPM_OUTPUT("SPORP"),
-@@ -2857,14 +2887,14 @@ static const struct dmi_system_id dmi_pl
- 	},
- 	{
- 		.callback = rt5670_quirk_cb,
--		.ident = "Lenovo Thinkpad Tablet 10",
-+		.ident = "Lenovo Miix 2 10",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
- 			DMI_MATCH(DMI_PRODUCT_VERSION, "Lenovo Miix 2 10"),
- 		},
- 		.driver_data = (unsigned long *)(RT5670_DMIC_EN |
- 						 RT5670_DMIC1_IN2P |
--						 RT5670_DEV_GPIO |
-+						 RT5670_GPIO1_IS_EXT_SPK_EN |
- 						 RT5670_JD_MODE2),
- 	},
- 	{
-@@ -2924,6 +2954,10 @@ static int rt5670_i2c_probe(struct i2c_c
- 		rt5670->pdata.dev_gpio = true;
- 		dev_info(&i2c->dev, "quirk dev_gpio\n");
- 	}
-+	if (rt5670_quirk & RT5670_GPIO1_IS_EXT_SPK_EN) {
-+		rt5670->pdata.gpio1_is_ext_spk_en = true;
-+		dev_info(&i2c->dev, "quirk GPIO1 is external speaker enable\n");
-+	}
- 	if (rt5670_quirk & RT5670_IN2_DIFF) {
- 		rt5670->pdata.in2_diff = true;
- 		dev_info(&i2c->dev, "quirk IN2_DIFF\n");
-@@ -3022,6 +3056,13 @@ static int rt5670_i2c_probe(struct i2c_c
- 		regmap_update_bits(rt5670->regmap, RT5670_GPIO_CTRL2,
- 				   RT5670_GP1_PF_MASK, RT5670_GP1_PF_OUT);
- 	}
-+
-+	if (rt5670->pdata.gpio1_is_ext_spk_en) {
-+		regmap_update_bits(rt5670->regmap, RT5670_GPIO_CTRL1,
-+				   RT5670_GP1_PIN_MASK, RT5670_GP1_PIN_GPIO1);
-+		regmap_update_bits(rt5670->regmap, RT5670_GPIO_CTRL2,
-+				   RT5670_GP1_PF_MASK, RT5670_GP1_PF_OUT);
-+	}
- 
- 	if (rt5670->pdata.jd_mode) {
- 		regmap_update_bits(rt5670->regmap, RT5670_GLB_CLK,
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+ 		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
 
 
