@@ -2,112 +2,99 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A13C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8B8A20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE8820719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:34:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=iram.es header.i=@iram.es header.b="AVE2V79d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgG0IeR (ORCPT
+        id S1726808AbgG0Iej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:34:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgG0IeR (ORCPT
+        Mon, 27 Jul 2020 04:34:39 -0400
+Received: from outbound1mad.lav.puc.rediris.es ([130.206.19.137]:60518 "EHLO
+        mx01.puc.rediris.es" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726227AbgG0Iej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:34:17 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B13BC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 01:34:17 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jzyaI-0000ik-4Y; Mon, 27 Jul 2020 10:34:10 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jzyaG-0001dX-V7; Mon, 27 Jul 2020 10:34:08 +0200
-Date:   Mon, 27 Jul 2020 10:34:08 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Martin Botka <martin.botka1@gmail.com>
-Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
-        Konrad Dybcio <konradybcio@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
- with u64 data length
-Message-ID: <20200727083408.jqm72hty62w7kxdc@pengutronix.de>
-References: <20200724213659.273599-1-martin.botka1@gmail.com>
- <20200724213659.273599-3-martin.botka1@gmail.com>
- <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
- <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gmail.com>
- <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com>
- <20200727075243.cjkxblsivgnn6jsk@pengutronix.de>
- <CADQ2G_GcYh13CGbApCqvi3xcHU-Ur2ej98VccKFOUSOZPrQZnQ@mail.gmail.com>
+        Mon, 27 Jul 2020 04:34:39 -0400
+X-Greylist: delayed 642 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Jul 2020 04:34:38 EDT
+Received: from mta-out02.sim.rediris.es (mta-out02.sim.rediris.es [130.206.24.44])
+        by mx01.puc.rediris.es  with ESMTP id 06R8Nclx000553-06R8Ncm1000553
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 27 Jul 2020 10:23:38 +0200
+Received: from mta-out02.sim.rediris.es (localhost.localdomain [127.0.0.1])
+        by mta-out02.sim.rediris.es (Postfix) with ESMTPS id F263AC143E2;
+        Mon, 27 Jul 2020 10:23:37 +0200 (CEST)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mta-out02.sim.rediris.es (Postfix) with ESMTP id 9E3D9C143E5;
+        Mon, 27 Jul 2020 10:23:37 +0200 (CEST)
+X-Amavis-Modified: Mail body modified (using disclaimer) -
+        mta-out02.sim.rediris.es
+Received: from mta-out02.sim.rediris.es ([127.0.0.1])
+        by localhost (mta-out02.sim.rediris.es [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id uzO0DVWZRF3N; Mon, 27 Jul 2020 10:23:37 +0200 (CEST)
+Received: from lt-gp.iram.es (75.red-88-27-245.staticip.rima-tde.net [88.27.245.75])
+        by mta-out02.sim.rediris.es (Postfix) with ESMTPA id F2D9CC143E2;
+        Mon, 27 Jul 2020 10:23:35 +0200 (CEST)
+Date:   Mon, 27 Jul 2020 10:23:31 +0200
+From:   Gabriel Paubert <paubert@iram.es>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org,
+        dja@axtens.net
+Subject: Re: [PATCH v2 2/5] powerpc: Allow 4224 bytes of stack expansion for
+ the signal frame
+Message-ID: <20200727082331.GA2110@lt-gp.iram.es>
+References: <20200724092528.1578671-1-mpe@ellerman.id.au>
+ <20200724092528.1578671-2-mpe@ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lvdzfpf3t7glasbo"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADQ2G_GcYh13CGbApCqvi3xcHU-Ur2ej98VccKFOUSOZPrQZnQ@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200724092528.1578671-2-mpe@ellerman.id.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=iram.es; s=DKIM; c=relaxed/relaxed;
+ h=date:from:to:cc:subject:message-id:references:mime-version:content-type;
+ bh=1ZiclzWz6oRLNeIZ15slU/UsF+W9BEH+Xsbw5PctIeE=;
+ b=AVE2V79dBHbGgXqjCH0Kp156+jzlwPfSIyCjGr6Gtf4dw7kS/LpXXwsmne4zYQ5FBqsbd+3q/s5y
+        JvlpRRdehpXLSBWzkgtmf5caJJvqbUHvrCFykvs9JpJEyOvE/hzs71VhQbJiTwTwfoXhuZK/jr6w
+        FjWQFPU6BkL7q17HUxt9y9PRhQUN1hMYi2oR+Mgi+fAwQLEy/sM4JycmET/8I/mGsVgnpzHTyx8t
+        RnHFFXFvaSDEylntHhb0rPl3L6FrgzKHk0iU/5g9WS9ZGY7qG4pNNEwza+nxYA00El9rcC0gUr+y
+        /l+hJUkZluc9lLyLD2PpSEkZ1rToQES3GKFrGg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 24, 2020 at 07:25:25PM +1000, Michael Ellerman wrote:
+> We have powerpc specific logic in our page fault handling to decide if
+> an access to an unmapped address below the stack pointer should expand
+> the stack VMA.
+> 
+> The code was originally added in 2004 "ported from 2.4". The rough
+> logic is that the stack is allowed to grow to 1MB with no extra
+> checking. Over 1MB the access must be within 2048 bytes of the stack
+> pointer, or be from a user instruction that updates the stack pointer.
+> 
+> The 2048 byte allowance below the stack pointer is there to cover the
+> 288 byte "red zone" as well as the "about 1.5kB" needed by the signal
+> delivery code.
+> 
+> Unfortunately since then the signal frame has expanded, and is now
+> 4224 bytes on 64-bit kernels with transactional memory enabled.
 
---lvdzfpf3t7glasbo
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Are there really users of transactional memory in the wild? 
 
-Hello Martin,
+Just asking because Power10 removes TM, and Power9 has had some issues
+with it AFAICT.
 
-On Mon, Jul 27, 2020 at 09:58:01AM +0200, Martin Botka wrote:
-> > I hit "reply-to-all" and the mail only was sent to you because you wrote
-> > to only me.
->=20
-> Yes my reply was only to you. But your original message was sent only to =
-me too.
-> So when i clicked reply to all it was only you as you sent it only to me.
+Getting rid of it (if possible) would result in smaller signal frames,
+with simpler signal delivery code (probably slightly faster also).
 
-Oh indeed. Bummer, and I was so sure to always reply to all :-|
+	Gabriel
+ 
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---lvdzfpf3t7glasbo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8ekX0ACgkQwfwUeK3K
-7AnF8Af/auMYk0XSqHjSdH6o5BpdaRw4k2nwyrLlpPbA1EAo1doDPo+5qggDDEEI
-Hhasvj30vEfKAP5PHmRcwHSacAYoUrLgzL9vrO3VLDrSfq1+xPoR2oZNyvEwyNjY
-ORMuV/aXEqcOgjfqciLl/qjMouS5RFyMryESdDULaQTPtIPNJGtFAL63cWibRVB2
-jh8JDB9F/rijp8QsmEDDqEMVSyjbLoGWHdQJvbbd3N9Xy8Rke6Iob+AUXulnFzaC
-q1sOJT3ypUjDhMhvxNBUSMVto8pKUUPZfuJosWBWDpWmAA1Bqi93FvTNyAGKeo4E
-D7Ne9+lzuKLmtH6bwgskg/LCNtlsRA==
-=VGmX
------END PGP SIGNATURE-----
-
---lvdzfpf3t7glasbo--
