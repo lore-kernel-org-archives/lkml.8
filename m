@@ -2,255 +2,122 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D801C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0443CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 369DE2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D4820775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ID/e03+H"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fKUUcjou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgG0Nml (ORCPT
+        id S1728491AbgG0NpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:42:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58828 "EHLO
+        Mon, 27 Jul 2020 09:45:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgG0Nmk (ORCPT
+        with ESMTP id S1728391AbgG0NpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:42:40 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79C4DC061794;
-        Mon, 27 Jul 2020 06:42:40 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id a8so12172581edy.1;
-        Mon, 27 Jul 2020 06:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=reply-to:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=r5UgUYmGIu8dXLKxxEsnpe0wyvxQ3PiGThgV1hXOvFQ=;
-        b=ID/e03+HVhMp8vhvRxAWcrJqeQDn0B0elBX4JgzNp19TqdRPpj0JAdi/gB71qgMKDg
-         4zs/nX407YlE6kFur9vBNlLxC7jkSwZtXgiCd8aDcz8Yr+qF09IxcCzXzaxapbhlv3gb
-         3t+nSiqVhTjec8RzhU3Z7PXqxtq1dOGRSkTtaLAjXxNMM/YpEXrG5AXcedxIPgvhHDdZ
-         tQbfJSYoS9+SHbUQ9t2/jdCRXO+H1AuOUMxtgUQ401FmFWdgdoLWulNpKhKFUc2rkVwa
-         w9M6e2dLQEHB2l/6aIqg5U9jaFgiQ58s7ukCDxCIlQGT/k213KvKlieMi2URT44kJ/m2
-         /K1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-transfer-encoding:content-language;
-        bh=r5UgUYmGIu8dXLKxxEsnpe0wyvxQ3PiGThgV1hXOvFQ=;
-        b=qu5i2qOgQiKU3cuOWZqPxJkMN7Zyt8GwDTIFdoSniBbWdtjjGVRW/jxppEwibSoQjr
-         wuS8eSyFnTPm/d0GwE6vJhnDGXbvL2YPMxbGos0aX7Tb5VBSf5/AW5ivjD58kO7jG6xx
-         zEXGgWOMB0kMKTVymolPAIypUB1ljoucm8HAeH5FAlgsr3uQaa2CekNFNXMdHsgvcCh1
-         ejVZ0vQWVmrabxm5tZXA8WeFMbH0n5MdrL0tp8MrhV431jhl3hJ4/k6ptL+BBbD5IW79
-         tcrD3wx7rvJrZhXatK3HZLdbuoBdyAFX7lt7pyw59A1zuKD9fu+fl3nN/qWTRnwOJrhE
-         vivw==
-X-Gm-Message-State: AOAM531q4JxozX4akgjX9r1WoCWxWo3Fg5/4YO5XssERVzWBkP65yp4+
-        4ypsbzzxn1zKaZOZ8WNF9ozkIn7l
-X-Google-Smtp-Source: ABdhPJwZznYnW4z4lkEFxOLCLYaX5bd+Wte9m7+t5rV8Uu8lPzz5m3GiJZ1jVnXU0ape3kDfG59Mng==
-X-Received: by 2002:a05:6402:1777:: with SMTP id da23mr20990077edb.260.1595857358906;
-        Mon, 27 Jul 2020 06:42:38 -0700 (PDT)
-Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
-        by smtp.gmail.com with ESMTPSA id n5sm6989547eja.70.2020.07.27.06.42.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 06:42:38 -0700 (PDT)
-Reply-To: christian.koenig@amd.com
-Subject: Re: [PATCH 1/2] drm/radeon: switch from 'pci_' to 'dma_' API
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        alexander.deucher@amd.com, christian.koenig@amd.com,
-        airlied@linux.ie, daniel@ffwll.ch
-Cc:     kernel-janitors@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200727103421.50739-1-christophe.jaillet@wanadoo.fr>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Message-ID: <224fc7f6-f56b-1dc8-87f2-33ff85d5720d@gmail.com>
-Date:   Mon, 27 Jul 2020 15:42:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 27 Jul 2020 09:45:12 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BADB1C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 06:45:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=w3IFzN3dHxTsM6d1vVVpNI9q/Oauc9/cIxmbJnleAH8=; b=fKUUcjouGdOCtKPvq7fa+umPtH
+        Ip3H8UImSDIcUah7UMcMXwJsU6623ygbn3SR/tbDfYEKnPIvQVGYQp9d/Pj+BHHMH/aMYEYZTvmfT
+        Eqi1UnyZnECIU4auCg+Sl3YY3n2qa4V1aAwfAMmh6xPMuLFCO71rRFUFhmPAnGEQPHr06hczZ7SWs
+        y4EeAKJxiAm66IvXqKXGiZuOVg8znkZfbeOsQKZSZYbPIJW+GiuXyWLANjHk5Bibz0Q5jdQFzRLNH
+        vVO2PPip/PxRp9Ev9wb6IJUYK1RTdCY3h+CupiXqDVGF18o5YumL051RB7bresygHWaoOw4GndcJB
+        o/xZQ7Tw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k03Qs-0002Oi-Gr; Mon, 27 Jul 2020 13:44:46 +0000
+Date:   Mon, 27 Jul 2020 14:44:46 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+c48f34012b06c4ac67dd@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: kernel BUG at include/linux/swapops.h:LINE!
+Message-ID: <20200727134446.GL23808@casper.infradead.org>
+References: <000000000000bc4fd705a6e090e2@google.com>
+ <0000000000004c38cd05aad1d13f@google.com>
+ <20200720165144.93189f7825bd28e234a42cb8@linux-foundation.org>
+ <20200723073744.5268-1-hdanton@sina.com>
+ <20200724111311.rcjqigtjqpkenxg6@box>
+ <20200726164904.GG23808@casper.infradead.org>
+ <20200727103140.xycdx6ctecomqsoe@box>
+ <20200727125950.12048-1-hdanton@sina.com>
 MIME-Version: 1.0
-In-Reply-To: <20200727103421.50739-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727125950.12048-1-hdanton@sina.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 27.07.20 um 12:34 schrieb Christophe JAILLET:
-> The wrappers in include/linux/pci-dma-compat.h should go away.
->
-> The patch has been generated with the coccinelle script below and has been
-> hand modified to replace GFP_ with a correct flag.
-> It has been compile tested.
->
-> When memory is allocated in 'radeon_gart_table_ram_alloc()' GFP_KERNEL
-> can be used because its callers already use this flag.
->
-> Both 'r100_pci_gart_init()' (r100.c) and 'rs400_gart_init()' (rs400.c)
-> call 'radeon_gart_init()'.
-> This function uses 'vmalloc'.
->
->
-> @@
-> @@
-> -    PCI_DMA_BIDIRECTIONAL
-> +    DMA_BIDIRECTIONAL
->
-> @@
-> @@
-> -    PCI_DMA_TODEVICE
-> +    DMA_TO_DEVICE
->
-> @@
-> @@
-> -    PCI_DMA_FROMDEVICE
-> +    DMA_FROM_DEVICE
->
-> @@
-> @@
-> -    PCI_DMA_NONE
-> +    DMA_NONE
->
-> @@
-> expression e1, e2, e3;
-> @@
-> -    pci_alloc_consistent(e1, e2, e3)
-> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
->
-> @@
-> expression e1, e2, e3;
-> @@
-> -    pci_zalloc_consistent(e1, e2, e3)
-> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
->
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_free_consistent(e1, e2, e3, e4)
-> +    dma_free_coherent(&e1->dev, e2, e3, e4)
->
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_map_single(e1, e2, e3, e4)
-> +    dma_map_single(&e1->dev, e2, e3, e4)
->
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_single(e1, e2, e3, e4)
-> +    dma_unmap_single(&e1->dev, e2, e3, e4)
->
-> @@
-> expression e1, e2, e3, e4, e5;
-> @@
-> -    pci_map_page(e1, e2, e3, e4, e5)
-> +    dma_map_page(&e1->dev, e2, e3, e4, e5)
->
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_page(e1, e2, e3, e4)
-> +    dma_unmap_page(&e1->dev, e2, e3, e4)
->
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_map_sg(e1, e2, e3, e4)
-> +    dma_map_sg(&e1->dev, e2, e3, e4)
->
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_sg(e1, e2, e3, e4)
-> +    dma_unmap_sg(&e1->dev, e2, e3, e4)
->
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-> +    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
->
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-> +    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
->
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-> +    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
->
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-> +    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
->
-> @@
-> expression e1, e2;
-> @@
-> -    pci_dma_mapping_error(e1, e2)
-> +    dma_mapping_error(&e1->dev, e2)
->
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_dma_mask(e1, e2)
-> +    dma_set_mask(&e1->dev, e2)
->
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_consistent_dma_mask(e1, e2)
-> +    dma_set_coherent_mask(&e1->dev, e2)
->
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Mon, Jul 27, 2020 at 08:59:50PM +0800, Hillf Danton wrote:
+> Can you elaborate on the difference between the two dumps?
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
+You didn't trim anything, so I have no idea which two dumps you mean.
 
-> ---
-> If needed, see post from Christoph Hellwig on the kernel-janitors ML:
->     https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
-> ---
->   drivers/gpu/drm/radeon/radeon_gart.c | 9 ++++-----
->   1 file changed, 4 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/radeon/radeon_gart.c b/drivers/gpu/drm/radeon/radeon_gart.c
-> index f178ba321715..b7ce254e5663 100644
-> --- a/drivers/gpu/drm/radeon/radeon_gart.c
-> +++ b/drivers/gpu/drm/radeon/radeon_gart.c
-> @@ -72,8 +72,8 @@ int radeon_gart_table_ram_alloc(struct radeon_device *rdev)
->   {
->   	void *ptr;
->   
-> -	ptr = pci_alloc_consistent(rdev->pdev, rdev->gart.table_size,
-> -				   &rdev->gart.table_addr);
-> +	ptr = dma_alloc_coherent(&rdev->pdev->dev, rdev->gart.table_size,
-> +				 &rdev->gart.table_addr, GFP_KERNEL);
->   	if (ptr == NULL) {
->   		return -ENOMEM;
->   	}
-> @@ -110,9 +110,8 @@ void radeon_gart_table_ram_free(struct radeon_device *rdev)
->   			      rdev->gart.table_size >> PAGE_SHIFT);
->   	}
->   #endif
-> -	pci_free_consistent(rdev->pdev, rdev->gart.table_size,
-> -			    (void *)rdev->gart.ptr,
-> -			    rdev->gart.table_addr);
-> +	dma_free_coherent(&rdev->pdev->dev, rdev->gart.table_size,
-> +			  (void *)rdev->gart.ptr, rdev->gart.table_addr);
->   	rdev->gart.ptr = NULL;
->   	rdev->gart.table_addr = 0;
->   }
+I'll annotate below ...
 
+> > > On Sun, Jul 26, 2020 at 05:49:04PM +0100, Matthew Wilcox wrote:
+> > > > 1457 086 (20181): drop_caches: 3
+> > > > 1457 page:00000000a216ae9a refcount:2 mapcount:0 mapping:000000009ba7bfed index:0x2227 pfn:0x229e7
+> > > > 1457 aops:def_blk_aops ino:0
+> > > > 1457 flags: 0x4000000000002030(lru|active|private)
+> > > > 1457 raw: 4000000000002030 fffff5b4416b5a48 fffff5b4408a7988 ffff9e9c34848578
+> > > > 1457 raw: 0000000000002227 ffff9e9bd18f0d00 00000002ffffffff 0000000000000000
+> > > > 1457 page dumped because: not locked
+> > > > 1457 swap entry 30.229e7
+
+This is a dump of the page that was found when looking up the migration entry.
+
+> On Mon, 27 Jul 2020 13:03:10 +0100 Matthew Wilcox wrote:
+> > It's not mapped with a PMD.  I tweaked my debugging slightly:
+> > 
+> >  static inline swp_entry_t make_migration_entry(struct page *page, int write)
+> >  {
+> > -       BUG_ON(!PageLocked(compound_head(page)));
+> > +       VM_BUG_ON_PAGE(!PageLocked(page), page);
+> >  
+> > +if (PageHead(page)) dump_page(page, "make entry");
+> > +if (PageTail(page)) printk("pfn %lx order %d\n", page_to_pfn(page), thp_order(thp_head(page)));
+> > 
+> > 1523 page:0000000006f62206 refcount:490 mapcount:1 mapping:0000000000000000 index:0x562b12a00 pfn:0x1dc00
+> > 1523 head:0000000006f62206 order:9 compound_mapcount:0 compound_pincount:0
+> > 1523 anon flags: 0x400000000009003d(locked|uptodate|dirty|lru|active|head|swapbacked)
+> > 1523 raw: 400000000009003d ffffecfd41301308 ffffecfd41b08008 ffff9e9971c00059
+> > 1523 raw: 0000000562b12a00 0000000000000000 000001ea00000000 0000000000000000
+> > 1523 page dumped because: make entry
+
+This is dumping the page when we create the entry.
+
+For completeness, here's the page that we find from the same run.
+
+1523 page:00000000a18100e6 refcount:0 mapcount:0 mapping:0000000000000000 index:0x1 pfn:0x1ddde
+1523 flags: 0x4000000000000000()
+1523 raw: 4000000000000000 dead000000000100 dead000000000122 0000000000000000
+1523 raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
+1523 page dumped because: not locked
+
+(an order-9 page will occupy PFNs 0x1dc00-0x1ddff)
+
+It's clearly been freed and is still sitting on the per-CPU free list.
+I've also seen them as PageBuddy and, as in the first example above,
+reallocated to a different user.
