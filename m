@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E27FC433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6868C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E171B205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD11205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbgG0LG0 (ORCPT
+        id S1728596AbgG0LG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:06:26 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40686 "EHLO
+        Mon, 27 Jul 2020 07:06:29 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40692 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728528AbgG0LGQ (ORCPT
+        with ESMTP id S1728533AbgG0LGQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Jul 2020 07:06:16 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
         with SMTP; 27 Jul 2020 14:06:12 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (dev-l-vrt-135.mtl.labs.mlnx [10.234.135.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06RB6CNb022190;
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06RB6Cwo022180;
         Mon, 27 Jul 2020 14:06:12 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 06RB6CtK002390;
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 06RB6Cms002388;
         Mon, 27 Jul 2020 14:06:12 +0300
 Received: (from moshe@localhost)
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 06RB6CKl002389;
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 06RB6Cht002387;
         Mon, 27 Jul 2020 14:06:12 +0300
 From:   Moshe Shemesh <moshe@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>,
@@ -38,9 +38,9 @@ To:     "David S. Miller" <davem@davemloft.net>,
         Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC 04/13] net/mlx5: Set cap for pci sync for fw update event
-Date:   Mon, 27 Jul 2020 14:02:24 +0300
-Message-Id: <1595847753-2234-5-git-send-email-moshe@mellanox.com>
+Subject: [PATCH net-next RFC 03/13] net/mlx5: Add functions to set/query MFRL register
+Date:   Mon, 27 Jul 2020 14:02:23 +0300
+Message-Id: <1595847753-2234-4-git-send-email-moshe@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
 In-Reply-To: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
 References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
@@ -49,28 +49,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set capability to notify the firmware that this host driver is capable
-of handling pci sync for firmware update events.
+Add functions to query and set the MFRL reset options supported by
+firmware.
 
 Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../net/ethernet/mellanox/mlx5/core/Makefile  |  2 +-
+ .../ethernet/mellanox/mlx5/core/fw_reset.c    | 46 +++++++++++++++++++
+ .../ethernet/mellanox/mlx5/core/fw_reset.h    | 13 ++++++
+ 3 files changed, 60 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index e32d46c33701..5fb23cfecd71 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -548,6 +548,9 @@ static int handle_hca_cap(struct mlx5_core_dev *dev, void *set_ctx)
- 	if (MLX5_CAP_GEN_MAX(dev, dct))
- 		MLX5_SET(cmd_hca_cap, set_hca_cap, dct, 1);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
+index 10e6886c96ba..4d45a2f6fed6 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
++++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
+@@ -16,7 +16,7 @@ mlx5_core-y :=	main.o cmd.o debugfs.o fw.o eq.o uar.o pagealloc.o \
+ 		transobj.o vport.o sriov.o fs_cmd.o fs_core.o pci_irq.o \
+ 		fs_counters.o rl.o lag.o dev.o events.o wq.o lib/gid.o \
+ 		lib/devcom.o lib/pci_vsc.o lib/dm.o diag/fs_tracepoint.o \
+-		diag/fw_tracer.o diag/crdump.o devlink.o diag/rsc_dump.o
++		diag/fw_tracer.o diag/crdump.o devlink.o diag/rsc_dump.o fw_reset.o
  
-+	if (MLX5_CAP_GEN_MAX(dev, pci_sync_for_fw_update_event))
-+		MLX5_SET(cmd_hca_cap, set_hca_cap, pci_sync_for_fw_update_event, 1);
+ #
+ # Netdev basic
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+new file mode 100644
+index 000000000000..76d2cece29ac
+--- /dev/null
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+@@ -0,0 +1,46 @@
++// SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
++/* Copyright (c) 2020, Mellanox Technologies inc.  All rights reserved. */
 +
- 	if (MLX5_CAP_GEN_MAX(dev, num_vhca_ports))
- 		MLX5_SET(cmd_hca_cap,
- 			 set_hca_cap,
++#include "fw_reset.h"
++
++static int mlx5_reg_mfrl_set(struct mlx5_core_dev *dev, u8 reset_level,
++			     u8 reset_type_sel, u8 sync_resp, bool sync_start)
++{
++	u32 out[MLX5_ST_SZ_DW(mfrl_reg)] = {};
++	u32 in[MLX5_ST_SZ_DW(mfrl_reg)] = {};
++
++	MLX5_SET(mfrl_reg, in, reset_level, reset_level);
++	MLX5_SET(mfrl_reg, in, rst_type_sel, reset_type_sel);
++	MLX5_SET(mfrl_reg, in, pci_sync_for_fw_update_resp, sync_resp);
++	MLX5_SET(mfrl_reg, in, pci_sync_for_fw_update_start, sync_start);
++
++	return mlx5_core_access_reg(dev, in, sizeof(in), out, sizeof(out), MLX5_REG_MFRL, 0, 1);
++}
++
++int mlx5_reg_mfrl_query(struct mlx5_core_dev *dev, u8 *reset_level, u8 *reset_type)
++{
++	u32 out[MLX5_ST_SZ_DW(mfrl_reg)] = {};
++	u32 in[MLX5_ST_SZ_DW(mfrl_reg)] = {};
++	int err;
++
++	err = mlx5_core_access_reg(dev, in, sizeof(in), out, sizeof(out), MLX5_REG_MFRL, 0, 0);
++	if (err)
++		return err;
++
++	if (reset_level)
++		*reset_level = MLX5_GET(mfrl_reg, out, reset_level);
++	if (reset_type)
++		*reset_type = MLX5_GET(mfrl_reg, out, reset_type);
++
++	return 0;
++}
++
++int mlx5_fw_set_reset_sync(struct mlx5_core_dev *dev, u8 reset_type_sel)
++{
++	return mlx5_reg_mfrl_set(dev, MLX5_MFRL_REG_RESET_LEVEL3, reset_type_sel, 0, true);
++}
++
++int mlx5_fw_set_live_patch(struct mlx5_core_dev *dev)
++{
++	return mlx5_reg_mfrl_set(dev, MLX5_MFRL_REG_RESET_LEVEL0, 0, 0, false);
++}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
+new file mode 100644
+index 000000000000..1bbd95182ca6
+--- /dev/null
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
++/* Copyright (c) 2020, Mellanox Technologies inc.  All rights reserved. */
++
++#ifndef __MLX5_FW_RESET_H
++#define __MLX5_FW_RESET_H
++
++#include "mlx5_core.h"
++
++int mlx5_reg_mfrl_query(struct mlx5_core_dev *dev, u8 *reset_level, u8 *reset_type);
++int mlx5_fw_set_reset_sync(struct mlx5_core_dev *dev, u8 reset_type_sel);
++int mlx5_fw_set_live_patch(struct mlx5_core_dev *dev);
++
++#endif
 -- 
 2.17.1
 
