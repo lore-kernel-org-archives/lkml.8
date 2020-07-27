@@ -2,108 +2,142 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F35C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF481C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7B920738
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E44rSvPD"
+	by mail.kernel.org (Postfix) with ESMTP id 8FDBD20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgG0H6m (ORCPT
+        id S1727921AbgG0H6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgG0H6l (ORCPT
+        Mon, 27 Jul 2020 03:58:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23980 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726183AbgG0H6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:58:41 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32CB4C0619D2;
-        Mon, 27 Jul 2020 00:58:41 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id b13so9033331edz.7;
-        Mon, 27 Jul 2020 00:58:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/REZwXRz5HY7fev5AIX1xp+FPLMsQ7CaayNFnZrrTs4=;
-        b=E44rSvPDKHSJX+gzJpv/MuvSGtQjfA11R0Nh4HxsD6D1B5bHRPLrkBH/vfDoZksV83
-         KsSWhzHTRZo0Rww/ofA+K5yQKW1aK/xVe5AoztxOw7HbSy/gedDM5c3cg4U0sejJpgUs
-         L284SKbEPvZ9oC7+Qkf3jPB9mH7i8w1kTu6VIcKGXZBSgCcPR+GVUdqII/E7ZVwsZGqo
-         yQE8GVLKAn3SA6J/4ebOZ/a7264TG3A+cMu4rLHy0hPG9lsal2aHAavjUUsEYWSOoq31
-         YEguXeDWgrFftAuF7xlHV4Ax8OXRBLt1pBzq/yAKq8nWIfmTA0IT5g400Sksqt/2AeKY
-         Xbdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/REZwXRz5HY7fev5AIX1xp+FPLMsQ7CaayNFnZrrTs4=;
-        b=ZOKO49eS8GZa+zR5IjKGAB0gyG8RGqxyWsQMO/2KamomWXYh8YwSj92wNYrXjoJq4Y
-         QtnuXG3nzVAc6iuSOGUGncQ3dvO5iFXstmG93XBPdTsUZwgppzCg9/qIcNtr0tJpsnS2
-         e0MSMBvRMrSTgG2jgg/opgMhs6fKNlWz13Upj8vnkqnwl5BiTlyt61DPG6HSh4x7IZ1Z
-         AAdSNBElLy0UjBKrscKgTUwXP8aQIF7B8QB6rzn0uLfTpLd0Q0VTQ2Jmsk7yRsXLIB/r
-         o5iyyRm+5CX6ERK9ZrNiN6axBhFSovZ2J3bvKeFDItBanKJ4E2HEZ+aNO6FRNrgJOquX
-         9iEg==
-X-Gm-Message-State: AOAM530bpWDojYtO79z/E15mB+MbW9F1YDvIK2g6FkfRbo4ivOfKtkQf
-        doCeXiS+qWkclbhsla0JXFp5YjuuCTAzE/hLZts=
-X-Google-Smtp-Source: ABdhPJxmdLhj0c/I/e6nCS/GkX9N03ZFRIjfJxIDkT8JXKbvvnm424ImsRXPevmDiHhJhXEiXih0lG99CTDFI8Na8CQ=
-X-Received: by 2002:aa7:d4c1:: with SMTP id t1mr20176260edr.253.1595836719999;
- Mon, 27 Jul 2020 00:58:39 -0700 (PDT)
+        Mon, 27 Jul 2020 03:58:47 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R7YcUo128842;
+        Mon, 27 Jul 2020 03:56:45 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrnkkgk9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 03:56:45 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R7lTDM170602;
+        Mon, 27 Jul 2020 03:56:45 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrnkkgju-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 03:56:45 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R7t1T8023670;
+        Mon, 27 Jul 2020 07:56:43 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma02fra.de.ibm.com with ESMTP id 32gcq0s6hj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 07:56:43 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R7ueiC61931744
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 07:56:41 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D7F25AE056;
+        Mon, 27 Jul 2020 07:56:40 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5B483AE04D;
+        Mon, 27 Jul 2020 07:56:38 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.199.36.96])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jul 2020 07:56:38 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: [PATCH 7/7] powerpc/smp: Depend on cpu_l1_cache_map when adding cpus
+Date:   Mon, 27 Jul 2020 13:25:32 +0530
+Message-Id: <20200727075532.30058-8-srikar@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200727075532.30058-1-srikar@linux.vnet.ibm.com>
+References: <20200727075532.30058-1-srikar@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20200724213659.273599-1-martin.botka1@gmail.com>
- <20200724213659.273599-3-martin.botka1@gmail.com> <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
- <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gmail.com>
- <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com> <20200727075243.cjkxblsivgnn6jsk@pengutronix.de>
-In-Reply-To: <20200727075243.cjkxblsivgnn6jsk@pengutronix.de>
-From:   Martin Botka <martin.botka1@gmail.com>
-Date:   Mon, 27 Jul 2020 09:58:01 +0200
-Message-ID: <CADQ2G_GcYh13CGbApCqvi3xcHU-Ur2ej98VccKFOUSOZPrQZnQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
- with u64 data length
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
-        Konrad Dybcio <konradybcio@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_04:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1015 impostorscore=0 phishscore=0
+ mlxscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270051
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Currently on hotplug/hotunplug, the cpu iterates through all the cpus in
+its core to find threads in its thread group. However this info is
+already captured in cpu_l1_cache_map. Hence we could reduce the
+iteration and cleanup add_cpu_to_smallcore_masks function.
 
-> I hit "reply-to-all" and the mail only was sent to you because you wrote
-> to only me.
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Anton Blanchard <anton@ozlabs.org>
+Cc: Oliver O'Halloran <oohall@gmail.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Michael Neuling <mikey@neuling.org>
+Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+---
+ arch/powerpc/kernel/smp.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Yes my reply was only to you. But your original message was sent only to me too.
-So when i clicked reply to all it was only you as you sent it only to me.
+diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+index eceb7aa0f4b8..22f4b3856470 100644
+--- a/arch/powerpc/kernel/smp.c
++++ b/arch/powerpc/kernel/smp.c
+@@ -1276,16 +1276,15 @@ static void remove_cpu_from_masks(int cpu)
+ 
+ static inline void add_cpu_to_smallcore_masks(int cpu)
+ {
+-	struct cpumask *this_l1_cache_map = per_cpu(cpu_l1_cache_map, cpu);
+-	int i, first_thread = cpu_first_thread_sibling(cpu);
++	int i;
+ 
+ 	if (!has_big_cores)
+ 		return;
+ 
+ 	cpumask_set_cpu(cpu, cpu_smallcore_mask(cpu));
+ 
+-	for (i = first_thread; i < first_thread + threads_per_core; i++) {
+-		if (cpu_online(i) && cpumask_test_cpu(i, this_l1_cache_map))
++	for_each_cpu(i, per_cpu(cpu_l1_cache_map, cpu)) {
++		if (cpu_online(i))
+ 			set_cpus_related(i, cpu, cpu_smallcore_mask);
+ 	}
+ }
+-- 
+2.17.1
 
-> Also threading is somehow strange because your reply to my mail
-
-Yes Gmail would not allow me to reply to your message and also send it
-to everyone so i had to reply to Andy's email which is why the
-threading is broken there. Sorry for that.
-
-> So I assume all the strange things happened on your side until proved
-> otherwise. :-)
-
-I think i just proved otherwise :)
-
-Best Regards,
-Martin
