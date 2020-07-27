@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFF3C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD64C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F326E2250E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A61D20809
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ltxkpA9i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZZE1QZI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgG0JiV (ORCPT
+        id S1728271AbgG0JiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49264 "EHLO
+        Mon, 27 Jul 2020 05:38:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728229AbgG0JiU (ORCPT
+        with ESMTP id S1728258AbgG0JiV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:38:20 -0400
+        Mon, 27 Jul 2020 05:38:21 -0400
 Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDBA1C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:38:19 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r12so14116221wrj.13
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:38:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36A9FC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:38:21 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r2so9071781wrs.8
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:38:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BGEGYiZyCfPzP/WgV+vYnmOQ/dOVXNWBzQ8hq5Z41ko=;
-        b=ltxkpA9ir5ZOEwoGWUBGf8shaPDTwgYkI7Suv2aMjHin7DHFcAByud8XWneDNcjuOS
-         H9OVjgbnUP4LV1sLt4AP9WtGTukJ9/sQtMM4DaHjzJTD6xd7UTyc4nyaQbj5ZcBQPNIg
-         Tnd9vXt3eBY/K41w3R3KIUmUQvOtbZxqbAkDRQpx5W4aonKTp9FFsTGHDaF2DLTn1yAK
-         Ez4dhdKa5ihdkku7MbNWBv57Wvcqov/t+Fmrs7t5/bjjHmfY+VS/LASxSxHWfE5Yh5yY
-         ORwwrUtm3crGbH5INu4krR+09BUnLziT2/I7c2bosdomjhoVVJQdjwMcWGOH9qrbIUC7
-         9NmQ==
+        bh=xZFlP2hftW/OVEfLVzTfnKdTkSZtyEnkGEH1R6ufs8I=;
+        b=ZZE1QZI99xBLfbuCo9jH5jJHtr6OG63gQKMJQyq//NnYbb1/3yPOseqwhr9mQxPm5U
+         ue2F04iceQpIHIWfBuy3Rh3+onBqRbDhO6ViFq8wxn2fLTvP8KX/bdbiH57DG58JZwbP
+         llutMB5lv0mc02o5j8YqiwFerDMJpDn457gecbXgk9MtjSUO/HiwspVzfW3fvTJyiVzL
+         eADN0rGUHys0/hJhqjSWyxsB4sXAZ6X4RQM2AcxcWY2GEv/fI/9KrXwnPFeD6l0AeSiU
+         sVWWZu7vAEo6jqtSWKE2fL4KAVw3Du+2HwTbZm+klSEMPvXKTtz3TDnleEgAJcyvlksn
+         CaKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BGEGYiZyCfPzP/WgV+vYnmOQ/dOVXNWBzQ8hq5Z41ko=;
-        b=BCR+YcmyKrWG5uh4SzvRv1P7CE8iRTeD21AjjxJtDP7SSHYQplmx0e2gnajMXoUlnt
-         Eff7iiE+OGYJ6b9dAWJpUh5LNcWozHt8z82ylq0qIMzmUPhqcVN8I6hxrDKCa71yLnT8
-         8/+hQw0uTHHq5WCM8NFM0D7HlSmU5xcaibRgo6CEI+Qg9lSWrOcH3+Uy7GPKP8za1dcW
-         RAMqOF+CzUI3hTBz63jicuvg+WAC+MWWGTds/bvEIv3XxgEAEOTKkjQxxg0gJLxTxBDO
-         nGYzw2iJhpv+yNKZ/Se8uVPqCCHBkVKFRHUQXNMVPeI87Y2sCPwnLbBPi3hFVucG820/
-         b+5g==
-X-Gm-Message-State: AOAM53217sR8M8npcLiLYBUs3rlkgjEug6MxeeK03Pmg4XfN+yCHY6M+
-        3TUaz2+976USjJYnAWDpqAkXbQ==
-X-Google-Smtp-Source: ABdhPJyRhmnUtPua5J4n3aoS3uN4PK6KuvPMmIUlBFDqDftLzkly2DB7Wb/ZyqoEISkgcAEl97RUag==
-X-Received: by 2002:a5d:55c9:: with SMTP id i9mr18964490wrw.31.1595842698519;
-        Mon, 27 Jul 2020 02:38:18 -0700 (PDT)
+        bh=xZFlP2hftW/OVEfLVzTfnKdTkSZtyEnkGEH1R6ufs8I=;
+        b=bjS88LkPHhxSd9ixMGq8v9FnPK+rYV0N6Wy0m3RBgoBuGqVXLOpU2f1jxMcXZd1jB5
+         hdohqyq2BRd3g7gkxrs1ezQ5h1nrm4pvYtKWzCeBSJwQlTgJEQFCbw4U74rjlNTguBT4
+         Epqf7+U6mA4iPX6byj9MOTtglkLKgxANb0tqD2BARk0jCABoHeBjYJ+z9aX0BN3/c7Ni
+         G5jSZIUB+83QvXbT8z9mSUiO/+DLnoAZ47GrI5BCIdWxwX4h4xAdPEjYVKw3DyixJw+A
+         hN1MacRbICTfngeBxaINTYinv6736hH2aX7WvMMcxKihm5AHPQNU3N3ph5P+hOEw76j6
+         E9cw==
+X-Gm-Message-State: AOAM533k0XEm/o2/U4ou2lkfNqmCT6/ho4+VqxaYxMg5OLM7E1m9HgLK
+        ofpgEYkISEGLTuE7TKBpvxOKHQ==
+X-Google-Smtp-Source: ABdhPJwdYJ0QYsLGadsdE2PzGJ+Pm2WGAupMBwzneDIJXFuCcXa1HslNogSVyOAUXTLBa35lLm1gvA==
+X-Received: by 2002:adf:ab05:: with SMTP id q5mr461098wrc.46.1595842699989;
+        Mon, 27 Jul 2020 02:38:19 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id y189sm20566099wmd.27.2020.07.27.02.38.17
+        by smtp.gmail.com with ESMTPSA id y189sm20566099wmd.27.2020.07.27.02.38.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 02:38:17 -0700 (PDT)
+        Mon, 27 Jul 2020 02:38:19 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     broonie@kernel.org
 Cc:     vkoul@kernel.org, perex@perex.cz, tiwai@suse.com,
@@ -66,9 +66,9 @@ Cc:     vkoul@kernel.org, perex@perex.cz, tiwai@suse.com,
         linux-kernel@vger.kernel.org, ckeepax@opensource.cirrus.com,
         pierre-louis.bossart@linux.intel.com,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 04/10] ASoC: q6asm: add length to write command token
-Date:   Mon, 27 Jul 2020 10:38:00 +0100
-Message-Id: <20200727093806.17089-5-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 05/10] ASoC: q6asm: add support to remove intial and trailing silence
+Date:   Mon, 27 Jul 2020 10:38:01 +0100
+Message-Id: <20200727093806.17089-6-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200727093806.17089-1-srinivas.kandagatla@linaro.org>
 References: <20200727093806.17089-1-srinivas.kandagatla@linaro.org>
@@ -79,91 +79,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add length to write command packet token so that we can track exactly
-how many bytes are consumed by DSP in the command reply.
-
-This is useful in some use-cases where the end of the file/stream
-is not aligned with period size.
+This patch adds support to ASM_DATA_CMD_REMOVE_INITIAL_SILENCE
+and ASM_DATA_CMD_REMOVE_TRAILING_SILENCE q6asm command to support
+compressed metadata for gapless playback.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- sound/soc/qcom/qdsp6/q6asm-dai.c | 4 +++-
- sound/soc/qcom/qdsp6/q6asm.c     | 7 ++++---
- sound/soc/qcom/qdsp6/q6asm.h     | 3 +++
- 3 files changed, 10 insertions(+), 4 deletions(-)
+ sound/soc/qcom/qdsp6/q6asm.c | 53 ++++++++++++++++++++++++++++++++++++
+ sound/soc/qcom/qdsp6/q6asm.h |  6 ++++
+ 2 files changed, 59 insertions(+)
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-index 466383b8c20c..5f0e36e23ef3 100644
---- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-@@ -509,6 +509,7 @@ static void compress_event_handler(uint32_t opcode, uint32_t token,
- 	struct snd_compr_stream *substream = prtd->cstream;
- 	unsigned long flags;
- 	uint64_t avail;
-+	uint32_t bytes_written;
- 
- 	switch (opcode) {
- 	case ASM_CLIENT_EVENT_CMD_RUN_DONE:
-@@ -529,7 +530,8 @@ static void compress_event_handler(uint32_t opcode, uint32_t token,
- 	case ASM_CLIENT_EVENT_DATA_WRITE_DONE:
- 		spin_lock_irqsave(&prtd->lock, flags);
- 
--		prtd->copied_total += prtd->pcm_count;
-+		bytes_written = token >> ASM_WRITE_TOKEN_LEN_SHIFT;
-+		prtd->copied_total += bytes_written;
- 		snd_compr_fragment_elapsed(substream);
- 
- 		if (prtd->state != Q6ASM_STREAM_RUNNING) {
 diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
-index d6728304ce6a..205453d1c1fc 100644
+index 205453d1c1fc..14ec7dad5b65 100644
 --- a/sound/soc/qcom/qdsp6/q6asm.c
 +++ b/sound/soc/qcom/qdsp6/q6asm.c
-@@ -670,6 +670,7 @@ static int32_t q6asm_stream_callback(struct apr_device *adev,
- 		if (ac->io_mode & ASM_SYNC_IO_MODE) {
- 			phys_addr_t phys;
- 			unsigned long flags;
-+			int token = hdr->token & ASM_WRITE_TOKEN_MASK;
+@@ -51,6 +51,8 @@
+ #define ASM_STREAM_CMD_OPEN_READWRITE_V2        0x00010D8D
+ #define ASM_MEDIA_FMT_ALAC			0x00012f31
+ #define ASM_MEDIA_FMT_APE			0x00012f32
++#define ASM_DATA_CMD_REMOVE_INITIAL_SILENCE	0x00010D67
++#define ASM_DATA_CMD_REMOVE_TRAILING_SILENCE	0x00010D68
  
- 			spin_lock_irqsave(&ac->lock, flags);
  
-@@ -681,12 +682,12 @@ static int32_t q6asm_stream_callback(struct apr_device *adev,
- 				goto done;
- 			}
+ #define ASM_LEGACY_STREAM_SESSION	0
+@@ -639,6 +641,8 @@ static int32_t q6asm_stream_callback(struct apr_device *adev,
+ 		case ASM_STREAM_CMD_OPEN_READWRITE_V2:
+ 		case ASM_STREAM_CMD_SET_ENCDEC_PARAM:
+ 		case ASM_DATA_CMD_MEDIA_FMT_UPDATE_V2:
++		case ASM_DATA_CMD_REMOVE_INITIAL_SILENCE:
++		case ASM_DATA_CMD_REMOVE_TRAILING_SILENCE:
+ 			if (result->status != 0) {
+ 				dev_err(ac->dev,
+ 					"cmd = 0x%x returned error = 0x%x\n",
+@@ -1324,6 +1328,55 @@ int q6asm_stream_media_format_block_ape(struct audio_client *ac,
+ }
+ EXPORT_SYMBOL_GPL(q6asm_stream_media_format_block_ape);
  
--			phys = port->buf[hdr->token].phys;
-+			phys = port->buf[token].phys;
- 
- 			if (lower_32_bits(phys) != result->opcode ||
- 			    upper_32_bits(phys) != result->status) {
- 				dev_err(ac->dev, "Expected addr %pa\n",
--					&port->buf[hdr->token].phys);
-+					&port->buf[token].phys);
- 				spin_unlock_irqrestore(&ac->lock, flags);
- 				ret = -EINVAL;
- 				goto done;
-@@ -1535,7 +1536,7 @@ int q6asm_write_async(struct audio_client *ac, uint32_t stream_id, uint32_t len,
- 	q6asm_add_hdr(ac, &pkt->hdr, pkt_size, false, stream_id);
- 
- 	ab = &port->buf[port->dsp_buf];
--	pkt->hdr.token = port->dsp_buf;
-+	pkt->hdr.token = port->dsp_buf | (len << ASM_WRITE_TOKEN_LEN_SHIFT);
- 	pkt->hdr.opcode = ASM_DATA_CMD_WRITE_V2;
- 	write->buf_addr_lsw = lower_32_bits(ab->phys);
- 	write->buf_addr_msw = upper_32_bits(ab->phys);
++static int q6asm_stream_remove_silence(struct audio_client *ac, uint32_t stream_id,
++				       uint32_t cmd,
++				       uint32_t num_samples)
++{
++	uint32_t *samples;
++	struct apr_pkt *pkt;
++	void *p;
++	int rc, pkt_size;
++
++	pkt_size = APR_HDR_SIZE + sizeof(uint32_t);
++	p = kzalloc(pkt_size, GFP_ATOMIC);
++	if (!p)
++		return -ENOMEM;
++
++	pkt = p;
++	samples = p + APR_HDR_SIZE;
++
++	q6asm_add_hdr(ac, &pkt->hdr, pkt_size, true, stream_id);
++
++	pkt->hdr.opcode = cmd;
++	*samples = num_samples;
++	rc = apr_send_pkt(ac->adev, pkt);
++	if (rc == pkt_size)
++		rc = 0;
++
++	kfree(pkt);
++
++	return rc;
++}
++
++int q6asm_stream_remove_initial_silence(struct audio_client *ac,
++					uint32_t stream_id,
++					uint32_t initial_samples)
++{
++	return q6asm_stream_remove_silence(ac, stream_id,
++					   ASM_DATA_CMD_REMOVE_INITIAL_SILENCE,
++					   initial_samples);
++}
++EXPORT_SYMBOL_GPL(q6asm_stream_remove_initial_silence);
++
++int q6asm_stream_remove_trailing_silence(struct audio_client *ac, uint32_t stream_id,
++					 uint32_t trailing_samples)
++{
++	return q6asm_stream_remove_silence(ac, stream_id,
++				   ASM_DATA_CMD_REMOVE_TRAILING_SILENCE,
++				   trailing_samples);
++}
++EXPORT_SYMBOL_GPL(q6asm_stream_remove_trailing_silence);
++
+ /**
+  * q6asm_enc_cfg_blk_pcm_format_support() - setup pcm configuration for capture
+  *
 diff --git a/sound/soc/qcom/qdsp6/q6asm.h b/sound/soc/qcom/qdsp6/q6asm.h
-index 9ac020c609c6..312a0452dcdf 100644
+index 312a0452dcdf..2acfc2274069 100644
 --- a/sound/soc/qcom/qdsp6/q6asm.h
 +++ b/sound/soc/qcom/qdsp6/q6asm.h
-@@ -20,6 +20,9 @@
- #define ASM_CLIENT_EVENT_CMD_RUN_DONE		0x1008
- #define ASM_CLIENT_EVENT_DATA_WRITE_DONE	0x1009
- #define ASM_CLIENT_EVENT_DATA_READ_DONE		0x100a
-+#define ASM_WRITE_TOKEN_MASK			GENMASK(15, 0)
-+#define ASM_WRITE_TOKEN_LEN_MASK		GENMASK(31, 16)
-+#define ASM_WRITE_TOKEN_LEN_SHIFT		16
- 
- enum {
- 	LEGACY_PCM_MODE = 0,
+@@ -134,6 +134,12 @@ int q6asm_run(struct audio_client *ac, uint32_t stream_id, uint32_t flags,
+ 	      uint32_t msw_ts, uint32_t lsw_ts);
+ int q6asm_run_nowait(struct audio_client *ac, uint32_t stream_id,
+ 		     uint32_t flags, uint32_t msw_ts, uint32_t lsw_ts);
++int q6asm_stream_remove_initial_silence(struct audio_client *ac,
++					uint32_t stream_id,
++					uint32_t initial_samples);
++int q6asm_stream_remove_trailing_silence(struct audio_client *ac,
++					 uint32_t stream_id,
++					 uint32_t trailing_samples);
+ int q6asm_cmd(struct audio_client *ac, uint32_t stream_id,  int cmd);
+ int q6asm_cmd_nowait(struct audio_client *ac, uint32_t stream_id,  int cmd);
+ int q6asm_get_session_id(struct audio_client *ac);
 -- 
 2.21.0
 
