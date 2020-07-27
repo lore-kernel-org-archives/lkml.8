@@ -2,181 +2,96 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7910C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABADDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A56B32070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CAD020719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:47:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="goLiuJ7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbgG0RqB (ORCPT
+        id S1730446AbgG0Rrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:46:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:48616 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728109AbgG0RqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:46:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 278AB30E;
-        Mon, 27 Jul 2020 10:46:00 -0700 (PDT)
-Received: from [192.168.178.2] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16AF83F718;
-        Mon, 27 Jul 2020 10:45:50 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] sched: Cleanup SCHED_THERMAL_PRESSURE kconfig
- entry
-To:     Qian Cai <cai@lca.pw>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-References: <20200712165917.9168-1-valentin.schneider@arm.com>
- <20200712165917.9168-3-valentin.schneider@arm.com>
- <20200727141825.GA4174@lca.pw>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <16f8c1d4-778b-3ab8-f328-bae80f3973b4@arm.com>
-Date:   Mon, 27 Jul 2020 19:45:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 27 Jul 2020 13:47:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbgG0Rrr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 13:47:47 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7753BC061794;
+        Mon, 27 Jul 2020 10:47:47 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o18so17915082eje.7;
+        Mon, 27 Jul 2020 10:47:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ijZvlgHQ+v2BWZ6VMCXnmgIYM9lqeQKC/Q58LwpkS18=;
+        b=goLiuJ7DPYB9oXd4K0FnBTft52vRIoaP8HHEoIjYGrc+tPTm98AuJdQQocC0tZrdIO
+         ISnBrkYunC/SuXetp8LVr0AUf/okLJ7rrydaj2DlRa14m/mvYjy2MO9Rvx0uPp+A8RyR
+         ymBD+HZEaA5cJTq65kSojT0vwfQ4HSr8m4XWE/Xzs+yGcAoqpMhdWdDComye4rXmIyNH
+         1mMPIkOzJGlzCzIIULku257QIFw6Zzwpm0koPrP4cP4qc+XHaUVgWdwTt7t3gSy+4oyy
+         m7HHgCRC9ms0IxORbtyaQdhlzBR/Pv7QY3qA5NofrhA7hDTOz7MJv713hvGuzUJiqbpc
+         bzxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ijZvlgHQ+v2BWZ6VMCXnmgIYM9lqeQKC/Q58LwpkS18=;
+        b=P8gocLr8pJH5qrOnoY0C4CUxh/G0zra+psMbip1xmnwTP/wkrFFkUphCIYEv/8mc8/
+         A9UBkAJdpXykiRyAhOXe+mtE6KbGFV2JON5STiSEaoenrSTCnlWCh6knHt45LqO55Pz1
+         HOWoszn/HP8tdcTXD/TkX3SWGMNk1nd3n7wGcAlUHbz79W8VeGh4sYVExZHgubu8Bxci
+         P3tNy1oSs7RurdP2BJZBS9OucUb1urTZ0OrABagrkelN/v7KwVWlG+46rfT0abnYRi6U
+         zBM+B49py1pEmBQH/1rrw4jg+oLbqhXaS/7g+jikgPTxNZRbZkUO1Zv+8/N6WBR2NJCc
+         caRA==
+X-Gm-Message-State: AOAM532De5d4j0PtlZ41XTLMxcq94779MnFY1BOPrfjhJCMd8yQTnO5N
+        7OhPowTDvwTYUVUKpjNhSUvf7E43KHEqFMu39tbd5gKGd9U=
+X-Google-Smtp-Source: ABdhPJyWjX1lCFQR4mrrLCa3z5egBfKg89MlfQ1v3c4dfSsnCgXyu7fZcZo4LE8I8xaNaz1PFPPa723qH/VZge8XLSU=
+X-Received: by 2002:a17:906:743:: with SMTP id z3mr21889697ejb.216.1595872066116;
+ Mon, 27 Jul 2020 10:47:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200727141825.GA4174@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200727092346.19780-1-amelie.delaunay@st.com> <20200727092346.19780-2-amelie.delaunay@st.com>
+In-Reply-To: <20200727092346.19780-2-amelie.delaunay@st.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 27 Jul 2020 19:47:35 +0200
+Message-ID: <CAFBinCA_GzdWC+L3Wj_PesRmNFP2rhpZ6jWhhNJP03O5AHc5Kw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: usb: dwc2: add optional
+ usb-role-switch property
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/07/2020 16:18, Qian Cai wrote:
-> On Sun, Jul 12, 2020 at 05:59:16PM +0100, Valentin Schneider wrote:
->> As Russell pointed out [1], this option is severely lacking in the
->> documentation department, and figuring out if one has the required
->> dependencies to benefit from turning it on is not straightforward.
->>
->> Make it non user-visible, and add a bit of help to it. While at it, make it
->> depend on CPU_FREQ_THERMAL.
->>
->> [1]: https://lkml.kernel.org/r/20200603173150.GB1551@shell.armlinux.org.uk
->>
->> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
->> ---
->>  init/Kconfig | 15 ++++++++++++++-
->>  1 file changed, 14 insertions(+), 1 deletion(-)
->>
->> diff --git a/init/Kconfig b/init/Kconfig
->> index 0498af567f70..0a97d85568b2 100644
->> --- a/init/Kconfig
->> +++ b/init/Kconfig
->> @@ -492,8 +492,21 @@ config HAVE_SCHED_AVG_IRQ
->>  	depends on SMP
->>  
->>  config SCHED_THERMAL_PRESSURE
->> -	bool "Enable periodic averaging of thermal pressure"
->> +	bool
->>  	depends on SMP
->> +	depends on CPU_FREQ_THERMAL
->> +	help
->> +	  Select this option to enable thermal pressure accounting in the
->> +	  scheduler. Thermal pressure is the value conveyed to the scheduler
->> +	  that reflects the reduction in CPU compute capacity resulted from
->> +	  thermal throttling. Thermal throttling occurs when the performance of
->> +	  a CPU is capped due to high operating temperatures.
->> +
->> +	  If selected, the scheduler will be able to balance tasks accordingly,
->> +	  i.e. put less load on throttled CPUs than on non/less throttled ones.
->> +
->> +	  This requires the architecture to implement
->> +	  arch_set_thermal_pressure() and arch_get_thermal_pressure().
->>  
->>  config BSD_PROCESS_ACCT
->>  	bool "BSD Process Accounting"
->> -- 
-> 
-> On arm64 linux-next (20200727),
-> 
-> https://gitlab.com/cailca/linux-mm/-/blob/master/arm64.config
-> 
-> WARNING: unmet direct dependencies detected for SCHED_THERMAL_PRESSURE
->   Depends on [n]: SMP [=y] && CPU_FREQ_THERMAL [=n]
->   Selected by [y]:
->   - ARM64 [=y]
+Hello Amelie,
 
-Not sure, but:
+thank you for adding this patch!
 
-(1) do we wan to let people enable SCHED_THERMAL_PRESSURE for arm64 so
-arm64 can potentially run w/o a CPU freq cooling device?
+On Mon, Jul 27, 2020 at 11:23 AM Amelie Delaunay <amelie.delaunay@st.com> wrote:
+>
+> This patch documents the usb-role-switch property in dwc2 bindings, now
+> that usb-role-switch support is available in dwc2 driver.
+>
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+please add my:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 2d4abbc9f8d0..baffe8b66da2 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -192,7 +192,6 @@ config ARM64
-        select PCI_SYSCALL if PCI
-        select POWER_RESET
-        select POWER_SUPPLY
--       select SCHED_THERMAL_PRESSURE
-        select SPARSE_IRQ
-        select SWIOTLB
-        select SYSCTL_EXCEPTION_TRACE
-diff --git a/init/Kconfig b/init/Kconfig
-index 37b089f87804..8b36e07fb230 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -492,7 +492,7 @@ config HAVE_SCHED_AVG_IRQ
-        depends on SMP
 
- config SCHED_THERMAL_PRESSURE
--       bool
-+       bool "Thermal pressure accounting"
-        depends on SMP
-        depends on CPU_FREQ_THERMAL
-        help
-
-Or
-
-(2) should SCHED_THERMAL_PRESSURE for arm64 be enabled by default?
-
-But then it makes no sense to allow the removal of CONFIG_CPU_FREQ_THERMAL.
-
-linux-next/master$ make ARCH=arm64 defconfig
-
-// Remove CONFIG_CPU_FREQ_THERMAL
-linux-next/master$ grep CPU_FREQ_THERMAL .config
-# CONFIG_CPU_FREQ_THERMAL is not set
-
-linux-next/master$ make
-scripts/kconfig/conf  --syncconfig Kconfig
-
-WARNING: unmet direct dependencies detected for SCHED_THERMAL_PRESSURE
-  Depends on [n]: SMP [=y] && CPU_FREQ_THERMAL [=n]
-  Selected by [y]:
-  - ARM64 [=y]
-
-WARNING: unmet direct dependencies detected for SCHED_THERMAL_PRESSURE
-  Depends on [n]: SMP [=y] && CPU_FREQ_THERMAL [=n]
-  Selected by [y]:
-  - ARM64 [=y]
-
-WARNING: unmet direct dependencies detected for SCHED_THERMAL_PRESSURE
-  Depends on [n]: SMP [=y] && CPU_FREQ_THERMAL [=n]
-  Selected by [y]:
-  - ARM64 [=y]
-  HOSTCC  scripts/dtc/dtc.o
-
----
-
-There is a similar issue with arm.
-
-I would prefer for (1).
+Martin
