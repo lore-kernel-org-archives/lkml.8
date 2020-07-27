@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4456AC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B362C43461
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2390C20786
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7620F208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892458;
-	bh=vfsrCGu3y+RWfQf9b8AQo6w0S428160Hx9tQUbf2Z/w=;
+	s=default; t=1595892461;
+	bh=cW0MevAFt8H5njALXBT6v761SRuxFMSBRNmZHnFg2CY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7FgfWQ1zP1n60xHgAKw+c67t23srItUG2I2ZTUDC/p+wHEY0v2ADdgZck+BltSaC
-	 Y29+a5VxynBDYv1rWNZDdw+V+flHDOvMpOlA8Wg3caFsxs8dJFUwINOmdZwc+mnFR9
-	 gpJbZASGn9x/7AwkAsqo6niGV1Jf5Nfd/jVcdG3g=
+	b=T41E1LNje5SN4C660rfY4Wa8IDUJCn4mE9QKc6lneDDKCOhOn0YVXPFigTZh10z5C
+	 3IZjDKKeq22nc8spdPKkbr1mreD3j3n0rFMobFyCe4AEUU+0O9RsKH0FlNEvg7nzd7
+	 ZjUgN0C/Uqd+HenzJ/tCndLGdDB3e7AzrXt54iKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbgG0XYu (ORCPT
+        id S1728395AbgG0X1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:24:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35896 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:27:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728314AbgG0XYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:24:43 -0400
+        id S1728392AbgG0XYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:24:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2083320A8B;
-        Mon, 27 Jul 2020 23:24:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B011C20A8B;
+        Mon, 27 Jul 2020 23:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892283;
-        bh=vfsrCGu3y+RWfQf9b8AQo6w0S428160Hx9tQUbf2Z/w=;
+        s=default; t=1595892289;
+        bh=cW0MevAFt8H5njALXBT6v761SRuxFMSBRNmZHnFg2CY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMmS0QTEOfDQeTLxyQKo647FZJgidO1XjuF/Czaz5V9O3efOr+ItXAo1a1LqQuDa2
-         7jmqs3IgkMljN3oLB+swakZpIdErBqcaBmxHG1e6sCg6aEBFGbIaPos0jmjmgMw4u2
-         XfvUFEZu1rlWx8IYq2SFPtMfmwnPTFVNSzx899As=
+        b=dg29HuCoxCRGY9Tkn6bEXj54RREO9oHoST4W2Sqw1a6Zdg3WXqgzcpZl5dt0Sl34h
+         kzxTKCLN7oSarYQ8Q/YqH+fqtEXXnUmOq49560nM+9a34BNmBwBc7iwCXyBdjMM4w1
+         zDDce/EB9BUaZjzeqF+AN9bYjXzhx6K9tdYGtYSA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>, Eric Dumazet <edumazet@google.com>,
-        Martin Schiller <ms@dev.tdt.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 17/17] drivers/net/wan: lapb: Corrected the usage of skb_cow
-Date:   Mon, 27 Jul 2020 19:24:20 -0400
-Message-Id: <20200727232420.717684-17-sashal@kernel.org>
+Cc:     Liam Beguin <liambeguin@gmail.com>,
+        kernel test robot <lkp@intel.com>,
+        Dave Anglin <dave.anglin@bell.net>,
+        Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
+        linux-parisc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 04/10] parisc: add support for cmpxchg on u8 pointers
+Date:   Mon, 27 Jul 2020 19:24:37 -0400
+Message-Id: <20200727232443.718000-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200727232420.717684-1-sashal@kernel.org>
-References: <20200727232420.717684-1-sashal@kernel.org>
+In-Reply-To: <20200727232443.718000-1-sashal@kernel.org>
+References: <20200727232443.718000-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,81 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: Liam Beguin <liambeguin@gmail.com>
 
-[ Upstream commit 8754e1379e7089516a449821f88e1fe1ebbae5e1 ]
+[ Upstream commit b344d6a83d01c52fddbefa6b3b4764da5b1022a0 ]
 
-This patch fixed 2 issues with the usage of skb_cow in LAPB drivers
-"lapbether" and "hdlc_x25":
+The kernel test bot reported[1] that using set_mask_bits on a u8 causes
+the following issue on parisc:
 
-1) After skb_cow fails, kfree_skb should be called to drop a reference
-to the skb. But in both drivers, kfree_skb is not called.
+	hppa-linux-ld: drivers/phy/ti/phy-tusb1210.o: in function `tusb1210_probe':
+	>> (.text+0x2f4): undefined reference to `__cmpxchg_called_with_bad_pointer'
+	>> hppa-linux-ld: (.text+0x324): undefined reference to `__cmpxchg_called_with_bad_pointer'
+	hppa-linux-ld: (.text+0x354): undefined reference to `__cmpxchg_called_with_bad_pointer'
 
-2) skb_cow should be called before skb_push so that is can ensure the
-safety of skb_push. But in "lapbether", it is incorrectly called after
-skb_push.
+Add support for cmpxchg on u8 pointers.
 
-More details about these 2 issues:
+[1] https://lore.kernel.org/patchwork/patch/1272617/#1468946
 
-1) The behavior of calling kfree_skb on failure is also the behavior of
-netif_rx, which is called by this function with "return netif_rx(skb);".
-So this function should follow this behavior, too.
-
-2) In "lapbether", skb_cow is called after skb_push. This results in 2
-logical issues:
-   a) skb_push is not protected by skb_cow;
-   b) An extra headroom of 1 byte is ensured after skb_push. This extra
-      headroom has no use in this function. It also has no use in the
-      upper-layer function that this function passes the skb to
-      (x25_lapb_receive_frame in net/x25/x25_dev.c).
-So logically skb_cow should instead be called before skb_push.
-
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Liam Beguin <liambeguin@gmail.com>
+Tested-by: Dave Anglin <dave.anglin@bell.net>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/hdlc_x25.c  | 4 +++-
- drivers/net/wan/lapbether.c | 8 +++++---
- 2 files changed, 8 insertions(+), 4 deletions(-)
+ arch/parisc/include/asm/cmpxchg.h |  2 ++
+ arch/parisc/lib/bitops.c          | 12 ++++++++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
-index bf78073ee7fd9..e2a83f4cd3bb6 100644
---- a/drivers/net/wan/hdlc_x25.c
-+++ b/drivers/net/wan/hdlc_x25.c
-@@ -62,8 +62,10 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
- {
- 	unsigned char *ptr;
+diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
+index ab5c215cf46c3..0689585758717 100644
+--- a/arch/parisc/include/asm/cmpxchg.h
++++ b/arch/parisc/include/asm/cmpxchg.h
+@@ -60,6 +60,7 @@ extern void __cmpxchg_called_with_bad_pointer(void);
+ extern unsigned long __cmpxchg_u32(volatile unsigned int *m, unsigned int old,
+ 				   unsigned int new_);
+ extern u64 __cmpxchg_u64(volatile u64 *ptr, u64 old, u64 new_);
++extern u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new_);
  
--	if (skb_cow(skb, 1))
-+	if (skb_cow(skb, 1)) {
-+		kfree_skb(skb);
- 		return NET_RX_DROP;
-+	}
- 
- 	skb_push(skb, 1);
- 	skb_reset_network_header(skb);
-diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-index 0f1217b506ad2..65b2202647411 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -128,10 +128,12 @@ static int lapbeth_data_indication(struct net_device *dev, struct sk_buff *skb)
- {
- 	unsigned char *ptr;
- 
--	skb_push(skb, 1);
--
--	if (skb_cow(skb, 1))
-+	if (skb_cow(skb, 1)) {
-+		kfree_skb(skb);
- 		return NET_RX_DROP;
-+	}
+ /* don't worry...optimizer will get rid of most of this */
+ static inline unsigned long
+@@ -71,6 +72,7 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new_, int size)
+ #endif
+ 	case 4: return __cmpxchg_u32((unsigned int *)ptr,
+ 				     (unsigned int)old, (unsigned int)new_);
++	case 1: return __cmpxchg_u8((u8 *)ptr, (u8)old, (u8)new_);
+ 	}
+ 	__cmpxchg_called_with_bad_pointer();
+ 	return old;
+diff --git a/arch/parisc/lib/bitops.c b/arch/parisc/lib/bitops.c
+index 70ffbcf889b8e..2e4d1f05a9264 100644
+--- a/arch/parisc/lib/bitops.c
++++ b/arch/parisc/lib/bitops.c
+@@ -79,3 +79,15 @@ unsigned long __cmpxchg_u32(volatile unsigned int *ptr, unsigned int old, unsign
+ 	_atomic_spin_unlock_irqrestore(ptr, flags);
+ 	return (unsigned long)prev;
+ }
 +
-+	skb_push(skb, 1);
- 
- 	ptr  = skb->data;
- 	*ptr = X25_IFACE_DATA;
++u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new)
++{
++	unsigned long flags;
++	u8 prev;
++
++	_atomic_spin_lock_irqsave(ptr, flags);
++	if ((prev = *ptr) == old)
++		*ptr = new;
++	_atomic_spin_unlock_irqrestore(ptr, flags);
++	return prev;
++}
 -- 
 2.25.1
 
