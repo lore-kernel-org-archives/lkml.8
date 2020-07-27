@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D683BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9B5C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEE9920FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA75208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859439;
-	bh=9FOnQYGHVN4dOx8fmzyzmZVhYjbLjfdb9/yh2ELR+Ow=;
+	s=default; t=1595859443;
+	bh=tH+bZieuhKiCAe1crHPmNpD1ivBEEIf7aWZ7DUPOZ+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PLYOelTKkTxWvY2nvcgfkmN2ght/gcaYWd0xCzHI4OI4yc+WGVDAPwqqC6SWDVhuH
-	 DSIiWgdVTWLjg/U4TLD/XzsJgC4Vj5+pud/4+ASIGnmpirGeexjK19Ej6zompy8SeO
-	 a5emhmCYMFNUFIfykeiE1Yz2euMns8Br4f3tYs08=
+	b=l2wL8OnbGNAwoFtF6nB4nn6ZH1QaFmM2AAqVIFi+EvCMoW3hhCpL+JbU0diBFc+WE
+	 sRltmYNVXdpSHXswOAu+Iisw1tURabU/zkZaJMu8ymRVNdMAKkb6/Xm22P+BvnVm/w
+	 GqMAI0BRnNee+0z8XDfjBLh0MEb7Q2IY0yJZlgZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731021AbgG0ORR (ORCPT
+        id S1731033AbgG0ORV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:17:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44374 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:17:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730989AbgG0ORK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:17:10 -0400
+        id S1731004AbgG0ORM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:17:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35AFD208E4;
-        Mon, 27 Jul 2020 14:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE52220775;
+        Mon, 27 Jul 2020 14:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859429;
-        bh=9FOnQYGHVN4dOx8fmzyzmZVhYjbLjfdb9/yh2ELR+Ow=;
+        s=default; t=1595859432;
+        bh=tH+bZieuhKiCAe1crHPmNpD1ivBEEIf7aWZ7DUPOZ+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zhsEUEUas2DISX9baXhE1qGw7y6jNeIV5oScOe5i6VVB262vjScPKbBkQjr3N88C+
-         GgHLv6iR9LPEd7o/hfOL03buKkaXEpcwx81QL0n4qNl4MLhjRJzOXFp2wESy7tJ7oG
-         mD/e96eZDXMeQLix2Bt7pXbHB6hWxJPyGRVnZ9Ag=
+        b=fsBF8bki2SXQgMypPoHJnDXM9Siz0voZjgDWFAV46mfma+ywNdWvORlEjVhim2bY8
+         yax+MspDUQlolx5FDjpP29tZRjwBx7aOoV31vLwYhT5VtVgiSE3FO2OzkoifmwmnF/
+         eMa2DxjfVyid+ElNenTEi7l4/RGrG93M+te1nKZs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joao Moreno <mail@joaomoreno.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 074/138] HID: apple: Disable Fn-key key-re-mapping on clone keyboards
-Date:   Mon, 27 Jul 2020 16:04:29 +0200
-Message-Id: <20200727134929.085789159@linuxfoundation.org>
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 075/138] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
+Date:   Mon, 27 Jul 2020 16:04:30 +0200
+Message-Id: <20200727134929.137482912@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,98 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit a5d81646fa294eed57786a9310b06ca48902adf8 ]
+[ Upstream commit 5b78fac4b1ba731cf4177fdbc1e3a4661521bcd0 ]
 
-The Maxxter KB-BT-001 Bluetooth keyboard, which looks somewhat like the
-Apple Wireless Keyboard, is using the vendor and product IDs (05AC:0239)
-of the Apple Wireless Keyboard (2009 ANSI version) <sigh>.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-But its F1 - F10 keys are marked as sending F1 - F10, not the special
-functions hid-apple.c maps them too; and since its descriptors do not
-contain the HID_UP_CUSTOM | 0x0003 usage apple-hid looks for for the
-Fn-key, apple_setup_input() never gets called, so F1 - F6 are mapped
-to key-codes which have not been set in the keybit array causing them
-to not send any events at all.
-
-The lack of a usage code matching the Fn key in the clone is actually
-useful as this allows solving this problem in a generic way.
-
-This commits adds a fn_found flag and it adds a input_configured
-callback which checks if this flag is set once all usages have been
-mapped. If it is not set, then assume this is a clone and clear the
-quirks bitmap so that the hid-apple code does not add any special
-handling to this keyboard.
-
-This fixes F1 - F6 not sending anything at all and F7 - F12 sending
-the wrong codes on the Maxxter KB-BT-001 Bluetooth keyboard and on
-similar clones.
-
-Cc: Joao Moreno <mail@joaomoreno.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20200624064626.19855-1-dinghao.liu@zju.edu.cn
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-apple.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/dma/tegra210-adma.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-index d732d1d10cafb..6909c045fece1 100644
---- a/drivers/hid/hid-apple.c
-+++ b/drivers/hid/hid-apple.c
-@@ -54,6 +54,7 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
- struct apple_sc {
- 	unsigned long quirks;
- 	unsigned int fn_on;
-+	unsigned int fn_found;
- 	DECLARE_BITMAP(pressed_numlock, KEY_CNT);
- };
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index 914901a680c8a..9068591bd684b 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -658,6 +658,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
  
-@@ -339,12 +340,15 @@ static int apple_input_mapping(struct hid_device *hdev, struct hid_input *hi,
- 		struct hid_field *field, struct hid_usage *usage,
- 		unsigned long **bit, int *max)
- {
-+	struct apple_sc *asc = hid_get_drvdata(hdev);
-+
- 	if (usage->hid == (HID_UP_CUSTOM | 0x0003) ||
- 			usage->hid == (HID_UP_MSVENDOR | 0x0003) ||
- 			usage->hid == (HID_UP_HPVENDOR2 | 0x0003)) {
- 		/* The fn key on Apple USB keyboards */
- 		set_bit(EV_REP, hi->input->evbit);
- 		hid_map_usage_clear(hi, usage, bit, max, EV_KEY, KEY_FN);
-+		asc->fn_found = true;
- 		apple_setup_input(hi->input);
- 		return 1;
+ 	ret = pm_runtime_get_sync(tdc2dev(tdc));
+ 	if (ret < 0) {
++		pm_runtime_put_noidle(tdc2dev(tdc));
+ 		free_irq(tdc->irq, tdc);
+ 		return ret;
  	}
-@@ -371,6 +375,19 @@ static int apple_input_mapped(struct hid_device *hdev, struct hid_input *hi,
- 	return 0;
- }
+@@ -869,8 +870,10 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 	pm_runtime_enable(&pdev->dev);
  
-+static int apple_input_configured(struct hid_device *hdev,
-+		struct hid_input *hidinput)
-+{
-+	struct apple_sc *asc = hid_get_drvdata(hdev);
-+
-+	if ((asc->quirks & APPLE_HAS_FN) && !asc->fn_found) {
-+		hid_info(hdev, "Fn key not found (Apple Wireless Keyboard clone?), disabling Fn key handling\n");
-+		asc->quirks = 0;
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_noidle(&pdev->dev);
+ 		goto rpm_disable;
 +	}
-+
-+	return 0;
-+}
-+
- static int apple_probe(struct hid_device *hdev,
- 		const struct hid_device_id *id)
- {
-@@ -585,6 +602,7 @@ static struct hid_driver apple_driver = {
- 	.event = apple_event,
- 	.input_mapping = apple_input_mapping,
- 	.input_mapped = apple_input_mapped,
-+	.input_configured = apple_input_configured,
- };
- module_hid_driver(apple_driver);
  
+ 	ret = tegra_adma_init(tdma);
+ 	if (ret)
 -- 
 2.25.1
 
