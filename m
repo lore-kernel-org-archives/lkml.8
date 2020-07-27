@@ -2,134 +2,133 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B96C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71537C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 029B22075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F71E2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595856183;
-	bh=KYaSv9xXBPcvT0Apo2G8kSAbXzJYKl5iiZ4cPD0qUOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tDZywdElcydXPLILbU1c33Vdq7xda7RUP4x7idUrd/D7sc6QKNUu5OC9aK2QMjYeC
-	 1guQoe15gDhyPVHAEBpyqj2ATKM1v8+1HEMxMwWT1psUM/0wWYwqqsgpO+6Tt+KJrH
-	 p9LKeTb2gR+l3PWMs6i1IEWsjYsnmS/L14ZHze2o=
+	s=default; t=1595856219;
+	bh=p0/aR+7F/EhpgGtHoA2xxlJN+6ONhfFeG/VGIi12Y5k=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=EXCecbf387KyS0QKjckCax/v9JqJRfARHEKZ60lsgXcpx6lG/bdEpwyL71fyvSKhw
+	 O/8Io7b6b8L6Rxi3jvNsiR6sD1oJcdIWeOKpJQi4C3V2CjTOJHqvzUq+Zjr4YY4MK7
+	 cUB7p7ZOzzugaMRaoRfzWHEVs/I5N6rL4juUTkcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbgG0NXB (ORCPT
+        id S1728761AbgG0NXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60628 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 09:23:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgG0NXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:23:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726139AbgG0NXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 09:23:37 -0400
+Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 278B22070A;
-        Mon, 27 Jul 2020 13:23:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 206C62070A;
+        Mon, 27 Jul 2020 13:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595856180;
-        bh=KYaSv9xXBPcvT0Apo2G8kSAbXzJYKl5iiZ4cPD0qUOk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jE5eHLGPDe2S3rBwmkitD9TkFJyH1DEuBHpcW1URvPS8/nlVGhInX28IuwGW2rI7s
-         YgBbJBYw3HFO/gd2FIh0qR5cbv5/0OhTU/redOikOxKC/LzBztbE5mbXZEVVE2+YKs
-         K9SERkNkw/D3MVfEH72uo6WGFm2SuE4VrboTR7Zo=
-Date:   Mon, 27 Jul 2020 15:22:56 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     B K Karthik <bkkarthik@pesu.pes.edu>
-Cc:     Jon Maloy <jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] net: tipc: fix general protection fault in
- tipc_conn_delete_sub
-Message-ID: <20200727132256.GA3933866@kroah.com>
-References: <20200727131057.7a3of3hhsld4ng5t@pesu.pes.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727131057.7a3of3hhsld4ng5t@pesu.pes.edu>
+        s=default; t=1595856216;
+        bh=p0/aR+7F/EhpgGtHoA2xxlJN+6ONhfFeG/VGIi12Y5k=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=vA3nhi2BjSC/lOBa5bRxZN6N7q6pt4FXD1yAUpm1nJWeVNeZVPZTszWkmyi4VUDMq
+         kFOEenShmFSmH0HzDtGB8TrJ11XnsZxDCqiN1pnXo7w0Ww0XWPLeUNf0UEiZXwI+sL
+         qTB0u37h/x/7Uh4mqPeVQNojXpxoXTNoCUSKv/KI=
+Message-ID: <1595856214.4841.86.camel@kernel.org>
+Subject: Re: [PATCH v3 15/19] IMA: Add support for file reads without
+ contents
+From:   Mimi Zohar <zohar@kernel.org>
+To:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 27 Jul 2020 09:23:34 -0400
+In-Reply-To: <20200724213640.389191-16-keescook@chromium.org>
+References: <20200724213640.389191-1-keescook@chromium.org>
+         <20200724213640.389191-16-keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 06:40:57PM +0530, B K Karthik wrote:
-> fix a general protection fault in tipc_conn_delete_sub
-> by checking for the existance of con->server.
-> prevent a null-ptr-deref by returning -EINVAL when
-> con->server is NULL
+On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
+> From: Scott Branden <scott.branden@broadcom.com>
 > 
-> general protection fault, probably for non-canonical address 0xdffffc0000000014: 0000 [#1] PREEMPT SMP KASAN
-> KASAN: null-ptr-deref in range [0x00000000000000a0-0x00000000000000a7]
-> CPU: 1 PID: 113 Comm: kworker/u4:3 Not tainted 5.6.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Workqueue: tipc_send tipc_conn_send_work
-> RIP: 0010:tipc_conn_delete_sub+0x54/0x440 net/tipc/topsrv.c:231
-> Code: 48 c1 ea 03 80 3c 02 00 0f 85 f0 03 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 6b 18 48 8d bd a0 00 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 c0 03 00 00 48 c7 c0 34 0b 8a 8a 4c 8b a5 a0 00
-> RSP: 0018:ffffc900012d7b58 EFLAGS: 00010206
-> RAX: dffffc0000000000 RBX: ffff8880a8269c00 RCX: ffffffff8789ca01
-> RDX: 0000000000000014 RSI: ffffffff8789a059 RDI: 00000000000000a0
-> RBP: 0000000000000000 R08: ffff8880a8d88380 R09: fffffbfff18577a8
-> R10: fffffbfff18577a7 R11: ffffffff8c2bbd3f R12: dffffc0000000000
-> R13: ffff888093d35a18 R14: ffff8880a8269c00 R15: ffff888093d35a00
-> FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000000076c000 CR3: 000000009441d000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  tipc_conn_send_to_sock+0x380/0x560 net/tipc/topsrv.c:266
->  tipc_conn_send_work+0x6f/0x90 net/tipc/topsrv.c:304
->  process_one_work+0x965/0x16a0 kernel/workqueue.c:2266
->  worker_thread+0x96/0xe20 kernel/workqueue.c:2412
->  kthread+0x388/0x470 kernel/kthread.c:268
->  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Modules linked in:
-> ---[ end trace 2c161a84be832606 ]---
-> RIP: 0010:tipc_conn_delete_sub+0x54/0x440 net/tipc/topsrv.c:231
-> Code: 48 c1 ea 03 80 3c 02 00 0f 85 f0 03 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 6b 18 48 8d bd a0 00 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 c0 03 00 00 48 c7 c0 34 0b 8a 8a 4c 8b a5 a0 00
-> RSP: 0018:ffffc900012d7b58 EFLAGS: 00010206
-> RAX: dffffc0000000000 RBX: ffff8880a8269c00 RCX: ffffffff8789ca01
-> RDX: 0000000000000014 RSI: ffffffff8789a059 RDI: 00000000000000a0
-> RBP: 0000000000000000 R08: ffff8880a8d88380 R09: fffffbfff18577a8
-> R10: fffffbfff18577a7 R11: ffffffff8c2bbd3f R12: dffffc0000000000
-> R13: ffff888093d35a18 R14: ffff8880a8269c00 R15: ffff888093d35a00
-> FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020800000 CR3: 0000000091b8e000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> When the kernel_read_file LSM hook is called with contents=false, IMA
+> can appraise the file directly, without requiring a filled buffer. When
+> such a buffer is available, though, IMA can continue to use it instead
+> of forcing a double read here.
 > 
-> Reported-and-tested-by: syzbot+55a38037455d0351efd3@syzkaller.appspotmail.com
-> Signed-off-by: B K Karthik <bkkarthik@pesu.pes.edu>
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> Link: https://lore.kernel.org/lkml/20200706232309.12010-10-scott.branden@broadcom.com/
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+After adjusting the comment below.
+
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+
 > ---
->  net/tipc/topsrv.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  security/integrity/ima/ima_main.c | 22 ++++++++++++++++------
+>  1 file changed, 16 insertions(+), 6 deletions(-)
 > 
-> diff --git a/net/tipc/topsrv.c b/net/tipc/topsrv.c
-> index 1489cfb941d8..6c8d0c6bb112 100644
-> --- a/net/tipc/topsrv.c
-> +++ b/net/tipc/topsrv.c
-> @@ -255,6 +255,9 @@ static void tipc_conn_send_to_sock(struct tipc_conn *con)
->  	int count = 0;
->  	int ret;
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index dc4f90660aa6..459e50526a12 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -613,11 +613,8 @@ void ima_post_path_mknod(struct dentry *dentry)
+>  int ima_read_file(struct file *file, enum kernel_read_file_id read_id,
+>  		  bool contents)
+>  {
+> -	/* Reject all partial reads during appraisal. */
+> -	if (!contents) {
+> -		if (ima_appraise & IMA_APPRAISE_ENFORCE)
+> -			return -EACCES;
+> -	}
+> +	enum ima_hooks func;
+> +	u32 secid;
 >  
-> +	if (!con->server)
-> +		return -EINVAL;
+>  	/*
+>  	 * Do devices using pre-allocated memory run the risk of the
+> @@ -626,7 +623,20 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id,
+>  	 * buffers? It may be desirable to include the buffer address
+>  	 * in this API and walk all the dma_map_single() mappings to check.
+>  	 */
+> -	return 0;
+> +
+> +	/*
+> +	 * There will be a call made to ima_post_read_file() with
+> +	 * a filled buffer, so we don't need to perform an extra
+> +	 * read early here.
+> +	 */
+> +	if (contents)
+> +		return 0;
+> +
+> +	/* Read entire file for all partial reads during appraisal. */
 
-What is wrong with looking at the srv local variable instead?
+In addition to verifying the file signature, the file might be
+included in the IMA measurement list or the file hash may be used to
+augment the audit record.  Please remove "during appraisal" from the
+comment.
 
-And how is server getting set to NULL and this function still being
-called?
+> +	func = read_idmap[read_id] ?: FILE_CHECK;
+> +	security_task_getsecid(current, &secid);
+> +	return process_measurement(file, current_cred(), secid, NULL,
+> +				   0, MAY_READ, func);
+>  }
+>  
+>  const int read_idmap[READING_MAX_ID] = {
 
-thanks,
-
-greg k-h
