@@ -2,284 +2,123 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D25FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7E11206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F96206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:40:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="vhf34NpA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VV0QxcDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730830AbgG0Pjo (ORCPT
+        id S1730500AbgG0Pkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:39:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49434 "EHLO
+        Mon, 27 Jul 2020 11:40:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729049AbgG0Pjn (ORCPT
+        with ESMTP id S1729049AbgG0Pkh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:39:43 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 865E7C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:39:43 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id il6so3865506pjb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:39:43 -0700 (PDT)
+        Mon, 27 Jul 2020 11:40:37 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1731CC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:40:37 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id u64so15593860qka.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:40:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qeeFM2bqqm7Pdc6T9HvDOkYabM11vNorXeX2zlS9K54=;
-        b=vhf34NpACds/YSGc71eoyGJ72NMM4ZORy5yA3ZXbCrStEESeeFyyVkF300KCQaBC8w
-         PSaKk+FFNnGB0sf6xvZDd3BMDMkNhLqSUKtwwU4G8T/cMah+XdAe8M5J3lXpcfClB/c7
-         y3i6SaKs4u3NrbsrRScVX7Vq9nyEHH2lKsM3PYK3sxWLm3qRDXd1LyTnX6TQqSNae7EI
-         eIneM6S8FwgM+2lf2XyF77m7PFzF2rSUtgVFvqH8DW0sz1bwanvY39B1MRH/ylt0wl4f
-         HJZS8OSKEeJ5F39Qj6gJE2c4a9z2azeod2fzwFU3wzSLlY8/gaa8+RHBUfcYDEJOa4oC
-         UzHw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3MHzayRxL6bOiigyiJOXy0PhmCnVIol0KG4wc5+RCf8=;
+        b=VV0QxcDhBbkfas2oiGVS1tvt5ESJqhpl67y4uGCMb2n8mBj4P/nU8cHUjPv/l76bU4
+         gjETm59e+fdYBwoodcOoh5UBxu7PGmou3asy7AL7Er8fbs2atIxO53YJaHKqiHTjuDds
+         uaaNWCmDvrjyoUO8wlSmU05OiMrdHR9gTE1KZHICoXD4hWPwF9ZOf0SEFlP8KbD3vDAO
+         Kwvs3ocpCiWZTfN0OihoxC4jjfSlefzs0ztS9PBUMkSl/xIR2wpSHO70miNuSAGrRdPo
+         J0lI1V2F7Z3w0wUZ+go35o8LtiBgZRBNNuTmpDojB8TO83eJEFKBkk7Xdc0hm62xdgoz
+         /CVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qeeFM2bqqm7Pdc6T9HvDOkYabM11vNorXeX2zlS9K54=;
-        b=gvJneXB7zwzi6owK+5hqXYCG6mmBgTzNQy1YEuhJRdoIIx0+fOlayTHz9FmkzRBCVe
-         yW/X7dO/TgUYXlgSiayqptWfyIzT9/NaMTBa1lnexh7kLzec1JjYBUsVinDxTrOgPhNr
-         7nbAZL1ge1UYUa5T9NvdeP/ms3i1cCetmd/EzAx7/Pjdq7+v9ZJwjXbUAZy6UEOG0bqS
-         Rr/LeL4849xJU26HF4+hzA+O4GCVpd2Zb3JkIV/jVr3NdOBpRnpWYnm7sKEKHbcFqkOu
-         uvs9BiQVhBiycFTVXgLXzJbLLY0YGhIGlxY19QO9jhf6tcOjAndNsP9Tgvy9OV3lZJWH
-         tV5g==
-X-Gm-Message-State: AOAM530hzDg2sZvHG04mU51hOyCDJ/Pzt0Z11YBVcY8m1LEz3EgqHRFU
-        T0GoW6SxyBJuqk8gpU3hUTib5w==
-X-Google-Smtp-Source: ABdhPJyqMal+7S3RURFS+mH7372yuxqLtS6DhV/dJoOjNq1VsqZhaUjtImYT21fxJGhSXLaKgBfcTQ==
-X-Received: by 2002:a17:902:bd90:: with SMTP id q16mr18126853pls.54.1595864382998;
-        Mon, 27 Jul 2020 08:39:42 -0700 (PDT)
-Received: from [192.168.1.102] (c-24-20-148-49.hsd1.or.comcast.net. [24.20.148.49])
-        by smtp.gmail.com with ESMTPSA id s22sm14545536pgv.43.2020.07.27.08.39.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Jul 2020 08:39:42 -0700 (PDT)
-From:   "Sean V Kelley" <sean.v.kelley@intel.com>
-To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
-Cc:     bhelgaas@google.com, rjw@rjwysocki.net,
-        "Raj, Ashok" <ashok.raj@intel.com>, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Qiuxu Zhuo" <qiuxu.zhuo@intel.com>
-Subject: Re: [RFC PATCH 6/9] PCI: Add 'rcec' field to pci_dev for associated
- RCiEPs
-Date:   Mon, 27 Jul 2020 08:39:43 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <9C45284A-6959-4CDE-AD56-2A9B9536403C@intel.com>
-In-Reply-To: <20200727122358.00006c23@Huawei.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
- <20200724172223.145608-7-sean.v.kelley@intel.com>
- <20200727122358.00006c23@Huawei.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3MHzayRxL6bOiigyiJOXy0PhmCnVIol0KG4wc5+RCf8=;
+        b=gFAccrvMktWmIUiRkRDJERKDzl48hfz8JkssRh2P47orDcF7lV1FKiVgkFWpycYMRm
+         6DHfA82Li7KnJCXWobrJrRp/sRmfXZgIP9tqKuPaIalMtQxAvLaByVsAnvzi6XQ2Skvt
+         ptpN2p5MH4tD6+/9nzMK9zatmsJ2YDKRm328NRZoD7B824sS3+d1aJxG8wK4VR5imfF/
+         l7ssf+c9VUUxKMiQlDkV3NPGwpHe1lC0OOPprzF4v8Pl3gzLFnfDXHG2IkpcJ/uoE+R8
+         iYz+O81vIUdVSitbtS5MT6P6D75K4ehUQ6LPShiggOeI1BsTk5x2NgrfsUNqCG1o4RjJ
+         QQ6g==
+X-Gm-Message-State: AOAM532RQcQVsBs+BuAN9NMJZ8V51IiX0VZfZBlxKJ4AhVWl78vLnM6b
+        8Qq2fQLGV9106GDgw92uRw==
+X-Google-Smtp-Source: ABdhPJz4p/ncsvcYlE0kBz7qziAGuqugFJvTZuwprUxKjrQU5gfYhHAMcIXMO2IekfmUlJxyg0HaEA==
+X-Received: by 2002:a37:a655:: with SMTP id p82mr23048681qke.92.1595864436373;
+        Mon, 27 Jul 2020 08:40:36 -0700 (PDT)
+Received: from PWN ([209.94.141.207])
+        by smtp.gmail.com with ESMTPSA id 128sm17457791qkk.101.2020.07.27.08.40.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 08:40:35 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 11:40:33 -0400
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux1394-devel@lists.sourceforge.net,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH] firewire: Prevent kernel-infoleak
+ in ioctl_get_info()
+Message-ID: <20200727154033.GA315469@PWN>
+References: <20200727151537.315023-1-yepeilin.cs@gmail.com>
+ <CAK8P3a3zz-xfz2jwUpEU5R7GyCK735PFQK7OjFmmTESgnSzq=Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3zz-xfz2jwUpEU5R7GyCK735PFQK7OjFmmTESgnSzq=Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27 Jul 2020, at 4:23, Jonathan Cameron wrote:
+On Mon, Jul 27, 2020 at 05:35:12PM +0200, Arnd Bergmann wrote:
+> On Mon, Jul 27, 2020 at 5:18 PM Peilin Ye <yepeilin.cs@gmail.com> wrote:
+> >
+> > ioctl_get_info() is copying uninitialized stack memory to userspace due to
+> > the compiler not initializing holes in statically allocated structures.
+> > Fix it by initializing `event` using memset() in fill_bus_reset_event().
+> >
+> > Cc: stable@vger.kernel.org
+> > Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+> 
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> I would recommend always looking through the git history of the
+> file to come up with an appropriate 'Fixes' tag. In this case
+> 
+> $ git log -p --follow drivers/firewire/core-cdev.c
+> 
+> searching for any mention of fill_bus_reset_event leads you to
+> commit 344bbc4de14e.
+> 
+> In my ~/.gitconfig I have this alias:
+> 
+> [core]
+>         abbrev = 12
+> [alias]
+>         fixes = show --format='Fixes: %h (\"%s\")' -s
+> 
+> With something like that, calling 'git fixes 344bbc4de14e' produces
+> the line to copy:
+> 
+> Fixes: 344bbc4de14e ("firewire: Generalize get_config_rom to get_info.")
 
-> On Fri, 24 Jul 2020 10:22:20 -0700
-> Sean V Kelley <sean.v.kelley@intel.com> wrote:
->
->> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->>
->> When attempting error recovery for an RCiEP associated with an RCEC =
+Thank you for the advice! Actually I did all of that (manually...) but
+wasn't sure whether I should add it on. I will send a v2 soon, and do so
+for future patches.
 
->> device,
->> there needs to be a way to update the Root Error Status, the =
-
->> Uncorrectable
->> Error Status and the Uncorrectable Error Severity of the parent RCEC.
->> So add the 'rcec' field to the pci_dev structure and provide a hook =
-
->> for the
->> Root Port Driver to associate RCiEPs with their respective parent =
-
->> RCEC.
->>
->> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
->> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
->
-> I haven't tested yet, but I think there is one path in here that =
-
-> breaks
-> my case (no OS visible rcec / all done in firmware GHESv2 / APEI)
->
-> Jonathan
-
-Okay, keep me up to date and if there is a way I can reproduce or better =
-
-test for your use case let me know and I will do so.
-
->
->> ---
->>  drivers/pci/pcie/aer.c         |  9 +++++----
->>  drivers/pci/pcie/err.c         |  9 +++++++++
->>  drivers/pci/pcie/portdrv_pci.c | 15 +++++++++++++++
->>  include/linux/pci.h            |  3 +++
->>  4 files changed, 32 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index 3acf56683915..f1bf06be449e 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -1335,17 +1335,18 @@ static int aer_probe(struct pcie_device *dev)
->>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
->>  {
->>  	int aer =3D dev->aer_cap;
->> +	int rc =3D 0;
->>  	u32 reg32;
->> -	int rc;
->> -
->>
->>  	/* Disable Root's interrupt in response to error messages */
->>  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
->>  	reg32 &=3D ~ROOT_PORT_INTR_ON_MESG_MASK;
->>  	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
->>
->> -	rc =3D pci_bus_error_reset(dev);
->> -	pci_info(dev, "Root Port link has been reset\n");
->> +	if (pci_pcie_type(dev) !=3D PCI_EXP_TYPE_RC_EC) {
->> +		rc =3D pci_bus_error_reset(dev);
->> +		pci_info(dev, "Root Port link has been reset\n");
->> +	}
->>
->>  	/* Clear Root Error Status */
->>  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index 9b3ec94bdf1d..0aae7643132e 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -203,6 +203,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev =
-
->> *dev,
->>  		pci_walk_dev_affected(dev, report_frozen_detected, &status);
->>  		if (pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_RC_END) {
->>  			status =3D flr_on_rciep(dev);
->> +			/*
->> +			 * The callback only clears the Root Error Status
->> +			 * of the RCEC (see aer.c).
->> +			 */
->> +			reset_link(dev->rcec);
->
-> This looks dangerous for my case where APEI / GHESv2 is used.  In that =
-
-> case
-> we don't expose an RCEC at all.   I don't think the reset_link =
-
-> callback
-> is safe to a null pointer here.  Fix may be as simple as
-> if (dev->rcec)
-> 	reset_link(dev->rcec);
-
-Good catch.  Will look to NULL case as well as walk through code where =
-
-dev->rcec is further referenced (below and elsewhere) to ensure nothing =
-
-falls through. Glad you are pointing these out.
-
->
->
->>  			if (status !=3D PCI_ERS_RESULT_RECOVERED) {
->>  				pci_warn(dev, "function level reset failed\n");
->>  				goto failed;
->> @@ -246,7 +251,11 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev =
-
->> *dev,
->>  	     pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_RC_EC)) {
->>  		pci_aer_clear_device_status(dev);
->>  		pci_aer_clear_nonfatal_status(dev);
->> +	} else if (pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_RC_END) {
->> +		pci_aer_clear_device_status(dev->rcec);
->> +		pci_aer_clear_nonfatal_status(dev->rcec);
->
-> These may be safe as in my both now have protections for =
-
-> !pcie_aer_is_native.
->
-I=E2=80=99ll have a look again for the NULL case
-
->>  	}
->> +
->>  	pci_info(dev, "device recovery successful\n");
->>  	return status;
->>
->> diff --git a/drivers/pci/pcie/portdrv_pci.c =
-
->> b/drivers/pci/pcie/portdrv_pci.c
->> index d5b109499b10..f9409a0110c2 100644
->> --- a/drivers/pci/pcie/portdrv_pci.c
->> +++ b/drivers/pci/pcie/portdrv_pci.c
->> @@ -90,6 +90,18 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops =
-
->> =3D {
->>  #define PCIE_PORTDRV_PM_OPS	NULL
->>  #endif /* !PM */
->>
->> +static int pcie_hook_rcec(struct pci_dev *pdev, void *data)
->> +{
->> +	struct pci_dev *rcec =3D (struct pci_dev *)data;
->> +
->> +	pdev->rcec =3D rcec;
->> +	pci_info(rcec, "RCiEP(under an RCEC) %04x:%02x:%02x.%d\n",
->> +		 pci_domain_nr(pdev->bus), pdev->bus->number,
->> +		 PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
->
-> We may want to make this debug info at somepoint if we have a way
-> of discovering it from userspace.   The PCI boot up is extremely
-> verbose already!
-
-I=E2=80=99ve submitted patches to pciutils, which expose this very detail=
-:
-
-https://lore.kernel.org/linux-pci/20200624223940.240463-1-sean.v.kelley@l=
-inux.intel.com/
-
-Flexible either way, could remove or make it debug info.
-
-Thanks,
-
-Sean
-
->
->> +
->> +	return 0;
->> +}
->> +
->>  /*
->>   * pcie_portdrv_probe - Probe PCI-Express port devices
->>   * @dev: PCI-Express port device being probed
->> @@ -110,6 +122,9 @@ static int pcie_portdrv_probe(struct pci_dev =
-
->> *dev,
->>  	     (pci_pcie_type(dev) !=3D PCI_EXP_TYPE_RC_EC)))
->>  		return -ENODEV;
->>
->> +	if (pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_RC_EC)
->> +		pcie_walk_rcec(dev, pcie_hook_rcec, dev);
->> +
->>  	status =3D pcie_port_device_register(dev);
->>  	if (status)
->>  		return status;
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index 34c1c4f45288..e920f29df40b 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -326,6 +326,9 @@ struct pci_dev {
->>  #ifdef CONFIG_PCIEAER
->>  	u16		aer_cap;	/* AER capability offset */
->>  	struct aer_stats *aer_stats;	/* AER stats for this device */
->> +#endif
->> +#ifdef CONFIG_PCIEPORTBUS
->> +	struct pci_dev	*rcec;		/* Associated RCEC device */
->>  #endif
->>  	u8		pcie_cap;	/* PCIe capability offset */
->>  	u8		msi_cap;	/* MSI capability offset */
+Thank you,
+Peilin Ye
