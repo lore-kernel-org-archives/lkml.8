@@ -2,89 +2,134 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97793C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D71BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7281420738
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:33:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="reT1y3UM"
+	by mail.kernel.org (Postfix) with ESMTP id 696FB2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgG0HdL (ORCPT
+        id S1726957AbgG0Hdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:33:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0HdK (ORCPT
+        Mon, 27 Jul 2020 03:33:46 -0400
+Received: from smtprelay0095.hostedemail.com ([216.40.44.95]:52432 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726116AbgG0Hdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:33:10 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB74C0619D2;
-        Mon, 27 Jul 2020 00:33:10 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id c2so5517874edx.8;
-        Mon, 27 Jul 2020 00:33:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=95o2SL2yS+OJ42B7vx7vpE8aa2uvVeEjtGJk2w185hM=;
-        b=reT1y3UM0/eHiiOk8AjpyJEGO5IZw7wNJAYn9rDmVsKIMJPwGvujG9/JMiuIrosiZv
-         WyGZ4ADs5yhYnEBDvFEk+7Ve2c3jVQ4nuUKG1PsFfuKwcoBw7jS89lEQRLKj+wkF+f6K
-         YMo1wEaBR6SMBzWfnfSoOHmwSovsord7w9qtESgRyXIQoD/GJgOJor0fh+C+ncsdtd7f
-         ZAfZDHto385Fr1/D4UlfZj5S9Zgq9jg8ur/NISYj3PQizB4ILuL2NzIc743IXwduuUyj
-         LjGWhBnJ4OwUsAUhNyh3H5ZRgOc5YObSNQkjkzWfkzZwVdsKarf6IVET9AviCzhzBnf9
-         /hkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=95o2SL2yS+OJ42B7vx7vpE8aa2uvVeEjtGJk2w185hM=;
-        b=meqPkt9zEPYGrlxkx4svzRJZJd+zs3p1Rvnveri3rjDgPFRcrO1rUfYr5bOMqWlSfz
-         LwjvKtD09d3G1iOVCueSvB3uSoXeMtq6j9v9meBo074PY46SPXEU8n9j3VC3VpZXZdxr
-         TpbKEkJCMqwI9CWm4nSJWU7xD+zRr9Fg7Nvd7sC0y6pUp8R/3eCht+xfhP4fR0sXkId9
-         +3d5Fu6OsbVFyB2iBtIaSkn1kW+blejiZJgzl6XNGACMxH0sdDoMCBHsSsHqlp8mOTNs
-         37OroRoh9N69Cr/ttgC/sK0soILi3Zx+W0jdz9h8hdQdzditVqCNE0gN79oSInm8hp8y
-         HKXQ==
-X-Gm-Message-State: AOAM530YrittIk+mswE/gUoZTFhzQmRRAiuJp8FuXTVRim0edjV/DCM7
-        k4946zEAfIZ/kAwVLDXgGTIO2YBjjyVqI4NMej7qAoZN
-X-Google-Smtp-Source: ABdhPJyY4JZi0jBFS9XuIKOB3L/gBL5RfEZTypoj8YM0d14GZMRw8scieVd3NJU8rhon6bN52FrwzCZzwxF6z8BX+HY=
-X-Received: by 2002:a05:6402:d06:: with SMTP id eb6mr19513491edb.211.1595835188988;
- Mon, 27 Jul 2020 00:33:08 -0700 (PDT)
+        Mon, 27 Jul 2020 03:33:45 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id DDE75180A8134;
+        Mon, 27 Jul 2020 07:33:44 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: toe01_580981926f5f
+X-Filterd-Recvd-Size: 3330
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 27 Jul 2020 07:33:43 +0000 (UTC)
+Message-ID: <cda9b566ad67976e1acd62b053de50ee44a57250.camel@perches.com>
+Subject: [PATCH] checkpatch: Add test for repeated words
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Mon, 27 Jul 2020 00:33:42 -0700
+In-Reply-To: <16aa5f86f2f899a9156305ead4b7042449278eea.camel@perches.com>
+References: <20200726162902.Horde.TCqHYaODbkzEpM-rFzDd8A2@messagerie.si.c-s.fr>
+         <b796e912-e945-3cb1-03f8-0f38009634a4@infradead.org>
+         <add7c13b1ca24c8cb6f243b99d61c19287020efd.camel@perches.com>
+         <4e505c35-8428-89bb-7f9b-bc819382c3cd@infradead.org>
+         <16aa5f86f2f899a9156305ead4b7042449278eea.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-References: <20200724213659.273599-1-martin.botka1@gmail.com>
- <20200724213659.273599-3-martin.botka1@gmail.com> <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
- <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gmail.com> <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com>
-In-Reply-To: <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com>
-From:   Martin Botka <martin.botka1@gmail.com>
-Date:   Mon, 27 Jul 2020 09:32:31 +0200
-Message-ID: <CADQ2G_HF+eBgNJVgFS4OP2FBOHvvPE6rkPz3vjSG7PZ3qm3igw@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
- with u64 data length
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
-        Konrad Dybcio <konradybcio@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Could you please send the messages also to everyone else ?
+Try to avoid adding repeated words either on the
+same line or consecutive comment lines in a block
 
-Next time of course.
+e.g.:
+
+duplicated word in comment block
+
+	/*
+	 * this is a comment block where the last word of the previous
+	 * previous line is also the first word of the next line
+	 */
+
+and simple duplication
+
+	/* test this this again */
+
+Inspired-by: Randy Dunlap (rdunlap@infradead.org>
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ scripts/checkpatch.pl | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index e9fde28eb0de..c6ef76b72bf3 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -591,6 +591,8 @@ our @mode_permission_funcs = (
+ 	["__ATTR", 2],
+ );
+ 
++my $word_pattern = '\b[A-Z]?[a-z]{2,}\b';
++
+ #Create a search pattern for all these functions to speed up a loop below
+ our $mode_perms_search = "";
+ foreach my $entry (@mode_permission_funcs) {
+@@ -3340,6 +3342,42 @@ sub process {
+ 			}
+ 		}
+ 
++# check for repeated words separated by a single space
++		if ($rawline =~ /^\+/) {
++			while ($rawline =~ /\b($word_pattern) (?=($word_pattern))/g) {
++
++				my $first = $1;
++				my $second = $2;
++
++				if ($first =~ /(?:struct|union|enum)/) {
++					pos($rawline) += length($first) + length($second) + 1;
++					next;
++				}
++
++				next if ($first ne $second);
++				next if ($first eq 'long');
++
++				if (WARN("REPEATED_WORD",
++					 "Possible repeated word: '$first'\n" . $herecurr) &&
++				    $fix) {
++					$fixed[$fixlinenr] =~ s/\b$first $second\b/$first/;
++				}
++			}
++
++			# if it's a repeated word on consecutive lines in a comment block
++			if ($prevline =~ /$;+\s*$/ &&
++			    $prevrawline =~ /($word_pattern)\s*$/) {
++				my $last_word = $1;
++				if ($rawline =~ /^\+\s*\*\s*$last_word /) {
++					if (WARN("REPEATED_WORD",
++						 "Possible repeated word: '$last_word'\n" . $hereprev) &&
++					    $fix) {
++						$fixed[$fixlinenr] =~ s/(\+\s*\*\s*)$last_word /$1/;
++					}
++				}
++			}
++		}
++
+ # check for space before tabs.
+ 		if ($rawline =~ /^\+/ && $rawline =~ / \t/) {
+ 			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
+
+
