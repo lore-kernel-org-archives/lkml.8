@@ -2,82 +2,99 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAE5C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0CFC43457
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55D5320714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF4420714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860925;
-	bh=0XkNZGMfPjvvPJ4vDl6luNql4PL5ypWVUV/Rm+mizsE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=KQUt6dEklMrZ/8dsg88EMDifwOByhl0DsOfT/9UWkJgxcB5JLSc7wvQ7GK4kQmzSx
-	 8tG+WC1E0CP8Lh9i35Vq164qhDgBPQL2+Tq6gkmbX2kUcDbiXSLCELBWMbWO4E791a
-	 xwuLm8tGCHCz2BnUnpcpKGYKIS/bFpydeS1DVCsM=
+	s=default; t=1595860930;
+	bh=mzOX92lrI1z/vL+l8kiOBnblu9pbDp1Fzd+SgTVzpEI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=E6ei7EzfN31iQWHnNBqVet/EJ+Lai8xYpZkjpGwNS5IK2uVhv5wG14OPmhRXTioqb
+	 QH4Ptm+OxFWz2DJqChbMHdsLREf8ILtRwqyFgJY0nv0whgXIr1kSo9T6HX+UrCzBhY
+	 vKqJ63npEwz35cHrQ635CtC4JMvUurC6qCIpaTvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733121AbgG0OmD (ORCPT
+        id S1729320AbgG0OmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:42:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40810 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:42:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729320AbgG0Olw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:41:52 -0400
-Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
+        id S1728424AbgG0OHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:07:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FB70208E4;
-        Mon, 27 Jul 2020 14:41:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 141CE207FC;
+        Mon, 27 Jul 2020 14:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595860912;
-        bh=0XkNZGMfPjvvPJ4vDl6luNql4PL5ypWVUV/Rm+mizsE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jpg/EmyQDv9FT7kOivKMX8wFhGU4sFTB2CH3Fh4EZTjsJsvFBn7m7pngU0GoPyW+3
-         39SrDAlP4E+C6K+8ut68HKiV0e/CnGbZncwAxpQzwd+vVR2JJIvbvJk/g27MBtu9Ku
-         qK+mrjkQ3I6tKw3z/+lX1qAQaaqCDbWrPRjvxXS0=
-Message-ID: <1595860910.4841.118.camel@kernel.org>
-Subject: Re: [PATCH v3 06/19] fs/kernel_read_file: Split into separate
- include file
-From:   Mimi Zohar <zohar@kernel.org>
-To:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 27 Jul 2020 10:41:50 -0400
-In-Reply-To: <20200724213640.389191-7-keescook@chromium.org>
-References: <20200724213640.389191-1-keescook@chromium.org>
-         <20200724213640.389191-7-keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        s=default; t=1595858862;
+        bh=mzOX92lrI1z/vL+l8kiOBnblu9pbDp1Fzd+SgTVzpEI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AVtTUqDvvbxHP07EzMLM+WaL0sW0PXddMyhxAsqvr9A0kRyRWIczhq+KiUsLJpG/Y
+         tPvG+Px/oXY6scT3j0ULvs6cWzkOv3yFBbPeCE298MpSMxHUFLkA09Xnj5vCBtFYr9
+         IqW6flMBOhRy8wcXCyAOlOGRW/t+CamuSyPDsGuo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 40/64] hwmon: (aspeed-pwm-tacho) Avoid possible buffer overflow
+Date:   Mon, 27 Jul 2020 16:04:19 +0200
+Message-Id: <20200727134913.168315417@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
+References: <20200727134911.020675249@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
-> From: Scott Branden <scott.branden@broadcom.com>
-> 
-> Move kernel_read_file* out of linux/fs.h to its own linux/kernel_read_file.h
-> include file. That header gets pulled in just about everywhere
-> and doesn't really need functions not related to the general fs interface.
-> 
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Link: https://lore.kernel.org/r/20200706232309.12010-2-scott.branden@broadcom.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+[ Upstream commit bc4071aafcf4d0535ee423b69167696d6c03207d ]
+
+aspeed_create_fan() reads a pwm_port value using of_property_read_u32().
+If pwm_port will be more than ARRAY_SIZE(pwm_port_params), there will be
+a buffer overflow in
+aspeed_create_pwm_port()->aspeed_set_pwm_port_enable(). The patch fixes
+the potential buffer overflow.
+
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Link: https://lore.kernel.org/r/20200703111518.9644-1-novikov@ispras.ru
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hwmon/aspeed-pwm-tacho.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
+index 69b97d45e3cbb..e4337e9dda444 100644
+--- a/drivers/hwmon/aspeed-pwm-tacho.c
++++ b/drivers/hwmon/aspeed-pwm-tacho.c
+@@ -878,6 +878,8 @@ static int aspeed_create_fan(struct device *dev,
+ 	ret = of_property_read_u32(child, "reg", &pwm_port);
+ 	if (ret)
+ 		return ret;
++	if (pwm_port >= ARRAY_SIZE(pwm_port_params))
++		return -EINVAL;
+ 	aspeed_create_pwm_port(priv, (u8)pwm_port);
+ 
+ 	ret = of_property_count_u8_elems(child, "cooling-levels");
+-- 
+2.25.1
+
+
+
