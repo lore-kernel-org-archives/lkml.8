@@ -2,235 +2,255 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F792C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D801C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0120F2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369DE2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:42:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ID/e03+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgG0NmR (ORCPT
+        id S1728470AbgG0Nml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:42:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61600 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726555AbgG0NmP (ORCPT
+        Mon, 27 Jul 2020 09:42:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgG0Nmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:42:15 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RDWYKA169386;
-        Mon, 27 Jul 2020 09:42:09 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32htsc0k28-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 09:42:09 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06RDWh29169826;
-        Mon, 27 Jul 2020 09:42:08 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32htsc0k1w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 09:42:08 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06RDYQvv012520;
-        Mon, 27 Jul 2020 13:42:08 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma03dal.us.ibm.com with ESMTP id 32gcy6ntja-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 13:42:08 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06RDg22E59638124
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 13:42:03 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C06E86A054;
-        Mon, 27 Jul 2020 13:42:04 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 91B676A047;
-        Mon, 27 Jul 2020 13:42:03 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.167.215])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jul 2020 13:42:03 +0000 (GMT)
-Subject: Re: [PATCH v9 02/15] s390/vfio-ap: use new AP bus interface to search
- for queue devices
-To:     Pierre Morel <pmorel@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, kernel test robot <lkp@intel.com>
-References: <20200720150344.24488-1-akrowiak@linux.ibm.com>
- <20200720150344.24488-3-akrowiak@linux.ibm.com>
- <a946e992-ff36-ca45-1811-7c6b0aaa161f@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <34208b94-8f37-e46b-3783-9a788c93fb02@linux.ibm.com>
-Date:   Mon, 27 Jul 2020 09:42:03 -0400
+        Mon, 27 Jul 2020 09:42:40 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79C4DC061794;
+        Mon, 27 Jul 2020 06:42:40 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id a8so12172581edy.1;
+        Mon, 27 Jul 2020 06:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=reply-to:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=r5UgUYmGIu8dXLKxxEsnpe0wyvxQ3PiGThgV1hXOvFQ=;
+        b=ID/e03+HVhMp8vhvRxAWcrJqeQDn0B0elBX4JgzNp19TqdRPpj0JAdi/gB71qgMKDg
+         4zs/nX407YlE6kFur9vBNlLxC7jkSwZtXgiCd8aDcz8Yr+qF09IxcCzXzaxapbhlv3gb
+         3t+nSiqVhTjec8RzhU3Z7PXqxtq1dOGRSkTtaLAjXxNMM/YpEXrG5AXcedxIPgvhHDdZ
+         tQbfJSYoS9+SHbUQ9t2/jdCRXO+H1AuOUMxtgUQ401FmFWdgdoLWulNpKhKFUc2rkVwa
+         w9M6e2dLQEHB2l/6aIqg5U9jaFgiQ58s7ukCDxCIlQGT/k213KvKlieMi2URT44kJ/m2
+         /K1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding:content-language;
+        bh=r5UgUYmGIu8dXLKxxEsnpe0wyvxQ3PiGThgV1hXOvFQ=;
+        b=qu5i2qOgQiKU3cuOWZqPxJkMN7Zyt8GwDTIFdoSniBbWdtjjGVRW/jxppEwibSoQjr
+         wuS8eSyFnTPm/d0GwE6vJhnDGXbvL2YPMxbGos0aX7Tb5VBSf5/AW5ivjD58kO7jG6xx
+         zEXGgWOMB0kMKTVymolPAIypUB1ljoucm8HAeH5FAlgsr3uQaa2CekNFNXMdHsgvcCh1
+         ejVZ0vQWVmrabxm5tZXA8WeFMbH0n5MdrL0tp8MrhV431jhl3hJ4/k6ptL+BBbD5IW79
+         tcrD3wx7rvJrZhXatK3HZLdbuoBdyAFX7lt7pyw59A1zuKD9fu+fl3nN/qWTRnwOJrhE
+         vivw==
+X-Gm-Message-State: AOAM531q4JxozX4akgjX9r1WoCWxWo3Fg5/4YO5XssERVzWBkP65yp4+
+        4ypsbzzxn1zKaZOZ8WNF9ozkIn7l
+X-Google-Smtp-Source: ABdhPJwZznYnW4z4lkEFxOLCLYaX5bd+Wte9m7+t5rV8Uu8lPzz5m3GiJZ1jVnXU0ape3kDfG59Mng==
+X-Received: by 2002:a05:6402:1777:: with SMTP id da23mr20990077edb.260.1595857358906;
+        Mon, 27 Jul 2020 06:42:38 -0700 (PDT)
+Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
+        by smtp.gmail.com with ESMTPSA id n5sm6989547eja.70.2020.07.27.06.42.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 06:42:38 -0700 (PDT)
+Reply-To: christian.koenig@amd.com
+Subject: Re: [PATCH 1/2] drm/radeon: switch from 'pci_' to 'dma_' API
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        alexander.deucher@amd.com, christian.koenig@amd.com,
+        airlied@linux.ie, daniel@ffwll.ch
+Cc:     kernel-janitors@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200727103421.50739-1-christophe.jaillet@wanadoo.fr>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
+Message-ID: <224fc7f6-f56b-1dc8-87f2-33ff85d5720d@gmail.com>
+Date:   Mon, 27 Jul 2020 15:42:37 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <a946e992-ff36-ca45-1811-7c6b0aaa161f@linux.ibm.com>
+In-Reply-To: <20200727103421.50739-1-christophe.jaillet@wanadoo.fr>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_08:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- spamscore=0 suspectscore=3 priorityscore=1501 malwarescore=0
- impostorscore=0 bulkscore=0 adultscore=0 lowpriorityscore=0 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007270100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am 27.07.20 um 12:34 schrieb Christophe JAILLET:
+> The wrappers in include/linux/pci-dma-compat.h should go away.
+>
+> The patch has been generated with the coccinelle script below and has been
+> hand modified to replace GFP_ with a correct flag.
+> It has been compile tested.
+>
+> When memory is allocated in 'radeon_gart_table_ram_alloc()' GFP_KERNEL
+> can be used because its callers already use this flag.
+>
+> Both 'r100_pci_gart_init()' (r100.c) and 'rs400_gart_init()' (rs400.c)
+> call 'radeon_gart_init()'.
+> This function uses 'vmalloc'.
+>
+>
+> @@
+> @@
+> -    PCI_DMA_BIDIRECTIONAL
+> +    DMA_BIDIRECTIONAL
+>
+> @@
+> @@
+> -    PCI_DMA_TODEVICE
+> +    DMA_TO_DEVICE
+>
+> @@
+> @@
+> -    PCI_DMA_FROMDEVICE
+> +    DMA_FROM_DEVICE
+>
+> @@
+> @@
+> -    PCI_DMA_NONE
+> +    DMA_NONE
+>
+> @@
+> expression e1, e2, e3;
+> @@
+> -    pci_alloc_consistent(e1, e2, e3)
+> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+>
+> @@
+> expression e1, e2, e3;
+> @@
+> -    pci_zalloc_consistent(e1, e2, e3)
+> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+>
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_free_consistent(e1, e2, e3, e4)
+> +    dma_free_coherent(&e1->dev, e2, e3, e4)
+>
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_map_single(e1, e2, e3, e4)
+> +    dma_map_single(&e1->dev, e2, e3, e4)
+>
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_unmap_single(e1, e2, e3, e4)
+> +    dma_unmap_single(&e1->dev, e2, e3, e4)
+>
+> @@
+> expression e1, e2, e3, e4, e5;
+> @@
+> -    pci_map_page(e1, e2, e3, e4, e5)
+> +    dma_map_page(&e1->dev, e2, e3, e4, e5)
+>
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_unmap_page(e1, e2, e3, e4)
+> +    dma_unmap_page(&e1->dev, e2, e3, e4)
+>
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_map_sg(e1, e2, e3, e4)
+> +    dma_map_sg(&e1->dev, e2, e3, e4)
+>
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_unmap_sg(e1, e2, e3, e4)
+> +    dma_unmap_sg(&e1->dev, e2, e3, e4)
+>
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
+> +    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+>
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_dma_sync_single_for_device(e1, e2, e3, e4)
+> +    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+>
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
+> +    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+>
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
+> +    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+>
+> @@
+> expression e1, e2;
+> @@
+> -    pci_dma_mapping_error(e1, e2)
+> +    dma_mapping_error(&e1->dev, e2)
+>
+> @@
+> expression e1, e2;
+> @@
+> -    pci_set_dma_mask(e1, e2)
+> +    dma_set_mask(&e1->dev, e2)
+>
+> @@
+> expression e1, e2;
+> @@
+> -    pci_set_consistent_dma_mask(e1, e2)
+> +    dma_set_coherent_mask(&e1->dev, e2)
+>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
+Reviewed-by: Christian König <christian.koenig@amd.com>
 
-On 7/24/20 4:38 AM, Pierre Morel wrote:
+> ---
+> If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+>     https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+> ---
+>   drivers/gpu/drm/radeon/radeon_gart.c | 9 ++++-----
+>   1 file changed, 4 insertions(+), 5 deletions(-)
 >
->
-> On 2020-07-20 17:03, Tony Krowiak wrote:
->> This patch refactor's the vfio_ap device driver to use the AP bus's
->> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
->> information about a queue that is bound to the vfio_ap device driver.
->> The bus's ap_get_qdev() function retrieves the queue device from a
->> hashtable keyed by APQN. This is much more efficient than looping over
->> the list of devices attached to the AP bus by several orders of
->> magnitude.
->
-> The patch does much more than modifying this line. ;)
-
-Yes it does, I'll be sure to include the additional details.
-
->
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> Reported-by: kernel test robot <lkp@intel.com>
->> ---
->>   drivers/s390/crypto/vfio_ap_drv.c     | 27 ++-------
->>   drivers/s390/crypto/vfio_ap_ops.c     | 86 +++++++++++++++------------
->>   drivers/s390/crypto/vfio_ap_private.h |  8 ++-
->>   3 files changed, 59 insertions(+), 62 deletions(-)
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_drv.c 
->> b/drivers/s390/crypto/vfio_ap_drv.c
->> index f4ceb380dd61..24cdef60039a 100644
->> --- a/drivers/s390/crypto/vfio_ap_drv.c
->> +++ b/drivers/s390/crypto/vfio_ap_drv.c
->> @@ -53,15 +53,9 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
->>    */
->>   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
->>   {
->> -    struct vfio_ap_queue *q;
->> -
->> -    q = kzalloc(sizeof(*q), GFP_KERNEL);
->> -    if (!q)
->> -        return -ENOMEM;
->> -    dev_set_drvdata(&apdev->device, q);
->> -    q->apqn = to_ap_queue(&apdev->device)->qid;
->> -    q->saved_isc = VFIO_AP_ISC_INVALID;
->> -    return 0;
->> +    struct ap_queue *queue = to_ap_queue(&apdev->device);
->> +
->> +    return vfio_ap_mdev_probe_queue(queue);
->>   }
->
-> You should explain the reason why this function is modified.
->
->>     /**
->> @@ -72,18 +66,9 @@ static int vfio_ap_queue_dev_probe(struct 
->> ap_device *apdev)
->>    */
->>   static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
->>   {
->> -    struct vfio_ap_queue *q;
->> -    int apid, apqi;
->> -
->> -    mutex_lock(&matrix_dev->lock);
->> -    q = dev_get_drvdata(&apdev->device);
->> -    dev_set_drvdata(&apdev->device, NULL);
->> -    apid = AP_QID_CARD(q->apqn);
->> -    apqi = AP_QID_QUEUE(q->apqn);
->> -    vfio_ap_mdev_reset_queue(apid, apqi, 1);
->> -    vfio_ap_irq_disable(q);
->> -    kfree(q);
->> -    mutex_unlock(&matrix_dev->lock);
->> +    struct ap_queue *queue = to_ap_queue(&apdev->device);
->> +
->> +    vfio_ap_mdev_remove_queue(queue);
->>   }
->
-> ... and this one?
->
->>     static void vfio_ap_matrix_dev_release(struct device *dev)
->> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
->> b/drivers/s390/crypto/vfio_ap_ops.c
->> index e0bde8518745..ad3925f04f61 100644
->> --- a/drivers/s390/crypto/vfio_ap_ops.c
->> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->> @@ -26,43 +26,26 @@
->>     static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
->>   -static int match_apqn(struct device *dev, const void *data)
->> -{
->> -    struct vfio_ap_queue *q = dev_get_drvdata(dev);
->> -
->> -    return (q->apqn == *(int *)(data)) ? 1 : 0;
->> -}
->> -
->>   /**
->> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
->> - * @matrix_mdev: the associated mediated matrix
->> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
->>    * @apqn: The queue APQN
->>    *
->> - * Retrieve a queue with a specific APQN from the list of the
->> - * devices of the vfio_ap_drv.
->> - * Verify that the APID and the APQI are set in the matrix.
->> + * Retrieve a queue with a specific APQN from the AP queue devices 
->> attached to
->> + * the AP bus.
->>    *
->> - * Returns the pointer to the associated vfio_ap_queue
->> + * Returns the pointer to the vfio_ap_queue with the specified APQN, 
->> or NULL.
->>    */
->> -static struct vfio_ap_queue *vfio_ap_get_queue(
->> -                    struct ap_matrix_mdev *matrix_mdev,
->> -                    int apqn)
->> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
->>   {
->> +    struct ap_queue *queue;
->>       struct vfio_ap_queue *q;
->> -    struct device *dev;
->>   -    if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
->> -        return NULL;
->> -    if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
->> +    queue = ap_get_qdev(apqn);
->> +    if (!queue)
->>           return NULL;
->>   -    dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
->> -                 &apqn, match_apqn);
->> -    if (!dev)
->> -        return NULL;
->> -    q = dev_get_drvdata(dev);
->> -    q->matrix_mdev = matrix_mdev;
->> -    put_device(dev);
->> +    q = dev_get_drvdata(&queue->ap_dev.device);
->> +    put_device(&queue->ap_dev.device);
->>         return q;
->>   }
->
-> this function changed a lot too, you should explain the goal in the 
-> patch comment.
->
-> ...snip...
->
-> Regards,
-> Pierre
->
+> diff --git a/drivers/gpu/drm/radeon/radeon_gart.c b/drivers/gpu/drm/radeon/radeon_gart.c
+> index f178ba321715..b7ce254e5663 100644
+> --- a/drivers/gpu/drm/radeon/radeon_gart.c
+> +++ b/drivers/gpu/drm/radeon/radeon_gart.c
+> @@ -72,8 +72,8 @@ int radeon_gart_table_ram_alloc(struct radeon_device *rdev)
+>   {
+>   	void *ptr;
+>   
+> -	ptr = pci_alloc_consistent(rdev->pdev, rdev->gart.table_size,
+> -				   &rdev->gart.table_addr);
+> +	ptr = dma_alloc_coherent(&rdev->pdev->dev, rdev->gart.table_size,
+> +				 &rdev->gart.table_addr, GFP_KERNEL);
+>   	if (ptr == NULL) {
+>   		return -ENOMEM;
+>   	}
+> @@ -110,9 +110,8 @@ void radeon_gart_table_ram_free(struct radeon_device *rdev)
+>   			      rdev->gart.table_size >> PAGE_SHIFT);
+>   	}
+>   #endif
+> -	pci_free_consistent(rdev->pdev, rdev->gart.table_size,
+> -			    (void *)rdev->gart.ptr,
+> -			    rdev->gart.table_addr);
+> +	dma_free_coherent(&rdev->pdev->dev, rdev->gart.table_size,
+> +			  (void *)rdev->gart.ptr, rdev->gart.table_addr);
+>   	rdev->gart.ptr = NULL;
+>   	rdev->gart.table_addr = 0;
+>   }
 
