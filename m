@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D438C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3C982083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF32F20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858917;
-	bh=L3NAJFu9xgpy0+dpwkTodzwTIjTIyNZVPiBUh2hZEiE=;
+	s=default; t=1595858920;
+	bh=E4hMhv9MnCUG4J4l+0OHGK6Kd2A7ToIE1oU1Q6qAS5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BZtY1RsOc63laSsKfzrk5jDuFpZ7UxRq6DwXj1c68SBDCrlgdu4iIEVDKGSKzcw4d
-	 gIAL2hN6YlnYfqst/mUfVjm39diHOIa3ZW4SD+lv3IItVzMqkRC4N2EvAJTTaK+ozz
-	 ziztCVikMHNWrXr7Z91se/PFmS/QRownA2cXrQ5M=
+	b=o7ZkxLf51V9ph+cSIKnxyPQxU9gWTAsCxQZ307C4bTQL9rUhQj6lGckE+ndTBXV3B
+	 IsUz4SlU1C05CPOKkdulqcSW7hmeJLT79eAy9lOFh9mDuTGMu4EN19VEeYwwJ/4RrQ
+	 PaDLNzV8ZP0SV5nKHo+NAEsoUNy+9YdFyx7jh9AA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbgG0OIg (ORCPT
+        id S1729461AbgG0OIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:08:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58070 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:08:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729436AbgG0OIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:08:34 -0400
+        id S1729451AbgG0OIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:08:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 686C42073E;
-        Mon, 27 Jul 2020 14:08:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2419620838;
+        Mon, 27 Jul 2020 14:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858913;
-        bh=L3NAJFu9xgpy0+dpwkTodzwTIjTIyNZVPiBUh2hZEiE=;
+        s=default; t=1595858916;
+        bh=E4hMhv9MnCUG4J4l+0OHGK6Kd2A7ToIE1oU1Q6qAS5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EnIGxGliK5jZxhBGV9PIMLd2RHtGVJeyuPzR4jiMZVNc3EPct0tYUomX3DdjBCupE
-         g8Fs1x5xK/FjTpyGS+3L9rSGfceSPnXiH1Idyl/1iWlGyaKTDRlINavfeqzO5yCnuK
-         YW0ark9ZQzzyrnE5wuTqLmbo5FLVufiZZLrh8Dpg=
+        b=XsBxG7zkOK2U6DnwrdXJQZD4B0/BN3V9x9FRMe3UYF3oNvq+GlFXwfm2T/k61g9WH
+         acMOQ0JlSwUiZkijmo5AylfKQyU/1Oeq2KBOq0XtPaSSpbne4KIQTJbXvIXwMCTdnH
+         qp4xF8wlS+UzpO5R02RwFVph6hogrjyXWcY0jWCc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhouxudong <zhouxudong8@huawei.com>,
-        guodeqing <geffrey.guo@huawei.com>, Julian Anastasov <ja@ssi.bg>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 29/64] ipvs: fix the connection sync failed in some cases
-Date:   Mon, 27 Jul 2020 16:04:08 +0200
-Message-Id: <20200727134912.596333202@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 30/64] i2c: rcar: always clear ICSAR to avoid side effects
+Date:   Mon, 27 Jul 2020 16:04:09 +0200
+Message-Id: <20200727134912.650137861@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -61,62 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: guodeqing <geffrey.guo@huawei.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit 8210e344ccb798c672ab237b1a4f241bda08909b ]
+[ Upstream commit eb01597158ffb1853a7a7fc2c57d4c844640f75e ]
 
-The sync_thread_backup only checks sk_receive_queue is empty or not,
-there is a situation which cannot sync the connection entries when
-sk_receive_queue is empty and sk_rmem_alloc is larger than sk_rcvbuf,
-the sync packets are dropped in __udp_enqueue_schedule_skb, this is
-because the packets in reader_queue is not read, so the rmem is
-not reclaimed.
+On R-Car Gen2, we get a timeout when reading from the address set in
+ICSAR, even though the slave interface is disabled. Clearing it fixes
+this situation. Note that Gen3 is not affected.
 
-Here I add the check of whether the reader_queue of the udp sock is
-empty or not to solve this problem.
+To reproduce: bind and undbind an I2C slave on some bus, run
+'i2cdetect' on that bus.
 
-Fixes: 2276f58ac589 ("udp: use a separate rx queue for packet reception")
-Reported-by: zhouxudong <zhouxudong8@huawei.com>
-Signed-off-by: guodeqing <geffrey.guo@huawei.com>
-Acked-by: Julian Anastasov <ja@ssi.bg>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipvs/ip_vs_sync.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-rcar.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/netfilter/ipvs/ip_vs_sync.c b/net/netfilter/ipvs/ip_vs_sync.c
-index b373e053ff9a3..90261055062ed 100644
---- a/net/netfilter/ipvs/ip_vs_sync.c
-+++ b/net/netfilter/ipvs/ip_vs_sync.c
-@@ -1726,6 +1726,8 @@ static int sync_thread_backup(void *data)
- {
- 	struct ip_vs_sync_thread_data *tinfo = data;
- 	struct netns_ipvs *ipvs = tinfo->ipvs;
-+	struct sock *sk = tinfo->sock->sk;
-+	struct udp_sock *up = udp_sk(sk);
- 	int len;
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index 132c4a405bf83..db9ca8e926ca7 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -817,6 +817,7 @@ static int rcar_unreg_slave(struct i2c_client *slave)
+ 	/* disable irqs and ensure none is running before clearing ptr */
+ 	rcar_i2c_write(priv, ICSIER, 0);
+ 	rcar_i2c_write(priv, ICSCR, 0);
++	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
  
- 	pr_info("sync thread started: state = BACKUP, mcast_ifn = %s, "
-@@ -1733,12 +1735,14 @@ static int sync_thread_backup(void *data)
- 		ipvs->bcfg.mcast_ifn, ipvs->bcfg.syncid, tinfo->id);
+ 	synchronize_irq(priv->irq);
+ 	priv->slave = NULL;
+@@ -914,6 +915,8 @@ static int rcar_i2c_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto out_pm_put;
  
- 	while (!kthread_should_stop()) {
--		wait_event_interruptible(*sk_sleep(tinfo->sock->sk),
--			 !skb_queue_empty(&tinfo->sock->sk->sk_receive_queue)
--			 || kthread_should_stop());
-+		wait_event_interruptible(*sk_sleep(sk),
-+					 !skb_queue_empty_lockless(&sk->sk_receive_queue) ||
-+					 !skb_queue_empty_lockless(&up->reader_queue) ||
-+					 kthread_should_stop());
- 
- 		/* do we have data now? */
--		while (!skb_queue_empty(&(tinfo->sock->sk->sk_receive_queue))) {
-+		while (!skb_queue_empty_lockless(&sk->sk_receive_queue) ||
-+		       !skb_queue_empty_lockless(&up->reader_queue)) {
- 			len = ip_vs_receive(tinfo->sock, tinfo->buf,
- 					ipvs->bcfg.sync_maxlen);
- 			if (len <= 0) {
++	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
++
+ 	if (priv->devtype == I2C_RCAR_GEN3) {
+ 		priv->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+ 		if (!IS_ERR(priv->rstc)) {
 -- 
 2.25.1
 
