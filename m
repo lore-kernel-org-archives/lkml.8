@@ -2,119 +2,172 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D6FC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ADEC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFC2207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF676207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:01:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="I1T7nVAH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DEc72jan"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731554AbgG0R7J (ORCPT
+        id S1730446AbgG0SBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:59:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729969AbgG0R7I (ORCPT
+        Mon, 27 Jul 2020 14:01:17 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:55092 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729610AbgG0SBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:59:08 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B001FC0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 10:59:08 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id o1so8512593plk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 10:59:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mFDUQmogg46Posu3w903aMyaH9JFMPS/SgmwZ4I8ccU=;
-        b=I1T7nVAHC3vzto7UQ9hEUXPS9L7N6JIHGvzV+CxpjYgmTe+ds1sKddaNfOp5Lz3zFa
-         gwq29Ta3R+Ik6gTSzyHZj/QZTNGF+3YjxvH/oCQsmR39XPWWUgXlruApbZuRv4+UO6m+
-         F+qJsD58I3vBK2wxxeMXuf1z2fVrikDTjLjbR3nvBVLAacLbU8HVbI0K7jV8MOuA6Bxz
-         4oT6R6utDcWVEFQn1fppwmwQNvzuhRptA2GEPRg7km6J4qyewnJSZB9xyCMkLRSxVBOr
-         HSqr07ARxowQi2ya25mF7GPbk4Gk2mFcDQT0lHnrh3jPX2oUlHgOexqhi5yZie7+ZxLf
-         N3HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mFDUQmogg46Posu3w903aMyaH9JFMPS/SgmwZ4I8ccU=;
-        b=bjUdUwia1GX5/LJq7AMuSqrbtmqJ93FC8LLMVISGaqHcJYfQOjMn/ZaZ7MgG9guH1S
-         j1FsGiGhvlw06UBVxKkvN6XocsYdYgUQxMNWvHNB+3On9VlSDGykXE+4H83FttO9mgf4
-         lMGY74nuxjPMPcTWmEgy6jpNHOQNFLsrkp/z1L7gepETlryYXybKffkbygq2dUQT4Th1
-         p2qVIC8sAh1zug9z4DsaG2NDl+JmM4g7UauZ9bzkVH0+6h4cs3OdKx54wP0rU7I8Rjj5
-         V70YFxj755u6L1lnGR1ahs5ItHKp/MhegMIzYtj87Ih/TOmTaXa4kIXiCfRlStywVse6
-         ojVg==
-X-Gm-Message-State: AOAM530cvNnp9D142+wBIx7sIClsz+TV7EV3LnvNYWN4t9Ebmzpr3yny
-        Wvlems461+eZcBlS2J8WCw6ogA==
-X-Google-Smtp-Source: ABdhPJxmYU88VTup/scAe1Pwy/mPgv3UJuWHJtQ3YU8xLR7QKaHQ2gI4MwOQdpbgduq0ybJfvL0uCg==
-X-Received: by 2002:a17:90b:1116:: with SMTP id gi22mr495293pjb.8.1595872748151;
-        Mon, 27 Jul 2020 10:59:08 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id w70sm8378070pfc.98.2020.07.27.10.59.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 10:59:07 -0700 (PDT)
-Subject: Re: [PATCH v2] ata: use generic power management
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200727173923.694872-1-vaibhavgupta40@gmail.com>
- <20200727174012.GA696265@gmail.com>
- <2b4738b0-5c2c-8ee2-83f9-10b961a5d0d3@kernel.dk>
- <20200727175119.GA700880@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <99b7cc57-1b4f-6c0b-00c6-08e22021c373@kernel.dk>
-Date:   Mon, 27 Jul 2020 11:59:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Mon, 27 Jul 2020 14:01:17 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RHvoW3022570;
+        Mon, 27 Jul 2020 18:00:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=eu4SrTGieRdpo72CtnDZ91l+25Ht7vSkZp5hzFeF660=;
+ b=DEc72janMLcdPS8ZsEPwLHNF3DJzt4ricPlsLOmBD1/LCfhSq+9Q7BUil5Cgy659rh2G
+ ZgnlsxeI4z0r7XM2WebMEbKMUkdnsYV7rx0cZaoUtyXkS9HABUtxL17icKvPC31tigSF
+ dvdgJU37nAmobyMf3qnrrDmz9+6AXy/35DgVzZH1SlCycpeChR8RmjdX+OQPMFpqEKx0
+ ZThfzrvB/79OH3r91iE3lHXvOMZldYSn8hkTnnYTPWuHpmRcam0ZMaXwNxT1IRrzmR8Z
+ YvKcMtHZARTLjZrdd1Z3O9fsygYlhUNtrb+ksvr8DVmzd5tndW1j2USVZH5tm+9B+PSP pQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 32hu1j31k9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Jul 2020 18:00:29 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RHxIp3102771;
+        Mon, 27 Jul 2020 18:00:28 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 32hu5r5014-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 18:00:27 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06RI0LEV025773;
+        Mon, 27 Jul 2020 18:00:21 GMT
+Received: from [10.39.226.160] (/10.39.226.160)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 27 Jul 2020 11:00:21 -0700
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
+        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
+        peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
+        christian@kellner.me, areber@redhat.com, cyphar@cyphar.com
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+ <87pn8glwd2.fsf@x220.int.ebiederm.org>
+From:   Steven Sistare <steven.sistare@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <28125570-4129-bcba-099b-f90481cfbfe8@oracle.com>
+Date:   Mon, 27 Jul 2020 14:00:17 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200727175119.GA700880@gmail.com>
+In-Reply-To: <87pn8glwd2.fsf@x220.int.ebiederm.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 clxscore=1011 mlxscore=0 impostorscore=0
+ phishscore=0 adultscore=0 suspectscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/20 11:51 AM, Vaibhav Gupta wrote:
-> On Mon, Jul 27, 2020 at 11:42:51AM -0600, Jens Axboe wrote:
->> On 7/27/20 11:40 AM, Vaibhav Gupta wrote:
->>> The patch is compile-tested only.
->>
->> Please test and verify actual functionality, if you're serious about
->> potentially getting this into the kernel.
->>
-> Hello Jens,
+On 7/27/2020 1:07 PM, ebiederm@xmission.com wrote:
+> Anthony Yznaga <anthony.yznaga@oracle.com> writes:
 > 
-> Sadly I don't have the hardware. This upgrade is part of my Linux Kernel
-> Mentorship Program project. Like other PCI drivers which I have updated, I could
-> do compile-testing only. Though this patch covers 54 drivers but the actual
-> change is done only in drivers/ata/libata-core. Since rest of the drivers
-> make use of the same ata_pci_device_suspend/resume(), it was a chain reaction. I
-> only had to change variable binding in "struct pci_driver" variable of dependent
-> drivers.
+>> This patchset adds support for preserving an anonymous memory range across
+>> exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
+>> sharing memory in this manner, as opposed to re-attaching to a named shared
+>> memory segment, is to ensure it is mapped at the same virtual address in
+>> the new process as it was in the old one.  An intended use for this is to
+>> preserve guest memory for guests using vfio while qemu exec's an updated
+>> version of itself.  By ensuring the memory is preserved at a fixed address,
+>> vfio mappings and their associated kernel data structures can remain valid.
+>> In addition, for the qemu use case, qemu instances that back guest RAM with
+>> anonymous memory can be updated.
+> 
+> What is wrong with using a file descriptor to a possibly deleted file
+> and re-mmaping it?
+> 
+> There is already MAP_FIXED that allows you to ensure you have the same
+> address.
 
-That's understandable, but you should find at least some hardware (maybe remotely
-accessible) to test this on. I'm not going to apply this without some confidence
-that it actually works, and compile only testing is a far cry from that. Lots of
-code compiles, but fails miserably at runtime.
+MAP_FIXED blows away any existing mapping in that range, which is not the 
+desired behavior.  We want to preserve the previously created mapping at
+the same VA and co-exist with other mappings created by the new process.
+There is no way to guarantee availability of a VA post-exec.
 
-While it's touching 54 drivers, at least basic coverage of the most popular
-choices will give everybody some confidence that it works in general.
+> I think all it would take would be a small protocol from one version
+> to the next to say map file descriptor #N and address #A.  Something
+> easily passed on the command line.
+> 
+> There is just enough complexity in exec currently that our
+> implementation of exec is already teetering.  So if we could use
+> existing mechanisms it would be good.
+> 
+> And I don't see why this version of sharing a mmap area would be
+> particularly general.  I do imagine that being able to force a
+> mmap area into a setuid executable would be a fun attack vector.
 
--- 
-Jens Axboe
+Any mmap(MAP_ANON) segment can be preserved.  That is very general, and is 
+the case we need to support to upgrade legacy applications that are already
+running (such as qemu) -- we cannot recode them before they are updated.
 
+> Perhaps I missed this in my skim of these patches but I did not see
+> anything that guarded this feature against an exec that changes an
+> applications privileges.
+
+The ELF opt-in flag must be set, so only selected executables will accept
+incoming mappings.  The exec() code verifies that the preserved mappings 
+do not overlap or become adjacent to text or stack, so it is not possible for
+example for an attacker to cause stack underflow or overflow to access injected
+content.  A gadget invoked by some other attack could access the preserved content.
+
+- Steve
+
+>> Patches 1 and 2 ensure that loading of ELF load segments does not silently
+>> clobber existing VMAS, and remove assumptions that the stack is the only
+>> VMA in the mm when the stack is set up.  Patch 1 re-introduces the use of
+>> MAP_FIXED_NOREPLACE to load ELF binaries that addresses the previous issues
+>> and could be considered on its own.
+>>
+>> Patches 3, 4, and 5 introduce the feature and an opt-in method for its use
+>> using an ELF note.
+>>
+>> Anthony Yznaga (5):
+>>   elf: reintroduce using MAP_FIXED_NOREPLACE for elf executable mappings
+>>   mm: do not assume only the stack vma exists in setup_arg_pages()
+>>   mm: introduce VM_EXEC_KEEP
+>>   exec, elf: require opt-in for accepting preserved mem
+>>   mm: introduce MADV_DOEXEC
+>>
+>>  arch/x86/Kconfig                       |   1 +
+>>  fs/binfmt_elf.c                        | 196 +++++++++++++++++++++++++--------
+>>  fs/exec.c                              |  33 +++++-
+>>  include/linux/binfmts.h                |   7 +-
+>>  include/linux/mm.h                     |   5 +
+>>  include/uapi/asm-generic/mman-common.h |   3 +
+>>  kernel/fork.c                          |   2 +-
+>>  mm/madvise.c                           |  25 +++++
+>>  mm/mmap.c                              |  47 ++++++++
+>>  9 files changed, 266 insertions(+), 53 deletions(-)
