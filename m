@@ -2,128 +2,97 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F17A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D4CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE87720672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A9122073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:50:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjS7ZIgb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHuKlq97"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbgG0Hup (ORCPT
+        id S1727124AbgG0Hu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:50:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60754 "EHLO
+        Mon, 27 Jul 2020 03:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0Hup (ORCPT
+        with ESMTP id S1726116AbgG0Hu5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:50:45 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFA88C0619D2;
-        Mon, 27 Jul 2020 00:50:44 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id g11so4283371ejr.0;
-        Mon, 27 Jul 2020 00:50:44 -0700 (PDT)
+        Mon, 27 Jul 2020 03:50:57 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421DEC0619D2;
+        Mon, 27 Jul 2020 00:50:57 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id z5so8985473pgb.6;
+        Mon, 27 Jul 2020 00:50:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=d+C+aRIzZChly/+LMFF0Tq4yjhH/K1QkKiEm2WmPAqY=;
-        b=ZjS7ZIgbBgpF0BCvSDDWXTDY4QJNfpLnL3sxY6sH1OcJBbXPf5GcSvcTtsHCBCHKff
-         poyr2wwc8lrls009nnXy+ttm+yrrFB60ow0sw0LRBOBGeoywHL5AgRH+5SoLM9i0MHCf
-         VTeZc5VMOt8nWJnGoJsn0I9DnonmAgpvPE+DOKwUdZGxyhxQTsS6wMS6ywF27TwDPnPu
-         4+TSNl6z33Q8piFEa5Y/0esuW3BCes1FB1fBrNgFjq0ByoiOBbAic992HVDFkZpK+T5M
-         cb34UZpoHjA8uuXLA5TkB0QT5FvlHV9hdx+Xm3zdyxX22SQKXNQY/Qd7xdl/h/ckoB1n
-         EX2w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HvRchyhkxeOLvzDuOrbaCYZ/zyb156MiLRE1ABCH84I=;
+        b=KHuKlq97lOmpgvmfdymhvpN8uf/hANCv3kkGu6QGEqkIdNfGIKZoOZhPHipHkLubxz
+         POPDaIvlCDmqdt9EHt7kMEd2b/8zf6vzgQHOUoqBub+XyOdPIzUhYy/M7DPe1oBeuxHm
+         VT6qGOMZw880nUoP71XlImKhZHXsHRa6k7ISxETfFyQWt4qsYJEqtGdsxmMoiFbRPzW7
+         xIdi8aQIpCR4QQU98/NyNdI8wHvkq5pL1AZmHs3ozQH0nJRU8LdmLjMxR2dn+3BAkL+w
+         wVzyC0kgNbBOgIa6RjciRV692+rSYDnkvWWtH0diAUZ0nlE8RHT718PeeBTdn4lFfUpR
+         IFaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d+C+aRIzZChly/+LMFF0Tq4yjhH/K1QkKiEm2WmPAqY=;
-        b=QTuVtKEbJv1BCn9yw2XNUFa8WH7fU+W8g4yR5BQA7aWmqSHs9ww2gJbdKNSsmM9SiC
-         ngNr37KRvvliiQiqvih8TN6izDtROO1d20AW/5K5EARzWJOb1KG9BeZtjcorFRPRZnI1
-         ge0P8MiLSKzKcy03VGOqgqMP8PBm5MTKKtE2FNruGq/pyk8TukAx225yTwTkqtyESred
-         Y1IbI/VRUFFlH8I2dT3+RvUE5YopeIYI55jQuOkqQzUDA0qUKCrKRS8LAxayZ1wPODd3
-         uTPgcahI9eb1XGMW4jzs9/usW0aSoiluiQRKFw1zq5XdcJQILJo7Gt2QTZQiSO726p5c
-         GbrQ==
-X-Gm-Message-State: AOAM5325juV6lyiRaE8JtZ1Kbr9rvisM6LWWZJlrmIwzXNwhDAW0Y2+B
-        G2P/QBl9t//aB2SDwY/UJiY=
-X-Google-Smtp-Source: ABdhPJx8ifaJYFn4DV6d0HZchBwdWU1orYgPlMqTeqHGuzS0V9eW7FKWnUH5f7CVB0wUBXhSRFCzqA==
-X-Received: by 2002:a17:906:248d:: with SMTP id e13mr1559098ejb.169.1595836243458;
-        Mon, 27 Jul 2020 00:50:43 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id m20sm6526256ejk.90.2020.07.27.00.50.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 00:50:42 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 09:50:41 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] Fix a bunch of W=1 warnings in PWM
-Message-ID: <20200727075041.GC2781612@ulmo>
-References: <20200629124752.1018358-1-lee.jones@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HvRchyhkxeOLvzDuOrbaCYZ/zyb156MiLRE1ABCH84I=;
+        b=HCleAqbcx+s9vj2bLP8jhzp+X46HhVkMUSek6zuN0/EeGaMN3feNdEn8sTvi5WeJ83
+         NA/Zi3197LovCvVwoOx5N3vkj9Aov1IwjFrp4O2HiSemiDfjtvWfApcebwmhQ1T4ySLa
+         gvdKLs1PvMraT6+8nklmPH1wWk5ncLBFbNtoGhE2KDBYdz+0YlAcCqYBx3bQaUz3Qh8+
+         imghdUJ79CZ6rehvlgTAB6QReeH+oRwKeHjHXSWlWWnO3H85GwgWjUM9KxWvgcvROHRL
+         GrWmNusLa7MMPWAH1B9Uts9rlZOKCMa/YAHbaYqdUB0y9rzu9r4Z5vA9dN5KDAs7dqE+
+         sQYQ==
+X-Gm-Message-State: AOAM530tDAsn5x94XOZAUcFIHHriepA3vTfPXMMyJ6aBgOQIAubxDwrl
+        gryum4sAjdSdAl4F+UdiO5alzG64fcGlvdcuoP4=
+X-Google-Smtp-Source: ABdhPJwZN36/0+bYxDq0YBCSQHuH6bnFz+l4e8yWNnes2mWDmufxX0YDvCAitBi7fUC2Q0zTyPsuywd9QxQfHrNA5eQ=
+X-Received: by 2002:a63:924b:: with SMTP id s11mr18169222pgn.74.1595836256878;
+ Mon, 27 Jul 2020 00:50:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="eRtJSFbw+EEWtPj3"
-Content-Disposition: inline
-In-Reply-To: <20200629124752.1018358-1-lee.jones@linaro.org>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+References: <20200607162350.21297-1-mani@kernel.org> <20200607162350.21297-3-mani@kernel.org>
+ <20200701130206.GD3334@localhost> <20200726155223.GB12036@Mani-XPS-13-9360>
+ <CAHp75VeP8CMZ-T2Kk24NzOPiWHM62GErxCDUgBbYzNotwiFHhw@mail.gmail.com> <20200727044610.GC12036@Mani-XPS-13-9360>
+In-Reply-To: <20200727044610.GC12036@Mani-XPS-13-9360>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Jul 2020 10:50:39 +0300
+Message-ID: <CAHp75Vddgt=dDxjtd9A7HejVYk+_GMVgvUM3dfzH5giCwhbaKA@mail.gmail.com>
+Subject: Re: [RESEND PATCH v4 2/3] usb: serial: xr_serial: Add gpiochip support
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        patong.mxl@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jul 27, 2020 at 7:46 AM Manivannan Sadhasivam <mani@kernel.org> wrote:
+> On Sun, Jul 26, 2020 at 07:34:54PM +0300, Andy Shevchenko wrote:
+> > On Sun, Jul 26, 2020 at 6:53 PM Manivannan Sadhasivam <mani@kernel.org> wrote:
 
---eRtJSFbw+EEWtPj3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-On Mon, Jun 29, 2020 at 01:47:48PM +0100, Lee Jones wrote:
-> Attempting to clean-up W=3D1 kernel builds, which are currently
-> overwhelmingly riddled with niggly little warnings.
->=20
-> Lee Jones (4):
->   pwm: bcm-iproc: Remove impossible comparison when validating duty
->     cycle
->   pwm: bcm-kona: Remove impossible comparison when validating duty cycle
->   pwm: mediatek: Provide missing kerneldoc description for 'soc' arg
->   pwm: omap-dmtimer: Repair pwm_omap_dmtimer_chip's broken kerneldoc
->     header
->=20
->  drivers/pwm/pwm-bcm-iproc.c    | 3 +--
->  drivers/pwm/pwm-bcm-kona.c     | 2 +-
->  drivers/pwm/pwm-mediatek.c     | 1 +
->  drivers/pwm/pwm-omap-dmtimer.c | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
+> > I'm wondering if you may use mctrl_gpio_*() API instead.
+>
+> How? mctrl_gpio APIs are a wrapper for accessing modem control gpio pins but
+> here we are not accessing the pins but rather exposing the pins as a gpiochip.
 
-Applied, thanks.
+I see. Thanks for the explanation.
 
-Thierry
+> Am I missing something?
 
---eRtJSFbw+EEWtPj3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8eh1EACgkQ3SOs138+
-s6EE0BAAtJ8jgzHwsPcXNK+EPH9rUmVFDOOHkL11CCJUc+k7H6oJtANYVNlCuwey
-8XYLAu9/hthSJddVGKF5lieUj4vDEoI+z0ZAzs2FV4q6gTKqbubYideTCk87PPZk
-tBpthZF9UjCRBzKeCD9shr9QXUH1VgCe2GbM9rwurVYBfl8O3Wl5zj7JBs/VirRy
-2S0AVyIjya6pqsSb6f0EFSehv2plffKe9Le0BEYfNd1kt06OOtWZ9vmQgY2gNBa5
-tqLmO7ZgBgVHq/IJ+figo+1Qlry51M//WgLiF6YbnBjgQJnynmSVUZfU7rOjhO6r
-eACFJZyeGlpsUoooUQ5MwYW6yP5wGhKUNpQQ/+rccZ36KNMEEybSBJ18/GszXDBW
-2DQLpkqQl+6csDb2WZmkvz7AbFVleSQnb6JDcAcyiDHhuaP4OxlWYnnhfs/Q3iuk
-vBIvqZUOSw3mNCoIkfpmpibKbVI2IwqXX/yAg5MWeR9xk2yWLXCaQi9MeXWuoUbF
-MRaRSJfppmvxzETu7qeGN/WpbO7limVWjwCyNk0URFSWWKSM8GOPLpjS/IQYmC6x
-bId2ypU+o6QB+F2QbD4DnvNivPiuyvOpwXNZH9Y4UV1zVvLq36Wg2K0Jn4NLtPu/
-rHrSGxjTq9L6n71N11mxrV7fPM9uS9jKNVGGgrCc3vZQMT4lJrs=
-=kRNd
------END PGP SIGNATURE-----
-
---eRtJSFbw+EEWtPj3--
+-- 
+With Best Regards,
+Andy Shevchenko
