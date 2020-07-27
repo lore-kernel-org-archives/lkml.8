@@ -2,167 +2,83 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0174C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94464C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7593F2074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:40:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ndaW31Ky"
+	by mail.kernel.org (Postfix) with ESMTP id 687142074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595882421;
+	bh=rUt9rhTuXxrDU9oSTEBd/GawsqrRg//hGHy5AT4wb1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Wq9S/XANy4qyUhi/W0UVYvW23S3c17oXYRKp4JHu/JNSAcwbM5zj32pxeB3FZoDDL
+	 OYe9Yb9zjuP9joYdiXHNbHYdqK4FDcXQGkESk6aYxD/c4Mh/htYMB3ChjPokdFc5Ng
+	 lwdUYGFIuo3XywKiR28J1RXJ9u7cqtUnsRaopzM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgG0UkH (ORCPT
+        id S1726455AbgG0UkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:40:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgG0UkG (ORCPT
+        Mon, 27 Jul 2020 16:40:20 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45399 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbgG0UkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:40:06 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52C38C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:40:06 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id 2so12500840qkf.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H5mkeIUP0mOEiGviUE7WNaFeT77sNuynQLFroF00uM0=;
-        b=ndaW31KyuJq5CflqHCgledXt6cwUJPQJEHmUkVLZn5LzMK9Qmep+K2g/zpXAWQMQho
-         pEwa9PyhAWywue6kD87lrQWp9cktZBi6ogYvfB5tPT1QwXsdM1S5TdLFXhOQtWkg0nZ/
-         85+0VKQvI36D+k7UVliYasEXiaX/wFunjRN3P7ALI05hRyOKSoH5oovDiK+3e5fKUNk7
-         j5/PHcj70JYX2+Ard2EYT0IXuR6Yj1IYHsbFAj7CI5t+C0ZSIjkUXwNRUxq+Z21p3dmm
-         YbvqHtAl9zFh+2ch1NBB8sQgaeCFujs+677S5bnLzmux6uVkzfPfX2rqMwoOV6yo5EFc
-         wSyw==
+        Mon, 27 Jul 2020 16:40:19 -0400
+Received: by mail-il1-f195.google.com with SMTP id b18so9087295ilo.12;
+        Mon, 27 Jul 2020 13:40:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H5mkeIUP0mOEiGviUE7WNaFeT77sNuynQLFroF00uM0=;
-        b=H3nKldRN9KnhgVI7RmdDqoIXm7oWN7nLKBMd+kUzyhTzVG+tx5eP9Ye84HbcptH5Sq
-         qFKygw6UExVOJ+Mtxk9BCq3Q0DyITCtc7BotixGFWTMgFg5AAyMNnOI8wuvAgKKughFH
-         4d2GW2Ql+DsqYyFMXnTiPigDMUR5fH0lcOC7vdyyRi2JHuvy2J3+hzyADPDls6RtT3ng
-         yVe4PIqqXjJQ6xQsbd1UJp5+PYtdDfGZC72ZoNLo0PA4adwVqY/3rjNK7QV80wDfdkRh
-         +2LrNN9LjdOpZGpt1cLs3Fh3BojUb5nlH7Uuv3ACrIu//27rht2LuD0kDRelAxcszWPo
-         4Dww==
-X-Gm-Message-State: AOAM532lttf1z1YHPmYY/x32mmoFF4DQ8Mbxfy49yzMfK5osz0MZBxot
-        Prncag1KlPXaITD0TbYe9YT6df1pQqJJhOuby/mQmvBfV8p6Pg==
-X-Google-Smtp-Source: ABdhPJyCDq02r0UswNpJp+FxF2hE3dfe281amCGBoaEXOi/lXtIkBn4jVTKVTXz6GfkFkjZhXH8EL7FDiQijATDf730=
-X-Received: by 2002:a05:620a:21d2:: with SMTP id h18mr6352807qka.407.1595882405152;
- Mon, 27 Jul 2020 13:40:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3Td7E5j/pYqR2qW0Pg0Jh7MYMZ/6aP3UbVq7wrH2KwU=;
+        b=P7ufcaAyPe0G8VWMfCVYgKcTx59t54PnBkR4gWC5D50omrx0TCx8zMCp2jqdnt/qVL
+         tftjfVnBwG/LVb6+fBXsUn1skCVuRrPAiWcSyLscxXjmFwMLz6M68pDsfn3krlygF9pu
+         GQ+dOcHI8U8IfMZvIhlbVGjBC67MsAdOtoj3xRKK1YJt9Km85wgWB283bMi4ldIlQ0oD
+         6UD6Eu1L6eiskAa5uYfXH8ZWMqd955h37XBL75c9HwrpWOosZi+LpYsPh/XAo+G/kZIy
+         RFrI5RIAIAAcStj9DOiG0/T6XlUqjZGeL0vUN4I39vE393+RLyTFvpHHpc1QuNPwtCmD
+         DHRA==
+X-Gm-Message-State: AOAM532cgPHfoVpKNeIsv6qCI5r4siov1r8v1N4iJGZbVK2MtxmSvf6k
+        FSVjU5Gy1hieT4+bJ4OsbwPqrjX0Fw==
+X-Google-Smtp-Source: ABdhPJzar3qYNFH1SZmi3V2Zmsfs0YajeL0JEZlhth0eNa+AC1Dv2WRzclj3usZ6oEjse4MS+1c1Bg==
+X-Received: by 2002:a05:6e02:ead:: with SMTP id u13mr26030263ilj.46.1595882418215;
+        Mon, 27 Jul 2020 13:40:18 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id w22sm2280193ioc.24.2020.07.27.13.40.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 13:40:17 -0700 (PDT)
+Received: (nullmailer pid 836467 invoked by uid 1000);
+        Mon, 27 Jul 2020 20:40:16 -0000
+Date:   Mon, 27 Jul 2020 14:40:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Cc:     b.zolnierkie@samsung.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v4] video: fbdev: ssd1307fb: Added support to Column
+ offset
+Message-ID: <20200727204016.GA836415@bogus>
+References: <1595622138-3965-1-git-send-email-455.rodrigo.alencar@gmail.com>
 MIME-Version: 1.0
-References: <000000000000862c0305ab6fc661@google.com>
-In-Reply-To: <000000000000862c0305ab6fc661@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 27 Jul 2020 22:39:53 +0200
-Message-ID: <CACT4Y+Z=j1fo-24HtkhJLpq9azXP7bXNMtr9Uz=FCrFx42qnqg@mail.gmail.com>
-Subject: Re: WARNING: ODEBUG bug in delete_node
-To:     syzbot <syzbot+062ee7c41cfd844a3a9a@syzkaller.appspotmail.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595622138-3965-1-git-send-email-455.rodrigo.alencar@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 7:37 PM syzbot
-<syzbot+062ee7c41cfd844a3a9a@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    e9a523ff Add linux-next specific files for 20200727
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17ad9108900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=2cbc23e6202df3d0
-> dashboard link: https://syzkaller.appspot.com/bug?extid=062ee7c41cfd844a3a9a
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
->
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+062ee7c41cfd844a3a9a@syzkaller.appspotmail.com
->
-> ------------[ cut here ]------------
-> ODEBUG: activate active (active state 1) object type: rcu_head hint: 0x0
-> WARNING: CPU: 1 PID: 16220 at lib/debugobjects.c:485 debug_print_object+0x160/0x250 lib/debugobjects.c:485
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 16220 Comm: syz-executor.0 Not tainted 5.8.0-rc7-next-20200727-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x18f/0x20d lib/dump_stack.c:118
->  panic+0x2e3/0x75c kernel/panic.c:231
->  __warn.cold+0x20/0x45 kernel/panic.c:600
->  report_bug+0x1bd/0x210 lib/bug.c:198
->  handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
->  exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
->  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:545
-> RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:485
-> Code: dd a0 12 94 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48 8b 14 dd a0 12 94 88 48 c7 c7 00 08 94 88 e8 e2 87 a6 fd <0f> 0b 83 05 13 a1 1a 07 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
-> RSP: 0018:ffffc900065e7958 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-> RDX: ffff8880a1a18280 RSI: ffffffff815d93b7 RDI: fffff52000cbcf1d
-> RBP: 0000000000000001 R08: 0000000000000001 R09: ffff8880ae7318a7
-> R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff89c52a00
-> R13: 0000000000000000 R14: 1ffff92000cbcf36 R15: ffffffff89c52a00
->  debug_object_activate+0x2da/0x3e0 lib/debugobjects.c:652
->  debug_object_activate+0x337/0x3e0 lib/debugobjects.c:682
->  debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
->  __call_rcu kernel/rcu/tree.c:2869 [inline]
->  call_rcu+0x2c/0x7e0 kernel/rcu/tree.c:2957
->  radix_tree_node_free lib/radix-tree.c:309 [inline]
->  delete_node+0xe5/0x8a0 lib/radix-tree.c:572
-
-+Matthew, I am not sure if this adds any actionable info, but FWIW
-this looks related to the "WARNING in delete_node (2)" issue you
-looked at few day ago:
-https://lore.kernel.org/lkml/20200726032115.GE23808@casper.infradead.org/
-
->  __radix_tree_delete+0x190/0x370 lib/radix-tree.c:1378
->  radix_tree_delete_item+0xe7/0x230 lib/radix-tree.c:1429
->  mnt_free_id fs/namespace.c:131 [inline]
->  cleanup_mnt+0x3db/0x500 fs/namespace.c:1140
->  task_work_run+0xdd/0x190 kernel/task_work.c:135
->  exit_task_work include/linux/task_work.h:25 [inline]
->  do_exit+0xb7d/0x29f0 kernel/exit.c:806
->  do_group_exit+0x125/0x310 kernel/exit.c:903
->  __do_sys_exit_group kernel/exit.c:914 [inline]
->  __se_sys_exit_group kernel/exit.c:912 [inline]
->  __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:912
->  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> RIP: 0033:0x45c369
-> Code: Bad RIP value.
-> RSP: 002b:00007fff0e2003e8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-> RAX: ffffffffffffffda RBX: 0000000000000016 RCX: 000000000045c369
-> RDX: 0000000000415e00 RSI: 0000000000ca85f0 RDI: 0000000000000043
-> RBP: 00000000004d0de8 R08: 000000000000000c R09: 0000000000000000
-> R10: 00000000023fc940 R11: 0000000000000246 R12: 0000000000000003
-> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000744ca0
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
->
->
+On Fri, 24 Jul 2020 17:22:18 -0300, Rodrigo Alencar wrote:
+> This patch provides support for displays like VGM128064B0W10,
+> which requires a column offset of 2, i.e., its segments starts
+> in SEG2 and ends in SEG129.
+> 
+> Signed-off-by: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
 > ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000862c0305ab6fc661%40google.com.
+>  Documentation/devicetree/bindings/display/ssd1307fb.txt | 1 +
+>  drivers/video/fbdev/ssd1307fb.c                         | 8 ++++++--
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+> 
+
+Acked-by: Rob Herring <robh@kernel.org>
