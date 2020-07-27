@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07878C4345C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CCEC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEA5C20775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8E1207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858829;
-	bh=8xLuIv/ZcOpNQLBrRzcPKJ+UEJZ4BOGUQtZowR3pxc0=;
+	s=default; t=1595858845;
+	bh=qCrRnVRA5KhdFuJB9e1HF7uBLgDqdl/68XqOah8yMvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FB4GDZ1DzRqHzxWiXUkOSEMNnKh3k9twjbD0IkJbcynq+f6MY2O70zPMQI/Ofm450
-	 HpwX1IX7XYWJVIfkd/72PT9oqB5dqM1/dAkGXR9e7leaLn+/EQTXB9bGTU2EcDxdTO
-	 VUuza1w27eKJL0SSaZtqqkeroeQOKSuF0VhxgvCk=
+	b=kdrh7dNaJoiTX93u2n9trYn5OuuuHvpmUpUmkIuwI0V1SSbCfWO0nwmUX8SEU6F1c
+	 RnisBVO2KnIRXtcT2pd6iTzemcE5Gay5w2eNV313NLrqPIuFk3UjeZwwM3nADrx6dY
+	 gagjqDgY8u0ZQL63Hk6138rlau91dgGuHGdOHcoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbgG0OHI (ORCPT
+        id S1729227AbgG0OHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:07:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55500 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:07:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729138AbgG0OHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:07:06 -0400
+        id S1729209AbgG0OHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:07:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AAE92073E;
-        Mon, 27 Jul 2020 14:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8B8021883;
+        Mon, 27 Jul 2020 14:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858826;
-        bh=8xLuIv/ZcOpNQLBrRzcPKJ+UEJZ4BOGUQtZowR3pxc0=;
+        s=default; t=1595858839;
+        bh=qCrRnVRA5KhdFuJB9e1HF7uBLgDqdl/68XqOah8yMvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BgiqV6rcoZN1V28LiJu+4A8FbaT09SAuho3LfOTVGl7/XJA6A0HyBiLND9j8unswZ
-         Q2XPETcmtRFDItywGkVM8gQWcazyO3VHBLTq4YlLofwB0rJAl1fBkLXN1thQ8a2JHu
-         uL2fvxs6b8C6kwrNfD9e7YWBNiEy/+ajenzZdlXQ=
+        b=p0+ViHIbjxtBVfZ7O5kqg9cyXEjgLC5r9CKtwvLGBC5zvWjZzz/2q9AvEw0h9YqcQ
+         7bOg22+onSzD1dTu8g3SfHf5dvH57UPwYi5f165ekP0s7FidTM4xtzh/CvunEiNFgw
+         v70nHKh4rYpjyMgaqTL3zndhCBGzhe80IELDFNx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacky Hu <hengqing.hu@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Xie He <xie.he.0141@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 03/64] pinctrl: amd: fix npins for uart0 in kerncz_groups
-Date:   Mon, 27 Jul 2020 16:03:42 +0200
-Message-Id: <20200727134911.204394507@linuxfoundation.org>
+Subject: [PATCH 4.14 08/64] drivers/net/wan/lapbether: Fixed the value of hard_header_len
+Date:   Mon, 27 Jul 2020 16:03:47 +0200
+Message-Id: <20200727134911.447451946@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -60,43 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacky Hu <hengqing.hu@gmail.com>
+From: Xie He <xie.he.0141@gmail.com>
 
-[ Upstream commit 69339d083dfb7786b0e0b3fc19eaddcf11fabdfb ]
+[ Upstream commit 9dc829a135fb5927f1519de11286e2bbb79f5b66 ]
 
-uart0_pins is defined as:
-static const unsigned uart0_pins[] = {135, 136, 137, 138, 139};
+When this driver transmits data,
+  first this driver will remove a pseudo header of 1 byte,
+  then the lapb module will prepend the LAPB header of 2 or 3 bytes,
+  then this driver will prepend a length field of 2 bytes,
+  then the underlying Ethernet device will prepend its own header.
 
-which npins is wronly specified as 9 later
-	{
-		.name = "uart0",
-		.pins = uart0_pins,
-		.npins = 9,
-	},
+So, the header length required should be:
+  -1 + 3 + 2 + "the header length needed by the underlying device".
 
-npins should be 5 instead of 9 according to the definition.
+This patch fixes kernel panic when this driver is used with AF_PACKET
+SOCK_DGRAM sockets.
 
-Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
-Link: https://lore.kernel.org/r/20200616015024.287683-1-hengqing.hu@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-amd.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wan/lapbether.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
-index 8fa453a59da5e..884f48f7a6a36 100644
---- a/drivers/pinctrl/pinctrl-amd.h
-+++ b/drivers/pinctrl/pinctrl-amd.h
-@@ -252,7 +252,7 @@ static const struct amd_pingroup kerncz_groups[] = {
- 	{
- 		.name = "uart0",
- 		.pins = uart0_pins,
--		.npins = 9,
-+		.npins = 5,
- 	},
- 	{
- 		.name = "uart1",
+diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+index 0e3f8ed84660e..ac34257e9f203 100644
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -308,7 +308,6 @@ static void lapbeth_setup(struct net_device *dev)
+ 	dev->netdev_ops	     = &lapbeth_netdev_ops;
+ 	dev->needs_free_netdev = true;
+ 	dev->type            = ARPHRD_X25;
+-	dev->hard_header_len = 3;
+ 	dev->mtu             = 1000;
+ 	dev->addr_len        = 0;
+ }
+@@ -329,6 +328,14 @@ static int lapbeth_new_device(struct net_device *dev)
+ 	if (!ndev)
+ 		goto out;
+ 
++	/* When transmitting data:
++	 * first this driver removes a pseudo header of 1 byte,
++	 * then the lapb module prepends an LAPB header of at most 3 bytes,
++	 * then this driver prepends a length field of 2 bytes,
++	 * then the underlying Ethernet device prepends its own header.
++	 */
++	ndev->hard_header_len = -1 + 3 + 2 + dev->hard_header_len;
++
+ 	lapbeth = netdev_priv(ndev);
+ 	lapbeth->axdev = ndev;
+ 
 -- 
 2.25.1
 
