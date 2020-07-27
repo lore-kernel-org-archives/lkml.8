@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2A5C433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4597C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93D52208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A707C208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859413;
-	bh=91ffLANxLOwAuoNFDVOlxC77GKnLIuKMsFT1hDppkWY=;
+	s=default; t=1595859418;
+	bh=SW9+HYcnTTFyJh5do9ig9OGS0aCJl6x8KPVUXY2iKAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q3BIzxUHTVj8IODY8rnzwDsKI6mZTjYhbtL8pUHZRVuoEl5IV1QKm6czgWt5vWEHh
-	 iye+tkiv95VOJJtCeyNXpB3GnkRtgMYjX4LtqOuVa7wcW2Fuz1CMlkdQOniW1hC9uA
-	 GyW+faDyVcnz1HjmsusrYUDuxNODS9C1IF9HeRUY=
+	b=JggncbzJ7H1XLlUWG8DakUSPpG0AxHCm/IGCHVstCAAK8KxeoaaZidNxfZ95OwjYA
+	 AAe3ysakpcso4D4g43UMRS/FuBvrv+o8X5My2vtnlfG9FQk7XroEN+muDY+MwWgzV8
+	 FrjVga51b/yFosKKb5LfNPs352NGhQbpOJv4lAOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbgG0OQw (ORCPT
+        id S1730971AbgG0OQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:16:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43750 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:16:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730925AbgG0OQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:16:45 -0400
+        id S1730952AbgG0OQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:16:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 989642075A;
-        Mon, 27 Jul 2020 14:16:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 495A720FC3;
+        Mon, 27 Jul 2020 14:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859404;
-        bh=91ffLANxLOwAuoNFDVOlxC77GKnLIuKMsFT1hDppkWY=;
+        s=default; t=1595859411;
+        bh=SW9+HYcnTTFyJh5do9ig9OGS0aCJl6x8KPVUXY2iKAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rx5O6kX57R9EWYMutefH1K+/w4TJLLRWF+Vig8FWdvUzeNYmEr9UsCbffe770zBVP
-         sz9dw1r9l1DM34lEWpbupLI2fcYYMR6jXL27MtFiEFnE7GBJTy96ZKMiCtzsdjk4wi
-         B6K+xKCUh+vx6XdVMWW0ExFw6S1/AFhRIwGlaFRQ=
+        b=zxzGz3hqaLefiHUZUm88NTuMAJjjKck/0XqoVknviv+xn+2V/eFTPT5ZFARH/rrU3
+         OfUjcznXhgejaA3UTprmc+ZlwsP7vuvQ822M0v9tCOuxzLziPflgokFuaJs+CRw+4h
+         GwgKhUzvQWpBCBFPwAxp7EADh0YZCXfA/yOW8iP0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 094/138] platform/x86: ISST: Add new PCI device ids
-Date:   Mon, 27 Jul 2020 16:04:49 +0200
-Message-Id: <20200727134930.076410898@linuxfoundation.org>
+        stable@vger.kernel.org, PeiSen Hou <pshou@realtek.com.tw>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 097/138] ALSA: hda/realtek - fixup for yet another Intel reference board
+Date:   Mon, 27 Jul 2020 16:04:52 +0200
+Message-Id: <20200727134930.218253156@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -61,60 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+From: PeiSen Hou <pshou@realtek.com.tw>
 
-[ Upstream commit e1eea3f839f41368d7cb4eb2d872d5b288677e94 ]
+[ Upstream commit 5734e509d5d515c187f642937ef2de1e58d7715d ]
 
-Added new PCI device ids for supporting mailbox and MMIO interface for
-Sapphire Rapids.
+Add headset_jack for the intel reference board support with
+10ec:1230.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: PeiSen Hou <pshou@realtek.com.tw>
+Link: https://lore.kernel.org/r/20200716090134.9811-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_speed_select_if/isst_if_common.h   | 3 +++
- drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c | 1 +
- drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c     | 1 +
- 3 files changed, 5 insertions(+)
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-index 1409a5bb55820..4f6f7f0761fc1 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-@@ -13,6 +13,9 @@
- #define INTEL_RAPL_PRIO_DEVID_0	0x3451
- #define INTEL_CFG_MBOX_DEVID_0	0x3459
- 
-+#define INTEL_RAPL_PRIO_DEVID_1 0x3251
-+#define INTEL_CFG_MBOX_DEVID_1  0x3259
-+
- /*
-  * Validate maximum commands in a single request.
-  * This is enough to handle command to every core in one ioctl, or all
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-index de4169d0796bd..9a055fd54053f 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-@@ -148,6 +148,7 @@ static long isst_if_mbox_proc_cmd(u8 *cmd_ptr, int *write_only, int resume)
- 
- static const struct pci_device_id isst_if_mbox_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_CFG_MBOX_DEVID_0)},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_CFG_MBOX_DEVID_1)},
- 	{ 0 },
- };
- MODULE_DEVICE_TABLE(pci, isst_if_mbox_ids);
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-index ad8c7c0df4d9a..e3778204b7a60 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-@@ -72,6 +72,7 @@ static long isst_if_mmio_rd_wr(u8 *cmd_ptr, int *write_only, int resume)
- 
- static const struct pci_device_id isst_if_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_0)},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_1)},
- 	{ 0 },
- };
- MODULE_DEVICE_TABLE(pci, isst_if_ids);
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 34d75102b596f..bf205621d7ac1 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7546,6 +7546,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x10cf, 0x1629, "Lifebook U7x7", ALC255_FIXUP_LIFEBOOK_U7x7_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x10cf, 0x1845, "Lifebook U904", ALC269_FIXUP_LIFEBOOK_EXTMIC),
+ 	SND_PCI_QUIRK(0x10ec, 0x10f2, "Intel Reference board", ALC700_FIXUP_INTEL_REFERENCE),
++	SND_PCI_QUIRK(0x10ec, 0x1230, "Intel Reference board", ALC225_FIXUP_HEADSET_JACK),
+ 	SND_PCI_QUIRK(0x10f7, 0x8338, "Panasonic CF-SZ6", ALC269_FIXUP_HEADSET_MODE),
+ 	SND_PCI_QUIRK(0x144d, 0xc109, "Samsung Ativ book 9 (NP900X3G)", ALC269_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
 -- 
 2.25.1
 
