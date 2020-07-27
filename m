@@ -2,50 +2,55 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F993C433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC12C433FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A404207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E73F20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860006;
-	bh=ryFPf0gi8ONfmeI9fC5hycejzOITrJfCPPB3Lb9o6v4=;
+	s=default; t=1595860292;
+	bh=O9Z9tiqTm9cnKbRq09/xuN1LzIH51JT2PRH3U8rB0eU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ye6Wlr1rW+7Zq2/JGCIViaN9jK64N91yY6CUCA8KBVwT39jatRJc3zKgL7UjYy9ux
-	 O+9QM8yicbVQE2SNzBTEMkJ1T/QV58sQ/4gXaK9TzRjr5LzaSbwARp+eaHmHU4AWk2
-	 1fpe6sHgErx8DznXLs2LxwR4HsUVPDKqrVRUDAYs=
+	b=er4g18XxXK2Vy4W/wsdgKuLIyIYqmBUxtOrFmXVzkNDoKOTvPsKLLnn/wcjcu2V90
+	 ch6T5rmbmbxEDL7SmCou1iBP8KrzsYiiZHHXku/edglqZ1kY9UTaBhkDXOOME5ZtJj
+	 QCSdOv3kpaJtUG1pT4JgoA0+MUEy3kxfnd4sKEn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732661AbgG0O0o (ORCPT
+        id S1729923AbgG0OUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:26:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56986 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:20:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732650AbgG0O0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:26:42 -0400
+        id S1731548AbgG0OU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:20:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5880321744;
-        Mon, 27 Jul 2020 14:26:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D19DC208E4;
+        Mon, 27 Jul 2020 14:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595860000;
-        bh=ryFPf0gi8ONfmeI9fC5hycejzOITrJfCPPB3Lb9o6v4=;
+        s=default; t=1595859627;
+        bh=O9Z9tiqTm9cnKbRq09/xuN1LzIH51JT2PRH3U8rB0eU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ngdTw5U241tbq5i3mSq/Vv/IjOXgrhbj9vbPrxMghh4qh+xiPhUYQrVRlVwS9gtJT
-         KfuQBXSFZcD1HHarjAUSMXrNXkmygw6omYzLfi/w6/q4FDM+q9hiQT2QdrwXmzhhVA
-         sDVy6+LR8Ly2XA4AM7MGDx1WtT1YxbCYEl+Sqh9U=
+        b=PlkGHAFU5hZO7IZVRY8nSLMwTsHdW/tHvQ2Ng20241QwISejDrM9KBbflS2YksQIj
+         AMzggPMNdYnu7+L/hzJROuNfNNNX10rGlL+d+Tkdij6Epd8zX1uR6X2Io2tjZbsIGb
+         WJj5sAlOMq8JzIOJhf/xjgMkH7cQgjCAhTiUbq8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.7 177/179] dm integrity: fix integrity recalculation that is improperly skipped
-Date:   Mon, 27 Jul 2020 16:05:52 +0200
-Message-Id: <20200727134941.277738499@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 043/179] bnxt_en: Fix race when modifying pause settings.
+Date:   Mon, 27 Jul 2020 16:03:38 +0200
+Message-Id: <20200727134934.779055697@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -58,128 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-commit 5df96f2b9f58a5d2dc1f30fe7de75e197f2c25f2 upstream.
+[ Upstream commit 163e9ef63641a02de4c95cd921577265c52e1ce2 ]
 
-Commit adc0daad366b62ca1bce3e2958a40b0b71a8b8b3 ("dm: report suspended
-device during destroy") broke integrity recalculation.
+The driver was modified to not rely on rtnl lock to protect link
+settings about 2 years ago.  The pause setting was missed when
+making that change.  Fix it by acquiring link_lock mutex before
+calling bnxt_hwrm_set_pause().
 
-The problem is dm_suspended() returns true not only during suspend,
-but also during resume. So this race condition could occur:
-1. dm_integrity_resume calls queue_work(ic->recalc_wq, &ic->recalc_work)
-2. integrity_recalc (&ic->recalc_work) preempts the current thread
-3. integrity_recalc calls if (unlikely(dm_suspended(ic->ti))) goto unlock_ret;
-4. integrity_recalc exits and no recalculating is done.
-
-To fix this race condition, add a function dm_post_suspending that is
-only true during the postsuspend phase and use it instead of
-dm_suspended().
-
-Signed-off-by: Mikulas Patocka <mpatocka redhat com>
-Fixes: adc0daad366b ("dm: report suspended device during destroy")
-Cc: stable vger kernel org # v4.18+
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: e2dc9b6e38fa ("bnxt_en: Don't use rtnl lock to protect link change logic in workqueue.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Reviewed-by: Edwin Peer <edwin.peer@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-integrity.c     |    4 ++--
- drivers/md/dm.c               |   17 +++++++++++++++++
- include/linux/device-mapper.h |    1 +
- 3 files changed, 20 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -2424,7 +2424,7 @@ static void integrity_writer(struct work
- 	unsigned prev_free_sectors;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index 360f9a95c1d50..21cc2bd127603 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -1687,8 +1687,11 @@ static int bnxt_set_pauseparam(struct net_device *dev,
+ 	if (epause->tx_pause)
+ 		link_info->req_flow_ctrl |= BNXT_LINK_PAUSE_TX;
  
- 	/* the following test is not needed, but it tests the replay code */
--	if (unlikely(dm_suspended(ic->ti)) && !ic->meta_dev)
-+	if (unlikely(dm_post_suspending(ic->ti)) && !ic->meta_dev)
- 		return;
- 
- 	spin_lock_irq(&ic->endio_wait.lock);
-@@ -2485,7 +2485,7 @@ static void integrity_recalc(struct work
- 
- next_chunk:
- 
--	if (unlikely(dm_suspended(ic->ti)))
-+	if (unlikely(dm_post_suspending(ic->ti)))
- 		goto unlock_ret;
- 
- 	range.logical_sector = le64_to_cpu(ic->sb->recalc_sector);
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -142,6 +142,7 @@ EXPORT_SYMBOL_GPL(dm_bio_get_target_bio_
- #define DMF_NOFLUSH_SUSPENDING 5
- #define DMF_DEFERRED_REMOVE 6
- #define DMF_SUSPENDED_INTERNALLY 7
-+#define DMF_POST_SUSPENDING 8
- 
- #define DM_NUMA_NODE NUMA_NO_NODE
- static int dm_numa_node = DM_NUMA_NODE;
-@@ -2385,6 +2386,7 @@ static void __dm_destroy(struct mapped_d
- 	if (!dm_suspended_md(md)) {
- 		dm_table_presuspend_targets(map);
- 		set_bit(DMF_SUSPENDED, &md->flags);
-+		set_bit(DMF_POST_SUSPENDING, &md->flags);
- 		dm_table_postsuspend_targets(map);
- 	}
- 	/* dm_put_live_table must be before msleep, otherwise deadlock is possible */
-@@ -2743,7 +2745,9 @@ retry:
- 	if (r)
- 		goto out_unlock;
- 
-+	set_bit(DMF_POST_SUSPENDING, &md->flags);
- 	dm_table_postsuspend_targets(map);
-+	clear_bit(DMF_POST_SUSPENDING, &md->flags);
- 
- out_unlock:
- 	mutex_unlock(&md->suspend_lock);
-@@ -2840,7 +2844,9 @@ static void __dm_internal_suspend(struct
- 	(void) __dm_suspend(md, map, suspend_flags, TASK_UNINTERRUPTIBLE,
- 			    DMF_SUSPENDED_INTERNALLY);
- 
-+	set_bit(DMF_POST_SUSPENDING, &md->flags);
- 	dm_table_postsuspend_targets(map);
-+	clear_bit(DMF_POST_SUSPENDING, &md->flags);
+-	if (netif_running(dev))
++	if (netif_running(dev)) {
++		mutex_lock(&bp->link_lock);
+ 		rc = bnxt_hwrm_set_pause(bp);
++		mutex_unlock(&bp->link_lock);
++	}
+ 	return rc;
  }
  
- static void __dm_internal_resume(struct mapped_device *md)
-@@ -3001,6 +3007,11 @@ int dm_suspended_md(struct mapped_device
- 	return test_bit(DMF_SUSPENDED, &md->flags);
- }
- 
-+static int dm_post_suspending_md(struct mapped_device *md)
-+{
-+	return test_bit(DMF_POST_SUSPENDING, &md->flags);
-+}
-+
- int dm_suspended_internally_md(struct mapped_device *md)
- {
- 	return test_bit(DMF_SUSPENDED_INTERNALLY, &md->flags);
-@@ -3017,6 +3028,12 @@ int dm_suspended(struct dm_target *ti)
- }
- EXPORT_SYMBOL_GPL(dm_suspended);
- 
-+int dm_post_suspending(struct dm_target *ti)
-+{
-+	return dm_post_suspending_md(dm_table_get_md(ti->table));
-+}
-+EXPORT_SYMBOL_GPL(dm_post_suspending);
-+
- int dm_noflush_suspending(struct dm_target *ti)
- {
- 	return __noflush_suspending(dm_table_get_md(ti->table));
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -426,6 +426,7 @@ const char *dm_device_name(struct mapped
- int dm_copy_name_and_uuid(struct mapped_device *md, char *name, char *uuid);
- struct gendisk *dm_disk(struct mapped_device *md);
- int dm_suspended(struct dm_target *ti);
-+int dm_post_suspending(struct dm_target *ti);
- int dm_noflush_suspending(struct dm_target *ti);
- void dm_accept_partial_bio(struct bio *bio, unsigned n_sectors);
- union map_info *dm_get_rq_mapinfo(struct request *rq);
+-- 
+2.25.1
+
 
 
