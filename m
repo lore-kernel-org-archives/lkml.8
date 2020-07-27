@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7916CC43617
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DE2C43619
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5779B20786
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F903208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892505;
-	bh=NHZ08oRQujbVFK+Fjzy48Flntos+lIZJ5tS94wU6v68=;
+	s=default; t=1595892512;
+	bh=cW0MevAFt8H5njALXBT6v761SRuxFMSBRNmZHnFg2CY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJpsaNXgIGmbZbtzLIw3Swqzp+vFhEhp81Jp+23g8R3oik33401+WfuTy9KRggvdY
-	 LKG53Aa9XXWQ/WKaP3Al0v6JKDYPvBFXtYz0Hzipsxt+rbheUkqPR3qnsGriX5csxV
-	 UvbfWT6A5XwOTKrC002zrsnu9ZSDTBizq31Tb80A=
+	b=G0B8A4bwemQBalRjDjhtBM7ikI2rxEbPg8T667xOGMFMHGHDR0BToXcy/GuPSjMxF
+	 BiVzuPVbYDSIyzYS9jYEKzgEF96sqj+ImMCdN7u1czEup/ndejqTbNKkM/J0xHgfUY
+	 mAuQcCGC2ngyQpZ3ZozVWL0yQkS+6He8Sk4O0WA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgG0X2Y (ORCPT
+        id S1728299AbgG0X2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:28:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35688 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:28:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728275AbgG0XYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:24:34 -0400
+        id S1728263AbgG0XYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:24:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A7AA2177B;
-        Mon, 27 Jul 2020 23:24:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78434208E4;
+        Mon, 27 Jul 2020 23:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892274;
-        bh=NHZ08oRQujbVFK+Fjzy48Flntos+lIZJ5tS94wU6v68=;
+        s=default; t=1595892271;
+        bh=cW0MevAFt8H5njALXBT6v761SRuxFMSBRNmZHnFg2CY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BtueRZJXT8objMn8kWm2cSfg4t23Oa8v0RiWhmvmeXuceYcz6h3t0jDIhR5F6j7Of
-         4k5B8coKQ74r/rzz5nyMFOvwGH0hAruAguYViQn3MAb3n7zWUfRVBJbpJuWbkf+t3Z
-         AjTad4PiHxlNqOl2YFKa52MRHhdq1o5tvr3Q4kS8=
+        b=FDzpR+5idfp90EOGHWZeYJ0giYUM3rOgTgphftqvGPHT+uTqH/m4qm2rmMELlcFG6
+         LeIEvTyqGxEj4Lk/DWUOlGciZPTW4uzO6ZiLBOpUllRGouWgxOEKuVNX20m/xjcNuE
+         CqiaN33S3XjuqWnXR3X3iz7AR6xSoSNVLjvCj8sA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>, Eric Dumazet <edumazet@google.com>,
-        Martin Schiller <ms@dev.tdt.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 10/17] drivers/net/wan/x25_asy: Fix to make it work
-Date:   Mon, 27 Jul 2020 19:24:13 -0400
-Message-Id: <20200727232420.717684-10-sashal@kernel.org>
+Cc:     Liam Beguin <liambeguin@gmail.com>,
+        kernel test robot <lkp@intel.com>,
+        Dave Anglin <dave.anglin@bell.net>,
+        Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
+        linux-parisc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 08/17] parisc: add support for cmpxchg on u8 pointers
+Date:   Mon, 27 Jul 2020 19:24:11 -0400
+Message-Id: <20200727232420.717684-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200727232420.717684-1-sashal@kernel.org>
 References: <20200727232420.717684-1-sashal@kernel.org>
@@ -60,105 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: Liam Beguin <liambeguin@gmail.com>
 
-[ Upstream commit 8fdcabeac39824fe67480fd9508d80161c541854 ]
+[ Upstream commit b344d6a83d01c52fddbefa6b3b4764da5b1022a0 ]
 
-This driver is not working because of problems of its receiving code.
-This patch fixes it to make it work.
+The kernel test bot reported[1] that using set_mask_bits on a u8 causes
+the following issue on parisc:
 
-When the driver receives an LAPB frame, it should first pass the frame
-to the LAPB module to process. After processing, the LAPB module passes
-the data (the packet) back to the driver, the driver should then add a
-one-byte pseudo header and pass the data to upper layers.
+	hppa-linux-ld: drivers/phy/ti/phy-tusb1210.o: in function `tusb1210_probe':
+	>> (.text+0x2f4): undefined reference to `__cmpxchg_called_with_bad_pointer'
+	>> hppa-linux-ld: (.text+0x324): undefined reference to `__cmpxchg_called_with_bad_pointer'
+	hppa-linux-ld: (.text+0x354): undefined reference to `__cmpxchg_called_with_bad_pointer'
 
-The changes to the "x25_asy_bump" function and the
-"x25_asy_data_indication" function are to correctly implement this
-procedure.
+Add support for cmpxchg on u8 pointers.
 
-Also, the "x25_asy_unesc" function ignores any frame that is shorter
-than 3 bytes. However the shortest frames are 2-byte long. So we need
-to change it to allow 2-byte frames to pass.
+[1] https://lore.kernel.org/patchwork/patch/1272617/#1468946
 
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Reviewed-by: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Liam Beguin <liambeguin@gmail.com>
+Tested-by: Dave Anglin <dave.anglin@bell.net>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/x25_asy.c | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
+ arch/parisc/include/asm/cmpxchg.h |  2 ++
+ arch/parisc/lib/bitops.c          | 12 ++++++++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/drivers/net/wan/x25_asy.c b/drivers/net/wan/x25_asy.c
-index 914be58473866..cdcc380b4c268 100644
---- a/drivers/net/wan/x25_asy.c
-+++ b/drivers/net/wan/x25_asy.c
-@@ -183,7 +183,7 @@ static inline void x25_asy_unlock(struct x25_asy *sl)
- 	netif_wake_queue(sl->dev);
- }
+diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
+index ab5c215cf46c3..0689585758717 100644
+--- a/arch/parisc/include/asm/cmpxchg.h
++++ b/arch/parisc/include/asm/cmpxchg.h
+@@ -60,6 +60,7 @@ extern void __cmpxchg_called_with_bad_pointer(void);
+ extern unsigned long __cmpxchg_u32(volatile unsigned int *m, unsigned int old,
+ 				   unsigned int new_);
+ extern u64 __cmpxchg_u64(volatile u64 *ptr, u64 old, u64 new_);
++extern u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new_);
  
--/* Send one completely decapsulated IP datagram to the IP layer. */
-+/* Send an LAPB frame to the LAPB module to process. */
- 
- static void x25_asy_bump(struct x25_asy *sl)
- {
-@@ -195,13 +195,12 @@ static void x25_asy_bump(struct x25_asy *sl)
- 	count = sl->rcount;
- 	dev->stats.rx_bytes += count;
- 
--	skb = dev_alloc_skb(count+1);
-+	skb = dev_alloc_skb(count);
- 	if (skb == NULL) {
- 		netdev_warn(sl->dev, "memory squeeze, dropping packet\n");
- 		dev->stats.rx_dropped++;
- 		return;
+ /* don't worry...optimizer will get rid of most of this */
+ static inline unsigned long
+@@ -71,6 +72,7 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new_, int size)
+ #endif
+ 	case 4: return __cmpxchg_u32((unsigned int *)ptr,
+ 				     (unsigned int)old, (unsigned int)new_);
++	case 1: return __cmpxchg_u8((u8 *)ptr, (u8)old, (u8)new_);
  	}
--	skb_push(skb, 1);	/* LAPB internal control */
- 	skb_put_data(skb, sl->rbuff, count);
- 	skb->protocol = x25_type_trans(skb, sl->dev);
- 	err = lapb_data_received(skb->dev, skb);
-@@ -209,7 +208,6 @@ static void x25_asy_bump(struct x25_asy *sl)
- 		kfree_skb(skb);
- 		printk(KERN_DEBUG "x25_asy: data received err - %d\n", err);
- 	} else {
--		netif_rx(skb);
- 		dev->stats.rx_packets++;
- 	}
+ 	__cmpxchg_called_with_bad_pointer();
+ 	return old;
+diff --git a/arch/parisc/lib/bitops.c b/arch/parisc/lib/bitops.c
+index 70ffbcf889b8e..2e4d1f05a9264 100644
+--- a/arch/parisc/lib/bitops.c
++++ b/arch/parisc/lib/bitops.c
+@@ -79,3 +79,15 @@ unsigned long __cmpxchg_u32(volatile unsigned int *ptr, unsigned int old, unsign
+ 	_atomic_spin_unlock_irqrestore(ptr, flags);
+ 	return (unsigned long)prev;
  }
-@@ -356,12 +354,21 @@ static netdev_tx_t x25_asy_xmit(struct sk_buff *skb,
-  */
- 
- /*
-- *	Called when I frame data arrives. We did the work above - throw it
-- *	at the net layer.
-+ *	Called when I frame data arrive. We add a pseudo header for upper
-+ *	layers and pass it to upper layers.
-  */
- 
- static int x25_asy_data_indication(struct net_device *dev, struct sk_buff *skb)
- {
-+	if (skb_cow(skb, 1)) {
-+		kfree_skb(skb);
-+		return NET_RX_DROP;
-+	}
-+	skb_push(skb, 1);
-+	skb->data[0] = X25_IFACE_DATA;
 +
-+	skb->protocol = x25_type_trans(skb, dev);
++u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new)
++{
++	unsigned long flags;
++	u8 prev;
 +
- 	return netif_rx(skb);
- }
- 
-@@ -657,7 +664,7 @@ static void x25_asy_unesc(struct x25_asy *sl, unsigned char s)
- 	switch (s) {
- 	case X25_END:
- 		if (!test_and_clear_bit(SLF_ERROR, &sl->flags) &&
--		    sl->rcount > 2)
-+		    sl->rcount >= 2)
- 			x25_asy_bump(sl);
- 		clear_bit(SLF_ESCAPE, &sl->flags);
- 		sl->rcount = 0;
++	_atomic_spin_lock_irqsave(ptr, flags);
++	if ((prev = *ptr) == old)
++		*ptr = new;
++	_atomic_spin_unlock_irqrestore(ptr, flags);
++	return prev;
++}
 -- 
 2.25.1
 
