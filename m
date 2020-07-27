@@ -2,361 +2,108 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,HK_RANDOM_REPLYTO,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B585C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C21C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40DAD20786
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14EB2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="WPaKlK87"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q1ZgQoFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgG0Xm1 (ORCPT
+        id S1726857AbgG0Xo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:42:27 -0400
-Received: from mail-40141.protonmail.ch ([185.70.40.141]:13434 "EHLO
-        mail-40141.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgG0Xm0 (ORCPT
+        Mon, 27 Jul 2020 19:44:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726278AbgG0Xo1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:42:26 -0400
-Date:   Mon, 27 Jul 2020 23:42:14 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1595893340;
-        bh=AQmh+uIpMfdES2g/A6HYV2B7dFrVRubFbvwlphZUT8g=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=WPaKlK87v5tMlYboefBGF39WRaUFU27b7wQRzJkJ9uB7fbY/ytSsgHkgcbkkq8cfV
-         /OJfCX1otKSQfRrp98/he37W9RmEybcs/bJZU4qBd4/ja2FdEBxx0mVv06ZN9wj9JT
-         W/xhMBV3amEPPZj0xrA5KyRlcMg2flG8EQszcoG4=
-To:     Daniel Vetter <daniel@ffwll.ch>
-From:   Mazin Rezk <mnrzk@protonmail.com>
-Cc:     Mazin Rezk <mnrzk@protonmail.com>,
-        =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        "anthony.ruhier@gmail.com" <anthony.ruhier@gmail.com>,
-        Duncan <1i5t5.duncan@cox.net>, Kees Cook <keescook@chromium.org>,
-        "sunpeng.li@amd.com" <sunpeng.li@amd.com>,
-        "regressions@leemhuis.info" <regressions@leemhuis.info>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "mphantomx@yahoo.com.br" <mphantomx@yahoo.com.br>
-Reply-To: Mazin Rezk <mnrzk@protonmail.com>
-Subject: Re: [PATCH] drm/amd/display: Clear dm_state for fast updates
-Message-ID: <YD-fbC_cowihrLhUGoqnRgtDZlb3b7XKwY7w-zv42iKinQLJ4S5NULKycSIyCPCDz6sFcCnPvB3MTNVLx8yQyde1J6P49FaKngQ68WhwQnE=@protonmail.com>
-In-Reply-To: <CAKMK7uFAnedLTp6LJYum6gYj3xaWkuuXJr70UJ48Pxxr-4dA7w@mail.gmail.com>
-References: <M0lxN5AUlPvzBKULfIBe5BZRwfQGXeMQCdWItYcQ-9P79y32WzExYK2Y0DwyNVtyGelqbvV07_lFk1oeT4cApbT-P_oH0bnxQbMmFsJv_xg=@protonmail.com> <ba078fb0-0dbc-df06-cfe9-f9537883f82a@amd.com> <e2f55480-c24f-6c85-08d3-21131a22d0bf@amd.com> <3b7e3e50-2ff7-eff3-2ffc-abaa4b36ce7f@amd.com> <CAKMK7uHCu02P4tvhF4LQbtYeNciU61ONC9EZRmQ-0wEGFPzZgg@mail.gmail.com> <Fnx2lsAReNccvQbyMYBgghvef4ekiQ_ZWL0m5BwF-2h48gvnNLghI4zkIWhQwy-H6CiytTXaxEtZ83dYRlzAXeKHujBRLc_tffmcJVWjwuo=@protonmail.com> <CAKMK7uFAnedLTp6LJYum6gYj3xaWkuuXJr70UJ48Pxxr-4dA7w@mail.gmail.com>
+        Mon, 27 Jul 2020 19:44:27 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DBC6C061794;
+        Mon, 27 Jul 2020 16:44:26 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id q7so19163568ljm.1;
+        Mon, 27 Jul 2020 16:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=moew+kZmDVAfG4fC4F4BUXU70dVOAPvVXz3aPRqWV+c=;
+        b=q1ZgQoFOYhEzcRTpKcFgFCwWWkfWsdZN9V77ruy9ePxp4kkFu4iPnUpH6Txm9eLP3K
+         Ducw5HyWELvKNTA+jGcHYqDLUPshvYa6BmrnXsro8UdgdiIcrU/WSHxuxBkofSyDwPCK
+         TL8TsWCPnDJ18icY0/LWUZd2Sf104gIsH82LtIgNn5usBJrvJ2wX+OTCcL7H5YyRraDW
+         TQ2B8A2apljo5nq5fx3VbvAbnjLgeQO4cJCsZlPAWIMOggk2NxTzZQzt4E2XAwnt/gxw
+         MRlKi6jvRdfZ1zwqyWJQ6ShIwLJze7Jc7KuP45j9bUeq+E5Vts/jXc4z8RiPWgeDrc06
+         tj2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=moew+kZmDVAfG4fC4F4BUXU70dVOAPvVXz3aPRqWV+c=;
+        b=KQgx2hHuYCOZ+EC/T7tXekyDCgeZPd5ZZT9i8JHqoQzt8KZgtMkC1Pst1V0OgJcUVs
+         pChkVdLN2waoeMwfa09oGBjZIjAgA7z+C0Fe8e11FzNCVvKchkTyyQ5Lzfl1Zutx1YzW
+         CSlYBY/eeUXEkZoorBsirx8VgUGUvkb+BGbeAFQ11FKFeH8guTV3s3YOrHIW9fvt0sdd
+         HwTGeBSkdpPWfa9FHm+VcwKYtNTJz9X12D9jwqdFxhlchJQX7faQ8fhw8Fo62hLpcPU2
+         A1xII6T3vu6N5rOfQ/sbvVXpmgLStTYR3NyCIJcrZ/9mbO16x/ZgvahpPZ6YHZ/RBA0X
+         MCQA==
+X-Gm-Message-State: AOAM5310mAtFqSbcEhjqLba5PXAYqTw69MXLQf/n5PjI8Y1cwMEU2rR6
+        er+9aXk9C2jyANSr2ShPHCKvpDtO5Zpid59Kl86Iyawxrgw=
+X-Google-Smtp-Source: ABdhPJxqt7yjHQHbPupJG9vvFvZjRsehmeM8o56Au9FRmksB3Q9itPwQ3rIbmzHlg9L/qPzCtL3kCB6IQ7KGZUHAu6M=
+X-Received: by 2002:a2e:8059:: with SMTP id p25mr5366425ljg.219.1595893464673;
+ Mon, 27 Jul 2020 16:44:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200727194415.GA1275@embeddedor> <70ed74d65b5909615c7a9430f3479695465d3b1d.camel@perches.com>
+In-Reply-To: <70ed74d65b5909615c7a9430f3479695465d3b1d.camel@perches.com>
+From:   Julian Calaby <julian.calaby@gmail.com>
+Date:   Tue, 28 Jul 2020 09:44:13 +1000
+Message-ID: <CAGRGNgW4VB1F9TdHf1Kg6WQtgHyH-ZKAnZ0kU5eKQaqUWHwbqg@mail.gmail.com>
+Subject: Re: [PATCH][next] ath11k: Use fallthrough pseudo-keyword
+To:     Joe Perches <joe@perches.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, July 27, 2020 5:32 PM, Daniel Vetter <daniel@ffwll.ch> wrote:
+Hi Joe,
 
-> On Mon, Jul 27, 2020 at 11:11 PM Mazin Rezk <mnrzk@protonmail.com> wrote:
-> >
-> > On Monday, July 27, 2020 4:29 PM, Daniel Vetter <daniel@ffwll.ch> wrote=
-:
-> >
-> > > On Mon, Jul 27, 2020 at 9:28 PM Christian K=C3=B6nig
-> > > <christian.koenig@amd.com> wrote:
-> > > >
-> > > > Am 27.07.20 um 16:05 schrieb Kazlauskas, Nicholas:
-> > > > > On 2020-07-27 9:39 a.m., Christian K=C3=B6nig wrote:
-> > > > >> Am 27.07.20 um 07:40 schrieb Mazin Rezk:
-> > > > >>> This patch fixes a race condition that causes a use-after-free =
-during
-> > > > >>> amdgpu_dm_atomic_commit_tail. This can occur when 2 non-blockin=
-g
-> > > > >>> commits
-> > > > >>> are requested and the second one finishes before the first.
-> > > > >>> Essentially,
-> > > > >>> this bug occurs when the following sequence of events happens:
-> > > > >>>
-> > > > >>> 1. Non-blocking commit #1 is requested w/ a new dm_state #1 and=
- is
-> > > > >>> deferred to the workqueue.
-> > > > >>>
-> > > > >>> 2. Non-blocking commit #2 is requested w/ a new dm_state #2 and=
- is
-> > > > >>> deferred to the workqueue.
-> > > > >>>
-> > > > >>> 3. Commit #2 starts before commit #1, dm_state #1 is used in th=
-e
-> > > > >>> commit_tail and commit #2 completes, freeing dm_state #1.
-> > > > >>>
-> > > > >>> 4. Commit #1 starts after commit #2 completes, uses the freed d=
-m_state
-> > > > >>> 1 and dereferences a freelist pointer while setting the context=
-.
-> > > > >>
-> > > > >> Well I only have a one mile high view on this, but why don't you=
- let
-> > > > >> the work items execute in order?
-> > > > >>
-> > > > >> That would be better anyway cause this way we don't trigger a ca=
-che
-> > > > >> line ping pong between CPUs.
-> > > > >>
-> > > > >> Christian.
-> > > > >
-> > > > > We use the DRM helpers for managing drm_atomic_commit_state and t=
-hose
-> > > > > helpers internally push non-blocking commit work into the system
-> > > > > unbound work queue.
-> > > >
-> > > > Mhm, well if you send those helper atomic commits in the order A,B =
-and
-> > > > they execute it in the order B,A I would call that a bug :)
-> > >
-> > > The way it works is it pushes all commits into unbound work queue, bu=
-t
-> > > then forces serialization as needed. We do _not_ want e.g. updates on
-> > > different CRTC to be serialized, that would result in lots of judder.
-> > > And hw is funny enough that there's all kinds of dependencies.
-> > >
-> > > The way you force synchronization is by adding other CRTC state
-> > > objects. So if DC is busted and can only handle a single update per
-> > > work item, then I guess you always need all CRTC states and everythin=
-g
-> > > will be run in order. But that also totally kills modern multi-screen
-> > > compositors. Xorg isn't modern, just in case that's not clear :-)
-> > >
-> > > Lucking at the code it seems like you indeed have only a single dm
-> > > state, so yeah global sync is what you'll need as immediate fix, and
-> > > then maybe fix up DM to not be quite so silly ... or at least only do
-> > > the dm state stuff when really needed.
-> > >
-> > > We could also sprinkle the drm_crtc_commit structure around a bit
-> > > (it's the glue that provides the synchronization across commits), but
-> > > since your dm state is global just grabbing all crtc states
-> > > unconditionally as part of that is probably best.
-> > >
-> > > > > While we could duplicate a copy of that code with nothing but the
-> > > > > workqueue changed that isn't something I'd really like to maintai=
-n
-> > > > > going forward.
-> > > >
-> > > > I'm not talking about duplicating the code, I'm talking about fixin=
-g the
-> > > > helpers. I don't know that code well, but from the outside it sound=
-s
-> > > > like a bug there.
-> > > >
-> > > > And executing work items in the order they are submitted is trivial=
-.
-> > > >
-> > > > Had anybody pinged Daniel or other people familiar with the helper =
-code
-> > > > about it?
-> > >
-> > > Yeah something is wrong here, and the fix looks horrible :-)
-> > >
-> > > Aside, I've also seen some recent discussion flare up about
-> > > drm_atomic_state_get/put used to paper over some other use-after-free=
-,
-> > > but this time related to interrupt handlers. Maybe a few rules about
-> > > that:
-> > > - dont
-> > > - especially not when it's interrupt handlers, because you can't call
-> > > drm_atomic_state_put from interrupt handlers.
-> > >
-> > > Instead have an spin_lock_irq to protect the shared date with your
-> > > interrupt handler, and _copy_ the date over. This is e.g. what
-> > > drm_crtc_arm_vblank_event does.
-> >
-> > Nicholas wrote a patch that attempted to resolve the issue by adding ev=
-ery
-> > CRTC into the commit to use use the stall checks. [1] While this forces
-> > synchronisation on commits, it's kind of a hacky method that may take a
-> > toll on performance.
-> >
-> > Is it possible to have a DRM helper that forces synchronisation on some
-> > commits without having to add every CRTC into the commit?
-> >
-> > Also, is synchronisation really necessary for fast updates in amdgpu?
-> > I'll admit, the idea of eliminating the use-after-free bug by eliminati=
-ng
-> > the use entirely doesn't seem ideal; but is forcing synchronisation on
-> > these updates that much better?
+On Tue, Jul 28, 2020 at 5:48 AM Joe Perches <joe@perches.com> wrote:
 >
-> Well clearing the dc_state pointer here and then allocating another
-> one in atomic_commit_tail also looks fishy. The proper fix is probably
-> a lot more involved, but yeah interim fix is to grab all crtc states
-> iff you also grabbed the dm_atomic_state structure. Real fix is to
-> only do this when necessary, which pretty much means the dc_state
-> needs to be somehow split up, or there needs to be some guarantees
-> about when it's necessary and when not. Otherwise parallel commits on
-> different CRTC are not possible with the current dc backend code.
+> On Mon, 2020-07-27 at 14:44 -0500, Gustavo A. R. Silva wrote:
+> > Replace the existing /* fall through */ comments and its variants with
+> > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> > fall-through markings when it is the case.
+> []
+> > diff --git a/drivers/net/wireless/ath/ath11k/dp.c b/drivers/net/wireless/ath/ath11k/dp.c
+> []
+> > @@ -159,7 +159,7 @@ int ath11k_dp_srng_setup(struct ath11k_base *ab, struct dp_srng *ring,
+> >                       break;
+> >               }
+> >               /* follow through when ring_num >= 3 */
+> > -             /* fall through */
+> > +             fallthrough;
+>
+> Likely the /* follow through ... */ comment can be deleted too
 
-In that case, I'll test out Nicholas' patch right now and see if it works.
-Unlike Duncan, something about my setup seems to trigger the bug rather
-quickly, so I should be able to tell if it works in the next couple of
-hours with a reasonable degree of accuracy.
+If the "when ring_num >= 3" comment is needed, how should this get
+formatted? Maybe something like:
+
+fallthrough; /* when ring_num >= 3 */
 
 Thanks,
-Mazin Rezk
 
->
-> See also my dma-fence annotation fixup patch, there dc_state also gets
-> in the way:
->
-> https://lore.kernel.org/dri-devel/20200707201229.472834-21-daniel.vetter@=
-ffwll.ch/
->
-> Nicholas, btw I'm still waiting for some dc feedback on that entire
-> series, and what/if there's plans to fix these issues properly.
->
-> Maybe even going back to the subclassed drm_atomic_state might be
-> better than what we currently have.
-> -Daniel
-> >
-> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=3D207383#c96
-> >
-> > Thanks,
-> > Mazin Rezk
-> >
-> > >
-> > > Cheers, Daniel
-> > >
-> > > >
-> > > > Regards,
-> > > > Christian.
-> > > >
-> > > > >
-> > > > > Regards,
-> > > > > Nicholas Kazlauskas
-> > > > >
-> > > > >>
-> > > > >>>
-> > > > >>> Since this bug has only been spotted with fast commits, this pa=
-tch
-> > > > >>> fixes
-> > > > >>> the bug by clearing the dm_state instead of using the old dc_st=
-ate for
-> > > > >>> fast updates. In addition, since dm_state is only used for its =
-dc_state
-> > > > >>> and amdgpu_dm_atomic_commit_tail will retain the dc_state if no=
-ne is
-> > > > >>> found,
-> > > > >>> removing the dm_state should not have any consequences in fast =
-updates.
-> > > > >>>
-> > > > >>> This use-after-free bug has existed for a while now, but only c=
-aused a
-> > > > >>> noticeable issue starting from 5.7-rc1 due to 3202fa62f ("slub:
-> > > > >>> relocate
-> > > > >>> freelist pointer to middle of object") moving the freelist poin=
-ter from
-> > > > >>> dm_state->base (which was unused) to dm_state->context (which i=
-s
-> > > > >>> dereferenced).
-> > > > >>>
-> > > > >>> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D207383
-> > > > >>> Fixes: bd200d190f45 ("drm/amd/display: Don't replace the dc_sta=
-te
-> > > > >>> for fast updates")
-> > > > >>> Reported-by: Duncan <1i5t5.duncan@cox.net>
-> > > > >>> Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
-> > > > >>> ---
-> > > > >>>   .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 36
-> > > > >>> ++++++++++++++-----
-> > > > >>>   1 file changed, 27 insertions(+), 9 deletions(-)
-> > > > >>>
-> > > > >>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > > > >>> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > > > >>> index 86ffa0c2880f..710edc70e37e 100644
-> > > > >>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > > > >>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > > > >>> @@ -8717,20 +8717,38 @@ static int amdgpu_dm_atomic_check(struc=
-t
-> > > > >>> drm_device *dev,
-> > > > >>>            * the same resource. If we have a new DC context as =
-part of
-> > > > >>>            * the DM atomic state from validation we need to fre=
-e it and
-> > > > >>>            * retain the existing one instead.
-> > > > >>> +         *
-> > > > >>> +         * Furthermore, since the DM atomic state only contain=
-s the DC
-> > > > >>> +         * context and can safely be annulled, we can free the=
- state
-> > > > >>> +         * and clear the associated private object now to free
-> > > > >>> +         * some memory and avoid a possible use-after-free lat=
-er.
-> > > > >>>            */
-> > > > >>> -        struct dm_atomic_state *new_dm_state, *old_dm_state;
-> > > > >>>
-> > > > >>> -        new_dm_state =3D dm_atomic_get_new_state(state);
-> > > > >>> -        old_dm_state =3D dm_atomic_get_old_state(state);
-> > > > >>> +        for (i =3D 0; i < state->num_private_objs; i++) {
-> > > > >>> +            struct drm_private_obj *obj =3D state->private_obj=
-s[i].ptr;
-> > > > >>>
-> > > > >>> -        if (new_dm_state && old_dm_state) {
-> > > > >>> -            if (new_dm_state->context)
-> > > > >>> -                dc_release_state(new_dm_state->context);
-> > > > >>> +            if (obj->funcs =3D=3D adev->dm.atomic_obj.funcs) {
-> > > > >>> +                int j =3D state->num_private_objs-1;
-> > > > >>>
-> > > > >>> -            new_dm_state->context =3D old_dm_state->context;
-> > > > >>> +                dm_atomic_destroy_state(obj,
-> > > > >>> +                        state->private_objs[i].state);
-> > > > >>> +
-> > > > >>> +                /* If i is not at the end of the array then th=
-e
-> > > > >>> +                 * last element needs to be moved to where i w=
-as
-> > > > >>> +                 * before the array can safely be truncated.
-> > > > >>> +                 */
-> > > > >>> +                if (i !=3D j)
-> > > > >>> +                    state->private_objs[i] =3D
-> > > > >>> +                        state->private_objs[j];
-> > > > >>>
-> > > > >>> -            if (old_dm_state->context)
-> > > > >>> -                dc_retain_state(old_dm_state->context);
-> > > > >>> +                state->private_objs[j].ptr =3D NULL;
-> > > > >>> +                state->private_objs[j].state =3D NULL;
-> > > > >>> +                state->private_objs[j].old_state =3D NULL;
-> > > > >>> +                state->private_objs[j].new_state =3D NULL;
-> > > > >>> +
-> > > > >>> +                state->num_private_objs =3D j;
-> > > > >>> +                break;
-> > > > >>> +            }
-> > > > >>>           }
-> > > > >>>       }
-> > > > >>>
-> > > > >>> --
-> > > > >>> 2.27.0
-> > > > >>>
-> > > > >>
-> > > > >
-> > > >
-> > > > _______________________________________________
-> > > > dri-devel mailing list
-> > > > dri-devel@lists.freedesktop.org
-> > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > >
-> > >
-> > >
-> > > --
-> > > Daniel Vetter
-> > > Software Engineer, Intel Corporation
-> > > http://blog.ffwll.ch
->
->
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+-- 
+Julian Calaby
+
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
