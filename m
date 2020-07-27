@@ -2,208 +2,499 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7760CC433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC69C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 538C12083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:34:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892858;
-	bh=JgDpgk8Xkxp89oqH9VYbBX5FyFOiPbGIIgUQHEDfMQk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lNaikqt7kWgchHocxpZWL5EhSxGoDsA9r5WcMUl0KLFiYcXMfP1XjB/e+0JTNAIzY
-	 6sHeRlbImfe7Jje4aMPX+OiU9hZvNomSeOBUdJj6f51sXEyYjfzP3Ipy1k92c6TdUg
-	 4FS1pI4LxDgol5TRh2Xy+T08tU746qKTDmPR0GnU=
+	by mail.kernel.org (Postfix) with ESMTP id 5921720809
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:34:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRgpUVuS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgG0XeR (ORCPT
+        id S1727896AbgG0Xe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:34:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42098 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbgG0XeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:34:16 -0400
-Received: from earth.universe (unknown [185.213.155.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6B2F20809;
-        Mon, 27 Jul 2020 23:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892856;
-        bh=JgDpgk8Xkxp89oqH9VYbBX5FyFOiPbGIIgUQHEDfMQk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B9xu8NxGiZ/IjMfRoOY5GDUznSz0VYP6sHDo/YO3sFh7Lm1PakNkKub0KuJ07kdD6
-         G/fcK+UqtARN45vcFdESB+KBWEtIaKvOBejZ10u9Rid9BfKQRp/8BDhgaTtL6s6uEj
-         BumCxP4LgFIA589ekGFgot1nHqZCZGGTmTs3N8FU=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 0B3A83C0B87; Tue, 28 Jul 2020 01:34:14 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 01:34:14 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Crag Wang <crag0715@gmail.com>
-Cc:     mathewk@chromium.org, mario.limonciello@dell.com,
-        campello@google.com, Crag Wang <crag.wang@dell.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 1/1] power_supply: wilco_ec: Add permanent long
- life charging mode
-Message-ID: <20200727233414.xu5eqyes76a5hpkw@earth.universe>
-References: <20200715145511.9464-1-crag.wang@dell.com>
+        Mon, 27 Jul 2020 19:34:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgG0Xe2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:34:28 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D46C061794;
+        Mon, 27 Jul 2020 16:34:28 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id a5so3624514ioa.13;
+        Mon, 27 Jul 2020 16:34:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AO+bby3fQrE72leYP1n2je6ks21A/uP8mKj5EGiF67s=;
+        b=dRgpUVuSC5dcXxQ/Vfe9qZcPwtJwZIvtWhLvwHHw/lhgRWym35ymZDLYmEQmR/TFQs
+         ETMrcxeiAqb8qJkymi/vvp3JuqzXHWSQGIjJ5nabqf15rc3agutMlR8+4SzJahJbP60G
+         GlRkp7O5wsMtHolD8rQUgytpSSm28YXdFAaoO3Gq0Cp03VkFs/NQ0T8b87gPgcDaoe+t
+         fMgNn49VxXrmIg0bQnNaVmW2aY69HxevVlbbPXJFVqI+IRK4827zV3QOu0ZYbUxEAqxZ
+         9gH/sYEBbbAlaGWI6GFqZYD7TRPlR8RPgdltM+Vs09kYxDMiGv0e7b1QJbnMn4F96PNo
+         o79A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AO+bby3fQrE72leYP1n2je6ks21A/uP8mKj5EGiF67s=;
+        b=SPO82e/dsIYsC3kaFfgUwEWBuDu//BqkFzK0kWUM34yEGrj1veET/ZWsTgGT/HWNCL
+         52LCnlxRFkBJVcbYDfs9XsELMU+O15Ynmh/H16qa6OxiO5gR2ZDglBSZenD9JOEQ0EGv
+         IBTB33DbN1+mtaK1qnAZCmAz8Q465d1SRy0bQnhZnsuKXN8hALuYwhFRAgkd+4mxhnqE
+         vhSy5DW43ipBFgUAw4MvUpaVhXMZ25E7h8s6uR5wz1lG3GndxOA/Zct8F4wKVlv8D4qT
+         eX5rjqXiOTSlVnRTpbYHyONaRdU8FTMkptgZiZp2Em+HZ1LPrn9pF5w1wGzdD77hp9qB
+         pcJQ==
+X-Gm-Message-State: AOAM530lbcqlcfSInaocipX33y2KZ4QkVJX9cNUrYmD5SE3QuDESp2Q9
+        AjBGYqMDDtJZ9aQ9uQnT9zmfWCVyzq0uBc8b9D8=
+X-Google-Smtp-Source: ABdhPJzQvuwkYYflFM/z/oLNg3Kswwvu6TiH/sbWzbT3ZNcdTI2pmb1tgo5SS37jePiJ9WFK3eD+WBLs7DK4edUYXLM=
+X-Received: by 2002:a5d:8d04:: with SMTP id p4mr26307801ioj.187.1595892867198;
+ Mon, 27 Jul 2020 16:34:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ze4425po6izm6pbt"
-Content-Disposition: inline
-In-Reply-To: <20200715145511.9464-1-crag.wang@dell.com>
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com> <1595681998-19193-18-git-send-email-alex.shi@linux.alibaba.com>
+In-Reply-To: <1595681998-19193-18-git-send-email-alex.shi@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 27 Jul 2020 16:34:15 -0700
+Message-ID: <CAKgT0UdaW4Rf43yULhQBuP07vQgmoPbaWHGKv1Z7fEPP6jH83w@mail.gmail.com>
+Subject: Re: [PATCH v17 17/21] mm/lru: replace pgdat lru_lock with lruvec lock
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ze4425po6izm6pbt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Jul 15, 2020 at 10:55:12PM +0800, Crag Wang wrote:
-> This is a long life mode set in the factory for extended warranty
-> battery, the power charging rate is customized so that battery at
-> work last longer.
->=20
-> Presently switching to a different battery charging mode is through
-> EC PID 0x0710 to configure the battery firmware, this operation will
-> be blocked by EC with failure code 0x01 when PLL mode is already
-> in use.
->=20
-> Signed-off-by: Crag Wang <crag.wang@dell.com>
+On Sat, Jul 25, 2020 at 6:01 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>
+> This patch moves per node lru_lock into lruvec, thus bring a lru_lock for
+> each of memcg per node. So on a large machine, each of memcg don't
+> have to suffer from per node pgdat->lru_lock competition. They could go
+> fast with their self lru_lock.
+>
+> After move memcg charge before lru inserting, page isolation could
+> serialize page's memcg, then per memcg lruvec lock is stable and could
+> replace per node lru lock.
+>
+> According to Daniel Jordan's suggestion, I run 208 'dd' with on 104
+> containers on a 2s * 26cores * HT box with a modefied case:
+> https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
+>
+> With this and later patches, the readtwice performance increases about
+> 80% within concurrent containers.
+>
+> Also add a debug func in locking which may give some clues if there are
+> sth out of hands.
+>
+> Hugh Dickins helped on patch polish, thanks!
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: Yang Shi <yang.shi@linux.alibaba.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: cgroups@vger.kernel.org
 > ---
->  Documentation/ABI/testing/sysfs-class-power-wilco | 3 +++
->  drivers/power/supply/power_supply_sysfs.c         | 1 +
->  drivers/power/supply/wilco-charger.c              | 5 +++++
->  include/linux/power_supply.h                      | 1 +
->  4 files changed, 10 insertions(+)
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-class-power-wilco b/Document=
-ation/ABI/testing/sysfs-class-power-wilco
-> index da1d6ffe5e3c..1c91b17b6fd4 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power-wilco
-> +++ b/Documentation/ABI/testing/sysfs-class-power-wilco
-> @@ -14,6 +14,9 @@ Description:
->  			Charging begins when level drops below
->  			charge_control_start_threshold, and ceases when
->  			level is above charge_control_end_threshold.
-> +		Permanent Long Life: Last longer battery life, this mode
-> +			is programmed once in the factory. Switching to a
-> +			different mode is unavailable.
-
-The documentation lacks one important aspect: What happens
-if I have a device where the factory did not program "Long Life"?
-I.e. what happens when
-
-# cat /sys/class/power_supply/wilco-charger/charge_type
-Standard
-# echo "Long Life" > /sys/class/power_supply/wilco-charger/charge_type
-
-Will the controller switch into permanent long life battery mode
-without any exit strategy?
-
->  What:		/sys/class/power_supply/wilco-charger/charge_control_start_thresh=
-old
->  Date:		April 2019
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/su=
-pply/power_supply_sysfs.c
-> index bc79560229b5..af3884015ad8 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -87,6 +87,7 @@ static const char * const POWER_SUPPLY_CHARGE_TYPE_TEXT=
-[] =3D {
->  	[POWER_SUPPLY_CHARGE_TYPE_STANDARD]	=3D "Standard",
->  	[POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE]	=3D "Adaptive",
->  	[POWER_SUPPLY_CHARGE_TYPE_CUSTOM]	=3D "Custom",
-> +	[POWER_SUPPLY_CHARGE_TYPE_LONGLIFE]	=3D "Permanent Long Life",
-
-The "Permanent" part is specific to the Wilco EC, so I think it's
-better to avoid it in the generic API. I think it's better to use
-just "Long Life" (and keep the wilco specific sysfs Documentation,
-that Long Life configuration is permanent).
-
--- Sebastian
-
+>  include/linux/memcontrol.h |  58 +++++++++++++++++++++++++
+>  include/linux/mmzone.h     |   2 +
+>  mm/compaction.c            |  67 ++++++++++++++++++-----------
+>  mm/huge_memory.c           |  11 ++---
+>  mm/memcontrol.c            |  63 ++++++++++++++++++++++++++-
+>  mm/mlock.c                 |  47 +++++++++++++-------
+>  mm/mmzone.c                |   1 +
+>  mm/swap.c                  | 104 +++++++++++++++++++++------------------------
+>  mm/vmscan.c                |  70 ++++++++++++++++--------------
+>  9 files changed, 288 insertions(+), 135 deletions(-)
+>
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index e77197a62809..258901021c6c 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -411,6 +411,19 @@ static inline struct lruvec *mem_cgroup_lruvec(struct mem_cgroup *memcg,
+>
+>  struct mem_cgroup *get_mem_cgroup_from_page(struct page *page);
+>
+> +struct lruvec *lock_page_lruvec(struct page *page);
+> +struct lruvec *lock_page_lruvec_irq(struct page *page);
+> +struct lruvec *lock_page_lruvec_irqsave(struct page *page,
+> +                                               unsigned long *flags);
+> +
+> +#ifdef CONFIG_DEBUG_VM
+> +void lruvec_memcg_debug(struct lruvec *lruvec, struct page *page);
+> +#else
+> +static inline void lruvec_memcg_debug(struct lruvec *lruvec, struct page *page)
+> +{
+> +}
+> +#endif
+> +
+>  static inline
+>  struct mem_cgroup *mem_cgroup_from_css(struct cgroup_subsys_state *css){
+>         return css ? container_of(css, struct mem_cgroup, css) : NULL;
+> @@ -892,6 +905,31 @@ static inline void mem_cgroup_put(struct mem_cgroup *memcg)
+>  {
+>  }
+>
+> +static inline struct lruvec *lock_page_lruvec(struct page *page)
+> +{
+> +       struct pglist_data *pgdat = page_pgdat(page);
+> +
+> +       spin_lock(&pgdat->__lruvec.lru_lock);
+> +       return &pgdat->__lruvec;
+> +}
+> +
+> +static inline struct lruvec *lock_page_lruvec_irq(struct page *page)
+> +{
+> +       struct pglist_data *pgdat = page_pgdat(page);
+> +
+> +       spin_lock_irq(&pgdat->__lruvec.lru_lock);
+> +       return &pgdat->__lruvec;
+> +}
+> +
+> +static inline struct lruvec *lock_page_lruvec_irqsave(struct page *page,
+> +               unsigned long *flagsp)
+> +{
+> +       struct pglist_data *pgdat = page_pgdat(page);
+> +
+> +       spin_lock_irqsave(&pgdat->__lruvec.lru_lock, *flagsp);
+> +       return &pgdat->__lruvec;
+> +}
+> +
+>  static inline struct mem_cgroup *
+>  mem_cgroup_iter(struct mem_cgroup *root,
+>                 struct mem_cgroup *prev,
+> @@ -1126,6 +1164,10 @@ static inline void count_memcg_page_event(struct page *page,
+>  void count_memcg_event_mm(struct mm_struct *mm, enum vm_event_item idx)
+>  {
+>  }
+> +
+> +static inline void lruvec_memcg_debug(struct lruvec *lruvec, struct page *page)
+> +{
+> +}
+>  #endif /* CONFIG_MEMCG */
+>
+>  /* idx can be of type enum memcg_stat_item or node_stat_item */
+> @@ -1255,6 +1297,22 @@ static inline struct lruvec *parent_lruvec(struct lruvec *lruvec)
+>         return mem_cgroup_lruvec(memcg, lruvec_pgdat(lruvec));
+>  }
+>
+> +static inline void unlock_page_lruvec(struct lruvec *lruvec)
+> +{
+> +       spin_unlock(&lruvec->lru_lock);
+> +}
+> +
+> +static inline void unlock_page_lruvec_irq(struct lruvec *lruvec)
+> +{
+> +       spin_unlock_irq(&lruvec->lru_lock);
+> +}
+> +
+> +static inline void unlock_page_lruvec_irqrestore(struct lruvec *lruvec,
+> +               unsigned long flags)
+> +{
+> +       spin_unlock_irqrestore(&lruvec->lru_lock, flags);
+> +}
+> +
+>  #ifdef CONFIG_CGROUP_WRITEBACK
+>
+>  struct wb_domain *mem_cgroup_wb_domain(struct bdi_writeback *wb);
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 14c668b7e793..30b961a9a749 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -249,6 +249,8 @@ enum lruvec_flags {
 >  };
-> =20
->  static const char * const POWER_SUPPLY_HEALTH_TEXT[] =3D {
-> diff --git a/drivers/power/supply/wilco-charger.c b/drivers/power/supply/=
-wilco-charger.c
-> index b3c6d7cdd731..713c3018652f 100644
-> --- a/drivers/power/supply/wilco-charger.c
-> +++ b/drivers/power/supply/wilco-charger.c
-> @@ -27,6 +27,7 @@ enum charge_mode {
->  	CHARGE_MODE_AC =3D 3,	/* Mostly AC use, used for Trickle */
->  	CHARGE_MODE_AUTO =3D 4,	/* Used for Adaptive */
->  	CHARGE_MODE_CUSTOM =3D 5,	/* Used for Custom */
-> +	CHARGE_MODE_LONGLIFE =3D 6, /* Used for Permanent Long Life */
->  };
-> =20
->  #define CHARGE_LOWER_LIMIT_MIN	50
-> @@ -48,6 +49,8 @@ static int psp_val_to_charge_mode(int psp_val)
->  		return CHARGE_MODE_AUTO;
->  	case POWER_SUPPLY_CHARGE_TYPE_CUSTOM:
->  		return CHARGE_MODE_CUSTOM;
-> +	case POWER_SUPPLY_CHARGE_TYPE_LONGLIFE:
-> +		return CHARGE_MODE_LONGLIFE;
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -67,6 +70,8 @@ static int charge_mode_to_psp_val(enum charge_mode mode)
->  		return POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE;
->  	case CHARGE_MODE_CUSTOM:
->  		return POWER_SUPPLY_CHARGE_TYPE_CUSTOM;
-> +	case CHARGE_MODE_LONGLIFE:
-> +		return POWER_SUPPLY_CHARGE_TYPE_LONGLIFE;
->  	default:
->  		return -EINVAL;
->  	}
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index ac1345a48ad0..528a3eaa2320 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -48,6 +48,7 @@ enum {
->  	POWER_SUPPLY_CHARGE_TYPE_STANDARD,	/* normal speed */
->  	POWER_SUPPLY_CHARGE_TYPE_ADAPTIVE,	/* dynamically adjusted speed */
->  	POWER_SUPPLY_CHARGE_TYPE_CUSTOM,	/* use CHARGE_CONTROL_* props */
-> +	POWER_SUPPLY_CHARGE_TYPE_LONGLIFE,	/* slow speed, longer life */
->  };
-> =20
->  enum {
-> --=20
-> 2.17.1
->=20
-> ---
-> The original author, Nick no longer being around and that's why he's not =
-on CC.
+>
+>  struct lruvec {
+> +       /* per lruvec lru_lock for memcg */
+> +       spinlock_t                      lru_lock;
+>         struct list_head                lists[NR_LRU_LISTS];
+>         /*
+>          * These track the cost of reclaiming one LRU - file or anon -
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index 2da2933fe56b..88bbd2e93895 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -787,7 +787,7 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>         unsigned long nr_scanned = 0, nr_isolated = 0;
+>         struct lruvec *lruvec;
+>         unsigned long flags = 0;
+> -       bool locked = false;
+> +       struct lruvec *locked_lruvec = NULL;
+>         struct page *page = NULL, *valid_page = NULL;
+>         unsigned long start_pfn = low_pfn;
+>         bool skip_on_failure = false;
+> @@ -847,11 +847,21 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                  * contention, to give chance to IRQs. Abort completely if
+>                  * a fatal signal is pending.
+>                  */
+> -               if (!(low_pfn % SWAP_CLUSTER_MAX)
+> -                   && compact_unlock_should_abort(&pgdat->lru_lock,
+> -                                           flags, &locked, cc)) {
+> -                       low_pfn = 0;
+> -                       goto fatal_pending;
+> +               if (!(low_pfn % SWAP_CLUSTER_MAX)) {
+> +                       if (locked_lruvec) {
+> +                               unlock_page_lruvec_irqrestore(locked_lruvec,
+> +                                                                       flags);
+> +                               locked_lruvec = NULL;
+> +                       }
+> +
+> +                       if (fatal_signal_pending(current)) {
+> +                               cc->contended = true;
+> +
+> +                               low_pfn = 0;
+> +                               goto fatal_pending;
+> +                       }
+> +
+> +                       cond_resched();
+>                 }
+>
+>                 if (!pfn_valid_within(low_pfn))
 
---ze4425po6izm6pbt
-Content-Type: application/pgp-signature; name="signature.asc"
+I'm noticing this patch introduces a bunch of noise. What is the
+reason for getting rid of compact_unlock_should_abort? It seems like
+you just open coded it here. If there is some sort of issue with it
+then it might be better to replace it as part of a preparatory patch
+before you introduce this one as changes like this make it harder to
+review.
 
------BEGIN PGP SIGNATURE-----
+It might make more sense to look at modifying
+compact_unlock_should_abort and compact_lock_irqsave (which always
+returns true so should probably be a void) to address the deficiencies
+they have that make them unusable for you.
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl8fZHIACgkQ2O7X88g7
-+pon5Q//Q0ljbWhfCtEjqe2xMDCnjXF3rx1XwzK/m99ouLBowdasFvLQ3qG7/LAI
-O7lQvSo4pHfAFKy9+H0eZXtGSQwqjoF0DNhLiGuHbF3trqO4Tm7dxQhejlOtCpIj
-Eh7D2B2YIXley9jR3RuxTuL0dNStR0jB+DL3c6/8IO8gA7GSqjKcpXEPohm0++RI
-fwyOGOsqAKof3+98Ze1jal46vORiuwhTEcCahzqh8FWoO5VsiFMKkg6oxqIOwuWd
-8bRITrCgcEb+8ioxCYdm/Rh+65OptYFKDZMKTobZkS8qWqoxp+R/Mhky1tYey11V
-N85n5XZvTVbLQG/Y1RrxnGdEX6pCfMox/PWz4EsS3xE4JG0ra2MjvHcmGbzz7y8A
-d4wJORjUEw6p3HJaHIXcThyDgPHX+i5lhmdeTjW50sAf5CkRGjbLNnjoTbjpLu/1
-uutJEounTDhYxacfcUJL8xucaJKZY90y5PBruuzV8QOj8vcCayaTC8tQ44Qi+e7l
-hVXK30ZEUZ0sbgrn/VmcD6aIc9LRhbgy14ankeQQqKBB6jAViBQzx62yqqVsF8by
-DqbduN18BZi3z5Ad2i9bDgzT1BSbeE2kHH/zeCjAOSMU4Ol9y6YClHP4MclIGuOs
-KFodT5uRd3RIF9XpIASCa3m4oeB85VIdKNdq4cWBeir73vFVUj8=
-=lkV5
------END PGP SIGNATURE-----
+> @@ -922,10 +932,9 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                          */
+>                         if (unlikely(__PageMovable(page)) &&
+>                                         !PageIsolated(page)) {
+> -                               if (locked) {
+> -                                       spin_unlock_irqrestore(&pgdat->lru_lock,
+> -                                                                       flags);
+> -                                       locked = false;
+> +                               if (locked_lruvec) {
+> +                                       unlock_page_lruvec_irqrestore(locked_lruvec, flags);
+> +                                       locked_lruvec = NULL;
+>                                 }
+>
+>                                 if (!isolate_movable_page(page, isolate_mode))
+> @@ -966,10 +975,20 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                 if (!TestClearPageLRU(page))
+>                         goto isolate_fail_put;
+>
+> +               rcu_read_lock();
+> +               lruvec = mem_cgroup_page_lruvec(page, pgdat);
+> +
+>                 /* If we already hold the lock, we can skip some rechecking */
+> -               if (!locked) {
+> -                       locked = compact_lock_irqsave(&pgdat->lru_lock,
+> -                                                               &flags, cc);
+> +               if (lruvec != locked_lruvec) {
+> +                       if (locked_lruvec)
+> +                               unlock_page_lruvec_irqrestore(locked_lruvec,
+> +                                                                       flags);
+> +
+> +                       compact_lock_irqsave(&lruvec->lru_lock, &flags, cc);
+> +                       locked_lruvec = lruvec;
+> +                       rcu_read_unlock();
+> +
+> +                       lruvec_memcg_debug(lruvec, page);
+>
+>                         /* Try get exclusive access under lock */
+>                         if (!skip_updated) {
 
---ze4425po6izm6pbt--
+So this bit makes things a bit complicated. From what I can can tell
+the comment about exclusive access under the lock is supposed to apply
+to the pageblock via the lru_lock. However you are having to retest
+the lock for each page because it is possible the page was moved to
+another memory cgroup while the lru_lock was released correct? So in
+this case is the lru vector lock really providing any protection for
+the skip_updated portion of this code block if the lock isn't
+exclusive to the pageblock? In theory this would probably make more
+sense to have protected the skip bits under the zone lock, but I
+imagine that was avoided due to the additional overhead.
+
+> @@ -988,9 +1007,8 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                                 SetPageLRU(page);
+>                                 goto isolate_fail_put;
+>                         }
+> -               }
+> -
+> -               lruvec = mem_cgroup_page_lruvec(page, pgdat);
+> +               } else
+> +                       rcu_read_unlock();
+>
+>                 /* The whole page is taken off the LRU; skip the tail pages. */
+>                 if (PageCompound(page))
+> @@ -1023,9 +1041,9 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>
+>  isolate_fail_put:
+>                 /* Avoid potential deadlock in freeing page under lru_lock */
+> -               if (locked) {
+> -                       spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+> -                       locked = false;
+> +               if (locked_lruvec) {
+> +                       unlock_page_lruvec_irqrestore(locked_lruvec, flags);
+> +                       locked_lruvec = NULL;
+>                 }
+>                 put_page(page);
+>
+> @@ -1039,9 +1057,10 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                  * page anyway.
+>                  */
+>                 if (nr_isolated) {
+> -                       if (locked) {
+> -                               spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+> -                               locked = false;
+> +                       if (locked_lruvec) {
+> +                               unlock_page_lruvec_irqrestore(locked_lruvec,
+> +                                                                       flags);
+> +                               locked_lruvec = NULL;
+>                         }
+>                         putback_movable_pages(&cc->migratepages);
+>                         cc->nr_migratepages = 0;
+> @@ -1068,8 +1087,8 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>         page = NULL;
+>
+>  isolate_abort:
+> -       if (locked)
+> -               spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+> +       if (locked_lruvec)
+> +               unlock_page_lruvec_irqrestore(locked_lruvec, flags);
+>         if (page) {
+>                 SetPageLRU(page);
+>                 put_page(page);
+
+<snip>
+
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index f77748adc340..168c1659e430 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1774,15 +1774,13 @@ int isolate_lru_page(struct page *page)
+>         WARN_RATELIMIT(PageTail(page), "trying to isolate tail page");
+>
+>         if (TestClearPageLRU(page)) {
+> -               pg_data_t *pgdat = page_pgdat(page);
+>                 struct lruvec *lruvec;
+>                 int lru = page_lru(page);
+>
+>                 get_page(page);
+> -               lruvec = mem_cgroup_page_lruvec(page, pgdat);
+> -               spin_lock_irq(&pgdat->lru_lock);
+> +               lruvec = lock_page_lruvec_irq(page);
+>                 del_page_from_lru_list(page, lruvec, lru);
+> -               spin_unlock_irq(&pgdat->lru_lock);
+> +               unlock_page_lruvec_irq(lruvec);
+>                 ret = 0;
+>         }
+>
+> @@ -1849,20 +1847,22 @@ static int too_many_isolated(struct pglist_data *pgdat, int file,
+>  static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+>                                                      struct list_head *list)
+>  {
+> -       struct pglist_data *pgdat = lruvec_pgdat(lruvec);
+>         int nr_pages, nr_moved = 0;
+>         LIST_HEAD(pages_to_free);
+>         struct page *page;
+> +       struct lruvec *orig_lruvec = lruvec;
+>         enum lru_list lru;
+>
+>         while (!list_empty(list)) {
+> +               struct lruvec *new_lruvec = NULL;
+> +
+>                 page = lru_to_page(list);
+>                 VM_BUG_ON_PAGE(PageLRU(page), page);
+>                 list_del(&page->lru);
+>                 if (unlikely(!page_evictable(page))) {
+> -                       spin_unlock_irq(&pgdat->lru_lock);
+> +                       spin_unlock_irq(&lruvec->lru_lock);
+>                         putback_lru_page(page);
+> -                       spin_lock_irq(&pgdat->lru_lock);
+> +                       spin_lock_irq(&lruvec->lru_lock);
+>                         continue;
+>                 }
+>
+> @@ -1876,6 +1876,12 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+>                  *                                        list_add(&page->lru,)
+>                  *     list_add(&page->lru,) //corrupt
+>                  */
+> +               new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+> +               if (new_lruvec != lruvec) {
+> +                       if (lruvec)
+> +                               spin_unlock_irq(&lruvec->lru_lock);
+> +                       lruvec = lock_page_lruvec_irq(page);
+> +               }
+>                 SetPageLRU(page);
+>
+>                 if (unlikely(put_page_testzero(page))) {
+
+I was going through the code of the entire patch set and I noticed
+these changes in move_pages_to_lru. What is the reason for adding the
+new_lruvec logic? My understanding is that we are moving the pages to
+the lruvec provided are we not?If so why do we need to add code to get
+a new lruvec? The code itself seems to stand out from the rest of the
+patch as it is introducing new code instead of replacing existing
+locking code, and it doesn't match up with the description of what
+this function is supposed to do since it changes the lruvec.
+
+> @@ -1883,16 +1889,15 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+>                         __ClearPageActive(page);
+>
+>                         if (unlikely(PageCompound(page))) {
+> -                               spin_unlock_irq(&pgdat->lru_lock);
+> +                               spin_unlock_irq(&lruvec->lru_lock);
+>                                 destroy_compound_page(page);
+> -                               spin_lock_irq(&pgdat->lru_lock);
+> +                               spin_lock_irq(&lruvec->lru_lock);
+>                         } else
+>                                 list_add(&page->lru, &pages_to_free);
+>
+>                         continue;
+>                 }
+>
+> -               lruvec = mem_cgroup_page_lruvec(page, pgdat);
+>                 lru = page_lru(page);
+>                 nr_pages = hpage_nr_pages(page);
+>
+> @@ -1902,6 +1907,11 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+>                 if (PageActive(page))
+>                         workingset_age_nonresident(lruvec, nr_pages);
+>         }
+> +       if (orig_lruvec != lruvec) {
+> +               if (lruvec)
+> +                       spin_unlock_irq(&lruvec->lru_lock);
+> +               spin_lock_irq(&orig_lruvec->lru_lock);
+> +       }
+>
+>         /*
+>          * To save our caller's stack, now use input list for pages to free.
