@@ -2,169 +2,89 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38945C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97793C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A24420738
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7281420738
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:33:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wTEt2lrn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="reT1y3UM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgG0Haw (ORCPT
+        id S1726845AbgG0HdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57676 "EHLO
+        Mon, 27 Jul 2020 03:33:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0Haw (ORCPT
+        with ESMTP id S1726116AbgG0HdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:30:52 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E57F3C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:30:50 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id h19so16055887ljg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:30:50 -0700 (PDT)
+        Mon, 27 Jul 2020 03:33:10 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DB74C0619D2;
+        Mon, 27 Jul 2020 00:33:10 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id c2so5517874edx.8;
+        Mon, 27 Jul 2020 00:33:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X5fEgGpWVjcw3GRcV8W7F39oPVxz0g7j7zQ9WmB3YxM=;
-        b=wTEt2lrn6iDyN6guMCNKvxo53XxAT/Od7zPDoyQMdhtpeUAX5wPigM0QD2nn4VpV0T
-         +tga4M2lbQ6K5gxHGjd8/VLgGkQX7lAM3tHTJBM1pxUcxnOGI6BqxL63qLaiQG9u2liO
-         JVghUkOvKiBdsSaZadHafzaz5HjI/2NKxUJOMT60/hhY5GaHUKodBPAJnt19a06CiTGE
-         59gEeAq1r2nAVNCw+kIh0UQbCxP0B9d7rLbfIFmXLz2EU7V8XJKb5m5rLrsrk1Tx1PTY
-         5gpTqQmgjqLg13zQ50BY7xmTeD8ybY8kVvVgm/KrLci13tpk34460t8OjNi3bwA+i4rA
-         RUaA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=95o2SL2yS+OJ42B7vx7vpE8aa2uvVeEjtGJk2w185hM=;
+        b=reT1y3UM0/eHiiOk8AjpyJEGO5IZw7wNJAYn9rDmVsKIMJPwGvujG9/JMiuIrosiZv
+         WyGZ4ADs5yhYnEBDvFEk+7Ve2c3jVQ4nuUKG1PsFfuKwcoBw7jS89lEQRLKj+wkF+f6K
+         YMo1wEaBR6SMBzWfnfSoOHmwSovsord7w9qtESgRyXIQoD/GJgOJor0fh+C+ncsdtd7f
+         ZAfZDHto385Fr1/D4UlfZj5S9Zgq9jg8ur/NISYj3PQizB4ILuL2NzIc743IXwduuUyj
+         LjGWhBnJ4OwUsAUhNyh3H5ZRgOc5YObSNQkjkzWfkzZwVdsKarf6IVET9AviCzhzBnf9
+         /hkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X5fEgGpWVjcw3GRcV8W7F39oPVxz0g7j7zQ9WmB3YxM=;
-        b=Rt/27YecUwVpmqksEiTck+r+6WONI966rha//tLi1nZd5BHRObhiV8B6NJmF5wpDc+
-         4cgPZz/4SKtKswJIlP475ucMKXtZh4glgqVyC+uYLVW4WlHPn0sfbFO1NON/mjzlaBZK
-         madHSJDRZg/KnwegadSmcV5M55Rwtu0EJjXf/+3WyNPqNJrduDsBWkw/gqHo0EsCRBp/
-         g2Y0epRaUWdQiZ9vLpS/axXfngTX9V2iVGWQocwfFZlclsQOb36ofwQn/oxKZCH/PIWY
-         mk5ZI7OGu2xcNdGRIo3Y595KLlnV5i33OtChjM1B4eOvGDrjeq/53m+tITQ0W0yKRN7E
-         q5RQ==
-X-Gm-Message-State: AOAM5313q3KNlbqpmILqHO+FnTsgCLV7KHG+fFTWw8r8DZaYoJdopWuC
-        TrwcBl/MlRUhBHFcIFcMSct3zw==
-X-Google-Smtp-Source: ABdhPJyuLjVh2cOZgL9pZNyZcOlOQDP8GFllPafx2uYt1/WePcdJCVxUQEx21L80AXYxJIgK2bmYOQ==
-X-Received: by 2002:a2e:9855:: with SMTP id e21mr10116088ljj.424.1595835049441;
-        Mon, 27 Jul 2020 00:30:49 -0700 (PDT)
-Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id b204sm2840514lfd.48.2020.07.27.00.30.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 00:30:48 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     lee.jones@linaro.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] mfd: dm355evm_msp: Convert LEDs to GPIO descriptor table
-Date:   Mon, 27 Jul 2020 09:28:44 +0200
-Message-Id: <20200727072844.195723-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=95o2SL2yS+OJ42B7vx7vpE8aa2uvVeEjtGJk2w185hM=;
+        b=meqPkt9zEPYGrlxkx4svzRJZJd+zs3p1Rvnveri3rjDgPFRcrO1rUfYr5bOMqWlSfz
+         LwjvKtD09d3G1iOVCueSvB3uSoXeMtq6j9v9meBo074PY46SPXEU8n9j3VC3VpZXZdxr
+         TpbKEkJCMqwI9CWm4nSJWU7xD+zRr9Fg7Nvd7sC0y6pUp8R/3eCht+xfhP4fR0sXkId9
+         +3d5Fu6OsbVFyB2iBtIaSkn1kW+blejiZJgzl6XNGACMxH0sdDoMCBHsSsHqlp8mOTNs
+         37OroRoh9N69Cr/ttgC/sK0soILi3Zx+W0jdz9h8hdQdzditVqCNE0gN79oSInm8hp8y
+         HKXQ==
+X-Gm-Message-State: AOAM530YrittIk+mswE/gUoZTFhzQmRRAiuJp8FuXTVRim0edjV/DCM7
+        k4946zEAfIZ/kAwVLDXgGTIO2YBjjyVqI4NMej7qAoZN
+X-Google-Smtp-Source: ABdhPJyY4JZi0jBFS9XuIKOB3L/gBL5RfEZTypoj8YM0d14GZMRw8scieVd3NJU8rhon6bN52FrwzCZzwxF6z8BX+HY=
+X-Received: by 2002:a05:6402:d06:: with SMTP id eb6mr19513491edb.211.1595835188988;
+ Mon, 27 Jul 2020 00:33:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200724213659.273599-1-martin.botka1@gmail.com>
+ <20200724213659.273599-3-martin.botka1@gmail.com> <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
+ <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gmail.com> <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com>
+In-Reply-To: <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com>
+From:   Martin Botka <martin.botka1@gmail.com>
+Date:   Mon, 27 Jul 2020 09:32:31 +0200
+Message-ID: <CADQ2G_HF+eBgNJVgFS4OP2FBOHvvPE6rkPz3vjSG7PZ3qm3igw@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
+ with u64 data length
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the DaVinci DM355EVM LEDs to use GPIO
-descriptor look-ups.
+> Could you please send the messages also to everyone else ?
 
-Cc: Sekhar Nori <nsekhar@ti.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/mfd/dm355evm_msp.c | 49 ++++++++++++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/mfd/dm355evm_msp.c b/drivers/mfd/dm355evm_msp.c
-index 151c36ce7343..af24712d605e 100644
---- a/drivers/mfd/dm355evm_msp.c
-+++ b/drivers/mfd/dm355evm_msp.c
-@@ -12,6 +12,7 @@
- #include <linux/module.h>
- #include <linux/err.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/machine.h>
- #include <linux/leds.h>
- #include <linux/i2c.h>
- #include <linux/mfd/dm355evm_msp.h>
-@@ -260,31 +261,55 @@ static int add_children(struct i2c_client *client)
- 
- 	/* LED output */
- 	if (msp_has_leds()) {
--#define GPIO_LED(l)	.name = l, .active_low = true
- 		static struct gpio_led evm_leds[] = {
--			{ GPIO_LED("dm355evm::ds14"),
-+			{ .name = "dm355evm::ds14",
- 				.default_trigger = "heartbeat", },
--			{ GPIO_LED("dm355evm::ds15"),
-+			{ .name = "dm355evm::ds15",
- 				.default_trigger = "mmc0", },
--			{ GPIO_LED("dm355evm::ds16"),
-+			{ .name = "dm355evm::ds16",
- 				/* could also be a CE-ATA drive */
- 				.default_trigger = "mmc1", },
--			{ GPIO_LED("dm355evm::ds17"),
-+			{ .name = "dm355evm::ds17",
- 				.default_trigger = "nand-disk", },
--			{ GPIO_LED("dm355evm::ds18"), },
--			{ GPIO_LED("dm355evm::ds19"), },
--			{ GPIO_LED("dm355evm::ds20"), },
--			{ GPIO_LED("dm355evm::ds21"), },
-+			{ .name = "dm355evm::ds18", },
-+			{ .name = "dm355evm::ds19", },
-+			{ .name = "dm355evm::ds20", },
-+			{ .name = "dm355evm::ds21", },
- 		};
--#undef GPIO_LED
- 
- 		struct gpio_led_platform_data evm_led_data = {
- 			.num_leds	= ARRAY_SIZE(evm_leds),
- 			.leds		= evm_leds,
- 		};
- 
--		for (i = 0; i < ARRAY_SIZE(evm_leds); i++)
--			evm_leds[i].gpio = i + dm355evm_msp_gpio.base;
-+		static struct gpiod_lookup_table evm_leds_gpio_table = {
-+			.dev_id = "leds-gpio",
-+			.table = {
-+				/*
-+				 * These GPIOs are on the dm355evm_msp
-+				 * GPIO chip at index 0..7
-+				 */
-+				GPIO_LOOKUP_IDX("dm355evm_msp", 0, NULL,
-+						0, GPIO_ACTIVE_LOW),
-+				GPIO_LOOKUP_IDX("dm355evm_msp", 1, NULL,
-+						1, GPIO_ACTIVE_LOW),
-+				GPIO_LOOKUP_IDX("dm355evm_msp", 2, NULL,
-+						2, GPIO_ACTIVE_LOW),
-+				GPIO_LOOKUP_IDX("dm355evm_msp", 3, NULL,
-+						3, GPIO_ACTIVE_LOW),
-+				GPIO_LOOKUP_IDX("dm355evm_msp", 4, NULL,
-+						4, GPIO_ACTIVE_LOW),
-+				GPIO_LOOKUP_IDX("dm355evm_msp", 5, NULL,
-+						5, GPIO_ACTIVE_LOW),
-+				GPIO_LOOKUP_IDX("dm355evm_msp", 6, NULL,
-+						6, GPIO_ACTIVE_LOW),
-+				GPIO_LOOKUP_IDX("dm355evm_msp", 7, NULL,
-+						7, GPIO_ACTIVE_LOW),
-+				{ },
-+			},
-+		};
-+
-+		gpiod_add_lookup_table(&evm_leds_gpio_table);
- 
- 		/* NOTE:  these are the only fully programmable LEDs
- 		 * on the board, since GPIO-61/ds22 (and many signals
--- 
-2.26.2
-
+Next time of course.
