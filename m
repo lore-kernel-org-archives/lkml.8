@@ -2,101 +2,93 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1168C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A64A6205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 953D12074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:16:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595848594;
+	bh=huU9FrrRSkbKfoK/WI/8ojDrsG1FAaBqigpZCvBwXX8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=VFS9GfPijU8em/ZX92CBf/k+xHqAcYFXIsG6BhvVNz+iooJaEVCPqMgDRxzgy7pQz
+	 K0PRQvzn1TlKtjUIJoHNoOsuOgqf6Vq/JlFh4xZmTNme2sIuI7jtHyZey1tdF2TY5i
+	 vzvSVz+j8sCrUUvyDh06RErReQ/EEWnKKuvznDW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgG0LMy (ORCPT
+        id S1727900AbgG0LQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:12:54 -0400
-Received: from mailout10.rmx.de ([94.199.88.75]:46431 "EHLO mailout10.rmx.de"
+        Mon, 27 Jul 2020 07:16:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726324AbgG0LMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:12:54 -0400
-Received: from kdin02.retarus.com (kdin02.dmz1.retloc [172.19.17.49])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726269AbgG0LQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:16:32 -0400
+Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mailout10.rmx.de (Postfix) with ESMTPS id 4BFcbk088pz31wH;
-        Mon, 27 Jul 2020 13:12:50 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin02.retarus.com (Postfix) with ESMTPS id 4BFcbK2FfZz2TSDj;
-        Mon, 27 Jul 2020 13:12:29 +0200 (CEST)
-Received: from N95HX1G2.wgnetz.xx (192.168.54.121) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 27 Jul
- 2020 13:12:29 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Christian Eggers <ceggers@arri.de>
-Subject: [PATCH] eeprom: at25: allow page sizes greater than 16 bit
-Date:   Mon, 27 Jul 2020 13:12:18 +0200
-Message-ID: <20200727111218.26926-1-ceggers@arri.de>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [192.168.54.121]
-X-RMX-ID: 20200727-131229-4BFcbK2FfZz2TSDj-0@kdin02
-X-RMX-SOURCE: 217.111.95.66
+        by mail.kernel.org (Postfix) with ESMTPSA id 1682420663;
+        Mon, 27 Jul 2020 11:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595848592;
+        bh=huU9FrrRSkbKfoK/WI/8ojDrsG1FAaBqigpZCvBwXX8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=GCy8ebTiS11gvztCsOHteRvKuVdxOKytVP0wMGyEh5vdqaOd8NK9tESxZvfTF+Lmi
+         0QPQrPJQGjkiOMAFKl2spUTQyH5dnXdz77bGmfSaKVc5xwfqC4HaetSeihngkfD/bf
+         El2EDPh+zLuWgzunDco7HVeJJH+fXwkaQUY2+Cko=
+Message-ID: <1595848589.4841.78.camel@kernel.org>
+Subject: Re: [PATCH v3 00/19] Introduce partial kernel_read_file() support
+From:   Mimi Zohar <zohar@kernel.org>
+To:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 27 Jul 2020 07:16:29 -0400
+In-Reply-To: <20200724213640.389191-1-keescook@chromium.org>
+References: <20200724213640.389191-1-keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Storage technologies like FRAM have no "write pages", the whole chip can
-be written within one SPI transfer. For these chips, the page size can
-be set equal to the device size. Currently available devices are already
-bigger than 64 kiB.
+On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
+> v3:
+> - add reviews/acks
+> - add "IMA: Add support for file reads without contents" patch
+> - trim CC list, in case that's why vger ignored v2
+> v2: [missing from lkml archives! (CC list too long?) repeating changes here]
+> - fix issues in firmware test suite
+> - add firmware partial read patches
+> - various bug fixes/cleanups
+> v1: https://lore.kernel.org/lkml/20200717174309.1164575-1-keescook@chromium.org/
+> 
+> Hi,
+> 
+> Here's my tree for adding partial read support in kernel_read_file(),
+> which fixes a number of issues along the way. It's got Scott's firmware
+> and IMA patches ported and everything tests cleanly for me (even with
+> CONFIG_IMA_APPRAISE=y).
 
-Signed-off-by: Christian Eggers <ceggers@arri.de>
----
- drivers/misc/eeprom/at25.c | 2 +-
- include/linux/spi/eeprom.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Thanks, Kees.  Other than my comments on the new
+security_kernel_post_load_data() hook, the patch set is really nice.
 
-diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
-index cde9a2fc1325..0e7c8dc01195 100644
---- a/drivers/misc/eeprom/at25.c
-+++ b/drivers/misc/eeprom/at25.c
-@@ -261,7 +261,7 @@ static int at25_fw_to_chip(struct device *dev, struct spi_eeprom *chip)
- 
- 	if (device_property_read_u32(dev, "pagesize", &val) == 0 ||
- 	    device_property_read_u32(dev, "at25,page-size", &val) == 0) {
--		chip->page_size = (u16)val;
-+		chip->page_size = val;
- 	} else {
- 		dev_err(dev, "Error: missing \"pagesize\" property\n");
- 		return -ENODEV;
-diff --git a/include/linux/spi/eeprom.h b/include/linux/spi/eeprom.h
-index aceccf9c71fb..1cca3dd5a748 100644
---- a/include/linux/spi/eeprom.h
-+++ b/include/linux/spi/eeprom.h
-@@ -14,7 +14,7 @@
- struct spi_eeprom {
- 	u32		byte_len;
- 	char		name[10];
--	u16		page_size;		/* for writes */
-+	u32		page_size;		/* for writes */
- 	u16		flags;
- #define	EE_ADDR1	0x0001			/*  8 bit addrs */
- #define	EE_ADDR2	0x0002			/* 16 bit addrs */
--- 
-Christian Eggers
-Embedded software developer
+In addition to compiling with CONFIG_IMA_APPRAISE enabled, have you
+booted the kernel with the ima_policy=tcb?  The tcb policy will add
+measurements to the IMA measurement list and extend the TPM with the
+file or buffer data digest.  Are you seeing the firmware measurements,
+in particular the partial read measurement?
 
-Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
-Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
-Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
+thanks,
 
+Mimi
