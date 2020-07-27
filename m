@@ -2,211 +2,105 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DDEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F23DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6997520656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3B420658
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:07:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uUWm7YbS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pO0yYGQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgG0IFS (ORCPT
+        id S1726753AbgG0IHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:05:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34768 "EHLO
+        Mon, 27 Jul 2020 04:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbgG0IFR (ORCPT
+        with ESMTP id S1726122AbgG0IH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:05:17 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0186AC0619D4;
-        Mon, 27 Jul 2020 01:05:16 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id s189so8993230pgc.13;
-        Mon, 27 Jul 2020 01:05:16 -0700 (PDT)
+        Mon, 27 Jul 2020 04:07:29 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ECD9C0619D2;
+        Mon, 27 Jul 2020 01:07:28 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id d17so16192347ljl.3;
+        Mon, 27 Jul 2020 01:07:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TckLjYCl3ZHc6WH0Io4YM2xM1w1BSOcuwRjb/jFrFu8=;
-        b=uUWm7YbSw6kSCPGkd8zYVj+tz3Y1WzLm7iabNsBf/f2jAcIGUUNu7jRiuVcSkPhj/l
-         SooQNg8jE9i5joPt4qRv+e3L+RRSyiGamh/sUTVNiy/05HBYP/Wgx9Fm0a1GwWDynYMl
-         8RGIU2tkbNyxdehhTUld+0jdT5QyZE0LvhqF6uep1hkvFzzyRMpbNkpxI3dT1IL4qnv8
-         Ib44lOp7++Wvpp3lIkmBF4X4jzIL030AOi+vbqUqjzwIhPzjFui5toN+UUUSvPkd52Y6
-         xe0IKNw3GMH8mgcuaEEzCdvgmz6J+Do5eqCRqxTyrAT1cWkrW7eRXcLkMmxnNEmzlOg5
-         l8cw==
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QBY+w6jlyOsmPmSWdAT4jKigsszPSmssReg15Ky49UU=;
+        b=pO0yYGQCSTQKbT0MGpMhARYtQU/QS+0eHydoie2QLOig4M7Wwlc33+Ywk7W9mH1iMQ
+         oAUuHrynvVNvmmbF+k8N5B0j8+maV4Wn+MMIuXuxcXmBYtPtBwGDK7X6++E5EebQkd8O
+         g9DZWNBmfNbewt0xugznCCNnRCuL2u3UVzBv/R4Zu4SAiPnHNvI13/XNX7oUcF3Kzs0f
+         490YLr4rsAyv5QkH2FySa8u1/4vZugEYa8xG3LFW+GpfG1zFg9SetYLUes9Sfe9Xukli
+         pv8+nz6+btJpWeL5P/pnh68uiC7AYJCSCCFKuJtwxeAsOidqiGxeU9vW7SSq010YLTk2
+         GbhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TckLjYCl3ZHc6WH0Io4YM2xM1w1BSOcuwRjb/jFrFu8=;
-        b=LrjZpqjEj6zW5Eoxan1rM+gfp4IFyv6XZGOTYzYd1bV95tZSwqoTImZrTQibxod/M6
-         +3TI9EJnUlUDoN63OzfhsAdinbWvb1UkMtXQ9XwkjYSFrJxOrsIA1WlvktJfH/Cq/WV/
-         IBax6ya1K5r8lam4T1mObEOQxatdQKhTf/U+0Wpai1T0x/oSdz4sSzAi6U++v4picD94
-         D6W0IhW+AKV+vIQvSEE97/4ufjdx5OJINquNDn2K2jzUcgty9E62u5y1epYo8yWToQ7Y
-         I9gmKZ4reho6zElXD9g8iD8Qe6TsyKEGqoRfmVXJ7sHVcFad9BIyFWFTo34XVmBMo8gW
-         /7Ag==
-X-Gm-Message-State: AOAM530eymGheVtfswNZs7/7OIqfKMdbJYZlelr6+Tv/PDifWq2Hgmjt
-        NcZ0hXlHJD+3rXTilDMtooCMeB+FdAYOodC+OBI=
-X-Google-Smtp-Source: ABdhPJwpD4Hp9GuBJVn1Vz04MUZ8WhRdu7W6lR0HY/v6uz+H/BjgC39W/xDhP1bCbkviZBuXvp4z0I5lBYEyr18C1fs=
-X-Received: by 2002:a63:ce41:: with SMTP id r1mr19216079pgi.203.1595837115244;
- Mon, 27 Jul 2020 01:05:15 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=QBY+w6jlyOsmPmSWdAT4jKigsszPSmssReg15Ky49UU=;
+        b=V75b7BpvAOd4p1KGHWkdXBqYjvXXUE9+PHnSOj6hondqUdzRx28Ia5OHbQODf2ux5P
+         X4CRnWMoWyKQxUGcUKoIG7Bo0LI8hFwOpjr+eZR1haEHOu6XMpwSTGZ/WUQlzrEf+gKC
+         HPS94mTfEzGDSKX26+sHRdj3GTRuiOBOtloPzrrZizNCaP9fLz+Y0gAp4nc72Ue3WLsl
+         4r3SplNDPcuepnumWO4ogPwc5ogXtjx0RlUngW9XJ34QUrYjm9cP0n3Rb1fz5i+on2s4
+         OHfB7zOuYhTcsSr5OPchKWeGhXze9xp/cEu399siWfmlGm11xynz2B4tuxNPFPkyg1BF
+         PstA==
+X-Gm-Message-State: AOAM533GBqoCHKETkCmqZ+K6L31mewn+fkAmNdf1AnfEuWjRcM7SZx9w
+        1FRgW+5pR2tCXq1Sa5BXYKs=
+X-Google-Smtp-Source: ABdhPJyp2w8n0TkWqz8Tn1BMhL1Hbci2VJ8g3DYVzcr02L4rjMmleq2Q8xI7QTOB2HipNAT8vnpsPA==
+X-Received: by 2002:a2e:91ca:: with SMTP id u10mr8963831ljg.132.1595837246293;
+        Mon, 27 Jul 2020 01:07:26 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:2f5:268:51f1:5041:2d6d:a8b7? ([2a00:1fa0:2f5:268:51f1:5041:2d6d:a8b7])
+        by smtp.gmail.com with ESMTPSA id t205sm2861608lff.8.2020.07.27.01.07.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 01:07:25 -0700 (PDT)
+Subject: Re: [PATCH 10/11] usb: mtu3: clear dual mode of u3port when disable
+ device
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Eddie Hung <eddie.hung@mediatek.com>
+References: <1595834101-13094-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1595834101-13094-10-git-send-email-chunfeng.yun@mediatek.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <e30483ff-e66a-1cba-e166-a1fe590c2f03@gmail.com>
+Date:   Mon, 27 Jul 2020 11:07:24 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200725150651.17029-1-vadym.kochan@plvision.eu>
- <20200725150651.17029-3-vadym.kochan@plvision.eu> <CAHp75VeLS+-QkHuee8oPP4TDQoQPGFHSVpzi0e4m3Xhy2K+d1g@mail.gmail.com>
- <20200726225545.GA11300@plvision.eu>
-In-Reply-To: <20200726225545.GA11300@plvision.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Jul 2020 11:04:56 +0300
-Message-ID: <CAHp75Vea6eWUqvXAKtu5Qv3Q0Oo=mxD+zf+zogZdcYOFtRe17g@mail.gmail.com>
-Subject: Re: [net-next v3 2/6] net: marvell: prestera: Add PCI interface support
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mickey Rachamim <mickeyr@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1595834101-13094-10-git-send-email-chunfeng.yun@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 1:55 AM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
-> On Sun, Jul 26, 2020 at 01:32:19PM +0300, Andy Shevchenko wrote:
-> > On Sat, Jul 25, 2020 at 6:10 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+Hello!
 
-...
+On 27.07.2020 10:14, Chunfeng Yun wrote:
 
-For the non-commented I assume you are agree with. Correct?
+> If not clear u3port's dual mode when disable device, the IP
 
-...
+    If we don't clear ... when disabling ...?
 
-> > > +config PRESTERA_PCI
-> > > +       tristate "PCI interface driver for Marvell Prestera Switch ASICs family"
-> > > +       depends on PCI && HAS_IOMEM && PRESTERA
-> >
-> > > +       default m
-> >
-> > Even if I have CONFIG_PRESTERA=y, why as a user I must have this as a module?
-> > If it's a crucial feature, shouldn't it be rather
-> >   default CONFIG_PRESTERA
-> > ?
->
-> The firmware image should be located on rootfs, and in case the rootfs
-> should be mounted later the pci driver can't pick this up when
-> statically compiled so I left it as 'm' by default.
+> will fail to enter sleep mode when suspend.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+[...]
 
-We have for a long time to catch firmware blobs from initrd (initramfs).
-default m is very unusual.
-
-...
-
-> > > +#define PRESTERA_FW_PATH \
-> > > +       "mrvl/prestera/mvsw_prestera_fw-v" \
-> > > +       __stringify(PRESTERA_SUPP_FW_MAJ_VER) \
-> > > +       "." __stringify(PRESTERA_SUPP_FW_MIN_VER) ".img"
-> >
-> > Wouldn't it be better to see this in the C code?
->
-> I have no strong opinion on this, but looks like macro is enough for
-> this statically defined versioning.
-
-The problem is that you have to bounce your editor to C code then to
-macro then to another macro...
-(in case you are looking for the code responsible for that)
-In many drivers I saw either it's one static line (without those
-__stringify(), etc) or done in C code dynamically near to
-request_firmware() call.
-
-Maybe you may replace __stringify by explicit characters / strings and
-comment how the name was constructed?
-
-#define FW_NAME "patch/to/it/fileX.Y.img"
-
-...
-
-> > > +static void prestera_pci_copy_to(u8 __iomem *dst, u8 *src, size_t len)
-> > > +{
-> > > +       u32 __iomem *dst32 = (u32 __iomem *)dst;
-> > > +       u32 *src32 = (u32 *)src;
-> > > +       int i;
-> > > +
-> > > +       for (i = 0; i < (len / 4); dst32++, src32++, i++)
-> > > +               writel_relaxed(*src32, dst32);
-> > > +}
-> > > +
-> > > +static void prestera_pci_copy_from(u8 *dst, u8 __iomem *src, size_t len)
-> > > +{
-> > > +       u32 __iomem *src32 = (u32 __iomem *)src;
-> > > +       u32 *dst32 = (u32 *)dst;
-> > > +       int i;
-> > > +
-> > > +       for (i = 0; i < (len / 4); dst32++, src32++, i++)
-> > > +               *dst32 = readl_relaxed(src32);
-> > > +}
-> >
-> > NIH of memcpy_fromio() / memcpy_toio() ?
-> >
-> I am not sure if there will be no issue with < 4 bytes transactions over
-> PCI bus. I need to check it.
-
-I didn't get it. You always do 4 byte chunks, so, supply aligned
-length to memcpy and you will have the same.
-
-...
-
-> > > +static int prestera_fw_rev_check(struct prestera_fw *fw)
-> > > +{
-> > > +       struct prestera_fw_rev *rev = &fw->dev.fw_rev;
-> > > +       u16 maj_supp = PRESTERA_SUPP_FW_MAJ_VER;
-> > > +       u16 min_supp = PRESTERA_SUPP_FW_MIN_VER;
-> > > +
-> >
-> > > +       if (rev->maj == maj_supp && rev->min >= min_supp)
-> > > +               return 0;
-> >
-> > Why not traditional pattern
-> >
-> > if (err) {
-> >  ...
-> > }
->
-> At least for me it looks simpler when to check which version is
-> correct.
-
-OK.
-
-> > ...
-> > return 0;
-> >
-> > ?
-> >
-> > > +       dev_err(fw->dev.dev, "Driver supports FW version only '%u.%u.x'",
-> > > +               PRESTERA_SUPP_FW_MAJ_VER, PRESTERA_SUPP_FW_MIN_VER);
-> > > +
-> > > +       return -EINVAL;
-> > > +}
-
-...
-
-> Thanks Andy for the comments, especially for pcim_ helpers.
-
-You are welcome!
-
--- 
-With Best Regards,
-Andy Shevchenko
+MBR, Sergei
