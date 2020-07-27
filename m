@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB67C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5E6C4345F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDDBE2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54ECF2075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:46:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="QrlISjyd"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="VHz399uz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732131AbgG0Sp5 (ORCPT
+        id S1732244AbgG0SqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:45:57 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:48466 "EHLO
+        Mon, 27 Jul 2020 14:46:13 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:19346 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732109AbgG0Spy (ORCPT
+        by vger.kernel.org with ESMTP id S1732152AbgG0Sp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 14:45:54 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RIjgAR027137
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 11:45:54 -0700
+        Mon, 27 Jul 2020 14:45:59 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RIjrlC021092
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 11:45:58 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=O7wK7OpoLwEqV4eCalhKTu3CREJohf19fBj1cE/GZUA=;
- b=QrlISjydqMZ0eUSUQZzk3B3fm+lQrEBsE2S0AbQUxKNAAsCRMA2vI3aqRUELbKfnvnyq
- WKfKMz22YzXbFwhkI+KV6Dk1HXelDuFCnq4xCABgjAWpvqyE7MCVYWFxbNYsP0CjHJp3
- IeKkkkxUr+yI41qgONI2dx+Yy6cQnUZ4keU= 
+ bh=5A7xQ8yUotOKRnfcZBEJdE63ptjXDxYZrHs9LNGABV8=;
+ b=VHz399uzvaBVTQ6ul97MJYCN/ANduu3k4+eFX3jHd/rUkt08oF1eBA6aK1kAOLD9JlDn
+ MRmYBc8GGC8kH1b0+3zZPOOG6lX8krWu+OqWp96/EOOYST2+iHPAkvkGJK363d509l4p
+ LyLR6624uGMbKFzHdVl25F1SFYIaz/g1d6g= 
 Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 32h50vnsxu-15
+        by mx0a-00082601.pphosted.com with ESMTP id 32h4ed5u84-9
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 11:45:54 -0700
-Received: from intmgw004.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 11:45:58 -0700
+Received: from intmgw002.41.prn1.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 27 Jul 2020 11:45:22 -0700
+ 15.1.1979.3; Mon, 27 Jul 2020 11:45:27 -0700
 Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
-        id F2C1F1DAFE9B; Mon, 27 Jul 2020 11:45:10 -0700 (PDT)
+        id 938651DAFE75; Mon, 27 Jul 2020 11:45:10 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
@@ -51,9 +51,9 @@ CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: prn0c01
-Subject: [PATCH bpf-next v2 21/35] bpf: eliminate rlimit-based memory accounting for reuseport_array maps
-Date:   Mon, 27 Jul 2020 11:44:52 -0700
-Message-ID: <20200727184506.2279656-22-guro@fb.com>
+Subject: [PATCH bpf-next v2 02/35] bpf: memcg-based memory accounting for bpf maps
+Date:   Mon, 27 Jul 2020 11:44:33 -0700
+Message-ID: <20200727184506.2279656-3-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200727184506.2279656-1-guro@fb.com>
 References: <20200727184506.2279656-1-guro@fb.com>
@@ -63,63 +63,43 @@ X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-27_13:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=38
- phishscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 impostorscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=797 priorityscore=1501 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007270127
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
+ priorityscore=1501 spamscore=0 lowpriorityscore=0 impostorscore=0
+ adultscore=0 bulkscore=0 malwarescore=0 phishscore=0 clxscore=1015
+ suspectscore=13 mlxlogscore=728 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007270127
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not use rlimit-based memory accounting for reuseport_array maps.
-It has been replaced with the memcg-based memory accounting.
+This patch enables memcg-based memory accounting for memory allocated
+by __bpf_map_area_alloc(), which is used by most map types for
+large allocations.
+
+Following patches in the series will refine the accounting for
+some map types.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 ---
- kernel/bpf/reuseport_array.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ kernel/bpf/syscall.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/reuseport_array.c b/kernel/bpf/reuseport_array.c
-index 90b29c5b1da7..9d0161fdfec7 100644
---- a/kernel/bpf/reuseport_array.c
-+++ b/kernel/bpf/reuseport_array.c
-@@ -150,9 +150,8 @@ static void reuseport_array_free(struct bpf_map *map)
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index ee290b1f2d9e..501b2c071d7b 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -275,7 +275,7 @@ static void *__bpf_map_area_alloc(u64 size, int numa_=
+node, bool mmapable)
+ 	 * __GFP_RETRY_MAYFAIL to avoid such situations.
+ 	 */
 =20
- static struct bpf_map *reuseport_array_alloc(union bpf_attr *attr)
- {
--	int err, numa_node =3D bpf_map_attr_numa_node(attr);
-+	int numa_node =3D bpf_map_attr_numa_node(attr);
- 	struct reuseport_array *array;
--	struct bpf_map_memory mem;
- 	u64 array_size;
-=20
- 	if (!bpf_capable())
-@@ -161,20 +160,13 @@ static struct bpf_map *reuseport_array_alloc(union =
-bpf_attr *attr)
- 	array_size =3D sizeof(*array);
- 	array_size +=3D (u64)attr->max_entries * sizeof(struct sock *);
-=20
--	err =3D bpf_map_charge_init(&mem, array_size);
--	if (err)
--		return ERR_PTR(err);
--
- 	/* allocate all map elements and zero-initialize them */
- 	array =3D bpf_map_area_alloc(array_size, numa_node);
--	if (!array) {
--		bpf_map_charge_finish(&mem);
-+	if (!array)
- 		return ERR_PTR(-ENOMEM);
--	}
-=20
- 	/* copy mandatory map attributes */
- 	bpf_map_init_from_attr(&array->map, attr);
--	bpf_map_charge_move(&array->map.memory, &mem);
-=20
- 	return &array->map;
- }
+-	const gfp_t gfp =3D __GFP_NOWARN | __GFP_ZERO;
++	const gfp_t gfp =3D __GFP_NOWARN | __GFP_ZERO | __GFP_ACCOUNT;
+ 	unsigned int flags =3D 0;
+ 	unsigned long align =3D 1;
+ 	void *area;
 --=20
 2.26.2
 
