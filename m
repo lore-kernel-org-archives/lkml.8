@@ -2,135 +2,98 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27E4C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7961C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8243420719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DAA2078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 19:18:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="b9Xi8EPK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="R2jjdbqK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgG0TSp (ORCPT
+        id S1728810AbgG0TS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 15:18:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55332 "EHLO
+        Mon, 27 Jul 2020 15:18:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728107AbgG0TSl (ORCPT
+        with ESMTP id S1728707AbgG0TS5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 15:18:41 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 965D9C0619D7
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:18:40 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id c80so15129682wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:18:40 -0700 (PDT)
+        Mon, 27 Jul 2020 15:18:57 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 137C9C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:18:57 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x9so8653036plr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 12:18:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=AD/pgeUaAWIctoPbHAQcCg8O5lgu8H5ssjeAH3MlNAE=;
-        b=b9Xi8EPKDhPyvptqzRh9TEyHmMfd/reQxGu/+VvNXDLeNkn94+A5XsLMU4sZGwGnYc
-         VQ7cN6oppIHp7Sb9aOnqtUx8KbqUL2t0VNncf/TBpGWpM0VcUa7jrep3fZu9VV7ljCF3
-         Wx50YZGH7fXe4vbZqShyP7XqktwHUoOhIiKJk=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=KYcxnJiJj69tRTiEAadwyrdtR22boWUN2z9HB/fXNUA=;
+        b=R2jjdbqKOeMyZXLB5gCmo1dIyD9OXYKPAw+app2x6HmA8T10ZwHHuGiPJj3zRmg6O7
+         1Kh9JSmdZ1lQWiFdA9qmTn0+xQjjDc5+40Vwtt44N8cymoskiaKIubLi364r/FxULAYZ
+         d0cyj50JO7V7RoocGGEctm4t/IqWYi/7QEc647x1JKyp99qd9q5Vdzz9vaS0ICmd3Gni
+         TVW7BrlR7HduEobquyFjGm0jjX1nZdfZUuKAeZ/OLCrRhocMGZMdopallxdVUWyPa4L3
+         XrMnPwSV2+3bsPyAPrhLet0db6mtxzHtCuvWmHQa8tlfiQUBdGFh/CpHQGL7MYakiAy5
+         Qopg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=AD/pgeUaAWIctoPbHAQcCg8O5lgu8H5ssjeAH3MlNAE=;
-        b=PML67doGSx/JozIrP4w83sohv9fr3dWm9tLB2fLW0YsSsQQEPFYm6Hwdww4n5Ozmkf
-         qodoDVZJrJTk8z7zaB3n2kL7VE27tYimobLI1V2pKZo4e0uIqZvG53ui/cHpZYodzWRy
-         /RF09Xys05hy6o1OhmLxSNZqr+wtXgYlW7t42w6SxOCqkc7+nwnnA4s/fdGBfiK+1aGd
-         jPE/Lk7x+O7Vbs3PiAk2x6lAV7+v74JGTUtbU7KagxfzT+YgJoKaV6h4Bagw5thudshA
-         vbeRDEvgDKUUxtKgb/hU6EnmSq9xG3TOQ7Kr+tzEx+eflHMGToMSirbs+G59lzABWTq8
-         JLBw==
-X-Gm-Message-State: AOAM532nA6uW6Ht47z9L+pwnnkbCshGLw/iN1OXqyN5QPsbNGhjKQeSM
-        N5H8qa2BqBprMbHhAYCEOmLZTV+0tMeojFQkOBkEhPUtRziOBq2zD7nqjiL6eK5W49vXLPTbNhr
-        m261k08By/AMFj3EhP9Rphq33JeWGT9B7DJG6IyHaXSbWOtv4dKxs/nbz2SMynuGDQZPhBjev/h
-        Yu3RnHfgEu
-X-Google-Smtp-Source: ABdhPJw7IDXDgUVkm/BmOYhovEDy4epUcWGU5dwgTcbUsYWhYOQSjfwYb9HbZEpCRr1sm9NvxhoSPA==
-X-Received: by 2002:a1c:7fd3:: with SMTP id a202mr607949wmd.67.1595877518878;
-        Mon, 27 Jul 2020 12:18:38 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id p11sm13730030wre.32.2020.07.27.12.18.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 12:18:38 -0700 (PDT)
-Subject: Re: [PATCH v3 00/19] Introduce partial kernel_read_file() support
-To:     Mimi Zohar <zohar@kernel.org>, Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200724213640.389191-1-keescook@chromium.org>
- <1595848589.4841.78.camel@kernel.org>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <1a46db6f-1c8a-3509-6371-7c77999833f2@broadcom.com>
-Date:   Mon, 27 Jul 2020 12:18:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KYcxnJiJj69tRTiEAadwyrdtR22boWUN2z9HB/fXNUA=;
+        b=iZz6gyU8KlgdJpPGj4cvDz6QevDmHFaYEWrGztoBT+WHcXzsZZepWms04DB59o6KsE
+         rWZUhzIBBO0VP+I52y7gIEsDyN6rtMntqIPFdGKZSOKIoKq3IayAI5jKFS0g6KynlxSu
+         Gu6CPoRY1z0hfKo7GmeGbl3b29hYgZ0qx7fMJnei81vN8v2mnq1BKgL9/zwxcHK8yvlb
+         Ncgm+sxhsl+5PukDWxeyFdnIk58Qu9bPtW1oSY9pWOwwCZXRfc/eNxqjoByyim6Oacvc
+         OjNz92WW/FrUKxnwK+PY7yr6wmNMieiRK1w6BAQlHQhJrCtwqRlSu+yThHrRyi81m011
+         uBtA==
+X-Gm-Message-State: AOAM530bv8SpSv83TWQj7xSlqet/1EcRbZxCvZrT8gDrA3rPSihmdN1g
+        Xk2OnEDvv6Qyc8XyoLgTEZTQfg==
+X-Google-Smtp-Source: ABdhPJz2jqCiQQNL40op8DOdoDG7P0HFj98+NtEUkvD4/UOy/rpmH+LlNHdciSjH2PKrVot5+x/gRg==
+X-Received: by 2002:a17:902:6bc2:: with SMTP id m2mr19056144plt.119.1595877536516;
+        Mon, 27 Jul 2020 12:18:56 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id o10sm345581pjo.55.2020.07.27.12.18.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 12:18:55 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] arm64: dts: meson: fix mmc0 tuning error on Khadas VIM3
+Date:   Mon, 27 Jul 2020 12:18:53 -0700
+Message-Id: <159587752409.20735.8859718228289623070.b4-ty@baylibre.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200721015950.11816-1-christianshewitt@gmail.com>
+References: <20200721015950.11816-1-christianshewitt@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1595848589.4841.78.camel@kernel.org>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-CA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mimi/Kees,
+On Tue, 21 Jul 2020 01:59:50 +0000, Christian Hewitt wrote:
+> Similar to other G12B devices using the W400 dtsi, I see reports of mmc0
+> tuning errors on VIM3 after a few hours uptime:
+> 
+> [12483.917391] mmc0: tuning execution failed: -5
+> [30535.551221] mmc0: tuning execution failed: -5
+> [35359.953671] mmc0: tuning execution failed: -5
+> [35561.875332] mmc0: tuning execution failed: -5
+> [61733.348709] mmc0: tuning execution failed: -5
+> 
+> [...]
 
-On 2020-07-27 4:16 a.m., Mimi Zohar wrote:
-> On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
->> v3:
->> - add reviews/acks
->> - add "IMA: Add support for file reads without contents" patch
->> - trim CC list, in case that's why vger ignored v2
->> v2: [missing from lkml archives! (CC list too long?) repeating changes here]
->> - fix issues in firmware test suite
->> - add firmware partial read patches
->> - various bug fixes/cleanups
->> v1: https://lore.kernel.org/lkml/20200717174309.1164575-1-keescook@chromium.org/
->>
->> Hi,
->>
->> Here's my tree for adding partial read support in kernel_read_file(),
->> which fixes a number of issues along the way. It's got Scott's firmware
->> and IMA patches ported and everything tests cleanly for me (even with
->> CONFIG_IMA_APPRAISE=y).
-> Thanks, Kees.  Other than my comments on the new
-> security_kernel_post_load_data() hook, the patch set is really nice.
->
-> In addition to compiling with CONFIG_IMA_APPRAISE enabled, have you
-> booted the kernel with the ima_policy=tcb?  The tcb policy will add
-> measurements to the IMA measurement list and extend the TPM with the
-> file or buffer data digest.  Are you seeing the firmware measurements,
-> in particular the partial read measurement?
-I booted the kernel with ima_policy=tcb.
+Applied, thanks!
 
-Unfortunately after enabling the following, fw_run_tests.sh does not run.
+[1/1] arm64: dts: meson: fix mmc0 tuning error on Khadas VIM3
+      commit: f1bb924e8f5b50752a80fa5b48c43003680a7b64
 
-mkdir /sys/kernel/security
-mount -t securityfs securityfs /sys/kernel/security
-echo "measure func=FIRMWARE_CHECK" > /sys/kernel/security/ima/policy
-echo "appraise func=FIRMWARE_CHECK appraise_type=imasig" > /sys/kernel/security/ima/policy
-./fw_run_tests.sh
-
-[ 1296.258052] test_firmware: loading 'test-firmware.bin'
-[ 1296.263903] misc test_firmware: loading /lib/firmware/test-firmware.bin failed with error -13
-[ 1296.263905] audit: type=1800 audit(1595905754.266:9): pid=5696 uid=0 auid=4294967295 ses=4294967295 subj=kernel op=appraise_data cause=IMA-signature-required comm="fw_namespace" name="/lib/firmware/test-firmware.bin" dev="tmpfs" ino=4592 res=0
-[ 1296.297085] misc test_firmware: Direct firmware load for test-firmware.bin failed with error -13
-[ 1296.305947] test_firmware: load of 'test-firmware.bin' failed: -13
-
->
-> thanks,
->
-> Mimi
-
+Best regards,
+-- 
+Kevin Hilman <khilman@baylibre.com>
