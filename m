@@ -2,106 +2,104 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CB1C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CC4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C29C205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a0e1sqnj"
+	by mail.kernel.org (Postfix) with ESMTP id B83C72072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:11:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595848288;
+	bh=5cjDhcqA22LmKpF1+epE71V5q45KFj1IeAEV+bx8KEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wrf6VDe4MFkcKuIUbX6CWFfbSxYppIjQltVqXwM5HOnQdMWvp6fBZVc2rVreAChT5
+	 J1pi9EmermBl0WEcP/bkNYMDiiKanB84ve6K9c3dG1/bVULWC3EwtxGk7fJOco49dK
+	 5lSebk0zur8/pL1AWqc16XZ6Z+25h6ujTLTo2TJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgG0LKE (ORCPT
+        id S1726957AbgG0LL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:10:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbgG0LKD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:10:03 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80EF8C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 04:10:02 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a15so14439442wrh.10
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 04:10:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=4QlGeWxo0Xv8FxeXIA+s7ap15MeXV/R9+qJZyp1gslE=;
-        b=a0e1sqnjEvJJORN4Xt4p1chaxgO+8UTCbaEZtPivfyVTRm/BD2AtWWyrbAjhsb0is7
-         jIZnBzh2A1JG99q/LTWvmgg1ODeedNoZsi84jGOu/I/2x+N7hINg2ZifvhO65QL5kSdv
-         IidVugE6wafCJwvTp4qjX14ZtqeQIauED5daNKf2W6H0p/zNTiJGXxYH7zRc7ZzxQI3c
-         t5olUi+mCkxi3XK4FTPWRd7vZFVCdoDPj34l2ANcAdPILsdkSREawsvk1dyG1iKAD+o/
-         BScu2NjSPMTJf/4XHkNnjetgo8JZpXi9yvwIdFw7CPD1utz5GUD6255ef7i57sovUTxp
-         DjIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=4QlGeWxo0Xv8FxeXIA+s7ap15MeXV/R9+qJZyp1gslE=;
-        b=rf8VAMA8Ybi8QaHBUrBWkFIqqn0MIm7rkGtD25pOupJnzCNZTlS6+fsx12AJf4bdxO
-         dsExMefpzX61e7XnQ8oHP6oOdolQA2nIhm0SxxSbPUvt4x2WfGMmbSBjpQznfYzlmSx7
-         BJgTbe1QK/Po7V2FC24zo8lBjH1NMeEPMwOhD/vniRmMNkBfUWh7jr6lFaBuQ4EdLxMa
-         dOjTzJPcLPUhjxgvtNITXUcqIsSMyQQo/bCrKZ3TBHc5pgC1aO0j4JJHn6FXQGyETsvK
-         i0E8UVbxo0O6Mm1mGPGwTsMvkB42GEuIt6TTfQDoKdeoP1ZlYb5BW9AZiPwi9P++QWBO
-         yQkQ==
-X-Gm-Message-State: AOAM533QxHhHm/KdyIdkbBXw1Kjh8Ax06r6rVd8pr6AOmgyLbEBgZOFV
-        /8V7sGdNMj5gy6AezSmiLR3cnA==
-X-Google-Smtp-Source: ABdhPJwZjwfADIDphEzPbM6Si87VVr3zoeXBhJhW9mBSSpU58kEItPZXRD4ItNtxV8lX2P5ghRqvxA==
-X-Received: by 2002:adf:dfd0:: with SMTP id q16mr22122029wrn.60.1595848201221;
-        Mon, 27 Jul 2020 04:10:01 -0700 (PDT)
-Received: from dell ([2.27.167.73])
-        by smtp.gmail.com with ESMTPSA id 130sm13039446wme.26.2020.07.27.04.10.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 04:10:00 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 12:09:58 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, benjamin.chao@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: Re: [PATCH v2 2/9] mfd: mt6360: Remove redundant brackets around raw
- numbers
-Message-ID: <20200727110958.GI1850026@dell>
-References: <1594983811-25908-1-git-send-email-gene.chen.richtek@gmail.com>
- <1594983811-25908-3-git-send-email-gene.chen.richtek@gmail.com>
+        Mon, 27 Jul 2020 07:11:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbgG0LL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:11:27 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC4B4205CB;
+        Mon, 27 Jul 2020 11:11:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595848286;
+        bh=5cjDhcqA22LmKpF1+epE71V5q45KFj1IeAEV+bx8KEA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zwl1JoHUq8qXqIEHxk8e/QYK5paM+jXPuNbIsWBOMjuQkxkP20nHpBR+c7eMNs40n
+         8KEHAM7jD/QrC6dtSdorxbp1lPzjMRQARN26ihMDxfTED12Y308emVDGYmd0DHjM/P
+         4Z8bXbfMyJ1UcnUHuUL2S645FBnlTAY7cstJsGlA=
+Date:   Mon, 27 Jul 2020 12:11:09 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Clark Wang <xiaoning.wang@nxp.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 1/4] spi: lpspi: Fix kernel warning dump when probe
+ fail after calling spi_register
+Message-ID: <20200727111109.GB6275@sirena.org.uk>
+References: <20200727031448.31661-1-xiaoning.wang@nxp.com>
+ <20200727031448.31661-2-xiaoning.wang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XOIedfhf+7KOe/yw"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1594983811-25908-3-git-send-email-gene.chen.richtek@gmail.com>
+In-Reply-To: <20200727031448.31661-2-xiaoning.wang@nxp.com>
+X-Cookie: Doing gets it done.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 Jul 2020, Gene Chen wrote:
 
-> From: Gene Chen <gene_chen@richtek.com>
-> 
-> Remove redundant brackets around raw numbers.
+--XOIedfhf+7KOe/yw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-They're not doing any harm, but I guess it's okay.
+On Mon, Jul 27, 2020 at 11:14:46AM +0800, Clark Wang wrote:
+> Calling devm_spi_register_controller() too early will cause problem.
+> When probe failed occurs after calling devm_spi_register_controller(),
+> the call of spi_controller_put() will trigger the following warning dump.
+>=20
+> [    2.092138] ------------[ cut here ]------------
+> [    2.096876] kernfs: can not remove 'uevent', no directory
+> [    2.102440] WARNING: CPU: 0 PID: 181 at fs/kernfs/dir.c:1503 kernfs_re=
+move_by_name_ns+0xa0/0xb0
+> [    2.111142] Modules linked in:
+> [    2.114207] CPU: 0 PID: 181 Comm: kworker/0:7 Not tainted 5.4.24-05024=
+-g775c6e8a738c-dirty #1314
+> [    2.122991] Hardware name: Freescale i.MX8DXL EVK (DT)
+> [    2.128141] Workqueue: events deferred_probe_work_func
 
-> Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> ---
->  drivers/mfd/mt6360-core.c  | 172 +++++++++----------
->  include/linux/mfd/mt6360.h | 410 ++++++++++++++++++++++-----------------------
->  2 files changed, 291 insertions(+), 291 deletions(-)
+Please think hard before including complete backtraces in upstream
+reports, they are very large and contain almost no useful information
+relative to their size so often obscure the relevant content in your
+message. If part of the backtrace is usefully illustrative (it often is
+for search engines if nothing else) then it's usually better to pull out
+the relevant sections.
 
-For my own reference (apply this as-is to your sign-off block):
+--XOIedfhf+7KOe/yw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8etkwACgkQJNaLcl1U
+h9By2AgAgnTCFAi+3XM31B5xy1B70aDoOYf1tRMaXEQR97aYIRF+ihcgFzNIsmrH
+E3lMnfNkmIdmCHpJpRyfgdH+zIMbya8rvWnQwiO60Ar+weSi6cB9cuRY/OvpKDQp
+oz/4iFuOMzLB/+d8OABUsT1NlxvJGZR55VxQyCtWLXWCl47Qw53g5BS5iHSK0vSt
+Qnlh/I+gGGdZ3AV/d6F5LlG0/ogsM0GW9qL06b5MBKHje93LJJao6YOczrYN2RIL
+9Zt5nJ3a5BqgduNsas5XrxWjQ3QV00AIPwdKXziIhxMcQBmGv3r3dYpDQELHU5nr
+WxgW50uDCZtetlfOcgTBIt4UREDmgQ==
+=umFf
+-----END PGP SIGNATURE-----
+
+--XOIedfhf+7KOe/yw--
