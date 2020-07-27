@@ -2,147 +2,199 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B7AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6634C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8FAC2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98892078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:19:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgG0LTK (ORCPT
+        id S1728193AbgG0LT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:19:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61266 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728075AbgG0LTJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:19:09 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RB2mlk096475;
-        Mon, 27 Jul 2020 07:18:53 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32hs8ggh65-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 07:18:52 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06RB5OBF105293;
-        Mon, 27 Jul 2020 07:18:52 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32hs8ggh5j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 07:18:52 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06RBElkY013652;
-        Mon, 27 Jul 2020 11:18:50 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma05fra.de.ibm.com with ESMTP id 32gcqk1a2m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jul 2020 11:18:50 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06RBImR532702754
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 11:18:48 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A7B25204F;
-        Mon, 27 Jul 2020 11:18:48 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 0489F5204E;
-        Mon, 27 Jul 2020 11:18:45 +0000 (GMT)
-Date:   Mon, 27 Jul 2020 16:48:45 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>
-Subject: Re: [PATCH v3 09/10] powerpc/smp: Create coregroup domain
-Message-ID: <20200727111845.GA11819@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200723085116.4731-1-srikar@linux.vnet.ibm.com>
- <20200723085116.4731-10-srikar@linux.vnet.ibm.com>
- <20200727043941.GA18303@in.ibm.com>
+        Mon, 27 Jul 2020 07:19:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:42188 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbgG0LT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:19:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEC9E30E;
+        Mon, 27 Jul 2020 04:19:26 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 292EC3F66E;
+        Mon, 27 Jul 2020 04:19:25 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 12:18:52 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Wei Hu <weh@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, robh@kernel.org, bhelgaas@google.com,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, decui@microsoft.com,
+        mikelley@microsoft.com
+Subject: Re: [PATCH v4] PCI: hv: Fix a timing issue which causes kdump to
+ fail occasionally
+Message-ID: <20200727111852.GA14239@e121166-lin.cambridge.arm.com>
+References: <20200727071731.18516-1-weh@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200727043941.GA18303@in.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-27_06:2020-07-27,2020-07-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015
- phishscore=0 spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007270078
+In-Reply-To: <20200727071731.18516-1-weh@microsoft.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Gautham R Shenoy <ego@linux.vnet.ibm.com> [2020-07-27 10:09:41]:
+On Mon, Jul 27, 2020 at 03:17:31PM +0800, Wei Hu wrote:
+> Kdump could fail sometime on Hyper-V guest over Accelerated Network
+> interface. This is because the retry in hv_pci_enter_d0() releases
+> child device strurctures in hv_pci_bus_exit(). Although there is
+> a second asynchronous device relations message sending from the host,
+> if this message arrives guest after hv_send_resource_allocated() is
+> called, the retry would fail.
+> 
+> Fix the problem by moving retry to hv_pci_probe() and starting retry
+> from hv_pci_query_relations() call.  This will cause a device relations
+> message to arrive guest synchronously.  The guest would be able to
+> rebuild the child device structures before calling
+> hv_send_resource_allocated().
+> 
+> This problem only happens on Accelerated Network or SRIOV devices as
+> only such devices currently are attached under vmbus PCI bridge.
+> 
+> Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid device state")
+> Signed-off-by: Wei Hu <weh@microsoft.com>
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>     v2: Adding Fixes tag according to Michael Kelley's review comment.
+>     v3: Fix couple typos and reword commit message to make it clearer.
+>     Thanks the comments from Bjorn Helgaas.
+>     v4: Adding more  problem descritpions in the commit message
+>     and code upon request from Lorenze Pieralisi.
+> 
+>  drivers/pci/controller/pci-hyperv.c | 71 +++++++++++++++--------------
+>  1 file changed, 37 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
 
-> > 
-> >  static void fixup_topology(void)
-> >  {
-> > +	if (!has_coregroup_support())
-> > +		powerpc_topology[mc_idx].mask = cpu_bigcore_mask;
-> > +
-> >  	if (shared_caches) {
-> >  		pr_info("Using shared cache scheduler topology\n");
-> >  		powerpc_topology[bigcore_idx].mask = shared_cache_mask;
-> 
-> 
-> Suppose we consider a topology which does not have coregroup_support,
-> but has shared_caches. In that case, we would want our coregroup
-> domain to degenerate.
-> 
-> From the above code, after the fixup, our topology will look as
-> follows:
-> 
-> static struct sched_domain_topology_level powerpc_topology[] = {
->   	{ cpu_smt_mask, powerpc_smt_flags, SD_INIT_NAME(SMT) },
->  	{ shared_cache_mask, powerpc_shared_cache_flags, SD_INIT_NAME(CACHE) },
-> 	{ cpu_bigcore_mask, SD_INIT_NAME(MC) },
->   	{ cpu_cpu_mask, SD_INIT_NAME(DIE) },
->   	{ NULL, },
-> 
-> So, in this case, the core-group domain (identified by MC) will
-> degenerate only if cpu_bigcore_mask() and shared_cache_mask() return
-> the same value. This may work for existing platforms, because either
-> shared_caches don't exist, or when they do, cpu_bigcore_mask and
-> shared_cache_mask return the same set of CPUs. But this may or may not
-> continue to hold good in the future.
-> 
-> Furthermore, if that is always going to be the case that in the
-> presence of shared_caches the cpu_bigcore_mask() and
-> shared_cache_mask() will always be the same, then why even define two
-> separate masks and not just have only the cpu_bigcore_mask() ?
-> 
+I edited commit log and a comment in the code to fix a typo and pushed
+out to pci/hv.
 
-Your two statements are contradicting. In the former you are saying we
-should be future proof and in the latter, you are asking for why add if they
-are both going to be the same.
+Thanks,
+Lorenzo
 
-> The correct way would be to set the powerpc_topology[mc_idx].mask to
-> powerpc_topology[bigcore_idx].mask *after* we have fixedup the
-> big_core level.
-
-The reason I modified it in v4 is not for degeneration or for future case
-but for the current PowerNV/SMT 4 case. I could have as well detected the
-the same and modified bigcore but thought fixup at one place would be
-better.
-
--- 
-Thanks and Regards
-Srikar Dronamraju
+> index bf40ff09c99d..d1758986fbc9 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -2759,10 +2759,8 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  	struct pci_bus_d0_entry *d0_entry;
+>  	struct hv_pci_compl comp_pkt;
+>  	struct pci_packet *pkt;
+> -	bool retry = true;
+>  	int ret;
+>  
+> -enter_d0_retry:
+>  	/*
+>  	 * Tell the host that the bus is ready to use, and moved into the
+>  	 * powered-on state.  This includes telling the host which region
+> @@ -2789,38 +2787,6 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+>  	if (ret)
+>  		goto exit;
+>  
+> -	/*
+> -	 * In certain case (Kdump) the pci device of interest was
+> -	 * not cleanly shut down and resource is still held on host
+> -	 * side, the host could return invalid device status.
+> -	 * We need to explicitly request host to release the resource
+> -	 * and try to enter D0 again.
+> -	 */
+> -	if (comp_pkt.completion_status < 0 && retry) {
+> -		retry = false;
+> -
+> -		dev_err(&hdev->device, "Retrying D0 Entry\n");
+> -
+> -		/*
+> -		 * Hv_pci_bus_exit() calls hv_send_resource_released()
+> -		 * to free up resources of its child devices.
+> -		 * In the kdump kernel we need to set the
+> -		 * wslot_res_allocated to 255 so it scans all child
+> -		 * devices to release resources allocated in the
+> -		 * normal kernel before panic happened.
+> -		 */
+> -		hbus->wslot_res_allocated = 255;
+> -
+> -		ret = hv_pci_bus_exit(hdev, true);
+> -
+> -		if (ret == 0) {
+> -			kfree(pkt);
+> -			goto enter_d0_retry;
+> -		}
+> -		dev_err(&hdev->device,
+> -			"Retrying D0 failed with ret %d\n", ret);
+> -	}
+> -
+>  	if (comp_pkt.completion_status < 0) {
+>  		dev_err(&hdev->device,
+>  			"PCI Pass-through VSP failed D0 Entry with status %x\n",
+> @@ -3058,6 +3024,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	struct hv_pcibus_device *hbus;
+>  	u16 dom_req, dom;
+>  	char *name;
+> +	bool enter_d0_retry = true;
+>  	int ret;
+>  
+>  	/*
+> @@ -3178,11 +3145,47 @@ static int hv_pci_probe(struct hv_device *hdev,
+>  	if (ret)
+>  		goto free_fwnode;
+>  
+> +retry:
+>  	ret = hv_pci_query_relations(hdev);
+>  	if (ret)
+>  		goto free_irq_domain;
+>  
+>  	ret = hv_pci_enter_d0(hdev);
+> +	/*
+> +	 * In certain case (Kdump) the pci device of interest was
+> +	 * not cleanly shut down and resource is still held on host
+> +	 * side, the host could return invalid device status.
+> +	 * We need to explicitly request host to release the resource
+> +	 * and try to enter D0 again.
+> +	 * Since the hv_pci_bus_exit() call releases structures
+> +	 * of all its child devices, we need to start the retry from
+> +	 * hv_pci_query_relations() call, requesting host to send
+> +	 * the synchronous child device relations message before this
+> +	 * information is needed in hv_send_resources_allocated()
+> +	 * call later .
+> +	 */
+> +	if (ret == -EPROTO && enter_d0_retry) {
+> +		enter_d0_retry = false;
+> +
+> +		dev_err(&hdev->device, "Retrying D0 Entry\n");
+> +
+> +		/*
+> +		 * Hv_pci_bus_exit() calls hv_send_resources_released()
+> +		 * to free up resources of its child devices.
+> +		 * In the kdump kernel we need to set the
+> +		 * wslot_res_allocated to 255 so it scans all child
+> +		 * devices to release resources allocated in the
+> +		 * normal kernel before panic happened.
+> +		 */
+> +		hbus->wslot_res_allocated = 255;
+> +		ret = hv_pci_bus_exit(hdev, true);
+> +
+> +		if (ret == 0)
+> +			goto retry;
+> +
+> +		dev_err(&hdev->device,
+> +			"Retrying D0 failed with ret %d\n", ret);
+> +	}
+>  	if (ret)
+>  		goto free_irq_domain;
+>  
+> -- 
+> 2.20.1
+> 
