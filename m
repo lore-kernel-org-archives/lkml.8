@@ -7,45 +7,52 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1197C433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14FDEC433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0FF920775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61F22083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859464;
-	bh=W6z7dnpeGGRWpWZZKzTCo6fCMQg2u8gAj9/OmC7aNfg=;
+	s=default; t=1595859468;
+	bh=W+aZnU5vNg9bWZKBSUOjo0QnhgEt+zvcWQNSDiewMUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rY6Y1C/e5yGwhQBdeSMVkE3XfM7OiOG0yxC7FYqxcZRdUpyChPOEwxfOc4P0324SH
-	 7M7AZAwjEfCW5dVyirhLDYn+N21r95kn3TRjlkoNZQnUnzhEI8TPX3kJvbfzVo8C28
-	 BG4vzSxxfRQA7Hmv6KoBKsMLrRl/avAq9oSw040o=
+	b=KAHWggs2SsAprDqpbwr7MFghV/bnIEL8qBRRGng2mWF3Cc/yJD8HZ2k3IxPOdKPgt
+	 O/ZmZ3rTKgjDYbba5lifDke202qhWdddC3ugM39aNh/QKk1eodaK/kBAV+ZJFewOgr
+	 kC7WRJ1hsyRFRaE0Mg/HQyLAEifb4n0Iek7sholI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731102AbgG0ORm (ORCPT
+        id S1731109AbgG0ORr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:17:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44828 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:17:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731062AbgG0OR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:17:29 -0400
+        id S1731098AbgG0ORl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:17:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA23820775;
-        Mon, 27 Jul 2020 14:17:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C82D820775;
+        Mon, 27 Jul 2020 14:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859449;
-        bh=W6z7dnpeGGRWpWZZKzTCo6fCMQg2u8gAj9/OmC7aNfg=;
+        s=default; t=1595859461;
+        bh=W+aZnU5vNg9bWZKBSUOjo0QnhgEt+zvcWQNSDiewMUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=12JX/sec1/83hIdR3/Ky8hicRe50EGLdpZuptf5Y7kkns2+xedT7g0/hKuP4rkwbq
-         Y3pOCabBLAMRG4FEWVo+VzETni8Z52jYduj+wRQ3kLa06EuQKdZCMf93njYXh01bt5
-         ixo0jmSVcAJueME/9YFhTXg5xzcdpU5L/vTT5sH0=
+        b=pmgYAUM8DXH4ZarW+6lm8tEdUDhixIgl1dqVdB1EVwsrEwIGc1dZWrUnWWPgnAix7
+         5++FvrTqmv7WDTHhuPfPbXUt/lQbvc+dl9P4+tD3xCnxUFsUIh53kAGc0jKBp/y47X
+         RmgmJ6gPqsZeM31gCfimq23Uu5Wq77uvssB4Us14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 5.4 113/138] staging: comedi: addi_apci_1500: check INSN_CONFIG_DIGITAL_TRIG shift
-Date:   Mon, 27 Jul 2020 16:05:08 +0200
-Message-Id: <20200727134931.110577599@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Eric Biggers <ebiggers@google.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 5.4 118/138] /dev/mem: Add missing memory barriers for devmem_inode
+Date:   Mon, 27 Jul 2020 16:05:13 +0200
+Message-Id: <20200727134931.348451262@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -58,72 +65,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Eric Biggers <ebiggers@google.com>
 
-commit fc846e9db67c7e808d77bf9e2ef3d49e3820ce5d upstream.
+commit b34e7e298d7a5ed76b3aa327c240c29f1ef6dd22 upstream.
 
-The `INSN_CONFIG` comedi instruction with sub-instruction code
-`INSN_CONFIG_DIGITAL_TRIG` includes a base channel in `data[3]`. This is
-used as a right shift amount for other bitmask values without being
-checked.  Shift amounts greater than or equal to 32 will result in
-undefined behavior.  Add code to deal with this, adjusting the checks
-for invalid channels so that enabled channel bits that would have been
-lost by shifting are also checked for validity.  Only channels 0 to 15
-are valid.
+WRITE_ONCE() isn't the correct way to publish a pointer to a data
+structure, since it doesn't include a write memory barrier.  Therefore
+other tasks may see that the pointer has been set but not see that the
+pointed-to memory has finished being initialized yet.  Instead a
+primitive with "release" semantics is needed.
 
-Fixes: a8c66b684efaf ("staging: comedi: addi_apci_1500: rewrite the subdevice support functions")
-Cc: <stable@vger.kernel.org> #4.0+: ef75e14a6c93: staging: comedi: verify array index is correct before using it
-Cc: <stable@vger.kernel.org> #4.0+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20200717145257.112660-5-abbotti@mev.co.uk
+Use smp_store_release() for this.
+
+The use of READ_ONCE() on the read side is still potentially correct if
+there's no control dependency, i.e. if all memory being "published" is
+transitively reachable via the pointer itself.  But this pairing is
+somewhat confusing and error-prone.  So just upgrade the read side to
+smp_load_acquire() so that it clearly pairs with smp_store_release().
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Fixes: 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims the region")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Dan Williams <dan.j.williams@intel.com>
+Link: https://lore.kernel.org/r/20200716060553.24618-1-ebiggers@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/addi_apci_1500.c |   24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ drivers/char/mem.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/staging/comedi/drivers/addi_apci_1500.c
-+++ b/drivers/staging/comedi/drivers/addi_apci_1500.c
-@@ -452,13 +452,14 @@ static int apci1500_di_cfg_trig(struct c
- 	struct apci1500_private *devpriv = dev->private;
- 	unsigned int trig = data[1];
- 	unsigned int shift = data[3];
--	unsigned int hi_mask = data[4] << shift;
--	unsigned int lo_mask = data[5] << shift;
--	unsigned int chan_mask = hi_mask | lo_mask;
--	unsigned int old_mask = (1 << shift) - 1;
-+	unsigned int hi_mask;
-+	unsigned int lo_mask;
-+	unsigned int chan_mask;
-+	unsigned int old_mask;
- 	unsigned int pm;
- 	unsigned int pt;
- 	unsigned int pp;
-+	unsigned int invalid_chan;
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -814,7 +814,8 @@ static struct inode *devmem_inode;
+ #ifdef CONFIG_IO_STRICT_DEVMEM
+ void revoke_devmem(struct resource *res)
+ {
+-	struct inode *inode = READ_ONCE(devmem_inode);
++	/* pairs with smp_store_release() in devmem_init_inode() */
++	struct inode *inode = smp_load_acquire(&devmem_inode);
  
- 	if (trig > 1) {
- 		dev_dbg(dev->class_dev,
-@@ -466,7 +467,20 @@ static int apci1500_di_cfg_trig(struct c
- 		return -EINVAL;
+ 	/*
+ 	 * Check that the initialization has completed. Losing the race
+@@ -1028,8 +1029,11 @@ static int devmem_init_inode(void)
+ 		return rc;
  	}
  
--	if (chan_mask > 0xffff) {
-+	if (shift <= 16) {
-+		hi_mask = data[4] << shift;
-+		lo_mask = data[5] << shift;
-+		old_mask = (1U << shift) - 1;
-+		invalid_chan = (data[4] | data[5]) >> (16 - shift);
-+	} else {
-+		hi_mask = 0;
-+		lo_mask = 0;
-+		old_mask = 0xffff;
-+		invalid_chan = data[4] | data[5];
-+	}
-+	chan_mask = hi_mask | lo_mask;
-+
-+	if (invalid_chan) {
- 		dev_dbg(dev->class_dev, "invalid digital trigger channel\n");
- 		return -EINVAL;
- 	}
+-	/* publish /dev/mem initialized */
+-	WRITE_ONCE(devmem_inode, inode);
++	/*
++	 * Publish /dev/mem initialized.
++	 * Pairs with smp_load_acquire() in revoke_devmem().
++	 */
++	smp_store_release(&devmem_inode, inode);
+ 
+ 	return 0;
+ }
 
 
