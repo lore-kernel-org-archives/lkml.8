@@ -2,75 +2,69 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91817C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5332075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:31:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595889068;
-	bh=qMuXFcxMzvx0mR2Biber8GcV8u6iEgvTEwiheu9UbUY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XmvAZqIKP1TyVPZi0Rxe/xFkmaGmMvvSwg6C/edckJeIAMCtK1UlIrG7Opd2GnEbf
-	 H/NXmtt94pAi9lxrcEdeYdmxYeutilhQvnmNJLX2HkmGsKqzk14DXe3CR4oy0Ue6Jq
-	 9BmBtUB/dTVFHwiOWBaX8/fR1Koe678IaoI1xjE4=
+	by mail.kernel.org (Postfix) with ESMTP id BEC0220729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgG0WbH (ORCPT
+        id S1727016AbgG0WcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 18:31:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42116 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 18:32:11 -0400
+Received: from ms.lwn.net ([45.79.88.28]:58038 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726731AbgG0WbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 18:31:06 -0400
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726171AbgG0WcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 18:32:10 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C50C20809;
-        Mon, 27 Jul 2020 22:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595889066;
-        bh=qMuXFcxMzvx0mR2Biber8GcV8u6iEgvTEwiheu9UbUY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=X4iRIY3OfKc7Jwfh6wmN9Yck32tyIDP+1owICcoXSqmzvU/wnmwLf80pzW1WG/ky8
-         CpYd2DopQ+sh6RgwBJO4mfKGdyFjxcmLYBvybwuJV5tv4ZqocbgWgk8obrWOL39H/4
-         jyjcpHLgvYSUmooeGaIR9uKc5SXOaq0D3Zy5MHIo=
-Received: by mail-lf1-f44.google.com with SMTP id y18so9871447lfh.11;
-        Mon, 27 Jul 2020 15:31:05 -0700 (PDT)
-X-Gm-Message-State: AOAM531MyayPYARMPI0RbmA11ro8oRYCXV/sHwqHJyMI72p3ZjiW0PFn
-        W6ewrATd43msSn5lZ02Gbe4CXgMhqzgu75rb5Y0=
-X-Google-Smtp-Source: ABdhPJyJSqwhde6IDem+A6PjaWq4kjB6gFsq4cNlr0EjJLJzkamOrulDaGuXrU6p2F3xlha3/Xw72kZNyQiWhIvqqUI=
-X-Received: by 2002:ac2:5683:: with SMTP id 3mr12510015lfr.69.1595889064422;
- Mon, 27 Jul 2020 15:31:04 -0700 (PDT)
+        by ms.lwn.net (Postfix) with ESMTPSA id 22D8C2E7;
+        Mon, 27 Jul 2020 22:32:10 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 16:32:08 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        trivial@kernel.org
+Subject: Re: [PATCH] Input: fix typo in function name documentation
+Message-ID: <20200727163208.4e956816@lwn.net>
+In-Reply-To: <20200724084025.GB31930@amd>
+References: <20200724084025.GB31930@amd>
+Organization: LWN.net
 MIME-Version: 1.0
-References: <20200727184506.2279656-1-guro@fb.com> <20200727184506.2279656-4-guro@fb.com>
-In-Reply-To: <20200727184506.2279656-4-guro@fb.com>
-From:   Song Liu <song@kernel.org>
-Date:   Mon, 27 Jul 2020 15:30:53 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW49Yo0WEDuNoujKtSwzKtBU3b4axuB=Z7rWTH78hrYgsQ@mail.gmail.com>
-Message-ID: <CAPhsuW49Yo0WEDuNoujKtSwzKtBU3b4axuB=Z7rWTH78hrYgsQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 03/35] bpf: refine memcg-based memory
- accounting for arraymap maps
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:23 PM Roman Gushchin <guro@fb.com> wrote:
->
-> Include percpu arrays and auxiliary data into the memcg-based memory
-> accounting.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+On Fri, 24 Jul 2020 10:40:25 +0200
+Pavel Machek <pavel@ucw.cz> wrote:
 
-Acked-by: Song Liu <songliubraving@fb.com>
+> Fix non-existing constant in documentation.
+> 
+> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+> 
+> diff --git a/Documentation/input/uinput.rst b/Documentation/input/uinput.rst
+> index b8e90b6a126c..10c62e62a0a6 100644
+> --- a/Documentation/input/uinput.rst
+> +++ b/Documentation/input/uinput.rst
+> @@ -99,7 +99,7 @@ the sake of simplicity.
+>  
+>        /*
+>         * Give userspace some time to read the events before we destroy the
+> -       * device with UI_DEV_DESTOY.
+> +       * device with UI_DEV_DESTROY.
+>         */
+>        sleep(1);
+
+Seems good...Dmitry, do you want this, or would you rather I picked it up?
+
+Thanks,
+
+jon
