@@ -2,94 +2,211 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C367C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD74C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E70F2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:44:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595853881;
-	bh=tAwVUpxvJNzfqblTALKuRFp9/teEYCCPXiqtpWnP87s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EcJEnKtMLT1phUncK1xdwQGmbQaSo6hRE0rXMUSvbN+WqUCuZEp8t4Hv7RcYIMAoY
-	 2w2quhWXTrBQPyoyL6nU+0AZ2MUAfG9K4qBdxma7EQGG782W9Ml4GqGeC4rm2mcl8S
-	 mAHodW32VagqfpBOqhCDnAIJsGfojyZJVW8Y2zCA=
+	by mail.kernel.org (Postfix) with ESMTP id E0CB62070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbgG0Mok (ORCPT
+        id S1728479AbgG0Mpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:44:40 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34651 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbgG0Mok (ORCPT
+        Mon, 27 Jul 2020 08:45:33 -0400
+Received: from smtp02.smtpout.orange.fr ([80.12.242.124]:57530 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728286AbgG0Mpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:44:40 -0400
-Received: by mail-oi1-f194.google.com with SMTP id q4so2458977oia.1;
-        Mon, 27 Jul 2020 05:44:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XF+2/WB5y2btEPphDZr/2V6HkcYCLBD66OV9ty+StNI=;
-        b=l+KECtoyY/DsNU58m1UtY/DmviqCAK9bNOqeETNcQ7f2KknlpuKoM0LSdm2OZWu+R4
-         WLY8Z4aNQbQEtxOI1JbFqB0Vk+5MchD3YCLRf0875MToau/GFT/0BfK6o6sObPsUSgh+
-         gqboQaZe4u46xyC/bOr0OVkf64yJzycmFPyCRdGtzl+qsUo8bJEOmC0fxVMuler9vIjF
-         nDZRv1tfmfZMojUn9HkdpiEcqUUwi1/vPTQfni2qks62cIRiGTVsKzIVzuF+9wLKkGzz
-         wTwpSz2bWFPD5hJ7FGj+WZoCHmifd53LTdImXuEbtgDvMdQloEZAl1PMckmDgoxagJOG
-         KJPw==
-X-Gm-Message-State: AOAM53210Z2gBkhSQ/s2sajmZHQJGkuJeH1Hcqe84fUquxMmaO7Am72K
-        mQsV+12SrBJ4aiX/TgJOKQp178pVbsGjsLKcmHrryg==
-X-Google-Smtp-Source: ABdhPJxbaCuZSlohbgTWhZLnfvKQNqvzBTick1y8KPp41KCYIjJEqwZwPKikdgbbscc6dbSyIgnknikZ9GS1teQKyeI=
-X-Received: by 2002:aca:3646:: with SMTP id d67mr6582450oia.68.1595853879110;
- Mon, 27 Jul 2020 05:44:39 -0700 (PDT)
+        Mon, 27 Jul 2020 08:45:33 -0400
+Received: from localhost.localdomain ([93.23.198.229])
+        by mwinf5d78 with ME
+        id 8ClV2300K4xT3VZ03ClWrC; Mon, 27 Jul 2020 14:45:30 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 27 Jul 2020 14:45:30 +0200
+X-ME-IP: 93.23.198.229
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     mchehab@kernel.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] media: b2c2: switch from 'pci_' to 'dma_' API
+Date:   Mon, 27 Jul 2020 14:45:27 +0200
+Message-Id: <20200727124527.52323-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200719002652.20155-1-rdunlap@infradead.org>
-In-Reply-To: <20200719002652.20155-1-rdunlap@infradead.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 27 Jul 2020 14:44:28 +0200
-Message-ID: <CAJZ5v0hw2uZanO6vduyLufh926XSHVwkKRDEs0e8XWgowwqJ4g@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: actypes.h: drop a duplicated word
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Erik Kaneda <erik.kaneda@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Robert Moore <robert.moore@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 19, 2020 at 2:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Drop the repeated word "an" in a comment.
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: linux-acpi@vger.kernel.org
-> ---
->  include/acpi/actypes.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> --- linux-next-20200717.orig/include/acpi/actypes.h
-> +++ linux-next-20200717/include/acpi/actypes.h
-> @@ -824,7 +824,7 @@ typedef u8 acpi_adr_space_type;
->   *
->   * Note: A Data Table region is a special type of operation region
->   * that has its own AML opcode. However, internally, the AML
-> - * interpreter simply creates an operation region with an an address
-> + * interpreter simply creates an operation region with an address
->   * space type of ACPI_ADR_SPACE_DATA_TABLE.
->   */
->  #define ACPI_ADR_SPACE_DATA_TABLE       (acpi_adr_space_type) 0x7E     /* Internal to ACPICA only */
+The wrappers in include/linux/pci-dma-compat.h should go away.
 
-This is an ACPICA header file, so it's better to route the change
-through the upstream.
+The patch has been generated with the coccinelle script below and has been
+hand modified to replace GFP_ with a correct flag.
+It has been compile tested.
 
-Erik, can you pick up this one, please?
+When memory is allocated in 'flexcop_dma_allocate()', GFP_KERNEL can be
+used because it is only called from the probe function (i.e.
+'flexcop_pci_probe()') and no lock is taken.
+
+The call chain is:
+   flexcop_pci_probe
+      --> flexcop_pci_dma_init
+         --> flexcop_dma_allocate
+
+@@
+@@
+-    PCI_DMA_BIDIRECTIONAL
++    DMA_BIDIRECTIONAL
+
+@@
+@@
+-    PCI_DMA_TODEVICE
++    DMA_TO_DEVICE
+
+@@
+@@
+-    PCI_DMA_FROMDEVICE
++    DMA_FROM_DEVICE
+
+@@
+@@
+-    PCI_DMA_NONE
++    DMA_NONE
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_alloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3;
+@@
+-    pci_zalloc_consistent(e1, e2, e3)
++    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_free_consistent(e1, e2, e3, e4)
++    dma_free_coherent(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_single(e1, e2, e3, e4)
++    dma_map_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_single(e1, e2, e3, e4)
++    dma_unmap_single(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4, e5;
+@@
+-    pci_map_page(e1, e2, e3, e4, e5)
++    dma_map_page(&e1->dev, e2, e3, e4, e5)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_page(e1, e2, e3, e4)
++    dma_unmap_page(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_map_sg(e1, e2, e3, e4)
++    dma_map_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_unmap_sg(e1, e2, e3, e4)
++    dma_unmap_sg(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
++    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_single_for_device(e1, e2, e3, e4)
++    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
++    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2, e3, e4;
+@@
+-    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
++    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+
+@@
+expression e1, e2;
+@@
+-    pci_dma_mapping_error(e1, e2)
++    dma_mapping_error(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_dma_mask(e1, e2)
++    dma_set_mask(&e1->dev, e2)
+
+@@
+expression e1, e2;
+@@
+-    pci_set_consistent_dma_mask(e1, e2)
++    dma_set_coherent_mask(&e1->dev, e2)
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+If needed, see post from Christoph Hellwig on the kernel-janitors ML:
+   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+---
+ drivers/media/pci/b2c2/flexcop-dma.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/pci/b2c2/flexcop-dma.c b/drivers/media/pci/b2c2/flexcop-dma.c
+index ba45b378d739..ff8058568240 100644
+--- a/drivers/media/pci/b2c2/flexcop-dma.c
++++ b/drivers/media/pci/b2c2/flexcop-dma.c
+@@ -17,7 +17,7 @@ int flexcop_dma_allocate(struct pci_dev *pdev,
+ 		return -EINVAL;
+ 	}
+ 
+-	tcpu = pci_alloc_consistent(pdev, size, &tdma);
++	tcpu = dma_alloc_coherent(&pdev->dev, size, &tdma, GFP_KERNEL);
+ 	if (tcpu != NULL) {
+ 		dma->pdev = pdev;
+ 		dma->cpu_addr0 = tcpu;
+@@ -33,8 +33,8 @@ EXPORT_SYMBOL(flexcop_dma_allocate);
+ 
+ void flexcop_dma_free(struct flexcop_dma *dma)
+ {
+-	pci_free_consistent(dma->pdev, dma->size*2,
+-			dma->cpu_addr0, dma->dma_addr0);
++	dma_free_coherent(&dma->pdev->dev, dma->size * 2, dma->cpu_addr0,
++			  dma->dma_addr0);
+ 	memset(dma, 0, sizeof(struct flexcop_dma));
+ }
+ EXPORT_SYMBOL(flexcop_dma_free);
+-- 
+2.25.1
+
