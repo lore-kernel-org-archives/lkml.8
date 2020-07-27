@@ -2,315 +2,102 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E113C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92449C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 021C520714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DFF82073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qFFqoW6u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DiaSbjFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgG0Gdy (ORCPT
+        id S1726814AbgG0GgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 02:33:54 -0400
-Received: from mail-eopbgr00076.outbound.protection.outlook.com ([40.107.0.76]:24995
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726116AbgG0Gdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 02:33:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M5tMgTTf/2Wx1HW5GqPU5hR1X/jXgF9mIvrDeqoGltIrU5FtW88iVuoPNn3H7V7dwaD/d4LO90uzzuqWEpSunEqZeeM9Y+bYnN96nH4MEVF6j4VID8zSaEXHldsq43t3MjG5e5PR0sqo5/Om3Hoa4DG5w8aZZtNY65EcrgTeyK8o3ZCLHh4wjfVj/PpAAWpL2z+XA5gD8tdxXUAlp1U1+G1FBkTAVMygaLoGJYLZ+5s6okX4Mdyxw+Bo7uA+JejvJUmqANk/VEmvfl0s8pDc2WRi78HDwIsRxrd3kLLgk98rdoQ6kILcylxfBTSBTgOrlCOph7oYJM3Ez01BZQ8SVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nnIO0jxkCchRA224xqc8uyPvVE8Pq+WmWuVDewzZK5E=;
- b=Yj+HxqOv8q4JAhRr1huFYrebzD541gdHztlpiDiSlyauk7OABvDVmys6tVxjuQBIxjJKbLlgoCAgnkmOpSfFdqi5pax7OtY+xnjdLc1L/Acvqkd+ZmnMH7S2FqiMVpRUJJniGG/rcxslwZyaaNcjhGExP1Y7pFgIBabzDFo5O0Cfh7I1SDhrnN8lTnfaxBk9UCuvhz0kFJaikta7za0RI/t3vP+qfSthG9SzigBzyJsBcBfReX5EX3bS838MxT2fdFfcNtyZuRXh+560gIwXslcZ+VD9GeZYCWraPqH2cyP/3jfw4mWFH77ziz5ZjNGyY0xHXJKtB2p96duAT4td/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nnIO0jxkCchRA224xqc8uyPvVE8Pq+WmWuVDewzZK5E=;
- b=qFFqoW6uXtpj4ju6u1or7Z5pOrz7jHVcWznVUApgpXpkEzajhR3xWJISfAZC7UTNav6/Q7WuGCuXwe30oxPh10XrkxzRXPPLIG8O4wbvatYyujSJc9kyyRy7v8CBl53HjJN3qYZvaTYlfsoiarh6oVzBD3kmF71UYSbIakFK8UI=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB5623.eurprd04.prod.outlook.com (2603:10a6:20b:a9::13)
- by AM5PR04MB3235.eurprd04.prod.outlook.com (2603:10a6:206:c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Mon, 27 Jul
- 2020 06:33:49 +0000
-Received: from AM6PR04MB5623.eurprd04.prod.outlook.com
- ([fe80::ccb9:b047:d156:2694]) by AM6PR04MB5623.eurprd04.prod.outlook.com
- ([fe80::ccb9:b047:d156:2694%5]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
- 06:33:49 +0000
-From:   Clark Wang <xiaoning.wang@nxp.com>
-To:     broonie@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com
-Cc:     linux-imx@nxp.com, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: imx: enable runtime pm support
-Date:   Mon, 27 Jul 2020 14:33:54 +0800
-Message-Id: <20200727063354.17031-1-xiaoning.wang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0112.apcprd02.prod.outlook.com
- (2603:1096:4:92::28) To AM6PR04MB5623.eurprd04.prod.outlook.com
- (2603:10a6:20b:a9::13)
+        Mon, 27 Jul 2020 02:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgG0GgI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 02:36:08 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48B33C0619D2;
+        Sun, 26 Jul 2020 23:36:07 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id o8so13028799wmh.4;
+        Sun, 26 Jul 2020 23:36:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OHzWojCxrKrB8BGpLNoziZDorIb++5odiZ1mDIW87iQ=;
+        b=DiaSbjFnxUycLjnJnZJmUUe+TraoJsVubRWcwFLVd6DIPq/emFzZtldY7w9xpsD3tJ
+         PjbHYtuVwdikhgUcoEqEpH8DQEteJZPZLshbjN6QD+Aph5WGveZ3/x2wDFrFbLiQgi8O
+         dROPdfO7vfbbLzI5FirvSCnszhsbkdV+zQSlR4rKaIf1It2BgvcaYLcfX8EDYIBHUJBn
+         l+C9eSyVc+7psUwvhIFpmZKsjrxKGxUU6YOkY3It8QRomHTTnleW0xwjPAVTN4GLn2qd
+         m+h8O6USFYkmFKaiWSP0NlwTyvV2+Gd6qeRodURlOaG0qd4qLPLXZNow7PUpEsYISHE1
+         Tm1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OHzWojCxrKrB8BGpLNoziZDorIb++5odiZ1mDIW87iQ=;
+        b=LS0E1RRjDqk4hh23URbE5nIhKYPoHKPONJWEQ77izGS+AXpCmoXW77qQ5IYk1i2QgC
+         kVZfFFX3ow/ggXnDxriVup1+vCsd5bmiH3zEMs/OdL+Oi23D0cTx+CeGz/owBYfSt6WN
+         J3jKxZoROMQMl7O0eE7+m+UfFd1vQqqmY276YCThXhVUFHRa0lZo0nz6E47YsCcXmCF7
+         ivqyiHzOvNECSGLUQ/8gk5UFjk+al+shJyaeWN74AEC4XlpfMg2BeMjsvWDM6UtB3o79
+         At1nWZdTH1EX2IRVf6sNIe5knW9OU5M2fik21S6NyXDhSU2fWAFgUxvz6DJQxhTng7nc
+         dmoQ==
+X-Gm-Message-State: AOAM530Obyxw/aR8MgEucjH9YoVFZqvlPfuAB7vkIqikJ0NmE1Sdx55/
+        N3X9TD1dhNiAEi/VWHI527/baQYz6lJiidOqIdg=
+X-Google-Smtp-Source: ABdhPJxD5LoZzgODNFDNnMfqDrfUDLsPKlOSywKXX9R2o9p68CIr3y91senhVTdcBSgtOxsfK1DUerOiuOYKtUa6NFg=
+X-Received: by 2002:a7b:cf2f:: with SMTP id m15mr18470412wmg.122.1595831766093;
+ Sun, 26 Jul 2020 23:36:06 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.71) by SG2PR02CA0112.apcprd02.prod.outlook.com (2603:1096:4:92::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21 via Frontend Transport; Mon, 27 Jul 2020 06:33:46 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.71]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2ea6346f-6ce3-4df1-1a5d-08d831f70552
-X-MS-TrafficTypeDiagnostic: AM5PR04MB3235:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM5PR04MB3235B9C12E94B5091934EE1DF3720@AM5PR04MB3235.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1201;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: z1P8HUMXJq3QTsp3PPIkPDwHrYqt3TAYrJcUbd42vR1+bf7DBjlTAedL3po1WtYk7DzXAx04Z9hiDhDaUsCl/v7ARdenRicp2E9YiXKLoWsv5oDhf7TOMgHHtKlDLoUF+NO68hvwSVqsX62CNKXsXLVVe971if5HvPdMpyHMg4va+gP4UzPDRkqfqtleYlJcuhA/ZY6h2r0HnPdHdrsXnNXrluwFbQJupnJoxphMZGvn66O02YFDJhblhBr3EDI7xupzq5BttiCZOYnK/neE56AVbXJMQYkyXFV1f9rnlhmxAPzhH+vri+pYfZIAgoL5cLqhjNNkmokGQ3mr9T2Lg/h0DORztporlj0pnZoqLjPv2PMynRfK5AnFYGSSiAHv
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5623.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(396003)(39860400002)(136003)(1076003)(6486002)(16526019)(26005)(186003)(316002)(2906002)(2616005)(4326008)(6506007)(956004)(66476007)(66556008)(66946007)(69590400007)(478600001)(6512007)(52116002)(6666004)(8936002)(83380400001)(5660300002)(8676002)(36756003)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: gcOz7l2SCYL1LOeijk8vY3M4SZlxjuuCk2SqZytp+xtuJ+NNK/lL4sR9IVXbaCdhAD4bBfP2ijCJrOIf5e9Ug/Dmx7FOUHmBcaE4AeRwXmSlmB+KTU80KsusgZ+Uq0Zkt7XKM763s6YGpfk0n0mefh65AwjF2l5G/SjPGgHOWtq/bromScxVesLgEV0wCPitBSW2ur5mcyaVG2+qNQWAsiQ6domweV+zb8Ni4yrcXzhsn0aO6fJC6l1eRrn+8dyVgdsGnUj5++/hOJhvDKuQ+Kk7KGRdixIEbM44vNwD1SBigMrbEnqbonq2fgkg1f8Iw72p409aCknkHWnuneqpQ4stgx5sqrWHB03v/TQZ/jZw/6uIxxI1GHeGBJ8c5LzWi+HRTLhNXXPngvC3HfvJj3eq9MhNvh98fnAYfbt+lf6apFrmwNa4TextgaY1YkM21Kz03DuYlVt8fYdwMtzMnzQmsK6/wZ2gw27jDCj/44A=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ea6346f-6ce3-4df1-1a5d-08d831f70552
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB5623.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 06:33:49.0813
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IvAdWIQEfZAThqfezvKT9wyy35xKXOOiyBf+TGHtSvzRxVJNOpKm4ZAQvu8aqemc8qllQcbWvT8O6TQKKAu7Uw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3235
+References: <001a11405628bb07410565279f4a@google.com> <0000000000004251b005ab5dce75@google.com>
+In-Reply-To: <0000000000004251b005ab5dce75@google.com>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Mon, 27 Jul 2020 14:47:11 +0800
+Message-ID: <CADvbK_cq=90axvohTHW6b=9pGSf9MDCHvpn76hWDmOWh91jWdQ@mail.gmail.com>
+Subject: Re: WARNING in xfrm_policy_insert
+To:     syzbot <syzbot+5cfc132a76d844973259@syzkaller.appspotmail.com>
+Cc:     davem <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        network dev <netdev@vger.kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable runtime pm support for spi-imx driver.
-
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
----
- drivers/spi/spi-imx.c | 121 ++++++++++++++++++++++++++++++------------
- 1 file changed, 88 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index fdc25f549378..38a5f1304cec 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -13,7 +13,9 @@
- #include <linux/irq.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
- #include <linux/slab.h>
- #include <linux/spi/spi.h>
- #include <linux/spi/spi_bitbang.h>
-@@ -30,6 +32,8 @@ static bool use_dma = true;
- module_param(use_dma, bool, 0644);
- MODULE_PARM_DESC(use_dma, "Enable usage of DMA when available (default)");
- 
-+#define MXC_RPM_TIMEOUT		2000 /* 2000ms */
-+
- #define MXC_CSPIRXDATA		0x00
- #define MXC_CSPITXDATA		0x04
- #define MXC_CSPICTRL		0x08
-@@ -1530,20 +1534,16 @@ spi_imx_prepare_message(struct spi_master *master, struct spi_message *msg)
- 	struct spi_imx_data *spi_imx = spi_master_get_devdata(master);
- 	int ret;
- 
--	ret = clk_enable(spi_imx->clk_per);
--	if (ret)
--		return ret;
--
--	ret = clk_enable(spi_imx->clk_ipg);
--	if (ret) {
--		clk_disable(spi_imx->clk_per);
-+	ret = pm_runtime_get_sync(spi_imx->dev);
-+	if (ret < 0) {
-+		dev_err(spi_imx->dev, "failed to enable clock\n");
- 		return ret;
- 	}
- 
- 	ret = spi_imx->devtype_data->prepare_message(spi_imx, msg);
- 	if (ret) {
--		clk_disable(spi_imx->clk_ipg);
--		clk_disable(spi_imx->clk_per);
-+		pm_runtime_mark_last_busy(spi_imx->dev);
-+		pm_runtime_put_autosuspend(spi_imx->dev);
- 	}
- 
- 	return ret;
-@@ -1554,8 +1554,8 @@ spi_imx_unprepare_message(struct spi_master *master, struct spi_message *msg)
- {
- 	struct spi_imx_data *spi_imx = spi_master_get_devdata(master);
- 
--	clk_disable(spi_imx->clk_ipg);
--	clk_disable(spi_imx->clk_per);
-+	pm_runtime_mark_last_busy(spi_imx->dev);
-+	pm_runtime_put_autosuspend(spi_imx->dev);
- 	return 0;
- }
- 
-@@ -1674,13 +1674,15 @@ static int spi_imx_probe(struct platform_device *pdev)
- 		goto out_master_put;
- 	}
- 
--	ret = clk_prepare_enable(spi_imx->clk_per);
--	if (ret)
--		goto out_master_put;
-+	pm_runtime_enable(spi_imx->dev);
-+	pm_runtime_set_autosuspend_delay(spi_imx->dev, MXC_RPM_TIMEOUT);
-+	pm_runtime_use_autosuspend(spi_imx->dev);
- 
--	ret = clk_prepare_enable(spi_imx->clk_ipg);
--	if (ret)
--		goto out_put_per;
-+	ret = pm_runtime_get_sync(spi_imx->dev);
-+	if (ret < 0) {
-+		dev_err(spi_imx->dev, "failed to enable clock\n");
-+		goto out_runtime_pm_put;
-+	}
- 
- 	spi_imx->spi_clk = clk_get_rate(spi_imx->clk_per);
- 	/*
-@@ -1690,7 +1692,7 @@ static int spi_imx_probe(struct platform_device *pdev)
- 	if (spi_imx->devtype_data->has_dmamode) {
- 		ret = spi_imx_sdma_init(&pdev->dev, spi_imx, master);
- 		if (ret == -EPROBE_DEFER)
--			goto out_clk_put;
-+			goto out_runtime_pm_put;
- 
- 		if (ret < 0)
- 			dev_err(&pdev->dev, "dma setup error %d, use pio\n",
-@@ -1705,19 +1707,20 @@ static int spi_imx_probe(struct platform_device *pdev)
- 	ret = spi_bitbang_start(&spi_imx->bitbang);
- 	if (ret) {
- 		dev_err(&pdev->dev, "bitbang start failed with %d\n", ret);
--		goto out_clk_put;
-+		goto out_runtime_pm_put;
- 	}
- 
- 	dev_info(&pdev->dev, "probed\n");
- 
--	clk_disable(spi_imx->clk_ipg);
--	clk_disable(spi_imx->clk_per);
-+	pm_runtime_mark_last_busy(spi_imx->dev);
-+	pm_runtime_put_autosuspend(spi_imx->dev);
-+
- 	return ret;
- 
--out_clk_put:
--	clk_disable_unprepare(spi_imx->clk_ipg);
--out_put_per:
--	clk_disable_unprepare(spi_imx->clk_per);
-+out_runtime_pm_put:
-+	pm_runtime_dont_use_autosuspend(spi_imx->dev);
-+	pm_runtime_put_sync(spi_imx->dev);
-+	pm_runtime_disable(spi_imx->dev);
- out_master_put:
- 	spi_master_put(master);
- 
-@@ -1732,30 +1735,82 @@ static int spi_imx_remove(struct platform_device *pdev)
- 
- 	spi_bitbang_stop(&spi_imx->bitbang);
- 
--	ret = clk_enable(spi_imx->clk_per);
-+	ret = pm_runtime_get_sync(spi_imx->dev);
-+	if (ret < 0) {
-+		dev_err(spi_imx->dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+
-+	writel(0, spi_imx->base + MXC_CSPICTRL);
-+
-+	pm_runtime_dont_use_autosuspend(spi_imx->dev);
-+	pm_runtime_put_sync(spi_imx->dev);
-+	pm_runtime_disable(spi_imx->dev);
-+
-+	spi_imx_sdma_exit(spi_imx);
-+	spi_master_put(master);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused spi_imx_runtime_resume(struct device *dev)
-+{
-+	struct spi_master *master = dev_get_drvdata(dev);
-+	struct spi_imx_data *spi_imx;
-+	int ret;
-+
-+	spi_imx = spi_master_get_devdata(master);
-+
-+	ret = clk_prepare_enable(spi_imx->clk_per);
- 	if (ret)
- 		return ret;
- 
--	ret = clk_enable(spi_imx->clk_ipg);
-+	ret = clk_prepare_enable(spi_imx->clk_ipg);
- 	if (ret) {
--		clk_disable(spi_imx->clk_per);
-+		clk_disable_unprepare(spi_imx->clk_per);
- 		return ret;
- 	}
- 
--	writel(0, spi_imx->base + MXC_CSPICTRL);
--	clk_disable_unprepare(spi_imx->clk_ipg);
-+	return 0;
-+}
-+
-+static int __maybe_unused spi_imx_runtime_suspend(struct device *dev)
-+{
-+	struct spi_master *master = dev_get_drvdata(dev);
-+	struct spi_imx_data *spi_imx;
-+
-+	spi_imx = spi_master_get_devdata(master);
-+
- 	clk_disable_unprepare(spi_imx->clk_per);
--	spi_imx_sdma_exit(spi_imx);
--	spi_master_put(master);
-+	clk_disable_unprepare(spi_imx->clk_ipg);
-+
-+	return 0;
-+}
- 
-+static int __maybe_unused spi_imx_suspend(struct device *dev)
-+{
-+	pinctrl_pm_select_sleep_state(dev);
- 	return 0;
- }
- 
-+static int __maybe_unused spi_imx_resume(struct device *dev)
-+{
-+	pinctrl_pm_select_default_state(dev);
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops imx_spi_pm = {
-+	SET_RUNTIME_PM_OPS(spi_imx_runtime_suspend,
-+				spi_imx_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(spi_imx_suspend, spi_imx_resume)
-+};
-+
- static struct platform_driver spi_imx_driver = {
- 	.driver = {
- 		   .name = DRIVER_NAME,
- 		   .of_match_table = spi_imx_dt_ids,
--		   },
-+		   .pm = &imx_spi_pm,
-+	},
- 	.id_table = spi_imx_devtype,
- 	.probe = spi_imx_probe,
- 	.remove = spi_imx_remove,
--- 
-2.17.1
-
+On Mon, Jul 27, 2020 at 4:11 AM syzbot
+<syzbot+5cfc132a76d844973259@syzkaller.appspotmail.com> wrote:
+>
+> syzbot suspects this issue was fixed by commit:
+>
+> commit ed17b8d377eaf6b4a01d46942b4c647378a79bdd
+> Author: Xin Long <lucien.xin@gmail.com>
+> Date:   Mon May 25 05:53:37 2020 +0000
+>
+>     xfrm: fix a warning in xfrm_policy_insert_list
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1774b9df100000
+> start commit:   6c677750 mlxsw: spectrum: Use NL_SET_ERR_MSG_MOD
+> git tree:       net-next
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=82a189bf69e089b5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=5cfc132a76d844973259
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12f8821d800000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13ec3c63800000
+>
+> If the result looks correct, please mark the issue as fixed by replying with:
+>
+> #syz fix: xfrm: fix a warning in xfrm_policy_insert_list
+>
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+#syz fix: xfrm: fix a warning in xfrm_policy_insert_list
