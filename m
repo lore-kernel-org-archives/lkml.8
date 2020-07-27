@@ -2,126 +2,121 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AD3C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0C4C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC66E20658
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:20:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=solid-run-com.20150623.gappssmtp.com header.i=@solid-run-com.20150623.gappssmtp.com header.b="Rrme5m5V"
+	by mail.kernel.org (Postfix) with ESMTP id 63696206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgG0JT7 (ORCPT
+        id S1727792AbgG0JVu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:19:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgG0JT7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:19:59 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000E2C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:19:58 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id qc22so1512963ejb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:19:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=solid-run-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yLnBcJ7AAd3mxUPf3jGsnG6dsXBMorrtxynphcZ58Lo=;
-        b=Rrme5m5VJcvJfeb/5BW8Hq518uIh95lif7kMwJNVad8/btgBS/K25HDnjgKvI8vtO7
-         YI4LnrVFZ5bte7TgQnygpWDu4yyX00VmQ4d9DWQl0uJwumsl20t8YcFhULEuJmRmqLzH
-         MBYYsHgJd1Ruyr2KL95cXQCZPmpRWwUJCoq21BZwg2oz1hFMO6KA6viDQW333yocDKgh
-         m5QjZkGjhuIhDuMDV/FnhxfqO9sc39fLVqjoPlpSkVFTk0/HTd6fO51dYtA/3KqxVGq8
-         Wi7aQuSR824kbXY6eaRf9EHGuOGoJ4D30m4hIF1qsykmde7LH484tEGOA9/K9zTR5oG0
-         gYXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yLnBcJ7AAd3mxUPf3jGsnG6dsXBMorrtxynphcZ58Lo=;
-        b=U5HySB1EWWBs4SjYndJsDNSAg9ph/QW6ArgLsHbr1lnLP5w/YSrOj5ZInba+kH+nWx
-         FEihLbkyw8Q2gCPVh1Wg8WHfjQIfJaXbxlV/NzMw1Q1/ug1xjwLbXkNVDIffhvh6mlag
-         /ooWFcvyQlYLPvoxdgryVz+wA0xlgrEvQ3jOrRZBSAKL4Cghvc5s8iTIGmjkubxpS2Jw
-         ciLZKBg3tx81Mypvdb9xNgTtth44mZaU12WLk10gn7rNjqBbySizDaVX59dibGiXDE8W
-         4R/NcpsaVe9YJaPdPPeXmKN1DGTwCo/4OKpWgdaATlNxzI/eztXWAe+uEUb0FxobLbIE
-         SI5g==
-X-Gm-Message-State: AOAM533tU/IoRgmjd2y7bF5peXpiU6+f135aDOzvBAejdOCVg+QEP6cr
-        7H89fv2bLzzZMXf+cZgwiwbJQ7nJKqUwyqGKMqZpKjbi
-X-Google-Smtp-Source: ABdhPJyuwhYdkGGy++YHy8bXte3CGx1WkQqv2s1Zp2sQFaoV4RP9ZY9GnwaCnPl/RDaoqjmbMCr7jWPWPAn3ppjayGo=
-X-Received: by 2002:a17:906:2451:: with SMTP id a17mr17227540ejb.274.1595841597754;
- Mon, 27 Jul 2020 02:19:57 -0700 (PDT)
+        Mon, 27 Jul 2020 05:21:50 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2526 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726263AbgG0JVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:21:49 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id E39C5FA1E84846A6F6C9;
+        Mon, 27 Jul 2020 10:21:47 +0100 (IST)
+Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
+ 2020 10:21:47 +0100
+Date:   Mon, 27 Jul 2020 10:20:24 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Logan Gunthorpe <logang@deltatee.com>
+CC:     Bjorn Helgaas <helgaas@kernel.org>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Andrew Maier <andrew.maier@eideticom.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Eric Wehage <Eric.Wehage@futurewei.com>,
+        "Alex Umansky" <alex.umansky@huawei.com>
+Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
+ allowed bridges
+Message-ID: <20200727102024.00005f8b@Huawei.com>
+In-Reply-To: <59b68da4-cd3c-bf65-6654-02d4feaede27@deltatee.com>
+References: <20200724150641.GA1518875@bjorn-Precision-5520>
+        <59b68da4-cd3c-bf65-6654-02d4feaede27@deltatee.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-1-miguelborgesdefreitas@gmail.com> <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
- <20200723174905.GA596242@bogus> <20200723195755.GV3428@piout.net> <CAC4G8N7Agb6pVVv6x9_pMMxkB9HnCFiaaC6EJb4-MNzEPd0Uhw@mail.gmail.com>
-In-Reply-To: <CAC4G8N7Agb6pVVv6x9_pMMxkB9HnCFiaaC6EJb4-MNzEPd0Uhw@mail.gmail.com>
-From:   Jon Nettleton <jon@solid-run.com>
-Date:   Mon, 27 Jul 2020 11:19:21 +0200
-Message-ID: <CABdtJHvA9YL76pf+ip--OuX1WOxLPm3f=WB_-BAdA2QguSu3tA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
- battery switch-over
-To:     Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh@kernel.org>, a.zummo@towertech.it,
-        Baruch Siach <baruch@tkos.co.il>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.52.121.176]
+X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 10:41 PM Miguel Borges de Freitas
-<miguelborgesdefreitas@gmail.com> wrote:
->
-> Hi Alexandre,
->
-> Having a way to dynamically change the configuration would definitely
-> be helpful in most cases. I decided to go with a DT property because
-> in the case this patch tries to solve (the cubox-i) there isn't simply
-> any other option - the default mode won't work due to the missing hw
-> components. So, I thought that by defining it as a DT property it
-> could somehow be locked to the hardware definition.
-> Keep me posted
->
-> Regards
->
-> PS: Sorry for the second message, forgot to disable html and the
-> message couldn't be delivered to all recipients.
->
-> Alexandre Belloni <alexandre.belloni@bootlin.com> escreveu no dia
-> quinta, 23/07/2020 =C3=A0(s) 20:57:
-> >
->
-> > >
-> > > I'm all for common properties, but is this common across vendors?
-> > >
-> >
-> > This is but this shouldn't be a DT property as it has to be changed
-> > dynamically. I'm working on an ioctl interface to change this
-> > configuration.
-> >
-> >
+On Fri, 24 Jul 2020 09:56:39 -0600
+Logan Gunthorpe <logang@deltatee.com> wrote:
 
-Thanks for sending this patch.  I think there are two paths forward if
-an ioctl interface is being added.
+> [+cc Jonathan]
+> 
+> On 2020-07-24 9:06 a.m., Bjorn Helgaas wrote:
+> > On Thu, Jul 23, 2020 at 02:10:52PM -0600, Logan Gunthorpe wrote:  
+> >> On 2020-07-23 1:57 p.m., Bjorn Helgaas wrote:  
+> >>> On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:  
+> >>>> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> wrote:  
+> >>>>>
+> >>>>> The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
+> >>>>> transactions between root ports and found to work. Therefore add it
+> >>>>> to the list.
+> >>>>>
+> >>>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> >>>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >>>>> Cc: Christian König <christian.koenig@amd.com>
+> >>>>> Cc: Huang Rui <ray.huang@amd.com>
+> >>>>> Cc: Alex Deucher <alexdeucher@gmail.com>  
+> >>>>
+> >>>> Starting with Zen, all AMD platforms support P2P for reads and writes.  
+> >>>
+> >>> What's the plan for getting out of the cycle of "update this list for
+> >>> every new chip"?  Any new _DSMs planned, for instance?  
+> >>
+> >> Well there was an effort to add capabilities in the PCI spec to describe
+> >> this but, as far as I know, they never got anywhere, and hardware still
+> >> doesn't self describe with this.  
+> > 
+> > Any idea what happened?  Is there hope for the future?  I'm really not
+> > happy about signing up for open-ended device-specific patches like
+> > this.  It's certainly not in the plug and play spirit that has made
+> > PCI successful.  I know, preaching to the choir here.  
+> 
+> Agreed, though I'm not really hooked into the PCI SIG. The last email I
+> got about this was an RFC from Jonathan Cameron in late 2018. I've CC'd
+> him here, maybe he'll have a bit more insight.
 
-1)  Change the property to reflect that this is the default state the
-RTC should be initialized to.
-2)  Just move this configuration into the bootloader and then verify
-that the bootloader doesn't reset this value.
+For non technical reasons, you can probably figure out, that particular
+ECR stalled. Unfortunately I can't directly provide info on any newer
+discussions. Eric, could you perhaps find out if there is anything we can share?
 
--Jon
+This is the same question of trying to find a way to avoid white listing
+root complexes that can do peer 2 peer that would have been covered by
+your Advanced Peer to Peer Capabilities ECR.
+
+Thanks,
+
+Jonathan
+
+
+
+
+
+> 
+> Logan
+
+
