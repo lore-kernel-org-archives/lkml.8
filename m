@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1052C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE98C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED1A20825
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB522070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859571;
-	bh=78btAS2b9p8DJC0sX4zuScTVsYWLaTYOwHo8pPXDDHQ=;
+	s=default; t=1595859576;
+	bh=cqwlgHyPsfPuA8z4WrenfxsuVzf4oQ5bGA82xRt0E4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jt5m0CYHqm2T/LNReXWo+jyhYiXjFXLC5x54eRcwRruWH+mk7Sw489c4bKtsI8GP7
-	 RBRytS3rF9eXytOzT+HIz4hs/PnmAyeqHY3WYT1FOCEcAEIlsJuB1XXydhzc7IRfKx
-	 /ISn/6DDiLxzz71XVdSdRnc1DfgKzipjFE6dtuTE=
+	b=ynZpzCDjAFChlETM3zBTDPq7AWhrszkg9vsJOd9ukGZZMGg+IIjjnPng/+rMvDn5W
+	 1jqP4x6YUibYuj3n7hN12RDlTa2xEL1Crgh5t+JGouMa4BGATQZHLXPFjDC3KfkaK2
+	 WYGytxfrzcN2jRqHk5I8eQ256zLqQVYJTM3/E8LQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbgG0OT3 (ORCPT
+        id S1731415AbgG0OTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:19:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47246 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:19:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731372AbgG0OTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:19:19 -0400
+        id S1731403AbgG0OT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:19:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 139752075A;
-        Mon, 27 Jul 2020 14:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B611A20825;
+        Mon, 27 Jul 2020 14:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859559;
-        bh=78btAS2b9p8DJC0sX4zuScTVsYWLaTYOwHo8pPXDDHQ=;
+        s=default; t=1595859569;
+        bh=cqwlgHyPsfPuA8z4WrenfxsuVzf4oQ5bGA82xRt0E4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JjzoFZPFt9N4r7ff5dwodzTYcJ1tbtNehHht78QnvtzIdmT91IOs6UTo1O6x/cmrm
-         7j3MfZWFGYjo/IVkm3IVArkYuP2GaPDvG9LnlOMYaRIQX2mzzMZfsW4h80yUFzXxGf
-         PtTl2fd/xpqPU2zuR1gSsXSR8BOazhuwqZZT+mDs=
+        b=IzSy3UsbNQWKz9P0gmiUQitShwH8pdtIJRYhvxFoRqf/jaTmS09l3PHoQImg+VihW
+         FKIJiGIj+HIw4j1dogS+/Ue/Q0o722RQ9i93r/OrgXyoF863ZHf9C7woIOWkVL+UC7
+         CRFUHRK1qdfL3j6/OSD0AwbcibhgA1UefU7rTLE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacky Hu <hengqing.hu@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 004/179] pinctrl: amd: fix npins for uart0 in kerncz_groups
-Date:   Mon, 27 Jul 2020 16:02:59 +0200
-Message-Id: <20200727134932.884284412@linuxfoundation.org>
+Subject: [PATCH 5.7 008/179] xtensa: fix __sync_fetch_and_{and,or}_4 declarations
+Date:   Mon, 27 Jul 2020 16:03:03 +0200
+Message-Id: <20200727134933.079693215@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -60,43 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacky Hu <hengqing.hu@gmail.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-[ Upstream commit 69339d083dfb7786b0e0b3fc19eaddcf11fabdfb ]
+[ Upstream commit 73f9941306d5ce030f3ffc7db425c7b2a798cf8e ]
 
-uart0_pins is defined as:
-static const unsigned uart0_pins[] = {135, 136, 137, 138, 139};
+Building xtensa kernel with gcc-10 produces the following warnings:
+  arch/xtensa/kernel/xtensa_ksyms.c:90:15: warning: conflicting types
+    for built-in function ‘__sync_fetch_and_and_4’;
+    expected ‘unsigned int(volatile void *, unsigned int)’
+    [-Wbuiltin-declaration-mismatch]
+  arch/xtensa/kernel/xtensa_ksyms.c:96:15: warning: conflicting types
+    for built-in function ‘__sync_fetch_and_or_4’;
+    expected ‘unsigned int(volatile void *, unsigned int)’
+    [-Wbuiltin-declaration-mismatch]
 
-which npins is wronly specified as 9 later
-	{
-		.name = "uart0",
-		.pins = uart0_pins,
-		.npins = 9,
-	},
+Fix declarations of these functions to avoid the warning.
 
-npins should be 5 instead of 9 according to the definition.
-
-Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
-Link: https://lore.kernel.org/r/20200616015024.287683-1-hengqing.hu@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-amd.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/xtensa/kernel/xtensa_ksyms.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
-index 3e5760f1a7153..d4a192df5fabd 100644
---- a/drivers/pinctrl/pinctrl-amd.h
-+++ b/drivers/pinctrl/pinctrl-amd.h
-@@ -252,7 +252,7 @@ static const struct amd_pingroup kerncz_groups[] = {
- 	{
- 		.name = "uart0",
- 		.pins = uart0_pins,
--		.npins = 9,
-+		.npins = 5,
- 	},
- 	{
- 		.name = "uart1",
+diff --git a/arch/xtensa/kernel/xtensa_ksyms.c b/arch/xtensa/kernel/xtensa_ksyms.c
+index 4092555828b13..24cf6972eacea 100644
+--- a/arch/xtensa/kernel/xtensa_ksyms.c
++++ b/arch/xtensa/kernel/xtensa_ksyms.c
+@@ -87,13 +87,13 @@ void __xtensa_libgcc_window_spill(void)
+ }
+ EXPORT_SYMBOL(__xtensa_libgcc_window_spill);
+ 
+-unsigned long __sync_fetch_and_and_4(unsigned long *p, unsigned long v)
++unsigned int __sync_fetch_and_and_4(volatile void *p, unsigned int v)
+ {
+ 	BUG();
+ }
+ EXPORT_SYMBOL(__sync_fetch_and_and_4);
+ 
+-unsigned long __sync_fetch_and_or_4(unsigned long *p, unsigned long v)
++unsigned int __sync_fetch_and_or_4(volatile void *p, unsigned int v)
+ {
+ 	BUG();
+ }
 -- 
 2.25.1
 
