@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D54EC43635
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15809C4346E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE455208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58D0208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892524;
-	bh=gPzvdbozJ0ICpL+L9dDFWMeYQ9kM7Eph6uJlVPy/Fe4=;
+	s=default; t=1595892534;
+	bh=LkmYfpO8CCHqVPPYGJEJrOUiJmWXY43q7bamRMNf8qU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zGgUCyjc5s4oVb+gok5PMsux18JAYfsJKM2o49fTfrafkRMDo6reUYMC8DU23+8dh
-	 ZwTpnzwkt/YS2RLCKmBZo8RI8La6QiGanFEHtEhYUGFe3LXBfaB+pEqY2LXNyLjVzq
-	 JBGm9N7cwyeaYYRSIlkzaohXR9aIUQwEKC1/SUe4=
+	b=LIUllRiP0bXYa+rDcUZXjpf0ANCXgLEVliO4/TRv8KVumO9KUc3U4LyN3myXRmJXj
+	 qiJHiaDfIXdgOOruSHT3ezDMIq8dTOZkDkN/0oBsuEo5c3sRnlMZDXytPykGWmBGqi
+	 vzfRPjoTRyIkN4pvZjLtNwIiO+05YNR2TuuASHwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgG0XY2 (ORCPT
+        id S1728671AbgG0X2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:24:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35234 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:28:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbgG0XYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:24:19 -0400
+        id S1728183AbgG0XYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:24:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 872B820786;
-        Mon, 27 Jul 2020 23:24:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8A8620A8B;
+        Mon, 27 Jul 2020 23:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892258;
-        bh=gPzvdbozJ0ICpL+L9dDFWMeYQ9kM7Eph6uJlVPy/Fe4=;
+        s=default; t=1595892263;
+        bh=LkmYfpO8CCHqVPPYGJEJrOUiJmWXY43q7bamRMNf8qU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+A29UBS1enfeCQIULUiNGLYaQvHcj5Dd6IFDPiGBXevD7Iq4lyAZUpF/73c8pj1j
-         fDRRBCqDSJS5nQD7UYxazZA687Vz90GIhZg2RVC2DklqXL0t+QIs796ZJOzXv8kpmz
-         Sle1wJmO3EQtPq/7OIOy8RUksOXzMEiOaR+mpZqo=
+        b=131NI9iBTrFuzZ2t85U1G4NdNGkfTMw2FouQOJxaqpDu41xmlO0CPF1fdnhPl4wIZ
+         AQQyPJtxrWra/s6R7NE7cgIP62Sezhn7BdwDYLhJk/eoM09/Acst4RVO7Ujc7du+lW
+         +xJBsvqVFrhS1IHKCsj6P2orQIbd5mCmTU+6YPwk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>, Eric Dumazet <edumazet@google.com>,
-        Martin Schiller <ms@dev.tdt.de>,
+Cc:     Paolo Pisati <paolo.pisati@canonical.com>,
+        David Ahern <dsahern@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 24/25] drivers/net/wan: lapb: Corrected the usage of skb_cow
-Date:   Mon, 27 Jul 2020 19:23:44 -0400
-Message-Id: <20200727232345.717432-24-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 02/17] selftests: fib_nexthop_multiprefix: fix cleanup() netns deletion
+Date:   Mon, 27 Jul 2020 19:24:05 -0400
+Message-Id: <20200727232420.717684-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200727232345.717432-1-sashal@kernel.org>
-References: <20200727232345.717432-1-sashal@kernel.org>
+In-Reply-To: <20200727232420.717684-1-sashal@kernel.org>
+References: <20200727232420.717684-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,81 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: Paolo Pisati <paolo.pisati@canonical.com>
 
-[ Upstream commit 8754e1379e7089516a449821f88e1fe1ebbae5e1 ]
+[ Upstream commit 651149f60376758a4759f761767965040f9e4464 ]
 
-This patch fixed 2 issues with the usage of skb_cow in LAPB drivers
-"lapbether" and "hdlc_x25":
+During setup():
+...
+        for ns in h0 r1 h1 h2 h3
+        do
+                create_ns ${ns}
+        done
+...
 
-1) After skb_cow fails, kfree_skb should be called to drop a reference
-to the skb. But in both drivers, kfree_skb is not called.
+while in cleanup():
+...
+        for n in h1 r1 h2 h3 h4
+        do
+                ip netns del ${n} 2>/dev/null
+        done
+...
 
-2) skb_cow should be called before skb_push so that is can ensure the
-safety of skb_push. But in "lapbether", it is incorrectly called after
-skb_push.
+and after removing the stderr redirection in cleanup():
 
-More details about these 2 issues:
+$ sudo ./fib_nexthop_multiprefix.sh
+...
+TEST: IPv4: host 0 to host 3, mtu 1400                              [ OK ]
+TEST: IPv6: host 0 to host 3, mtu 1400                              [ OK ]
+Cannot remove namespace file "/run/netns/h4": No such file or directory
+$ echo $?
+1
 
-1) The behavior of calling kfree_skb on failure is also the behavior of
-netif_rx, which is called by this function with "return netif_rx(skb);".
-So this function should follow this behavior, too.
+and a non-zero return code, make kselftests fail (even if the test
+itself is fine):
 
-2) In "lapbether", skb_cow is called after skb_push. This results in 2
-logical issues:
-   a) skb_push is not protected by skb_cow;
-   b) An extra headroom of 1 byte is ensured after skb_push. This extra
-      headroom has no use in this function. It also has no use in the
-      upper-layer function that this function passes the skb to
-      (x25_lapb_receive_frame in net/x25/x25_dev.c).
-So logically skb_cow should instead be called before skb_push.
+...
+not ok 34 selftests: net: fib_nexthop_multiprefix.sh # exit=1
+...
 
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/hdlc_x25.c  | 4 +++-
- drivers/net/wan/lapbether.c | 8 +++++---
- 2 files changed, 8 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/fib_nexthop_multiprefix.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
-index c84536b03aa84..f70336bb6f524 100644
---- a/drivers/net/wan/hdlc_x25.c
-+++ b/drivers/net/wan/hdlc_x25.c
-@@ -71,8 +71,10 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+diff --git a/tools/testing/selftests/net/fib_nexthop_multiprefix.sh b/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
+index 9dc35a16e4159..51df5e305855a 100755
+--- a/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
++++ b/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
+@@ -144,7 +144,7 @@ setup()
+ 
+ cleanup()
  {
- 	unsigned char *ptr;
- 
--	if (skb_cow(skb, 1))
-+	if (skb_cow(skb, 1)) {
-+		kfree_skb(skb);
- 		return NET_RX_DROP;
-+	}
- 
- 	skb_push(skb, 1);
- 	skb_reset_network_header(skb);
-diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-index e30d91a38cfb6..b73b347ed731d 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -128,10 +128,12 @@ static int lapbeth_data_indication(struct net_device *dev, struct sk_buff *skb)
- {
- 	unsigned char *ptr;
- 
--	skb_push(skb, 1);
--
--	if (skb_cow(skb, 1))
-+	if (skb_cow(skb, 1)) {
-+		kfree_skb(skb);
- 		return NET_RX_DROP;
-+	}
-+
-+	skb_push(skb, 1);
- 
- 	ptr  = skb->data;
- 	*ptr = X25_IFACE_DATA;
+-	for n in h1 r1 h2 h3 h4
++	for n in h0 r1 h1 h2 h3
+ 	do
+ 		ip netns del ${n} 2>/dev/null
+ 	done
 -- 
 2.25.1
 
