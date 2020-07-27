@@ -2,156 +2,235 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79778C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F792C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6CC2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0120F2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgG0NmB (ORCPT
+        id S1728442AbgG0NmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:42:01 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:35177 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgG0NmA (ORCPT
+        Mon, 27 Jul 2020 09:42:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61600 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726555AbgG0NmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:42:00 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N49d1-1kzke72vfV-0107gZ; Mon, 27 Jul 2020 15:41:58 +0200
-Received: by mail-qk1-f172.google.com with SMTP id 11so15242216qkn.2;
-        Mon, 27 Jul 2020 06:41:58 -0700 (PDT)
-X-Gm-Message-State: AOAM53259VI8nXMMK7q7cYFIM7IOnKAyiCAAFZcoSUzifOp6PqsdWit4
-        thEpYOj5jwk9PFhxiU1w2QT2Ur2bwnZAJaHiXFU=
-X-Google-Smtp-Source: ABdhPJzqySuIuVB3czYYTZfyLd6uhBrv9RKw8ilEdQwRCvqND1MWjmxKJ0rPM4aQhz302ObDF3kYrSDVo+yClkDXAmc=
-X-Received: by 2002:a37:385:: with SMTP id 127mr21536451qkd.3.1595857317286;
- Mon, 27 Jul 2020 06:41:57 -0700 (PDT)
+        Mon, 27 Jul 2020 09:42:15 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RDWYKA169386;
+        Mon, 27 Jul 2020 09:42:09 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32htsc0k28-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 09:42:09 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06RDWh29169826;
+        Mon, 27 Jul 2020 09:42:08 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32htsc0k1w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 09:42:08 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06RDYQvv012520;
+        Mon, 27 Jul 2020 13:42:08 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03dal.us.ibm.com with ESMTP id 32gcy6ntja-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 13:42:08 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06RDg22E59638124
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 13:42:03 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C06E86A054;
+        Mon, 27 Jul 2020 13:42:04 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91B676A047;
+        Mon, 27 Jul 2020 13:42:03 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.167.215])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jul 2020 13:42:03 +0000 (GMT)
+Subject: Re: [PATCH v9 02/15] s390/vfio-ap: use new AP bus interface to search
+ for queue devices
+To:     Pierre Morel <pmorel@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, kernel test robot <lkp@intel.com>
+References: <20200720150344.24488-1-akrowiak@linux.ibm.com>
+ <20200720150344.24488-3-akrowiak@linux.ibm.com>
+ <a946e992-ff36-ca45-1811-7c6b0aaa161f@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <34208b94-8f37-e46b-3783-9a788c93fb02@linux.ibm.com>
+Date:   Mon, 27 Jul 2020 09:42:03 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <1595382353-17486-1-git-send-email-Anson.Huang@nxp.com>
- <CAK8P3a13gcF_+dkfxZW0u_YuJ92hY1JukWfzM+e30iM=YUhraQ@mail.gmail.com>
- <DB3PR0402MB3916F080E4912B27B18BEADEF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a2CBYV2xEkedQYmzL4XgHPeu02=vmLffq+RWwvEvuUGKQ@mail.gmail.com>
- <DB3PR0402MB391674F67A1B9F2732883C0BF5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a0XpKnbz79dH4i7HofGgpAodtmgdBmVBVQOKfCiJMkpPw@mail.gmail.com> <DB3PR0402MB3916634EA84687D6C7535BC1F5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916634EA84687D6C7535BC1F5720@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 15:41:41 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a06tu4UgTxT4q9eS4=z5AHiEWQMhk5PfZEz=4t+f26s5Q@mail.gmail.com>
-Message-ID: <CAK8P3a06tu4UgTxT4q9eS4=z5AHiEWQMhk5PfZEz=4t+f26s5Q@mail.gmail.com>
-Subject: Re: [PATCH V2 1/4] gpio: mxc: Support module build
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Peng Fan <peng.fan@nxp.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Olof Johansson <olof@lixom.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Joel Stanley <joel@jms.id.au>, Lubomir Rintel <lkundrak@v3.sk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "michael@walle.cc" <michael@walle.cc>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:12GnPkMsBlHbsfD4U38ElU/anl9pwaLxKK+gVFU33Z0wRjMSL66
- hzGxvYT1Glng73TEmHhGcfif2UJSF/g0z+NkRe4hyYb6kn+y2JTOmN8u2fT7hk3PkF8QtJk
- QuOrqTd6xnj0c7c3Ppg3HPdTpUeOYdbuvmdZVijBScyoV8Pi5Cg32EEDTctIgTlcPrXroSp
- MXHmIvTvuYsQCojFom8uw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zFmmZ2Eh8gY=:5PfNRLGeCvCYPbauLK4y1z
- 4BtIuXX51hjLZc0BhLw0+MideWc8Be6OWCsuK0q40mA6eR3h+r1fIGEkBawVy6MH8fBD5j0Ob
- VNswoWrjacAoVjOwK38o1RisMFxBa1YpzzO2vzxnma8w/zIjXxaEnP0GxcY511tSAwyiqqfr0
- FrvKHN2WDOm/WUsRfkunTzlOqtjSRsVJ0Ejv0EfZ38dv4wieGGfQ2L4xyO3i+u9RK8bNvOA5I
- 5Ynw5uShxa1TgjRpG5MvXkKE2YqrbtwGnNDulS3aTDdnB/rW9cOA+fGLXAdxyi3yUbrqVk44c
- KGMWHHMb2OuZfLNEm3Lg3EeH0nUeobJGL4OKY8zO6Zs/15S8Fa2YvejWj2+XebM5RTAyrHOCL
- N5OCf8iW87ULfnxiPUPeHoht0lMw6wUxaaD6+8nhlCU4Kx6kO2i6j1bZNFiYqk6nzb80uNeyU
- uvzYIboGHGDlfwLkCKy/43TwkLV8aGxYBSW9G+cB+CM/tlG/Lm5J7VaYT2QvW5OgaWmwIDmSu
- jwhqmflLCcwrjk0O+Rrh8TRMe61eLDtZfilEzbmY3XH9RbTGmjM3bw0DzRKqAJQCYX/trCKpz
- oA48xc7RO5nAZOQ1JrEuNvwH7gz/phh5doLSu6/0+cpxKNib0BEBIUvk60IeVxsFC6G1ZHrZe
- epbSIN6jmtrsTEOZreO4a/VuRPfZRiJYDlTxPx+YNDXijHGPiUrXRO4976GQpEcg8hf6m2g32
- dVvPNTWqkZWI9+qvrLIFvq/v7h/X7wwAl4tgTgPzJ+vR0Mrh692WJwkWhKP6peFRUEbjpR5Go
- fFHbwYHImkzkt/WXpi2Z2uUCcATQKk5oYdqVkCnfAHsSmOlNo/TWAzIM4vA6eJ9LztTwwcphh
- /9QxGPfu8UC8TlbjCdt5HA4MgoWiDqaH4yBB9fVDctNbsKSpBP7EJNjNg7XtwFvkLfw6ah+hk
- VwOxfik4dMArcaB1EdExic9QGxnn068T9NNhhX8fwswLozvqdVJmS
+In-Reply-To: <a946e992-ff36-ca45-1811-7c6b0aaa161f@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_08:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ spamscore=0 suspectscore=3 priorityscore=1501 malwarescore=0
+ impostorscore=0 bulkscore=0 adultscore=0 lowpriorityscore=0 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 2:23 PM Anson Huang <anson.huang@nxp.com> wrote:
-> > Subject: Re: [PATCH V2 1/4] gpio: mxc: Support module build
-> >
-> > > So, could you please help advise how to proceed it for this GPIO
-> > > driver to  support loadable module?
-> >
-> > I would start by getting a reference board to work with a kernel in which all
-> > drivers are built-in except for the pinctrl driver, to see what exactly breaks
-> > when you do that, and what other drivers may have the same problems.
-> > Maybe it's not that bad after all and you only need a few modifications.
-> >
+
+
+On 7/24/20 4:38 AM, Pierre Morel wrote:
 >
-> I agreed, but the situation is i.MX SoC contains more than 20 modules, and most of
-> them are NOT owned by me, so I am NOT sure when the module owner will start
-> working on the support. And if with minimum devices enabled, such as tiny kernel
-> with ramfs, it is working even with pinctrl/clock etc. built as loadable module.
+>
+> On 2020-07-20 17:03, Tony Krowiak wrote:
+>> This patch refactor's the vfio_ap device driver to use the AP bus's
+>> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
+>> information about a queue that is bound to the vfio_ap device driver.
+>> The bus's ap_get_qdev() function retrieves the queue device from a
+>> hashtable keyed by APQN. This is much more efficient than looping over
+>> the list of devices attached to the AP bus by several orders of
+>> magnitude.
+>
+> The patch does much more than modifying this line. ;)
 
-Do you have an example that is actually broken? I checked how the gpio
-chip is actually used and found that "regulator-fixed", "virtual,mdio-gpio",
-"regulator-gpio", "gpio-leds", "marvell,mv88e6085", "microchip,usb2513b",
-"fsl,imx7d-usdhc", "fsl,imx6sx-fec", "mmc-pwrseq-simple", "brcm,bcm43438-bt",
- "rohm,bd71837", "nxp,pca9546",  "rtc-m41t80", should all work fine here.
+Yes it does, I'll be sure to include the additional details.
 
-I'm not sure about "fsl,mma8451", maybe test that one manually or look
-at the driver in more detail.
+>
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_drv.c     | 27 ++-------
+>>   drivers/s390/crypto/vfio_ap_ops.c     | 86 +++++++++++++++------------
+>>   drivers/s390/crypto/vfio_ap_private.h |  8 ++-
+>>   3 files changed, 59 insertions(+), 62 deletions(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_drv.c 
+>> b/drivers/s390/crypto/vfio_ap_drv.c
+>> index f4ceb380dd61..24cdef60039a 100644
+>> --- a/drivers/s390/crypto/vfio_ap_drv.c
+>> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+>> @@ -53,15 +53,9 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
+>>    */
+>>   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+>>   {
+>> -    struct vfio_ap_queue *q;
+>> -
+>> -    q = kzalloc(sizeof(*q), GFP_KERNEL);
+>> -    if (!q)
+>> -        return -ENOMEM;
+>> -    dev_set_drvdata(&apdev->device, q);
+>> -    q->apqn = to_ap_queue(&apdev->device)->qid;
+>> -    q->saved_isc = VFIO_AP_ISC_INVALID;
+>> -    return 0;
+>> +    struct ap_queue *queue = to_ap_queue(&apdev->device);
+>> +
+>> +    return vfio_ap_mdev_probe_queue(queue);
+>>   }
+>
+> You should explain the reason why this function is modified.
+>
+>>     /**
+>> @@ -72,18 +66,9 @@ static int vfio_ap_queue_dev_probe(struct 
+>> ap_device *apdev)
+>>    */
+>>   static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
+>>   {
+>> -    struct vfio_ap_queue *q;
+>> -    int apid, apqi;
+>> -
+>> -    mutex_lock(&matrix_dev->lock);
+>> -    q = dev_get_drvdata(&apdev->device);
+>> -    dev_set_drvdata(&apdev->device, NULL);
+>> -    apid = AP_QID_CARD(q->apqn);
+>> -    apqi = AP_QID_QUEUE(q->apqn);
+>> -    vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>> -    vfio_ap_irq_disable(q);
+>> -    kfree(q);
+>> -    mutex_unlock(&matrix_dev->lock);
+>> +    struct ap_queue *queue = to_ap_queue(&apdev->device);
+>> +
+>> +    vfio_ap_mdev_remove_queue(queue);
+>>   }
+>
+> ... and this one?
+>
+>>     static void vfio_ap_matrix_dev_release(struct device *dev)
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
+>> b/drivers/s390/crypto/vfio_ap_ops.c
+>> index e0bde8518745..ad3925f04f61 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -26,43 +26,26 @@
+>>     static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
+>>   -static int match_apqn(struct device *dev, const void *data)
+>> -{
+>> -    struct vfio_ap_queue *q = dev_get_drvdata(dev);
+>> -
+>> -    return (q->apqn == *(int *)(data)) ? 1 : 0;
+>> -}
+>> -
+>>   /**
+>> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
+>> - * @matrix_mdev: the associated mediated matrix
+>> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
+>>    * @apqn: The queue APQN
+>>    *
+>> - * Retrieve a queue with a specific APQN from the list of the
+>> - * devices of the vfio_ap_drv.
+>> - * Verify that the APID and the APQI are set in the matrix.
+>> + * Retrieve a queue with a specific APQN from the AP queue devices 
+>> attached to
+>> + * the AP bus.
+>>    *
+>> - * Returns the pointer to the associated vfio_ap_queue
+>> + * Returns the pointer to the vfio_ap_queue with the specified APQN, 
+>> or NULL.
+>>    */
+>> -static struct vfio_ap_queue *vfio_ap_get_queue(
+>> -                    struct ap_matrix_mdev *matrix_mdev,
+>> -                    int apqn)
+>> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
+>>   {
+>> +    struct ap_queue *queue;
+>>       struct vfio_ap_queue *q;
+>> -    struct device *dev;
+>>   -    if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
+>> -        return NULL;
+>> -    if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
+>> +    queue = ap_get_qdev(apqn);
+>> +    if (!queue)
+>>           return NULL;
+>>   -    dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+>> -                 &apqn, match_apqn);
+>> -    if (!dev)
+>> -        return NULL;
+>> -    q = dev_get_drvdata(dev);
+>> -    q->matrix_mdev = matrix_mdev;
+>> -    put_device(dev);
+>> +    q = dev_get_drvdata(&queue->ap_dev.device);
+>> +    put_device(&queue->ap_dev.device);
+>>         return q;
+>>   }
+>
+> this function changed a lot too, you should explain the goal in the 
+> patch comment.
+>
+> ...snip...
+>
+> Regards,
+> Pierre
+>
 
-"fsl,imx8mq-pcie" looks broken but easily fixed, and this is something we
-have already discussed.
-
-imx8mq-nitrogen.c has a "vsel-gpios" property in its "fcs,fan53555"
-device node that is neither part of the binding nor handled by the
-driver, so this is broken regardless of the gpio driver.
-
-> Meanwhile, as you said, most of the users are still using built-in model, so adding the
-> support for GPIO can be in parallel with other modules' work, in other words, with this
-> GPIO loadable module support patch, if other modules can NOT work due to lack of
-> defer probe implementation, then the patch should be done in other module, adding
-> that the default configuration of GPIO is still built-in, do you think it can be an independent
-> patch and get into linux-next first?
-
-I think you should be reasonably sure that making the driver a loadable module
-does not break other drivers that might rely on the probe order and
-that are known
-to be used with an i.MX chip. With the list above, that seems to actually be
-the case for the most part, but testing is always better.
-
-If there are boards that use other drivers which do not support deferred probing
-but don't have those listed in the dts files in the kernel, then that
-is not something
-you have to worry about I think.
-
-I'll let Linus Walleij comment on whether he thinks the initcall should stay
-at subsys_initcall() to avoid breaking users with buggy drivers, or whether
-this should be changed to module_init() or builtin_platform_driver() to
-have a better chance of finding and fixing those broken drivers.
-
-     Arnd
