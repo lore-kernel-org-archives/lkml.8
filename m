@@ -2,86 +2,218 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56190C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55C6C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB6E2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8327F2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595857733;
+	bh=xjoatFaJsxRQnEszMxVSiF0p+7rV7tk/yD0bW+W7OFY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bWfcdDN+4gZDpzeo3V9kHg4TIZzKv6sEXZeew9ioCwFS2Uuc5uZTwvB1RQkxvYO4v
+	 JDjOSvGCmsUvYcjhqinhV4b9Xg/VczeAv3lKTgAummWZ8kgrIuIJz5EewI7Z3pKBk6
+	 OI9o+ePZzNpnlXlAn3tMQUSSX1lHgtP0LzHNW6KE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgG0NtP (ORCPT
+        id S1729023AbgG0Nsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:49:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729032AbgG0NtM (ORCPT
+        Mon, 27 Jul 2020 09:48:52 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42891 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbgG0Nsv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:49:12 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BDD9C0619D2;
-        Mon, 27 Jul 2020 06:49:12 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k03UE-003g0B-15; Mon, 27 Jul 2020 13:48:14 +0000
-Date:   Mon, 27 Jul 2020 14:48:14 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     'David Miller' <davem@davemloft.net>, "hch@lst.de" <hch@lst.de>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
-Subject: Re: get rid of the address_space override in setsockopt v2
-Message-ID: <20200727134814.GD794331@ZenIV.linux.org.uk>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200724.154342.1433271593505001306.davem@davemloft.net>
- <8ae792c27f144d4bb5cbea0c1cce4eed@AcuMS.aculab.com>
+        Mon, 27 Jul 2020 09:48:51 -0400
+Received: by mail-ot1-f66.google.com with SMTP id v21so5065358otj.9;
+        Mon, 27 Jul 2020 06:48:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G04O0/r0JtPjrA8T/yOTsq6lvTWvwXhHJzNHSD+Bvv0=;
+        b=Gf359EdhteI4Nnq8Yld1iYnvTexUhH9eL8GOUhs/UP2BN6++DzC2jAzaiegIg8SAR6
+         GgPsXH2riEdq/YZ5KGBsCkkftO8iyfdZ3snvhNvzvaU13qFDhjXKDAu0vRYshGVGN2T/
+         5Tw6Opaf0JIVq8VySt11ydieDvi4SYdR6/WbmVl7/ZTC8HZ85D7LI9TIzpTXeInuNoMH
+         YlVdh61tIoNiQtqhwmQJ/K84pm0V/UUIHk9siLcht/oAguHpNFtVYbf3gt7ZUC1cW4uC
+         hgEWodd5x/1ie9cRSZcXvMjg9/UaRq1o3S32f4lgJ5DZ5YJkQiw6xXNTal8uuSKAKms4
+         VtJg==
+X-Gm-Message-State: AOAM531Csy/22jzx06rTDRHG2w2J9nWQ/lK4lcz3MGcilGELdEBWHb4p
+        SejIt7TandJbMVFBjwQkalvsZUYyKojLo+slLGI=
+X-Google-Smtp-Source: ABdhPJxQLiGqjTBzCpfevLDoRoDaKwlSc6cFqo2M+nGytqpin0EHVT6UPpVSxY5bGbBw9MjXXpk0V2Yid7ru5AgB5bY=
+X-Received: by 2002:a9d:306:: with SMTP id 6mr10573023otv.167.1595857730290;
+ Mon, 27 Jul 2020 06:48:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ae792c27f144d4bb5cbea0c1cce4eed@AcuMS.aculab.com>
+References: <20200722093732.14297-1-ionela.voinescu@arm.com> <20200722093732.14297-2-ionela.voinescu@arm.com>
+In-Reply-To: <20200722093732.14297-2-ionela.voinescu@arm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 27 Jul 2020 15:48:39 +0200
+Message-ID: <CAJZ5v0i5Xrk6oTt81aeXDi1F8gnEspJo9e6nGf10nSvBz-Dbkw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] cpufreq: move invariance setter calls in cpufreq core
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 09:51:45AM +0000, David Laight wrote:
+On Wed, Jul 22, 2020 at 11:38 AM Ionela Voinescu
+<ionela.voinescu@arm.com> wrote:
+>
+> From: Valentin Schneider <valentin.schneider@arm.com>
+>
+> To properly scale its per-entity load-tracking signals, the task scheduler
+> needs to be given a frequency scale factor, i.e. some image of the current
+> frequency the CPU is running at. Currently, this scale can be computed
+> either by using counters (APERF/MPERF on x86, AMU on arm64), or by
+> piggy-backing on the frequency selection done by cpufreq.
+>
+> For the latter, drivers have to explicitly set the scale factor
+> themselves, despite it being purely boiler-plate code: the required
+> information depends entirely on the kind of frequency switch callback
+> implemented by the driver, i.e. either of: target_index(), target(),
+> fast_switch() and setpolicy().
+>
+> The fitness of those callbacks with regard to driving the Frequency
+> Invariance Engine (FIE) is studied below:
+>
+> target_index()
+> ==============
+> Documentation states that the chosen frequency "must be determined by
+> freq_table[index].frequency". It isn't clear if it *has* to be that
+> frequency, or if it can use that frequency value to do some computation
+> that ultimately leads to a different frequency selection. All drivers
+> go for the former, while the vexpress-spc-cpufreq has an atypical
+> implementation which is handled separately.
+>
+> Therefore, the hook works on the assumption the core can use
+> freq_table[index].frequency.
+>
+> target()
+> =======
+> This has been flagged as deprecated since:
+>
+>   commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
+>
+> It also doesn't have that many users:
+>
+>   cpufreq-nforce2.c:371:2:      .target = nforce2_target,
+>   cppc_cpufreq.c:416:2:         .target = cppc_cpufreq_set_target,
+>   gx-suspmod.c:439:2:           .target = cpufreq_gx_target,
+>   pcc-cpufreq.c:573:2:          .target = pcc_cpufreq_target,
 
-> I'm sure there is code that processes options in chunks.
-> This probably means it is possible to put a chunk boundary
-> at the end of userspace and continue processing the very start
-> of kernel memory.
-> 
-> At best this faults on the kernel copy code and crashes the system.
+Also intel_pstate in the passive mode.
 
-Really?  Care to provide some details, or is it another of your "I can't
-be possibly arsed to check what I'm saying, but it stands for reason
-that..." specials?
+>
+> Should we care about drivers using this hook, we may be able to exploit
+> cpufreq_freq_transition_{being, end}(). This is handled in a separate
+> patch.
+>
+> fast_switch()
+> =============
+> This callback *has* to return the frequency that was selected.
+>
+> setpolicy()
+> ===========
+> This callback does not have any designated way of informing what was the
+> end choice. But there are only two drivers using setpolicy(), and none
+> of them have current FIE support:
+>
+>   drivers/cpufreq/longrun.c:281:        .setpolicy      = longrun_set_policy,
+>   drivers/cpufreq/intel_pstate.c:2215:  .setpolicy      = intel_pstate_set_policy,
+>
+> The intel_pstate is known to use counter-driven frequency invariance.
+>
+> Conclusion
+> ==========
+>
+> Given that the significant majority of current FIE enabled drivers use
+> callbacks that lend themselves to triggering the setting of the FIE scale
+> factor in a generic way, move the invariance setter calls to cpufreq core.
+>
+> As a result of setting the frequency scale factor in cpufreq core, after
+> callbacks that lend themselves to trigger it, remove this functionality
+> from the driver side.
+>
+> To be noted that despite marking a successful frequency change, many
+> cpufreq drivers will consider the new frequency as the requested
+> frequency, although this is might not be the one granted by the hardware.
+>
+> Therefore, the call to arch_set_freq_scale() is a "best effort" one, and
+> it is up to the architecture if the new frequency is used in the new
+> frequency scale factor setting (determined by the implementation of
+> arch_set_freq_scale()) or eventually used by the scheduler (determined
+> by the implementation of arch_scale_freq_capacity()). The architecture
+> is in a better position to decide if it has better methods to obtain
+> more accurate information regarding the current frequency and use that
+> information instead (for example, the use of counters).
+>
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/cpufreq/cpufreq-dt.c           | 10 +---------
+>  drivers/cpufreq/cpufreq.c              | 20 +++++++++++++++++---
+>  drivers/cpufreq/qcom-cpufreq-hw.c      |  9 +--------
+>  drivers/cpufreq/scmi-cpufreq.c         | 12 ++----------
+>  drivers/cpufreq/scpi-cpufreq.c         |  6 +-----
+>  drivers/cpufreq/vexpress-spc-cpufreq.c |  5 -----
+>  6 files changed, 22 insertions(+), 40 deletions(-)
+>
+> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+> index 944d7b45afe9..9fd4ce774f12 100644
+> --- a/drivers/cpufreq/cpufreq-dt.c
+> +++ b/drivers/cpufreq/cpufreq-dt.c
+> @@ -40,16 +40,8 @@ static int set_target(struct cpufreq_policy *policy, unsigned int index)
+>  {
+>         struct private_data *priv = policy->driver_data;
+>         unsigned long freq = policy->freq_table[index].frequency;
+> -       int ret;
+> -
+> -       ret = dev_pm_opp_set_rate(priv->cpu_dev, freq * 1000);
+>
+> -       if (!ret) {
+> -               arch_set_freq_scale(policy->related_cpus, freq,
+> -                                   policy->cpuinfo.max_freq);
+> -       }
+> -
+> -       return ret;
+> +       return dev_pm_opp_set_rate(priv->cpu_dev, freq * 1000);
+>  }
+>
+>  /*
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 036f4cc42ede..bac4101546db 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2058,9 +2058,16 @@ EXPORT_SYMBOL(cpufreq_unregister_notifier);
+>  unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
+>                                         unsigned int target_freq)
+>  {
+> +       unsigned int freq;
+> +
+>         target_freq = clamp_val(target_freq, policy->min, policy->max);
+> +       freq = cpufreq_driver->fast_switch(policy, target_freq);
+> +
+> +       if (freq)
+> +               arch_set_freq_scale(policy->related_cpus, freq,
+> +                                   policy->cpuinfo.max_freq);
+
+Why can't arch_set_freq_scale() handle freq == 0?
