@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9B5C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396B8C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCA75208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA07208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859443;
-	bh=tH+bZieuhKiCAe1crHPmNpD1ivBEEIf7aWZ7DUPOZ+k=;
+	s=default; t=1595859449;
+	bh=aR6hq68g+JgW0/2Rfx8A0TFHFTFCCggYO2Jse4nyR7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l2wL8OnbGNAwoFtF6nB4nn6ZH1QaFmM2AAqVIFi+EvCMoW3hhCpL+JbU0diBFc+WE
-	 sRltmYNVXdpSHXswOAu+Iisw1tURabU/zkZaJMu8ymRVNdMAKkb6/Xm22P+BvnVm/w
-	 GqMAI0BRnNee+0z8XDfjBLh0MEb7Q2IY0yJZlgZI=
+	b=EmTM3KcJ7FUMY+Ob/kVfB2XwXN5ha2lCuBFILlySqce1magfyUG5H1Yf6orlQTtki
+	 SBH8R8tcV8GS7CZKLNrFVO8o/gLiCIQofV6rVPBehvZXO155DX4MS+roWNxnPYsqC9
+	 7wUoPGCCq8qTq3YpdK57eoImue2cK7szHWKtzRZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731033AbgG0ORV (ORCPT
+        id S1731056AbgG0OR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:17:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44428 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:17:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731004AbgG0ORM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:17:12 -0400
+        id S1731019AbgG0ORR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:17:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE52220775;
-        Mon, 27 Jul 2020 14:17:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74FD020825;
+        Mon, 27 Jul 2020 14:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859432;
-        bh=tH+bZieuhKiCAe1crHPmNpD1ivBEEIf7aWZ7DUPOZ+k=;
+        s=default; t=1595859437;
+        bh=aR6hq68g+JgW0/2Rfx8A0TFHFTFCCggYO2Jse4nyR7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fsBF8bki2SXQgMypPoHJnDXM9Siz0voZjgDWFAV46mfma+ywNdWvORlEjVhim2bY8
-         yax+MspDUQlolx5FDjpP29tZRjwBx7aOoV31vLwYhT5VtVgiSE3FO2OzkoifmwmnF/
-         eMa2DxjfVyid+ElNenTEi7l4/RGrG93M+te1nKZs=
+        b=DDL5ZX2QpjvVsgaOvZmCUxgl9xE6h/EWSqpc33cbv46CZa1TRKCmIWHz5eitM2ubf
+         nGzhhxuP+BrZO8PnJ2gL/MX3pD3ceUExc3EBzW79iKXa0+v+CeXc7FTanzWdNkrON+
+         q4imOx0l72Au1mF5jg03yanntThdp5M+/YRs3vLs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 075/138] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
-Date:   Mon, 27 Jul 2020 16:04:30 +0200
-Message-Id: <20200727134929.137482912@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 077/138] ARM: dts: n900: remove mmc1 card detect gpio
+Date:   Mon, 27 Jul 2020 16:04:32 +0200
+Message-Id: <20200727134929.235445900@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,47 +63,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Merlijn Wajer <merlijn@wizzup.org>
 
-[ Upstream commit 5b78fac4b1ba731cf4177fdbc1e3a4661521bcd0 ]
+[ Upstream commit ed3e98e919aaaa47e9d9f8a40c3f6f4a22577842 ]
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+Instead, expose the key via the input framework, as SW_MACHINE_COVER
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20200624064626.19855-1-dinghao.liu@zju.edu.cn
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The chip-detect GPIO is actually detecting if the cover is closed.
+Technically it's possible to use the SD card with open cover. The
+only downside is risk of battery falling out and user being able
+to physically remove the card.
+
+The behaviour of SD card not being available when the device is
+open is unexpected and creates more problems than it solves. There
+is a high chance, that more people accidentally break their rootfs
+by opening the case without physically removing the card.
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Merlijn Wajer <merlijn@wizzup.org>
+Link: https://lore.kernel.org/r/20200612125402.18393-3-merlijn@wizzup.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/omap3-n900.dts | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 914901a680c8a..9068591bd684b 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -658,6 +658,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index 7f2ddb78da5fa..4227da71cc626 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -105,6 +105,14 @@
+ 			linux,code = <SW_FRONT_PROXIMITY>;
+ 			linux,can-disable;
+ 		};
++
++		machine_cover {
++			label = "Machine Cover";
++			gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
++			linux,input-type = <EV_SW>;
++			linux,code = <SW_MACHINE_COVER>;
++			linux,can-disable;
++		};
+ 	};
  
- 	ret = pm_runtime_get_sync(tdc2dev(tdc));
- 	if (ret < 0) {
-+		pm_runtime_put_noidle(tdc2dev(tdc));
- 		free_irq(tdc->irq, tdc);
- 		return ret;
- 	}
-@@ -869,8 +870,10 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	pm_runtime_enable(&pdev->dev);
+ 	isp1707: isp1707 {
+@@ -814,10 +822,6 @@
+ 	pinctrl-0 = <&mmc1_pins>;
+ 	vmmc-supply = <&vmmc1>;
+ 	bus-width = <4>;
+-	/* For debugging, it is often good idea to remove this GPIO.
+-	   It means you can remove back cover (to reboot by removing
+-	   battery) and still use the MMC card. */
+-	cd-gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
+ };
  
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
- 		goto rpm_disable;
-+	}
- 
- 	ret = tegra_adma_init(tdma);
- 	if (ret)
+ /* most boards use vaux3, only some old versions use vmmc2 instead */
 -- 
 2.25.1
 
