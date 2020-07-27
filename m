@@ -2,105 +2,97 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4B0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2B6C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E6312070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:08:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ObQ5W0T7"
+	by mail.kernel.org (Postfix) with ESMTP id 7E57E2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595837368;
+	bh=lCrpB88WAFkALsOviV3SLm4odihd1JMS4dLTep4qOXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kzGJ8rTVhB6/siAekH7UHaFck1HMOh70TqQIi0lmujEzRdz+uOAph5hLRPCNItiaJ
+	 x2OJapFmBlOvvs8llagnGtO4Wqj3+AVoabrE/UEOBF4ABXZsyuYHegmzRGtkQj6vAF
+	 ufOamfh2sDz0GMi5cUI50tabQE9uKG7ymyLRUOfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgG0IIg (ORCPT
+        id S1727067AbgG0IJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:08:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726122AbgG0IIf (ORCPT
+        Mon, 27 Jul 2020 04:09:27 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:44832 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbgG0IJ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:08:35 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB2BC0619D2;
-        Mon, 27 Jul 2020 01:08:35 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFXW46K3hz9sRN;
-        Mon, 27 Jul 2020 18:08:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595837313;
-        bh=ZB0YfooDmJb71L7NPOII9upL0BQw1kzm26TJWFmNJvI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ObQ5W0T7KVZ6Ir3M3Uw2LogMkZzz0v5LK+9xQtfHDgApg/LsLpJbZRVzAyj8EyPMq
-         X72EUqWLziUQ/34KjXKVbrzSLEKwPt6NIDmVcYpFz15pTZ8yz39uGQ6e/8HIt7gG2S
-         KRPUrNr8scujsVTmH0fn7+6ZJRqjmKGtPamzxdzzzadLEb7g9j4zQBy3SUQoD6ciwg
-         L9QCAzHOSXi/U6mLHhV3o1IqFSkOuOnOtxMWyntqi3DtbcWaPNtAStIzxW8CkEtDYs
-         aUYKkKrpiA/lGYOxKeGGuWn/Azm4OeDK5dEzoQICJpj3rBJtOnIVf95kxenXMCMO7i
-         I2LJ0hYEMrDGg==
-Date:   Mon, 27 Jul 2020 18:08:31 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Omer Shpigelman <oshpigelman@habana.ai>
-Subject: linux-next: build failure after merge of the char-misc tree
-Message-ID: <20200727180831.6c356fc1@canb.auug.org.au>
+        Mon, 27 Jul 2020 04:09:27 -0400
+Received: by mail-ej1-f66.google.com with SMTP id dk23so4232824ejb.11;
+        Mon, 27 Jul 2020 01:09:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hKkmbibPaaHyRRuXyUfERlU7BOY1YF76J3mADSkmBJI=;
+        b=V/bgkBXjr+/0E7EMcWPZTOxh+cr//Zq3EHVT8kZVi9ctW9jhjDidkShwmG7PA4w0Tw
+         LO0qV5gOAfU8VGfS2a+C/TXEk7+OeP3/BCqUP+/3cNYXz+61tZ+iMPCzQhXZkQUFHx0p
+         Am5DF5RURPP8L7WOuwVMVI+4HiFq0SozjE0OiUTuw73anoUTgrJnScSSgVzEAne3rsqw
+         0N9JwckAL4DtXGx4M42lTPHRbFIbVUDxTMaHvBTc2mOfq+FfZfPaVCWFujRhCQDZkS/G
+         bU9UM/pZa/qGxICgNqhDQjBO/Ucfgxi/Z6JNSSRuEHcBQ+MGztUrGlxDQ6iljF6TD985
+         Fatg==
+X-Gm-Message-State: AOAM533af+T2hOpl1SiTpuG7lA3i6B2WtmzkbvgfOmS3JCr/vbWU9SoL
+        zQjTwTF9e9fqx28O7CuynK8=
+X-Google-Smtp-Source: ABdhPJx9eLbrDIcbXbnQwv52xfDW9/pKccXusKjWlVpgQW8jvx+LdTDi/Zg9iyuhBC6wogl+k+76jA==
+X-Received: by 2002:a17:906:7f05:: with SMTP id d5mr2430608ejr.122.1595837365080;
+        Mon, 27 Jul 2020 01:09:25 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.213])
+        by smtp.googlemail.com with ESMTPSA id mf17sm2953883ejb.56.2020.07.27.01.09.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 27 Jul 2020 01:09:24 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 10:09:21 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Roger Quadros <rogerq@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 14/16] memory: pl172: Enclose macro argument usage in
+ parenthesis
+Message-ID: <20200727080921.GA29255@kozik-lap>
+References: <20200724182328.3348-1-krzk@kernel.org>
+ <20200724182328.3348-15-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wNv+Qy3O1nb0cUhVFMrSJS_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200724182328.3348-15-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/wNv+Qy3O1nb0cUhVFMrSJS_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jul 24, 2020 at 08:23:26PM +0200, Krzysztof Kozlowski wrote:
+> Macros arguments should be enclosed by parenthesis for safety.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/memory/pl172.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 
-Hi all,
+Applied to drivers/memory tree.
 
-After merging the char-misc tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
-
-In file included from drivers/misc/habanalabs/goya/goya.c:8:
-drivers/misc/habanalabs/goya/goyaP.h:12:10: fatal error: habanalabs.h: No s=
-uch file or directory
-   12 | #include "habanalabs.h"
-      |          ^~~~~~~~~~~~~~
-In file included from drivers/misc/habanalabs/goya/goya_security.c:8:
-drivers/misc/habanalabs/goya/goyaP.h:12:10: fatal error: habanalabs.h: No s=
-uch file or directory
-   12 | #include "habanalabs.h"
-      |          ^~~~~~~~~~~~~~
-
-Presumably caused by commit
-
-  70b2f993ea4a ("habanalabs: create common folder")
-
-I have used the char-misc tree from next-20200724 for today.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/wNv+Qy3O1nb0cUhVFMrSJS_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ei4AACgkQAVBC80lX
-0GwpbAf/W+vSs7w255A8tCEkIBcZiJvjLSaE1H/eeFvaEHrgwaRVpxmtFzl3eN3k
-upP61pSy5fHrS5ZnlIR5hbQZpnuZvSIiw+yBSwOxQWtXuMEgoLbaPnXUNF25jq2T
-P6mJ/iw22BqsvSi4sUYqDZy4So7Xp1JJQ67X5FEeRh0SWAyLeE6Lh4SZjSf58hEe
-WXvMYvW4nctN3OM1l/Pc/YzjJiUaZ6r7msc1a/30i3MU/EkQdr/i+o9JFTzYlA3Y
-Mty1rmQBqlz1jquwQ7MbUgDP4ugRdMcROQd74Sg029UZCDz2njZBmz3PJzUViXkN
-TCBdufQdyPief3ioZCgh3wH9UqIFCQ==
-=EXts
------END PGP SIGNATURE-----
-
---Sig_/wNv+Qy3O1nb0cUhVFMrSJS_--
+Best regards,
+Krzysztof
