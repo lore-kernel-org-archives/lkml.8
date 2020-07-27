@@ -2,120 +2,135 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29348C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112AAC433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB1152078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859213;
-	bh=W1kz7H0Zg4K77PouQ4bwaTC+6NDwjaCUYFCrs+r8C1U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x4QB7DtqtW8kYfs6aRT59Sd3nqWeVlt0gbxhtTELHUEaKu0DTcWmrD1tEOmx0Tyd+
-	 BVPR0kYhbnV0l9wKRT0PV5aIXAxwfi1owWf46x67fVH7LAXUiM9Sr63N5bvXUZ+/by
-	 jPtp9mZY/7WjWaVVe2KO8oh2pMMgSTMUvIDYvsos=
+	by mail.kernel.org (Postfix) with ESMTP id E81CA2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:13:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730379AbgG0ONc (ORCPT
+        id S1730411AbgG0ONo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730374AbgG0ON1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:13:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 174262073E;
-        Mon, 27 Jul 2020 14:13:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859206;
-        bh=W1kz7H0Zg4K77PouQ4bwaTC+6NDwjaCUYFCrs+r8C1U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dV8CWNH/gAkilIAovRiWH8tQTE8xIe7mrzE3VWc7cwaMmXZ2hKjGycVDUrxLKXaTH
-         G9r/ae6Sy7fegBPZS3kFh3uvNLA56292DAj9k1DOn1r9rIJfzplYBcxeSQi/bKFjcB
-         ydXT2qDCTCq9hF3rWsOS6F2EKWvLU7R27hb3S+/k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 020/138] ARM: dts: imx6qdl-gw551x: Do not use simple-audio-card,dai-link
-Date:   Mon, 27 Jul 2020 16:03:35 +0200
-Message-Id: <20200727134926.330762347@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
-References: <20200727134925.228313570@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 27 Jul 2020 10:13:44 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43558 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728644AbgG0ONk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:13:40 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k03sn-0002Sy-Th; Mon, 27 Jul 2020 14:13:38 +0000
+Date:   Mon, 27 Jul 2020 16:13:37 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: bpfilter logging write errors in dmesg
+Message-ID: <20200727141337.liwdfjxq4cwvt5if@wittgenstein>
+References: <20200727104636.nuz3u4xb7ba7ue5a@wittgenstein>
+ <20200727132855.GA28165@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200727132855.GA28165@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+On Mon, Jul 27, 2020 at 03:28:55PM +0200, Christoph Hellwig wrote:
+> On Mon, Jul 27, 2020 at 12:46:36PM +0200, Christian Brauner wrote:
+> > Hey Christoph,
+> > 
+> > Seems that commit
+> > 6955a76fbcd5 ("bpfilter: switch to kernel_write")
+> > causes bpfilter to spew these useless messages in dmesg?
+> > 
+> > [   26.356824] Started bpfilter
+> > [   26.357059] bpfilter: write fail -22
+> > [   26.396244] Started bpfilter
+> > [   26.396325] bpfilter: Loaded bpfilter_umh pid 637
+> > [   26.396542] bpfilter: write fail -22
+> > [   26.409588] bpfilter: Loaded bpfilter_umh pid 638
+> > [   26.410790] Started bpfilter
+> > [   26.410960] bpfilter: write fail -22
+> > [   26.445718] Started bpfilter
+> > [   26.445799] bpfilter: Loaded bpfilter_umh pid 640
+> > [   26.445983] bpfilter: write fail -22
+> > [   26.451122] bpfilter: read fail 0
+> > [   26.496497] bpfilter: Loaded bpfilter_umh pid 648
+> > [   26.497889] Started bpfilter
+> > [   26.750028] bpfilter: write fail -22
+> > [   26.768400] Started bpfilter
+> > [   26.768496] bpfilter: Loaded bpfilter_umh pid 661
+> > [   26.768699] bpfilter: write fail -22
+> > [   26.806550] Started bpfilter
+> > [   26.806616] bpfilter: Loaded bpfilter_umh pid 663
+> > [   26.864708] bpfilter: write fail -22
+> > [   26.872345] bpfilter: Loaded bpfilter_umh pid 666
+> > [   26.873072] Started bpfilter
+> > [   26.873194] bpfilter: write fail -22
+> > [   27.295514] kauditd_printk_skb: 22 callbacks suppressed
+> > 
+> > This is on a pure v5.8-rc7 via make bindep-pkg. I'm not using bpfilter
+> > in any shape or form afaict and haven't seen those messages before and
+> > this seems to be the last change I see.
+> 
+> I don't see any of those on 5.8-rc, just:
+> 
+> root@testvm:~# dmesg | grep bpf
+> [    6.692550] bpfilter: Loaded bpfilter_umh pid 1849
 
-[ Upstream commit e52928e8d5c1c4837a0c6ec2068beea99defde8b ]
+Hm, odd
 
-According to Documentation/devicetree/bindings/sound/simple-card.txt
-the 'simple-audio-card,dai-link' may be omitted when the card has
-only one DAI link, which is the case here.
+> 
+> That debug patch below should help to pintpoint what is going on for
+> you:
 
-Get rid of 'simple-audio-card,dai-link' in order to fix the following
-build warning with W=1:
+Thanks for the debug patch! Applied and ran a kernel and I'm getting:
 
-arch/arm/boot/dts/imx6qdl-gw551x.dtsi:109.32-121.5: Warning (unit_address_vs_reg): /sound-digital/simple-audio-card,dai-link@0: node has a unit name, but no reg property
+[   21.919851] bpfilter: Loaded bpfilter_umh pid 619
+[   22.000229] rw_verify_area
+[   22.000235] bpfilter: write fail -22
+[   22.014686] Started bpfilter
 
-Cc: Tim Harvey <tharvey@gateworks.com>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/imx6qdl-gw551x.dtsi | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+I'm also seeing some other failures later:
 
-diff --git a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-index c23ba229fd057..c38e86eedcc01 100644
---- a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-@@ -105,19 +105,16 @@
- 	sound-digital {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "tda1997x-audio";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&sound_codec>;
-+		simple-audio-card,frame-master = <&sound_codec>;
- 
--		simple-audio-card,dai-link@0 {
--			format = "i2s";
--
--			cpu {
--				sound-dai = <&ssi2>;
--			};
-+		sound_cpu: simple-audio-card,cpu {
-+			sound-dai = <&ssi2>;
-+		};
- 
--			codec {
--				bitclock-master;
--				frame-master;
--				sound-dai = <&hdmi_receiver>;
--			};
-+		sound_codec: simple-audio-card,codec {
-+			sound-dai = <&hdmi_receiver>;
- 		};
- 	};
- };
--- 
-2.25.1
+[  236.898220] bpfilter: write fail -22
+[  236.899255] bpfilter: write fail -32
+[  236.922557] bpfilter: Loaded bpfilter_umh pid 1101
+[  236.923310] Started bpfilter
+[  236.923521] rw_verify_area
+[  236.923524] bpfilter: write fail -22
+[  236.925273] bpfilter: read fail 0
+[  236.945117] bpfilter: Loaded bpfilter_umh pid 1103
+[  236.945925] Started bpfilter
+[  236.946123] rw_verify_area
+[  236.946126] bpfilter: write fail -22
+[  236.947641] bpfilter: read fail 0
+[  236.968143] bpfilter: Loaded bpfilter_umh pid 1105
+[  236.968734] Started bpfilter
+[  236.987777] rw_verify_area
+[  236.987781] bpfilter: write fail -22
+[  236.990072] bpfilter: read fail 0
 
+Seems I can trigger this via iptables:
 
+[  437.922719] bpfilter: write fail -22
+[  437.924488] bpfilter: read fail 0
+root@g1-vm:~# iptables -S
+iptables v1.8.4 (legacy): can't initialize iptables table `filter': Bad address
+Perhaps iptables or your kernel needs to be upgraded.
 
+I have
+CONFIG_IP_NF_IPTABLES=m
+CONFIG_IP6_NF_IPTABLES=m
+maybe I'm just missing another kernel option or something and I have no
+idea how this bpfilter thing and iptables relate to each other. So maybe
+it's not worth the effort and it's just my setup being broken somehow.
+
+Christian
