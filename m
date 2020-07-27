@@ -2,106 +2,127 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 452E8C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF72C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF3920672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83742073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:26:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brpUcL1d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730770AbgG0RZl (ORCPT
+        id S1730810AbgG0R0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:25:41 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:59595 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgG0RZk (ORCPT
+        Mon, 27 Jul 2020 13:26:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729927AbgG0R0W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:25:40 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MC2o9-1k5MDf3aZx-00COYp; Mon, 27 Jul 2020 19:25:39 +0200
-Received: by mail-qk1-f170.google.com with SMTP id 2so11868100qkf.10;
-        Mon, 27 Jul 2020 10:25:38 -0700 (PDT)
-X-Gm-Message-State: AOAM53133EXYITZmZGW14vx4amvBuI9bqNv3y8GMdxF943w3XFgZZ4ii
-        QaobYtlLaYT0WJh+8pLguWbn8ZgdeikONE4SRYk=
-X-Google-Smtp-Source: ABdhPJyHnciMJIel1lwAD5bow/zb/QGlp3YciXK2/NVdtnimMUPJo7yU6pZ4mJlHkwU8BKDS8Pa279r2z6tHPp7qb+M=
-X-Received: by 2002:a37:b484:: with SMTP id d126mr23840011qkf.394.1595870737385;
- Mon, 27 Jul 2020 10:25:37 -0700 (PDT)
+        Mon, 27 Jul 2020 13:26:22 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA66C061794;
+        Mon, 27 Jul 2020 10:26:21 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f18so15570523wml.3;
+        Mon, 27 Jul 2020 10:26:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zsKxRhlKd+uQDOq2/CXnJ6zIjjtOUm8tfFO4C1ExSks=;
+        b=brpUcL1dvlfAx+vy6LtKzjhnTVyIriswGfEVAhcn4lBEgN/dKomchE/adCVnX6Oz32
+         zhDR+MYC8aTX9htq5QRg2ynAPL+FB8ryT3We2P5zzOC89WsfiY0bWxSW0myzQmURj22O
+         lQE6O8H0GvW4NxapvQP/VgTe3ERzx1YwXMVSMJNbiuGdOIeb6m6b0V4S9SeOjVKOU5g0
+         BSnRm4tHiaSZSJSWfdPIPZ/+OqdRqhvUxlgiToNidPwGm7Z3YRHWHbNHfVeYlxG+JSZ/
+         ajeP647s5kvSE4564J6Pyamp+hpZgvdecG6Xs90bphDofFiPSNteiTh986fJ17/h7F7L
+         kUGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zsKxRhlKd+uQDOq2/CXnJ6zIjjtOUm8tfFO4C1ExSks=;
+        b=EMafQtJnHvqyoF9twiOTVGIzqsBShyJohiAyXnQsYqsQEEGvThgglCkwxkrpJFppce
+         29Qh2utiAFHWfSuSFH7p9KNLMc+HViNmcfwYkrGUHJ4ISng6NLxOhJYgHNL5BFtktHwS
+         YtYI8Yp6YAivV0fcXxqVdfjSza9jwM3uPfhQpdtvEQgmjiYgye+8HZ9ET7LrLui+mnAk
+         TkFIO4/wIHgQjfmqtvv2Vtn5AeWE6MWjCJ95+v+TaKuKfk8LJcta+75Gu5mcXOcF2JP0
+         dysIBes0RB5I7+5i6Hor10lr1cthSFly4mCz3Kk9h7UjB4iKgx/JmrbF5Auh/Gk5pydM
+         WJdw==
+X-Gm-Message-State: AOAM530HlJPcGuNXYoycqoaThFsv/nT8t82fuQL/KVHiac/5brat3zcf
+        vfCN5ljSuEvQxbRdm+am/GkzgyD1JaVDPg==
+X-Google-Smtp-Source: ABdhPJwkJV3qaZGLM3sAXvMmmraw2MnHdwguxhJ8gmiBPedSmNgltn0XLRIhYjiS1VEvidDNTPbdvA==
+X-Received: by 2002:a1c:2dc6:: with SMTP id t189mr344180wmt.26.1595870780590;
+        Mon, 27 Jul 2020 10:26:20 -0700 (PDT)
+Received: from localhost.localdomain (112.red-81-32-35.dynamicip.rima-tde.net. [81.32.35.112])
+        by smtp.gmail.com with ESMTPSA id l10sm9198395wru.3.2020.07.27.10.26.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 10:26:20 -0700 (PDT)
+From:   Juan Antonio Aldea-Armenteros <juant.aldea@gmail.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Juan Antonio Aldea-Armenteros <juant.aldea@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2] media: atomisp-mt9m114: replace fixed function names
+Date:   Mon, 27 Jul 2020 19:24:17 +0200
+Message-Id: <20200727172415.54935-1-juant.aldea@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200727162935.31714-1-rppt@kernel.org> <20200727162935.31714-5-rppt@kernel.org>
-In-Reply-To: <20200727162935.31714-5-rppt@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 27 Jul 2020 19:25:20 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3Lbjdx_43-b0i1FXEfqaNPbaoXLraa2WikfPHrOZ6Kog@mail.gmail.com>
-Message-ID: <CAK8P3a3Lbjdx_43-b0i1FXEfqaNPbaoXLraa2WikfPHrOZ6Kog@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] arch, mm: wire up memfd_secret system call were relevant
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-nvdimm@lists.01.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:EceBZqwyo4B1UVEZn/Xgzc7AE01Hrl25zqNiNRQE1nSOWMZWle+
- g7N+PnXRbCSAMr0XnZ49UfT+iW8IunuS9TPM822G37AEvmA3W7in5ND1Ye/8UnvHrrPI383
- kEGT+CmwlBf7zuvI0Sxkpzl1sWD2ck3PNJ8qOBybMEfmYFG+9s9wlKoe6v/QgUZ1P6d1R0y
- H6Ut5jTjR1+YQzurNJp/w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tC2Xp4XT5xY=:L/0NRMbXw9YElq6rjWLtqI
- 0Mr9VzUM7WLH9qn8aC+ng9oz0Sm/BE8sB2tVVg2loLmdQaSofHRMLqW5Y4pNJei7bc/dercWN
- Udlmt5WUOCU5zpzqvUwLUPFT1sF+o2a7pUVSA3ztLs1q3SQSiolebs104pJWejE1eanEdHu7h
- pAhPGDX0lgydu5PmjGhTyfOA8u60UZaG0ikMSmXVINfSK6/dGwD4fVJwwLUcNjdV1HKqQFsAz
- wPopjZsfVAljmtbwysL9ASZIYsxnDh+58NyIrxvgUsBHlBWS/2NqXJ+LFKj42LfOuycfr5IfT
- WxpeZ1lDMmGa+s6smQ5KisI2ySFTw6K5//f55QKlnKOakHMxaur1L1Ef7k+k+GOZPAu3QUwA4
- t8W299OnR0zZuJeJkGlWSA3Y7VfAIAIxe7nVI+nSLk7EakTipPaIfnOAX5/qMZjlyRKhNO4BI
- BH8MJ9WdtDzwQVfPL1vkRZmMy1eOT9G4EdhMn0GUm+fv59547if+HFv0N3b+biOXTql/861pT
- KHIzur9/Hbh+Yh+DJB2cE9PLgDdoAAjMk/cnxGxcvXXBv11dVaHYlwkWpZKM1inB91LtXdLLy
- RcD9NvwaM079xjiYEMzK10x5QNBWQbPw3/BgGFEC3hlmBdpws93U5bYzxakGXe+kPHcUuvRlC
- 8CDFQNf2US/HaGllrd7w+cF30C/4IzgboUYrmJagytrGukMNmGcW4NUyu3nfUkvTn2kDYAEvj
- i56M62rt8WzjSv5WG1rSSs9FrJ46Gh/iFbQQR0NCTmAPCDfvWcWTDQYuBOL4SqCzbNwnXTvJ7
- Kgy40VpSpa6qgmeZpTDKScN3kXt34wbCVeakSB3aZT6XILnzTAKiComYlrxspK0Fo6uZVWuH6
- vkzqNYYGpLawOe0Ip2Ef50B7uOKtHKYGNL/mKbZgdfm/V5w7QJrno9H2Fk4Fe6BqnQudOSvK7
- E3ALx286dghNqXnZ9IkRNbDxpAQ8CTsKB8F0EmYmxlKE74AA0CKlJ
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 6:30 PM Mike Rapoport <rppt@kernel.org> wrote:
->
-> From: Mike Rapoport <rppt@linux.ibm.com>
->
-> Wire up memfd_secret system call on architectures that define
-> ARCH_HAS_SET_DIRECT_MAP, namely arm64, risc-v and x86.
->
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+There are a couple of debug messages using hardcoded function names
+instead of the preferred __func__ magic constant.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Replace them:
+
+WARNING: Prefer using '"%s...", __func__' to using 'misensor_rmw_reg', this function's name, in a string
+215: FILE: ./media/atomisp/i2c/atomisp-mt9m114.c:215:
++       v4l2_err(client, "misensor_rmw_reg error exit, read failed\n");
+
+WARNING: Prefer using '"%s...", __func__' to using 'misensor_rmw_reg', this function's name, in a string
+236: FILE: ./media/atomisp/i2c/atomisp-mt9m114.c:236:
++       v4l2_err(client, "misensor_rmw_reg error exit, write failed\n");
+
+Signed-off-by: Juan Antonio Aldea-Armenteros <juant.aldea@gmail.com>
+
+PATCH V2:
+* Restored word "error" as pointed out by Dan Carpenter <dan.carpenter@oracle.com>
+
+---
+ drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c b/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c
+index 0d60918a9b19..f5de81132177 100644
+--- a/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c
++++ b/drivers/staging/media/atomisp/i2c/atomisp-mt9m114.c
+@@ -212,7 +212,7 @@ misensor_rmw_reg(struct i2c_client *client, u16 data_length, u16 reg,
+ 
+ 	err = mt9m114_read_reg(client, data_length, reg, &val);
+ 	if (err) {
+-		v4l2_err(client, "misensor_rmw_reg error exit, read failed\n");
++		v4l2_err(client, "%s error exit, read failed\n", __func__);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -233,7 +233,7 @@ misensor_rmw_reg(struct i2c_client *client, u16 data_length, u16 reg,
+ 
+ 	err = mt9m114_write_reg(client, data_length, reg, val);
+ 	if (err) {
+-		v4l2_err(client, "misensor_rmw_reg error exit, write failed\n");
++		v4l2_err(client, "%s error exit, write failed\n", __func__);
+ 		return -EINVAL;
+ 	}
+ 
+-- 
+2.27.0
+
