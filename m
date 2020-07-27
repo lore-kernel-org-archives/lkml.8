@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B16DC43460
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F97DC4345B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A29F2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AAD207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858840;
-	bh=/oDceVRvBcZtcSeouwu1wm8VWD2sKbRTIpY4H/q1V0g=;
+	s=default; t=1595858827;
+	bh=/+lYmerbp5LL2nkMd56EBYUGie/PD1wv+QobVSI6++M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zGp55JT8V0OhGjOZiGWd7km9qlLZGrGdQB7mjQKf8CB5qqpyPQk9jwkb3ZxTt6IkU
-	 WJpcUGj5Iii3B26GUV2KkfVvqmBnLYCXMAY4yXDYsHyqBBEcKpm0oq3mNa1OxqRWjw
-	 I+aLCRp6XNps35UvLNRrjhXnj8HELc/pS5NhyE/Y=
+	b=mV6xNPE+ZDJ/gm0s9GSFbiBfq5tPvw9+0RiFJ210k5aEBz9ZXczII7X7XOlA4lYYB
+	 XriF3z+LVtf+xYR7PqeKrpY6MqQZSG95MAQACV3/Cppk2CWnYHsCMSVHJM9yUbmblT
+	 u910ehSUBGNGfpSjgQewtu8EHozEK/+xNKqbqc00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbgG0OHS (ORCPT
+        id S1729134AbgG0OHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:07:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55756 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:07:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729181AbgG0OHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:07:15 -0400
+        id S1729120AbgG0OHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:07:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 214F720775;
-        Mon, 27 Jul 2020 14:07:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 299D420775;
+        Mon, 27 Jul 2020 14:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858834;
-        bh=/oDceVRvBcZtcSeouwu1wm8VWD2sKbRTIpY4H/q1V0g=;
+        s=default; t=1595858823;
+        bh=/+lYmerbp5LL2nkMd56EBYUGie/PD1wv+QobVSI6++M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GNVgRiT+2dU0OaxcEDCGnQjIlDFYdrLiwY3UM0Khdbk65wgA+Oj334PhEIfnqIkKu
-         O2ms6Mac4LMep1qvOLSMsrsWBsbU3oae9B0bpjyY5XDsboJlzyD3/ASR+nZGgxD/fh
-         k7CeXVtWPZqkbY7QseY9cdJ0Qx4obUj4b+h2JrbY=
+        b=RmjLrT599/Zd67R/ltWcmaG9yt3jWgW+XkNC3dB1K2QnXrwIoCl8lmXbvVf77b5Ct
+         FWt05/QYIvPk4bWU83H7cCHwNTXgSJkqPtqLa2lyp/I4wmbdhf4D7oSfVUuMRMnfc2
+         l/oNlqOy2+FDQoG9JpHCDvQfr486YYaga+8+siAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        stable@vger.kernel.org, Sergey Organov <sorganov@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 06/64] xtensa: fix __sync_fetch_and_{and,or}_4 declarations
-Date:   Mon, 27 Jul 2020 16:03:45 +0200
-Message-Id: <20200727134911.349920934@linuxfoundation.org>
+Subject: [PATCH 4.14 24/64] net: dp83640: fix SIOCSHWTSTAMP to update the struct with actual configuration
+Date:   Mon, 27 Jul 2020 16:04:03 +0200
+Message-Id: <20200727134912.349190447@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -59,48 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Sergey Organov <sorganov@gmail.com>
 
-[ Upstream commit 73f9941306d5ce030f3ffc7db425c7b2a798cf8e ]
+[ Upstream commit 473309fb8372365ad211f425bca760af800e10a7 ]
 
-Building xtensa kernel with gcc-10 produces the following warnings:
-  arch/xtensa/kernel/xtensa_ksyms.c:90:15: warning: conflicting types
-    for built-in function ‘__sync_fetch_and_and_4’;
-    expected ‘unsigned int(volatile void *, unsigned int)’
-    [-Wbuiltin-declaration-mismatch]
-  arch/xtensa/kernel/xtensa_ksyms.c:96:15: warning: conflicting types
-    for built-in function ‘__sync_fetch_and_or_4’;
-    expected ‘unsigned int(volatile void *, unsigned int)’
-    [-Wbuiltin-declaration-mismatch]
+>From Documentation/networking/timestamping.txt:
 
-Fix declarations of these functions to avoid the warning.
+  A driver which supports hardware time stamping shall update the
+  struct with the actual, possibly more permissive configuration.
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Do update the struct passed when we upscale the requested time
+stamping mode.
+
+Fixes: cb646e2b02b2 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
+Signed-off-by: Sergey Organov <sorganov@gmail.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/xtensa_ksyms.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/phy/dp83640.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/xtensa/kernel/xtensa_ksyms.c b/arch/xtensa/kernel/xtensa_ksyms.c
-index dc7b470a423a6..58b79e2ea569c 100644
---- a/arch/xtensa/kernel/xtensa_ksyms.c
-+++ b/arch/xtensa/kernel/xtensa_ksyms.c
-@@ -82,13 +82,13 @@ void __xtensa_libgcc_window_spill(void)
- }
- EXPORT_SYMBOL(__xtensa_libgcc_window_spill);
- 
--unsigned long __sync_fetch_and_and_4(unsigned long *p, unsigned long v)
-+unsigned int __sync_fetch_and_and_4(volatile void *p, unsigned int v)
- {
- 	BUG();
- }
- EXPORT_SYMBOL(__sync_fetch_and_and_4);
- 
--unsigned long __sync_fetch_and_or_4(unsigned long *p, unsigned long v)
-+unsigned int __sync_fetch_and_or_4(volatile void *p, unsigned int v)
- {
- 	BUG();
- }
+diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
+index c52c016676af3..5752280fdb408 100644
+--- a/drivers/net/phy/dp83640.c
++++ b/drivers/net/phy/dp83640.c
+@@ -1339,6 +1339,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
+ 		dp83640->hwts_rx_en = 1;
+ 		dp83640->layer = PTP_CLASS_L4;
+ 		dp83640->version = PTP_CLASS_V1;
++		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V1_L4_EVENT;
+ 		break;
+ 	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
+ 	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
+@@ -1346,6 +1347,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
+ 		dp83640->hwts_rx_en = 1;
+ 		dp83640->layer = PTP_CLASS_L4;
+ 		dp83640->version = PTP_CLASS_V2;
++		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L4_EVENT;
+ 		break;
+ 	case HWTSTAMP_FILTER_PTP_V2_L2_EVENT:
+ 	case HWTSTAMP_FILTER_PTP_V2_L2_SYNC:
+@@ -1353,6 +1355,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
+ 		dp83640->hwts_rx_en = 1;
+ 		dp83640->layer = PTP_CLASS_L2;
+ 		dp83640->version = PTP_CLASS_V2;
++		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L2_EVENT;
+ 		break;
+ 	case HWTSTAMP_FILTER_PTP_V2_EVENT:
+ 	case HWTSTAMP_FILTER_PTP_V2_SYNC:
+@@ -1360,6 +1363,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
+ 		dp83640->hwts_rx_en = 1;
+ 		dp83640->layer = PTP_CLASS_L4 | PTP_CLASS_L2;
+ 		dp83640->version = PTP_CLASS_V2;
++		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
+ 		break;
+ 	default:
+ 		return -ERANGE;
 -- 
 2.25.1
 
