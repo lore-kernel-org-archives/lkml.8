@@ -2,242 +2,126 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD65C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4453C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2FB2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B30E12072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:00:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="haorPcN/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgG0K7t (ORCPT
+        id S1728426AbgG0LAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:59:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:41800 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727775AbgG0K7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:59:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 279CF30E;
-        Mon, 27 Jul 2020 03:59:48 -0700 (PDT)
-Received: from e120877-lin.cambridge.arm.com (e120877-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0C9AB3F66E;
-        Mon, 27 Jul 2020 03:59:46 -0700 (PDT)
-From:   vincent.donnefort@arm.com
-To:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org
-Cc:     linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
-        lukasz.luba@arm.com, valentin.schneider@arm.com,
-        Vincent Donnefort <vincent.donnefort@arm.com>
-Subject: [PATCH] sched/fair: provide u64 read for 32-bits arch helper
-Date:   Mon, 27 Jul 2020 11:59:24 +0100
-Message-Id: <1595847564-239957-1-git-send-email-vincent.donnefort@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 27 Jul 2020 07:00:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727775AbgG0LAP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:00:15 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F5DC061794;
+        Mon, 27 Jul 2020 04:00:15 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id u24so4083571oiv.7;
+        Mon, 27 Jul 2020 04:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7PdAl22kYVVHyy+DC47FmxXZY5dbomVe4vqaxI2xzsQ=;
+        b=haorPcN/q/kHQHvFoDiDMfAPWlhOMyhnap37UU7V5VKr6LC1Cyk6A6ksDmii4OairR
+         fIFhKvoWv+c0AoBwph4202ezXcTa67D3grHIhdId5Hu5Ur/59PzblIQ/u9k5B4QyP7kM
+         hU353MU0Dg44P5IZfxIQvyjdhdyW4wK+6LfHiYPb6IXALUfKH1tzc9PsSZRvCGkC6oG9
+         GyjnyxjyEXuGIFFgz4vsySwsSuCjXk31y03/k+Rjc37uJD508Uhkbn1Cs1XmBpQ9o7lZ
+         XdhAKlx9Xl+732X+VPRrWegGgR0FkUeEs4qbbEwSPX+6r/8hgEPlYLWqaVER9JfXx32b
+         b7pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7PdAl22kYVVHyy+DC47FmxXZY5dbomVe4vqaxI2xzsQ=;
+        b=T4TvzI1vo9p2jA4kjLpKXqX2ZzV2X463v/MK/YKijh4phfu9Zr0yIz2ncqa9rF2avs
+         RG90aRAO9ZPM0nzjb5l0SlyWPJPqtPxrDI+iKVxu179F5oTy7RgLYsU6eBMezTz7Y2Lq
+         oD/B5KAr0DbTZ8EU6zT/n8eHM0urvWJXZjDBjxPam49XRJXYuIOj3jmdVuOI5vz6phrP
+         8QJCmNJuPsTFEXMRSgv3eayvYnCjWMURfBI6XIFEuAC23csZpr2/lMGwBtGYnMF8Jy/S
+         Bj8+ooNm9RQyvnaqqCQBg4dCv7439dIIuUNthwEo9/YbgRCRp7F4hsPbOdY0HM7+leNQ
+         QACw==
+X-Gm-Message-State: AOAM531gglZSrxBOS2do94Ivxjt8xOiFN01HIVV7WCsLrMOpmKHkkEmN
+        9aW1HGuS6pAIrPJWDBoGM+WzJYqaX1iaixK6cFyxkxJC3LA=
+X-Google-Smtp-Source: ABdhPJwB0fhvgfez3aT41nXznftzgbVGj0p5rk6LaOIkWS+q9JnjvjhSSTcwNy3ryKYSuqE9klE6B5nQ9bklJKrD6+c=
+X-Received: by 2002:aca:a990:: with SMTP id s138mr1243980oie.154.1595847615017;
+ Mon, 27 Jul 2020 04:00:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200727180831.6c356fc1@canb.auug.org.au> <20200727092448.GB1764157@kroah.com>
+ <CAFCwf13o6A_88xBZdTk+XamAULckKB3Wk8A-V8NmmvkXDwB60w@mail.gmail.com> <20200727100529.GA1922918@kroah.com>
+In-Reply-To: <20200727100529.GA1922918@kroah.com>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Mon, 27 Jul 2020 13:59:46 +0300
+Message-ID: <CAFCwf11+xFm8LkV4uuK8iRM4cVARQV+8+XqgEm8dhSMBRcaDhQ@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the char-misc tree
+To:     Greg KH <greg@kroah.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Omer Shpigelman <oshpigelman@habana.ai>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Donnefort <vincent.donnefort@arm.com>
+On Mon, Jul 27, 2020 at 1:05 PM Greg KH <greg@kroah.com> wrote:
+>
+> On Mon, Jul 27, 2020 at 12:28:14PM +0300, Oded Gabbay wrote:
+> > On Mon, Jul 27, 2020 at 12:24 PM Greg KH <greg@kroah.com> wrote:
+> > >
+> > > On Mon, Jul 27, 2020 at 06:08:31PM +1000, Stephen Rothwell wrote:
+> > > > Hi all,
+> > > >
+> > > > After merging the char-misc tree, today's linux-next build (x86_64
+> > > > allmodconfig) failed like this:
+> > > >
+> > > > In file included from drivers/misc/habanalabs/goya/goya.c:8:
+> > > > drivers/misc/habanalabs/goya/goyaP.h:12:10: fatal error: habanalabs.h: No such file or directory
+> > > >    12 | #include "habanalabs.h"
+> > > >       |          ^~~~~~~~~~~~~~
+> > > > In file included from drivers/misc/habanalabs/goya/goya_security.c:8:
+> > > > drivers/misc/habanalabs/goya/goyaP.h:12:10: fatal error: habanalabs.h: No such file or directory
+> > > >    12 | #include "habanalabs.h"
+> > > >       |          ^~~~~~~~~~~~~~
+> > > >
+> > > > Presumably caused by commit
+> > > >
+> > > >   70b2f993ea4a ("habanalabs: create common folder")
+> > > >
+> > > > I have used the char-misc tree from next-20200724 for today.
+> > >
+> > > Ugh, this is a mess of a merge with this driver.
+> > >
+> > > Oded, I'll take Stephen's merge resolutions here and push out a new
+> > > version, and try to resolve this error, but if you could verify I got it
+> > > correct, that would be great.
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> >
+> > Sure, np. Just point me where to look.
+>
+> I didn't see the above build issue, but maybe I didn't have the right
+> configuration options enabled for my build.
+>
+> Oded, I've done the merge and pushed it out to my char-misc-next branch,
+> let me know if I've messed anything up there.
+>
+> thanks,
+>
+> greg k-h
 
-Introducing two macro helpers u64_32read() and u64_32read_set_copy() to
-factorize the u64 vminruntime and last_update_time read on a 32-bits
-architecture. Those new helpers encapsulate smp_rmb() and smp_wmb()
-synchronization and therefore, have a small penalty in set_task_rq_fair()
-and init_cfs_rq().
-
-The choice of using a macro over an inline function is driven by the
-conditional u64 variable copy declarations.
-
-  #ifndef CONFIG_64BIT
-     u64 [vminruntime|last_update_time]_copy;
-  #endif
-
-Signed-off-by: Vincent Donnefort <vincent.donnefort@arm.com>
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1a68a05..00a825d 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -563,10 +563,8 @@ static void update_min_vruntime(struct cfs_rq *cfs_rq)
- 
- 	/* ensure we never gain time by being placed backwards. */
- 	cfs_rq->min_vruntime = max_vruntime(cfs_rq->min_vruntime, vruntime);
--#ifndef CONFIG_64BIT
--	smp_wmb();
--	cfs_rq->min_vruntime_copy = cfs_rq->min_vruntime;
--#endif
-+
-+	u64_32read_set_copy(cfs_rq->min_vruntime, cfs_rq->min_vruntime_copy);
- }
- 
- /*
-@@ -3284,6 +3282,11 @@ static inline void cfs_rq_util_change(struct cfs_rq *cfs_rq, int flags)
- }
- 
- #ifdef CONFIG_SMP
-+static inline u64 cfs_rq_last_update_time(struct cfs_rq *cfs_rq)
-+{
-+	return u64_32read(cfs_rq->avg.last_update_time,
-+			  cfs_rq->load_last_update_time_copy);
-+}
- #ifdef CONFIG_FAIR_GROUP_SCHED
- /**
-  * update_tg_load_avg - update the tg's load avg
-@@ -3340,27 +3343,9 @@ void set_task_rq_fair(struct sched_entity *se,
- 	if (!(se->avg.last_update_time && prev))
- 		return;
- 
--#ifndef CONFIG_64BIT
--	{
--		u64 p_last_update_time_copy;
--		u64 n_last_update_time_copy;
--
--		do {
--			p_last_update_time_copy = prev->load_last_update_time_copy;
--			n_last_update_time_copy = next->load_last_update_time_copy;
--
--			smp_rmb();
-+	p_last_update_time = cfs_rq_last_update_time(prev);
-+	n_last_update_time = cfs_rq_last_update_time(next);
- 
--			p_last_update_time = prev->avg.last_update_time;
--			n_last_update_time = next->avg.last_update_time;
--
--		} while (p_last_update_time != p_last_update_time_copy ||
--			 n_last_update_time != n_last_update_time_copy);
--	}
--#else
--	p_last_update_time = prev->avg.last_update_time;
--	n_last_update_time = next->avg.last_update_time;
--#endif
- 	__update_load_avg_blocked_se(p_last_update_time, se);
- 	se->avg.last_update_time = n_last_update_time;
- }
-@@ -3681,10 +3666,8 @@ update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
- 
- 	decayed |= __update_load_avg_cfs_rq(now, cfs_rq);
- 
--#ifndef CONFIG_64BIT
--	smp_wmb();
--	cfs_rq->load_last_update_time_copy = sa->last_update_time;
--#endif
-+	u64_32read_set_copy(sa->last_update_time,
-+			    cfs_rq->load_last_update_time_copy);
- 
- 	return decayed;
- }
-@@ -3810,27 +3793,6 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
- 	}
- }
- 
--#ifndef CONFIG_64BIT
--static inline u64 cfs_rq_last_update_time(struct cfs_rq *cfs_rq)
--{
--	u64 last_update_time_copy;
--	u64 last_update_time;
--
--	do {
--		last_update_time_copy = cfs_rq->load_last_update_time_copy;
--		smp_rmb();
--		last_update_time = cfs_rq->avg.last_update_time;
--	} while (last_update_time != last_update_time_copy);
--
--	return last_update_time;
--}
--#else
--static inline u64 cfs_rq_last_update_time(struct cfs_rq *cfs_rq)
--{
--	return cfs_rq->avg.last_update_time;
--}
--#endif
--
- /*
-  * Synchronize entity load avg of dequeued entity without locking
-  * the previous rq.
-@@ -6744,21 +6706,9 @@ static void migrate_task_rq_fair(struct task_struct *p, int new_cpu)
- 	if (p->state == TASK_WAKING) {
- 		struct sched_entity *se = &p->se;
- 		struct cfs_rq *cfs_rq = cfs_rq_of(se);
--		u64 min_vruntime;
--
--#ifndef CONFIG_64BIT
--		u64 min_vruntime_copy;
--
--		do {
--			min_vruntime_copy = cfs_rq->min_vruntime_copy;
--			smp_rmb();
--			min_vruntime = cfs_rq->min_vruntime;
--		} while (min_vruntime != min_vruntime_copy);
--#else
--		min_vruntime = cfs_rq->min_vruntime;
--#endif
- 
--		se->vruntime -= min_vruntime;
-+		se->vruntime -= u64_32read(cfs_rq->min_vruntime,
-+					   cfs_rq->min_vruntime_copy);
- 	}
- 
- 	if (p->on_rq == TASK_ON_RQ_MIGRATING) {
-@@ -10891,9 +10841,7 @@ void init_cfs_rq(struct cfs_rq *cfs_rq)
- {
- 	cfs_rq->tasks_timeline = RB_ROOT_CACHED;
- 	cfs_rq->min_vruntime = (u64)(-(1LL << 20));
--#ifndef CONFIG_64BIT
--	cfs_rq->min_vruntime_copy = cfs_rq->min_vruntime;
--#endif
-+	u64_32read_set_copy(cfs_rq->min_vruntime, cfs_rq->min_vruntime_copy);
- #ifdef CONFIG_SMP
- 	raw_spin_lock_init(&cfs_rq->removed.lock);
- #endif
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 9f33c77..c8c4646 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -605,6 +605,41 @@ struct cfs_rq {
- #endif /* CONFIG_FAIR_GROUP_SCHED */
- };
- 
-+/*
-+ * u64_32read() / u64_32read_set_copy()
-+ *
-+ * Use the copied u64 value to protect against data race. This is only
-+ * applicable for 32-bits architectures.
-+ */
-+#if !defined(CONFIG_64BIT) && defined(CONFIG_SMP)
-+# define u64_32read(val, copy)						\
-+({									\
-+	u64 _val;							\
-+	u64 _val_copy;							\
-+									\
-+	do {								\
-+		_val_copy = copy;					\
-+		/*							\
-+		 * paired with u64_32read_set_copy, ordering access	\
-+		 * to val and copy.					\
-+		 */							\
-+		smp_rmb();						\
-+		_val = val;						\
-+	} while (_val != _val_copy);					\
-+									\
-+	_val;								\
-+})
-+# define u64_32read_set_copy(val, copy)					\
-+do {									\
-+	/* paired with u64_32read, ordering access to val and copy */	\
-+	smp_wmb();							\
-+	copy = val;							\
-+} while (0)
-+#else
-+# define u64_32read(val, copy) (val)
-+# define u64_32read_set_copy(val, copy) do { } while (0)
-+#endif
-+
- static inline int rt_bandwidth_enabled(void)
- {
- 	return sysctl_sched_rt_runtime >= 0;
--- 
-2.7.4
-
+Looks good, thanks!
+Oded
