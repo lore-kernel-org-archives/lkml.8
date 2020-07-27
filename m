@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203E4C43460
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF69AC432C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2A3A20786
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADEC4208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892466;
-	bh=Ezm59BrI2xzB7EIKgvwFqNMC5HrCH6WKJKXNUOGexwc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xhXFmCUh7xqeyMYL1BWYIYgZCo3QDJTyg9GEiwfdaKnfRrym+Wuf0SvDerrz8NWQI
-	 c/E7OIcCSXUp/IerXhMXQ/+sS36d/V8jxVxSj+hR+AGtZzXSF+4EmI8vGQBp0XGmRw
-	 ACI3N7SqvwgjzKQh3Xyh6kb2ULMCg7ZNyA1iP3b8=
+	s=default; t=1595892471;
+	bh=24/kZlRm8jazrDcIiMOpg+gWnDJLT6ZaiVEEri8sSQo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ZDTTDwIexAStAwXr4NY/MtOdw3H/8ksrExslHOL53MUh526Ki3MDG7NV5LPfLQj8E
+	 hIG23RjKEy034JShfxP786eSRqsDNIeFSt0kAqJq/cAMyvqZbT5/kUYRW0kgOUmidI
+	 zlyuXhys4b4OdQ5plNH3M7Fd+tdMiG/Pqhe5XzbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgG0XYs (ORCPT
+        id S1728793AbgG0X1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:24:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:27:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728326AbgG0XYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:24:41 -0400
+        id S1728369AbgG0XYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:24:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A782621D95;
-        Mon, 27 Jul 2020 23:24:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 026F621D95;
+        Mon, 27 Jul 2020 23:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892280;
-        bh=Ezm59BrI2xzB7EIKgvwFqNMC5HrCH6WKJKXNUOGexwc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BGSteS5ITVEMj0WODuAdwdhV7JIHEQjhjWxb1V5OQkPrbIxEhBZXcMKhTVmGr0BQR
-         LLGeqFAqXIDKf/51dLNZxbsDhdrY4c44vldmcDXlYPvklli2H9j+GvanZ1QMFIdV02
-         an1X3o2X9Shw8xFMxuk6/N7x67eCYaLOSx40Tlow=
+        s=default; t=1595892285;
+        bh=24/kZlRm8jazrDcIiMOpg+gWnDJLT6ZaiVEEri8sSQo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cx+xuIVDgzChKFRiE7ZZ+uYvYn4E4gJ696F+4oGpNdgHTudv946c+7KdxFmHmq4Hh
+         rb7mid3txCKrH4dYr2b32XuEjZdlSB33RBvvUTeDoAF43EnuT79SLCmzk6uKEY/efY
+         KhdnrpsTKWH8bH73SZKltNbFL1YMy9JKp+KhLsDI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrea Righi <andrea.righi@canonical.com>,
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        xen-devel@lists.xenproject.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 15/17] xen-netfront: fix potential deadlock in xennet_remove()
-Date:   Mon, 27 Jul 2020 19:24:18 -0400
-Message-Id: <20200727232420.717684-15-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 01/10] usb: hso: Fix debug compile warning on sparc32
+Date:   Mon, 27 Jul 2020 19:24:34 -0400
+Message-Id: <20200727232443.718000-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200727232420.717684-1-sashal@kernel.org>
-References: <20200727232420.717684-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,132 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Righi <andrea.righi@canonical.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit c2c633106453611be07821f53dff9e93a9d1c3f0 ]
+[ Upstream commit e0484010ec05191a8edf980413fc92f28050c1cc ]
 
-There's a potential race in xennet_remove(); this is what the driver is
-doing upon unregistering a network device:
+On sparc32, tcflag_t is "unsigned long", unlike on all other
+architectures, where it is "unsigned int":
 
-  1. state = read bus state
-  2. if state is not "Closed":
-  3.    request to set state to "Closing"
-  4.    wait for state to be set to "Closing"
-  5.    request to set state to "Closed"
-  6.    wait for state to be set to "Closed"
+    drivers/net/usb/hso.c: In function ‘hso_serial_set_termios’:
+    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 4 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
+    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
+       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
+       ^~~~~~~
+    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 5 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
+    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
+       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
+       ^~~~~~~
 
-If the state changes to "Closed" immediately after step 1 we are stuck
-forever in step 4, because the state will never go back from "Closed" to
-"Closing".
+As "unsigned long" is 32-bit on sparc32, fix this by casting all tcflag_t
+parameters to "unsigned int".
+While at it, use "%u" to format unsigned numbers.
 
-Make sure to check also for state == "Closed" in step 4 to prevent the
-deadlock.
-
-Also add a 5 sec timeout any time we wait for the bus state to change,
-to avoid getting stuck forever in wait_event().
-
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/xen-netfront.c | 64 +++++++++++++++++++++++++-------------
- 1 file changed, 42 insertions(+), 22 deletions(-)
+ drivers/net/usb/hso.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
-index 482c6c8b0fb7e..88280057e0321 100644
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -63,6 +63,8 @@ module_param_named(max_queues, xennet_max_queues, uint, 0644);
- MODULE_PARM_DESC(max_queues,
- 		 "Maximum number of queues per virtual interface");
+diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
+index 5251c5f6f96ed..61b9d33681484 100644
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -1403,8 +1403,9 @@ static void hso_serial_set_termios(struct tty_struct *tty, struct ktermios *old)
+ 	unsigned long flags;
  
-+#define XENNET_TIMEOUT  (5 * HZ)
-+
- static const struct ethtool_ops xennet_ethtool_ops;
+ 	if (old)
+-		hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
+-			tty->termios.c_cflag, old->c_cflag);
++		hso_dbg(0x16, "Termios called with: cflags new[%u] - old[%u]\n",
++			(unsigned int)tty->termios.c_cflag,
++			(unsigned int)old->c_cflag);
  
- struct netfront_cb {
-@@ -1334,12 +1336,15 @@ static struct net_device *xennet_create_dev(struct xenbus_device *dev)
- 
- 	netif_carrier_off(netdev);
- 
--	xenbus_switch_state(dev, XenbusStateInitialising);
--	wait_event(module_wq,
--		   xenbus_read_driver_state(dev->otherend) !=
--		   XenbusStateClosed &&
--		   xenbus_read_driver_state(dev->otherend) !=
--		   XenbusStateUnknown);
-+	do {
-+		xenbus_switch_state(dev, XenbusStateInitialising);
-+		err = wait_event_timeout(module_wq,
-+				 xenbus_read_driver_state(dev->otherend) !=
-+				 XenbusStateClosed &&
-+				 xenbus_read_driver_state(dev->otherend) !=
-+				 XenbusStateUnknown, XENNET_TIMEOUT);
-+	} while (!err);
-+
- 	return netdev;
- 
-  exit:
-@@ -2139,28 +2144,43 @@ static const struct attribute_group xennet_dev_group = {
- };
- #endif /* CONFIG_SYSFS */
- 
--static int xennet_remove(struct xenbus_device *dev)
-+static void xennet_bus_close(struct xenbus_device *dev)
- {
--	struct netfront_info *info = dev_get_drvdata(&dev->dev);
--
--	dev_dbg(&dev->dev, "%s\n", dev->nodename);
-+	int ret;
- 
--	if (xenbus_read_driver_state(dev->otherend) != XenbusStateClosed) {
-+	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
-+		return;
-+	do {
- 		xenbus_switch_state(dev, XenbusStateClosing);
--		wait_event(module_wq,
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateClosing ||
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateUnknown);
-+		ret = wait_event_timeout(module_wq,
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateClosing ||
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateClosed ||
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateUnknown,
-+				   XENNET_TIMEOUT);
-+	} while (!ret);
-+
-+	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
-+		return;
- 
-+	do {
- 		xenbus_switch_state(dev, XenbusStateClosed);
--		wait_event(module_wq,
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateClosed ||
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateUnknown);
--	}
-+		ret = wait_event_timeout(module_wq,
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateClosed ||
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateUnknown,
-+				   XENNET_TIMEOUT);
-+	} while (!ret);
-+}
-+
-+static int xennet_remove(struct xenbus_device *dev)
-+{
-+	struct netfront_info *info = dev_get_drvdata(&dev->dev);
- 
-+	xennet_bus_close(dev);
- 	xennet_disconnect_backend(info);
- 
- 	if (info->netdev->reg_state == NETREG_REGISTERED)
+ 	/* the actual setup */
+ 	spin_lock_irqsave(&serial->serial_lock, flags);
 -- 
 2.25.1
 
