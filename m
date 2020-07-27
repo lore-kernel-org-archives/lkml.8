@@ -2,104 +2,124 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED6EC433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC5BC433F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9332A2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5918A208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859296;
-	bh=hqGjzG7kcr/MsbjRxsV9hAB3/B1VJxy+zFkGz8jLWdc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=0FuYOInfc9F5HJmoIQ5hI1ItBlUDI6JDjCWoQ2EVH5iu+ESxXK6/TGS5KMMniqiqI
-	 V0sgFgGjNos/7ifJFZATUfnMbWO0rpKoawXW3piFQGVLNmJmNnIcN5ogTSR6QF+Xp8
-	 gEIIJtcLa1nwUCtxVNR8X9ONVehOHKewXJ41TdDI=
+	s=default; t=1595859287;
+	bh=NTugThViFGiRXib5CKtPHuNzlpLklsHlIJrixb5zji8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=c1XmcaR35GLYaNBi3HWoEvsd7BYN9rP3yBT2/znYeTE+0iM+vP/OhXVa8xCsD4uJy
+	 uGshPXKsPN5KGi6Ov9Ze93jk31Iek+mcyJwmaqNOb8am0zX70yy3WQ+dtBeyS3/ibN
+	 QpC8LH82GHFHJ8/zhbyDax+E3prc/PH87m1PXjdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730604AbgG0OOz (ORCPT
+        id S1730591AbgG0OOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:14:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40504 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:14:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730582AbgG0OOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:14:41 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        id S1730551AbgG0OOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:14:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82D1F2173E;
-        Mon, 27 Jul 2020 14:14:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35F2A2173E;
+        Mon, 27 Jul 2020 14:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859280;
-        bh=hqGjzG7kcr/MsbjRxsV9hAB3/B1VJxy+zFkGz8jLWdc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=gVWT8qiP8B2d3sTJWw8jQuwCKb3Ijd21gSw5+UBWrb5jM7RD83N2Xm6QSWdZUsPF4
-         eGVxErBhMwzWE7lKlM103qKgBzyjtjdGMAgnxaU3R+cp4PsPNU3lmozQjqz094GyZx
-         2MntVodiw2oVVzOD8/Rq62m6IKmhl5bzXm6+YpII=
-Date:   Mon, 27 Jul 2020 09:14:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     James Ettle <james@ettle.org.uk>
-Cc:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>,
-        Rui Feng <rui_feng@realsil.com.cn>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <lenb@kernel.org>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jacopo De Simoi <wilderkde@gmail.com>
-Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
-Message-ID: <20200727141438.GA1743062@bjorn-Precision-5520>
+        s=default; t=1595859273;
+        bh=NTugThViFGiRXib5CKtPHuNzlpLklsHlIJrixb5zji8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qpTb/2QgajEvvizXyqH7dHIHrjTf2fkxrc5MCoRTmX19VY98wsxs4QhkSlA3LtW0F
+         /+bCUl4iJkMzPUtU4fWtdFVj0D1JnvlfaZ0CIsazPjtCI6+e+Nkb4eKKIwuyO+5jZw
+         1OtXzkRH/7N+LIJGfZzQXJTmRCKI0jjeLOX37FrQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sergey Organov <sorganov@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 045/138] net: dp83640: fix SIOCSHWTSTAMP to update the struct with actual configuration
+Date:   Mon, 27 Jul 2020 16:04:00 +0200
+Message-Id: <20200727134927.618938911@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
+References: <20200727134925.228313570@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aaa64572fac0fc411b79a9adb59b5bbcbdf4b1a8.camel@ettle.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 09:27:11PM +0100, James Ettle wrote:
-> On Fri, 2020-07-24 at 18:13 -0500, Bjorn Helgaas wrote:
-> > 
-> > Maybe we should simplify this a little bit more.  James, if you don't
-> > touch ASPM config at all, either manually or via udev, does the ASPM
-> > configuration stay the same across suspend/resume?
-> 
-> Yes, it stays the same. Explicitly: 
-> 
-> With the udev rule disabled, immediately following clean boot from
-> power-off (and no additional tinkering), ASPM is OFF to the best of my
-> knowledge:
-> 
->  - link/l1_aspm in sysfs is 0 for PCI devices 0000:01:00.[01];
->  - the processor sleeps no deeper than package C3.
-> 
-> The situation above is the same following a suspend/resume cycle --
-> both in terms of sysfs, and observed package C-state occupancy.
-> 
-> [Tested on kernel 5.7.10, but the behaviour is the same as prior
-> kernels.]
+From: Sergey Organov <sorganov@gmail.com>
 
-I don't know the connection between ASPM and package C-states, so I
-need to simplify this even more.  All I want to do right now is verify
-that if we don't have any outside influences on the ASPM configuration
-(eg, no manual changes and no udev rules), it stays the same across
-suspend/resume.
+[ Upstream commit 473309fb8372365ad211f425bca760af800e10a7 ]
 
-In https://bugzilla.kernel.org/show_bug.cgi?id=208117#c12, we saw that
-ASPM L0s was disabled before suspend but was enabled after resume.
-That should not happen.
+>From Documentation/networking/timestamping.txt:
 
-You're looking at the sysfs link/l1_aspm file, which tells us what the
-PCI core thinks the state is, but I'm not confident that's accurate,
-especially because the driver fiddles with the state behind the back
-of the PCI core.  So let's read the ASPM state directly from the
-hardware like this:
+  A driver which supports hardware time stamping shall update the
+  struct with the actual, possibly more permissive configuration.
 
-  sudo lspci -vvs 00:1d.0 | egrep "^0|Lnk|L1|LTR|snoop"
-  sudo lspci -vvs 01:00   | egrep "^0|Lnk|L1|LTR|snoop"
+Do update the struct passed when we upscale the requested time
+stamping mode.
 
-Can you try that before and after suspend/resume?
+Fixes: cb646e2b02b2 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
+Signed-off-by: Sergey Organov <sorganov@gmail.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/phy/dp83640.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
+index 1c75b2627ca87..7d845117abb02 100644
+--- a/drivers/net/phy/dp83640.c
++++ b/drivers/net/phy/dp83640.c
+@@ -1348,6 +1348,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
+ 		dp83640->hwts_rx_en = 1;
+ 		dp83640->layer = PTP_CLASS_L4;
+ 		dp83640->version = PTP_CLASS_V1;
++		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V1_L4_EVENT;
+ 		break;
+ 	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
+ 	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
+@@ -1355,6 +1356,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
+ 		dp83640->hwts_rx_en = 1;
+ 		dp83640->layer = PTP_CLASS_L4;
+ 		dp83640->version = PTP_CLASS_V2;
++		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L4_EVENT;
+ 		break;
+ 	case HWTSTAMP_FILTER_PTP_V2_L2_EVENT:
+ 	case HWTSTAMP_FILTER_PTP_V2_L2_SYNC:
+@@ -1362,6 +1364,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
+ 		dp83640->hwts_rx_en = 1;
+ 		dp83640->layer = PTP_CLASS_L2;
+ 		dp83640->version = PTP_CLASS_V2;
++		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L2_EVENT;
+ 		break;
+ 	case HWTSTAMP_FILTER_PTP_V2_EVENT:
+ 	case HWTSTAMP_FILTER_PTP_V2_SYNC:
+@@ -1369,6 +1372,7 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
+ 		dp83640->hwts_rx_en = 1;
+ 		dp83640->layer = PTP_CLASS_L4 | PTP_CLASS_L2;
+ 		dp83640->version = PTP_CLASS_V2;
++		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
+ 		break;
+ 	default:
+ 		return -ERANGE;
+-- 
+2.25.1
+
+
+
