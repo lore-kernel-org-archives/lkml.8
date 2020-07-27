@@ -2,178 +2,138 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F77C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF650C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8DA020809
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595888936;
-	bh=rdPsWOM5XxOjwdr6Owp1Xhu0EC7auxyhKWp/RL0NBDU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ddDueThS67Mk9Nbl2w4VDq+1eQQqU7zCRbnSN4er+gKMNz6AEeeebwoypkaX853gB
-	 Yo6qCPVc5WlvRYJeIjOlFMfCLmPtzXQAFKBlMeUuFAzzBJl6WtZZ4GcmaeQdwPlADW
-	 u8C9tiAd0iNmeuvvNQh50B8fsGajQzxHBwfLZQS0=
+	by mail.kernel.org (Postfix) with ESMTP id CBCBB208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 22:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgG0W24 (ORCPT
+        id S1727087AbgG0WaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 18:28:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40928 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 18:30:14 -0400
+Received: from mga01.intel.com ([192.55.52.88]:31412 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgG0W2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 18:28:54 -0400
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55D6621883
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 22:28:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595888933;
-        bh=rdPsWOM5XxOjwdr6Owp1Xhu0EC7auxyhKWp/RL0NBDU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NoA4P78dpIEXL8KS5SAmSwVYvYq2FKIGcieDiVRrd98+GUxI8RIel22B2XXBOPQtE
-         SGlaaXvtBhOXwHZ5nYuEqxNwA2Kp2K8ZypVIj+JfsHrGE0U29AFGmAl/LeO7SzhvO4
-         dAHNkAcuc7/G7ECbSSek+UygnaaljfOY5rBcTRN8=
-Received: by mail-wr1-f48.google.com with SMTP id y3so16371437wrl.4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 15:28:53 -0700 (PDT)
-X-Gm-Message-State: AOAM531vqKTZ+AMhXDMMunyBZAYGkCAU59HwllhAKNZ8a0iMQq/UGvzu
-        i0j7C4Y+P34vE+MZ3pi+oMUwv95irLaMhmJTl8mEKQ==
-X-Google-Smtp-Source: ABdhPJzTSOd+BUi7TEYPgRy+hih8uugv0CROsSHRWp7CWZsIksFV0+UYV/4/8GQjBS6XrQXyZcXeRcC96AgFh+Jn6BU=
-X-Received: by 2002:a5d:65d2:: with SMTP id e18mr21668255wrw.70.1595888931870;
- Mon, 27 Jul 2020 15:28:51 -0700 (PDT)
+        id S1726171AbgG0WaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 18:30:14 -0400
+IronPort-SDR: Tz2eJyROIqZ5CQQ3CBvqHfyZWlkvmCqwGpceT2/yZk/uAW7qDtgwDxVtCoblyUoJFxLjG0Hwow
+ cbE6DtAdlCaQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="169234127"
+X-IronPort-AV: E=Sophos;i="5.75,404,1589266800"; 
+   d="scan'208";a="169234127"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 15:30:13 -0700
+IronPort-SDR: 9vhGkQma2R7buA8er1qw9M6kxN6CJhujFQxcjMIhKxJdVSqgn37TkThb7DN/BXl9k0MJmPBGww
+ Z1xpGzJ7xA6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,404,1589266800"; 
+   d="scan'208";a="285932204"
+Received: from lkp-server01.sh.intel.com (HELO df0563f96c37) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 27 Jul 2020 15:30:07 -0700
+Received: from kbuild by df0563f96c37 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k0BdG-00024O-QY; Mon, 27 Jul 2020 22:30:06 +0000
+Date:   Tue, 28 Jul 2020 06:29:17 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:WIP.x86/entry] BUILD REGRESSION
+ f87032aec41e0b00ae5fa9103eb8e7b2d1f8416b
+Message-ID: <5f1f553d.ASRyXJ4YwT6tZVv9%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20200716182208.180916541@linutronix.de> <20200716185424.011950288@linutronix.de>
-In-Reply-To: <20200716185424.011950288@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 27 Jul 2020 15:28:40 -0700
-X-Gmail-Original-Message-ID: <CALCETrW_CrpYnBWipDQkznRakbb2FnayiN4PLWH7Mid5-ryBYw@mail.gmail.com>
-Message-ID: <CALCETrW_CrpYnBWipDQkznRakbb2FnayiN4PLWH7Mid5-ryBYw@mail.gmail.com>
-Subject: Re: [patch V3 01/13] entry: Provide generic syscall entry functionality
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Keno Fischer <keno@juliacomputing.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 12:50 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> From: Thomas Gleixner <tglx@linutronix.de>
->
-> On syscall entry certain work needs to be done:
->
->    - Establish state (lockdep, context tracking, tracing)
->    - Conditional work (ptrace, seccomp, audit...)
->
-> This code is needlessly duplicated and  different in all
-> architectures.
->
-> +
-> +/**
-> + * arch_syscall_enter_seccomp - Architecture specific seccomp invocation
-> + * @regs:      Pointer to currents pt_regs
-> + *
-> + * Returns: The original or a modified syscall number
-> + *
-> + * Invoked from syscall_enter_from_user_mode(). Can be replaced by
-> + * architecture specific code.
-> + */
-> +static inline long arch_syscall_enter_seccomp(struct pt_regs *regs);
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  WIP.x86/entry
+branch HEAD: f87032aec41e0b00ae5fa9103eb8e7b2d1f8416b  Merge branch 'locking/nmi' into x86/entry
 
-Ick.  I'd rather see arch_populate_seccomp_data() and kill this hook.
-But we can clean this up later.
+Error/Warning in current branch:
 
-> +/**
-> + * arch_syscall_enter_audit - Architecture specific audit invocation
-> + * @regs:      Pointer to currents pt_regs
-> + *
-> + * Invoked from syscall_enter_from_user_mode(). Must be replaced by
-> + * architecture specific code if the architecture supports audit.
-> + */
-> +static inline void arch_syscall_enter_audit(struct pt_regs *regs);
-> +
+include/linux/irqflags.h:40:41: error: expected expression before ')' token
 
-Let's pass u32 arch here.
+Error/Warning ids grouped by kconfigs:
 
-> +/**
-> + * syscall_enter_from_user_mode - Check and handle work before invoking
-> + *                              a syscall
-> + * @regs:      Pointer to currents pt_regs
-> + * @syscall:   The syscall number
-> + *
-> + * Invoked from architecture specific syscall entry code with interrupts
-> + * disabled. The calling code has to be non-instrumentable. When the
-> + * function returns all state is correct and the subsequent functions can be
-> + * instrumented.
-> + *
-> + * Returns: The original or a modified syscall number
-> + *
-> + * If the returned syscall number is -1 then the syscall should be
-> + * skipped. In this case the caller may invoke syscall_set_error() or
-> + * syscall_set_return_value() first.  If neither of those are called and -1
-> + * is returned, then the syscall will fail with ENOSYS.
-> + *
-> + * The following functionality is handled here:
-> + *
-> + *  1) Establish state (lockdep, RCU (context tracking), tracing)
-> + *  2) TIF flag dependent invocations of arch_syscall_enter_tracehook(),
-> + *     arch_syscall_enter_seccomp(), trace_sys_enter()
-> + *  3) Invocation of arch_syscall_enter_audit()
-> + */
-> +long syscall_enter_from_user_mode(struct pt_regs *regs, long syscall);
+recent_errors
+|-- i386-allyesconfig
+|   `-- include-linux-irqflags.h:error:expected-expression-before-)-token
+|-- i386-randconfig-c001-20200727
+|   `-- include-linux-irqflags.h:error:expected-expression-before-)-token
+|-- x86_64-allmodconfig
+|   `-- include-linux-irqflags.h:error:expected-expression-before-)-token
+|-- x86_64-allyesconfig
+|   `-- include-linux-irqflags.h:error:expected-expression-before-)-token
+|-- x86_64-lkp
+|   `-- include-linux-irqflags.h:error:expected-expression-before-)-token
+`-- x86_64-rhel-7.6-kselftests
+    `-- include-linux-irqflags.h:error:expected-expression-before-)-token
 
-This should IMO also take u32 arch.
+elapsed time: 1718m
 
-I'm also uneasy about having this do the idtentry/irqentry stuff as
-well as the syscall stuff.  Is there a particular reason you did it
-this way instead of having callers do:
+configs tested: 50
+configs skipped: 1
 
-idtentry_enter();
-instrumentation_begin();
-syscall_enter_from_user_mode();
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm64                            allyesconfig
+arm64                               defconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+sparc64                             defconfig
+x86_64                                   rhel
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                           allyesconfig
+x86_64                              defconfig
 
-FWIW, I think we could make this even better -- couldn't this get
-folded together with syscall *exit* and become:
-
-idtentry_enter();
-instrumentation_begin();
-generic_syscall();
-instrumentation_end();
-idtentry_exit();
-
-and generic_syscall() would call arch_dispatch_syscall(regs, arch, syscall_nr);
-
-
-
-> +
-> +/**
-> + * irqentry_enter_from_user_mode - Establish state before invoking the irq handler
-> + * @regs:      Pointer to currents pt_regs
-> + *
-> + * Invoked from architecture specific entry code with interrupts disabled.
-> + * Can only be called when the interrupt entry came from user mode. The
-> + * calling code must be non-instrumentable.  When the function returns all
-> + * state is correct and the subsequent functions can be instrumented.
-> + *
-> + * The function establishes state (lockdep, RCU (context tracking), tracing)
-> + */
-> +void irqentry_enter_from_user_mode(struct pt_regs *regs);
-
-Unless the rest of the series works differently from what I expect, I
-don't love this name.  How about normal_entry_from_user_mode() or
-ordinary_entry_from_user_mode()?  After all, this seems to cover IRQ,
-all the non-horrible exceptions, and (internally) syscalls.
-
---Andy
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
