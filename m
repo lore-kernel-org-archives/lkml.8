@@ -2,131 +2,87 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42918C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5376C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 297D120672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7938D2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:03:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMacKXxB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgG0KBf convert rfc822-to-8bit (ORCPT
+        id S1727873AbgG0KD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:01:35 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2529 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726139AbgG0KBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:01:35 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id D2CE66CD8921393AABEB;
-        Mon, 27 Jul 2020 11:01:33 +0100 (IST)
-Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
- 2020 11:01:33 +0100
-Date:   Mon, 27 Jul 2020 11:00:10 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
-        <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [RFC PATCH 1/9] pci_ids: Add class code and extended capability
- for RCEC
-Message-ID: <20200727110010.00005042@Huawei.com>
-In-Reply-To: <20200724172223.145608-2-sean.v.kelley@intel.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
-        <20200724172223.145608-2-sean.v.kelley@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 27 Jul 2020 06:03:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbgG0KD5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 06:03:57 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1931BC061794;
+        Mon, 27 Jul 2020 03:03:57 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c3so1501656lfb.3;
+        Mon, 27 Jul 2020 03:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d6I2lLfZNvMeErNBP+6RCTBs+KS8Tnc+1L09dfq9pLM=;
+        b=eMacKXxB0UWbCbTyTrY1Y2dKEZbpP4OCoTxx8nqEiWAJznuSw23HeKgtCZeLmTZcor
+         Q/xQgMIiwmvlBzU1Tadh4s8dPw0ZbNMII5XJASaoJpBrSPK2oeVpmDHRnhgnBb4gAUpb
+         mGKQtYTB3u7OxTSOv3Ik9dI0QyEuc7t9IYZYtsSRWr0ACBuhlIc1c5aTQurKD3WoCExC
+         7hFuxlbr9/NZN4hyKWTaeyTG2R1Eof253JVjShzM7a31FPkMebnykTXKd+lF4y2C6lKR
+         Nubp9PMFE4kZFZBJ+0Og5tieHtw6MEWikGRr6Vswc5/VHyjoqYLA6cjdHvZ71wOMgaKX
+         jf7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d6I2lLfZNvMeErNBP+6RCTBs+KS8Tnc+1L09dfq9pLM=;
+        b=T0n35u+eBgs+tS6xwiO6ZDin+xQLcrD5SSwOuKkcxj7v+EE0uEdbBE5LexRIzZJZYi
+         74Epvo2zQT4zPfudIpGfG8H0twU4af4/NzN8ySHgF+0OmGpWxMgMterUgDB2nud+lLEC
+         asHWzgCHaZvD/XUoudeiWopNyLa1QzhY5YILoVsv8CWautvo6M9VqrQbUo/CxY2P7ckB
+         llb38ql1YiRPBa84u2tKH+/c+NKBPBfeZjmgPjzoRBPhR1a1bgu4IpdXP+yCm8VM3aP2
+         2yuEFDLsBnJfrwQ1iPVih97nRDWOtbIYaF2N4JsEaDRupaD1W6VwcVPIyK05FYBTM5VX
+         kmbQ==
+X-Gm-Message-State: AOAM532nUPhpcfSVC2bOf6iGAETmF47xHHedMI/XHBWEX6fX0Cbv9Xlw
+        Ifn+duG/XpmF0XTMyqPQkI+8gX8U3SL81rvVD/wpaEt4N2I=
+X-Google-Smtp-Source: ABdhPJzNIJlwlw2uz6FtpnKqLkz53xW+A4YgKjOefKWGV+Ww1GXoJ3ZG1EtqY1tyDSqZgkozgDcDen2BIje09EZ39ZE=
+X-Received: by 2002:a19:7f94:: with SMTP id a142mr3612342lfd.43.1595844235631;
+ Mon, 27 Jul 2020 03:03:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.52.121.176]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20200727090629.169701-1-cyrozap@gmail.com> <20200727090629.169701-2-cyrozap@gmail.com>
+ <20200727092654.GD1764157@kroah.com>
+In-Reply-To: <20200727092654.GD1764157@kroah.com>
+From:   Forest Crossman <cyrozap@gmail.com>
+Date:   Mon, 27 Jul 2020 05:03:43 -0500
+Message-ID: <CAO3ALPwJq4=GairV8ksHenRtXwg2mYNDKtnYcf99eN6Eo6es5A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] usb: xhci: define IDs for various ASMedia host controllers
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, mathias.nyman@intel.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 10:22:15 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
+On Mon, Jul 27, 2020 at 4:26 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Jul 27, 2020 at 04:06:28AM -0500, Forest Crossman wrote:
+> > Signed-off-by: Forest Crossman <cyrozap@gmail.com>
+>
+> I can not take patches without any changelog text, sorry.
 
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> 
-> A PCIe Root Complex Event Collector(RCEC) has the base class 0x08,
-> sub-class 0x07, and programming interface 0x00. Add the class code
-> 0x0807 to identify RCEC devices and add the defines for the RCEC
-> Endpoint Association Extended Capability.
-> 
-> See PCI Express Base Specification, version 5.0-1, section "1.3.4
-> Root Complex Event Collector" and section "7.9.10 Root Complex
-> Event Collector Endpoint Association Extended Capability"
-
-Add a reference to the document
-"PCI Code and ID Assignment Specification"
-for the class number.
-
-From the change log on latest version seems like it's been there since
-version 1.4.
-
-There is a worrying note (bottom of page 16 of 1.12 version of that docs)
-in there that says some older specs used 0x0806 for RCECs and that we
-should use the port type field to actually check if we have one.
-
-Hopefully we won't encounter any of those in the wild.
-
-Otherwise, it's exactly what the spec says.
-We could bike shed on naming choices, but the ones you have seem clear enough
-to me.
-
-FWIW
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Ah, whoops, I'm very sorry about that! Should I send a v2 of just this
+patch? Or would it be better to send the whole series again?
 
 
-Jonathan
-> 
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> ---
->  include/linux/pci_ids.h       | 1 +
->  include/uapi/linux/pci_regs.h | 7 +++++++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 0ad57693f392..de8dff1fb176 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -81,6 +81,7 @@
->  #define PCI_CLASS_SYSTEM_RTC		0x0803
->  #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
->  #define PCI_CLASS_SYSTEM_SDHCI		0x0805
-> +#define PCI_CLASS_SYSTEM_RCEC		0x0807
->  #define PCI_CLASS_SYSTEM_OTHER		0x0880
->  
->  #define PCI_BASE_CLASS_INPUT		0x09
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index f9701410d3b5..f335f65f65d6 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -828,6 +828,13 @@
->  #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system budget */
->  #define PCI_EXT_CAP_PWR_SIZEOF	16
->  
-> +/* Root Complex Event Collector Endpoint Association  */
-> +#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
-> +#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
-> +#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version that BUSN present */
-> +#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
-> +#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
-> +
->  /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
->  #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
->  #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)
+Thanks,
 
-
+Forest
