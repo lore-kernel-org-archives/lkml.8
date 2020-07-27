@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DB1C43446
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76D962083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2478E2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859828;
-	bh=AffMlMTKO4zKS4T/9efGfxZ+ta1j6Jw3kXv1B/QFf7Y=;
+	s=default; t=1595859831;
+	bh=uTzKu8227IvK2neuOEG36qM3bzCod7rBoHzbc5aDt0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zjm6TLmqJNxDTfijCZ654PXvdUFs9PQQdn+ZtDMyzk95dNFu2UiOubqTq01ju1jm6
-	 gWYeoTmzoEhJnVn8SkpkbDPoXoeKi4l16nH2JTj5LOoajzghgQXy3aYHWsPhyCjOqf
-	 NErkrf0KWL0amsDfelfUssBFoTxDviz+Pygz5Qmk=
+	b=ThA/ZDjPR+PIGsXEbULyGq+TBwGlJoWB2BR45LET+0+e8nIEYi4YAnbWFB6qM+UBb
+	 3ZYrPCy9P+Ar/UCHpoI4NEtVDo+sJyNDKwz07JnsiFzdq+Weef27Gg6ayAfeA+fLkJ
+	 ZuK6LtdVbxNp/f7vK2wJIReHWjrxVCKEaHPOBJ50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732149AbgG0OXr (ORCPT
+        id S1732159AbgG0OXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:23:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53070 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:23:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732139AbgG0OXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:23:44 -0400
+        id S1732118AbgG0OXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:23:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A466A2075A;
-        Mon, 27 Jul 2020 14:23:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27E3B2083E;
+        Mon, 27 Jul 2020 14:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859824;
-        bh=AffMlMTKO4zKS4T/9efGfxZ+ta1j6Jw3kXv1B/QFf7Y=;
+        s=default; t=1595859821;
+        bh=uTzKu8227IvK2neuOEG36qM3bzCod7rBoHzbc5aDt0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MeJtpgDayWF8oy8xDAqujdbtS0xRWLWtguuhCp2agQ77Dno2rUXatQhVlvunAFxo+
-         nGjEzx27Sw4YUB6xBNW+s/htmXnlmuuvtyKFo4WzJ+OdlHDCxPzPISimShMsBNrvHv
-         JWfK0IRsqWrCbSuU8nyIvoh6ljxZ4dXvmmiqW27A=
+        b=vYWYLx8joNRlyI0EhMj2UZ+dCnMcbtJUCQFYsrpudh5l5v4YJN3BP9zF/JhizKKIn
+         vkDa15bJQIVz2wgPzng+tjT0KjIrUWgkdPHXaNerfDqVzPYRwrE7hEqUIGFsHxFgDW
+         f7tQ2ij21APG3TA2MoO1RXaKt1UllQOLylP+5Iz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, Patrick Volkerding <volkerdi@gmail.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 089/179] nfsd4: fix NULL dereference in nfsd/clients display code
-Date:   Mon, 27 Jul 2020 16:04:24 +0200
-Message-Id: <20200727134937.011848345@linuxfoundation.org>
+Subject: [PATCH 5.7 088/179] Revert "PCI/PM: Assume ports without DLL Link Active train links in 100 ms"
+Date:   Mon, 27 Jul 2020 16:04:23 +0200
+Message-Id: <20200727134936.962434071@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -60,83 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: J. Bruce Fields <bfields@redhat.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit 9affa435817711861d774f5626c393c80f16d044 ]
+[ Upstream commit d08c30d7a0d1826f771f16cde32bd86e48401791 ]
 
-We hold the cl_lock here, and that's enough to keep stateid's from going
-away, but it's not enough to prevent the files they point to from going
-away.  Take fi_lock and a reference and check for NULL, as we do in
-other code.
+This reverts commit ec411e02b7a2e785a4ed9ed283207cd14f48699d.
 
-Reported-by: NeilBrown <neilb@suse.de>
-Fixes: 78599c42ae3c ("nfsd4: add file to display list of client's opens")
-Reviewed-by: NeilBrown <neilb@suse.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Patrick reported that this commit broke hybrid graphics on a ThinkPad X1
+Extreme 2nd with Intel UHD Graphics 630 and NVIDIA GeForce GTX 1650 Mobile:
+
+  nouveau 0000:01:00.0: fifo: PBDMA0: 01000000 [] ch 0 [00ff992000 DRM] subc 0 mthd 0008 data 00000000
+
+Karol reported that this commit broke Nouveau firmware loading on a Lenovo
+P1G2 with Intel UHD Graphics 630 and NVIDIA TU117GLM [Quadro T1000 Mobile]:
+
+  nouveau 0000:01:00.0: acr: AHESASC binary failed
+
+In both cases, reverting ec411e02b7a2 solved the problem.  Unfortunately,
+this revert will reintroduce the "Thunderbolt bridges take long time to
+resume from D3cold" problem:
+https://bugzilla.kernel.org/show_bug.cgi?id=206837
+
+Link: https://lore.kernel.org/r/CAErSpo5sTeK_my1dEhWp7aHD0xOp87+oHYWkTjbL7ALgDbXo-Q@mail.gmail.com
+Link: https://lore.kernel.org/r/CACO55tsAEa5GXw5oeJPG=mcn+qxNvspXreJYWDJGZBy5v82JDA@mail.gmail.com
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208597
+Reported-by: Patrick Volkerding <volkerdi@gmail.com>
+Reported-by: Karol Herbst <kherbst@redhat.com>
+Fixes: ec411e02b7a2 ("PCI/PM: Assume ports without DLL Link Active train links in 100 ms")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ drivers/pci/pci.c | 30 +++++++++---------------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index bdfae3ba39539..0a201bb074b0e 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -509,6 +509,17 @@ find_any_file(struct nfs4_file *f)
- 	return ret;
- }
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index d4758518a97bd..a4efc7e0061f5 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4662,8 +4662,7 @@ static int pci_pm_reset(struct pci_dev *dev, int probe)
+  * pcie_wait_for_link_delay - Wait until link is active or inactive
+  * @pdev: Bridge device
+  * @active: waiting for active or inactive?
+- * @delay: Delay to wait after link has become active (in ms). Specify %0
+- *	   for no delay.
++ * @delay: Delay to wait after link has become active (in ms)
+  *
+  * Use this to wait till link becomes active or inactive.
+  */
+@@ -4704,7 +4703,7 @@ static bool pcie_wait_for_link_delay(struct pci_dev *pdev, bool active,
+ 		msleep(10);
+ 		timeout -= 10;
+ 	}
+-	if (active && ret && delay)
++	if (active && ret)
+ 		msleep(delay);
+ 	else if (ret != active)
+ 		pci_info(pdev, "Data Link Layer Link Active not %s in 1000 msec\n",
+@@ -4825,28 +4824,17 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+ 	if (!pcie_downstream_port(dev))
+ 		return;
  
-+static struct nfsd_file *find_deleg_file(struct nfs4_file *f)
-+{
-+	struct nfsd_file *ret = NULL;
-+
-+	spin_lock(&f->fi_lock);
-+	if (f->fi_deleg_file)
-+		ret = nfsd_file_get(f->fi_deleg_file);
-+	spin_unlock(&f->fi_lock);
-+	return ret;
-+}
-+
- static atomic_long_t num_delegations;
- unsigned long max_delegations;
+-	/*
+-	 * Per PCIe r5.0, sec 6.6.1, for downstream ports that support
+-	 * speeds > 5 GT/s, we must wait for link training to complete
+-	 * before the mandatory delay.
+-	 *
+-	 * We can only tell when link training completes via DLL Link
+-	 * Active, which is required for downstream ports that support
+-	 * speeds > 5 GT/s (sec 7.5.3.6).  Unfortunately some common
+-	 * devices do not implement Link Active reporting even when it's
+-	 * required, so we'll check for that directly instead of checking
+-	 * the supported link speed.  We assume devices without Link Active
+-	 * reporting can train in 100 ms regardless of speed.
+-	 */
+-	if (dev->link_active_reporting) {
+-		pci_dbg(dev, "waiting for link to train\n");
+-		if (!pcie_wait_for_link_delay(dev, true, 0)) {
++	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
++		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
++		msleep(delay);
++	} else {
++		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
++			delay);
++		if (!pcie_wait_for_link_delay(dev, true, delay)) {
+ 			/* Did not train, no need to wait any further */
+ 			return;
+ 		}
+ 	}
+-	pci_dbg(child, "waiting %d ms to become accessible\n", delay);
+-	msleep(delay);
  
-@@ -2436,6 +2447,8 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
- 	oo = ols->st_stateowner;
- 	nf = st->sc_file;
- 	file = find_any_file(nf);
-+	if (!file)
-+		return 0;
- 
- 	seq_printf(s, "- 0x%16phN: { type: open, ", &st->sc_stateid);
- 
-@@ -2469,6 +2482,8 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
- 	oo = ols->st_stateowner;
- 	nf = st->sc_file;
- 	file = find_any_file(nf);
-+	if (!file)
-+		return 0;
- 
- 	seq_printf(s, "- 0x%16phN: { type: lock, ", &st->sc_stateid);
- 
-@@ -2497,7 +2512,9 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
- 
- 	ds = delegstateid(st);
- 	nf = st->sc_file;
--	file = nf->fi_deleg_file;
-+	file = find_deleg_file(nf);
-+	if (!file)
-+		return 0;
- 
- 	seq_printf(s, "- 0x%16phN: { type: deleg, ", &st->sc_stateid);
- 
-@@ -2509,6 +2526,7 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
- 
- 	nfs4_show_superblock(s, file);
- 	seq_printf(s, " }\n");
-+	nfsd_file_put(file);
- 
- 	return 0;
- }
+ 	if (!pci_device_is_present(child)) {
+ 		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
 -- 
 2.25.1
 
