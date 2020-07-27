@@ -2,169 +2,129 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E53FC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64539C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B865207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:28:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o3SnS5cu"
+	by mail.kernel.org (Postfix) with ESMTP id 3DF39207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595860137;
+	bh=/r7CpAbdOGh79gtbW0/Th7l8+bvwG0+jXqRwWEGze1g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ovqt6IxhIhjGHHyvXHRhIivXmjJAEv3eVEBYVYxBSe+QL67EbTu21b8djd3LHJ4St
+	 mMfwdvOUnGgNqAxbv2PXAgqWMnoaOwfcHwyBCUZP3b9zZLh2ckIPyDKeiC1+oWjaPf
+	 9r9ndvdCK/Fs9ShPybwzww7cg029z//wm02SSeYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732734AbgG0O2q (ORCPT
+        id S1732196AbgG0OYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:28:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732716AbgG0O2l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:28:41 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD4DDC061794;
-        Mon, 27 Jul 2020 07:28:41 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id m16so8078105pls.5;
-        Mon, 27 Jul 2020 07:28:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ByU1/eNsYuK+GvYyh2kCuTxeEuK1AGp+s4ZtpbXbVKU=;
-        b=o3SnS5cuvequyTLFcS+lezgeWpNLkUtAmwe6DnMeHTy/MxmANCgHVsSpEhLvBTM76Z
-         oLwhVYeuXBw39dvfolBjCQ9lW1sW8fF4vvwmhC2Yt4fVoa0er0GJeBTWN0nEn39fLeJu
-         yJueqvcQ/qS6605ydP+dlCSsvWjg44rUT10pg12fePozF2rJkc6d5gXjGerCCvGLPED2
-         CfCppqOH4SincYE547zDZ5H5gPMIkVuQ4Pgsmq0ZekfsiFKrkHPG9EoWpjV3W75klSeN
-         fbP7dXwryyACOzbT3p5KlcZyhEuM6uUt1pJfRm1guIhBegsp0Dr72okkzz+Z/hz+QHmZ
-         GpgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ByU1/eNsYuK+GvYyh2kCuTxeEuK1AGp+s4ZtpbXbVKU=;
-        b=a+t3yIDK2UD7wdW9vILB7C50kaww+OltZvrhmFFMn5uebqKCjf3NKNb9y0S/RPbz3x
-         CU6qsbY0GGvnXtri1BxRchfHI41om6/jzK/Iz/kRisih45ZZMH+ShHPcuuovDcvOd5iD
-         fHWVbjcJpytQIdiUuKKNQ6BqdzC8y0q5U/dHTGAnI5gZxG3PyL3HKBJGmWgaPgxQqG0d
-         elMNclMV61uKXUdDkGAi+zkGvWxqFd9jF5TqqwQgkEQiz812dBC/vdmuHCJzhcUPaIgo
-         6T/QfMneHNQlVaIq+0PbH+/1kuehl/KRQbcN2VM5juxIYdb5I7hKoTkR1xjF1PBB+tAq
-         sxvA==
-X-Gm-Message-State: AOAM5335aIiusjbIof65r1m23mwvuS6BCqUTyzBatFhSa1VBvMVituNG
-        K4BC3Ck8d6o+zcNGO1RBJEwA+W/l2+c=
-X-Google-Smtp-Source: ABdhPJyVv9oMvEfyk+7j0Q4ouhj0Zs/TlRaSAhSD3yKSd4N3VR8GQ1eYPDUyJVqxH5A0ymP0ZxUG+Q==
-X-Received: by 2002:a17:902:bd4a:: with SMTP id b10mr3335612plx.109.1595860121354;
-        Mon, 27 Jul 2020 07:28:41 -0700 (PDT)
-Received: from carrot.localdomain (i60-35-88-138.s42.a014.ap.plala.or.jp. [60.35.88.138])
-        by smtp.gmail.com with ESMTPSA id g18sm15430460pfk.40.2020.07.27.07.28.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 Jul 2020 07:28:40 -0700 (PDT)
-From:   Ryusuke Konishi <konishi.ryusuke@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-nilfs <linux-nilfs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/3] nilfs2: Convert __nilfs_msg to integrate the level and format
-Date:   Mon, 27 Jul 2020 23:28:30 +0900
-Message-Id: <1595860111-3920-3-git-send-email-konishi.ryusuke@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1595860111-3920-1-git-send-email-konishi.ryusuke@gmail.com>
-References: <1595860111-3920-1-git-send-email-konishi.ryusuke@gmail.com>
+        Mon, 27 Jul 2020 10:24:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731505AbgG0OYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:24:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 464832083E;
+        Mon, 27 Jul 2020 14:23:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595859839;
+        bh=/r7CpAbdOGh79gtbW0/Th7l8+bvwG0+jXqRwWEGze1g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OX4FxisvemN5XOKTiH/s0A/hlJZ9hxVu/JLVk/V5JTkbu7lDL/JBRdfGYyBVgnf2j
+         jgxZjHg+Poh7862qamRlG166jhlIMm4xzuz8crPKu7plQQ1JPgkLtWxi5iqa2A++Am
+         ZpsYWenvGe1XiP22N+IXPBRbCmDAdrFEjQZ2Tu4M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jack Xiao <Jack.Xiao@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 126/179] drm/amdgpu: fix preemption unit test
+Date:   Mon, 27 Jul 2020 16:05:01 +0200
+Message-Id: <20200727134938.786732517@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
+References: <20200727134932.659499757@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches <joe@perches.com>
+From: Jack Xiao <Jack.Xiao@amd.com>
 
-Reduce object size a bit by removing the KERN_<LEVEL> as a
-separate argument and adding it to the format string.
+[ Upstream commit d845a2051b6b673fab4229b920ea04c7c4352b51 ]
 
-Reduce overall object size by about ~.5% (x86-64 defconfig w/ nilfs2)
+Remove signaled jobs from job list and ensure the
+job was indeed preempted.
 
-old:
-$ size -t fs/nilfs2/built-in.a | tail -1
- 191738	   8676	     44	 200458	  30f0a	(TOTALS)
-
-new:
-$ size -t fs/nilfs2/built-in.a | tail -1
- 190971	   8676	     44	 199691	  30c0b	(TOTALS)
-
-Signed-off-by: Joe Perches <joe@perches.com>
-Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Signed-off-by: Jack Xiao <Jack.Xiao@amd.com>
+Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nilfs2/nilfs.h |  9 ++++-----
- fs/nilfs2/super.c | 16 +++++++++++-----
- 2 files changed, 15 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nilfs2/nilfs.h b/fs/nilfs2/nilfs.h
-index 42395ba52da6..979a41016743 100644
---- a/fs/nilfs2/nilfs.h
-+++ b/fs/nilfs2/nilfs.h
-@@ -289,9 +289,8 @@ static inline int nilfs_mark_inode_dirty_sync(struct inode *inode)
- /* super.c */
- extern struct inode *nilfs_alloc_inode(struct super_block *);
- 
--extern __printf(3, 4)
--void __nilfs_msg(struct super_block *sb, const char *level,
--		 const char *fmt, ...);
-+__printf(2, 3)
-+void __nilfs_msg(struct super_block *sb, const char *fmt, ...);
- extern __printf(3, 4)
- void __nilfs_error(struct super_block *sb, const char *function,
- 		   const char *fmt, ...);
-@@ -299,7 +298,7 @@ void __nilfs_error(struct super_block *sb, const char *function,
- #ifdef CONFIG_PRINTK
- 
- #define nilfs_msg(sb, level, fmt, ...)					\
--	__nilfs_msg(sb, level, fmt, ##__VA_ARGS__)
-+	__nilfs_msg(sb, level fmt, ##__VA_ARGS__)
- #define nilfs_error(sb, fmt, ...)					\
- 	__nilfs_error(sb, __func__, fmt, ##__VA_ARGS__)
- 
-@@ -307,7 +306,7 @@ void __nilfs_error(struct super_block *sb, const char *function,
- 
- #define nilfs_msg(sb, level, fmt, ...)					\
- 	do {								\
--		no_printk(fmt, ##__VA_ARGS__);				\
-+		no_printk(level fmt, ##__VA_ARGS__);			\
- 		(void)(sb);						\
- 	} while (0)
- #define nilfs_error(sb, fmt, ...)					\
-diff --git a/fs/nilfs2/super.c b/fs/nilfs2/super.c
-index 5729ee86da9a..fef4821a1f0f 100644
---- a/fs/nilfs2/super.c
-+++ b/fs/nilfs2/super.c
-@@ -62,19 +62,25 @@
- static int nilfs_setup_super(struct super_block *sb, int is_mount);
- static int nilfs_remount(struct super_block *sb, int *flags, char *data);
- 
--void __nilfs_msg(struct super_block *sb, const char *level, const char *fmt,
--		 ...)
-+void __nilfs_msg(struct super_block *sb, const char *fmt, ...)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+index c0f9a651dc067..92b18c4760e55 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+@@ -1156,27 +1156,37 @@ static void amdgpu_ib_preempt_job_recovery(struct drm_gpu_scheduler *sched)
+ static void amdgpu_ib_preempt_mark_partial_job(struct amdgpu_ring *ring)
  {
- 	struct va_format vaf;
- 	va_list args;
-+	int level;
+ 	struct amdgpu_job *job;
+-	struct drm_sched_job *s_job;
++	struct drm_sched_job *s_job, *tmp;
+ 	uint32_t preempt_seq;
+ 	struct dma_fence *fence, **ptr;
+ 	struct amdgpu_fence_driver *drv = &ring->fence_drv;
+ 	struct drm_gpu_scheduler *sched = &ring->sched;
++	bool preempted = true;
  
- 	va_start(args, fmt);
--	vaf.fmt = fmt;
-+
-+	level = printk_get_level(fmt);
-+	vaf.fmt = printk_skip_level(fmt);
- 	vaf.va = &args;
-+
- 	if (sb)
--		printk("%sNILFS (%s): %pV\n", level, sb->s_id, &vaf);
-+		printk("%c%cNILFS (%s): %pV\n",
-+		       KERN_SOH_ASCII, level, sb->s_id, &vaf);
- 	else
--		printk("%sNILFS: %pV\n", level, &vaf);
-+		printk("%c%cNILFS: %pV\n",
-+		       KERN_SOH_ASCII, level, &vaf);
-+
- 	va_end(args);
- }
+ 	if (ring->funcs->type != AMDGPU_RING_TYPE_GFX)
+ 		return;
  
+ 	preempt_seq = le32_to_cpu(*(drv->cpu_addr + 2));
+-	if (preempt_seq <= atomic_read(&drv->last_seq))
+-		return;
++	if (preempt_seq <= atomic_read(&drv->last_seq)) {
++		preempted = false;
++		goto no_preempt;
++	}
+ 
+ 	preempt_seq &= drv->num_fences_mask;
+ 	ptr = &drv->fences[preempt_seq];
+ 	fence = rcu_dereference_protected(*ptr, 1);
+ 
++no_preempt:
+ 	spin_lock(&sched->job_list_lock);
+-	list_for_each_entry(s_job, &sched->ring_mirror_list, node) {
++	list_for_each_entry_safe(s_job, tmp, &sched->ring_mirror_list, node) {
++		if (dma_fence_is_signaled(&s_job->s_fence->finished)) {
++			/* remove job from ring_mirror_list */
++			list_del_init(&s_job->node);
++			sched->ops->free_job(s_job);
++			continue;
++		}
+ 		job = to_amdgpu_job(s_job);
+-		if (job->fence == fence)
++		if (preempted && job->fence == fence)
+ 			/* mark the job as preempted */
+ 			job->preemption_status |= AMDGPU_IB_PREEMPTED;
+ 	}
 -- 
-1.8.3.1
+2.25.1
+
+
 
