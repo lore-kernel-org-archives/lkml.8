@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2451C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87B3820663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E8A20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860046;
-	bh=IpPNz01uO1QjtLxilmlnsg8OVIYlMpAGWMPWTCRk9qM=;
+	s=default; t=1595860047;
+	bh=aH9N2X8cK9yWknxgS/kGhUdLd4Tp5DOTt7iEgW0I6Q0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kJVy9LJ0YKXxx0BVhgJBYnndruYwjI7R2Ztu+TuLVUZIF++vqNE6Z4dC/68L/eE3r
-	 WT9Fa+8P/Gw5uqbK7+FYYreIVxGp9PN5d84dWxNsbSy7UJIqzowCSWxEK/wNdDl8s6
-	 FmW+m3yBdn1+tezpLYCyncOQ5YLODzneCJtneRuk=
+	b=OnN3U07omhgrzQsda5exClwwLPZ5XG9/Ga24u1EM8vOlHMmGkM+gw8Gdv4NkRM7jb
+	 GP5wyMD2aTZk3b5E6vkZM5tYNmqltmr0CVCaQOabchy2oX0APljSmMYuoAXTguf7Bc
+	 DzFMO6cPdhCwuecmp1ggqQiehR+jlcqfaqmmbmRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732547AbgG0O1Y (ORCPT
+        id S1732505AbgG0OZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:27:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55982 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:25:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732512AbgG0OZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:25:49 -0400
+        id S1731876AbgG0OZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:25:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A304021D95;
-        Mon, 27 Jul 2020 14:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8421207FC;
+        Mon, 27 Jul 2020 14:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859949;
-        bh=IpPNz01uO1QjtLxilmlnsg8OVIYlMpAGWMPWTCRk9qM=;
+        s=default; t=1595859944;
+        bh=aH9N2X8cK9yWknxgS/kGhUdLd4Tp5DOTt7iEgW0I6Q0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xFOD3vstBmEsbBLAwWUYDRnqfGDEzQoyNVvpDR5pFIdhAgKVHm/FLiT5XWNorCEcJ
-         Pq76vU6Tjt4tzaLmatvglRIiSqFsfGa9ZwzzLqB8Mx8T8eCa2wNEW+RzSapFSrp1Mg
-         elz1sPdvgewuvlIN2wbLVRz+f5GBX5KFC4hGMY4w=
+        b=xamtOT0S8Nwv2Wew5yJ23K4cw2cz6n9PQ6JLdTtynZDEWRG/p41TFNwwCrfTxG5Gl
+         Gfivwlo3G3KMNzBX08DMkESfWX/43zC6WtQNNmhdCwhf1eJPKhP77hdNz0AnfrJaBH
+         dro+dIntJzxKDKToopaLcDI8D71qdb4LqN2IPiyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Pawe=C5=82=20Gronowski?= <me@woland.xyz>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.7 167/179] drm/amdgpu: Fix NULL dereference in dpm sysfs handlers
-Date:   Mon, 27 Jul 2020 16:05:42 +0200
-Message-Id: <20200727134940.796558955@linuxfoundation.org>
+        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.7 166/179] mmc: sdhci-of-aspeed: Fix clock divider calculation
+Date:   Mon, 27 Jul 2020 16:05:41 +0200
+Message-Id: <20200727134940.746906590@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -60,58 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paweł Gronowski <me@woland.xyz>
+From: Eddie James <eajames@linux.ibm.com>
 
-commit 38e0c89a19fd13f28d2b4721035160a3e66e270b upstream.
+commit ebd4050c6144b38098d8eed34df461e5e3fa82a9 upstream.
 
-NULL dereference occurs when string that is not ended with space or
-newline is written to some dpm sysfs interface (for example pp_dpm_sclk).
-This happens because strsep replaces the tmp with NULL if the delimiter
-is not present in string, which is then dereferenced by tmp[0].
+When calculating the clock divider, start dividing at 2 instead of 1.
+The divider is divided by two at the end of the calculation, so starting
+at 1 may result in a divider of 0, which shouldn't happen.
 
-Reproduction example:
-sudo sh -c 'echo -n 1 > /sys/class/drm/card0/device/pp_dpm_sclk'
-
-Signed-off-by: Paweł Gronowski <me@woland.xyz>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Acked-by: Joel Stanley <joel@jms.id.au>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/20200709195706.12741-3-eajames@linux.ibm.com
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/mmc/host/sdhci-of-aspeed.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
-@@ -775,8 +775,7 @@ static ssize_t amdgpu_set_pp_od_clk_volt
- 		tmp_str++;
- 	while (isspace(*++tmp_str));
+--- a/drivers/mmc/host/sdhci-of-aspeed.c
++++ b/drivers/mmc/host/sdhci-of-aspeed.c
+@@ -68,7 +68,7 @@ static void aspeed_sdhci_set_clock(struc
+ 	if (WARN_ON(clock > host->max_clk))
+ 		clock = host->max_clk;
  
--	while (tmp_str[0]) {
--		sub_str = strsep(&tmp_str, delimiter);
-+	while ((sub_str = strsep(&tmp_str, delimiter)) != NULL) {
- 		ret = kstrtol(sub_str, 0, &parameter[parameter_size]);
- 		if (ret)
- 			return -EINVAL;
-@@ -1036,8 +1035,7 @@ static ssize_t amdgpu_read_mask(const ch
- 	memcpy(buf_cpy, buf, bytes);
- 	buf_cpy[bytes] = '\0';
- 	tmp = buf_cpy;
--	while (tmp[0]) {
--		sub_str = strsep(&tmp, delimiter);
-+	while ((sub_str = strsep(&tmp, delimiter)) != NULL) {
- 		if (strlen(sub_str)) {
- 			ret = kstrtol(sub_str, 0, &level);
- 			if (ret)
-@@ -1634,8 +1632,7 @@ static ssize_t amdgpu_set_pp_power_profi
- 			i++;
- 		memcpy(buf_cpy, buf, count-i);
- 		tmp_str = buf_cpy;
--		while (tmp_str[0]) {
--			sub_str = strsep(&tmp_str, delimiter);
-+		while ((sub_str = strsep(&tmp_str, delimiter)) != NULL) {
- 			ret = kstrtol(sub_str, 0, &parameter[parameter_size]);
- 			if (ret)
- 				return -EINVAL;
+-	for (div = 1; div < 256; div *= 2) {
++	for (div = 2; div < 256; div *= 2) {
+ 		if ((parent / div) <= clock)
+ 			break;
+ 	}
 
 
