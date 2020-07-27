@@ -2,174 +2,126 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06428C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F343C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2AC920658
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2A5206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:24:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="LIJBfl13"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgG0JYF (ORCPT
+        id S1728149AbgG0JYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:24:05 -0400
-Received: from mga18.intel.com ([134.134.136.126]:11312 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726285AbgG0JYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:24:04 -0400
-IronPort-SDR: 4MsiqCc3QrHWqcMLcbHWF3DpTZSFAeLgv7PSUVGNqX3bW5pZVbs6AImjyty3BCWETM/TgzjZgQ
- zVpurox9tZ7g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="138491962"
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="138491962"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 02:24:04 -0700
-IronPort-SDR: s660u8vdc/hWdXL+JZwCVxTpKnAPrKnY+XX04a3k50wnynebdr0D98MZ6Vtb9sHKyCh3cbrfOF
- s0anme+RV7Ow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
-   d="scan'208";a="303394020"
-Received: from pg-nxl3.altera.com ([10.142.129.93])
-  by orsmga002.jf.intel.com with ESMTP; 27 Jul 2020 02:24:01 -0700
-From:   "Ooi, Joyce" <joyce.ooi@intel.com>
-To:     Thor Thayer <thor.thayer@linux.intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Tan Ley Foon <ley.foon.tan@intel.com>,
-        See Chin Liang <chin.liang.see@intel.com>,
-        Dinh Nguyen <dinh.nguyen@intel.com>
-Subject: [PATCH v5 07/10] net: eth: altera: change tx functions to type netdev_tx_t
-Date:   Mon, 27 Jul 2020 17:21:54 +0800
-Message-Id: <20200727092157.115937-8-joyce.ooi@intel.com>
-X-Mailer: git-send-email 2.13.0
-In-Reply-To: <20200727092157.115937-1-joyce.ooi@intel.com>
-References: <20200727092157.115937-1-joyce.ooi@intel.com>
+        Mon, 27 Jul 2020 05:24:14 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17974 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728114AbgG0JYL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:24:11 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R9DcH6023314;
+        Mon, 27 Jul 2020 11:23:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=GYuL87S7YPoqYEQ8fLjuaH+A2tOWajNHf5iOqsZhpfI=;
+ b=LIJBfl13winPriDeJ679lLSitR1k2XuX6TA4qNkeZAhz896tGIXzbiZDWOVrrS+2iwYP
+ 9bAhZlnhJMWyjXwc0VQBnhmfGEiks066/h7Eks1U1lwspzxCMiVfqpyBhFOGhOirIy9E
+ WpcC3HHOF9u0x9dR4MMqUGNxbl9KyYGE2Kt8hjvPrto/DK8bITG7cpMGZnaB57NN6MAw
+ poH0/X7qMp62r9BcfYRMe+LK8Vl9PXGt+anznGBXObopKDsPZfVF71ZDAQiGFesGAAt7
+ /y/3fYFdDSVje8EHWQx5ZzqgmwaIdsxLW4Mvqxus1it8Jb9oBhPyG5g3PC81R8lm/zex WQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32gagv0e58-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 11:23:55 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 40F6D100038;
+        Mon, 27 Jul 2020 11:23:54 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2A1052AE6B3;
+        Mon, 27 Jul 2020 11:23:54 +0200 (CEST)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 Jul 2020 11:23:53
+ +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v4 0/3] Add USB role switch support to DWC2
+Date:   Mon, 27 Jul 2020 11:23:43 +0200
+Message-ID: <20200727092346.19780-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_06:2020-07-27,2020-07-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dalon Westergreen <dalon.westergreen@linux.intel.com>
+When using usb-c connector (but it can also be the case with a micro-b
+connector), iddig, avalid, bvalid, vbusvalid input signals may not be
+connected to the DWC2 OTG controller.
+DWC2 OTG controller features an overriding control of the PHY voltage valid
+and ID input signals.
+So, missing signals can be forced using usb role from usb role switch and
+this override feature.
 
-Modify all msgdma and sgdma tx_buffer functions to be of type
-netdev_tx_t, and also modify main tx function to be of
-netdev_tx_t type.
+This series adds support for usb role switch to dwc2, by using overriding
+control of the PHY voltage valid and ID input signals.
 
-Signed-off-by: Dalon Westergreen <dalon.westergreen@linux.intel.com>
-Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
-Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+It has been tested on stm32mp157c-dk2 [1], which has a Type-C connector
+managed by a Type-C port controller, and connected to USB OTG controller.
+
+[1] https://www.st.com/en/evaluation-tools/stm32mp157c-dk2.html
+
+Amelie Delaunay (3):
+  dt-bindings: usb: dwc2: add optional usb-role-switch property
+  usb: dwc2: override PHY input signals with usb role switch support
+  usb: dwc2: don't use ID/Vbus detection if usb-role-switch on STM32MP15
+    SoCs
 ---
-v2: this patch is added in patch version 2
-v3: no change
-v4: no change
-v5: no change
+Changes in v4:
+- Simplify call to dwc2_force_mode in drd.c
+- Add error_drd label in probe error path in platform.c
+Changes in v3:
+- Fix build issue reported by kernel test robot in drd.c
+Changes in v2:
+- Previous DT patch already in stm32-next branch so removed from v2 patchset
+  "ARM: dts: stm32: enable usb-role-switch on USB OTG on stm32mp15xx-dkx"
+- DWC2 DT bindings update added
+- Build issue reported by kernel test robot fixed
+- Martin's comments taken into account
 ---
- drivers/net/ethernet/altera/altera_msgdma.c | 5 +++--
- drivers/net/ethernet/altera/altera_msgdma.h | 4 ++--
- drivers/net/ethernet/altera/altera_sgdma.c  | 5 +++--
- drivers/net/ethernet/altera/altera_sgdma.h  | 4 ++--
- drivers/net/ethernet/altera/altera_tse.h    | 4 ++--
- 5 files changed, 12 insertions(+), 10 deletions(-)
+ .../devicetree/bindings/usb/dwc2.yaml         |   4 +
+ drivers/usb/dwc2/Kconfig                      |   1 +
+ drivers/usb/dwc2/Makefile                     |   2 +-
+ drivers/usb/dwc2/core.h                       |   9 +
+ drivers/usb/dwc2/drd.c                        | 180 ++++++++++++++++++
+ drivers/usb/dwc2/gadget.c                     |   2 +-
+ drivers/usb/dwc2/params.c                     |   4 +-
+ drivers/usb/dwc2/platform.c                   |  20 +-
+ 8 files changed, 217 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/usb/dwc2/drd.c
 
-diff --git a/drivers/net/ethernet/altera/altera_msgdma.c b/drivers/net/ethernet/altera/altera_msgdma.c
-index ac1efd08267a..ac68151a7f47 100644
---- a/drivers/net/ethernet/altera/altera_msgdma.c
-+++ b/drivers/net/ethernet/altera/altera_msgdma.c
-@@ -106,7 +106,8 @@ void msgdma_clear_txirq(struct altera_tse_private *priv)
- }
- 
- /* return 0 to indicate transmit is pending */
--int msgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
-+netdev_tx_t
-+msgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
- {
- 	csrwr32(lower_32_bits(buffer->dma_addr), priv->tx_dma_desc,
- 		msgdma_descroffs(read_addr_lo));
-@@ -120,7 +121,7 @@ int msgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
- 		msgdma_descroffs(stride));
- 	csrwr32(MSGDMA_DESC_CTL_TX_SINGLE, priv->tx_dma_desc,
- 		msgdma_descroffs(control));
--	return 0;
-+	return NETDEV_TX_OK;
- }
- 
- u32 msgdma_tx_completions(struct altera_tse_private *priv)
-diff --git a/drivers/net/ethernet/altera/altera_msgdma.h b/drivers/net/ethernet/altera/altera_msgdma.h
-index 23f5b2a13898..d816b24dfa7f 100644
---- a/drivers/net/ethernet/altera/altera_msgdma.h
-+++ b/drivers/net/ethernet/altera/altera_msgdma.h
-@@ -16,8 +16,8 @@ void msgdma_clear_txirq(struct altera_tse_private *priv);
- u32 msgdma_tx_completions(struct altera_tse_private *priv);
- void msgdma_add_rx_desc(struct altera_tse_private *priv,
- 			struct tse_buffer *buffer);
--int msgdma_tx_buffer(struct altera_tse_private *priv,
--		     struct tse_buffer *buffer);
-+netdev_tx_t msgdma_tx_buffer(struct altera_tse_private *priv,
-+			     struct tse_buffer *buffer);
- u32 msgdma_rx_status(struct altera_tse_private *priv);
- int msgdma_initialize(struct altera_tse_private *priv);
- void msgdma_uninitialize(struct altera_tse_private *priv);
-diff --git a/drivers/net/ethernet/altera/altera_sgdma.c b/drivers/net/ethernet/altera/altera_sgdma.c
-index fe6276c7e4a3..6898ec682425 100644
---- a/drivers/net/ethernet/altera/altera_sgdma.c
-+++ b/drivers/net/ethernet/altera/altera_sgdma.c
-@@ -166,7 +166,8 @@ void sgdma_clear_txirq(struct altera_tse_private *priv)
-  *   will now actually look at the code, so from now, 0 is good and return
-  *   NETDEV_TX_BUSY when busy.
-  */
--int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
-+netdev_tx_t
-+sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
- {
- 	struct sgdma_descrip __iomem *descbase =
- 		(struct sgdma_descrip __iomem *)priv->tx_dma_desc;
-@@ -196,7 +197,7 @@ int sgdma_tx_buffer(struct altera_tse_private *priv, struct tse_buffer *buffer)
- 	/* enqueue the request to the pending transmit queue */
- 	queue_tx(priv, buffer);
- 
--	return 0;
-+	return NETDEV_TX_OK;
- }
- 
- 
-diff --git a/drivers/net/ethernet/altera/altera_sgdma.h b/drivers/net/ethernet/altera/altera_sgdma.h
-index 3fb201417820..6a41833f0965 100644
---- a/drivers/net/ethernet/altera/altera_sgdma.h
-+++ b/drivers/net/ethernet/altera/altera_sgdma.h
-@@ -13,8 +13,8 @@ void sgdma_disable_rxirq(struct altera_tse_private *priv);
- void sgdma_disable_txirq(struct altera_tse_private *priv);
- void sgdma_clear_rxirq(struct altera_tse_private *priv);
- void sgdma_clear_txirq(struct altera_tse_private *priv);
--int sgdma_tx_buffer(struct altera_tse_private *priv,
--		    struct tse_buffer *buffer);
-+netdev_tx_t sgdma_tx_buffer(struct altera_tse_private *priv,
-+			    struct tse_buffer *buffer);
- u32 sgdma_tx_completions(struct altera_tse_private *priv);
- void sgdma_add_rx_desc(struct altera_tse_private *priv,
- 		       struct tse_buffer *buffer);
-diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
-index fa24ab3c7d6a..79d02748c89d 100644
---- a/drivers/net/ethernet/altera/altera_tse.h
-+++ b/drivers/net/ethernet/altera/altera_tse.h
-@@ -392,8 +392,8 @@ struct altera_dmaops {
- 	void (*disable_rxirq)(struct altera_tse_private *priv);
- 	void (*clear_txirq)(struct altera_tse_private *priv);
- 	void (*clear_rxirq)(struct altera_tse_private *priv);
--	int (*tx_buffer)(struct altera_tse_private *priv,
--			 struct tse_buffer *buffer);
-+	netdev_tx_t (*tx_buffer)(struct altera_tse_private *priv,
-+				 struct tse_buffer *buffer);
- 	u32 (*tx_completions)(struct altera_tse_private *priv);
- 	void (*add_rx_desc)(struct altera_tse_private *priv,
- 			    struct tse_buffer *buffer);
 -- 
-2.13.0
+2.17.1
 
