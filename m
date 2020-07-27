@@ -2,111 +2,134 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE63C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 01:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2237C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 01:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69B7820663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 01:46:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W5GnH5zf"
+	by mail.kernel.org (Postfix) with ESMTP id 8B03D20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 01:48:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595814491;
+	bh=Q9AN3yCXYo95QCIPUf1ja6LZcxTE0oqLhfRUrT3YYrA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Sv8w6e51QGlXRvLzxoWOxbk/fBTXiOClvIet94AZLW7qOszTpeKoQfJgjPylUIriG
+	 2MmrVWqyo+O8igWtWmGS6Ikuwsvsi5HxfzXg3zTeFT8TIz/DpygpitHzIbMZBpSuLk
+	 xoCus0E8WDhcqFME/qEdTz+w+j2evAZCKIOzRlew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgG0BqI (ORCPT
+        id S1727033AbgG0BsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 21:46:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbgG0BqH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 21:46:07 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09776C0619D2;
-        Sun, 26 Jul 2020 18:46:07 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id o13so8519074pgf.0;
-        Sun, 26 Jul 2020 18:46:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FkewYi4NEj9DYPkGcNYYj0thN1u6i8LoJmF6J427G24=;
-        b=W5GnH5zfdSudcBo7qCazalC4ZSXSOYqNKlrGTJ8f+lEm7c2BVM2nBoC97NLCxz8Ecw
-         IhGkIfz8LRCbGdRkYIBxqBXvDjp6NOweULfKOCfoBseFL6i+3IFTR6nH6OU/wFUb/mMK
-         h7SKDxAEd2Zii4siaC3NZK+qYX7ZQZ5YAlf0EHJKUjR0gnEFw/t/p4+u4d/1Ca5RWBfu
-         AsbM4OhrPVAgIZFi+Y9ZcAxP4QfLSU9h2B5aWBNwV30/AkGMxQs4tVuF22b6orkSlhyB
-         idfPxRstz30HihkGVL7zTLO5AaYyBi/uK9tHAnKJThD/D+mncYKL42Ze4ElPniTxlYgW
-         FrLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FkewYi4NEj9DYPkGcNYYj0thN1u6i8LoJmF6J427G24=;
-        b=e01A8E/SWyGBaH1sN8FttXVicHHCyMAVzYFQP387g+lvTopTB/dJSg6IHVb/5WDzrq
-         eI2UvFdOTziendZIvKZTs6531MgFhjZEC1IzVaUDSUCwcuW5XtRZjHyxpoR0+ZpVGhBx
-         Br/FHGc9lxlL0mu1begNehO+gjc70jU9YNJjOKzmsYXmSB1sZJ1vAbFzSFOFK5cQW5sT
-         bMMxaEyYIEuZfCN5aj7NVXxZJ2T+QC1EzJ+iea0uV6EKb+bPYK7u83dZMleD9pZLpjps
-         ghRPg6JiBN58lgC61UmaizxvIx+zFhj94oPmzwYBn9RUJ0NipVXBhj/caWBIn2ljVi7Y
-         hncg==
-X-Gm-Message-State: AOAM530bOgeQqART/Aolnwk0JTYpFqtwqRVSBPneM/F0EVR6oa7xRK0D
-        genjfWoav2Gs1SW+KSIKTpc=
-X-Google-Smtp-Source: ABdhPJytt0icjy2kS8S+uy58W68c1qkGUJk9cKVJo/3bRIx1J3Iy6gKw07rxLgO3+N0Gk30soflAMQ==
-X-Received: by 2002:a63:5a54:: with SMTP id k20mr17555354pgm.226.1595814366497;
-        Sun, 26 Jul 2020 18:46:06 -0700 (PDT)
-Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id c2sm7009210pgb.52.2020.07.26.18.46.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 18:46:05 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 09:46:01 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 03/18] gpiolib: make cdev a build option
-Message-ID: <20200727014601.GA10761@sol>
-References: <20200725041955.9985-1-warthog618@gmail.com>
- <20200725041955.9985-4-warthog618@gmail.com>
- <CACRpkdZymmO9ku5OmCO74eiX3Y3jq_1g5De9Tx4hg3Lyrdt6bQ@mail.gmail.com>
+        Sun, 26 Jul 2020 21:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726797AbgG0BsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 21:48:05 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-111-31.bvtn.or.frontiernet.net [50.39.111.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D2C320663;
+        Mon, 27 Jul 2020 01:48:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595814485;
+        bh=Q9AN3yCXYo95QCIPUf1ja6LZcxTE0oqLhfRUrT3YYrA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=J0PNf3heEUk1LOfq2Co/7IwbfcXWMQLllvsBgkwh2yDV7GfwERQGPcd9ZHElAoILr
+         ovIipAQBI//qvzWnplVd+/REJRY4XzX2Y1QJgPwUt9ZjmTb/lAnCpm80FZd8EBAM7x
+         w6sybDTz7afUjCWB8Gq45AVAXFiPW3Q+a63p3gyU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 16361352276B; Sun, 26 Jul 2020 18:48:05 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 18:48:05 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     peterz@infradead.org
+Cc:     Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>, jakub@redhat.com,
+        hjl.tools@gmail.com
+Subject: Re: [PATCH] kcsan: Add option to allow watcher interruptions
+Message-ID: <20200727014805.GF9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200220185855.GY2935@paulmck-ThinkPad-P72>
+ <20200220213317.GA35033@google.com>
+ <20200725145623.GZ9247@paulmck-ThinkPad-P72>
+ <CANpmjNPhuvrhRHAiuv2Zju1VNSe7dO0aaYn+1TB99OF2Hv0S_A@mail.gmail.com>
+ <20200725174430.GH10769@hirez.programming.kicks-ass.net>
+ <20200725193909.GB9247@paulmck-ThinkPad-P72>
+ <20200725201013.GZ119549@hirez.programming.kicks-ass.net>
+ <20200725202131.GM43129@hirez.programming.kicks-ass.net>
+ <20200725220750.GC9247@paulmck-ThinkPad-P72>
+ <20200726115242.GA119549@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZymmO9ku5OmCO74eiX3Y3jq_1g5De9Tx4hg3Lyrdt6bQ@mail.gmail.com>
+In-Reply-To: <20200726115242.GA119549@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:25:53AM +0200, Linus Walleij wrote:
-> On Sat, Jul 25, 2020 at 6:21 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Sun, Jul 26, 2020 at 01:52:42PM +0200, peterz@infradead.org wrote:
+> On Sat, Jul 25, 2020 at 03:07:50PM -0700, Paul E. McKenney wrote:
+> > On Sat, Jul 25, 2020 at 10:21:31PM +0200, peterz@infradead.org wrote:
+> > > On Sat, Jul 25, 2020 at 10:10:13PM +0200, peterz@infradead.org wrote:
+> > > > On Sat, Jul 25, 2020 at 12:39:09PM -0700, Paul E. McKenney wrote:
+> > > 
+> > > > > This gets me the following for __rcu_read_lock():
+> > > > > 
+> > > > > 00000000000000e0 <__rcu_read_lock>:
+> > > > >       e0:	48 8b 14 25 00 00 00 	mov    0x0,%rdx
+> > > > >       e7:	00 
+> > > > >       e8:	8b 82 e0 02 00 00    	mov    0x2e0(%rdx),%eax
+> > > > >       ee:	83 c0 01             	add    $0x1,%eax
+> > > > >       f1:	89 82 e0 02 00 00    	mov    %eax,0x2e0(%rdx)
+> > > > >       f7:	c3                   	retq   
+> > > > >       f8:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+> > > > >       ff:	00 
+> > > > > 
+> > > > > One might hope for a dec instruction, but this isn't bad.  We do lose
+> > > > > a few instructions compared to the C-language case due to differences
+> > > > > in address calculation:
+> > > > > 
+> > > > > 00000000000000e0 <__rcu_read_lock>:
+> > > > >       e0:	48 8b 04 25 00 00 00 	mov    0x0,%rax
+> > > > >       e7:	00 
+> > > > >       e8:	83 80 e0 02 00 00 01 	addl   $0x1,0x2e0(%rax)
+> > > > >       ef:	c3                   	retq   
+> > > > 
+> > > > Shees, that's daft... I think this is one of the cases where GCC is
+> > > > perhaps overly cautious when presented with 'volatile'.
+> > > > 
+> > > > It has a history of generating excessively crap code around volatile,
+> > > > and while it has improved somewhat, this seems to show there's still
+> > > > room for improvement...
+> > > > 
+> > > > I suppose this is the point where we go bug a friendly compiler person.
+> > 
+> > Sounds very good!  Do you have someone specific in mind?
 > 
-> > +config GPIO_CDEV
-> > +       bool "/dev/gpiochipN (character device interface)"
-> > +       default y
+> Jakub perhaps?, Cc'ed
 > 
-> I don't want to make it too easy to do this, as I see it as a standard
-> kernel feature.
+> > > Having had a play with godbolt.org, it seems clang isn't affected by
+> > > this particular flavour of crazy, but GCC does indeed refuse to fuse the
+> > > address calculation and the addition.
+> > 
+> > So there is hope, then!
+> > 
+> > And even GCC's current state is an improvement.  Last I messed with this,
+> > the ACCESS_ONCE()++ approach generated a load, a register increment,
+> > and a store.
+> > 
+> > Do you still have the godbolt.org URLs?  I would be happy to file
+> > a bugzilla.
 > 
-> Can we add:
-> 
-> depends on EXPERT
-> 
-> as with other standard kernel features?
-> 
+> https://godbolt.org/z/rP8rYM
 
-Fair enough.
+Here you go!  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96327
 
-But what of the GPIO_CDEV_V1 option to disable uAPI V1 added in patch 04,
-and that depends on GPIO_CDEV?
-That is equivalent to GPIO_SYSFS, which is not dependent on EXPERT,
-so I'll need to restructure the dependencies so it doesn't
-inherit the EXPERT dependency.
-Unless you also want it to be dependent on EXPERT.
-
-Hmmm, and maybe patch 04 should be later in the series - after V2 is
-fully implemented and V1 is deprecated - around patch 11.
-
-Cheers,
-Kent.
+							Thanx, Paul
