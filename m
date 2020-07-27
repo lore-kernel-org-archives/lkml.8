@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C47C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E716C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A05ED20FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B2D02250E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859404;
-	bh=QSI+nFYT3BU7ERKo1L3AE5VUAt/RWgJY17WCjL8DwpA=;
+	s=default; t=1595859407;
+	bh=KHiEmeSDHEk36Ap081u5lxBnesPSBOC4MwK1QNOPB98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=biHpVINIVCuQ8HyTAuLqd/DUFmEeU1O+OPBVJ849YUkgAGqomHaqFzVDQf/4NV96V
-	 O35WWrgYq6oLled9adsWSzIdv3vsBxL4vIbXdU4VIykxK1PTGDbGTot97RNGpWL1TK
-	 TIcCOX4THhpHGcPQsaRCRG4BZdJuTcy1qVQPkhbI=
+	b=UKlZNKljwhGuhx9P3IOUu0x529ekJi0f5Jfcd9imyS3brlnx8ADKVeZblABgxIjLb
+	 vTouxQFSlpKS2Ak6xnFuMz5djz1kyCNY+1l0Vp0r4I0Txlf8uAfr4N90c+WITXED8k
+	 iqE9dhr5sV6feYB9SyKnNqH28453PnTCadZUAgWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbgG0OQn (ORCPT
+        id S1730929AbgG0OQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:16:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43648 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:16:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730909AbgG0OQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:16:39 -0400
+        id S1730918AbgG0OQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:16:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABD512070A;
-        Mon, 27 Jul 2020 14:16:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F5A02070A;
+        Mon, 27 Jul 2020 14:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859399;
-        bh=QSI+nFYT3BU7ERKo1L3AE5VUAt/RWgJY17WCjL8DwpA=;
+        s=default; t=1595859401;
+        bh=KHiEmeSDHEk36Ap081u5lxBnesPSBOC4MwK1QNOPB98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ngp9lU3U/ouGMnd35UlVKAoP5FUX15A/xnmmGRjWbkD+oWBFqOKF1QyM65Dkad21
-         3U1YQv/7nUbf9wQEf5C07TjHjwtOWh5Sdnb3Ck1OwGeHG/EVHfVsxJnlfrtIuGCBWf
-         A352IsDvNm6OljcWhd52+i3otz/gpYFtGUNeZnf4=
+        b=e91EX2abEWlTZJbQpkegbBxyavBDnWEQSGvUbNNn8coIsor2bXeRyQGF31VQn0xvb
+         UvjDH0Hff9NrdvtLFIr02qlrOjAKjqylRcg17CJQSvAcOQ492pjxcGxn+oC8IZxdIJ
+         46GIwjfiBFW4hOgoddd7lCz7ZBjuhIoC+ZoINNwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jack Xiao <Jack.Xiao@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Stefan Dietrich <roots@gmx.de>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 092/138] drm/amdgpu: fix preemption unit test
-Date:   Mon, 27 Jul 2020 16:04:47 +0200
-Message-Id: <20200727134929.965823747@linuxfoundation.org>
+Subject: [PATCH 5.4 093/138] hwmon: (nct6775) Accept PECI Calibration as temperature source for NCT6798D
+Date:   Mon, 27 Jul 2020 16:04:48 +0200
+Message-Id: <20200727134930.028179403@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -61,68 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Xiao <Jack.Xiao@amd.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit d845a2051b6b673fab4229b920ea04c7c4352b51 ]
+[ Upstream commit 8a03746c8baf82e1616f05a1a716d34378dcf780 ]
 
-Remove signaled jobs from job list and ensure the
-job was indeed preempted.
+Stefan Dietrich reports invalid temperature source messages on Asus Formula
+XII Z490.
 
-Signed-off-by: Jack Xiao <Jack.Xiao@amd.com>
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+nct6775 nct6775.656: Invalid temperature source 28 at index 0,
+		source register 0x100, temp register 0x73
+
+Debugging suggests that temperature source 28 reports the CPU temperature.
+Let's assume that temperature sources 28 and 29 reflect "PECI Agent {0,1}
+Calibration", similar to other chips of the series.
+
+Reported-by: Stefan Dietrich <roots@gmx.de>
+Cc: Stefan Dietrich <roots@gmx.de>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/hwmon/nct6775.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-index 1e25ca34d876c..700e26b69abca 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-@@ -990,27 +990,37 @@ static void amdgpu_ib_preempt_job_recovery(struct drm_gpu_scheduler *sched)
- static void amdgpu_ib_preempt_mark_partial_job(struct amdgpu_ring *ring)
- {
- 	struct amdgpu_job *job;
--	struct drm_sched_job *s_job;
-+	struct drm_sched_job *s_job, *tmp;
- 	uint32_t preempt_seq;
- 	struct dma_fence *fence, **ptr;
- 	struct amdgpu_fence_driver *drv = &ring->fence_drv;
- 	struct drm_gpu_scheduler *sched = &ring->sched;
-+	bool preempted = true;
+diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
+index 7efa6bfef0609..ba9b96973e808 100644
+--- a/drivers/hwmon/nct6775.c
++++ b/drivers/hwmon/nct6775.c
+@@ -786,13 +786,13 @@ static const char *const nct6798_temp_label[] = {
+ 	"Agent1 Dimm1",
+ 	"BYTE_TEMP0",
+ 	"BYTE_TEMP1",
+-	"",
+-	"",
++	"PECI Agent 0 Calibration",	/* undocumented */
++	"PECI Agent 1 Calibration",	/* undocumented */
+ 	"",
+ 	"Virtual_TEMP"
+ };
  
- 	if (ring->funcs->type != AMDGPU_RING_TYPE_GFX)
- 		return;
+-#define NCT6798_TEMP_MASK	0x8fff0ffe
++#define NCT6798_TEMP_MASK	0xbfff0ffe
+ #define NCT6798_VIRT_TEMP_MASK	0x80000c00
  
- 	preempt_seq = le32_to_cpu(*(drv->cpu_addr + 2));
--	if (preempt_seq <= atomic_read(&drv->last_seq))
--		return;
-+	if (preempt_seq <= atomic_read(&drv->last_seq)) {
-+		preempted = false;
-+		goto no_preempt;
-+	}
- 
- 	preempt_seq &= drv->num_fences_mask;
- 	ptr = &drv->fences[preempt_seq];
- 	fence = rcu_dereference_protected(*ptr, 1);
- 
-+no_preempt:
- 	spin_lock(&sched->job_list_lock);
--	list_for_each_entry(s_job, &sched->ring_mirror_list, node) {
-+	list_for_each_entry_safe(s_job, tmp, &sched->ring_mirror_list, node) {
-+		if (dma_fence_is_signaled(&s_job->s_fence->finished)) {
-+			/* remove job from ring_mirror_list */
-+			list_del_init(&s_job->node);
-+			sched->ops->free_job(s_job);
-+			continue;
-+		}
- 		job = to_amdgpu_job(s_job);
--		if (job->fence == fence)
-+		if (preempted && job->fence == fence)
- 			/* mark the job as preempted */
- 			job->preemption_status |= AMDGPU_IB_PREEMPTED;
- 	}
+ /* NCT6102D/NCT6106D specific data */
 -- 
 2.25.1
 
