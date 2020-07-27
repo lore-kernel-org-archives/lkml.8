@@ -2,89 +2,158 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D587C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C236F20809
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I5dX71/U"
+	by mail.kernel.org (Postfix) with ESMTP id 53B8220838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgG0U65 (ORCPT
+        id S1726909AbgG0U7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:58:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbgG0U65 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:58:57 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF231C0619D2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:58:56 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ha11so3014565pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:58:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1oR/0P9ErtpTgrX+m0OBVrR3VYxPvi53ReAdjDAOr4Y=;
-        b=I5dX71/Uvcfwk/jblm750/2EXt9yjhsPtSEdC4N4lQ/AO2FGB8gfWH/WsjvuuSQOyj
-         ONY5pB87KzLdpaf2iZKf6HtgyagXcsssjLA0pBtIbfYXso5X7qhilKimVkhh0S66fKIy
-         UdZRRQbO/XKIGmFIbA50WIhCZmfQ+15/zHM9A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1oR/0P9ErtpTgrX+m0OBVrR3VYxPvi53ReAdjDAOr4Y=;
-        b=QmyCZToFfmtJ5nFv+piRFs7+0Ur40kyZ/XEVaw73sB7N9EfBL1kYD+OejWG3oUsPkL
-         SReLa7aEroQ16V1ewkFixIPVFCDFKTI1JTRzdtRnEVlIRlkEvYtiK1fs7LxfSAeLi65D
-         xyYMwX4OWtyivQr652c95T5XCc3ybqDrwEUsPcAQzZQjMs0emskd7JIncZWTPYCO5UYw
-         pmsCV5aScOws8ooh3YIqTx1GlQI54h8BiPVjyF7xsvyKsld7Ag1T9M4wThbQYzvJ023G
-         35xFeTfudom4TboIQl3jGgFJyCiRe06DC10PrHa2kx556ert8BXAKySVYH7zPdCXD4Ra
-         BTJQ==
-X-Gm-Message-State: AOAM531FTiW45cXnXalzFd/DpMNcl3OPA38vyqNvCkGATOmGt0tUrY8t
-        z8tzsF2xcNRPAfvvJ3wCXEksbQ==
-X-Google-Smtp-Source: ABdhPJwNPDS+cc+l5C6Fk46mxdaDL9PclHliTxJP5rQfP6oKuQNDrzGsoCx2t1y2JMkjPqG1jMFPKw==
-X-Received: by 2002:a17:902:7485:: with SMTP id h5mr7030550pll.282.1595883536582;
-        Mon, 27 Jul 2020 13:58:56 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id g8sm15819746pgr.70.2020.07.27.13.58.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 13:58:55 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 13:58:55 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        sibis@codeaurora.org, dianders@chromium.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] interconnect: qcom: sc7180: Replace xlate with
- xlate_extended
-Message-ID: <20200727205855.GI3191083@google.com>
-References: <20200723130942.28491-1-georgi.djakov@linaro.org>
- <20200723130942.28491-6-georgi.djakov@linaro.org>
+        Mon, 27 Jul 2020 16:59:12 -0400
+Received: from mga09.intel.com ([134.134.136.24]:50925 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgG0U7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 16:59:11 -0400
+IronPort-SDR: McrCKUqe+uaAfMZEA7ugCeCtRsJYkFtgka8tdgvu1ynZ1o5URYJ9qMHrNU2w488P8YStwujOuV
+ KcNuayNZvAmA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9695"; a="152368198"
+X-IronPort-AV: E=Sophos;i="5.75,403,1589266800"; 
+   d="scan'208";a="152368198"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 13:59:10 -0700
+IronPort-SDR: F6x4TaH2xUbkqcHOlkYVCRLa84X160LomB+gQPSLrqqclZ5rkG41zSJgbumVGi5uDGCsUe7wk1
+ 4OgHP9BbFWkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,403,1589266800"; 
+   d="scan'208";a="320157680"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga008.jf.intel.com with ESMTP; 27 Jul 2020 13:59:10 -0700
+Date:   Mon, 27 Jul 2020 13:59:09 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RFC V2 17/17] x86/entry: Preserve PKRS MSR across
+ exceptions
+Message-ID: <20200727205909.GP844235@iweiny-DESK2.sc.intel.com>
+References: <20200717072056.73134-1-ira.weiny@intel.com>
+ <20200717072056.73134-18-ira.weiny@intel.com>
+ <87r1t2vwi7.fsf@nanos.tec.linutronix.de>
+ <20200723220435.GI844235@iweiny-DESK2.sc.intel.com>
+ <87mu3pvly7.fsf@nanos.tec.linutronix.de>
+ <874kpwtxlh.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200723130942.28491-6-georgi.djakov@linaro.org>
+In-Reply-To: <874kpwtxlh.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 04:09:41PM +0300, Georgi Djakov wrote:
-> From: Sibi Sankar <sibis@codeaurora.org>
+On Fri, Jul 24, 2020 at 11:24:58PM +0200, Thomas Gleixner wrote:
+> Ira,
 > 
-> Use the qcom_icc_xlate_extended() in order to parse tags, that are
-> specified as an additional arguments to the path endpoints in DT.
+> Thomas Gleixner <tglx@linutronix.de> writes:
+> > Ira Weiny <ira.weiny@intel.com> writes:
+> >> On Thu, Jul 23, 2020 at 09:53:20PM +0200, Thomas Gleixner wrote:
+> >> I think, after fixing my code (see below), using idtentry_state could still
+> >> work.  If the per-cpu cache and the MSR is updated in idtentry_exit() that
+> >> should carry the state to the new cpu, correct?
+> >
+> > I'm way too tired to think about that now. Will have a look tomorrow
+> > with brain awake.
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> Not that I'm way more awake now, but at least I have the feeling that my
+> brain is not completely useless.
+> 
+> Let me summarize what I understood:
+> 
+>   1) A per CPU cache which shadows the current state of the MSR, i.e. the
+>      current valid key. You use that to avoid costly MSR writes if the
+>      key does not change.
 
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Yes
+
+> 
+>   2) On idtentry you store the key on entry in idtentry_state, clear it
+>      in the MSR and shadow state if necessary and restore it on exit.
+
+Yes, but I've subsequently found a bug here but yea that was the intention.
+:-D
+
+I also maintain the ref count of the number of nested calls to kmap to ensure
+that kmap_atomic() is nestable during an exception independent of the number
+of nested calls of the interrupted thread.
+
+>   3) On context switch out you save the per CPU cache value in the task
+>      and on context switch in you restore it from there.
+
+yes
+
+> 
+> Yes, that works (see below for #2) and sorry for my confusion yesterday
+> about storing this in task state.
+
+No problem.
+
+> 
+> #2 requires to handle the exceptions which do not go through
+> idtentry_enter/exit() seperately, but that's a manageable amount. It's
+> the ones which use IDTENTRY_RAW or a variant of it.
+> 
+> #BP, #MC, #NMI, #DB, #DF need extra local storage as all the kernel
+> entries for those use nmi_enter()/exit(). So you just can create
+> wrappers around those. Somehting like this
+> 
+> static __always_inline idtentry_state_t idtentry_nmi_enter(void)
+> {
+>      	idtentry_state_t state = {};
+> 
+>         nmi_enter();
+>         instrumentation_begin();
+>         state.key = save_and_clear_key();
+>         instrumentation_end();
+> }
+> 
+> static __always_inline void idtentry_nmi_exit(idtentry_state_t state)
+> {
+>         instrumentation_begin();
+>         restore_key(state.key);
+>         instrumentation_end();
+>         nmi_exit();
+> }
+> 
+
+Thanks!
+
+> #UD and #PF are using the raw entry variant as well but still invoke
+> idtentry_enter()/exit(). #PF does not need any work. #UD handles
+> WARN/BUG without going through idtentry_enter() first, but I don't think
+> that's an issue unless a not 0 key would prevent writing to the console
+> device. You surely can figure that out.
+> 
+> Hope that helps.
+
+Yes it does thank you.  I'm also trying to simplify the API per Peters
+comments while refactoring this.
+
+Ira
+
