@@ -2,52 +2,50 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58307C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9D3C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 342C721775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E10A021775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859113;
-	bh=qmXlgezNpQKuP8n/7StkfuYTAZhuauIEOMDNJw9/43o=;
+	s=default; t=1595859117;
+	bh=3d40csHXYgAn1gKXI/bGgNGTJZgUioqvbt1dNEOH83A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1yJJfOMD2ZkUVGHGONu0OV/eSkGLFdKvLqYkq7xfSbq1uaHtKMIpAUdQr0GDr+BzS
-	 qu8TJRstZ3UmYarXtFDopBlsEvWXqZN+MfrUaacRWQ6vxGiAJOtCm0E9hosL8u5JU0
-	 1dPmV6RClhhEqmqUr73lXG8alr/nYfWjzS9Fnlh8=
+	b=luUEpptrRfrOUiFk4el2fWkPGZHQfqNPCHGJfCsSjpb84Rciqb2EjyZmJcpZTpWgQ
+	 ZP3SBKgAl8sP/VOCE2jGWmy+PaVKo99Z2ZZvAOZMPF8Z+h4FDXrh9rv8MCYX+qdp4U
+	 tbLHEMC82+wRXbRrYP5AhV/aNTcgC9nfbKUDH1jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730087AbgG0OLw (ORCPT
+        id S1730098AbgG0OLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:11:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35646 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:11:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729274AbgG0OLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:11:48 -0400
+        id S1729274AbgG0OLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:11:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9010220838;
-        Mon, 27 Jul 2020 14:11:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28B6920838;
+        Mon, 27 Jul 2020 14:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859108;
-        bh=qmXlgezNpQKuP8n/7StkfuYTAZhuauIEOMDNJw9/43o=;
+        s=default; t=1595859113;
+        bh=3d40csHXYgAn1gKXI/bGgNGTJZgUioqvbt1dNEOH83A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oJYNlBhT27NT825dVO9wD5dNFXJL2zyuKsD7YN7I93bG7ld5gLFES/0LV8bw9yDHz
-         mUPXOmVMNKd4teqQfhDSzV69SkpzLkJ0+O26FRNbpgF7tU4nPjYOWGZRdT2Lzlp65t
-         OVHVC9zOeKvPOwMV6OJwhi/K85Sqbw6ObEqHDjYk=
+        b=vo7zG8UnvvX9X93xxLqzVL04UGZEjDHm5oU7Lavqc1LTONoOioYJi3QVI67FCTRmJ
+         sbxq41gAyBMQU8SJht2dnO+otLC3PAPTFfylLMygMtaaYJb0CN4X1a1pFdFTQ3vQXv
+         ZDMYcIHKIoFfrksNm/4OahYqzL8j6NSPjsckBpf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 38/86] i2c: rcar: always clear ICSAR to avoid side effects
-Date:   Mon, 27 Jul 2020 16:04:12 +0200
-Message-Id: <20200727134916.341859287@linuxfoundation.org>
+        stable@vger.kernel.org, Forest Crossman <cyrozap@gmail.com>
+Subject: [PATCH 4.19 63/86] usb: xhci: Fix ASM2142/ASM3142 DMA addressing
+Date:   Mon, 27 Jul 2020 16:04:37 +0200
+Message-Id: <20200727134917.589434945@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -60,48 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Forest Crossman <cyrozap@gmail.com>
 
-[ Upstream commit eb01597158ffb1853a7a7fc2c57d4c844640f75e ]
+commit dbb0897e805f2ab1b8bc358f6c3d878a376b8897 upstream.
 
-On R-Car Gen2, we get a timeout when reading from the address set in
-ICSAR, even though the slave interface is disabled. Clearing it fixes
-this situation. Note that Gen3 is not affected.
+The ASM2142/ASM3142 (same PCI IDs) does not support full 64-bit DMA
+addresses, which can cause silent memory corruption or IOMMU errors on
+platforms that use the upper bits. Add the XHCI_NO_64BIT_SUPPORT quirk
+to fix this issue.
 
-To reproduce: bind and undbind an I2C slave on some bus, run
-'i2cdetect' on that bus.
+Signed-off-by: Forest Crossman <cyrozap@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200717112734.328432-1-cyrozap@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-rcar.c | 3 +++
+ drivers/usb/host/xhci-pci.c |    3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index 2c29f901d3090..6e49e438ef5a5 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -863,6 +863,7 @@ static int rcar_unreg_slave(struct i2c_client *slave)
- 	/* disable irqs and ensure none is running before clearing ptr */
- 	rcar_i2c_write(priv, ICSIER, 0);
- 	rcar_i2c_write(priv, ICSCR, 0);
-+	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -231,6 +231,9 @@ static void xhci_pci_quirks(struct devic
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+ 			pdev->device == 0x1142)
+ 		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
++	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
++			pdev->device == 0x2142)
++		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
  
- 	synchronize_irq(priv->irq);
- 	priv->slave = NULL;
-@@ -966,6 +967,8 @@ static int rcar_i2c_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto out_pm_put;
- 
-+	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
-+
- 	if (priv->devtype == I2C_RCAR_GEN3) {
- 		priv->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
- 		if (!IS_ERR(priv->rstc)) {
--- 
-2.25.1
-
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+ 		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
 
 
