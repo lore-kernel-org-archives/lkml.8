@@ -2,123 +2,150 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B672CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4578020809
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E71A20729
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IcQwbCob"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ZONTcrHu";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="eLMGf1xK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbgG0Vir (ORCPT
+        id S1726769AbgG0Vje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 17:38:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726110AbgG0Viq (ORCPT
+        Mon, 27 Jul 2020 17:39:34 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:43136 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726110AbgG0Vjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:38:46 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A49FC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:38:46 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id m9so8219631qvx.5
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 14:38:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OBPW13q5QlzlSrMzZgbTLPGHsSTa3HJ7NZm2XA+DWro=;
-        b=IcQwbCobh7vNkJkcr8tb+vx7W74HheX2L8Fr7dpZ/em+hbTwhHjTLmVR+cPsFn6OsS
-         gPOStCmf9ky3UPVmE+InLyxIWDCcHAS77jlOJpw0ym4EqJyydFZ8mDhkIIfnsBfVTLMK
-         USUO2V1Pn8scghR4r3f87qt6DArxNQxzZd/Dlu0LiMs7L1FQR4Q8or8lgs7hH0e4qzS7
-         7QK0AhL4agBclZPMj6pGcJLOYAV9Ru8R4+qRTdJHOYEj5JExzL9ACW2pXGvB2C/F4u+t
-         LksyLeCqSowFyLoejfb9YdEZFCQLPt7IMNUxVKhgdiI2FP27N8A3XU5tPFjxdUTwadTU
-         rx+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OBPW13q5QlzlSrMzZgbTLPGHsSTa3HJ7NZm2XA+DWro=;
-        b=Dcg8TZmk+27XGnZU7aM4VM1QXWYvShXbjMm7x2qdxORTEHbD31RI2V74Kw1m+H1E0E
-         8C9eYvjvTasB22scRzcq11/UOOXCSEyZWemBdZh4pFQhuEEpVxBiIWrCDv314G/lSfpI
-         x2YeA1X8zRyyRgPPEDs4f6+9kHJX3oNmESZW1rMbsAI2mUVd2O2irAmDDvcyJ1kQYK10
-         zT+I5ULEqX1GQAISjbKQJ7Ec8ETM0aMSe14ZSY23hjwUALgXx4pYE1UBDGlJa9oX7H/E
-         EkcgS8bdCCKuhOmcKanE+Elc4Hogn0Q8DdaisCtH4XJeskm2hgCGbL1v/CeRPi66Lbku
-         PNFg==
-X-Gm-Message-State: AOAM530A4Fe6rY598h23eeOHKsBifjA9Gu52PW4hBNYNNjdthtN7ZrL6
-        mMe44Bm39LjHVk0xcY6++w==
-X-Google-Smtp-Source: ABdhPJztgREWPYXpbY24y3xYJ2ab/diXDmx2tovh1N/94fVvWPtBBHR0/+nE3r/ezlx7C21gRN1SYQ==
-X-Received: by 2002:ad4:5748:: with SMTP id q8mr23598337qvx.1.1595885925464;
-        Mon, 27 Jul 2020 14:38:45 -0700 (PDT)
-Received: from localhost.localdomain ([209.94.141.207])
-        by smtp.gmail.com with ESMTPSA id y7sm17423217qta.36.2020.07.27.14.38.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 14:38:44 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH] ptrace: Prevent kernel-infoleak in ptrace_get_syscall_info()
-Date:   Mon, 27 Jul 2020 17:36:44 -0400
-Message-Id: <20200727213644.328662-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 27 Jul 2020 17:39:33 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RLcrJ3016134;
+        Mon, 27 Jul 2020 14:39:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=pNA1Q0t8H+NTlWRNPqgWurYyGMT9+/750zTzrpP2210=;
+ b=ZONTcrHucIdCz/dTvfYa/XgHRP3beP3AzSyp16ItvJrBdEDD+yI/bAnC2J8kpuWGWnZB
+ o/5dPH1DLv5o33egoQ07ZReluS2/kk3s2pGfKsiZs3DRSTCpCvpsKTvk3eisCc/MXK2A
+ +objrDIyKNj9M59tIfNkb6t7BPPO8RZuoXo= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32gjjes1ss-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 27 Jul 2020 14:39:18 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 27 Jul 2020 14:39:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JRAHvcZAxVP1vkMEC35Yk4EySDutvlbYs3tUAXG4qqajyUF1j5NS4jIygsjcsdve46fzsCddl6ys4PtDTlFoEkD9KCEjXqVoLTyiaCXG7KQnhAVNsVYCwTwG8Bd/Y4aoEgPrvUHgk5CjAdqRoYGSIdyFZo5zhOvMtJAhTfWAE3Wx8jMPPlo5px0ak+z6LCcpcpVs+HZxrBFk4BjFGISum4zNhvH4e0H5p5adSLTmCScDtspDH8xfFplsADib6imiAoMLwxOPEJF2+VPukfopkPgmApnbTdJMRs9RtJWr5LmztKtjIrxGeCfvYBMWjpB0ExmQUa3E9fChrUk0Lfj8LQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pNA1Q0t8H+NTlWRNPqgWurYyGMT9+/750zTzrpP2210=;
+ b=h5yCrnAkEu0raXQbKEYrx9vtJ9CwjcKuZhxhMIQn1iFP3EIwSwKm2rqIhedAa3pNhrApb86okyv7Ayw66JnK7WB9xB+Ymb0y9LpfIFBbFi34V+WWOGIviPvw+0d98Co1vK1Nfhxt0K+VcGAmQ0RPb++t0gPQ7vHuwrUl+QQEyp0Pks8eef322s8lRzxfh/EftSVtxVMm2BepIUAGEm3hXXERWjUUwoeqh9dl5QU+2G4y1Kxiq5LYu5/7E+U7qRv1m5XsSWkSbqT2leNw3xZTdlMQ1BV9zf9mKdKTPblhsXCEApjT73EQTYuxE8MkwzvRpWKndijLyS4FUtzSDv2MPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pNA1Q0t8H+NTlWRNPqgWurYyGMT9+/750zTzrpP2210=;
+ b=eLMGf1xK8ckMw4I1br7VV0oPfLI7o64BoFB31eLo5L9dxYoVJuzTX8HG75Us6w3FuYlkH2SmOLmV/HfuWdufZs/1e/UG6tUTKHW2gmieanqMH627D4TUJ8uUAUTwxmdVcFskCU13fFzqfgNlxI6KjzyZvxkFWEma9zbQC7rbJik=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB3366.namprd15.prod.outlook.com (2603:10b6:a03:10d::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Mon, 27 Jul
+ 2020 21:39:16 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
+ 21:39:16 +0000
+Subject: Re: [PATCH][next] bpf: fix swapped arguments in calls to
+ check_buffer_access
+To:     Colin King <colin.king@canonical.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200727175411.155179-1-colin.king@canonical.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <c9ea156a-20fa-5415-0d35-0521e8740ddc@fb.com>
+Date:   Mon, 27 Jul 2020 14:39:14 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
+In-Reply-To: <20200727175411.155179-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR04CA0032.namprd04.prod.outlook.com
+ (2603:10b6:a03:40::45) To BYAPR15MB4088.namprd15.prod.outlook.com
+ (2603:10b6:a02:c3::18)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2620:10d:c085:21cf::11ef] (2620:10d:c090:400::5:402c) by BYAPR04CA0032.namprd04.prod.outlook.com (2603:10b6:a03:40::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Mon, 27 Jul 2020 21:39:16 +0000
+X-Originating-IP: [2620:10d:c090:400::5:402c]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 224e1d55-abc5-4166-fba6-08d832758325
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3366:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB33660481BFB00FD8F3E6B1CED3720@BYAPR15MB3366.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vQsRXyyWxdDSpfjvqm+bwiXPWMA6rPvEFCcXQHN056X37io9CV6N1uC5U3ED+CiFbcqOaHuzOMwV/bP0SpDGjiAimMfgvrtvaaXephI4kaxoDX1wJi9lyppkie/SJHX9/e1krCDHCoiv5TKCmxZQ8AbtuDgQIT5kh90uQ1VgGoCu7t/+nIGgnq/fdDPeMHUDEf0AXc72eLGN32bTNjptfNs04IurBgepuLWiWTK7IIIP1RcpPuIfh0ZmPwAgJVxyI/Kn+PuH35eXlsrafKOEz6ylRyORB+fD8Y4apYDY5lwqeBi9++pJTP1ttu2a/Ekydp4Sb8nHodFWQuQVApYesoRa//dHcNxIt7GBj+rftPNmMfR19NopCqdx1zwxMhtrM1G7rP3rRqnlWcdkP+rWkQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(39860400002)(136003)(366004)(396003)(66946007)(4326008)(66556008)(52116002)(8936002)(66476007)(2616005)(31686004)(2906002)(5660300002)(31696002)(53546011)(86362001)(478600001)(6486002)(8676002)(83380400001)(186003)(4744005)(110136005)(316002)(16526019)(36756003)(921003)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: QVrpsA/UWYhsOPbr50hsiy/6yScDsxEB4JdUAX19TFzRj5DPS7LdTVuiqfwfxQz0G2Pg3eAB6g1bEHrlkyFHkEM2eR2zV3xDJ3dcsAaX1iaf6WU7GYQXKWYrCVGQpTK0VYTW/aol3uYxM/DyFCoiXZGax0KqIGgGQSxrQzbEnOBLx72umqo871u5t5i1P+aFxAMzppj+4uijHqbmgB0qITA1dhsx42ULOOS7TF+1eLU1PRFcU1gI2U2umSG5OrkGyt7dB9D2/7UslITqOt42FnaH90zQzwskr9cduqhJZ3jqGSoY5QWM/Vgq3RHxHiAycUf+BQ8/BwTbn7w1200U5fnAI5xLZIT4oJPDXLOWUEzXhb6EjpEVXWpZ6q+gHipeIPhXVGtMqHHkcV7yunMSlEnI1JtRRWEeLiEBFfdISD4B+lOxn/9aIg39VhaT/Rjv2gCylNeZhk+G0zwU1H6ZRZwQHgPmGD34jWMprd4iUl3V3Bt1dlSconVQNzx9XYJsjrrbunFdyySxL88+sjrMpA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 224e1d55-abc5-4166-fba6-08d832758325
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 21:39:16.8300
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mObefGI/SaRKtQkXn2KG0ObUncbBtoYit8gZ7N5H4xDlAnyyNxfvme+ZAf3s4fqG
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3366
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_15:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1011 bulkscore=0
+ phishscore=0 spamscore=0 adultscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270146
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ptrace_get_syscall_info() is copying uninitialized stack memory to
-userspace due to the compiler not initializing holes in statically
-allocated structures. Fix it by initializing `info` with memset().
 
-Cc: stable@vger.kernel.org
-Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
- kernel/ptrace.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index 43d6179508d6..e48d05b765b5 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -960,15 +960,17 @@ ptrace_get_syscall_info(struct task_struct *child, unsigned long user_size,
- 			void __user *datavp)
- {
- 	struct pt_regs *regs = task_pt_regs(child);
--	struct ptrace_syscall_info info = {
--		.op = PTRACE_SYSCALL_INFO_NONE,
--		.arch = syscall_get_arch(child),
--		.instruction_pointer = instruction_pointer(regs),
--		.stack_pointer = user_stack_pointer(regs),
--	};
-+	struct ptrace_syscall_info info;
- 	unsigned long actual_size = offsetof(struct ptrace_syscall_info, entry);
- 	unsigned long write_size;
- 
-+	memset(&info, 0, sizeof(info));
-+
-+	info.op	= PTRACE_SYSCALL_INFO_NONE;
-+	info.arch = syscall_get_arch(child);
-+	info.instruction_pointer = instruction_pointer(regs);
-+	info.stack_pointer = user_stack_pointer(regs);
-+
- 	/*
- 	 * This does not need lock_task_sighand() to access
- 	 * child->last_siginfo because ptrace_freeze_traced()
--- 
-2.25.1
+On 7/27/20 10:54 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There are a couple of arguments of the boolean flag zero_size_allowed
+> and the char pointer buf_info when calling to function check_buffer_access
+> that are swapped by mistake. Fix these by swapping them to correct
+> the argument ordering.
+> 
+> Addresses-Coverity: ("Array compared to 0")
+> Fixes: afbf21dce668 ("bpf: Support readonly/readwrite buffers in verifier")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
+Thanks for the fix!
+Acked-by: Yonghong Song <yhs@fb.com>
