@@ -2,172 +2,90 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ADEC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CECFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF676207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC6E20825
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 18:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DEc72jan"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CprVCxC5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730446AbgG0SBR (ORCPT
+        id S1729890AbgG0SDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 14:01:17 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55092 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729610AbgG0SBR (ORCPT
+        Mon, 27 Jul 2020 14:03:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729006AbgG0SDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 14:01:17 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RHvoW3022570;
-        Mon, 27 Jul 2020 18:00:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=eu4SrTGieRdpo72CtnDZ91l+25Ht7vSkZp5hzFeF660=;
- b=DEc72janMLcdPS8ZsEPwLHNF3DJzt4ricPlsLOmBD1/LCfhSq+9Q7BUil5Cgy659rh2G
- ZgnlsxeI4z0r7XM2WebMEbKMUkdnsYV7rx0cZaoUtyXkS9HABUtxL17icKvPC31tigSF
- dvdgJU37nAmobyMf3qnrrDmz9+6AXy/35DgVzZH1SlCycpeChR8RmjdX+OQPMFpqEKx0
- ZThfzrvB/79OH3r91iE3lHXvOMZldYSn8hkTnnYTPWuHpmRcam0ZMaXwNxT1IRrzmR8Z
- YvKcMtHZARTLjZrdd1Z3O9fsygYlhUNtrb+ksvr8DVmzd5tndW1j2USVZH5tm+9B+PSP pQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 32hu1j31k9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jul 2020 18:00:29 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RHxIp3102771;
-        Mon, 27 Jul 2020 18:00:28 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 32hu5r5014-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jul 2020 18:00:27 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06RI0LEV025773;
-        Mon, 27 Jul 2020 18:00:21 GMT
-Received: from [10.39.226.160] (/10.39.226.160)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Jul 2020 11:00:21 -0700
-Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
-        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
-        peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
-        christian@kellner.me, areber@redhat.com, cyphar@cyphar.com
-References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
- <87pn8glwd2.fsf@x220.int.ebiederm.org>
-From:   Steven Sistare <steven.sistare@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <28125570-4129-bcba-099b-f90481cfbfe8@oracle.com>
-Date:   Mon, 27 Jul 2020 14:00:17 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 27 Jul 2020 14:03:32 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13BE4C061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 11:03:32 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id m16so8505811pls.5
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 11:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0HUK2rHG97QodtAqtmT31+xBsb58/wIDEA5SoI1QmOI=;
+        b=CprVCxC5Df/E5rRlMUu1Inf3anLB7yhmiZVty2ZcaJULvfIdVOTZg6+EIJD6NElbfx
+         c7jkAOgmyQPZeQWik5HskOf5OnLhWTJ1lxzzN2ZNa+CuB2U6HJUt+a4TfRaaQYeRWQUg
+         zdwdMSZdglSqdubOFkgy+YFmWiIl5fSixQKhI6z2cJ6BZzuKvge9J53xhJbvRVrWAuWn
+         D6pGYwGIdEtTHRTAwyYkrNXwMLipAleDEvt7RF1nEDl4X1t1WsATZ+RPPfPOVYDUTVeU
+         4T3DAkHJogp+FdpjwFvctA45ny2SOW5agyegHLH6pKmK3Qm7/BuYdHCno8MjqKBrICOl
+         qNmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0HUK2rHG97QodtAqtmT31+xBsb58/wIDEA5SoI1QmOI=;
+        b=b+M7s/7amg04/fYK9SHtU59mCLfAYPY/ZcAQg+Vuaq3YRK7PYLqAb26AvvI9mfyWjC
+         F5nF9U20h3uB/PGe2bbolWV2DujpuOF/JLkdYn50IPiNsBHmgEAxYmtrBPwetqoBmNRO
+         aJmDMrc8vENmff3AyUeSOZSyGjHwPciTfk+DK20IIT6sRSNORqpWl1Twzcu8ar5UhbGh
+         NEbz8pM3BMtPB6AtEoCWOgw49z6wy/m5bRC5UMaIyguN9BYsH18sf394RpOUk/ccG6DO
+         ExdvzItaTTD/ISyR1u4cMvjsaV1042j2h7UoA34YPLSWGVs5dzLpy8RJdAh67fMeYeNs
+         VZ8A==
+X-Gm-Message-State: AOAM530LSqH1EgNoidljv5SgHVLL15AYFs92jI9ZGJc3wn11SDQlS2Sh
+        pXbhv7s2KZYJO3QMeVuhWbvsqviVw52e2ptllV8Vww==
+X-Google-Smtp-Source: ABdhPJwz22qZhfSThB7Mzf/1O0HxvMuy2P7Jof1+xnKvCm2FF0jSEIcNGsHzKJLuEgHbt53bOSTB80vaMpxDEssy/ME=
+X-Received: by 2002:a17:90a:30ea:: with SMTP id h97mr495452pjb.32.1595873011083;
+ Mon, 27 Jul 2020 11:03:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87pn8glwd2.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 malwarescore=0 clxscore=1011 mlxscore=0 impostorscore=0
- phishscore=0 adultscore=0 suspectscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270121
+References: <CAOGTHR7wWaS+CdA9aR-8wWXa-AC47WBuLe5BEg01pFoKwKBpAw@mail.gmail.com>
+In-Reply-To: <CAOGTHR7wWaS+CdA9aR-8wWXa-AC47WBuLe5BEg01pFoKwKBpAw@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 27 Jul 2020 11:03:19 -0700
+Message-ID: <CAKwvOdnK7+iUyBdBaVTY=5JMK9Fm11PU2sc8ZwYfWs1OYAbeNQ@mail.gmail.com>
+Subject: Re: a bug in genksysms/CONFIG_MODVERSIONS w/ __attribute__((foo))?
+To:     Rob Simmons <rsimmons514@gmail.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/2020 1:07 PM, ebiederm@xmission.com wrote:
-> Anthony Yznaga <anthony.yznaga@oracle.com> writes:
-> 
->> This patchset adds support for preserving an anonymous memory range across
->> exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
->> sharing memory in this manner, as opposed to re-attaching to a named shared
->> memory segment, is to ensure it is mapped at the same virtual address in
->> the new process as it was in the old one.  An intended use for this is to
->> preserve guest memory for guests using vfio while qemu exec's an updated
->> version of itself.  By ensuring the memory is preserved at a fixed address,
->> vfio mappings and their associated kernel data structures can remain valid.
->> In addition, for the qemu use case, qemu instances that back guest RAM with
->> anonymous memory can be updated.
-> 
-> What is wrong with using a file descriptor to a possibly deleted file
-> and re-mmaping it?
-> 
-> There is already MAP_FIXED that allows you to ensure you have the same
-> address.
+On Sun, Jul 26, 2020 at 4:31 PM Rob Simmons <rsimmons514@gmail.com> wrote:
 
-MAP_FIXED blows away any existing mapping in that range, which is not the 
-desired behavior.  We want to preserve the previously created mapping at
-the same VA and co-exist with other mappings created by the new process.
-There is no way to guarantee availability of a VA post-exec.
-
-> I think all it would take would be a small protocol from one version
-> to the next to say map file descriptor #N and address #A.  Something
-> easily passed on the command line.
-> 
-> There is just enough complexity in exec currently that our
-> implementation of exec is already teetering.  So if we could use
-> existing mechanisms it would be good.
-> 
-> And I don't see why this version of sharing a mmap area would be
-> particularly general.  I do imagine that being able to force a
-> mmap area into a setuid executable would be a fun attack vector.
-
-Any mmap(MAP_ANON) segment can be preserved.  That is very general, and is 
-the case we need to support to upgrade legacy applications that are already
-running (such as qemu) -- we cannot recode them before they are updated.
-
-> Perhaps I missed this in my skim of these patches but I did not see
-> anything that guarded this feature against an exec that changes an
-> applications privileges.
-
-The ELF opt-in flag must be set, so only selected executables will accept
-incoming mappings.  The exec() code verifies that the preserved mappings 
-do not overlap or become adjacent to text or stack, so it is not possible for
-example for an attacker to cause stack underflow or overflow to access injected
-content.  A gadget invoked by some other attack could access the preserved content.
-
-- Steve
-
->> Patches 1 and 2 ensure that loading of ELF load segments does not silently
->> clobber existing VMAS, and remove assumptions that the stack is the only
->> VMA in the mm when the stack is set up.  Patch 1 re-introduces the use of
->> MAP_FIXED_NOREPLACE to load ELF binaries that addresses the previous issues
->> and could be considered on its own.
->>
->> Patches 3, 4, and 5 introduce the feature and an opt-in method for its use
->> using an ELF note.
->>
->> Anthony Yznaga (5):
->>   elf: reintroduce using MAP_FIXED_NOREPLACE for elf executable mappings
->>   mm: do not assume only the stack vma exists in setup_arg_pages()
->>   mm: introduce VM_EXEC_KEEP
->>   exec, elf: require opt-in for accepting preserved mem
->>   mm: introduce MADV_DOEXEC
->>
->>  arch/x86/Kconfig                       |   1 +
->>  fs/binfmt_elf.c                        | 196 +++++++++++++++++++++++++--------
->>  fs/exec.c                              |  33 +++++-
->>  include/linux/binfmts.h                |   7 +-
->>  include/linux/mm.h                     |   5 +
->>  include/uapi/asm-generic/mman-common.h |   3 +
->>  kernel/fork.c                          |   2 +-
->>  mm/madvise.c                           |  25 +++++
->>  mm/mmap.c                              |  47 ++++++++
->>  9 files changed, 266 insertions(+), 53 deletions(-)
+You may have forgotten to send a body; but yes genksysms is brittle
+and upstream development on it stopped years ago.  Put an attribute
+someplace unexpected and the parser will silently fail, making the
+modversions hash all zeros, which doesn't protect you from loading a
+potentially harmful module with different function signature.  If
+you're planning on attending plumbers, I plan to put together a brief
+talk on the subject.
+-- 
+Thanks,
+~Nick Desaulniers
