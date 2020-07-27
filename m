@@ -2,597 +2,94 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76478C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED76C4345D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD8D20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1352075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:07:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C6OgC15k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ek7ZqXpn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgG0JGp (ORCPT
+        id S1728016AbgG0JHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:06:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44348 "EHLO
+        Mon, 27 Jul 2020 05:07:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727808AbgG0JGo (ORCPT
+        with ESMTP id S1727850AbgG0JHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:06:44 -0400
+        Mon, 27 Jul 2020 05:07:01 -0400
 Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C92FEC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:06:44 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id a65so2622684otc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:06:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F418C061794;
+        Mon, 27 Jul 2020 02:07:01 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id h13so11821401otr.0;
+        Mon, 27 Jul 2020 02:07:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GGpZXEuRBib6aDpnPcoJB4L6dn8yPsd4V+J/dT3VJmE=;
-        b=C6OgC15kKUHOR7+qCyz0EvQdkZDbuiIRKyBlHQA5ceiVAK74V0gN9zMSiXJrWQTg4m
-         YVEwFYnhnW3kQ1Jf+G5gDrS40fmoGMeYivGIF3OKs9K634R60M5fJ9/NDUc5BCGhuWl+
-         kK8ok51HH7iRlkz77MO2j/GBDTMaaIMQMicdg=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cnnk+R6s02N/1ZtsK3L3h80BkK4YyB9AiPTtAGsZx7Q=;
+        b=ek7ZqXpnRZsKYEckxz8ADcWr6162gmxv+Wfg/VPifAgvMFGtdVjReQiHzHPLwdLcOq
+         icV8Si8AMi9ik/+QgKU0oh6BDXJVHcsx2ht1PgdjsLN4v6mLEzEc6JGXfubohK4LYTKK
+         DuVhqkMDbxMmNgG1M4lCCZPyS+3RR1S0CjwQgC6gkvoXsGwe5FfzEyXdhz+8YReNNPKU
+         kCpxAG9Hz8eFnjsAgoImjblNx4TAjoLj2ld8OvfJa3MyY47+40tDRg2DFOZJy3SMq1+z
+         HIKGGVFARyDN+Siq6aneD82dF6fbTuwzE7AS9jq49wp0WBcgHu4VaesqiZFOp5Ij1Sng
+         0qvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GGpZXEuRBib6aDpnPcoJB4L6dn8yPsd4V+J/dT3VJmE=;
-        b=ocLFk9C48+fhhY9RwxvGJNhKaZSEMTpiTdVqydF3AGVJ/BtUs3PaVCUyQ8ozayJn66
-         qswpAMamZK4pVJbjyRXmVCB+nkMtka1dCeKzcrf1L0ImrL3sOBd6nBBjeL1nTm72PJl/
-         X9Z4ETPyes4oIZX8P9mf6FBJPjmPyTGH7eVv1NYgq2/hHcTdpn2BwDshCYUVt4R2B3eU
-         RPSDYXtY08gNVyYIjDXEWkmz7ByMn6fUXaBv2MO7MDGdiQfyvhTVKte2IcaYUiiryrKZ
-         bGeFwOxU+Y9kMPUQJSOW7jYtHyz2VyHSOi8D5HkJml++Qfb+HCZaI4xBtAvYbQ/wGXQd
-         octQ==
-X-Gm-Message-State: AOAM532MVKoGD+/DyACIp9Z2zozrNLXMirLqx//lx+40rGY36Dx87n7l
-        kc7jj9N0edmIJ/wQtJ2lBlEZ/rg3VsU=
-X-Google-Smtp-Source: ABdhPJyPgie6/mhehjfsBu03Yhkgheqc+vyqw9pYM7Bf+y3oY79R2C/XFvmrjzlfkRE70SGeoRFzoA==
-X-Received: by 2002:a05:6830:1456:: with SMTP id w22mr19038138otp.117.1595840803224;
-        Mon, 27 Jul 2020 02:06:43 -0700 (PDT)
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com. [209.85.167.169])
-        by smtp.gmail.com with ESMTPSA id y67sm1949718oig.46.2020.07.27.02.06.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 02:06:42 -0700 (PDT)
-Received: by mail-oi1-f169.google.com with SMTP id l63so13704425oih.13
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:06:41 -0700 (PDT)
-X-Received: by 2002:a54:4f08:: with SMTP id e8mr6105676oiy.94.1595840801018;
- Mon, 27 Jul 2020 02:06:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cnnk+R6s02N/1ZtsK3L3h80BkK4YyB9AiPTtAGsZx7Q=;
+        b=Ilt1IXaC4S5n0qOYzfTjmRo9wcxbw08v3V7rrruMMAS/5A+mGHIB/r066Jo6+k+5GX
+         /UR3ymLXCJqipSIUf9cgYnfxuBYBii5Yvz2r6GoNTjqnqUYj+tg5UesRbOfGfwYyKsH1
+         bU2wOcNUCKdUUDh2iCw+A6CBevQwmrk9MEDSxapFI8mlG43o0x15K6fvwg/Xz95MPuB+
+         ALr1SsTW0+bY5s2KmXJ5+MD3OyV/yP+6QG8OMTPqbdLxbYh0GCGHIR/LEjRUTu57681C
+         V4hwWrEeKAPL7TdceA/G2n0UKub60WzYfkwgbGylJMH28NML1pFRxVcZ3ByaW6CcSEwP
+         Vv3g==
+X-Gm-Message-State: AOAM533XS4+f8JuRf/FZAln3GXL2NV2pvz19aB+Kkn0sgKhTO/a/t+xh
+        NE5NxiA7ATR6Sn7g2i5KupmMyeNP
+X-Google-Smtp-Source: ABdhPJyGgv3a23b5lsT5QrMXtNqJyXacnhWEZoQLb96Xh14GfhLOO6vVPujqIpXAmOR27rJ9QKngEQ==
+X-Received: by 2002:a9d:63cd:: with SMTP id e13mr20224848otl.170.1595840820489;
+        Mon, 27 Jul 2020 02:07:00 -0700 (PDT)
+Received: from localhost.localdomain ([170.130.31.90])
+        by smtp.gmail.com with ESMTPSA id q189sm1471297oic.15.2020.07.27.02.06.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 02:06:59 -0700 (PDT)
+From:   Forest Crossman <cyrozap@gmail.com>
+To:     linux-usb@vger.kernel.org
+Cc:     Forest Crossman <cyrozap@gmail.com>, mathias.nyman@intel.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Small fixes for ASMedia host controllers
+Date:   Mon, 27 Jul 2020 04:06:27 -0500
+Message-Id: <20200727090629.169701-1-cyrozap@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200713060842.471356-1-acourbot@chromium.org>
- <20200713060842.471356-2-acourbot@chromium.org> <CAAEAJfB6NS2oJU1uiN1kTU-Mhank6-wOUox2qVzRRXEhp3o9Lw@mail.gmail.com>
-In-Reply-To: <CAAEAJfB6NS2oJU1uiN1kTU-Mhank6-wOUox2qVzRRXEhp3o9Lw@mail.gmail.com>
-From:   Alexandre Courbot <acourbot@chromium.org>
-Date:   Mon, 27 Jul 2020 18:06:27 +0900
-X-Gmail-Original-Message-ID: <CAPBb6MVcr18k4xx71=9vmuCaqCwSdzkwO6X8yFP2v5SfFGqkKw@mail.gmail.com>
-Message-ID: <CAPBb6MVcr18k4xx71=9vmuCaqCwSdzkwO6X8yFP2v5SfFGqkKw@mail.gmail.com>
-Subject: Re: [PATCH v3 01/16] media: mtk-vcodec: abstract firmware interface
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 6:23 AM Ezequiel Garcia
-<ezequiel@vanguardiasur.com.ar> wrote:
->
-> On Mon, 13 Jul 2020 at 03:09, Alexandre Courbot <acourbot@chromium.org> wrote:
-> >
-> > From: Yunfei Dong <yunfei.dong@mediatek.com>
-> >
-> > MT8183's codec firwmare is run by a different remote processor from
-> > MT8173. While the firmware interface is basically the same, the way to
-> > invoke it differs. Abstract all firmware calls under a layer that will
-> > allow us to handle both firmware types transparently.
-> >
-> > Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-> > [acourbot: refactor, cleanup and split]
-> > Co-developed-by: Alexandre Courbot <acourbot@chromium.org>
-> > Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> > [pihsun: fix error path and add mtk_vcodec_fw_release]
-> > Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> > Reviewed-by: Tiffany Lin <tiffany.lin@mediatek.com>
-> > Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
-> > ---
-> >  drivers/media/platform/mtk-vcodec/Makefile    |   4 +-
-> >  .../platform/mtk-vcodec/mtk_vcodec_dec_drv.c  |  50 ++---
-> >  .../platform/mtk-vcodec/mtk_vcodec_dec_pm.c   |   1 -
-> >  .../platform/mtk-vcodec/mtk_vcodec_drv.h      |   5 +-
-> >  .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  |  47 ++---
-> >  .../platform/mtk-vcodec/mtk_vcodec_enc_pm.c   |   2 -
-> >  .../media/platform/mtk-vcodec/mtk_vcodec_fw.c | 172 ++++++++++++++++++
-> >  .../media/platform/mtk-vcodec/mtk_vcodec_fw.h |  36 ++++
-> >  .../platform/mtk-vcodec/mtk_vcodec_util.c     |   1 -
-> >  .../platform/mtk-vcodec/vdec/vdec_h264_if.c   |   1 -
-> >  .../platform/mtk-vcodec/vdec/vdec_vp8_if.c    |   1 -
-> >  .../platform/mtk-vcodec/vdec/vdec_vp9_if.c    |   1 -
-> >  .../media/platform/mtk-vcodec/vdec_drv_base.h |   2 -
-> >  .../media/platform/mtk-vcodec/vdec_drv_if.c   |   1 -
-> >  .../media/platform/mtk-vcodec/vdec_vpu_if.c   |  12 +-
-> >  .../media/platform/mtk-vcodec/vdec_vpu_if.h   |  11 +-
-> >  .../platform/mtk-vcodec/venc/venc_h264_if.c   |  15 +-
-> >  .../platform/mtk-vcodec/venc/venc_vp8_if.c    |   8 +-
-> >  .../media/platform/mtk-vcodec/venc_drv_if.c   |   1 -
-> >  .../media/platform/mtk-vcodec/venc_vpu_if.c   |  17 +-
-> >  .../media/platform/mtk-vcodec/venc_vpu_if.h   |   5 +-
-> >  21 files changed, 290 insertions(+), 103 deletions(-)
-> >  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-> >  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.h
-> >
-> > diff --git a/drivers/media/platform/mtk-vcodec/Makefile b/drivers/media/platform/mtk-vcodec/Makefile
-> > index 37b94b555fa1..b8636119ed0a 100644
-> > --- a/drivers/media/platform/mtk-vcodec/Makefile
-> > +++ b/drivers/media/platform/mtk-vcodec/Makefile
-> > @@ -12,7 +12,7 @@ mtk-vcodec-dec-y := vdec/vdec_h264_if.o \
-> >                 vdec_vpu_if.o \
-> >                 mtk_vcodec_dec.o \
-> >                 mtk_vcodec_dec_pm.o \
-> > -
-> > +               mtk_vcodec_fw.o
-> >
-> >  mtk-vcodec-enc-y := venc/venc_vp8_if.o \
-> >                 venc/venc_h264_if.o \
-> > @@ -25,5 +25,3 @@ mtk-vcodec-enc-y := venc/venc_vp8_if.o \
-> >
-> >  mtk-vcodec-common-y := mtk_vcodec_intr.o \
-> >                 mtk_vcodec_util.o\
-> > -
-> > -ccflags-y += -I$(srctree)/drivers/media/platform/mtk-vpu
-> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-> > index 97a1b6664c20..4f07a5fcce7f 100644
-> > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-> > @@ -20,7 +20,7 @@
-> >  #include "mtk_vcodec_dec_pm.h"
-> >  #include "mtk_vcodec_intr.h"
-> >  #include "mtk_vcodec_util.h"
-> > -#include "mtk_vpu.h"
-> > +#include "mtk_vcodec_fw.h"
-> >
-> >  #define VDEC_HW_ACTIVE 0x10
-> >  #define VDEC_IRQ_CFG   0x11
-> > @@ -77,22 +77,6 @@ static irqreturn_t mtk_vcodec_dec_irq_handler(int irq, void *priv)
-> >         return IRQ_HANDLED;
-> >  }
-> >
-> > -static void mtk_vcodec_dec_reset_handler(void *priv)
-> > -{
-> > -       struct mtk_vcodec_dev *dev = priv;
-> > -       struct mtk_vcodec_ctx *ctx;
-> > -
-> > -       mtk_v4l2_err("Watchdog timeout!!");
-> > -
-> > -       mutex_lock(&dev->dev_mutex);
-> > -       list_for_each_entry(ctx, &dev->ctx_list, list) {
-> > -               ctx->state = MTK_STATE_ABORT;
-> > -               mtk_v4l2_debug(0, "[%d] Change to state MTK_STATE_ERROR",
-> > -                               ctx->id);
-> > -       }
-> > -       mutex_unlock(&dev->dev_mutex);
-> > -}
-> > -
-> >  static int fops_vcodec_open(struct file *file)
-> >  {
-> >         struct mtk_vcodec_dev *dev = video_drvdata(file);
-> > @@ -144,21 +128,20 @@ static int fops_vcodec_open(struct file *file)
-> >         if (v4l2_fh_is_singular(&ctx->fh)) {
-> >                 mtk_vcodec_dec_pw_on(&dev->pm);
-> >                 /*
-> > -                * vpu_load_firmware checks if it was loaded already and
-> > -                * does nothing in that case
-> > +                * Does nothing if firmware was already loaded.
-> >                  */
-> > -               ret = vpu_load_firmware(dev->vpu_plat_dev);
-> > +               ret = mtk_vcodec_fw_load_firmware(dev->fw_handler);
-> >                 if (ret < 0) {
-> >                         /*
-> >                          * Return 0 if downloading firmware successfully,
-> >                          * otherwise it is failed
-> >                          */
-> > -                       mtk_v4l2_err("vpu_load_firmware failed!");
-> > +                       mtk_v4l2_err("failed to load firmware!");
-> >                         goto err_load_fw;
-> >                 }
-> >
-> >                 dev->dec_capability =
-> > -                       vpu_get_vdec_hw_capa(dev->vpu_plat_dev);
-> > +                       mtk_vcodec_fw_get_vdec_capa(dev->fw_handler);
-> >                 mtk_v4l2_debug(0, "decoder capability %x", dev->dec_capability);
-> >         }
-> >
-> > @@ -228,6 +211,8 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
-> >         struct mtk_vcodec_dev *dev;
-> >         struct video_device *vfd_dec;
-> >         struct resource *res;
-> > +       phandle rproc_phandle;
-> > +       enum mtk_vcodec_fw_type fw_type;
-> >         int i, ret;
-> >
-> >         dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
-> > @@ -237,19 +222,21 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
-> >         INIT_LIST_HEAD(&dev->ctx_list);
-> >         dev->plat_dev = pdev;
-> >
-> > -       dev->vpu_plat_dev = vpu_get_plat_device(dev->plat_dev);
-> > -       if (dev->vpu_plat_dev == NULL) {
-> > -               mtk_v4l2_err("[VPU] vpu device in not ready");
-> > -               return -EPROBE_DEFER;
-> > +       if (!of_property_read_u32(pdev->dev.of_node, "mediatek,vpu",
-> > +                                 &rproc_phandle)) {
-> > +               fw_type = VPU;
-> > +       } else {
-> > +               mtk_v4l2_err("Could not get vdec IPI device");
-> > +               return -ENODEV;
-> >         }
-> > -
-> > -       vpu_wdt_reg_handler(dev->vpu_plat_dev, mtk_vcodec_dec_reset_handler,
-> > -                       dev, VPU_RST_DEC);
-> > +       dev->fw_handler = mtk_vcodec_fw_select(dev, fw_type, VPU_RST_DEC);
-> > +       if (IS_ERR(dev->fw_handler))
-> > +               return PTR_ERR(dev->fw_handler);
-> >
-> >         ret = mtk_vcodec_init_dec_pm(dev);
-> >         if (ret < 0) {
-> >                 dev_err(&pdev->dev, "Failed to get mt vcodec clock source");
-> > -               return ret;
-> > +               goto err_dec_pm;
-> >         }
-> >
-> >         for (i = 0; i < NUM_MAX_VDEC_REG_BASE; i++) {
-> > @@ -352,6 +339,8 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
-> >         v4l2_device_unregister(&dev->v4l2_dev);
-> >  err_res:
-> >         mtk_vcodec_release_dec_pm(dev);
-> > +err_dec_pm:
-> > +       mtk_vcodec_fw_release(dev->fw_handler);
-> >         return ret;
-> >  }
-> >
-> > @@ -376,6 +365,7 @@ static int mtk_vcodec_dec_remove(struct platform_device *pdev)
-> >
-> >         v4l2_device_unregister(&dev->v4l2_dev);
-> >         mtk_vcodec_release_dec_pm(dev);
-> > +       mtk_vcodec_fw_release(dev->fw_handler);
-> >         return 0;
-> >  }
-> >
-> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
-> > index 5a6ec8fb52da..36dfe3fc056a 100644
-> > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
-> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
-> > @@ -12,7 +12,6 @@
-> >
-> >  #include "mtk_vcodec_dec_pm.h"
-> >  #include "mtk_vcodec_util.h"
-> > -#include "mtk_vpu.h"
-> >
-> >  int mtk_vcodec_init_dec_pm(struct mtk_vcodec_dev *mtkdev)
-> >  {
-> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-> > index 9fd56dee7fd1..e132c4ec463a 100644
-> > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-> > @@ -309,13 +309,13 @@ struct mtk_vcodec_ctx {
-> >   * @m2m_dev_dec: m2m device for decoder
-> >   * @m2m_dev_enc: m2m device for encoder.
-> >   * @plat_dev: platform device
-> > - * @vpu_plat_dev: mtk vpu platform device
-> >   * @ctx_list: list of struct mtk_vcodec_ctx
-> >   * @irqlock: protect data access by irq handler and work thread
-> >   * @curr_ctx: The context that is waiting for codec hardware
-> >   *
-> >   * @reg_base: Mapped address of MTK Vcodec registers.
-> >   *
-> > + * @fw_handler: used to communicate with the firmware.
-> >   * @id_counter: used to identify current opened instance
-> >   *
-> >   * @encode_workqueue: encode work queue
-> > @@ -344,12 +344,13 @@ struct mtk_vcodec_dev {
-> >         struct v4l2_m2m_dev *m2m_dev_dec;
-> >         struct v4l2_m2m_dev *m2m_dev_enc;
-> >         struct platform_device *plat_dev;
-> > -       struct platform_device *vpu_plat_dev;
-> >         struct list_head ctx_list;
-> >         spinlock_t irqlock;
-> >         struct mtk_vcodec_ctx *curr_ctx;
-> >         void __iomem *reg_base[NUM_MAX_VCODEC_REG_BASE];
-> >
-> > +       struct mtk_vcodec_fw *fw_handler;
-> > +
-> >         unsigned long id_counter;
-> >
-> >         struct workqueue_struct *decode_workqueue;
-> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-> > index 4d31f1ed113f..4340ea10afd0 100644
-> > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-> > @@ -21,7 +21,7 @@
-> >  #include "mtk_vcodec_enc_pm.h"
-> >  #include "mtk_vcodec_intr.h"
-> >  #include "mtk_vcodec_util.h"
-> > -#include "mtk_vpu.h"
-> > +#include "mtk_vcodec_fw.h"
-> >
-> >  module_param(mtk_v4l2_dbg_level, int, S_IRUGO | S_IWUSR);
-> >  module_param(mtk_vcodec_dbg, bool, S_IRUGO | S_IWUSR);
-> > @@ -101,22 +101,6 @@ static irqreturn_t mtk_vcodec_enc_lt_irq_handler(int irq, void *priv)
-> >         return IRQ_HANDLED;
-> >  }
-> >
-> > -static void mtk_vcodec_enc_reset_handler(void *priv)
-> > -{
-> > -       struct mtk_vcodec_dev *dev = priv;
-> > -       struct mtk_vcodec_ctx *ctx;
-> > -
-> > -       mtk_v4l2_debug(0, "Watchdog timeout!!");
-> > -
-> > -       mutex_lock(&dev->dev_mutex);
-> > -       list_for_each_entry(ctx, &dev->ctx_list, list) {
-> > -               ctx->state = MTK_STATE_ABORT;
-> > -               mtk_v4l2_debug(0, "[%d] Change to state MTK_STATE_ABORT",
-> > -                               ctx->id);
-> > -       }
-> > -       mutex_unlock(&dev->dev_mutex);
-> > -}
-> > -
-> >  static int fops_vcodec_open(struct file *file)
-> >  {
-> >         struct mtk_vcodec_dev *dev = video_drvdata(file);
-> > @@ -159,10 +143,10 @@ static int fops_vcodec_open(struct file *file)
-> >
-> >         if (v4l2_fh_is_singular(&ctx->fh)) {
-> >                 /*
-> > -                * vpu_load_firmware checks if it was loaded already and
-> > +                * load fireware to checks if it was loaded already and
-> >                  * does nothing in that case
-> >                  */
-> > -               ret = vpu_load_firmware(dev->vpu_plat_dev);
-> > +               ret = mtk_vcodec_fw_load_firmware(dev->fw_handler);
-> >                 if (ret < 0) {
-> >                         /*
-> >                          * Return 0 if downloading firmware successfully,
-> > @@ -173,7 +157,7 @@ static int fops_vcodec_open(struct file *file)
-> >                 }
-> >
-> >                 dev->enc_capability =
-> > -                       vpu_get_venc_hw_capa(dev->vpu_plat_dev);
-> > +                       mtk_vcodec_fw_get_venc_capa(dev->fw_handler);
-> >                 mtk_v4l2_debug(0, "encoder capability %x", dev->enc_capability);
-> >         }
-> >
-> > @@ -235,6 +219,8 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
-> >         struct mtk_vcodec_dev *dev;
-> >         struct video_device *vfd_enc;
-> >         struct resource *res;
-> > +       phandle rproc_phandle;
-> > +       enum mtk_vcodec_fw_type fw_type;
-> >         int i, j, ret;
-> >
-> >         dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
-> > @@ -244,19 +230,21 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
-> >         INIT_LIST_HEAD(&dev->ctx_list);
-> >         dev->plat_dev = pdev;
-> >
-> > -       dev->vpu_plat_dev = vpu_get_plat_device(dev->plat_dev);
-> > -       if (dev->vpu_plat_dev == NULL) {
-> > -               mtk_v4l2_err("[VPU] vpu device in not ready");
-> > -               return -EPROBE_DEFER;
-> > +       if (!of_property_read_u32(pdev->dev.of_node, "mediatek,vpu",
-> > +                                 &rproc_phandle)) {
-> > +               fw_type = VPU;
-> > +       } else {
-> > +               mtk_v4l2_err("Could not get venc IPI device");
-> > +               return -ENODEV;
-> >         }
-> > -
-> > -       vpu_wdt_reg_handler(dev->vpu_plat_dev, mtk_vcodec_enc_reset_handler,
-> > -                               dev, VPU_RST_ENC);
-> > +       dev->fw_handler = mtk_vcodec_fw_select(dev, fw_type, VPU_RST_ENC);
-> > +       if (IS_ERR(dev->fw_handler))
-> > +               return PTR_ERR(dev->fw_handler);
-> >
-> >         ret = mtk_vcodec_init_enc_pm(dev);
-> >         if (ret < 0) {
-> >                 dev_err(&pdev->dev, "Failed to get mt vcodec clock source!");
-> > -               return ret;
-> > +               goto err_enc_pm;
-> >         }
-> >
-> >         for (i = VENC_SYS, j = 0; i < NUM_MAX_VCODEC_REG_BASE; i++, j++) {
-> > @@ -377,6 +365,8 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
-> >         v4l2_device_unregister(&dev->v4l2_dev);
-> >  err_res:
-> >         mtk_vcodec_release_enc_pm(dev);
-> > +err_enc_pm:
-> > +       mtk_vcodec_fw_release(dev->fw_handler);
-> >         return ret;
-> >  }
-> >
-> > @@ -401,6 +391,7 @@ static int mtk_vcodec_enc_remove(struct platform_device *pdev)
-> >
-> >         v4l2_device_unregister(&dev->v4l2_dev);
-> >         mtk_vcodec_release_enc_pm(dev);
-> > +       mtk_vcodec_fw_release(dev->fw_handler);
-> >         return 0;
-> >  }
-> >
-> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
-> > index 3e2bfded79a6..ee22902aaa71 100644
-> > --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
-> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
-> > @@ -12,8 +12,6 @@
-> >
-> >  #include "mtk_vcodec_enc_pm.h"
-> >  #include "mtk_vcodec_util.h"
-> > -#include "mtk_vpu.h"
-> > -
-> >
-> >  int mtk_vcodec_init_enc_pm(struct mtk_vcodec_dev *mtkdev)
-> >  {
-> > diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-> > new file mode 100644
-> > index 000000000000..967bb100a990
-> > --- /dev/null
-> > +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_fw.c
-> > @@ -0,0 +1,172 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include "mtk_vcodec_fw.h"
-> > +#include "mtk_vcodec_util.h"
-> > +#include "mtk_vcodec_drv.h"
-> > +
-> > +struct mtk_vcodec_fw_ops {
-> > +       int (*load_firmware)(struct mtk_vcodec_fw *fw);
-> > +       unsigned int (*get_vdec_capa)(struct mtk_vcodec_fw *fw);
-> > +       unsigned int (*get_venc_capa)(struct mtk_vcodec_fw *fw);
-> > +       void * (*map_dm_addr)(struct mtk_vcodec_fw *fw, u32 dtcm_dmem_addr);
-> > +       int (*ipi_register)(struct mtk_vcodec_fw *fw, int id,
-> > +               mtk_vcodec_ipi_handler handler, const char *name, void *priv);
-> > +       int (*ipi_send)(struct mtk_vcodec_fw *fw, int id, void *buf,
-> > +               unsigned int len, unsigned int wait);
-> > +};
-> > +
-> > +struct mtk_vcodec_fw {
-> > +       enum mtk_vcodec_fw_type type;
-> > +       const struct mtk_vcodec_fw_ops *ops;
-> > +       struct platform_device *pdev;
-> > +};
-> > +
-> > +static int mtk_vcodec_vpu_load_firmware(struct mtk_vcodec_fw *fw)
-> > +{
-> > +       return vpu_load_firmware(fw->pdev);
-> > +}
-> > +
-> > +static unsigned int mtk_vcodec_vpu_get_vdec_capa(struct mtk_vcodec_fw *fw)
-> > +{
-> > +       return vpu_get_vdec_hw_capa(fw->pdev);
-> > +}
-> > +
-> > +static unsigned int mtk_vcodec_vpu_get_venc_capa(struct mtk_vcodec_fw *fw)
-> > +{
-> > +       return vpu_get_venc_hw_capa(fw->pdev);
-> > +}
-> > +
-> > +static void *mtk_vcodec_vpu_map_dm_addr(struct mtk_vcodec_fw *fw,
-> > +                                       u32 dtcm_dmem_addr)
-> > +{
-> > +       return vpu_mapping_dm_addr(fw->pdev, dtcm_dmem_addr);
-> > +}
-> > +
-> > +static int mtk_vcodec_vpu_set_ipi_register(struct mtk_vcodec_fw *fw, int id,
-> > +               mtk_vcodec_ipi_handler handler, const char *name, void *priv)
-> > +{
-> > +       /*
-> > +        * The handler we receive takes a void * as its first argument. We
-> > +        * cannot change this because it needs to be passed down to the rproc
-> > +        * subsystem when SCP is used. VPU takes a const argument, which is
-> > +        * more constrained, so the conversion below is safe.
-> > +        */
-> > +       ipi_handler_t handler_const = (ipi_handler_t)handler;
-> > +
-> > +       return vpu_ipi_register(fw->pdev, id, handler_const, name, priv);
-> > +}
-> > +
-> > +static int mtk_vcodec_vpu_ipi_send(struct mtk_vcodec_fw *fw, int id, void *buf,
-> > +               unsigned int len, unsigned int wait)
-> > +{
-> > +       return vpu_ipi_send(fw->pdev, id, buf, len);
-> > +}
-> > +
-> > +static const struct mtk_vcodec_fw_ops mtk_vcodec_vpu_msg = {
-> > +       .load_firmware = mtk_vcodec_vpu_load_firmware,
-> > +       .get_vdec_capa = mtk_vcodec_vpu_get_vdec_capa,
-> > +       .get_venc_capa = mtk_vcodec_vpu_get_venc_capa,
-> > +       .map_dm_addr = mtk_vcodec_vpu_map_dm_addr,
-> > +       .ipi_register = mtk_vcodec_vpu_set_ipi_register,
-> > +       .ipi_send = mtk_vcodec_vpu_ipi_send,
-> > +};
-> > +
-> > +static void mtk_vcodec_reset_handler(void *priv)
-> > +{
-> > +       struct mtk_vcodec_dev *dev = priv;
-> > +       struct mtk_vcodec_ctx *ctx;
-> > +
-> > +       mtk_v4l2_err("Watchdog timeout!!");
-> > +
-> > +       mutex_lock(&dev->dev_mutex);
-> > +       list_for_each_entry(ctx, &dev->ctx_list, list) {
-> > +               ctx->state = MTK_STATE_ABORT;
-> > +               mtk_v4l2_debug(0, "[%d] Change to state MTK_STATE_ABORT",
-> > +                               ctx->id);
-> > +       }
-> > +       mutex_unlock(&dev->dev_mutex);
-> > +}
-> > +
-> > +struct mtk_vcodec_fw *mtk_vcodec_fw_select(struct mtk_vcodec_dev *dev,
-> > +                                          enum mtk_vcodec_fw_type type,
-> > +                                          enum rst_id rst_id)
-> > +{
-> > +       const struct mtk_vcodec_fw_ops *ops;
-> > +       struct mtk_vcodec_fw *fw;
-> > +       struct platform_device *fw_pdev = NULL;
-> > +
-> > +       switch (type) {
-> > +       case VPU:
-> > +               ops = &mtk_vcodec_vpu_msg;
-> > +               fw_pdev = vpu_get_plat_device(dev->plat_dev);
-> > +               if (!fw_pdev) {
-> > +                       mtk_v4l2_err("firmware device is not ready");
-> > +                       return ERR_PTR(-EINVAL);
-> > +               }
-> > +               vpu_wdt_reg_handler(fw_pdev, mtk_vcodec_reset_handler,
-> > +                                   dev, rst_id);
-> > +               break;
-> > +       default:
-> > +               mtk_v4l2_err("invalid vcodec fw type");
-> > +               return ERR_PTR(-EINVAL);
-> > +       }
-> > +
-> > +       fw = devm_kzalloc(&dev->plat_dev->dev, sizeof(*fw), GFP_KERNEL);
-> > +       if (!fw)
-> > +               return ERR_PTR(-EINVAL);
-> > +
-> > +       fw->type = type;
-> > +       fw->ops = ops;
-> > +       fw->pdev = fw_pdev;
-> > +
-> > +       return fw;
-> > +}
-> > +EXPORT_SYMBOL_GPL(mtk_vcodec_fw_select);
-> > +
-> > +void mtk_vcodec_fw_release(struct mtk_vcodec_fw *fw)
-> > +{
-> > +       switch (fw->type) {
-> > +       case VPU:
-> > +               put_device(&fw->pdev->dev);
-> > +               break;
-> > +       }
-> > +}
-> > +EXPORT_SYMBOL_GPL(mtk_vcodec_fw_release);
-> > +
->
-> What are these symbols exported for?
+The first patch just defines some host controller device IDs to make the
+code a bit easier to read (since the controller part number is not
+always the same as the DID) and to prepare for the next patch.
 
-This driver is made of three modules: mtk_vcodec_common,
-mtk_vcodec_dec and mtk_vcodec_enc. These functions are used by both
-the encoder and decoder module, so they need to be exported.
+The second patch defines a new device ID for the ASM1142 and enables the
+XHCI_NO_64BIT_SUPPORT quirk for that device, since it has the same
+problem with truncating the higher bits as the ASM2142/ASM3142.
 
-There is mistake in the patch though that I noticed while
-investigating your comment: the file defining these functions
-(mtk_vcodec_fw.c) is linked against the mtk_vcodec_dec module while it
-should be part of mtk_vcodec_common, so thanks for asking. :)
+
+Forest Crossman (2):
+  usb: xhci: define IDs for various ASMedia host controllers
+  usb: xhci: Fix ASMedia ASM1142 DMA addressing
+
+ drivers/usb/host/xhci-pci.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+-- 
+2.20.1
+
