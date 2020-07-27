@@ -2,148 +2,86 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9279BC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03669206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595852022;
-	bh=ewkwyJ5XYmclS18PV1WpycBLPBOKvMAJJdbbWC3GAT8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eXqm9nnWqIPmmgQM5vxPx5WpG0sDib+GCZkPy0Rl8WLhNAe5yjayWYM3Zvm4BF/B7
-	 4uSPT0aqijOvVUjL0S1Wj6nN+HiaKTBHb+n4hj/v3FiyloPfrwdtqRnxXjoNVlo87L
-	 WAit3a8s8oftpXJoaoJcJOwSvGPlw7tNpBkTQO10=
+	by mail.kernel.org (Postfix) with ESMTP id 6C87220663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgG0MNl (ORCPT
+        id S1728328AbgG0MNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:13:41 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33767 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbgG0MNk (ORCPT
+        Mon, 27 Jul 2020 08:13:52 -0400
+Received: from dispatch1-us1.ppe-hosted.com ([148.163.129.52]:50090 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726555AbgG0MNv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:13:40 -0400
-Received: by mail-ot1-f67.google.com with SMTP id h13so12158814otr.0;
-        Mon, 27 Jul 2020 05:13:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hya4kAak3vFpvKCmV5SC8CvzY7BVaQgU/URNmp9BcZ4=;
-        b=agyhTbqbD+9UsE2Pu5yqvuJFxgtsgAol0B7zz+fP+pskeI6PBsvWrWkqt+SL786snp
-         nCs3pREkeg7xSVDrMbGtQMVeJYjgiYUTVv9CxPrZjJTw3SXDY04kIbLMKRC4YVTM3VrN
-         n8oF3KvKxehB2sc564NCCg+jy4kG0rzM8/LSmLkpc3ubfz5JvgGLcyo1/QGDYDBNQtCY
-         +eabp9XAnz+gHEceH7s4GwFfRjHGBNNKSnHCZOIjWRphMXrvDnlfxOSuwqHM3ZeRRt2n
-         YSkXXLvFttU98TBUXiOkdgwdUK3W2KKlUmroacmILkVrgm8fq/1a6kBtwpmoLYeIx+jf
-         8CLA==
-X-Gm-Message-State: AOAM531d+k9e0E3ro12JjnGqh/5zALldDWOZ7lFkHO50PtDtohtOZnvW
-        szvt5eJOrbTQAg/OH22LG1kYiMHb0s4KVD3s3HQ=
-X-Google-Smtp-Source: ABdhPJzWgH9YnsibmP7ohIsPdvbdnPiVh5mOEocRs7asL1OJ+94TWqFP8dqKQVa7Ps7h8bt7rVUk3udHV1/hD+86g5o=
-X-Received: by 2002:a9d:306:: with SMTP id 6mr10255308otv.167.1595852019197;
- Mon, 27 Jul 2020 05:13:39 -0700 (PDT)
+        Mon, 27 Jul 2020 08:13:51 -0400
+Received: from mx1-us1.ppe-hosted.com (unknown [10.7.65.60])
+        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 52BE860096;
+        Mon, 27 Jul 2020 12:13:51 +0000 (UTC)
+Received: from us4-mdac16-53.ut7.mdlocal (unknown [10.7.66.24])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 5098E2009A;
+        Mon, 27 Jul 2020 12:13:51 +0000 (UTC)
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mx1-us1.ppe-hosted.com (unknown [10.7.66.35])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id D85B91C0051;
+        Mon, 27 Jul 2020 12:13:50 +0000 (UTC)
+Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 7B9D048005F;
+        Mon, 27 Jul 2020 12:13:50 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
+ (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 27 Jul
+ 2020 13:13:44 +0100
+Subject: Re: [PATCH 2/7] sfc: drop unnecessary list_empty
+To:     Julia Lawall <Julia.Lawall@inria.fr>,
+        Solarflare linux maintainers <linux-net-drivers@solarflare.com>
+CC:     <kernel-janitors@vger.kernel.org>,
+        Martin Habets <mhabets@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1595761112-11003-1-git-send-email-Julia.Lawall@inria.fr>
+ <1595761112-11003-3-git-send-email-Julia.Lawall@inria.fr>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <f8564082-0dad-a1a7-9d2e-198b429b58d4@solarflare.com>
+Date:   Mon, 27 Jul 2020 13:13:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <1595842178-20351-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1595842178-20351-1-git-send-email-yangtiezhu@loongson.cn>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 27 Jul 2020 14:13:10 +0200
-Message-ID: <CAJZ5v0iJM_Q0D2Um7upMzkww0kL0FjH3udZPXaORY-dv5MDpLQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: Use valid link of ACPI specification
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Ning Sun <ning.sun@intel.com>,
-        Thomas Renninger <trenn@suse.com>,
-        Shuah Khan <shuah@kernel.org>, linux-hwmon@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        tboot-devel@lists.sourceforge.net,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1595761112-11003-3-git-send-email-Julia.Lawall@inria.fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Originating-IP: [10.17.20.203]
+X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
+ ukex01.SolarFlarecom.com (10.17.10.4)
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.6.1012-25566.005
+X-TM-AS-Result: No-1.399100-8.000000-10
+X-TMASE-MatchedRID: fgYTp5XatxaHYS4ybQtcOvZvT2zYoYOwC/ExpXrHizwumZeX1WIQ8L88
+        DvjRvF4An1Vi+LJeakUDvaj804LnkIwPUiPqp90EngIgpj8eDcC063Wh9WVqgmWCfbzydb0gsFZ
+        /31Unt9AV0D/96nhBQ90H8LFZNFG76sBnwpOylLOFBEdPN6KLPexVt431s/sfUrA4AyYCpjRnnG
+        sVz5KGCUq+D/qldGfLBsRAh8WmTAcG2WAWHb2qekrMHC7kmmSWJy4DmWREnABDDKa3G4nrLQ==
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10-1.399100-8.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.6.1012-25566.005
+X-MDID: 1595852031-PHB02brAlX_u
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 11:30 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> Currently, acpi.info is an invalid link to access ACPI specification,
-> the new valid link is https://uefi.org/specifications.
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  Documentation/hwmon/acpi_power_meter.rst      | 2 +-
->  drivers/acpi/Kconfig                          | 3 +--
->  include/linux/tboot.h                         | 2 +-
->  tools/power/cpupower/man/cpupower-idle-info.1 | 2 +-
->  4 files changed, 4 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/hwmon/acpi_power_meter.rst b/Documentation/hwmon/acpi_power_meter.rst
-> index 4a0941a..8628c11 100644
-> --- a/Documentation/hwmon/acpi_power_meter.rst
-> +++ b/Documentation/hwmon/acpi_power_meter.rst
-> @@ -9,7 +9,7 @@ Supported systems:
->
->      Prefix: 'power_meter'
->
-> -    Datasheet: http://acpi.info/, section 10.4.
-> +    Datasheet: https://uefi.org/specifications, section 10.4.
->
->  Author: Darrick J. Wong
->
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index ce2730d..7428cd2 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -40,8 +40,7 @@ menuconfig ACPI
->           the UEFI Forum and any UEFI member can join the ASWG and contribute
->           to the ACPI specification.
->           The specification is available at:
-> -         <http://www.acpi.info>
-> -         <http://www.uefi.org/acpi/specs>
-> +         <https://uefi.org/specifications>
->
->  if ACPI
->
-> diff --git a/include/linux/tboot.h b/include/linux/tboot.h
-> index c7e4247..5146d25 100644
-> --- a/include/linux/tboot.h
-> +++ b/include/linux/tboot.h
-> @@ -44,7 +44,7 @@ struct tboot_acpi_generic_address {
->
->  /*
->   * combines Sx info from FADT and FACS tables per ACPI 2.0+ spec
-> - * (http://www.acpi.info/)
-> + * (https://uefi.org/specifications)
->   */
->  struct tboot_acpi_sleep_info {
->         struct tboot_acpi_generic_address pm1a_cnt_blk;
-> diff --git a/tools/power/cpupower/man/cpupower-idle-info.1 b/tools/power/cpupower/man/cpupower-idle-info.1
-> index 80a1311..20b6345 100644
-> --- a/tools/power/cpupower/man/cpupower-idle-info.1
-> +++ b/tools/power/cpupower/man/cpupower-idle-info.1
-> @@ -75,7 +75,7 @@ By default only values of core zero are displayed. How to display settings of
->  other cores is described in the cpupower(1) manpage in the \-\-cpu option
->  section.
->  .SH REFERENCES
-> -http://www.acpi.info/spec.htm
-> +https://uefi.org/specifications
->  .SH "FILES"
->  .nf
->  \fI/sys/devices/system/cpu/cpu*/cpuidle/state*\fP
-> --
-
-Applied as 5.9 material with a minor edit in the subject.
-
-However, in the future please always CC ACPI-related patches to the
-linux-acpi mailing list.
-
-Thanks!
+On 26/07/2020 11:58, Julia Lawall wrote:
+> list_for_each_safe is able to handle an empty list.
+> The only effect of avoiding the loop is not initializing the
+> index variable.
+> Drop list_empty tests in cases where these variables are not
+> used.
+Sure, why not.
+Acked-by: Edward Cree <ecree@solarflare.com>
