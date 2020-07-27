@@ -2,187 +2,59 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84133C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2DB2072E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 699B32075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgG0Gvr (ORCPT
+        id S1726825AbgG0Gwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 02:51:47 -0400
-Received: from smtprelay0085.hostedemail.com ([216.40.44.85]:56534 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726140AbgG0Gvr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 02:51:47 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id A7422181D341E;
-        Mon, 27 Jul 2020 06:51:45 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: queen93_051184626f5f
-X-Filterd-Recvd-Size: 7348
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 27 Jul 2020 06:51:44 +0000 (UTC)
-Message-ID: <16aa5f86f2f899a9156305ead4b7042449278eea.camel@perches.com>
-Subject: Re: [PATCH 0/9] powerpc: delete duplicated words
-From:   Joe Perches <joe@perches.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@samba.org>,
-        linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Date:   Sun, 26 Jul 2020 23:51:43 -0700
-In-Reply-To: <4e505c35-8428-89bb-7f9b-bc819382c3cd@infradead.org>
-References: <20200726162902.Horde.TCqHYaODbkzEpM-rFzDd8A2@messagerie.si.c-s.fr>
-         <b796e912-e945-3cb1-03f8-0f38009634a4@infradead.org>
-         <add7c13b1ca24c8cb6f243b99d61c19287020efd.camel@perches.com>
-         <4e505c35-8428-89bb-7f9b-bc819382c3cd@infradead.org>
-Content-Type: multipart/mixed; boundary="=-WZb3QuBXr/QXwN41SYgI"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Mon, 27 Jul 2020 02:52:49 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:50994 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726122AbgG0Gws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 02:52:48 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jzwzu-0000b6-OZ; Mon, 27 Jul 2020 16:52:31 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 27 Jul 2020 16:52:30 +1000
+Date:   Mon, 27 Jul 2020 16:52:30 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Huang Guobin <huangguobin4@huawei.com>
+Cc:     haren@us.ibm.com, ddstreet@ieee.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] lib: Verify array index is correct before using it
+Message-ID: <20200727065230.GA25105@gondor.apana.org.au>
+References: <20200727065910.1628-1-huangguobin4@huawei.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727065910.1628-1-huangguobin4@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-WZb3QuBXr/QXwN41SYgI
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-
-On Sun, 2020-07-26 at 12:08 -0700, Randy Dunlap wrote:
-
-> v0.1 of this script also found lots of repeated numbers and strings of
-> special characters (ASCII art etc.), so now it ignores duplicated numbers
-> or special characters -- since it is really looking for duplicate words.
+On Mon, Jul 27, 2020 at 02:59:10AM -0400, Huang Guobin wrote:
+> This code reads from the array before verifying that "c" is a valid
+> index. Move test array offset code before use to fix it.
 > 
-> Anyway, I might as well attach it. It's no big deal.
-> And if someone else wants to tackle using it, go for it.
+> Fixes: 2da572c959dd ("lib: add software 842 compression/decompression")
+> Signed-off-by: Huang Guobin <huangguobin4@huawei.com>
+> ---
+>  lib/842/842_compress.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 
-This might be a reasonable thing to add to checkpatch.
+Please post this to linux-crypto@vger.kernel.org.
 
-And here's another possible similar perl word deduplicator attached:
-
-Assuming you have git, this could be used like:
-
-$ git ls-files -- <dir> | xargs perl deduplicate_words.pl
-
-And it would overwrite all files with duplicated words.
-
-No guarantees any changes it makes are right of course.
-It still needs a human to verify any change.
-
-For instance:
-
-$ git ls-files kernel/trace/*.[ch] | xargs perl deduplicate_words.pl
-$ git diff kernel/trace
- kernel/trace/ftrace.c             | 2 +-
- kernel/trace/trace.c              | 2 +-
- kernel/trace/trace_dynevent.c     | 2 +-
- kernel/trace/trace_events_synth.c | 2 +-
- kernel/trace/tracing_map.c        | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index a3093a84bae3..b7f085a4f71a 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -2405,7 +2405,7 @@ struct ftrace_ops direct_ops = {
-  *
-  * If the record has the FTRACE_FL_REGS set, that means that it
-  * wants to convert to a callback that saves all regs. If FTRACE_FL_REGS
-- * is not not set, then it wants to convert to the normal callback.
-+ * is not set, then it wants to convert to the normal callback.
-  *
-  * Returns the address of the trampoline to set to
-  */
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 5aa5c01e2fed..4d3dcfb06d6d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9253,7 +9253,7 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
- 
- 	/*
- 	 * We need to stop all tracing on all CPUS to read the
--	 * the next buffer. This is a bit expensive, but is
-+	 * next buffer. This is a bit expensive, but is
- 	 * not done often. We fill all what we can read,
- 	 * and then release the locks again.
- 	 */
-diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
-index 2c435fdef565..8c1e7e168505 100644
---- a/kernel/trace/trace_dynevent.c
-+++ b/kernel/trace/trace_dynevent.c
-@@ -402,7 +402,7 @@ void dynevent_arg_init(struct dynevent_arg *arg,
-  * whitespace, all followed by a separator, if applicable.  After the
-  * first arg string is successfully appended to the command string,
-  * the optional @operator is appended, followed by the second arg and
-- * and optional @separator.  If no separator was specified when
-+ * optional @separator.  If no separator was specified when
-  * initializing the arg, a space will be appended.
-  */
- void dynevent_arg_pair_init(struct dynevent_arg_pair *arg_pair,
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index e2a623f2136c..3801d3088744 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -1211,7 +1211,7 @@ __synth_event_trace_start(struct trace_event_file *file,
- 	 * ENABLED bit is set (which attaches the probe thus allowing
- 	 * this code to be called, etc).  Because this is called
- 	 * directly by the user, we don't have that but we still need
--	 * to honor not logging when disabled.  For the the iterated
-+	 * to honor not logging when disabled.  For the iterated
- 	 * trace case, we save the enabed state upon start and just
- 	 * ignore the following data calls.
- 	 */
-diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
-index 74738c9856f1..4b50fc0cb12c 100644
---- a/kernel/trace/tracing_map.c
-+++ b/kernel/trace/tracing_map.c
-@@ -260,7 +260,7 @@ int tracing_map_add_var(struct tracing_map *map)
-  * to use cmp_fn.
-  *
-  * A key can be a subset of a compound key; for that purpose, the
-- * offset param is used to describe where within the the compound key
-+ * offset param is used to describe where within the compound key
-  * the key referenced by this key field resides.
-  *
-  * Return: The index identifying the field in the map and associated
-
-
---=-WZb3QuBXr/QXwN41SYgI
-Content-Type: application/x-perl; name="deduplicate_words.pl"
-Content-Disposition: attachment; filename="deduplicate_words.pl"
-Content-Transfer-Encoding: base64
-
-IyEvdXNyL2Jpbi9lbnYvcGVybAoKIyBkZWR1cGxjYXRlIHJlcGVhdGVkIHdvcmRzIGZyb20gLltj
-aF0gZmlsZXMKCm15ICR3b3JkID0gJ1xiW0EtWl0/W2Etel17Mix9XGInOwoKZm9yIG15ICRmaWxl
-bmFtZSAoQEFSR1YpIHsKICAgIG15ICRvbGRsaW5lID0gJyc7CiAgICBteSBAb3V0cHV0ID0gKCk7
-CgogICAgaWYgKCRmaWxlbmFtZSBlcSAnLScpIHsKCW9wZW4oJEZJTEUsICc8JlNURElOJyk7CiAg
-ICB9IGVsc2UgewoJb3BlbigkRklMRSwgJzwnLCAiJGZpbGVuYW1lIikgfHwKCSAgICBkaWUgIiRQ
-OiAkZmlsZW5hbWU6IG9wZW4gZmFpbGVkIC0gJCFcbiI7CiAgICB9CgogICAgd2hpbGUgKDwkRklM
-RT4pIHsKCW15ICRuZXdsaW5lID0gJF87Cgl3aGlsZSAoJG5ld2xpbmUgPX4gL1xiKCR3b3JkKSAo
-Pz0oJHdvcmQpKS9nKSB7CgoJICAgICRmaXJzdCA9ICQxOwoJICAgICRzZWNvbmQgPSAkMjsKCgkg
-ICAgaWYgKCRmaXJzdCA9fiAvKD86c3RydWN0fHVuaW9ufGVudW0pLykgewoJCXBvcygkbmV3bGlu
-ZSkgKz0gbGVuZ3RoKCRmaXJzdCkgKyBsZW5ndGgoJHNlY29uZCkgKyAxOwoJCW5leHQ7CgkgICAg
-fQoKCSAgICBuZXh0IGlmICgkZmlyc3QgbmUgJHNlY29uZCk7CgkgICAgbmV4dCBpZiAoJGZpcnN0
-IGVxICdsb25nJyk7CgoJICAgICRuZXdsaW5lID1+IHMvXGIkZmlyc3QgJHNlY29uZFxiLyRmaXJz
-dC87Cgl9CgoJIyBpZiBpdCdzIGEgcmVwZWF0ZWQgd29yZCBvbiBjb25zZWN1dGl2ZSBsaW5lcyBp
-biBhIGNvbW1lbnQgYmxvY2sKCWlmICgkb2xkbGluZSA9fiAvKCR3b3JkKVxzKiQvKSB7CgkgICAg
-bXkgJGxhc3Rfd29yZCA9ICQxOwoJICAgICRuZXdsaW5lID1+IHMvKF5ccypcKlxzKikkbGFzdF93
-b3JkIC8kMS87Cgl9CgoJcHVzaCAoQG91dHB1dCwgJG5ld2xpbmUpOwoKCSRvbGRsaW5lID0gJG5l
-d2xpbmU7CiAgICB9CgogICAgY2xvc2UoJEZJTEUpOwoKICAgIGlmICgkZmlsZW5hbWUgZXEgJy0n
-KSB7CglvcGVuKCRGSUxFLCAnPCZTVERPVVQnKTsKICAgIH0gZWxzZSB7CglvcGVuKCRGSUxFLCAn
-PicsICIkZmlsZW5hbWUiKSB8fAoJICAgIGRpZSAiJFA6ICRmaWxlbmFtZTogb3BlbiBmYWlsZWQg
-LSAkIVxuIjsKICAgIH0KICAgIGZvcmVhY2ggbXkgJGxpbmUgKEBvdXRwdXQpIHsKCXByaW50ICRG
-SUxFICRsaW5lOwogICAgfQoKICAgIGNsb3NlICgkRklMRSk7Cn0K
-
-
---=-WZb3QuBXr/QXwN41SYgI--
-
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
