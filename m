@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12756C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F43CC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E00AB2250E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E75208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859834;
-	bh=L+hvxD0ShNgRiW665zZgeC/VRcIF7HA/LgIxcg0wf7E=;
+	s=default; t=1595859841;
+	bh=r3iHyGQz9boyggQI7VCb+3Xt73g++0A/lGYtI0CTALU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vUvd8EropciY+fBXkt2VYG/hsd958LMlC9sZmBHQTTnMCCU6grB3wbRYFw8pN23fo
-	 D2bHeGBI5LbOrqrm6LBYoPZO1hTQEleouW4ndTcRv6h6kkxtc0Nh0Grv+pjpcaH+19
-	 VMObTL1ouzWInm3yyjNxnOHSCPHO+dxfTKeFsGGQ=
+	b=GuPaSsoGMtgQxpxw5uUITQhL4808T7hKBJ2KK6LAkPIvYAJsd5k5NJid5YRUKmkpV
+	 W2msLzW6AXa2Ti78sJYVS2ERMvSqYGe5pdy7aT4Jhzw1Xjvw6S4ttLd6OC3ZLZAr6Q
+	 njzGRkeE5UbSS7Nahs+wFyvPNriI7Zqjycw3Bg+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732167AbgG0OXx (ORCPT
+        id S1732189AbgG0OX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:23:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53148 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:23:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732148AbgG0OXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:23:47 -0400
+        id S1732156AbgG0OXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:23:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CDCE22BF5;
-        Mon, 27 Jul 2020 14:23:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1AC2208E4;
+        Mon, 27 Jul 2020 14:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859827;
-        bh=L+hvxD0ShNgRiW665zZgeC/VRcIF7HA/LgIxcg0wf7E=;
+        s=default; t=1595859829;
+        bh=r3iHyGQz9boyggQI7VCb+3Xt73g++0A/lGYtI0CTALU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A+XnPq4h4MHdOqH/dBFeU+bk0iDUQAwyaCMyazCLB4Tav2+t0PU4dzRtuvfjJeinw
-         C3/Gb5FHbNhSd5InpKOgJMtapwVjxhd5TMCb5E+lhvBvGk1ySbp9238AbgMDAu1hIz
-         1etTvRQMxvSlPqHLb2nEoTzsRSaOvJEaT3N6Wamo=
+        b=xwRUIvuGm29/eyXhZqt9/MITr313t16O2etJzsPNHnAs3xOfeQSoXvN19KjqMTWF4
+         m0F1pTtOJfiw40H4vWkaNLaGQlAq+c5682xq31vK2d5Tt9/euKwzopqDgB77Qe08Zp
+         x+qLpT1dxCx7Ooc5sk4VGRgPlx08lW2aMUJZZ+r4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 090/179] enetc: Remove the mdio bus on PF probe bailout
-Date:   Mon, 27 Jul 2020 16:04:25 +0200
-Message-Id: <20200727134937.059668605@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 091/179] i2c: rcar: always clear ICSAR to avoid side effects
+Date:   Mon, 27 Jul 2020 16:04:26 +0200
+Message-Id: <20200727134937.109276982@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -60,72 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit 26cb7085c8984e5b71d65c374a135134ed8cabb3 ]
+[ Upstream commit eb01597158ffb1853a7a7fc2c57d4c844640f75e ]
 
-For ENETC ports that register an external MDIO bus,
-the bus doesn't get removed on the error bailout path
-of enetc_pf_probe().
+On R-Car Gen2, we get a timeout when reading from the address set in
+ICSAR, even though the slave interface is disabled. Clearing it fixes
+this situation. Note that Gen3 is not affected.
 
-This issue became much more visible after recent:
-commit 07095c025ac2 ("net: enetc: Use DT protocol information to set up the ports")
-Before this commit, one could make probing fail on the error
-path only by having register_netdev() fail, which is unlikely.
-But after this commit, because it moved the enetc_of_phy_get()
-call up in the probing sequence, now we can trigger an mdiobus_free()
-bug just by forcing enetc_alloc_msix() to return error, i.e. with the
-'pci=nomsi' kernel bootarg (since ENETC relies on MSI support to work),
-as the calltrace below shows:
+To reproduce: bind and undbind an I2C slave on some bus, run
+'i2cdetect' on that bus.
 
-kernel BUG at /home/eiz/work/enetc/net/drivers/net/phy/mdio_bus.c:648!
-Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-[...]
-Hardware name: LS1028A RDB Board (DT)
-pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--)
-pc : mdiobus_free+0x50/0x58
-lr : devm_mdiobus_free+0x14/0x20
-[...]
-Call trace:
- mdiobus_free+0x50/0x58
- devm_mdiobus_free+0x14/0x20
- release_nodes+0x138/0x228
- devres_release_all+0x38/0x60
- really_probe+0x1c8/0x368
- driver_probe_device+0x5c/0xc0
- device_driver_attach+0x74/0x80
- __driver_attach+0x8c/0xd8
- bus_for_each_dev+0x7c/0xd8
- driver_attach+0x24/0x30
- bus_add_driver+0x154/0x200
- driver_register+0x64/0x120
- __pci_register_driver+0x44/0x50
- enetc_pf_driver_init+0x24/0x30
- do_one_initcall+0x60/0x1c0
- kernel_init_freeable+0x1fc/0x274
- kernel_init+0x14/0x110
- ret_from_fork+0x10/0x34
-
-Fixes: ebfcb23d62ab ("enetc: Add ENETC PF level external MDIO support")
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/enetc/enetc_pf.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/busses/i2c-rcar.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc_pf.c b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-index 438648a06f2ae..041e19895adfa 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pf.c
-@@ -919,6 +919,7 @@ static int enetc_pf_probe(struct pci_dev *pdev,
- 	return 0;
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index 3b5397aa4ca60..50dd98803ca0c 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -868,6 +868,7 @@ static int rcar_unreg_slave(struct i2c_client *slave)
+ 	/* disable irqs and ensure none is running before clearing ptr */
+ 	rcar_i2c_write(priv, ICSIER, 0);
+ 	rcar_i2c_write(priv, ICSCR, 0);
++	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
  
- err_reg_netdev:
-+	enetc_mdio_remove(pf);
- 	enetc_of_put_phy(priv);
- 	enetc_free_msix(priv);
- err_alloc_msix:
+ 	synchronize_irq(priv->irq);
+ 	priv->slave = NULL;
+@@ -971,6 +972,8 @@ static int rcar_i2c_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto out_pm_put;
+ 
++	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
++
+ 	if (priv->devtype == I2C_RCAR_GEN3) {
+ 		priv->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+ 		if (!IS_ERR(priv->rstc)) {
 -- 
 2.25.1
 
