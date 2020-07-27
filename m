@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB5DC433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98ADC433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A474620FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC9820FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859765;
-	bh=zJ6iDxmgPMyeACGKiEcG9JS+5pkhHpQ/PRhePC2Mmdk=;
+	s=default; t=1595859769;
+	bh=XWAO2rDwOr0pL/+FcfDAObp3HO8jmPTq0soq/G32Nt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R2CP0m17jrq6e62qx92coanUuhVuHB5m+C6THcnQX/AGMXxkzE5SbPN9kzCQl6uL5
-	 y5VRyXvgLXWKFZ+H6ZREACp2RdMM3pOSkOc7mF4aiYGWk/QKsVMW0MMqY5FXowodRQ
-	 dqFonD9OkNTO9cumOPY2WT/DadJvimjcL79bAv5E=
+	b=PdtIGqD5yUHMI5IfRFrdvkNU5lkHfBJ5n/37SuRiWKbbaTotW1PVWCGTkAKczW951
+	 PLnz4h0W0uIn/WihPZD4fFE5Qzf6WlPS+gMd6whc7uFPpbsZG3YcyFbpZ7IEAxeJoU
+	 h0FDQT69Pat8r79GXZPOMABt4g7OYbrupK5RMjkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgG0OWo (ORCPT
+        id S1731965AbgG0OWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:22:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51670 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:22:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731047AbgG0OWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:22:42 -0400
+        id S1731950AbgG0OWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:22:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1442B2070B;
-        Mon, 27 Jul 2020 14:22:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDCFC2070B;
+        Mon, 27 Jul 2020 14:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859760;
-        bh=zJ6iDxmgPMyeACGKiEcG9JS+5pkhHpQ/PRhePC2Mmdk=;
+        s=default; t=1595859765;
+        bh=XWAO2rDwOr0pL/+FcfDAObp3HO8jmPTq0soq/G32Nt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q1p/XtQb9B7ln4gtglNlMCTi7ZpkDaUlAfS1DwN+WKojqYonNWLtZJ7UMeMeFscLb
-         TkaceOI7BHJ9Qd4xg/axBkZEpixJKpzPo76mznH5QNrK5c2CA5Mjof+FcHzfNmmGDS
-         GO4LhBYcGv1y1qJ2UMzt3+VU1cimJ4Yoi/KjFC/U=
+        b=iUt8UUy0w0d9E5WbYmnnTsLbggO52DlwhAOoO7ZTWLM857Q5Zeq69IyTk9jTMeojJ
+         6eAbWQWvoSsz01VtZCPtGdgu/f0Im2ULBBAHJzwlEHR19fOXbdflep68FPXeVvIPOU
+         FmdLbUX7BfXl2CnquQwC2rK3U5ICitGkCay9zb4k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthew Howell <matthew.howell@sealevel.com>,
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 095/179] serial: exar: Fix GPIO configuration for Sealevel cards based on XR17V35X
-Date:   Mon, 27 Jul 2020 16:04:30 +0200
-Message-Id: <20200727134937.294102349@linuxfoundation.org>
+Subject: [PATCH 5.7 097/179] scripts/gdb: fix lx-symbols gdb.error while loading modules
+Date:   Mon, 27 Jul 2020 16:04:32 +0200
+Message-Id: <20200727134937.382845323@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -60,55 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Howell <matthew.howell@sealevel.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-[ Upstream commit 5fdbe136ae19ab751daaa4d08d9a42f3e30d17f9 ]
+[ Upstream commit 7359608a271ce81803de148befefd309baf88c76 ]
 
-Sealevel XR17V35X based devices are inoperable on kernel versions
-4.11 and above due to a change in the GPIO preconfiguration introduced in
-commit
-7dea8165f1d. This patch fixes this by preconfiguring the GPIO on Sealevel
-cards to the value (0x00) used prior to commit 7dea8165f1d
+Commit ed66f991bb19 ("module: Refactor section attr into bin attribute")
+removed the 'name' field from 'struct module_sect_attr' triggering the
+following error when invoking lx-symbols:
 
-With GPIOs preconfigured as per commit 7dea8165f1d all ports on
-Sealevel XR17V35X based devices become stuck in high impedance
-mode, regardless of dip-switch or software configuration. This
-causes the device to become effectively unusable. This patch (in
-various forms) has been distributed to our customers and no issues
-related to it have been reported.
+  (gdb) lx-symbols
+  loading vmlinux
+  scanning for modules in linux/build
+  loading @0xffffffffc014f000: linux/build/drivers/net/tun.ko
+  Python Exception <class 'gdb.error'> There is no member named name.:
+  Error occurred in Python: There is no member named name.
 
-Fixes: 7dea8165f1d6 ("serial: exar: Preconfigure xr17v35x MPIOs as output")
-Signed-off-by: Matthew Howell <matthew.howell@sealevel.com>
-Link: https://lore.kernel.org/r/alpine.DEB.2.21.2007221605270.13247@tstest-VirtualBox
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch fixes the issue taking the module name from the 'struct
+attribute'.
+
+Fixes: ed66f991bb19 ("module: Refactor section attr into bin attribute")
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+Reviewed-by: Kieran Bingham <kbingham@kernel.org>
+Link: http://lkml.kernel.org/r/20200722102239.313231-1-sgarzare@redhat.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_exar.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ scripts/gdb/linux/symbols.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
-index 59449b6500cd6..9b5da1d43332f 100644
---- a/drivers/tty/serial/8250/8250_exar.c
-+++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -326,7 +326,17 @@ static void setup_gpio(struct pci_dev *pcidev, u8 __iomem *p)
- 	 * devices will export them as GPIOs, so we pre-configure them safely
- 	 * as inputs.
- 	 */
--	u8 dir = pcidev->vendor == PCI_VENDOR_ID_EXAR ? 0xff : 0x00;
-+
-+	u8 dir = 0x00;
-+
-+	if  ((pcidev->vendor == PCI_VENDOR_ID_EXAR) &&
-+		(pcidev->subsystem_vendor != PCI_VENDOR_ID_SEALEVEL)) {
-+		// Configure GPIO as inputs for Commtech adapters
-+		dir = 0xff;
-+	} else {
-+		// Configure GPIO as outputs for SeaLevel adapters
-+		dir = 0x00;
-+	}
- 
- 	writeb(0x00, p + UART_EXAR_MPIOINT_7_0);
- 	writeb(0x00, p + UART_EXAR_MPIOLVL_7_0);
+diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
+index be984aa29b759..1be9763cf8bb2 100644
+--- a/scripts/gdb/linux/symbols.py
++++ b/scripts/gdb/linux/symbols.py
+@@ -96,7 +96,7 @@ lx-symbols command."""
+             return ""
+         attrs = sect_attrs['attrs']
+         section_name_to_address = {
+-            attrs[n]['name'].string(): attrs[n]['address']
++            attrs[n]['battr']['attr']['name'].string(): attrs[n]['address']
+             for n in range(int(sect_attrs['nsections']))}
+         args = []
+         for section_name in [".data", ".data..read_mostly", ".rodata", ".bss",
 -- 
 2.25.1
 
