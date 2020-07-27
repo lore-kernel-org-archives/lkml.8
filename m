@@ -2,119 +2,72 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C69C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28651C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8432F20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE73420809
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:56:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y+lqk4wl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ubrfn5F5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgG0Uzc (ORCPT
+        id S1726753AbgG0U4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:55:32 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:45668 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgG0Uzb (ORCPT
+        Mon, 27 Jul 2020 16:56:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbgG0U4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:55:31 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 64C6B8030868;
-        Mon, 27 Jul 2020 20:55:23 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3kM3i7w2TsUD; Mon, 27 Jul 2020 23:55:21 +0300 (MSK)
-Date:   Mon, 27 Jul 2020 23:55:20 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 00/10] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-Message-ID: <20200727205520.kteltxy6gbho226q@mobilestation>
-References: <20200723005848.31907-1-Sergey.Semin@baikalelectronics.ru>
- <20200727090114.GM12965@vkoul-mobl>
+        Mon, 27 Jul 2020 16:56:06 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB0DC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:56:06 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1595883364;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vGlklfhOhKMe52+hawZnpl3d36F4/BFOW/Vk8oQE7eM=;
+        b=Y+lqk4wl3HL7c+JNJAFxRC1GzsSXbJ0VMOlLjOY4Ni0TuONAOSVDBx2jAX8nnZd9BJx/LJ
+        ap3ZhsmV0KycsC33/t7LDlK64uUeKZG4Sgz5Mm1qFk7nBwIKfdCcWOIGX9sifLuHxKnl9B
+        Z6qaybkU6dgaYLrf7pL0v5STxN3MfKHOQdyZSyBnwlpvpUjztrkueY9B6C2kV6ICuTHRnF
+        6/K9i7GCqexJK0/s9WcEY05TuXaNbevELaiy1FFvGJODfvYxojlZoJbf7mJtCx6CQKy/+0
+        xRtD6tM7bcSK867HNsXVNZwEE0+15y3hmh6vZvEch3mzK6IfSOiQ5p+E53sGjw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1595883364;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vGlklfhOhKMe52+hawZnpl3d36F4/BFOW/Vk8oQE7eM=;
+        b=ubrfn5F5T2p7GfJQ/BCtS23kE9iQnqxHg/uK2gDXVj+jvcTjq8vwhFhrAQi0w2a1HvwOVE
+        5VcYODlch6rUInCQ==
+To:     peterz@infradead.org, Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mbenes@suse.cz
+Subject: Re: [PATCH] objtool,x86: Verify poke_int3_handler() is self contained
+In-Reply-To: <20200727104050.GH119549@hirez.programming.kicks-ass.net>
+References: <20200727104050.GH119549@hirez.programming.kicks-ass.net>
+Date:   Mon, 27 Jul 2020 22:56:03 +0200
+Message-ID: <87eeowbrto.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200727090114.GM12965@vkoul-mobl>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 02:31:14PM +0530, Vinod Koul wrote:
-> On 23-07-20, 03:58, Serge Semin wrote:
-> > In the previous patchset I've written the next message:
-> > 
-> > > Folks, note I've removed the next patches from the series:
-> > > [PATCH v7 04/11] dmaengine: Introduce max SG list entries capability
-> > > [PATCH v7 11/11] dmaengine: dw: Initialize max_sg_nents capability
-> > > It turns out the problem with the asynchronous handling of Tx- and Rx-
-> > > SPI transfers interrupts is more complex than I expected. So in order to
-> > > solve the problem it isn't enough to split the SG list entries submission
-> > > up based on the max_sg_nents capability setting (though the synchronous
-> > > one-by-one SG list entries handling does fix a part of the problem). So
-> > > if and when I get to find a comprehensive solution for it I'll submit a
-> > > new series with fixups. Until then please consider to merge the patchset
-> > > in without those patches.
-> > 
-> > Those patches are returned back to the series. I've found a solution, which
-> > fixes the problem for our hardware. A new patchset with several fixes for the
-> > DW DMAC driver will be sent shortly after this one is merged in. Note the same
-> > concerns the DW APB SPI driver. So please review and merge in as soon as
-> > possible.
-> > 
-> > Regarding the patchset. Baikal-T1 SoC has an DW DMAC on-board to provide a
-> > Mem-to-Mem, low-speed peripherals Dev-to-Mem and Mem-to-Dev functionality.
-> > Mostly it's compatible with currently implemented in the kernel DW DMAC
-> > driver, but there are some peculiarities which must be taken into account
-> > in order to have the device fully supported.
-> > 
-> > First of all traditionally we replaced the legacy plain text-based dt-binding
-> > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
-> > channels, which alas have different max burst length configuration.
-> > In particular first two channels may burst up to 128 bits (16 bytes) at a time
-> > while the rest of them just up to 32 bits. We must make sure that the DMA
-> > subsystem doesn't set values exceeding these limitations otherwise the
-> > controller will hang up. In third currently we discovered the problem in using
-> > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
-> > natively implemented multi-block LLP transfers support and the SPI-transfer
-> > length exceeds the max lock size. In this case due to asynchronous handling of
-> > Tx- and Rx- SPI transfers interrupt we might end up with DW APB SSI Rx FIFO
-> > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
-> > the DMAC to asynchronously execute the transfers we'd have to at least warn
-> > the user of the possible errors. In forth it's worth to set the DMA device max
-> > segment size with max block size config specific to the DW DMA controller. It
-> > shall help the DMA clients to create size-optimized SG-list items for the
-> > controller. This in turn will cause less dw_desc allocations, less LLP
-> > reinitializations, better DMA device performance.
-> > 
-> > Finally there is a bug in the algorithm of the nollp flag detection.
-> > In particular even if DW DMAC parameters state the multi-block transfers
-> > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
-> > by the driver true multi-block LLP functionality unusable. This happens cause'
-> > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
-> > contiguous multi-block transfers will be only supported. We must take the
-> > flag into account when detecting the LLP support otherwise the driver just
-> > won't work correctly.
-> 
-> Applied all, thanks
+peterz@infradead.org writes:
+> Abuse the SMAP rules to ensure poke_int3_handler() doesn't call out to
+> anything.
 
-Great! Thank you very much. Now I can send out another set of patches for
-review.
+Yuck. Isn't that what noinstr is for or am I missing something?
 
--Sergey
+Thanks,
 
-> -- 
-> ~Vinod
+        tglx
+
+
