@@ -2,93 +2,134 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C635C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9901DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC252073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70EF120714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595825191;
-	bh=FaoNP8k6aSLsx7TpTwjKJPpQYLPjHTrsR+RxlYSUviU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vO7BuDqCnFIp7sgs8cZzIC4vllAeiNjKPXHuptvaufT7zN7+k4wp0Kni6pMO+j7Au
-	 0ChQO4ltdLAhUwNLWIc4rK9VGZxhEaK1XvGWqn9MUQbCAwjMaLBH8XNFeVXPuPyqui
-	 bTUamp6lFQl+7GsQsSUZ6BmKTzC+gAm8WLCS/hCk=
+	s=default; t=1595825798;
+	bh=9mv2NHRKupFqImSSf919VC8iFdyialFr4OrArdTym0M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qAbMKvNrMcS2yoE5uW5Ed3+6jMu6odfGsbW1nid2VrfAAk1boSrO+SF5l9K3Q0F1M
+	 q3cLRpS2nSirlneDQKOt4GxhYtyJLklHyY4ESI0xkVZZu5K1DSlseq0ycW6t06sk5J
+	 W/kDJ0VwHBani96K3aO9V3yG69kk/tYqSWEibHcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbgG0Eq2 (ORCPT
+        id S1726323AbgG0E42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 00:46:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbgG0Eq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 00:46:28 -0400
-Received: from Mani-XPS-13-9360 (unknown [157.46.48.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 957FB2073E;
-        Mon, 27 Jul 2020 04:46:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595825187;
-        bh=FaoNP8k6aSLsx7TpTwjKJPpQYLPjHTrsR+RxlYSUviU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DxKMTyFAiQtwVJ8+TAzrsFrS/urT4BTzQAYkttN0vO2lb6v9eml9DXxa+OimH6s4P
-         ZrQmPSpmfk5J+mmY+BuhCpQSKoJ7Ponb9EW7asDNx4P3w5Q8K2LnLQjP7pk1qDF5s6
-         6YSFkrGND2zQeHtOwkqIU6ZB7lPxzIM0qddlynjM=
-Date:   Mon, 27 Jul 2020 10:16:10 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB <linux-usb@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        patong.mxl@gmail.com, Linus Walleij <linus.walleij@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [RESEND PATCH v4 2/3] usb: serial: xr_serial: Add gpiochip
- support
-Message-ID: <20200727044610.GC12036@Mani-XPS-13-9360>
-References: <20200607162350.21297-1-mani@kernel.org>
- <20200607162350.21297-3-mani@kernel.org>
- <20200701130206.GD3334@localhost>
- <20200726155223.GB12036@Mani-XPS-13-9360>
- <CAHp75VeP8CMZ-T2Kk24NzOPiWHM62GErxCDUgBbYzNotwiFHhw@mail.gmail.com>
+        Mon, 27 Jul 2020 00:56:28 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:28982 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgG0E40 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 00:56:26 -0400
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 06R4u2vZ005262;
+        Mon, 27 Jul 2020 13:56:03 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 06R4u2vZ005262
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1595825763;
+        bh=VsNfuWLBKO3xt/tClgaisljP3G+NdDWNzhElfMxOfYY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=a1N4XqYgXgZeqAvpuXyZg/EQxm0jnP3s7xKyQ43nza7hGgVA1P6qCNnAjp9XsUi5z
+         3rh4B6nM8CZdYZQbTWuPyYaYI54s9FwyuvHV/knkE8KC1A1d3zlcoOKhH6aZUNQ44M
+         Du3I2bf73P5wcIlDOltGy1YRkFcPypHTk3dJ3m7WRDLh0isucTBOkFAfO9HJCrxKtZ
+         46uV8zN0pWIo3xzHIcJgJ9is0N+1a5X4Ubc6zg3h8ldNg9aHUFaVv8WHImWMEHqU9a
+         D1Vj7Rl6jMmOtj9edYkEqvfE5XZu0jLmmJglpU3yt5qfrmrXLZU31tn1ljIy167IIh
+         UL/muXbwVOh6A==
+X-Nifty-SrcIP: [209.85.222.44]
+Received: by mail-ua1-f44.google.com with SMTP id 4so328498uav.8;
+        Sun, 26 Jul 2020 21:56:03 -0700 (PDT)
+X-Gm-Message-State: AOAM532+N2cI0ng5y97a3Fh+Hp9c75LsQiPYBdPNoCUNPKb+bxTgsQP2
+        5DSBeOEJcQtNFv+61tTo4Q/n8O7R8HKr/x+WnEk=
+X-Google-Smtp-Source: ABdhPJzBD6NVz4V/UkSdnoYqZT6v6jY8++J4Xf9slSZ/iiqfDsoSYuuWR1bXY9TO8wmRXDEktTQuMDORUmQkciIXFEE=
+X-Received: by 2002:ab0:5b91:: with SMTP id y17mr15827254uae.95.1595825761768;
+ Sun, 26 Jul 2020 21:56:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeP8CMZ-T2Kk24NzOPiWHM62GErxCDUgBbYzNotwiFHhw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1595358391-34525-1-git-send-email-clabbe@baylibre.com>
+ <1595358391-34525-17-git-send-email-clabbe@baylibre.com> <11ac49bc33546ef9ebc4120878206bd882667d8a.camel@perches.com>
+ <b545eb4e3f2b4b676959e4666ef536f2691041eb.camel@perches.com>
+In-Reply-To: <b545eb4e3f2b4b676959e4666ef536f2691041eb.camel@perches.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 27 Jul 2020 13:55:25 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATohp=6BySQfn9g5xERm4u2rBG9VaoiGJ33TWovNTZd8w@mail.gmail.com>
+Message-ID: <CAK7LNATohp=6BySQfn9g5xERm4u2rBG9VaoiGJ33TWovNTZd8w@mail.gmail.com>
+Subject: Re: [PATCH] Makefile.extrawarn: Move sign-compare from W=2 to W=3
+To:     Joe Perches <joe@perches.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 07:34:54PM +0300, Andy Shevchenko wrote:
-> On Sun, Jul 26, 2020 at 6:53 PM Manivannan Sadhasivam <mani@kernel.org> wrote:
-> > On Wed, Jul 01, 2020 at 03:02:06PM +0200, Johan Hovold wrote:
-> > > On Sun, Jun 07, 2020 at 09:53:49PM +0530, Manivannan Sadhasivam wrote:
-> 
-> ...
-> 
-> > > Same here. And perhaps just ignoring the pins managed by gpiolib is
-> > > better (cf. gpiolib and pinctrl being orthogonal).
+On Wed, Jul 22, 2020 at 1:57 PM Joe Perches <joe@perches.com> wrote:
+>
+> This -Wsign-compare compiler warning can be very noisy
+> and most of the suggested conversions are unnecessary.
+>
+> Make the warning W=3 so it's described under the
+> "can most likely be ignored" block.
+>
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+
+Applied to linux-kbuild. Thanks.
+
+
+
+> On Tue, 2020-07-21 at 14:32 -0700, Joe Perches wrote:
+> > On Tue, 2020-07-21 at 19:06 +0000, Corentin Labbe wrote:
+> > > This patch fixes the warning:
+> > > warning: comparison of integer expressions of different signedness: 'int' and 'long unsigned int' [-Wsign-compare]
 > >
-> > You mean, we can just make TX,RX,CTS,RTS pins controlled only by the serial
-> > driver and the rest only by gpiolib?
-> 
-> I'm wondering if you may use mctrl_gpio_*() API instead.
+> > I think these do not really need conversion.
+> > Are these useful compiler warnings ?
+>
+> Perhaps move the warning from W=2 to W=3 so
+> it's described as "can most likely be ignored"
+>
+>  scripts/Makefile.extrawarn | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+> index 62c275685b75..95e4cdb94fe9 100644
+> --- a/scripts/Makefile.extrawarn
+> +++ b/scripts/Makefile.extrawarn
+> @@ -66,7 +66,6 @@ KBUILD_CFLAGS += -Wnested-externs
+>  KBUILD_CFLAGS += -Wshadow
+>  KBUILD_CFLAGS += $(call cc-option, -Wlogical-op)
+>  KBUILD_CFLAGS += -Wmissing-field-initializers
+> -KBUILD_CFLAGS += -Wsign-compare
+>  KBUILD_CFLAGS += -Wtype-limits
+>  KBUILD_CFLAGS += $(call cc-option, -Wmaybe-uninitialized)
+>  KBUILD_CFLAGS += $(call cc-option, -Wunused-macros)
+> @@ -87,6 +86,7 @@ KBUILD_CFLAGS += -Wpacked
+>  KBUILD_CFLAGS += -Wpadded
+>  KBUILD_CFLAGS += -Wpointer-arith
+>  KBUILD_CFLAGS += -Wredundant-decls
+> +KBUILD_CFLAGS += -Wsign-compare
+>  KBUILD_CFLAGS += -Wswitch-default
+>  KBUILD_CFLAGS += $(call cc-option, -Wpacked-bitfield-compat)
+>
+>
+>
 
-How? mctrl_gpio APIs are a wrapper for accessing modem control gpio pins but
-here we are not accessing the pins but rather exposing the pins as a gpiochip.
-Am I missing something?
 
-Thanks,
-Mani
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+--
+Best Regards
+Masahiro Yamada
