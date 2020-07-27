@@ -2,148 +2,93 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6D3C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2D5C433FB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2B4B2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDCBA206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595870025;
-	bh=3eRtGhVMR6oQbug4MP6QIehIPYVlI3wFYiSzkVQnCWY=;
+	s=default; t=1595870044;
+	bh=DzMvaEZ2c8PRGNGNoXy8zUYsCmrHhqwpQRTnJDQLDUI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TGWEfGZL3P5wu7VDEYucF2+lxAWCDNC8aJNNsD1zypjao+fpz7RU1osZjY/DUWXOq
-	 7YEBRVDdj7I+5yP1krqJogxijB8cYFwjMn6NbtpwDrSiLSLTgmOIpKhodHkF44y47c
-	 o2Z8Y6vxeP6Dukmkl9f6Lgtf8nT+QM2GpDEaOrD0=
+	b=AxhER1KuVn5koKOBvqyhfROiUUTY5fL7lmHuHinzzocH3cz9KMgqxYzgaf/fX7CSV
+	 dcsPAqbOif/BEh4XYC3owC8tzNQBNOfrJEfUvNcFnKhSVNm+t3R9CVXbDo9ofH1qXH
+	 1wJ1xNV0rDU4WT64T+H1YK2PfWclJ/9ESFVP5kmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbgG0RNn (ORCPT
+        id S1730524AbgG0ROA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:13:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47124 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 13:14:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728939AbgG0RNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:13:43 -0400
+        id S1729991AbgG0RNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 13:13:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79D77206E7;
-        Mon, 27 Jul 2020 17:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BCC72074F;
+        Mon, 27 Jul 2020 17:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595870023;
-        bh=3eRtGhVMR6oQbug4MP6QIehIPYVlI3wFYiSzkVQnCWY=;
+        s=default; t=1595870025;
+        bh=DzMvaEZ2c8PRGNGNoXy8zUYsCmrHhqwpQRTnJDQLDUI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QVgmXgw8Ox+DIaTIQpkzrpEjLpQadO/dvxoyVd6gZpA3uWvZ9xjQDH36f0L+9mL81
-         6rEt3OY35uBvdRZLjqVVYT2kz3ulZf9CGaGNR53LjAMmxDclz2w95GlIu/FKNO5i3t
-         DqKvRdvdKEucRpBYzKsGcBnq1tmI4MlQtHQsJows=
-Date:   Mon, 27 Jul 2020 16:24:16 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     B K Karthik <bkkarthik@pesu.pes.edu>
-Cc:     Jon Maloy <jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        tipc-discussion@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] net: tipc: fix general protection fault in
- tipc_conn_delete_sub
-Message-ID: <20200727142416.GA186956@kroah.com>
-References: <20200727131057.7a3of3hhsld4ng5t@pesu.pes.edu>
- <20200727132256.GA3933866@kroah.com>
- <CAAhDqq2N6nTHpz_CNTwh-ZRK-rQO0uUXO41iOouKn690R494Ww@mail.gmail.com>
+        b=ta4V/TlHAZL7GlZvS59gW5IPtECdtMnZt2+tatrDJyqnWz1O6zwUr/fjbiyRZzCUq
+         jbQwi39X/aeKjmSakvqPkNV8my08NF3uxhR/Zx6p1bH1iAMVpOzamiGemiMOa0FQnw
+         H5LnEhMnt0XB5o29YPiUmoxLPKtR1O7dM4ibE91o=
+Date:   Mon, 27 Jul 2020 16:38:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kieran Bingham <kbingham@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+        stable@vger.kernel.org, Stefano Garzarella <sgarzare@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 4.19 42/86] scripts/gdb: fix lx-symbols gdb.error while
+ loading modules
+Message-ID: <20200727143847.GA189341@kroah.com>
+References: <20200727134914.312934924@linuxfoundation.org>
+ <20200727134916.556617777@linuxfoundation.org>
+ <7675dec9-7b66-b785-5034-22e8ede0b597@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAhDqq2N6nTHpz_CNTwh-ZRK-rQO0uUXO41iOouKn690R494Ww@mail.gmail.com>
+In-Reply-To: <7675dec9-7b66-b785-5034-22e8ede0b597@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 07:46:05PM +0530, B K Karthik wrote:
-> On Mon, Jul 27, 2020 at 6:53 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Jul 27, 2020 at 06:40:57PM +0530, B K Karthik wrote:
-> > > fix a general protection fault in tipc_conn_delete_sub
-> > > by checking for the existance of con->server.
-> > > prevent a null-ptr-deref by returning -EINVAL when
-> > > con->server is NULL
-> > >
-> > > general protection fault, probably for non-canonical address 0xdffffc0000000014: 0000 [#1] PREEMPT SMP KASAN
-> > > KASAN: null-ptr-deref in range [0x00000000000000a0-0x00000000000000a7]
-> > > CPU: 1 PID: 113 Comm: kworker/u4:3 Not tainted 5.6.0-syzkaller #0
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > > Workqueue: tipc_send tipc_conn_send_work
-> > > RIP: 0010:tipc_conn_delete_sub+0x54/0x440 net/tipc/topsrv.c:231
-> > > Code: 48 c1 ea 03 80 3c 02 00 0f 85 f0 03 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 6b 18 48 8d bd a0 00 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 c0 03 00 00 48 c7 c0 34 0b 8a 8a 4c 8b a5 a0 00
-> > > RSP: 0018:ffffc900012d7b58 EFLAGS: 00010206
-> > > RAX: dffffc0000000000 RBX: ffff8880a8269c00 RCX: ffffffff8789ca01
-> > > RDX: 0000000000000014 RSI: ffffffff8789a059 RDI: 00000000000000a0
-> > > RBP: 0000000000000000 R08: ffff8880a8d88380 R09: fffffbfff18577a8
-> > > R10: fffffbfff18577a7 R11: ffffffff8c2bbd3f R12: dffffc0000000000
-> > > R13: ffff888093d35a18 R14: ffff8880a8269c00 R15: ffff888093d35a00
-> > > FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 000000000076c000 CR3: 000000009441d000 CR4: 00000000001406e0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > Call Trace:
-> > >  tipc_conn_send_to_sock+0x380/0x560 net/tipc/topsrv.c:266
-> > >  tipc_conn_send_work+0x6f/0x90 net/tipc/topsrv.c:304
-> > >  process_one_work+0x965/0x16a0 kernel/workqueue.c:2266
-> > >  worker_thread+0x96/0xe20 kernel/workqueue.c:2412
-> > >  kthread+0x388/0x470 kernel/kthread.c:268
-> > >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > > Modules linked in:
-> > > ---[ end trace 2c161a84be832606 ]---
-> > > RIP: 0010:tipc_conn_delete_sub+0x54/0x440 net/tipc/topsrv.c:231
-> > > Code: 48 c1 ea 03 80 3c 02 00 0f 85 f0 03 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b 6b 18 48 8d bd a0 00 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 c0 03 00 00 48 c7 c0 34 0b 8a 8a 4c 8b a5 a0 00
-> > > RSP: 0018:ffffc900012d7b58 EFLAGS: 00010206
-> > > RAX: dffffc0000000000 RBX: ffff8880a8269c00 RCX: ffffffff8789ca01
-> > > RDX: 0000000000000014 RSI: ffffffff8789a059 RDI: 00000000000000a0
-> > > RBP: 0000000000000000 R08: ffff8880a8d88380 R09: fffffbfff18577a8
-> > > R10: fffffbfff18577a7 R11: ffffffff8c2bbd3f R12: dffffc0000000000
-> > > R13: ffff888093d35a18 R14: ffff8880a8269c00 R15: ffff888093d35a00
-> > > FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > CR2: 0000000020800000 CR3: 0000000091b8e000 CR4: 00000000001406e0
-> > > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > >
-> > > Reported-and-tested-by: syzbot+55a38037455d0351efd3@syzkaller.appspotmail.com
-> > > Signed-off-by: B K Karthik <bkkarthik@pesu.pes.edu>
-> > > ---
-> > >  net/tipc/topsrv.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/net/tipc/topsrv.c b/net/tipc/topsrv.c
-> > > index 1489cfb941d8..6c8d0c6bb112 100644
-> > > --- a/net/tipc/topsrv.c
-> > > +++ b/net/tipc/topsrv.c
-> > > @@ -255,6 +255,9 @@ static void tipc_conn_send_to_sock(struct tipc_conn *con)
-> > >       int count = 0;
-> > >       int ret;
-> > >
-> > > +     if (!con->server)
-> > > +             return -EINVAL;
-> >
-> > What is wrong with looking at the srv local variable instead?
-> >
-> > And how is server getting set to NULL and this function still being
-> > called?
+On Mon, Jul 27, 2020 at 03:26:42PM +0100, Kieran Bingham wrote:
+> Hi Greg, Sasha,
 > 
-> tipc_conn_send_work makes a call to connected() which just returns con
-> && test_bit(CF_CONNECTED, &con->flags)
-> maybe we can add this check to the implementation of connection() if
-> you agree, but I found this solution to be fairly simpler because I'm
-> not sure where else connected() is being used, and I did not want to
-> introduce redundant function calls.
+> On 27/07/2020 15:04, Greg Kroah-Hartman wrote:
+> > From: Stefano Garzarella <sgarzare@redhat.com>
+> > 
+> > [ Upstream commit 7359608a271ce81803de148befefd309baf88c76 ]
+> > 
+> > Commit ed66f991bb19 ("module: Refactor section attr into bin attribute")
+> > removed the 'name' field from 'struct module_sect_attr' triggering the
+> > following error when invoking lx-symbols:
+> 
+> 
+> Has ed66f991bb19 ("module: Refactor section attr into bin attribute")
+> been backported to 4.19? It doesn't /sound/ like something that would
+> require backporting unless something else depended up on it,  but if it
+> hasn't been ... then *this* patch shouldn't be either...
 
-That's not what I asked here at all.
+It was released in 4.19.133, 5.4.52, and 5.7.9.
+
+> Same for 5.4, and 5.7 that's just come in.
+> 
+> This patch will 'apply' cleanly, and not hit any compilation errors, as
+> it only changes python code... so my reason to highlight is in case some
+> automated system picked it up based on those assumptions.
+> 
+> If ed66f991bb19 has also been backported, then I'm sorry for the noise ;-)
+
+It was, but thanks for the review!
 
 greg k-h
