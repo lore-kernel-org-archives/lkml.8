@@ -2,313 +2,201 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20264C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E486420775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6882064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 15:05:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Lg4msL7R"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="VtzMBn4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbgG0PD5 (ORCPT
+        id S1729845AbgG0PFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 11:03:57 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:46129 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729766AbgG0PD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 11:03:57 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595862236; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=LolzyKXcEplORVr2wLOkC8klu+9uXZS44xDXWhpCYKk=; b=Lg4msL7R1J6GC0YQ9ygHa8TTKlbruK2NsDZ/hEk1mmeXQ4qE3LJQwXrVNx5aZu93xyiBxxA8
- zdOf8Eo4WbdBaaiwxSGWdiBbB6Q7ATkjmgeBJPArBCtvrQIJd4K8lTXl2yNwqix/NxMKx+1R
- d8cVik3vHDJhOqUwlVDbkvmLIkI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5f1eecb2fcbecb3df181ed8b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 15:03:14
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AAE1EC4339C; Mon, 27 Jul 2020 15:03:12 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2300BC433CA;
-        Mon, 27 Jul 2020 15:03:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2300BC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 27 Jul 2020 09:03:07 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [Freedreno] [PATCH v10 06/13] iommu/arm-smmu-qcom: Get and set
- the pagetable config for split pagetables
-Message-ID: <20200727150306.GB32521@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
-References: <20200720154047.3611092-1-jcrouse@codeaurora.org>
- <20200720154047.3611092-7-jcrouse@codeaurora.org>
- <CAF6AEGuF_fC4=vBKr24HogE-d3KkXUQivOpVde9iqf+RvRzNtA@mail.gmail.com>
+        Mon, 27 Jul 2020 11:05:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728933AbgG0PFR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 11:05:17 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE89C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:05:17 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id f9so3437884pju.4
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 08:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=07ri+IqTYf1fjZepY5g8VXcoLFcfPO4oBtO7lv1kJDA=;
+        b=VtzMBn4crNcZcyJ+6o1zOaOYWkPDW13gNgR/hm+I0N4aKLfjebBb5nppjE45zA9dyp
+         +hyrV6pvrdgbf97Wkl1Q6psPTU36m4VY8yLOyRo7gWqFg97E5LwNc4F+l88xkgh1agc1
+         bp120hrWMZKD5/wKlHzhmGOTHXm1pKhrKsBYKmC9liWVrb/UYCT1L3HsYfq3FzFm0mQP
+         4kHW3zAxF/IH1Dtj8WbC3R301ww9Q5uJ8AhuLwZ5sMzxunEVz7upcJ6AFeiBYYqGGhvn
+         Bo0USFHWfmdjdxhyVBgIQLyKf75toRwq/L9nZNsDKTgQCDVI21xrIav4V499iP3HxZzB
+         rr7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=07ri+IqTYf1fjZepY5g8VXcoLFcfPO4oBtO7lv1kJDA=;
+        b=p+JZX+SpKa6vqQos9VipfcCzvqi5ZRzX4fA7fhABrHAyk33nMYl3EWJJrWyY+Kg+US
+         0EEaCLTN3FIc57qfHcotwgmbv2/uztku3y6xOkr8CVrcZ1eGH9w7DWGoaWbvPmf/DMjw
+         dEd4hJhWks7OQuq3mq0PXGCv+I+Pf+jO4QiTQfm6WC4c2azePGGY/9PSlTqZ40xodU0d
+         EROuVSF6YZ/w/IHC2hxmHhX0M56hp+w154kidAACSck+RMmvyD4a/ymDRRf4jZ74qTdC
+         6NM4l4EChPSPPW4T11pVNxZQGYoXKMqpigyN3IH0aPM5iyWicLUZ2VgC6B71/ecjKsx9
+         Srfw==
+X-Gm-Message-State: AOAM532ERAHuyadvAnWYKGyAYI/jU8wPaGZp9ebB/JdQOYwKobIdZ195
+        foOecTDvyqcvRur0SKELLDk5nA==
+X-Google-Smtp-Source: ABdhPJzl+1AJvlc0PN8W87qhHbl+tCsEGCMPA6OLS0Jj0M0Mch+md2d5VMA8Qx8nv/ct38VCt1mdZQ==
+X-Received: by 2002:a17:90a:6888:: with SMTP id a8mr18507355pjd.59.1595862316701;
+        Mon, 27 Jul 2020 08:05:16 -0700 (PDT)
+Received: from [192.168.1.102] (c-24-20-148-49.hsd1.or.comcast.net. [24.20.148.49])
+        by smtp.gmail.com with ESMTPSA id 22sm15115563pfh.157.2020.07.27.08.05.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 Jul 2020 08:05:15 -0700 (PDT)
+From:   "Sean V Kelley" <sean.v.kelley@intel.com>
+To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
+Cc:     bhelgaas@google.com, rjw@rjwysocki.net, tony.luck@intel.com,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Qiuxu Zhuo" <qiuxu.zhuo@intel.com>
+Subject: Re: [RFC PATCH 2/9] PCI: Extend Root Port Driver to support RCEC
+Date:   Mon, 27 Jul 2020 08:05:16 -0700
+X-Mailer: MailMate (1.13.1r5671)
+Message-ID: <3628B87C-DE0E-477E-85C1-FFD154DC4EFD@intel.com>
+In-Reply-To: <20200727133010.00003de8@Huawei.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+ <20200724172223.145608-3-sean.v.kelley@intel.com>
+ <20200727133010.00003de8@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGuF_fC4=vBKr24HogE-d3KkXUQivOpVde9iqf+RvRzNtA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 10:03:07AM -0700, Rob Clark wrote:
-> On Mon, Jul 20, 2020 at 8:41 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
-> >
-> > The Adreno GPU has the capability to manage its own pagetables and switch
-> > them dynamically from the hardware. To do this the GPU uses TTBR1 for
-> > "global" GPU memory and creates local pagetables for each context and
-> > switches them dynamically with the GPU.
-> >
-> > Use DOMAIN_ATTR_PGTABLE_CFG to get the current configuration for the
-> > TTBR1 pagetable from the smmu driver so the leaf driver can create
-> > compatible pagetables for use with TTBR0.
-> >
-> > Because TTBR0 is disabled by default when TTBR1 is enabled the GPU
-> > driver can pass the configuration of one of the newly created pagetables
-> > back through DOMAIN_ATTR_PGTABLE_CFG as a trigger to enable translation on
-> > TTBR0.
-> >
-> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > ---
-> >
-> >  drivers/iommu/arm-smmu-qcom.c | 47 +++++++++++++++++++++++++++++++++++
-> >  drivers/iommu/arm-smmu.c      | 32 ++++++++++++++++++------
-> >  drivers/iommu/arm-smmu.h      | 10 ++++++++
-> >  3 files changed, 81 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-> > index b9a5c5369e86..9a0c64ca9cb6 100644
-> > --- a/drivers/iommu/arm-smmu-qcom.c
-> > +++ b/drivers/iommu/arm-smmu-qcom.c
-> > @@ -34,6 +34,52 @@ static bool qcom_adreno_smmu_is_gpu_device(struct device *dev)
-> >         return false;
-> >  }
-> >
-> > +/*
-> > + * Local implementation to configure TTBR0 wil the specified pagetable config.
-> > + * The GPU driver will call this to enable TTBR0 when per-instance pagetables
-> > + * are active
-> > + */
-> > +static int qcom_adreno_smmu_set_pgtable_cfg(struct arm_smmu_domain *smmu_domain,
-> > +               struct io_pgtable_cfg *pgtbl_cfg)
-> > +{
-> > +       struct io_pgtable *pgtable = io_pgtable_ops_to_pgtable(smmu_domain->pgtbl_ops);
-> > +       struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
-> > +       struct arm_smmu_cb *cb = &smmu_domain->smmu->cbs[cfg->cbndx];
-> > +
-> > +       /* The domain must have split pagetables already enabled */
-> > +       if (cb->tcr[0] & ARM_SMMU_TCR_EPD1)
-> > +               return -EINVAL;
-> > +
-> > +       /* If the pagetable config is NULL, disable TTBR0 */
-> > +       if (!pgtbl_cfg) {
-> > +               /* Do nothing if it is already disabled */
-> > +               if ((cb->tcr[0] & ARM_SMMU_TCR_EPD0))
-> > +                       return -EINVAL;
-> > +
-> > +               /* Set TCR to the original configuration */
-> > +               cb->tcr[0] = arm_smmu_lpae_tcr(&pgtable->cfg);
-> > +               cb->ttbr[0] = FIELD_PREP(ARM_SMMU_TTBRn_ASID, cb->cfg->asid);
-> > +       } else {
-> > +               u32 tcr = cb->tcr[0];
-> > +
-> > +               /* FIXME: What sort of validation do we need to do here? */
-> > +
-> > +               /* Don't call this again if TTBR0 is already enabled */
-> > +               if (!(cb->tcr[0] & ARM_SMMU_TCR_EPD0))
-> > +                       return -EINVAL;
-> > +
-> > +               tcr |= arm_smmu_lpae_tcr(pgtbl_cfg);
-> > +               tcr &= ~(ARM_SMMU_TCR_EPD0 | ARM_SMMU_TCR_EPD1);
-> > +
-> > +               cb->tcr[0] = tcr;
-> > +               cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
-> > +               cb->ttbr[0] |= FIELD_PREP(ARM_SMMU_TTBRn_ASID, cb->cfg->asid);
-> > +       }
-> > +
-> > +       arm_smmu_write_context_bank(smmu_domain->smmu, cb->cfg->cbndx);
-> > +       return 0;
-> > +}
-> > +
-> >  static int qcom_adreno_smmu_alloc_context_bank(struct arm_smmu_domain *smmu_domain,
-> >                 struct device *dev, int start, int count)
-> >  {
-> > @@ -131,6 +177,7 @@ static const struct arm_smmu_impl qcom_adreno_smmu_impl = {
-> >         .def_domain_type = qcom_smmu_def_domain_type,
-> >         .reset = qcom_smmu500_reset,
-> >         .alloc_context_bank = qcom_adreno_smmu_alloc_context_bank,
-> > +       .set_pgtable_cfg = qcom_adreno_smmu_set_pgtable_cfg,
-> >  };
-> >
-> >  static struct arm_smmu_device *qcom_smmu_create(struct arm_smmu_device *smmu,
-> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> > index fff536a44faa..e1036ae54a8d 100644
-> > --- a/drivers/iommu/arm-smmu.c
-> > +++ b/drivers/iommu/arm-smmu.c
-> > @@ -86,13 +86,6 @@ struct arm_smmu_smr {
-> >         bool                            valid;
-> >  };
-> >
-> > -struct arm_smmu_cb {
-> > -       u64                             ttbr[2];
-> > -       u32                             tcr[2];
-> > -       u32                             mair[2];
-> > -       struct arm_smmu_cfg             *cfg;
-> > -};
-> > -
-> >  static bool using_legacy_binding, using_generic_binding;
-> >
-> >  static inline int arm_smmu_rpm_get(struct arm_smmu_device *smmu)
-> > @@ -558,7 +551,7 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
-> >         }
-> >  }
-> >
-> > -static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
-> > +void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
-> >  {
-> >         u32 reg;
-> >         bool stage1;
-> > @@ -1515,6 +1508,18 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
-> >                 case DOMAIN_ATTR_NESTING:
-> >                         *(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
-> >                         return 0;
-> > +               case DOMAIN_ATTR_PGTABLE_CFG: {
-> > +                       struct io_pgtable *pgtable;
-> > +                       struct io_pgtable_cfg *dest = data;
-> > +
-> > +                       if (!smmu_domain->pgtbl_ops)
-> > +                               return -ENODEV;
-> > +
-> > +                       pgtable = io_pgtable_ops_to_pgtable(smmu_domain->pgtbl_ops);
-> > +
-> > +                       memcpy(dest, &pgtable->cfg, sizeof(*dest));
-> > +                       return 0;
-> > +               }
-> 
-> hmm, maybe it would make sense to have impl hooks for get/set_attr, so
-> we could handle DOMAIN_ATTR_PGTABLE_CFG inside the adreno_smmu_impl?
-> 
-> Having impl specific domain attrs would be useful for what I have in
-> mind to enable stall/resume support, so we can hook in devcoredump to
-> iova faults (which would be a huge improvement for debugability, right
-> now iova faults are somewhat harder to debug than needed).  My rough
-> idea was to add DOMAIN_ATTR_RESUME, which could be used with
-> set_attr() to (1) enable STALL and let drm/msm know whether the iommu
-> supports it, and (2) resume translation from wq context after
-> devcoredump snapshot is collected.
+On 27 Jul 2020, at 5:30, Jonathan Cameron wrote:
 
-Expanding on that, maybe a DOMAIN_ATTR_IMPL with struct { int subtype; void
-*data } as the payload would let us add things without having to populate the
-generic enum.  That would force us to export an arm-smmu header but at this
-point it might be such a bad thing.
+> On Fri, 24 Jul 2020 10:22:16 -0700
+> Sean V Kelley <sean.v.kelley@intel.com> wrote:
+>
+>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>>
+>> If a Root Complex Integrated Endpoint (RCiEP) is implemented, errors =
 
-Jordan
+>> may
+>> optionally be sent to a corresponding Root Complex Event Collector =
 
+>> (RCEC).
+>> Each RCiEP must be associated with no more than one RCEC. Interface =
 
-> BR,
-> -R
-> 
-> >                 default:
-> >                         return -ENODEV;
-> >                 }
-> > @@ -1555,6 +1560,17 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
-> >                         else
-> >                                 smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
-> >                         break;
-> > +               case DOMAIN_ATTR_PGTABLE_CFG: {
-> > +                       struct arm_smmu_device *smmu = smmu_domain->smmu;
-> > +
-> > +                       ret = -EPERM;
-> > +
-> > +                       if (smmu)
-> > +                               if (smmu->impl && smmu->impl->set_pgtable_cfg)
-> > +                                       ret = smmu->impl->set_pgtable_cfg(smmu_domain,
-> > +                                               data);
-> > +                       }
-> > +                       break;
-> >                 default:
-> >                         ret = -ENODEV;
-> >                 }
-> > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-> > index 9f81c1fffe1e..9325fc28d24a 100644
-> > --- a/drivers/iommu/arm-smmu.h
-> > +++ b/drivers/iommu/arm-smmu.h
-> > @@ -328,6 +328,13 @@ struct arm_smmu_cfg {
-> >  };
-> >  #define ARM_SMMU_INVALID_IRPTNDX       0xff
-> >
-> > +struct arm_smmu_cb {
-> > +       u64                             ttbr[2];
-> > +       u32                             tcr[2];
-> > +       u32                             mair[2];
-> > +       struct arm_smmu_cfg             *cfg;
-> > +};
-> > +
-> >  enum arm_smmu_domain_stage {
-> >         ARM_SMMU_DOMAIN_S1 = 0,
-> >         ARM_SMMU_DOMAIN_S2,
-> > @@ -408,6 +415,8 @@ struct arm_smmu_impl {
-> >         int (*def_domain_type)(struct device *dev);
-> >         int (*alloc_context_bank)(struct arm_smmu_domain *smmu_domain,
-> >                         struct device *dev, int start, int max);
-> > +       int (*set_pgtable_cfg)(struct arm_smmu_domain *smmu_domain,
-> > +                       struct io_pgtable_cfg *cfg);
-> >  };
-> >
-> >  #define INVALID_SMENDX                 -1
-> > @@ -493,6 +502,7 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
-> >  struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu);
-> >  struct arm_smmu_device *qcom_adreno_smmu_impl_init(struct arm_smmu_device *smmu);
-> >
-> > +void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx);
-> >  int arm_mmu500_reset(struct arm_smmu_device *smmu);
-> >
-> >  #endif /* _ARM_SMMU_H */
-> > --
-> > 2.25.1
-> >
-> > _______________________________________________
-> > Freedreno mailing list
-> > Freedreno@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/freedreno
+>> errors
+>> are reported to the OS by RCECs.
+>>
+>> For an RCEC (technically not a Bridge), error messages "received" =
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>> from
+>> associated RCiEPs must be enabled for "transmission" in order to =
+
+>> cause a
+>> System Error via the Root Control register or (when the Advanced =
+
+>> Error
+>> Reporting Capability is present) reporting via the Root Error Command
+>> register and logging in the Root Error Status register and Error =
+
+>> Source
+>> Identification register.
+>>
+>> Given the commonality with Root Ports and the need to also support =
+
+>> AER
+>> and PME services for RCECs, extend the Root Port driver to support =
+
+>> RCEC
+>> devices through the addition of the RCEC Class ID to the driver
+>> structure.
+>>
+> Hi.
+>
+> I'm surprised it ended up this simple :) Seems we are a bit lucky that
+> the existing code is rather flexible on what is there and what isn't
+> and that there is never any reason to directly touch the various
+> type1 specific registers (given as I read the spec, an RCEC uses a
+> type0 config space header unlike the ports).
+
+Which is part of the reason why I chose to refer to it as an RFC, =
+
+because it seemed simpler and I was unsure if we were missing anything, =
+
+and it turns out we were. Unfortunately, to avoid churn, I=E2=80=99ve lef=
+t =
+
+quite a bit of comments/naming intact with =E2=80=9Croot=E2=80=9D/=E2=80=9C=
+port=E2=80=9D terms.
+
+>
+> Given you mention PME, it's probably worth noting (I think) you aren't
+> actually enabling the service yet as there is a check in that path on =
+
+> whether we
+> have a root port or not.
+> https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/pci/pcie/portd=
+rv_core.c#L241
+
+Good catch, testing has been only done at this point with AER injection.
+Will correct.
+
+Thanks,
+
+Sean
+
+>
+> Thanks,
+>
+> Jonathan
+>
+>
+>> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+>> ---
+>>  drivers/pci/pcie/portdrv_pci.c | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/pcie/portdrv_pci.c =
+
+>> b/drivers/pci/pcie/portdrv_pci.c
+>> index 3acf151ae015..d5b109499b10 100644
+>> --- a/drivers/pci/pcie/portdrv_pci.c
+>> +++ b/drivers/pci/pcie/portdrv_pci.c
+>> @@ -106,7 +106,8 @@ static int pcie_portdrv_probe(struct pci_dev =
+
+>> *dev,
+>>  	if (!pci_is_pcie(dev) ||
+>>  	    ((pci_pcie_type(dev) !=3D PCI_EXP_TYPE_ROOT_PORT) &&
+>>  	     (pci_pcie_type(dev) !=3D PCI_EXP_TYPE_UPSTREAM) &&
+>> -	     (pci_pcie_type(dev) !=3D PCI_EXP_TYPE_DOWNSTREAM)))
+>> +	     (pci_pcie_type(dev) !=3D PCI_EXP_TYPE_DOWNSTREAM) &&
+>> +	     (pci_pcie_type(dev) !=3D PCI_EXP_TYPE_RC_EC)))
+>>  		return -ENODEV;
+>>
+>>  	status =3D pcie_port_device_register(dev);
+>> @@ -195,6 +196,8 @@ static const struct pci_device_id port_pci_ids[] =
+
+>> =3D {
+>>  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x00), ~0) },
+>>  	/* subtractive decode PCI-to-PCI bridge, class type is 060401h */
+>>  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x01), ~0) },
+>> +	/* handle any Root Complex Event Collector */
+>> +	{ PCI_DEVICE_CLASS(((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00), ~0) },
+>>  	{ },
+>>  };
+>>
