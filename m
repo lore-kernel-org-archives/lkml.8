@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 374AEC433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20EFC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10A3620775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB0D120775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860302;
-	bh=M4XB6A0Or7ENzp2Ogu+rq/XEJ+qLF4cqMriz9m8WTfE=;
+	s=default; t=1595860310;
+	bh=Gi/1matADbQoQnGQPaHeo0DvP+h85YZ9Z5NkcxJSnx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qJ2mcgyhSrY+6BcpP/Y/FjxJ/rQqZxwJcVK+g5B39hwRmSLPJ0bDSIzf6bHhinS6G
-	 LOwWLCySkEz6Ik4lhIsA9V5MFBTPd+txylyDPNO9BIdP5RBdcDZM02c//5FVTc7+IN
-	 XtM7H+pVnkXX5LVf/D+5gZ4NOR6U3zGLE5Za5z7E=
+	b=UtsVGo0M0Rax+Vu2IBdWJH9u3dov8Z7Ty/g+3PAZtf+xyAKI+lJspNevXJMBYn0GZ
+	 XP07eftUWq9PqE5TE01NLup0iqHmnDp8u++j2fJtljKjELPVELXBcAdkf0vdQsjVyx
+	 QdykLsRE60F1i6XacrwavJl82voPA+WbSltMBtOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732575AbgG0Obk (ORCPT
+        id S1732711AbgG0Obt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:31:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48468 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:31:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731526AbgG0OUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:20:16 -0400
+        id S1731521AbgG0OUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:20:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E73520775;
-        Mon, 27 Jul 2020 14:20:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA73D2070A;
+        Mon, 27 Jul 2020 14:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859615;
-        bh=M4XB6A0Or7ENzp2Ogu+rq/XEJ+qLF4cqMriz9m8WTfE=;
+        s=default; t=1595859613;
+        bh=Gi/1matADbQoQnGQPaHeo0DvP+h85YZ9Z5NkcxJSnx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r26xTxCMXMnXc1rPKAW/XbbTKMJI0xhuXvrYExk59dRavBfxapkhU183nh1ZFjFdP
-         XEVGwCPA+s/2kPPHUNy2dGjX/cePqznR+wYFeMxNDaAfGZyG+2en5feW9X40Slw7zQ
-         r1BLQfKH2OXZOC8Ii7LslRxZ6PdBSj4NcnwnyLk0=
+        b=WYhQ4BXwFqnEUXBlq53J4yKi5u8foItPSSSaBYaoeX5avgm/zAgonHrNX6XIXtyUF
+         t3zxEWHhDm4eS9uBR4/j1B++Wf5fL0WJ7aW06BB2nbS/a4jKlyVjgJx/1Q7fRcStgv
+         jSVgW4NXJxpix4RE2rzc08FXp+Nd7Xy/yf6DKsEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Boris Burkov <boris@bur.io>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 039/179] btrfs: fix mount failure caused by race with umount
-Date:   Mon, 27 Jul 2020 16:03:34 +0200
-Message-Id: <20200727134934.579218640@linuxfoundation.org>
+Subject: [PATCH 5.7 038/179] btrfs: fix double free on ulist after backref resolution failure
+Date:   Mon, 27 Jul 2020 16:03:33 +0200
+Message-Id: <20200727134934.528531421@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -59,104 +60,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Burkov <boris@bur.io>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 48cfa61b58a1fee0bc49eef04f8ccf31493b7cdd upstream.
+commit 580c079b5766ac706f56eec5c79aee4bf929fef6 upstream.
 
-It is possible to cause a btrfs mount to fail by racing it with a slow
-umount. The crux of the sequence is generic_shutdown_super not yet
-calling sop->put_super before btrfs_mount_root calls btrfs_open_devices.
-If that occurs, btrfs_open_devices will decide the opened counter is
-non-zero, increment it, and skip resetting fs_devices->total_rw_bytes to
-0. From here, mount will call sget which will result in grab_super
-trying to take the super block umount semaphore. That semaphore will be
-held by the slow umount, so mount will block. Before up-ing the
-semaphore, umount will delete the super block, resulting in mount's sget
-reliably allocating a new one, which causes the mount path to dutifully
-fill it out, and increment total_rw_bytes a second time, which causes
-the mount to fail, as we see double the expected bytes.
+At btrfs_find_all_roots_safe() we allocate a ulist and set the **roots
+argument to point to it. However if later we fail due to an error returned
+by find_parent_nodes(), we free that ulist but leave a dangling pointer in
+the **roots argument. Upon receiving the error, a caller of this function
+can attempt to free the same ulist again, resulting in an invalid memory
+access.
 
-Here is the sequence laid out in greater detail:
+One such scenario is during qgroup accounting:
 
-CPU0                                                    CPU1
-down_write sb->s_umount
-btrfs_kill_super
-  kill_anon_super(sb)
-    generic_shutdown_super(sb);
-      shrink_dcache_for_umount(sb);
-      sync_filesystem(sb);
-      evict_inodes(sb); // SLOW
+btrfs_qgroup_account_extents()
 
-                                              btrfs_mount_root
-                                                btrfs_scan_one_device
-                                                fs_devices = device->fs_devices
-                                                fs_info->fs_devices = fs_devices
-                                                // fs_devices-opened makes this a no-op
-                                                btrfs_open_devices(fs_devices, mode, fs_type)
-                                                s = sget(fs_type, test, set, flags, fs_info);
-                                                  find sb in s_instances
-                                                  grab_super(sb);
-                                                    down_write(&s->s_umount); // blocks
+ --> calls btrfs_find_all_roots() passes &new_roots (a stack allocated
+     pointer) to btrfs_find_all_roots()
 
-      sop->put_super(sb)
-        // sb->fs_devices->opened == 2; no-op
-      spin_lock(&sb_lock);
-      hlist_del_init(&sb->s_instances);
-      spin_unlock(&sb_lock);
-      up_write(&sb->s_umount);
-                                                    return 0;
-                                                  retry lookup
-                                                  don't find sb in s_instances (deleted by CPU0)
-                                                  s = alloc_super
-                                                  return s;
-                                                btrfs_fill_super(s, fs_devices, data)
-                                                  open_ctree // fs_devices total_rw_bytes improperly set!
-                                                    btrfs_read_chunk_tree
-                                                      read_one_dev // increment total_rw_bytes again!!
-                                                      super_total_bytes < fs_devices->total_rw_bytes // ERROR!!!
+   --> btrfs_find_all_roots() just calls btrfs_find_all_roots_safe()
+       passing &new_roots to it
 
-To fix this, we clear total_rw_bytes from within btrfs_read_chunk_tree
-before the calls to read_one_dev, while holding the sb umount semaphore
-and the uuid mutex.
+     --> allocates ulist and assigns its address to **roots (which
+         points to new_roots from btrfs_qgroup_account_extents())
 
-To reproduce, it is sufficient to dirty a decent number of inodes, then
-quickly umount and mount.
+     --> find_parent_nodes() returns an error, so we free the ulist
+         and leave **roots pointing to it after returning
 
-  for i in $(seq 0 500)
-  do
-    dd if=/dev/zero of="/mnt/foo/$i" bs=1M count=1
-  done
-  umount /mnt/foo&
-  mount /mnt/foo
+ --> btrfs_qgroup_account_extents() sees btrfs_find_all_roots() returned
+     an error and jumps to the label 'cleanup', which just tries to
+     free again the same ulist
 
-does the trick for me.
+Stack trace example:
 
+ ------------[ cut here ]------------
+ BTRFS: tree first key check failed
+ WARNING: CPU: 1 PID: 1763215 at fs/btrfs/disk-io.c:422 btrfs_verify_level_key+0xe0/0x180 [btrfs]
+ Modules linked in: dm_snapshot dm_thin_pool (...)
+ CPU: 1 PID: 1763215 Comm: fsstress Tainted: G        W         5.8.0-rc3-btrfs-next-64 #1
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+ RIP: 0010:btrfs_verify_level_key+0xe0/0x180 [btrfs]
+ Code: 28 5b 5d (...)
+ RSP: 0018:ffffb89b473779a0 EFLAGS: 00010286
+ RAX: 0000000000000000 RBX: ffff90397759bf08 RCX: 0000000000000000
+ RDX: 0000000000000001 RSI: 0000000000000027 RDI: 00000000ffffffff
+ RBP: ffff9039a419c000 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: ffffb89b43301000 R12: 000000000000005e
+ R13: ffffb89b47377a2e R14: ffffb89b473779af R15: 0000000000000000
+ FS:  00007fc47e1e1000(0000) GS:ffff9039ac200000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007fc47e1df000 CR3: 00000003d9e4e001 CR4: 00000000003606e0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Call Trace:
+  read_block_for_search+0xf6/0x350 [btrfs]
+  btrfs_next_old_leaf+0x242/0x650 [btrfs]
+  resolve_indirect_refs+0x7cf/0x9e0 [btrfs]
+  find_parent_nodes+0x4ea/0x12c0 [btrfs]
+  btrfs_find_all_roots_safe+0xbf/0x130 [btrfs]
+  btrfs_qgroup_account_extents+0x9d/0x390 [btrfs]
+  btrfs_commit_transaction+0x4f7/0xb20 [btrfs]
+  btrfs_sync_file+0x3d4/0x4d0 [btrfs]
+  do_fsync+0x38/0x70
+  __x64_sys_fdatasync+0x13/0x20
+  do_syscall_64+0x5c/0xe0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0033:0x7fc47e2d72e3
+ Code: Bad RIP value.
+ RSP: 002b:00007fffa32098c8 EFLAGS: 00000246 ORIG_RAX: 000000000000004b
+ RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fc47e2d72e3
+ RDX: 00007fffa3209830 RSI: 00007fffa3209830 RDI: 0000000000000003
+ RBP: 000000000000072e R08: 0000000000000001 R09: 0000000000000003
+ R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000003e8
+ R13: 0000000051eb851f R14: 00007fffa3209970 R15: 00005607c4ac8b50
+ irq event stamp: 0
+ hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+ hardirqs last disabled at (0): [<ffffffffb8eb5e85>] copy_process+0x755/0x1eb0
+ softirqs last  enabled at (0): [<ffffffffb8eb5e85>] copy_process+0x755/0x1eb0
+ softirqs last disabled at (0): [<0000000000000000>] 0x0
+ ---[ end trace 8639237550317b48 ]---
+ BTRFS error (device sdc): tree first key mismatch detected, bytenr=62324736 parent_transid=94 key expected=(262,108,1351680) has=(259,108,1921024)
+ general protection fault, probably for non-canonical address 0x6b6b6b6b6b6b6b6b: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC PTI
+ CPU: 2 PID: 1763215 Comm: fsstress Tainted: G        W         5.8.0-rc3-btrfs-next-64 #1
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+ RIP: 0010:ulist_release+0x14/0x60 [btrfs]
+ Code: c7 07 00 (...)
+ RSP: 0018:ffffb89b47377d60 EFLAGS: 00010282
+ RAX: 6b6b6b6b6b6b6b6b RBX: ffff903959b56b90 RCX: 0000000000000000
+ RDX: 0000000000000001 RSI: 0000000000270024 RDI: ffff9036e2adc840
+ RBP: ffff9036e2adc848 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: 0000000000000000 R12: ffff9036e2adc840
+ R13: 0000000000000015 R14: ffff9039a419ccf8 R15: ffff90395d605840
+ FS:  00007fc47e1e1000(0000) GS:ffff9039ac600000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007f8c1c0a51c8 CR3: 00000003d9e4e004 CR4: 00000000003606e0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ Call Trace:
+  ulist_free+0x13/0x20 [btrfs]
+  btrfs_qgroup_account_extents+0xf3/0x390 [btrfs]
+  btrfs_commit_transaction+0x4f7/0xb20 [btrfs]
+  btrfs_sync_file+0x3d4/0x4d0 [btrfs]
+  do_fsync+0x38/0x70
+  __x64_sys_fdatasync+0x13/0x20
+  do_syscall_64+0x5c/0xe0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0033:0x7fc47e2d72e3
+ Code: Bad RIP value.
+ RSP: 002b:00007fffa32098c8 EFLAGS: 00000246 ORIG_RAX: 000000000000004b
+ RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fc47e2d72e3
+ RDX: 00007fffa3209830 RSI: 00007fffa3209830 RDI: 0000000000000003
+ RBP: 000000000000072e R08: 0000000000000001 R09: 0000000000000003
+ R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000003e8
+ R13: 0000000051eb851f R14: 00007fffa3209970 R15: 00005607c4ac8b50
+ Modules linked in: dm_snapshot dm_thin_pool (...)
+ ---[ end trace 8639237550317b49 ]---
+ RIP: 0010:ulist_release+0x14/0x60 [btrfs]
+ Code: c7 07 00 (...)
+ RSP: 0018:ffffb89b47377d60 EFLAGS: 00010282
+ RAX: 6b6b6b6b6b6b6b6b RBX: ffff903959b56b90 RCX: 0000000000000000
+ RDX: 0000000000000001 RSI: 0000000000270024 RDI: ffff9036e2adc840
+ RBP: ffff9036e2adc848 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: 0000000000000000 R12: ffff9036e2adc840
+ R13: 0000000000000015 R14: ffff9039a419ccf8 R15: ffff90395d605840
+ FS:  00007fc47e1e1000(0000) GS:ffff9039ad200000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007f6a776f7d40 CR3: 00000003d9e4e002 CR4: 00000000003606e0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+Fix this by making btrfs_find_all_roots_safe() set *roots to NULL after
+it frees the ulist.
+
+Fixes: 8da6d5815c592b ("Btrfs: added btrfs_find_all_roots()")
 CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Boris Burkov <boris@bur.io>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/volumes.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/btrfs/backref.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -7056,6 +7056,14 @@ int btrfs_read_chunk_tree(struct btrfs_f
- 	mutex_lock(&fs_info->chunk_mutex);
- 
- 	/*
-+	 * It is possible for mount and umount to race in such a way that
-+	 * we execute this code path, but open_fs_devices failed to clear
-+	 * total_rw_bytes. We certainly want it cleared before reading the
-+	 * device items, so clear it here.
-+	 */
-+	fs_info->fs_devices->total_rw_bytes = 0;
-+
-+	/*
- 	 * Read all device items, and then all the chunk items. All
- 	 * device items are found before any chunk item (their object id
- 	 * is smaller than the lowest possible object id for a chunk
+--- a/fs/btrfs/backref.c
++++ b/fs/btrfs/backref.c
+@@ -1465,6 +1465,7 @@ static int btrfs_find_all_roots_safe(str
+ 		if (ret < 0 && ret != -ENOENT) {
+ 			ulist_free(tmp);
+ 			ulist_free(*roots);
++			*roots = NULL;
+ 			return ret;
+ 		}
+ 		node = ulist_next(tmp, &uiter);
 
 
