@@ -2,58 +2,53 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93280C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB913C433FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 724B220775
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9687420838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860350;
-	bh=E9kOmYvx3YB9KGGH3MDEv+MFY5zgfWQoOjXQAr6Pwbo=;
+	s=default; t=1595860352;
+	bh=iJirAemF/CyfoWmMvNgo2psWOY/TmoreBsRJ3IibRUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eiW2haav3nV6WPNwZ3tGVMCbMFHT+ibkwjfIlyQXCBHOTklgXWssZjUevLACvy6ls
-	 hNFxPb9C9gG21579yf+qZq7m2wZSoKtRufPb6oFl5eGVJftJ00OU6qJ2lLAa8e66oB
-	 z7WEq4ulOlYzFhr/TZS4dKf8s0zoR/CPmcslLUAs=
+	b=xGnwlHKFm2a33P5drvROSydG/bjNGSF33CiF60cR6I1OggfQTft7PTnu2rbDHuGYK
+	 WfIyzXUwFbPL/Pww7n1vNDkrV8OUGJMOhuvkmfgz4pdZ5vaUkdGrDQPMQduM0yd5ww
+	 fpTXmY1YzZCrFTrHOTqjq6Y453x4/1iVoDHGNiH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730556AbgG0Oc3 (ORCPT
+        id S1729856AbgG0OS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:32:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46824 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:18:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731334AbgG0OTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:19:00 -0400
+        id S1731321AbgG0OSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 128BA2070A;
-        Mon, 27 Jul 2020 14:18:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D4D82070A;
+        Mon, 27 Jul 2020 14:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859540;
-        bh=E9kOmYvx3YB9KGGH3MDEv+MFY5zgfWQoOjXQAr6Pwbo=;
+        s=default; t=1595859535;
+        bh=iJirAemF/CyfoWmMvNgo2psWOY/TmoreBsRJ3IibRUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gcBlrFhxWlkSHBUcpT58Z8jGw68PrJSDjzW5bFAufGO2J446J63v9+tbov0iVgXQG
-         GMOqHN5+o6eKsO8GC0+iLjyvuvbRdhjHe1eqa8KLB0YkTdDWSKjT6fjNfz0FdXHUkK
-         p+R2iSBYnDa/Tapw62SEP2eXDV91E3WlpQn+CdQY=
+        b=B+2KRSy7Wfm8BdYtazLeCyPVZtSAOG1vuirzopj7tjB2vz20763xd1YTDwGYEO0Wj
+         k10DN8lkBmkA0fCCflrWOK3KUQErBopUnTgzM1AeBN8ALelKXF4oTfZBvRGiP3lx+S
+         hdJsX8WquZzIL90rFrUUXR3+5Cq5ZFNxXbunFHeA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 010/179] scsi: mpt3sas: Fix unlock imbalance
-Date:   Mon, 27 Jul 2020 16:03:05 +0200
-Message-Id: <20200727134933.176852512@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.4 136/138] dm integrity: fix integrity recalculation that is improperly skipped
+Date:   Mon, 27 Jul 2020 16:05:31 +0200
+Message-Id: <20200727134932.209189611@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
-References: <20200727134932.659499757@linuxfoundation.org>
+In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
+References: <20200727134925.228313570@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,82 +58,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit cb551b8dc079d2ef189145782627c99cb68c0255 ]
+commit 5df96f2b9f58a5d2dc1f30fe7de75e197f2c25f2 upstream.
 
-In BRM_status_show(), if the condition "!ioc->is_warpdrive" tested on entry
-to the function is true, a "goto out" is called. This results in unlocking
-ioc->pci_access_mutex without this mutex lock being taken.  This generates
-the following splat:
+Commit adc0daad366b62ca1bce3e2958a40b0b71a8b8b3 ("dm: report suspended
+device during destroy") broke integrity recalculation.
 
-[ 1148.539883] mpt3sas_cm2: BRM_status_show: BRM attribute is only for warpdrive
-[ 1148.547184]
-[ 1148.548708] =====================================
-[ 1148.553501] WARNING: bad unlock balance detected!
-[ 1148.558277] 5.8.0-rc3+ #827 Not tainted
-[ 1148.562183] -------------------------------------
-[ 1148.566959] cat/5008 is trying to release lock (&ioc->pci_access_mutex) at:
-[ 1148.574035] [<ffffffffc070b7a3>] BRM_status_show+0xd3/0x100 [mpt3sas]
-[ 1148.580574] but there are no more locks to release!
-[ 1148.585524]
-[ 1148.585524] other info that might help us debug this:
-[ 1148.599624] 3 locks held by cat/5008:
-[ 1148.607085]  #0: ffff92aea3e392c0 (&p->lock){+.+.}-{3:3}, at: seq_read+0x34/0x480
-[ 1148.618509]  #1: ffff922ef14c4888 (&of->mutex){+.+.}-{3:3}, at: kernfs_seq_start+0x2a/0xb0
-[ 1148.630729]  #2: ffff92aedb5d7310 (kn->active#224){.+.+}-{0:0}, at: kernfs_seq_start+0x32/0xb0
-[ 1148.643347]
-[ 1148.643347] stack backtrace:
-[ 1148.655259] CPU: 73 PID: 5008 Comm: cat Not tainted 5.8.0-rc3+ #827
-[ 1148.665309] Hardware name: HGST H4060-S/S2600STB, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
-[ 1148.678394] Call Trace:
-[ 1148.684750]  dump_stack+0x78/0xa0
-[ 1148.691802]  lock_release.cold+0x45/0x4a
-[ 1148.699451]  __mutex_unlock_slowpath+0x35/0x270
-[ 1148.707675]  BRM_status_show+0xd3/0x100 [mpt3sas]
-[ 1148.716092]  dev_attr_show+0x19/0x40
-[ 1148.723664]  sysfs_kf_seq_show+0x87/0x100
-[ 1148.731193]  seq_read+0xbc/0x480
-[ 1148.737882]  vfs_read+0xa0/0x160
-[ 1148.744514]  ksys_read+0x58/0xd0
-[ 1148.751129]  do_syscall_64+0x4c/0xa0
-[ 1148.757941]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 1148.766240] RIP: 0033:0x7f1230566542
-[ 1148.772957] Code: Bad RIP value.
-[ 1148.779206] RSP: 002b:00007ffeac1bcac8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-[ 1148.790063] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f1230566542
-[ 1148.800284] RDX: 0000000000020000 RSI: 00007f1223460000 RDI: 0000000000000003
-[ 1148.810474] RBP: 00007f1223460000 R08: 00007f122345f010 R09: 0000000000000000
-[ 1148.820641] R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000000000
-[ 1148.830728] R13: 0000000000000003 R14: 0000000000020000 R15: 0000000000020000
+The problem is dm_suspended() returns true not only during suspend,
+but also during resume. So this race condition could occur:
+1. dm_integrity_resume calls queue_work(ic->recalc_wq, &ic->recalc_work)
+2. integrity_recalc (&ic->recalc_work) preempts the current thread
+3. integrity_recalc calls if (unlikely(dm_suspended(ic->ti))) goto unlock_ret;
+4. integrity_recalc exits and no recalculating is done.
 
-Fix this by returning immediately instead of jumping to the out label.
+To fix this race condition, add a function dm_post_suspending that is
+only true during the postsuspend phase and use it instead of
+dm_suspended().
 
-Link: https://lore.kernel.org/r/20200701085254.51740-1-damien.lemoal@wdc.com
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Acked-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Mikulas Patocka <mpatocka redhat com>
+Fixes: adc0daad366b ("dm: report suspended device during destroy")
+Cc: stable vger kernel org # v4.18+
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/mpt3sas/mpt3sas_ctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-integrity.c     |    4 ++--
+ drivers/md/dm.c               |   17 +++++++++++++++++
+ include/linux/device-mapper.h |    1 +
+ 3 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-index 62e552838565f..e94e72de2fc68 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-@@ -3145,7 +3145,7 @@ BRM_status_show(struct device *cdev, struct device_attribute *attr,
- 	if (!ioc->is_warpdrive) {
- 		ioc_err(ioc, "%s: BRM attribute is only for warpdrive\n",
- 			__func__);
--		goto out;
-+		return 0;
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -2298,7 +2298,7 @@ static void integrity_writer(struct work
+ 	unsigned prev_free_sectors;
+ 
+ 	/* the following test is not needed, but it tests the replay code */
+-	if (unlikely(dm_suspended(ic->ti)) && !ic->meta_dev)
++	if (unlikely(dm_post_suspending(ic->ti)) && !ic->meta_dev)
+ 		return;
+ 
+ 	spin_lock_irq(&ic->endio_wait.lock);
+@@ -2359,7 +2359,7 @@ static void integrity_recalc(struct work
+ 
+ next_chunk:
+ 
+-	if (unlikely(dm_suspended(ic->ti)))
++	if (unlikely(dm_post_suspending(ic->ti)))
+ 		goto unlock_ret;
+ 
+ 	range.logical_sector = le64_to_cpu(ic->sb->recalc_sector);
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -141,6 +141,7 @@ EXPORT_SYMBOL_GPL(dm_bio_get_target_bio_
+ #define DMF_NOFLUSH_SUSPENDING 5
+ #define DMF_DEFERRED_REMOVE 6
+ #define DMF_SUSPENDED_INTERNALLY 7
++#define DMF_POST_SUSPENDING 8
+ 
+ #define DM_NUMA_NODE NUMA_NO_NODE
+ static int dm_numa_node = DM_NUMA_NODE;
+@@ -2377,6 +2378,7 @@ static void __dm_destroy(struct mapped_d
+ 	if (!dm_suspended_md(md)) {
+ 		dm_table_presuspend_targets(map);
+ 		set_bit(DMF_SUSPENDED, &md->flags);
++		set_bit(DMF_POST_SUSPENDING, &md->flags);
+ 		dm_table_postsuspend_targets(map);
  	}
- 	/* pci_access_mutex lock acquired by sysfs show path */
- 	mutex_lock(&ioc->pci_access_mutex);
--- 
-2.25.1
-
+ 	/* dm_put_live_table must be before msleep, otherwise deadlock is possible */
+@@ -2735,7 +2737,9 @@ retry:
+ 	if (r)
+ 		goto out_unlock;
+ 
++	set_bit(DMF_POST_SUSPENDING, &md->flags);
+ 	dm_table_postsuspend_targets(map);
++	clear_bit(DMF_POST_SUSPENDING, &md->flags);
+ 
+ out_unlock:
+ 	mutex_unlock(&md->suspend_lock);
+@@ -2832,7 +2836,9 @@ static void __dm_internal_suspend(struct
+ 	(void) __dm_suspend(md, map, suspend_flags, TASK_UNINTERRUPTIBLE,
+ 			    DMF_SUSPENDED_INTERNALLY);
+ 
++	set_bit(DMF_POST_SUSPENDING, &md->flags);
+ 	dm_table_postsuspend_targets(map);
++	clear_bit(DMF_POST_SUSPENDING, &md->flags);
+ }
+ 
+ static void __dm_internal_resume(struct mapped_device *md)
+@@ -2993,6 +2999,11 @@ int dm_suspended_md(struct mapped_device
+ 	return test_bit(DMF_SUSPENDED, &md->flags);
+ }
+ 
++static int dm_post_suspending_md(struct mapped_device *md)
++{
++	return test_bit(DMF_POST_SUSPENDING, &md->flags);
++}
++
+ int dm_suspended_internally_md(struct mapped_device *md)
+ {
+ 	return test_bit(DMF_SUSPENDED_INTERNALLY, &md->flags);
+@@ -3009,6 +3020,12 @@ int dm_suspended(struct dm_target *ti)
+ }
+ EXPORT_SYMBOL_GPL(dm_suspended);
+ 
++int dm_post_suspending(struct dm_target *ti)
++{
++	return dm_post_suspending_md(dm_table_get_md(ti->table));
++}
++EXPORT_SYMBOL_GPL(dm_post_suspending);
++
+ int dm_noflush_suspending(struct dm_target *ti)
+ {
+ 	return __noflush_suspending(dm_table_get_md(ti->table));
+--- a/include/linux/device-mapper.h
++++ b/include/linux/device-mapper.h
+@@ -422,6 +422,7 @@ const char *dm_device_name(struct mapped
+ int dm_copy_name_and_uuid(struct mapped_device *md, char *name, char *uuid);
+ struct gendisk *dm_disk(struct mapped_device *md);
+ int dm_suspended(struct dm_target *ti);
++int dm_post_suspending(struct dm_target *ti);
+ int dm_noflush_suspending(struct dm_target *ti);
+ void dm_accept_partial_bio(struct bio *bio, unsigned n_sectors);
+ void dm_remap_zone_report(struct dm_target *ti, sector_t start,
 
 
