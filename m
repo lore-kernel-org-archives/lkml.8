@@ -2,186 +2,133 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14427C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B53C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7A2B20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:02:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbO4DzeJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8C3732073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgG0ICs (ORCPT
+        id S1727886AbgG0H6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:02:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbgG0ICs (ORCPT
+        Mon, 27 Jul 2020 03:58:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64998 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726183AbgG0H6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:02:48 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27EE8C0619D2;
-        Mon, 27 Jul 2020 01:02:48 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id j10so358389qvo.13;
-        Mon, 27 Jul 2020 01:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=J3cQXzpZBg3Vtk5bdGvdVAHaa0sFWRNtivX5Db04OBA=;
-        b=dbO4DzeJoT4j/TG1g7aRqmAN97/rmvbXCgY0YIU+CKb91Nf2TrIJR0nnw1SpeI4Us3
-         8LT+osFW8Hg45Zhs9ffuzPawoTve2Buq0CelaGklZTuUecawIWX9rdUIGP7bZkKwj1mY
-         r/vf2FL+CNrfHec3DM8auarsv2yyXhY831G+200uHV0Au8aiEaYxd2WC0NF2l5R0+6t9
-         xh/tRtP+x5LRl2sgUsXEhnP3RvpHg02OA2SXbEOUHUb7R9HkjeBkQqXHiw8jtb1RNEgm
-         cPek2E6EtSE7T64GAhal8elJmXCTELnGUIxdACayGdK0sYUgNLOsHmyIyb+1LaJ2XgVN
-         dtBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=J3cQXzpZBg3Vtk5bdGvdVAHaa0sFWRNtivX5Db04OBA=;
-        b=CuLLqNe1uSsajVdRexiwmE7JPdHmGhHc7xdWp5kzI7izdF2YOL8G8pxXMnAhP8B3/p
-         UMXP+j9PVHeMJUNx/Fnb6rVH4ANO2sSoHk7Tw7Iv5CW4ad9E85bOJjgH9aPkNFhxjqoS
-         XdnL8G1idlBr8JXg9jRb8m8mu4qn/3U/MDiWTwwfCiAHIsxaH0ozpBryLVfDwOyWHsQ7
-         o0AjWbee4mJwZc/3kXLg9uVO6QqjwoUl6UAd7+ihYYL0AxYoYes0Pj74IldrQKQVFreP
-         GH4RQKFnEPFasABHznfvscLNC9oQ3ZbHbh2W2GFgmveyeKCO+Zv2JMGufLlt+7nvXyao
-         9eJA==
-X-Gm-Message-State: AOAM533U2AWnyVCV/Nu9Mn+KLJJhKgNXS7fj6GpVdiYzyIq4posE2yjZ
-        unc9uaKNFYRRTFWIVgcgbsyUWRfMLg==
-X-Google-Smtp-Source: ABdhPJwvxrtKoMtBAPuC4VlZNTYeK4YEu4Wojy+ZJZ2qlzy3urGbyD2J2QlSRJJ01NqjCRiDc/OKyA==
-X-Received: by 2002:a0c:e789:: with SMTP id x9mr20072948qvn.135.1595836967417;
-        Mon, 27 Jul 2020 01:02:47 -0700 (PDT)
-Received: from localhost.localdomain ([209.94.141.207])
-        by smtp.gmail.com with ESMTPSA id 130sm16105123qkf.61.2020.07.27.01.02.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 01:02:46 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzkaller-bugs@googlegroups.com,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vandana BN <bnvandana@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH v4] media/v4l2-core: Fix kernel-infoleak in video_put_user()
-Date:   Mon, 27 Jul 2020 04:00:02 -0400
-Message-Id: <20200727080002.208829-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200726222703.102701-1-yepeilin.cs@gmail.com>
-References: <20200726222703.102701-1-yepeilin.cs@gmail.com>
+        Mon, 27 Jul 2020 03:58:04 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R7WqhT005813;
+        Mon, 27 Jul 2020 03:56:39 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32hsqej5qh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 03:56:39 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R7XGkv007225;
+        Mon, 27 Jul 2020 03:56:39 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32hsqej5q2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 03:56:39 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R7uSE7020648;
+        Mon, 27 Jul 2020 07:56:37 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 32gcqghxw1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 07:56:37 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R7uZ8H49479858
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 07:56:35 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 36A60AE04D;
+        Mon, 27 Jul 2020 07:56:35 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7C0DAE045;
+        Mon, 27 Jul 2020 07:56:32 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.199.36.96])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jul 2020 07:56:32 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: [PATCH 5/7] powerpc/smp: Limit cpus traversed to within a node.
+Date:   Mon, 27 Jul 2020 13:25:30 +0530
+Message-Id: <20200727075532.30058-6-srikar@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200727075532.30058-1-srikar@linux.vnet.ibm.com>
+References: <20200727075532.30058-1-srikar@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_04:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 mlxlogscore=999 adultscore=0 clxscore=1015 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007270053
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-video_put_user() is copying uninitialized stack memory to userspace due
-to the compiler not initializing holes in the structures declared on the
-stack. Fix it by initializing `ev32` and `vb32` using memset().
+All the arch specific topology cpumasks are within a node/die.
+However when setting these per cpu cpumasks, system traverses through
+all the online cpus. This is redundant.
 
-Cc: stable@vger.kernel.org
-Fixes: 1a6c0b36dd19 ("media: v4l2-core: fix VIDIOC_DQEVENT for time64 ABI")
-Fixes: 577c89b0ce72 ("media: v4l2-core: fix v4l2_buffer handling for time64 ABI")
-Reported-and-tested-by: syzbot+79d751604cb6f29fbf59@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=79d751604cb6f29fbf59
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Reduce the traversal to only cpus that are online in the node to which
+the cpu belongs to.
+
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Anton Blanchard <anton@ozlabs.org>
+Cc: Oliver O'Halloran <oohall@gmail.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Michael Neuling <mikey@neuling.org>
+Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 ---
-Change in v4:
-    - Add `Cc:` and `Fixes:` tags. (Suggested by Arnd Bergmann <arnd@arndb.de>)
+ arch/powerpc/kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Change in v3:
-    - Improve the commit description. (Suggested by Laurent Pinchart
-      <laurent.pinchart@ideasonboard.com>)
-
-Change in v2:
-    - Do the same thing for `case VIDIOC_DQEVENT_TIME32`.
-
- drivers/media/v4l2-core/v4l2-ioctl.c | 50 +++++++++++++++-------------
- 1 file changed, 27 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index a556880f225a..e3a25ea913ac 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -3189,14 +3189,16 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
- #ifdef CONFIG_COMPAT_32BIT_TIME
- 	case VIDIOC_DQEVENT_TIME32: {
- 		struct v4l2_event *ev = parg;
--		struct v4l2_event_time32 ev32 = {
--			.type		= ev->type,
--			.pending	= ev->pending,
--			.sequence	= ev->sequence,
--			.timestamp.tv_sec  = ev->timestamp.tv_sec,
--			.timestamp.tv_nsec = ev->timestamp.tv_nsec,
--			.id		= ev->id,
--		};
-+		struct v4l2_event_time32 ev32;
-+
-+		memset(&ev32, 0, sizeof(ev32));
-+
-+		ev32.type	= ev->type;
-+		ev32.pending	= ev->pending;
-+		ev32.sequence	= ev->sequence;
-+		ev32.timestamp.tv_sec	= ev->timestamp.tv_sec;
-+		ev32.timestamp.tv_nsec	= ev->timestamp.tv_nsec;
-+		ev32.id		= ev->id;
+diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
+index cde157483abf..9b03aad0beac 100644
+--- a/arch/powerpc/kernel/smp.c
++++ b/arch/powerpc/kernel/smp.c
+@@ -1232,7 +1232,7 @@ static bool update_mask_by_l2(int cpu, struct cpumask *(*mask_fn)(int))
+ 		return false;
  
- 		memcpy(&ev32.u, &ev->u, sizeof(ev->u));
- 		memcpy(&ev32.reserved, &ev->reserved, sizeof(ev->reserved));
-@@ -3210,21 +3212,23 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
- 	case VIDIOC_DQBUF_TIME32:
- 	case VIDIOC_PREPARE_BUF_TIME32: {
- 		struct v4l2_buffer *vb = parg;
--		struct v4l2_buffer_time32 vb32 = {
--			.index		= vb->index,
--			.type		= vb->type,
--			.bytesused	= vb->bytesused,
--			.flags		= vb->flags,
--			.field		= vb->field,
--			.timestamp.tv_sec	= vb->timestamp.tv_sec,
--			.timestamp.tv_usec	= vb->timestamp.tv_usec,
--			.timecode	= vb->timecode,
--			.sequence	= vb->sequence,
--			.memory		= vb->memory,
--			.m.userptr	= vb->m.userptr,
--			.length		= vb->length,
--			.request_fd	= vb->request_fd,
--		};
-+		struct v4l2_buffer_time32 vb32;
-+
-+		memset(&vb32, 0, sizeof(vb32));
-+
-+		vb32.index	= vb->index;
-+		vb32.type	= vb->type;
-+		vb32.bytesused	= vb->bytesused;
-+		vb32.flags	= vb->flags;
-+		vb32.field	= vb->field;
-+		vb32.timestamp.tv_sec	= vb->timestamp.tv_sec;
-+		vb32.timestamp.tv_usec	= vb->timestamp.tv_usec;
-+		vb32.timecode	= vb->timecode;
-+		vb32.sequence	= vb->sequence;
-+		vb32.memory	= vb->memory;
-+		vb32.m.userptr	= vb->m.userptr;
-+		vb32.length	= vb->length;
-+		vb32.request_fd	= vb->request_fd;
- 
- 		if (copy_to_user(arg, &vb32, sizeof(vb32)))
- 			return -EFAULT;
+ 	cpumask_set_cpu(cpu, mask_fn(cpu));
+-	for_each_cpu(i, cpu_online_mask) {
++	for_each_cpu_and(i, cpu_online_mask, cpu_cpu_mask(cpu)) {
+ 		/*
+ 		 * when updating the marks the current CPU has not been marked
+ 		 * online, but we need to update the cache masks
 -- 
-2.25.1
+2.17.1
 
