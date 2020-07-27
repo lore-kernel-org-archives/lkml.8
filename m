@@ -2,90 +2,94 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACC1C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C367C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3DBE20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:43:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="epo5gD64"
+	by mail.kernel.org (Postfix) with ESMTP id 4E70F2072E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595853881;
+	bh=tAwVUpxvJNzfqblTALKuRFp9/teEYCCPXiqtpWnP87s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EcJEnKtMLT1phUncK1xdwQGmbQaSo6hRE0rXMUSvbN+WqUCuZEp8t4Hv7RcYIMAoY
+	 2w2quhWXTrBQPyoyL6nU+0AZ2MUAfG9K4qBdxma7EQGG782W9Ml4GqGeC4rm2mcl8S
+	 mAHodW32VagqfpBOqhCDnAIJsGfojyZJVW8Y2zCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgG0Mnr (ORCPT
+        id S1728472AbgG0Mok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:43:47 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44103 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbgG0Mnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:43:46 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFfcc29jVz9sPB;
-        Mon, 27 Jul 2020 22:43:44 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1595853824;
-        bh=Bq0/bjaNwroxMJoPXYiAeqay9NJtRS61vlcInRNB8es=;
-        h=Date:From:To:Cc:Subject:From;
-        b=epo5gD64C643FZK05YBmqmdqECu0cpCLpBmYuXTrNPEDzgdUr/fJKIAr3PvxFhUSY
-         3R11gojVu4WpOXTwkr2ylPk072QprN4SjpSGSlm/qAr04OAEzvZaVoN4xKBR9BcJmM
-         WXOssjLG/KLfchTZyvHww2x1wkHW6tyIzOb+4/Je8vOguTxm5GzGIUyQ3nM/fqDL6E
-         xed5/bCMtlM/+vHgbvBX3HAXtNdtk/KC1eP0uRVigP4b2KRrfxr15a01K9ScUZ6i13
-         pDG/KwX0XpHjENgXgV8EC8YYDumvwIl4K0PmtdK/bNTU6XJk9A7NvUguDroba76xMC
-         E/Q9ZRMSxTW9A==
-Date:   Mon, 27 Jul 2020 22:43:43 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: problem in the fsinfo tree
-Message-ID: <20200727224343.5f86c3c8@canb.auug.org.au>
+        Mon, 27 Jul 2020 08:44:40 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34651 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728173AbgG0Mok (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:44:40 -0400
+Received: by mail-oi1-f194.google.com with SMTP id q4so2458977oia.1;
+        Mon, 27 Jul 2020 05:44:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XF+2/WB5y2btEPphDZr/2V6HkcYCLBD66OV9ty+StNI=;
+        b=l+KECtoyY/DsNU58m1UtY/DmviqCAK9bNOqeETNcQ7f2KknlpuKoM0LSdm2OZWu+R4
+         WLY8Z4aNQbQEtxOI1JbFqB0Vk+5MchD3YCLRf0875MToau/GFT/0BfK6o6sObPsUSgh+
+         gqboQaZe4u46xyC/bOr0OVkf64yJzycmFPyCRdGtzl+qsUo8bJEOmC0fxVMuler9vIjF
+         nDZRv1tfmfZMojUn9HkdpiEcqUUwi1/vPTQfni2qks62cIRiGTVsKzIVzuF+9wLKkGzz
+         wTwpSz2bWFPD5hJ7FGj+WZoCHmifd53LTdImXuEbtgDvMdQloEZAl1PMckmDgoxagJOG
+         KJPw==
+X-Gm-Message-State: AOAM53210Z2gBkhSQ/s2sajmZHQJGkuJeH1Hcqe84fUquxMmaO7Am72K
+        mQsV+12SrBJ4aiX/TgJOKQp178pVbsGjsLKcmHrryg==
+X-Google-Smtp-Source: ABdhPJxbaCuZSlohbgTWhZLnfvKQNqvzBTick1y8KPp41KCYIjJEqwZwPKikdgbbscc6dbSyIgnknikZ9GS1teQKyeI=
+X-Received: by 2002:aca:3646:: with SMTP id d67mr6582450oia.68.1595853879110;
+ Mon, 27 Jul 2020 05:44:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/5lY93W3f7zp8S26LvyCsTp=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200719002652.20155-1-rdunlap@infradead.org>
+In-Reply-To: <20200719002652.20155-1-rdunlap@infradead.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 27 Jul 2020 14:44:28 +0200
+Message-ID: <CAJZ5v0hw2uZanO6vduyLufh926XSHVwkKRDEs0e8XWgowwqJ4g@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: actypes.h: drop a duplicated word
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Erik Kaneda <erik.kaneda@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Robert Moore <robert.moore@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/5lY93W3f7zp8S26LvyCsTp=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jul 19, 2020 at 2:27 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> Drop the repeated word "an" in a comment.
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: linux-acpi@vger.kernel.org
+> ---
+>  include/acpi/actypes.h |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> --- linux-next-20200717.orig/include/acpi/actypes.h
+> +++ linux-next-20200717/include/acpi/actypes.h
+> @@ -824,7 +824,7 @@ typedef u8 acpi_adr_space_type;
+>   *
+>   * Note: A Data Table region is a special type of operation region
+>   * that has its own AML opcode. However, internally, the AML
+> - * interpreter simply creates an operation region with an an address
+> + * interpreter simply creates an operation region with an address
+>   * space type of ACPI_ADR_SPACE_DATA_TABLE.
+>   */
+>  #define ACPI_ADR_SPACE_DATA_TABLE       (acpi_adr_space_type) 0x7E     /* Internal to ACPICA only */
 
-Hi all,
+This is an ACPICA header file, so it's better to route the change
+through the upstream.
 
-In rebasing commit
-
-  348b039216fb ("fsinfo: Add fsinfo() syscall to query filesystem informati=
-on")
-
-you forgot to update
-
-arch/arm64/include/asm/unistd.h
-include/uapi/asm-generic/unistd.h=20
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/5lY93W3f7zp8S26LvyCsTp=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ey/8ACgkQAVBC80lX
-0Gxfagf+MlwSI+umfygrGiFU74cKs1F80agLui7StDQ7wrvTTjXhxutWFN+fn4v2
-+Dp7kDyPBfJ748hfEjZ7xGmZi+KwqHF6uVpQNzrL8saL/KaTWWslQ0Mk8V0sxCdC
-cIEZfcrH5WP3a1KjN4xgz2YM0s2EmPhojbxhbGGa7e2MuNeHR390hMiRE7BYsTPD
-jh2oHMxProvD8tesTDBNPNSpM5Ui3TMtBu/lWCaJXf2DK+HSEHMS7Fns0h9WBMiI
-aMM+VIpDxCpZaUvqYLYB3NlExoqhiVCreOYLfjFtDqR2L0Bo/S50l8WohDipSo3M
-Snve8r0PwNdpZo36d8cLSdE+ZUE/NA==
-=333+
------END PGP SIGNATURE-----
-
---Sig_/5lY93W3f7zp8S26LvyCsTp=--
+Erik, can you pick up this one, please?
