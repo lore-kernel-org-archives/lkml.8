@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FA3C433EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3B6C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6D27207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33DBD21883
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860511;
-	bh=UCOxlc3N3+YpQEkmFbMqkpiiW5ae3DTQ3TBmeMyYHrc=;
+	s=default; t=1595860517;
+	bh=9fi20TPI1MFfdKm2wcuihBn1I4F7kSBAr/fE6EhADck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zcnbsG/S9S6ygMt5gCYHCbrSAqp1A2ppGL29VGfSbIpIe1uoQQ6iHZeRS/gNW1N6N
-	 Y8qWAW0PBrbYMVUt9/v8x92Tn/c8k2+Vx8SHBjeAVByay8yyQpIkkpUO0tF3e4Y++h
-	 pXoHsNjHnRry+YjGWefo7KTx7HqWAo2H4V0IL8oM=
+	b=YHSJXpwJmiRoFi164e18VC89GnipnqxPglWp4OIdPv0H4PmxmMIn+WxagniBJ6mJI
+	 HSTOiQoXHKi53kMxnZc9KnwBL26OBLwehTB5571yT1tsMOIa5A4+PE9EZMTeFeqGm2
+	 JoyBuorSZjgoFzW41FB6KeqVEdlCKgcpjiUJRrBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732905AbgG0OfK (ORCPT
+        id S1730700AbgG0OfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:35:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41920 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:35:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730714AbgG0OPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:15:32 -0400
+        id S1730690AbgG0OPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:15:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 005462075A;
-        Mon, 27 Jul 2020 14:15:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C639D2078E;
+        Mon, 27 Jul 2020 14:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859330;
-        bh=UCOxlc3N3+YpQEkmFbMqkpiiW5ae3DTQ3TBmeMyYHrc=;
+        s=default; t=1595859320;
+        bh=9fi20TPI1MFfdKm2wcuihBn1I4F7kSBAr/fE6EhADck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wa2VlZ7TM40mPx9K12rno3KKZzs/j7iqTpprPFpAT0mrGexWt85fXBVd88h9OCJ5K
-         L82flWMXFBGcU1M6dLu95400r4b6vF4eTUhN9lulWgBzIePakvx6VGvuQEVG+McZr2
-         Svj1MIAF/675V/BMXDDJB/1LY0X/+Hpei2+nEO0E=
+        b=byHQNdf6U/Cm8zEYBp0gT8eoyYv7ufm5K1T3rBg/twoB6xaPTULWkIiOvcOSNpc7x
+         CqMbPlr8qS87kG7waO02CL2zaxEjE1NK+k4eVxYV3axIE4lov0cRV1NWpWMDTCI+7T
+         ASzWyYoOCzam1U2V9pwDDTdepFdStEk8hN23ZgGo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Mukesh Kumar Savaliya <msavaliy@codeaurora.org>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 065/138] i2c: i2c-qcom-geni: Fix DMA transfer race
-Date:   Mon, 27 Jul 2020 16:04:20 +0200
-Message-Id: <20200727134928.655687260@linuxfoundation.org>
+        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 062/138] nfsd4: fix NULL dereference in nfsd/clients display code
+Date:   Mon, 27 Jul 2020 16:04:17 +0200
+Message-Id: <20200727134928.512290568@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -63,91 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: J. Bruce Fields <bfields@redhat.com>
 
-[ Upstream commit 02b9aec59243c6240fc42884acc958602146ddf6 ]
+[ Upstream commit 9affa435817711861d774f5626c393c80f16d044 ]
 
-When I have KASAN enabled on my kernel and I start stressing the
-touchscreen my system tends to hang.  The touchscreen is one of the
-only things that does a lot of big i2c transfers and ends up hitting
-the DMA paths in the geni i2c driver.  It appears that KASAN adds
-enough delay in my system to tickle a race condition in the DMA setup
-code.
+We hold the cl_lock here, and that's enough to keep stateid's from going
+away, but it's not enough to prevent the files they point to from going
+away.  Take fi_lock and a reference and check for NULL, as we do in
+other code.
 
-When the system hangs, I found that it was running the geni_i2c_irq()
-over and over again.  It had these:
-
-m_stat   = 0x04000080
-rx_st    = 0x30000011
-dm_tx_st = 0x00000000
-dm_rx_st = 0x00000000
-dma      = 0x00000001
-
-Notably we're in DMA mode but are getting M_RX_IRQ_EN and
-M_RX_FIFO_WATERMARK_EN over and over again.
-
-Putting some traces in geni_i2c_rx_one_msg() showed that when we
-failed we were getting to the start of geni_i2c_rx_one_msg() but were
-never executing geni_se_rx_dma_prep().
-
-I believe that the problem here is that we are starting the geni
-command before we run geni_se_rx_dma_prep().  If a transfer makes it
-far enough before we do that then we get into the state I have
-observed.  Let's change the order, which seems to work fine.
-
-Although problems were seen on the RX path, code inspection suggests
-that the TX should be changed too.  Change it as well.
-
-Fixes: 37692de5d523 ("i2c: i2c-qcom-geni: Add bus driver for the Qualcomm GENI I2C controller")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Akash Asthana <akashast@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Mukesh Kumar Savaliya <msavaliy@codeaurora.org>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Reported-by: NeilBrown <neilb@suse.de>
+Fixes: 78599c42ae3c ("nfsd4: add file to display list of client's opens")
+Reviewed-by: NeilBrown <neilb@suse.de>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-qcom-geni.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4state.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-index 17abf60c94aeb..aafc76ee93e02 100644
---- a/drivers/i2c/busses/i2c-qcom-geni.c
-+++ b/drivers/i2c/busses/i2c-qcom-geni.c
-@@ -368,7 +368,6 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 		geni_se_select_mode(se, GENI_SE_FIFO);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 9af9b673f2923..68cf116607645 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -506,6 +506,17 @@ find_any_file(struct nfs4_file *f)
+ 	return ret;
+ }
  
- 	writel_relaxed(len, se->base + SE_I2C_RX_TRANS_LEN);
--	geni_se_setup_m_cmd(se, I2C_READ, m_param);
- 
- 	if (dma_buf && geni_se_rx_dma_prep(se, dma_buf, len, &rx_dma)) {
- 		geni_se_select_mode(se, GENI_SE_FIFO);
-@@ -376,6 +375,8 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 		dma_buf = NULL;
- 	}
- 
-+	geni_se_setup_m_cmd(se, I2C_READ, m_param);
++static struct nfsd_file *find_deleg_file(struct nfs4_file *f)
++{
++	struct nfsd_file *ret = NULL;
 +
- 	time_left = wait_for_completion_timeout(&gi2c->done, XFER_TIMEOUT);
- 	if (!time_left)
- 		geni_i2c_abort_xfer(gi2c);
-@@ -409,7 +410,6 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 		geni_se_select_mode(se, GENI_SE_FIFO);
- 
- 	writel_relaxed(len, se->base + SE_I2C_TX_TRANS_LEN);
--	geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
- 
- 	if (dma_buf && geni_se_tx_dma_prep(se, dma_buf, len, &tx_dma)) {
- 		geni_se_select_mode(se, GENI_SE_FIFO);
-@@ -417,6 +417,8 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 		dma_buf = NULL;
- 	}
- 
-+	geni_se_setup_m_cmd(se, I2C_WRITE, m_param);
++	spin_lock(&f->fi_lock);
++	if (f->fi_deleg_file)
++		ret = nfsd_file_get(f->fi_deleg_file);
++	spin_unlock(&f->fi_lock);
++	return ret;
++}
 +
- 	if (!dma_buf) /* Get FIFO IRQ */
- 		writel_relaxed(1, se->base + SE_GENI_TX_WATERMARK_REG);
+ static atomic_long_t num_delegations;
+ unsigned long max_delegations;
  
+@@ -2378,6 +2389,8 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
+ 	oo = ols->st_stateowner;
+ 	nf = st->sc_file;
+ 	file = find_any_file(nf);
++	if (!file)
++		return 0;
+ 
+ 	seq_printf(s, "- 0x%16phN: { type: open, ", &st->sc_stateid);
+ 
+@@ -2411,6 +2424,8 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
+ 	oo = ols->st_stateowner;
+ 	nf = st->sc_file;
+ 	file = find_any_file(nf);
++	if (!file)
++		return 0;
+ 
+ 	seq_printf(s, "- 0x%16phN: { type: lock, ", &st->sc_stateid);
+ 
+@@ -2439,7 +2454,9 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
+ 
+ 	ds = delegstateid(st);
+ 	nf = st->sc_file;
+-	file = nf->fi_deleg_file;
++	file = find_deleg_file(nf);
++	if (!file)
++		return 0;
+ 
+ 	seq_printf(s, "- 0x%16phN: { type: deleg, ", &st->sc_stateid);
+ 
+@@ -2451,6 +2468,7 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
+ 
+ 	nfs4_show_superblock(s, file);
+ 	seq_printf(s, " }\n");
++	nfsd_file_put(file);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
