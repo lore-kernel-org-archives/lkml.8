@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB4AC4345A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E17C6207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE6D20775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860232;
-	bh=qrLmXgZbIEcHIp+0WI3P3rg3unMUaFsDnDu4Pd2+yeQ=;
+	s=default; t=1595860242;
+	bh=0egnQEd/O+j//ciAsYesnArgxjTTurAsUK3+NIBF79A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u6ZyU6eCVx0fOpgMYbgbEB8lWMT5L9Q5RhF25hTxi/OeCBorPcMRqhWfei8GpST5b
-	 X9IYDZyWx0lIdMfXKPwvvkOg0UBNit3bJVtUtA7M/Z6Y7eyGrecDghpAeZ9pjyYRqS
-	 gslMzUJAsPLZ0z8ZzXVW72N8GmAKwOyiwE5w43mE=
+	b=HzL/my7oV6tzoagnWREcNGQ9CTnxbIH5DsRZsh1wVQZ4b7kksZlR5UCckNFn69CW0
+	 TR4SlgFv2Ukt3PabN+tPhhOKB6Ie6K8wh5vgHcLTn+iVUbZdxXTQPra4XwFq2VRdUO
+	 o5UUS53gKWoWp9ZzjSQoc9NMAjegvZWQa1nDRBk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732536AbgG0Oaa (ORCPT
+        id S1732588AbgG0Oak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:30:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50590 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:30:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731797AbgG0OVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:21:51 -0400
+        id S1731772AbgG0OVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:21:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A0452070A;
-        Mon, 27 Jul 2020 14:21:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D0B22070A;
+        Mon, 27 Jul 2020 14:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859711;
-        bh=qrLmXgZbIEcHIp+0WI3P3rg3unMUaFsDnDu4Pd2+yeQ=;
+        s=default; t=1595859700;
+        bh=0egnQEd/O+j//ciAsYesnArgxjTTurAsUK3+NIBF79A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SuEfUiTdxsNjr3Rr8FIDp2kSau+Bq7BWD4Uwo4rnhqDSCKoRW8vm25/6wC+XXOehz
-         YRRnSTMWINP8u8nR8c8rJvm0WEaYQKHh+l52Mgduc1amgg/ayjKaJUr5CgoKyxw5eL
-         dsrzf5FMGyBpe5Lc10cOPfNnsBFyqNkkhUT3JBNc=
+        b=zoTSmTp5Ad/sNGuKclUJvy4xv+gDRj1jI6P5qmIX08xtD5xnBzQlYwSnd1k+btp7E
+         eQl1QlOdLx79BzMjHC6+8JhjlmYrKGmeQe5mvm3Z44gkQEN7uOt/uScdnzz7iE115i
+         rVdP4IkU04rTKvwnN/6Ji2qnn8ixIHFi9j8HD2v8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        stable@vger.kernel.org, Shannon Nelson <snelson@pensando.io>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 075/179] crypto/chtls: fix tls alert messages corrupted by tls data
-Date:   Mon, 27 Jul 2020 16:04:10 +0200
-Message-Id: <20200727134936.334859651@linuxfoundation.org>
+Subject: [PATCH 5.7 071/179] ionic: fix up filter locks and debug msgs
+Date:   Mon, 27 Jul 2020 16:04:06 +0200
+Message-Id: <20200727134936.142291407@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -61,49 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
+From: Shannon Nelson <snelson@pensando.io>
 
-[ Upstream commit c271042eb6a031d1333cf57422ec1d20726901ab ]
+[ Upstream commit cbec2153a9a68d011454960ba84887e46e40b37d ]
 
-When tls data skb is pending for Tx and tls alert comes , It
-is wrongly overwrite the record type of tls data to tls alert
-record type. fix the issue correcting it.
+Add in a couple of forgotten spinlocks and fix up some of
+the debug messages around filter management.
 
-v1->v2:
-- Correct submission tree.
-- Add fixes tag.
-
-Fixes: 6919a8264a32 ("Crypto/chtls: add/delete TLS header in driver")
-Signed-off-by: Vinay Kumar Yadav <vinay.yadav@chelsio.com>
+Fixes: c1e329ebec8d ("ionic: Add management of rx filters")
+Signed-off-by: Shannon Nelson <snelson@pensando.io>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/chelsio/chtls/chtls_io.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/pensando/ionic/ionic_lif.c | 17 +++++++----------
+ .../ethernet/pensando/ionic/ionic_rx_filter.c   |  5 +++++
+ 2 files changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/crypto/chelsio/chtls/chtls_io.c b/drivers/crypto/chelsio/chtls/chtls_io.c
-index e1401d9cc756c..2e9acae1cba3b 100644
---- a/drivers/crypto/chelsio/chtls/chtls_io.c
-+++ b/drivers/crypto/chelsio/chtls/chtls_io.c
-@@ -1052,14 +1052,15 @@ int chtls_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
- 							  &record_type);
- 				if (err)
- 					goto out_err;
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+index 7fea60fc3e089..48aa502e4bd3d 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+@@ -849,8 +849,7 @@ static int ionic_lif_addr_add(struct ionic_lif *lif, const u8 *addr)
+ 	if (f)
+ 		return 0;
+ 
+-	netdev_dbg(lif->netdev, "rx_filter add ADDR %pM (id %d)\n", addr,
+-		   ctx.comp.rx_filter_add.filter_id);
++	netdev_dbg(lif->netdev, "rx_filter add ADDR %pM\n", addr);
+ 
+ 	memcpy(ctx.cmd.rx_filter_add.mac.addr, addr, ETH_ALEN);
+ 	err = ionic_adminq_post_wait(lif, &ctx);
+@@ -879,6 +878,9 @@ static int ionic_lif_addr_del(struct ionic_lif *lif, const u8 *addr)
+ 		return -ENOENT;
+ 	}
+ 
++	netdev_dbg(lif->netdev, "rx_filter del ADDR %pM (id %d)\n",
++		   addr, f->filter_id);
 +
-+				/* Avoid appending tls handshake, alert to tls data */
-+				if (skb)
-+					tx_skb_finalize(skb);
- 			}
+ 	ctx.cmd.rx_filter_del.filter_id = cpu_to_le32(f->filter_id);
+ 	ionic_rx_filter_free(lif, f);
+ 	spin_unlock_bh(&lif->rx_filters.lock);
+@@ -887,9 +889,6 @@ static int ionic_lif_addr_del(struct ionic_lif *lif, const u8 *addr)
+ 	if (err && err != -EEXIST)
+ 		return err;
  
- 			recordsz = size;
- 			csk->tlshws.txleft = recordsz;
- 			csk->tlshws.type = record_type;
+-	netdev_dbg(lif->netdev, "rx_filter del ADDR %pM (id %d)\n", addr,
+-		   ctx.cmd.rx_filter_del.filter_id);
 -
--			if (skb)
--				ULP_SKB_CB(skb)->ulp.tls.type = record_type;
- 		}
+ 	return 0;
+ }
  
- 		if (!skb || (ULP_SKB_CB(skb)->flags & ULPCB_FLAG_NO_APPEND) ||
+@@ -1341,13 +1340,11 @@ static int ionic_vlan_rx_add_vid(struct net_device *netdev, __be16 proto,
+ 	};
+ 	int err;
+ 
++	netdev_dbg(netdev, "rx_filter add VLAN %d\n", vid);
+ 	err = ionic_adminq_post_wait(lif, &ctx);
+ 	if (err)
+ 		return err;
+ 
+-	netdev_dbg(netdev, "rx_filter add VLAN %d (id %d)\n", vid,
+-		   ctx.comp.rx_filter_add.filter_id);
+-
+ 	return ionic_rx_filter_save(lif, 0, IONIC_RXQ_INDEX_ANY, 0, &ctx);
+ }
+ 
+@@ -1372,8 +1369,8 @@ static int ionic_vlan_rx_kill_vid(struct net_device *netdev, __be16 proto,
+ 		return -ENOENT;
+ 	}
+ 
+-	netdev_dbg(netdev, "rx_filter del VLAN %d (id %d)\n", vid,
+-		   le32_to_cpu(ctx.cmd.rx_filter_del.filter_id));
++	netdev_dbg(netdev, "rx_filter del VLAN %d (id %d)\n",
++		   vid, f->filter_id);
+ 
+ 	ctx.cmd.rx_filter_del.filter_id = cpu_to_le32(f->filter_id);
+ 	ionic_rx_filter_free(lif, f);
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_rx_filter.c b/drivers/net/ethernet/pensando/ionic/ionic_rx_filter.c
+index 80eeb7696e014..fb9d828812bd2 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_rx_filter.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_rx_filter.c
+@@ -69,10 +69,12 @@ int ionic_rx_filters_init(struct ionic_lif *lif)
+ 
+ 	spin_lock_init(&lif->rx_filters.lock);
+ 
++	spin_lock_bh(&lif->rx_filters.lock);
+ 	for (i = 0; i < IONIC_RX_FILTER_HLISTS; i++) {
+ 		INIT_HLIST_HEAD(&lif->rx_filters.by_hash[i]);
+ 		INIT_HLIST_HEAD(&lif->rx_filters.by_id[i]);
+ 	}
++	spin_unlock_bh(&lif->rx_filters.lock);
+ 
+ 	return 0;
+ }
+@@ -84,11 +86,13 @@ void ionic_rx_filters_deinit(struct ionic_lif *lif)
+ 	struct hlist_node *tmp;
+ 	unsigned int i;
+ 
++	spin_lock_bh(&lif->rx_filters.lock);
+ 	for (i = 0; i < IONIC_RX_FILTER_HLISTS; i++) {
+ 		head = &lif->rx_filters.by_id[i];
+ 		hlist_for_each_entry_safe(f, tmp, head, by_id)
+ 			ionic_rx_filter_free(lif, f);
+ 	}
++	spin_unlock_bh(&lif->rx_filters.lock);
+ }
+ 
+ int ionic_rx_filter_save(struct ionic_lif *lif, u32 flow_id, u16 rxq_index,
+@@ -124,6 +128,7 @@ int ionic_rx_filter_save(struct ionic_lif *lif, u32 flow_id, u16 rxq_index,
+ 	f->filter_id = le32_to_cpu(ctx->comp.rx_filter_add.filter_id);
+ 	f->rxq_index = rxq_index;
+ 	memcpy(&f->cmd, ac, sizeof(f->cmd));
++	netdev_dbg(lif->netdev, "rx_filter add filter_id %d\n", f->filter_id);
+ 
+ 	INIT_HLIST_NODE(&f->by_hash);
+ 	INIT_HLIST_NODE(&f->by_id);
 -- 
 2.25.1
 
