@@ -2,153 +2,108 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36CEC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FB9C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9105620759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4D6520759
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:23:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDK8obBO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1xJZnJm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgG0HUf (ORCPT
+        id S1726387AbgG0HXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:20:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56072 "EHLO
+        Mon, 27 Jul 2020 03:23:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726433AbgG0HUf (ORCPT
+        with ESMTP id S1726116AbgG0HXf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:20:35 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40ED2C0619D2;
-        Mon, 27 Jul 2020 00:20:35 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z188so728051pfc.6;
-        Mon, 27 Jul 2020 00:20:35 -0700 (PDT)
+        Mon, 27 Jul 2020 03:23:35 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F4FBC0619D2;
+        Mon, 27 Jul 2020 00:23:34 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d1so7534752plr.8;
+        Mon, 27 Jul 2020 00:23:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=YJXjh4GmMEW7XN5/tplqsYhfZdl3H6taMH5axLntfAw=;
-        b=EDK8obBOfKHNTjFkgxYJ9+5FEXC9QIaLLHJwM0UjYRXgbOW/WYsNnkfJKS0zWMKRBl
-         5G+RoaiMjvm8LFeedDpWGTIR/HiNGJAhklG0TJk6dIgJOkeY9HZqlYV4DmrwKNByys3P
-         Elrq6P9TpGDjVCIsjqjmlSQSNhqePcgaXZ2gp2jdGvOjgzFlD1EPa0Ew4mslTyOCTsbc
-         RxP6CfefjoGYcqCDH7LsOEVFU1yVVSZIft1lpudYstiGuLQmnhN6Q+bMVFtx7HH+PYgn
-         CJO0YLupfA5nXjCK/E5cpOjpZeLw9avWbMDPZSOU24yLLKwOvFteoZ0YEZYH5WRFPh6l
-         NuQQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HtLi8w57gnnmKubQpAlKgfo+luXCSY1x3qq8plEtTes=;
+        b=J1xJZnJm2yihRu1lA/bmmScLbqa/2ZgzmMZlarNvKpsHmq6BxTUMhPwrwzn/lWoGEW
+         pUUSIdv0Rjpn5oVK9RgIcA9SrGFKbsG2Lw0nPW284Mr5tOub8xhjGHc0J+qrvJj4bj79
+         76FTxixvq67AltH2bbSVWk2jKNopAKQ7RLK/SVRmy5LekFy1eBh5d2/nTxtIRuAlZ/+7
+         peO452HbvzeYv6MLXQympD/1AXwd3iqbpDvH0ymGcX6Omfngqp1nxm7vuFmu+1P4EPES
+         MFOK/LKTLOwSJxm4Zi/+CCYZQ9k805cxW1SamTIfWlbk2O6tryhbk/siKs+8PVHjbVCz
+         EJBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=YJXjh4GmMEW7XN5/tplqsYhfZdl3H6taMH5axLntfAw=;
-        b=bQ89a4W1VSSAR98Qlk6uc/1W4U3bX6i75C3XSoPKDsCZGUxEpJRiiS8uNfQVaCCYix
-         +o64u82aVN4W6wi5t4MQ7zKw+6rSRz45FCKRpvU4nu7mNZ6Ost/A1FaHh4tJqNN68Xcm
-         8o5fY/C4r3Unhsy0yQLa0Xkk0OEoBz7Da3/oIC/q6AJqmA9zzka61UWlT/T3eCK8mbMb
-         F9Nd1NSvh1EAoFfJnL9+m59CyK3SUdHHN47+qmS7NBh0WBBcPq8AqGojeGtLJQYpaAkd
-         W6o+UHwvfEIi18UPS4zijvIMDba8neidA8+toGG0v7Bg5BfCHAQ6mFiLgo64d7KdrMri
-         CCPw==
-X-Gm-Message-State: AOAM53374Du1DvFLjQ4RaWZ40xWhUtYegE/RmnRVLPPqbhpX8H0CHiJF
-        fCnn5vxnpzSPtOn4l8Nm32I=
-X-Google-Smtp-Source: ABdhPJzo4zlFjXMsAfOgM4X3zAg74cxBAhosgrhd7WC+wNNgCrrv4S9sv/p1zxTGJSCjmjnxOwQ/tg==
-X-Received: by 2002:aa7:8e0c:: with SMTP id c12mr18974880pfr.38.1595834434715;
-        Mon, 27 Jul 2020 00:20:34 -0700 (PDT)
-Received: from gmail.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id lb13sm7971701pjb.9.2020.07.27.00.20.30
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HtLi8w57gnnmKubQpAlKgfo+luXCSY1x3qq8plEtTes=;
+        b=OcBu1xO91B8GM0t/KP3l6WRYLag+igsfg1xE/2bqj5Jlxpc/KTnaVtyjb9VRtKB/GB
+         yu9Ajfa18Rx/Ww0QKlft5Lr8tnWTLViSNWZT9aeMZA8atZXoYq6fmyXnbIJt5GkQ+8qn
+         NYA/7BAKC+xLUEsQl0rULA2L2Wumy049WjGIRtB71vrwDkHY1Ugzmli4HfIArbvamc+q
+         xrO266C0RyBtaiw/TwjFv5iRHtZwb4TNx9qKkGz/Yuj+7CWqygsUsDmn2kTApXD6+T7a
+         pRAJO/1UitGjDfE9LPtJy11pw3Hhc3srsXIMrbcUsqvD51QRZN/FMPoFdlHpebHXgmCR
+         5UEg==
+X-Gm-Message-State: AOAM533/rHtxwLzghtYg4wdNqmChoh0VXbmf7QWzVyA7zSBTRhosy2Mq
+        Sr6TlsZsh87PgQ7XJSmnc1U=
+X-Google-Smtp-Source: ABdhPJzfVEhUcVaZLk/pm7cyXJlrTQYqJd65h6yHKTNEwXlpe+fRk3ZpHXbX+9mcNDdx7cK88Ye02g==
+X-Received: by 2002:a17:90a:628b:: with SMTP id d11mr9192420pjj.167.1595834613946;
+        Mon, 27 Jul 2020 00:23:33 -0700 (PDT)
+Received: from 119-18-5-146.771205.syd.nbn.aussiebb.net (119-18-5-146.771205.syd.nbn.aussiebb.net. [119.18.5.146])
+        by smtp.gmail.com with ESMTPSA id my16sm10695118pjb.43.2020.07.27.00.23.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 00:20:34 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 12:49:10 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        kbuild-all@lists.01.org, clang-built-linux@googlegroups.com,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v1] ata: use generic power management
-Message-ID: <20200727071910.GA6368@gmail.com>
-References: <20200724110630.1219882-1-vaibhavgupta40@gmail.com>
- <202007250808.yhgHBmpJ%lkp@intel.com>
+        Mon, 27 Jul 2020 00:23:33 -0700 (PDT)
+From:   Jonathan Liu <net147@gmail.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     Olliver Schinagl <oliver@schinagl.nl>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Jonathan Liu <net147@gmail.com>
+Subject: [PATCH] spi: sun4i: update max transfer size reported
+Date:   Mon, 27 Jul 2020 17:23:28 +1000
+Message-Id: <20200727072328.510798-1-net147@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202007250808.yhgHBmpJ%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 09:00:12AM +0800, kernel test robot wrote:
-> Hi Vaibhav,
-> 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on block/for-next]
-> [also build test WARNING on v5.8-rc6 next-20200724]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Vaibhav-Gupta/ata-use-generic-power-management/20200724-190929
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git for-next
-> config: x86_64-allyesconfig (attached as .config)
-> compiler: clang version 12.0.0 (https://github.com/llvm/llvm-project 1d09ecf36175f7910ffedd6d497c07b5c74c22fb)
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # install x86_64 cross compiling tool for clang build
->         # apt-get install binutils-x86-64-linux-gnu
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=x86_64 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
-> >> drivers/ata/pata_triflex.c:186:36: warning: ISO C90 forbids mixing declarations and code [-Wdeclaration-after-statement]
->            static const struct ata_port_info info = {
->                                              ^
->    1 warning generated.
-> 
-> vim +186 drivers/ata/pata_triflex.c
-> 
-> 669a5db411d85a Jeff Garzik     2006-08-29  176  
-> 669a5db411d85a Jeff Garzik     2006-08-29  177  static int triflex_init_one(struct pci_dev *dev, const struct pci_device_id *id)
-> 669a5db411d85a Jeff Garzik     2006-08-29  178  {
-> 5acd74b592933f Vaibhav Gupta   2020-07-24  179  	/*
-> 5acd74b592933f Vaibhav Gupta   2020-07-24  180  	 * We must not disable or powerdown the device.
-> 5acd74b592933f Vaibhav Gupta   2020-07-24  181  	 * APM bios refuses to suspend if IDE is not accessible.
-> 5acd74b592933f Vaibhav Gupta   2020-07-24  182  	 */
-> 5acd74b592933f Vaibhav Gupta   2020-07-24  183  	dev->pm_cap = 0;
-> 5acd74b592933f Vaibhav Gupta   2020-07-24  184  	dev_info(&dev->dev, "Disable triflex to be turned off by PCI CORE\n");
-> 5acd74b592933f Vaibhav Gupta   2020-07-24  185  
-> 1626aeb881236c Tejun Heo       2007-05-04 @186  	static const struct ata_port_info info = {
-> 1d2808fd3d2d5d Jeff Garzik     2007-05-28  187  		.flags = ATA_FLAG_SLAVE_POSS,
-> 14bdef982caeda Erik Inge Bolsø 2009-03-14  188  		.pio_mask = ATA_PIO4,
-> 14bdef982caeda Erik Inge Bolsø 2009-03-14  189  		.mwdma_mask = ATA_MWDMA2,
-> 669a5db411d85a Jeff Garzik     2006-08-29  190  		.port_ops = &triflex_port_ops
-> 669a5db411d85a Jeff Garzik     2006-08-29  191  	};
-> 1626aeb881236c Tejun Heo       2007-05-04  192  	const struct ata_port_info *ppi[] = { &info, NULL };
-> 669a5db411d85a Jeff Garzik     2006-08-29  193  
-> 06296a1e684bcd Joe Perches     2011-04-15  194  	ata_print_version_once(&dev->dev, DRV_VERSION);
-> 669a5db411d85a Jeff Garzik     2006-08-29  195  
-> 1c5afdf7a629d2 Tejun Heo       2010-05-19  196  	return ata_pci_bmdma_init_one(dev, ppi, &triflex_sht, NULL, 0);
-> 669a5db411d85a Jeff Garzik     2006-08-29  197  }
-> 669a5db411d85a Jeff Garzik     2006-08-29  198  
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+The spi-sun4i driver already has the ability to do large transfers.
+However, the max transfer size reported is still fifo depth - 1.
 
-Fixed in v2. Will float v2 after few more checks.
+Update the max transfer size reported to the max value possible.
 
-Thanks
-Vaibhav Gupta
+Fixes: 196737912da5 ("spi: sun4i: Allow transfers larger than FIFO size")
+Signed-off-by: Jonathan Liu <net147@gmail.com>
+---
+ drivers/spi/spi-sun4i.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
+index cbfac6596fad..1fdfc6e6691d 100644
+--- a/drivers/spi/spi-sun4i.c
++++ b/drivers/spi/spi-sun4i.c
+@@ -198,7 +198,7 @@ static void sun4i_spi_set_cs(struct spi_device *spi, bool enable)
+ 
+ static size_t sun4i_spi_max_transfer_size(struct spi_device *spi)
+ {
+-	return SUN4I_FIFO_DEPTH - 1;
++	return SUN4I_MAX_XFER_SIZE - 1;
+ }
+ 
+ static int sun4i_spi_transfer_one(struct spi_master *master,
+-- 
+2.27.0
+
