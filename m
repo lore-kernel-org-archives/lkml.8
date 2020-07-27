@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96442C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9444EC35278
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF5C208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6690820786
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892597;
-	bh=VmwA5yULAMfmhKYTXg6cCjOLNQZggdm0KXFjrBNk3fc=;
+	s=default; t=1595892602;
+	bh=I2dTzUq/9wZciNDjDhbRp5+H1zAaUup4cSjPwG9P8DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=glP738IIGz/m9iqGqeDgOFVXl7xS5d4eWsARJ/0qruREneAOOLmppWsveSWVQts7Y
-	 2lyRICUjlDN0Lv8HFenba713MEXcIg1zkQQXmdcjMX+4KTEaczPd///SwqNKvdacv6
-	 m7kPRKoTFTxoogkBoHDV/YYjX4BvT7gzOfSuFwoI=
+	b=jeOn9/1UD+GeOCt+rchDgYANU5E1xjurcLVYGXObN3GW06Hzt0m5BY0pyS5GkDgur
+	 YbevOUWKxH9guXynydK/nvAwsPeESrEb0rOmgF6vvNOZlVFmFbAlzNOExBsfpQeYsM
+	 MXv5zKssfatdsfKRix6DXJ6e4RKB1hQg4Kmnuwyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgG0XYB (ORCPT
+        id S1728856AbgG0XaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:24:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34770 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:30:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727957AbgG0XX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:23:57 -0400
+        id S1727940AbgG0XXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:23:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CDCD2173E;
-        Mon, 27 Jul 2020 23:23:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EDC220A8B;
+        Mon, 27 Jul 2020 23:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892236;
-        bh=VmwA5yULAMfmhKYTXg6cCjOLNQZggdm0KXFjrBNk3fc=;
+        s=default; t=1595892235;
+        bh=I2dTzUq/9wZciNDjDhbRp5+H1zAaUup4cSjPwG9P8DI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yH+jdhM5WeD6RmgMIWTdb9Q7NXHyoqYrNCF5Ekiq6I2QOKBYLu7PfN9h3bXE0AH/x
-         0/EQjjKgdeXS+2Jmh0CqYs+qP6ISNDMjkb0E+MSXhblckwWeu2ZKTJ1SNUqqTZ57PU
-         yyEkVOtgrix8D273163RBCuI4zHfC1OeuhN7mkmU=
+        b=SjcrjdePUCW5hCWkOxycGS8bv3eQjSzRJGTq+ylPD1i4vEPFARGVBwWAaFS34rpGR
+         BDpVa1xJ2Nqbv9ksiVbOVjZIdz9t6l22Jl93L5CzljCSyRn1N/XZhy2koMAx/ELGXH
+         CiHQqtInTlUMDRrjvTzqRTH8tj2r2YEObBVBfT3U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniele Albano <d.albano@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org,
-        io-uring@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 07/25] io_uring: always allow drain/link/hardlink/async sqe flags
-Date:   Mon, 27 Jul 2020 19:23:27 -0400
-Message-Id: <20200727232345.717432-7-sashal@kernel.org>
+Cc:     Paolo Pisati <paolo.pisati@canonical.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 06/25] selftests: net: ip_defrag: modprobe missing nf_defrag_ipv6 support
+Date:   Mon, 27 Jul 2020 19:23:26 -0400
+Message-Id: <20200727232345.717432-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200727232345.717432-1-sashal@kernel.org>
 References: <20200727232345.717432-1-sashal@kernel.org>
@@ -59,62 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Albano <d.albano@gmail.com>
+From: Paolo Pisati <paolo.pisati@canonical.com>
 
-[ Upstream commit 61710e437f2807e26a3402543bdbb7217a9c8620 ]
+[ Upstream commit aba69d49fb49c9166596dd78926514173b7f9ab5 ]
 
-We currently filter these for timeout_remove/async_cancel/files_update,
-but we only should be filtering for fixed file and buffer select. This
-also causes a second read of sqe->flags, which isn't needed.
+Fix ip_defrag.sh when CONFIG_NF_DEFRAG_IPV6=m:
 
-Just check req->flags for the relevant bits. This then allows these
-commands to be used in links, for example, like everything else.
+$ sudo ./ip_defrag.sh
++ set -e
++ mktemp -u XXXXXX
++ readonly NETNS=ns-rGlXcw
++ trap cleanup EXIT
++ setup
++ ip netns add ns-rGlXcw
++ ip -netns ns-rGlXcw link set lo up
++ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_high_thresh=9000000
++ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_low_thresh=7000000
++ ip netns exec ns-rGlXcw sysctl -w net.ipv4.ipfrag_time=1
++ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_high_thresh=9000000
++ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_low_thresh=7000000
++ ip netns exec ns-rGlXcw sysctl -w net.ipv6.ip6frag_time=1
++ ip netns exec ns-rGlXcw sysctl -w net.netfilter.nf_conntrack_frag6_high_thresh=9000000
++ cleanup
++ ip netns del ns-rGlXcw
 
-Signed-off-by: Daniele Albano <d.albano@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+$ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+ls: cannot access '/proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh': No such file or directory
+
+$ sudo modprobe nf_defrag_ipv6
+$ ls -la /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+-rw-r--r-- 1 root root 0 Jul 14 12:34 /proc/sys/net/netfilter/nf_conntrack_frag6_high_thresh
+
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/ip_defrag.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 51be3a20ade17..12ab983474dff 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4803,7 +4803,9 @@ static int io_timeout_remove_prep(struct io_kiocb *req,
- {
- 	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
- 		return -EINVAL;
--	if (sqe->flags || sqe->ioprio || sqe->buf_index || sqe->len)
-+	if (unlikely(req->flags & (REQ_F_FIXED_FILE | REQ_F_BUFFER_SELECT)))
-+		return -EINVAL;
-+	if (sqe->ioprio || sqe->buf_index || sqe->len)
- 		return -EINVAL;
+diff --git a/tools/testing/selftests/net/ip_defrag.sh b/tools/testing/selftests/net/ip_defrag.sh
+index 15d3489ecd9ce..ceb7ad4dbd945 100755
+--- a/tools/testing/selftests/net/ip_defrag.sh
++++ b/tools/testing/selftests/net/ip_defrag.sh
+@@ -6,6 +6,8 @@
+ set +x
+ set -e
  
- 	req->timeout.addr = READ_ONCE(sqe->addr);
-@@ -5009,8 +5011,9 @@ static int io_async_cancel_prep(struct io_kiocb *req,
- {
- 	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
- 		return -EINVAL;
--	if (sqe->flags || sqe->ioprio || sqe->off || sqe->len ||
--	    sqe->cancel_flags)
-+	if (unlikely(req->flags & (REQ_F_FIXED_FILE | REQ_F_BUFFER_SELECT)))
-+		return -EINVAL;
-+	if (sqe->ioprio || sqe->off || sqe->len || sqe->cancel_flags)
- 		return -EINVAL;
++modprobe -q nf_defrag_ipv6
++
+ readonly NETNS="ns-$(mktemp -u XXXXXX)"
  
- 	req->cancel.addr = READ_ONCE(sqe->addr);
-@@ -5028,7 +5031,9 @@ static int io_async_cancel(struct io_kiocb *req)
- static int io_files_update_prep(struct io_kiocb *req,
- 				const struct io_uring_sqe *sqe)
- {
--	if (sqe->flags || sqe->ioprio || sqe->rw_flags)
-+	if (unlikely(req->flags & (REQ_F_FIXED_FILE | REQ_F_BUFFER_SELECT)))
-+		return -EINVAL;
-+	if (sqe->ioprio || sqe->rw_flags)
- 		return -EINVAL;
- 
- 	req->files_update.offset = READ_ONCE(sqe->off);
+ setup() {
 -- 
 2.25.1
 
