@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653FBC433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E7FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41C022083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BE52083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859774;
-	bh=pw+zoWOo5qE3BJjvI2ogxid0E79/xtE7wob1dj8vH1M=;
+	s=default; t=1595859776;
+	bh=z2IM2Mu9HSt9sLr6cNZQIScq87Wopxln51FoHO14OGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wtexr+S06qk0UYBG5kh3VcuY7aGAbRKuis7ajcuBFvmLGYbm/BFfdRRu/u02Rx/ko
-	 QD6RT8W/B/NZy1PBNVFfGiUBtm0sJY/yas3fIelZv+mHspj9VrVOoMZa5CFTvc/1lb
-	 peswP86UiIApfZ8kwToCHE94JBL2s36pqm3HGi7U=
+	b=TvjsSMz13cVXZ2hB8kTL4rAsA//0XlwQQWgJTN1Ba7hs8Doqdhe7FvFP4zP0bJn6q
+	 wOW50K39OT+i/JNZhz4uC/PSaE4H8O93FaLKX5ztAG4ei+rbER6CVXof0KIXRKIS0i
+	 jF6RfjwMXKLQ3xX4EgACVqyXTjmTOs2O6ynvgSF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbgG0OWw (ORCPT
+        id S1731982AbgG0OWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:22:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51830 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:22:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731961AbgG0OWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:22:48 -0400
+        id S1731961AbgG0OWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:22:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6517620775;
-        Mon, 27 Jul 2020 14:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F8A52070A;
+        Mon, 27 Jul 2020 14:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859767;
-        bh=pw+zoWOo5qE3BJjvI2ogxid0E79/xtE7wob1dj8vH1M=;
+        s=default; t=1595859773;
+        bh=z2IM2Mu9HSt9sLr6cNZQIScq87Wopxln51FoHO14OGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ne9o5BwHM4IoEbQakbkZqw7UU0eU6GOnVb8F+zSuRNtm9lgthwxs+7k9CgOkWjGNN
-         j29lPAA1Dh9MQzi1GCPxc8GxlQEAr2UEONa5go17aCsdAE9yewz/80rioyA1Q9sgq8
-         g3AFnvPrazWHn2q+1O81JUQeS/l0jj1xtw6p1PF8=
+        b=OuhFT8eHszO735eA6L8/TTNOI7K1/udlNbBn4JLcm1LHDk3NqbVh0isSwoz03k5Bs
+         XxXExW2OMyBwnUe7jI3S1PGYjivLNKSJ04MSjF+og+C5WxuKKLOa6HuO+Zyt4fViuu
+         N0jeDDy5R8AotKuFc0FZHecqDMEQueInaiB/BN88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 098/179] RISC-V: Do not rely on initrd_start/end computed during early dt parsing
-Date:   Mon, 27 Jul 2020 16:04:33 +0200
-Message-Id: <20200727134937.430056754@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Federico Ricchiuto <fed.ricchiuto@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 100/179] HID: i2c-hid: add Mediacom FlexBook edge13 to descriptor override
+Date:   Mon, 27 Jul 2020 16:04:35 +0200
+Message-Id: <20200727134937.524689290@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -60,96 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atish Patra <atish.patra@wdc.com>
+From: Federico Ricchiuto <fed.ricchiuto@gmail.com>
 
-[ Upstream commit 4400231c8acc7e513204c8470c6d796ba47dc169 ]
+[ Upstream commit 43e666acb79f3d355dd89bf20f4d25d3b15da13e ]
 
-Currently, initrd_start/end are computed during early_init_dt_scan
-but used during arch_setup. We will get the following panic if initrd is used
-and CONFIG_DEBUG_VIRTUAL is turned on.
+The Mediacom FlexBook edge13 uses the SIPODEV SP1064 touchpad, which does not
+supply descriptors, so it has to be added to the override list.
 
-[    0.000000] ------------[ cut here ]------------
-[    0.000000] kernel BUG at arch/riscv/mm/physaddr.c:33!
-[    0.000000] Kernel BUG [#1]
-[    0.000000] Modules linked in:
-[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.8.0-rc4-00015-ged0b226fed02 #886
-[    0.000000] epc: ffffffe0002058d2 ra : ffffffe0000053f0 sp : ffffffe001001f40
-[    0.000000]  gp : ffffffe00106e250 tp : ffffffe001009d40 t0 : ffffffe00107ee28
-[    0.000000]  t1 : 0000000000000000 t2 : ffffffe000a2e880 s0 : ffffffe001001f50
-[    0.000000]  s1 : ffffffe0001383e8 a0 : ffffffe00c087e00 a1 : 0000000080200000
-[    0.000000]  a2 : 00000000010bf000 a3 : ffffffe00106f3c8 a4 : ffffffe0010bf000
-[    0.000000]  a5 : ffffffe000000000 a6 : 0000000000000006 a7 : 0000000000000001
-[    0.000000]  s2 : ffffffe00106f068 s3 : ffffffe00106f070 s4 : 0000000080200000
-[    0.000000]  s5 : 0000000082200000 s6 : 0000000000000000 s7 : 0000000000000000
-[    0.000000]  s8 : 0000000080011010 s9 : 0000000080012700 s10: 0000000000000000
-[    0.000000]  s11: 0000000000000000 t3 : 000000000001fe30 t4 : 000000000001fe30
-[    0.000000]  t5 : 0000000000000000 t6 : ffffffe00107c471
-[    0.000000] status: 0000000000000100 badaddr: 0000000000000000 cause: 0000000000000003
-[    0.000000] random: get_random_bytes called from print_oops_end_marker+0x22/0x46 with crng_init=0
-
-To avoid the error, initrd_start/end can be computed from phys_initrd_start/size
-in setup itself. It also improves the initrd placement by aligning the start
-and size with the page size.
-
-Fixes: 76d2a0493a17 ("RISC-V: Init and Halt Code")
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Federico Ricchiuto <fed.ricchiuto@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/mm/init.c | 33 +++++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index fdc772f57edc3..81493cee0a167 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -94,19 +94,40 @@ void __init mem_init(void)
- #ifdef CONFIG_BLK_DEV_INITRD
- static void __init setup_initrd(void)
- {
-+	phys_addr_t start;
- 	unsigned long size;
- 
--	if (initrd_start >= initrd_end) {
--		pr_info("initrd not found or empty");
-+	/* Ignore the virtul address computed during device tree parsing */
-+	initrd_start = initrd_end = 0;
-+
-+	if (!phys_initrd_size)
-+		return;
-+	/*
-+	 * Round the memory region to page boundaries as per free_initrd_mem()
-+	 * This allows us to detect whether the pages overlapping the initrd
-+	 * are in use, but more importantly, reserves the entire set of pages
-+	 * as we don't want these pages allocated for other purposes.
-+	 */
-+	start = round_down(phys_initrd_start, PAGE_SIZE);
-+	size = phys_initrd_size + (phys_initrd_start - start);
-+	size = round_up(size, PAGE_SIZE);
-+
-+	if (!memblock_is_region_memory(start, size)) {
-+		pr_err("INITRD: 0x%08llx+0x%08lx is not a memory region",
-+		       (u64)start, size);
- 		goto disable;
- 	}
--	if (__pa_symbol(initrd_end) > PFN_PHYS(max_low_pfn)) {
--		pr_err("initrd extends beyond end of memory");
-+
-+	if (memblock_is_region_reserved(start, size)) {
-+		pr_err("INITRD: 0x%08llx+0x%08lx overlaps in-use memory region\n",
-+		       (u64)start, size);
- 		goto disable;
- 	}
- 
--	size = initrd_end - initrd_start;
--	memblock_reserve(__pa_symbol(initrd_start), size);
-+	memblock_reserve(start, size);
-+	/* Now convert initrd to virtual addresses */
-+	initrd_start = (unsigned long)__va(phys_initrd_start);
-+	initrd_end = initrd_start + phys_initrd_size;
- 	initrd_below_start_ok = 1;
- 
- 	pr_info("Initial ramdisk at: 0x%p (%lu bytes)\n",
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index ec142bc8c1daf..35f3bfc3e6f59 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -373,6 +373,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Mediacom FlexBook edge 13",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "MEDIACOM"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "FlexBook_edge13-M-FBE13"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{
+ 		.ident = "Odys Winbook 13",
+ 		.matches = {
 -- 
 2.25.1
 
