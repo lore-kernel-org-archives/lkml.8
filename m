@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFFEC433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D52AC433F8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 017E12173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A20B208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859148;
-	bh=oKGghECnOuCDtNH1ZYo2vmubxt0MKgCDi77vFnlNNIE=;
+	s=default; t=1595859151;
+	bh=dc5GIlP5hZ2l58dr+lnG1k9qkoosoB/+ERd84z3QCqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZsA4lSSAZSFpmHgv5asd8Qphkq9QA16r/KoJuNDv9IcXwtdRA8hU7QU8+0MaoE9r4
-	 BYy5GUyn3pWYUBLmMRsOUKr8OVCqZyUTt/ZUc6sOYZFjAGED0peFRgpWVI8bmCOE5l
-	 AvkOqG0xxN/LlpKuD8vz8q1uoWDMRFMrBpOuPogg=
+	b=b3D9d93tnWkPoLh11IV05uNvBbbLAarcaoRP+ehzjqgxTMTqjgndd+67mI2MTaLUg
+	 MmYDo0ZtZ9wbz3UfT/xlhilbfnywBRDc0ScUbgrkOFkjGK8QWWjLM5DIarflXU6zKI
+	 Tnee8fsLpvD3ryOkml8YJ/o8zwiHKI9HE9vACTj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbgG0OM1 (ORCPT
+        id S1730206AbgG0OMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:12:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36652 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:12:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730194AbgG0OMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:12:23 -0400
+        id S1730189AbgG0OMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:12:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60F202083E;
-        Mon, 27 Jul 2020 14:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2F6A20838;
+        Mon, 27 Jul 2020 14:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859142;
-        bh=oKGghECnOuCDtNH1ZYo2vmubxt0MKgCDi77vFnlNNIE=;
+        s=default; t=1595859140;
+        bh=dc5GIlP5hZ2l58dr+lnG1k9qkoosoB/+ERd84z3QCqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jDn7OvqbBzyySU4Bfs9KQtCJLsXjPu4trjMUpnvqz8ibRwyFgRfEEbVdeeLKgI/YQ
-         14VNLmRu0tGcJ5NF4KxUVdjyeHaK2EPbcUm6GXG7aTlQ/YkBtlUf/jo6CzobjxymhP
-         jJeDjgtMfSHQPohwGMgOecZaezoe7B/6uK+U9BSE=
+        b=b6mciHwcRd9ypKEBZMSPBA0aQO/6t+yYCX+LXaCpMrMOYmq1IPdtQVJAvk/V1cE5x
+         x3aybnaAHR+XrXkcn7NZfGTCqHkWm+u4iziPYOqdOht8Ds7sdHcjSYsKDZIM1sfU74
+         b3h6C6xR8dF/wGjp3YKKCJ005TBcAaZ/3kXEShJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Patrick Fernie <patrick.fernie@gmail.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Subject: [PATCH 4.19 64/86] Revert "cifs: Fix the target file was deleted when rename failed."
-Date:   Mon, 27 Jul 2020 16:04:38 +0200
-Message-Id: <20200727134917.638089035@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 4.19 81/86] x86, vmlinux.lds: Page-align end of ..page_aligned sections
+Date:   Mon, 27 Jul 2020 16:04:55 +0200
+Message-Id: <20200727134918.465504233@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -62,58 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit 0e6705182d4e1b77248a93470d6d7b3013d59b30 upstream.
+commit de2b41be8fcccb2f5b6c480d35df590476344201 upstream.
 
-This reverts commit 9ffad9263b467efd8f8dc7ae1941a0a655a2bab2.
+On x86-32 the idt_table with 256 entries needs only 2048 bytes. It is
+page-aligned, but the end of the .bss..page_aligned section is not
+guaranteed to be page-aligned.
 
-Upon additional testing with older servers, it was found that
-the original commit introduced a regression when using the old SMB1
-dialect and rsyncing over an existing file.
+As a result, objects from other .bss sections may end up on the same 4k
+page as the idt_table, and will accidentially get mapped read-only during
+boot, causing unexpected page-faults when the kernel writes to them.
 
-The patch will need to be respun to address this, likely including
-a larger refactoring of the SMB1 and SMB3 rename code paths to make
-it less confusing and also to address some additional rename error
-cases that SMB3 may be able to workaround.
+This could be worked around by making the objects in the page aligned
+sections page sized, but that's wrong.
 
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reported-by: Patrick Fernie <patrick.fernie@gmail.com>
-CC: Stable <stable@vger.kernel.org>
-Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
-Acked-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Explicit sections which store only page aligned objects have an implicit
+guarantee that the object is alone in the page in which it is placed. That
+works for all objects except the last one. That's inconsistent.
+
+Enforcing page sized objects for these sections would wreckage memory
+sanitizers, because the object becomes artificially larger than it should
+be and out of bound access becomes legit.
+
+Align the end of the .bss..page_aligned and .data..page_aligned section on
+page-size so all objects places in these sections are guaranteed to have
+their own page.
+
+[ tglx: Amended changelog ]
+
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200721093448.10417-1-joro@8bytes.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |   10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ arch/x86/kernel/vmlinux.lds.S     |    1 +
+ include/asm-generic/vmlinux.lds.h |    5 ++++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1783,7 +1783,6 @@ cifs_rename2(struct inode *source_dir, s
- 	FILE_UNIX_BASIC_INFO *info_buf_target;
- 	unsigned int xid;
- 	int rc, tmprc;
--	bool new_target = d_really_is_negative(target_dentry);
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -372,6 +372,7 @@ SECTIONS
+ 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {
+ 		__bss_start = .;
+ 		*(.bss..page_aligned)
++		. = ALIGN(PAGE_SIZE);
+ 		*(BSS_MAIN)
+ 		BSS_DECRYPTED
+ 		. = ALIGN(PAGE_SIZE);
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -279,7 +279,8 @@
  
- 	if (flags & ~RENAME_NOREPLACE)
- 		return -EINVAL;
-@@ -1860,13 +1859,8 @@ cifs_rename2(struct inode *source_dir, s
- 	 */
+ #define PAGE_ALIGNED_DATA(page_align)					\
+ 	. = ALIGN(page_align);						\
+-	*(.data..page_aligned)
++	*(.data..page_aligned)						\
++	. = ALIGN(page_align);
  
- unlink_target:
--	/*
--	 * If the target dentry was created during the rename, try
--	 * unlinking it if it's not negative
--	 */
--	if (new_target &&
--	    d_really_is_positive(target_dentry) &&
--	    (rc == -EACCES || rc == -EEXIST)) {
-+	/* Try unlinking the target dentry if it's not negative */
-+	if (d_really_is_positive(target_dentry) && (rc == -EACCES || rc == -EEXIST)) {
- 		if (d_is_dir(target_dentry))
- 			tmprc = cifs_rmdir(target_dir, target_dentry);
- 		else
+ #define READ_MOSTLY_DATA(align)						\
+ 	. = ALIGN(align);						\
+@@ -650,7 +651,9 @@
+ 	. = ALIGN(bss_align);						\
+ 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {				\
+ 		BSS_FIRST_SECTIONS					\
++		. = ALIGN(PAGE_SIZE);					\
+ 		*(.bss..page_aligned)					\
++		. = ALIGN(PAGE_SIZE);					\
+ 		*(.dynbss)						\
+ 		*(BSS_MAIN)						\
+ 		*(COMMON)						\
 
 
