@@ -2,134 +2,129 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9901DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB42C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70EF120714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:56:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595825798;
-	bh=9mv2NHRKupFqImSSf919VC8iFdyialFr4OrArdTym0M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qAbMKvNrMcS2yoE5uW5Ed3+6jMu6odfGsbW1nid2VrfAAk1boSrO+SF5l9K3Q0F1M
-	 q3cLRpS2nSirlneDQKOt4GxhYtyJLklHyY4ESI0xkVZZu5K1DSlseq0ycW6t06sk5J
-	 W/kDJ0VwHBani96K3aO9V3yG69kk/tYqSWEibHcU=
+	by mail.kernel.org (Postfix) with ESMTP id 1147020714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:00:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=maximintegrated.onmicrosoft.com header.i=@maximintegrated.onmicrosoft.com header.b="Pf96SI55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgG0E42 (ORCPT
+        id S1726357AbgG0FAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 00:56:28 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:28982 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgG0E40 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 00:56:26 -0400
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 06R4u2vZ005262;
-        Mon, 27 Jul 2020 13:56:03 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 06R4u2vZ005262
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1595825763;
-        bh=VsNfuWLBKO3xt/tClgaisljP3G+NdDWNzhElfMxOfYY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=a1N4XqYgXgZeqAvpuXyZg/EQxm0jnP3s7xKyQ43nza7hGgVA1P6qCNnAjp9XsUi5z
-         3rh4B6nM8CZdYZQbTWuPyYaYI54s9FwyuvHV/knkE8KC1A1d3zlcoOKhH6aZUNQ44M
-         Du3I2bf73P5wcIlDOltGy1YRkFcPypHTk3dJ3m7WRDLh0isucTBOkFAfO9HJCrxKtZ
-         46uV8zN0pWIo3xzHIcJgJ9is0N+1a5X4Ubc6zg3h8ldNg9aHUFaVv8WHImWMEHqU9a
-         D1Vj7Rl6jMmOtj9edYkEqvfE5XZu0jLmmJglpU3yt5qfrmrXLZU31tn1ljIy167IIh
-         UL/muXbwVOh6A==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id 4so328498uav.8;
-        Sun, 26 Jul 2020 21:56:03 -0700 (PDT)
-X-Gm-Message-State: AOAM532+N2cI0ng5y97a3Fh+Hp9c75LsQiPYBdPNoCUNPKb+bxTgsQP2
-        5DSBeOEJcQtNFv+61tTo4Q/n8O7R8HKr/x+WnEk=
-X-Google-Smtp-Source: ABdhPJzBD6NVz4V/UkSdnoYqZT6v6jY8++J4Xf9slSZ/iiqfDsoSYuuWR1bXY9TO8wmRXDEktTQuMDORUmQkciIXFEE=
-X-Received: by 2002:ab0:5b91:: with SMTP id y17mr15827254uae.95.1595825761768;
- Sun, 26 Jul 2020 21:56:01 -0700 (PDT)
+        Mon, 27 Jul 2020 01:00:08 -0400
+Received: from mail-mw2nam12on2117.outbound.protection.outlook.com ([40.107.244.117]:24992
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726006AbgG0FAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 01:00:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hsvWSZXCtH4CIS/0PwVZb41VoNhX2vUwEY6S8whxbzSsMGErTV5YgaMZg8sPo4gOuOSUfcw4/7WcppOVur/OIQsszPi2YQ7aRqvk2MEk/DOVs4oN+9thyN6YX2NtowXHu1usWerljzuglPQyWbZ/FyrbeHsAzNSUavurHKUlOGS2Yy4Fv5fEBJBoHiL8OHURw48lm05sCXqn/ZbHFZxfoXii0/fOYHvumX02KT1fWuwHjqtw5RBd7502b2Umdpg7EG+ZVkTWNXC6Etz5J9tcqFvoSwr908WjfuLqWNbCcOX7otH3p4WKs3yZjZl9neqD8jEW6oySQLAfu7xPjhe0Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HQNHTtxIzShBvGtIlMKkz9O/8pQkqF0MvUCX51cxJLI=;
+ b=UifOplsIkCY5z5ps5pz77mONkfNXFWaTH3CituWbTNTPHzFMrI52kUgXI7EuxB835Ga9ART/u4j6VVj/y6q0qnDtY9qcyR02Gi/wJkLJENm/Fri0IiTyXbFG1LOsfamNG1AsBPqCNd5S9AK3GBtmxPP9NKr8JrHbYjjzFJW1YgLOlsnsaOjGBHr2609lZaFodATsXnpl/QFdAC8qCN+i/+mSzDsxd6dtvKDgR2LlSLkk/cEXuawTbQ1yWqXXBlVRdq78NSCvXnlmagcMiTx2NefbvP9ZYH16ISI18AiWjXIQlpWK/npJ8IOVusMXqbpRKm/YNYVEZoZAApumnbpQCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=maximintegrated.com; dmarc=pass action=none
+ header.from=maximintegrated.com; dkim=pass header.d=maximintegrated.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=maximintegrated.onmicrosoft.com;
+ s=selector2-maximintegrated-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HQNHTtxIzShBvGtIlMKkz9O/8pQkqF0MvUCX51cxJLI=;
+ b=Pf96SI55JgoRFujz/YhIu4eevynnpXmsSYUVgsLewr5zBMwl8mOFUbJ4b2fNh8H/DaqFb3jSUPpQVrrWhLPhJE5fAuVovDYSsH+FYnKQAH6gsjfHjEuv2nb+LOgzygqzXsuuQGJDJNAzAGfZVLWfA0nUewDKL7sT+VZxURUoUHY=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none
+ header.from=maximintegrated.com;
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com (2603:10b6:300:2a::12)
+ by MWHPR11MB1600.namprd11.prod.outlook.com (2603:10b6:301:b::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Mon, 27 Jul
+ 2020 05:00:03 +0000
+Received: from MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::d9e8:a3eb:4f08:e795]) by MWHPR11MB2047.namprd11.prod.outlook.com
+ ([fe80::d9e8:a3eb:4f08:e795%5]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
+ 05:00:03 +0000
+From:   Steve Lee <steves.lee@maximintegrated.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, ckeepax@opensource.cirrus.com,
+        geert@linux-m68k.org, rf@opensource.wolfsonmicro.com,
+        shumingf@realtek.com, srinivas.kandagatla@linaro.org,
+        krzk@kernel.org, dmurphy@ti.com, jack.yu@realtek.com,
+        nuno.sa@analog.com, steves.lee@maximintegrated.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Cc:     ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com,
+        steves.lee.maxim@gmail.com
+Subject: [RESEND 1/3] ASoC: max98390: Fix dac event dapm mixer.
+Date:   Mon, 27 Jul 2020 13:59:32 +0900
+Message-Id: <20200727045932.20877-1-steves.lee@maximintegrated.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SL2PR04CA0003.apcprd04.prod.outlook.com
+ (2603:1096:100:2d::15) To MWHPR11MB2047.namprd11.prod.outlook.com
+ (2603:10b6:300:2a::12)
 MIME-Version: 1.0
-References: <1595358391-34525-1-git-send-email-clabbe@baylibre.com>
- <1595358391-34525-17-git-send-email-clabbe@baylibre.com> <11ac49bc33546ef9ebc4120878206bd882667d8a.camel@perches.com>
- <b545eb4e3f2b4b676959e4666ef536f2691041eb.camel@perches.com>
-In-Reply-To: <b545eb4e3f2b4b676959e4666ef536f2691041eb.camel@perches.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 27 Jul 2020 13:55:25 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATohp=6BySQfn9g5xERm4u2rBG9VaoiGJ33TWovNTZd8w@mail.gmail.com>
-Message-ID: <CAK7LNATohp=6BySQfn9g5xERm4u2rBG9VaoiGJ33TWovNTZd8w@mail.gmail.com>
-Subject: Re: [PATCH] Makefile.extrawarn: Move sign-compare from W=2 to W=3
-To:     Joe Perches <joe@perches.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (2001:2d8:ed2b:74dd:b4b1:36e4:d148:7e35) by SL2PR04CA0003.apcprd04.prod.outlook.com (2603:1096:100:2d::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20 via Frontend Transport; Mon, 27 Jul 2020 04:59:58 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [2001:2d8:ed2b:74dd:b4b1:36e4:d148:7e35]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8d0a5520-4826-4312-784f-08d831e9ebed
+X-MS-TrafficTypeDiagnostic: MWHPR11MB1600:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR11MB160015B8D48804A38E59528992720@MWHPR11MB1600.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:254;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iFRArY3ECcAcczKCSPuEU540SkDA6hYwE8gyyI8mPWrxcbZQHeAL01KBCK6uFHt+HlKHLH+uRx7cVZN6P9o+u9jtVOivdnwqFg+Qv/8gwjy+/FTQiBsQImnI4iNRBzjv7gXnGqrVwIxAhPK+xVBpCQ98+HiZy2Yy3GRzTpbkrP4/v/jOqavA/nVMgO4Hvrbgeor1+N9DeFb2GZFkNViM5ycz6oau+xwPQ7MTRQrH3GlAJ2XC3DaIVBEmofM/i9pe5eUkNip+ANdmsQwpY9Za7Y9G8/yn1bBJaMEaIRqkymK4ZRJRNbzQwJkf0+dfSYmdf+4RUs6eQj5UYXGK2pj1CKVmzKe5twWi+3kfCWmRzkomeVgEQBZBbDglEWm3o/rhUxG5aYF3k+taJWqx0BUtDQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB2047.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(396003)(136003)(366004)(66946007)(2906002)(6512007)(8676002)(66556008)(83380400001)(66476007)(7416002)(478600001)(6486002)(86362001)(186003)(16526019)(1076003)(69590400007)(6666004)(4326008)(4744005)(8936002)(36756003)(316002)(52116002)(2616005)(6506007)(5660300002)(921003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: aG4qphtL05KpNrX/D+Qqb32LjiI32OHcnuHPRVAnimtmwTVSBwtkLquRbAVg7wPVFTTS7cwg1omEAFlv8SNhBEGMXunSpZp6tWMwuC5gvizhrd1aDTbX719RONNBsmN/5jYLbLTUI7Fji4MtjjHpBVlsF1Pr88rm3e4Jqzl5qClFSjein8zH5QEPH5Yjp2OnHlHyay5FhP65ikyyxp4eN+P/ZrHl4nB1z1ADZTcur8EDntltAcPjGGn/jca+yzZMp2R4lV/8Rkg6fEd/hFqgsf7t6NAJoJ9n55t34rJP2AaPM7QbhoeKeDCJhZkNmmumJfInjSX+8ymbWMccvZ+MNVUKPYscKMTiTB0pXg1No9ytpHtYMBOPPcp8jfdSo9d6FrSbOubi3D8RJgah8O1MR8s7ix9WLtuA9pkazbyRYwMFf6hHsWdcNnaAy25tZlLG4psSRQ5WMIaBPWQfzHQXFFm78dgntmNUMsxJ3KXqwkhJ0kXbWFXzw8Ds+kqMt5WIB0a1Th9kFE54BrgTW7hSBXhShq4vrMK8pdAb1icbHfFk6aTQ5Z6yWtJY1jrX5/yz
+X-OriginatorOrg: maximintegrated.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d0a5520-4826-4312-784f-08d831e9ebed
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB2047.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 05:00:03.2472
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd909df-ea69-4788-a554-f24b7854ad03
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lhOmTndpuy0SJbYdQCn+OEW9M6Imu6ySFO7JBAh/mjd1LJhvM0G/QsxoSOidG/XwPT1UgFGAVGts9Nqvci/MP1cABrhX3YSbnkyh0LnR2ZM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1600
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 1:57 PM Joe Perches <joe@perches.com> wrote:
->
-> This -Wsign-compare compiler warning can be very noisy
-> and most of the suggested conversions are unnecessary.
->
-> Make the warning W=3 so it's described under the
-> "can most likely be ignored" block.
->
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
+ Global EN register guide to off before AMP_EN register
+ when amp disable sequence.
+  - remove AMP_EN control before max98390_dac_event call
 
-Applied to linux-kbuild. Thanks.
+Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+---
+ sound/soc/codecs/max98390.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/sound/soc/codecs/max98390.c b/sound/soc/codecs/max98390.c
+index 3e8094241645..44ffebac15ad 100644
+--- a/sound/soc/codecs/max98390.c
++++ b/sound/soc/codecs/max98390.c
+@@ -678,7 +678,7 @@ static const struct snd_kcontrol_new max98390_dai_controls =
+ 
+ static const struct snd_soc_dapm_widget max98390_dapm_widgets[] = {
+ 	SND_SOC_DAPM_DAC_E("Amp Enable", "HiFi Playback",
+-		MAX98390_R203A_AMP_EN, 0, 0, max98390_dac_event,
++		SND_SOC_NOPM, 0, 0, max98390_dac_event,
+ 		SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
+ 	SND_SOC_DAPM_MUX("DAI Sel Mux", SND_SOC_NOPM, 0, 0,
+ 		&max98390_dai_controls),
+-- 
+2.17.1
 
-
-> On Tue, 2020-07-21 at 14:32 -0700, Joe Perches wrote:
-> > On Tue, 2020-07-21 at 19:06 +0000, Corentin Labbe wrote:
-> > > This patch fixes the warning:
-> > > warning: comparison of integer expressions of different signedness: 'int' and 'long unsigned int' [-Wsign-compare]
-> >
-> > I think these do not really need conversion.
-> > Are these useful compiler warnings ?
->
-> Perhaps move the warning from W=2 to W=3 so
-> it's described as "can most likely be ignored"
->
->  scripts/Makefile.extrawarn | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index 62c275685b75..95e4cdb94fe9 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -66,7 +66,6 @@ KBUILD_CFLAGS += -Wnested-externs
->  KBUILD_CFLAGS += -Wshadow
->  KBUILD_CFLAGS += $(call cc-option, -Wlogical-op)
->  KBUILD_CFLAGS += -Wmissing-field-initializers
-> -KBUILD_CFLAGS += -Wsign-compare
->  KBUILD_CFLAGS += -Wtype-limits
->  KBUILD_CFLAGS += $(call cc-option, -Wmaybe-uninitialized)
->  KBUILD_CFLAGS += $(call cc-option, -Wunused-macros)
-> @@ -87,6 +86,7 @@ KBUILD_CFLAGS += -Wpacked
->  KBUILD_CFLAGS += -Wpadded
->  KBUILD_CFLAGS += -Wpointer-arith
->  KBUILD_CFLAGS += -Wredundant-decls
-> +KBUILD_CFLAGS += -Wsign-compare
->  KBUILD_CFLAGS += -Wswitch-default
->  KBUILD_CFLAGS += $(call cc-option, -Wpacked-bitfield-compat)
->
->
->
-
-
---
-Best Regards
-Masahiro Yamada
