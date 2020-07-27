@@ -2,182 +2,182 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33ABFC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A4BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 097D2207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:53:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=solid-run-com.20150623.gappssmtp.com header.i=@solid-run-com.20150623.gappssmtp.com header.b="pq5TkMXO"
+	by mail.kernel.org (Postfix) with ESMTP id 58046206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgG0Oxh (ORCPT
+        id S1729518AbgG0OzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:53:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728743AbgG0Oxg (ORCPT
+        Mon, 27 Jul 2020 10:55:23 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:36535 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728593AbgG0OzX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:53:36 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61FDFC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:53:36 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id f14so1514082ejb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:53:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=solid-run-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jCQp04gaUj6KkSnmOynTN5DWIdoTsVqJqWxUkHbzffI=;
-        b=pq5TkMXOQlAMMfmLjbyxYb5ODxbZOaUIvr98CgMAX+JRzkZXMXVCqNbI0PnrVM/8Ii
-         +YPP+5B9ghuK0TO845Bv6JhjHvj2rM3UMlRbrF36R4ql2z6nDxX9CJV8Ufa1ALYIGdWG
-         czoOmvTHFSjFGN5lnQ2hZv8t8wJ6jKhoE/ZmogrWKtHRH9/LxX2tChA0K4dKKDFARJ8K
-         ysM36eVGT7/R94eoeeDlcDOKtyYNlY9YC/sEOd5uJLXWwmqzu1qmRIMfAPiECZ4DZHVH
-         KUIPzPwaKL38NQWH1VYkUlwNxotUxis5blXXICAWS04m7R1ecgEwHSzM7QGidgXpmQAx
-         onKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jCQp04gaUj6KkSnmOynTN5DWIdoTsVqJqWxUkHbzffI=;
-        b=RPXkj3yOh/DVqbin4nS7DJrt4CPJ/YLlkMNhGFsvwC6cnCmPxH11hYABQvaZsHWKAe
-         Vysn9FMe87Y/Z/Hm1HzWnMisxgxKb4ykG8s5CuG+vAiapuVERlfwGbQaQ8AdOvF3/oFm
-         yIdGKT5InLw7+xPMGttkNb12Z7N3tMM+d68DoLe0RQCxrWRCIg0iCR2L9K73Z8i4TUhA
-         4K6DRr/jAV3OGKReN2DJbaF2zHziDaMtU7Gpr55uNQ8Yiwq60SqbRb0ck/188RHlfuVg
-         HXzWycPY4UUb9zH56mJwd++7xQ33JJT0rwpk9E77OMe5jCsM0ASNjrP4mZSwkmUrxVsE
-         G14g==
-X-Gm-Message-State: AOAM530ykQaDPUXrRF3xPGfNrGKs6cnPNR4F/cz7DsGGizIuByqPMuTi
-        qc+gdkQPnA1X7cc2wWxNtVthrG5K24DHbarPqzWWzg==
-X-Google-Smtp-Source: ABdhPJy7XLns5nLG05OdBbUylSemksWFr2TLHaYF566wq5VWjAAx+FLLYE2WnV0UslxIVf7mRgpoCwhY5w/gyXEARqQ=
-X-Received: by 2002:a17:906:600f:: with SMTP id o15mr6513709ejj.41.1595861615025;
- Mon, 27 Jul 2020 07:53:35 -0700 (PDT)
+        Mon, 27 Jul 2020 10:55:23 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M1rGy-1jxrbk3MBU-002EwH; Mon, 27 Jul 2020 16:55:21 +0200
+Received: by mail-qt1-f176.google.com with SMTP id a32so12388268qtb.5;
+        Mon, 27 Jul 2020 07:55:20 -0700 (PDT)
+X-Gm-Message-State: AOAM533ZWz0enoIgMN0JE8JFROIGl461VIVcMTiHe2Z7S1MsrzAZZ1fy
+        W0aPOd+sqKZ2zAnni0baLsQQ+DfCTt131kJTXJA=
+X-Google-Smtp-Source: ABdhPJx9V72QTymo8w1nyOPNr9QDIb1f85k08B5c7bfE5ycZlPzb1BLAKjqSaYTOQzF9HCrRgrx1SHcX9er4/B6hPNo=
+X-Received: by 2002:ac8:4652:: with SMTP id f18mr4923449qto.142.1595861719558;
+ Mon, 27 Jul 2020 07:55:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200719145028.3370-3-miguelborgesdefreitas@gmail.com>
- <20200720112401.4620-1-miguelborgesdefreitas@gmail.com> <20200720112401.4620-2-miguelborgesdefreitas@gmail.com>
- <20200723174905.GA596242@bogus> <20200723195755.GV3428@piout.net>
- <20200727094553.GH1551@shell.armlinux.org.uk> <CABdtJHu2BacX+EeVkCxFYWfNxJ-7Z5MP7BqVfF2KHy+XfJGN3w@mail.gmail.com>
- <20200727141729.GJ1551@shell.armlinux.org.uk>
-In-Reply-To: <20200727141729.GJ1551@shell.armlinux.org.uk>
-From:   Jon Nettleton <jon@solid-run.com>
-Date:   Mon, 27 Jul 2020 16:52:58 +0200
-Message-ID: <CABdtJHtQfrnfdyUgp07G=2_7dLBqnnkmAdZ_Fbqiy84tndJX6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
- battery switch-over
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Rob Herring <robh@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sascha Hauer <kernel@pengutronix.de>, a.zummo@towertech.it,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <20200726220557.102300-1-yepeilin.cs@gmail.com>
+ <20200726222703.102701-1-yepeilin.cs@gmail.com> <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
+ <20200727131608.GD1913@kadam> <CAK8P3a3+9Gr6G6KDWu=iW3316O9cPH+XupBBajJaxrq20xQcyQ@mail.gmail.com>
+ <20200727144335.GB2571@kadam>
+In-Reply-To: <20200727144335.GB2571@kadam>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 27 Jul 2020 16:55:03 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1q-6aWWs0E0BeGo2S2jcQ7ELU2Q0o4Utc4Qb9J8An5kQ@mail.gmail.com>
+Message-ID: <CAK8P3a1q-6aWWs0E0BeGo2S2jcQ7ELU2Q0o4Utc4Qb9J8An5kQ@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
+ kernel-infoleak in video_put_user()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vandana BN <bnvandana@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:tg/AoHCEOzFAvg7gpivm7llDARO5ETgYItX/UyNLv11Hj+kUEss
+ gaoEZqF9Swg/frhxewZMg9np3RCE8raNgC8ifNllb/2kfx9JXS/lpMeXQj+12lADYBftr4C
+ 5ZnjmUFYNLZ2i/SKgmvJ3NpOxAVewrdOxuX169B0fKxB5Joo/4933kfNlVhejQc+DYsIkdT
+ QfzF1CVkSuqzlvs0yjJ4A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/gJ4HQPTSlA=:wK7KjLlZvMxrMBqGlgrOEl
+ C6EwE3AgVo1zSP7IpVa33AMGlCVKQg5Zc5b9knmZCKjhTTey8rr324tkm4gRqtg6zOn7tHg8v
+ uZfE4F8RVgfydtO7QcBkqd3ThzLh34apHEeAE+czrGQMiPrD1RYdni9lxILFSEvQ+TluXsaZI
+ +6fZFucgrJlAYi6uTL1rm24BQZ0S4YIl2qh42fBL2yo2yO7gF785b/QidG/euLr8nEJlnrC+e
+ ybyI+PGXUaHkqvL+vnzNGHzFu4bkFpMK83qR5NnLfyQw+qsTQC4s3EJ54wZ2fyPbTvHlQi5FV
+ 7eIHAwkCI9z9gFD8RBGP3679fF3w+KhW7fUQwMDQrIeflsgLLwjaZZCdfkfF5WPbksoX64U9u
+ f6VTTxWTt5CLVNzoOmv2Vvvd5KQKzSSYaX9+p1QJeDZ0mWP35c6Ll/jhqDgEK1VZ9+W0nhxJB
+ y7c8hcpMbS/0rthFWxJkrcwU+rBHgRHf92zf1lMd71o0ZEQz5+1h6WCEnZ5isX4D6ou+pACeO
+ yiOPOn1K9kLNB6HupDV9qO5CX3SGV7yTJbaouNVcQ5rxEUFYAExaNxEX7P3adupDVxPX6oE2A
+ 3evrpnfcgNPf2TvbGOa+yCq24tELJ3054emLX/JE35o0kvIg36miAcSUOGOVawj/yr+QRx9qn
+ TjKz2c6A7iKOBVbumWnUDkznQnH3s105E36io3PEmrxHoOPzcuy1j7aHWKPMvHRMHNgr02ds9
+ 8hOf+N9I0cp1rED498wkQfcRm19Cr+539pKmooSvRWipVtCZDAM4Q13WMaJ0kusE58GHM9ncs
+ Hyyw/oX+bYYy01LUdJ7lBed2eyMFtMDPpxsImOQGc2ZrwRU3WlOi+oCKT4HrMTkOFsZFIw1cw
+ H/ERaHBb2Lut0TYrgrsIQo83fZVABCuU4aaClyF5VXn/rjJSNluW8GGdg0PZLnisI2zYThrTa
+ lwLC2cn7oHiSCyeUHOnkIGFuSZSmhuoQRQkYEz+8n12UyceBN5ADh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 4:17 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
+On Mon, Jul 27, 2020 at 4:43 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 >
-> On Mon, Jul 27, 2020 at 03:33:17PM +0200, Jon Nettleton wrote:
-> > On Mon, Jul 27, 2020 at 11:46 AM Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk> wrote:
+> On Mon, Jul 27, 2020 at 04:05:38PM +0200, Arnd Bergmann wrote:
+> > On Mon, Jul 27, 2020 at 3:16 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
 > > >
-> > > On Thu, Jul 23, 2020 at 09:57:55PM +0200, Alexandre Belloni wrote:
-> > > > On 23/07/2020 11:49:05-0600, Rob Herring wrote:
-> > > > > On Mon, Jul 20, 2020 at 12:23:59PM +0100, miguelborgesdefreitas@gmail.com wrote:
-> > > > > > From: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-> > > > > >
-> > > > > > This adds direct-switching mode as a configurable DT flag for
-> > > > > > RTC modules supporting it (e.g. nxp pcf8523).
-> > > > > > DSM switches the power source to the battery supply whenever the
-> > > > > > VDD drops below VBAT. The option is recommended for hw designs
-> > > > > > where VDD is always expected to be higher than VBAT.
-> > > > > >
-> > > > > > Signed-off-by: Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
-> > > > > > ---
-> > > > > > Changes in v2:
-> > > > > > - Added extended commit message for git history
-> > > > > > - Separate dt bindings documentation into a single patch
-> > > > > >
-> > > > > >  Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt | 7 ++++++-
-> > > > > >  Documentation/devicetree/bindings/rtc/rtc.yaml        | 7 +++++++
-> > > > > >  2 files changed, 13 insertions(+), 1 deletion(-)
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > > > > > index 0b1080c..f715a8f 100644
-> > > > > > --- a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > > > > > +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-> > > > > > @@ -4,10 +4,14 @@ Required properties:
-> > > > > >  - compatible: Should contain "nxp,pcf8523".
-> > > > > >  - reg: I2C address for chip.
-> > > > > >
-> > > > > > -Optional property:
-> > > > > > +Optional properties:
-> > > > > >  - quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
-> > > > > >    expressed in femto Farad (fF). Valid values are 7000 and 12500.
-> > > > > >    Default value (if no value is specified) is 12500fF.
-> > > > > > +- pm-enable-dsm: battery switch-over function is enabled in direct
-> > > > > > +  switching mode. The power failure condition happens when VDD < VBAT,
-> > > > > > +  without requiring VDD to drop below Vth(sw)bat.
-> > > > > > +  Default value (if not provided) is the standard mode.
-> > > > > >
-> > > > > >  Example:
-> > > > > >
-> > > > > > @@ -15,4 +19,5 @@ pcf8523: rtc@68 {
-> > > > > >   compatible = "nxp,pcf8523";
-> > > > > >   reg = <0x68>;
-> > > > > >   quartz-load-femtofarads = <7000>;
-> > > > > > + pm-enable-dsm;
-> > > > > >  };
-> > > > > > diff --git a/Documentation/devicetree/bindings/rtc/rtc.yaml b/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > > > > > index ee237b2..a0048f4 100644
-> > > > > > --- a/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > > > > > +++ b/Documentation/devicetree/bindings/rtc/rtc.yaml
-> > > > > > @@ -47,4 +47,11 @@ properties:
-> > > > > >      description:
-> > > > > >        Enables wake up of host system on alarm.
-> > > > > >
-> > > > > > +  pm-enable-dsm:
-> > > > > > +    $ref: /schemas/types.yaml#/definitions/flag
-> > > > > > +    description:
-> > > > > > +      Enables the battery switch-over function in direct switching
-> > > > > > +      mode. Should be set in systems where VDD is higher than VBAT
-> > > > > > +      at all times.
+> > > On Mon, Jul 27, 2020 at 09:25:16AM +0200, Arnd Bergmann wrote:
+> > > > On Mon, Jul 27, 2020 at 12:28 AM Peilin Ye <yepeilin.cs@gmail.com> wrote:
 > > > > >
-> > > > > I'm all for common properties, but is this common across vendors?
+> > > > > video_put_user() is copying uninitialized stack memory to userspace due
+> > > > > to the compiler not initializing holes in the structures declared on the
+> > > > > stack. Fix it by initializing `ev32` and `vb32` using memset().
 > > > > >
+> > > > > Reported-and-tested-by: syzbot+79d751604cb6f29fbf59@syzkaller.appspotmail.com
+> > > > > Link: https://syzkaller.appspot.com/bug?extid=79d751604cb6f29fbf59
+> > > > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > > > Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 > > > >
-> > > > This is but this shouldn't be a DT property as it has to be changed
-> > > > dynamically. I'm working on an ioctl interface to change this
-> > > > configuration.
+> > > > Thanks a lot for addressing this! I now see that I actually created a similar
+> > > > bugfix for it back in January, but for some reason that got stuck in my
+> > > > backlog and I never wrote a proper description for it or sent it out to the
+> > > > list, sorry about that. I would hope we could find a way to have either
+> > > > the compiler or sparse warn if we copy uninitialized data to user space,
+> > > > but we now don't even check for that within the kernel any more.
 > > >
-> > > Why does it need to be changed dynamically?  If the hardware components
-> > > are not fitted to allow the RTC to be safely used without DSM, then
-> > > why should userspace be able to disable DSM?
-> > >
+> > > Here are my latest warnings on linux-next from Friday.
 > >
-> > My presumption would be if you had a system that ran at different
-> > system voltages depending if it is plugged in to mains or running on a
-> > battery.
+> > Ah, I forgot you had that kind of list already, thanks for checking!
+> >
+> > > block/scsi_ioctl.c:707 scsi_put_cdrom_generic_arg() warn: check that 'cgc32' doesn't leak information (struct has a hole after 'data_direction')
+> >
+> > I see no padding in this one, should be fine AFAICT. Any idea why you
+> > get a warning
+> > for this instance?
+> >
 >
-> Yes, but we're not talking about that case with the Cubox-i.
+> The warning message only prints the first struct hole or uninitialized
+> struct memeber.  ->data_direction in this case.
 >
-> Should a platform like the Cubox-i allow the user to disable DSM?
+> block/scsi_ioctl.c
+>    646  #ifdef CONFIG_COMPAT
+>    647  struct compat_cdrom_generic_command {
+>    648          unsigned char   cmd[CDROM_PACKET_SIZE];
+>    649          compat_caddr_t  buffer;
+>    650          compat_uint_t   buflen;
+>    651          compat_int_t    stat;
+>    652          compat_caddr_t  sense;
+>    653          unsigned char   data_direction;
 >
-> There needs to be a way to block the ability to dynamically change
-> this mode if the hardware is not up to operating without DSM.
+> There is going to be 3 bytes of padding between this char and the next
+> int.
 >
+>    654          compat_int_t    quiet;
+>    655          compat_int_t    timeout;
+>    656          compat_caddr_t  reserved[1];
+>    657  };
+>    658  #endif
+>
+> The bug seems real, but it depends on the compiler of course.
 
-Agreed.  Do we need a modes supported device-tree property?  That
-would actually describe the hardware as device-tree is supposed to do.
+Right, I misread the single 'char' in there.
+
+
+> > > drivers/input/misc/uinput.c:743 uinput_ff_upload_to_user() warn: check that 'ff_up_compat' doesn't leak information (struct has a hole after 'replay')
+> >
+> > This one hs padding in it and looks broken.
+>
+> No.  This a bug in smatch.  It's memcpy() over the hole, but the check
+> isn't capturing that.  The code is slightly weird...  I could try
+> silence the warning but it would only silence this one false positive so
+> I haven't investigated it.
+
+
+Ah right, and the structure it copies in turn comes from user space
+originally.
+
+> > > drivers/scsi/megaraid/megaraid_mm.c:824 kioc_to_mimd() warn: check that 'cinfo.base' doesn't leak information
+> >
+> > Seems fine due to __packed annotation.
+> >
+>
+> It's not related __packed.  Smatch is saying that cinfo.base isn't
+> necessarily initialized.
+>
+> drivers/scsi/megaraid/megaraid_mm.c
+>    816
+>    817                  case MEGAIOC_QADAPINFO:
+>    818
+>    819                          hinfo = (mraid_hba_info_t *)(unsigned long)
+>    820                                          kioc->buf_vaddr;
+>    821
+>    822                          hinfo_to_cinfo(hinfo, &cinfo);
+>
+> hinfo_to_cinfo() is a no-op if hinfo is NULL.  Smatch can't tell if
+> "hinfo" is non-NULL.
+
+Ok, that sounds fair, I couldn't easily tell either ;-)
+
+     Arnd
