@@ -2,152 +2,103 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF422C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 01:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 01:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94FCF2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 01:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48C622070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 01:54:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ulRkaaW1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="upbNmjKq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgG0BwP (ORCPT
+        id S1727053AbgG0ByR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 21:52:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33954 "EHLO
+        Sun, 26 Jul 2020 21:54:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgG0BwO (ORCPT
+        with ESMTP id S1726689AbgG0ByR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 21:52:14 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9819DC0619D2;
-        Sun, 26 Jul 2020 18:52:14 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id o2so6755299qvk.6;
-        Sun, 26 Jul 2020 18:52:14 -0700 (PDT)
+        Sun, 26 Jul 2020 21:54:17 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C6C4C0619D2;
+        Sun, 26 Jul 2020 18:54:17 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id z5so8509691pgb.6;
+        Sun, 26 Jul 2020 18:54:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=s0MTKKieN/5uVLS9bf74sUuYGfWvsi8uePbeYi7/ZQQ=;
-        b=ulRkaaW1PHcCELDSdF9HxDj/uDBqyLm7aAEVHTvTq2QGpk6MJ1rgM+xjfHBhwORICq
-         aHnRrfVDzUSW+3dRGzk/5qDez9RBFjsuPkvHy4K3CY4r+gm8DcS5sCNnoCD88Hk2p8ko
-         P8YlgWPyvctOLknja1GCrRNdud90Jmbb0Xb2tQH/Nd+oIkYhlLjVDwHuHEr4PldIZPZq
-         wmoZxBMk2P1rU7zGuURTTqYnastOQiaNB0mXl5OzhpyyBq7CPRSdQenqSWbhLEIfZJoi
-         2RSaOhrRHOdcm/IF6kMBsHz22IW/kFBQwkhG2Vqq+mpah9pHr7OAvAbuemMzPrZhVupd
-         geHw==
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=pU/UU8AOp1QLTy9B4XFXlftgUkYl03lBkuurw1t3dUw=;
+        b=upbNmjKqiITvbt80uVdCAQ+IFdsRaT7iTzzbJXy0DE1wzjOmQ/k5OyppIysYsXoqTB
+         QS4ise0k7eBVKfsYfwR9YUA3dMvZmQmJ/ME4M5ahHpMNpv8GLpgpFui9tn3Y76IBJ6Lj
+         pQm946BigPStLigLjWdEhQGI7jC8fgbQDozDba4qs+chXrhPDjrWU56blVYU43/5ja9R
+         jDelIus57jnmY9tkvwHS6VdZANEAzL1KXND9lI2SIYgX/R/Jt8qAWxh7reNiPdL3welf
+         HhjK9aB0FSEuz3/u5coEEqdnQrfVgf0sXEaCNhOLXxRNGOqeliMOXeu+QRTk9JP6O8Sy
+         tywg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=s0MTKKieN/5uVLS9bf74sUuYGfWvsi8uePbeYi7/ZQQ=;
-        b=nwHb7tOct8YfB6A7Zhciam5g8LvbHqKhmW3m4wbA/bFZq62aDploGd4foUu0SFHVDf
-         Mm/+AI7a8/hXDm4YvNHY1CpGy/ZmRgh8cIFGRy5pvcfOdPDDfMm2vkJPx209gWI1Ewfi
-         KPlV8jOLJO/czoSDEsJp5XlhOSt8LC6y+pzn6kL7//nBGFwNOuhgx8GltVGfDVyTWA+f
-         UBgbcRvf6iwk+jEY4ovLAtVOkKXqzBkJEVA5+ME7FwYwKb+4TUMSJYtC/skNVg6EPH/3
-         wvzyw2pplM0dtw2LhbpFFfqZs3U7DSk4Fv/eSLlrN/rRY8ICd8S/6PaJizswyXHOP4F8
-         yZuw==
-X-Gm-Message-State: AOAM533uF931eBaHryaBltQidr1/yBp1Z6gjBv2a4ZkW1y+xJeV45ced
-        a92ut58C9P6w0yCkKQHnTT0=
-X-Google-Smtp-Source: ABdhPJxSpUpXepXtpRmIc6e37L65Fv/e797GhCbnMphucuUsumOMoskJridQh/wS8Wfgd5AG5ymYvQ==
-X-Received: by 2002:a0c:82a2:: with SMTP id i31mr20687818qva.106.1595814733886;
-        Sun, 26 Jul 2020 18:52:13 -0700 (PDT)
-Received: from linux.home ([2604:2000:1344:41d:9cb8:60da:6bf0:c998])
-        by smtp.googlemail.com with ESMTPSA id 184sm15359142qkl.37.2020.07.26.18.52.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2020 18:52:13 -0700 (PDT)
-From:   Gaurav Singh <gaurav1086@gmail.com>
-To:     gaurav1086@gmail.com, Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netfilter-devel@vger.kernel.org (open list:NETFILTER),
-        coreteam@netfilter.org (open list:NETFILTER),
-        netdev@vger.kernel.org (open list:NETWORKING [IPv4/IPv6]),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] netfilter: ip6tables: Remove redundant null checks
-Date:   Sun, 26 Jul 2020 21:52:05 -0400
-Message-Id: <20200727015206.26423-1-gaurav1086@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200625023626.32557-1-gaurav1086@gmail.com>
-References: <20200625023626.32557-1-gaurav1086@gmail.com>
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=pU/UU8AOp1QLTy9B4XFXlftgUkYl03lBkuurw1t3dUw=;
+        b=adAVwQ477jG5JwZI77PxXqGIpUet/82DpaclNBSLmisGvu32Iiq8AtgsDk7NQN5IhC
+         X+jWsFibKz3v6Ipff2yzeeZaZoMtDICebxGVpze4keXn71lU5jtyfde1rZ0X5J5IHsjo
+         k+3aRw77mcTrPC5vXBQhz/KFl65kfy77Qwmbxg59XOesM9wFHom2AutlAYUAPLfBVzwf
+         TNmnz2o8FcKcYebsDJ/rU3+ejtY5oe5fs1zF6ZmUpBUrqiTnemMpFuTSHleYYMkvORyn
+         z1au5FATn3v0YfDxuDJDKKz2xE0QJg9KJzOQ0UNMA1iZXUHUqKrugmetKY9wopnp26aS
+         Sk8g==
+X-Gm-Message-State: AOAM530g8CtCaKeIvk2zlZxcohCsI9gX9mgXtrjovJrlCo9x8oo4Rcft
+        u10fJexByuPTKsWTsZ6KH62fLCGM86w=
+X-Google-Smtp-Source: ABdhPJwj1VtqxsoeuuFgonN3D/HINlVgZkGW5GZOis7sSgQ1xqG2tO1B0Ivqq59S6nl95T5MQr8cpA==
+X-Received: by 2002:a63:5004:: with SMTP id e4mr18127350pgb.208.1595814856732;
+        Sun, 26 Jul 2020 18:54:16 -0700 (PDT)
+Received: from [10.8.0.10] ([203.205.141.54])
+        by smtp.gmail.com with ESMTPSA id e5sm12218011pjy.26.2020.07.26.18.54.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Jul 2020 18:54:16 -0700 (PDT)
+To:     tytso@mit.edu, adilger.kernel@dilger.ca
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   brookxu <brookxu.cn@gmail.com>
+Subject: ext4: delete the invalid BUGON in ext4_mb_load_buddy_gfp()
+Message-ID: <ad68e8a2-5ec3-5beb-537f-f3e53f55367a@gmail.com>
+Date:   Mon, 27 Jul 2020 09:54:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-netfilter: ip6tables: Remove redundant null checks
+Delete the invalid BUGON in ext4_mb_load_buddy_gfp(), the previous
+code has already judged whether page is NULL.
 
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+Signed-off-by: Chunguang Xu <brookxu@tencent.com>
 ---
- net/ipv6/netfilter/ip6t_ah.c   | 3 +--
- net/ipv6/netfilter/ip6t_frag.c | 3 +--
- net/ipv6/netfilter/ip6t_hbh.c  | 3 +--
- net/ipv6/netfilter/ip6t_rt.c   | 3 +--
- 4 files changed, 4 insertions(+), 8 deletions(-)
+ fs/ext4/mballoc.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/net/ipv6/netfilter/ip6t_ah.c b/net/ipv6/netfilter/ip6t_ah.c
-index 4e15a14435e4..70da2f2ce064 100644
---- a/net/ipv6/netfilter/ip6t_ah.c
-+++ b/net/ipv6/netfilter/ip6t_ah.c
-@@ -74,8 +74,7 @@ static bool ah_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 		 ahinfo->hdrres, ah->reserved,
- 		 !(ahinfo->hdrres && ah->reserved));
- 
--	return (ah != NULL) &&
--		spi_match(ahinfo->spis[0], ahinfo->spis[1],
-+	return spi_match(ahinfo->spis[0], ahinfo->spis[1],
- 			  ntohl(ah->spi),
- 			  !!(ahinfo->invflags & IP6T_AH_INV_SPI)) &&
- 		(!ahinfo->hdrlen ||
-diff --git a/net/ipv6/netfilter/ip6t_frag.c b/net/ipv6/netfilter/ip6t_frag.c
-index fb91eeee4a1e..3aad6439386b 100644
---- a/net/ipv6/netfilter/ip6t_frag.c
-+++ b/net/ipv6/netfilter/ip6t_frag.c
-@@ -85,8 +85,7 @@ frag_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 		 !((fraginfo->flags & IP6T_FRAG_NMF) &&
- 		   (ntohs(fh->frag_off) & IP6_MF)));
- 
--	return (fh != NULL) &&
--		id_match(fraginfo->ids[0], fraginfo->ids[1],
-+	return id_match(fraginfo->ids[0], fraginfo->ids[1],
- 			 ntohl(fh->identification),
- 			 !!(fraginfo->invflags & IP6T_FRAG_INV_IDS)) &&
- 		!((fraginfo->flags & IP6T_FRAG_RES) &&
-diff --git a/net/ipv6/netfilter/ip6t_hbh.c b/net/ipv6/netfilter/ip6t_hbh.c
-index 467b2a86031b..e7a3fb9355ee 100644
---- a/net/ipv6/netfilter/ip6t_hbh.c
-+++ b/net/ipv6/netfilter/ip6t_hbh.c
-@@ -86,8 +86,7 @@ hbh_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 		  ((optinfo->hdrlen == hdrlen) ^
- 		   !!(optinfo->invflags & IP6T_OPTS_INV_LEN))));
- 
--	ret = (oh != NULL) &&
--	      (!(optinfo->flags & IP6T_OPTS_LEN) ||
-+	ret = (!(optinfo->flags & IP6T_OPTS_LEN) ||
- 	       ((optinfo->hdrlen == hdrlen) ^
- 		!!(optinfo->invflags & IP6T_OPTS_INV_LEN)));
- 
-diff --git a/net/ipv6/netfilter/ip6t_rt.c b/net/ipv6/netfilter/ip6t_rt.c
-index f633dc84ca3f..733c83d38b30 100644
---- a/net/ipv6/netfilter/ip6t_rt.c
-+++ b/net/ipv6/netfilter/ip6t_rt.c
-@@ -89,8 +89,7 @@ static bool rt_mt6(const struct sk_buff *skb, struct xt_action_param *par)
- 		 !((rtinfo->flags & IP6T_RT_RES) &&
- 		   (((const struct rt0_hdr *)rh)->reserved)));
- 
--	ret = (rh != NULL) &&
--	      (segsleft_match(rtinfo->segsleft[0], rtinfo->segsleft[1],
-+	ret = (segsleft_match(rtinfo->segsleft[0], rtinfo->segsleft[1],
- 			      rh->segments_left,
- 			      !!(rtinfo->invflags & IP6T_RT_INV_SGS))) &&
- 	      (!(rtinfo->flags & IP6T_RT_LEN) ||
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index 28a139f..9b1c3ad 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -1279,9 +1279,6 @@ int ext4_mb_init_group(struct super_block *sb, ext4_group_t group, gfp_t gfp)
+     e4b->bd_buddy_page = page;
+     e4b->bd_buddy = page_address(page) + (poff * sb->s_blocksize);
+ 
+-    BUG_ON(e4b->bd_bitmap_page == NULL);
+-    BUG_ON(e4b->bd_buddy_page == NULL);
+-
+     return 0;
+ 
+ err:
 -- 
-2.17.1
+1.8.3.1
 
