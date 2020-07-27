@@ -2,72 +2,79 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28651C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5631EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE73420809
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:56:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y+lqk4wl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ubrfn5F5"
+	by mail.kernel.org (Postfix) with ESMTP id 2B5CA20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgG0U4H (ORCPT
+        id S1726817AbgG0U4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:56:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgG0U4G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:56:06 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB0DC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:56:06 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595883364;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vGlklfhOhKMe52+hawZnpl3d36F4/BFOW/Vk8oQE7eM=;
-        b=Y+lqk4wl3HL7c+JNJAFxRC1GzsSXbJ0VMOlLjOY4Ni0TuONAOSVDBx2jAX8nnZd9BJx/LJ
-        ap3ZhsmV0KycsC33/t7LDlK64uUeKZG4Sgz5Mm1qFk7nBwIKfdCcWOIGX9sifLuHxKnl9B
-        Z6qaybkU6dgaYLrf7pL0v5STxN3MfKHOQdyZSyBnwlpvpUjztrkueY9B6C2kV6ICuTHRnF
-        6/K9i7GCqexJK0/s9WcEY05TuXaNbevELaiy1FFvGJODfvYxojlZoJbf7mJtCx6CQKy/+0
-        xRtD6tM7bcSK867HNsXVNZwEE0+15y3hmh6vZvEch3mzK6IfSOiQ5p+E53sGjw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595883364;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vGlklfhOhKMe52+hawZnpl3d36F4/BFOW/Vk8oQE7eM=;
-        b=ubrfn5F5T2p7GfJQ/BCtS23kE9iQnqxHg/uK2gDXVj+jvcTjq8vwhFhrAQi0w2a1HvwOVE
-        5VcYODlch6rUInCQ==
-To:     peterz@infradead.org, Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, mbenes@suse.cz
-Subject: Re: [PATCH] objtool,x86: Verify poke_int3_handler() is self contained
-In-Reply-To: <20200727104050.GH119549@hirez.programming.kicks-ass.net>
-References: <20200727104050.GH119549@hirez.programming.kicks-ass.net>
-Date:   Mon, 27 Jul 2020 22:56:03 +0200
-Message-ID: <87eeowbrto.fsf@nanos.tec.linutronix.de>
+        Mon, 27 Jul 2020 16:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726091AbgG0U4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 16:56:17 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26A1F20809;
+        Mon, 27 Jul 2020 20:56:16 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 16:56:14 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, sfr@canb.auug.org.au
+Subject: Re: [PATCH v2] sched,tracing: Convert to sched_set_fifo()
+Message-ID: <20200727165614.5d0f4346@oasis.local.home>
+In-Reply-To: <20200725165816.GE10769@hirez.programming.kicks-ass.net>
+References: <202006192249.AYnVBGCH%lkp@intel.com>
+        <20200709124505.GT597537@hirez.programming.kicks-ass.net>
+        <20200709115818.36a956a4@oasis.local.home>
+        <20200720214918.GM5523@worktop.programming.kicks-ass.net>
+        <20200724213911.GX119549@hirez.programming.kicks-ass.net>
+        <20200724174618.7487ee7c@oasis.local.home>
+        <20200724215003.GY119549@hirez.programming.kicks-ass.net>
+        <20200724181846.415bfd43@oasis.local.home>
+        <20200725165816.GE10769@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-peterz@infradead.org writes:
-> Abuse the SMAP rules to ensure poke_int3_handler() doesn't call out to
-> anything.
+On Sat, 25 Jul 2020 18:58:16 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Yuck. Isn't that what noinstr is for or am I missing something?
+> On Fri, Jul 24, 2020 at 06:18:46PM -0400, Steven Rostedt wrote:
+> > On Fri, 24 Jul 2020 23:50:03 +0200
+> > peterz@infradead.org wrote:
+> >   
+> > > -	if (producer_fifo < 0)
+> > > +	if (producer_fifo)
+> > > +		trace_printk("Running Producer at SCHED_FIFO %s\n",
+> > > +			     consumer_fifo == 1 ? "low" : "high");  
+> > 
+> > I'm going to take cut-and-paste away from you!  
+> 
+> Well, yes, I said so, I also already have it fixed.
 
-Thanks,
+I thought you're comment on IRC was about v1, as I read it before
+seeing v2.
 
-        tglx
+> 
+> Aside from that, is the patch ok?
 
+Beside this, yes.
 
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
