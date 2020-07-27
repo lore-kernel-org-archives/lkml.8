@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE075C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E01C433F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98CA72083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE4612083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860413;
-	bh=JGHlMZQJ1xpEdottcTaPnLzS+nCY083XoLYz11gR/Lw=;
+	s=default; t=1595860418;
+	bh=sr55WZBKO1zAa55a/U4uiXMrVkozFZ9KxigTSgpK8Z0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ECm+Jov419rT2IHyx24WqAbs2qgPKvpmTGo62KVol05I9DRRc6DXJMv75+t7ZJwtM
-	 HF1SQZqODiO0Msd2ETvwTGB7UJw/uZL8zPh97f0pCVYKVZ07PLRaBpUzUHjs0wDoji
-	 YXbv/fxp7mpuC7TxEDTPK9W09+ieJ+9bkd7e45jE=
+	b=qpnQhgaqamKdSJgFLFaSogm81IEuvdEKGtkaaBhe8V75SpE3/sNUxHrCeRYhPDPXy
+	 fw1BP0eyx5+jiyV2MFF6wC5sznZWT7vXVA4WDKczMTF9fMV21ONA9MRhA2yw/QsGo1
+	 b8HMq1w/zsiWHKZbFho/yJeMkd2UzrVHfZyzbmOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729480AbgG0ORh (ORCPT
+        id S1732868AbgG0Odh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:17:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44728 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:33:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731043AbgG0ORZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:17:25 -0400
+        id S1731077AbgG0ORe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:17:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 378CA208E4;
-        Mon, 27 Jul 2020 14:17:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84ECF2070A;
+        Mon, 27 Jul 2020 14:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859444;
-        bh=JGHlMZQJ1xpEdottcTaPnLzS+nCY083XoLYz11gR/Lw=;
+        s=default; t=1595859454;
+        bh=sr55WZBKO1zAa55a/U4uiXMrVkozFZ9KxigTSgpK8Z0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vmSS2aW9bB0Sf8K0KCS30OzZl7GoimfulFq+UtjGtg+DkQrDZuceqD0nEf2LgiOSj
-         5JU+qmnxvhoakIcMkI7XVeOrtWvdUHbWMi/XOUxlxHxxIomEqvv+e4j66MK4jRpZVF
-         04nOzltpaetqnk5YfU9Eu2tqeNLrqXZknwLu0ZUY=
+        b=AmMvAPYBSOd6sjOwSpP2Wp1w1ks/PVJydrZ68kNu0bODQSuMdL+HOuTKxfwTm5B5L
+         GTeZ7n1OAEKWft9n1Qx/KKnbJAnG8Z4rmxXLTTC+VrhJZiVXPlEN6pkbD4k6ljCxg5
+         QL3Jrra2Yo9N64Fk7Y7zd7rmkqulY47VvFiINGWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 5.4 111/138] staging: comedi: addi_apci_1032: check INSN_CONFIG_DIGITAL_TRIG shift
-Date:   Mon, 27 Jul 2020 16:05:06 +0200
-Message-Id: <20200727134931.014045740@linuxfoundation.org>
+        stable@vger.kernel.org, Shardar Shariff Md <smohammed@nvidia.com>,
+        Krishna Yarlagadda <kyarlagadda@nvidia.com>,
+        Johan Hovold <johan@kernel.org>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.4 115/138] serial: tegra: fix CREAD handling for PIO
+Date:   Mon, 27 Jul 2020 16:05:10 +0200
+Message-Id: <20200727134931.199769367@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -58,74 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Johan Hovold <johan@kernel.org>
 
-commit 0bd0db42a030b75c20028c7ba6e327b9cb554116 upstream.
+commit b374c562ee7ab3f3a1daf959c01868bae761571c upstream.
 
-The `INSN_CONFIG` comedi instruction with sub-instruction code
-`INSN_CONFIG_DIGITAL_TRIG` includes a base channel in `data[3]`. This is
-used as a right shift amount for other bitmask values without being
-checked.  Shift amounts greater than or equal to 32 will result in
-undefined behavior.  Add code to deal with this.
+Commit 33ae787b74fc ("serial: tegra: add support to ignore read") added
+support for dropping input in case CREAD isn't set, but for PIO the
+ignore_status_mask wasn't checked until after the character had been
+put in the receive buffer.
 
-Fixes: 33cdce6293dcc ("staging: comedi: addi_apci_1032: conform to new INSN_CONFIG_DIGITAL_TRIG")
-Cc: <stable@vger.kernel.org> #3.8+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20200717145257.112660-3-abbotti@mev.co.uk
+Note that the NULL tty-port test is bogus and will be removed by a
+follow-on patch.
+
+Fixes: 33ae787b74fc ("serial: tegra: add support to ignore read")
+Cc: stable <stable@vger.kernel.org>     # 5.4
+Cc: Shardar Shariff Md <smohammed@nvidia.com>
+Cc: Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/20200710135947.2737-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/addi_apci_1032.c |   20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ drivers/tty/serial/serial-tegra.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/comedi/drivers/addi_apci_1032.c
-+++ b/drivers/staging/comedi/drivers/addi_apci_1032.c
-@@ -106,14 +106,22 @@ static int apci1032_cos_insn_config(stru
- 				    unsigned int *data)
- {
- 	struct apci1032_private *devpriv = dev->private;
--	unsigned int shift, oldmask;
-+	unsigned int shift, oldmask, himask, lomask;
+--- a/drivers/tty/serial/serial-tegra.c
++++ b/drivers/tty/serial/serial-tegra.c
+@@ -651,11 +651,14 @@ static void tegra_uart_handle_rx_pio(str
+ 		ch = (unsigned char) tegra_uart_read(tup, UART_RX);
+ 		tup->uport.icount.rx++;
  
- 	switch (data[0]) {
- 	case INSN_CONFIG_DIGITAL_TRIG:
- 		if (data[1] != 0)
- 			return -EINVAL;
- 		shift = data[3];
--		oldmask = (1U << shift) - 1;
-+		if (shift < 32) {
-+			oldmask = (1U << shift) - 1;
-+			himask = data[4] << shift;
-+			lomask = data[5] << shift;
-+		} else {
-+			oldmask = 0xffffffffu;
-+			himask = 0;
-+			lomask = 0;
-+		}
- 		switch (data[2]) {
- 		case COMEDI_DIGITAL_TRIG_DISABLE:
- 			devpriv->ctrl = 0;
-@@ -136,8 +144,8 @@ static int apci1032_cos_insn_config(stru
- 				devpriv->mode2 &= oldmask;
- 			}
- 			/* configure specified channels */
--			devpriv->mode1 |= data[4] << shift;
--			devpriv->mode2 |= data[5] << shift;
-+			devpriv->mode1 |= himask;
-+			devpriv->mode2 |= lomask;
- 			break;
- 		case COMEDI_DIGITAL_TRIG_ENABLE_LEVELS:
- 			if (devpriv->ctrl != (APCI1032_CTRL_INT_ENA |
-@@ -154,8 +162,8 @@ static int apci1032_cos_insn_config(stru
- 				devpriv->mode2 &= oldmask;
- 			}
- 			/* configure specified channels */
--			devpriv->mode1 |= data[4] << shift;
--			devpriv->mode2 |= data[5] << shift;
-+			devpriv->mode1 |= himask;
-+			devpriv->mode2 |= lomask;
- 			break;
- 		default:
- 			return -EINVAL;
+-		if (!uart_handle_sysrq_char(&tup->uport, ch) && tty)
+-			tty_insert_flip_char(tty, ch, flag);
++		if (uart_handle_sysrq_char(&tup->uport, ch))
++			continue;
+ 
+ 		if (tup->uport.ignore_status_mask & UART_LSR_DR)
+ 			continue;
++
++		if (tty)
++			tty_insert_flip_char(tty, ch, flag);
+ 	} while (1);
+ }
+ 
 
 
