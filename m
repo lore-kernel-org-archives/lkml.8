@@ -2,84 +2,174 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA429C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0358C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD28D2075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:28:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oS9RvDUM"
+	by mail.kernel.org (Postfix) with ESMTP id 799CB2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:28:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595856522;
+	bh=lu2rHSNp9FyF7jmDfg6vYFkcneRskbHLBspKv5psxN4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GjBvlr+Bd+4AwH6ABeDVkN54TffszgppSrqZ9GYjeeF8tq4483fKONpTMsHn2SvWL
+	 GdMoXmhCeaTdqctnnzc3Bzp1UTkJoiDwTIhXWTuP2Mg8FPmg3dnqmU6YC/T7WBd+jm
+	 Xrn8elFOOJ0Rnp/3KLxo+uuJ5DzZw+KRQLz6VAgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgG0N21 (ORCPT
+        id S1728835AbgG0N2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:28:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56554 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728810AbgG0N20 (ORCPT
+        Mon, 27 Jul 2020 09:28:41 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42216 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728810AbgG0N2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:28:26 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB91FC0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 06:28:25 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id i19so8990756lfj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 06:28:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gOqZtq8jjYGsRrVE9SfOle2aGRnGjTTajFWgsMLd7gI=;
-        b=oS9RvDUMQeGfwmgdSCWGfV1B2GIKKEJhFrjFeWhGkG7qgakjvxs6REU2MKlHBProdS
-         GpwXKK2siUcskNGjWF9vvF446AH5dhXkieeBzX7OWsCEldIbv/E/wf6CZhZvATIO4kf8
-         v+OB+xQh1Lyp0Z3yfqCDfY+GEjDXZNi/9YE5syOKWfW0zGSg8alkKPTN+kMFo+Tk7ulV
-         wGCknvO0pU/wZ8+bKNO3QsxnyOMmCWONpMApvL9VF38FQVF2oVRgVju/UjVVdBcbTClO
-         l6r5jtmsOOv3dCqM2ztlbdzO/gTE2U3Ij37aZoR2DojjI7YkOttQwep4ycWE0dsKTUVK
-         Cn7w==
+        Mon, 27 Jul 2020 09:28:41 -0400
+Received: by mail-ot1-f68.google.com with SMTP id v21so5015602otj.9;
+        Mon, 27 Jul 2020 06:28:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gOqZtq8jjYGsRrVE9SfOle2aGRnGjTTajFWgsMLd7gI=;
-        b=KcGfpac0ChCV9sot8XNhfvjRnz8KsuIWaDjG2iczPHXDSmQFwZhuOdDt1TJkDBHzL9
-         pmA36EfmCWesfqyKPiHn2p7AJLeLtwwhtIaVjCY5OmoiCE8yhpiorpJxBnCTBVe618c5
-         3f15d0Z4y13PpVdjOXx9kkTa7xg+1AJYRWW8FebON6dl503sgTKYVnLQ3xO9Zx9O7w0U
-         d1yJ2E2zGJbXaCD81xE2IBjKQ9YSZYetXNWRUp3VxMJXkmh3drXujFpbOf76A3NKBJNz
-         qCKuJ9FL3D00F6mpBb4kW3v1O9xi5EazsMzegP18FpIkHZa0Frc4Xpemjm5J05WFW4mR
-         C2HA==
-X-Gm-Message-State: AOAM531pb4uYpBgHKgiMnqNYq5ijAKoAObTmfXisFXjAcJ6DIVc1wS0T
-        YVxA0OjjoFS8P6TVlxBNECZZsQtlw92AxqeWQW6pEg==
-X-Google-Smtp-Source: ABdhPJxGHOXZCG9AsImtYwpDzkDpPQ4nkXAG0kareKMahSYOQsdz7xhKFMJbEbPGn/7D27VIvWTBsU2LlctndTriyKY=
-X-Received: by 2002:a19:1c6:: with SMTP id 189mr11675726lfb.158.1595856503472;
- Mon, 27 Jul 2020 06:28:23 -0700 (PDT)
+        bh=dyBt54tE9HNpCn7MfHA5YP/4SLINbBOxbN35N0rBINs=;
+        b=IlwxGG60AiP/v/DeC4spUtO0QJMQdLm3ThLkzZKqumIuJElVjEUrqTgJJiOf8ZW2lN
+         JAX237kM74JxjnmG1dUwMiNvaatwCXOyxs1TErbtaoDbZ5H5zsv6JnOO1wRpvEV4jH7W
+         EElVAC6SFvvIAR0h1wbjJcdsFHlQJ7Jq2TDqyyWorGc9adobzHI+uNfiiwr4hmKVUeUP
+         meX0gTKBV1Fox2A4+VigYHoNkTK2pEgbr2bh5+Ew41iAnh/kg4I+FQeMq9gHPEv4nE1q
+         CxftrLoS0PYNVuoKSjp2J97krQyG2SCHJi1LryP1gT9Wtu+6Mce203/acj7E93Wn7sp+
+         u8GQ==
+X-Gm-Message-State: AOAM530NVuCDWaNP35J2ftDoGIKArtiYKts0NF+SO1F3FcEGatQdsgKn
+        6a6eibU+7QcSqjPlzIf+Ki2z+lM9GxBHCY1Ij/s=
+X-Google-Smtp-Source: ABdhPJxA6L3ew5rkyAd8d0RHF2JbupA8LXHj2xjbAHpaL5OkleNr5cEb8uUy78H10Of4PCFPHoQWYZm5TV/JSsEHy1Q=
+X-Received: by 2002:a9d:306:: with SMTP id 6mr10506313otv.167.1595856519954;
+ Mon, 27 Jul 2020 06:28:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200727134433.1c4ea34e@canb.auug.org.au> <20200727052224.GA933@lst.de>
-In-Reply-To: <20200727052224.GA933@lst.de>
-From:   Alain Michaud <alainmichaud@google.com>
-Date:   Mon, 27 Jul 2020 09:28:12 -0400
-Message-ID: <CALWDO_W5mY9_KJwWikCtAZufTqSFnn238C7cPy34RQoqASpxhQ@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the bluetooth tree
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alain Michaud <alainm@chromium.org>
+References: <20200720050500.23357-1-akshu.agrawal@amd.com> <20200720050500.23357-2-akshu.agrawal@amd.com>
+In-Reply-To: <20200720050500.23357-2-akshu.agrawal@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 27 Jul 2020 15:28:29 +0200
+Message-ID: <CAJZ5v0j264hcr0AbwXou240K73xfQ5Q0pF4TEP11SAOT2nuOjA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] ACPI: APD: Change name from ST to FCH
+To:     Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Same here, thanks for the fix!
-
-
-On Mon, Jul 27, 2020 at 1:22 AM Christoph Hellwig <hch@lst.de> wrote:
+On Mon, Jul 20, 2020 at 7:06 AM Akshu Agrawal <akshu.agrawal@amd.com> wrote:
 >
-> The fixup looks good to me, thanks.
+> AMD SoC general pupose clk is present in new platforms with
+> same MMIO mappings. We can reuse the same clk handler support
+> for other platforms. Hence, changing name from ST(SoC) to FCH(IP)
+>
+> Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+
+This patch and the [3/4] appear to be part of a larger series which
+isn't visible to me as a whole.
+
+Do you want me to apply them nevertheless?
+
+> ---
+>  drivers/acpi/acpi_apd.c                            | 14 +++++++-------
+>  .../linux/platform_data/{clk-st.h => clk-fch.h}    | 10 +++++-----
+>  2 files changed, 12 insertions(+), 12 deletions(-)
+>  rename include/linux/platform_data/{clk-st.h => clk-fch.h} (53%)
+>
+> diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
+> index ba2612e9a0eb..2d99e46add1a 100644
+> --- a/drivers/acpi/acpi_apd.c
+> +++ b/drivers/acpi/acpi_apd.c
+> @@ -8,7 +8,7 @@
+>   */
+>
+>  #include <linux/clk-provider.h>
+> -#include <linux/platform_data/clk-st.h>
+> +#include <linux/platform_data/clk-fch.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_domain.h>
+>  #include <linux/clkdev.h>
+> @@ -79,11 +79,11 @@ static int misc_check_res(struct acpi_resource *ares, void *data)
+>         return !acpi_dev_resource_memory(ares, &res);
+>  }
+>
+> -static int st_misc_setup(struct apd_private_data *pdata)
+> +static int fch_misc_setup(struct apd_private_data *pdata)
+>  {
+>         struct acpi_device *adev = pdata->adev;
+>         struct platform_device *clkdev;
+> -       struct st_clk_data *clk_data;
+> +       struct fch_clk_data *clk_data;
+>         struct resource_entry *rentry;
+>         struct list_head resource_list;
+>         int ret;
+> @@ -106,7 +106,7 @@ static int st_misc_setup(struct apd_private_data *pdata)
+>
+>         acpi_dev_free_resource_list(&resource_list);
+>
+> -       clkdev = platform_device_register_data(&adev->dev, "clk-st",
+> +       clkdev = platform_device_register_data(&adev->dev, "clk-fch",
+>                                                PLATFORM_DEVID_NONE, clk_data,
+>                                                sizeof(*clk_data));
+>         return PTR_ERR_OR_ZERO(clkdev);
+> @@ -135,8 +135,8 @@ static const struct apd_device_desc cz_uart_desc = {
+>         .properties = uart_properties,
+>  };
+>
+> -static const struct apd_device_desc st_misc_desc = {
+> -       .setup = st_misc_setup,
+> +static const struct apd_device_desc fch_misc_desc = {
+> +       .setup = fch_misc_setup,
+>  };
+>  #endif
+>
+> @@ -239,7 +239,7 @@ static const struct acpi_device_id acpi_apd_device_ids[] = {
+>         { "AMD0020", APD_ADDR(cz_uart_desc) },
+>         { "AMDI0020", APD_ADDR(cz_uart_desc) },
+>         { "AMD0030", },
+> -       { "AMD0040", APD_ADDR(st_misc_desc)},
+> +       { "AMD0040", APD_ADDR(fch_misc_desc)},
+>  #endif
+>  #ifdef CONFIG_ARM64
+>         { "APMC0D0F", APD_ADDR(xgene_i2c_desc) },
+> diff --git a/include/linux/platform_data/clk-st.h b/include/linux/platform_data/clk-fch.h
+> similarity index 53%
+> rename from include/linux/platform_data/clk-st.h
+> rename to include/linux/platform_data/clk-fch.h
+> index 7cdb6a402b35..850ca776156d 100644
+> --- a/include/linux/platform_data/clk-st.h
+> +++ b/include/linux/platform_data/clk-fch.h
+> @@ -1,17 +1,17 @@
+>  /* SPDX-License-Identifier: MIT */
+>  /*
+> - * clock framework for AMD Stoney based clock
+> + * clock framework for AMD misc clocks
+>   *
+>   * Copyright 2018 Advanced Micro Devices, Inc.
+>   */
+>
+> -#ifndef __CLK_ST_H
+> -#define __CLK_ST_H
+> +#ifndef __CLK_FCH_H
+> +#define __CLK_FCH_H
+>
+>  #include <linux/compiler.h>
+>
+> -struct st_clk_data {
+> +struct fch_clk_data {
+>         void __iomem *base;
+>  };
+>
+> -#endif /* __CLK_ST_H */
+> +#endif /* __CLK_FCH_H */
+> --
+> 2.20.1
+>
