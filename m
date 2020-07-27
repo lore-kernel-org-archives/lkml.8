@@ -2,104 +2,285 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D6FC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B285FC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 663622070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595847469;
-	bh=U/1331pETiuwhTM+IUIHu8BPQ+Psbv5olq3HsSqSQj4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=z27CllF1ed90PZnEf39i/tz5U5G8YowmV48JxDEdN/fLM0nQHOAg6PiaBLshL2lTp
-	 ftXHcl/KkbBZs6ZEfXyojQgaTdbM+lgxcrZzV2Qe6GDs72alfxxLSqhTj+FCclM7KM
-	 GMgu4HEFCwVlDBfRziy6Qcjigqrz+ebynus9FBfk=
+	by mail.kernel.org (Postfix) with ESMTP id 85DCA2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:58:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qLSFx10Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgG0K5s (ORCPT
+        id S1728401AbgG0K6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:57:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34104 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 06:58:41 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:13336 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726324AbgG0K5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:57:47 -0400
-Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728392AbgG0K6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 06:58:40 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595847519; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=DEfjH/2I4evPsMqfPSbH/iM41ACmWP5x0mOUhdXb52s=;
+ b=qLSFx10QkkV0S7oqsbFOKJTUIArC02n3K+lD/P+rQCduGwCLEdlg/nDiglOuqFhEWhUjbBDe
+ tMjIrBXuSU9Rg8kFH4MISE2khT2jG0vws69N1LO5hXcRNO3pQNzxEmL18N1PEycB4d9n/wOn
+ UUKqzglzYUp8c/HI8YGD6V77ifs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f1eb35da61bb9e3f58d35e0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 10:58:37
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 861D9C433CB; Mon, 27 Jul 2020 10:58:36 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33B532070B;
-        Mon, 27 Jul 2020 10:57:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595847467;
-        bh=U/1331pETiuwhTM+IUIHu8BPQ+Psbv5olq3HsSqSQj4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=BOOtDTGzLu1hTazCClx7HJFY7Dt9e0BGgjqhW55IgbB7sYLyFJQmkCiZsCNCbcDAN
-         qbhKky3oNrVus9Cyuz3LIUQvJMOg0lqaOeqv0zAxcW3IpJh6GA0wELNna+X8ji8WNE
-         0goynQGVKw1nTR64C36POjKqj7RQSApbiKx8wIkk=
-Message-ID: <1595847465.4841.63.camel@kernel.org>
-Subject: Re: [PATCH v3 12/19] firmware_loader: Use security_post_load_data()
-From:   Mimi Zohar <zohar@kernel.org>
-To:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
-        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 27 Jul 2020 06:57:45 -0400
-In-Reply-To: <20200724213640.389191-13-keescook@chromium.org>
-References: <20200724213640.389191-1-keescook@chromium.org>
-         <20200724213640.389191-13-keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 914D4C433C6;
+        Mon, 27 Jul 2020 10:58:35 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 27 Jul 2020 16:28:35 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org, mka@chromium.org,
+        dianders@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH 4/6] arm64: dts: qcom: sdm845: Increase the number of
+ interconnect cells
+In-Reply-To: <20200723130942.28491-5-georgi.djakov@linaro.org>
+References: <20200723130942.28491-1-georgi.djakov@linaro.org>
+ <20200723130942.28491-5-georgi.djakov@linaro.org>
+Message-ID: <3c8c4aae7697d9d5a052b9dfd1ea0cf4@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
-> Now that security_post_load_data() is wired up, use it instead
-> of the NULL file argument style of security_post_read_file(),
-> and update the security_kernel_load_data() call to indicate that a
-> security_kernel_post_load_data() call is expected.
+On 2020-07-23 18:39, Georgi Djakov wrote:
+> Increase the number of interconnect-cells, as now we can include
+> the tag information. The consumers can specify the path tag as an
+> additional argument to the endpoints.
+
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+
+https://patchwork.kernel.org/patch/11655409/
+I'll replace the tag ids with the
+macros once ^^ lands.
+
 > 
-> Wire up the IMA check to match earlier logic. Perhaps a generalized
-> change to ima_post_load_data() might look something like this:
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 44 ++++++++++++++--------------
+>  1 file changed, 22 insertions(+), 22 deletions(-)
 > 
->     return process_buffer_measurement(buf, size,
->                                       kernel_load_data_id_str(load_id),
->                                       read_idmap[load_id] ?: FILE_CHECK,
->                                       0, NULL);
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index e506793407d8..94f5d27f2927 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -200,7 +200,7 @@ &LITTLE_CPU_SLEEP_1
+>  			dynamic-power-coefficient = <100>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			operating-points-v2 = <&cpu0_opp_table>;
+> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
+> SLAVE_EBI1>,
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
+> SLAVE_EBI1 3>,
+>  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_0>;
+> @@ -225,7 +225,7 @@ &LITTLE_CPU_SLEEP_1
+>  			dynamic-power-coefficient = <100>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			operating-points-v2 = <&cpu0_opp_table>;
+> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
+> SLAVE_EBI1>,
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
+> SLAVE_EBI1 3>,
+>  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_100>;
+> @@ -247,7 +247,7 @@ &LITTLE_CPU_SLEEP_1
+>  			dynamic-power-coefficient = <100>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			operating-points-v2 = <&cpu0_opp_table>;
+> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
+> SLAVE_EBI1>,
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
+> SLAVE_EBI1 3>,
+>  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_200>;
+> @@ -269,7 +269,7 @@ &LITTLE_CPU_SLEEP_1
+>  			dynamic-power-coefficient = <100>;
+>  			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			operating-points-v2 = <&cpu0_opp_table>;
+> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
+> SLAVE_EBI1>,
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
+> SLAVE_EBI1 3>,
+>  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_300>;
+> @@ -291,7 +291,7 @@ &BIG_CPU_SLEEP_1
+>  			dynamic-power-coefficient = <396>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			operating-points-v2 = <&cpu4_opp_table>;
+> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
+> SLAVE_EBI1>,
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
+> SLAVE_EBI1 3>,
+>  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_400>;
+> @@ -313,7 +313,7 @@ &BIG_CPU_SLEEP_1
+>  			dynamic-power-coefficient = <396>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			operating-points-v2 = <&cpu4_opp_table>;
+> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
+> SLAVE_EBI1>,
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
+> SLAVE_EBI1 3>,
+>  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_500>;
+> @@ -335,7 +335,7 @@ &BIG_CPU_SLEEP_1
+>  			dynamic-power-coefficient = <396>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			operating-points-v2 = <&cpu4_opp_table>;
+> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
+> SLAVE_EBI1>,
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
+> SLAVE_EBI1 3>,
+>  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_600>;
+> @@ -357,7 +357,7 @@ &BIG_CPU_SLEEP_1
+>  			dynamic-power-coefficient = <396>;
+>  			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			operating-points-v2 = <&cpu4_opp_table>;
+> -			interconnects = <&gladiator_noc MASTER_APPSS_PROC &mem_noc 
+> SLAVE_EBI1>,
+> +			interconnects = <&gladiator_noc MASTER_APPSS_PROC 3 &mem_noc 
+> SLAVE_EBI1 3>,
+>  					<&osm_l3 MASTER_OSM_L3_APPS &osm_l3 SLAVE_OSM_L3>;
+>  			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_700>;
+> @@ -2011,49 +2011,49 @@ pcie1_lane: lanes@1c06200 {
+>  		mem_noc: interconnect@1380000 {
+>  			compatible = "qcom,sdm845-mem-noc";
+>  			reg = <0 0x01380000 0 0x27200>;
+> -			#interconnect-cells = <1>;
+> +			#interconnect-cells = <2>;
+>  			qcom,bcm-voters = <&apps_bcm_voter>;
+>  		};
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+>  		dc_noc: interconnect@14e0000 {
+>  			compatible = "qcom,sdm845-dc-noc";
+>  			reg = <0 0x014e0000 0 0x400>;
+> -			#interconnect-cells = <1>;
+> +			#interconnect-cells = <2>;
+>  			qcom,bcm-voters = <&apps_bcm_voter>;
+>  		};
+> 
+>  		config_noc: interconnect@1500000 {
+>  			compatible = "qcom,sdm845-config-noc";
+>  			reg = <0 0x01500000 0 0x5080>;
+> -			#interconnect-cells = <1>;
+> +			#interconnect-cells = <2>;
+>  			qcom,bcm-voters = <&apps_bcm_voter>;
+>  		};
+> 
+>  		system_noc: interconnect@1620000 {
+>  			compatible = "qcom,sdm845-system-noc";
+>  			reg = <0 0x01620000 0 0x18080>;
+> -			#interconnect-cells = <1>;
+> +			#interconnect-cells = <2>;
+>  			qcom,bcm-voters = <&apps_bcm_voter>;
+>  		};
+> 
+>  		aggre1_noc: interconnect@16e0000 {
+>  			compatible = "qcom,sdm845-aggre1-noc";
+>  			reg = <0 0x016e0000 0 0x15080>;
+> -			#interconnect-cells = <1>;
+> +			#interconnect-cells = <2>;
+>  			qcom,bcm-voters = <&apps_bcm_voter>;
+>  		};
+> 
+>  		aggre2_noc: interconnect@1700000 {
+>  			compatible = "qcom,sdm845-aggre2-noc";
+>  			reg = <0 0x01700000 0 0x1f300>;
+> -			#interconnect-cells = <1>;
+> +			#interconnect-cells = <2>;
+>  			qcom,bcm-voters = <&apps_bcm_voter>;
+>  		};
+> 
+>  		mmss_noc: interconnect@1740000 {
+>  			compatible = "qcom,sdm845-mmss-noc";
+>  			reg = <0 0x01740000 0 0x1c100>;
+> -			#interconnect-cells = <1>;
+> +			#interconnect-cells = <2>;
+>  			qcom,bcm-voters = <&apps_bcm_voter>;
+>  		};
+> 
+> @@ -2156,8 +2156,8 @@ ipa: ipa@1e40000 {
+>  			clocks = <&rpmhcc RPMH_IPA_CLK>;
+>  			clock-names = "core";
+> 
+> -			interconnects = <&aggre2_noc MASTER_IPA &mem_noc SLAVE_EBI1>,
+> -				        <&aggre2_noc MASTER_IPA &system_noc SLAVE_IMEM>,
+> +			interconnects = <&aggre2_noc MASTER_IPA 0 &mem_noc SLAVE_EBI1 0>,
+> +					<&aggre2_noc MASTER_IPA 0 &system_noc SLAVE_IMEM 0>,
+>  					<&gladiator_noc MASTER_APPSS_PROC &config_noc SLAVE_IPA_CFG>;
+>  			interconnect-names = "memory",
+>  					     "imem",
+> @@ -3561,8 +3561,8 @@ usb_1: usb@a6f8800 {
+> 
+>  			resets = <&gcc GCC_USB30_PRIM_BCR>;
+> 
+> -			interconnects = <&aggre2_noc MASTER_USB3_0 &mem_noc SLAVE_EBI1>,
+> -					<&gladiator_noc MASTER_APPSS_PROC &config_noc SLAVE_USB3_0>;
+> +			interconnects = <&aggre2_noc MASTER_USB3_0 0 &mem_noc SLAVE_EBI1 
+> 0>,
+> +					<&gladiator_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_USB3_0 0>;
+>  			interconnect-names = "usb-ddr", "apps-usb";
+> 
+>  			usb_1_dwc3: dwc3@a600000 {
+> @@ -3609,8 +3609,8 @@ usb_2: usb@a8f8800 {
+> 
+>  			resets = <&gcc GCC_USB30_SEC_BCR>;
+> 
+> -			interconnects = <&aggre2_noc MASTER_USB3_1 &mem_noc SLAVE_EBI1>,
+> -					<&gladiator_noc MASTER_APPSS_PROC &config_noc SLAVE_USB3_1>;
+> +			interconnects = <&aggre2_noc MASTER_USB3_1 0 &mem_noc SLAVE_EBI1 
+> 0>,
+> +					<&gladiator_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_USB3_1 0>;
+>  			interconnect-names = "usb-ddr", "apps-usb";
+> 
+>  			usb_2_dwc3: dwc3@a800000 {
+> @@ -4306,7 +4306,7 @@ lpasscc: clock-controller@17014000 {
+>  		gladiator_noc: interconnect@17900000 {
+>  			compatible = "qcom,sdm845-gladiator-noc";
+>  			reg = <0 0x17900000 0 0xd080>;
+> -			#interconnect-cells = <1>;
+> +			#interconnect-cells = <2>;
+>  			qcom,bcm-voters = <&apps_bcm_voter>;
+>  		};
 
-process_measurement() measures, verifies a file signature -  both
-signatures stored as an xattr and as an appended buffer signature -
-and augments audit records with the file hash. (Support for measuring,
-augmenting audit records, and/or verifying fs-verity signatures has
-yet to be added.)
-
-As explained in my response to 11/19, the file descriptor provides the
-file pathname associated with the buffer data.  In addition, IMA
-policy rules may be defined in terms of other file descriptor info -
-uid, euid, uuid, etc.
-
-Recently support was added for measuring the kexec boot command line,
-certificates being loaded onto a keyring, and blacklisted file hashes
-(limited to appended signatures).  None of these buffers are signed.
- process_buffer_measurement() was added for this reason and as a
-result is limited to just measuring the buffer data.
-
-Whether process_measurement() or process_buffer_measurement() should
-be modified, needs to be determined.  In either case to support the
-init_module syscall, would at minimum require the associated file
-pathname.
-
-Mimi
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
