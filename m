@@ -2,106 +2,109 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30947C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23508206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05A07206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:53:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bYCwTD5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgG0Mw3 (ORCPT
+        id S1728547AbgG0Mxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:52:29 -0400
-Received: from mailout06.rmx.de ([94.199.90.92]:36655 "EHLO mailout06.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728387AbgG0Mw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:52:29 -0400
-Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout06.rmx.de (Postfix) with ESMTPS id 4BFfpc4w6hz9w5h;
-        Mon, 27 Jul 2020 14:52:24 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin01.retarus.com (Postfix) with ESMTPS id 4BFfnb69cVz2xbN;
-        Mon, 27 Jul 2020 14:51:31 +0200 (CEST)
-Received: from N95HX1G2.wgnetz.xx (192.168.54.121) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 27 Jul
- 2020 14:49:43 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Fabio Estevam <festevam@gmail.com>
-CC:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Martin Kaiser <martin@kaiser.cx>,
-        <linux-crypto@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Christian Eggers <ceggers@arri.de>
-Subject: [PATCH] hwrng: imx-rngc - setup default RNG quality
-Date:   Mon, 27 Jul 2020 14:45:53 +0200
-Message-ID: <20200727124552.4336-1-ceggers@arri.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <CAOMZO5ASnj7SpjjAEpWjRK-vMpFFKU00=rxKeBtaMSKE9pkX1g@mail.gmail.com>
-References: <CAOMZO5ASnj7SpjjAEpWjRK-vMpFFKU00=rxKeBtaMSKE9pkX1g@mail.gmail.com>
+        Mon, 27 Jul 2020 08:53:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728387AbgG0Mxk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:53:40 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB14EC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:53:38 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id p14so13714011wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:53:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=OKBC78fRUsagIQPVuNlcQcC33WynfMSk7xXsZ9n82rA=;
+        b=bYCwTD5kGiJc9stvrIrWpJi8eMtSpUPEF24UjTrPUeYxuhFn0Rgk6BtH8i2UHYueEl
+         NOD5q1z7ArkNw54bgJXM37dM0RHqB2/Znl38N7/85Wc+Hd6oslBMQiCgM1jb7gcjM3+o
+         ZFq9mouI2Cgi/l3icqbcls2SXpvfFarLsa2Pd2pBxQXRO295JioWV9H4VfgRQ2C8R7Ry
+         ayB6wOnvEnUVF9nREAR1Lhivz9CsEII2+C/aNnG6BOHH6MVUNDPDHOsIu6pox/MbWSSU
+         bJcrWu2VhhMsDLR4O6rNpX3qm3TJwSdsuvXBFZrv7lMyUaeHO55u8/a0RMc8j56slAm/
+         X+Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=OKBC78fRUsagIQPVuNlcQcC33WynfMSk7xXsZ9n82rA=;
+        b=U9Bfc1mp6U6XEbjK1nXfMoF9EPJE9gDIXSxw5IyYPXuzQF/XzLNDP2EQYPXMKAc2+k
+         Fqorql/Gc+g6joGuZULqWdJFK03VNwnXJuuYheQoKnYjO1RJ3UhPfA/GaGj8y7zWdhpY
+         +Ap7sWktMUKzWN26jGqYc0XfrsCjjfVgMKqf9vqQTwTZJ1fDQt+Hcpzlb5ipfoEXKYXp
+         SPIOEz5JXieZX1GviCVeM1Mx8/SnmahGHcYQv7SOZuE4sIw2mx6DmASBnqcCdWfrdeBe
+         QcOBC5N7jVsgpTBQ9T+oGakjiJ5tteZSq9t8vvzWaUCjgnbwQ0yz3hPoL67LbeaK4WKZ
+         8lqA==
+X-Gm-Message-State: AOAM530TPP+JRBTrimtk45xaORpFm7yvUZUTctvwHSebvdvRA/kqRoe8
+        Trul/kNuObjcP5zVx5WK77RFVw==
+X-Google-Smtp-Source: ABdhPJzTYBZjZp631h4EWSAdPJc21hD2BcQhj8E+Hf8SShiAji9/FKFYk4MV1Y+v4RqIjdAmqmAF6g==
+X-Received: by 2002:a1c:1d2:: with SMTP id 201mr19142377wmb.132.1595854417540;
+        Mon, 27 Jul 2020 05:53:37 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id c16sm12689205wrx.73.2020.07.27.05.53.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 05:53:36 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 13:53:35 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Xu Wang <vulab@iscas.ac.cn>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] intel_soc_pmic_mrfld: simplify the return expression of
+ intel_scu_ipc_dev_iowrite8()
+Message-ID: <20200727125335.GQ1850026@dell>
+References: <20200727030407.8820-1-vulab@iscas.ac.cn>
+ <20200727120908.GR3703480@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [192.168.54.121]
-X-RMX-ID: 20200727-145137-4BFfnb69cVz2xbN-0@kdin01
-X-RMX-SOURCE: 217.111.95.66
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200727120908.GR3703480@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When hw_random device's quality is non-zero, it will automatically fill
-the kernel's entropy pool at boot.  For this purpose, one conservative
-quality value is being picked up as the default value.
+On Mon, 27 Jul 2020, Andy Shevchenko wrote:
 
-Signed-off-by: Christian Eggers <ceggers@arri.de>
----
- drivers/char/hw_random/imx-rngc.c | 1 +
- 1 file changed, 1 insertion(+)
+> On Mon, Jul 27, 2020 at 03:04:07AM +0000, Xu Wang wrote:
+> > Simplify the return expression.
+> 
+> I understand your intention, but I would rather leave as is.
+> It's a bit more helpful in the original form in case to add some debugging.
 
-diff --git a/drivers/char/hw_random/imx-rngc.c b/drivers/char/hw_random/imx-rngc.c
-index f9c5ddd0276b..a62ff78bd7ea 100644
---- a/drivers/char/hw_random/imx-rngc.c
-+++ b/drivers/char/hw_random/imx-rngc.c
-@@ -285,6 +285,7 @@ static int imx_rngc_probe(struct platform_device *pdev)
- 	rngc->rng.init = imx_rngc_init;
- 	rngc->rng.read = imx_rngc_read;
- 	rngc->rng.cleanup = imx_rngc_cleanup;
-+	rngc->rng.quality = 900;
- 
- 	rngc->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, rngc);
+If you wish to add debugging, you'll have to add the extra line of
+code yourself. :)
+
+> It also keep it symmetrical with read() counterpart.
+
+Can this be fixed-up too?
+
+> That said, I'm not objecting the change if Lee finds it good enough.
+> 
+> > Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> > ---
+> >  drivers/mfd/intel_soc_pmic_mrfld.c | 7 +------
+> >  1 file changed, 1 insertion(+), 6 deletions(-)
+
+Applied, thanks.
+
 -- 
-On Mon, Jul 27, 2020 Fabian Estevam wrote:
-> Horia has already sent a patch series that adds imx6ull rngb support:
-> https://lkml.org/lkml/2020/7/23/173
-
-That happens when patches are sent upstream one year after writing....
-
-Can you please add the third patch of the series?
-
-regards
-
-Christian Eggers
-Embedded software developer
-
-Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
-Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
-Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
-Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
