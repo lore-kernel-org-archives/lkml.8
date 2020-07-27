@@ -2,89 +2,151 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12779C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBB7C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E883F2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387D02070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731110AbgG0RyS (ORCPT
+        id S1731250AbgG0Ryj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:54:18 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50162 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgG0RyS (ORCPT
+        Mon, 27 Jul 2020 13:54:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726821AbgG0Ryi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:54:18 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k07KF-0002zf-KX; Mon, 27 Jul 2020 17:54:11 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] bpf: fix swapped arguments in calls to check_buffer_access
-Date:   Mon, 27 Jul 2020 18:54:11 +0100
-Message-Id: <20200727175411.155179-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 27 Jul 2020 13:54:38 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9AEAC061794;
+        Mon, 27 Jul 2020 10:54:38 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 5B00F263ACB
+Subject: Re: [PATCH v2 0/3] media: vimc: Allow multiple capture devices to use
+ the same sensor
+To:     kieran.bingham@ideasonboard.com,
+        Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+References: <20200724120213.17119-1-kgupta@es.iitr.ac.in>
+ <20200724121521.GA2705690@oden.dyn.berto.se>
+ <20200724122104.GA18482@kaaira-HP-Pavilion-Notebook>
+ <a6f4eabf-6cd5-950b-f2e3-853370c77629@ideasonboard.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <2a6cb067-283d-ca65-2698-1fae66a17d02@collabora.com>
+Date:   Mon, 27 Jul 2020 14:54:30 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <a6f4eabf-6cd5-950b-f2e3-853370c77629@ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi,
 
-There are a couple of arguments of the boolean flag zero_size_allowed
-and the char pointer buf_info when calling to function check_buffer_access
-that are swapped by mistake. Fix these by swapping them to correct
-the argument ordering.
+On 7/27/20 11:31 AM, Kieran Bingham wrote:
+> Hi all,
+> 
+> +Dafna for the thread discussion, as she's missed from the to/cc list.
+> 
+> 
+> On 24/07/2020 13:21, Kaaira Gupta wrote:
+>> On Fri, Jul 24, 2020 at 02:15:21PM +0200, Niklas Söderlund wrote:
+>> Hi,
+>>
+>>> Hi Kaaira,
+>>>
+>>> Thanks for your work.
+>>
+>> Thanks for yours :D
+>>
+>>>
+>>> On 2020-07-24 17:32:10 +0530, Kaaira Gupta wrote:
+>>>> This is version 2 of the patch series posted by Niklas for allowing
+>>>> multiple streams in VIMC.
+>>>> The original series can be found here:
+>>>> https://patchwork.kernel.org/cover/10948831/
+>>>>
+>>>> This series adds support for two (or more) capture devices to be 
+>>>> connected to the same sensors and run simultaneously. Each capture device 
+>>>> can be started and stopped independent of each other.
+>>>>
+>>>> Patch 1/3 and 2/3 deals with solving the issues that arises once two 
+>>>> capture devices can be part of the same pipeline. While 3/3 allows for 
+>>>> two capture devices to be part of the same pipeline and thus allows for 
+>>>> simultaneously use.
+>>>
+>>> I'm just curious if you are aware of this series? It would replace the 
+>>> need for 1/3 and 2/3 of this series right?
+>>
+>> v3 of this series replaces the need for 1/3, but not the current version
+>> (ie v4). v4 of patch 2/5 removes the stream_counter that is needed to
+>> keep count of the calls to s_stream. Hence 1/3 becomes relevant again.
+> 
+> So the question really is, how do we best make use of the two current
+> series, to achieve our goal of supporting multiple streams.
+> 
+> Having not parsed Dafna's series yet, do we need to combine elements of
+> both ? Or should we work towards starting with this series and get
+> dafna's patches built on top ?
+> 
+> Or should patch 1/3 and 3/3 of this series be on top of Dafna's v4 ?
+> 
+> (It might be noteworthy to say that Kaaira has reported successful
+> multiple stream operation from /this/ series and her development branch
+> on libcamera).
 
-Addresses-Coverity: ("Array compared to 0")
-Fixes: afbf21dce668 ("bpf: Support readonly/readwrite buffers in verifier")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- kernel/bpf/verifier.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Dafna's patch seems still under discussion, but I don't want to block progress in Vimc either.
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index cd14e70f2d07..88bb25d08bf8 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -3477,14 +3477,14 @@ static int check_mem_access(struct bpf_verifier_env *env, int insn_idx, u32 regn
- 				regno, reg_type_str[reg->type]);
- 			return -EACCES;
- 		}
--		err = check_buffer_access(env, reg, regno, off, size, "rdonly",
--					  false,
-+		err = check_buffer_access(env, reg, regno, off, size, false,
-+					  "rdonly",
- 					  &env->prog->aux->max_rdonly_access);
- 		if (!err && value_regno >= 0)
- 			mark_reg_unknown(env, regs, value_regno);
- 	} else if (reg->type == PTR_TO_RDWR_BUF) {
--		err = check_buffer_access(env, reg, regno, off, size, "rdwr",
--					  false,
-+		err = check_buffer_access(env, reg, regno, off, size, false,
-+					  "rdwr",
- 					  &env->prog->aux->max_rdwr_access);
- 		if (!err && t == BPF_READ && value_regno >= 0)
- 			mark_reg_unknown(env, regs, value_regno);
--- 
-2.27.0
+So I was wondering if we can move forward with Vimc support for multistreaming,
+without considering Dafna's patchset, and we can do the clean up later once we solve that.
 
+What do you think?
+
+Regards,
+Helen
+
+> 
+> 
+>>> 1.  https://lore.kernel.org/linux-media/20200522075522.6190-1-dafna.hirschfeld@collabora.com/
+>>>
+>>>>
+>>>> Changes since v1:
+>>>> 	- All three patches rebased on latest media-tree.
+>>>> 	Patch 3:
+>>>> 	- Search for an entity with a non-NULL pipe instead of searching
+>>>> 	  for sensor. This terminates the search at output itself.
+>>>>
+>>>> Kaaira Gupta (3):
+>>>>   media: vimc: Add usage count to subdevices
+>>>>   media: vimc: Serialize vimc_streamer_s_stream()
+>>>>   media: vimc: Join pipeline if one already exists
+>>>>
+>>>>  .../media/test-drivers/vimc/vimc-capture.c    | 35 ++++++++++++++++++-
+>>>>  .../media/test-drivers/vimc/vimc-debayer.c    |  8 +++++
+>>>>  drivers/media/test-drivers/vimc/vimc-scaler.c |  8 +++++
+>>>>  drivers/media/test-drivers/vimc/vimc-sensor.c |  9 ++++-
+>>>>  .../media/test-drivers/vimc/vimc-streamer.c   | 23 +++++++-----
+>>>>  5 files changed, 73 insertions(+), 10 deletions(-)
+>>>>
+>>>> -- 
+>>>> 2.17.1
+>>>>
+>>>
+>>> -- 
+>>> Regards,
+>>> Niklas Söderlund
+> 
