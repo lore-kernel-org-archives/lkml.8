@@ -2,72 +2,75 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAE6C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBF6C433EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE8482075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB93620775
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p4j78vfX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KIeSHUMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbgG0NWR (ORCPT
+        id S1728731AbgG0NWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:22:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55598 "EHLO
+        Mon, 27 Jul 2020 09:22:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgG0NWR (ORCPT
+        with ESMTP id S1726139AbgG0NWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:22:17 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A1EC061794;
-        Mon, 27 Jul 2020 06:22:15 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t6so4257065ljk.9;
-        Mon, 27 Jul 2020 06:22:15 -0700 (PDT)
+        Mon, 27 Jul 2020 09:22:22 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B81F7C061794;
+        Mon, 27 Jul 2020 06:22:21 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id v4so7519682ljd.0;
+        Mon, 27 Jul 2020 06:22:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2G6P9Mf8J/hrSEoJOhnZnPBi+0zf3SP1iWdG7utZNS8=;
-        b=p4j78vfX/9mLAkK2YSP5Yi9mQ1SehLwx88UvLGkiXfO2Qei+pB48UaUc6JscCJK1Lt
-         2QAKnEH7PEnP5VeLoBgWoZTowuVxi2Ccsy4Z9ivgZ4yqzr18DieX2fJX5qBhXtUl0/FA
-         DvOWvDo2JiK7ILVAVSGd4wstB5mwxRAIkFJKjhzvqP0PdaJVSsoq6K9Ejp7H+nXBcHy/
-         UDGvw3aToxj6uZGAHG9jobc6tMWucM8GtxFygOJXqjZAg223CI6uHhO+iENG7TMWxZZ5
-         gKT8PSngLZ64u2gU/NaE7oW1wElf5q+IWH43GVvg+E8DJvq5p3bvhLqdTI9spTFbHEwX
-         axsg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OOdN5rtYtSqSIyhrvd8kf6giI99N3nmLV7XvxeNhlH4=;
+        b=KIeSHUMdRaPdGvjUMUTznrlbtG0ImwqDcv68Wo+mxrYoAx0FJFGCu6sLVTpAJe6f+6
+         QUKFFbI7xmswBQm9XWqVMInrk7n+DcCxyGU+jqfemEklkWEu2woelRHwqPuFzWUJ17I9
+         G04zyuYq4gtqqGzf25qveOm0qNydcQ5mLKBIg7ino/MzbAUMUE6Cb1zjaRzbt/GGRu/q
+         GLKuSWkCbGpeNi90Dw+rf9/xo5CgEHu9ps7ywNmayw1ciGS5E6VzaBIt2PPSEJpgZc7q
+         ETYTFpR3O7waxbkAO9R7bdCa4BxKHlls3Qio2L0Vp+XpyuJtD74QYGScjVkjjky6VMYu
+         66YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2G6P9Mf8J/hrSEoJOhnZnPBi+0zf3SP1iWdG7utZNS8=;
-        b=SMWqXFGWstsBZwC5j6TKXwf8Xf59gos4ofAdKecZrqgLbN5WQEydnNLfGVosH/nJB9
-         mg8hGrefz3VOh7vWONd474PRxvI+iECHPS6J/LdDLmy8YSLjt0WAqBW+ozriYKh1mngd
-         gaBx/DTN4D9xMu42ECPCVcxhsv+n4Z6zvhldzOVA2v34kA3ecOxmQRbgrWxHDprR3vjI
-         gYNvjji3Ni80aqv9Dn90dcCdDBTTbbyf27LT3CqChcDDgLNKNfPUHLSznL33YXdn5QAz
-         JnYXBQOqF7lKbK+wlB7LVafvgDZrDdFmvNtAnUcu/gvLfzEXhBr1vY+TjBYEhvwnv4rD
-         AmsA==
-X-Gm-Message-State: AOAM532+nw492TPTSuiCY1cOyyHA32xJhom+99qCA+LCV02ETVseMEHe
-        hPh3FnfI/dTyWx0bme8nI14=
-X-Google-Smtp-Source: ABdhPJwrUr4FBzqkl+/Pvw7UoR0kBZ0rRVSxrqal7gJ0ZThva1s6ANeoZTwRhR7LY1z638OGO5g9UQ==
-X-Received: by 2002:a2e:9c59:: with SMTP id t25mr9793527ljj.402.1595856134330;
-        Mon, 27 Jul 2020 06:22:14 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OOdN5rtYtSqSIyhrvd8kf6giI99N3nmLV7XvxeNhlH4=;
+        b=fvrkmgdiMuYpXX9dCMkXQKonw8sla1c0pN3DOJghLdSjVAoa1HoeROv0/om0Pl+muF
+         XR1EjA6Yg9/bTat43OEo31Ixs1pLdRTO9xx1E9hyCmDbq/3rTi9xF1MhAK5LOs2vVHVu
+         51d12x7w2lC7jvmRy1YS3sjqm5XC75395UzgGEv1zsF3tHK/Q0FBbYeMc8Gi9FliBq0K
+         QmtbtQwH4ZDi/gg3nfYMln9lr4nOwiwYBuXwy9/CMnZs9RRiWUHs4z3q6BuTsHIcz+rD
+         YV6iW9xTaY4LJ2h8PbjN0CrK51e8q1ykOF7AjkhD4f7wddfY/vP8ZHZvo2MVlHOc/o+t
+         szwQ==
+X-Gm-Message-State: AOAM533qGMVrum9dkPOuYoZPueumTglCaCWe6q8N5Venysnad7ZY465S
+        UC8Oihco9wZADD1GcLLqJFQ=
+X-Google-Smtp-Source: ABdhPJyjWIViHeV/RNiYTKxNBp7PmpTurt18cFDQ8kqpKI8poKSxdv2pH8mWq+H5ud9bOCp4hGG6rA==
+X-Received: by 2002:a2e:844a:: with SMTP id u10mr3492848ljh.213.1595856140307;
+        Mon, 27 Jul 2020 06:22:20 -0700 (PDT)
 Received: from localhost.localdomain (h-98-128-228-147.NA.cust.bahnhof.se. [98.128.228.147])
-        by smtp.gmail.com with ESMTPSA id s9sm501813ljh.46.2020.07.27.06.22.13
+        by smtp.gmail.com with ESMTPSA id s9sm501813ljh.46.2020.07.27.06.22.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 06:22:13 -0700 (PDT)
+        Mon, 27 Jul 2020 06:22:19 -0700 (PDT)
 From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
 To:     jikos@kernel.org, benjamin.tissoires@redhat.com
 Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         dmlambea@gmail.com, alexhenrie24@gmail.com,
         Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH 0/2] HID: Constify static struct hid_device_id
-Date:   Mon, 27 Jul 2020 15:21:58 +0200
-Message-Id: <20200727132200.32510-1-rikard.falkeborn@gmail.com>
+Subject: [PATCH 2/2] HID: macally: Constify macally_id_table
+Date:   Mon, 27 Jul 2020 15:22:00 +0200
+Message-Id: <20200727132200.32510-3-rikard.falkeborn@gmail.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727132200.32510-1-rikard.falkeborn@gmail.com>
+References: <20200727132200.32510-1-rikard.falkeborn@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,17 +78,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Constify hid_device_id in two drivers (these were the only drivers that
-didn't already have it as const).
+macally_id_table is not modified and can be made const to allow the
+compiler to put it in read-only memory.
 
-Rikard Falkeborn (2):
-  HID: cougar: Constify cougar_id_table
-  HID: macally: Constify macally_id_table
-
- drivers/hid/hid-cougar.c  | 2 +-
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
  drivers/hid/hid-macally.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/hid/hid-macally.c b/drivers/hid/hid-macally.c
+index 9a4fc7dffb14..aea46e522008 100644
+--- a/drivers/hid/hid-macally.c
++++ b/drivers/hid/hid-macally.c
+@@ -29,7 +29,7 @@ static __u8 *macally_report_fixup(struct hid_device *hdev, __u8 *rdesc,
+ 	return rdesc;
+ }
+ 
+-static struct hid_device_id macally_id_table[] = {
++static const struct hid_device_id macally_id_table[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SOLID_YEAR,
+ 			 USB_DEVICE_ID_MACALLY_IKEY_KEYBOARD) },
+ 	{ }
 -- 
 2.27.0
 
