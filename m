@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FE1C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B6AC433ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93CD92070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381DF2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:38:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RhOXMgss"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IgYqDGNl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgG0JiV (ORCPT
+        id S1728311AbgG0Jih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49258 "EHLO
+        Mon, 27 Jul 2020 05:38:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbgG0JiT (ORCPT
+        with ESMTP id S1728258AbgG0JiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:38:19 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C17EC0619D4
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:38:18 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id z18so10596946wrm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:38:18 -0700 (PDT)
+        Mon, 27 Jul 2020 05:38:25 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76465C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:38:25 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id b6so14153960wrs.11
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 02:38:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NGhSMw5rANk93AxDzrh+wwZG+B5HF8qJTCODBy27FHQ=;
-        b=RhOXMgssTx6PPGu1/Vegg97W3OXjoKMeWxLRo2HdsCYofJV7I6CWx3NqsrMfRyin3G
-         SN4xkcFD4ZPa3UAetwasbE3Hjm9kLETVc72d/EhjygzCyg9O5Pvdt24lQXrf988dBhCw
-         0R3jANKPQFUZaGGFy+FFrfBbySVuV7PxdtTLPLKS56uCUgBx6b3eUBrozqtSdhD9wP8Y
-         AUnRULsfwCpQjxr/nnNABoG3reJ+YiARMnmK1DcekF2+ZMGVaeaPbWvlDxyAXGhM/QZS
-         kM3TD6v8lG5okWyFgl10QvoWXVU/eMkNVda2aAgy4OMQbRTMAT4CymAAaIdterxvqEI+
-         v4ZQ==
+        bh=PaYEBHP1hA6Z0ty3CQH+DbAz1Fhh0daXJSUmhh2mbvQ=;
+        b=IgYqDGNlWZlVtL4DvjwvDyWn3GBJBeuwqEmt703cfv1shUXl27ma+zt571HhruqxUj
+         BxZdyUWY/ANHk5RxffcRH8EQjXdy8QOevLkHZuncm5kB5hYQVE/OHiY69HmQizzQop3m
+         POsj+Gd5NMmebPTAIb+HwrYKkvnfkam/g6IJcYE/LAcV3GvPeZAJiLONqaE37ALKGTsD
+         mh8epq7GDMJhg2wVhDdWku/UYFz3Id5onxSWBWFdj10qlglQmxj/vExBMxbeTu0L0Nbx
+         TtVtgYlv6xluYSXLqqUpI6ivOPanW/iCO8d4YoPgJndgHsLzlYOYce+vpKCG19k89Qc6
+         wTSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NGhSMw5rANk93AxDzrh+wwZG+B5HF8qJTCODBy27FHQ=;
-        b=jzYJdPRAz9QCWZSCvPeikPLwiVAEJxHl1ouzhER+aqaxslJyrXft71RxlwHfdJpZUG
-         fr76IpJ4fco3z86AK4lQTWnA5Cacra3WoQk4lhQpAApHdFfVNuwaP72rzXQNC3owPsYD
-         AckfcXnoSbyUSCtwmKFKtITi7Ww9wyuYIsIGl1Dcc8r51s87avxHBa8klynvleefX9jV
-         Pd+SXHvsZFyqdFNXj7nw4zdxHxiltk93vlcACh3lWR6O04CjC7EXKXFPUJH+7IYQlY2J
-         wwQz7WNd33QFOQypQuNiLePV/dmIEnu7kEHssIP12cHUO/4lnlWegeEnF9YaMMqCHMcb
-         PSew==
-X-Gm-Message-State: AOAM531m0n1tRgEDMzGDgrUjDbZfxF3buPFTOMMFKJoZCshJgSiwx2DF
-        LaF8to44M5jAu00lV8rRUvWqpg==
-X-Google-Smtp-Source: ABdhPJya93rqdcJwhckPQUaHBuEIu9GMb+saVL1XYg0o4gz1LaDhJSt0Sn/S40itt6TIeef+yn1+Eg==
-X-Received: by 2002:a5d:4942:: with SMTP id r2mr15760878wrs.285.1595842697169;
-        Mon, 27 Jul 2020 02:38:17 -0700 (PDT)
+        bh=PaYEBHP1hA6Z0ty3CQH+DbAz1Fhh0daXJSUmhh2mbvQ=;
+        b=fcUaU+EycBm86DvPNOxFAu/n6mlsokCozH42wsR4qw7NZiyP/pReM9KmClpBFZmSiK
+         PBFNRzQ8e9DZR8iRmbE2oVxF96d3n1Nhj2Kd0UrWsorTtBkt56FZRv7XYjEUIkxewYDr
+         ceh64QPO9wLRFx8cUh67Z8JgMEkol/RxgnbZWyqfVk4m71kXeKbi+Z18ySKdL555RIbE
+         CWIPScIwktjIOGZcnFGBBtd1fTv+mD0CSVV5u+h2xO3695PtK9lHaT24NO3sgK9+Ow+C
+         hszfCjBEH4iDbuQ4dS1tATs/pKmnsBEiFZyzRPcnZS2ihvnpQM5NhQ5NBVcvYjm6801c
+         p17w==
+X-Gm-Message-State: AOAM5316fPgOSDGzddVZibTCDSou++g3B4UynDFbvwCgCi48FYtdMDc5
+        7IZWTYZOw4zcxmxbKyEg3bBgMQ==
+X-Google-Smtp-Source: ABdhPJxzomdcvXn6uVYVrGr10wI1q2tY6BaUV5/UymLlF1nGwt7zdE0RZvHcbMt5a3lSdkbPn5kXEQ==
+X-Received: by 2002:a5d:4a90:: with SMTP id o16mr18732461wrq.87.1595842704041;
+        Mon, 27 Jul 2020 02:38:24 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id y189sm20566099wmd.27.2020.07.27.02.38.16
+        by smtp.gmail.com with ESMTPSA id y189sm20566099wmd.27.2020.07.27.02.38.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 02:38:16 -0700 (PDT)
+        Mon, 27 Jul 2020 02:38:23 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     broonie@kernel.org
 Cc:     vkoul@kernel.org, perex@perex.cz, tiwai@suse.com,
@@ -66,9 +66,9 @@ Cc:     vkoul@kernel.org, perex@perex.cz, tiwai@suse.com,
         linux-kernel@vger.kernel.org, ckeepax@opensource.cirrus.com,
         pierre-louis.bossart@linux.intel.com,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 03/10] ASoC: q6asm: use flags directly from q6asm-dai
-Date:   Mon, 27 Jul 2020 10:37:59 +0100
-Message-Id: <20200727093806.17089-4-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 08/10] ASoC: q6asm-dai: prepare set params to accept profile change
+Date:   Mon, 27 Jul 2020 10:38:04 +0100
+Message-Id: <20200727093806.17089-9-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200727093806.17089-1-srinivas.kandagatla@linaro.org>
 References: <20200727093806.17089-1-srinivas.kandagatla@linaro.org>
@@ -79,86 +79,281 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use flags set by q6asm-dais directly!
+rearrange code so that it will be easy to change the codec
+profile at runtime. This means moving exiting set_params
+to an internal wrapper which can be called when codec
+profile changes.
 
-This will be useful gapless case where write needs a special flag to indicate
-that last buffer.
+This is also preparing the code for easy to use in gapless cases.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- sound/soc/qcom/qdsp6/q6asm-dai.c | 8 ++++----
- sound/soc/qcom/qdsp6/q6asm.c     | 5 +----
- sound/soc/qcom/qdsp6/q6asm.h     | 1 -
- 3 files changed, 5 insertions(+), 9 deletions(-)
+ sound/soc/qcom/qdsp6/q6asm-dai.c | 149 ++++++++++++++++++-------------
+ 1 file changed, 85 insertions(+), 64 deletions(-)
 
 diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-index e8c732ec6061..466383b8c20c 100644
+index a7fe4147c0a2..420aaaa67788 100644
 --- a/sound/soc/qcom/qdsp6/q6asm-dai.c
 +++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-@@ -186,7 +186,7 @@ static void event_handler(uint32_t opcode, uint32_t token,
- 	case ASM_CLIENT_EVENT_CMD_RUN_DONE:
- 		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
- 			q6asm_write_async(prtd->audio_client, prtd->stream_id,
--				   prtd->pcm_count, 0, 0, NO_TIMESTAMP);
-+				   prtd->pcm_count, 0, 0, 0);
+@@ -53,7 +53,7 @@ enum stream_state {
+ struct q6asm_dai_rtd {
+ 	struct snd_pcm_substream *substream;
+ 	struct snd_compr_stream *cstream;
+-	struct snd_compr_params codec_param;
++	struct snd_codec codec;
+ 	struct snd_dma_buffer dma_buffer;
+ 	spinlock_t lock;
+ 	phys_addr_t phys;
+@@ -644,15 +644,13 @@ static int q6asm_dai_compr_free(struct snd_soc_component *component,
+ 	return 0;
+ }
+ 
+-static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+-				      struct snd_compr_stream *stream,
+-				      struct snd_compr_params *params)
++static int __q6asm_dai_compr_set_codec_params(struct snd_soc_component *component,
++					      struct snd_compr_stream *stream,
++					      struct snd_codec *codec,
++					      int stream_id)
+ {
+ 	struct snd_compr_runtime *runtime = stream->runtime;
+ 	struct q6asm_dai_rtd *prtd = runtime->private_data;
+-	struct snd_soc_pcm_runtime *rtd = stream->private_data;
+-	int dir = stream->direction;
+-	struct q6asm_dai_data *pdata;
+ 	struct q6asm_flac_cfg flac_cfg;
+ 	struct q6asm_wma_cfg wma_cfg;
+ 	struct q6asm_alac_cfg alac_cfg;
+@@ -666,53 +664,18 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 	struct snd_dec_alac *alac;
+ 	struct snd_dec_ape *ape;
+ 
+-	codec_options = &(prtd->codec_param.codec.options);
+-
+-
+-	memcpy(&prtd->codec_param, params, sizeof(*params));
+-
+-	pdata = snd_soc_component_get_drvdata(component);
+-	if (!pdata)
+-		return -EINVAL;
+-
+-	if (!prtd || !prtd->audio_client) {
+-		dev_err(dev, "private data null or audio client freed\n");
+-		return -EINVAL;
+-	}
+-
+-	prtd->periods = runtime->fragments;
+-	prtd->pcm_count = runtime->fragment_size;
+-	prtd->pcm_size = runtime->fragments * runtime->fragment_size;
+-	prtd->bits_per_sample = 16;
+-	if (dir == SND_COMPRESS_PLAYBACK) {
+-		ret = q6asm_open_write(prtd->audio_client, prtd->stream_id,
+-				       params->codec.id, params->codec.profile,
+-				       prtd->bits_per_sample, true);
+-
+-		if (ret < 0) {
+-			dev_err(dev, "q6asm_open_write failed\n");
+-			q6asm_audio_client_free(prtd->audio_client);
+-			prtd->audio_client = NULL;
+-			return ret;
+-		}
+-	}
++	codec_options = &(prtd->codec.options);
+ 
+-	prtd->session_id = q6asm_get_session_id(prtd->audio_client);
+-	ret = q6routing_stream_open(rtd->dai_link->id, LEGACY_PCM_MODE,
+-			      prtd->session_id, dir);
+-	if (ret) {
+-		dev_err(dev, "Stream reg failed ret:%d\n", ret);
+-		return ret;
+-	}
++	memcpy(&prtd->codec, codec, sizeof(*codec));
+ 
+-	switch (params->codec.id) {
++	switch (codec->id) {
+ 	case SND_AUDIOCODEC_FLAC:
+ 
+ 		memset(&flac_cfg, 0x0, sizeof(struct q6asm_flac_cfg));
+ 		flac = &codec_options->flac_d;
+ 
+-		flac_cfg.ch_cfg = params->codec.ch_in;
+-		flac_cfg.sample_rate =  params->codec.sample_rate;
++		flac_cfg.ch_cfg = codec->ch_in;
++		flac_cfg.sample_rate = codec->sample_rate;
+ 		flac_cfg.stream_info_present = 1;
+ 		flac_cfg.sample_size = flac->sample_size;
+ 		flac_cfg.min_blk_size = flac->min_blk_size;
+@@ -721,7 +684,7 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 		flac_cfg.min_frame_size = flac->min_frame_size;
+ 
+ 		ret = q6asm_stream_media_format_block_flac(prtd->audio_client,
+-							   prtd->stream_id,
++							   stream_id,
+ 							   &flac_cfg);
+ 		if (ret < 0) {
+ 			dev_err(dev, "FLAC CMD Format block failed:%d\n", ret);
+@@ -734,10 +697,10 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 
+ 		memset(&wma_cfg, 0x0, sizeof(struct q6asm_wma_cfg));
+ 
+-		wma_cfg.sample_rate =  params->codec.sample_rate;
+-		wma_cfg.num_channels = params->codec.ch_in;
+-		wma_cfg.bytes_per_sec = params->codec.bit_rate / 8;
+-		wma_cfg.block_align = params->codec.align;
++		wma_cfg.sample_rate =  codec->sample_rate;
++		wma_cfg.num_channels = codec->ch_in;
++		wma_cfg.bytes_per_sec = codec->bit_rate / 8;
++		wma_cfg.block_align = codec->align;
+ 		wma_cfg.bits_per_sample = prtd->bits_per_sample;
+ 		wma_cfg.enc_options = wma->encoder_option;
+ 		wma_cfg.adv_enc_options = wma->adv_encoder_option;
+@@ -751,7 +714,7 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 			return -EINVAL;
+ 
+ 		/* check the codec profile */
+-		switch (params->codec.profile) {
++		switch (codec->profile) {
+ 		case SND_AUDIOPROFILE_WMA9:
+ 			wma_cfg.fmtag = 0x161;
+ 			wma_v9 = 1;
+@@ -775,17 +738,17 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 
+ 		default:
+ 			dev_err(dev, "Unknown WMA profile:%x\n",
+-				params->codec.profile);
++				codec->profile);
+ 			return -EIO;
+ 		}
+ 
+ 		if (wma_v9)
+ 			ret = q6asm_stream_media_format_block_wma_v9(
+-					prtd->audio_client, prtd->stream_id,
++					prtd->audio_client, stream_id,
+ 					&wma_cfg);
+ 		else
+ 			ret = q6asm_stream_media_format_block_wma_v10(
+-					prtd->audio_client, prtd->stream_id,
++					prtd->audio_client, stream_id,
+ 					&wma_cfg);
+ 		if (ret < 0) {
+ 			dev_err(dev, "WMA9 CMD failed:%d\n", ret);
+@@ -797,10 +760,10 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 		memset(&alac_cfg, 0x0, sizeof(alac_cfg));
+ 		alac = &codec_options->alac_d;
+ 
+-		alac_cfg.sample_rate = params->codec.sample_rate;
+-		alac_cfg.avg_bit_rate = params->codec.bit_rate;
++		alac_cfg.sample_rate = codec->sample_rate;
++		alac_cfg.avg_bit_rate = codec->bit_rate;
+ 		alac_cfg.bit_depth = prtd->bits_per_sample;
+-		alac_cfg.num_channels = params->codec.ch_in;
++		alac_cfg.num_channels = codec->ch_in;
+ 
+ 		alac_cfg.frame_length = alac->frame_length;
+ 		alac_cfg.pb = alac->pb;
+@@ -810,7 +773,7 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 		alac_cfg.compatible_version = alac->compatible_version;
+ 		alac_cfg.max_frame_bytes = alac->max_frame_bytes;
+ 
+-		switch (params->codec.ch_in) {
++		switch (codec->ch_in) {
+ 		case 1:
+ 			alac_cfg.channel_layout_tag = ALAC_CH_LAYOUT_MONO;
+ 			break;
+@@ -819,7 +782,7 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 			break;
+ 		}
+ 		ret = q6asm_stream_media_format_block_alac(prtd->audio_client,
+-							   prtd->stream_id,
++							   stream_id,
+ 							   &alac_cfg);
+ 		if (ret < 0) {
+ 			dev_err(dev, "ALAC CMD Format block failed:%d\n", ret);
+@@ -831,8 +794,8 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 		memset(&ape_cfg, 0x0, sizeof(ape_cfg));
+ 		ape = &codec_options->ape_d;
+ 
+-		ape_cfg.sample_rate = params->codec.sample_rate;
+-		ape_cfg.num_channels = params->codec.ch_in;
++		ape_cfg.sample_rate = codec->sample_rate;
++		ape_cfg.num_channels = codec->ch_in;
+ 		ape_cfg.bits_per_sample = prtd->bits_per_sample;
+ 
+ 		ape_cfg.compatible_version = ape->compatible_version;
+@@ -844,7 +807,7 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
+ 		ape_cfg.seek_table_present = ape->seek_table_present;
+ 
+ 		ret = q6asm_stream_media_format_block_ape(prtd->audio_client,
+-							  prtd->stream_id,
++							  stream_id,
+ 							  &ape_cfg);
+ 		if (ret < 0) {
+ 			dev_err(dev, "APE CMD Format block failed:%d\n", ret);
+@@ -856,6 +819,64 @@ static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
  		break;
- 	case ASM_CLIENT_EVENT_CMD_EOS_DONE:
- 		prtd->state = Q6ASM_STREAM_STOPPED;
-@@ -196,7 +196,7 @@ static void event_handler(uint32_t opcode, uint32_t token,
- 		snd_pcm_period_elapsed(substream);
- 		if (prtd->state == Q6ASM_STREAM_RUNNING)
- 			q6asm_write_async(prtd->audio_client, prtd->stream_id,
--					   prtd->pcm_count, 0, 0, NO_TIMESTAMP);
-+					   prtd->pcm_count, 0, 0, 0);
+ 	}
  
- 		break;
- 		}
-@@ -515,7 +515,7 @@ static void compress_event_handler(uint32_t opcode, uint32_t token,
- 		spin_lock_irqsave(&prtd->lock, flags);
- 		if (!prtd->bytes_sent) {
- 			q6asm_write_async(prtd->audio_client, prtd->stream_id,
--					  prtd->pcm_count, 0, 0, NO_TIMESTAMP);
-+					  prtd->pcm_count, 0, 0, 0);
- 			prtd->bytes_sent += prtd->pcm_count;
- 		}
- 
-@@ -541,7 +541,7 @@ static void compress_event_handler(uint32_t opcode, uint32_t token,
- 
- 		if (avail >= prtd->pcm_count) {
- 			q6asm_write_async(prtd->audio_client, prtd->stream_id,
--					   prtd->pcm_count, 0, 0, NO_TIMESTAMP);
-+					   prtd->pcm_count, 0, 0, 0);
- 			prtd->bytes_sent += prtd->pcm_count;
- 		}
- 
-diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
-index f5d1f3c2c1ec..d6728304ce6a 100644
---- a/sound/soc/qcom/qdsp6/q6asm.c
-+++ b/sound/soc/qcom/qdsp6/q6asm.c
-@@ -1546,10 +1546,7 @@ int q6asm_write_async(struct audio_client *ac, uint32_t stream_id, uint32_t len,
- 	write->mem_map_handle =
- 	    ac->port[SNDRV_PCM_STREAM_PLAYBACK].mem_map_handle;
- 
--	if (wflags == NO_TIMESTAMP)
--		write->flags = (wflags & 0x800000FF);
--	else
--		write->flags = (0x80000000 | wflags);
-+	write->flags = wflags;
- 
- 	port->dsp_buf++;
- 
-diff --git a/sound/soc/qcom/qdsp6/q6asm.h b/sound/soc/qcom/qdsp6/q6asm.h
-index ceece124dd3d..9ac020c609c6 100644
---- a/sound/soc/qcom/qdsp6/q6asm.h
-+++ b/sound/soc/qcom/qdsp6/q6asm.h
-@@ -29,7 +29,6 @@ enum {
- };
- 
- #define MAX_SESSIONS	8
--#define NO_TIMESTAMP    0xFF00
- #define FORMAT_LINEAR_PCM   0x0000
- 
- struct q6asm_flac_cfg {
++	return 0;
++}
++
++static int q6asm_dai_compr_set_params(struct snd_soc_component *component,
++				      struct snd_compr_stream *stream,
++				      struct snd_compr_params *params)
++{
++	struct snd_compr_runtime *runtime = stream->runtime;
++	struct q6asm_dai_rtd *prtd = runtime->private_data;
++	struct snd_soc_pcm_runtime *rtd = stream->private_data;
++	int dir = stream->direction;
++	struct q6asm_dai_data *pdata;
++	struct device *dev = component->dev;
++	int ret;
++
++	pdata = snd_soc_component_get_drvdata(component);
++	if (!pdata)
++		return -EINVAL;
++
++	if (!prtd || !prtd->audio_client) {
++		dev_err(dev, "private data null or audio client freed\n");
++		return -EINVAL;
++	}
++
++	prtd->periods = runtime->fragments;
++	prtd->pcm_count = runtime->fragment_size;
++	prtd->pcm_size = runtime->fragments * runtime->fragment_size;
++	prtd->bits_per_sample = 16;
++
++	if (dir == SND_COMPRESS_PLAYBACK) {
++		ret = q6asm_open_write(prtd->audio_client, prtd->stream_id, params->codec.id,
++				params->codec.profile, prtd->bits_per_sample,
++				true);
++
++		if (ret < 0) {
++			dev_err(dev, "q6asm_open_write failed\n");
++			q6asm_audio_client_free(prtd->audio_client);
++			prtd->audio_client = NULL;
++			return ret;
++		}
++	}
++
++	prtd->session_id = q6asm_get_session_id(prtd->audio_client);
++	ret = q6routing_stream_open(rtd->dai_link->id, LEGACY_PCM_MODE,
++			      prtd->session_id, dir);
++	if (ret) {
++		dev_err(dev, "Stream reg failed ret:%d\n", ret);
++		return ret;
++	}
++
++	ret = __q6asm_dai_compr_set_codec_params(component, stream,
++						 &params->codec,
++						 prtd->stream_id);
++	if (ret) {
++		dev_err(dev, "codec param setup failed ret:%d\n", ret);
++		return ret;
++	}
++
+ 	ret = q6asm_map_memory_regions(dir, prtd->audio_client, prtd->phys,
+ 				       (prtd->pcm_size / prtd->periods),
+ 				       prtd->periods);
 -- 
 2.21.0
 
