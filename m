@@ -2,113 +2,298 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6341C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFC9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2975206F6
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:14:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YZlE7wpK"
+	by mail.kernel.org (Postfix) with ESMTP id 4F6FC2075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbgG0FN5 (ORCPT
+        id S1726371AbgG0FSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:13:57 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:50178 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726006AbgG0FN5 (ORCPT
+        Mon, 27 Jul 2020 01:18:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3848 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726064AbgG0FSi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:13:57 -0400
-Received: from mailhost.synopsys.com (sv2-mailhost2.synopsys.com [10.205.2.134])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2436EC0641;
-        Mon, 27 Jul 2020 05:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1595826836; bh=eul44+C62DTDvDmmS3zMwGRsSJ3B5+hYF5hZSdNPdx8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YZlE7wpKcVSwyi8bkmwbLc0lqtJM8vmgs1XgeUj4/2EWDSbzoW7OtlFn3Rdf+mZBk
-         jPWD0WUkCtO9D1ms27FWkl8AJGUlqpw+glKlj5JIZjMAzWEZQTkgiiobusbsmJtKAz
-         GEuUwBKhRhQzc5upBNHt4gDTTKUfnFHAv8YWFBVTbvzhkaKguWefuxD57/uDKkSU7w
-         ifJmPOb9iz7tBou+1ivkMHfnDKr3WgMqu588ajxCoHEIVDPiDSL74GmVrh35Ia8fUt
-         j3V6WmOneMbSRy4z7PyxT0nfZ3+GUsmynK/ml3f1k+kJYC8X86r9FlMu30EyOktwkF
-         KOYY3e+mmwTMw==
-Received: from vineetg-Latitude-7400.internal.synopsys.com (unknown [10.13.183.89])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 40187A0096;
-        Mon, 27 Jul 2020 05:13:52 +0000 (UTC)
-X-SNPS-Relay: synopsys.com
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org,
+        Mon, 27 Jul 2020 01:18:38 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R51qSr021048;
+        Mon, 27 Jul 2020 01:18:20 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrcy0dms-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 01:18:20 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R52Crj022847;
+        Mon, 27 Jul 2020 01:18:20 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32hrcy0dm8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 01:18:20 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R5C7IJ031019;
+        Mon, 27 Jul 2020 05:18:18 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06fra.de.ibm.com with ESMTP id 32gcye93nk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 05:18:18 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R5ID6Y57606332
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 05:18:13 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 97159A404D;
+        Mon, 27 Jul 2020 05:18:13 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 141BBA4040;
+        Mon, 27 Jul 2020 05:18:09 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.85.97.241])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jul 2020 05:18:08 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <michaele@au1.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH] ARC: perf: don't bail setup if pct irq missing in device-tree
-Date:   Sun, 26 Jul 2020 22:13:45 -0700
-Message-Id: <20200727051345.13382-1-vgupta@synopsys.com>
-X-Mailer: git-send-email 2.20.1
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Nick Piggin <npiggin@au1.ibm.com>,
+        Oliver OHalloran <oliveroh@au1.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Neuling <mikey@linux.ibm.com>,
+        Anton Blanchard <anton@au1.ibm.com>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: [PATCH v4 00/10] Coregroup support on Powerpc
+Date:   Mon, 27 Jul 2020 10:47:55 +0530
+Message-Id: <20200727051805.16728-1-srikar@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_03:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 spamscore=0 clxscore=1015 mlxscore=0 phishscore=0
+ bulkscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007270032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current code inadventely bails if hardware supports sampling/overflow
-interrupts, but the irq is missing from device tree. This need not be as
-we can still do simple counting based perf stat.
+Changelog v3 ->v4:
+v3: https://lore.kernel.org/lkml/20200723085116.4731-1-srikar@linux.vnet.ibm.com/t/#u
 
-This unborks perf on HSDK-4xD
+powerpc/smp: Create coregroup domain
+	if coregroup_support doesn't exist, update MC mask to the next
+	smaller domain mask.
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
----
- arch/arc/kernel/perf_event.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+Changelog v2 -> v3:
+v2: https://lore.kernel.org/linuxppc-dev/20200721113814.32284-1-srikar@linux.vnet.ibm.com/t/#u
 
-diff --git a/arch/arc/kernel/perf_event.c b/arch/arc/kernel/perf_event.c
-index 661fd842ea97..79849f37e782 100644
---- a/arch/arc/kernel/perf_event.c
-+++ b/arch/arc/kernel/perf_event.c
-@@ -562,7 +562,7 @@ static int arc_pmu_device_probe(struct platform_device *pdev)
- {
- 	struct arc_reg_pct_build pct_bcr;
- 	struct arc_reg_cc_build cc_bcr;
--	int i, has_interrupts;
-+	int i, has_interrupts, irq;
- 	int counter_size;	/* in bits */
- 
- 	union cc_name {
-@@ -637,13 +637,7 @@ static int arc_pmu_device_probe(struct platform_device *pdev)
- 		.attr_groups	= arc_pmu->attr_groups,
- 	};
- 
--	if (has_interrupts) {
--		int irq = platform_get_irq(pdev, 0);
--
--		if (irq < 0) {
--			pr_err("Cannot get IRQ number for the platform\n");
--			return -ENODEV;
--		}
-+	if (has_interrupts && (irq = platform_get_irq(pdev, 0) >= 0)) {
- 
- 		arc_pmu->irq = irq;
- 
-@@ -652,9 +646,9 @@ static int arc_pmu_device_probe(struct platform_device *pdev)
- 				   this_cpu_ptr(&arc_pmu_cpu));
- 
- 		on_each_cpu(arc_cpu_pmu_irq_init, &irq, 1);
--
--	} else
-+	} else {
- 		arc_pmu->pmu.capabilities |= PERF_PMU_CAP_NO_INTERRUPT;
-+	}
- 
- 	/*
- 	 * perf parser doesn't really like '-' symbol in events name, so let's
+powerpc/smp: Cache node for reuse
+	Removed node caching part. Rewrote the Commit msg (Michael Ellerman)
+	Renamed to powerpc/smp: Fix a warning under !NEED_MULTIPLE_NODES
+
+powerpc/smp: Enable small core scheduling sooner
+	Rewrote changelog (Gautham)
+	Renamed to powerpc/smp: Move topology fixups into  a new function
+
+powerpc/smp: Create coregroup domain
+	Add optimization for mask updation under coregroup_support
+
+Changelog v1 -> v2:
+v1: https://lore.kernel.org/linuxppc-dev/20200714043624.5648-1-srikar@linux.vnet.ibm.com/t/#u
+
+powerpc/smp: Merge Power9 topology with Power topology
+	Replaced a reference to cpu_smt_mask with per_cpu(cpu_sibling_map, cpu)
+	since cpu_smt_mask is only defined under CONFIG_SCHED_SMT
+
+powerpc/smp: Enable small core scheduling sooner
+	Restored the previous info msg (Jordan)
+	Moved big core topology fixup to fixup_topology (Gautham)
+
+powerpc/smp: Dont assume l2-cache to be superset of sibling
+	Set cpumask after verifying l2-cache. (Gautham)
+
+powerpc/smp: Generalize 2nd sched domain
+	Moved shared_cache topology fixup to fixup_topology (Gautham)
+
+Powerpc/numa: Detect support for coregroup
+	Explained Coregroup in commit msg (Michael Ellerman)
+
+Powerpc/smp: Create coregroup domain
+	Moved coregroup topology fixup to fixup_topology (Gautham)
+
+powerpc/smp: Implement cpu_to_coregroup_id
+	Move coregroup_enabled before getting associativity (Gautham)
+
+powerpc/smp: Provide an ability to disable coregroup
+	Patch dropped (Michael Ellerman)
+
+Cleanup of existing powerpc topologies and add coregroup support on
+Powerpc. Coregroup is a group of (subset of) cores of a DIE that share
+a resource.
+
+Patch 7 of this patch series: "Powerpc/numa: Detect support for coregroup"
+depends on
+https://lore.kernel.org/linuxppc-dev/20200707140644.7241-1-srikar@linux.vnet.ibm.com/t/#u
+However it should be easy to rebase the patch without the above patch.
+
+This patch series is based on top of current powerpc/next tree + the
+above patch.
+
+On Power 8 Systems
+------------------
+$ tail /proc/cpuinfo
+processor	: 255
+cpu		: POWER8 (architected), altivec supported
+clock		: 3724.000000MHz
+revision	: 2.1 (pvr 004b 0201)
+
+timebase	: 512000000
+platform	: pSeries
+model		: IBM,8408-E8E
+machine		: CHRP IBM,8408-E8E
+MMU		: Hash
+
+Before the patchset
+-------------------
+$ cat /proc/sys/kernel/sched_domain/cpu0/domain*/name
+SMT
+DIE
+NUMA
+NUMA
+$ head /proc/schedstat
+version 15
+timestamp 4295534931
+cpu0 0 0 0 0 0 0 41389823338 17682779896 14117
+domain0 00000000,00000000,00000000,00000000,00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,00000000,00000000,00000000,00000000,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain2 00000000,00000000,00000000,00000000,00000000,00000000,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain3 ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+cpu1 0 0 0 0 0 0 27087859050 152273672 10396
+domain0 00000000,00000000,00000000,00000000,00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,00000000,00000000,00000000,00000000,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+After the patchset
+------------------
+$ cat /proc/sys/kernel/sched_domain/cpu0/domain*/name
+SMT
+DIE
+NUMA
+NUMA
+$ head /proc/schedstat
+version 15
+timestamp 4295534931
+cpu0 0 0 0 0 0 0 41389823338 17682779896 14117
+domain0 00000000,00000000,00000000,00000000,00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,00000000,00000000,00000000,00000000,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain2 00000000,00000000,00000000,00000000,00000000,00000000,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain3 ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+cpu1 0 0 0 0 0 0 27087859050 152273672 10396
+domain0 00000000,00000000,00000000,00000000,00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,00000000,00000000,00000000,00000000,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+On Power 9 (with device-tree enablement to show coregroups).
+(hunks for mimicing a coregroup was posted at
+https://lore.kernel.org/linuxppc-dev/20200714043624.5648-1-srikar@linux.vnet.ibm.com/t/#m2cb09bb11c7a93257d6123d1d27edb8212f8af21)
+-----------------------------------------------------------
+$ tail /proc/cpuinfo
+processor	: 127
+cpu		: POWER9 (architected), altivec supported
+clock		: 3000.000000MHz
+revision	: 2.2 (pvr 004e 0202)
+
+timebase	: 512000000
+platform	: pSeries
+model		: IBM,9008-22L
+machine		: CHRP IBM,9008-22L
+MMU		: Hash
+
+Before patchset
+--------------
+$ cat /proc/sys/kernel/sched_domain/cpu0/domain*/name
+SMT
+CACHE
+DIE
+NUMA
+
+$ head /proc/schedstat
+version 15
+timestamp 4318242208
+cpu0 0 0 0 0 0 0 28077107004 4773387362 78205
+domain0 00000000,00000000,00000000,00000055 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain2 00000000,00000000,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain3 ffffffff,ffffffff,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+cpu1 0 0 0 0 0 0 24177439200 413887604 75393
+domain0 00000000,00000000,00000000,000000aa 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+After patchset
+--------------
+$ cat /proc/sys/kernel/sched_domain/cpu0/domain*/name
+SMT
+CACHE
+MC
+DIE
+NUMA
+
+$ head /proc/schedstat
+version 15
+timestamp 4318242208
+cpu0 0 0 0 0 0 0 28077107004 4773387362 78205
+domain0 00000000,00000000,00000000,00000055 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00000000,00000000,00000000,000000ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain2 00000000,00000000,00000000,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain3 00000000,00000000,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain4 ffffffff,ffffffff,ffffffff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+cpu1 0 0 0 0 0 0 24177439200 413887604 75393
+domain0 00000000,00000000,00000000,000000aa 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Michael Ellerman <michaele@au1.ibm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Nick Piggin <npiggin@au1.ibm.com>
+Cc: Oliver OHalloran <oliveroh@au1.ibm.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Michael Neuling <mikey@linux.ibm.com>
+Cc: Anton Blanchard <anton@au1.ibm.com>
+Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Cc: Jordan Niethe <jniethe5@gmail.com>
+
+Srikar Dronamraju (10):
+  powerpc/smp: Fix a warning under !NEED_MULTIPLE_NODES
+  powerpc/smp: Merge Power9 topology with Power topology
+  powerpc/smp: Move powerpc_topology above
+  powerpc/smp: Move topology fixups into  a new function
+  powerpc/smp: Dont assume l2-cache to be superset of sibling
+  powerpc/smp: Generalize 2nd sched domain
+  powerpc/numa: Detect support for coregroup
+  powerpc/smp: Allocate cpumask only after searching thread group
+  powerpc/smp: Create coregroup domain
+  powerpc/smp: Implement cpu_to_coregroup_id
+
+ arch/powerpc/include/asm/smp.h      |   1 +
+ arch/powerpc/include/asm/topology.h |  10 ++
+ arch/powerpc/kernel/smp.c           | 246 +++++++++++++++++-----------
+ arch/powerpc/mm/numa.c              |  59 +++++--
+ 4 files changed, 210 insertions(+), 106 deletions(-)
+
 -- 
-2.20.1
+2.17.1
 
