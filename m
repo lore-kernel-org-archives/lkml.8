@@ -2,198 +2,158 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	BODY_QUOTE_MALF_MSGID,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183BAC433E5
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EECC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00C652075A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D144E2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 12:26:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ufvCrz6Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgG0MYS (ORCPT
+        id S1728292AbgG0M0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 08:24:18 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2535 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728292AbgG0MYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:24:18 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 50336B258D4D68A1850D;
-        Mon, 27 Jul 2020 13:24:16 +0100 (IST)
-Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
- 2020 13:24:15 +0100
-Date:   Mon, 27 Jul 2020 13:22:52 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
-        <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [RFC PATCH 7/9] PCI/AER: Add RCEC AER handling
-Message-ID: <20200727132252.0000644c@Huawei.com>
-In-Reply-To: <20200724172223.145608-8-sean.v.kelley@intel.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
-        <20200724172223.145608-8-sean.v.kelley@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 27 Jul 2020 08:26:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727078AbgG0M0M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 08:26:12 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B587BC061794
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:26:10 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 3so7629862wmi.1
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:26:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=6rri9mhUlxebznKAimXAy/9Cm8FbvWLt4+hoq73h+fg=;
+        b=ufvCrz6ZcjseH/gYg4ZTe6zEzxxBdDu/FZzW+/moozUD7jvBaNfqZjv5A34h1JVTTs
+         1xUt+sX775nu+Yzz4gUmHcEUURBPs8CEXsKysjYQa3Jsp/Slud4vARhsOSDOw9frRPSL
+         oWDSF2sO2uCcLCHI1HE4FMsLLnvI0/JbptlThAhgwh3XZnV36rbo77kCysTpTKvl71AY
+         19eYrNtuElNUaUVL1ockn7C2N7XlkPEmKnXxUizQp/NjgFHkdR58DfsHP8TtcZ3DBqkO
+         hyNR6OVv0YaBW1U3E4gv93FjcTVb38WOk7tfeX1re5BF3t/j120PMfmQ1AZi7wqTcv0b
+         Fi0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=6rri9mhUlxebznKAimXAy/9Cm8FbvWLt4+hoq73h+fg=;
+        b=kWctxm5dvnZt45v/ek2RW7fkAKhlg25Y9sTWv8DxPyhmbIxsr0kFbCzx/prUuFvMbJ
+         z9kJMDm30fA3X87xs+T6+TQmKW3bNZQjWXOhLuVGfoiIJM104rtPN1TXgeSl1RV6a9y+
+         dri0oCK2oRvfR2atm2GTQ/ZZZVlWExYd39AkX1SIAlTUtQSseYj0nXamxCqU/Z+07zY9
+         OfVCcCHFoAEsgBq7Zri8wF4ANU9t37yUZDeHz4ZDyddBa2TQTuzrZRtqH8709gwBnO1I
+         WjZm5qV6mEE/3TFHDF9H0TNxPJKKp/QnACBNMNX8LoFqHLIMPUPipr9vmYQi3btekD9R
+         10Cw==
+X-Gm-Message-State: AOAM532dIL2+v5OJAbJeZOz1dWp8yer6lS1qUy1JuDVjfZF8BcnPG1Qp
+        K3eNd+O1KlOGboSbG+MV5Hmiag==
+X-Google-Smtp-Source: ABdhPJxWRBzQIb/NGY4w/mLgO/880v6aJtaTUgabR7iHW48GPvS3Zr/z4csjZpZBpu9zq+g/LhATtQ==
+X-Received: by 2002:a05:600c:285:: with SMTP id 5mr21108863wmk.41.1595852769343;
+        Mon, 27 Jul 2020 05:26:09 -0700 (PDT)
+Received: from dell ([2.27.167.73])
+        by smtp.gmail.com with ESMTPSA id n189sm7842688wmn.40.2020.07.27.05.26.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 05:26:08 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 13:26:06 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, benjamin.chao@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH v2 8/9] mfd: mt6360: Fix flow which is used to check ic
+ exist
+Message-ID: <20200727122557.GO1850026@dell>
+References: <1594983811-25908-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1594983811-25908-9-git-send-email-gene.chen.richtek@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.121.176]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1594983811-25908-9-git-send-email-gene.chen.richtek@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 10:22:21 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
+On Fri, 17 Jul 2020, Gene Chen wrote:
 
-> The Root Complex Event Collectors(RCEC) appear as peers to Root Ports
-> and also have the AER capability. So add RCEC support to the current AER
-> service driver and attach the AER service driver to the RCEC device.
+> From: Gene Chen <gene_chen@richtek.com>
 > 
-> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-
-A few questions and comments for this patch.
-
-See inline.
-
-Jonathan
-
-
+> Fix flow which is used to check ic exist.
+> 
+> Signed-off-by: Gene Chen <gene_chen@richtek.com>
 > ---
->  drivers/pci/pcie/aer.c | 34 +++++++++++++++++++++++++++-------
->  1 file changed, 27 insertions(+), 7 deletions(-)
+>  drivers/mfd/mt6360-core.c | 28 +++++++++++++++++++---------
+>  1 file changed, 19 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index f1bf06be449e..7cc430c74c46 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -303,7 +303,7 @@ int pci_aer_raw_clear_status(struct pci_dev *dev)
->  		return -EIO;
+> diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
+> index 5a68228..3186a7c 100644
+> --- a/drivers/mfd/mt6360-core.c
+> +++ b/drivers/mfd/mt6360-core.c
+> @@ -293,6 +293,23 @@ static const struct mfd_cell mt6360_devs[] = {
+>  		    NULL, 0, 0, "mediatek,mt6360-tcpc"),
+>  };
 >  
->  	port_type = pci_pcie_type(dev);
-> -	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
-> +	if (port_type == PCI_EXP_TYPE_ROOT_PORT || port_type == PCI_EXP_TYPE_RC_EC) {
->  		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &status);
->  		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, status);
->  	}
-> @@ -389,6 +389,12 @@ void pci_aer_init(struct pci_dev *dev)
->  	pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR, sizeof(u32) * n);
->  
->  	pci_aer_clear_status(dev);
+> +static int mt6360_check_vendor_info(struct mt6360_data *data)
+> +{
+> +	u32 info;
+> +	int ret;
 > +
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) {
-> +		if (!pci_find_ext_capability(dev, PCI_EXT_CAP_ID_RCEC))
-> +			return;
-> +		pci_info(dev, "AER: RCEC CAP FOUND and cap_has_rtctl = %d\n", n);
-
-It feels like failing to find an RC_EC extended cap in a RCEC deserved
-a nice strong error message.  Perhaps this isn't the right place to do it
-though.  For that matter, why are we checking for it here?
-
-> +	}
->  }
->  
->  void pci_aer_exit(struct pci_dev *dev)
-> @@ -577,7 +583,8 @@ static umode_t aer_stats_attrs_are_visible(struct kobject *kobj,
->  	if ((a == &dev_attr_aer_rootport_total_err_cor.attr ||
->  	     a == &dev_attr_aer_rootport_total_err_fatal.attr ||
->  	     a == &dev_attr_aer_rootport_total_err_nonfatal.attr) &&
-
-It is a bit ugly to have these called rootport_total_err etc for the rcec.
-Perhaps we should just add additional attributes to reflect we are looking at
-an RCEC?
-
-> -	    pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
-> +	    ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
-> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_EC)))
->  		return 0;
->  
->  	return a->mode;
-> @@ -894,7 +901,10 @@ static bool find_source_device(struct pci_dev *parent,
->  	if (result)
->  		return true;
->  
-> -	pci_walk_bus(parent->subordinate, find_device_iter, e_info);
-> +	if (pci_pcie_type(parent) == PCI_EXP_TYPE_RC_EC)
-> +		pcie_walk_rcec(parent, find_device_iter, e_info);
-> +	else
-> +		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
->  
->  	if (!e_info->error_dev_num) {
->  		pci_info(parent, "can't find device of ID%04x\n", e_info->id);
-> @@ -1030,6 +1040,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
->  		if (!(info->status & ~info->mask))
->  			return 0;
->  	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> +		   pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC ||
->  	           pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
->  		   info->severity == AER_NONFATAL) {
->  
-> @@ -1182,6 +1193,8 @@ static int set_device_error_reporting(struct pci_dev *dev, void *data)
->  	int type = pci_pcie_type(dev);
->  
->  	if ((type == PCI_EXP_TYPE_ROOT_PORT) ||
-> +	    (type == PCI_EXP_TYPE_RC_EC) ||
-> +	    (type == PCI_EXP_TYPE_RC_END) ||
-
-Why add RC_END here?
-
->  	    (type == PCI_EXP_TYPE_UPSTREAM) ||
->  	    (type == PCI_EXP_TYPE_DOWNSTREAM)) {
->  		if (enable)
-> @@ -1206,9 +1219,11 @@ static void set_downstream_devices_error_reporting(struct pci_dev *dev,
->  {
->  	set_device_error_reporting(dev, &enable);
->  
-> -	if (!dev->subordinate)
-> -		return;
-> -	pci_walk_bus(dev->subordinate, set_device_error_reporting, &enable);
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
-> +		pcie_walk_rcec(dev, set_device_error_reporting, &enable);
-> +	else if (dev->subordinate)
-> +		pci_walk_bus(dev->subordinate, set_device_error_reporting, &enable);
+> +	ret = regmap_read(data->regmap, MT6360_PMU_DEV_INFO, &info);
+> +	if (ret < 0)
+> +		return ret;
 > +
->  }
->  
->  /**
-> @@ -1306,6 +1321,11 @@ static int aer_probe(struct pcie_device *dev)
->  	struct device *device = &dev->device;
->  	struct pci_dev *port = dev->port;
->  
-> +	/* Limit to Root Ports or Root Complex Event Collectors */
-> +	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
-> +	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
+> +	if ((info & CHIP_VEN_MASK) != CHIP_VEN_MT6360)
 > +		return -ENODEV;
 > +
->  	rpc = devm_kzalloc(device, sizeof(struct aer_rpc), GFP_KERNEL);
->  	if (!rpc)
->  		return -ENOMEM;
-> @@ -1362,7 +1382,7 @@ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+> +	data->chip_rev = info & CHIP_REV_MASK;
+> +
+> +	return 0;
+> +}
+> +
+>  static const unsigned short mt6360_slave_addr[MT6360_SLAVE_MAX] = {
+>  	MT6360_PMU_SLAVEID,
+>  	MT6360_PMIC_SLAVEID,
+> @@ -303,7 +320,6 @@ static const unsigned short mt6360_slave_addr[MT6360_SLAVE_MAX] = {
+>  static int mt6360_probe(struct i2c_client *client)
+>  {
+>  	struct mt6360_data *data;
+> -	unsigned int reg_data;
+>  	int i, ret;
 >  
->  static struct pcie_port_service_driver aerdriver = {
->  	.name		= "aer",
-> -	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
-> +	.port_type	= PCIE_ANY_PORT,
-
-Why this particular change?  Seems that is a lot wider than simply
-adding RCEC.  Obviously we'll then drop out in the aer_probe but it
-is still rather inelegant.
-
->  	.service	= PCIE_PORT_SERVICE_AER,
+>  	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
+> @@ -319,16 +335,10 @@ static int mt6360_probe(struct i2c_client *client)
+>  		return PTR_ERR(data->regmap);
+>  	}
 >  
->  	.probe		= aer_probe,
+> -	ret = regmap_read(data->regmap, MT6360_PMU_DEV_INFO, &reg_data);
+> +	ret = mt6360_check_vendor_info(data);
+>  	if (ret) {
+> -		dev_err(&client->dev, "Device not found\n");
+> -		return ret;
+> -	}
+> -
+> -	data->chip_rev = reg_data & CHIP_REV_MASK;
+> -	if (data->chip_rev != CHIP_VEN_MT6360) {
+>  		dev_err(&client->dev, "Device not supported\n");
 
+Can you move this into mt6360_check_vendor_info() too please?
 
+> -		return -ENODEV;
+> +		return ret;
+>  	}
+>  
+>  	ret = devm_regmap_add_irq_chip(&client->dev, data->regmap, client->irq,
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
