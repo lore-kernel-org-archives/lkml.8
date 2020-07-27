@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405DCC433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E68CC433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169E32070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BFF42075A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859515;
-	bh=N1qsdZkVZAZPDuNUk4mKrFEbtKcn95AWfSjOjhwaCH8=;
+	s=default; t=1595859522;
+	bh=5MbtI0ihvkEoxI9SWcTbrLH2vIzaHkcSMuxKD1ckyRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gTZRd5A3O4uczDCJcPAc6E+ULE0904FceYnB0pTT0QtnjKD/44EEIgR1W5FZOEmQC
-	 YonTpuSAv18IX3bjdnFsy1ODPDDjo1Q7MsAsQQSIsibjAccHrjZ77lmHFvcUd8hIh3
-	 lzK7ZEmmuUdXpthl/6Zp+5jeo4uAYF6301rpbpts=
+	b=rqLgeuQc739KNxgy5wLtz8ylDehjiMrN9/vSfUIX6OdNp3mK6szBnpkEZCwYBLDoT
+	 fhrac0YrfhWy6Aro6mFFj+SuI1B0JZ9ayAhgd6qYzlhYccYkDt16NTnLS4dO9KfBBq
+	 54qXPN0RepnCuJyXDx0+/WumCufnF6vqx8Ot7QmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbgG0OSd (ORCPT
+        id S1730683AbgG0OSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:18:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46118 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:18:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731229AbgG0OS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:18:26 -0400
+        id S1731262AbgG0OSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:18:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBF9720825;
-        Mon, 27 Jul 2020 14:18:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFA0A20775;
+        Mon, 27 Jul 2020 14:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859506;
-        bh=N1qsdZkVZAZPDuNUk4mKrFEbtKcn95AWfSjOjhwaCH8=;
+        s=default; t=1595859516;
+        bh=5MbtI0ihvkEoxI9SWcTbrLH2vIzaHkcSMuxKD1ckyRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W86SqpXyDx4yR1YzxlQ8cf9u0t4vT0Ye2MkVvHvBWoQ66ZNLOGOMZ+BXPPQw5g5oQ
-         HowuuZt1MvpEXpz4+pJy28I89nLvKxR6A81tBGAunlbtZEiTYXh2NJ67o46HPOuBrp
-         bKz81YWfU2YK5eAV5DTSr4qGjBhN9JGgOPA8/iwg=
+        b=FzDEX2Qco/ss3y09xvBD6VfdoYPT355xewhzuW8TKNmZErcisaGgVu/fx5SuTfBNX
+         phn1+Z3CKvXcwN5aEqHxGmyDuXswdCxLDnyCqufZESpxj0Z1k0/wAe0tYbugmV/ghP
+         k3bWU0EiCsYMOxZltjYfYI4KFI0oKLXPq7JGc3X4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Forest Crossman <cyrozap@gmail.com>
-Subject: [PATCH 5.4 106/138] usb: xhci: Fix ASM2142/ASM3142 DMA addressing
-Date:   Mon, 27 Jul 2020 16:05:01 +0200
-Message-Id: <20200727134930.769999735@linuxfoundation.org>
+        stable@vger.kernel.org, Rustam Kovhaev <rkovhaev@gmail.com>,
+        syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 110/138] staging: wlan-ng: properly check endpoint types
+Date:   Mon, 27 Jul 2020 16:05:05 +0200
+Message-Id: <20200727134930.967084310@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -58,35 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Forest Crossman <cyrozap@gmail.com>
+From: Rustam Kovhaev <rkovhaev@gmail.com>
 
-commit dbb0897e805f2ab1b8bc358f6c3d878a376b8897 upstream.
+commit faaff9765664009c1c7c65551d32e9ed3b1dda8f upstream.
 
-The ASM2142/ASM3142 (same PCI IDs) does not support full 64-bit DMA
-addresses, which can cause silent memory corruption or IOMMU errors on
-platforms that use the upper bits. Add the XHCI_NO_64BIT_SUPPORT quirk
-to fix this issue.
+As syzkaller detected, wlan-ng driver does not do sanity check of
+endpoints in prism2sta_probe_usb(), add check for xfer direction and type
 
-Signed-off-by: Forest Crossman <cyrozap@gmail.com>
+Reported-and-tested-by: syzbot+c2a1fa67c02faa0de723@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=c2a1fa67c02faa0de723
+Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200717112734.328432-1-cyrozap@gmail.com
+Link: https://lore.kernel.org/r/20200722161052.999754-1-rkovhaev@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-pci.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/staging/wlan-ng/prism2usb.c |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -250,6 +250,9 @@ static void xhci_pci_quirks(struct devic
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
- 			pdev->device == 0x1142)
- 		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
-+	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
-+			pdev->device == 0x2142)
-+		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
+--- a/drivers/staging/wlan-ng/prism2usb.c
++++ b/drivers/staging/wlan-ng/prism2usb.c
+@@ -61,11 +61,25 @@ static int prism2sta_probe_usb(struct us
+ 			       const struct usb_device_id *id)
+ {
+ 	struct usb_device *dev;
+-
++	const struct usb_endpoint_descriptor *epd;
++	const struct usb_host_interface *iface_desc = interface->cur_altsetting;
+ 	struct wlandevice *wlandev = NULL;
+ 	struct hfa384x *hw = NULL;
+ 	int result = 0;
  
- 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
- 		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
++	if (iface_desc->desc.bNumEndpoints != 2) {
++		result = -ENODEV;
++		goto failed;
++	}
++
++	result = -EINVAL;
++	epd = &iface_desc->endpoint[1].desc;
++	if (!usb_endpoint_is_bulk_in(epd))
++		goto failed;
++	epd = &iface_desc->endpoint[2].desc;
++	if (!usb_endpoint_is_bulk_out(epd))
++		goto failed;
++
+ 	dev = interface_to_usbdev(interface);
+ 	wlandev = create_wlan();
+ 	if (!wlandev) {
 
 
