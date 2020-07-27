@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45239C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A53B3C433F2
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 249CB2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB492083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595858895;
-	bh=1krdMMCgu2EhWpI5PXJAaTOqyzYFC6r2SVugadVwagU=;
+	s=default; t=1595858899;
+	bh=syJIf6GQBppf2Hdw79wPHqxwHwYccToCNQ4NPDLgv8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HqgMF94VmrTFItMrWXVuS71dnefqa89m9dD7ilFxkBE/AtpvdZ0wayV34uQKI6dqm
-	 02Qr5rQ9c2qFjdOYMzRtaNuIZqhdM7dCjgSUxs+cBdut+p4lJU6nNMpwxR5Qwpyi6n
-	 W7TLUhVVUiU7qTW6C43Qb5vFYZcmymj14tuh0iJA=
+	b=bEgOpIt1hcjbXJ7BilA9JasLod63yuVMQ+1FNUejZLtLN84EZIdDAJVmTRm/00qYR
+	 jVxL24mTyUrl4STrtajiRXlmlaoT6oZOzoKRe5myg/BIdgtr4t21JhIKe3R2Q+CWg1
+	 ehVz34YV8USDZxCIUpe1pcO+7SyWm1X+LSHKVGDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbgG0OIN (ORCPT
+        id S1729395AbgG0OIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:08:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57384 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:08:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729375AbgG0OII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:08:08 -0400
+        id S1729383AbgG0OIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:08:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D53A52073E;
-        Mon, 27 Jul 2020 14:08:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33C792083B;
+        Mon, 27 Jul 2020 14:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858888;
-        bh=1krdMMCgu2EhWpI5PXJAaTOqyzYFC6r2SVugadVwagU=;
+        s=default; t=1595858893;
+        bh=syJIf6GQBppf2Hdw79wPHqxwHwYccToCNQ4NPDLgv8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zNP2vazWLfFsXwvPq7mp/pSW5f6LQfViFnB9MONEpUov5VbuL20JO0Hr3YvvgSZ6Y
-         eM7W5A1og5J1F58O0H1FENE8pwWpiaNMepDdkT8BDh/ZG2oPPeye2nyiOkd/o4Lr80
-         WR7gMgrkK8Lkw7SmupbSid/zH0KELURkzsD0ukXs=
+        b=bTIqAbgGj2e5dzW4QDLzkL6eFt31N1pk3ZG8fh3bsC/aeLGfLyL/DXk0z+GfHFKPa
+         sVMSbCPjky0rHKXcPBHZ4Xt3rve6O2GfddvCLtMvSEj1NNC7/I/y4wj9KiSBltRbg8
+         CM9wVnY5j5cp/eP6JK5XBFm/2qmGX1ZpLUJuVWHk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Patrick Fernie <patrick.fernie@gmail.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Subject: [PATCH 4.14 49/64] Revert "cifs: Fix the target file was deleted when rename failed."
-Date:   Mon, 27 Jul 2020 16:04:28 +0200
-Message-Id: <20200727134913.606900997@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.14 51/64] staging: comedi: addi_apci_1032: check INSN_CONFIG_DIGITAL_TRIG shift
+Date:   Mon, 27 Jul 2020 16:04:30 +0200
+Message-Id: <20200727134913.698888065@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
 References: <20200727134911.020675249@linuxfoundation.org>
@@ -62,58 +58,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 0e6705182d4e1b77248a93470d6d7b3013d59b30 upstream.
+commit 0bd0db42a030b75c20028c7ba6e327b9cb554116 upstream.
 
-This reverts commit 9ffad9263b467efd8f8dc7ae1941a0a655a2bab2.
+The `INSN_CONFIG` comedi instruction with sub-instruction code
+`INSN_CONFIG_DIGITAL_TRIG` includes a base channel in `data[3]`. This is
+used as a right shift amount for other bitmask values without being
+checked.  Shift amounts greater than or equal to 32 will result in
+undefined behavior.  Add code to deal with this.
 
-Upon additional testing with older servers, it was found that
-the original commit introduced a regression when using the old SMB1
-dialect and rsyncing over an existing file.
-
-The patch will need to be respun to address this, likely including
-a larger refactoring of the SMB1 and SMB3 rename code paths to make
-it less confusing and also to address some additional rename error
-cases that SMB3 may be able to workaround.
-
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reported-by: Patrick Fernie <patrick.fernie@gmail.com>
-CC: Stable <stable@vger.kernel.org>
-Acked-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
-Acked-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Fixes: 33cdce6293dcc ("staging: comedi: addi_apci_1032: conform to new INSN_CONFIG_DIGITAL_TRIG")
+Cc: <stable@vger.kernel.org> #3.8+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20200717145257.112660-3-abbotti@mev.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/inode.c |   10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/staging/comedi/drivers/addi_apci_1032.c |   20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1778,7 +1778,6 @@ cifs_rename2(struct inode *source_dir, s
- 	FILE_UNIX_BASIC_INFO *info_buf_target;
- 	unsigned int xid;
- 	int rc, tmprc;
--	bool new_target = d_really_is_negative(target_dentry);
+--- a/drivers/staging/comedi/drivers/addi_apci_1032.c
++++ b/drivers/staging/comedi/drivers/addi_apci_1032.c
+@@ -115,14 +115,22 @@ static int apci1032_cos_insn_config(stru
+ 				    unsigned int *data)
+ {
+ 	struct apci1032_private *devpriv = dev->private;
+-	unsigned int shift, oldmask;
++	unsigned int shift, oldmask, himask, lomask;
  
- 	if (flags & ~RENAME_NOREPLACE)
- 		return -EINVAL;
-@@ -1855,13 +1854,8 @@ cifs_rename2(struct inode *source_dir, s
- 	 */
- 
- unlink_target:
--	/*
--	 * If the target dentry was created during the rename, try
--	 * unlinking it if it's not negative
--	 */
--	if (new_target &&
--	    d_really_is_positive(target_dentry) &&
--	    (rc == -EACCES || rc == -EEXIST)) {
-+	/* Try unlinking the target dentry if it's not negative */
-+	if (d_really_is_positive(target_dentry) && (rc == -EACCES || rc == -EEXIST)) {
- 		if (d_is_dir(target_dentry))
- 			tmprc = cifs_rmdir(target_dir, target_dentry);
- 		else
+ 	switch (data[0]) {
+ 	case INSN_CONFIG_DIGITAL_TRIG:
+ 		if (data[1] != 0)
+ 			return -EINVAL;
+ 		shift = data[3];
+-		oldmask = (1U << shift) - 1;
++		if (shift < 32) {
++			oldmask = (1U << shift) - 1;
++			himask = data[4] << shift;
++			lomask = data[5] << shift;
++		} else {
++			oldmask = 0xffffffffu;
++			himask = 0;
++			lomask = 0;
++		}
+ 		switch (data[2]) {
+ 		case COMEDI_DIGITAL_TRIG_DISABLE:
+ 			devpriv->ctrl = 0;
+@@ -145,8 +153,8 @@ static int apci1032_cos_insn_config(stru
+ 				devpriv->mode2 &= oldmask;
+ 			}
+ 			/* configure specified channels */
+-			devpriv->mode1 |= data[4] << shift;
+-			devpriv->mode2 |= data[5] << shift;
++			devpriv->mode1 |= himask;
++			devpriv->mode2 |= lomask;
+ 			break;
+ 		case COMEDI_DIGITAL_TRIG_ENABLE_LEVELS:
+ 			if (devpriv->ctrl != (APCI1032_CTRL_INT_ENA |
+@@ -163,8 +171,8 @@ static int apci1032_cos_insn_config(stru
+ 				devpriv->mode2 &= oldmask;
+ 			}
+ 			/* configure specified channels */
+-			devpriv->mode1 |= data[4] << shift;
+-			devpriv->mode2 |= data[5] << shift;
++			devpriv->mode1 |= himask;
++			devpriv->mode2 |= lomask;
+ 			break;
+ 		default:
+ 			return -EINVAL;
 
 
