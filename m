@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65655C4346A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC74CC43470
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 331CE20A8B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57DE208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 23:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595892425;
-	bh=bTEMXvdIvyE2iqBAS9NC+cQYJQ88tOHYymR7wqxovZk=;
+	s=default; t=1595892432;
+	bh=KP2S6zjMVIV//HHt0ckkmTyuYNbrWQFsrRLKQQLWScM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l6vGtePXde4eci99mpKz5JFbGxT1vh9xwfaG+/TTDIW9Fl5lYRgkCThkJ0opipWkM
-	 Px0Ff8ClPZrv+3wYwGsdgcm59Q53ua/Y5D/BehhyvLgUxjQbPr9W9bv9t1F97rf8Hj
-	 ekC5OsBzn1mFXGaN8gCJXymiytHEaANopOBV+FFw=
+	b=H25iHrE4JI9oXYn4MrDWnBt5vqU6arM04cwqF++KPM33nrmrEcvhNkydoSwlGkWX2
+	 QXryTefgowfNSU8cMdqRD1aXCCNNodtT+ueZpdS0m9HnalcWND3yPbQV3uYRIjXpxf
+	 FA2iTfbFryZuLvT3jOrVzJl5brqUt79EQI+hOIY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgG0X1D (ORCPT
+        id S1728460AbgG0XZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 19:27:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36290 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 19:25:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728437AbgG0XZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 19:25:03 -0400
+        id S1728432AbgG0XYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 19:24:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B833208E4;
-        Mon, 27 Jul 2020 23:25:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BA7022CB2;
+        Mon, 27 Jul 2020 23:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595892303;
-        bh=bTEMXvdIvyE2iqBAS9NC+cQYJQ88tOHYymR7wqxovZk=;
+        s=default; t=1595892295;
+        bh=KP2S6zjMVIV//HHt0ckkmTyuYNbrWQFsrRLKQQLWScM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OHdmhMWVgRNQV+BJcEW+qmW0Ltt9Ra4Zle+Qx7PlRew5Jafyj4U7SdpOuisiu7bZ4
-         HSa2nDRUfeSFp7enX6b38tnGX9cO3oRWGstltAvzx3PkNl2gT0DjoiddWY5yxaM+El
-         QWSMuVjDyACkd/J2uzx9QaFsPGuZSjuYBplCFEGo=
+        b=Vm5LmJMxBGKbXUBb3FDwEcQ63coJhSpFtAQyxNUwcYcrrcFq2xR7TLVg8AVmZnCxn
+         Za/Y3IjrGeku+q6xr0IUSyA629VaABdRXG0pGwk+IwMtvi4gxdjC1RdxKfrXJocpED
+         1gReS7W7Yj+iHD+jMdvVDGalimAJTqbXEWfRouck=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-nfc@lists.01.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/10] nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
-Date:   Mon, 27 Jul 2020 19:24:51 -0400
-Message-Id: <20200727232458.718131-3-sashal@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 08/10] x86/unwind/orc: Fix ORC for newly forked tasks
+Date:   Mon, 27 Jul 2020 19:24:41 -0400
+Message-Id: <20200727232443.718000-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200727232458.718131-1-sashal@kernel.org>
-References: <20200727232458.718131-1-sashal@kernel.org>
+In-Reply-To: <20200727232443.718000-1-sashal@kernel.org>
+References: <20200727232443.718000-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,32 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit 1e8fd3a97f2d83a7197876ceb4f37b4c2b00a0f3 ]
+[ Upstream commit 372a8eaa05998cd45b3417d0e0ffd3a70978211a ]
 
-The implementation of s3fwrn5_recv_frame() is supposed to consume skb on
-all execution paths. Release skb before returning -ENODEV.
+The ORC unwinder fails to unwind newly forked tasks which haven't yet
+run on the CPU.  It correctly reads the 'ret_from_fork' instruction
+pointer from the stack, but it incorrectly interprets that value as a
+call stack address rather than a "signal" one, so the address gets
+incorrectly decremented in the call to orc_find(), resulting in bad ORC
+data.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix it by forcing 'ret_from_fork' frames to be signal frames.
+
+Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+Link: https://lkml.kernel.org/r/f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/s3fwrn5/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/unwind_orc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nfc/s3fwrn5/core.c b/drivers/nfc/s3fwrn5/core.c
-index 9d9c8d57a042d..64b58455e620b 100644
---- a/drivers/nfc/s3fwrn5/core.c
-+++ b/drivers/nfc/s3fwrn5/core.c
-@@ -209,6 +209,7 @@ int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
- 	case S3FWRN5_MODE_FW:
- 		return s3fwrn5_fw_recv_frame(ndev, skb);
- 	default:
-+		kfree_skb(skb);
- 		return -ENODEV;
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 2701b370e58fe..1d264ba1e56d1 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -420,8 +420,11 @@ bool unwind_next_frame(struct unwind_state *state)
+ 	/*
+ 	 * Find the orc_entry associated with the text address.
+ 	 *
+-	 * Decrement call return addresses by one so they work for sibling
+-	 * calls and calls to noreturn functions.
++	 * For a call frame (as opposed to a signal frame), state->ip points to
++	 * the instruction after the call.  That instruction's stack layout
++	 * could be different from the call instruction's layout, for example
++	 * if the call was to a noreturn function.  So get the ORC data for the
++	 * call instruction itself.
+ 	 */
+ 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
+ 	if (!orc)
+@@ -634,6 +637,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+ 		state->sp = task->thread.sp;
+ 		state->bp = READ_ONCE_NOCHECK(frame->bp);
+ 		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
++		state->signal = (void *)state->ip == ret_from_fork;
  	}
- }
+ 
+ 	if (get_stack_info((unsigned long *)state->sp, state->task,
 -- 
 2.25.1
 
