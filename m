@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F1AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F44C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8D220663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 991DD20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860213;
-	bh=XJuEidlReUIBMXF0vMRweVd7zH9eejVPBgUWArVlU2U=;
+	s=default; t=1595860217;
+	bh=N3uvxnTFN3pzdT4wAHLGM8Qz19yO6nAZXWjbSZF/A0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0DuQ0KuEC4Vdr5rYs64EHrwsLBewHDeeptG8j25/2hcWaNSu3uO3IEKfbJYTbZNZg
-	 rHpgFV0f5R352iMV3npadUwU2XPra++YMc/lCGpSAwLyO4GeYM/8zI/FT31nb3RZDK
-	 4ZIBlYcr55aXJqPPQYt4eYMBc2KmGqwBXxSxBkY8=
+	b=xn5RBdsABoYnQrzK7Eiy5vL7p6hh5H2CdfeMzANnI/tMAJ72EXi63/639JymiHA0d
+	 2jI6QUoEMAfIjFapvCkcJC0t7UcEocnPZus+FMCOS2FaBxhEystKeg4BYrIpG43eMm
+	 HkAU69acc7FpGx0zalYn7yeiOIOGB5lMH6yjWufE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731902AbgG0OWb (ORCPT
+        id S1731874AbgG0OWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51364 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:22:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731879AbgG0OWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:22:25 -0400
+        id S1731863AbgG0OWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:22:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7B3B2173E;
-        Mon, 27 Jul 2020 14:22:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0AEE2083E;
+        Mon, 27 Jul 2020 14:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859745;
-        bh=XJuEidlReUIBMXF0vMRweVd7zH9eejVPBgUWArVlU2U=;
+        s=default; t=1595859740;
+        bh=N3uvxnTFN3pzdT4wAHLGM8Qz19yO6nAZXWjbSZF/A0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Srqe6jTM2AQA3BvcN4nSlpeX10H2Pn2dGuD88LaOANSB/bTIskzUsi6ETAF0tP3/5
-         rh8lWh/E1NzILNLs0Tg4JX3cFNcja9Yz5CNM6eNl5W+s/8TJrDBkP81CKufCJc0/bx
-         CakUNdJqV8Xcp/thPkAAK7aaqkVsj2kyx3UKsVUc=
+        b=zgyVk9T1AXZasFF8HIzb3nTnatAiW0X1aI591e0AE8kYH7+kzl3LLOE5zLauGoa7g
+         eXkDqWCi7pklK1SUsl/OXwZv7Xtkcb6l/IQyP93f3L1ZX6NSelgB7lrPAXpXET3l4C
+         CipB2lVLi853ZB6ZTMg/VO3CeXV1fWciuPnRxqfM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Sergey Organov <sorganov@gmail.com>,
         Richard Cochran <richardcochran@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 058/179] net: dp83640: fix SIOCSHWTSTAMP to update the struct with actual configuration
-Date:   Mon, 27 Jul 2020 16:03:53 +0200
-Message-Id: <20200727134935.497840503@linuxfoundation.org>
+Subject: [PATCH 5.7 056/179] net: fec: fix hardware time stamping by external devices
+Date:   Mon, 27 Jul 2020 16:03:51 +0200
+Message-Id: <20200727134935.399267347@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
 References: <20200727134932.659499757@linuxfoundation.org>
@@ -63,61 +64,106 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sergey Organov <sorganov@gmail.com>
 
-[ Upstream commit 473309fb8372365ad211f425bca760af800e10a7 ]
+[ Upstream commit 340746398b67e3ce5019698748ebaa7adf048114 ]
 
->From Documentation/networking/timestamping.txt:
+Fix support for external PTP-aware devices such as DSA or PTP PHY:
 
-  A driver which supports hardware time stamping shall update the
-  struct with the actual, possibly more permissive configuration.
+Make sure we never time stamp tx packets when hardware time stamping
+is disabled.
 
-Do update the struct passed when we upscale the requested time
-stamping mode.
+Check for PTP PHY being in use and then pass ioctls related to time
+stamping of Ethernet packets to the PTP PHY rather than handle them
+ourselves. In addition, disable our own hardware time stamping in this
+case.
 
-Fixes: cb646e2b02b2 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
+Fixes: 6605b730c061 ("FEC: Add time stamping code and a PTP hardware clock")
 Signed-off-by: Sergey Organov <sorganov@gmail.com>
 Acked-by: Richard Cochran <richardcochran@gmail.com>
+Acked-by: Vladimir Oltean <olteanv@gmail.com>
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83640.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/freescale/fec.h      |  1 +
+ drivers/net/ethernet/freescale/fec_main.c | 23 +++++++++++++++++------
+ drivers/net/ethernet/freescale/fec_ptp.c  | 12 ++++++++++++
+ 3 files changed, 30 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-index ecbd5e0d685cf..acb0aae607558 100644
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -1260,6 +1260,7 @@ static int dp83640_hwtstamp(struct mii_timestamper *mii_ts, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L4;
- 		dp83640->version = PTP_CLASS_V1;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V1_L4_EVENT;
- 		break;
- 	case HWTSTAMP_FILTER_PTP_V2_L4_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_L4_SYNC:
-@@ -1267,6 +1268,7 @@ static int dp83640_hwtstamp(struct mii_timestamper *mii_ts, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L4;
- 		dp83640->version = PTP_CLASS_V2;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L4_EVENT;
- 		break;
- 	case HWTSTAMP_FILTER_PTP_V2_L2_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_L2_SYNC:
-@@ -1274,6 +1276,7 @@ static int dp83640_hwtstamp(struct mii_timestamper *mii_ts, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L2;
- 		dp83640->version = PTP_CLASS_V2;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_L2_EVENT;
- 		break;
- 	case HWTSTAMP_FILTER_PTP_V2_EVENT:
- 	case HWTSTAMP_FILTER_PTP_V2_SYNC:
-@@ -1281,6 +1284,7 @@ static int dp83640_hwtstamp(struct mii_timestamper *mii_ts, struct ifreq *ifr)
- 		dp83640->hwts_rx_en = 1;
- 		dp83640->layer = PTP_CLASS_L4 | PTP_CLASS_L2;
- 		dp83640->version = PTP_CLASS_V2;
-+		cfg.rx_filter = HWTSTAMP_FILTER_PTP_V2_EVENT;
- 		break;
- 	default:
- 		return -ERANGE;
+diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
+index e74dd1f86bbae..828eb8ce6631c 100644
+--- a/drivers/net/ethernet/freescale/fec.h
++++ b/drivers/net/ethernet/freescale/fec.h
+@@ -597,6 +597,7 @@ struct fec_enet_private {
+ void fec_ptp_init(struct platform_device *pdev, int irq_idx);
+ void fec_ptp_stop(struct platform_device *pdev);
+ void fec_ptp_start_cyclecounter(struct net_device *ndev);
++void fec_ptp_disable_hwts(struct net_device *ndev);
+ int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr);
+ int fec_ptp_get(struct net_device *ndev, struct ifreq *ifr);
+ 
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index dc6f8763a5d40..bf73bc9bf35b9 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1302,8 +1302,13 @@ fec_enet_tx_queue(struct net_device *ndev, u16 queue_id)
+ 			ndev->stats.tx_bytes += skb->len;
+ 		}
+ 
+-		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS) &&
+-			fep->bufdesc_ex) {
++		/* NOTE: SKBTX_IN_PROGRESS being set does not imply it's we who
++		 * are to time stamp the packet, so we still need to check time
++		 * stamping enabled flag.
++		 */
++		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS &&
++			     fep->hwts_tx_en) &&
++		    fep->bufdesc_ex) {
+ 			struct skb_shared_hwtstamps shhwtstamps;
+ 			struct bufdesc_ex *ebdp = (struct bufdesc_ex *)bdp;
+ 
+@@ -2731,10 +2736,16 @@ static int fec_enet_ioctl(struct net_device *ndev, struct ifreq *rq, int cmd)
+ 		return -ENODEV;
+ 
+ 	if (fep->bufdesc_ex) {
+-		if (cmd == SIOCSHWTSTAMP)
+-			return fec_ptp_set(ndev, rq);
+-		if (cmd == SIOCGHWTSTAMP)
+-			return fec_ptp_get(ndev, rq);
++		bool use_fec_hwts = !phy_has_hwtstamp(phydev);
++
++		if (cmd == SIOCSHWTSTAMP) {
++			if (use_fec_hwts)
++				return fec_ptp_set(ndev, rq);
++			fec_ptp_disable_hwts(ndev);
++		} else if (cmd == SIOCGHWTSTAMP) {
++			if (use_fec_hwts)
++				return fec_ptp_get(ndev, rq);
++		}
+ 	}
+ 
+ 	return phy_mii_ioctl(phydev, rq, cmd);
+diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ethernet/freescale/fec_ptp.c
+index 945643c026155..f8a592c96beb0 100644
+--- a/drivers/net/ethernet/freescale/fec_ptp.c
++++ b/drivers/net/ethernet/freescale/fec_ptp.c
+@@ -452,6 +452,18 @@ static int fec_ptp_enable(struct ptp_clock_info *ptp,
+ 	return -EOPNOTSUPP;
+ }
+ 
++/**
++ * fec_ptp_disable_hwts - disable hardware time stamping
++ * @ndev: pointer to net_device
++ */
++void fec_ptp_disable_hwts(struct net_device *ndev)
++{
++	struct fec_enet_private *fep = netdev_priv(ndev);
++
++	fep->hwts_tx_en = 0;
++	fep->hwts_rx_en = 0;
++}
++
+ int fec_ptp_set(struct net_device *ndev, struct ifreq *ifr)
+ {
+ 	struct fec_enet_private *fep = netdev_priv(ndev);
 -- 
 2.25.1
 
