@@ -2,102 +2,82 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23932C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAE5C433EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED3532083B
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D5320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860920;
-	bh=3Ntu81l2iPqRZi+s6BEQIwuKCV0gzsZOWwcMMWUJBYE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V6VzxtQ1d+YND0l7J7nObSnYlAyMHH5TBnVqBGIiv41mE7AgL3vLKArKebUndfD4h
-	 Ilo1NLmY6TPeth+c6gFdwICKWTQ9CkEDnrDbuVAwk8VEYJkpmj/OgYTwF+MDsAARxH
-	 NrJieWtsk9v2A5VruGWkMzwA3tksAGdxnQNEwoLw=
+	s=default; t=1595860925;
+	bh=0XkNZGMfPjvvPJ4vDl6luNql4PL5ypWVUV/Rm+mizsE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=KQUt6dEklMrZ/8dsg88EMDifwOByhl0DsOfT/9UWkJgxcB5JLSc7wvQ7GK4kQmzSx
+	 8tG+WC1E0CP8Lh9i35Vq164qhDgBPQL2+Tq6gkmbX2kUcDbiXSLCELBWMbWO4E791a
+	 xwuLm8tGCHCz2BnUnpcpKGYKIS/bFpydeS1DVCsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733100AbgG0Olz (ORCPT
+        id S1733121AbgG0OmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:41:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56870 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:42:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729310AbgG0OHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:07:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1729320AbgG0Olw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:41:52 -0400
+Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52CC92083E;
-        Mon, 27 Jul 2020 14:07:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FB70208E4;
+        Mon, 27 Jul 2020 14:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595858869;
-        bh=3Ntu81l2iPqRZi+s6BEQIwuKCV0gzsZOWwcMMWUJBYE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DFT/Qog/pu9kU2sYn85Lje43PVAGZTZjmRFh+jzWUZ08YdaEVbZC/6ke2YE3Ec/1B
-         EwACnhoYs5CzdhMruI6ksQ5jvictGm3aGi5df4DT5kUkisfi4ScuieVgzdBjxZZmlw
-         qhnpj717LgY79kB0FHau+0oOvB02Mo2gOjvvIgtg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 43/64] usb: gadget: udc: gr_udc: fix memleak on error handling path in gr_ep_init()
-Date:   Mon, 27 Jul 2020 16:04:22 +0200
-Message-Id: <20200727134913.315062511@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134911.020675249@linuxfoundation.org>
-References: <20200727134911.020675249@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        s=default; t=1595860912;
+        bh=0XkNZGMfPjvvPJ4vDl6luNql4PL5ypWVUV/Rm+mizsE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=jpg/EmyQDv9FT7kOivKMX8wFhGU4sFTB2CH3Fh4EZTjsJsvFBn7m7pngU0GoPyW+3
+         39SrDAlP4E+C6K+8ut68HKiV0e/CnGbZncwAxpQzwd+vVR2JJIvbvJk/g27MBtu9Ku
+         qK+mrjkQ3I6tKw3z/+lX1qAQaaqCDbWrPRjvxXS0=
+Message-ID: <1595860910.4841.118.camel@kernel.org>
+Subject: Re: [PATCH v3 06/19] fs/kernel_read_file: Split into separate
+ include file
+From:   Mimi Zohar <zohar@kernel.org>
+To:     Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, SeongJae Park <sjpark@amazon.de>,
+        KP Singh <kpsingh@chromium.org>, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 27 Jul 2020 10:41:50 -0400
+In-Reply-To: <20200724213640.389191-7-keescook@chromium.org>
+References: <20200724213640.389191-1-keescook@chromium.org>
+         <20200724213640.389191-7-keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+On Fri, 2020-07-24 at 14:36 -0700, Kees Cook wrote:
+> From: Scott Branden <scott.branden@broadcom.com>
+> 
+> Move kernel_read_file* out of linux/fs.h to its own linux/kernel_read_file.h
+> include file. That header gets pulled in just about everywhere
+> and doesn't really need functions not related to the general fs interface.
+> 
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Link: https://lore.kernel.org/r/20200706232309.12010-2-scott.branden@broadcom.com
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit c8f8529e2c4141afa2ebb487ad48e8a6ec3e8c99 ]
-
-gr_ep_init() does not assign the allocated request anywhere if allocation
-of memory for the buffer fails. This is a memory leak fixed by the given
-patch.
-
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/gadget/udc/gr_udc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
-index feb73a1c42ef9..be094f4e116b1 100644
---- a/drivers/usb/gadget/udc/gr_udc.c
-+++ b/drivers/usb/gadget/udc/gr_udc.c
-@@ -2000,9 +2000,12 @@ static int gr_ep_init(struct gr_udc *dev, int num, int is_in, u32 maxplimit)
- 
- 	if (num == 0) {
- 		_req = gr_alloc_request(&ep->ep, GFP_ATOMIC);
-+		if (!_req)
-+			return -ENOMEM;
-+
- 		buf = devm_kzalloc(dev->dev, PAGE_SIZE, GFP_DMA | GFP_ATOMIC);
--		if (!_req || !buf) {
--			/* possible _req freed by gr_probe via gr_remove */
-+		if (!buf) {
-+			gr_free_request(&ep->ep, _req);
- 			return -ENOMEM;
- 		}
- 
--- 
-2.25.1
-
-
-
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
