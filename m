@@ -2,78 +2,291 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C777C433EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6814BC433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 081802075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44FD820786
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:48:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iLaBtnq6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgG0UtE (ORCPT
+        id S1727097AbgG0Us5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:49:04 -0400
-Received: from smtprelay0241.hostedemail.com ([216.40.44.241]:48152 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727111AbgG0UtE (ORCPT
+        Mon, 27 Jul 2020 16:48:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgG0Usz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:49:04 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 4FC8B12CA;
-        Mon, 27 Jul 2020 20:49:03 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: team71_150227526f64
-X-Filterd-Recvd-Size: 1934
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 27 Jul 2020 20:49:01 +0000 (UTC)
-Message-ID: <7f07e16c47c7dcb35685cddbb3a740e4698258fc.camel@perches.com>
-Subject: Re: checkpatch: support deprecated terms checking
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        SeongJae Park <sjpark@amazon.com>
-Cc:     =?UTF-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        SeongJae Park <sj38.park@gmail.com>,
-        linux-kernel@vger.kernel.org, apw@canonical.com,
-        colin.king@canonical.com, jslaby@suse.cz, pavel@ucw.cz,
-        SeongJae Park <sjpark@amazon.de>
-Date:   Mon, 27 Jul 2020 13:49:00 -0700
-In-Reply-To: <20200727134411.73461df2fe73f8f96d93f75e@linux-foundation.org>
-References: <20200726203328.GA8321@qmqm.qmqm.pl>
-         <20200727065441.27164-1-sjpark@amazon.com>
-         <20200727134411.73461df2fe73f8f96d93f75e@linux-foundation.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Mon, 27 Jul 2020 16:48:55 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79188C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:48:55 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s189so10599615pgc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cl8j7GopTyZRJUUXdEXAzgEZa0nsCpMSIg/iqYNRNJI=;
+        b=iLaBtnq6xWHbjfS9QuQUioSxC170WYAeutNLBQNmsMY9Y5mX4ojCA5wgEOGVS8YKK9
+         Zhnmc63uw2QgH+kTs90etqDqnzopdR3s57ppLc/b3RXAl9YxGF4x5P9vW410qZyxeU2i
+         R+g6Sc76SziFatI+tH9MDVVyPtjHG+78wlE+8NCVMYjAnwkxd/aKj7o6Rt6VqK1KCHgF
+         At2PEyVi6sodJmb7NuOz8V4OBbZeHTxo5y6EW6OMyaRfqm0t3Oi722HGRLk2BkUdLW61
+         EQixGImDS8VRcz0HoTaUwecOxP0DX793COr0JYu0+mJVUGI+Lczxa3N7Ck35M4FfNScp
+         +kbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cl8j7GopTyZRJUUXdEXAzgEZa0nsCpMSIg/iqYNRNJI=;
+        b=f+tlYM4RMsyPUBY+7GUwGSSIBhuNR439J6Boc0vR4fTTAv0omq37XD2DsrZPkvIGwn
+         c/+peiITvJ8+lt5hGj8KZNRNFBNxeaj6LETIwtDaTuwfHW/OwakFtV8zqlZW/Ev+t/Di
+         snS1tuzO8omNu45S8ZhihZp/f3j8ihDaEn3/22mLgV5cp+wL13rpBia+GUOjmTd0rqwJ
+         oZ/jXcHP4edRLEusQrlsKtZOIwGXcEMhbdGYZcHbz7T3mRRqcbq1YNPY6luesOKxhZLN
+         eNmSBzESz8RouSyVYSPXITdhToqnMjXjkBqbjzIBFeyI/6wowe2x/zpbwLrHIcQGdnZh
+         x2Rw==
+X-Gm-Message-State: AOAM531j+kkPe+kBOPz5lTUfxw6JR6vP7abXFs6X7pFpYG7NnbI/7+p+
+        enV8dMY+bWc79g3tUH1+zFSKKQ==
+X-Google-Smtp-Source: ABdhPJzCJt3/kFYjKdCkjcIMaqcvuRRHbskkoYcAp1VnT157e73YyUuEdxYzSE508CB7pOpy9v5aTQ==
+X-Received: by 2002:aa7:9f46:: with SMTP id h6mr2443306pfr.321.1595882934807;
+        Mon, 27 Jul 2020 13:48:54 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id n15sm535816pjf.12.2020.07.27.13.48.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 13:48:54 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 13:45:21 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     ????????? <wenhu.wang@vivo.com>
+Cc:     elder@kernel.org, davem@davemloft.net, kuba@kernel.org,
+        kvalo@codeaurora.org, agross@kernel.org, ohad@wizery.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, alsa-devel@alsa-project.org,
+        ath11k@lists.infradead.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        srinivas.kandagatla@linaro.org, sibis@codeaurora.org
+Subject: Re: [PATCH] soc: qmi: allow user to set handle wq to hiprio
+Message-ID: <20200727204521.GB229995@builder.lan>
+References: <AMoAtwB9DXJsyd-1khUpzqq9.1.1595862196133.Hmail.wenhu.wang@vivo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AMoAtwB9DXJsyd-1khUpzqq9.1.1595862196133.Hmail.wenhu.wang@vivo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-07-27 at 13:44 -0700, Andrew Morton wrote:
-> On Mon, 27 Jul 2020 08:54:41 +0200 SeongJae Park <sjpark@amazon.com> wrote:
+On Mon 27 Jul 08:03 PDT 2020, ????????? wrote:
+
+> Currently the qmi_handle is initialized single threaded and strictly
+> ordered with the active set to 1. This is pretty simple and safe but
+> sometimes ineffency. So it is better to allow user to decide whether
+> a high priority workqueue should be used.
+
+Can you please describe a scenario where this is needed/desired and
+perhaps also comment on why this is not always desired?
+
+Regards,
+Bjorn
+
 > 
-> > > > > Unfortunately, the inexperienced _do_ in fact run
-> > > > > checkpatch on files and submit inappropriate patches.
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+> ---
+>  drivers/net/ipa/ipa_qmi.c             | 4 ++--
+>  drivers/net/wireless/ath/ath10k/qmi.c | 2 +-
+>  drivers/net/wireless/ath/ath11k/qmi.c | 2 +-
+>  drivers/remoteproc/qcom_sysmon.c      | 2 +-
+>  drivers/slimbus/qcom-ngd-ctrl.c       | 4 ++--
+>  drivers/soc/qcom/pdr_interface.c      | 4 ++--
+>  drivers/soc/qcom/qmi_interface.c      | 9 +++++++--
+>  include/linux/soc/qcom/qmi.h          | 3 ++-
+>  samples/qmi/qmi_sample_client.c       | 4 ++--
+>  9 files changed, 20 insertions(+), 14 deletions(-)
 > 
-> I don't think I really agree with the "new code only" guideline (where
-> did this come from, anyway?).  10 years from now any remaining pre-2020
-> terms will look exceedingly archaic and will get converted at some
-> point.
+> diff --git a/drivers/net/ipa/ipa_qmi.c b/drivers/net/ipa/ipa_qmi.c
+> index 5090f0f923ad..d78b0fe6bd83 100644
+> --- a/drivers/net/ipa/ipa_qmi.c
+> +++ b/drivers/net/ipa/ipa_qmi.c
+> @@ -486,7 +486,7 @@ int ipa_qmi_setup(struct ipa *ipa)
+>  	 */
+>  	ret = qmi_handle_init(&ipa_qmi->server_handle,
+>  			      IPA_QMI_SERVER_MAX_RCV_SZ, &ipa_server_ops,
+> -			      ipa_server_msg_handlers);
+> +			      ipa_server_msg_handlers, 0);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -500,7 +500,7 @@ int ipa_qmi_setup(struct ipa *ipa)
+>  	 */
+>  	ret = qmi_handle_init(&ipa_qmi->client_handle,
+>  			      IPA_QMI_CLIENT_MAX_RCV_SZ, &ipa_client_ops,
+> -			      ipa_client_msg_handlers);
+> +			      ipa_client_msg_handlers, 0);
+>  	if (ret)
+>  		goto err_server_handle_release;
+>  
+> diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
+> index 5468a41e928e..02881882b4d9 100644
+> --- a/drivers/net/wireless/ath/ath10k/qmi.c
+> +++ b/drivers/net/wireless/ath/ath10k/qmi.c
+> @@ -1034,7 +1034,7 @@ int ath10k_qmi_init(struct ath10k *ar, u32 msa_size)
+>  
+>  	ret = qmi_handle_init(&qmi->qmi_hdl,
+>  			      WLFW_BDF_DOWNLOAD_REQ_MSG_V01_MAX_MSG_LEN,
+> -			      &ath10k_qmi_ops, qmi_msg_handler);
+> +			      &ath10k_qmi_ops, qmi_msg_handler, 0);
+>  	if (ret)
+>  		goto err;
+>  
+> diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
+> index c00a99ad8dbc..91394d58d36e 100644
+> --- a/drivers/net/wireless/ath/ath11k/qmi.c
+> +++ b/drivers/net/wireless/ath/ath11k/qmi.c
+> @@ -2397,7 +2397,7 @@ int ath11k_qmi_init_service(struct ath11k_base *ab)
+>  
+>  	ab->qmi.target_mem_mode = ATH11K_QMI_TARGET_MEM_MODE_DEFAULT;
+>  	ret = qmi_handle_init(&ab->qmi.handle, ATH11K_QMI_RESP_LEN_MAX,
+> -			      &ath11k_qmi_ops, ath11k_qmi_msg_handlers);
+> +			      &ath11k_qmi_ops, ath11k_qmi_msg_handlers, 0);
+>  	if (ret < 0) {
+>  		ath11k_warn(ab, "failed to initialize qmi handle\n");
+>  		return ret;
+> diff --git a/drivers/remoteproc/qcom_sysmon.c b/drivers/remoteproc/qcom_sysmon.c
+> index 8d8996d714f0..4ec470e424ef 100644
+> --- a/drivers/remoteproc/qcom_sysmon.c
+> +++ b/drivers/remoteproc/qcom_sysmon.c
+> @@ -614,7 +614,7 @@ struct qcom_sysmon *qcom_add_sysmon_subdev(struct rproc *rproc,
+>  	}
+>  
+>  	ret = qmi_handle_init(&sysmon->qmi, SSCTL_MAX_MSG_LEN, &ssctl_ops,
+> -			      qmi_indication_handler);
+> +			      qmi_indication_handler, 0);
+>  	if (ret < 0) {
+>  		dev_err(sysmon->dev, "failed to initialize qmi handle\n");
+>  		kfree(sysmon);
+> diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
+> index 743ee7b4e63f..ba76691fc5a5 100644
+> --- a/drivers/slimbus/qcom-ngd-ctrl.c
+> +++ b/drivers/slimbus/qcom-ngd-ctrl.c
+> @@ -446,7 +446,7 @@ static int qcom_slim_qmi_init(struct qcom_slim_ngd_ctrl *ctrl,
+>  		return -ENOMEM;
+>  
+>  	rc = qmi_handle_init(handle, SLIMBUS_QMI_POWER_REQ_MAX_MSG_LEN,
+> -				NULL, qcom_slim_qmi_msg_handlers);
+> +				NULL, qcom_slim_qmi_msg_handlers, 0);
+>  	if (rc < 0) {
+>  		dev_err(ctrl->dev, "QMI client init failed: %d\n", rc);
+>  		goto qmi_handle_init_failed;
+> @@ -1293,7 +1293,7 @@ static int qcom_slim_ngd_qmi_svc_event_init(struct qcom_slim_ngd_ctrl *ctrl)
+>  	int ret;
+>  
+>  	ret = qmi_handle_init(&qmi->svc_event_hdl, 0,
+> -				&qcom_slim_ngd_qmi_svc_event_ops, NULL);
+> +				&qcom_slim_ngd_qmi_svc_event_ops, NULL, 0);
+>  	if (ret < 0) {
+>  		dev_err(ctrl->dev, "qmi_handle_init failed: %d\n", ret);
+>  		return ret;
+> diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
+> index bdcf16f88a97..cc1cb90c1968 100644
+> --- a/drivers/soc/qcom/pdr_interface.c
+> +++ b/drivers/soc/qcom/pdr_interface.c
+> @@ -685,7 +685,7 @@ struct pdr_handle *pdr_handle_alloc(void (*status)(int state,
+>  
+>  	ret = qmi_handle_init(&pdr->locator_hdl,
+>  			      SERVREG_GET_DOMAIN_LIST_RESP_MAX_LEN,
+> -			      &pdr_locator_ops, NULL);
+> +			      &pdr_locator_ops, NULL, 0);
+>  	if (ret < 0)
+>  		goto destroy_indack;
+>  
+> @@ -696,7 +696,7 @@ struct pdr_handle *pdr_handle_alloc(void (*status)(int state,
+>  	ret = qmi_handle_init(&pdr->notifier_hdl,
+>  			      SERVREG_STATE_UPDATED_IND_MAX_LEN,
+>  			      &pdr_notifier_ops,
+> -			      qmi_indication_handler);
+> +			      qmi_indication_handler, 0);
+>  	if (ret < 0)
+>  		goto release_qmi_handle;
+>  
+> diff --git a/drivers/soc/qcom/qmi_interface.c b/drivers/soc/qcom/qmi_interface.c
+> index 1a03eaa38c46..01160dbfc4d0 100644
+> --- a/drivers/soc/qcom/qmi_interface.c
+> +++ b/drivers/soc/qcom/qmi_interface.c
+> @@ -609,6 +609,7 @@ static struct socket *qmi_sock_create(struct qmi_handle *qmi,
+>   * @recv_buf_size: maximum size of incoming message
+>   * @ops:	reference to callbacks for QRTR notifications
+>   * @handlers:	NULL-terminated list of QMI message handlers
+> + * @hiprio:	whether high priority worker is used for workqueue
+>   *
+>   * This initializes the QMI client handle to allow sending and receiving QMI
+>   * messages. As messages are received the appropriate handler will be invoked.
+> @@ -617,9 +618,11 @@ static struct socket *qmi_sock_create(struct qmi_handle *qmi,
+>   */
+>  int qmi_handle_init(struct qmi_handle *qmi, size_t recv_buf_size,
+>  		    const struct qmi_ops *ops,
+> -		    const struct qmi_msg_handler *handlers)
+> +		    const struct qmi_msg_handler *handlers,
+> +		    unsigned int hiprio)
+>  {
+>  	int ret;
+> +	unsigned int flags = WQ_UNBOUND;
+>  
+>  	mutex_init(&qmi->txn_lock);
+>  	mutex_init(&qmi->sock_lock);
+> @@ -647,7 +650,9 @@ int qmi_handle_init(struct qmi_handle *qmi, size_t recv_buf_size,
+>  	if (!qmi->recv_buf)
+>  		return -ENOMEM;
+>  
+> -	qmi->wq = alloc_workqueue("qmi_msg_handler", WQ_UNBOUND, 1);
+> +	if (hiprio)
+> +		flags |= WQ_HIGHPRI;
+> +	qmi->wq = alloc_workqueue("qmi_msg_handler", flags, 1);
+>  	if (!qmi->wq) {
+>  		ret = -ENOMEM;
+>  		goto err_free_recv_buf;
+> diff --git a/include/linux/soc/qcom/qmi.h b/include/linux/soc/qcom/qmi.h
+> index e712f94b89fc..24062fd7163d 100644
+> --- a/include/linux/soc/qcom/qmi.h
+> +++ b/include/linux/soc/qcom/qmi.h
+> @@ -244,7 +244,8 @@ int qmi_add_server(struct qmi_handle *qmi, unsigned int service,
+>  
+>  int qmi_handle_init(struct qmi_handle *qmi, size_t max_msg_len,
+>  		    const struct qmi_ops *ops,
+> -		    const struct qmi_msg_handler *handlers);
+> +		    const struct qmi_msg_handler *handlers,
+> +		    unsigned int hiprio);
+>  void qmi_handle_release(struct qmi_handle *qmi);
+>  
+>  ssize_t qmi_send_request(struct qmi_handle *qmi, struct sockaddr_qrtr *sq,
+> diff --git a/samples/qmi/qmi_sample_client.c b/samples/qmi/qmi_sample_client.c
+> index c9e7276c3d83..a91d1633ea38 100644
+> --- a/samples/qmi/qmi_sample_client.c
+> +++ b/samples/qmi/qmi_sample_client.c
+> @@ -463,7 +463,7 @@ static int qmi_sample_probe(struct platform_device *pdev)
+>  
+>  	ret = qmi_handle_init(&sample->qmi, TEST_DATA_REQ_MAX_MSG_LEN_V01,
+>  			      NULL,
+> -			      qmi_sample_handlers);
+> +			      qmi_sample_handlers, 0);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -590,7 +590,7 @@ static int qmi_sample_init(void)
+>  	if (ret)
+>  		goto err_remove_debug_dir;
+>  
+> -	ret = qmi_handle_init(&lookup_client, 0, &lookup_ops, NULL);
+> +	ret = qmi_handle_init(&lookup_client, 0, &lookup_ops, NULL, 0);
+>  	if (ret < 0)
+>  		goto err_unregister_driver;
+>  
+> -- 
+> 2.17.1
 > 
-> Wouldn't be longterm realistic to just bite the bullet now and add these
-> conversions to the various todo lists?
-
-I don't think so.
-
-There's no exclusion list for existing uses
-written to external specification.
-
-It's just emitting effectively noisy warnings
-on things that should not be changed.
-
-
+> 
+> 
