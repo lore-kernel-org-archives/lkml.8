@@ -2,117 +2,150 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0D6C433F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0ACC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A57B420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:32:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="D8HCNvbb"
+	by mail.kernel.org (Postfix) with ESMTP id 3C2CE20809
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 04:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgG0Ec2 (ORCPT
+        id S1726408AbgG0EcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 00:32:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58482 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgG0EcX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 00:32:23 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD4D2C0619D4
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 21:32:22 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id m15so7572772lfp.7
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 21:32:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y2MT8K7LJP0h4HIjUSHIF3kx72ZyLwnnER3/s7uorqE=;
-        b=D8HCNvbbfeCXTArUC4WY1QDrs9HjLspd9XS6l+ZIduQcykgLo9mIag8AEPoxijQdxx
-         N0I6GZ6ggif98PyvczFJQTezcR085wLtKWpW32z+fnl1YcUMRliE2ieD4PCcJ+Af9qM5
-         XgNj7w46y1O7ff2pkN657Rpag5lZjbuv52oqk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y2MT8K7LJP0h4HIjUSHIF3kx72ZyLwnnER3/s7uorqE=;
-        b=M8Kl3aTyNyi0mlLxLZd6rHlxgqgy9CZfXhp5KX0olqHVrDs65Ai6enlvDmVpQVWz6L
-         pjNsPpCtpPLLY+eQ6U73I2Ka6pO8MDkzW+dQNLvg8dVzcnTk0/znbtQFYszl/QFX9+zW
-         Y9AVgPMd+GZ1CcA045jbObWprvKosYXapMJlRLxfidLUB3f3lMsf+2qxs4Zp5oACRWhw
-         HqcrTZqRayAuSaatrEDY1qEZBsenelHpRxPQWr7NENYg87CY97SrfzCxmU8PRhYeJKK4
-         TVbE7kD6CHnld4kHBBVRa69E+E+UfRFuF+Afuy/5jTGDXmOfi4RkFNj3fia5W40Kke5y
-         heMw==
-X-Gm-Message-State: AOAM530kUm0Qp88NVcYCI38HySwS9wxwodKhAaN0aJBHugYxwsR8Mie9
-        siQUQ4Q6wmgpEsKtcVyuQYFq/8LZLG5RfStbL6iWzA==
-X-Google-Smtp-Source: ABdhPJyPqCU/OdRwDZPqwlMkGbnhgQCLKdZNaMgRtj9kGkbaFfHHszQybGc/isZ4yrfqqymo2EzDGJjUEh54mtwmKWg=
-X-Received: by 2002:ac2:5502:: with SMTP id j2mr9290650lfk.50.1595824340928;
- Sun, 26 Jul 2020 21:32:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
- <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com> <20200722104128.GK1030@ninjato>
- <5048cf44-e2c2-ee31-a9fb-b823f16c2c7d@broadcom.com> <20200725101815.GA1519@ninjato>
-In-Reply-To: <20200725101815.GA1519@ninjato>
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Date:   Mon, 27 Jul 2020 10:02:09 +0530
-Message-ID: <CAHO=5PF6WmgTYAA8vVd86cx0YTx0CKouJ2k+13hNVCPiEtMVYA@mail.gmail.com>
-Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     Ray Jui <ray.jui@broadcom.com>,
-        Dhananjay Phadke <dphadke@linux.microsoft.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Jul 2020 00:32:14 -0400
+Received: from mga17.intel.com ([192.55.52.151]:24190 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbgG0EcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 00:32:10 -0400
+IronPort-SDR: SxPV2w6bDrGA301NKwzSYG2q1+PZwnA6eW9Gt4T+ogs+Gwjx306e00WEsqt/huIIKycVBgP4MJ
+ ryAvvEuOShMA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="131016895"
+X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
+   d="scan'208";a="131016895"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2020 21:32:10 -0700
+IronPort-SDR: ixN6CYhk1cReiK28BiQnrsuFeTwrdYoA4YK2Af/XEbXHW/kb71rlPfH33q4Kgf9Gw5OX8fOgG+
+ XRk08KSPr46Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,401,1589266800"; 
+   d="scan'208";a="329550045"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga007.jf.intel.com with ESMTP; 26 Jul 2020 21:32:09 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Cathy Zhang <cathy.zhang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-edac@vger.kernel.org
+Subject: [PATCH 4/4] x86/cpu: Use SERIALIZE in sync_core() when available
+Date:   Sun, 26 Jul 2020 21:31:32 -0700
+Message-Id: <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
+References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 3:48 PM Wolfram Sang <wsa@kernel.org> wrote:
->
->
-> > I think the following sequence needs to be implemented to make this
-> > safe, i.e., after 'synchronize_irq', no further slave interrupt will be
-> > fired.
-> >
-> > In 'bcm_iproc_i2c_unreg_slave':
-> >
-> > 1. Set an atomic variable 'unreg_slave' (I'm bad in names so please come
-> > up with a better name than this)
-> >
-> > 2. Disable all slave interrupts
-> >
-> > 3. synchronize_irq
-> >
-> > 4. Set slave to NULL
-> >
-> > 5. Erase slave addresses
->
-> What about this in unreg_slave?
->
-> 1. disable_irq()
->         This includes synchronize_irq() and avoids the race. Because irq
->         will be masked at interrupt controller level, interrupts coming
->         in at the I2C IP core level should still be pending once we
->         reenable the irq.
->
-> 2. disable all slave interrupts
->
-> 3. enable_irq()
->
-> 4. clean up the rest (pointer, address)
->
-> Or am I overlooking something?
+The SERIALIZE instruction gives software a way to force the processor to
+complete all modifications to flags, registers and memory from previous
+instructions and drain all buffered writes to memory before the next
+instruction is fetched and executed. Thus, it serves the purpose of
+sync_core(). Use it when available.
 
-This sequence will take care of all cases.
+Use boot_cpu_has() and not static_cpu_has(); the most critical paths
+(returning to user mode and from interrupt and NMI) will not reach
+sync_core().
 
-@Dhananjay Phadke is it possible to verify this from your side once.
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Cathy Zhang <cathy.zhang@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kyung Min Park <kyung.min.park@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: linux-edac@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviwed-by: Tony Luck <tony.luck@intel.com>
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+---
+---
+ arch/x86/include/asm/special_insns.h |  5 +++++
+ arch/x86/include/asm/sync_core.h     | 10 +++++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
-Best regards,
-Raaygonda
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index 59a3e13204c3..0a2a60bba282 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -234,6 +234,11 @@ static inline void clwb(volatile void *__p)
+ 
+ #define nop() asm volatile ("nop")
+ 
++static inline void serialize(void)
++{
++	asm volatile(".byte 0xf, 0x1, 0xe8");
++}
++
+ #endif /* __KERNEL__ */
+ 
+ #endif /* _ASM_X86_SPECIAL_INSNS_H */
+diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
+index fdb5b356e59b..bf132c09d61b 100644
+--- a/arch/x86/include/asm/sync_core.h
++++ b/arch/x86/include/asm/sync_core.h
+@@ -5,6 +5,7 @@
+ #include <linux/preempt.h>
+ #include <asm/processor.h>
+ #include <asm/cpufeature.h>
++#include <asm/special_insns.h>
+ 
+ #ifdef CONFIG_X86_32
+ static inline void iret_to_self(void)
+@@ -54,7 +55,8 @@ static inline void iret_to_self(void)
+ static inline void sync_core(void)
+ {
+ 	/*
+-	 * There are quite a few ways to do this.  IRET-to-self is nice
++	 * Hardware can do this for us if SERIALIZE is available. Otherwise,
++	 * there are quite a few ways to do this.  IRET-to-self is nice
+ 	 * because it works on every CPU, at any CPL (so it's compatible
+ 	 * with paravirtualization), and it never exits to a hypervisor.
+ 	 * The only down sides are that it's a bit slow (it seems to be
+@@ -75,6 +77,12 @@ static inline void sync_core(void)
+ 	 * Like all of Linux's memory ordering operations, this is a
+ 	 * compiler barrier as well.
+ 	 */
++
++	if (boot_cpu_has(X86_FEATURE_SERIALIZE)) {
++		serialize();
++		return;
++	}
++
+ 	iret_to_self();
+ }
+ 
+-- 
+2.17.1
+
