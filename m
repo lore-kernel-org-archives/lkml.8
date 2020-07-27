@@ -2,126 +2,292 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29964C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8290BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08CDB2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5369B2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:29:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kfLqCv5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbgG0N25 (ORCPT
+        id S1728852AbgG0N3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:28:57 -0400
-Received: from verein.lst.de ([213.95.11.211]:43507 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726320AbgG0N25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:28:57 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 96A6F68C4E; Mon, 27 Jul 2020 15:28:55 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 15:28:55 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
-Subject: Re: bpfilter logging write errors in dmesg
-Message-ID: <20200727132855.GA28165@lst.de>
-References: <20200727104636.nuz3u4xb7ba7ue5a@wittgenstein>
+        Mon, 27 Jul 2020 09:29:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56728 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgG0N3c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 09:29:32 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D67C061794;
+        Mon, 27 Jul 2020 06:29:32 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 74so807280pfx.13;
+        Mon, 27 Jul 2020 06:29:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1W/TJOhV1Q2x8Y1yXce+BP15tiEKyW2hSok2S/+HdkU=;
+        b=kfLqCv5oeqjLUhoqhNxntBxH5Dtso7HRS8ERXDmplzxzw0pL1QTCeDn6ehQ0O3R/b5
+         OJh4l/Jc4sUQP+3hIV0QA5vTBNP20Rx2upTTX2BaXSSVZxlwjqJtAAqbr24rLvIzlG3/
+         DfpItpIuTUAwrLn3Hwd4qYOtO5BwwHQYg83rBJlHTLda3RpcENDrGs0I3gLR5dgzvyoA
+         yOtCpbbnZs8xzTmutBo68Irl8oqLWA72U6U3Ae84bgJcKQ/NSGtDOemWR+z5V3gc3Zta
+         pwIyUcTIsUxI2Wg+V8vps1+MMYeFmMuf9RBmHv43dm3+dNwnUgRbTewMntQXTeUCxSCr
+         CKXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1W/TJOhV1Q2x8Y1yXce+BP15tiEKyW2hSok2S/+HdkU=;
+        b=kYV8dPjfbeh4q6qaoAfHaoO04HZznL7zhjvqYKQSzKDK8xpLq43h2D3tlR0naZmGZW
+         XP34SEaQrYgWwQBmDt4hoCr6INoTxRUrBw2ENAPz9Mk1piUCLB1AlRPQS8UkjkkRSV2W
+         FwUqtT7VXk04RxUwJcmgTj8ssciyY3pzaxV7TBzCOmL5XTaG0ACq+2mYst91h4rDjDNH
+         E2u/51/Cx3C4wcMUK0Huu8KwKZeJs5OQwazsZQhMBBC3n+e3uRZGuHI9APOE51rV17Fc
+         rW0zKoql7mOkbXZXQWeT7PahmkhZGDbIk4ag4Z+T13AFCXEc1/L9RQCi9SwyEsp7shXL
+         8New==
+X-Gm-Message-State: AOAM530eOApZiVfBgcnQ/4DJwxqx4chVz/fa0h5b8hOhvHes96tNnIel
+        1bg2XYAQzfTDzQpzGq1i/1bLAgBicPHlIXwFvlM=
+X-Google-Smtp-Source: ABdhPJwhiEUrznarqE/qM4WT4ZX6Jmz84CEn4bWiJf9PqB2KXFbk4s1TrsN6w8OfJPnhtN5ES1xbhWWxNKtY28X8pt0=
+X-Received: by 2002:a63:924b:: with SMTP id s11mr19224169pgn.74.1595856572131;
+ Mon, 27 Jul 2020 06:29:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727104636.nuz3u4xb7ba7ue5a@wittgenstein>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20200727122242.32337-1-vadym.kochan@plvision.eu> <20200727122242.32337-3-vadym.kochan@plvision.eu>
+In-Reply-To: <20200727122242.32337-3-vadym.kochan@plvision.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 27 Jul 2020 16:29:17 +0300
+Message-ID: <CAHp75VeWGUB8izyHptfsXXv4GbsDu6_4rr9EaRR9wooXywaP+g@mail.gmail.com>
+Subject: Re: [net-next v4 2/6] net: marvell: prestera: Add PCI interface support
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:46:36PM +0200, Christian Brauner wrote:
-> Hey Christoph,
-> 
-> Seems that commit
-> 6955a76fbcd5 ("bpfilter: switch to kernel_write")
-> causes bpfilter to spew these useless messages in dmesg?
-> 
-> [   26.356824] Started bpfilter
-> [   26.357059] bpfilter: write fail -22
-> [   26.396244] Started bpfilter
-> [   26.396325] bpfilter: Loaded bpfilter_umh pid 637
-> [   26.396542] bpfilter: write fail -22
-> [   26.409588] bpfilter: Loaded bpfilter_umh pid 638
-> [   26.410790] Started bpfilter
-> [   26.410960] bpfilter: write fail -22
-> [   26.445718] Started bpfilter
-> [   26.445799] bpfilter: Loaded bpfilter_umh pid 640
-> [   26.445983] bpfilter: write fail -22
-> [   26.451122] bpfilter: read fail 0
-> [   26.496497] bpfilter: Loaded bpfilter_umh pid 648
-> [   26.497889] Started bpfilter
-> [   26.750028] bpfilter: write fail -22
-> [   26.768400] Started bpfilter
-> [   26.768496] bpfilter: Loaded bpfilter_umh pid 661
-> [   26.768699] bpfilter: write fail -22
-> [   26.806550] Started bpfilter
-> [   26.806616] bpfilter: Loaded bpfilter_umh pid 663
-> [   26.864708] bpfilter: write fail -22
-> [   26.872345] bpfilter: Loaded bpfilter_umh pid 666
-> [   26.873072] Started bpfilter
-> [   26.873194] bpfilter: write fail -22
-> [   27.295514] kauditd_printk_skb: 22 callbacks suppressed
-> 
-> This is on a pure v5.8-rc7 via make bindep-pkg. I'm not using bpfilter
-> in any shape or form afaict and haven't seen those messages before and
-> this seems to be the last change I see.
+On Mon, Jul 27, 2020 at 3:23 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+>
+> Add PCI interface driver for Prestera Switch ASICs family devices, which
+> provides:
+>
+>     - Firmware loading mechanism
+>     - Requests & events handling to/from the firmware
+>     - Access to the firmware on the bus level
+>
+> The firmware has to be loaded each time the device is reset. The driver
+> is loading it from:
+>
+>     /lib/firmware/marvell/prestera_fw-v{MAJOR}.{MINOR}.img
+>
+> The full firmware image version is located within the internal header
+> and consists of 3 numbers - MAJOR.MINOR.PATCH. Additionally, driver has
+> hard-coded minimum supported firmware version which it can work with:
+>
+>     MAJOR - reflects the support on ABI level between driver and loaded
+>             firmware, this number should be the same for driver and loaded
+>             firmware.
+>
+>     MINOR - this is the minimum supported version between driver and the
+>             firmware.
+>
+>     PATCH - indicates only fixes, firmware ABI is not changed.
+>
+> Firmware image file name contains only MAJOR and MINOR numbers to make
+> driver be compatible with any PATCH version.
 
-I don't see any of those on 5.8-rc, just:
+I have to admit that memcpy_toio() / memcpy_fromio() may not be good
+for this driver.
+Please, consider two things:
+ - they are native endianess (it's good if it's your case)
+ - they are behaving interestingly when buffer is not aligned
 
-root@testvm:~# dmesg | grep bpf
-[    6.692550] bpfilter: Loaded bpfilter_umh pid 1849
+Sorry I didn't think well about this.
 
-That debug patch below should help to pintpoint what is going on for
-you:
+...
 
+> +struct prestera_ldr_regs {
+> +       u32 ldr_ready;
+> +       u32 pad1;
+> +
+> +       u32 ldr_img_size;
+> +       u32 ldr_ctl_flags;
+> +
+> +       u32 ldr_buf_offs;
+> +       u32 ldr_buf_size;
+> +
+> +       u32 ldr_buf_rd;
+> +       u32 pad2;
+> +       u32 ldr_buf_wr;
+> +
+> +       u32 ldr_status;
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 4fb797822567a6..15232ddea197b2 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -516,8 +516,10 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t
- 
- 	if (WARN_ON_ONCE(!(file->f_mode & FMODE_WRITE)))
- 		return -EBADF;
--	if (!(file->f_mode & FMODE_CAN_WRITE))
-+	if (!(file->f_mode & FMODE_CAN_WRITE)) {
-+		pr_info_ratelimited("file can't write\n");
- 		return -EINVAL;
-+	}
- 
- 	old_fs = get_fs();
- 	set_fs(KERNEL_DS);
-@@ -528,8 +530,10 @@ ssize_t __kernel_write(struct file *file, const void *buf, size_t count, loff_t
- 		ret = file->f_op->write(file, p, count, pos);
- 	else if (file->f_op->write_iter)
- 		ret = new_sync_write(file, p, count, pos);
--	else
-+	else {
-+		pr_info_ratelimited("file has no write method\n");
- 		ret = -EINVAL;
-+	}
- 	set_fs(old_fs);
- 	if (ret > 0) {
- 		fsnotify_modify(file);
-@@ -545,8 +549,10 @@ ssize_t kernel_write(struct file *file, const void *buf, size_t count,
- 	ssize_t ret;
- 
- 	ret = rw_verify_area(WRITE, file, pos, count);
--	if (ret)
-+	if (ret) {
-+		pr_info_ratelimited("rw_verify_area\n");
- 		return ret;
-+	}
- 
- 	file_start_write(file);
- 	ret =  __kernel_write(file, buf, count, pos);
+> +} __packed __aligned(4);
+
+Do these attributes change the struct anyhow?
+
+...
+
+> +static int prestera_fw_wait_reg32(struct prestera_fw *fw, u32 reg, u32 cmp,
+> +                                 unsigned int waitms)
+> +{
+> +       u8 __iomem *addr = PRESTERA_FW_REG_ADDR(fw, reg);
+> +       u32 val;
+> +
+> +       return readl_poll_timeout(addr, val, cmp == val, 1000 * 10, waitms * 1000);
+
+Hmm... If waitms (better to spell it fully like wait_timeout or so)
+less than 10?
+And all those magic numbers in each of readl_poll_timeout() calls.
+
+Also consider to use predefined constants like NSEC_PER_SEC.
+
+> +}
+
+...
+
+> +       err = readl_poll_timeout(addr, val, val & mask, 1000 * 10, waitus);
+> +       if (err) {
+> +               dev_err(fw->dev.dev, "Timeout to load FW img [state=%d]",
+> +                       prestera_ldr_read(fw, PRESTERA_LDR_STATUS_REG));
+> +               return err;
+> +       }
+> +
+> +       return 0;
+
+  if (err)
+    dev_err();
+
+  return err;
+
+...
+
+> +static int prestera_pci_probe(struct pci_dev *pdev,
+> +                             const struct pci_device_id *id)
+> +{
+> +       const char *driver_name = pdev->driver->name;
+> +       struct prestera_fw *fw;
+> +       int err;
+> +
+> +       err = pcim_enable_device(pdev);
+> +       if (err)
+> +               return err;
+> +
+> +       err = pcim_iomap_regions(pdev, BIT(PRESTERA_PCI_BAR_FW) |
+> +                                BIT(PRESTERA_PCI_BAR_PP),
+> +                                pci_name(pdev));
+> +       if (err)
+> +               return err;
+> +
+> +       if (dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(30))) {
+
+> +               pci_err(pdev, "fail to set DMA mask\n");
+
+pci_err() is more for PCI core and Co. I think dev_err() and other
+dev_*() are good enough here.
+
+> +               goto err_dma_mask;
+> +       }
+> +
+> +       pci_set_master(pdev);
+> +
+> +       fw = devm_kzalloc(&pdev->dev, sizeof(*fw), GFP_KERNEL);
+> +       if (!fw) {
+> +               err = -ENOMEM;
+> +               goto err_pci_dev_alloc;
+> +       }
+> +
+> +       fw->dev.ctl_regs = pcim_iomap_table(pdev)[PRESTERA_PCI_BAR_FW];
+> +       fw->dev.pp_regs = pcim_iomap_table(pdev)[PRESTERA_PCI_BAR_PP];
+
+> +       fw->dev.dev = &pdev->dev;
+> +       fw->pci_dev = pdev;
+
+Seems like the second one is redundant. You may always derive struct
+pci_dev from struct dev if needed.
+
+> +       pci_set_drvdata(pdev, fw);
+> +
+> +       err = prestera_fw_init(fw);
+> +       if (err)
+> +               goto err_prestera_fw_init;
+> +
+> +       dev_info(fw->dev.dev, "Switch FW is ready\n");
+> +
+> +       fw->wq = alloc_workqueue("prestera_fw_wq", WQ_HIGHPRI, 1);
+> +       if (!fw->wq)
+> +               goto err_wq_alloc;
+> +
+> +       INIT_WORK(&fw->evt_work, prestera_fw_evt_work_fn);
+> +
+> +       err = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSI);
+> +       if (err < 0) {
+> +               pci_err(pdev, "MSI IRQ init failed\n");
+> +               goto err_irq_alloc;
+> +       }
+> +
+> +       err = request_irq(pci_irq_vector(pdev, 0), prestera_pci_irq_handler,
+> +                         0, driver_name, fw);
+> +       if (err) {
+> +               pci_err(pdev, "fail to request IRQ\n");
+> +               goto err_request_irq;
+> +       }
+> +
+> +       err = prestera_device_register(&fw->dev);
+> +       if (err)
+> +               goto err_prestera_dev_register;
+> +
+> +       return 0;
+> +
+> +err_prestera_dev_register:
+> +       free_irq(pci_irq_vector(pdev, 0), fw);
+> +err_request_irq:
+> +       pci_free_irq_vectors(pdev);
+> +err_irq_alloc:
+> +       destroy_workqueue(fw->wq);
+> +err_wq_alloc:
+> +       prestera_fw_uninit(fw);
+
+> +err_prestera_fw_init:
+> +err_pci_dev_alloc:
+> +err_dma_mask:
+
+All three are useless.
+
+> +       return err;
+> +}
+
+...
+
+> +static struct pci_driver prestera_pci_driver = {
+> +       .name     = "Prestera DX",
+> +       .id_table = prestera_pci_devices,
+> +       .probe    = prestera_pci_probe,
+> +       .remove   = prestera_pci_remove,
+> +};
+
+> +
+
+Redundant blank line.
+
+> +module_pci_driver(prestera_pci_driver);
+-- 
+With Best Regards,
+Andy Shevchenko
