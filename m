@@ -2,50 +2,52 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72498C433FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88F6C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A55F20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7840C20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860428;
-	bh=Tdh9cOVs/2IgNFxLPF4ZL/iqY0zBfjy8MZwS73LcFlo=;
+	s=default; t=1595860434;
+	bh=ax18XffG5jxK874e0YlJ/eIxrW42Be9Ay9KtOtPgJ7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sarOCPcq/+EJUe527/oP15ERs1kotTHbWM9rbfImnVulLvjlY1LyF1mUiXd+SW7Zr
-	 dXgrTguo+Y3TVPQPUIwp819vJMP/mxy5RzjsQDVEfrBLxzB8tp6hmR7uwIU+1lOsaC
-	 64GATZOa3Kb7jAyqIyCPkS2fdv6fDaZX0XrFWkA4=
+	b=DiPE2lVvK4WpkzdxS/mOmvIjbR40heiqo/zAShZmy7yL4RTwc9HP9jCUTngRSrFCA
+	 zpn4qsActLu0AhkDw7CXgyI5rde79ij+V7GuGoKK7oS+VoF8paWsyA2fno2aC/lC43
+	 cY/GQP0piB/3NgcidsYRp+idWi2vevFdOCcgKqWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732604AbgG0Odr (ORCPT
+        id S1732874AbgG0Odx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:33:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44766 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:33:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731050AbgG0OR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:17:27 -0400
+        id S1731027AbgG0ORT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:17:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95B5E2083E;
-        Mon, 27 Jul 2020 14:17:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E1FE2083E;
+        Mon, 27 Jul 2020 14:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859447;
-        bh=Tdh9cOVs/2IgNFxLPF4ZL/iqY0zBfjy8MZwS73LcFlo=;
+        s=default; t=1595859439;
+        bh=ax18XffG5jxK874e0YlJ/eIxrW42Be9Ay9KtOtPgJ7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+z0VTFwRyC2npN7oOyVix48lVRHTlwH60pl6ynKnd0AbYm7j5ynU45CcG/dpKKr2
-         AWq9EvZ/7FZNKowN+4hKaPnhk0QWwi/2/0ALpTLfIk9YeVZy4t8JA77MS3/R1wb5A9
-         mTBCuWsLq0jv9Dc2+pceswXJP7aEBLZayYrBErdo=
+        b=rI4WQbsKF9YwukqgAkCN1+kavmRNew8BeJcXma/g46BJ0L1UVL32AKCFoMfTM69LL
+         iNb0TmvdWPuqLlT3HwhpPaGQUcltcvSrxYTUsqXAMn01tfCmL5N68uA8T87P5Pa1hV
+         sZfH/eTqxNfRN/3iTsFWXEAm7BdAXNT+OF0xLelM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 5.4 112/138] staging: comedi: ni_6527: fix INSN_CONFIG_DIGITAL_TRIG support
-Date:   Mon, 27 Jul 2020 16:05:07 +0200
-Message-Id: <20200727134931.063175633@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Matthew Howell <matthew.howell@sealevel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 068/138] serial: exar: Fix GPIO configuration for Sealevel cards based on XR17V35X
+Date:   Mon, 27 Jul 2020 16:04:23 +0200
+Message-Id: <20200727134928.795399132@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -58,51 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Matthew Howell <matthew.howell@sealevel.com>
 
-commit f07804ec77d77f8a9dcf570a24154e17747bc82f upstream.
+[ Upstream commit 5fdbe136ae19ab751daaa4d08d9a42f3e30d17f9 ]
 
-`ni6527_intr_insn_config()` processes `INSN_CONFIG` comedi instructions
-for the "interrupt" subdevice.  When `data[0]` is
-`INSN_CONFIG_DIGITAL_TRIG` it is configuring the digital trigger.  When
-`data[2]` is `COMEDI_DIGITAL_TRIG_ENABLE_EDGES` it is configuring rising
-and falling edge detection for the digital trigger, using a base channel
-number (or shift amount) in `data[3]`, a rising edge bitmask in
-`data[4]` and falling edge bitmask in `data[5]`.
+Sealevel XR17V35X based devices are inoperable on kernel versions
+4.11 and above due to a change in the GPIO preconfiguration introduced in
+commit
+7dea8165f1d. This patch fixes this by preconfiguring the GPIO on Sealevel
+cards to the value (0x00) used prior to commit 7dea8165f1d
 
-If the base channel number (shift amount) is greater than or equal to
-the number of channels (24) of the digital input subdevice, there are no
-changes to the rising and falling edges, so the mask of channels to be
-changed can be set to 0, otherwise the mask of channels to be changed,
-and the rising and falling edge bitmasks are shifted by the base channel
-number before calling `ni6527_set_edge_detection()` to change the
-appropriate registers.  Unfortunately, the code is comparing the base
-channel (shift amount) to the interrupt subdevice's number of channels
-(1) instead of the digital input subdevice's number of channels (24).
-Fix it by comparing to 32 because all shift amounts for an `unsigned
-int` must be less than that and everything from bit 24 upwards is
-ignored by `ni6527_set_edge_detection()` anyway.
+With GPIOs preconfigured as per commit 7dea8165f1d all ports on
+Sealevel XR17V35X based devices become stuck in high impedance
+mode, regardless of dip-switch or software configuration. This
+causes the device to become effectively unusable. This patch (in
+various forms) has been distributed to our customers and no issues
+related to it have been reported.
 
-Fixes: 110f9e687c1a8 ("staging: comedi: ni_6527: support INSN_CONFIG_DIGITAL_TRIG")
-Cc: <stable@vger.kernel.org> # 3.17+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20200717145257.112660-2-abbotti@mev.co.uk
+Fixes: 7dea8165f1d6 ("serial: exar: Preconfigure xr17v35x MPIOs as output")
+Signed-off-by: Matthew Howell <matthew.howell@sealevel.com>
+Link: https://lore.kernel.org/r/alpine.DEB.2.21.2007221605270.13247@tstest-VirtualBox
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/comedi/drivers/ni_6527.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/8250/8250_exar.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/comedi/drivers/ni_6527.c
-+++ b/drivers/staging/comedi/drivers/ni_6527.c
-@@ -332,7 +332,7 @@ static int ni6527_intr_insn_config(struc
- 		case COMEDI_DIGITAL_TRIG_ENABLE_EDGES:
- 			/* check shift amount */
- 			shift = data[3];
--			if (shift >= s->n_chan) {
-+			if (shift >= 32) {
- 				mask = 0;
- 				rising = 0;
- 				falling = 0;
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+index e1268646ee562..9e2dbe43667ae 100644
+--- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -307,7 +307,17 @@ static void setup_gpio(struct pci_dev *pcidev, u8 __iomem *p)
+ 	 * devices will export them as GPIOs, so we pre-configure them safely
+ 	 * as inputs.
+ 	 */
+-	u8 dir = pcidev->vendor == PCI_VENDOR_ID_EXAR ? 0xff : 0x00;
++
++	u8 dir = 0x00;
++
++	if  ((pcidev->vendor == PCI_VENDOR_ID_EXAR) &&
++		(pcidev->subsystem_vendor != PCI_VENDOR_ID_SEALEVEL)) {
++		// Configure GPIO as inputs for Commtech adapters
++		dir = 0xff;
++	} else {
++		// Configure GPIO as outputs for SeaLevel adapters
++		dir = 0x00;
++	}
+ 
+ 	writeb(0x00, p + UART_EXAR_MPIOINT_7_0);
+ 	writeb(0x00, p + UART_EXAR_MPIOLVL_7_0);
+-- 
+2.25.1
+
 
 
