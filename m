@@ -2,127 +2,145 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36DFC433EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C68FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86AAF2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F122074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595869881;
-	bh=XLRy4SH6xYtcSpdHOrlqOGtGsA5ScggILcg7hMblP4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jradsdWuOy1VLxe2TtqW8SR6pYPLeOt67uHVa0VtIwneN8jW2QzFgvr/8f2p1e+pi
-	 XciVnaxTS6GYmrZSzTXvnamppQMFJDtrB89FsdlANC9O7BAPMaZ0Ut0OSBrDIMhYuS
-	 VoMk5u8GUjrle9EeEL8iNE3X6ug4GXZt0dA6LAGo=
+	s=default; t=1595869959;
+	bh=WogOJT1SpSbDm9BIS5mq+VMEccrmGTd/fbEvNfTWPgM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=m07o4NHRH52swQT8+6/yEbEsp2NjLbAIA13EZjLFrVbYhd21YGxGcSlEM9aYBD8qy
+	 QvhgU7bliIEUyrKLjy3oirE2BBUDZUoxiHjDtWadBpgh0mD28x18VoMB+RoioC2Dnl
+	 Sh5trP24dbx5xlwVytAwVBd1x7SFGUr35MDVjHRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730415AbgG0RLU (ORCPT
+        id S1728867AbgG0RMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:11:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45584 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 13:12:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728712AbgG0RLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:11:17 -0400
-Received: from kernel.org (unknown [87.71.40.38])
+        id S1728045AbgG0RMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 13:12:37 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AAEB206E7;
-        Mon, 27 Jul 2020 17:11:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B562206E7;
+        Mon, 27 Jul 2020 17:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595869877;
-        bh=XLRy4SH6xYtcSpdHOrlqOGtGsA5ScggILcg7hMblP4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RGlKfXBUd26L5XDA1ssqNMsN524ad4SB5OWposrAfAR1GqXXVCoku8j2/PxKiDDlt
-         ZjgCXf8wWE4+IGmxJrktVr72zad9jL8jTfqjGu+VoAyYWbVCO1WDhniWv6reqEeMu8
-         mqapPlh3w6TjsmKchi6eYJoHQoysiCGjddWIxmbQ=
-Date:   Mon, 27 Jul 2020 20:11:02 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-riscv@lists.infradead.org,
-        x86@kernel.org
-Subject: Re: [PATCH v2 7/7] mm: secretmem: add ability to reserve memory at
- boot
-Message-ID: <20200727171102.GA3655207@kernel.org>
-References: <20200727162935.31714-1-rppt@kernel.org>
- <20200727162935.31714-8-rppt@kernel.org>
+        s=default; t=1595869956;
+        bh=WogOJT1SpSbDm9BIS5mq+VMEccrmGTd/fbEvNfTWPgM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lQ1Z9K59C8/AlkD1/eM/JwEqvlO7ySlctuRPoQqZ36nRK1Dy7JlBuq/54o4cIjEcD
+         cbn9dbymYVSeLmrss7+oAwKbKw0LEVhdVjYi0OVwO3tnBP+DzAKy8Wn2N0a0srie7z
+         DjhgZiDTdIYE3B13+xlYN3P1+D7OOQalV77YMcwg=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k06fy-00FNOn-Va; Mon, 27 Jul 2020 18:12:35 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727162935.31714-8-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 27 Jul 2020 18:12:34 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org,
+        steven.price@arm.com, mark.rutland@arm.com, ascull@google.com,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com
+Subject: Re: [RESEND RFC PATCH v1] arm64: kvm: flush tlbs by range in
+ unmap_stage2_range function
+In-Reply-To: <f74277fd-5af2-c46f-169f-c15a321165cd@huawei.com>
+References: <20200724134315.805-1-yezhenyu2@huawei.com>
+ <5d54c860b3b4e7a98e4d53397e6424ae@kernel.org>
+ <f74277fd-5af2-c46f-169f-c15a321165cd@huawei.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <fb4756b58892fbc2022cf1f5b9320c27@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yezhenyu2@huawei.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org, steven.price@arm.com, mark.rutland@arm.com, ascull@google.com, kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org, xiexiangyou@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oops, something went wrong with the rebase, this should have been
-squashed into the previous patch...
+Zhenyu,
 
-On Mon, Jul 27, 2020 at 07:29:35PM +0300, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
+On 2020-07-27 15:51, Zhenyu Ye wrote:
+> Hi Marc,
 > 
-> Taking pages out from the direct map and bringing them back may create
-> undesired fragmentation and usage of the smaller pages in the direct
-> mapping of the physical memory.
+> On 2020/7/26 1:40, Marc Zyngier wrote:
+>> On 2020-07-24 14:43, Zhenyu Ye wrote:
+>>> Now in unmap_stage2_range(), we flush tlbs one by one just after the
+>>> corresponding pages cleared.  However, this may cause some 
+>>> performance
+>>> problems when the unmap range is very large (such as when the vm
+>>> migration rollback, this may cause vm downtime too loog).
+>> 
+>> You keep resending this patch, but you don't give any numbers
+>> that would back your assertion.
 > 
-> This can be avoided if a significantly large area of the physical memory
-> would be reserved for secretmem purposes at boot time.
+> I have tested the downtime of vm migration rollback on arm64, and found
+> the downtime could even take up to 7s.  Then I traced the cost of
+> unmap_stage2_range() and found it could take a maximum of 1.2s.  The
+> vm configuration is as follows (with high memory pressure, the dirty
+> rate is about 500MB/s):
 > 
-> Add ability to reserve physical memory for secretmem at boot time using
-> "secretmem" kernel parameter and then use that reserved memory as a global
-> pool for secret memory needs.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index fb95fad81c79..6f3c2f28160f 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4548,6 +4548,10 @@
->  			Format: integer between 0 and 10
->  			Default is 0.
->  
-> +	secretmem=n[KMG]
-> +			[KNL,BOOT] Reserve specified amount of memory to
-> +			back mappings of secret memory.
-> +
->  	skew_tick=	[KNL] Offset the periodic timer tick per cpu to mitigate
->  			xtime_lock contention on larger systems, and/or RCU lock
->  			contention on all systems with CONFIG_MAXSMP set.
-> -- 
-> 2.26.2
-> 
+>   <memory unit='GiB'>192</memory>
+>   <vcpu placement='static'>48</vcpu>
+>   <memoryBacking>
+>     <hugepages>
+>       <page size='1' unit='GiB' nodeset='0'/>
+>     </hugepages>
+>   </memoryBacking>
 
+This means nothing to me, I'm afraid.
+
+> 
+> After this patch applied, the cost of unmap_stage2_range() can reduce 
+> to
+> 16ms, and VM downtime can be less than 1s.
+> 
+> The following figure shows a clear comparison:
+> 
+> 	      |	vm downtime  |	cost of unmap_stage2_range()
+> --------------+--------------+----------------------------------
+> before change |		7s   |		1200 ms
+> after  change |		1s   |		  16 ms
+> --------------+--------------+----------------------------------
+
+I don't see how you turn a 1.184s reduction into a 6s gain.
+Surely there is more to it than what you posted.
+
+>>> +
+>>> +    if ((end - start) >= 512 << (PAGE_SHIFT - 12)) {
+>>> +        __tlbi(vmalls12e1is);
+>> 
+>> And what is this magic value based on? You don't even mention in the
+>> commit log that you are taking this shortcut.
+>> 
+> 
+> 
+> If the page num is bigger than 512, flush all tlbs of this vm to avoid
+> soft lock-ups on large TLB flushing ranges.  Just like what the
+> flush_tlb_range() does.
+
+I'm not sure this is applicable here, and it doesn't mean
+this is as good on other systems.
+
+Thanks,
+
+         M.
 -- 
-Sincerely yours,
-Mike.
+Jazz is not dead. It just smells funny...
