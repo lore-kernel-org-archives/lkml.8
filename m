@@ -2,167 +2,109 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B4DC433ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F825C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 058482074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AEA220714
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:42:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A53/TAW3"
+	dkim=pass (2048-bit key) header.d=draconx-ca.20150623.gappssmtp.com header.i=@draconx-ca.20150623.gappssmtp.com header.b="PcQmdoob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbgG0Rlx (ORCPT
+        id S1730873AbgG0RmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:41:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40206 "EHLO
+        Mon, 27 Jul 2020 13:42:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728170AbgG0Rlx (ORCPT
+        with ESMTP id S1728170AbgG0RmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:41:53 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF2CC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 10:41:53 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t6so8472068plo.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 10:41:53 -0700 (PDT)
+        Mon, 27 Jul 2020 13:42:23 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEF16C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 10:42:23 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id y17so9156360ybm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 10:42:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=anIhz+sUWSZj2LLbB+V68VzBj1HjbcN4RzXAFjEj7pk=;
-        b=A53/TAW3iJzAqM3UVSdj8n8yLACsMpMkFdUpHx7hdCQwG5BdtaS1xgwPMV27wBQGBX
-         ezA9FGjP8KpBIMFbq6O1w6hZ5uE9zlro/tDge9V3CGS8LA+F3KYOrKBXfNOBqsZ0N4op
-         Pnnt/7hiVk3as30/qnaqFkpxDj/Jth8sa2E98wzqaMrUnSHN6g9WHuFTrpjPorz0dF1w
-         uUZh5BYXRB6CQu8wdCgc/AYY1B+S4ZZSoz2LbWiJPBXSOxpMlGafLRIqQfP+VdgdMYgM
-         LufmOjVkc9jvN82+yXkl2ir4gO2HOOlSAWkfzpkioWoj8YS+kQePQp3n+03q9SMhyNE/
-         Qesw==
+        d=draconx-ca.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=8eTEImJlgOllN2N0LVMVlZdkUWAqoKd8wMgN/KPPGyw=;
+        b=PcQmdoobad+ns7LDo62SRtHFW8CqQRB4OfyM2CsoZ5l2gfI3wUdbpc9Yj4KvkWQZ7N
+         8XdUhqrCIftgytbRI9vziHsjeNts5Uh0BVZAoJRfgAg4KwEgh3NrzyaHezhLeYBHPm4k
+         F9FpyLz33eEJtNjfTrmzoHAu2Kt0lmU+UvpqYdD4nGUjCxAAcNsx/Uutbvv9pyJ6WklG
+         I/dm5avZl3GKTeDD1o7/dnoIBjePWFod0UvfipQJZ89CLhFLxYeAAcmFe7sD77C2yuuo
+         MoF5iah1OaPspUQibfWciLZeqwnZ8uDhkv8mEi6YPGVvRsqjNTvmQael1e32eCGsndnj
+         y85A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=anIhz+sUWSZj2LLbB+V68VzBj1HjbcN4RzXAFjEj7pk=;
-        b=LFK+FwYxznM/XXVRPeTelNxmcr31oV0YM8FseEIFPtxKTh4ouYXTlD7QjC3BuVWwYB
-         wNKeMYlM821VCpWtf6o+r162YJVNosIDkeGitJmXJlYPaK9tR6/qr/8uTyuGCr9706aA
-         WziiOoH9oMu9USplieFhB+eTpUMyOdq0fToBbWRwv0gu8KD7lCopbCWqIBL6fQZgtJf5
-         r9EIzL7FeVnAi/wQIp/RZdVs1IsoOHeMw91gHsH0aMbmSDqpmQEYM6U7pR0V0kfXi++X
-         OThU+z8YWkowWNtRQLN5ev0edcg1BbDRdnpsh4qMwpMinAVzzTNvIpHxr/VXlSk9GQFO
-         l5dQ==
-X-Gm-Message-State: AOAM533FSZrWFLa1i7kujkRcosUZG0WxypKBtbrCOldESdfCXU9UInX6
-        OFPsKBeMS8nLBHxH6JvqSTXI6g==
-X-Google-Smtp-Source: ABdhPJxonNO7C1s8c7dsZ01iiSbx7OWhiK4Kk7C7FePc4SZXpL20+c+k2aEeLh7w9nx+KMSqOYL4mg==
-X-Received: by 2002:a17:902:bb82:: with SMTP id m2mr19649190pls.61.1595871712379;
-        Mon, 27 Jul 2020 10:41:52 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u13sm201376pjy.40.2020.07.27.10.41.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 10:41:51 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 10:38:18 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     linux-pm@vger.kernel.org, evgreen@chromium.org,
-        akashast@codeaurora.org, mka@chromium.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] interconnect: Add bulk API helpers
-Message-ID: <20200727173818.GE63496@builder.lan>
-References: <20200528162542.30158-1-georgi.djakov@linaro.org>
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=8eTEImJlgOllN2N0LVMVlZdkUWAqoKd8wMgN/KPPGyw=;
+        b=U5ZmepKqiG7rKkD7eloqXQiZOdcUr0OhZDIlLJNyNHDdOuCHxD4NL6xG1BuUF7VAq0
+         oXAfBe91omfxqrDk6FnsH0v4kx7D2OulNJ3qBiqOWJlsyCYoz9kgaBUL2PMr5Hf8gEkd
+         BK1AAmtwPlO9Z1iD2Sw/NkRUiki14EYN7dpSPGAl1DJkZenCp8+lckqHM3PlfAejc2AI
+         0NgOUuv/n8LtrK4pvRydyJfRslZ3MkqOVdm3Hcl4K4d1WDhCVwZrrIigk4D+1FpUW9be
+         7wwcCyZ2V35kV6xaI+V0RjVbPmGO4YxIgSlalLTpwKQbt6M52r0LC1CHT2I+nd5HwhrG
+         g7RA==
+X-Gm-Message-State: AOAM533aZzIXHRR4s64z7XpTOVRsYSlfk9AEdp3n4o+SjBHrg2VpPcdU
+        ngGi3hx+wMqJMetoJS/LOPvX1D/h3e2xWV2/8UvHtg==
+X-Google-Smtp-Source: ABdhPJyhgSDpr2FdTbpW7mQoCX8b9rF1eP3wUiwp1GHuEIFPNp42c9HwMG5miSAbYBtkAYUJUXiKKPD+jHA9yuLX72s=
+X-Received: by 2002:a25:b446:: with SMTP id c6mr36564613ybg.279.1595871743002;
+ Mon, 27 Jul 2020 10:42:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528162542.30158-1-georgi.djakov@linaro.org>
+Received: by 2002:a25:807:0:0:0:0:0 with HTTP; Mon, 27 Jul 2020 10:42:22 -0700 (PDT)
+X-Originating-IP: [24.53.240.163]
+In-Reply-To: <20200727161319.GH794331@ZenIV.linux.org.uk>
+References: <20200723155101.pnezpo574ot4qkzx@atlas.draconx.ca>
+ <20200727160554.GG794331@ZenIV.linux.org.uk> <20200727161319.GH794331@ZenIV.linux.org.uk>
+From:   Nick Bowler <nbowler@draconx.ca>
+Date:   Mon, 27 Jul 2020 13:42:22 -0400
+Message-ID: <CADyTPEx_dppsUK_SdPKfn-1ZgEzYubbe4tBmXSKBBXTFT5cbWA@mail.gmail.com>
+Subject: Re: [PATCH] Re: PROBLEM: cryptsetup fails to unlock drive in 5.8-rc6 (regression)
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28 May 09:25 PDT 2020, Georgi Djakov wrote:
-> diff --git a/drivers/interconnect/bulk.c b/drivers/interconnect/bulk.c
-> new file mode 100644
-> index 000000000000..9bd418594665
-> --- /dev/null
-> +++ b/drivers/interconnect/bulk.c
-> @@ -0,0 +1,119 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/interconnect-provider.h>
-> +#include <linux/device.h>
-> +#include <linux/export.h>
-> +
-> +/**
-> + * of_icc_bulk_get - get interconnect paths
+On 2020-07-27, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Mon, Jul 27, 2020 at 05:05:54PM +0100, Al Viro wrote:
+>> On Thu, Jul 23, 2020 at 11:51:01AM -0400, Nick Bowler wrote:
+>> > After installing Linux 5.8-rc6, it seems cryptsetup can no longer
+>> > open LUKS volumes.  Regardless of the entered passphrase (correct
+>> > or otherwise), the result is a very unhelpful "Keyslot open failed."
+>> > message.
+[...]
+> Oh, fuck...  Please see if the following fixes your reproducer; the braino
+> is, of course, that instead of fetching ucmsg->cmsg_len into ucmlen we read
+> the entire thing into cmsg.  Other uses of ucmlen had been replaced with
+> cmsg.cmsg_len; this one was missed.
+>
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> ---
+> diff --git a/net/compat.c b/net/compat.c
+> index 5e3041a2c37d..434838bef5f8 100644
+> --- a/net/compat.c
+> +++ b/net/compat.c
+> @@ -202,7 +202,7 @@ int cmsghdr_from_user_compat_to_kern(struct msghdr
+> *kmsg, struct sock *sk,
+>
+>  		/* Advance. */
+>  		kcmsg = (struct cmsghdr *)((char *)kcmsg + tmp);
+> -		ucmsg = cmsg_compat_nxthdr(kmsg, ucmsg, ucmlen);
+> +		ucmsg = cmsg_compat_nxthdr(kmsg, ucmsg, cmsg.cmsg_len);
+>  	}
+>
+>  	/*
 
-Parenthesis on the function name here, and on the other functions below.
+This patch appears to resolve the problem when applied on top of 5.8-rc7.
 
-> + * @dev: the device requesting the path
-> + * @num_paths: the number of icc_bulk_data
-> + * @paths: the table with the paths we want to get
-> + *
-> + * Returns 0 on success or -EERROR otherwise.
-
-s/-EERROR/negative errno/
-
-> + */
-> +int __must_check of_icc_bulk_get(struct device *dev, int num_paths,
-> +				 struct icc_bulk_data *paths)
-> +{
-> +	int ret, i;
-> +
-> +	for (i = 0; i < num_paths; i++) {
-> +		paths[i].path = of_icc_get(dev, paths[i].name);
-> +		if (IS_ERR(paths[i].path)) {
-> +			ret = PTR_ERR(paths[i].path);
-> +			dev_err(dev, "of_icc_get() failed on path %s (%d)\n",
-> +				paths[i].name, ret);
-
-I think you only should print this error if ret != -EPROBE_DEFER.
-
-> +			paths[i].path = NULL;
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +err:
-> +	icc_bulk_put(i, paths);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(of_icc_bulk_get);
-> +
-> +/**
-> + * icc_bulk_put - put a list of interconnect paths
-> + * @num_paths: the number of icc_bulk_data
-> + * @paths: the icc_bulk_data table with the paths being put
-> + */
-> +void icc_bulk_put(int num_paths, struct icc_bulk_data *paths)
-> +{
-> +	while (--num_paths >= 0) {
-> +		icc_put(paths[num_paths].path);
-> +		paths[num_paths].path = NULL;
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(icc_bulk_put);
-> +
-> +/**
-> + * icc_bulk_set - set bandwidth to a set of paths
-> + * @num_paths: the number of icc_bulk_data
-> + * @paths: the icc_bulk_data table containing the paths and bandwidth
-> + *
-> + * Returns 0 on success or -EERROR otherwise.
-> + */
-> +int icc_bulk_set_bw(int num_paths, const struct icc_bulk_data *paths)
-> +{
-> +	int ret = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < num_paths; i++) {
-> +		ret = icc_set_bw(paths[i].path, paths[i].avg_bw,
-> +				 paths[i].peak_bw);
-
-You can unwrap this line.
-
-Regards,
-Bjorn
+Thanks,
+  Nick
