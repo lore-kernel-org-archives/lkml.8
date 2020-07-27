@@ -2,160 +2,126 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B38AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA22C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 368A72073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:08:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l1LOF0dm"
+	by mail.kernel.org (Postfix) with ESMTP id 3F1132073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730231AbgG0RIA (ORCPT
+        id S1730374AbgG0RLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:08:00 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59392 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729403AbgG0RH7 (ORCPT
+        Mon, 27 Jul 2020 13:11:17 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:49706 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728712AbgG0RLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:07:59 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RGgkN5077073;
-        Mon, 27 Jul 2020 17:02:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=EH2bcmGiKig5NQUr25P5VYLKdWqRTYRE1Orwb4KgXik=;
- b=l1LOF0dmlbi1ncVDq7RWlEvNJYr2LbPMPmGo3aXniYWPZhLlMSHR0iWNp/2cDgmG6dbR
- RsmBzBxwcJM3BxRVkITqX1WvldXoqwBEQ03KjtD+yDZgD1mbk32LJV5cwSQ381iZh3Y9
- BCtLvGVqEyXedSXoHlknOTfyCHrbE6mWURmbGcIEEHGXvrGUEJ5/qtMwH8azy5BTtzxL
- krFCtP1n2bTqG81bcnd5Xz1b8ajPJlHCouPTuK7bHtdIFfZN519587R0e4/RkkwN7uww
- /QNbyjqx8Ocr6uD0+RLlm6G5JCez12sO4h0aSAWN1OV1n+iLEpHqky6Wc6yI5u2WSKKf jg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 32hu1j2rvc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jul 2020 17:02:16 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06RGgViM055487;
-        Mon, 27 Jul 2020 17:02:16 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 32hu5r9fda-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jul 2020 17:02:16 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06RGuWGn111604;
-        Mon, 27 Jul 2020 17:02:15 GMT
-Received: from ca-qasparc-x86-2.us.oracle.com (ca-qasparc-x86-2.us.oracle.com [10.147.24.103])
-        by userp3020.oracle.com with ESMTP id 32hu5r9f7r-6;
-        Mon, 27 Jul 2020 17:02:15 +0000
-From:   Anthony Yznaga <anthony.yznaga@oracle.com>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org
-Cc:     mhocko@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        viro@zeniv.linux.org.uk, akpm@linux-foundation.org, arnd@arndb.de,
-        ebiederm@xmission.com, keescook@chromium.org, gerg@linux-m68k.org,
+        Mon, 27 Jul 2020 13:11:16 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k06eR-00019I-TD; Mon, 27 Jul 2020 11:10:59 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k06eQ-0006Sd-Sl; Mon, 27 Jul 2020 11:10:59 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Anthony Yznaga <anthony.yznaga@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
         ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
         peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
         christian@kellner.me, areber@redhat.com, cyphar@cyphar.com,
         steven.sistare@oracle.com
-Subject: [RFC PATCH 5/5] mm: introduce MADV_DOEXEC
-Date:   Mon, 27 Jul 2020 10:11:27 -0700
-Message-Id: <1595869887-23307-6-git-send-email-anthony.yznaga@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9695 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 clxscore=1015
- malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007270116
+Date:   Mon, 27 Jul 2020 12:07:53 -0500
+In-Reply-To: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+        (Anthony Yznaga's message of "Mon, 27 Jul 2020 10:11:22 -0700")
+Message-ID: <87pn8glwd2.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1k06eQ-0006Sd-Sl;;;mid=<87pn8glwd2.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+gamZ8xvQHBIctI0vkZJ1IBG5dzD/MEwA=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-madvise MADV_DOEXEC preserves a memory range across exec.  Initially
-only supported for non-executable, non-stack, anonymous memory.
-MADV_DONTEXEC reverts the effect of a previous MADV_DOXEXEC call and
-undoes the preservation of the range.  After a successful exec call,
-the behavior of all ranges reverts to MADV_DONTEXEC.
+Anthony Yznaga <anthony.yznaga@oracle.com> writes:
 
-Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
-Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
----
- include/uapi/asm-generic/mman-common.h |  3 +++
- mm/madvise.c                           | 25 +++++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+> This patchset adds support for preserving an anonymous memory range across
+> exec(3) using a new madvise MADV_DOEXEC argument.  The primary benefit for
+> sharing memory in this manner, as opposed to re-attaching to a named shared
+> memory segment, is to ensure it is mapped at the same virtual address in
+> the new process as it was in the old one.  An intended use for this is to
+> preserve guest memory for guests using vfio while qemu exec's an updated
+> version of itself.  By ensuring the memory is preserved at a fixed address,
+> vfio mappings and their associated kernel data structures can remain valid.
+> In addition, for the qemu use case, qemu instances that back guest RAM with
+> anonymous memory can be updated.
 
-diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
-index f94f65d429be..7c5f616b28f7 100644
---- a/include/uapi/asm-generic/mman-common.h
-+++ b/include/uapi/asm-generic/mman-common.h
-@@ -72,6 +72,9 @@
- #define MADV_COLD	20		/* deactivate these pages */
- #define MADV_PAGEOUT	21		/* reclaim these pages */
- 
-+#define MADV_DOEXEC	22		/* do inherit across exec */
-+#define MADV_DONTEXEC	23		/* don't inherit across exec */
-+
- /* compatibility flags */
- #define MAP_FILE	0
- 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index dd1d43cf026d..b447fa748649 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -103,6 +103,26 @@ static long madvise_behavior(struct vm_area_struct *vma,
- 	case MADV_KEEPONFORK:
- 		new_flags &= ~VM_WIPEONFORK;
- 		break;
-+	case MADV_DOEXEC:
-+		/*
-+		 * MADV_DOEXEC is only supported on private, non-executable,
-+		 * non-stack anonymous memory and if the VM_EXEC_KEEP flag
-+		 * is available.
-+		 */
-+		if (!VM_EXEC_KEEP || vma->vm_file || vma->vm_flags & (VM_EXEC|VM_SHARED|VM_STACK)) {
-+			error = -EINVAL;
-+			goto out;
-+		}
-+		new_flags |= (new_flags & ~VM_MAYEXEC) | VM_EXEC_KEEP;
-+		break;
-+	case MADV_DONTEXEC:
-+		if (!VM_EXEC_KEEP) {
-+			error = -EINVAL;
-+			goto out;
-+		}
-+		if (new_flags & VM_EXEC_KEEP)
-+			new_flags |= (new_flags & ~VM_EXEC_KEEP) | VM_MAYEXEC;
-+		break;
- 	case MADV_DONTDUMP:
- 		new_flags |= VM_DONTDUMP;
- 		break;
-@@ -983,6 +1003,8 @@ static int madvise_inject_error(int behavior,
- 	case MADV_SOFT_OFFLINE:
- 	case MADV_HWPOISON:
- #endif
-+	case MADV_DOEXEC:
-+	case MADV_DONTEXEC:
- 		return true;
- 
- 	default:
-@@ -1037,6 +1059,9 @@ static int madvise_inject_error(int behavior,
-  *  MADV_DONTDUMP - the application wants to prevent pages in the given range
-  *		from being included in its core dump.
-  *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
-+ *  MADV_DOEXEC - On exec, preserve and duplicate this area in the new process
-+ *		  if the new process allows it.
-+ *  MADV_DONTEXEC - Undo the effect of MADV_DOEXEC.
-  *
-  * return values:
-  *  zero    - success
--- 
-1.8.3.1
+What is wrong with using a file descriptor to a possibly deleted file
+and re-mmaping it?
 
+There is already MAP_FIXED that allows you to ensure you have the same
+address.
+
+I think all it would take would be a small protocol from one version
+to the next to say map file descriptor #N and address #A.  Something
+easily passed on the command line.
+
+There is just enough complexity in exec currently that our
+implementation of exec is already teetering.  So if we could use
+existing mechanisms it would be good.
+
+And I don't see why this version of sharing a mmap area would be
+particularly general.  I do imagine that being able to force a
+mmap area into a setuid executable would be a fun attack vector.
+
+Perhaps I missed this in my skim of these patches but I did not see
+anything that guarded this feature against an exec that changes an
+applications privileges.
+
+Eric
+
+
+> Patches 1 and 2 ensure that loading of ELF load segments does not silently
+> clobber existing VMAS, and remove assumptions that the stack is the only
+> VMA in the mm when the stack is set up.  Patch 1 re-introduces the use of
+> MAP_FIXED_NOREPLACE to load ELF binaries that addresses the previous issues
+> and could be considered on its own.
+>
+> Patches 3, 4, and 5 introduce the feature and an opt-in method for its use
+> using an ELF note.
+>
+> Anthony Yznaga (5):
+>   elf: reintroduce using MAP_FIXED_NOREPLACE for elf executable mappings
+>   mm: do not assume only the stack vma exists in setup_arg_pages()
+>   mm: introduce VM_EXEC_KEEP
+>   exec, elf: require opt-in for accepting preserved mem
+>   mm: introduce MADV_DOEXEC
+>
+>  arch/x86/Kconfig                       |   1 +
+>  fs/binfmt_elf.c                        | 196 +++++++++++++++++++++++++--------
+>  fs/exec.c                              |  33 +++++-
+>  include/linux/binfmts.h                |   7 +-
+>  include/linux/mm.h                     |   5 +
+>  include/uapi/asm-generic/mman-common.h |   3 +
+>  kernel/fork.c                          |   2 +-
+>  mm/madvise.c                           |  25 +++++
+>  mm/mmap.c                              |  47 ++++++++
+>  9 files changed, 266 insertions(+), 53 deletions(-)
