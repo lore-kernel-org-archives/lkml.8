@@ -2,151 +2,125 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E19C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA64C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 824342074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:26:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HAp+xdKD"
+	by mail.kernel.org (Postfix) with ESMTP id F26EB206E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595881623;
+	bh=pVSPbWxessRIZurIuOzZlz0KujjZbQXyIwrU4wU3nho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ly3oW/XNn8Ez6VE+KJulhoz+ymGkuzyqyNSG2qdarnClYVZuaxi0RVHPRawrHFWEV
+	 pk+RkuMAPl4xNhVorfhIrfaKimo7QSTfHci3UNYJt/YhQEcGUcVRVBGjfrOvy4MDof
+	 tExSUfWGNValwMUqADL4/DhvePxfyZfWMAJukkwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbgG0U05 (ORCPT
+        id S1729204AbgG0U1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:26:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgG0U04 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:26:56 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E99AAC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:26:55 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a5so6157196wrm.6
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:26:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IRCcsXpaaLaM038K29AfeEzWiB+CPxs3iz1GKps2ELI=;
-        b=HAp+xdKDIRDrY/SvUb4vMd8+wCOTYwQ9Ki/3l8mYLztDtSyWXywWt1/wiWyGU3J7S1
-         aycDiOBu1D3qTMsKV0T4CWLdvVxMv3pqHPY32jmI0NiZV7zbXl9enC4Q/BYAxsB5uXOC
-         t6E+hNM83aXgPyrXDGhWFV0ZIu3gSVElU6ZhQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IRCcsXpaaLaM038K29AfeEzWiB+CPxs3iz1GKps2ELI=;
-        b=eDlVYX0e8wmE3k1kkbhvOIGmgyLxHYZXpBIZhEIIBDJ/bjlSpEZK9LbB0SLuePKI5s
-         Kv2jj+MR9/LxM1IsBEco4x80OS0GDgFRQkwyuUNabnd9NLT869TVktQGpof3r1RDhtR4
-         Vv4nHInVKyLRFIabJber9m+OtE3XipafArDlmTtseAlF35D3dF9tTjc4jrNZp8jK58Ua
-         BGBzQ6MIBGM2PSsUMlbpdN34DI1NtgtNeVkjiCreo4eoOIUIIPsLIsx+OWJqksbRq+Fs
-         2FvZqNYYINSpvpmQUpkQtkGai9dIEAFBYSJorFjH2ZsPfrEJwNvCGuDV4nBBbBL8l7HU
-         oDbg==
-X-Gm-Message-State: AOAM533trBDahdKDkYIejKQ4ILIgkvduUXGrA3vuHNDLejYvcI8jYgy4
-        +A3+NonxBTkwdfeKFrBpy9vw9g==
-X-Google-Smtp-Source: ABdhPJwvh6fZ0T2qw9pLgRK+ON9OfQe4rJptojXuDRhaVdh788crsN7Q8b8A6JLjjNn2GxfTK5rxUQ==
-X-Received: by 2002:a5d:4dc2:: with SMTP id f2mr22056598wru.399.1595881614638;
-        Mon, 27 Jul 2020 13:26:54 -0700 (PDT)
-Received: from kpsingh-macbookpro2.roam.corp.google.com ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id l81sm924197wmf.4.2020.07.27.13.26.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 13:26:54 -0700 (PDT)
-Subject: Re: [RFC PATCH bpf-next] bpf: POC on local_storage charge and
- uncharge map_ops
-To:     Martin KaFai Lau <kafai@fb.com>, KP Singh <kpsingh@google.com>
-Cc:     bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-References: <20200723115032.460770-4-kpsingh@chromium.org>
- <20200725013047.4006241-1-kafai@fb.com>
-From:   KP Singh <kpsingh@chromium.org>
-Message-ID: <c3c422c7-b15e-32ee-4156-b9d26896f7a0@chromium.org>
-Date:   Mon, 27 Jul 2020 22:26:53 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        Mon, 27 Jul 2020 16:27:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726196AbgG0U1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 16:27:00 -0400
+Received: from localhost (p5486cd33.dip0.t-ipconnect.de [84.134.205.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72D56206E7;
+        Mon, 27 Jul 2020 20:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595881620;
+        bh=pVSPbWxessRIZurIuOzZlz0KujjZbQXyIwrU4wU3nho=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HHDXbeTgUuQKU/1fh2JKFe1u+W+apYXRf3ojvY/mqvZ3x00kNVHI+NkJzWiEld/IU
+         jiyfKVZijeQVkEZ5WJMIv7m34ay9cfqAIcsM9zZlBOlFUTCVzasWbUS0YLgGF7jfnh
+         z8UuGYEkXwxot+xcckTK0VzO/gsGFyfWWiH2x2mM=
+Date:   Mon, 27 Jul 2020 22:26:57 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Dhananjay Phadke <dphadke@linux.microsoft.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
+Message-ID: <20200727202657.GA18997@ninjato>
+References: <1595115599-100054-1-git-send-email-dphadke@linux.microsoft.com>
+ <116ac90c-8b49-ca89-90a4-9a28f43a7c50@broadcom.com>
+ <20200722104128.GK1030@ninjato>
+ <5048cf44-e2c2-ee31-a9fb-b823f16c2c7d@broadcom.com>
+ <20200725101815.GA1519@ninjato>
+ <4cf12c92-889d-ffbf-f8de-c1e08cfb8ce9@broadcom.com>
+ <20200727181346.GA1034@ninjato>
 MIME-Version: 1.0
-In-Reply-To: <20200725013047.4006241-1-kafai@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
+Content-Disposition: inline
+In-Reply-To: <20200727181346.GA1034@ninjato>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for this, I was able to update the series with this patch and it works.
-One minor comment though.
 
-I was wondering how should I send it as a part of the series. I will keep the
-original commit description + mention this thread and add your Co-Developed-by:
-tag and then you can add your Signed-off-by: as well. I am not sure of the 
-canonical way here and am open to suggestions :)
+--W/nzBZO5zC0uMSeA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- KP
+On Mon, Jul 27, 2020 at 08:13:46PM +0200, Wolfram Sang wrote:
+>=20
+> > Can you confirm that even if we have irq pending at the i2c IP core
+> > level, as long as we execute Step 2. below (to disable/mask all slave
+> > interrupts), after 'enable_irq' is called, we still will not receive any
+> > further i2c slave interrupt?
+>=20
+> This is HW dependant. From my tests with Renesas HW, this is not the
+> case. But the actual error case was impossible to trigger for me, so
+> far. I might try again later. But even in the worst case, I would only
+> get a "spurious interrupt" and not an NULL-ptr OOPS.
 
-On 25.07.20 03:30, Martin KaFai Lau wrote:
-> It is a direct replacement of the patch 3 in discussion [1]
-> and to test out the idea on adding
-> map_local_storage_charge, map_local_storage_uncharge,
-> and map_owner_storage_ptr.
-> 
-> It is only compiler tested to demo the idea.
-> 
-> [1]: https://patchwork.ozlabs.org/project/netdev/patch/20200723115032.460770-4-kpsingh@chromium.org/
-> 
-> Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-> ---
->  include/linux/bpf.h            |  10 ++
->  include/net/bpf_sk_storage.h   |  51 +++++++
->  include/uapi/linux/bpf.h       |   8 +-
+Let me explain how I verified this:
 
-[...]
+0) add a debug print whenever the slave irq part is called
 
-> +
-> +static void sk_storage_uncharge(struct bpf_local_storage_map *smap,
-> +				void *owner, u32 size)
-> +{
-> +	struct sock *sk = owner;
-> +
-> +	atomic_sub(size, &sk->sk_omem_alloc);
-> +}
-> +
-> +static struct bpf_local_storage __rcu **
-> +sk_storage_ptr(struct bpf_local_storage_map *smap, void *owner)
+1) Put a 2 second delay after disable_irq() and before clearing
+interrupt enable register
 
-Do we need an smap pointer here? It's not being used and is also not
-used for inode as well.
+2) unbind the slave driver in the background, triggering the 2s delay
 
-- KP
+3) during the delay, try to read from the to-be-unbound slave in the
+   foreground
 
-> +{
-> +	struct sock *sk = owner;
-> +
-> +	return &sk->sk_bpf_storage;
-> +}
-> +
+4) ensure there is no prinout from the slave irq
 
-[...]
+Worked fine for me with the Renesas R-Car I2C IP interface. As mentioned
+before, I couldn't trigger a bad case with my setup. So, I hope this new
+fix will work for Rayagonda's test case, too!
 
-> -/* BPF_FUNC_sk_storage_get flags */
-> +/* BPF_FUNC_<local>_storage_get flags */
->  enum {
-> -	BPF_SK_STORAGE_GET_F_CREATE	= (1ULL << 0),
-> +	BPF_LOCAL_STORAGE_GET_F_CREATE	= (1ULL << 0),
-> +	/* BPF_SK_STORAGE_GET_F_CREATE is only kept for backward compatibility
-> +	 * and BPF_LOCAL_STORAGE_GET_F_CREATE must be used instead.
-> +	 */
-> +	BPF_SK_STORAGE_GET_F_CREATE  = BPF_LOCAL_STORAGE_GET_F_CREATE,
->  };
->  
->  /* BPF_FUNC_read_branch_records flags. */
-> 
+
+--W/nzBZO5zC0uMSeA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8fOI0ACgkQFA3kzBSg
+KbZ2mg//ZffoljqCUbULydJcx1FgcZDwTaniwi7AmmFMvl8rSVkihNTlBHi6mt39
+Feh+yk6Je7+A/nQm554rrkMHjqc6c7B+LtwzXbBIAIz99U75QPS9bSRhAofitsMX
++4ixLRywn2cwqSTtgGIb2J5/M24zM3F0jw1ifdi6xzGajrLKVzOGLemxp2WUCirU
+hey2hVLyq9j8iTYev7Vg+BKQJhHqUu4/uxM3Z47ymE4+KhMBmc0mAN31SE7hceps
+7VBVX7elaIKWn8HfoqDjmmaLnne6A+yqK4ep7Uuh/1uz24jcy15f0XZ0dvN4baOu
+z1k38J2B9C03eAEsuR15gY1kSbEI1Ce5Mi34Z4b6qhjpI8jj6mdzYrBxgu4euCA8
+2yYcG0z2k27jmqFl+7O4te9chDSxpJotYEF0bPLGkzduNMjeBF5PAPzvxsN/ZPaP
+cAwuOkYwiQTbOpKYYLNREIe0+KzuvVGGhhWcJapxCZhj1Hv73lu+HJiCTzmzDat6
+gVi59UWhyycjMFuU6rewotnpJYS8YN6bFJGPfBgCsTl3vl8IJc2YBpw+goikQ1E4
+Y05RMGcE5dn/2x7eR9u8owH/lL4JkcQGksj0xJLkQQ1BQg1IkTWCmHAlMHD6GGal
+qS+yQqAudo3/HPbC4TtFMamCgzNwDtftu95Mf0E3H1QhTc0dLTg=
+=0k9R
+-----END PGP SIGNATURE-----
+
+--W/nzBZO5zC0uMSeA--
