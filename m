@@ -2,103 +2,79 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42588C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2236EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2202083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:36:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595856965;
-	bh=2Yq+MaLWcEj3edk4hAYe+/GUUNPl7bYKU7VolZjMk8Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z1C76US6gu//PLIbLgqu6E7L0dJp72vfRy7cDbVoF6ri6N0PcrTlRZ7Yta4ylUd2B
-	 UGr9b6zBKM+nwH74YkPfACEZQBR8MwtS0dyFKLIdpio5b2C01ZF3+xV7XBQbRatlo/
-	 ecHNyYD6PlQ2Fyk6SO0puHDK+TeK88J4JHOT3SMg=
+	by mail.kernel.org (Postfix) with ESMTP id CD09A20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 13:36:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PIq29Lqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgG0NgD (ORCPT
+        id S1729006AbgG0Ngr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 09:36:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbgG0NgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 09:36:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 27 Jul 2020 09:36:47 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43265 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726298AbgG0Ngr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 09:36:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595857006;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8D67ol3aJBpMshrqkN6iSV7ca0jH4mAuZgj7ZHwQHi4=;
+        b=PIq29LqfNaHzcccdszTbHYWEisEdEt0CmVIOomHqXigbJzghqPRH/Ta70JwkJfoW2nGr6j
+        W+734zG7C6LW43AlFfxX7bP3CtUEPSc5v78GR3xQa/es721+qjWyAxbBrQC12OGhTn0LrF
+        4BCmhPVnkEW3k77l/iEvP91K6/xRbRI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-sUa4tk6JNR63pW1PtrxTuw-1; Mon, 27 Jul 2020 09:36:41 -0400
+X-MC-Unique: sUa4tk6JNR63pW1PtrxTuw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E1732073E;
-        Mon, 27 Jul 2020 13:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595856963;
-        bh=2Yq+MaLWcEj3edk4hAYe+/GUUNPl7bYKU7VolZjMk8Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cOdBxxBt/q+rrdy3v0XAXcFUS9vLPTef2+ciFH6pn48TwW3z9CDqh5QGLeWXVS+bH
-         XVsm7rkGWrJ+1AopPHwnzOS1Uw3vKOllI2CF4R2i0T0l2LyF+0Pnkv3M2Zy8ffsd9r
-         o3wA/ex3iBmweMnlQ6936OrNIRMYqlRTwIuIfOm8=
-Date:   Mon, 27 Jul 2020 15:35:58 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] mtd: unlock on error in ioctl
-Message-ID: <20200727133558.GA28751@kroah.com>
-References: <20200727112050.GF389488@mwanda>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53EA91932482;
+        Mon, 27 Jul 2020 13:36:40 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6E97B5C1B2;
+        Mon, 27 Jul 2020 13:36:39 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200727224626.463ffeaf@canb.auug.org.au>
+References: <20200727224626.463ffeaf@canb.auug.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     dhowells@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the akpm tree with the fsinfo tree
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727112050.GF389488@mwanda>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2814723.1595856998.1@warthog.procyon.org.uk>
+Date:   Mon, 27 Jul 2020 14:36:38 +0100
+Message-ID: <2814724.1595856998@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 02:20:50PM +0300, Dan Carpenter wrote:
-> We need to unlock before returning on this error path.
-> 
-> Fixes: 210bec567936 ("mtd: properly check all write ioctls for permissions")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/mtd/mtdchar.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mtd/mtdchar.c b/drivers/mtd/mtdchar.c
-> index 52c120f9fb0d..05f9218592df 100644
-> --- a/drivers/mtd/mtdchar.c
-> +++ b/drivers/mtd/mtdchar.c
-> @@ -1064,8 +1064,10 @@ static long mtdchar_compat_ioctl(struct file *file, unsigned int cmd,
->  		struct mtd_oob_buf32 buf;
->  		struct mtd_oob_buf32 __user *buf_user = argp;
->  
-> -		if (!(file->f_mode & FMODE_WRITE))
-> -			return -EPERM;
-> +		if (!(file->f_mode & FMODE_WRITE)) {
-> +			ret = -EPERM;
-> +			goto unlock;
-> +		}
->  
->  		if (copy_from_user(&buf, argp, sizeof(buf)))
->  			ret = -EFAULT;
-> @@ -1117,6 +1119,7 @@ static long mtdchar_compat_ioctl(struct file *file, unsigned int cmd,
->  		ret = mtdchar_ioctl(file, cmd, (unsigned long)argp);
->  	}
->  
-> +unlock:
->  	mutex_unlock(&mtd_mutex);
->  
->  	return ret;
-> -- 
-> 2.27.0
-> 
+Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-I think this is already fixed up in the mtd tree.
+> The notificiations tree has been rebased to remove a new syscall and
+> the fsinfo tree rebased on top of that, so the syscall numbers have all
+> changed again :-(
 
-thanks,
+Would it make it easier it if I just left a hole for the syscall I dropped for
+the moment?
 
-greg k-h
+David
+
