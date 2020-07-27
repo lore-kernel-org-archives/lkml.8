@@ -2,128 +2,122 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847A8C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E520DC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8CE20729
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:47:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595886436;
-	bh=4KHzr6s9qazdRG4uIrQgBE5hj3ZCg9MSVH8IOy0oqo4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Kfz1DfjtM4XmdHciPcyIou0luV6B4smje+ra6dwxDQJ/6z7nBKpzNUxtxPlPTGLX/
-	 DMI01KkXL0TdQ2eLTTuhzkQezkClN7fCzN7lrTfADiaOgaSdQKtSXW4xxUeJFeuQjn
-	 ungYfU9IzWFu99nuTPxZ7NINtoIwyffhXwBwF6qA=
+	by mail.kernel.org (Postfix) with ESMTP id C7E7A20792
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 21:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgG0VrP (ORCPT
+        id S1726283AbgG0VuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 17:47:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726110AbgG0VrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 17:47:15 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8CB62070B;
-        Mon, 27 Jul 2020 21:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595886434;
-        bh=4KHzr6s9qazdRG4uIrQgBE5hj3ZCg9MSVH8IOy0oqo4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=m8MzimSTDbym1tEunWUc/6M1BccMkDGih1rrJafaILcBTbNrd6/p3CZZ+ovg6N7RO
-         vZy9S8oIZaJpgQqiRxCFgw5GArxNYxpDfm02WWK5km9gZs4IfFRZMR7t9f5dxrxrok
-         WV41SmZtDRqp0GywHA+DDWYlBDqsD1KhpPkOO+vs=
-Date:   Mon, 27 Jul 2020 16:47:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     James Ettle <james@ettle.org.uk>
-Cc:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>,
-        Rui Feng <rui_feng@realsil.com.cn>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <lenb@kernel.org>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jacopo De Simoi <wilderkde@gmail.com>
-Subject: Re: rtsx_pci not restoring ASPM state after suspend/resume
-Message-ID: <20200727214712.GA1777201@bjorn-Precision-5520>
+        Mon, 27 Jul 2020 17:50:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:45926 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726110AbgG0VuP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 17:50:15 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id AF3D08030867;
+        Mon, 27 Jul 2020 21:50:12 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id BaDuD-7nSK_l; Tue, 28 Jul 2020 00:50:12 +0300 (MSK)
+Date:   Tue, 28 Jul 2020 00:50:10 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] gpio: dwapb: Convert driver to using the
+ GPIO-lib-based IRQ-chip
+Message-ID: <20200727215010.qzhvavmskfoaapi5@mobilestation>
+References: <20200723013858.10766-1-Sergey.Semin@baikalelectronics.ru>
+ <20200723013858.10766-5-Sergey.Semin@baikalelectronics.ru>
+ <20200723100317.GJ3703480@smile.fi.intel.com>
+ <20200724230342.bhdpc32rsjw7rzbl@mobilestation>
+ <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <f02332767323fc3ecccea13dd47ecfff12526112.camel@ettle.org.uk>
+In-Reply-To: <CAHp75Vdeg6v_yLYjxZPJM7SgDP-fou6SEuaE8+TFCNW4c2r_rA@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 08:52:25PM +0100, James Ettle wrote:
-> On Mon, 2020-07-27 at 09:14 -0500, Bjorn Helgaas wrote:
-> > I don't know the connection between ASPM and package C-states, so I
-> > need to simplify this even more.  All I want to do right now is
-> > verify
-> > that if we don't have any outside influences on the ASPM
-> > configuration
-> > (eg, no manual changes and no udev rules), it stays the same across
-> > suspend/resume.
+On Sat, Jul 25, 2020 at 03:12:49PM +0300, Andy Shevchenko wrote:
+> On Sat, Jul 25, 2020 at 2:03 AM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> > On Thu, Jul 23, 2020 at 01:03:17PM +0300, Andy Shevchenko wrote:
+> > > On Thu, Jul 23, 2020 at 04:38:55AM +0300, Serge Semin wrote:
+
+...
+ 
+> > > > +           /* This will let us handle the parent IRQ in the driver */
+> > > > +           girq->parents = NULL;
+> > > > +           girq->num_parents = 0;
+> > > > +           girq->parent_handler = NULL;
 > 
-> Basically this started from me observing deep package C-states weren't
-> being used, until I went and fiddled with the ASPM state of the
-> rtsx_pci card reader under sysfs -- so phenomenological poking on my
-> part.
+> > > Shan't we do this before request_irq() call (at least for consistency with the
+> > > rest of the drivers)?
+> >
+> > Technically we shan't. Please elaborate which drivers you are referring to?
 > 
-> > So let's read the ASPM state directly from the
-> > hardware like this:
-> > 
-> >   sudo lspci -vvs 00:1d.0 | egrep "^0|Lnk|L1|LTR|snoop"
-> >   sudo lspci -vvs 01:00   | egrep "^0|Lnk|L1|LTR|snoop"
-> > 
-> > Can you try that before and after suspend/resume?
+> All of them? Recent patches for IRQ chip template do something like
 > 
-> I've attached these to the bugzilla entry at:
+> girq = &...;
+> girq->foo = bar;
+> ...
+> ret = request_irq(...);
 > 
-> https://bugzilla.kernel.org/show_bug.cgi?id=208117
+> ...and here no more girq->baz = gaz; lines.
 > 
-> Spoiler: With no udev rules or suspend hooks, things are the same
-> before and after suspend/resume. One thing I do see (both before and
-> after) is that ASPM L0s and L1 is enabled for the card reader, but
-> disabled for the ethernet chip (does r8169 fiddle with ASPM too?).
+> > Even the recent Linus' series "Use irqchip template" mostly does it in the
+> > same order.
+> 
+> Funny, that's what I;m referring to.
 
-Thank you!  It's good that this stays the same across suspend/resume.
-Do you see different C-state behavior before vs after?
+It turns out my "mostly" was wrong in this matter. It's 4 out of 17 patches,
+which make the initialization in the same order as mine:
+drivers/gpio/gpio-max732x.c
+drivers/gpio/gpio-pca953x.c
+drivers/gpio/gpio-pcf857x.c
+drivers/gpio/gpio-adp5588.c
 
-This is the config I see:
+while the rest of them does it in the order suggested by you:
+drivers/gpio/gpio-pci-idio-16.c
+drivers/gpio/gpio-pcie-idio-24.c
+drivers/gpio/gpio-104-idio-16.c
+drivers/gpio/gpio-104-dio-48e.c
+drivers/gpio/gpio-ws16c48.c
+drivers/gpio/gpio-rcar.c
+drivers/gpio/gpio-wcove.c
+drivers/pinctrl/pinctrl-amd.c
+drivers/gpio/gpio-crystalcove.c
+drivers/pinctrl/pinctrl-mcp23s08.c
+drivers/pinctrl/pinctrl-sx150x.c
+drivers/pinctrl/pinctrl-stmfx.c
+drivers/gpio/gpio-tc3589x.c
 
-  00:1d.0 bridge to [bus 01]: ASPM L1 supported;     ASPM Disabled
-  01:00.0 card reader:        ASPM L0s L1 supported; L0s L1 Enabled
-  01:00.1 GigE NIC:           ASPM L0s L1 supported; ASPM Disabled
+Then, let's use the same order here as the most of the drivers do just for
+consistency.
 
-This is actually illegal because PCIe r5.0, sec 5.4.1.3, says software
-must not enable L0s in either direction unless components on both ends
-of the link support L0s.  The bridge (00:1d.0) does not support L0s,
-so it's illegal to enable L0s on 01:00.0.  I don't know whether this
-causes problems in practice.
+-Sergey 
 
-I don't see anything in rtsx that enables L0s.  Can you collect the
-dmesg log when booting with "pci=earlydump"?  That will show whether
-the BIOS left it this way.  The PCI core isn't supposed to do this, so
-if it did, we need to fix that.
-
-I don't know whether r8169 mucks with ASPM.  It is legal to have
-different configurations for the two functions, even though they share
-the same link.  Sec 5.4.1 has rules about how hardware resolves
-differences.
-
-> [Oddly when I set ASPM (e.g. using udev) the lspci tools show ASPM
-> enabled after a suspend/resume, but still no deep package C-states
-> until I manually fiddle via sysfs on the card reader. Sorry if this
-> only muddies the water further!]
-
-Let's defer this for now.  It sounds worth pursuing, but I can't keep
-everything in my head at once.
-
-Bjorn
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
