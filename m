@@ -2,149 +2,126 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFC3C433F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AACFC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3A120719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860828;
-	bh=iAEKyE0lp0Q1eiGVOqPBMSTirL6AZ6YGjWbDUMdGnlQ=;
-	h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:
-	 From;
-	b=FLeiVSDZVZ4sp8D2IUI9OmnTbpUKhs6JLJiZvCs1aBbvwhzA/gYWNHnViyVOpDsw2
-	 lKl+kkMjAkZ6ocz1nXt6ItlDRIb3SNR+QobUYME2jf3LF0wsP4whFhaRKTYUXi2M3a
-	 UceScQRoPTjQmIqR1x+jhb9cbnmNTMMvB3BfxSaA=
+	by mail.kernel.org (Postfix) with ESMTP id D9C6820719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:40:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RqDt+Msw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733045AbgG0Ok1 (ORCPT
+        id S1733040AbgG0OkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:40:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731024AbgG0OkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:40:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37987 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730521AbgG0OkT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Jul 2020 10:40:19 -0400
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 470D620714;
-        Mon, 27 Jul 2020 14:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595860819;
-        bh=iAEKyE0lp0Q1eiGVOqPBMSTirL6AZ6YGjWbDUMdGnlQ=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=rkODX2P6EOsZX2WaltOPasDhw8J6QPosDEodCzHgVyZa9OO5wHHs4xKhxkq40dqOX
-         8C2NaVQS75iqgDNu/o27nhft2DqFOXk6G9Qj+C20EhvzTuR9mR8kzBOiXo5va85TpT
-         H0s5c3D9Giu2nCeL1uchpGaoPj6VYV/XDPrvMiYs=
-Reply-To: kbingham@kernel.org
-Subject: Re: [PATCH 4.19 42/86] scripts/gdb: fix lx-symbols gdb.error while
- loading modules
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200727134914.312934924@linuxfoundation.org>
- <20200727134916.556617777@linuxfoundation.org>
- <7675dec9-7b66-b785-5034-22e8ede0b597@kernel.org>
- <20200727143700.rtouw4mgim4kjmeb@steredhat>
-From:   Kieran Bingham <kbingham@kernel.org>
-Autocrypt: addr=kbingham@kernel.org; keydata=
- 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
-Message-ID: <48bcd4ea-0d06-a25c-caf5-7b260f502412@kernel.org>
-Date:   Mon, 27 Jul 2020 15:40:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595860818;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=izsbK+ZOKnq7dNSVt0IlxJ0IbYW71pzFLmCjbU4plCU=;
+        b=RqDt+MsweS6EvRG9tfmqUpufgUqnG+n5cqkctIwXoQ7L+bxHWqTPXEDiEZSxtRxNcQIz5p
+        T0hyaF2Ptc2tAVy3WWUa1As20J+YA/gJfznyAwdS1UyrRR1/dU86Ttnq3Kp8taB0GYXECA
+        tSiD2pcnn2jXXTzw3lQGvQXU2cOspVo=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-374-91nFSw4yMEiDHkMpP4VNRA-1; Mon, 27 Jul 2020 10:40:15 -0400
+X-MC-Unique: 91nFSw4yMEiDHkMpP4VNRA-1
+Received: by mail-wm1-f71.google.com with SMTP id s2so4799878wmj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:40:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=izsbK+ZOKnq7dNSVt0IlxJ0IbYW71pzFLmCjbU4plCU=;
+        b=C/W0vc8bKCYAXHl5eUyQVMOWs35Yy26PWGi+NO0/ikN0XBPJBIybPYQaFV+qTCI7J0
+         Fb9X6vV0BvtmyTvjzBoQkr5pG+gYIsVzubOXLafaATmNqsvUcCIq/rGFppP8oX5XRAph
+         n6GbpPK6IjEZAhBmEwfb2o7oJCsqijjTraD9APTHSGXOlZxQ2EK+i+jdIvV92rfht2tU
+         1p8nSnOrWbWZru9ZY1Py+S8bP6yHSH9fdp/5KWhSSl0tx2Q9EvA8tnWkEJz86sxgVY0w
+         sIhxLBGME2e3mH1WlkZsonbnF3Z450KntKhzFNhII+0dn1qksOT+rKPLpE0fb8djWXr4
+         Mnuw==
+X-Gm-Message-State: AOAM531fydHqOcHw+ypxUcAvJSLEkYCf4fISwgGlYFfBSHZrhVXjmJQA
+        aJWxTlse/L9JG1K7LHrGpvIjclQYF+UtT511J3r1eda7wyeIbv7F07NCWPZGjPuaFvcE0C450ff
+        /so+4+iMxht69C/ANkOmUC9GB
+X-Received: by 2002:a1c:5982:: with SMTP id n124mr20918659wmb.77.1595860814723;
+        Mon, 27 Jul 2020 07:40:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzgZuIogu5hzxAcWaxVai3d/DsyPRSUKU7GcLo+4TZTFJ/k5uN+y5FA8hkMBW9RTUIKGPi0nA==
+X-Received: by 2002:a1c:5982:: with SMTP id n124mr20918640wmb.77.1595860814402;
+        Mon, 27 Jul 2020 07:40:14 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:4502:3ee3:2bae:c612? ([2001:b07:6468:f312:4502:3ee3:2bae:c612])
+        by smtp.gmail.com with ESMTPSA id z127sm4591641wme.44.2020.07.27.07.40.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2020 07:40:13 -0700 (PDT)
+Subject: Re: [PATCH] KVM: Using macros instead of magic values
+To:     Haiwei Li <lihaiwei.kernel@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>, mingo@redhat.com,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
+References: <4c072161-80dd-b7ed-7adb-02acccaa0701@gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <92cd8fd2-d838-a1e3-dc39-7e6e5c4e68ca@redhat.com>
+Date:   Mon, 27 Jul 2020 16:40:03 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200727143700.rtouw4mgim4kjmeb@steredhat>
+In-Reply-To: <4c072161-80dd-b7ed-7adb-02acccaa0701@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stefano,
-
-On 27/07/2020 15:37, Stefano Garzarella wrote:
-> On Mon, Jul 27, 2020 at 03:26:42PM +0100, Kieran Bingham wrote:
->> Hi Greg, Sasha,
->>
->> On 27/07/2020 15:04, Greg Kroah-Hartman wrote:
->>> From: Stefano Garzarella <sgarzare@redhat.com>
->>>
->>> [ Upstream commit 7359608a271ce81803de148befefd309baf88c76 ]
->>>
->>> Commit ed66f991bb19 ("module: Refactor section attr into bin attribute")
->>> removed the 'name' field from 'struct module_sect_attr' triggering the
->>> following error when invoking lx-symbols:
->>
->>
->> Has ed66f991bb19 ("module: Refactor section attr into bin attribute")
->> been backported to 4.19? It doesn't /sound/ like something that would
->> require backporting unless something else depended up on it,  but if it
->> hasn't been ... then *this* patch shouldn't be either...
->>
->> Same for 5.4, and 5.7 that's just come in.
->>
->> This patch will 'apply' cleanly, and not hit any compilation errors, as
->> it only changes python code... so my reason to highlight is in case some
->> automated system picked it up based on those assumptions.
->>
->> If ed66f991bb19 has also been backported, then I'm sorry for the noise ;-)
->>
+On 21/07/20 10:23, Haiwei Li wrote:
+> From: Haiwei Li <lihaiwei@tencent.com>
 > 
-> I had the same doubt, but I just saw that ed66f991bb19 was backported to
-> the stable branches (4.19, 5.4 and 5.7), so I think this backport is> correct.
+> Instead of using magic values, use macros.
+> 
+> Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
+> ---
+>  arch/x86/kvm/lapic.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 47801a4..d5fb2ea 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -2083,7 +2083,8 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic,
+> u32 reg, u32 val)
+> 
+>      case APIC_SELF_IPI:
+>          if (apic_x2apic_mode(apic)) {
+> -            kvm_lapic_reg_write(apic, APIC_ICR, 0x40000 | (val & 0xff));
+> +            kvm_lapic_reg_write(apic, APIC_ICR,
+> +                        APIC_DEST_SELF | (val & APIC_VECTOR_MASK));
+>          } else
+>              ret = 1;
+>          break;
+> -- 
+> 1.8.3.1
+> 
 
-Perfect, thanks for confirming.
+Queued, thanks.
 
---
-Kieran
+Paolo
+
