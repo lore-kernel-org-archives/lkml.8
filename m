@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511F8C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66661C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26703206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A97820719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860545;
-	bh=H/OM6/a8M3t7VNB7Ov8Of+TDljr1vmXMWpv38rk0khQ=;
+	s=default; t=1595860552;
+	bh=YKVuAkV0eYJPZqvXHyFJPRi0u2KKXdveNpN4N5vQAjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nokvqo1vdyF5AkrCylxxoJrrrwQcltMhxZBsnvKlLhWfuyJnlIkvJP+zpeZwFIxsm
-	 4kADUCmXU4DyV8mlHmflEG889D6h3pMMf+pEfpI1h3UFfA90NrlnoDZ7YwzV4K/N1S
-	 Saq0Y3P/b2mqbHjH9AELq5IUABqxpokZaeHHnqmw=
+	b=RhcGNBK6xobT9+EPM3/n+3Hgz7klCvEd2LLQrnAr36xLMBi57M6FpEC1YV4cDMu3m
+	 2FydNlKArvXYm63qByvYi/ifWc7i8OtCwaJ6QUYIMl5uwA9Khe4FL6ucXo0HQrM53y
+	 D64CaoIJiIzZuxna6xIe9NP4r4i+pCo6NvtJ1YWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732926AbgG0Ofo (ORCPT
+        id S1730606AbgG0Ofv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:35:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40790 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:35:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730606AbgG0OOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:14:49 -0400
+        id S1730583AbgG0OOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:14:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D84422173E;
-        Mon, 27 Jul 2020 14:14:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 002DE21744;
+        Mon, 27 Jul 2020 14:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859289;
-        bh=H/OM6/a8M3t7VNB7Ov8Of+TDljr1vmXMWpv38rk0khQ=;
+        s=default; t=1595859281;
+        bh=YKVuAkV0eYJPZqvXHyFJPRi0u2KKXdveNpN4N5vQAjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CNHovnEFmgGSrkj7B4Io9eSoMq/eb8mG+FwwIuKsoot3qpXcISlGnwxPvvzma4blA
-         Le0uDPVJcHBHLhL6d1jbz2GVejt/5Tl1KG0O1sygCOLcolvxSVD7WM0+r7f1p+4/oZ
-         rJ2PpehChSAUMcN5UwT50TCTGVTd5M8Y6eA54JSA=
+        b=EMBoOo3Mq8eQbWbC8JG/o8i734tW1XhWvGzeVzCFegYzT4o7xLxqpmXBH/QaYGlG5
+         zPWRWcSUVhw8vw53Z4KqJZo09gefnPR/ajw4W5zYUnnmQxzUI83I1btH8Z88gHi7R1
+         ppIr9z5LOnmaNfRvIx0vEYYYBNqAzrTnhCVXpuxY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shannon Nelson <snelson@pensando.io>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 051/138] ionic: use offset for ethtool regs data
-Date:   Mon, 27 Jul 2020 16:04:06 +0200
-Message-Id: <20200727134927.908289915@linuxfoundation.org>
+Subject: [PATCH 5.4 048/138] net: smc91x: Fix possible memory leak in smc_drv_probe()
+Date:   Mon, 27 Jul 2020 16:04:03 +0200
+Message-Id: <20200727134927.757640108@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,46 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shannon Nelson <snelson@pensando.io>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit f85ae16f924f92a370b81b4e77862c1c59882fce ]
+[ Upstream commit bca9749b1aa23d964d3ab930938af66dbf887f15 ]
 
-Use an offset to write the second half of the regs data into the
-second half of the buffer instead of overwriting the first half.
+If try_toggle_control_gpio() failed in smc_drv_probe(), free_netdev(ndev)
+should be called to free the ndev created earlier. Otherwise, a memleak
+will occur.
 
-Fixes: 4d03e00a2140 ("ionic: Add initial ethtool support")
-Signed-off-by: Shannon Nelson <snelson@pensando.io>
+Fixes: 7d2911c43815 ("net: smc91x: Fix gpios for device tree based booting")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/pensando/ionic/ionic_ethtool.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/smsc/smc91x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c b/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c
-index 7d10265f782a6..5aacc00962df7 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_ethtool.c
-@@ -102,15 +102,18 @@ static void ionic_get_regs(struct net_device *netdev, struct ethtool_regs *regs,
- 			   void *p)
- {
- 	struct ionic_lif *lif = netdev_priv(netdev);
-+	unsigned int offset;
- 	unsigned int size;
+diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
+index 3a6761131f4c2..2248d26746124 100644
+--- a/drivers/net/ethernet/smsc/smc91x.c
++++ b/drivers/net/ethernet/smsc/smc91x.c
+@@ -2274,7 +2274,7 @@ static int smc_drv_probe(struct platform_device *pdev)
+ 		ret = try_toggle_control_gpio(&pdev->dev, &lp->power_gpio,
+ 					      "power", 0, 0, 100);
+ 		if (ret)
+-			return ret;
++			goto out_free_netdev;
  
- 	regs->version = IONIC_DEV_CMD_REG_VERSION;
+ 		/*
+ 		 * Optional reset GPIO configured? Minimum 100 ns reset needed
+@@ -2283,7 +2283,7 @@ static int smc_drv_probe(struct platform_device *pdev)
+ 		ret = try_toggle_control_gpio(&pdev->dev, &lp->reset_gpio,
+ 					      "reset", 0, 0, 100);
+ 		if (ret)
+-			return ret;
++			goto out_free_netdev;
  
-+	offset = 0;
- 	size = IONIC_DEV_INFO_REG_COUNT * sizeof(u32);
--	memcpy_fromio(p, lif->ionic->idev.dev_info_regs->words, size);
-+	memcpy_fromio(p + offset, lif->ionic->idev.dev_info_regs->words, size);
- 
-+	offset += size;
- 	size = IONIC_DEV_CMD_REG_COUNT * sizeof(u32);
--	memcpy_fromio(p, lif->ionic->idev.dev_cmd_regs->words, size);
-+	memcpy_fromio(p + offset, lif->ionic->idev.dev_cmd_regs->words, size);
- }
- 
- static int ionic_get_link_ksettings(struct net_device *netdev,
+ 		/*
+ 		 * Need to wait for optional EEPROM to load, max 750 us according
 -- 
 2.25.1
 
