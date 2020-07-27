@@ -2,219 +2,203 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B05C433FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0C4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3FA520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p6auQxlk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CdPHNua/"
+	by mail.kernel.org (Postfix) with ESMTP id 47AAA20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:27:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1595860065;
+	bh=jmOsuzzw+P8LeZ7Lb7jHJhR5Tuq3G+y8FiJyk2wNvfk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=M3sq87AH4/y5sw72j96/r8NKuuvKCim3m503FnVPhIl4ILBkpgvUlPNJXGVBE0NfM
+	 9nJekwbbCueDsMuSH+kSWu4nABoBWaHEnkYgCxh0/Wkv16h1Gswi7TF/LZvILfFge2
+	 Ut44JW0B8EDNl9hlzGZJFrquRTdcGnt5QXIca4qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbgG0OZR (ORCPT
+        id S1732416AbgG0O1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731498AbgG0OZO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:25:14 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9041C0619D4;
-        Mon, 27 Jul 2020 07:25:13 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 14:25:11 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1595859912;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iNHHAvCNnLUuxWvSYqKOaxmpHY2i9DCarZbKtpAKXAE=;
-        b=p6auQxlkFo4Nrp/HxTF6KYtTHKtaoKz/f+Ozh/NgzUfS/EBnfDFVGtOaryDFNrpoYTDsB/
-        B13OTnp8ixmOnHi9vc+EVIYoecuBQzmFBvsdgUKNIBSyBuSIgFEuUh6YsNq9QoJ9Vd3efu
-        Cs4M64quOi797jg9+PNN7XhnV+PcJmIN+RDBjFT1K1tNmxmHhiUTrtAxP0gIQrrsw2KWKI
-        O6JkLIzSI0LVKmzuihtGyg5skU0CqNXOV0Nn+Sn89J5B19tMy3EozwM9NNZ+Vn2AmvhZjr
-        /iJPkxscl8uRPRwbZPuRdguvT2KyCxic9zGc6wSoWupE1wasJexKUe8+LS8gDw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1595859912;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iNHHAvCNnLUuxWvSYqKOaxmpHY2i9DCarZbKtpAKXAE=;
-        b=CdPHNua/1YtOaZp7f2T04HRI8qV8kmOPQmpmiZUtqAFHywYpxlYzPzDGFE+8oDSUo+NsVN
-        Xc+3Iz719kN0RtBw==
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] genirq/affinity: Make affinity setting if activated opt-in
-Cc:     John Keeping <john@metanate.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <87blk4tzgm.fsf@nanos.tec.linutronix.de>
-References: <87blk4tzgm.fsf@nanos.tec.linutronix.de>
+        Mon, 27 Jul 2020 10:27:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731804AbgG0OZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:25:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03366207FC;
+        Mon, 27 Jul 2020 14:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595859920;
+        bh=jmOsuzzw+P8LeZ7Lb7jHJhR5Tuq3G+y8FiJyk2wNvfk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xzisdj2I0VVoO+6+iWYPlb36hmxDaF0WcyaizxawJg6FzNiPcfh3yVykknLLZAZNi
+         J24fvEt/yHT+kqI+NelhwXDO4pqn9xC8dRztMUhRSfrLqQgXyGyplrPAI5ZSrV7z1c
+         fQdrtdFBQEOYEs/72Z6gTO9fDif6xmTytp0mjEio=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+Subject: [PATCH 5.7 157/179] vt: Reject zero-sized screen buffer size.
+Date:   Mon, 27 Jul 2020 16:05:32 +0200
+Message-Id: <20200727134940.321577532@linuxfoundation.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200727134932.659499757@linuxfoundation.org>
+References: <20200727134932.659499757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Message-ID: <159585991142.4006.928637752238313572.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the irq/urgent branch of tip:
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-Commit-ID:     f0c7baca180046824e07fc5f1326e83a8fd150c7
-Gitweb:        https://git.kernel.org/tip/f0c7baca180046824e07fc5f1326e83a8fd150c7
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Fri, 24 Jul 2020 22:44:41 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 27 Jul 2020 16:20:40 +02:00
+commit ce684552a266cb1c7cc2f7e623f38567adec6653 upstream.
 
-genirq/affinity: Make affinity setting if activated opt-in
+syzbot is reporting general protection fault in do_con_write() [1] caused
+by vc->vc_screenbuf == ZERO_SIZE_PTR caused by vc->vc_screenbuf_size == 0
+caused by vc->vc_cols == vc->vc_rows == vc->vc_size_row == 0 caused by
+fb_set_var() from ioctl(FBIOPUT_VSCREENINFO) on /dev/fb0 , for
+gotoxy(vc, 0, 0) from reset_terminal() from vc_init() from vc_allocate()
+ from con_install() from tty_init_dev() from tty_open() on such console
+causes vc->vc_pos == 0x10000000e due to
+((unsigned long) ZERO_SIZE_PTR) + -1U * 0 + (-1U << 1).
 
-John reported that on a RK3288 system the perf per CPU interrupts are all
-affine to CPU0 and provided the analysis:
+I don't think that a console with 0 column or 0 row makes sense. And it
+seems that vc_do_resize() does not intend to allow resizing a console to
+0 column or 0 row due to
 
- "It looks like what happens is that because the interrupts are not per-CPU
-  in the hardware, armpmu_request_irq() calls irq_force_affinity() while
-  the interrupt is deactivated and then request_irq() with IRQF_PERCPU |
-  IRQF_NOBALANCING.  
+  new_cols = (cols ? cols : vc->vc_cols);
+  new_rows = (lines ? lines : vc->vc_rows);
 
-  Now when irq_startup() runs with IRQ_STARTUP_NORMAL, it calls
-  irq_setup_affinity() which returns early because IRQF_PERCPU and
-  IRQF_NOBALANCING are set, leaving the interrupt on its original CPU."
+exception.
 
-This was broken by the recent commit which blocked interrupt affinity
-setting in hardware before activation of the interrupt. While this works in
-general, it does not work for this particular case. As contrary to the
-initial analysis not all interrupt chip drivers implement an activate
-callback, the safe cure is to make the deferred interrupt affinity setting
-at activation time opt-in.
+Theoretically, cols and rows can be any range as long as
+0 < cols * rows * 2 <= KMALLOC_MAX_SIZE is satisfied (e.g.
+cols == 1048576 && rows == 2 is possible) because of
 
-Implement the necessary core logic and make the two irqchip implementations
-for which this is required opt-in. In hindsight this would have been the
-right thing to do, but ...
+  vc->vc_size_row = vc->vc_cols << 1;
+  vc->vc_screenbuf_size = vc->vc_rows * vc->vc_size_row;
 
-Fixes: baedb87d1b53 ("genirq/affinity: Handle affinity setting on inactive interrupts correctly")
-Reported-by: John Keeping <john@metanate.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Marc Zyngier <maz@kernel.org>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/87blk4tzgm.fsf@nanos.tec.linutronix.de
+in visual_init() and kzalloc(vc->vc_screenbuf_size) in vc_allocate().
+
+Since we can detect cols == 0 or rows == 0 via screenbuf_size = 0 in
+visual_init(), we can reject kzalloc(0). Then, vc_allocate() will return
+an error, and con_write() will not be called on a console with 0 column
+or 0 row.
+
+We need to make sure that integer overflow in visual_init() won't happen.
+Since vc_do_resize() restricts cols <= 32767 and rows <= 32767, applying
+1 <= cols <= 32767 and 1 <= rows <= 32767 restrictions to vc_allocate()
+will be practically fine.
+
+This patch does not touch con_init(), for returning -EINVAL there
+does not help when we are not returning -ENOMEM.
+
+[1] https://syzkaller.appspot.com/bug?extid=017265e8553724e514e8
+
+Reported-and-tested-by: syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kernel/apic/vector.c    |  4 ++++
- drivers/irqchip/irq-gic-v3-its.c |  5 ++++-
- include/linux/irq.h              | 13 +++++++++++++
- kernel/irq/manage.c              |  6 +++++-
- 4 files changed, 26 insertions(+), 2 deletions(-)
+ drivers/tty/vt/vt.c |   29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index 7649da2..dae32d9 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -560,6 +560,10 @@ static int x86_vector_alloc_irqs(struct irq_domain *domain, unsigned int virq,
- 		 * as that can corrupt the affinity move state.
- 		 */
- 		irqd_set_handle_enforce_irqctx(irqd);
-+
-+		/* Don't invoke affinity setter on deactivated interrupts */
-+		irqd_set_affinity_on_activate(irqd);
-+
- 		/*
- 		 * Legacy vectors are already assigned when the IOAPIC
- 		 * takes them over. They stay on the same vector. This is
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index beac4ca..103d850 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3523,6 +3523,7 @@ static int its_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	msi_alloc_info_t *info = args;
- 	struct its_device *its_dev = info->scratchpad[0].ptr;
- 	struct its_node *its = its_dev->its;
-+	struct irq_data *irqd;
- 	irq_hw_number_t hwirq;
- 	int err;
- 	int i;
-@@ -3542,7 +3543,9 @@ static int its_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 
- 		irq_domain_set_hwirq_and_chip(domain, virq + i,
- 					      hwirq + i, &its_irq_chip, its_dev);
--		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(virq + i)));
-+		irqd = irq_get_irq_data(virq + i);
-+		irqd_set_single_target(irqd);
-+		irqd_set_affinity_on_activate(irqd);
- 		pr_debug("ID:%d pID:%d vID:%d\n",
- 			 (int)(hwirq + i - its_dev->event_map.lpi_base),
- 			 (int)(hwirq + i), virq + i);
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 8d5bc2c..1b7f4df 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -213,6 +213,8 @@ struct irq_data {
-  *				  required
-  * IRQD_HANDLE_ENFORCE_IRQCTX	- Enforce that handle_irq_*() is only invoked
-  *				  from actual interrupt context.
-+ * IRQD_AFFINITY_ON_ACTIVATE	- Affinity is set on activation. Don't call
-+ *				  irq_chip::irq_set_affinity() when deactivated.
-  */
- enum {
- 	IRQD_TRIGGER_MASK		= 0xf,
-@@ -237,6 +239,7 @@ enum {
- 	IRQD_CAN_RESERVE		= (1 << 26),
- 	IRQD_MSI_NOMASK_QUIRK		= (1 << 27),
- 	IRQD_HANDLE_ENFORCE_IRQCTX	= (1 << 28),
-+	IRQD_AFFINITY_ON_ACTIVATE	= (1 << 29),
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1092,10 +1092,19 @@ static const struct tty_port_operations
+ 	.destruct = vc_port_destruct,
  };
  
- #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, state_use_accessors)
-@@ -421,6 +424,16 @@ static inline bool irqd_msi_nomask_quirk(struct irq_data *d)
- 	return __irqd_to_state(d) & IRQD_MSI_NOMASK_QUIRK;
++/*
++ * Change # of rows and columns (0 means unchanged/the size of fg_console)
++ * [this is to be used together with some user program
++ * like resize that changes the hardware videomode]
++ */
++#define VC_MAXCOL (32767)
++#define VC_MAXROW (32767)
++
+ int vc_allocate(unsigned int currcons)	/* return 0 on success */
+ {
+ 	struct vt_notifier_param param;
+ 	struct vc_data *vc;
++	int err;
+ 
+ 	WARN_CONSOLE_UNLOCKED();
+ 
+@@ -1125,6 +1134,11 @@ int vc_allocate(unsigned int currcons)	/
+ 	if (!*vc->vc_uni_pagedir_loc)
+ 		con_set_default_unimap(vc);
+ 
++	err = -EINVAL;
++	if (vc->vc_cols > VC_MAXCOL || vc->vc_rows > VC_MAXROW ||
++	    vc->vc_screenbuf_size > KMALLOC_MAX_SIZE || !vc->vc_screenbuf_size)
++		goto err_free;
++	err = -ENOMEM;
+ 	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
+ 	if (!vc->vc_screenbuf)
+ 		goto err_free;
+@@ -1143,7 +1157,7 @@ err_free:
+ 	visual_deinit(vc);
+ 	kfree(vc);
+ 	vc_cons[currcons].d = NULL;
+-	return -ENOMEM;
++	return err;
  }
  
-+static inline void irqd_set_affinity_on_activate(struct irq_data *d)
-+{
-+	__irqd_to_state(d) |= IRQD_AFFINITY_ON_ACTIVATE;
-+}
-+
-+static inline bool irqd_affinity_on_activate(struct irq_data *d)
-+{
-+	return __irqd_to_state(d) & IRQD_AFFINITY_ON_ACTIVATE;
-+}
-+
- #undef __irqd_to_state
+ static inline int resize_screen(struct vc_data *vc, int width, int height,
+@@ -1158,14 +1172,6 @@ static inline int resize_screen(struct v
+ 	return err;
+ }
  
- static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 2a9fec5..48c38e0 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -320,12 +320,16 @@ static bool irq_set_affinity_deactivated(struct irq_data *data,
- 	struct irq_desc *desc = irq_data_to_desc(data);
+-/*
+- * Change # of rows and columns (0 means unchanged/the size of fg_console)
+- * [this is to be used together with some user program
+- * like resize that changes the hardware videomode]
+- */
+-#define VC_RESIZE_MAXCOL (32767)
+-#define VC_RESIZE_MAXROW (32767)
+-
+ /**
+  *	vc_do_resize	-	resizing method for the tty
+  *	@tty: tty being resized
+@@ -1201,7 +1207,7 @@ static int vc_do_resize(struct tty_struc
+ 	user = vc->vc_resize_user;
+ 	vc->vc_resize_user = 0;
  
- 	/*
-+	 * Handle irq chips which can handle affinity only in activated
-+	 * state correctly
-+	 *
- 	 * If the interrupt is not yet activated, just store the affinity
- 	 * mask and do not call the chip driver at all. On activation the
- 	 * driver has to make sure anyway that the interrupt is in a
- 	 * useable state so startup works.
- 	 */
--	if (!IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) || irqd_is_activated(data))
-+	if (!IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) ||
-+	    irqd_is_activated(data) || !irqd_affinity_on_activate(data))
- 		return false;
+-	if (cols > VC_RESIZE_MAXCOL || lines > VC_RESIZE_MAXROW)
++	if (cols > VC_MAXCOL || lines > VC_MAXROW)
+ 		return -EINVAL;
  
- 	cpumask_copy(desc->irq_common_data.affinity, mask);
+ 	new_cols = (cols ? cols : vc->vc_cols);
+@@ -1212,7 +1218,7 @@ static int vc_do_resize(struct tty_struc
+ 	if (new_cols == vc->vc_cols && new_rows == vc->vc_rows)
+ 		return 0;
+ 
+-	if (new_screen_size > KMALLOC_MAX_SIZE)
++	if (new_screen_size > KMALLOC_MAX_SIZE || !new_screen_size)
+ 		return -EINVAL;
+ 	newscreen = kzalloc(new_screen_size, GFP_USER);
+ 	if (!newscreen)
+@@ -3393,6 +3399,7 @@ static int __init con_init(void)
+ 		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
+ 		tty_port_init(&vc->port);
+ 		visual_init(vc, currcons, 1);
++		/* Assuming vc->vc_{cols,rows,screenbuf_size} are sane here. */
+ 		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
+ 		vc_init(vc, vc->vc_rows, vc->vc_cols,
+ 			currcons || !vc->vc_sw->con_save_screen);
+
+
