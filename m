@@ -2,108 +2,108 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FB9C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC72C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4D6520759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:23:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1xJZnJm"
+	by mail.kernel.org (Postfix) with ESMTP id 1641F2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:25:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbgG0HXg (ORCPT
+        id S1726781AbgG0HZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:23:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56528 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0HXf (ORCPT
+        Mon, 27 Jul 2020 03:25:36 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:52995 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgG0HZg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:23:35 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F4FBC0619D2;
-        Mon, 27 Jul 2020 00:23:34 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id d1so7534752plr.8;
-        Mon, 27 Jul 2020 00:23:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HtLi8w57gnnmKubQpAlKgfo+luXCSY1x3qq8plEtTes=;
-        b=J1xJZnJm2yihRu1lA/bmmScLbqa/2ZgzmMZlarNvKpsHmq6BxTUMhPwrwzn/lWoGEW
-         pUUSIdv0Rjpn5oVK9RgIcA9SrGFKbsG2Lw0nPW284Mr5tOub8xhjGHc0J+qrvJj4bj79
-         76FTxixvq67AltH2bbSVWk2jKNopAKQ7RLK/SVRmy5LekFy1eBh5d2/nTxtIRuAlZ/+7
-         peO452HbvzeYv6MLXQympD/1AXwd3iqbpDvH0ymGcX6Omfngqp1nxm7vuFmu+1P4EPES
-         MFOK/LKTLOwSJxm4Zi/+CCYZQ9k805cxW1SamTIfWlbk2O6tryhbk/siKs+8PVHjbVCz
-         EJBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HtLi8w57gnnmKubQpAlKgfo+luXCSY1x3qq8plEtTes=;
-        b=OcBu1xO91B8GM0t/KP3l6WRYLag+igsfg1xE/2bqj5Jlxpc/KTnaVtyjb9VRtKB/GB
-         yu9Ajfa18Rx/Ww0QKlft5Lr8tnWTLViSNWZT9aeMZA8atZXoYq6fmyXnbIJt5GkQ+8qn
-         NYA/7BAKC+xLUEsQl0rULA2L2Wumy049WjGIRtB71vrwDkHY1Ugzmli4HfIArbvamc+q
-         xrO266C0RyBtaiw/TwjFv5iRHtZwb4TNx9qKkGz/Yuj+7CWqygsUsDmn2kTApXD6+T7a
-         pRAJO/1UitGjDfE9LPtJy11pw3Hhc3srsXIMrbcUsqvD51QRZN/FMPoFdlHpebHXgmCR
-         5UEg==
-X-Gm-Message-State: AOAM533/rHtxwLzghtYg4wdNqmChoh0VXbmf7QWzVyA7zSBTRhosy2Mq
-        Sr6TlsZsh87PgQ7XJSmnc1U=
-X-Google-Smtp-Source: ABdhPJzfVEhUcVaZLk/pm7cyXJlrTQYqJd65h6yHKTNEwXlpe+fRk3ZpHXbX+9mcNDdx7cK88Ye02g==
-X-Received: by 2002:a17:90a:628b:: with SMTP id d11mr9192420pjj.167.1595834613946;
-        Mon, 27 Jul 2020 00:23:33 -0700 (PDT)
-Received: from 119-18-5-146.771205.syd.nbn.aussiebb.net (119-18-5-146.771205.syd.nbn.aussiebb.net. [119.18.5.146])
-        by smtp.gmail.com with ESMTPSA id my16sm10695118pjb.43.2020.07.27.00.23.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 00:23:33 -0700 (PDT)
-From:   Jonathan Liu <net147@gmail.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     Olliver Schinagl <oliver@schinagl.nl>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Jonathan Liu <net147@gmail.com>
-Subject: [PATCH] spi: sun4i: update max transfer size reported
-Date:   Mon, 27 Jul 2020 17:23:28 +1000
-Message-Id: <20200727072328.510798-1-net147@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 27 Jul 2020 03:25:36 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MrQN5-1kc6LS1RQ7-00oSaW; Mon, 27 Jul 2020 09:25:33 +0200
+Received: by mail-qt1-f174.google.com with SMTP id k18so11476309qtm.10;
+        Mon, 27 Jul 2020 00:25:33 -0700 (PDT)
+X-Gm-Message-State: AOAM532evHLRZt1xnU3P9FMl3ZraIadYspfVI5Vomrdbvzy9ZxVO1OPI
+        qxumO0Av/Q4pPojkPWhRX+2CehV5T+ovqeEIF5E=
+X-Google-Smtp-Source: ABdhPJwWLr1eTQmOXplkFU6XSrVj3kjpURsSxQSIWVgU+rgY8vc+FCSJgM46ph7HyxcrmOsXIwIa1wuoiXAbMCg8mWw=
+X-Received: by 2002:aed:33e7:: with SMTP id v94mr18147736qtd.18.1595834732135;
+ Mon, 27 Jul 2020 00:25:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200726220557.102300-1-yepeilin.cs@gmail.com> <20200726222703.102701-1-yepeilin.cs@gmail.com>
+In-Reply-To: <20200726222703.102701-1-yepeilin.cs@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 27 Jul 2020 09:25:16 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
+Message-ID: <CAK8P3a3NB2BVo9fH-Wcinrhhs-QJ=9dK59Ds83TvgLmEkRy3qA@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH v3] media/v4l2-core: Fix
+ kernel-infoleak in video_put_user()
+To:     Peilin Ye <yepeilin.cs@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vandana BN <bnvandana@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Pvkn78eH0tOJf1RFljQq0oDnVVH7E+/mtWTzh0OZ61SmInkuDGg
+ lQ3UluJCbw1dkfypL+PduslEGlPeO2uD+Lj3fwuYYLKKtFhvZTcugw5EqR1eaxlq567DoAO
+ +XBUvz2a442uXtXHTLTJ0FVCQ/oClATX8n9+XvvAQcwIgbpinnBpxyn311yh8YgiTdoNEuS
+ n2vMJker2LIcbxoXziSrA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l8yhX0La2Kw=:H87blivzVsgm1iYavydGII
+ QPGdLMTp92t8lUhTRnAALef8MV9tOwxvzVOYIjqyjS2kmqsjU3vIYXIs48ahj1ZlRaP/sp/vu
+ 3B+v1yEreVmaKyynRVfr2pHMKLfmDDzmyJ2e2DXqNwrnHOM3Glr6GJ03Trw+U5fJAJS5SHPOQ
+ uO7+n8rNUSk+5qub8bEw13yBaXtRtlxVEnPmOmRI0nEdWyXx+dugVhsC19qirqQf9Wv6NjlKf
+ koAt4ieGEVWppFB3sNx0MaQV65V7423su4SS06OWeq+ugs9/w3G0XosYQpTvahKteRmsPKFIl
+ 8WZLLkHGJNwVF6veBxCXNmCZXaJX8xNxddgaWhrSF4j2g9V76VuT9Po4VzRk7+p9rk2ngBn5y
+ R74+gOAk8OtyZYt6mbaZitvMkjVLp00CulPvqCGVUwJZyPUHAOtU11m3HM/DG2SrZGpOk82iw
+ D+unrqN3nxvA5sB9K/YTdF9mY6if7XMBzHgsvPOZdmmlosyBZ9yaA93F3qcu/6AlJxGK+3QFN
+ Kf/TJ76qZFqe63Jz2KCtLetPX8A/IQXu7wBHn5pu7HDVK+qjjdNikrYyfn3ckysAjjfleGMeb
+ Nm8CWsHJcDI3sTe8oC+vm4iEQp+amyLMAdAoSha55/UUM0qe+8drnn5Irmu+MBeiot3ic6GHG
+ eTnRs8e2dkVDHMabPsls5Oc3GWldlYYJ7Jl3rbY6bgsXWgt56Sz8J/piopWWwOLD/5TRzlpN0
+ PuxjoCuD2fAD6ZC2hvZC9cbbmMaCIPivKQ+6XwC0+o5pa8AsD5/alD2yH3QZZz7lO3PGkBReh
+ et9bmtcjn2GUFjpRkKcKy4YLPJ+olxpLrNWqZ3pYzdQv7itsqCojzez8zmII8RjWun4Ljm1vS
+ AhBfx6ZwjN4CXetQokg8iWRtvZXSb3czRjjngwDILilNwxV3NvEhr0BAc87lTPjvesJ/bsIG2
+ yZ7Dx4js7OllOYMstz+5fdPkHhRBdm4Pq2lgRVW2IBlUX9Tnwp5BL
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The spi-sun4i driver already has the ability to do large transfers.
-However, the max transfer size reported is still fifo depth - 1.
+On Mon, Jul 27, 2020 at 12:28 AM Peilin Ye <yepeilin.cs@gmail.com> wrote:
+>
+> video_put_user() is copying uninitialized stack memory to userspace due
+> to the compiler not initializing holes in the structures declared on the
+> stack. Fix it by initializing `ev32` and `vb32` using memset().
+>
+> Reported-and-tested-by: syzbot+79d751604cb6f29fbf59@syzkaller.appspotmail.com
+> Link: https://syzkaller.appspot.com/bug?extid=79d751604cb6f29fbf59
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
 
-Update the max transfer size reported to the max value possible.
+Thanks a lot for addressing this! I now see that I actually created a similar
+bugfix for it back in January, but for some reason that got stuck in my
+backlog and I never wrote a proper description for it or sent it out to the
+list, sorry about that. I would hope we could find a way to have either
+the compiler or sparse warn if we copy uninitialized data to user space,
+but we now don't even check for that within the kernel any more.
 
-Fixes: 196737912da5 ("spi: sun4i: Allow transfers larger than FIFO size")
-Signed-off-by: Jonathan Liu <net147@gmail.com>
----
- drivers/spi/spi-sun4i.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I would suggest adding these tags to the patch, to ensure it gets backported
+to stable kernels as needed:
 
-diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
-index cbfac6596fad..1fdfc6e6691d 100644
---- a/drivers/spi/spi-sun4i.c
-+++ b/drivers/spi/spi-sun4i.c
-@@ -198,7 +198,7 @@ static void sun4i_spi_set_cs(struct spi_device *spi, bool enable)
- 
- static size_t sun4i_spi_max_transfer_size(struct spi_device *spi)
- {
--	return SUN4I_FIFO_DEPTH - 1;
-+	return SUN4I_MAX_XFER_SIZE - 1;
- }
- 
- static int sun4i_spi_transfer_one(struct spi_master *master,
--- 
-2.27.0
+Cc: stable@vger.kernel.org
+Fixes: 1a6c0b36dd19 ("media: v4l2-core: fix VIDIOC_DQEVENT for time64 ABI")
+Fixes: 577c89b0ce72 ("media: v4l2-core: fix v4l2_buffer handling for
+time64 ABI")
 
+In addition to
+
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
