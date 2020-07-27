@@ -2,134 +2,123 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB162C43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DCDC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A37E02076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 120C520715
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 03:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PUg+WSl6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sM8bc/w1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbgG0DPK (ORCPT
+        id S1728044AbgG0DPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 26 Jul 2020 23:15:10 -0400
-Received: from mail-eopbgr70071.outbound.protection.outlook.com ([40.107.7.71]:2453
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728005AbgG0DPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 26 Jul 2020 23:15:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hfBy81JrpVKRwfmO4JiTZtG+A6gc+KyciaW7U+ChPrIoHvECgSKYmQr27y1E7uO5TWAWXS5j39uJzCDnck+jt8/4YFbdevDpFeC++hCp2Ybe5vcf6YuCCueVwO3vud4JFTyXGuXLl1ErJ0FyG8fE227AaPH36YEl4lQBRprxthJ+euN+Zr6gjUlTelcAWObOHuVFV1mfMDycNN6wf8B92T5ZhdwIXJ86Oh+IOxA0xRM2EelNDf91AEkmgP7fVNyuG5n0bKMjzPdRcdHVp3Ohnpy65JN41VnBLFiThmEaqH69nPmVU/dqGMYCPiGk2fPaQOCrWXok8L2NFmQ7N4XzCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LyQD/mohmovBFiPaqgEIxcyggY8VtPFEPLcJfoubqqo=;
- b=LWuoulnKPRGnoADggFe4mkTQRjN/QGWFwhXF7C0xr5Vu8u4heFy1If9quIZ/8Zioxy9a8+eqGAVle1NbhbRuunKZg7lQ+q5b76O3YynONvVxcgrQmH+pzpyjwFq+HcjShL9QM1nfuuXPSmiRFvM7M3O/afIloHr/PA3uCRdENCTActU3EfyvwkpGw76XHaE/2VRkaBRvaUHP1BIxC+8JS5fUUtC35Hhv6Zbi6Omsg7ada/BML5iRTyJi9BjGOJaoNkShFC2AzWccMHG9b/5QEuKIdIjxMFlMbniHxkOp0e+VhIEj6bTIO9cOZZ1ioOO0o4oeUcF1/vA51xlpc45DFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LyQD/mohmovBFiPaqgEIxcyggY8VtPFEPLcJfoubqqo=;
- b=PUg+WSl6zrbFvNwROg5QyY5ZYscQztuFt5tbIc5NlNMwJUNHu1NyjNoKrEF/pstn4T6kM4XQ5tQNtgJjpwrwFKxDY8JpNQdEtmBezmghuVAExCmoKAC1n9eVqZaYKqXmf6KHLKYh4Alqk1m3PRI7lT77TcpSV1bdY9FVTS6otUs=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB5623.eurprd04.prod.outlook.com (2603:10a6:20b:a9::13)
- by AM6PR0402MB3880.eurprd04.prod.outlook.com (2603:10a6:209:1b::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.31; Mon, 27 Jul
- 2020 03:15:06 +0000
-Received: from AM6PR04MB5623.eurprd04.prod.outlook.com
- ([fe80::ccb9:b047:d156:2694]) by AM6PR04MB5623.eurprd04.prod.outlook.com
- ([fe80::ccb9:b047:d156:2694%5]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
- 03:15:06 +0000
-From:   Clark Wang <xiaoning.wang@nxp.com>
-To:     broonie@kernel.org, robh+dt@kernel.org, Anson.Huang@nxp.com
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        Sun, 26 Jul 2020 23:15:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgG0DPo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 26 Jul 2020 23:15:44 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 724B4C0619D2;
+        Sun, 26 Jul 2020 20:15:44 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m8so1415157pfh.3;
+        Sun, 26 Jul 2020 20:15:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R2fUCpyoEpXcLqhIagFjvMuKuk/xhf3lv26ScKGnflM=;
+        b=sM8bc/w11dDweOpJW9Qk53Fv8si9G2l7ygEVDrUgs/D7ZuCACvFsJy11hAPMYdpfOY
+         EiPeW+9N/kkKISSeyZR3PiK4KSrqP296ijyOayoR2Tqmt56/CfSzD6C8aqLo+s0SyCFw
+         tLsnR4/iOybUpCvPCUwWxtUZUB3fJHoIOTvbKtmY9RJOepnAMNwe42cwXpmWiunFdWnN
+         DQ6Sm7ah3lJnh1uoxG79Y7s2K1ZEOHxPYLeE1cYP4arSQwXD/Opr21fZUr+Krad1etUG
+         Bwqc0Ik+rV4XatMi5M3id29PnaJb8SjomEsN5MvjbbE7iG5goMDbJzO+9g19UdkLez4t
+         X9ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R2fUCpyoEpXcLqhIagFjvMuKuk/xhf3lv26ScKGnflM=;
+        b=YPTfWW+t819nYrF67X27mRmP8J3I5IYpAGngKN88vpMrb6JaEBzIuxMxu06H/n2jB6
+         CeIYtTv5xYOqaqPZ2WQZAO1idGzPgFWfTiGblDfC1lzWHZWdp7ocFN/gfIQ8PIto01LK
+         50EaLt9TQgSnVcdVnyd3xKVKot6rebhxb8vUCS6MvMJ8Y+40n/dcegtZNzaiz0BS221H
+         DBiXBDSPdydGVPdtSIQ/BO3RZOUbtl8uaKYyXN93G6nBC2dMNix8pmty60YSHEQ0JoSQ
+         +ACcxxgpqPb18DsVp5WkiGmO0BZmk8mrUnWRRvanhpw2sYkFnsrLAsmIV167sSv/nv2R
+         BHJA==
+X-Gm-Message-State: AOAM532gNP9J0bK51XN9S78Sd7vNdZu/7jNtSRK4yALE+crs7E8LWM5c
+        K2mc8j4P5Pcsf9w+khH00cRLK/wC
+X-Google-Smtp-Source: ABdhPJy5pIVT7e44QOu5P7YIYWfZ8mYz7zYUGCXQ5YrJJMwGU6eXzZQ8p4mIfMOcz8tENo/WOa+/rQ==
+X-Received: by 2002:a62:e70c:: with SMTP id s12mr17509922pfh.98.1595819744044;
+        Sun, 26 Jul 2020 20:15:44 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x24sm11693903pjr.53.2020.07.26.20.15.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 26 Jul 2020 20:15:43 -0700 (PDT)
+Date:   Sun, 26 Jul 2020 20:15:41 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH V2 4/4] dt-bindings: lpspi: New property in document DT bindings for LPSPI
-Date:   Mon, 27 Jul 2020 11:15:13 +0800
-Message-Id: <20200727031513.31774-1-xiaoning.wang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0151.apcprd01.prod.exchangelabs.com
- (2603:1096:4:8f::31) To AM6PR04MB5623.eurprd04.prod.outlook.com
- (2603:10a6:20b:a9::13)
+Subject: Re: [PATCH v2] rtc: ds1307: provide an indication that the watchdog
+ has fired
+Message-ID: <20200727031541.GA53573@roeck-us.net>
+References: <20200726231306.734-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.71) by SG2PR01CA0151.apcprd01.prod.exchangelabs.com (2603:1096:4:8f::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Mon, 27 Jul 2020 03:15:04 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.71]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ffb70e70-0e53-4dc9-ffc3-08d831db42d9
-X-MS-TrafficTypeDiagnostic: AM6PR0402MB3880:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR0402MB38808DD27E49B5B70727F9F8F3720@AM6PR0402MB3880.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oiqOudFvjfg0VAtbyiruOtelO4D977Xz8/RjIpJeia7qg/W/8Wit92+4N7aFzbC8SVWtN+A4aSCdQJtikV4+jNwIe6bM9ek+cInYD1R8HoGYUzLKDKMCO4SSrO0k8EYyOo8wm9FY5I7KNclsjrs2yBYUlRAjFgxERFWRkdbzrWMqQ6SQOkQdr/Qf5iLaxIBI5hGo6FQ0H/uZr2+HOAeVQAWk1MviD5PyoGApkQWVTM7++TT6Y+6rROS6vekMJNj9+PS0ACYMTBzyhZb4XsnrX7plEnfM6hDXquv3LjWZASjRHRPkmCXrtRFRL3u4o2bDJc6HEGfk8IUZ/degLhJexvXp9xsYYijVzrU02kUocB193sLbwOu+VdkPTPxAGlWZ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5623.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(136003)(376002)(346002)(366004)(66556008)(66946007)(66476007)(5660300002)(956004)(2616005)(8676002)(478600001)(6512007)(36756003)(316002)(4326008)(6486002)(6636002)(1076003)(6666004)(26005)(16526019)(52116002)(6506007)(186003)(83380400001)(86362001)(69590400007)(8936002)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: ktgOimpwFpeer5vD9J9sxyaI2utqZ2GM0qcPtuBNNENcZbXFdbCfIP7ekIAmqtcz3ZLVGztmQaWJ8wws39s41NWU6YOqcd68a33x9rZEa697Rn2F3LTcA1PATkD6L/YutANsbHfe6XX4RABkB99vZMaZUgPRB75J8M781WZQ8CdVDvJwAzKq8QUUxTPpzyJh01vTvAc0Y3ihaPONr6BLIyi8bfZcx6/qEm0zEiNeBDsIhUqoXPYSL4lr/hS8L++uSTSKRpw9xXKrLE4rGqhuety0+O70FHq+hWQCAl5J4J6cS0AaXGkq5EtCj6cvFtaIWGaGEl7wT8fo4M0lXaTVKYVpHqVeEBhojgAuDn0fHiPcvLzAhD+PiuPR1/6vLY+fSCkra6AqAtrykfAokvwMxvQ5QlUhuaYwKBpcqlYC+5N+5dTIVPfdhibDvIZcInitNrQaawBtH+SLYjZ7ddVpJCyDa9iyQqchaug34j3xkEU=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ffb70e70-0e53-4dc9-ffc3-08d831db42d9
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB5623.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 03:15:06.5095
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PUmbuYfWXhOzseWvWUpeKZxhpQ+Ncs0KgmscdKdinlLzasR7K4BwNhsa7B/fzx6LbIBwdT5jt54bbwsSC3nNOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3880
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200726231306.734-1-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add "fsl,spi-only-use-cs1-sel" to fit i.MX8DXL-EVK.
-Spi common code does not support use of CS signals discontinuously.
-It only uses CS1 without using CS0. So, add this property to re-config
-chipselect value.
+On Mon, Jul 27, 2020 at 11:13:06AM +1200, Chris Packham wrote:
+> There's not much feedback when the ds1388 watchdog fires. Generally it
+> yanks on the reset line and the board reboots. Capture the fact that the
+> watchdog has fired in the past so that userspace can retrieve it via
+> WDIOC_GETBOOTSTATUS. This should help distinguish a watchdog triggered
+> reset from a power interruption.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+> Changes in v2:
+> - Set bootstatus to WDIOF_CARDRESET and let userspace decide what to do with
+>   the information.
+> 
+>  drivers/rtc/rtc-ds1307.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+> index 49702942bb08..209736db510d 100644
+> --- a/drivers/rtc/rtc-ds1307.c
+> +++ b/drivers/rtc/rtc-ds1307.c
+> @@ -868,6 +868,14 @@ static int ds1388_wdt_start(struct watchdog_device *wdt_dev)
+>  	struct ds1307 *ds1307 = watchdog_get_drvdata(wdt_dev);
+>  	u8 regs[2];
+>  	int ret;
+> +	int val;
+> +
+> +	ret = regmap_read(ds1307->regmap, DS1388_REG_FLAG, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val & DS1388_BIT_WF)
+> +		wdt_dev->bootstatus = WDIOF_CARDRESET;
 
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
----
-Changes:
-V2:
- - New patch added in the v2 patchset.
----
- Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+This should be done during probe, ie in ds1307_wdt_register().
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-index 143b94a1883a..22882e769e26 100644
---- a/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-+++ b/Documentation/devicetree/bindings/spi/spi-fsl-lpspi.yaml
-@@ -34,6 +34,12 @@ properties:
-       - const: per
-       - const: ipg
- 
-+  fsl,spi-only-use-cs1-sel:
-+    description:
-+      spi common code does not support use of CS signals discontinuously.
-+      i.MX8DXL-EVK board only uses CS1 without using CS0. Therefore, add
-+      this property to re-config the chipselect value in the LPSPI driver.
-+
- required:
-   - compatible
-   - reg
-@@ -57,4 +63,5 @@ examples:
-                  <&clks IMX7ULP_CLK_DUMMY>;
-         clock-names = "per", "ipg";
-         spi-slave;
-+        fsl,spi-only-use-cs1-sel;
-     };
--- 
-2.17.1
+Guenter
 
+>  
+>  	ret = regmap_update_bits(ds1307->regmap, DS1388_REG_FLAG,
+>  				 DS1388_BIT_WF, 0);
+> -- 
+> 2.27.0
+> 
