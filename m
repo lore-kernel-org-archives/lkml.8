@@ -2,127 +2,168 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AFEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0A12075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 06:59:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m+fTHaAj"
+	by mail.kernel.org (Postfix) with ESMTP id 783E420792
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgG0G7x (ORCPT
+        id S1726887AbgG0HBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 02:59:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52860 "EHLO
+        Mon, 27 Jul 2020 03:01:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgG0G7w (ORCPT
+        with ESMTP id S1726116AbgG0HBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 02:59:52 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DDAC0619D2
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 23:59:52 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id i62so19648941ybc.15
-        for <linux-kernel@vger.kernel.org>; Sun, 26 Jul 2020 23:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=9/YSwprGE0WZwSWfXLYVy6V0Ah3OoUpnPGrBV/LRITA=;
-        b=m+fTHaAj0JPw3ABBmUnN46A5mmPLHkTVVyZ8suMxXp+vWgocvuwn2YhFNGm88lQUDF
-         0Ipw8hhTQmjl6srPRoA77U8pFkle0oyTVg9q7efUVULis+4aPAbpcNJYLgXjR9pGks2K
-         0yFv71jR8JqgC1y6376PhYUd0wsXPulqQ2fYvCwRvvx2kEDQ4bGhIi38ppg63XRYKsli
-         OJhjdpysVbe0efevbEozHhMUjOoKKqsfe9ptDyWa9vwKUoCod/akcOxXjLKP3GmfnlNp
-         F82cjKtzMvkUKQvUWJk48FIhA3xTcb0HP6tKvdZlrtDtw2WZeBIBXmTLt5yDgVbYCM8A
-         abNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=9/YSwprGE0WZwSWfXLYVy6V0Ah3OoUpnPGrBV/LRITA=;
-        b=JtQp+fXM/WPuiSyF9K4W0ASjVPdDAZ0TYaIujw7rYwnoXQOkWoZiuhMotN0zV28Rkv
-         lLD4d0s95Rjbr+62NPf5/CpP1kbTfM2uG+grNy1MzSJ2OH7iTWfC5dAZp5pv12KUy0cA
-         3378UvWtsxCeSn9Gzt32T7tGDvz6H3rKeJI/nB6NS78TWSy4SQeBjp7SQh8MOh5yDBxb
-         YRMhxev8kCQVFYMC49ui5+LP0RgUzzLpecUQc3P03VWHeWgZPLGzxTbQYASF/A2KEiCj
-         smn3nk/xpaJVfWbzAd88YgiSyCGkBwEsGy5SLj98Ewp3qVfeMwZZOEhD90NpIdJszSGP
-         vJ8g==
-X-Gm-Message-State: AOAM532lMc3X8kUjAwEiCiTbw5hqGp2iiyeTxnGzjgLbKtndOLXtWpKL
-        /bXfDhhydoem1Do5HDQpntVrpu2FEcO8
-X-Google-Smtp-Source: ABdhPJz7ZE9JX1xcuL6ggGjeX4GY2EfS6ZQVKaFpFeKXbWp8rV2g56PwdJo+OYTDl/0xDoD2QJjN04vRVhCC
-X-Received: by 2002:a5b:14a:: with SMTP id c10mr32329689ybp.493.1595833191601;
- Sun, 26 Jul 2020 23:59:51 -0700 (PDT)
-Date:   Sun, 26 Jul 2020 23:59:48 -0700
-Message-Id: <20200727065948.12201-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH] perf record: Set PERF_RECORD_SAMPLE if attr->freq is set.
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        David Sharp <dhsharp@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Jul 2020 03:01:33 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5079C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 00:01:33 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jzx8a-0006aD-Qt; Mon, 27 Jul 2020 09:01:28 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jzx8Y-0006Jq-RX; Mon, 27 Jul 2020 09:01:26 +0200
+Date:   Mon, 27 Jul 2020 09:01:26 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     linux-pwm@vger.kernel.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com
+Subject: Re: [PATCH v5 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200727070126.2juwfmra3i67lxfw@pengutronix.de>
+References: <cover.1595489518.git.rahul.tanwar@linux.intel.com>
+ <0f47648107ec23f72868ca37f29ea43e15c08e08.1595489518.git.rahul.tanwar@linux.intel.com>
+ <20200723161553.ey47oijnwitf4hvu@pengutronix.de>
+ <c2ef8f5c-af23-a63d-5f72-de0c307be8eb@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ddzwp66u6avxreag"
+Content-Disposition: inline
+In-Reply-To: <c2ef8f5c-af23-a63d-5f72-de0c307be8eb@linux.intel.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sharp <dhsharp@google.com>
 
-evsel__config() would only set PERF_RECORD_SAMPLE if it set attr->freq
-from perf record options. When it is set by libpfm events, it would not
-get set. This changes evsel__config to see if attr->freq is set outside of
-whether or not it changes attr->freq itself.
+--ddzwp66u6avxreag
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: David Sharp <dhsharp@google.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/evsel.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+On Mon, Jul 27, 2020 at 02:04:56PM +0800, Tanwar, Rahul wrote:
+>=20
+> Hi Uwe,
+>=20
+> On 24/7/2020 12:15 am, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >
+> > On Thu, Jul 23, 2020 at 03:44:18PM +0800, Rahul Tanwar wrote:
+> >> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> >> +			 const struct pwm_state *state)
+> >> +{
+> >> +	struct lgm_pwm_chip *pc =3D to_lgm_pwm_chip(chip);
+> >> +	u32 duty_cycle, val;
+> >> +	int ret;
+> >> +
+> >> +	if (!state->enabled) {
+> >> +		ret =3D lgm_pwm_enable(chip, 0);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	/*
+> >> +	 * HW only supports NORMAL polarity
+> >> +	 * HW supports fixed period which can not be changed/configured by u=
+ser
+> >> +	 */
+> >> +	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
+> >> +	    state->period !=3D pc->period)
+> >> +		return -EINVAL;
+> > At least for state->polarity you have to check before state->enabled, as
+> > the expectation on
+> >
+> >         .enabled =3D false
+> >         .polarity =3D PWM_POLARITY_INVERSED
+> >
+> > is that the output becomes constant high. Also as confirmed at the end
+> > of v4, state->period < pc->period was the right check to do.
+>=20
+> For below case:
+>=20
+> .enabled =3D false
+> .polarity =3D PWM_POLARITY_INVERSED
+>=20
+> Since our HW does not support inversed polarity, the output for above case
+> is expected to be constant low. And if we disable PWM before checking for
+> polarity, the output becomes constant low. The code just does that. Sorry,
+> i could not understand what is wrong with the code. It looks correct to m=
+e.
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index ef802f6d40c1..811f538f7d77 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -979,13 +979,18 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
- 	if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
- 				     opts->user_interval != ULLONG_MAX)) {
- 		if (opts->freq) {
--			evsel__set_sample_bit(evsel, PERIOD);
- 			attr->freq		= 1;
- 			attr->sample_freq	= opts->freq;
- 		} else {
- 			attr->sample_period = opts->default_interval;
- 		}
- 	}
-+	/*
-+	 * If attr->freq was set (here or earlier), ask for period
-+	 * to be sampled.
-+	 */
-+	if (attr->freq)
-+		evsel__set_sample_bit(evsel, PERIOD);
- 
- 	if (opts->no_samples)
- 		attr->sample_freq = 0;
--- 
-2.28.0.rc0.142.g3c755180ce-goog
+As your hardware can only support normal polarity, the code must have:
 
+	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+		return -EINVAL;
+
+	if (!state->enabled) {
+		ret =3D lgm_pwm_enable(chip, 0);
+		return ret;
+	}
+
+That's what I meant writing: "At least for state->polarity you have to
+check before state->enabled".
+
+> Given the fact that we support fixed period, if we allow
+> state->period < pc->period case then the duty cycle will be evaluated as
+> higher than the requested one because the state->period is lesser than
+> the actual fixed period supported by the HW. Can you please elaborate
+> on why you think we should allow state->period < pc->period case?
+
+You should not allow it. In v4 you had:
+
+	if (state->polarity !=3D PWM_POLARITY_NORMAL ||
+	    state->period < pc->period)
+		return -EINVAL;
+
+That's the right thing to do (even though I was unsettled at one point
+and wrote it was wrong). The check in v5 with state->period !=3D
+pc->period is wrong.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ddzwp66u6avxreag
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl8ee8MACgkQwfwUeK3K
+7AkRDAgAiUnatkQl/KD0wuhWITucTaiQM4Qo2QZDKhy/JLydo0U0VKR3+A/uN3QN
+W3gcMAu9xeocUFMKtbrWAgCVczK+k1yfI9w5EB6fHRl65MlH5J3MwfDvib1EAIcm
+H0kA9zCdlD5UujmGB6cJhgs+mnpJobdM/EV1OMGon8FlZ7AvopWJ34HZFFsUvA6P
+FCme/aqyHZ92V6dAfemLY9J2yy7bjMiZUOhFAp13/3kwCWKaPL/IIL3Z5ShLCWMO
+ASO/dZjP3PT5oDryiKq43XR2zftEVzgw+gKroVhvuN8Vo1n3MHVeNvdvq52m2C7C
+KCKTd+qGQy0VWGG+M2xuI/7n8xHZZg==
+=NaYd
+-----END PGP SIGNATURE-----
+
+--ddzwp66u6avxreag--
