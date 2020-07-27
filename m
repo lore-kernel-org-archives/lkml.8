@@ -2,121 +2,108 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0C4C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F40F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63696206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDE220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 09:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgG0JVu convert rfc822-to-8bit (ORCPT
+        id S1727844AbgG0JWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 05:21:50 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2526 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726263AbgG0JVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:21:49 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id E39C5FA1E84846A6F6C9;
-        Mon, 27 Jul 2020 10:21:47 +0100 (IST)
-Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
- 2020 10:21:47 +0100
-Date:   Mon, 27 Jul 2020 10:20:24 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Logan Gunthorpe <logang@deltatee.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Andrew Maier <andrew.maier@eideticom.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Eric Wehage <Eric.Wehage@futurewei.com>,
-        "Alex Umansky" <alex.umansky@huawei.com>
-Subject: Re: [PATCH] PCI/P2PDMA: Add AMD Zen 2 root complex to the list of
- allowed bridges
-Message-ID: <20200727102024.00005f8b@Huawei.com>
-In-Reply-To: <59b68da4-cd3c-bf65-6654-02d4feaede27@deltatee.com>
-References: <20200724150641.GA1518875@bjorn-Precision-5520>
-        <59b68da4-cd3c-bf65-6654-02d4feaede27@deltatee.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.52.121.176]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+        Mon, 27 Jul 2020 05:22:23 -0400
+Received: from mga09.intel.com ([134.134.136.24]:46426 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726263AbgG0JWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:22:23 -0400
+IronPort-SDR: 3Lx7hcRiZoHsDQ3+KgjqyQcZi4N9aIJ/Ic4Cz6vFPZs9kthQKC1Sq48ah/nw2/t4R+oHuUHr76
+ eja6KSxqs9XQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9694"; a="152237578"
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="152237578"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2020 02:22:22 -0700
+IronPort-SDR: ha1T5oMCPoh4ZTwjIBVuGLb5a9GKaA0fo791x+29zAVjys+TfUzigBOpz0Hw7ChPFIHeC5FsB4
+ r3XrTNy4MRYw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,402,1589266800"; 
+   d="scan'208";a="303393667"
+Received: from pg-nxl3.altera.com ([10.142.129.93])
+  by orsmga002.jf.intel.com with ESMTP; 27 Jul 2020 02:22:19 -0700
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>
+Subject: [PATCH v5 00/10] net: eth: altera: tse: Add PTP and mSGDMA prefetcher
+Date:   Mon, 27 Jul 2020 17:21:47 +0800
+Message-Id: <20200727092157.115937-1-joyce.ooi@intel.com>
+X-Mailer: git-send-email 2.13.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 09:56:39 -0600
-Logan Gunthorpe <logang@deltatee.com> wrote:
+From: Joyce Ooi <joyce.ooi@intel.com>
 
-> [+cc Jonathan]
-> 
-> On 2020-07-24 9:06 a.m., Bjorn Helgaas wrote:
-> > On Thu, Jul 23, 2020 at 02:10:52PM -0600, Logan Gunthorpe wrote:  
-> >> On 2020-07-23 1:57 p.m., Bjorn Helgaas wrote:  
-> >>> On Thu, Jul 23, 2020 at 02:01:17PM -0400, Alex Deucher wrote:  
-> >>>> On Thu, Jul 23, 2020 at 1:43 PM Logan Gunthorpe <logang@deltatee.com> wrote:  
-> >>>>>
-> >>>>> The AMD Zen 2 root complex (Starship/Matisse) was tested for P2PDMA
-> >>>>> transactions between root ports and found to work. Therefore add it
-> >>>>> to the list.
-> >>>>>
-> >>>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> >>>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> >>>>> Cc: Christian König <christian.koenig@amd.com>
-> >>>>> Cc: Huang Rui <ray.huang@amd.com>
-> >>>>> Cc: Alex Deucher <alexdeucher@gmail.com>  
-> >>>>
-> >>>> Starting with Zen, all AMD platforms support P2P for reads and writes.  
-> >>>
-> >>> What's the plan for getting out of the cycle of "update this list for
-> >>> every new chip"?  Any new _DSMs planned, for instance?  
-> >>
-> >> Well there was an effort to add capabilities in the PCI spec to describe
-> >> this but, as far as I know, they never got anywhere, and hardware still
-> >> doesn't self describe with this.  
-> > 
-> > Any idea what happened?  Is there hope for the future?  I'm really not
-> > happy about signing up for open-ended device-specific patches like
-> > this.  It's certainly not in the plug and play spirit that has made
-> > PCI successful.  I know, preaching to the choir here.  
-> 
-> Agreed, though I'm not really hooked into the PCI SIG. The last email I
-> got about this was an RFC from Jonathan Cameron in late 2018. I've CC'd
-> him here, maybe he'll have a bit more insight.
+This patch series cleans up the Altera TSE driver and adds support
+for the newer msgdma prefetcher as well as ptp support when using
+the msgdma prefetcher.
 
-For non technical reasons, you can probably figure out, that particular
-ECR stalled. Unfortunately I can't directly provide info on any newer
-discussions. Eric, could you perhaps find out if there is anything we can share?
+v2: Rename altera_ptp to intel_fpga_tod, modify msgdma and sgdma tx_buffer
+    functions to be of type netdev_tx_t, and minor suggested edits
+v3: Modify tx_buffer to stop queue before returning NETDEV_TX_BUSY
+v4: Fix build warnings
+v5: Rename 'ptp_enable' variable to 'has_ptp' and initialize hardware clock
+    to 0 in intel_fpga_tod, and make minor suggested changes
 
-This is the same question of trying to find a way to avoid white listing
-root complexes that can do peer 2 peer that would have been covered by
-your Advanced Peer to Peer Capabilities ECR.
+Dalon Westergreen (10):
+  net: eth: altera: tse_start_xmit ignores tx_buffer call response
+  net: eth: altera: set rx and tx ring size before init_dma call
+  net: eth: altera: fix altera_dmaops declaration
+  net: eth: altera: add optional function to start tx dma
+  net: eth: altera: Move common functions to altera_utils
+  net: eth: altera: Add missing identifier names to function
+    declarations
+  net: eth: altera: change tx functions to type netdev_tx_t
+  net: eth: altera: add support for ptp and timestamping
+  net: eth: altera: add msgdma prefetcher
+  net: eth: altera: update devicetree bindings documentation
 
-Thanks,
+ .../devicetree/bindings/net/altera_tse.txt         | 103 ++++-
+ drivers/net/ethernet/altera/Kconfig                |   1 +
+ drivers/net/ethernet/altera/Makefile               |   3 +-
+ drivers/net/ethernet/altera/altera_msgdma.c        |   5 +-
+ drivers/net/ethernet/altera/altera_msgdma.h        |  30 +-
+ .../net/ethernet/altera/altera_msgdma_prefetcher.c | 431 +++++++++++++++++++++
+ .../net/ethernet/altera/altera_msgdma_prefetcher.h |  30 ++
+ .../ethernet/altera/altera_msgdmahw_prefetcher.h   |  87 +++++
+ drivers/net/ethernet/altera/altera_sgdma.c         |  22 +-
+ drivers/net/ethernet/altera/altera_sgdma.h         |  32 +-
+ drivers/net/ethernet/altera/altera_tse.h           |  98 ++---
+ drivers/net/ethernet/altera/altera_tse_ethtool.c   |  30 ++
+ drivers/net/ethernet/altera/altera_tse_main.c      | 203 ++++++++--
+ drivers/net/ethernet/altera/altera_utils.c         |  29 ++
+ drivers/net/ethernet/altera/altera_utils.h         |  51 +++
+ drivers/net/ethernet/altera/intel_fpga_tod.c       | 341 ++++++++++++++++
+ drivers/net/ethernet/altera/intel_fpga_tod.h       |  56 +++
+ 17 files changed, 1399 insertions(+), 153 deletions(-)
+ create mode 100644 drivers/net/ethernet/altera/altera_msgdma_prefetcher.c
+ create mode 100644 drivers/net/ethernet/altera/altera_msgdma_prefetcher.h
+ create mode 100644 drivers/net/ethernet/altera/altera_msgdmahw_prefetcher.h
+ create mode 100644 drivers/net/ethernet/altera/intel_fpga_tod.c
+ create mode 100644 drivers/net/ethernet/altera/intel_fpga_tod.h
 
-Jonathan
-
-
-
-
-
-> 
-> Logan
-
+-- 
+2.13.0
 
