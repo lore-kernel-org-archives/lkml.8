@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BEAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BEAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77878207FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7D8208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860400;
-	bh=xFcZaJQThwSH1casYtsVL7Ea5wmUrDRz6vfLJ6gPRZc=;
+	s=default; t=1595860407;
+	bh=/YydLRvkoKVz03blHEasLvIRqIOV/wARQ1buAMOoUk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bBQ/zHuGHhv6ob3XgNGTfDztAh2alhaG9tMhFfFlm7OZQTsoaMded+zo1NFRpAund
-	 syWNEajtpki87UrgflAXr55mtRjCy6QGEZrW144KilexFzlo6RsvMGy0q65ysfL9VB
-	 U8dyH6KCNqdS1oTNY+1AArjZawQmbUOU7QZO2GD0=
+	b=zBy+9ioMK6TF4cPMYdJYkX4QVkyaYXEud8R08rH+HvVvvWgITI5kldmCP6kS3QlSj
+	 SzEo1z0Vi9E0amLm4hh7XlXaqdr+RkdGElTBx49zlLJxUr/fv/juwG4lPvz6MUylSy
+	 8DCEZXVDr1dPJCcBjxnkWdzRTnkv+VH59JznFW+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731906AbgG0OdS (ORCPT
+        id S1732051AbgG0Od0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:33:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:33:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731125AbgG0ORy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:17:54 -0400
+        id S1730499AbgG0ORo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:17:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D1682070A;
-        Mon, 27 Jul 2020 14:17:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7560D2070A;
+        Mon, 27 Jul 2020 14:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859474;
-        bh=xFcZaJQThwSH1casYtsVL7Ea5wmUrDRz6vfLJ6gPRZc=;
+        s=default; t=1595859464;
+        bh=/YydLRvkoKVz03blHEasLvIRqIOV/wARQ1buAMOoUk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1E+RuZm5s4xMM6ROQ2I0P7My04XFRQ+Z7FYwWHhiEoPzYN6Fks0kfTgB5lHvZoYf/
-         pCCBckp9JDF09kUo4tZz27HcGDJdDREnchBbAoMl5O10XzWlP4PXO9j9snDKKMi5BI
-         2FKL71Kzbb2UZHxhBrSRhRT19bf6Y55yXsUSbznk=
+        b=hXUw7syMdMzdryZ1uuav/nYrTjullVKU7AVfpE25dP3c+wT48zqOmeCWrN/VppaUz
+         K9jTWKQbxSr32XTXUbAmxCuzzC5qQIYQCd+/gkJBaK1PIrm0hgxnJX9EylbNCwkuxl
+         gmidhDEWBn1Z8QCG5USKbhBnihVBVDWfpLI+GdZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 122/138] mm/mmap.c: close race between munmap() and expand_upwards()/downwards()
-Date:   Mon, 27 Jul 2020 16:05:17 +0200
-Message-Id: <20200727134931.542528333@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+Subject: [PATCH 5.4 119/138] fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
+Date:   Mon, 27 Jul 2020 16:05:14 +0200
+Message-Id: <20200727134931.396560131@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -65,89 +61,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit 246c320a8cfe0b11d81a4af38fa9985ef0cc9a4c upstream.
+commit 033724d6864245a11f8e04c066002e6ad22b3fd0 upstream.
 
-VMA with VM_GROWSDOWN or VM_GROWSUP flag set can change their size under
-mmap_read_lock().  It can lead to race with __do_munmap():
+syzbot is reporting general protection fault in bitfill_aligned() [1]
+caused by integer underflow in bit_clear_margins(). The cause of this
+problem is when and how do_vc_resize() updates vc->vc_{cols,rows}.
 
-	Thread A			Thread B
-__do_munmap()
-  detach_vmas_to_be_unmapped()
-  mmap_write_downgrade()
-				expand_downwards()
-				  vma->vm_start = address;
-				  // The VMA now overlaps with
-				  // VMAs detached by the Thread A
-				// page fault populates expanded part
-				// of the VMA
-  unmap_region()
-    // Zaps pagetables partly
-    // populated by Thread B
+If vc_do_resize() fails (e.g. kzalloc() fails) when var.xres or var.yres
+is going to shrink, vc->vc_{cols,rows} will not be updated. This allows
+bit_clear_margins() to see info->var.xres < (vc->vc_cols * cw) or
+info->var.yres < (vc->vc_rows * ch). Unexpectedly large rw or bh will
+try to overrun the __iomem region and causes general protection fault.
 
-Similar race exists for expand_upwards().
+Also, vc_resize(vc, 0, 0) does not set vc->vc_{cols,rows} = 0 due to
 
-The fix is to avoid downgrading mmap_lock in __do_munmap() if detached
-VMAs are next to VM_GROWSDOWN or VM_GROWSUP VMA.
+  new_cols = (cols ? cols : vc->vc_cols);
+  new_rows = (lines ? lines : vc->vc_rows);
 
-[akpm@linux-foundation.org: s/mmap_sem/mmap_lock/ in comment]
+exception. Since cols and lines are calculated as
 
-Fixes: dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in munmap")
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Yang Shi <yang.shi@linux.alibaba.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: <stable@vger.kernel.org>	[4.20+]
-Link: http://lkml.kernel.org/r/20200709105309.42495-1-kirill.shutemov@linux.intel.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  cols = FBCON_SWAP(ops->rotate, info->var.xres, info->var.yres);
+  rows = FBCON_SWAP(ops->rotate, info->var.yres, info->var.xres);
+  cols /= vc->vc_font.width;
+  rows /= vc->vc_font.height;
+  vc_resize(vc, cols, rows);
+
+in fbcon_modechanged(), var.xres < vc->vc_font.width makes cols = 0
+and var.yres < vc->vc_font.height makes rows = 0. This means that
+
+  const int fd = open("/dev/fb0", O_ACCMODE);
+  struct fb_var_screeninfo var = { };
+  ioctl(fd, FBIOGET_VSCREENINFO, &var);
+  var.xres = var.yres = 1;
+  ioctl(fd, FBIOPUT_VSCREENINFO, &var);
+
+easily reproduces integer underflow bug explained above.
+
+Of course, callers of vc_resize() are not handling vc_do_resize() failure
+is bad. But we can't avoid vc_resize(vc, 0, 0) which returns 0. Therefore,
+as a band-aid workaround, this patch checks integer underflow in
+"struct fbcon_ops"->clear_margins call, assuming that
+vc->vc_cols * vc->vc_font.width and vc->vc_rows * vc->vc_font.heigh do not
+cause integer overflow.
+
+[1] https://syzkaller.appspot.com/bug?id=a565882df74fa76f10d3a6fec4be31098dbb37c6
+
+Reported-and-tested-by: syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/mmap.c |   16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/video/fbdev/core/bitblit.c   |    4 ++--
+ drivers/video/fbdev/core/fbcon_ccw.c |    4 ++--
+ drivers/video/fbdev/core/fbcon_cw.c  |    4 ++--
+ drivers/video/fbdev/core/fbcon_ud.c  |    4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -2622,7 +2622,7 @@ static void unmap_region(struct mm_struc
-  * Create a list of vma's touched by the unmap, removing them from the mm's
-  * vma list as we go..
-  */
--static void
-+static bool
- detach_vmas_to_be_unmapped(struct mm_struct *mm, struct vm_area_struct *vma,
- 	struct vm_area_struct *prev, unsigned long end)
- {
-@@ -2647,6 +2647,17 @@ detach_vmas_to_be_unmapped(struct mm_str
+--- a/drivers/video/fbdev/core/bitblit.c
++++ b/drivers/video/fbdev/core/bitblit.c
+@@ -216,7 +216,7 @@ static void bit_clear_margins(struct vc_
+ 	region.color = color;
+ 	region.rop = ROP_COPY;
  
- 	/* Kill the cache */
- 	vmacache_invalidate(mm);
-+
-+	/*
-+	 * Do not downgrade mmap_lock if we are next to VM_GROWSDOWN or
-+	 * VM_GROWSUP VMA. Such VMAs can change their size under
-+	 * down_read(mmap_lock) and collide with the VMA we are about to unmap.
-+	 */
-+	if (vma && (vma->vm_flags & VM_GROWSDOWN))
-+		return false;
-+	if (prev && (prev->vm_flags & VM_GROWSUP))
-+		return false;
-+	return true;
- }
- 
- /*
-@@ -2827,7 +2838,8 @@ int __do_munmap(struct mm_struct *mm, un
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dx = info->var.xoffset + rs;
+ 		region.dy = 0;
+ 		region.width = rw;
+@@ -224,7 +224,7 @@ static void bit_clear_margins(struct vc_
+ 		info->fbops->fb_fillrect(info, &region);
  	}
  
- 	/* Detach vmas from rbtree */
--	detach_vmas_to_be_unmapped(mm, vma, prev, end);
-+	if (!detach_vmas_to_be_unmapped(mm, vma, prev, end))
-+		downgrade = false;
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dx = info->var.xoffset;
+ 		region.dy = info->var.yoffset + bs;
+ 		region.width = rs;
+--- a/drivers/video/fbdev/core/fbcon_ccw.c
++++ b/drivers/video/fbdev/core/fbcon_ccw.c
+@@ -201,7 +201,7 @@ static void ccw_clear_margins(struct vc_
+ 	region.color = color;
+ 	region.rop = ROP_COPY;
  
- 	if (downgrade)
- 		downgrade_write(&mm->mmap_sem);
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dx = 0;
+ 		region.dy = info->var.yoffset;
+ 		region.height = rw;
+@@ -209,7 +209,7 @@ static void ccw_clear_margins(struct vc_
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
+ 
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dx = info->var.xoffset + bs;
+ 		region.dy = 0;
+                 region.height = info->var.yres_virtual;
+--- a/drivers/video/fbdev/core/fbcon_cw.c
++++ b/drivers/video/fbdev/core/fbcon_cw.c
+@@ -184,7 +184,7 @@ static void cw_clear_margins(struct vc_d
+ 	region.color = color;
+ 	region.rop = ROP_COPY;
+ 
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dx = 0;
+ 		region.dy = info->var.yoffset + rs;
+ 		region.height = rw;
+@@ -192,7 +192,7 @@ static void cw_clear_margins(struct vc_d
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
+ 
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dx = info->var.xoffset;
+ 		region.dy = info->var.yoffset;
+                 region.height = info->var.yres;
+--- a/drivers/video/fbdev/core/fbcon_ud.c
++++ b/drivers/video/fbdev/core/fbcon_ud.c
+@@ -231,7 +231,7 @@ static void ud_clear_margins(struct vc_d
+ 	region.color = color;
+ 	region.rop = ROP_COPY;
+ 
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dy = 0;
+ 		region.dx = info->var.xoffset;
+ 		region.width  = rw;
+@@ -239,7 +239,7 @@ static void ud_clear_margins(struct vc_d
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
+ 
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dy = info->var.yoffset;
+ 		region.dx = info->var.xoffset;
+                 region.height  = bh;
 
 
