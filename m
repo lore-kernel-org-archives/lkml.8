@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E039C43457
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36C0C43458
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E227020719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FDE820719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860751;
-	bh=WiG8lY5u5Gxq7nHbvYZ3ThbiA3hQHm0TvajDFI3wIuA=;
+	s=default; t=1595860753;
+	bh=ZlkBZRpRZouPucAK8to0nNZMYP7bbrHIinNn677J9D8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L3JCEWRqSFJrVh/xx8BIWJV5pHZeRF/nUBZOAZdsAZ/ks9lk1bGUoZxHkvOjWevgh
-	 LO4nqL2ZhEtkTy0HYee9bI78wGeww+nyZkcatG23K8WYxVxlq1gPU+zkvNBtLEOMRT
-	 axeGPl9CV67ZkBvcaUCvBCKuqk188a9R3GTr52V8=
+	b=elJ2WadCuSRoxCJzIvlgGVkXgE+Gh2pc6IW4FBtCWOw+qktrzhVcT9cayhEwowGYf
+	 PA/UISKHaMk5ZXwGsT+5js+dfChA3BkiHgBInH7J4EWcXI1OC9y2f6JYfnw2s3rrUH
+	 SHHdefc2tsEK12Dw1l4VizKfzn188v+Hkx31cvus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729780AbgG0OKL (ORCPT
+        id S1729761AbgG0OKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:10:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60912 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbgG0OKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:10:07 -0400
+        id S1729743AbgG0OKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:10:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC4E120838;
-        Mon, 27 Jul 2020 14:10:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1D1B208E4;
+        Mon, 27 Jul 2020 14:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859007;
-        bh=WiG8lY5u5Gxq7nHbvYZ3ThbiA3hQHm0TvajDFI3wIuA=;
+        s=default; t=1595859002;
+        bh=ZlkBZRpRZouPucAK8to0nNZMYP7bbrHIinNn677J9D8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vdFHlsfiK+UFCiQKV7yrtdOiFqTKMzIAoriyIhlq7sGhC/QNGdOWA594kIHyFLvfT
-         pwdHjPEW+xxvLZkAWX5WrNuxhwgiaoT1DkJE4V4C5ZwfgHqN6BxKIY+ns+0AojaeQC
-         jRRLyCCz+RCjjj6nNP7VJRx55dtpsiAinlNqla+Q=
+        b=GElU7A8jvnaSkrLhQNpH1Rx82P7b4P/QXMJjtW0iifg5oVhRg5+R4MqK9TPWnpsFD
+         2ie4IUyi2Pq9H3dxHCQOGzFNhRYOpS1g7QNhb3mTMnLbANIG+7XgaItmtK+WekoF3g
+         +w779XaquDcuUIusw7d+TWWs22Ym7LsoBD0opYsU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacky Hu <hengqing.hu@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, George Kennedy <george.kennedy@oracle.com>,
+        syzbot+4cd84f527bf4a10fc9c1@syzkaller.appspotmail.com,
+        Jakub Kicinski <kuba@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 04/86] pinctrl: amd: fix npins for uart0 in kerncz_groups
-Date:   Mon, 27 Jul 2020 16:03:38 +0200
-Message-Id: <20200727134914.563156370@linuxfoundation.org>
+Subject: [PATCH 4.19 28/86] ax88172a: fix ax88172a_unbind() failures
+Date:   Mon, 27 Jul 2020 16:04:02 +0200
+Message-Id: <20200727134915.862491789@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -60,43 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacky Hu <hengqing.hu@gmail.com>
+From: George Kennedy <george.kennedy@oracle.com>
 
-[ Upstream commit 69339d083dfb7786b0e0b3fc19eaddcf11fabdfb ]
+[ Upstream commit c28d9a285668c799eeae2f7f93e929a6028a4d6d ]
 
-uart0_pins is defined as:
-static const unsigned uart0_pins[] = {135, 136, 137, 138, 139};
+If ax88172a_unbind() fails, make sure that the return code is
+less than zero so that cleanup is done properly and avoid UAF.
 
-which npins is wronly specified as 9 later
-	{
-		.name = "uart0",
-		.pins = uart0_pins,
-		.npins = 9,
-	},
-
-npins should be 5 instead of 9 according to the definition.
-
-Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
-Link: https://lore.kernel.org/r/20200616015024.287683-1-hengqing.hu@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: a9a51bd727d1 ("ax88172a: fix information leak on short answers")
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+Reported-by: syzbot+4cd84f527bf4a10fc9c1@syzkaller.appspotmail.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-amd.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/ax88172a.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
-index 22af7edfdb38e..91da7527f0020 100644
---- a/drivers/pinctrl/pinctrl-amd.h
-+++ b/drivers/pinctrl/pinctrl-amd.h
-@@ -256,7 +256,7 @@ static const struct amd_pingroup kerncz_groups[] = {
- 	{
- 		.name = "uart0",
- 		.pins = uart0_pins,
--		.npins = 9,
-+		.npins = 5,
- 	},
- 	{
- 		.name = "uart1",
+diff --git a/drivers/net/usb/ax88172a.c b/drivers/net/usb/ax88172a.c
+index 914cac55a7ae7..909755ef71ac3 100644
+--- a/drivers/net/usb/ax88172a.c
++++ b/drivers/net/usb/ax88172a.c
+@@ -210,6 +210,7 @@ static int ax88172a_bind(struct usbnet *dev, struct usb_interface *intf)
+ 	ret = asix_read_cmd(dev, AX_CMD_READ_NODE_ID, 0, 0, ETH_ALEN, buf, 0);
+ 	if (ret < ETH_ALEN) {
+ 		netdev_err(dev->net, "Failed to read MAC address: %d\n", ret);
++		ret = -EIO;
+ 		goto free;
+ 	}
+ 	memcpy(dev->net->dev_addr, buf, ETH_ALEN);
 -- 
 2.25.1
 
