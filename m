@@ -2,131 +2,102 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9024EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3CEC433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66ECA20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9741F2074F
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:38:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Ai5egpza"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qmtAl08t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731247AbgG0RiP (ORCPT
+        id S1731437AbgG0Ri3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:38:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729034AbgG0RiO (ORCPT
+        Mon, 27 Jul 2020 13:38:29 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:57700 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728925AbgG0Ri2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:38:14 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81430C061794;
-        Mon, 27 Jul 2020 10:38:14 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id z17so12742229edr.9;
-        Mon, 27 Jul 2020 10:38:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/sKKwVMF8e4uHhkt8F3tJZDTVJK3HD/IRNcRCGfQ0iI=;
-        b=Ai5egpzaMg+snqXKaqxknnOqLimP/zj6IXv/zg0JBwwuK2BwrBIY0TLJ4HUwd86yOj
-         RCLN69SG4FyZirYcRCk7C74kaP0ZojtIhFxs4zZEB+TYfzr48Lk8HudamqQshhc0D/wC
-         gpXUFpQsiOSLG1rdFgb+Tz4Y9nO0Q1tfTio11oUlFfkkqHMdbN/Xf6f/9CeaCq6XXQZH
-         KIu2zNkMU9nLtBYFfqks/doGXNHXkrcKdXtXcs5bslKRbh3qRWP8eHyhhKr0T7c3+677
-         1udexORQ0Qi8oYFeVw4NjT6bh2qLFnFLVrCSShBsy1UvMhSqDV1LNoHsPKbuOPGx1jNn
-         Y2yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/sKKwVMF8e4uHhkt8F3tJZDTVJK3HD/IRNcRCGfQ0iI=;
-        b=RWY0MnM5qeE9CSQi+R46OWs75N+5iJWi9s5c4/hBUZo485kJ31vzS+asyF5fMG4X5t
-         1ZLC4bu0KQtqOntwakZd87E/t4hcn2N+y+JNMRRSfYGKp/emZjptWAdK5uQEH14fARJO
-         9HnNSjRsKAWCnSNPZCGuC7sm6NGSEyJgdMWOlS3aO28XmQMah8pZC012WC4hvbnz40nV
-         b616xE6nk/MpPr93cqJA4mfXOi3Us87bdLyZvTlvUpZxdIedJLBb/8aZk3rannQRnL/A
-         o59JWuMSicNQK5DvK0JcltBi15kkvXOc4+f4FLKmrm+Y2rReMCtVqbq7poCzkgPwgfA1
-         GCTQ==
-X-Gm-Message-State: AOAM532EBKg/dJ/csfgLoVkLhggGkvlj9FKeVt0yWKa8CwEwaD79uVhW
-        IzINypjKQqO36orXRpYJSdQrRV4GnQE=
-X-Google-Smtp-Source: ABdhPJxBfOMURSmESYSYBVelY4lBWbo7lOCvYRLpUDv8nxmeawmAsgobF3dOIFn/CqLO8ohJbJKl8g==
-X-Received: by 2002:a05:6402:22f0:: with SMTP id dn16mr22471016edb.83.1595871493204;
-        Mon, 27 Jul 2020 10:38:13 -0700 (PDT)
-Received: from localhost.localdomain (p200300f13716be00428d5cfffeb99db8.dip0.t-ipconnect.de. [2003:f1:3716:be00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id cc9sm8115756edb.14.2020.07.27.10.38.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 10:38:12 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     hminas@synopsys.com, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, marex@denx.de,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3] usb: dwc2: Add missing cleanups when usb_add_gadget_udc() fails
-Date:   Mon, 27 Jul 2020 19:38:01 +0200
-Message-Id: <20200727173801.792626-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 27 Jul 2020 13:38:28 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1046)
+        id 367BA20B4908; Mon, 27 Jul 2020 10:38:28 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 367BA20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1595871508;
+        bh=hzbEnRYbp7CjaiVlwpRNX2SqfyUAUkPwouFn2zKxziQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qmtAl08tkOJUFq5qhM1G95ug1vjde7ZvCV47hZjBx2X0cEvxRw+gTnYZwve1MV6kL
+         jQebm3l7+VP6UGuUb7CUHP4wUbFmOXkyQKD4D3pU56z0bjBc4SGlffw1wsdbWhyiVR
+         oB4+OdZOETbwsP2nq7uZE2pPPv83JDXTgLa/O1g4=
+From:   Dhananjay Phadke <dphadke@linux.microsoft.com>
+To:     ray.jui@broadcom.com
+Cc:     bcm-kernel-feedback-list@broadcom.com, dphadke@linux.microsoft.com,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rayagonda.kokatanur@broadcom.com, rjui@broadcom.com, wsa@kernel.org
+Subject: Re: [PATCH] i2c: iproc: fix race between client unreg and isr
+Date:   Mon, 27 Jul 2020 10:38:28 -0700
+Message-Id: <1595871508-28566-1-git-send-email-dphadke@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <4cf12c92-889d-ffbf-f8de-c1e08cfb8ce9@broadcom.com>
+References: <4cf12c92-889d-ffbf-f8de-c1e08cfb8ce9@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call dwc2_debugfs_exit() and dwc2_hcd_remove() (if the HCD was enabled
-earlier) when usb_add_gadget_udc() has failed. This ensures that the
-debugfs entries created by dwc2_debugfs_init() as well as the HCD are
-cleaned up in the error path.
+Ray Jui <ray.jui@broadcom.com> wrote:
+>>> I think the following sequence needs to be implemented to make this
+>>> safe, i.e., after 'synchronize_irq', no further slave interrupt will be
+>>> fired.
+>>>
+>>> In 'bcm_iproc_i2c_unreg_slave':
+>>>
+>>> 1. Set an atomic variable 'unreg_slave' (I'm bad in names so please come
+>>> up with a better name than this)
+>>>
+>>> 2. Disable all slave interrupts
+>>>
+>>> 3. synchronize_irq
+>>>
+>>> 4. Set slave to NULL
+>>>
+>>> 5. Erase slave addresses
+>> 
+>> What about this in unreg_slave?
+>> 
+>> 1. disable_irq()
+>> 	This includes synchronize_irq() and avoids the race. Because irq
+>> 	will be masked at interrupt controller level, interrupts coming
+>> 	in at the I2C IP core level should still be pending once we
+>> 	reenable the irq.
+>> 
+> 
+> Can you confirm that even if we have irq pending at the i2c IP core
+> level, as long as we execute Step 2. below (to disable/mask all slave
+> interrupts), after 'enable_irq' is called, we still will not receive any
+> further i2c slave interrupt?
+> 
+> Basically I'm asking if interrupts will be "cached" at the GIC
+> controller level after 'disable_irq' is called. As long as that is not
+> the case, then I think we are good.
+> 
+> The goal of course is to ensure there's no further slave interrupts
+> after 'enable_irq' in Step 3 below.
 
-Fixes: 207324a321a866 ("usb: dwc2: Postponed gadget registration to the udc class driver")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
-Changes since v2 at [1]:
-- add #if around the new label and it's code to prevent the following
-  warning found by the Kernel test robot:
-    unused label 'error_debugfs' [-Wunused-label]
+That was my question as well, the best would be if the i2c controller itself
+has a bit for masking all interrupts overriding individual event enables
+set by the ISR.
 
-Changes since v1 at [0]
-- also cleanup the HCD as suggested by Minas (thank you!)
-- updated the subject accordingly
+Also with regards to the original sequence, I think slave address should
+be erased before enable_irq(), besides draining rx and tx FIFOs.
 
+I'll send reworked patch.
 
-[0] https://patchwork.kernel.org/patch/11631381/
-[1] https://patchwork.kernel.org/patch/11642957/
+@Rayagonda will validate new sequence with the test that hit the race condition.
 
-
- drivers/usb/dwc2/platform.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-index cb8ddbd53718..b74099764b2d 100644
---- a/drivers/usb/dwc2/platform.c
-+++ b/drivers/usb/dwc2/platform.c
-@@ -583,12 +583,19 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 		retval = usb_add_gadget_udc(hsotg->dev, &hsotg->gadget);
- 		if (retval) {
- 			dwc2_hsotg_remove(hsotg);
--			goto error_init;
-+			goto error_debugfs;
- 		}
- 	}
- #endif /* CONFIG_USB_DWC2_PERIPHERAL || CONFIG_USB_DWC2_DUAL_ROLE */
- 	return 0;
- 
-+#if IS_ENABLED(CONFIG_USB_DWC2_PERIPHERAL) || \
-+	IS_ENABLED(CONFIG_USB_DWC2_DUAL_ROLE)
-+error_debugfs:
-+	dwc2_debugfs_exit(hsotg);
-+	if (hsotg->hcd_enabled)
-+		dwc2_hcd_remove(hsotg);
-+#endif
- error_init:
- 	if (hsotg->params.activate_stm_id_vb_detection)
- 		regulator_disable(hsotg->usb33d);
--- 
-2.27.0
+- Dhananjay
 
