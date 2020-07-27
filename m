@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D52AC433F8
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C08C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A20B208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1500120838
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859151;
-	bh=dc5GIlP5hZ2l58dr+lnG1k9qkoosoB/+ERd84z3QCqo=;
+	s=default; t=1595859154;
+	bh=UXqN/Skp4MHKAS0ReE2h6jHKxt9CRMFfnXibuxcri+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b3D9d93tnWkPoLh11IV05uNvBbbLAarcaoRP+ehzjqgxTMTqjgndd+67mI2MTaLUg
-	 MmYDo0ZtZ9wbz3UfT/xlhilbfnywBRDc0ScUbgrkOFkjGK8QWWjLM5DIarflXU6zKI
-	 Tnee8fsLpvD3ryOkml8YJ/o8zwiHKI9HE9vACTj8=
+	b=TB9ladPKiproXgGcP2TcV/gH8tvvNjK+5SxPCE9y5uYRT7f/8lZ+CUyyqjQtrtPFk
+	 +W/hW6UDPquubmoOkfU/LXnaJC9LsxWq0+L9hiCZl5qq5XJoIZ83EN/yeTx63RO6aE
+	 Ol4gnC2o2M+Ui4FNH6lCZuDqiGICL8JWYxkF0T00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbgG0OMa (ORCPT
+        id S1730220AbgG0OMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:12:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36560 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:12:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730189AbgG0OMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:12:20 -0400
+        id S1730194AbgG0OM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:12:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2F6A20838;
-        Mon, 27 Jul 2020 14:12:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52CF621744;
+        Mon, 27 Jul 2020 14:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859140;
-        bh=dc5GIlP5hZ2l58dr+lnG1k9qkoosoB/+ERd84z3QCqo=;
+        s=default; t=1595859147;
+        bh=UXqN/Skp4MHKAS0ReE2h6jHKxt9CRMFfnXibuxcri+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b6mciHwcRd9ypKEBZMSPBA0aQO/6t+yYCX+LXaCpMrMOYmq1IPdtQVJAvk/V1cE5x
-         x3aybnaAHR+XrXkcn7NZfGTCqHkWm+u4iziPYOqdOht8Ds7sdHcjSYsKDZIM1sfU74
-         b3h6C6xR8dF/wGjp3YKKCJ005TBcAaZ/3kXEShJs=
+        b=0Ix48nAT+KQ7QX4DgXX2vQgNP6JJlSttXcORPv0Crau4tr9ogvLgfAARmZiYQr9H0
+         e4aBOM83bkZ21z4RLp8Py3uD+t2pNsboVaSJ+3gycQXEFlETu3TgtzDegTp8cjz3AL
+         7eP1vO65sg2211fh4Q3d9kaJwCBq4dK0lp7Bauf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 4.19 81/86] x86, vmlinux.lds: Page-align end of ..page_aligned sections
-Date:   Mon, 27 Jul 2020 16:04:55 +0200
-Message-Id: <20200727134918.465504233@linuxfoundation.org>
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 83/86] ASoC: qcom: Drop HAS_DMA dependency to fix link failure
+Date:   Mon, 27 Jul 2020 16:04:57 +0200
+Message-Id: <20200727134918.565565676@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
 References: <20200727134914.312934924@linuxfoundation.org>
@@ -60,78 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-commit de2b41be8fcccb2f5b6c480d35df590476344201 upstream.
+commit b6aa06de7757667bac88997a8807b143b8436035 upstream.
 
-On x86-32 the idt_table with 256 entries needs only 2048 bytes. It is
-page-aligned, but the end of the .bss..page_aligned section is not
-guaranteed to be page-aligned.
+When building on allyesconfig kernel for a NO_DMA=y platform (e.g.
+Sun-3), CONFIG_SND_SOC_QCOM_COMMON=y, but CONFIG_SND_SOC_QDSP6_AFE=n,
+leading to a link failure:
 
-As a result, objects from other .bss sections may end up on the same 4k
-page as the idt_table, and will accidentially get mapped read-only during
-boot, causing unexpected page-faults when the kernel writes to them.
+    sound/soc/qcom/common.o: In function `qcom_snd_parse_of':
+    common.c:(.text+0x2e2): undefined reference to `q6afe_is_rx_port'
 
-This could be worked around by making the objects in the page aligned
-sections page sized, but that's wrong.
+While SND_SOC_QDSP6 depends on HAS_DMA, SND_SOC_MSM8996 and SND_SOC_SDM845
+don't, so the following warning is seen:
 
-Explicit sections which store only page aligned objects have an implicit
-guarantee that the object is alone in the page in which it is placed. That
-works for all objects except the last one. That's inconsistent.
+    WARNING: unmet direct dependencies detected for SND_SOC_QDSP6
+      Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && QCOM_APR [=y] && HAS_DMA [=n]
+      Selected by [y]:
+      - SND_SOC_MSM8996 [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && QCOM_APR [=y]
+      - SND_SOC_SDM845 [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && QCOM_APR [=y] && CROS_EC [=y] && I2C [=y] && SOUNDWIRE [=y]
 
-Enforcing page sized objects for these sections would wreckage memory
-sanitizers, because the object becomes artificially larger than it should
-be and out of bound access becomes legit.
+Until recently, this warning was harmless (from a compile-testing
+point-of-view), but the new user of q6afe_is_rx_port() turned this into
+a hard failure.
 
-Align the end of the .bss..page_aligned and .data..page_aligned section on
-page-size so all objects places in these sections are guaranteed to have
-their own page.
+As the QDSP6 driver itself builds fine if NO_DMA=y, and it depends on
+QCOM_APR (which in turns depends on ARCH_QCOM || COMPILE_TEST), it is
+safe to increase compile testing coverage.  Hence fix the link failure
+by dropping the HAS_DMA dependency of SND_SOC_QDSP6.
 
-[ tglx: Amended changelog ]
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200721093448.10417-1-joro@8bytes.org
+Fixes: a2120089251f1fe2 ("ASoC: qcom: common: set correct directions for dailinks")
+Fixes: 6b1687bf76ef84cb ("ASoC: qcom: add sdm845 sound card support")
+Fixes: a6f933f63f2ffdb2 ("ASoC: qcom: apq8096: Add db820c machine driver")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Link: https://lore.kernel.org/r/20200629122443.21736-1-geert@linux-m68k.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/vmlinux.lds.S     |    1 +
- include/asm-generic/vmlinux.lds.h |    5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ sound/soc/qcom/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -372,6 +372,7 @@ SECTIONS
- 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {
- 		__bss_start = .;
- 		*(.bss..page_aligned)
-+		. = ALIGN(PAGE_SIZE);
- 		*(BSS_MAIN)
- 		BSS_DECRYPTED
- 		. = ALIGN(PAGE_SIZE);
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -279,7 +279,8 @@
+--- a/sound/soc/qcom/Kconfig
++++ b/sound/soc/qcom/Kconfig
+@@ -70,7 +70,7 @@ config SND_SOC_QDSP6_ASM_DAI
  
- #define PAGE_ALIGNED_DATA(page_align)					\
- 	. = ALIGN(page_align);						\
--	*(.data..page_aligned)
-+	*(.data..page_aligned)						\
-+	. = ALIGN(page_align);
- 
- #define READ_MOSTLY_DATA(align)						\
- 	. = ALIGN(align);						\
-@@ -650,7 +651,9 @@
- 	. = ALIGN(bss_align);						\
- 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {				\
- 		BSS_FIRST_SECTIONS					\
-+		. = ALIGN(PAGE_SIZE);					\
- 		*(.bss..page_aligned)					\
-+		. = ALIGN(PAGE_SIZE);					\
- 		*(.dynbss)						\
- 		*(BSS_MAIN)						\
- 		*(COMMON)						\
+ config SND_SOC_QDSP6
+ 	tristate "SoC ALSA audio driver for QDSP6"
+-	depends on QCOM_APR && HAS_DMA
++	depends on QCOM_APR
+ 	select SND_SOC_QDSP6_COMMON
+ 	select SND_SOC_QDSP6_CORE
+ 	select SND_SOC_QDSP6_AFE
 
 
