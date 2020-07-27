@@ -2,70 +2,108 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF99C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F35C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7271120672
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7B920738
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 07:58:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E44rSvPD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgG0H60 (ORCPT
+        id S1727915AbgG0H6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 03:58:26 -0400
-Received: from verein.lst.de ([213.95.11.211]:42430 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgG0H60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 03:58:26 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 630C468B05; Mon, 27 Jul 2020 09:58:22 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 09:58:22 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Song Liu <song@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        drbd-dev@lists.linbit.com, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH 10/14] bdi: remove BDI_CAP_SYNCHRONOUS_IO
-Message-ID: <20200727075822.GA5355@lst.de>
-References: <20200726150333.305527-1-hch@lst.de> <20200726150333.305527-11-hch@lst.de> <20200726190639.GA560221@google.com>
+        Mon, 27 Jul 2020 03:58:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgG0H6l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 03:58:41 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32CB4C0619D2;
+        Mon, 27 Jul 2020 00:58:41 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id b13so9033331edz.7;
+        Mon, 27 Jul 2020 00:58:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/REZwXRz5HY7fev5AIX1xp+FPLMsQ7CaayNFnZrrTs4=;
+        b=E44rSvPDKHSJX+gzJpv/MuvSGtQjfA11R0Nh4HxsD6D1B5bHRPLrkBH/vfDoZksV83
+         KsSWhzHTRZo0Rww/ofA+K5yQKW1aK/xVe5AoztxOw7HbSy/gedDM5c3cg4U0sejJpgUs
+         L284SKbEPvZ9oC7+Qkf3jPB9mH7i8w1kTu6VIcKGXZBSgCcPR+GVUdqII/E7ZVwsZGqo
+         yQE8GVLKAn3SA6J/4ebOZ/a7264TG3A+cMu4rLHy0hPG9lsal2aHAavjUUsEYWSOoq31
+         YEguXeDWgrFftAuF7xlHV4Ax8OXRBLt1pBzq/yAKq8nWIfmTA0IT5g400Sksqt/2AeKY
+         Xbdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/REZwXRz5HY7fev5AIX1xp+FPLMsQ7CaayNFnZrrTs4=;
+        b=ZOKO49eS8GZa+zR5IjKGAB0gyG8RGqxyWsQMO/2KamomWXYh8YwSj92wNYrXjoJq4Y
+         QtnuXG3nzVAc6iuSOGUGncQ3dvO5iFXstmG93XBPdTsUZwgppzCg9/qIcNtr0tJpsnS2
+         e0MSMBvRMrSTgG2jgg/opgMhs6fKNlWz13Upj8vnkqnwl5BiTlyt61DPG6HSh4x7IZ1Z
+         AAdSNBElLy0UjBKrscKgTUwXP8aQIF7B8QB6rzn0uLfTpLd0Q0VTQ2Jmsk7yRsXLIB/r
+         o5iyyRm+5CX6ERK9ZrNiN6axBhFSovZ2J3bvKeFDItBanKJ4E2HEZ+aNO6FRNrgJOquX
+         9iEg==
+X-Gm-Message-State: AOAM530bpWDojYtO79z/E15mB+MbW9F1YDvIK2g6FkfRbo4ivOfKtkQf
+        doCeXiS+qWkclbhsla0JXFp5YjuuCTAzE/hLZts=
+X-Google-Smtp-Source: ABdhPJxmdLhj0c/I/e6nCS/GkX9N03ZFRIjfJxIDkT8JXKbvvnm424ImsRXPevmDiHhJhXEiXih0lG99CTDFI8Na8CQ=
+X-Received: by 2002:aa7:d4c1:: with SMTP id t1mr20176260edr.253.1595836719999;
+ Mon, 27 Jul 2020 00:58:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200726190639.GA560221@google.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20200724213659.273599-1-martin.botka1@gmail.com>
+ <20200724213659.273599-3-martin.botka1@gmail.com> <CAHp75VdJ14p+_+XqxrgRrjXF7m6L4nGr5vB03NTM=0xjgw4c7Q@mail.gmail.com>
+ <CADQ2G_HkiAZx8OhfQ_jeizveMaB-QN9dfN6Tcwfk9XuF97rmOg@mail.gmail.com>
+ <CADQ2G_HYTE6cd=PM2JzCTadkPe2DDb8dxObPdPJtz1626ktE9Q@mail.gmail.com> <20200727075243.cjkxblsivgnn6jsk@pengutronix.de>
+In-Reply-To: <20200727075243.cjkxblsivgnn6jsk@pengutronix.de>
+From:   Martin Botka <martin.botka1@gmail.com>
+Date:   Mon, 27 Jul 2020 09:58:01 +0200
+Message-ID: <CADQ2G_GcYh13CGbApCqvi3xcHU-Ur2ej98VccKFOUSOZPrQZnQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/6] pwm: core: Add option to config PWM duty/period
+ with u64 data length
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Fenglin Wu <fenglinw@codeaurora.org>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 12:06:39PM -0700, Minchan Kim wrote:
-> > @@ -528,8 +530,7 @@ static ssize_t backing_dev_store(struct device *dev,
-> >  	 * freely but in fact, IO is going on so finally could cause
-> >  	 * use-after-free when the IO is really done.
-> >  	 */
-> > -	zram->disk->queue->backing_dev_info->capabilities &=
-> > -			~BDI_CAP_SYNCHRONOUS_IO;
-> > +	zram->disk->fops = &zram_wb_devops;
-> >  	up_write(&zram->init_lock);
-> 
-> For zram, regardless of BDI_CAP_SYNCHRONOUS_IO, it have used rw_page
-> every time on read/write path. This one with next patch will make zram
-> use bio instead of rw_page when it's declared !BDI_CAP_SYNCHRONOUS_IO,
-> which introduce regression for performance.
+Hello,
 
-It really should not matter, as the overhead of setting up a bio
-is minimal.  It also is only used in the legacy mpage buffered I/O
-code outside of the swap code, which has so many performance issues on
-its own that even if this made a difference it wouldn't matter.
+> I hit "reply-to-all" and the mail only was sent to you because you wrote
+> to only me.
 
-If you want magic treatment for your zram swap code you really need
-to integrate it with the swap code instead of burding the block layer
-with all this mess.
+Yes my reply was only to you. But your original message was sent only to me too.
+So when i clicked reply to all it was only you as you sent it only to me.
+
+> Also threading is somehow strange because your reply to my mail
+
+Yes Gmail would not allow me to reply to your message and also send it
+to everyone so i had to reply to Andy's email which is why the
+threading is broken there. Sorry for that.
+
+> So I assume all the strange things happened on your side until proved
+> otherwise. :-)
+
+I think i just proved otherwise :)
+
+Best Regards,
+Martin
