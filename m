@@ -3,97 +3,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45A1C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B95C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC6AF20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85C420656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:36:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGr5q/9Q"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C9llSBpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgG0LgY (ORCPT
+        id S1727939AbgG0Lgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbgG0LgX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:36:23 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42371C061794;
-        Mon, 27 Jul 2020 04:36:21 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id x9so16834226ljc.5;
-        Mon, 27 Jul 2020 04:36:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3duE7OBR2T4N2tYjRvsITkGu0zyZUrsrEinPE6byIJA=;
-        b=aGr5q/9QRAMaUt3j5VfbR3OdspD6ClP8KdgJUfmnmzsunPsBqGa5S9naW8YgBF/zwA
-         xk7mCre8gB5IbfeUa3zGFNF80ldeRdn79TISRGf+kftzYbjhBna3K5cPwBEv8QmiDqns
-         Eo1HRkKLdsARNMMznT6RAODNxdr2N0NiebCEwrOd4xHSWUDUrfiny+NM0DKHM3CxxbDA
-         4McAvoF2Ps7yD3wZq0QzvcBLQXxtVOSswIGiwuMiyQd/6e92DcK0KyXC/LN0EPpdxHHl
-         QtkCkh55wJjZ/9fPeyRlUoAaPUKJMpe917jU3ni6GSooU4CSsDX+8sMZqP9+0CW+Ttqq
-         iq+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3duE7OBR2T4N2tYjRvsITkGu0zyZUrsrEinPE6byIJA=;
-        b=SfXXH3H3WD7VWQ19KwEYH4upPiyVdgd9Eeci7v8a+Cp5KUxmC+EXzwY+yFrD47g7Jy
-         fFJKMzqZSzEjU3hnshdLqqiUBhqbUPVH2hJGACWDOJ2EFlotjFF1OYZfh3/KP8AeRUg0
-         88LPgYGKBURXWq7yfggydKyT49qTaLVmslCUX1rHhRmpzmziu2O1Vd1PPnTNGafVqYCh
-         LleLEqCRskfPVa2w+BnPG3ug+MdjskRQj3ZJxhct0oqpNOgRD7JG33YI9Tj9bj5Lp0oQ
-         DarIe2SrGLj8mm9Y4YWIsL9iDZhDh50c08qNYjss7U0xcQfs3wOn89AKapok3UY16DOR
-         OotA==
-X-Gm-Message-State: AOAM532bNfkaDlTKhhIiwZPd3XtbVh6K9rfCRt4UchO/eQof4lQTfwSo
-        z77CwDJnx2PZA3juYGmR3EspSHSBQ0G7PM1oZ2M=
-X-Google-Smtp-Source: ABdhPJySdoA0YQZX3SzX76PZs+yXIx9uSU6Htm2i166nkcxAQA1159Pl7aChK9+bUVbcPdHRJ+ZUOND1IY6QjMMDCyA=
-X-Received: by 2002:a2e:a168:: with SMTP id u8mr9049888ljl.178.1595849779599;
- Mon, 27 Jul 2020 04:36:19 -0700 (PDT)
+        Mon, 27 Jul 2020 07:36:44 -0400
+Received: from ozlabs.org ([203.11.71.1]:37375 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726227AbgG0Lgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:36:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BFd7F5Vdpz9sPf;
+        Mon, 27 Jul 2020 21:36:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1595849801;
+        bh=m9gc4f7+OGMwWWb8875YFApZLF4dDGweR1HdKuefN4o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=C9llSBpLAma7XaRwCN1GASQ17Spte8zUiVKgoA08qhcpHBUGHZso7oa09NRfRGij+
+         huQucz0zhRLa0SyO56B2+S0amhn88Dij3WoZzuFDQVrsps2L8uriOuOfVe3mVy72cU
+         lJzzm177kzs0BLf5bdye6jEoNG+tMS3cYNxPkaZjOBPAFqQzJsqq7blmSKuLp14w3J
+         eg0UH6t/rBQ1IPmKndEbF9QizMVLMGHTV8QhitaUIkjI3EXrii33L4w1kHL+IH9iyN
+         YNCclOejWfXhuOj5Eg7LmXFr8vZ0SBEhgEgFuRKZblFYxv8qdx4vbF5RewwbHUjlMO
+         nup5iVNCgY9Kw==
+Date:   Mon, 27 Jul 2020 21:36:41 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the drivers-memory tree
+Message-ID: <20200727213641.3491e3d1@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200727105718.26225-1-ceggers@arri.de> <20200727105718.26225-2-ceggers@arri.de>
-In-Reply-To: <20200727105718.26225-2-ceggers@arri.de>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 27 Jul 2020 08:36:08 -0300
-Message-ID: <CAOMZO5ASnj7SpjjAEpWjRK-vMpFFKU00=rxKeBtaMSKE9pkX1g@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6ull: Add rngb node
-To:     Christian Eggers <ceggers@arri.de>,
-        Horia Geanta Neag <horia.geanta@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Kaiser <martin@kaiser.cx>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/vEHPzkFRjVv/UCLif86hy81";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
+--Sig_/vEHPzkFRjVv/UCLif86hy81
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 27, 2020 at 8:00 AM Christian Eggers <ceggers@arri.de> wrote:
->
-> The RNGB block on 6ull has no major differences, but it has no
-> switchable clock.
+Hi all,
 
-Horia has already sent a patch series that adds imx6ull rngb support:
-https://lkml.org/lkml/2020/7/23/173
+After merging the drivers-memory tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+drivers/memory/omap-gpmc.c:36:10: fatal error: asm/mach-types.h: No such fi=
+le or directory
+   36 | #include <asm/mach-types.h>
+      |          ^~~~~~~~~~~~~~~~~~
+
+Caused by commit
+
+  99b42df9d57e ("memory: Enable compile testing for most of the drivers")
+
+I have reverted that commit for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/vEHPzkFRjVv/UCLif86hy81
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8evEkACgkQAVBC80lX
+0Gzcrgf/cApgcv2qsKozvok3vzE9Fee8xb11fyqzoP8nth88YUB2VryZbDUwi/xJ
+mXbbnSceKqe/oKMS1gnIHq44DLc5Zr7EdQ4Lt5FhlS7DXSIP3PGPe0EVFZJ9rnts
+ATdhnAEqwVmIDAZp9NzzSsTmf/r+N7vmA0uamU9ncoouRGAL8ofnRO5lQfb657Bw
+2Qy1jEvTylNInzexf1F5eOipSrP6ln1VEEv+mC8sOcKdZ1nBi4GruWq8teZommeT
+duVBICoEIYMFMqwBk11wWSPn0fZn9SSY1RY5o1/ew7/uZki5lN4mzO9FUMtIrZZ2
+I5wMvU8ZiUoSf+Lt2VzrWxK6lRmw1Q==
+=sMae
+-----END PGP SIGNATURE-----
+
+--Sig_/vEHPzkFRjVv/UCLif86hy81--
