@@ -2,246 +2,140 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6448C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEEAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 919DE2074F
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:21:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="COMRw359"
+	by mail.kernel.org (Postfix) with ESMTP id 04DA12065E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 10:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgG0KVw (ORCPT
+        id S1727919AbgG0KWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 06:21:52 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:11691 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726139AbgG0KVw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 06:21:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1595845310; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=3ICFc++bUE871suhrVMhUt05tELazLFLFEnQc5uUq3s=; b=COMRw359HtXU2MBBK7FWxvSD2PC7eHt1O3GiSjxl4XywA6NolKSsUcRpRfjMJGxD4lXqfihe
- QotQl18mVDEVleTup8NYK8hdHq34pBhiwuovxZiTCeQlY8tX6EytFqMHA+xy1xnx2gRbOFdL
- rYEo2RLNMoiTBfVcE8WUYfKkt/s=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
- 5f1eaab1aa44a6db05abd0a9 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 10:21:37
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E45C1C43395; Mon, 27 Jul 2020 10:21:36 +0000 (UTC)
-Received: from [192.168.0.103] (unknown [49.205.245.25])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AB14EC433C9;
-        Mon, 27 Jul 2020 10:21:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AB14EC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V1] mmc: sdhci-msm: Set IO pins in low power state during
- suspend
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>
-References: <1594213888-2780-1-git-send-email-vbadigan@codeaurora.org>
- <1594213888-2780-2-git-send-email-vbadigan@codeaurora.org>
- <20200710005233.GN3191083@google.com>
- <63323fe2-e3a3-030f-5275-01fa6b04e23b@codeaurora.org>
- <20200711001948.GO3191083@google.com>
- <2c322fe1-6a86-43c9-11f3-387b917836ed@codeaurora.org>
- <406769f7-2282-d658-5573-3a510d256eee@codeaurora.org>
- <CAPDyKFpLg0HnZ6p=x9Egv9w65hB5CtFw=gV1rpL8vbWcHYtCzg@mail.gmail.com>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <5779057c-1639-6e86-a44e-5a3827a4fd75@codeaurora.org>
-Date:   Mon, 27 Jul 2020 15:51:19 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 27 Jul 2020 06:22:47 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2530 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727813AbgG0KWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 06:22:47 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 58BA1E7371DCCA907CA0;
+        Mon, 27 Jul 2020 11:22:45 +0100 (IST)
+Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
+ 2020 11:22:44 +0100
+Date:   Mon, 27 Jul 2020 11:21:21 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@kernel.org>,
+        <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [RFC PATCH 1/9] pci_ids: Add class code and extended capability
+ for RCEC
+Message-ID: <20200727112121.00007653@Huawei.com>
+In-Reply-To: <20200727110010.00005042@Huawei.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+        <20200724172223.145608-2-sean.v.kelley@intel.com>
+        <20200727110010.00005042@Huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFpLg0HnZ6p=x9Egv9w65hB5CtFw=gV1rpL8vbWcHYtCzg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Originating-IP: [10.52.121.176]
+X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 27 Jul 2020 11:00:10 +0100
+Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
 
-On 7/24/2020 3:06 PM, Ulf Hansson wrote:
-> On Tue, 14 Jul 2020 at 16:12, Veerabhadrarao Badiganti
-> <vbadigan@codeaurora.org> wrote:
->>
->> On 7/13/2020 9:26 PM, Veerabhadrarao Badiganti wrote:
->>> On 7/11/2020 5:49 AM, Matthias Kaehlcke wrote:
->>>> Hi,
->>>>
->>>> On Fri, Jul 10, 2020 at 04:28:36PM +0530, Veerabhadrarao Badiganti
->>>> wrote:
->>>>> Hi Mathias,
->>>>>
->>>>> On 7/10/2020 6:22 AM, Matthias Kaehlcke wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On Wed, Jul 08, 2020 at 06:41:20PM +0530, Veerabhadrarao Badiganti
->>>>>> wrote:
->>>>>>> Configure SDHC IO pins with low power configuration when the driver
->>>>>>> is in suspend state.
->>>>>>>
->>>>>>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->>>>>>> ---
->>>>>>>     drivers/mmc/host/sdhci-msm.c | 17 +++++++++++++++++
->>>>>>>     1 file changed, 17 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/mmc/host/sdhci-msm.c
->>>>>>> b/drivers/mmc/host/sdhci-msm.c
->>>>>>> index 392d41d57a6e..efd2bae1430c 100644
->>>>>>> --- a/drivers/mmc/host/sdhci-msm.c
->>>>>>> +++ b/drivers/mmc/host/sdhci-msm.c
->>>>>>> @@ -15,6 +15,7 @@
->>>>>>>     #include <linux/iopoll.h>
->>>>>>>     #include <linux/regulator/consumer.h>
->>>>>>>     #include <linux/interconnect.h>
->>>>>>> +#include <linux/pinctrl/consumer.h>
->>>>>>>     #include "sdhci-pltfm.h"
->>>>>>>     #include "cqhci.h"
->>>>>>> @@ -1352,6 +1353,19 @@ static void
->>>>>>> sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->>>>>>>             sdhci_msm_hs400(host, &mmc->ios);
->>>>>>>     }
->>>>>>> +static int sdhci_msm_set_pincfg(struct sdhci_msm_host *msm_host,
->>>>>>> bool level)
->>>>>>> +{
->>>>>>> +    struct platform_device *pdev = msm_host->pdev;
->>>>>>> +    int ret;
->>>>>>> +
->>>>>>> +    if (level)
->>>>>>> +        ret = pinctrl_pm_select_default_state(&pdev->dev);
->>>>>>> +    else
->>>>>>> +        ret = pinctrl_pm_select_sleep_state(&pdev->dev);
->>>>>>> +
->>>>>>> +    return ret;
->>>>>>> +}
->>>>>>> +
->>>>>>>     static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
->>>>>>>     {
->>>>>>>         if (IS_ERR(mmc->supply.vmmc))
->>>>>>> @@ -1596,6 +1610,9 @@ static void sdhci_msm_handle_pwr_irq(struct
->>>>>>> sdhci_host *host, int irq)
->>>>>>>                 ret = sdhci_msm_set_vqmmc(msm_host, mmc,
->>>>>>>                         pwr_state & REQ_BUS_ON);
->>>>>>>             if (!ret)
->>>>>>> +            ret = sdhci_msm_set_pincfg(msm_host,
->>>>>>> +                    pwr_state & REQ_BUS_ON);
->>>>>>> +        if (!ret)
->>>>>>>                 irq_ack |= CORE_PWRCTL_BUS_SUCCESS;
->>>>>>>             else
->>>>>>>                 irq_ack |= CORE_PWRCTL_BUS_FAIL;
->>>>>> I happened to have a debug patch in my tree which logs when regulators
->>>>>> are enabled/disabled, with this patch I see the SD card regulator
->>>>>> toggling constantly after returning from the first system suspend.
->>>>>>
->>>>>> I added more logs:
->>>>>>
->>>>>> [ 1156.085819] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
->>>>>> [ 1156.248936] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
->>>>>> [ 1156.301989] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
->>>>>> [ 1156.462383] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
->>>>>> [ 1156.525988] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
->>>>>> [ 1156.670372] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
->>>>>> [ 1156.717935] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
->>>>>> [ 1156.878122] DBG: sdhci_msm_set_pincfg: level = 1 (ret: 0)
->>>>>> [ 1156.928134] DBG: sdhci_msm_set_pincfg: level = 0 (ret: 0)
->>>>>>
->>>>>> This is on an SC7180 platform. It doesn't run an upstream kernel
->>>>>> though,
->>>>>> but v5.4 with plenty of upstream patches.
->>>>> I have verified this on couple of sc7180 targets (on Chrome platform
->>>>> with
->>>>> Chrome kernel).
->>>>> But didn't see any issue. Its working as expected.
->>>> Did you test system suspend too? At least in the Chrome OS kernel
->>>> tree system
->>>> suspend is not supported yet in the main branch, you'd need a pile of
->>>> 30+
->>>> extra patches to get it to work. This is expected to change soon
->>>> though :)
->>> Yes. I have verified with system  suspend-resume scenario.
->>> Sorry forgot to mention this point explicitly in last response.
->>>
->>> I believe all the needed patches were present on qcom internal tree.
->>> Suspend-resume is working fine on sc7180 qcom chrome tree.
->>>
->> Thanks Matthias. I cloud reproduce the issue on device without SDcard.
->>
->> Without SDcard inserted, cd-gpio (SD card detect GPIO) is getting read
->> as active HIGH
->> (as if card is inserted) during system-resume, resulting SDcard probe/scan.
->>
->> After that its triggering interrupt again when pinctrl config is applied
->> during SDcard
->> power-up sequence (as part of probe/scan) which is again triggering
->> sdcard scan.
->>
->> I will have to change SDcard cd-gpio sleep config to fix this issue like
->> below:
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index e2230f47a17d..9266d514e163 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -2447,7 +2447,7 @@
->>
->>                                   pinconf-sd-cd {
->>                                           pins = "gpio69";
->> -                                       bias-disable;
->> +                                       bias-pull-up;
->>                                           drive-strength = <2>;
->>
->> I will check more on why its getting read as active HIGH during resume.
->>
->>
->>>>> Let me know if you are observing this issue constantly on multiple
->>>>> boards, I
->>>>> will share you
->>>>> a debug patch to check it further.
->>>> I currently have only one board with the SD card slot populated, I might
->>>> get another one next week.
->>>>
->>>> The toggling occurs only when no SD card is inserted.
->> Thanks
->>
->> Veera
->>
-> Thanks for testing and for looking into this. Perhaps I should drop
-> the $subject patch then?
-Hi Uffe,
+> On Fri, 24 Jul 2020 10:22:15 -0700
+> Sean V Kelley <sean.v.kelley@intel.com> wrote:
+> 
+> > From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> > 
+> > A PCIe Root Complex Event Collector(RCEC) has the base class 0x08,
+> > sub-class 0x07, and programming interface 0x00. Add the class code
+> > 0x0807 to identify RCEC devices and add the defines for the RCEC
+> > Endpoint Association Extended Capability.
+> > 
+> > See PCI Express Base Specification, version 5.0-1, section "1.3.4
+> > Root Complex Event Collector" and section "7.9.10 Root Complex
+> > Event Collector Endpoint Association Extended Capability"  
+> 
+> Add a reference to the document
+> "PCI Code and ID Assignment Specification"
+> for the class number.
 
-No need to drop this. We could root-casue the issue. Its a board 
-specific issue.
-This particular platform/board doesn't have external pull-up on the 
-cd-gpio pin.
+Actually probably no need. I'd somehow managed to fail to notice the
+class code is also given in section 1.3.4 of the main spec.
 
-So internal pull-up config has to be applied on cd-gpio all the time.
-We posted this dt change to enable internal pull 
-https://patchwork.kernel.org/patch/11675347/
+> 
+> From the change log on latest version seems like it's been there since
+> version 1.4.
+> 
+> There is a worrying note (bottom of page 16 of 1.12 version of that docs)
+> in there that says some older specs used 0x0806 for RCECs and that we
+> should use the port type field to actually check if we have one.
+> 
+> Hopefully we won't encounter any of those in the wild.
+> 
+> Otherwise, it's exactly what the spec says.
+> We could bike shed on naming choices, but the ones you have seem clear enough
+> to me.
+> 
+> FWIW
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> 
+> Jonathan
+> > 
+> > Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> > ---
+> >  include/linux/pci_ids.h       | 1 +
+> >  include/uapi/linux/pci_regs.h | 7 +++++++
+> >  2 files changed, 8 insertions(+)
+> > 
+> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> > index 0ad57693f392..de8dff1fb176 100644
+> > --- a/include/linux/pci_ids.h
+> > +++ b/include/linux/pci_ids.h
+> > @@ -81,6 +81,7 @@
+> >  #define PCI_CLASS_SYSTEM_RTC		0x0803
+> >  #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
+> >  #define PCI_CLASS_SYSTEM_SDHCI		0x0805
+> > +#define PCI_CLASS_SYSTEM_RCEC		0x0807
+> >  #define PCI_CLASS_SYSTEM_OTHER		0x0880
+> >  
+> >  #define PCI_BASE_CLASS_INPUT		0x09
+> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> > index f9701410d3b5..f335f65f65d6 100644
+> > --- a/include/uapi/linux/pci_regs.h
+> > +++ b/include/uapi/linux/pci_regs.h
+> > @@ -828,6 +828,13 @@
+> >  #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system budget */
+> >  #define PCI_EXT_CAP_PWR_SIZEOF	16
+> >  
+> > +/* Root Complex Event Collector Endpoint Association  */
+> > +#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
+> > +#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
+> > +#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version that BUSN present */
+> > +#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
+> > +#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
+> > +
+> >  /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
+> >  #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
+> >  #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)  
+> 
 
-Thanks
-Veera
 
-> Uffe
