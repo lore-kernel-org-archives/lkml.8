@@ -2,143 +2,127 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C187EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9ECC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFC120786
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16FDD20786
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 20:30:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="bzNK7nJk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Snw79Wkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbgG0UaJ (ORCPT
+        id S1729281AbgG0Uab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 16:30:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbgG0UaI (ORCPT
+        Mon, 27 Jul 2020 16:30:31 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28763 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726196AbgG0Uab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 16:30:08 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 471F0C061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:30:08 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p3so10576876pgh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 13:30:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2KZJwIkhy/CrWVZLuUHvj+D7ETG92ZsCbDsCh9LqsAY=;
-        b=bzNK7nJkhpcctw8iEyrGD9i++PcZ+43Z5mANXDqbCuWyHCiTPy2OM0p3QDbLplwOe6
-         R947pngpVc+vbgYMZdf2t5it6MdECh44JwVFT4vhDi9h+AghbzXODHeZ5jXTz92BjLtl
-         HfnI6jVQYnOV/rif7oCo6/hCjVKvyciSlAKe4WSub77dvopPM4L40sggklvl14EhyzsW
-         nvJASc1EpYMgdBX1NZusbdAloNCuSENRlioBwBbJaOFTSHLUkk+uwQMfErLIn2/pnA7D
-         Gqbncdv0tc7FBNAV4YDB74amIK+9LjC1m97MqA+T9VGH215VB/UR8y+78tUxuSXguhNA
-         +EoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2KZJwIkhy/CrWVZLuUHvj+D7ETG92ZsCbDsCh9LqsAY=;
-        b=SSSFhBuBk5nDR3yyPzCMOwIDLzaj5DB7QP/+Bxk4OJVJVb26D8y2HcAnEZ+KQw0Tn2
-         A/fD9Vr5yMbF82oqIBvy/kRWlwE5ljET8x4TnM2g80s+tSKzTp1N5imBN+qsJUFbElUC
-         1GpVPY2RMoHDe7ui+JfGTm2oWZHdj6o4NKAK0RbO3GpSMdaquxNysOI2flV8NolzAK3T
-         2DVWRDVh8S7Z0F58XH/J4Je3fU/h3e2Uw/ptylE9WlqfLm6M6S+zkgk5NnjMotSTKBf2
-         TULJewWcqOGduuZR6FAam+ziVW+1zzX05UlZrVPV5PKNWj3oJ2RGkAIBdzvfZ9TNEN+A
-         WFAw==
-X-Gm-Message-State: AOAM531z1frdMIdWihFwVI3HlXBuY3FBkI+qKUl+tkI4jUsQJkqvUPsW
-        b+aOx4PFJu7mV5DkA0spOEg3P/TiRzk=
-X-Google-Smtp-Source: ABdhPJxTWacB6EGQGaEQ+NPmcYzQG9/x9QEKKKQnyObZnzJ8sFdEm+YpGl6oy3JUs2H8dTaltB7V2g==
-X-Received: by 2002:a62:7942:: with SMTP id u63mr21266195pfc.54.1595881807704;
-        Mon, 27 Jul 2020 13:30:07 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id y6sm467347pji.2.2020.07.27.13.30.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2020 13:30:07 -0700 (PDT)
-Subject: Re: [PATCH v2] ata: use generic power management
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200727173923.694872-1-vaibhavgupta40@gmail.com>
- <20200727174012.GA696265@gmail.com>
- <2b4738b0-5c2c-8ee2-83f9-10b961a5d0d3@kernel.dk>
- <20200727175119.GA700880@gmail.com>
- <99b7cc57-1b4f-6c0b-00c6-08e22021c373@kernel.dk>
- <20200727181144.GA543@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <9718954b-2152-1bc2-e702-ebe8799fdfb3@kernel.dk>
-Date:   Mon, 27 Jul 2020 14:30:03 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 27 Jul 2020 16:30:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595881830;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hw5a11evQWNoZLcSM3PhrQFxwvQ8zctZnXM4jg3v0qk=;
+        b=Snw79WknaTJco2AEGy2GbZz0QVuIjU6nDaUSPhRJq4IPPTrjRnZNri4ukwyaG4glEG9ArY
+        LhnE/rD1WWSh0jpG7XYRNyFMy7CKFo1zYo8Dr09m6cpM+/9w42ObP/PejSFbLWtcXibyov
+        lctEd03lh6j4b+Fi0gElFzXOm6ETES0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-498-LgqPGVQYPI6kbodr6iBHuw-1; Mon, 27 Jul 2020 16:30:28 -0400
+X-MC-Unique: LgqPGVQYPI6kbodr6iBHuw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F1C11932480;
+        Mon, 27 Jul 2020 20:30:27 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F31F410013D7;
+        Mon, 27 Jul 2020 20:30:26 +0000 (UTC)
+Date:   Mon, 27 Jul 2020 16:30:26 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     John Donnelly <john.p.donnelly@oracle.com>, stable@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: (resend) [PATCH [linux-4.14.y]] dm cache: submit writethrough
+ writes in parallel to origin and cache
+Message-ID: <20200727203025.GA28830@redhat.com>
+References: <37c5a615-655d-c106-afd0-54e03f3c0eef@oracle.com>
+ <20200727150014.GA27472@redhat.com>
+ <20200727191809.GI406581@sasha-vm>
+ <D8DDA535-33D5-4E80-85B3-62A463441B5F@oracle.com>
+ <20200727201700.GJ406581@sasha-vm>
 MIME-Version: 1.0
-In-Reply-To: <20200727181144.GA543@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727201700.GJ406581@sasha-vm>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/27/20 12:11 PM, Vaibhav Gupta wrote:
-> On Mon, Jul 27, 2020 at 11:59:05AM -0600, Jens Axboe wrote:
->> On 7/27/20 11:51 AM, Vaibhav Gupta wrote:
->>> On Mon, Jul 27, 2020 at 11:42:51AM -0600, Jens Axboe wrote:
->>>> On 7/27/20 11:40 AM, Vaibhav Gupta wrote:
->>>>> The patch is compile-tested only.
->>>>
->>>> Please test and verify actual functionality, if you're serious
->>>> about potentially getting this into the kernel.
->>>>
->>> Hello Jens,
->>>
->>> Sadly I don't have the hardware. This upgrade is part of my Linux
->>> Kernel Mentorship Program project. Like other PCI drivers which I
->>> have updated, I could do compile-testing only. Though this patch
->>> covers 54 drivers but the actual change is done only in
->>> drivers/ata/libata-core. Since rest of the drivers make use of the
->>> same ata_pci_device_suspend/resume(), it was a chain reaction. I
->>> only had to change variable binding in "struct pci_driver" variable
->>> of dependent drivers.
->>
->> That's understandable, but you should find at least some hardware
->> (maybe remotely accessible) to test this on. I'm not going to apply
->> this without some confidence that it actually works, and compile only
->> testing is a far cry from that. Lots of code compiles, but fails
->> miserably at runtime.
->>
->> While it's touching 54 drivers, at least basic coverage of the most
->> popular choices will give everybody some confidence that it works in
->> general.
->>
-> Yes, I agree. Actually with previous drivers, I was able to get help
-> from maintainers and/or supporters for the hardware testing. Is that
-> possible for this patch?
+On Mon, Jul 27 2020 at  4:17pm -0400,
+Sasha Levin <sashal@kernel.org> wrote:
 
-It might be, you'll have to ask people to help you, very rarely do people
-just test patches unsolicited unless they have some sort of interest in the
-feature.
+> On Mon, Jul 27, 2020 at 02:38:52PM -0500, John Donnelly wrote:
+> >
+> >
+> >>On Jul 27, 2020, at 2:18 PM, Sasha Levin <sashal@kernel.org> wrote:
+> >>
+> >>On Mon, Jul 27, 2020 at 11:00:14AM -0400, Mike Snitzer wrote:
+> >>>This mail needs to be saent to stable@vger.kernel.org (now cc'd).
+> >>>
+> >>>Greg et al: please backport 2df3bae9a6543e90042291707b8db0cbfbae9ee9
+> >>
+> >>Hm, what's the issue that this patch addresses? It's not clear from the
+> >>commit message.
+> >>
+> >>--
+> >>Thanks,
+> >>Sasha
+> >
+> >HI Sasha ,
+> >
+> >In an off-line conversation I had with Mike , he indicated that :
+> >
+> >
+> >commit 1b17159e52bb31f982f82a6278acd7fab1d3f67b
+> >Author: Mike Snitzer <snitzer@redhat.com>
+> >Date:   Fri Feb 28 18:00:53 2020 -0500
+> >
+> >  dm bio record: save/restore bi_end_io and bi_integrity
+> >
+> >
+> >commit 248aa2645aa7fc9175d1107c2593cc90d4af5a4e
+> >Author: Mike Snitzer <snitzer@redhat.com>
+> >Date:   Fri Feb 28 18:11:53 2020 -0500
+> >
+> >  dm integrity: use dm_bio_record and dm_bio_restore
+> >
+> >
+> >Were picked up  in  "stable" kernels picked up even though
+> >neither was marked for stable@vger.kernel.org
+> >
+> >Adding this missing  commit :
+> >
+> >2df3bae9a6543e90042291707b8db0cbfbae9ee9
+> >
+> >
+> >Completes the series
+> 
+> Should we just revert those two commits instead if they're not needed?
 
-This is all part of what it takes to get code upstream. Writing the code
-is just a small part of it, the bigger part is usually getting it tested
-and providing some assurance that you are willing to fix issues when/if
-they come up.
+I'd be fine with that, exceept I haven't looked to see whether any
+other stable commits conflict with reverting them.
 
-You might want to consider splitting up the patchset a bit - you could
-have one patch for the generic bits, then one for each chipset. That
-would allow you to at least get some of the work upstream, once tested.
+But you have my blessing to give it a shot ;)
 
--- 
-Jens Axboe
+Mike
 
