@@ -2,88 +2,134 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A53C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AF5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B39B20786
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B3120719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:29:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rhBWZ8UZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgG0I1v (ORCPT
+        id S1726541AbgG0I31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:27:51 -0400
-Received: from smtprelay0083.hostedemail.com ([216.40.44.83]:48704 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726139AbgG0I1u (ORCPT
+        Mon, 27 Jul 2020 04:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726139AbgG0I30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:27:50 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id C23DD1730850;
-        Mon, 27 Jul 2020 08:27:49 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: sleet04_270be7a26f5f
-X-Filterd-Recvd-Size: 2386
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 27 Jul 2020 08:27:48 +0000 (UTC)
-Message-ID: <ae9d562ec9ef765dddd1491d4cfb5f6d18f7025f.camel@perches.com>
-Subject: Re: [PATCH 2/6] rtlwifi: Remove unnecessary parenthese in rtl_dbg
- uses
-From:   Joe Perches <joe@perches.com>
-To:     Pkshih <pkshih@realtek.com>,
-        "Larry.Finger@lwfinger.net" <Larry.Finger@lwfinger.net>
-Cc:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Date:   Mon, 27 Jul 2020 01:27:47 -0700
-In-Reply-To: <1595830034.12227.7.camel@realtek.com>
-References: <cover.1595706419.git.joe@perches.com>
-         <9b2eaedb7ea123ea766a379459b20a9486d1cd41.1595706420.git.joe@perches.com>
-         <1595830034.12227.7.camel@realtek.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Mon, 27 Jul 2020 04:29:26 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF316C061794;
+        Mon, 27 Jul 2020 01:29:25 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id g11so4394031ejr.0;
+        Mon, 27 Jul 2020 01:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kTvFHWIgSGjnFCLXvF/yM/fZKWRBifqnvOHS6nXZY60=;
+        b=rhBWZ8UZfJnc/0LDqRq1hvkXo3Y/bKWD9uXPbt5ZdJCJL7MPyacKwMj8uZl1LoIx+t
+         JJBPVDfd7U0T8YGwhhCJZBJRhG0dHWshYxK6BiKXvS39U3Jw7WixJpP1+v2N11/KeHpD
+         6HRq0M47ZM+dxh2MLcWdc83LoqK0WnCPn57cLleZTUTRKoZmnpBKdymAOnGspTpzafp5
+         gb1bUilnrQWaQ0abFXdY7bDQVaOHvhDYjHZxAnWcDYHv3vdQN/3joHxoMLjitYb5lnF8
+         6pZBf228xQ3KVpJs+dn+U/NOv9hndoHDYa9Anl8xVsk+VTOR4KNJh3UTq35soi/MYg42
+         Qxzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kTvFHWIgSGjnFCLXvF/yM/fZKWRBifqnvOHS6nXZY60=;
+        b=KOef3x0qMsuz+UKNeEULY64JzHMEeLdPx8sYTEty4wK3A6IDrQJUkqK8LX5kb3ELhl
+         WX0/u9Rv5onN9X0I9m2RPGlIYPwPB3HGC3AIGUM/nfLTe6aGhldGuIQpKmh/+YWNQAyx
+         E9r/1LX5CCsRGUXMses2hCGw02ZtZ53KsEYuYyqQMztzMaW0OG5EYZC/q6PI8FXlv09m
+         ZcSHBqv5b8DkAOEODE+y3e090DwIwDnD5puDlsT9nwN2B+k2X/cqATaEuPguSawdI+uE
+         aCdsAbdDTzlZP48IaAM8NpUHRxNIeMirMSi2MS2GU4uczekrmRZzg/hy6e4iWTN0t5Jm
+         2V/w==
+X-Gm-Message-State: AOAM530eLenRNnoV6D3a7WkiMOwUR2LoBLswUiDTU4DFTvrQJVZAIUPj
+        G1LQ6wONXxoEEK47tOCVVvU=
+X-Google-Smtp-Source: ABdhPJxBJ61Af8cchsQdC/QftI94zMlte4qABD6xZOGp0SVf0126WE3jJmOlPkHbPFHUG5f9p+9U8A==
+X-Received: by 2002:a17:907:2119:: with SMTP id qn25mr1249847ejb.278.1595838564540;
+        Mon, 27 Jul 2020 01:29:24 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id o9sm6972837edz.81.2020.07.27.01.29.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 01:29:23 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 10:29:22 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Subject: Re: [PATCH v4] pwm: bcm-iproc: handle clk_get_rate() return
+Message-ID: <20200727082922.GE2781612@ulmo>
+References: <20200718044606.18739-1-scott.branden@broadcom.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sfyO1m2EN8ZOtJL6"
+Content-Disposition: inline
+In-Reply-To: <20200718044606.18739-1-scott.branden@broadcom.com>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-07-27 at 06:07 +0000, Pkshih wrote:
-> On Sat, 2020-07-25 at 12:55 -0700, Joe Perches wrote:
-> > Make these statements a little simpler.
-[]
-> > diff --git a/drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtcoutsrc.c
-[]
-> > @@ -874,11 +874,10 @@ static void halbtc_display_wifi_status(struct
-> > btc_coexist *btcoexist,
-> >  	seq_printf(m, "\n %-35s = %s / %s/ %s/ AP=%d ",
-> >  		   "Wifi freq/ bw/ traffic",
-> >  		   gl_btc_wifi_freq_string[wifi_freq],
-> > -		   ((wifi_under_b_mode) ? "11b" :
-> > -		    gl_btc_wifi_bw_string[wifi_bw]),
-> > -		   ((!wifi_busy) ? "idle" : ((BTC_WIFI_TRAFFIC_TX ==
-> > -					      wifi_traffic_dir) ? "uplink" :
-> > -					     "downlink")),
-> > +		   wifi_under_b_mode ? "11b" : gl_btc_wifi_bw_string[wifi_bw],
-> > +		   (!wifi_busy ? "idle" :
-> > +		    wifi_traffic_dir == BTC_WIFI_TRAFFIC_TX ? "uplink" :
-> > +		    "downlink"),
-> 
-> I think this would be better
-> 
-> +		   !wifi_busy ? "idle" :
-> +		   (wifi_traffic_dir == BTC_WIFI_TRAFFIC_TX ? "uplink" :
-> +		    "downlink"),
 
-It seems most repeated test1 ? : test2 ? : test3 ?:
-uses do not have the style you suggest in the kernel.
+--sfyO1m2EN8ZOtJL6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jul 17, 2020 at 09:46:06PM -0700, Scott Branden wrote:
+> From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+>=20
+> Handle clk_get_rate() returning 0 to avoid possible division by zero.
+>=20
+> Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>=20
+> ---
+> Changes from v3: fixed typo in commit message: Reviewed-off-by.
+> Hopefully everything clean now.
+> Changes from v2: update commit message to remove <=3D condition
+> as clk_get_rate only returns value >=3D 0
+> ---
+>  drivers/pwm/pwm-bcm-iproc.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 
+Applied, thanks.
+
+Thierry
+
+--sfyO1m2EN8ZOtJL6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl8ekGEACgkQ3SOs138+
+s6E9NQ/8DRh+Uofx9uOez18XOB5EXMG+bglfBoTGCIZtSqn9NLcVnGNpM37XVEhU
+F1rSljb4082n2YzA5yGXz5CPR0IMWldexngcbyrH1HOKYruiP/tjI5ndl7qE3s1v
+UfMeqw0EOx8Jp7lUGEQcHB4w2tMFY/5LVJJqdVdIU9b4ddmIZkXnxpIpUFN+FTfR
+FZ7+ZkCGFAHPH0OEWQ6H8SjwTS1t+iqoB4FbV22xXUYe9BCg7JxT55pMfoz3Ktke
+lfTKrwT1cA0tPLww9G0pd5MiI4+9L2p3imzyVLQ0ZC4evYi09S1cmSFlQbfuI3xC
+6+caPgkKJl96zbK0zlR9immVgzZ+ZFQKhFa7iP7GqTJMfnAtN0B0rukctzmTTq1Y
+UeG2QZO3KO39Kow7UOaVKNTdJ74tjzphJSJsbDRTL70c7sm2FxsodTBGmqs29EFb
+DdJ8Pq81mLI1y+TWyN3PCqHXm+AJNzWQuXMBQBpGVfSYIquaFuNsX2CZtuLVS2kR
+eu5WoN+Oh9mGJxjNNLIHHsl+U4V7qm+vNnsA5a17QKkps+5oUz1qeduy/0/PHqkm
+Mk1IFbX7lQRZjiAJt2IUMypYOS9IP9nGCdqUYeEh44dkSgzLV7o8OjO5V2BXMC6I
+6wki2OpMXEs2wJWjit5PWynQJQIEugfEiLjFyHSJ1pnBrV45+Fo=
+=qIz5
+-----END PGP SIGNATURE-----
+
+--sfyO1m2EN8ZOtJL6--
