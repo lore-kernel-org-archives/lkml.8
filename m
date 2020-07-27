@@ -2,146 +2,151 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 144A1C433FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B642C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E73302078E
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595859166;
-	bh=WN+xdijybaJpHVCIymRbt5voSWUVYs4Q53sCSyrVzGs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OZqnQE4Kv4eSVXJH2QpusdLkPJC8kz0nhgJr4rPjgHEL73a9foau8Ifq3GHDOn/+R
-	 JCpTOs/n+U5yv6H8XmNJNG5AJUL/IRK6X+Vx0u8fzipOjb7FcJ2zj14Y1UC0W1lqIL
-	 OdQtLa4spOTy2eIAF9H9eleTMmfedkbaKRysYw+E=
+	by mail.kernel.org (Postfix) with ESMTP id 04BA12078E
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:12:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="B8ffA7US"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgG0OMq (ORCPT
+        id S1730264AbgG0OMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:12:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37156 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730225AbgG0OMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:12:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730231AbgG0OMn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 27 Jul 2020 10:12:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA8320838;
-        Mon, 27 Jul 2020 14:12:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859162;
-        bh=WN+xdijybaJpHVCIymRbt5voSWUVYs4Q53sCSyrVzGs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hoyN/QObv2Jym+xZrCoEVrtXLSCQT4pu7cq/GGB1Il+bEUKTeasCrmRC3f87gblne
-         Nt2TeGuyzoQRcnghEUFd8xmQ2/b01Piq365KvfXY+8x9DY7lPBt5m57vl9XWZ+g/9h
-         1DuW0sabPv8PtOuy0+k7+r9/tDz74mVoW1n51ucg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>
-Subject: [PATCH 4.19 70/86] serial: 8250: fix null-ptr-deref in serial8250_start_tx()
-Date:   Mon, 27 Jul 2020 16:04:44 +0200
-Message-Id: <20200727134917.928280300@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134914.312934924@linuxfoundation.org>
-References: <20200727134914.312934924@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0481C0619D2
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:12:42 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id o10so2573027edh.6
+        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 07:12:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bHapzJ0P6xUuZ32/Fm3FmLxN3+W0YiwvdWtul3bH0zc=;
+        b=B8ffA7US+1YKsKILPUPB+8nSLr6m3RTdAtBDehe3oxJyYQ7mRu0QiHt38w+fEdoQLG
+         jdtbJLjSnRSRs/U27O/03LK5W+gje6bfwur455MeP9VxwLT2oacer2EFrUSWfGQTiLPB
+         4h1da6SxVTQRL/KFHQX9UU1+yoqZj9ixBqaNUTqHfI65CDLmTa5U4K/qYpJ+TliA0tp2
+         JVZQcMqIOpnHq74+mduHT8TTmn6SyfFisCcaQWuKE/+ebwlkl0D/ua+qRPGv0qGwiZcL
+         3yq6hBbdW9Ougv+EJhJsaYgbOO5xj0GXvY97kJG3ZLX1bVQmX4PiZjuEtSHUsYJRo6n/
+         vhgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bHapzJ0P6xUuZ32/Fm3FmLxN3+W0YiwvdWtul3bH0zc=;
+        b=kRoRIf3Q62uoAWSRNMnDwiC2gwBezeQvd6FL2/fIEEYWawMAGLeJSGRR2Hdn2sZk+z
+         OWWN6EdtAIXftJXUG1Dd4KY0x12sJONv+NjiYpjS8+uBQlB4h/uIuWhhistwl38oAhZc
+         TdcG2hl/Dv/+tM5f1N+3ZwN4R4WaoZLWGHoTXPn2eqjOAOKF0Rwqd1qqGR079w8zRCeB
+         jFmHm5BANcxaOjIuOBL/RJnsIBSzqQ+ijS11u86D7rhzEDRBx8sxsgSB7eSvMPHe6v2w
+         E/rLWEML0J80PFlEFsgIWNzpUiBcILKpskdImu7Q4z2JZWsWoILfv8Ctyy/O8PXtYhJ1
+         1K/Q==
+X-Gm-Message-State: AOAM5320Dc9faMeTHppvev06dQXftOqK2jla+8Sq0BzmTJGU4Ymi3pwG
+        U6YRM9uWTvo/b+2lwPGW5f6Fc+iAov1aux6SUeEyMQ==
+X-Google-Smtp-Source: ABdhPJzL6g6Q0QOmH9j7dy280O/qkgraYf1W+MBlD2oMwuVrryHQjjWkm7mAfQzWBU2TtCCTk/dPSXhirg3BW3/hgPg=
+X-Received: by 2002:a05:6402:947:: with SMTP id h7mr21787651edz.213.1595859161489;
+ Mon, 27 Jul 2020 07:12:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200713060842.471356-1-acourbot@chromium.org>
+ <20200713060842.471356-3-acourbot@chromium.org> <CAAEAJfD8yfdTptkmXoPzrw6S=6eKr=K4yL9-5aq2JtWF7M3=7w@mail.gmail.com>
+ <CAPBb6MW3AC2savGCHk8w98u1oRuZAs9m6sqz++ksJ58DGvJ5nQ@mail.gmail.com>
+In-Reply-To: <CAPBb6MW3AC2savGCHk8w98u1oRuZAs9m6sqz++ksJ58DGvJ5nQ@mail.gmail.com>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Mon, 27 Jul 2020 11:12:30 -0300
+Message-ID: <CAAEAJfB1cBM-QCg1Sg6iwyQps7r6osY69p68Q-0_YzmSPhNgXw@mail.gmail.com>
+Subject: Re: [PATCH v3 02/16] dt-bindings: media: mtk-vcodec: document SCP node
+To:     Alexandre Courbot <acourbot@chromium.org>
+Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+On Mon, 27 Jul 2020 at 06:06, Alexandre Courbot <acourbot@chromium.org> wrote:
+>
+> On Thu, Jul 23, 2020 at 6:37 AM Ezequiel Garcia
+> <ezequiel@vanguardiasur.com.ar> wrote:
+> >
+> > On Mon, 13 Jul 2020 at 03:09, Alexandre Courbot <acourbot@chromium.org> wrote:
+> > >
+> > > The mediatek codecs can use either the VPU or the SCP as their interface
+> > > to firmware. Reflect this in the DT bindings.
+> > >
+> > > Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> > > Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/media/mediatek-vcodec.txt | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> > > index b6b5dde6abd8..7aef0a4fe207 100644
+> > > --- a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> > > +++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> > > @@ -19,7 +19,9 @@ Required properties:
+> > >  - iommus : should point to the respective IOMMU block with master port as
+> > >    argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> > >    for details.
+> > > -- mediatek,vpu : the node of video processor unit
+> > > +One of the two following nodes:
+> > > +- mediatek,vpu : the node of the video processor unit, if using VPU.
+> > > +- mediatek,scp : the noode of the SCP unit, if using SCP.
+> > >
+> >
+> > This interface doesn't enforce the fact only one of the two
+> > should be present, but not both (which is the case, right?).
+>
+> That's correct.
+>
+> >
+> > I hope I'm not bikeshedding here, but from an interface POV,
+> > would it be cleaner to just have a single mediatek,coprocessor
+> > property, and then use of_device_is_compatible
+> > to distinguish VPU from SCP type?
+>
+> From an interface point of view maybe, however doing so would
+> introduce a backward-incompatible change with the existing MT8173
+> bindings. I also feel like it is less error-prone to have the property
+> explicitly state what it is expecting at the other end of the phandle
+> (vpu or scp) instead of the more generic "coprocessor".
+>
+> >
+> > Moreover, I'd argue you don't need a dt-binding change
+> > and should just keep the current mediatek-vpu property,
+> > and then rely on of_device_is_compatible.
+>
+> VPU and SCP are different kinds of processors, so I'm not sure whether
+> it is desirable to use VPU interchangeably like this. Note that I'm
+> not strongly against it either, but for things like bindings I tend to
+> prefer precise language to avoid confusions.
 
-commit f4c23a140d80ef5e6d3d1f8f57007649014b60fa upstream.
+Yeah, I guess that makes sense.
 
-I got null-ptr-deref in serial8250_start_tx():
+Not only from a language precision point of view (after all
+DT are not designed to be human readable).
 
-[   78.114630] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[   78.123778] Mem abort info:
-[   78.126560]   ESR = 0x86000007
-[   78.129603]   EC = 0x21: IABT (current EL), IL = 32 bits
-[   78.134891]   SET = 0, FnV = 0
-[   78.137933]   EA = 0, S1PTW = 0
-[   78.141064] user pgtable: 64k pages, 48-bit VAs, pgdp=00000027d41a8600
-[   78.147562] [0000000000000000] pgd=00000027893f0003, p4d=00000027893f0003, pud=00000027893f0003, pmd=00000027c9a20003, pte=0000000000000000
-[   78.160029] Internal error: Oops: 86000007 [#1] SMP
-[   78.164886] Modules linked in: sunrpc vfat fat aes_ce_blk crypto_simd cryptd aes_ce_cipher crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce ses enclosure sg sbsa_gwdt ipmi_ssif spi_dw_mmio sch_fq_codel vhost_net tun vhost vhost_iotlb tap ip_tables ext4 mbcache jbd2 ahci hisi_sas_v3_hw libahci hisi_sas_main libsas hns3 scsi_transport_sas hclge libata megaraid_sas ipmi_si hnae3 ipmi_devintf ipmi_msghandler br_netfilter bridge stp llc nvme nvme_core xt_sctp sctp libcrc32c dm_mod nbd
-[   78.207383] CPU: 11 PID: 23258 Comm: null-ptr Not tainted 5.8.0-rc6+ #48
-[   78.214056] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B210.01 03/12/2020
-[   78.222888] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
-[   78.228435] pc : 0x0
-[   78.230618] lr : serial8250_start_tx+0x160/0x260
-[   78.235215] sp : ffff800062eefb80
-[   78.238517] x29: ffff800062eefb80 x28: 0000000000000fff
-[   78.243807] x27: ffff800062eefd80 x26: ffff202fd83b3000
-[   78.249098] x25: ffff800062eefd80 x24: ffff202fd83b3000
-[   78.254388] x23: ffff002fc5e50be8 x22: 0000000000000002
-[   78.259679] x21: 0000000000000001 x20: 0000000000000000
-[   78.264969] x19: ffffa688827eecc8 x18: 0000000000000000
-[   78.270259] x17: 0000000000000000 x16: 0000000000000000
-[   78.275550] x15: ffffa68881bc67a8 x14: 00000000000002e6
-[   78.280841] x13: ffffa68881bc67a8 x12: 000000000000c539
-[   78.286131] x11: d37a6f4de9bd37a7 x10: ffffa68881cccff0
-[   78.291421] x9 : ffffa68881bc6000 x8 : ffffa688819daa88
-[   78.296711] x7 : ffffa688822a0f20 x6 : ffffa688819e0000
-[   78.302002] x5 : ffff800062eef9d0 x4 : ffffa68881e707a8
-[   78.307292] x3 : 0000000000000000 x2 : 0000000000000002
-[   78.312582] x1 : 0000000000000001 x0 : ffffa688827eecc8
-[   78.317873] Call trace:
-[   78.320312]  0x0
-[   78.322147]  __uart_start.isra.9+0x64/0x78
-[   78.326229]  uart_start+0xb8/0x1c8
-[   78.329620]  uart_flush_chars+0x24/0x30
-[   78.333442]  n_tty_receive_buf_common+0x7b0/0xc30
-[   78.338128]  n_tty_receive_buf+0x44/0x2c8
-[   78.342122]  tty_ioctl+0x348/0x11f8
-[   78.345599]  ksys_ioctl+0xd8/0xf8
-[   78.348903]  __arm64_sys_ioctl+0x2c/0xc8
-[   78.352812]  el0_svc_common.constprop.2+0x88/0x1b0
-[   78.357583]  do_el0_svc+0x44/0xd0
-[   78.360887]  el0_sync_handler+0x14c/0x1d0
-[   78.364880]  el0_sync+0x140/0x180
-[   78.368185] Code: bad PC value
+But as you mention, given the processors will have different compatible
+strings it would make sense to not allow overloading the property.
 
-SERIAL_PORT_DFNS is not defined on each arch, if it's not defined,
-serial8250_set_defaults() won't be called in serial8250_isa_init_ports(),
-so the p->serial_in pointer won't be initialized, and it leads a null-ptr-deref.
-Fix this problem by calling serial8250_set_defaults() after init uart port.
+In any case, I don't have a strong opinion either.
 
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200721143852.4058352-1-yangyingliang@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/tty/serial/8250/8250_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -527,6 +527,7 @@ static void __init serial8250_isa_init_p
- 		 */
- 		up->mcr_mask = ~ALPHA_KLUDGE_MCR;
- 		up->mcr_force = ALPHA_KLUDGE_MCR;
-+		serial8250_set_defaults(up);
- 	}
- 
- 	/* chain base port ops to support Remote Supervisor Adapter */
-@@ -550,7 +551,6 @@ static void __init serial8250_isa_init_p
- 		port->membase  = old_serial_port[i].iomem_base;
- 		port->iotype   = old_serial_port[i].io_type;
- 		port->regshift = old_serial_port[i].iomem_reg_shift;
--		serial8250_set_defaults(up);
- 
- 		port->irqflags |= irqflag;
- 		if (serial8250_isa_config != NULL)
-
-
+Thanks,
+Ezequiel
