@@ -2,106 +2,94 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66661C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E17C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A97820719
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92659208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860552;
-	bh=YKVuAkV0eYJPZqvXHyFJPRi0u2KKXdveNpN4N5vQAjk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RhcGNBK6xobT9+EPM3/n+3Hgz7klCvEd2LLQrnAr36xLMBi57M6FpEC1YV4cDMu3m
-	 2FydNlKArvXYm63qByvYi/ifWc7i8OtCwaJ6QUYIMl5uwA9Khe4FL6ucXo0HQrM53y
-	 D64CaoIJiIzZuxna6xIe9NP4r4i+pCo6NvtJ1YWY=
+	s=default; t=1595860561;
+	bh=dxq/jqClAkdTWak3nsWGqBiRyGoUb2C2my9pWKFTqjM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ti59Mqh3+ix9STN00lxxJJuTSf/mabXqV9CEhf6Qv96jbC9FFEKxRGFaFE9TXJDLW
+	 oOqKKwW79P1wx9Aq+88zBEcRQibCiyp2xDtfezZivEmA8m1HKqT/h76Q8PgxtpRDvl
+	 wGjhiE7v+2AdipMvzeTq9KPlIG4x0gDUa+mrhE1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbgG0Ofv (ORCPT
+        id S1732928AbgG0Of7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:35:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730583AbgG0OOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:14:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 002DE21744;
-        Mon, 27 Jul 2020 14:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859281;
-        bh=YKVuAkV0eYJPZqvXHyFJPRi0u2KKXdveNpN4N5vQAjk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EMBoOo3Mq8eQbWbC8JG/o8i734tW1XhWvGzeVzCFegYzT4o7xLxqpmXBH/QaYGlG5
-         zPWRWcSUVhw8vw53Z4KqJZo09gefnPR/ajw4W5zYUnnmQxzUI83I1btH8Z88gHi7R1
-         ppIr9z5LOnmaNfRvIx0vEYYYBNqAzrTnhCVXpuxY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 048/138] net: smc91x: Fix possible memory leak in smc_drv_probe()
-Date:   Mon, 27 Jul 2020 16:04:03 +0200
-Message-Id: <20200727134927.757640108@linuxfoundation.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
-References: <20200727134925.228313570@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 27 Jul 2020 10:35:59 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42157 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730524AbgG0OOX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:14:23 -0400
+Received: by mail-ot1-f65.google.com with SMTP id v21so5132573otj.9;
+        Mon, 27 Jul 2020 07:14:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RwV/fYC6R5PVghDc7Xcfm5xADtIIp1K2tl3Z3YbTId0=;
+        b=EyX8oZgXnnyZ14gS8R68le0lWjEV7pUltjytZqZJTHMzrGP3kfFlD6aSKu2sUVX5qy
+         +r7/BwgrNFPi8NzabwoV+P7U4eWB8aHHtrzjF7e9TC6cyk1FLp/Naeun9VqE0X2TdTfN
+         d1b03WqVKQgdcEiteOXfr9uDxGghi/X+8R5HplMezJuFIIsPGMf7IegyoCe+5lqoa0Ye
+         NEnVBVKreCylidXQB4n8U6fZtjySGYO3BvZ2mb+t/q6LKmyCqxLQ4c0HB3jwh88TiMma
+         GHB+34AFs9M9PhYLaPzdKf4q7H3hbz/fQWrkS6Co5WGWdtvH6o3k6uOV8gbec6e5zdhx
+         6aKA==
+X-Gm-Message-State: AOAM531ZdEKEz0AZS7F/F0NBgGuZqAR95rrPeUTy7+KVN0QLJbWPYXhk
+        QKgmJDYO9iGTYXZYbnjBivWc4092QE7sCq/zFG4=
+X-Google-Smtp-Source: ABdhPJy3IQ4gWoo3GVjFr2jd6qToC3wtimm7RFwI0aGYMQzT7H7gS+icm3pzzCk7LtxkYZm+IgVNdSPw5XxX9M393tU=
+X-Received: by 2002:a9d:590a:: with SMTP id t10mr20554597oth.262.1595859262962;
+ Mon, 27 Jul 2020 07:14:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1594120299-31389-1-git-send-email-ego@linux.vnet.ibm.com> <20200707113235.GM14120@in.ibm.com>
+In-Reply-To: <20200707113235.GM14120@in.ibm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 27 Jul 2020 16:14:12 +0200
+Message-ID: <CAJZ5v0jA20TJyxRwtBu31zF5otkqbTW9R03Na3LgJsWB3nDmoQ@mail.gmail.com>
+Subject: Re: [PATCH 0/5] cpuidle-pseries: Parse extended CEDE information for idle.
+To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Neuling <mikey@neuling.org>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        linuxppc-dev@ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+On Tue, Jul 7, 2020 at 1:32 PM Gautham R Shenoy <ego@linux.vnet.ibm.com> wrote:
+>
+> Hi,
+>
+> On Tue, Jul 07, 2020 at 04:41:34PM +0530, Gautham R. Shenoy wrote:
+> > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> >
+> > Hi,
+> >
+> >
+> >
+> >
+> > Gautham R. Shenoy (5):
+> >   cpuidle-pseries: Set the latency-hint before entering CEDE
+> >   cpuidle-pseries: Add function to parse extended CEDE records
+> >   cpuidle-pseries : Fixup exit latency for CEDE(0)
+> >   cpuidle-pseries : Include extended CEDE states in cpuidle framework
+> >   cpuidle-pseries: Block Extended CEDE(1) which adds no additional
+> >     value.
+>
+> Forgot to mention that these patches are on top of Nathan's series to
+> remove extended CEDE offline and bogus topology update code :
+> https://lore.kernel.org/linuxppc-dev/20200612051238.1007764-1-nathanl@linux.ibm.com/
 
-[ Upstream commit bca9749b1aa23d964d3ab930938af66dbf887f15 ]
-
-If try_toggle_control_gpio() failed in smc_drv_probe(), free_netdev(ndev)
-should be called to free the ndev created earlier. Otherwise, a memleak
-will occur.
-
-Fixes: 7d2911c43815 ("net: smc91x: Fix gpios for device tree based booting")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/smsc/smc91x.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
-index 3a6761131f4c2..2248d26746124 100644
---- a/drivers/net/ethernet/smsc/smc91x.c
-+++ b/drivers/net/ethernet/smsc/smc91x.c
-@@ -2274,7 +2274,7 @@ static int smc_drv_probe(struct platform_device *pdev)
- 		ret = try_toggle_control_gpio(&pdev->dev, &lp->power_gpio,
- 					      "power", 0, 0, 100);
- 		if (ret)
--			return ret;
-+			goto out_free_netdev;
- 
- 		/*
- 		 * Optional reset GPIO configured? Minimum 100 ns reset needed
-@@ -2283,7 +2283,7 @@ static int smc_drv_probe(struct platform_device *pdev)
- 		ret = try_toggle_control_gpio(&pdev->dev, &lp->reset_gpio,
- 					      "reset", 0, 0, 100);
- 		if (ret)
--			return ret;
-+			goto out_free_netdev;
- 
- 		/*
- 		 * Need to wait for optional EEPROM to load, max 750 us according
--- 
-2.25.1
-
-
-
+OK, so this is targeted at the powerpc maintainers, isn't it?
