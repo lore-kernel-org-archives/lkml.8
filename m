@@ -2,256 +2,317 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05563C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45520C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0A6D206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BD8D207FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 17:17:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F24pSJOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730645AbgG0RQG convert rfc822-to-8bit (ORCPT
+        id S1730484AbgG0RRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 13:16:06 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2540 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728021AbgG0RQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 13:16:06 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 8D3ED8F437775346153B;
-        Mon, 27 Jul 2020 18:16:04 +0100 (IST)
-Received: from localhost (10.52.121.176) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 27 Jul
- 2020 18:16:04 +0100
-Date:   Mon, 27 Jul 2020 18:14:40 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <tony.luck@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [RFC PATCH 7/9] PCI/AER: Add RCEC AER handling
-Message-ID: <20200727181440.0000614a@Huawei.com>
-In-Reply-To: <6C5C96C5-0365-48A0-B623-1A4C0CE0D13E@intel.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
-        <20200724172223.145608-8-sean.v.kelley@intel.com>
-        <20200727132252.0000644c@Huawei.com>
-        <6C5C96C5-0365-48A0-B623-1A4C0CE0D13E@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 27 Jul 2020 13:17:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728021AbgG0RQ7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 13:16:59 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C9C0C061794;
+        Mon, 27 Jul 2020 10:16:59 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id g19so4037039ejc.9;
+        Mon, 27 Jul 2020 10:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=PREIfXCCu3w1zcBtJb3ZfAXkGKdy/WRW+EQjYoFwzm4=;
+        b=F24pSJOzxR93pXUjPELGLKNFTxodoWPLieXhqKUPwLg97sRqzlE5ptMk35Oc4I5j4a
+         KIZKItREVsjuKFstTDkN5Bq3Yg2q8RxjCFMF1vbNY1jFTCD8s83ZeqdbNKK9tl7KfZqc
+         3anCw9ggQa/ztFKkplOS4fMk8ajdOblfS39laN+5fEFZWjGLHYlSVH+I4668V2pKN4zg
+         SZlun5SnBlxktflp9/sZEBIaUVhlBr4RNB9IhVMXDS/f0eJtOaz8EjfDOMs18WHpqBut
+         hs+9QOcI3gKHpy9lcqG9Npensg702r4NPeGV1Aqt0l5byDWRc7y7JmHia+3geElXvUoq
+         8gQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=PREIfXCCu3w1zcBtJb3ZfAXkGKdy/WRW+EQjYoFwzm4=;
+        b=Hbq7LFGFVHtAe0WegyRtBd5KxljIb0c3q5izrc6YR46iBn+LegpsoA2y+djhapPR5y
+         W5Zp3cN1GJbjyW5UqZ9J5ogXfrh71sC38wrTYA1Bm8tues+P2DrFz/2W23gL6WdNyLdZ
+         vtZgz3VhAn0E3az/5tsUsODiRdUZGXExU/RgXDJup7HxlYOuEk0eXnDxkUsCxCR6O2BL
+         Z/z9KDxiCzUYYjeNyYXcmWZYO2nyusF3/eGc2Y6WBHV2wPA/BvhOQt+gOTimh6pmvB4C
+         lZmyVV2a5NSOUzUgyfAoJcvCxnfqI6hkxfXIfmE97kc4mRPvPq0hs47xGfkALPHz3jw7
+         zvGA==
+X-Gm-Message-State: AOAM531T+XcI+qMIiPhhcQOejoh9S2Al5Sp8l+AmWuPg8QWJgNtZzMdJ
+        TF8gp80bEXdKhOdRlPeA2nHHRCHw2RhH8WcxiI7WgiW9
+X-Google-Smtp-Source: ABdhPJyxEC0OlYV19Te3075t4r3dMqI3c7X3WZxvviw+ElGVcW4TpojtZCtLSkOF9Djzm34h9tn1ayXMOw1jKl9ILaI=
+X-Received: by 2002:a17:906:f199:: with SMTP id gs25mr6047791ejb.161.1595870218000;
+ Mon, 27 Jul 2020 10:16:58 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200720154047.3611092-1-jcrouse@codeaurora.org>
+ <20200720154047.3611092-7-jcrouse@codeaurora.org> <CAF6AEGuF_fC4=vBKr24HogE-d3KkXUQivOpVde9iqf+RvRzNtA@mail.gmail.com>
+ <20200727150306.GB32521@jcrouse1-lnx.qualcomm.com>
+In-Reply-To: <20200727150306.GB32521@jcrouse1-lnx.qualcomm.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 27 Jul 2020 10:17:36 -0700
+Message-ID: <CAF6AEGtdO=d2r7dvLFNJ02nUDbKBm0J7O-i9=kxjWTr9NK=ecg@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH v10 06/13] iommu/arm-smmu-qcom: Get and set
+ the pagetable config for split pagetables
+To:     Rob Clark <robdclark@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.52.121.176]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Jul 2020 08:19:39 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
-
-> On 27 Jul 2020, at 5:22, Jonathan Cameron wrote:
-> 
-> > On Fri, 24 Jul 2020 10:22:21 -0700
-> > Sean V Kelley <sean.v.kelley@intel.com> wrote:
-> >  
-> >> The Root Complex Event Collectors(RCEC) appear as peers to Root Ports
-> >> and also have the AER capability. So add RCEC support to the current 
-> >> AER
-> >> service driver and attach the AER service driver to the RCEC device.
-> >>
-> >> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> >> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> >> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>  
+On Mon, Jul 27, 2020 at 8:03 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> On Sun, Jul 26, 2020 at 10:03:07AM -0700, Rob Clark wrote:
+> > On Mon, Jul 20, 2020 at 8:41 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+> > >
+> > > The Adreno GPU has the capability to manage its own pagetables and switch
+> > > them dynamically from the hardware. To do this the GPU uses TTBR1 for
+> > > "global" GPU memory and creates local pagetables for each context and
+> > > switches them dynamically with the GPU.
+> > >
+> > > Use DOMAIN_ATTR_PGTABLE_CFG to get the current configuration for the
+> > > TTBR1 pagetable from the smmu driver so the leaf driver can create
+> > > compatible pagetables for use with TTBR0.
+> > >
+> > > Because TTBR0 is disabled by default when TTBR1 is enabled the GPU
+> > > driver can pass the configuration of one of the newly created pagetables
+> > > back through DOMAIN_ATTR_PGTABLE_CFG as a trigger to enable translation on
+> > > TTBR0.
+> > >
+> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > > ---
+> > >
+> > >  drivers/iommu/arm-smmu-qcom.c | 47 +++++++++++++++++++++++++++++++++++
+> > >  drivers/iommu/arm-smmu.c      | 32 ++++++++++++++++++------
+> > >  drivers/iommu/arm-smmu.h      | 10 ++++++++
+> > >  3 files changed, 81 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+> > > index b9a5c5369e86..9a0c64ca9cb6 100644
+> > > --- a/drivers/iommu/arm-smmu-qcom.c
+> > > +++ b/drivers/iommu/arm-smmu-qcom.c
+> > > @@ -34,6 +34,52 @@ static bool qcom_adreno_smmu_is_gpu_device(struct device *dev)
+> > >         return false;
+> > >  }
+> > >
+> > > +/*
+> > > + * Local implementation to configure TTBR0 wil the specified pagetable config.
+> > > + * The GPU driver will call this to enable TTBR0 when per-instance pagetables
+> > > + * are active
+> > > + */
+> > > +static int qcom_adreno_smmu_set_pgtable_cfg(struct arm_smmu_domain *smmu_domain,
+> > > +               struct io_pgtable_cfg *pgtbl_cfg)
+> > > +{
+> > > +       struct io_pgtable *pgtable = io_pgtable_ops_to_pgtable(smmu_domain->pgtbl_ops);
+> > > +       struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> > > +       struct arm_smmu_cb *cb = &smmu_domain->smmu->cbs[cfg->cbndx];
+> > > +
+> > > +       /* The domain must have split pagetables already enabled */
+> > > +       if (cb->tcr[0] & ARM_SMMU_TCR_EPD1)
+> > > +               return -EINVAL;
+> > > +
+> > > +       /* If the pagetable config is NULL, disable TTBR0 */
+> > > +       if (!pgtbl_cfg) {
+> > > +               /* Do nothing if it is already disabled */
+> > > +               if ((cb->tcr[0] & ARM_SMMU_TCR_EPD0))
+> > > +                       return -EINVAL;
+> > > +
+> > > +               /* Set TCR to the original configuration */
+> > > +               cb->tcr[0] = arm_smmu_lpae_tcr(&pgtable->cfg);
+> > > +               cb->ttbr[0] = FIELD_PREP(ARM_SMMU_TTBRn_ASID, cb->cfg->asid);
+> > > +       } else {
+> > > +               u32 tcr = cb->tcr[0];
+> > > +
+> > > +               /* FIXME: What sort of validation do we need to do here? */
+> > > +
+> > > +               /* Don't call this again if TTBR0 is already enabled */
+> > > +               if (!(cb->tcr[0] & ARM_SMMU_TCR_EPD0))
+> > > +                       return -EINVAL;
+> > > +
+> > > +               tcr |= arm_smmu_lpae_tcr(pgtbl_cfg);
+> > > +               tcr &= ~(ARM_SMMU_TCR_EPD0 | ARM_SMMU_TCR_EPD1);
+> > > +
+> > > +               cb->tcr[0] = tcr;
+> > > +               cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> > > +               cb->ttbr[0] |= FIELD_PREP(ARM_SMMU_TTBRn_ASID, cb->cfg->asid);
+> > > +       }
+> > > +
+> > > +       arm_smmu_write_context_bank(smmu_domain->smmu, cb->cfg->cbndx);
+> > > +       return 0;
+> > > +}
+> > > +
+> > >  static int qcom_adreno_smmu_alloc_context_bank(struct arm_smmu_domain *smmu_domain,
+> > >                 struct device *dev, int start, int count)
+> > >  {
+> > > @@ -131,6 +177,7 @@ static const struct arm_smmu_impl qcom_adreno_smmu_impl = {
+> > >         .def_domain_type = qcom_smmu_def_domain_type,
+> > >         .reset = qcom_smmu500_reset,
+> > >         .alloc_context_bank = qcom_adreno_smmu_alloc_context_bank,
+> > > +       .set_pgtable_cfg = qcom_adreno_smmu_set_pgtable_cfg,
+> > >  };
+> > >
+> > >  static struct arm_smmu_device *qcom_smmu_create(struct arm_smmu_device *smmu,
+> > > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > > index fff536a44faa..e1036ae54a8d 100644
+> > > --- a/drivers/iommu/arm-smmu.c
+> > > +++ b/drivers/iommu/arm-smmu.c
+> > > @@ -86,13 +86,6 @@ struct arm_smmu_smr {
+> > >         bool                            valid;
+> > >  };
+> > >
+> > > -struct arm_smmu_cb {
+> > > -       u64                             ttbr[2];
+> > > -       u32                             tcr[2];
+> > > -       u32                             mair[2];
+> > > -       struct arm_smmu_cfg             *cfg;
+> > > -};
+> > > -
+> > >  static bool using_legacy_binding, using_generic_binding;
+> > >
+> > >  static inline int arm_smmu_rpm_get(struct arm_smmu_device *smmu)
+> > > @@ -558,7 +551,7 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+> > >         }
+> > >  }
+> > >
+> > > -static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+> > > +void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+> > >  {
+> > >         u32 reg;
+> > >         bool stage1;
+> > > @@ -1515,6 +1508,18 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
+> > >                 case DOMAIN_ATTR_NESTING:
+> > >                         *(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
+> > >                         return 0;
+> > > +               case DOMAIN_ATTR_PGTABLE_CFG: {
+> > > +                       struct io_pgtable *pgtable;
+> > > +                       struct io_pgtable_cfg *dest = data;
+> > > +
+> > > +                       if (!smmu_domain->pgtbl_ops)
+> > > +                               return -ENODEV;
+> > > +
+> > > +                       pgtable = io_pgtable_ops_to_pgtable(smmu_domain->pgtbl_ops);
+> > > +
+> > > +                       memcpy(dest, &pgtable->cfg, sizeof(*dest));
+> > > +                       return 0;
+> > > +               }
 > >
-> > A few questions and comments for this patch.
+> > hmm, maybe it would make sense to have impl hooks for get/set_attr, so
+> > we could handle DOMAIN_ATTR_PGTABLE_CFG inside the adreno_smmu_impl?
 > >
-> > See inline.
+> > Having impl specific domain attrs would be useful for what I have in
+> > mind to enable stall/resume support, so we can hook in devcoredump to
+> > iova faults (which would be a huge improvement for debugability, right
+> > now iova faults are somewhat harder to debug than needed).  My rough
+> > idea was to add DOMAIN_ATTR_RESUME, which could be used with
+> > set_attr() to (1) enable STALL and let drm/msm know whether the iommu
+> > supports it, and (2) resume translation from wq context after
+> > devcoredump snapshot is collected.
+>
+> Expanding on that, maybe a DOMAIN_ATTR_IMPL with struct { int subtype; void
+> *data } as the payload would let us add things without having to populate the
+> generic enum.  That would force us to export an arm-smmu header but at this
+> point it might be such a bad thing.
+
+That feels a bit like overkill to me, I don't expect there to be that
+many custom things.  But I'll defer to the iommu folks as to which
+they prefer.
+
+BR,
+-R
+
+> Jordan
+>
+>
+> > BR,
+> > -R
 > >
-> > Jonathan
-> >
-> >  
-> >> ---
-> >>  drivers/pci/pcie/aer.c | 34 +++++++++++++++++++++++++++-------
-> >>  1 file changed, 27 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> >> index f1bf06be449e..7cc430c74c46 100644
-> >> --- a/drivers/pci/pcie/aer.c
-> >> +++ b/drivers/pci/pcie/aer.c
-> >> @@ -303,7 +303,7 @@ int pci_aer_raw_clear_status(struct pci_dev *dev)
-> >>  		return -EIO;
-> >>
-> >>  	port_type = pci_pcie_type(dev);
-> >> -	if (port_type == PCI_EXP_TYPE_ROOT_PORT) {
-> >> +	if (port_type == PCI_EXP_TYPE_ROOT_PORT || port_type == 
-> >> PCI_EXP_TYPE_RC_EC) {
-> >>  		pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &status);
-> >>  		pci_write_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, status);
-> >>  	}
-> >> @@ -389,6 +389,12 @@ void pci_aer_init(struct pci_dev *dev)
-> >>  	pci_add_ext_cap_save_buffer(dev, PCI_EXT_CAP_ID_ERR, sizeof(u32) * 
-> >> n);
-> >>
-> >>  	pci_aer_clear_status(dev);
-> >> +
-> >> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) {
-> >> +		if (!pci_find_ext_capability(dev, PCI_EXT_CAP_ID_RCEC))
-> >> +			return;
-> >> +		pci_info(dev, "AER: RCEC CAP FOUND and cap_has_rtctl = %d\n", n);  
-> >
-> > It feels like failing to find an RC_EC extended cap in a RCEC deserved
-> > a nice strong error message.  Perhaps this isn't the right place to do 
-> > it
-> > though.  For that matter, why are we checking for it here?  
-> 
-> Sorry, I’ve left an in-development output in the code.  Will replace 
-> with a check with more meaningful output elsewhere.
-> 
-> >  
-> >> +	}
-> >>  }
-> >>
-> >>  void pci_aer_exit(struct pci_dev *dev)
-> >> @@ -577,7 +583,8 @@ static umode_t aer_stats_attrs_are_visible(struct 
-> >> kobject *kobj,
-> >>  	if ((a == &dev_attr_aer_rootport_total_err_cor.attr ||
-> >>  	     a == &dev_attr_aer_rootport_total_err_fatal.attr ||
-> >>  	     a == &dev_attr_aer_rootport_total_err_nonfatal.attr) &&  
-> >
-> > It is a bit ugly to have these called rootport_total_err etc for the 
-> > rcec.
-> > Perhaps we should just add additional attributes to reflect we are 
-> > looking at
-> > an RCEC?  
-> 
-> I was trying to avoid any renaming to reduce churn as I did with my 
-> first patch for ACPI / CLX_OSC support.
-> Will take a look.
-> 
-> >  
-> >> -	    pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT)
-> >> +	    ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ROOT_PORT) &&
-> >> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_EC)))
-> >>  		return 0;
-> >>
-> >>  	return a->mode;
-> >> @@ -894,7 +901,10 @@ static bool find_source_device(struct pci_dev 
-> >> *parent,
-> >>  	if (result)
-> >>  		return true;
-> >>
-> >> -	pci_walk_bus(parent->subordinate, find_device_iter, e_info);
-> >> +	if (pci_pcie_type(parent) == PCI_EXP_TYPE_RC_EC)
-> >> +		pcie_walk_rcec(parent, find_device_iter, e_info);
-> >> +	else
-> >> +		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
-> >>
-> >>  	if (!e_info->error_dev_num) {
-> >>  		pci_info(parent, "can't find device of ID%04x\n", e_info->id);
-> >> @@ -1030,6 +1040,7 @@ int aer_get_device_error_info(struct pci_dev 
-> >> *dev, struct aer_err_info *info)
-> >>  		if (!(info->status & ~info->mask))
-> >>  			return 0;
-> >>  	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> >> +		   pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC ||
-> >>  	           pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
-> >>  		   info->severity == AER_NONFATAL) {
-> >>
-> >> @@ -1182,6 +1193,8 @@ static int set_device_error_reporting(struct 
-> >> pci_dev *dev, void *data)
-> >>  	int type = pci_pcie_type(dev);
-> >>
-> >>  	if ((type == PCI_EXP_TYPE_ROOT_PORT) ||
-> >> +	    (type == PCI_EXP_TYPE_RC_EC) ||
-> >> +	    (type == PCI_EXP_TYPE_RC_END) ||  
-> >
-> > Why add RC_END here?  
-> 
-> I’m not clear on your question.  Errors can come from RCEC or RCiEPs.  
-> We still need to enable reporting by the RCiEPs.
-
-I was curious to see that we need it in this code path for an RCiEP but
-not for a normal EP.  From a quick glance it looks like that is often
-done in the drivers for the EPs themselves rather than here.
-
-> 
-> >  
-> >>  	    (type == PCI_EXP_TYPE_UPSTREAM) ||
-> >>  	    (type == PCI_EXP_TYPE_DOWNSTREAM)) {
-> >>  		if (enable)
-> >> @@ -1206,9 +1219,11 @@ static void 
-> >> set_downstream_devices_error_reporting(struct pci_dev *dev,
-> >>  {
-> >>  	set_device_error_reporting(dev, &enable);
-> >>
-> >> -	if (!dev->subordinate)
-> >> -		return;
-> >> -	pci_walk_bus(dev->subordinate, set_device_error_reporting, 
-> >> &enable);
-> >> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
-> >> +		pcie_walk_rcec(dev, set_device_error_reporting, &enable);
-> >> +	else if (dev->subordinate)
-> >> +		pci_walk_bus(dev->subordinate, set_device_error_reporting, 
-> >> &enable);
-> >> +
-> >>  }
-> >>
-> >>  /**
-> >> @@ -1306,6 +1321,11 @@ static int aer_probe(struct pcie_device *dev)
-> >>  	struct device *device = &dev->device;
-> >>  	struct pci_dev *port = dev->port;
-> >>
-> >> +	/* Limit to Root Ports or Root Complex Event Collectors */
-> >> +	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
-> >> +	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
-> >> +		return -ENODEV;
-> >> +
-> >>  	rpc = devm_kzalloc(device, sizeof(struct aer_rpc), GFP_KERNEL);
-> >>  	if (!rpc)
-> >>  		return -ENOMEM;
-> >> @@ -1362,7 +1382,7 @@ static pci_ers_result_t aer_root_reset(struct 
-> >> pci_dev *dev)
-> >>
-> >>  static struct pcie_port_service_driver aerdriver = {
-> >>  	.name		= "aer",
-> >> -	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
-> >> +	.port_type	= PCIE_ANY_PORT,  
-> >
-> > Why this particular change?  Seems that is a lot wider than simply
-> > adding RCEC.  Obviously we'll then drop out in the aer_probe but it
-> > is still rather inelegant.  
-> 
-> In order to extend the service drivers to non-root-port devices (i.e., 
-> RCEC), the simple path appeared to only require setting the type to 
-> ANY_PORT and catching the needed types arriving in the probe.  Would you 
-> prefer extending to a type2?  I’m not sure how one is more elegant 
-> than another but open to that approach.  However, this seems to require 
-> less code perhaps and seems consistent with most ‘drop-out’ 
-> conditional patterns in the kernel.  The same applies to pme.
-
-I'd miss understood this bit.  It's fine as you have it here.
-
-Jonathan
-
-> 
-> Thanks,
-> 
-> Sean
-> 
-> 
-> >  
-> >>  	.service	= PCIE_PORT_SERVICE_AER,
-> >>
-> >>  	.probe		= aer_probe,  
-
-
+> > >                 default:
+> > >                         return -ENODEV;
+> > >                 }
+> > > @@ -1555,6 +1560,17 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
+> > >                         else
+> > >                                 smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
+> > >                         break;
+> > > +               case DOMAIN_ATTR_PGTABLE_CFG: {
+> > > +                       struct arm_smmu_device *smmu = smmu_domain->smmu;
+> > > +
+> > > +                       ret = -EPERM;
+> > > +
+> > > +                       if (smmu)
+> > > +                               if (smmu->impl && smmu->impl->set_pgtable_cfg)
+> > > +                                       ret = smmu->impl->set_pgtable_cfg(smmu_domain,
+> > > +                                               data);
+> > > +                       }
+> > > +                       break;
+> > >                 default:
+> > >                         ret = -ENODEV;
+> > >                 }
+> > > diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> > > index 9f81c1fffe1e..9325fc28d24a 100644
+> > > --- a/drivers/iommu/arm-smmu.h
+> > > +++ b/drivers/iommu/arm-smmu.h
+> > > @@ -328,6 +328,13 @@ struct arm_smmu_cfg {
+> > >  };
+> > >  #define ARM_SMMU_INVALID_IRPTNDX       0xff
+> > >
+> > > +struct arm_smmu_cb {
+> > > +       u64                             ttbr[2];
+> > > +       u32                             tcr[2];
+> > > +       u32                             mair[2];
+> > > +       struct arm_smmu_cfg             *cfg;
+> > > +};
+> > > +
+> > >  enum arm_smmu_domain_stage {
+> > >         ARM_SMMU_DOMAIN_S1 = 0,
+> > >         ARM_SMMU_DOMAIN_S2,
+> > > @@ -408,6 +415,8 @@ struct arm_smmu_impl {
+> > >         int (*def_domain_type)(struct device *dev);
+> > >         int (*alloc_context_bank)(struct arm_smmu_domain *smmu_domain,
+> > >                         struct device *dev, int start, int max);
+> > > +       int (*set_pgtable_cfg)(struct arm_smmu_domain *smmu_domain,
+> > > +                       struct io_pgtable_cfg *cfg);
+> > >  };
+> > >
+> > >  #define INVALID_SMENDX                 -1
+> > > @@ -493,6 +502,7 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
+> > >  struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu);
+> > >  struct arm_smmu_device *qcom_adreno_smmu_impl_init(struct arm_smmu_device *smmu);
+> > >
+> > > +void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx);
+> > >  int arm_mmu500_reset(struct arm_smmu_device *smmu);
+> > >
+> > >  #endif /* _ARM_SMMU_H */
+> > > --
+> > > 2.25.1
+> > >
+> > > _______________________________________________
+> > > Freedreno mailing list
+> > > Freedreno@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/freedreno
+>
+> --
+> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
