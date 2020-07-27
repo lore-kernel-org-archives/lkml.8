@@ -2,151 +2,186 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC10AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB620C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92FE12075D
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1192075D
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 05:54:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FRMOQ3jg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mI3qWXQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgG0Fxu (ORCPT
+        id S1726861AbgG0FyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 01:53:50 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:33508 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgG0Fxt (ORCPT
+        Mon, 27 Jul 2020 01:54:12 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:14475 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726140AbgG0FyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 01:53:49 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200727055347epoutp03d7c52d70e793a1e40fdca69a88296c9f~lhjobyse22016820168epoutp03G
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 05:53:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200727055347epoutp03d7c52d70e793a1e40fdca69a88296c9f~lhjobyse22016820168epoutp03G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1595829227;
-        bh=saHxhsM0w2XX7RJSQrbqe2wZRztjJhp30+NjpyHF3Uw=;
-        h=Subject:To:From:Date:In-Reply-To:References:From;
-        b=FRMOQ3jg5lGnk4gATMtJlJ3Q2aXIOhOulSO1MzCOvLMMXQKnlzeBJEf4oNn5QjxDl
-         XhVnigOGRV+f72hyUav0Z6Pw4/YT77/puSvcL7Pb7DGjLGUbfVf3s3M7IndK1QhsRw
-         FcNjx0Vocvcw1eCd9232QMnE3tZLfXsT4ZF7+6Is=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200727055346epcas1p2090864eb719c92c0b9fb0fb03621e653~lhjoQieXQ2918529185epcas1p29;
-        Mon, 27 Jul 2020 05:53:46 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4BFTWW3ZlCzMqYm0; Mon, 27 Jul
-        2020 05:53:43 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3B.E7.29173.1EB6E1F5; Mon, 27 Jul 2020 14:53:38 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200727055337epcas1p16683bb2e79f0014871e0512fd35d0869~lhjfgkL5N3027230272epcas1p1t;
-        Mon, 27 Jul 2020 05:53:37 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200727055337epsmtrp26057c71521d276f6171330b69d3c53d2~lhjffnA590809708097epsmtrp2i;
-        Mon, 27 Jul 2020 05:53:37 +0000 (GMT)
-X-AuditID: b6c32a37-9b7ff700000071f5-e7-5f1e6be19d73
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        06.97.08382.1EB6E1F5; Mon, 27 Jul 2020 14:53:37 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200727055337epsmtip125908687d47990ef35e99a2658ba7348~lhjfWYG4X3261232612epsmtip1u;
-        Mon, 27 Jul 2020 05:53:37 +0000 (GMT)
-Subject: Re: linux-next: Fixes tag needs some work in the devfreq tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <cda32633-6fce-6baf-738b-ae2d60f40c34@samsung.com>
-Date:   Mon, 27 Jul 2020 15:05:21 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Mon, 27 Jul 2020 01:54:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1595829251; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=FTqA48hw8hnaqUdgwqT+jre/wJ4jEyk5sxdAz7+sHPY=; b=mI3qWXQeR6aM4F+mo/Cm1572VsqGsbhb7aEROJ267DQGJE5ZWRWsowctcZoggDErUMHJot4p
+ e1kS3Z225ijxLHgf+nYU4dJ3XrFukMDcRMEUFbfAwHFSBfKZuXPt71hBbp7U7s0Pi5ag1h5h
+ dn+ypWDGbMPGUVJyFD2S8JAOxI8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f1e6bff8db7256a95ec7caa (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 27 Jul 2020 05:54:07
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CB369C43395; Mon, 27 Jul 2020 05:54:06 +0000 (UTC)
+Received: from [192.168.1.12] (unknown [61.1.231.32])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E6F0DC433CA;
+        Mon, 27 Jul 2020 05:54:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E6F0DC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v4 4/5] arm64: dts: sdm845: Add OPP tables and
+ power-domains for venus
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Taniya Das <tdas@codeaurora.org>
+References: <1595503612-2901-1-git-send-email-rnayak@codeaurora.org>
+ <1595503612-2901-5-git-send-email-rnayak@codeaurora.org>
+ <e68ff810-362a-5b99-206b-f676b204101d@linaro.org>
+ <94581989-e069-55e5-6b70-919185eda33e@linaro.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <e0c03ce2-136c-2c5c-6f36-bb0c69a82e2d@codeaurora.org>
+Date:   Mon, 27 Jul 2020 11:23:59 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200727141707.3e96c3ee@canb.auug.org.au>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <94581989-e069-55e5-6b70-919185eda33e@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEKsWRmVeSWpSXmKPExsWy7bCmge6jbLl4g7aZTBaXd81hs9i69yq7
-        A5NH440bbB6fN8kFMEVl22SkJqakFimk5iXnp2TmpdsqeQfHO8ebmhkY6hpaWpgrKeQl5qba
-        Krn4BOi6ZeYAjVdSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2CqlFqTkFFgW6BUn5haX5qXr
-        JefnWhkaGBiZAhUmZGfMXv2LseA9S8XGnvssDYz3mLsYOTgkBEwklq1L6WLk4hAS2MEo8Xrj
-        c3YI5xOjxNpls5kgnG+MEhPPNLJ2MXKCdRx6d4oZIrGXUeL33M9QzntGiQs75zGDVAkLuEms
-        Ob+cBcQWEciR+LBmA1icTUBLYv+LG2wgNr+AosTVH48ZQWxeATuJxx8ngdWzCKhKTFi8AswW
-        FQiTOLmtBapGUOLkzCdgcU4Bc4lFn68ygdjMAgYSRxbNYYWwxSVuPZkPFZeX2P52DthxEgKn
-        2CVuX7vICPGCi8SVK+fZIGxhiVfHt7BD2FISn9/thYpXS6w8eYQNormDUWLL/gtQ/xtL7F86
-        mQnCVpTY+XsuI8Q2Pol3X3tYIaHKK9HRJgRRoixx+cFdqHJJicXtnVDzPSRWbznNPoFRcRaS
-        32Yh+WcWkn9mIflnASPLKkax1ILi3PTUYsMCY+T43sQITnxa5jsYp739oHeIkYmD8RCjBAez
-        kggvt6hMvBBvSmJlVWpRfnxRaU5q8SFGU2BwT2SWEk3OB6bevJJ4Q1MjY2NjCxNDM1NDQyVx
-        3n9n2eOFBNITS1KzU1MLUotg+pg4OKUamMznGR19ssDKaK7qO/PcWLe7F0OaDnzxMbRUS9h1
-        89XWvT5e2wPnX1lQuOJ3zsOzmkfkTTq3HT6mkT/7etuTn2cOPnf+d3VmdEicfrL0i7rq9ttd
-        KzQruEPjzpyuWp/KdnDRHJYfBn8XB/9xnhv8MVGM5Wa5Wm01p3dmsH0yS0VNgI9DifF0Sy6Z
-        /geP+jlW/V/U257aoPPj8lnXthXeZldOfQhe9O6cwKmtm9Ze9vp+odtj6XOO2apM7z/9CQzx
-        vqE2TaiRtaL8QORhhguaP2bbBwbcMsj81KgQ2X1QbjZbjcSihOvr96dPei/y1+Xsd5mJ9g+L
-        GGdoFwcENzzs2M8d/2SXS9DOhZq/172awKnEUpyRaKjFXFScCADp0r7ABQQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsWy7bCSnO7DbLl4g1vTpS0u75rDZrF171V2
-        ByaPxhs32Dw+b5ILYIrisklJzcksSy3St0vgypi9+hdjwXuWio0991kaGO8xdzFyckgImEgc
-        encKyObiEBLYzSjxbc8iFoiEpMS0i0eBEhxAtrDE4cPFEDVvGSWWHvjCBFIjLOAmseb8crB6
-        EYEcifcP5kMN2s4ocb7hA9gGNgEtif0vbrCB2PwCihJXfzxmBLF5BewkHn+cBNbMIqAqMWHx
-        CjBbVCBMYueSx0wQNYISJ2c+AYtzCphLLPp8FSzOLKAnseP6L1YIW1zi1pP5UHF5ie1v5zBP
-        YBSahaR9FpKWWUhaZiFpWcDIsopRMrWgODc9t9iwwDAvtVyvODG3uDQvXS85P3cTIzjMtTR3
-        MG5f9UHvECMTB+MhRgkOZiURXm5RmXgh3pTEyqrUovz4otKc1OJDjNIcLErivDcKF8YJCaQn
-        lqRmp6YWpBbBZJk4OKUamELlOR127qtk9u936HNbxbvwA4uq24ynnIcWvWt68vfjZd9VZ350
-        SDRsmimtf8X5xdXJRcoPmaS+TD8hmj3hQM8E9TRthWV6u2N49M8qzBbsVjFxWL0qa9miSbIa
-        fms3ege6dL/m3m95T7Ret//wjM1b6r9sSkpaobdBuMbLcr+dSF5sh1p5a6Ywj5DKE5Ml02ZG
-        8wRFz7/256q7XK5exxGmtSnOU87zVGyvStbqeRU/X5XFuqpP5Udr1+bb14I+ha+eP+VC3d5J
-        YZd2ZXU6fl716+c3vznXiw5dDeu42a6pOr3iytycM0cyfNMTvirwnzoTPa9m6aSvxsZXOxuK
-        5j5uvljDt17LfqGiRv4LXiWW4oxEQy3mouJEABs5SQDiAgAA
-X-CMS-MailID: 20200727055337epcas1p16683bb2e79f0014871e0512fd35d0869
-X-Msg-Generator: CA
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200727041725epcas1p26800df7997a32a6b0d16ba2d034da372
-References: <20200727132428.2763f57b@canb.auug.org.au>
-        <CGME20200727041725epcas1p26800df7997a32a6b0d16ba2d034da372@epcas1p2.samsung.com>
-        <20200727141707.3e96c3ee@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 7/27/20 1:17 PM, Stephen Rothwell wrote:
+
+On 7/24/2020 7:39 PM, Stanimir Varbanov wrote:
 > Hi,
 > 
-> On Mon, 27 Jul 2020 13:24:28 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> On 7/23/20 9:06 PM, Stanimir Varbanov wrote:
+>> Hi Rajendra,
 >>
->> Hi all,
+>> After applying 2,3 and 4/5 patches on linaro-integration v5.8-rc2 I see
+>> below messages on db845:
 >>
->> In commit
+>> qcom-venus aa00000.video-codec: dev_pm_opp_set_rate: failed to find
+>> current OPP for freq 533000097 (-34)
 >>
->>   332c5b522b7c ("PM / devfrq: Fix indentaion of devfreq_summary debugfs node")
+>> ^^^ This one is new.
+>>
+>> qcom_rpmh TCS Busy, retrying RPMH message send: addr=0x30000
+>>
+>> ^^^ and this message is annoying, can we make it pr_debug in rpmh?
+>>
+>> On 7/23/20 2:26 PM, Rajendra Nayak wrote:
+>>> Add the OPP tables in order to be able to vote on the performance state of
+>>> a power-domain.
+>>>
+>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>> ---
+>>>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 40 ++++++++++++++++++++++++++++++++++--
+>>>   1 file changed, 38 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>> index e506793..5ca2265 100644
+>>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>>> @@ -3631,8 +3631,10 @@
+>>>   			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+>>>   			power-domains = <&videocc VENUS_GDSC>,
+>>>   					<&videocc VCODEC0_GDSC>,
+>>> -					<&videocc VCODEC1_GDSC>;
+>>> -			power-domain-names = "venus", "vcodec0", "vcodec1";
+>>> +					<&videocc VCODEC1_GDSC>,
+>>> +					<&rpmhpd SDM845_CX>;
+>>> +			power-domain-names = "venus", "vcodec0", "vcodec1", "cx";
+>>> +			operating-points-v2 = <&venus_opp_table>;
+>>>   			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+>>>   				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+>>>   				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
+>>> @@ -3654,6 +3656,40 @@
+>>>   			video-core1 {
+>>>   				compatible = "venus-encoder";
+>>>   			};
+>>> +
+>>> +			venus_opp_table: venus-opp-table {
+>>> +				compatible = "operating-points-v2";
+>>> +
+>>> +				opp-100000000 {
+>>> +					opp-hz = /bits/ 64 <100000000>;
+>>> +					required-opps = <&rpmhpd_opp_min_svs>;
+>>> +				};
+>>> +
+>>> +				opp-200000000 {
+>>> +					opp-hz = /bits/ 64 <200000000>;
+>>> +					required-opps = <&rpmhpd_opp_low_svs>;
+>>> +				};
+>>> +
+>>> +				opp-320000000 {
+>>> +					opp-hz = /bits/ 64 <320000000>;
+>>> +					required-opps = <&rpmhpd_opp_svs>;
+>>> +				};
+>>> +
+>>> +				opp-380000000 {
+>>> +					opp-hz = /bits/ 64 <380000000>;
+>>> +					required-opps = <&rpmhpd_opp_svs_l1>;
+>>> +				};
+>>> +
+>>> +				opp-444000000 {
+>>> +					opp-hz = /bits/ 64 <444000000>;
+>>> +					required-opps = <&rpmhpd_opp_nom>;
+>>> +				};
+>>> +
+>>> +				opp-533000000 {
+>>> +					opp-hz = /bits/ 64 <533000000>;
 > 
-> This is now commit 470fa173646f
-> 
->> Fixes tag
->>
->>   Fixes: commit 66d0e797bf09 ("Revert "PM / devfreq: Modify the device name as devfreq(X) for sysfs"")
->>
->> has these problem(s):
->>
->>   - leading word 'commit' unexpected
-> 
+> Actually it comes from videocc, where ftbl_video_cc_venus_clk_src
+> defines 533000000 but the real calculated freq is 533000097.
 
-Thanks for pointing out. I fixed it. Thanks.
+I still don't quite understand why the videocc driver returns this
+frequency despite this not being in the freq table.
+I would expect a clk_round_rate() when called with 533000097 to return
+a 533000000.
 
+Taniya, Do you know why?
+
+> 
+> If I change to opp-hz = /bits/ 64 <533000097> the error disappear.
+> 
+> I guess we have to revisit m/n and/or pre-divider for this freq when the
+> source pll is P_VIDEO_PLL0_OUT_MAIN PLL?
+> 
+>>> +					required-opps = <&rpmhpd_opp_turbo>;
+>>> +				};
+>>> +			};
+>>>   		};
+>>>   
+>>>   		videocc: clock-controller@ab00000 {
+>>>
+>>
+> 
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
