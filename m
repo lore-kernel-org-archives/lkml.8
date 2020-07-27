@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6868C433F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43070C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAD11205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14967205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgG0LG3 (ORCPT
+        id S1728603AbgG0LGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:06:29 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40692 "EHLO
+        Mon, 27 Jul 2020 07:06:32 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:40688 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728533AbgG0LGQ (ORCPT
+        with ESMTP id S1728540AbgG0LGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:06:16 -0400
+        Mon, 27 Jul 2020 07:06:18 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 27 Jul 2020 14:06:12 +0300
+        with SMTP; 27 Jul 2020 14:06:11 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (dev-l-vrt-135.mtl.labs.mlnx [10.234.135.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06RB6Cwo022180;
-        Mon, 27 Jul 2020 14:06:12 +0300
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 06RB6BI4022173;
+        Mon, 27 Jul 2020 14:06:11 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 06RB6Cms002388;
-        Mon, 27 Jul 2020 14:06:12 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 06RB6Ban002384;
+        Mon, 27 Jul 2020 14:06:11 +0300
 Received: (from moshe@localhost)
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 06RB6Cht002387;
-        Mon, 27 Jul 2020 14:06:12 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 06RB6BIk002383;
+        Mon, 27 Jul 2020 14:06:11 +0300
 From:   Moshe Shemesh <moshe@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jiri Pirko <jiri@mellanox.com>,
         Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC 03/13] net/mlx5: Add functions to set/query MFRL register
-Date:   Mon, 27 Jul 2020 14:02:23 +0300
-Message-Id: <1595847753-2234-4-git-send-email-moshe@mellanox.com>
+Subject: [PATCH net-next RFC 01/13] devlink: Add reload level option to devlink reload command
+Date:   Mon, 27 Jul 2020 14:02:21 +0300
+Message-Id: <1595847753-2234-2-git-send-email-moshe@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
 In-Reply-To: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
 References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
@@ -49,102 +49,328 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add functions to query and set the MFRL reset options supported by
-firmware.
+Add devlink reload level to allow the user to request a specific reload
+level. The level parameter is optional, if not specified then driver's
+default reload level is used (backward compatible).
+Reload levels supported are:
+driver: driver entities re-instantiation only.
+fw_reset: firmware reset and driver entities re-instantiation.
+fw_live_patch: firmware live patching only.
 
 Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
 ---
- .../net/ethernet/mellanox/mlx5/core/Makefile  |  2 +-
- .../ethernet/mellanox/mlx5/core/fw_reset.c    | 46 +++++++++++++++++++
- .../ethernet/mellanox/mlx5/core/fw_reset.h    | 13 ++++++
- 3 files changed, 60 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
- create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
+ drivers/net/ethernet/mellanox/mlx4/main.c     |  6 ++-
+ .../net/ethernet/mellanox/mlx5/core/devlink.c |  6 ++-
+ drivers/net/ethernet/mellanox/mlxsw/core.c    |  6 ++-
+ drivers/net/netdevsim/dev.c                   |  6 ++-
+ include/net/devlink.h                         |  6 ++-
+ include/uapi/linux/devlink.h                  | 19 +++++++
+ net/core/devlink.c                            | 52 +++++++++++++++++--
+ 7 files changed, 86 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-index 10e6886c96ba..4d45a2f6fed6 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-@@ -16,7 +16,7 @@ mlx5_core-y :=	main.o cmd.o debugfs.o fw.o eq.o uar.o pagealloc.o \
- 		transobj.o vport.o sriov.o fs_cmd.o fs_core.o pci_irq.o \
- 		fs_counters.o rl.o lag.o dev.o events.o wq.o lib/gid.o \
- 		lib/devcom.o lib/pci_vsc.o lib/dm.o diag/fs_tracepoint.o \
--		diag/fw_tracer.o diag/crdump.o devlink.o diag/rsc_dump.o
-+		diag/fw_tracer.o diag/crdump.o devlink.o diag/rsc_dump.o fw_reset.o
+diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
+index 954c22c79f6b..57d9d4381cb0 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/main.c
++++ b/drivers/net/ethernet/mellanox/mlx4/main.c
+@@ -3935,7 +3935,7 @@ static int mlx4_restart_one_up(struct pci_dev *pdev, bool reload,
+ 			       struct devlink *devlink);
  
- #
- # Netdev basic
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
-new file mode 100644
-index 000000000000..76d2cece29ac
---- /dev/null
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
-+/* Copyright (c) 2020, Mellanox Technologies inc.  All rights reserved. */
+ static int mlx4_devlink_reload_down(struct devlink *devlink, bool netns_change,
+-				    struct netlink_ext_ack *extack)
++				    enum devlink_reload_level level, struct netlink_ext_ack *extack)
+ {
+ 	struct mlx4_priv *priv = devlink_priv(devlink);
+ 	struct mlx4_dev *dev = &priv->dev;
+@@ -3951,7 +3951,7 @@ static int mlx4_devlink_reload_down(struct devlink *devlink, bool netns_change,
+ 	return 0;
+ }
+ 
+-static int mlx4_devlink_reload_up(struct devlink *devlink,
++static int mlx4_devlink_reload_up(struct devlink *devlink, enum devlink_reload_level level,
+ 				  struct netlink_ext_ack *extack)
+ {
+ 	struct mlx4_priv *priv = devlink_priv(devlink);
+@@ -3969,6 +3969,8 @@ static int mlx4_devlink_reload_up(struct devlink *devlink,
+ 
+ static const struct devlink_ops mlx4_devlink_ops = {
+ 	.port_type_set	= mlx4_devlink_port_type_set,
++	.supported_reload_levels = BIT(DEVLINK_RELOAD_LEVEL_DRIVER),
++	.default_reload_level = DEVLINK_RELOAD_LEVEL_DRIVER,
+ 	.reload_down	= mlx4_devlink_reload_down,
+ 	.reload_up	= mlx4_devlink_reload_up,
+ };
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
+index c709e9a385f6..5424e31a0f45 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
+@@ -89,7 +89,7 @@ mlx5_devlink_info_get(struct devlink *devlink, struct devlink_info_req *req,
+ }
+ 
+ static int mlx5_devlink_reload_down(struct devlink *devlink, bool netns_change,
+-				    struct netlink_ext_ack *extack)
++				    enum devlink_reload_level level, struct netlink_ext_ack *extack)
+ {
+ 	struct mlx5_core_dev *dev = devlink_priv(devlink);
+ 
+@@ -97,7 +97,7 @@ static int mlx5_devlink_reload_down(struct devlink *devlink, bool netns_change,
+ 	return 0;
+ }
+ 
+-static int mlx5_devlink_reload_up(struct devlink *devlink,
++static int mlx5_devlink_reload_up(struct devlink *devlink, enum devlink_reload_level level,
+ 				  struct netlink_ext_ack *extack)
+ {
+ 	struct mlx5_core_dev *dev = devlink_priv(devlink);
+@@ -118,6 +118,8 @@ static const struct devlink_ops mlx5_devlink_ops = {
+ #endif
+ 	.flash_update = mlx5_devlink_flash_update,
+ 	.info_get = mlx5_devlink_info_get,
++	.supported_reload_levels = BIT(DEVLINK_RELOAD_LEVEL_DRIVER),
++	.default_reload_level = DEVLINK_RELOAD_LEVEL_DRIVER,
+ 	.reload_down = mlx5_devlink_reload_down,
+ 	.reload_up = mlx5_devlink_reload_up,
+ };
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+index b01f8f2fab63..360d749eb042 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -1113,7 +1113,7 @@ mlxsw_devlink_info_get(struct devlink *devlink, struct devlink_info_req *req,
+ 
+ static int
+ mlxsw_devlink_core_bus_device_reload_down(struct devlink *devlink,
+-					  bool netns_change,
++					  bool netns_change, enum devlink_reload_level level,
+ 					  struct netlink_ext_ack *extack)
+ {
+ 	struct mlxsw_core *mlxsw_core = devlink_priv(devlink);
+@@ -1126,7 +1126,7 @@ mlxsw_devlink_core_bus_device_reload_down(struct devlink *devlink,
+ }
+ 
+ static int
+-mlxsw_devlink_core_bus_device_reload_up(struct devlink *devlink,
++mlxsw_devlink_core_bus_device_reload_up(struct devlink *devlink, enum devlink_reload_level level,
+ 					struct netlink_ext_ack *extack)
+ {
+ 	struct mlxsw_core *mlxsw_core = devlink_priv(devlink);
+@@ -1266,6 +1266,8 @@ mlxsw_devlink_trap_policer_counter_get(struct devlink *devlink,
+ }
+ 
+ static const struct devlink_ops mlxsw_devlink_ops = {
++	.supported_reload_levels	= BIT(DEVLINK_RELOAD_LEVEL_FW_RESET),
++	.default_reload_level		= DEVLINK_RELOAD_LEVEL_FW_RESET,
+ 	.reload_down		= mlxsw_devlink_core_bus_device_reload_down,
+ 	.reload_up		= mlxsw_devlink_core_bus_device_reload_up,
+ 	.port_type_set			= mlxsw_devlink_port_type_set,
+diff --git a/drivers/net/netdevsim/dev.c b/drivers/net/netdevsim/dev.c
+index ce719c830a77..680482f687f4 100644
+--- a/drivers/net/netdevsim/dev.c
++++ b/drivers/net/netdevsim/dev.c
+@@ -697,7 +697,7 @@ static int nsim_dev_reload_create(struct nsim_dev *nsim_dev,
+ static void nsim_dev_reload_destroy(struct nsim_dev *nsim_dev);
+ 
+ static int nsim_dev_reload_down(struct devlink *devlink, bool netns_change,
+-				struct netlink_ext_ack *extack)
++				enum devlink_reload_level level, struct netlink_ext_ack *extack)
+ {
+ 	struct nsim_dev *nsim_dev = devlink_priv(devlink);
+ 
+@@ -713,7 +713,7 @@ static int nsim_dev_reload_down(struct devlink *devlink, bool netns_change,
+ 	return 0;
+ }
+ 
+-static int nsim_dev_reload_up(struct devlink *devlink,
++static int nsim_dev_reload_up(struct devlink *devlink, enum devlink_reload_level level,
+ 			      struct netlink_ext_ack *extack)
+ {
+ 	struct nsim_dev *nsim_dev = devlink_priv(devlink);
+@@ -873,6 +873,8 @@ nsim_dev_devlink_trap_policer_counter_get(struct devlink *devlink,
+ }
+ 
+ static const struct devlink_ops nsim_dev_devlink_ops = {
++	.supported_reload_levels = BIT(DEVLINK_RELOAD_LEVEL_DRIVER),
++	.default_reload_level = DEVLINK_RELOAD_LEVEL_DRIVER,
+ 	.reload_down = nsim_dev_reload_down,
+ 	.reload_up = nsim_dev_reload_up,
+ 	.info_get = nsim_dev_info_get,
+diff --git a/include/net/devlink.h b/include/net/devlink.h
+index 19d990c8edcc..b291cd8d6be6 100644
+--- a/include/net/devlink.h
++++ b/include/net/devlink.h
+@@ -985,9 +985,11 @@ enum devlink_trap_group_generic_id {
+ 	}
+ 
+ struct devlink_ops {
++	unsigned long supported_reload_levels;
++	enum devlink_reload_level default_reload_level;
+ 	int (*reload_down)(struct devlink *devlink, bool netns_change,
+-			   struct netlink_ext_ack *extack);
+-	int (*reload_up)(struct devlink *devlink,
++			   enum devlink_reload_level level, struct netlink_ext_ack *extack);
++	int (*reload_up)(struct devlink *devlink, enum devlink_reload_level level,
+ 			 struct netlink_ext_ack *extack);
+ 	int (*port_type_set)(struct devlink_port *devlink_port,
+ 			     enum devlink_port_type port_type);
+diff --git a/include/uapi/linux/devlink.h b/include/uapi/linux/devlink.h
+index cfef4245ea5a..fa5f66db5012 100644
+--- a/include/uapi/linux/devlink.h
++++ b/include/uapi/linux/devlink.h
+@@ -272,6 +272,23 @@ enum {
+ 	DEVLINK_ATTR_TRAP_METADATA_TYPE_FA_COOKIE,
+ };
+ 
++/**
++ * enum devlink_reload_level - Reload level.
++ * @DEVLINK_RELOAD_LEVEL_DRIVER: Driver entities re-instantiation only.
++ * @DEVLINK_RELOAD_LEVEL_FW_RESET: FW reset and driver entities re-instantiation.
++ * @DEVLINK_RELOAD_LEVEL_FW_LIVE_PATCH: FW live patching only.
++ */
++enum devlink_reload_level {
++	DEVLINK_RELOAD_LEVEL_UNSPEC,
++	DEVLINK_RELOAD_LEVEL_DRIVER,
++	DEVLINK_RELOAD_LEVEL_FW_RESET,
++	DEVLINK_RELOAD_LEVEL_FW_LIVE_PATCH,
 +
-+#include "fw_reset.h"
++	/* Add new reload levels above */
++	__DEVLINK_RELOAD_LEVEL_MAX,
++	DEVLINK_RELOAD_LEVEL_MAX = __DEVLINK_RELOAD_LEVEL_MAX - 1
++};
 +
-+static int mlx5_reg_mfrl_set(struct mlx5_core_dev *dev, u8 reset_level,
-+			     u8 reset_type_sel, u8 sync_resp, bool sync_start)
+ enum devlink_attr {
+ 	/* don't change the order or add anything between, this is ABI! */
+ 	DEVLINK_ATTR_UNSPEC,
+@@ -458,6 +475,8 @@ enum devlink_attr {
+ 	DEVLINK_ATTR_PORT_LANES,			/* u32 */
+ 	DEVLINK_ATTR_PORT_SPLITTABLE,			/* u8 */
+ 
++	DEVLINK_ATTR_RELOAD_LEVEL,		/* u8 */
++
+ 	/* add new attributes above here, update the policy in devlink.c */
+ 
+ 	__DEVLINK_ATTR_MAX,
+diff --git a/net/core/devlink.c b/net/core/devlink.c
+index 0ca89196a367..31b367a1612d 100644
+--- a/net/core/devlink.c
++++ b/net/core/devlink.c
+@@ -462,6 +462,12 @@ static int devlink_nl_put_handle(struct sk_buff *msg, struct devlink *devlink)
+ 	return 0;
+ }
+ 
++static bool
++devlink_reload_level_is_supported(struct devlink *devlink, enum devlink_reload_level level)
 +{
-+	u32 out[MLX5_ST_SZ_DW(mfrl_reg)] = {};
-+	u32 in[MLX5_ST_SZ_DW(mfrl_reg)] = {};
-+
-+	MLX5_SET(mfrl_reg, in, reset_level, reset_level);
-+	MLX5_SET(mfrl_reg, in, rst_type_sel, reset_type_sel);
-+	MLX5_SET(mfrl_reg, in, pci_sync_for_fw_update_resp, sync_resp);
-+	MLX5_SET(mfrl_reg, in, pci_sync_for_fw_update_start, sync_start);
-+
-+	return mlx5_core_access_reg(dev, in, sizeof(in), out, sizeof(out), MLX5_REG_MFRL, 0, 1);
++	return test_bit(level, &devlink->ops->supported_reload_levels);
 +}
 +
-+int mlx5_reg_mfrl_query(struct mlx5_core_dev *dev, u8 *reset_level, u8 *reset_type)
+ static int devlink_nl_fill(struct sk_buff *msg, struct devlink *devlink,
+ 			   enum devlink_command cmd, u32 portid,
+ 			   u32 seq, int flags)
+@@ -2958,21 +2964,21 @@ bool devlink_is_reload_failed(const struct devlink *devlink)
+ EXPORT_SYMBOL_GPL(devlink_is_reload_failed);
+ 
+ static int devlink_reload(struct devlink *devlink, struct net *dest_net,
+-			  struct netlink_ext_ack *extack)
++			  enum devlink_reload_level level, struct netlink_ext_ack *extack)
+ {
+ 	int err;
+ 
+ 	if (!devlink->reload_enabled)
+ 		return -EOPNOTSUPP;
+ 
+-	err = devlink->ops->reload_down(devlink, !!dest_net, extack);
++	err = devlink->ops->reload_down(devlink, !!dest_net, level, extack);
+ 	if (err)
+ 		return err;
+ 
+ 	if (dest_net && !net_eq(dest_net, devlink_net(devlink)))
+ 		devlink_reload_netns_change(devlink, dest_net);
+ 
+-	err = devlink->ops->reload_up(devlink, extack);
++	err = devlink->ops->reload_up(devlink, level, extack);
+ 	devlink_reload_failed_set(devlink, !!err);
+ 	return err;
+ }
+@@ -2980,6 +2986,7 @@ static int devlink_reload(struct devlink *devlink, struct net *dest_net,
+ static int devlink_nl_cmd_reload(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct devlink *devlink = info->user_ptr[0];
++	enum devlink_reload_level level;
+ 	struct net *dest_net = NULL;
+ 	int err;
+ 
+@@ -3000,7 +3007,20 @@ static int devlink_nl_cmd_reload(struct sk_buff *skb, struct genl_info *info)
+ 			return PTR_ERR(dest_net);
+ 	}
+ 
+-	err = devlink_reload(devlink, dest_net, info->extack);
++	if (info->attrs[DEVLINK_ATTR_RELOAD_LEVEL])
++		level = nla_get_u8(info->attrs[DEVLINK_ATTR_RELOAD_LEVEL]);
++	else
++		level = devlink->ops->default_reload_level;
++
++	if (level == DEVLINK_RELOAD_LEVEL_UNSPEC || level > DEVLINK_RELOAD_LEVEL_MAX) {
++		NL_SET_ERR_MSG_MOD(info->extack, "Invalid reload level");
++		return -EINVAL;
++	} else if (!devlink_reload_level_is_supported(devlink, level)) {
++		NL_SET_ERR_MSG_MOD(info->extack, "Requested reload level is not supported");
++		return -EOPNOTSUPP;
++	}
++
++	err = devlink_reload(devlink, dest_net, level, info->extack);
+ 
+ 	if (dest_net)
+ 		put_net(dest_net);
+@@ -7026,6 +7046,7 @@ static const struct nla_policy devlink_nl_policy[DEVLINK_ATTR_MAX + 1] = {
+ 	[DEVLINK_ATTR_TRAP_POLICER_RATE] = { .type = NLA_U64 },
+ 	[DEVLINK_ATTR_TRAP_POLICER_BURST] = { .type = NLA_U64 },
+ 	[DEVLINK_ATTR_PORT_FUNCTION] = { .type = NLA_NESTED },
++	[DEVLINK_ATTR_RELOAD_LEVEL] = { .type = NLA_U8 },
+ };
+ 
+ static const struct genl_ops devlink_nl_ops[] = {
+@@ -7351,6 +7372,21 @@ static struct genl_family devlink_nl_family __ro_after_init = {
+ 	.n_mcgrps	= ARRAY_SIZE(devlink_nl_mcgrps),
+ };
+ 
++static int devlink_reload_levels_verify(struct devlink *devlink)
 +{
-+	u32 out[MLX5_ST_SZ_DW(mfrl_reg)] = {};
-+	u32 in[MLX5_ST_SZ_DW(mfrl_reg)] = {};
-+	int err;
++	const struct devlink_ops *ops;
 +
-+	err = mlx5_core_access_reg(dev, in, sizeof(in), out, sizeof(out), MLX5_REG_MFRL, 0, 0);
-+	if (err)
-+		return err;
++	if (!devlink_reload_supported(devlink))
++		return 0;
 +
-+	if (reset_level)
-+		*reset_level = MLX5_GET(mfrl_reg, out, reset_level);
-+	if (reset_type)
-+		*reset_type = MLX5_GET(mfrl_reg, out, reset_type);
-+
++	ops = devlink->ops;
++	if (WARN_ON(ops->supported_reload_levels >= BIT(__DEVLINK_RELOAD_LEVEL_MAX) ||
++		    ops->supported_reload_levels & BIT(DEVLINK_RELOAD_LEVEL_UNSPEC) ||
++		    !(ops->supported_reload_levels & BIT(ops->default_reload_level))))
++		return -EINVAL;
 +	return 0;
 +}
 +
-+int mlx5_fw_set_reset_sync(struct mlx5_core_dev *dev, u8 reset_type_sel)
-+{
-+	return mlx5_reg_mfrl_set(dev, MLX5_MFRL_REG_RESET_LEVEL3, reset_type_sel, 0, true);
-+}
+ /**
+  *	devlink_alloc - Allocate new devlink instance resources
+  *
+@@ -7371,6 +7407,11 @@ struct devlink *devlink_alloc(const struct devlink_ops *ops, size_t priv_size)
+ 	if (!devlink)
+ 		return NULL;
+ 	devlink->ops = ops;
++	if (devlink_reload_levels_verify(devlink)) {
++		kfree(devlink);
++		return NULL;
++	}
 +
-+int mlx5_fw_set_live_patch(struct mlx5_core_dev *dev)
-+{
-+	return mlx5_reg_mfrl_set(dev, MLX5_MFRL_REG_RESET_LEVEL0, 0, 0, false);
-+}
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
-new file mode 100644
-index 000000000000..1bbd95182ca6
---- /dev/null
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
-+/* Copyright (c) 2020, Mellanox Technologies inc.  All rights reserved. */
-+
-+#ifndef __MLX5_FW_RESET_H
-+#define __MLX5_FW_RESET_H
-+
-+#include "mlx5_core.h"
-+
-+int mlx5_reg_mfrl_query(struct mlx5_core_dev *dev, u8 *reset_level, u8 *reset_type);
-+int mlx5_fw_set_reset_sync(struct mlx5_core_dev *dev, u8 reset_type_sel);
-+int mlx5_fw_set_live_patch(struct mlx5_core_dev *dev);
-+
-+#endif
+ 	xa_init_flags(&devlink->snapshot_ids, XA_FLAGS_ALLOC);
+ 	__devlink_net_set(devlink, &init_net);
+ 	INIT_LIST_HEAD(&devlink->port_list);
+@@ -9599,7 +9640,8 @@ static void __net_exit devlink_pernet_pre_exit(struct net *net)
+ 		if (net_eq(devlink_net(devlink), net)) {
+ 			if (WARN_ON(!devlink_reload_supported(devlink)))
+ 				continue;
+-			err = devlink_reload(devlink, &init_net, NULL);
++			err = devlink_reload(devlink, &init_net,
++					     devlink->ops->default_reload_level, NULL);
+ 			if (err && err != -EOPNOTSUPP)
+ 				pr_warn("Failed to reload devlink instance into init_net\n");
+ 		}
 -- 
 2.17.1
 
