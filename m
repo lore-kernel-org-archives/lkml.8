@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4C5C43445
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF81C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45F9A206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2A62083B
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 14:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1595860596;
-	bh=Nnja+LHhundbZRtUoZNYR6xqJHf/eWzAviu2i5bqXdM=;
+	s=default; t=1595860599;
+	bh=kX/x4lufzoryAdRBCxBM5fFpxE1XR8OvFRQ8rY+oG0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bnI5ZZShW8k8Z5WDX5OYDamnEMK2nWLE5gc7Otk/vMxOYzBPZyNlQTKbQVz4P2CEf
-	 AcrlSuIFWrKkamFmvE20/dQa9BJMAp51x2IyLTKogOgqrM56lnlgzSW9nC59s2l1BH
-	 UVEp49dmKv4Tmtdo/t56ORaYIn2pnKCedxiojhXU=
+	b=ELruJ48qbagSaKD7/kH8CePgXIvU3idZghe334+XX3Cqu6iBl7bT0RSzggWbyKWlL
+	 jLNEUUHU7LVqpF5Hwf3j5rXUlTt0WYKh3QMyDPBcQCZ8BkNvo0IIHBhyExSXx8n+/i
+	 3XXif8WfCyYP/ctYIyZUwtRVEqCWnoefFKAvPYX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731855AbgG0Oge (ORCPT
+        id S1732932AbgG0Ogh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 10:36:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38650 "EHLO mail.kernel.org"
+        Mon, 27 Jul 2020 10:36:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730386AbgG0ONf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:13:35 -0400
+        id S1730381AbgG0ONd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 10:13:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D95120838;
-        Mon, 27 Jul 2020 14:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 876B22073E;
+        Mon, 27 Jul 2020 14:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595859214;
-        bh=Nnja+LHhundbZRtUoZNYR6xqJHf/eWzAviu2i5bqXdM=;
+        s=default; t=1595859212;
+        bh=kX/x4lufzoryAdRBCxBM5fFpxE1XR8OvFRQ8rY+oG0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F3JlsrU9OIRfVl5C0kIzVcx6bmeknUfJfWVaenHmc6gCeI10ZQoLUqt6TcZ+2iHvn
-         AAGbD6C8ureOMDVO2Cj7DWNUpZ0BgT4kF/RDuOfrJoUrpXqG66Z0QJMITSzImWvOmB
-         700T2RWlM0Rjm1Pns4CzWYZVAr4ah8dQ0iW3TOCI=
+        b=umCV1axkJ8XjiEM6Pc9gAOT+VpmT5O3C5fgMfkGPWIWBMfRx2iHusuFSJ4YQHf3zt
+         E6VJOnFyYM7d3c/hfS+NnvKZdyipFZ76iGIU3jTbRlpd+pcKrbLVsY+xFn+HObyOR4
+         tntMXrWyF6SVVqAL+5ohRXHBbiNph21LlAUo1Ogg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org,
+        Charan Teja Kalla <charante@codeaurora.org>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 005/138] mac80211: allow rx of mesh eapol frames with default rx key
-Date:   Mon, 27 Jul 2020 16:03:20 +0200
-Message-Id: <20200727134925.509009180@linuxfoundation.org>
+Subject: [PATCH 5.4 022/138] dmabuf: use spinlock to access dmabuf->name
+Date:   Mon, 27 Jul 2020 16:03:37 +0200
+Message-Id: <20200727134926.451525690@linuxfoundation.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200727134925.228313570@linuxfoundation.org>
 References: <20200727134925.228313570@linuxfoundation.org>
@@ -60,78 +63,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Charan Teja Kalla <charante@codeaurora.org>
 
-[ Upstream commit 0b467b63870d9c05c81456aa9bfee894ab2db3b6 ]
+[ Upstream commit 6348dd291e3653534a9e28e6917569bc9967b35b ]
 
-Without this patch, eapol frames cannot be received in mesh
-mode, when 802.1X should be used. Initially only a MGTK is
-defined, which is found and set as rx->key, when there are
-no other keys set. ieee80211_drop_unencrypted would then
-drop these eapol frames, as they are data frames without
-encryption and there exists some rx->key.
+There exists a sleep-while-atomic bug while accessing the dmabuf->name
+under mutex in the dmabuffs_dname(). This is caused from the SELinux
+permissions checks on a process where it tries to validate the inherited
+files from fork() by traversing them through iterate_fd() (which
+traverse files under spin_lock) and call
+match_file(security/selinux/hooks.c) where the permission checks happen.
+This audit information is logged using dump_common_audit_data() where it
+calls d_path() to get the file path name. If the file check happen on
+the dmabuf's fd, then it ends up in ->dmabuffs_dname() and use mutex to
+access dmabuf->name. The flow will be like below:
+flush_unauthorized_files()
+  iterate_fd()
+    spin_lock() --> Start of the atomic section.
+      match_file()
+        file_has_perm()
+          avc_has_perm()
+            avc_audit()
+              slow_avc_audit()
+	        common_lsm_audit()
+		  dump_common_audit_data()
+		    audit_log_d_path()
+		      d_path()
+                        dmabuffs_dname()
+                          mutex_lock()--> Sleep while atomic.
 
-Fix this by differentiating between mesh eapol frames and
-other data frames with existing rx->key. Allow mesh mesh
-eapol frames only if they are for our vif address.
+Call trace captured (on 4.19 kernels) is below:
+___might_sleep+0x204/0x208
+__might_sleep+0x50/0x88
+__mutex_lock_common+0x5c/0x1068
+__mutex_lock_common+0x5c/0x1068
+mutex_lock_nested+0x40/0x50
+dmabuffs_dname+0xa0/0x170
+d_path+0x84/0x290
+audit_log_d_path+0x74/0x130
+common_lsm_audit+0x334/0x6e8
+slow_avc_audit+0xb8/0xf8
+avc_has_perm+0x154/0x218
+file_has_perm+0x70/0x180
+match_file+0x60/0x78
+iterate_fd+0x128/0x168
+selinux_bprm_committing_creds+0x178/0x248
+security_bprm_committing_creds+0x30/0x48
+install_exec_creds+0x1c/0x68
+load_elf_binary+0x3a4/0x14e0
+search_binary_handler+0xb0/0x1e0
 
-With this patch in-place, ieee80211_rx_h_mesh_fwding continues
-after the ieee80211_drop_unencrypted check and notices, that
-these eapol frames have to be delivered locally, as they should.
+So, use spinlock to access dmabuf->name to avoid sleep-while-atomic.
 
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20200625104214.50319-1-markus.theil@tu-ilmenau.de
-[small code cleanups]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Cc: <stable@vger.kernel.org> [5.3+]
+Signed-off-by: Charan Teja Kalla <charante@codeaurora.org>
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+ [sumits: added comment to spinlock_t definition to avoid warning]
+Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/a83e7f0d-4e54-9848-4b58-e1acdbe06735@codeaurora.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/dma-buf/dma-buf.c | 11 +++++++----
+ include/linux/dma-buf.h   |  1 +
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 69429c8df7b30..e5fb9002d3147 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -2305,6 +2305,7 @@ static int ieee80211_802_1x_port_control(struct ieee80211_rx_data *rx)
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index cf65a47310c3a..eba7e3fe769cf 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -45,10 +45,10 @@ static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+ 	size_t ret = 0;
  
- static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
- {
-+	struct ieee80211_hdr *hdr = (void *)rx->skb->data;
- 	struct sk_buff *skb = rx->skb;
- 	struct ieee80211_rx_status *status = IEEE80211_SKB_RXCB(skb);
+ 	dmabuf = dentry->d_fsdata;
+-	mutex_lock(&dmabuf->lock);
++	spin_lock(&dmabuf->name_lock);
+ 	if (dmabuf->name)
+ 		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
+-	mutex_unlock(&dmabuf->lock);
++	spin_unlock(&dmabuf->name_lock);
  
-@@ -2315,6 +2316,31 @@ static int ieee80211_drop_unencrypted(struct ieee80211_rx_data *rx, __le16 fc)
- 	if (status->flag & RX_FLAG_DECRYPTED)
- 		return 0;
+ 	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
+ 			     dentry->d_name.name, ret > 0 ? name : "");
+@@ -338,8 +338,10 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+ 		kfree(name);
+ 		goto out_unlock;
+ 	}
++	spin_lock(&dmabuf->name_lock);
+ 	kfree(dmabuf->name);
+ 	dmabuf->name = name;
++	spin_unlock(&dmabuf->name_lock);
  
-+	/* check mesh EAPOL frames first */
-+	if (unlikely(rx->sta && ieee80211_vif_is_mesh(&rx->sdata->vif) &&
-+		     ieee80211_is_data(fc))) {
-+		struct ieee80211s_hdr *mesh_hdr;
-+		u16 hdr_len = ieee80211_hdrlen(fc);
-+		u16 ethertype_offset;
-+		__be16 ethertype;
-+
-+		if (!ether_addr_equal(hdr->addr1, rx->sdata->vif.addr))
-+			goto drop_check;
-+
-+		/* make sure fixed part of mesh header is there, also checks skb len */
-+		if (!pskb_may_pull(rx->skb, hdr_len + 6))
-+			goto drop_check;
-+
-+		mesh_hdr = (struct ieee80211s_hdr *)(skb->data + hdr_len);
-+		ethertype_offset = hdr_len + ieee80211_get_mesh_hdrlen(mesh_hdr) +
-+				   sizeof(rfc1042_header);
-+
-+		if (skb_copy_bits(rx->skb, ethertype_offset, &ethertype, 2) == 0 &&
-+		    ethertype == rx->sdata->control_port_protocol)
-+			return 0;
-+	}
-+
-+drop_check:
- 	/* Drop unencrypted frames if key is set. */
- 	if (unlikely(!ieee80211_has_protected(fc) &&
- 		     !ieee80211_is_any_nullfunc(fc) &&
+ out_unlock:
+ 	mutex_unlock(&dmabuf->lock);
+@@ -402,10 +404,10 @@ static void dma_buf_show_fdinfo(struct seq_file *m, struct file *file)
+ 	/* Don't count the temporary reference taken inside procfs seq_show */
+ 	seq_printf(m, "count:\t%ld\n", file_count(dmabuf->file) - 1);
+ 	seq_printf(m, "exp_name:\t%s\n", dmabuf->exp_name);
+-	mutex_lock(&dmabuf->lock);
++	spin_lock(&dmabuf->name_lock);
+ 	if (dmabuf->name)
+ 		seq_printf(m, "name:\t%s\n", dmabuf->name);
+-	mutex_unlock(&dmabuf->lock);
++	spin_unlock(&dmabuf->name_lock);
+ }
+ 
+ static const struct file_operations dma_buf_fops = {
+@@ -537,6 +539,7 @@ struct dma_buf *dma_buf_export(const struct dma_buf_export_info *exp_info)
+ 	dmabuf->size = exp_info->size;
+ 	dmabuf->exp_name = exp_info->exp_name;
+ 	dmabuf->owner = exp_info->owner;
++	spin_lock_init(&dmabuf->name_lock);
+ 	init_waitqueue_head(&dmabuf->poll);
+ 	dmabuf->cb_excl.poll = dmabuf->cb_shared.poll = &dmabuf->poll;
+ 	dmabuf->cb_excl.active = dmabuf->cb_shared.active = 0;
+diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+index ec212cb27fdc6..12eac4293af66 100644
+--- a/include/linux/dma-buf.h
++++ b/include/linux/dma-buf.h
+@@ -303,6 +303,7 @@ struct dma_buf {
+ 	void *vmap_ptr;
+ 	const char *exp_name;
+ 	const char *name;
++	spinlock_t name_lock; /* spinlock to protect name access */
+ 	struct module *owner;
+ 	struct list_head list_node;
+ 	void *priv;
 -- 
 2.25.1
 
