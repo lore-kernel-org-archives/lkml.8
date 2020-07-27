@@ -2,141 +2,123 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AABBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28E4F205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21067205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:06:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pPOEgylv"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="C3bFz2EL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgG0LFi (ORCPT
+        id S1728508AbgG0LGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:05:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbgG0LFi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:05:38 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4486BC061794;
-        Mon, 27 Jul 2020 04:05:38 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id n5so9299726pgf.7;
-        Mon, 27 Jul 2020 04:05:38 -0700 (PDT)
+        Mon, 27 Jul 2020 07:06:04 -0400
+Received: from mail-dm6nam11on2071.outbound.protection.outlook.com ([40.107.223.71]:44641
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728477AbgG0LGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 07:06:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I8pP8L3UEnGBccQIJruBnSxi4QojAjaLN7oOEqToFVmkX5n9otTyOcXYu6joYysr3aRiJVmfhRzBlgk3flzzmYix0To9LeuvMOHMuSC3Ps9/qListt/IteIgcbl4inHjvAU+DHSDg5edbd95L5rCY+gNu45rFgvwwpsCxPkBbkZq5SdkcecQCoTjGesXqTLz0EnHW4NvmOKLREa/34DcUY+moAWJhUfwF2yBZ1oBBAHEPbFguIBRnBEjvhqqx3YPxlgG20YVAD+J0T7DaDA4xxKwtq0witMygxbOjoIWWLb+Rout3oFdfd+o40cVNPwouhsTisHa0/cZcf+MGz1OuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1A7sHR8uiWBtmOF1hdFHvxyW6wgy3YDB48gZ3sURZhs=;
+ b=aXgAWamQP7kR7ZTCEtxvoj5NOkrE9ao+EYnF9kX13zYaU935NEItj0JDKjMM2O62YVIl1EeCCVENvDkFEaS9gGXn3YzzbUdzAlp5nr6Ua9saC8XlLtGC23lxZHuNNf2WCOoZJzFYKKiDoIiECTgbo8xTRpCyn4TiMkfK1V+CUtGqkqJc3JQa5Bvf5T/Vu8fJB0DUIHPRBAW4v9wYj0WmNrvON8FPXLjD1n1OIvM7EMja8SoLywY4Rde1Ni5BHVsWZAaH30Fwmu0xBY5087Ww/i9qXrtsB5QitCqukfmae38ppjCgJ4xPvuPvbAvfM1RgXMb/mkWaDQqxH9dxe0/g1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/qqDBKnihG2XgFKzkTVnXhmjbAmwos65pYeAfPUz+TY=;
-        b=pPOEgylv6Y7MH8bv2omt+P9eNrjYD7Gvv22lyPeZ4pECv3ufllmMYYWrrdlnuFjRt9
-         bSrYstVxo77gL0pHHgw8bECA5nf07LTnlcgRF3i9sjV5KKWuALEkWJTlys0zNsienGpA
-         dkHALVm2EgRvjRA5At8fFLtQ78K5l17DNoHOBIV1hk//wRPHK6uIV/9e1YEjsvNHOHQG
-         ztl5zdAaROYoT6DQ4IROwPgdWd/No7ZqJgo1A3UN0FDpzVpZI4QF673lDaRm+z94DAw2
-         wJSsCSJfGbSolsww0hAWb69VzcQXvLlfNJjCi4PLOk0gmQ4RT+wGrTL4TJoxBaDaPjlf
-         23eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/qqDBKnihG2XgFKzkTVnXhmjbAmwos65pYeAfPUz+TY=;
-        b=sL8sIIXplUsyUmZTobtnlvsd9vIU2US8wP0z4idK4riD0D+6fGb5gO7JL3hZbKvS59
-         8XuAfQUzYqFdZVXAZb+pG1zN7M7ecf2URjDFSPUq+RM3L5kv0f4MhvT1s6xsM/PML2v5
-         BgzchDLvhacwz+tSfE9Y1bqXw9NAM7BsWlZj7Ii13+67c3wLZ3XFS2ijOOFBAH3d3jXP
-         iY9HzVXxtXwvJwkf2krzneEnJEefZh9R6r86yJQPARfrbn5X1YWZqv7ALXrBxXHfREH+
-         eA2XqRUuBzbPmDnkzk11xIPEMYw9nX+8LKhr3fgv7CuezaORTz0CdfS3l6gx52beRTVW
-         QyUQ==
-X-Gm-Message-State: AOAM533BFVb2XAYVnss90Lw752S5NRBNEfzcd5DtbK4RTGW+HdtXVJ+s
-        fxtyFDSIiHeWZsCIDzWbZvBDMCFIOibPhS3RBes=
-X-Google-Smtp-Source: ABdhPJzuBsxSLlKiomAknMEpLElLpk5DVv+r46SMf/pRDFGSQfeU2Cks1QOuxgp9TA0kJMnMY0dnmVF9jMWf+22TFXs=
-X-Received: by 2002:a63:924b:: with SMTP id s11mr18731996pgn.74.1595847937830;
- Mon, 27 Jul 2020 04:05:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200725150651.17029-1-vadym.kochan@plvision.eu>
- <20200725150651.17029-3-vadym.kochan@plvision.eu> <CAHp75VeLS+-QkHuee8oPP4TDQoQPGFHSVpzi0e4m3Xhy2K+d1g@mail.gmail.com>
- <20200726225545.GA11300@plvision.eu> <CAHp75Vea6eWUqvXAKtu5Qv3Q0Oo=mxD+zf+zogZdcYOFtRe17g@mail.gmail.com>
- <20200727093421.GA21360@plvision.eu>
-In-Reply-To: <20200727093421.GA21360@plvision.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 27 Jul 2020 14:05:23 +0300
-Message-ID: <CAHp75VcC1zts-5fncuJAXq2wmZfZCvmmng4V_wvQWpV1Yny3dw@mail.gmail.com>
-Subject: Re: [net-next v3 2/6] net: marvell: prestera: Add PCI interface support
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     "David S. Miller" <davem@davemloft.net>,
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1A7sHR8uiWBtmOF1hdFHvxyW6wgy3YDB48gZ3sURZhs=;
+ b=C3bFz2EL+8OeugftTG01Ifd1eu/G7wWlbuyAzNNnMykeRE60xO07e+t2blU30nEdFgphHYCneQk1JYVDRfxhqwy2/8j512GE9uKZLzfTNOnOFt7go0QsMSO13oWMH8pBwvzyhvxL8HQUhiPAtQ7P8NWvUJ2lIUXPEw0dZDAHY2w=
+Authentication-Results: st.com; dkim=none (message not signed)
+ header.d=none;st.com; dmarc=none action=none header.from=synaptics.com;
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+ by BYAPR03MB4198.namprd03.prod.outlook.com (2603:10b6:a03:7e::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.21; Mon, 27 Jul
+ 2020 11:05:59 +0000
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::b5cc:ca6b:3c25:a99c]) by BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::b5cc:ca6b:3c25:a99c%4]) with mapi id 15.20.3216.033; Mon, 27 Jul 2020
+ 11:05:59 +0000
+Date:   Mon, 27 Jul 2020 19:01:07 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mickey Rachamim <mickeyr@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] net: stmmac: improve WOL
+Message-ID: <20200727190045.36f247cc@xhacker.debian>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TY2PR01CA0012.jpnprd01.prod.outlook.com
+ (2603:1096:404:a::24) To BYAPR03MB3573.namprd03.prod.outlook.com
+ (2603:10b6:a02:ae::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by TY2PR01CA0012.jpnprd01.prod.outlook.com (2603:1096:404:a::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23 via Frontend Transport; Mon, 27 Jul 2020 11:05:56 +0000
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: cc3e2fe7-3a40-4d5f-3b01-08d8321d0ad3
+X-MS-TrafficTypeDiagnostic: BYAPR03MB4198:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB4198BAA3936E6CDAE1A4D5B5ED720@BYAPR03MB4198.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jPwKJJfaQ3ukUOMqnMvpbZjLIjAkKjzqmpjfgtXyfbtia37ZUR4uDOjZL67A/h62EBk6Lrz7ys7Mw7w1gJ+7qUH3AsRrl/ovG88Mz/RrL8oLFXaivNcPkjq81HPo3mkPfS8UHZkicakaO6Xn6QI7fCIWj6ZGCWm+HVySXIuRyrggivOJLaMD6nb04TyNzFNJWX/ItWWffuKgdORi0t32GxCgQuh02ICDZnybFS2CsHKFLWdwWbTDrDIg/g5QNu0AVeZCDq4JUZ8nxaWNbxjE+QRn+6OI+IqPgSqwn7lvO9gsxu7TvTMz0WIxxuLQrR8J
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(366004)(346002)(376002)(396003)(136003)(66946007)(66476007)(66556008)(5660300002)(6506007)(55016002)(86362001)(52116002)(9686003)(4744005)(8676002)(478600001)(110136005)(7696005)(316002)(1076003)(4326008)(16526019)(8936002)(26005)(956004)(83380400001)(2906002)(6666004)(7416002)(186003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: aeQngkP+Aia67IILNklrGXdaycb/knf/efRBWVM97JkEcgy0QtN197Y6T92xzUmdbbfGExGzoA2mjQ8YiG3vkG4WFXNO7SA5lTPb8JuQUwUlHlVppnxIjkxbPR4zgZlzogQMLEM3q9xgkm4VsUhQ61LDoIeSsgLJfBk8jnJMB3ntHv6vLCsvXiVWWT3J9O53UvAoowawL33dE6fanSabtsVjm7IpxHlVj9GhNpDuvyn72+yH5WYV2g2oB0L0HpMMa683HXbMkiOLsvpm3M+ZOni6vUKDnYKOeJN+2WQwTFfsPtqJbG0rCazdBnzLVyyUeyJ7CqzbHHIgeq+QQamibZxUhbFeo94cV+f6imQwQkDpBri467yWDHSTV2aIN0c80dAOfWr+FRNmvU7zwFbvQG2QWDL9eibEIjZlBnlEWFlTqfU3vwGW/AGw7jtc1Qaflc95zWdjxjn37Lox/pkIzT1c3NOeYCPbjMBMqpH8CQQLybYFAIrKSqBztdtjE1zh
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc3e2fe7-3a40-4d5f-3b01-08d8321d0ad3
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3573.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2020 11:05:59.2849
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jRatiSHMnpA+xtcLLtUb1k/BKAz7JaIA9v02Cv9MVdHj6bi6JTqZZMWR9xBNA45dPTqmCRnFVNpZXf04Z81xwg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4198
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 12:34 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
-> On Mon, Jul 27, 2020 at 11:04:56AM +0300, Andy Shevchenko wrote:
-> > On Mon, Jul 27, 2020 at 1:55 AM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
-> > > On Sun, Jul 26, 2020 at 01:32:19PM +0300, Andy Shevchenko wrote:
-> > > > On Sat, Jul 25, 2020 at 6:10 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+Currently, stmmac driver relies on the HW PMT to support WOL. We want
+to support phy based WOL.
 
-...
+patch1 is a small improvement to disable WAKE_MAGIC for PMT case if
+no pmt_magic_frame.
+patch2 and patch3 are two prepation patches.
+patch4 implement the phy based WOL
+patch5 tries to save a bit energy if WOL is enabled.
 
-> > > > > +config PRESTERA_PCI
-> > > > > +       tristate "PCI interface driver for Marvell Prestera Switch ASICs family"
-> > > > > +       depends on PCI && HAS_IOMEM && PRESTERA
-> > > >
-> > > > > +       default m
-> > > >
-> > > > Even if I have CONFIG_PRESTERA=y, why as a user I must have this as a module?
-> > > > If it's a crucial feature, shouldn't it be rather
-> > > >   default CONFIG_PRESTERA
-> > > > ?
-> > >
-> > > The firmware image should be located on rootfs, and in case the rootfs
-> > > should be mounted later the pci driver can't pick this up when
-> > > statically compiled so I left it as 'm' by default.
-> >
-> > We have for a long time to catch firmware blobs from initrd (initramfs).
-> > default m is very unusual.
-> >
-> For example drivers/net/ethernet/mellanox/mlxsw/pci.c also uses 'm' as
-> default, but may be in that case the reason is that there are several
-> bus implementations - i2c, pci.
+Jisheng Zhang (5):
+  net: stmmac: Remove WAKE_MAGIC if HW shows no pmt_magic_frame
+  net: stmmac: Move device_can_wakeup() check earlier in set_wol
+  net: stmmac: only call pmt() during suspend/resume if HW enables PMT
+  net: stmmac: Support WOL with phy
+  net: stmmac: speed down the PHY, if WoL used, to save energy
 
-% git grep -n -w 'default m if' -- $(git ls-files | grep Kconfig) | wc -l
-240
-% git grep -n -w 'default m' -- $(git ls-files | grep Kconfig) | wc -l
-293
-% git grep -n -w 'default' -- $(git ls-files | grep Kconfig) | wc -l
-5226
-
-So, basically 'default m' cases are ~1% (53) of all default cases
-(5226) in the tree.
-
-...
-
-> > Maybe you may replace __stringify by explicit characters / strings and
-> > comment how the name was constructed?
-> >
-> > #define FW_NAME "patch/to/it/fileX.Y.img"
-> >
-> I used snprintf, and now it looks simpler.
-
-Works for me!
+ .../ethernet/stmicro/stmmac/stmmac_ethtool.c  | 19 ++++++++++++++++---
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c | 18 +++++++++++++++---
+ 2 files changed, 31 insertions(+), 6 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.28.0.rc0
+
