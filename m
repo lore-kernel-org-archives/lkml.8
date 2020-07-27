@@ -2,116 +2,98 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED81C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45A1C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3A8206E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC6AF20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 11:36:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5phTAFW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGr5q/9Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgG0Lea (ORCPT
+        id S1727854AbgG0LgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 07:34:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38942 "EHLO
+        Mon, 27 Jul 2020 07:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbgG0Le3 (ORCPT
+        with ESMTP id S1726227AbgG0LgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 07:34:29 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F01FC061794
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 04:34:28 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id j19so9334804pgm.11
-        for <linux-kernel@vger.kernel.org>; Mon, 27 Jul 2020 04:34:28 -0700 (PDT)
+        Mon, 27 Jul 2020 07:36:23 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42371C061794;
+        Mon, 27 Jul 2020 04:36:21 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id x9so16834226ljc.5;
+        Mon, 27 Jul 2020 04:36:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KNqhCNDlCGUtCAIGEpVKu7Yf2JbLRnex9E/c2kvaRMU=;
-        b=K5phTAFWN3kjl7VrGX1CgYEcmO2i98sCFsKKox4k9cGyakQxg2fUNWE8z/IdaMD/jQ
-         bHa0WvBfMEsvSaxiADuEsIgTgwlquBAK4u5qwF3hE7yCG0TOoOq9+bXvjfOqRZU+Lv9f
-         kRL1Tm77psFMKmiUXAW4BHQZOGn+DsjUedrbAKE5CWL7jZRi5IZ5gEGOYf/8I1WoVBcD
-         9CK/9j12pWS6Fj9C3Q1yjDTd2bk6lg7x8QLT6wOZNoyGpr8jgWH4qxqHWogheTK9sRx+
-         bIcQfFT/eijakt+m/58ZDpLgC155wnl0cL2B3ziL4jS3RC2KII+m80eaCtP7mA5hHCwd
-         M7ow==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3duE7OBR2T4N2tYjRvsITkGu0zyZUrsrEinPE6byIJA=;
+        b=aGr5q/9QRAMaUt3j5VfbR3OdspD6ClP8KdgJUfmnmzsunPsBqGa5S9naW8YgBF/zwA
+         xk7mCre8gB5IbfeUa3zGFNF80ldeRdn79TISRGf+kftzYbjhBna3K5cPwBEv8QmiDqns
+         Eo1HRkKLdsARNMMznT6RAODNxdr2N0NiebCEwrOd4xHSWUDUrfiny+NM0DKHM3CxxbDA
+         4McAvoF2Ps7yD3wZq0QzvcBLQXxtVOSswIGiwuMiyQd/6e92DcK0KyXC/LN0EPpdxHHl
+         QtkCkh55wJjZ/9fPeyRlUoAaPUKJMpe917jU3ni6GSooU4CSsDX+8sMZqP9+0CW+Ttqq
+         iq+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KNqhCNDlCGUtCAIGEpVKu7Yf2JbLRnex9E/c2kvaRMU=;
-        b=qbanEpo6xM8iWP4ILWHLcnOSKz75V3+51SAT9SWGbyrHGnLpEj0Oc+c2SSDOZrObh/
-         3piXYsK1rxRH9fafLBwYgaRYnfifsAnagHqb6PR9Efr0pVYjxpCBWf7QzuZRzo/D0TH+
-         rdyKRGvGX0zDJaAfHWZk/lXHBRb11smucqsiikx+5bE/kALjKiOwybMzOqLPXwJ9E72Z
-         8VFqhINO06TFmxJ88ubTS2kkQm19cm9HNbnBKVOgkDEmsaz7BgByRbWAI29f7nC2gDDw
-         j3FlR8G15PootkgT1e+1qjHkkr2+yaq0lTtVGd8/mHx2YAkoCakA7e58mW5uNzudVegK
-         Sxvg==
-X-Gm-Message-State: AOAM530u4USFZscyKUzry7APA/aTsL7qg+CGFrtq3UjXoNEZe77XZr7j
-        cKE7TD9Mey1YpLfKhdsm2HU=
-X-Google-Smtp-Source: ABdhPJyCPw66QDcmbO7zc3bT3A4gwVP1DzGsqVEBWHUCBDup8AUIaYQmeQlikAORr0+2lJMWvInjEQ==
-X-Received: by 2002:a62:7546:: with SMTP id q67mr2784040pfc.210.1595849667651;
-        Mon, 27 Jul 2020 04:34:27 -0700 (PDT)
-Received: from pc.domain.name ([103.10.31.103])
-        by smtp.gmail.com with ESMTPSA id n15sm14520534pgs.25.2020.07.27.04.34.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 04:34:27 -0700 (PDT)
-From:   Yadav Lamichhane <tuxomega1@gmail.com>
-To:     christian.brauner@ubuntu.com
-Cc:     serge@hallyn.com, linux-kernel@vger.kernel.org,
-        Yadav Lamichhane <tuxomega1@gmail.com>
-Subject: [PATCH] userns: Fix a kernel coding style issue
-Date:   Mon, 27 Jul 2020 17:18:23 +0545
-Message-Id: <20200727113323.79720-1-tuxomega1@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3duE7OBR2T4N2tYjRvsITkGu0zyZUrsrEinPE6byIJA=;
+        b=SfXXH3H3WD7VWQ19KwEYH4upPiyVdgd9Eeci7v8a+Cp5KUxmC+EXzwY+yFrD47g7Jy
+         fFJKMzqZSzEjU3hnshdLqqiUBhqbUPVH2hJGACWDOJ2EFlotjFF1OYZfh3/KP8AeRUg0
+         88LPgYGKBURXWq7yfggydKyT49qTaLVmslCUX1rHhRmpzmziu2O1Vd1PPnTNGafVqYCh
+         LleLEqCRskfPVa2w+BnPG3ug+MdjskRQj3ZJxhct0oqpNOgRD7JG33YI9Tj9bj5Lp0oQ
+         DarIe2SrGLj8mm9Y4YWIsL9iDZhDh50c08qNYjss7U0xcQfs3wOn89AKapok3UY16DOR
+         OotA==
+X-Gm-Message-State: AOAM532bNfkaDlTKhhIiwZPd3XtbVh6K9rfCRt4UchO/eQof4lQTfwSo
+        z77CwDJnx2PZA3juYGmR3EspSHSBQ0G7PM1oZ2M=
+X-Google-Smtp-Source: ABdhPJySdoA0YQZX3SzX76PZs+yXIx9uSU6Htm2i166nkcxAQA1159Pl7aChK9+bUVbcPdHRJ+ZUOND1IY6QjMMDCyA=
+X-Received: by 2002:a2e:a168:: with SMTP id u8mr9049888ljl.178.1595849779599;
+ Mon, 27 Jul 2020 04:36:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200727105718.26225-1-ceggers@arri.de> <20200727105718.26225-2-ceggers@arri.de>
+In-Reply-To: <20200727105718.26225-2-ceggers@arri.de>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 27 Jul 2020 08:36:08 -0300
+Message-ID: <CAOMZO5ASnj7SpjjAEpWjRK-vMpFFKU00=rxKeBtaMSKE9pkX1g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ARM: dts: imx6ull: Add rngb node
+To:     Christian Eggers <ceggers@arri.de>,
+        Horia Geanta Neag <horia.geanta@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Kaiser <martin@kaiser.cx>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix a brace around if-else statement and for loop.
+Hi Christian,
 
-Signed-off-by: Yadav Lamichhane <tuxomega1@gmail.com>
----
- kernel/user_namespace.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+On Mon, Jul 27, 2020 at 8:00 AM Christian Eggers <ceggers@arri.de> wrote:
+>
+> The RNGB block on 6ull has no major differences, but it has no
+> switchable clock.
 
-diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
-index 87804e0371fe..7703753cac97 100644
---- a/kernel/user_namespace.c
-+++ b/kernel/user_namespace.c
-@@ -118,9 +118,8 @@ int create_user_ns(struct cred *new)
- 	ns->owner = owner;
- 	ns->group = group;
- 	INIT_WORK(&ns->work, free_user_ns);
--	for (i = 0; i < UCOUNT_COUNTS; i++) {
-+	for (i = 0; i < UCOUNT_COUNTS; i++)
- 		ns->ucount_max[i] = INT_MAX;
--	}
- 	ns->ucounts = ucounts;
-
- 	/* Inherit USERNS_SETGROUPS_ALLOWED from our parent */
-@@ -1156,12 +1155,10 @@ ssize_t proc_setgroups_write(struct file *file, const char __user *buf,
- 	if (strncmp(pos, "allow", 5) == 0) {
- 		pos += 5;
- 		setgroups_allowed = true;
--	}
--	else if (strncmp(pos, "deny", 4) == 0) {
-+	} else if (strncmp(pos, "deny", 4) == 0) {
- 		pos += 4;
- 		setgroups_allowed = false;
--	}
--	else
-+	} else
- 		goto out;
-
- 	/* Verify there is not trailing junk on the line */
---
-2.26.2
-
+Horia has already sent a patch series that adds imx6ull rngb support:
+https://lkml.org/lkml/2020/7/23/173
