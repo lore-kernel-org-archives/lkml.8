@@ -2,86 +2,82 @@ Return-Path: <SRS0=+GcV=BG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28567C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C88EC20759
-	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:20:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VUKFfiR/"
+	by mail.kernel.org (Postfix) with ESMTP id 06CEB20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 27 Jul 2020 08:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgG0IUl (ORCPT
+        id S1726997AbgG0IVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 27 Jul 2020 04:20:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgG0IUk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 27 Jul 2020 04:20:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A53E7C061794;
-        Mon, 27 Jul 2020 01:20:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=xrG0BU7yIGWs9jDgU0K3JJbw4oVcEokGuvUv9xL/Y+0=; b=VUKFfiR/zbbxIyGNnxZj0pzr6Z
-        K/xgwWX+t2geF5XQZh0ZuwnqKTr7OSZ42+Qv8zFCHNzpdJ0wPQlgTab/9NUIvfrAxkSp0mrDpDGCR
-        ji1OvOivtcDDbR/waecBHPT5mHIqLOz9lmROBF6mO0Vp6zC2UsqgVnfiVBqvS+IJBM+/f4o4LYirI
-        13ylsHczcXzOdEXT9/okYDS8ZxMuOBhqDCLWfLpVC0zrtRPE0jx4+4ytJSwIkzenUInk26c32Y1nf
-        TQbltQTp34CZTwI+Z0TlTeB6VgAys27Kzcvq2UxyQHn6sjUmUqxw2tgEpPEkuCJyUk9p7bFmZ7z2p
-        J9/a3LjQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jzyMg-0002aV-Ht; Mon, 27 Jul 2020 08:20:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8BEE8301EE3;
-        Mon, 27 Jul 2020 10:20:03 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 762FF2BDC8D4F; Mon, 27 Jul 2020 10:20:03 +0200 (CEST)
-Date:   Mon, 27 Jul 2020 10:20:03 +0200
-From:   peterz@infradead.org
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Cathy Zhang <cathy.zhang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-edac@vger.kernel.org
-Subject: Re: [PATCH 4/4] x86/cpu: Use SERIALIZE in sync_core() when available
-Message-ID: <20200727082003.GD119549@hirez.programming.kicks-ass.net>
-References: <20200727043132.15082-1-ricardo.neri-calderon@linux.intel.com>
- <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
+        Mon, 27 Jul 2020 04:21:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:39346 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbgG0IVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 27 Jul 2020 04:21:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 840D8D6E;
+        Mon, 27 Jul 2020 01:21:04 -0700 (PDT)
+Received: from [10.37.12.33] (unknown [10.37.12.33])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E74D3F71F;
+        Mon, 27 Jul 2020 01:21:01 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] memory: samsung: exynos5422-dmc: Adjust polling
+ interval and uptreshold
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, willy.mh.wolff.ml@gmail.com,
+        k.konieczny@samsung.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        s.nawrocki@samsung.com, kgene@kernel.org
+References: <20200710191122.11029-1-lukasz.luba@arm.com>
+ <20200710191122.11029-2-lukasz.luba@arm.com>
+ <20200720144623.GB22791@kozik-lap>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <decc2758-8c57-8b32-26fb-d4a5b2ca5224@arm.com>
+Date:   Mon, 27 Jul 2020 09:20:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727043132.15082-5-ricardo.neri-calderon@linux.intel.com>
+In-Reply-To: <20200720144623.GB22791@kozik-lap>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 26, 2020 at 09:31:32PM -0700, Ricardo Neri wrote:
-> +static inline void serialize(void)
-> +{
-> +	asm volatile(".byte 0xf, 0x1, 0xe8");
-> +}
 
-Can we pretty please have a comment with the binutils version that has
-the mnomic? Such that when we increase the required binutils version we
-can grep for this.
+
+On 7/20/20 3:46 PM, Krzysztof Kozlowski wrote:
+> On Fri, Jul 10, 2020 at 08:11:21PM +0100, Lukasz Luba wrote:
+>> In order to react faster and make better decisions under some workloads,
+>> benchmarking the memory subsystem behavior, adjust the polling interval
+>> and upthreshold value used by the simple_ondemand governor.
+>>
+>> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+>> ---
+>>   drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> Feel free to take it via devfreq tree.
+> 
+> Best regards,
+> Krzysztof
+> 
+
+Thank you Krzysztof for the review.
+
+Regards,
+Lukasz
